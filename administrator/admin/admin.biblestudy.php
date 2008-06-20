@@ -1,5 +1,4 @@
 <?php
-$test = 'this is a test';
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
@@ -24,7 +23,4 @@ $controller = JRequest::getVar( 'controller' );
 		//Redirect if set by the controller 
 		
 		$controller->redirect();
-
-
-
 ?>
