@@ -1,6 +1,5 @@
 <?php
-
-
+$test = 'this is a test';
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
