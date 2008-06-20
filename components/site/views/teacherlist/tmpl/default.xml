@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml tf 12-11-2007 $ -->
+<metadata>
+	<layout title="Teachers List Layout">
+		<message>
+			<![CDATA[Create a link to the main Teachers List Page]]>
+		</message>
+	</layout>
+	<state>
+		<name>Teachers List Layout</name>
+	</state>
+</metadata>

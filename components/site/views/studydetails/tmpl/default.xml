@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml tf 12-11-2007 $ -->
+<metadata>
+	<layout title="Single Study Layout">
+		<message>
+			<![CDATA[Create a link to a single study's details]]>
+		</message>
+	</layout>
+	<state>
+		<name>Single Study Layout</name>
+		<description>Choose a single study to link to</description>
+		<url addpath="/administrator/components/com_biblestudy/elements">
+			<param name="id" type="studydetails" default="" label="Select a Study" description="The study to link to" />
+		</url>
+	</state>
+</metadata>
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml tf 12-11-2007 $ -->
+<metadata>
+	<layout title="Single Teacher View Layout">
+		<message>
+			<![CDATA[Create a link to a single teacher]]>
+		</message>
+	</layout>
+	<state>
+		<name>Single Teacher Layout</name>
+		<description>Choose a single teacher to link to</description>
+		<url addpath="/administrator/components/com_biblestudy/elements">
+			<param name="id" type="teacher" default="" label="Select a Teacher" description="The teacher to link to" />
+		</url>
+	</state>
+</metadata>

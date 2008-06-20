@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml tf 12-11-2007 $ -->
+<metadata>
+	<layout title="Studies List Layout">
+		<message>
+			<![CDATA[Create a link to the main Bible Studies List Page]]>
+		</message>
+	</layout>
+	<state>
+		<name>Studies List Layout</name>
+	</state>
+</metadata>

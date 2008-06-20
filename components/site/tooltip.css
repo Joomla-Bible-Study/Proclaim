@@ -1,0 +1,42 @@
+.tool-tip {
+        color: #fff;
+        width: 300px;
+        z-index: 13000;
+}
+
+.tool-title {
+        font-weight: bold;
+        font-size: 11px;
+        margin: 0;
+        color: #9FD4FF;
+        padding: 8px 8px 4px;
+        background: url(/images/tooltip/bubble.gif) top left;
+}
+
+.tool-text {
+        font-size: 11px;
+        padding: 4px 8px 8px;
+        background: url(/images/tooltip/bubble_filler.gif) bottom right;
+}
+    .custom-tip {
+       color: #000;
+       width: 300px;
+       z-index: 13000;
+       border: 2px solid #666666;
+    }
+
+    .custom-title {
+       font-weight: bold;
+       font-size: 11px;
+       margin: 0;
+       color: #000000;
+       padding: 8px 8px 4px;
+       background: #666666;
+       border-bottom: 1px solid #999999;
+    }
+
+    .custom-text {
+       font-size: 11px;
+       padding: 4px 8px 8px;
+       background: #999999;
+    }
