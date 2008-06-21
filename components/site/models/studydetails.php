@@ -32,6 +32,7 @@ class biblestudyModelstudydetails extends JModel
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$this->setId((int)$array[0]);
+		$this->hit();
 	}
 
 	
@@ -52,16 +53,16 @@ class biblestudyModelstudydetails extends JModel
 	function hit()
 	{
 		global $mainframe;
-
+		
 		if ($this->_id)
 		{
-			$s = & $this->getTable();
-			$s->hit($this->_id);
+
+			$study = $this->getTable();
+			$study->hit($this->_id);
 			return true;
 		}
 		return false;
 	}
-	
 	function &getData()
 	{
 		// Load the data
