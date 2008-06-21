@@ -95,6 +95,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		  <th><?php echo JText::_( 'Title' ); ?></th>
           <th><?php echo JText::_( 'Series' ); ?></th>
 		  <th><?php echo JText::_( 'Topic' );?></th>
+		  <th align="center"><?php echo JText::_( 'Views'); ?></th>
         </tr>
       </thead>
       <?php
@@ -121,6 +122,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		<td><?php echo $row->studytitle; ?></td>
         <td><?php echo $row->series_text; ?></td>
 		<td><?php echo $row->topic_text; ?></td>
+		<td align="center"><?php echo $row->views; ?></td>
       </tr>
       <?php
 		$k = 1 - $k;
