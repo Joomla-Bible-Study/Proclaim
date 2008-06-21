@@ -122,7 +122,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		<td><?php echo $row->studytitle; ?></td>
         <td><?php echo $row->series_text; ?></td>
 		<td><?php echo $row->topic_text; ?></td>
-		<td align="center"><?php echo $row->hits; ?></td>
+		<td align="center"><?php echo $row->hits; ?> </td>
       </tr>
       <?php
 		$k = 1 - $k;
