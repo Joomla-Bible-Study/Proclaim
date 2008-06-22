@@ -32,9 +32,11 @@ class biblestudyModelstudydetails extends JModel
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$this->setId((int)$array[0]);
+		
+		 //set the default view search path
+        $this->addTablePath(JPATH_COMPONENT.DS.'tables');
 		$this->hit();
 	}
-
 	
 	function setId($id)
 	{
@@ -53,10 +55,8 @@ class biblestudyModelstudydetails extends JModel
 	function hit()
 	{
 		global $mainframe;
-		
 		if ($this->_id)
 		{
-
 			$study = $this->getTable();
 			$study->hit($this->_id);
 			return true;
