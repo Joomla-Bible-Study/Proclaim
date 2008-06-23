@@ -39,6 +39,7 @@ class biblestudyControllerstudydetails extends JController
 		//if(JRequest::getCmd('view') == 'studydetails')
 		//{
 			//$model =& $this->getModel('studydetails');
+		//$table =& $this->getTable('studydetails');
 			$model->hit();
 		//}
 		
