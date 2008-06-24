@@ -18,10 +18,12 @@ class biblestudyModelstudydetails extends JModel
 	function __construct()
 	{
 		parent::__construct();
+		global $mainframe;
 		//added for single study view off of menu
 		$menu	=& JSite::getMenu();
 		$item    = $menu->getActive();
 		$params	=& $menu->getParams($item->id);
+		$params2 =& $mainframe->getPageParameters();
 		//$params =& JSiteHelper::getMenuParams();
 		$id = $params->get('id', 0);
 		if (!$id)
@@ -35,7 +37,9 @@ class biblestudyModelstudydetails extends JModel
 		
 		 //set the default view search path
         $this->addTablePath(JPATH_COMPONENT.DS.'tables');
+	if($params2->get('record_hits') == 1){
 		$this->hit();
+	}
 	}
 	
 	function setId($id)
