@@ -5,6 +5,10 @@
 		<option value="0">Restrict Deletes</option>
 		<option value="1">Allow admin deletes</option>
 	</param>
+	<param name="record_hits" type="radio" default="1" label="Enable hits for individual studies" description="Default setting records the number of views for each study. Disable this if you experience slow loading times on the frontend.">
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
 	<param name="drop_tables" type="radio" default="0" label="Don't Drop/Drop component tables on uninstall" description="Choose whether on uninstall to drop the component's database tables">
 		<option value="0">Keep db Tables on Uninstall</option>
 		<option value="1">Drop db Tables on Uninstall</option>
