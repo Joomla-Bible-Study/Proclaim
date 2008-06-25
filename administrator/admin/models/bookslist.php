@@ -30,11 +30,7 @@ function __construct()
 		// Get the pagination request variables
 		$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 0);
 		$limitstart = $mainframe->getUserStateFromRequest( $option.'limitstart', 'limitstart', 0 );
-		$testview 	= JRequest::getVar( 'view' );
-			if ($testview != 'booklist') 
-				{
-					$limitstart = 0;
-				}
+		
 		$this->setState('limit', $limit);
 		$this->setState('limitstart', $limitstart);
 	}
@@ -76,6 +72,9 @@ function getPagination()
 		if (empty($this->_pagination))
 		{
 			jimport('joomla.html.pagination');
+			$total = $this->getTotal();
+			$limitstart = $this->getState('limitstart');
+			$limit = $this->getState('limit');
 			$this->_pagination = new JPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
 		}
 
