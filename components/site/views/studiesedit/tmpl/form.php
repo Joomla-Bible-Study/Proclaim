@@ -87,7 +87,25 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
               <td size="8"><?php echo JText::_( 'Vs End' );?></td>
             </tr>
             <tr> 
-              <td ><?php echo $this->lists['booknumber']; ?>
+              <td ><?php //echo $this->lists['booknumber']; 
+			  $database =& JFactory::getDBO();
+			  $query2 = 'SELECT booknumber AS value, bookname AS text, published'
+                        . ' FROM #__bsms_books'
+                        . ' WHERE published = 1'
+                        . ' ORDER BY booknumber';
+						$database->setQuery( $query2 );
+						$bookid = $database->loadAssocList();
+						echo '<select name="booknumber" id="booknumber" class="inputbox" size="1" ><option value="0"';
+						echo '>- '.JText::_('Select a Book').' -'.'</option>';
+                        foreach ($bookid as $bookid2) {
+                        $format = $bookid2['text'];
+                        $output = JText::sprintf($format);
+                        $bookvalue = $bookid2['value'];
+						if ($bookvalue == $this->studiesedit->booknumber){$selected = 'selected="selected"';
+                        echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
+						echo '<option value="'.$bookvalue.'">'.$output.'</option>';
+                        };
+                         echo '</select>';?>
               </td>
               <td ><input class="text_area" type="text" name="chapter_begin" id="chapter_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_begin;?>"/></td>
               <td ><input class="text_area" type="text" name="verse_begin" id="verse_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_begin;?>"/></td>
@@ -107,7 +125,18 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
               <td size="8"><?php echo JText::_( 'Vs End 2' );?></td>
             </tr>
             <tr> 
-              <td ><?php echo $this->lists['booknumber2']; ?>
+              <td ><?php //echo $this->lists['booknumber2']; 
+			  echo '<select name="booknumber2" id="booknumber2" class="inputbox" size="1" ><option value="0"';
+						echo '>- '.JText::_('Select a Book').' -'.'</option>';
+                        foreach ($bookid as $bookid2) {
+                        $format = $bookid2['text'];
+                        $output = JText::sprintf($format);
+                        $bookvalue = $bookid2['value'];
+						if ($bookvalue == $this->studiesedit->booknumber2){$selected = 'selected="selected"';
+                        echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
+						echo '<option value="'.$bookvalue.'">'.$output.'</option>';
+                        };
+                         echo '</select>';?>
               </td>
               <td ><input class="text_area" type="text" name="chapter_begin2" id="chapter_begin2" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_begin2;?>"/></td>
               <td ><input class="text_area" type="text" name="verse_begin2" id="verse_begin2" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_begin2;?>"/></td>
