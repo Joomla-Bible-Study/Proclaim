@@ -46,7 +46,7 @@ class biblestudyViewstudieslist extends JView
 		$filter_searchby	= $mainframe->getUserStateFromRequest( $option.'filter_searchby','filter_searchby','studytext','word' );
 
 	$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year','filter_year',0,'int' );
-	$filter_order	 	= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'ordering',	'cmd' );
+	$filter_order	 	= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'studydate',	'cmd' );
 	$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'filter_order_Dir',	'filter_order_Dir',	'ASC' );
 		
 	$javascript 	= 'onchange="document.adminForm.submit();"';
