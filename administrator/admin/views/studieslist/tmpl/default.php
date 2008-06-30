@@ -32,25 +32,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		<?php echo $this->lists['messagetypeid'];?>
  		<?php echo $this->lists['studyyear'];?>
 		<?php //echo $this->lists['sorting'];?>
-         <?php
-                    $query6 = ' SELECT * FROM #__bsms_order '
-					. ' ORDER BY id ';
-					$database->setQuery( $query6 );
-					$sortorder = $database->loadAssocList();
-					$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
-					echo '<select name="filter_orders" id="filter_orders" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
-						if (!$filter_orders ) {
-						echo 'selected="selected"';}
-						echo '>- '.JText::_('Select an Order').' -'.'</option>';
-                        foreach ($sortorder as $sortorder2) {
-                        $format = $sortorder2['text'];
-                        $output = JText::sprintf($format);
-                        $sortvalue = $sortorder2['value'];
-						if ($sortvalue == $filter_orders){$selected = 'selected="selected"';
-                        echo '<option value="'.$sortvalue.'"'.$selected.' >'.$output.'</option>';}
-						echo '<option value="'.$sortvalue.'">'.$output.'</option>';
-                        };
-                         echo '</select>';?>
+         
                           <?php 
 						$query8 = 'SELECT DISTINCT #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text'
 						. ' FROM #__bsms_studies'
