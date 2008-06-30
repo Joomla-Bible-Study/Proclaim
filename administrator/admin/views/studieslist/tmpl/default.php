@@ -86,9 +86,8 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
           <th width="20"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->rows ); ?>);" /> 
 		  <!-- changed $this->items to rows in above -->
           </th>
-          <th width="20" align="center"> <?php echo JText::_( 'Published' ); ?> 
-          </th>
-		  <th> <?php echo JText::_( 'Date' ); ?> </th>
+          <th width="20" align="center"><?php echo JHTML::_('grid.sort','Published','published',$this->lists['order_Dir'],$this->lists['order']); ?></th>
+		  <th><?php echo JHTML::_('grid.sort','Date','studydate',$this->lists['order_Dir'],$this->lists['order']); ?></th>
           <th><?php echo JText::_( 'Type' ); ?></th>
           <th><?php echo JText::_( 'Scripture' ); ?></th>
           <th><?php echo JText::_( 'Teacher' ); ?></th>
