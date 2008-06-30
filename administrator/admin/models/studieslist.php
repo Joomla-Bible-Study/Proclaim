@@ -157,15 +157,19 @@ function _buildContentWhere()
 function _buildContentOrderBy()
 	{
 		global $mainframe, $option;
-
-		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',	'word' );
-
-		if ($filter_orders == 'ASC'){
-			$orderby 	= ' ORDER BY studydate ASC ';
-		} else {
-			$orderby 	= ' ORDER BY studydate DESC ';
+		
+		$orders = array('published','date','type','scripture','teacher','title','series','topic','hits');
+		$filter_order = $mainframe->getUserStateFromRequest($option.'filter_order','filter_order','ordering','cmd' );
+		$filter_order_Dir = strtoupper($mainframe->getUserStateFromRequest($option.'filter_order_Dir','filter_order_Dir','ASC'));
+		//$filter_orders = $mainframe->getUserStateFromRequest($option.'filter_orders','filter_orders','DESC','word');
+		if($filter_order_Dir != 'ASC' && $filter_order_Dir != 'DESC'){$filter_order_Dir = 'ASC';}
+		if(!in_array($filter_order,$orders)){$filter_order = 'studydate';}
+		
+		if($filter_order == 'studydate'){
+			$orderby = ' ORDER BY studydate '.$filter_order_Dir;
+		}else{
+			$orderby = ' ORDER BY '.$filter_order.' '.$filter_order_Dir.' , id';
 		}
-
 		return $orderby;
 	}
 }
