@@ -82,19 +82,19 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 	<table class="adminlist">
       <thead>
         <tr> 
-          <th width="5"> <?php echo JText::_( 'ID' ); ?> </th>
+          <th width="5"> <?php echo JHTML::_( 'grid.sort','ID','id', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
           <th width="20"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->rows ); ?>);" /> 
 		  <!-- changed $this->items to rows in above -->
           </th>
           <th width="20" align="center"><?php echo JHTML::_('grid.sort','Published','published',$this->lists['order_Dir'],$this->lists['order']); ?></th>
 		  <th><?php echo JHTML::_('grid.sort','Date','studydate',$this->lists['order_Dir'],$this->lists['order']); ?></th>
-          <th><?php echo JText::_( 'Type' ); ?></th>
-          <th><?php echo JText::_( 'Scripture' ); ?></th>
-          <th><?php echo JText::_( 'Teacher' ); ?></th>
-		  <th><?php echo JText::_( 'Title' ); ?></th>
-          <th><?php echo JText::_( 'Series' ); ?></th>
-		  <th><?php echo JText::_( 'Topic' );?></th>
-		  <th align="center"><?php echo JText::_( 'Hits'); ?></th>
+          <th><?php echo JHTML::_('grid.sort', 'Type', 'messagetype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+          <th><?php echo JHTML::_( 'grid.sort','Scripture', 'booknumber', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+          <th><?php echo JHTML::_( 'grid.sort','Teacher' , 'teacher_id', $this->lists['order_Dir'], $this->lists['order']); ?></th>
+		  <th><?php echo JHTML::_( 'grid.sort', 'Title', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+          <th><?php echo JHTML::_( 'grid.sort', 'Series', 'series_id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+		  <th><?php echo JHTML::_( 'grid.sort','Topic','topics_id', $this->lists['order_Dir'], $this->lists['order'] );?></th>
+		  <th align="center"><?php echo JHTML::_( 'grid.sort', 'Hits', 'hits', $this->lists['order_Dir'], $this->lists['order']); ?></th>
         </tr>
       </thead>
       <?php
@@ -136,4 +136,6 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="boxchecked" value="0" />
 <input type="hidden" name="controller" value="studiesedit" />
+<input type="hidden" name="filter_order" value="<?php echo $this->lists['order']; ?>" />
+<input type="hidden" name="filter_order_Dir" value="<?php echo $this->lists['order_Dir']; ?>" />
 </form>
