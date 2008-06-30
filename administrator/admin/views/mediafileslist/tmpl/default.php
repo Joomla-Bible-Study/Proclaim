@@ -4,7 +4,6 @@
 <?php //echo $this->lists['studyid']; ?>
 <div id="editcell">
 	<table class="adminlist">
-
       <thead>
         <tr> 
        
