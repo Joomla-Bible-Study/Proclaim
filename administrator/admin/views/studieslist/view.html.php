@@ -41,11 +41,14 @@ class biblestudyViewstudieslist extends JView
 		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',	'filter_series',0,'int' );
 		$filter_messagetype	= $mainframe->getUserStateFromRequest( $option.'filter_messagetype','filter_messagetype',0,'int' );
 		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year','filter_year',0,'int' );
-		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
 		$search				= $mainframe->getUserStateFromRequest( $option.'search','search','','string' );
 		$search				= JString::strtolower( $search );
 		$filter_searchby	= $mainframe->getUserStateFromRequest( $option.'filter_searchby','filter_searchby','studytext','word' );
 
+	$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year','filter_year',0,'int' );
+	$filter_order	 	= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'ordering',	'cmd' );
+	$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'filter_order_Dir',	'filter_order_Dir',	'ASC' );
+		
 	$javascript 	= 'onchange="document.adminForm.submit();"';
 		// Get data from the model
 		$rows		= & $this->get( 'Data');
@@ -140,6 +143,11 @@ $query8 = 'SELECT id AS value, topic_text AS text, published'
 		$lists['topics']	= JHTML::_('select.genericlist',   $topics, 'filter_topic', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_topic" );
 */
 		$lists['search']= $search;
+		
+		// table order
+		$lists['order_Dir'] = $filter_order_Dir;
+		$lists['order'] = $filter_order;
+		
 		$this->assignRef('user',		JFactory::getUser());
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('rows', 		$rows);
