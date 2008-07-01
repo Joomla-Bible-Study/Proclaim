@@ -58,14 +58,18 @@ class biblestudyModelstudydetails extends JModel
 	 */
 	function hit()
 	{
-		global $mainframe;
+		/*global $mainframe;
 		if ($this->_id)
 		{
 			$study = $this->getTable();
 			$study->hit($this->_id);
 			return true;
-		}
-		return false;
+		}*/
+		$db =& JFactory::getDBO();
+		$db->setQuery('UPDATE '.$db->nameQuote('#__bsms_studies').'SET '.$db->nameQuote('hits').' = '.$db->nameQuote('hits').' + 1 '.' WHERE id = '.$this->_id);
+		$db->query();
+		return true;
+//		return false;
 	}
 	function &getData()
 	{
