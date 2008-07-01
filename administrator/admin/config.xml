@@ -5,10 +5,6 @@
 		<option value="0">Restrict Deletes</option>
 		<option value="1">Allow admin deletes</option>
 	</param>
-	<param name="record_hits" type="radio" default="1" label="Enable hits for individual studies" description="Default setting records the number of views for each study. Disable this if you experience slow loading times on the frontend.">
-		<option value="0">No</option>
-		<option value="1">Yes</option>
-	</param>
 	<param name="drop_tables" type="radio" default="0" label="Don't Drop/Drop component tables on uninstall" description="Choose whether on uninstall to drop the component's database tables">
 		<option value="0">Keep db Tables on Uninstall</option>
 		<option value="1">Drop db Tables on Uninstall</option>
@@ -596,6 +592,39 @@
 		</param>
 		<param name="span14" type="text" default="" label="Span tag for Submitted By" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet14" type="list" default="0" label="Bullet Submitted By" description="Add a bullet before this item">
+			<option value="0">No Bullet</option>
+			<option value="1">Bulleted</option>
+		</param>
+		<param name="@spacer" type="spacer" default="" label="" description="">
+		</param>
+		<param name="@spacer" type="spacer" default="Hits" label="Hits" description="Hits">
+		</param>
+		<param name="position15" type="list" default="0" label="Hits" description="Choose column 1-4 for number of times study has been read to appear or not to show">
+			<option value="0">Don't show</option>
+			<option value="1">Column 1</option>
+			<option value="2">Column 2</option>
+			<option value="3">Column 3</option>
+			<option value="4">Column 4</option>
+		</param>
+		<param name="hits_label" type="text" default="Hits" label="Label for Hits" description="Word or words to come before the hits number" />
+		<param name="order15" type="list" default="1" label="Order for Hits in list" description="Type a number of the order for this element in it's column">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+		</param>
+		<param name="islink15" type="list" default="0" label="Hits a link to study" description="Choose whether Hits should be a hyperlink to the study details or media">
+			<option value="0">Not a link</option>
+			<option value="1">Link to Details</option>
+			<option value="2">Link to 1st Media File</option>
+		</param>
+		<param name="span15" type="text" default="" label="Span tag for Hits" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
+		<param name="isbullet15" type="list" default="0" label="Bullet Submitted By" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
 		</param>

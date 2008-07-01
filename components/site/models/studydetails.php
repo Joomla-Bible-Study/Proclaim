@@ -35,11 +35,11 @@ class biblestudyModelstudydetails extends JModel
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$this->setId((int)$array[0]);
 		
-		 //set the default view search path
+		 ////set the default view search path
         $this->addTablePath(JPATH_COMPONENT.DS.'tables');
-	if($params2->get('record_hits') == 1){
+	//if($params2->get('record_hits') == 1){
 		$this->hit();
-	}
+	//}
 	}
 	
 	function setId($id)

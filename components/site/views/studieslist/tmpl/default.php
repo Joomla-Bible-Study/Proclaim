@@ -534,6 +534,13 @@ $a = array( array( 	'element' => $scripture1,
 					'span' => $params->get('span14'),
 					'isbullet' => $params->get('isbullet14')
 				),
+			array(	'element' => $params->get('hits_label').': '.$row->hits,
+					'position' => $params->get('position15'),
+					'order' => $params->get('order15'),
+					'islink' => $params->get('islink15'),
+					'span' => $params->get('span15'),
+					'isbullet' => $params->get('isbullet15')
+				),
 			array(	'element' => $row->secondary_reference,
 					'position' => $params->get('position12'),
 					'order' => $params->get('order12'),
