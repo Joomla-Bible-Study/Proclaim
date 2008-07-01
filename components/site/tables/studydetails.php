@@ -49,7 +49,7 @@ class Tablestudydetails extends JTable
 	var $verse_begin2 = null;
 	var $verse_end2 = null;	
 	var $comments = null;
-	var $hits = 0;
+	var $hits = null;
 	var $user_id = null;
 	var $user_name = null;	
 	
