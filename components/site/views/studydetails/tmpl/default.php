@@ -22,7 +22,8 @@ $message = JRequest::getVar('msg');
 $pathway =& $mainframe->getPathWay();
 $uri 		=& JFactory::getURI();
 $database	= & JFactory::getDBO();
-function format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e) {
+$esv = 0;
+function format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv) {
 global $mainframe, $option;
 $params =& $mainframe->getPageParameters();
 //$params = &JComponentHelper::getParams($option);
@@ -61,6 +62,7 @@ if ($params->get('show_verses') >0)
 				}
 			}
 		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		
 	}
 	else 
 	{
@@ -71,6 +73,31 @@ if ($params->get('show_verses') >0)
 			$scripture = $book.$b1.$ch_b;
 			}
 	}
+	if ($esv = 1){
+	 $scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		if ($ch_e == $ch_b) {
+			$ch_e = '';
+			$b2a = '';
+			}
+		if ($v_b == 0){
+			$v_b = '';
+			$v_e = '';
+			$b2a = '';
+			$b2 = '';
+			}
+		if ($v_e == 0) {
+			$v_e = '';
+			$b2a = '';
+			}
+		if ($ch_e == 0) {
+			$b2a = '';
+			$ch_e = '';
+				if ($v_e == 0) {
+					$b3 = '';
+				}
+			}
+		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		}
 return $scripture;
 }	  
 
@@ -80,14 +107,14 @@ $ch_b = $this->studydetails->chapter_begin;
 $ch_e = $this->studydetails->chapter_end;
 $v_b = $this->studydetails->verse_begin;
 $v_e = $this->studydetails->verse_end;
-$scripture1 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e);
+$scripture1 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);
 
 $booknumber = $this->studydetails->booknumber2;
 $ch_b = $this->studydetails->chapter_begin2;
 $ch_e = $this->studydetails->chapter_end2;
 $v_b = $this->studydetails->verse_begin2;
 $v_e = $this->studydetails->verse_end2;
-$scripture2 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e);		
+$scripture2 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);		
 //if ($studydetails->secondary_reference) { $scripture .= ' - '.$studydetails->secondary_reference; }
 $picture = $this->params->get('show_picture_view');
 switch ($picture) {
@@ -521,7 +548,15 @@ if ($user->name){$full_name = $user->name; } else {$full_name = ''; } ?>
 <?php
   
   $key = "IP";
-  $passage = urlencode($scripture1);
+$booknumber = $this->studydetails->booknumber;
+$ch_b = $this->studydetails->chapter_begin;
+$ch_e = $this->studydetails->chapter_end;
+$v_b = $this->studydetails->verse_begin;
+$v_e = $this->studydetails->verse_end;
+$esv = 1;
+$scripture3 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);
+ 
+  $passage = urlencode($scripture3);
   $options = "include-passage-references=false";
   $url = "http://www.esvapi.org/v2/rest/passageQuery?key=$key&passage=$passage&$options";
   $p = (get_extension_funcs("curl")); // This tests to see if the curl functions are there. It will return false if curl not installed

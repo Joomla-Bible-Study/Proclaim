@@ -87,8 +87,7 @@ $b2 = ':';
 $b2a = ':';
 $b3 = '-';
 $b3a = '-';
-if ($params->get('show_verses') >0)
-	{
+
 	$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
 		if ($ch_e == $ch_b) {
 			$ch_e = '';
@@ -112,16 +111,8 @@ if ($params->get('show_verses') >0)
 				}
 			}
 		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-	}
-	else 
-	{
-		if ($ch_e > $ch_b) {
-			$scripture = $book.$b1.$ch_b.$b3.$ch_e;
-			}
-			else {
-			$scripture = $book.$b1.$ch_b;
-			}
-	}
+	
+	
 return $scripture;
 }	  
 
