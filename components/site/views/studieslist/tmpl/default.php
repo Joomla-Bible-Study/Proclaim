@@ -891,6 +891,11 @@ $color = $params->get('use_color');
                     <?php
 					
 					foreach ($media1 as $media) {
+						if ($params->get('media_player') > 0) {
+							//Look to see if it is an mp3
+							$ismp3 = substr($media->filename,-3,3);
+								if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
+						} //End if media_player param test
 					$link_type = $media->link_type;
 					$media_size = $media->size;
 					if (!$media_size){
@@ -979,6 +984,15 @@ $color = $params->get('use_color');
 						}
 						else {$media1_link = '';}
 					} //TF added this } because it seemed that the else above media->published didn't seem to have an end bracket
+					if ($useplayer == 1){$media1_link = 
+					'<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
+<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="290">
+<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
+<param name="FlashVars" value="playerID='.$row_count.'&amp;soundFile='.$path1.'">
+<param name="quality" value="high">
+<param name="menu" value="false">
+<param name="wmode" value="transparent">
+</object> ';}
 					?>
 					<?php //<!-- this is where the media column td begins -->?>
 					<td align="left" width="<?php echo $textwidth;?>">
@@ -1022,6 +1036,7 @@ $color = $params->get('use_color');
         </td><?php //This is the end of the column for the overall table of the listing page?>
     </tr><?php //This is the end of the row for the overall table of the listing page?>
     <tr><?php //This is a row for the footer ?>
+    
      <tfoot>
     <td align="center"><?php echo $this->pagination->getListFooter(); ?><?php //Column for footer?>
     </td><?php //End footer column?>
