@@ -20,6 +20,8 @@ class biblestudyViewmediafileslist extends JView
 		$params = &JComponentHelper::getParams($option);
 		JToolBarHelper::title(   JText::_( 'Media Files Manager' ), 'generic.png' );
 		//Checks to see if the admin allows rows to be deleted
+		JToolBarHelper::publishList();
+		JToolBarHelper::unpublishList();
 		if ($params->get('allow_deletes') > 0 ):
 			JToolBarHelper::deleteList();
 		endif;

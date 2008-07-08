@@ -628,7 +628,39 @@
 			<option value="2">Link to 1st Media File</option>
 		</param>
 		<param name="span15" type="text" default="" label="Span tag for Hits" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
-		<param name="isbullet15" type="list" default="0" label="Bullet Submitted By" description="Add a bullet before this item">
+		<param name="isbullet15" type="list" default="0" label="Bullet Hits" description="Add a bullet before this item">
+			<option value="0">No Bullet</option>
+			<option value="1">Bulleted</option>
+		</param>
+		<param name="@spacer" type="spacer" default="" label="" description="">
+		</param>
+		<param name="@spacer" type="spacer" default="Study Number" label="Study Number" description="Study Number">
+		</param>
+		<param name="position16" type="list" default="0" label="Study Number" description="Choose column 1-4 for the study number">
+			<option value="0">Don't show</option>
+			<option value="1">Column 1</option>
+			<option value="2">Column 2</option>
+			<option value="3">Column 3</option>
+			<option value="4">Column 4</option>
+		</param>
+		<param name="order16" type="list" default="1" label="Order for Study Number in list" description="Type a number of the order for this element in it's column">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+		</param>
+		<param name="islink16" type="list" default="0" label="Study Number a link to study" description="Choose whether Study Number should be a hyperlink to the study details or media">
+			<option value="0">Not a link</option>
+			<option value="1">Link to Details</option>
+			<option value="2">Link to 1st Media File</option>
+		</param>
+		<param name="span16" type="text" default="" label="Span tag for Study Number" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
+		<param name="isbullet16" type="list" default="0" label="Bullet Study Number" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
 		</param>
@@ -730,6 +762,10 @@
 		<param name="line" type="list" default="1" label="Choose to show or hide lines" description="Showing lines puts a line seperator below each listing">
 			<option value="0">Line Off</option>
 			<option value="1">Line On</option>
+		</param>
+		<param name="download_side" type="list" default="0" label="Download icon to side or under" description="Choose whether the download icon (set in each media file) appears to the side or below the media file">
+			<option value="0">Below</option>
+			<option value="1">Beside</option>
 		</param>
 		<param name="line_break" type="radio" label="Space below each study" description="Put a line break below each listing">
 			<option value="1">Show</option>

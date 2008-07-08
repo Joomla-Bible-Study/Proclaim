@@ -541,6 +541,13 @@ $a = array( array( 	'element' => $scripture1,
 					'span' => $params->get('span15'),
 					'isbullet' => $params->get('isbullet15')
 				),
+			array(	'element' => $row->studynumber,
+					'position' => $params->get('position16'),
+					'order' => $params->get('order16'),
+					'islink' => $params->get('islink16'),
+					'span' => $params->get('span16'),
+					'isbullet' => $params->get('isbullet16')
+				),
 			array(	'element' => $row->secondary_reference,
 					'position' => $params->get('position12'),
 					'order' => $params->get('order12'),
@@ -891,6 +898,7 @@ $color = $params->get('use_color');
                     <?php
 					
 					foreach ($media1 as $media) {
+					$useplayer = 0;
 						if ($params->get('media_player') > 0) {
 							//Look to see if it is an mp3
 							$ismp3 = substr($media->filename,-3,3);
@@ -996,7 +1004,7 @@ $color = $params->get('use_color');
 					?>
 					<?php //<!-- this is where the media column td begins -->?>
 					<td align="left" width="<?php echo $textwidth;?>">
-						<?php echo $media1_link; ?><?php if ($link_type > 0){?><form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblstudy/imgages/download.png';?>" alt="<?php echo JText::_('Download');?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php }?>
+						<?php echo $media1_link; ?><?php if ($link_type > 0){ if ($this->params->get('download_side') > 0) { echo '<td>';} ?><form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblstudy/imgages/download.png';?>" alt="<?php echo JText::_('Download');?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
 						<?php if ($this->params->get('show_filesize') > 0) 
 							{ ?>
 							 <br />
