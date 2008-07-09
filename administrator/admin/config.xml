@@ -70,6 +70,7 @@
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
+	<param name="player_width" type="text" width="3" default="190" label="Width of Mp3 Player" description="Set a width in pixels for the MP3 player" />
 	<param name="show_filesize" type="radio" default="1" label="Show Filesize" description="Show/Hide filesize of the media">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>

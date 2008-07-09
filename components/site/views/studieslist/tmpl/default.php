@@ -1,6 +1,16 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php 
+$params =& $mainframe->getPageParameters();
+$player_width = null;
+$player_width = $this->params->get('player_width');
+if (!$player_width) { $player_width = '290'; }
+$document =& JFactory::getDocument();
+$document->addCustomTag( '<script type="text/javascript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>' );
+$document->addCustomTag( '<script type="text/javascript"> AudioPlayer.setup("'.JURI::base().'components/com_biblestudy/player.swf",{width: '.$player_width.'});</script>');
+?>
 <script type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
 <link href="components/com_biblestudy/tooltip.css" rel="stylesheet" type="text/css" media="screen" />
+
 <style type="text/css">
 /* CSS goes here */
 #
@@ -21,15 +31,10 @@ a[title]:hover:after{
 <?php
 
 $message = JRequest::getVar('msg');
-//$message2 = JRequest::getVar('msg2');
-/*$pathway = $mainframe->getPathWay();
-$document =& JFactory::getDocument();
-if ($document->getType() == 'html')
-	{ $document->addCustomTag('<!-a Custom Tag-->!');}*/
 $database	= & JFactory::getDBO();
 global $mainframe, $option;
 //$params = &JComponentHelper::getParams($option);
-$params =& $mainframe->getPageParameters();
+
 $color1 = $this->params->get('color1');
 $color2 = $this->params->get('color2');
 $page_width = $this->params->get('page_width');
@@ -993,14 +998,8 @@ $color = $params->get('use_color');
 						else {$media1_link = '';}
 					} //TF added this } because it seemed that the else above media->published didn't seem to have an end bracket
 					if ($useplayer == 1){$media1_link = 
-					'<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="290">
-<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
-<param name="FlashVars" value="playerID='.$row_count.'&amp;soundFile='.$path1.'">
-<param name="quality" value="high">
-<param name="menu" value="false">
-<param name="wmode" value="transparent">
-</object> ';}
+					'<p id="audioplayer_'.$row_count.'">Sound File</p><script type="text/javascript"> AudioPlayer.embed("audioplayer_'.$row_count.'", {soundFile: "'.$path1.'"
+					});</script>';}
 					?>
 					<?php //<!-- this is where the media column td begins -->?>
 					<td align="left" width="<?php echo $textwidth;?>">
