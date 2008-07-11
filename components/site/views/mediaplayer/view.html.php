@@ -45,6 +45,7 @@ class biblestudyViewmediaplayer extends JView
 			$mediaplayer = $db->loadObject();
 		$studyfile = $mediaplayer->server_path.$mediaplayer->folderpath.$mediaplayer->filename;
 		$mediacode = $mediaplayer->mediacode;
+		$mediacode = str_replace("'",'"',$mediacode);
 		$this->assignRef('mediaplayer',		$mediaplayer);
 		//from avreloaded
 		//$plcode = preg_replace('#\s+#', ' ', $params->get('mediacode', ''));

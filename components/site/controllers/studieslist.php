@@ -27,5 +27,16 @@ function download() {
 		 die;
   		}
 	}
+
+	function avplayer() 
+	{
+		$task = JRequest::getVar('task');
+		if ($task == 'avplayer')
+			{
+			$mediacode = JRequest::getVar('code');
+			echo $mediacode;
+			return;
+			}
+	}
 }
 ?>

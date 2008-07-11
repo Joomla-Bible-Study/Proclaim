@@ -46,7 +46,7 @@ class biblestudyModelmediafilesedit extends JModel
 			$this->_data = new stdClass();
 			$this->_data->id = 0;
 			//TF added these
-			$this->_data->published = 0;
+			$this->_data->published = 1;
 			$this->_data->media_image = null;
 			$this->_data->server = null;
 			$this->_data->path = null;
@@ -85,6 +85,8 @@ class biblestudyModelmediafilesedit extends JModel
 		$data['filename'] = $filename_upload;
 		}
 		if ($filename_upload == ''){$data['filename'] = $name_bak;}
+		$data['mediacode'] = str_replace('"',"'",$data['mediacode']);
+		//$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		// Bind the form fields to the  table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());

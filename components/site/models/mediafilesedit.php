@@ -83,6 +83,7 @@ class biblestudyModelmediafilesedit extends JModel
 		if (isset($filename_upload)){
 		$data['filename'] = $filename_upload;
 		}
+		$data['mediacode'] = str_replace('"',"'",$data['mediacode']);
 		// Bind the form fields to the  table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());

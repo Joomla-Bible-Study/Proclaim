@@ -1,5 +1,21 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
+<script type="text/javascript">
+<!--
+function myPopup() {
+window.open( "http://www.google.com/", "myWindow", 
+"status=no, height=300, width=300, resizable=no, titlebar=no, scrollbars=no, location=no, toolbar=no, directories=no" )
+
+}
+//-->
+</script>
+<?php
+echo '{mp3remote popup="true" divid="mypopup" width="640" height="500"}http://www.calvarychapelnewberg.net/MediaFiles/2008/2008-002.mp3{/mp3remote} {avrpopup type="window" id="mypopup"}';?><img src="http://www.joomlaoregon.org/biblestudy/components/com_biblestudy/images/speaker24.png"><?php echo '{/avrpopup}';
+?>
+<a href="http://www.google.com" target="name"
+onclick="myPopup(); return false;">click here</a> 
+
 <?php 
+
 $params =& $mainframe->getPageParameters();
 $player_width = null;
 $player_width = $this->params->get('player_width');
@@ -104,6 +120,11 @@ echo JText::_('Podcasts').'</td></tr>';
             	<H1 class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
 				<?php echo $this->params->get('page_title'); ?>
 				</H1>
+<?php
+$modalparams = array('size'=>array('x'=>100, 'y'=>100));
+JHTML::_('behavior.modal', 'a.mymodal', $modalparams);
+echo '<a class="mymodal" title="example" href="http://www.example.com" rel="{handler: \'iframe\', size: {x: 400, y: 150}}">Example Modal Window</a>';
+?>
             </td><?php //End of column2 for logo?>
             <?php } //End of if show page title?>
             </tr><?php //End of row for logo table?>
@@ -1000,10 +1021,9 @@ $color = $params->get('use_color');
 					if ($useplayer == 1){$media1_link = 
 					'<p id="audioplayer_'.$row_count.'">Sound File</p><script type="text/javascript"> AudioPlayer.embed("audioplayer_'.$row_count.'", {soundFile: "'.$path1.'"
 					});</script>';}
-					?>
-					<?php //<!-- this is where the media column td begins -->?>
+		//<!-- this is where the media column td begins -->?>
 					<td align="left" width="<?php echo $textwidth;?>">
-						<?php echo $media1_link; ?><?php if ($link_type > 0){ if ($this->params->get('download_side') > 0) { echo '<td>';} ?><form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblstudy/imgages/download.png';?>" alt="<?php echo JText::_('Download');?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
+						<?php echo $media1_link; ?><?php if ($link_type > 0){ if ($this->params->get('download_side') > 0) { echo '<td>';} ?><form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
 						<?php if ($this->params->get('show_filesize') > 0) 
 							{ ?>
 							 <br />
@@ -1043,7 +1063,7 @@ $color = $params->get('use_color');
         </td><?php //This is the end of the column for the overall table of the listing page?>
     </tr><?php //This is the end of the row for the overall table of the listing page?>
     <tr><?php //This is a row for the footer ?>
-    
+ 
      <tfoot>
     <td align="center"><?php echo $this->pagination->getListFooter(); ?><?php //Column for footer?>
     </td><?php //End footer column?>
