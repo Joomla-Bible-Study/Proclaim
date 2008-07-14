@@ -8,9 +8,7 @@ window.open( "http://www.google.com/", "myWindow",
 }
 //-->
 </script>
-<?php
-echo '{mp3remote popup="true" divid="mypopup" width="640" height="500"}http://www.calvarychapelnewberg.net/MediaFiles/2008/2008-002.mp3{/mp3remote} {avrpopup type="window" id="mypopup"}';?><img src="http://www.joomlaoregon.org/biblestudy/components/com_biblestudy/images/speaker24.png"><?php echo '{/avrpopup}';
-?>
+
 <a href="http://www.google.com" target="name"
 onclick="myPopup(); return false;">click here</a> 
 
@@ -120,11 +118,7 @@ echo JText::_('Podcasts').'</td></tr>';
             	<H1 class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
 				<?php echo $this->params->get('page_title'); ?>
 				</H1>
-<?php
-$modalparams = array('size'=>array('x'=>100, 'y'=>100));
-JHTML::_('behavior.modal', 'a.mymodal', $modalparams);
-echo '<a class="mymodal" title="example" href="http://www.example.com" rel="{handler: \'iframe\', size: {x: 400, y: 150}}">Example Modal Window</a>';
-?>
+
             </td><?php //End of column2 for logo?>
             <?php } //End of if show page title?>
             </tr><?php //End of row for logo table?>
@@ -246,6 +240,8 @@ $query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$b
 $db->setQuery($query);
 $bookresults = $db->loadObject();
 $book=$bookresults->bookname;
+//$output = JText::sprintf($format);
+$book = JText::sprintf($book);
 $b1 = ' ';
 $b2 = ':';
 $b2a = ':';
@@ -1005,11 +1001,42 @@ $color = $params->get('use_color');
 								$media1_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" /></a>';
 								$media1_sizetext = '';
 								//add path for internal viewer
-									if (JPluginHelper::importPlugin('content', 'avreloaded')) 
+									if (JPluginHelper::importPlugin('system', 'avreloaded')) 
 										{
 										if ($media->internal_viewer > 0) 
 											{
-												$media1_link = '<a href="index.php?option=com_biblestudy&view=mediaplayer&id='. $media->id.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" /></a>';
+												$studyfile = $media->spath.$media->fpath.$media->filename;
+												$mediacode = $media->mediacode;
+												$mediacode = str_replace("'",'"',$mediacode);
+												$ispop = substr_count($mediacode, 'popup');
+												if ($ispop < 1) { 
+													$bracketpos = strpos($mediacode,'}');
+													$mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
+													}
+												$isdivid = substr_count($mediacode, 'divid');
+												if ($isdivid < 1) {
+													$dividid = ' divid="'.$media->id.'"';
+													$bracketpos = strpos($mediacode, '}');
+													$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
+													}
+												/*$iswidth = substr_count($mediacode, 'width');
+												if ($iswidth < 1) {
+													$width = ' width="640" ';
+													$bracketpos = strpos($mediacode, '}');
+													$mediacode = substr_replace($mediacode, $width,$bracketpos,0);
+													}
+												$isheight = substr_count($mediacode, 'height');
+												if ($isheight < 1) {
+													$height = ' height="400"';
+													$bracketpos = strpos($mediacode, '}');
+													$mediacode = substr_replace($mediacode, $height,$bracketpos,0);
+													}*/
+												
+												//$search = '{google}';
+												//$replace = '{google popup="true" divid="mypopup'.$media->id.'"}';
+												//$mediacode = str_replace($search,$replace,$mediacode);
+												$mediacode = str_replace('-',$studyfile,$mediacode); 
+												$media1_link = $mediacode.'{avrpopup type="window" id="'.$media->id.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" />{/avrpopup}';
 								$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
 											}
 										} 
