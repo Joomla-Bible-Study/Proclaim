@@ -9,8 +9,8 @@ window.open( "http://www.google.com/", "myWindow",
 //-->
 </script>
 
-<a href="http://www.google.com" target="name"
-onclick="myPopup(); return false;">click here</a> 
+<!--<a href="http://www.google.com" target="name"
+onclick="myPopup(); return false;">click here</a> -->
 
 <?php 
 
@@ -153,6 +153,7 @@ echo JText::_('Podcasts').'</td></tr>';
                         foreach ($bookid as $bookid2) {
                         $format = $bookid2['text'];
                         $output = JText::sprintf($format);
+						$output = htmlentities($output);
                         $bookvalue = $bookid2['value'];
 						if ($bookvalue == $filter_book){$selected = 'selected="selected"';
                         echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
@@ -240,7 +241,6 @@ $query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$b
 $db->setQuery($query);
 $bookresults = $db->loadObject();
 $book=$bookresults->bookname;
-//$output = JText::sprintf($format);
 $book = JText::sprintf($book);
 $b1 = ' ';
 $b2 = ':';
@@ -1092,7 +1092,12 @@ $color = $params->get('use_color');
     <tr><?php //This is a row for the footer ?>
  
      <tfoot>
-    <td align="center"><?php echo $this->pagination->getListFooter(); ?><?php //Column for footer?>
+    <td align="center"><?php 
+	echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
+	echo $this->pagination->getLimitBox();
+	echo $this->pagination->getPagesLinks();
+	echo $this->pagination->getPagesCounter();
+	//echo $this->pagination->getListFooter(); ?><?php //Column for footer?>
     </td><?php //End footer column?>
     </tfoot>
     </tr><?php //End footer row?>

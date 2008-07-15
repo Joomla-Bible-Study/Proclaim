@@ -23,16 +23,23 @@ class biblestudyModelstudieslist extends JModel
 		parent::__construct();
 
 		global $mainframe, $option;
-
+		$config = JFactory::getConfig();
 		// Get the pagination request variables
-		$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
-		//$limitstart = $mainframe->getUserStateFromRequest( $option.'limitstart', 'limitstart', 0, 'int' );
-		$limitstart = $mainframe->getUserStateFromRequest( $option.'limitstart', 'limitstart', 0 );
-		// In case limit has been changed, adjust it
-		$limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
+		$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $config->getValue('config.list_limit'), 'int'));
+		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
+
+		// In case limit has been changed, adjust limitstart accordingly
+		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		
-		$this->setState('limit', $limit);
-		$this->setState('limitstart', $limitstart);
+		// Get the pagination request variables
+		//$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+		//$limitstart = $mainframe->getUserStateFromRequest( $option.'limitstart', 'limitstart', 0, 'int' );
+		//$limitstart = $mainframe->getUserStateFromRequest( $option.'limitstart', 'limitstart', 0 );
+		// In case limit has been changed, adjust it
+		//$limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
+		
+		//$this->setState('limit', $limit);
+		//$this->setState('limitstart', $limitstart);
 	}
 
 	/**
@@ -105,6 +112,13 @@ class biblestudyModelstudieslist extends JModel
 		{
 			jimport('joomla.html.pagination');
 			$this->_pagination = new JPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
+			
+			/*jimport('joomla.html.pagination');
+			$total = $this->getTotal();
+			$limitstart = $this->getState('limitstart');
+			$limit = $this->getState('limit');
+			$this->_pagination = new JPagination( $total, $limitstart, $limit );*/
+			
 		}
 
 		return $this->_pagination;

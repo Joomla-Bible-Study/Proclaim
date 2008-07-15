@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
-<install type="component" version="1.5.0">
+<install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
 	<creationDate>July 8, 2008</creationDate>
