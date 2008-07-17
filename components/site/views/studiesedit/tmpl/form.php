@@ -33,7 +33,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
     <table width=100% class="admintable">
     <tr><div>
 	<button type="button" onclick="submitbutton('save')">
-		<?php echo JText::_('Save') ?>
+		<?php echo JText::_('Save'); if (!$this->studiesedit->id){ echo JText::_(' & Enter Media Information');} ?>
 	</button>
 	<button type="button" onclick="submitbutton('cancel')">
 		<?php echo JText::_('Cancel') ?>
@@ -262,6 +262,8 @@ if ($user_name == ''){$user_name = $user->name;}
 <input type="hidden" name="user_id" value="<?php echo $user->get('id');?>"  />
 <input type="hidden" name="user_name" value="<?php echo $user_name;?>"  />
 <input type="hidden" name="published" id="published" value="<?php echo $params->get('study_publish');?>"  />
+<?php if (!$this->studiesedit->id) { ?>
+<input type="hidden" name="new" id="new" value="1" /> <?php } ?>
 </form>
 <?php } //End for testing of user level access
 } // End of testing if front end submission allowed?>

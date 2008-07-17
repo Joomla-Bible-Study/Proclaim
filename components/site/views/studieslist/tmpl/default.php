@@ -1,26 +1,19 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<script type="text/javascript">
-<!--
-function myPopup() {
-window.open( "http://www.google.com/", "myWindow", 
-"status=no, height=300, width=300, resizable=no, titlebar=no, scrollbars=no, location=no, toolbar=no, directories=no" )
 
-}
-//-->
-</script>
-
-<!--<a href="http://www.google.com" target="name"
-onclick="myPopup(); return false;">click here</a> -->
-
+<!--<script type="text/javascript"> 
+var pid = document.getElementById('pid');
+var ppath = document.getElementById('ppath');
+AudioPlayer.embed('pid', {soundFile: 'ppath'});</script>-->
 <?php 
 
-$params =& $mainframe->getPageParameters();
+/*$params =& $mainframe->getPageParameters();
 $player_width = null;
 $player_width = $this->params->get('player_width');
 if (!$player_width) { $player_width = '290'; }
 $document =& JFactory::getDocument();
 $document->addCustomTag( '<script type="text/javascript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>' );
 $document->addCustomTag( '<script type="text/javascript"> AudioPlayer.setup("'.JURI::base().'components/com_biblestudy/player.swf",{width: '.$player_width.'});</script>');
+*/
 ?>
 <script type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
 <link href="components/com_biblestudy/tooltip.css" rel="stylesheet" type="text/css" media="screen" />
@@ -928,6 +921,8 @@ $color = $params->get('use_color');
 						} //End if media_player param test
 					$link_type = $media->link_type;
 					$media_size = $media->size;
+					$useavr = 0;
+					$useavr = $useavr + $params->get('useavr') + $media->internal_viewer;
 					if (!$media_size){
 						}
 						else {
@@ -980,7 +975,7 @@ $color = $params->get('use_color');
 									//add path for internal viewer
 									if (JPluginHelper::importPlugin('content', 'avreloaded')) 
 										{
-										if ($media->internal_viewer > 0) 
+										if ($useavr > 0) 
 											{
 												$media1_link = '<a href="index.php?option=com_biblestudy&view=mediaplayer&id='. $media->id.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" /></a>';
 								$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
@@ -1003,10 +998,14 @@ $color = $params->get('use_color');
 								//add path for internal viewer
 									if (JPluginHelper::importPlugin('system', 'avreloaded')) 
 										{
-										if ($media->internal_viewer > 0) 
+										if ($useavr > 0) 
 											{
 												$studyfile = $media->spath.$media->fpath.$media->filename;
 												$mediacode = $media->mediacode;
+												if ($mediacode == ''){
+													$fileextension = substr($media->filename,-3,3);
+													$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
+												}
 												$mediacode = str_replace("'",'"',$mediacode);
 												$ispop = substr_count($mediacode, 'popup');
 												if ($ispop < 1) { 
@@ -1019,24 +1018,18 @@ $color = $params->get('use_color');
 													$bracketpos = strpos($mediacode, '}');
 													$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
 													}
-												/*$iswidth = substr_count($mediacode, 'width');
-												if ($iswidth < 1) {
-													$width = ' width="640" ';
-													$bracketpos = strpos($mediacode, '}');
-													$mediacode = substr_replace($mediacode, $width,$bracketpos,0);
-													}
-												$isheight = substr_count($mediacode, 'height');
-												if ($isheight < 1) {
-													$height = ' height="400"';
-													$bracketpos = strpos($mediacode, '}');
-													$mediacode = substr_replace($mediacode, $height,$bracketpos,0);
-													}*/
+												$bracketpos = strpos($mediacode,'}');
 												
-												//$search = '{google}';
-												//$replace = '{google popup="true" divid="mypopup'.$media->id.'"}';
-												//$mediacode = str_replace($search,$replace,$mediacode);
-												$mediacode = str_replace('-',$studyfile,$mediacode); 
-												$media1_link = $mediacode.'{avrpopup type="window" id="'.$media->id.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" />{/avrpopup}';
+												$dashpos = $bracketpos + 1;
+												
+												$isdash = strpos($mediacode,'-',$bracketpos);
+												
+												if ($isdash == $dashpos){
+												$ishttp = substr_count($studyfile, 'http://');
+												if ($ishttp < 1) { $studyfile = substr_replace($studyfile,'http://',0,0);}
+												$mediacode = str_replace('-',$studyfile,$mediacode);
+												}
+												$media1_link = $mediacode.'{avrpopup type="window" id="'.$media->id.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" "title="'.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
 								$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
 											}
 										} 
@@ -1045,9 +1038,8 @@ $color = $params->get('use_color');
 						}
 						else {$media1_link = '';}
 					} //TF added this } because it seemed that the else above media->published didn't seem to have an end bracket
-					if ($useplayer == 1){$media1_link = 
-					'<p id="audioplayer_'.$row_count.'">Sound File</p><script type="text/javascript"> AudioPlayer.embed("audioplayer_'.$row_count.'", {soundFile: "'.$path1.'"
-					});</script>';}
+					//if ($useplayer == 1){$media1_link = 
+					//'<button pid="audioplayer_'.$row_count.'" ppath="'.$path1.'" onclick="AudioPlayer.embed(\'pid\', \'ppath\')">Sound File</button>';}
 		//<!-- this is where the media column td begins -->?>
 					<td align="left" width="<?php echo $textwidth;?>">
 						<?php echo $media1_link; ?><?php if ($link_type > 0){ if ($this->params->get('download_side') > 0) { echo '<td>';} ?><form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>

@@ -34,7 +34,14 @@ class biblestudyViewmediafilesedit extends JView
 		// build the html select list for ordering
 		
 		$database	= & JFactory::getDBO();
-			
+		$study = JRequest::getVar('new', '0', 'get', 'int' );
+		if ($study == 1) {
+			$query = 'SELECT id, studytitle, studydate FROM #__bsms_studies ORDER BY id DESC LIMIT 1';
+			$database->setQuery($query);
+			$newstudy = $database->loadObject();
+			$this->assignRef('newstudy', $newstudy);
+		}
+		//$this->assignRef('newstudy', '0');
 		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $mediafilesedit->published);
 		
 		$lists['link_type'] = JHTML::_('select.booleanlist','link_type', 'class="inputbox"', $mediafilesedit->link_type);

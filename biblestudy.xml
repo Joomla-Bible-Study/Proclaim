@@ -3,14 +3,14 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>July 8, 2008</creationDate>
+	<creationDate>July 17, 2008</creationDate>
 	<author>Tom Fuller</author>
 	<authorEmail>TomFuller2@gmail.com</authorEmail>
 	<authorUrl>http://joomlacode.org/gf/project/biblestudy/</authorUrl>
 	<copyright>2008 Tom Fuller</copyright>
 	<license>GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
-	<version>6.0.08_RC4</version>
+	<version>6.0.08_RC5</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Bible Study Management System</description>
 	<installfile>install.biblestudy.php</installfile>
@@ -35,8 +35,6 @@
 		<filename>tooltip.js</filename>
 		<filename>convert1.htm</filename>
 		<filename>class.biblestudydownload.php</filename>
-		<filename>player.swf</filename>
-		<filename>audio-player.js</filename>
 		<filename>views/index.html</filename>
 		<filename>views/studieslist/index.html</filename>
 		<filename>views/studieslist/view.html.php</filename>

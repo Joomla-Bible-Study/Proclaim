@@ -77,7 +77,17 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
         <td >
         
         <table width="100%" border="0" cellspacing="1" cellpadding="1">
-        <tr><td><?php echo JText::_( 'Study: '); echo $this->lists['studies'];?></td></tr>
+        <tr><td><?php echo JText::_( 'Study: '); 
+		//$newid = 0;
+		//$newid = $this->newstudy->id;
+		$study = 0;
+		$study = JRequest::getVar('new', '0', 'get', 'int' );
+		if ($study < 1){		
+			echo $this->lists['studies'];
+			}
+		else {
+			?><input type="hidden" name="study_id" id="study_id" value="<?php echo $this->newstudy->id;?>" /><?php echo JText::_('Study: ');?><strong><?php echo $this->newstudy->studytitle.' - '.$this->newstudy->studydate;
+			}?></strong></td></tr>
         <tr>
 			<td >
 				<label for="ordering">

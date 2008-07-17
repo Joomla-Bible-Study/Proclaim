@@ -55,11 +55,12 @@ class biblestudyControllerstudiesedit extends JController
 			$msg = JText::_( 'Error Saving Study' );
 		}
 		$params =& $mainframe->getPageParameters();
-
-		if ($params->get('view_link') == 1){
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
-		if ($params->get('view_link') == 2){
-    	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
+		$new = JRequest::getVar('new', '0', 'post', 'int' );
+		//if ($params->get('view_link') == 1){
+		//$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
+		//if ($params->get('view_link') == 2){
+		$link = 'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form&new='.$new;
+    	//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 		
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
