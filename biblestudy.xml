@@ -49,12 +49,6 @@
 		<filename>views/studydetails/tmpl/default.php</filename>
 		<filename>views/studydetails/tmpl/default.xml</filename>
 		<filename>views/studydetails/metadata.xml</filename>
-		<filename>views/mediaplayer/index.html</filename>
-		<filename>views/mediaplayer/view.html.php</filename>
-		<filename>views/mediaplayer/metadata.xml</filename>
-		<filename>views/mediaplayer/tmpl/index.html</filename>
-		<filename>views/mediaplayer/tmpl/default.php</filename>
-		<filename>views/mediaplayer/tmpl/default.xml</filename>
 		<filename>views/teacherdisplay/index.html</filename>
 		<filename>views/teacherdisplay/view.html.php</filename>
 		<filename>views/teacherdisplay/metadata.xml</filename>

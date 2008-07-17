@@ -49,6 +49,10 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="tooltip" type="radio" default="1" label="Show/Hide Tooltip" description="Shows or hides a tooltip with details of your studies over the study details link">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
 	<param name="show_pdf_text" type="radio" default="1" label="PDF" description="Show/Hide link to a pdf version">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -90,10 +94,6 @@
 	<param name="teacherw" type="text" width="3" default="" label="Width for Teacher Image" description="Set a width for the teacher thumbnail" />
 	<param name="teacherh" type="text" width="3" default="" label="Height for Teacher Image" description="Set a heighth for the teacher thumbnail" />
 	<param name="teachername" type="text" width="50" default="" label="Teacher Name" description="Name of teacher to show on list page" />
-	<param name="tooltip" type="radio" default="1" label="Show/Hide Tooltip" description="Shows or hides a tooltip with details of your studies over the study details link">
-			<option value="0">Hide</option>
-			<option value="1">Show</option>
-		</param>
 	<param name="details_text" type="text" default="Study Details" size="50" label="Alt tag for details" description="Text to show on mouse over of details image link other than if you choose a tooltip" />
 	<param name="show_book_search" type="radio" default="1" label="Show/Hide book search" description="Shows or hides the drop down box for books">
 			<option value="0">Hide</option>
@@ -127,7 +127,7 @@
 		</param>
 	<param name="@spacer" type="spacer" default="Front End Submission" label="" description="">
 		</param>
-	<param name="allow_entry_study" type="radio" default="1" label="Allow Front End Submission" description="Allow certain users to enter studes and mediafiles from the front end">
+	<param name="allow_entry_study" type="radio" default="0" label="Allow Front End Submission" description="Allow certain users to enter studes and mediafiles from the front end">
 		<option value="0">No Frontend access</option>
 		<option value="1">Allow Frontend access</option>
 	</param>

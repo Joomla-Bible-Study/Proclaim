@@ -36,10 +36,11 @@ a[title]:hover:after{
 </style>
 
 <?php
-
+global $mainframe, $option;
+$params =& $mainframe->getPageParameters();
 $message = JRequest::getVar('msg');
 $database	= & JFactory::getDBO();
-global $mainframe, $option;
+ 
 //$params = &JComponentHelper::getParams($option);
 
 $color1 = $this->params->get('color1');
@@ -611,7 +612,7 @@ $color = $params->get('use_color');
                              ?>
                         <?php if (isset($column1[0]['position'])) { //This tests to see if there is anything in column1?>
                         <?php if ($entry_user >= $entry_access){//This adds a <td> for user frontend editing of the record?>
-                        <td valign="<?php echo $params->get('colalign');?>"><a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]=<?php echo $row->id;?>">[Edit]</a></td><?php } //End of front end user authorized to edit records?>
+                        <td valign="<?php echo $params->get('colalign');?>"><a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]=<?php echo $row->id;?>"><?php echo JText::_('[Edit]');?></a></td><?php } //End of front end user authorized to edit records?>
                     	<td width="<?php echo $widpos1;?>"><?php //Column 1 of 5?>
                         	<table  border="<?php echo $params->get('border');?>" cellpadding="<?php echo $params->get('padding');?>" cellspacing="<?php echo $params->get('spacing');?>"> <?php //This is the table for the list. It's outside the foreach?>
                         	<?php
@@ -852,7 +853,7 @@ $color = $params->get('use_color');
 							<?php $link = JRoute::_('index.php?option=' . $option . '&view=studydetails' . '&id=' . $row->id . '&format=pdf' ); ?>
 
                             <td >
-                            <a href="<?php echo $link; ?>" target="_blank" title="<?php echo $details_text;?>"><img src="<?php echo JURI::base().$this->params->get('pdf_image');?>" alt="						 							<?php echo $details_text.'- PDF Version';?>" width="<?php echo $this->params->get('imagew');?>" height="<?php echo $this->params->get('imageh');?>" border="0" ></a>
+                            <a href="<?php echo $link; ?>" target="_blank" title="<?php echo $details_text;?>"><img src="<?php echo JURI::base().$this->params->get('pdf_image');?>" alt="						 							<?php echo $details_text.JText::_('- PDF Version');?>" width="<?php echo $this->params->get('imagew');?>" height="<?php echo $this->params->get('imageh');?>" border="0" ></a>
 							</td><?php //This is the end of the column for the pdf image?>
                             
                             <?php } // End of show pdf text ?>
@@ -913,12 +914,6 @@ $color = $params->get('use_color');
                     <?php
 					
 					foreach ($media1 as $media) {
-					$useplayer = 0;
-						if ($params->get('media_player') > 0) {
-							//Look to see if it is an mp3
-							$ismp3 = substr($media->filename,-3,3);
-								if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
-						} //End if media_player param test
 					$link_type = $media->link_type;
 					$media_size = $media->size;
 					$useavr = 0;
@@ -972,15 +967,7 @@ $color = $params->get('use_color');
 									{
 										$media1_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" /></a>';
 								$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
-									//add path for internal viewer
-									if (JPluginHelper::importPlugin('content', 'avreloaded')) 
-										{
-										if ($useavr > 0) 
-											{
-												$media1_link = '<a href="index.php?option=com_biblestudy&view=mediaplayer&id='. $media->id.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" /></a>';
-								$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
-											}
-										} 
+									
 									}
 								else { $media1_link = ''; $media1_sizetext = ''; }
 								}

@@ -36,7 +36,7 @@ class biblestudyViewstudydetails extends JView
 		$database	= & JFactory::getDBO();
 		$query = "SELECT id"
 			. "\nFROM #__menu"
-			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist'";
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
 		$database->setQuery($query);
 		$menuid = $database->loadResult();
 		$this->assignRef('menuid',$menuid);
