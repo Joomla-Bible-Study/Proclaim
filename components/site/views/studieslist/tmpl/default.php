@@ -948,6 +948,8 @@ $color = $params->get('use_color');
 						}	//end of else for media_size
 					$filesize = $media_size;
 					$mimetype = $media->mimetext;
+					$src = JURI::base().$media->impath;
+					list($width,$height)=getimagesize($src);
 					$ispath = 0;
 					if (!$media->filename){
 						$path1 = '';
@@ -960,8 +962,8 @@ $color = $params->get('use_color');
 						$ispath = 1;
 						$direct_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '
 						.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
-						.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew')
-						.'" height="'.$this->params->get('imageh').'" border="0" /></a>';
+						.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
+						.'" height="'.$height.'" border="0" /></a>';
 						}
 					$isavr = 0;
 					if (JPluginHelper::importPlugin('system', 'avreloaded'))
@@ -995,8 +997,8 @@ $color = $params->get('use_color');
 								}
 							$avr_link = $mediacode.'{avrpopup type="window" id="'.$media->id
 							.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
-							.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew')
-							.'" height="'.$this->params->get('imageh').'" border="0" "title="'
+							.' '.$duration.' '.$media_size.'" width="'.$width
+							.'" height="'.$height.'" border="0" "title="'
 							.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
 						} 
 					$useavr = 0;

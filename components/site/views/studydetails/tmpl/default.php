@@ -394,123 +394,82 @@ if (!$media_size){
 		
 	}	//end of else for media_size
 
-if (!$media->filename){
-	$path1 = '';
-	}
-	else {
-	$path1 = 'http://'.$media->spath.$media->fpath.$media->filename;
-	}
-
-if ($this->params->get('show_filesize') > 0) 
-	{
-		if ($media->published > 0) 
-			{
-			if ($media->filename) 
-				{
-					$media1_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" /></a>';
-			$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
-				//add path for internal viewer
-									if (JPluginHelper::importPlugin('system', 'avreloaded')) 
-										{
-										if ($useavr > 0) 
-											{
-												$studyfile = $media->spath.$media->fpath.$media->filename;
-												$mediacode = $media->mediacode;
-												if ($mediacode == ''){
-													$fileextension = substr($media->filename,-3,3);
-													$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
-												}
-												$mediacode = str_replace("'",'"',$mediacode);
-												$ispop = substr_count($mediacode, 'popup');
-												if ($ispop < 1) { 
-													$bracketpos = strpos($mediacode,'}');
-													$mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
-													}
-												$isdivid = substr_count($mediacode, 'divid');
-												if ($isdivid < 1) {
-													$dividid = ' divid="'.$media->id.'"';
-													$bracketpos = strpos($mediacode, '}');
-													$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
-													}
-												$bracketpos = strpos($mediacode,'}');
-												
-												$dashpos = $bracketpos + 1;
-												
-												$isdash = strpos($mediacode,'-',$bracketpos);
-												
-												if ($isdash == $dashpos){
-												$ishttp = substr_count($studyfile, 'http://');
-												if ($ishttp < 1) { $studyfile = substr_replace($studyfile,'http://',0,0);}
-												$mediacode = str_replace('-',$studyfile,$mediacode);
-												}
-												$media1_link = $mediacode.'{avrpopup type="window" id="'.$media->id.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" "title="'.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
-												$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
+					$filesize = $media_size;
+					$mimetype = $media->mimetext;
+					$src = JURI::base().$media->impath;
+					list($width,$height)=getimagesize($src);
+					$ispath = 0;
+					if (!$media->filename){
+						$path1 = '';
+						$ispath = 0;
 						}
-					} 
-				}
-			else { $media1_link = ''; $media1_sizetext = ''; }
-			}
-		else { $media1_link = ''; $media1_sizetext = ''; }
-	}
-	//last } uncommented 2-25-08
-	
-//This else comes from show filesize being greater than 0	
-else 
-{
-	if ($media->published > 0) {
-			if ($media->filename) {
-			$media1_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" /></a>';
-			$media1_sizetext = '';
-			
-			//add path for internal viewer
-									if (JPluginHelper::importPlugin('system', 'avreloaded')) 
-										{
-										if ($useavr > 0) 
-											{
-												$studyfile = $media->spath.$media->fpath.$media->filename;
-												$mediacode = $media->mediacode;
-												if ($mediacode == ''){
-													$fileextension = substr($media->filename,-3,3);
-													$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
-												}
-												$mediacode = str_replace("'",'"',$mediacode);
-												$ispop = substr_count($mediacode, 'popup');
-												if ($ispop < 1) { 
-													$bracketpos = strpos($mediacode,'}');
-													$mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
-													}
-												$isdivid = substr_count($mediacode, 'divid');
-												if ($isdivid < 1) {
-													$dividid = ' divid="'.$media->id.'"';
-													$bracketpos = strpos($mediacode, '}');
-													$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
-													}
-												$bracketpos = strpos($mediacode,'}');
-												
-												$dashpos = $bracketpos + 1;
-												
-												$isdash = strpos($mediacode,'-',$bracketpos);
-												
-												if ($isdash == $dashpos){
-												$ishttp = substr_count($studyfile, 'http://');
-												if ($ishttp < 1) { $studyfile = substr_replace($studyfile,'http://',0,0);}
-												$mediacode = str_replace('-',$studyfile,$mediacode);
-												}
-												$media1_link = $mediacode.'{avrpopup type="window" id="'.$media->id.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" border="0" "title="'.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
-												$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
-						} //Not sure why these are needed
-						}//Not sure why these are needed
-				
-			}
-			else {$media1_link = '';}
-	}
-	else {$media1_link = '';}
-} //TF added this } because it seemed that the else above media->published didn't seem to have an end bracket
-?>
+						else {
+						$path1 = 'http://'.$media->spath.$media->fpath.$media->filename;
+						$pathname = $media->fpath;
+						$filename = $media->filename;
+						$ispath = 1;
+						$direct_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '
+						.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
+						.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
+						.'" height="'.$height.'" border="0" /></a>';
+						}
+					$isavr = 0;
+					if (JPluginHelper::importPlugin('system', 'avreloaded'))
+						{ 
+							$isavr = 1;
+							$studyfile = $media->spath.$media->fpath.$media->filename;
+							$mediacode = $media->mediacode;
+								if ($mediacode == ''){
+									$fileextension = substr($media->filename,-3,3);
+									$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
+								}
+							$mediacode = str_replace("'",'"',$mediacode);
+							$ispop = substr_count($mediacode, 'popup');
+								if ($ispop < 1) { 
+									$bracketpos = strpos($mediacode,'}');
+									$mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
+								}
+							$isdivid = substr_count($mediacode, 'divid');
+								if ($isdivid < 1) {
+									$dividid = ' divid="'.$media->id.'"';
+									$bracketpos = strpos($mediacode, '}');
+									$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
+								}
+							$bracketpos = strpos($mediacode,'}');
+							$dashpos = $bracketpos + 1;
+							$isdash = strpos($mediacode,'-',$bracketpos);
+								if ($isdash == $dashpos){
+									$ishttp = substr_count($studyfile, 'http://');
+										if ($ishttp < 1) { $studyfile = substr_replace($studyfile,'http://',0,0);}
+									$mediacode = str_replace('-',$studyfile,$mediacode);
+								}
+							$avr_link = $mediacode.'{avrpopup type="window" id="'.$media->id
+							.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
+							.' '.$duration.' '.$media_size.'" width="'.$width
+							.'" height="'.$height.'" border="0" "title="'
+							.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
+						} 
+					$useavr = 0;
+					$useavr = $useavr + $params->get('useavr') + $media->internal_viewer;
+					$isfilesize = 0;
+						if ($filesize > 0)
+						{ 
+							$isfilesize = 1;
+							$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
+						}
+						else {$media1_sizetext = '';}
+					$media1_link = $direct_link;
+						
+					if ($useavr > 0)
+						{ $media1_link = $avr_link;
+							
+						}
+					
+					?>
 <!-- this is where the media column td begins -->
 <td width="<?php echo $this->params->get('media_width');?>">	
     <?php echo $media1_link; ?>
-    <?php if ($link_type > 0){?><form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblstudy/imgages/download.png';?>" alt="<?php echo JText::_('Download');?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studydetails" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php }?>
+    <?php if ($link_type > 0){?><form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studydetails" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php }?>
     <?php if ($this->params->get('show_filesize') > 0) 
 		{ ?>
          <br>
