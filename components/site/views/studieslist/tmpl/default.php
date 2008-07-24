@@ -1019,7 +1019,9 @@ $color = $params->get('use_color');
 					
 					?>
 					<td align="left" width="<?php echo $textwidth;?>">
-						<?php echo $media1_link; ?><?php if ($link_type > 0){ if ($this->params->get('download_side') > 0) { echo '<td>';} ?><form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
+						<?php echo $media1_link; ?><?php if ($link_type > 0){ $src = JURI::base().'components/com_biblstudy/imgages/download.png';
+					list($width,$height)=getimagesize($src);?>
+                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblstudy/imgages/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
 						<?php if ($this->params->get('show_filesize') > 0) 
 							{ ?>
 							

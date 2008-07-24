@@ -396,8 +396,8 @@ INSERT IGNORE INTO `#__bsms_media` VALUES (7, 'Streaming Video', 'Streaming Vide
 INSERT IGNORE INTO `#__bsms_media` VALUES (8, 'Real Audio', 'Real Audio', 'components/com_biblestudy/images/realplayer24.png', 'Real Audio', 1);
 INSERT IGNORE INTO `#__bsms_media` VALUES (9, 'Windows Media Audio', 'Windows Media Audio', 'components/com_biblestudy/images/windows-media24.png', 'Windows Media File', 1);
 INSERT IGNORE INTO `#__bsms_media` VALUES (10, 'Podcast Audio', 'Podcast Audio', 'components/com_biblestudy/images/podcast-audio24.png', 'Podcast Audio', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (11, 'CD', 'CD', 'components/com_biblestudy/image/cd.png', 'CD', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (12, 'DVD', 'DVD', 'components/com_biblestudy/image/dvd.png', 'DVD', 1);
+INSERT IGNORE INTO `#__bsms_media` VALUES (11, 'CD', 'CD', 'components/com_biblestudy/images/cd.png', 'CD', 1);
+INSERT IGNORE INTO `#__bsms_media` VALUES (12, 'DVD', 'DVD', 'components/com_biblestudy/images/dvd.png', 'DVD', 1);
 --
 -- Dumping Data into Mime Type
 --

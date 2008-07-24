@@ -450,7 +450,7 @@ if (!$media_size){
 							.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
 						} 
 					$useavr = 0;
-					$useavr = $useavr + $params->get('useavr') + $media->internal_viewer;
+					$useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
 					$isfilesize = 0;
 						if ($filesize > 0)
 						{ 
@@ -469,7 +469,9 @@ if (!$media_size){
 <!-- this is where the media column td begins -->
 <td width="<?php echo $this->params->get('media_width');?>">	
     <?php echo $media1_link; ?>
-    <?php if ($link_type > 0){?><form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studydetails" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php }?>
+    <?php if ($link_type > 0){$src = JURI::base().'components/com_biblstudy/imgages/download.png';
+					list($width,$height)=getimagesize($src);?>
+                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblstudy/imgages/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php }?>
     <?php if ($this->params->get('show_filesize') > 0) 
 		{ ?>
          <br>
@@ -535,7 +537,9 @@ echo 'Comment: '.$comment->comment_text.'<br><hr>';?>
 $this->assignRef('thestudy',$this->studydetails->study_id);
 $comment_access = $this->params->get('comment_access');
 $comment_user = $user->usertype;
-$comment_access = $this->params->get('comment_access');
+if (!$comment_user) { $comment_user = 0;}
+//$comment_access = $this->params->get('comment_access');
+//dump ($comment_access, 'Comment Access'); dump ($comment_user, 'Comment User');
 if ($comment_access > $comment_user){echo '<strong><br />'.JText::_('You must be registered to post comments').'</strong>';}else{
 if ($user->name){$full_name = $user->name; } else {$full_name = ''; } ?>
 <?php if ($user->email) {$user_email = $user->email;} else {$user_email = '';}?>
