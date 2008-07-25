@@ -1,18 +1,10 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 
-<!--<script type="text/javascript"> 
-var pid = document.getElementById('pid');
-var ppath = document.getElementById('ppath');
-AudioPlayer.embed('pid', {soundFile: 'ppath'});</script>-->
+
 <?php 
 
 /*$params =& $mainframe->getPageParameters();
-$player_width = null;
-$player_width = $this->params->get('player_width');
-if (!$player_width) { $player_width = '290'; }
-$document =& JFactory::getDocument();
-$document->addCustomTag( '<script type="text/javascript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>' );
-$document->addCustomTag( '<script type="text/javascript"> AudioPlayer.setup("'.JURI::base().'components/com_biblestudy/player.swf",{width: '.$player_width.'});</script>');
+
 */
 ?>
 <script type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
@@ -100,10 +92,13 @@ echo JText::_('Podcasts').'</td></tr>';
         <table width="100%"><?php //Table to hold the logo?>
         <tr><?php //Row for logo?>
         	<?php $wtd = $this->params->get('pimagew');?>
-<?php if ($this->params->get( 'show_page_image' ) >0) { ?>
-		<?php if ($wtd = ''){ $wtd = 48; } else { $wtd = $wtd + 2; } ?>
-            <td width="<?php echo $wtd; ?>"><?php //Column  for logo?>
-            	<img src="<?php echo JURI::base().$this->params->get('page_image');?>" alt="Bible Studies" width="<?php echo $this->params->get('pimagew');?>" height="<?php echo $this->params->get('pimageh');?>" border="0" />
+<?php if ($this->params->get( 'show_page_image' ) >0) { 
+$src = JURI::base().$this->params->get('page_image');
+list($width,$height)=getimagesize($src);
+?>
+		
+            <td width="<?php echo $width +2; ?>"><?php //Column  for logo?>
+            	<img src="<?php echo JURI::base().$this->params->get('page_image');?>" alt="<?php JText::_('Bible Studies');?>" width="<?php echo $width;?>" height="<?php echo $height;?>" border="0" />
             
             </td><?php //End of column for logo?>
             <?php } //End of if statement for show page image?>
@@ -844,7 +839,11 @@ $color = $params->get('use_color');
                             <?php if ($params->get('tooltip') >0) { ?>
                             <span class="zoomTip" title="<strong>Sermon Info:</strong> ::<?php if ($study) {?><strong>Title:</strong> <?php echo $study;}?><br><br> <?php if ($intro) {?><strong>Details:</strong> <?php echo $intro;?><?php } ?><br><br><?php if ($snumber) {?><strong>Sermon Number:</strong> <?php echo $snumber;}?> <br><strong>Teacher:</strong> <?php echo $teacher;?><br><br><hr /><br><?php if ($scripture1) {?><strong>Scripture: </strong><?php echo $scripture1;?><?php } ?>">
                             <?php } //end of is show tooltip?>
-                            <a href="<?php echo $link; ?>"><img src="<?php echo JURI::base().$params->get('text_image');?>" alt="<?php echo $details_text;?>" width="<?php echo $this->params->get('imagew');?>" height="<?php echo $params->get('imageh');?>" border="0" ></a><?php if ($params->get('tooltip') >0) { ?></span><?php } ?>
+                            <?php
+							$src = JURI::base().$this->params->get('text_image');
+							list($width,$height)=getimagesize($src);
+							?>
+                            <a href="<?php echo $link; ?>"><img src="<?php echo JURI::base().$params->get('text_image');?>" alt="<?php echo $details_text;?>" width="<?php echo $width;?>" height="<?php echo $height;?>" border="0" ></a><?php if ($params->get('tooltip') >0) { ?></span><?php } ?>
                             </td><?php //End of text column ?>
                             
                             <?php } // end of show_full_text if ?>
@@ -853,7 +852,10 @@ $color = $params->get('use_color');
 							<?php $link = JRoute::_('index.php?option=' . $option . '&view=studydetails' . '&id=' . $row->id . '&format=pdf' ); ?>
 
                             <td >
-                            <a href="<?php echo $link; ?>" target="_blank" title="<?php echo $details_text;?>"><img src="<?php echo JURI::base().$this->params->get('pdf_image');?>" alt="						 							<?php echo $details_text.JText::_('- PDF Version');?>" width="<?php echo $this->params->get('imagew');?>" height="<?php echo $this->params->get('imageh');?>" border="0" ></a>
+                            <?php $src = JURI::base().$this->params->get('pdf_image');
+							list($width,$height)=getimagesize($src);
+						?>
+                            <a href="<?php echo $link; ?>" target="_blank" title="<?php echo $details_text;?>"><img src="<?php echo JURI::base().$this->params->get('pdf_image');?>" alt="						 							<?php echo $details_text.JText::_('- PDF Version');?>" width="<?php echo $width;?>" height="<?php echo $height;?>" border="0" ></a>
 							</td><?php //This is the end of the column for the pdf image?>
                             
                             <?php } // End of show pdf text ?>
@@ -884,8 +886,14 @@ $color = $params->get('use_color');
 						if (($cd->mid + $dvd->mid) > 0) {?>
 						
                         <table><tr>
-                        <?php if ($cd->mid > 0){?><td><?php echo '<a href="'.$cd->server_path.$cd->prod_cd.'" title="'.$cd->media_alttext.'"><img src="'.JURI::base().$cd->media_image_path.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" alt="'.$cd->media_alttext.' "border="0"></a>';?></td><?php } ?>
-                        <?php if ($dvd->mid > 0){ ?><td><?php echo '<a href="'.$dvd->server_path.$dvd->prod_dvd.'" title="'.$dvd->media_alttext.'"><img src="'.JURI::base().$dvd->media_image_path.'" width="'.$this->params->get('imagew').'" height="'.$this->params->get('imageh').'" alt="'.$dvd->media_alttext.' "border="0"></a>';?></td><?php } ?>
+                        <?php 
+						
+						if ($cd->mid > 0){
+						$src = JURI::base().$cd->media_image_path;
+						list($width,$height)=getimagesize($src);?><td><?php echo '<a href="'.$cd->server_path.$cd->prod_cd.'" title="'.$cd->media_alttext.'"><img src="'.JURI::base().$cd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$cd->media_alttext.' "border="0"></a>';?></td><?php } ?>
+                        <?php if ($dvd->mid > 0){ 
+						$src = JURI::base().$dvd->media_image_path;
+						list($width,$height)=getimagesize($src);?><td><?php echo '<a href="'.$dvd->server_path.$dvd->prod_dvd.'" title="'.$dvd->media_alttext.'"><img src="'.JURI::base().$dvd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$dvd->media_alttext.' "border="0"></a>';?></td><?php } ?>
                         </tr><tr><td colspan="2" align="center"><span <?php echo $params->get('store_span');?>><?php echo $params->get('store_name');?></span></td></tr></table><?php }?></td><?php  }//End of store column?>
                         
                    <?php if ($this->params->get('show_media') > 0) { ?>
