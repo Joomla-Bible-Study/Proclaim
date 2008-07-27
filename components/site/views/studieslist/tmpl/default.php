@@ -979,8 +979,9 @@ $color = $params->get('use_color');
 							$isavr = 1;
 							$studyfile = $media->spath.$media->fpath.$media->filename;
 							$mediacode = $media->mediacode;
+							$isrealfile = substr($studyfile, -4, 1);
+							$fileextension = substr($media->filename,-3,3);
 								if ($mediacode == ''){
-									$fileextension = substr($media->filename,-3,3);
 									$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
 								}
 							$mediacode = str_replace("'",'"',$mediacode);
@@ -1000,7 +1001,17 @@ $color = $params->get('use_color');
 							$isdash = strpos($mediacode,'-',$bracketpos);
 								if ($isdash == $dashpos){
 									$ishttp = substr_count($studyfile, 'http://');
-										if ($ishttp < 1) { $studyfile = substr_replace($studyfile,'http://',0,0);}
+										if ($ishttp < 1) { 
+											//We want to see if there is a file here or if it is streaming by testing to see if there is an extension
+											$isrealfile = substr($studyfile, -4, 1);
+												if ($isrealfile == '.') {
+													$studyfile = substr_replace($studyfile,'http://',0,0);
+												}
+										}
+										if ($isrealfile != '.')
+										{
+											$studyfile = $media->filename;
+										}
 									$mediacode = str_replace('-',$studyfile,$mediacode);
 								}
 							$avr_link = $mediacode.'{avrpopup type="window" id="'.$media->id
@@ -1008,6 +1019,7 @@ $color = $params->get('use_color');
 							.' '.$duration.' '.$media_size.'" width="'.$width
 							.'" height="'.$height.'" border="0" "title="'
 							.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
+							//dump ($avr_link, 'AVR Lnk');
 						} 
 					$useavr = 0;
 					$useavr = $useavr + $params->get('useavr') + $media->internal_viewer;
@@ -1022,6 +1034,7 @@ $color = $params->get('use_color');
 						
 					if ($useavr > 0)
 						{ $media1_link = $avr_link;
+						//dump ($avr_link, 'AVR Link');
 							
 						}
 					
