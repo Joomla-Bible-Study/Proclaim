@@ -12,9 +12,12 @@ class biblestudyViewmediafilesedit extends JView
 	function display($tpl = null)
 	{
 		
-		require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_avreloaded'.DS.'elements'.DS.'insertbutton.php');
-		$mbutton = JElementInsertButton::fetchElementImplicit('mediacode',JText::_('AVR Media'));
-		$this->assignRef('mbutton', $mbutton);
+		if (JPluginHelper::importPlugin('system', 'avreloaded'))
+			{
+				require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_avreloaded'.DS.'elements'.DS.'insertbutton.php');
+				$mbutton = JElementInsertButton::fetchElementImplicit('mediacode',JText::_('AVR Media'));
+				$this->assignRef('mbutton', $mbutton);
+			}
 		
 		$mediafilesedit		=& $this->get('Data');
 		$isNew		= ($mediafilesedit->id < 1);

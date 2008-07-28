@@ -101,7 +101,8 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
               <tr><td><?php echo JText::_(' Use <a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">AVReloaded Viewer</a> (1.2.4 of higher Must be installed): ').$this->lists['internal_viewer']; ?></td>
 			</tr>
             <tr><td><?php echo JText::_('AVRELOADED');?></td></tr>
-            <tr><td><input class="text_area" name="mediacode" id="mediacode" size="200" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php echo $this->mbutton;?></td></tr>
+            <tr><td><input class="text_area" name="mediacode" id="mediacode" size="200" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php if (JPluginHelper::importPlugin('system', 'avreloaded'))
+					{echo $this->mbutton;}?></td></tr>
             <tr>
              <?php //<tr>?> 
              <td> <?php echo JText::_('Image: ');?> 
