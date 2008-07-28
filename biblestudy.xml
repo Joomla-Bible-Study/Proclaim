@@ -10,7 +10,7 @@
 	<copyright>2008 Tom Fuller</copyright>
 	<license>GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
-	<version>6.0.08_RC6</version>
+	<version>6.0.08_RC7</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Bible Study Management System</description>
 	<installfile>install.biblestudy.php</installfile>
