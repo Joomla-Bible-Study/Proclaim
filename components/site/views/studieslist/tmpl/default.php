@@ -524,7 +524,7 @@ $a = array( array( 	'element' => $scripture1,
 					'span' => 0,
 					'isbullet' => 0,
 				),
-			array(	'element' => $row->message_type,
+			array(	'element' => $row->secondary_reference,
 					'position' => $params->get('position11'),
 					'order' => $params->get('order11'),
 					'islink' => $params->get('islink11'),
@@ -559,7 +559,7 @@ $a = array( array( 	'element' => $scripture1,
 					'span' => $params->get('span16'),
 					'isbullet' => $params->get('isbullet16')
 				),
-			array(	'element' => $row->secondary_reference,
+			array(	'element' => $row->message_type,
 					'position' => $params->get('position12'),
 					'order' => $params->get('order12'),
 					'islink' => $params->get('islink12'),
@@ -964,7 +964,11 @@ $color = $params->get('use_color');
 						$ispath = 0;
 						}
 						else {
-						$path1 = 'http://'.$media->spath.$media->fpath.$media->filename;
+						$path1 = $media->spath.$media->fpath.$media->filename;
+						$isslash = substr_count($path1,'//');
+							if (!$isslash) {
+							$path1 = 'http://'.$path1;
+							}
 						$pathname = $media->fpath;
 						$filename = $media->filename;
 						$ispath = 1;
@@ -1005,7 +1009,10 @@ $color = $params->get('use_color');
 											//We want to see if there is a file here or if it is streaming by testing to see if there is an extension
 											$isrealfile = substr($studyfile, -4, 1);
 												if ($isrealfile == '.') {
+												$isslash = substr_count($studyfile,'//');
+													if (!$isslash) {
 													$studyfile = substr_replace($studyfile,'http://',0,0);
+													}
 												}
 										}
 										if ($isrealfile != '.')
@@ -1040,9 +1047,9 @@ $color = $params->get('use_color');
 					
 					?>
 					<td align="left" width="<?php echo $textwidth;?>">
-						<?php echo $media1_link; ?><?php if ($link_type > 0){ $src = JURI::base().'components/com_biblstudy/imgages/download.png';
+						<?php echo $media1_link; ?><?php if ($link_type > 0){ $src = JURI::base().'components/com_biblestudy/images/download.png';
 					list($width,$height)=getimagesize($src);?>
-                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblstudy/imgages/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
+                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
 						<?php if ($this->params->get('show_filesize') > 0) 
 							{ ?>
 							

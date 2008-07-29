@@ -404,7 +404,11 @@ if (!$media_size){
 						$ispath = 0;
 						}
 						else {
-						$path1 = 'http://'.$media->spath.$media->fpath.$media->filename;
+						$path1 = $media->spath.$media->fpath.$media->filename;
+						$isslash = substr_count($path1,'//');
+							if (!$isslash) {
+							$path1 = 'http://'.$path1;
+							}
 						$pathname = $media->fpath;
 						$filename = $media->filename;
 						$ispath = 1;
@@ -445,7 +449,10 @@ if (!$media_size){
 											//We want to see if there is a file here or if it is streaming by testing to see if there is an extension
 											$isrealfile = substr($studyfile, -4, 1);
 												if ($isrealfile == '.') {
+												$isslash = substr_count($studyfile,'//');
+													if (!$isslash) {
 													$studyfile = substr_replace($studyfile,'http://',0,0);
+													}
 												}
 										}
 										if ($isrealfile != '.')
@@ -480,9 +487,9 @@ if (!$media_size){
 <!-- this is where the media column td begins -->
 <td width="<?php echo $this->params->get('media_width');?>">	
     <?php echo $media1_link; ?>
-    <?php if ($link_type > 0){$src = JURI::base().'components/com_biblstudy/imgages/download.png';
+    <?php if ($link_type > 0){$src = JURI::base().'components/com_biblestudy/images/download.png';
 					list($width,$height)=getimagesize($src);?>
-                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblstudy/imgages/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php }?>
+                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php }?>
     <?php if ($this->params->get('show_filesize') > 0) 
 		{ ?>
          <br>
