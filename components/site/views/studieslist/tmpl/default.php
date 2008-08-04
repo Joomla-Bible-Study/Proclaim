@@ -14,9 +14,6 @@
 /* CSS goes here */
 #
 
-a[title]:after{
-
-
 a[title]:hover:after{
 /*Shows the generated content*/
 	content: attr(title) " (" attr(href) ")";
@@ -832,7 +829,7 @@ $color = $params->get('use_color');
                     		<table align="left"><tr valign="<?php echo $params->get('colalign');?>">
                             
                             <?php if ($params->get('show_full_text') > 0) { ?>
-							<?php $link = JRoute::_('index.php?option=' . $option . '&view=studydetails' . '&id=' . $row->id ); ?>
+							<?php $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id ); ?>
                             <?php JHTML::_('behavior.tooltip'); 
                             ?>
                             <td ><?php //This is the beginning of the column for the text image ?>
@@ -849,7 +846,7 @@ $color = $params->get('use_color');
                             <?php } // end of show_full_text if ?>
                             
                             <?php if ($this->params->get('show_pdf_text') > 0) { ?>
-							<?php $link = JRoute::_('index.php?option=' . $option . '&view=studydetails' . '&id=' . $row->id . '&format=pdf' ); ?>
+							<?php $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf' ); ?>
 
                             <td >
                             <?php $src = JURI::base().$this->params->get('pdf_image');
