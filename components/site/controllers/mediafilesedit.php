@@ -58,12 +58,17 @@ class biblestudyControllermediafilesedit extends JController
 			$msg = JText::_( 'Error Saving Media' );
 		}
 		global $mainframe, $option;
-		$params =& $mainframe->getPageParameters();
-		if ($params->get('view_link') == 1){
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
-		if ($params->get('view_link') == 2){
-    	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 		
+    	//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist&msg='.$msg);
+		$database	= & JFactory::getDBO();
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$database->setQuery($query);
+		$menuid = $database->loadResult();
+	if ($menuid){
+    $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$menuid.'&msg='.$msg);}
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
 		// Check the table in so it can be edited.... we are done with it anyway

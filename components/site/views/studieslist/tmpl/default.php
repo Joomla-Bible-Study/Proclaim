@@ -46,10 +46,16 @@ $show_description = $params->get('show_description', 1);
 	?>
 <table width="<?php echo $page_width; ?>" > <?php //Overall table for the listing page?>
 <form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
-<?php $user =& JFactory::getUser();
+<?php 
+
+$user =& JFactory::getUser();
 $entry_user = $user->get('gid');
-$entry_access = $this->params->get('entry_access');
-$allow_entry = $this->params->get('allow_entry_study');
+if (!$entry_user) { $entry_user = 0;}
+$entry_access = $params->get('entry_access');
+if (!$entry_access) {$entry_access = 23;}
+$allow_entry = $params->get('allow_entry_study');
+if (!$entry_user) { $entry_user = 0; }
+if (!$entry_access) { $entry_access = 23; }
 if ($allow_entry > 0) {
 if ($entry_access <= $entry_user){ 
 if ($message) {?>
@@ -68,6 +74,7 @@ if ($message) {?>
 <?php // Here we start the test to see if podcast entry allowed
 if ($this->params->get('allow_podcast') > 0){
 $podcast_access = $this->params->get('podcast_access');
+if (!$podcast_access) {$podcast_access = 23;}
 if ($podcast_access <= $entry_user){
 $query = ('SELECT id, title, published FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC');
 $database->setQuery( $query );
