@@ -920,7 +920,7 @@ $color = $params->get('use_color');
 					. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
 					. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
 					. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-					. ' WHERE #__bsms_mediafiles.study_id = '.$row->id.' ORDER BY ordering ASC';
+					. ' WHERE #__bsms_mediafiles.study_id = '.$row->id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC';
 					$database->setQuery( $query_media1 );
 					$media1 = $database->loadObjectList('id');
 					
@@ -982,7 +982,7 @@ $color = $params->get('use_color');
 						$pathname = $media->fpath;
 						$filename = $media->filename;
 						$ispath = 1;
-						$direct_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '
+						$direct_link = '<a href="'.$path1.'" title="'.$media->malttext.' '.$duration.' '
 						.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
 						.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
 						.'" height="'.$height.'" border="0" /></a>';
@@ -1035,7 +1035,7 @@ $color = $params->get('use_color');
 							$avr_link = $mediacode.'{avrpopup type="window" id="'.$media->id
 							.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
 							.' '.$duration.' '.$media_size.'" width="'.$width
-							.'" height="'.$height.'" border="0" "title="'
+							.'" height="'.$height.'" border="0" title="'
 							.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
 							//dump ($avr_link, 'AVR Lnk');
 							
@@ -1061,16 +1061,18 @@ $color = $params->get('use_color');
 					<td align="left" >
                     <?php //dump ($media1_link, 'Media1_link'); ?>
 						<?php  echo $media1_link; ?>
-						<?php if ($link_type > 0){ $src = JURI::base().'components/com_biblestudy/images/download.png';
-					if(list($width,$height)=@getimagesize($src)){}
-						else {$width = 24; $height= 24;}?>
-                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php }?>
-						<?php if ($this->params->get('show_filesize') > 0) 
+                        <?php if ($this->params->get('show_filesize') > 0) 
 							{ ?>
 							
 							 <?php echo $media1_sizetext; 
 							 
 							}?>
+						<?php if ($link_type > 0){ $src = JURI::base().'components/com_biblestudy/images/download.png';
+						if ($this->params->get('download_side') > 0) { echo '<td>';}
+					if(list($width,$height)=@getimagesize($src)){}
+						else {$width = 24; $height= 24;}?>
+                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
+						
 					</td>
                     
 
