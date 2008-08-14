@@ -420,7 +420,8 @@ $df = 	($params->get('date_format'));
 			break;
 		}
 $textwidth=$params->get('imagew'); 
-$textwidth = ($textwidth + 1);   
+$textwidth = ($textwidth + 1);
+$storewidth = $params->get('storewidth');   
 $teacher = $row->teachername;
 $study = $row->studytitle;
 $sname = $row->series_text;
@@ -872,7 +873,7 @@ $color = $params->get('use_color');
                     <?php } //This is the end of the if statement to see if text and/or pdf images set to "show"?>
                    <?php if ($params->get('show_store') > 0){?>
                   
-				   		<td width="<?php echo $textwidth;?>"><?php //This td is for the store column?>
+				   		<td width="<?php echo $storewidth;?>"><?php //This td is for the store column?>
 						<?php $query = 'SELECT m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
 						.' s.image_cd, s.prod_cd, s.server_cd, sr.id AS srid, sr.server_path
                         FROM #__bsms_studies AS s

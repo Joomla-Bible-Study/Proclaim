@@ -779,6 +779,7 @@
 			<option value="1">Show</option>
 			<option value="0">Hide</option>
 		</param>
+		<param name="storewidth" default="50" type="text" label="Store Width" description="Width in pixels or percent for the store - if shown" />
 		<param name="store_name" default="Store" type="text" label="Store Name" description="Name for the store on listing page" />
 		<param name="store_span" type="text" default='style="font-size:.70em;"' label="Span info for store name" description="Enter valid style information for this label" />
 		<param name="@spacer" type="spacer" default="" label="" description="">
