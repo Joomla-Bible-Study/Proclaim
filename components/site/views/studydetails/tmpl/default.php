@@ -489,7 +489,7 @@ if (!$media_size){
     <?php echo $media1_link; ?>
     <?php if ($link_type > 0){$src = JURI::base().'components/com_biblestudy/images/download.png';
 					list($width,$height)=getimagesize($src);?>
-                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php }?>
+                    <a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&amp;id=<?php echo $media->id;?>&amp;view=studieslist&amp;controller=studieslist&amp;task=download"> <img src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" /></a><?php }?>
     <?php if ($this->params->get('show_filesize') > 0) 
 		{ ?>
          <br>

@@ -932,9 +932,16 @@ $color = $params->get('use_color');
                     <?php
 					
 					foreach ($media1 as $media) {
+					$download_image = $params->get('download_image');
+					if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
 					$link_type = $media->link_type;
 					$media_size = $media->size;
-					
+					$useplayer = 0;
+						if ($params->get('media_player') > 0) {
+							//Look to see if it is an mp3
+							$ismp3 = substr($media->filename,-3,3);
+								if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
+						} //End if media_player param test
 					if (!$media_size){ $media_size = '';
 						}
 						else {
@@ -1012,8 +1019,8 @@ $color = $params->get('use_color');
 									$bracketpos = strpos($mediacode, '}');
 									$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
 								}
-							$bracketpos = strpos($mediacode,'}');
-							$dashpos = $bracketpos + 1;
+							$bracketpos = strpos($mediacode,'{');
+							$dashpos = $bracketpos - 1;
 							$isdash = strpos($mediacode,'-',$bracketpos);
 								if ($isdash == $dashpos){
 									$ishttp = substr_count($studyfile, 'http://');
@@ -1057,7 +1064,18 @@ $color = $params->get('use_color');
 						//dump ($avr_link, 'AVR Link');
 							
 						}
-					
+					if ($useplayer == 1){
+					$player_width = $params->get('player_width');
+					if (!$player_width) { $player_width = '290'; }
+					$media1_link = 
+					'<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
+<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="290">
+<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
+<param name="FlashVars" value="playerID='.$row_count.'&amp;soundFile='.$path1.'">
+<param name="quality" value="high">
+<param name="menu" value="false">
+<param name="wmode" value="transparent">
+</object> ';}
 					?>
 					<td align="left" >
                     <?php //dump ($media1_link, 'Media1_link'); ?>
@@ -1068,11 +1086,11 @@ $color = $params->get('use_color');
 							 <?php echo $media1_sizetext; 
 							 
 							}?>
-						<?php if ($link_type > 0){ $src = JURI::base().'components/com_biblestudy/images/download.png';
+						<?php if ($link_type > 0){ $src = JURI::base().$download_image;
 						if ($this->params->get('download_side') > 0) { echo '<td>';}
 					if(list($width,$height)=@getimagesize($src)){}
 						else {$width = 24; $height= 24;}?>
-                    <form action="index.php" method="post"><input type="image" src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" class="button" id="button" value="submit" /><input type="hidden" name="id" value="<?php echo $media->id;?>"  /><input type="hidden" name="controller" value="studieslist" /><input type="hidden" name="view" value="studieslist" /><input type="hidden" name="task" value="download" /><input type="hidden" name="option" value="com_biblestudy" /></form><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
+                    <a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&amp;id=<?php echo $media->id;?>&amp;view=studieslist&amp;controller=studieslist&amp;task=download"> <img src="<?php echo JURI::base().$download_image;?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" /></a><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
 						
 					</td>
                     

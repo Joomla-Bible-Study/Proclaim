@@ -10,7 +10,7 @@ class Dump_File{
 	
   function download($inline = false, $server, $path, $filename, $size, $mime_type, $id){
  	
-  	$id = JRequest::getVar('id', 0, 'POST', 'INT');
+  	$id = JRequest::getVar('id', 0, 'GET', 'INT');
 	$db	= & JFactory::getDBO();
 	$query = 'SELECT #__bsms_mediafiles.*,'
 		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'

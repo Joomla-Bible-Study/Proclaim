@@ -74,6 +74,12 @@
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
+	<param name="media_player" type="radio" default="0" label="MP3 Media Player" description="Use built-in media player for all mp3 files (overrides AVR)">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+	<param name="player_width" type="text" default="290" label="Width for MP3 Player" description="Width in pixels of internal MP3 player" />
+	<param name="download_image" type="text" size="55" default="components/com_biblestudy/images/download.png" label="Download Icon Image" description="Path from root to download icon image file" />
 	<param name="show_filesize" type="radio" default="1" label="Show Filesize" description="Show/Hide filesize of the media">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
