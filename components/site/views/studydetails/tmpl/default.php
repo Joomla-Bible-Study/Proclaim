@@ -15,6 +15,7 @@ else { document.getElementById(d).style.display = "none"; }
 
 <?php
 global $mainframe;
+
 //$menu = JSite::getMenu();
 //$item = $menu->getActive();
 $message = JRequest::getVar('msg');
@@ -360,10 +361,20 @@ if ($this->params->get('comment_publish') < 1){echo JText::_('Submissions may ne
 		$media1 = $database->loadObjectList('id');
 if (!$media1){} else { // This tests to make sure that there is a result to the media query or it will generate an arror
 foreach ($media1 as $media) {
+$params =& $mainframe->getPageParameters();
+$download_image = $params->get('download_image');
+if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
 $link_type = $media->link_type;
 $useavr = 0;
 $useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
 $media_size = $media->size;
+$useplayer = 0;
+	if ($params->get('media_player') > 0) {
+	//Look to see if it is an mp3
+		$ismp3 = substr($media->filename,-3,3);
+			if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
+	} //End if media_player param test
+	
 if (!$media_size){
 	}
 	else {
@@ -440,8 +451,8 @@ if (!$media_size){
 									$bracketpos = strpos($mediacode, '}');
 									$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
 								}
-							$bracketpos = strpos($mediacode,'}');
-							$dashpos = $bracketpos + 1;
+							$bracketpos = strpos($mediacode,'{');
+							$dashpos = $bracketpos - 1;
 							$isdash = strpos($mediacode,'-',$bracketpos);
 								if ($isdash == $dashpos){
 									$ishttp = substr_count($studyfile, 'http://');
@@ -482,14 +493,25 @@ if (!$media_size){
 						{ $media1_link = $avr_link;
 							
 						}
-					
+					if ($useplayer == 1){
+					$player_width = $params->get('player_width');
+					if (!$player_width) { $player_width = '290'; }
+					$media1_link = 
+					'<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
+<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$media->id.'" height="24" width="290">
+<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
+<param name="FlashVars" value="playerID='.$media->id.'&amp;soundFile='.$path1.'">
+<param name="quality" value="high">
+<param name="menu" value="false">
+<param name="wmode" value="transparent">
+</object> ';}
 					?>
 <!-- this is where the media column td begins -->
 <td width="<?php echo $this->params->get('media_width');?>">	
     <?php echo $media1_link; ?>
-    <?php if ($link_type > 0){$src = JURI::base().'components/com_biblestudy/images/download.png';
+    <?php if ($link_type > 0){$src = JURI::base().$download_image;
 					list($width,$height)=getimagesize($src);?>
-                    <a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&amp;id=<?php echo $media->id;?>&amp;view=studieslist&amp;controller=studieslist&amp;task=download"> <img src="<?php echo JURI::base().'components/com_biblestudy/images/download.png';?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" /></a><?php }?>
+                    <a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&amp;id=<?php echo $media->id;?>&amp;view=studieslist&amp;controller=studieslist&amp;task=download"> <img src="<?php echo JURI::base().$download_image;?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" /></a><?php }?>
     <?php if ($this->params->get('show_filesize') > 0) 
 		{ ?>
          <br>
