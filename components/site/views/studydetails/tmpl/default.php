@@ -453,7 +453,7 @@ if (!$media_size){
 								}
 							$bracketpos = strpos($mediacode,'{');
 							$dashpos = $bracketpos - 1;
-							$isdash = strpos($mediacode,'-',$bracketpos);
+							$isdash = strpos($mediacode,'-',$dashpos);
 								if ($isdash == $dashpos){
 									$ishttp = substr_count($studyfile, 'http://');
 										if ($ishttp < 1) { 

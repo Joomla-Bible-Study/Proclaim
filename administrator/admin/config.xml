@@ -672,6 +672,38 @@
 		</param>
 		<param name="@spacer" type="spacer" default="" label="" description="">
 		</param>
+		<param name="@spacer" type="spacer" default="Topic" label="Topic" description="Topic">
+		</param>
+		<param name="position17" type="list" default="0" label="Topic" description="Choose column 1-4 for the Topic">
+			<option value="0">Don't show</option>
+			<option value="1">Column 1</option>
+			<option value="2">Column 2</option>
+			<option value="3">Column 3</option>
+			<option value="4">Column 4</option>
+		</param>
+		<param name="order17" type="list" default="1" label="Order for Topic in list" description="Type a number of the order for this element in it's column">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+		</param>
+		<param name="islink17" type="list" default="0" label="Topic a link to study" description="Choose whether Topic should be a hyperlink to the study details or media">
+			<option value="0">Not a link</option>
+			<option value="1">Link to Details</option>
+			<option value="2">Link to 1st Media File</option>
+		</param>
+		<param name="span17" type="text" default="" label="Span tag for Topic" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
+		<param name="isbullet17" type="list" default="0" label="Bullet Topic" description="Add a bullet before this item">
+			<option value="0">No Bullet</option>
+			<option value="1">Bulleted</option>
+		</param>
+		<param name="@spacer" type="spacer" default="" label="" description="">
+		</param>
 		<param name="@spacer" type="spacer" default="Blank Line 1" label="Blank Line" description="Blank Line">
 		</param>
 		<param name="blank1" type="list" default="0" label="Blank Line 1" description="Choose a column if you want for a blank line">

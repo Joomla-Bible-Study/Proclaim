@@ -565,6 +565,13 @@ $a = array( array( 	'element' => $scripture1,
 					'span' => $params->get('span16'),
 					'isbullet' => $params->get('isbullet16')
 				),
+			array(	'element' => $row->topic_text,
+					'position' => $params->get('position17'),
+					'order' => $params->get('order17'),
+					'islink' => $params->get('islink17'),
+					'span' => $params->get('span17'),
+					'isbullet' => $params->get('isbullet17')
+				),
 			array(	'element' => $row->message_type,
 					'position' => $params->get('position12'),
 					'order' => $params->get('order12'),
@@ -1019,10 +1026,8 @@ $color = $params->get('use_color');
 									$bracketpos = strpos($mediacode, '}');
 									$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
 								}
-							$bracketpos = strpos($mediacode,'{');
-							$dashpos = $bracketpos - 1;
-							$isdash = strpos($mediacode,'-',$bracketpos);
-								if ($isdash == $dashpos){
+							$isonlydash = substr_count($mediacode, '}-{');
+								if ($isonlydash == 1){
 									$ishttp = substr_count($studyfile, 'http://');
 										if ($ishttp < 1) { 
 											//We want to see if there is a file here or if it is streaming by testing to see if there is an extension
@@ -1034,6 +1039,7 @@ $color = $params->get('use_color');
 													}
 												}
 										}
+								
 										if ($isrealfile != '.')
 										{
 											$studyfile = $media->filename;
