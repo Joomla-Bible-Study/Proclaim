@@ -3,7 +3,7 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>September 1, 2008</creationDate>
+	<creationDate>September 2, 2008</creationDate>
 	<author>Tom Fuller</author>
 	<authorEmail>TomFuller2@gmail.com</authorEmail>
 	<authorUrl>http://joomlacode.org/gf/project/biblestudy/</authorUrl>

@@ -451,10 +451,8 @@ if (!$media_size){
 									$bracketpos = strpos($mediacode, '}');
 									$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
 								}
-							$bracketpos = strpos($mediacode,'{');
-							$dashpos = $bracketpos - 1;
-							$isdash = strpos($mediacode,'-',$dashpos);
-								if ($isdash == $dashpos){
+							$isonlydash = substr_count($mediacode, '}-{');
+								if ($isonlydash == 1){
 									$ishttp = substr_count($studyfile, 'http://');
 										if ($ishttp < 1) { 
 											//We want to see if there is a file here or if it is streaming by testing to see if there is an extension
