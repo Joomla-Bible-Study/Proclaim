@@ -587,6 +587,18 @@ if ($user->name){$full_name = $user->name; } else {$full_name = ''; } ?>
 <tr><td ><?php echo JText::_('First & Last Name: ');?></td><td><input class="text_area" size="50" type="text" name="full_name" id="full_name" value="<?php echo $full_name;?>" /></td></tr>
 <tr><td><?php echo JText::_('Email (Not displayed): ');?></td><td><input class="text_area" type="text" size="50" name="user_email" id="user_email" value="<?php echo $user->email;?>" /></td></tr>
 <tr><td><?php echo JText::_('Comment: ');?></td><td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr>
+<?php if ($this->params->get('use_captcha') == 1) { ?>
+<tr><td><?php // Beginning of row for captcha
+// Begin captcha . Thanks Adeptus 
+								
+		echo JText::_('Enter the text in the picture').'&nbsp;'?>
+		<input name="txtNumber" type="text" id="txtNumber" value="" style="vertical-align:middle" size="10">&nbsp;
+		<img src="<?php echo JURI::base().'components/com_biblestudy/randomImage.php';?>" alt="" /><br />
+								
+</td></td><?php //end of row for captcha?>
+<?php
+	} // end of if for use of captcha
+?>
 </table><?php //End of Form table?>
 <input type="hidden" name="study_id" id="study_id" value="<?php echo $this->studydetails->id;?>" />
 <input type="hidden" name="task" value="comment" />

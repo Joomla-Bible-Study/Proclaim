@@ -52,7 +52,26 @@ class biblestudyControllerstudydetails extends JController
 	$params =& $mainframe->getPageParameters();
 
 	$model = $this->getModel('studydetails');
-
+		// Begin captcha
+			if ($this->params->get('use_captcha') == 1) {
+				session_start();
+				$number = JRequest::getVar('txtNumber', 'null', 'POST');
+					
+				if ($message != NULL)
+				{
+					if (md5($number) != $_SESSION['image_random_value'])
+					{
+						$mess = 'Incorrect Key';
+						echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
+						echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
+						return;
+						die();
+						//break;
+					}
+				}
+			}
+			
+		// Finish captcha
 		if ($model->storecomment()) {
 			$msg = JText::_( 'Comment Submitted!' );
 		} else {
@@ -71,6 +90,7 @@ class biblestudyControllerstudydetails extends JController
 	 */
 	function save()
 	{
+		
 		$model = $this->getModel('studydetails');
 
 		if ($model->store($post)) {

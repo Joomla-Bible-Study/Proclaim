@@ -900,6 +900,10 @@
 		<option value="0">Approval on backend</option>
 		<option value="1">No Approval needed</option>
 		</param>
+	<param name="use_captcha" type="radio" default="1" label="Use Captcha for comments" description="Choose whether to use an image with text in it for users to enter before posting their comment">
+		<option value="0">No Captcha</option>
+		<option value="1">Use Captcha</option>
+		</param>
 	<param name="email_comments" type="radio" default="1" label="Email when comments entered" description="Set to yes if you want an email sent for every comment entered on studies">
 		<option value="0">No Email on Comments</option>
 		<option value="1">Email sent</option>

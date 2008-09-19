@@ -10,7 +10,7 @@
 	<copyright>2008 Tom Fuller</copyright>
 	<license>GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
-	<version>6.0.10</version>
+	<version>6.0.11</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Bible Study Management System</description>
 	<installfile>install.biblestudy.php</installfile>
@@ -37,6 +37,7 @@
 		<filename>tooltip.js</filename>
 		<filename>convert1.htm</filename>
 		<filename>class.biblestudydownload.php</filename>
+		<filename>randomImage.php</filename>
 		<filename>views/index.html</filename>
 		<filename>views/studieslist/index.html</filename>
 		<filename>views/studieslist/view.html.php</filename>
