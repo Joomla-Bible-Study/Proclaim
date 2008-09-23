@@ -920,6 +920,7 @@
 		<option value="1">Title Only</option>
 		<option value="2">Scripture Only</option>
 		<option value="3">Title + Scripture</option>
+		<option value="4">Date + Scripture + Title</option>
 		</param>
 	<param name="allow_podcast" type="radio" default="0" label="Allow Podcast Frontend entry" description="Choose whether to allow or not podcast entry on the front end">
 		<option value="0">No Front End Entry</option>

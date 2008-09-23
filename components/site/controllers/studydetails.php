@@ -50,28 +50,34 @@ class biblestudyControllerstudydetails extends JController
 	{
 	global $option, $mainframe;
 	$params =& $mainframe->getPageParameters();
-
+	$cap = 1;
 	$model = $this->getModel('studydetails');
 		// Begin captcha
-			if ($this->params->get('use_captcha') == 1) {
-				session_start();
+			if ($params->get('use_captcha') == 1) {
+				//session_start();
 				$number = JRequest::getVar('txtNumber', 'null', 'POST');
-					
-				if ($message != NULL)
-				{
+				//$image_random_value = JRequest::getVar('image_random_value');	
+				//if ($message != NULL)
+				//{
+					//if (md5($number) != $image_random_value)
+					//$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
+					$testit = JSession::get('image_random_value');
+					dump ($testit, 'testit: ');
 					if (md5($number) != $_SESSION['image_random_value'])
 					{
-						$mess = 'Incorrect Key';
+						$mess = JText::_('Incorrect Key');
 						echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 						echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
 						return;
 						die();
+						$cap = 0;
 						//break;
 					}
-				}
+				//}
 			}
 			
 		// Finish captcha
+	if ($cap == 1) {
 		if ($model->storecomment()) {
 			$msg = JText::_( 'Comment Submitted!' );
 		} else {
@@ -82,7 +88,7 @@ class biblestudyControllerstudydetails extends JController
 		}
 		$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
 		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&msg='.$msg, 'Comment Added.');
-
+	} // End of $cap
 	}
 	/**
 	 * save a record (and redirect to main page)

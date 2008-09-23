@@ -216,6 +216,9 @@ function publish()
 				case 3:
 					$title = $episode->studytitle.' - '.$episode->bookname.' '.$episode->chapter_begin;
 				break;
+				case 4:
+					$title = $episodedate.' - '.$episode->bookname.' '.$episode->chapter_begin.' - '.$episode->studytitle;
+				break;
 			}
 		$title = str_replace('&',"and",$title);
 		$episodedetailtemp = '';

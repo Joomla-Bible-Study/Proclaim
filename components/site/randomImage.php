@@ -6,7 +6,8 @@ $rand = rand(10000, 99999);
 
 // create the hash for the random number and put it in the session
 $_SESSION['image_random_value'] = md5($rand);
-
+//$image_random_value2 = md5($rand);
+//JRequest::setVar( 'image_random_value2', $image_random_value2 );
 // create the image
 $image = imagecreate(60, 30);
 
