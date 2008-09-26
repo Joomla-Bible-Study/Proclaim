@@ -28,6 +28,8 @@ class Dump_File{
 	$path = $media->fpath;
 	$filename = $media->filename;
 	$size = $media->size;
+	$download_file = 'http://'.$server.$path.$filename;
+	//if ($size < 1) { $size = filesize($download_file); }
 	$mime_type = $media->mimetext;
     $user_agent = (isset($_SERVER["HTTP_USER_AGENT"]) ) ? $_SERVER["HTTP_USER_AGENT"] : $HTTP_USER_AGENT;
     while (@ob_end_clean());
@@ -42,8 +44,7 @@ class Dump_File{
     header("Content-Type: application/force-download");
     header("Content-Disposition: attachment; filename=".$filename);
     header("Content-Transfer-Encoding: binary");
-	$download_file = 'http://'.$server.$path.$filename;
-    $this->readfile_chunked($download_file);
+	$this->readfile_chunked($download_file);
 
   }
 
