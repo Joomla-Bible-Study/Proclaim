@@ -296,13 +296,14 @@ return $scripture;
 		. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
 		. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
 		. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-		. ' WHERE #__bsms_mediafiles.study_id LIKE '.$row->id.' ORDER BY ordering ASC LIMIT 1';
+		. ' WHERE #__bsms_mediafiles.study_id LIKE '.$row->id.' LIMIT 1';
 $database->setQuery( $query );
 $filesize = $database->loadObject();	
-$file_size = $filesize->size;
-	if (!$file_size){
+
+	if (!$filesize){
 	}
 	else {
+	$file_size = $filesize->size;
 	switch ($file_size ) {
 	
 		case $file_size < 1024 :
@@ -334,8 +335,12 @@ $file_size = $filesize->size;
     PHP to alternate the colors between the two colors we defined above. */ 
     $bgcolor = ($row_count % 2) ? $color1 : $color2;
 	?>
-<?php	
+<?php
+if (!$filesize){
+	}
+	else {	
 $filepath = 'http://'.$filesize->spath.$filesize->fpath.$filesize->filename;
+}
 $show_media = $params->get('show_media',1);
 $filesize_showm = $params->get('filesize_showm');
 $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails&id=' . $row->id);

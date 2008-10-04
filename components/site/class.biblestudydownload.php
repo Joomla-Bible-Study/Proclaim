@@ -35,7 +35,8 @@ class Dump_File{
     while (@ob_end_clean());
     
 	$filesize = $size;
-	
+	dump ($filesize, 'Filesize: ');
+	dump ($download_file, 'Download File: ');
     header("HTTP/1.1 200 OK");
     header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
     header("Expires: 0");
