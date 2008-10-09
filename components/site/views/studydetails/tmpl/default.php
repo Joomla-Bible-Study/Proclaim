@@ -508,8 +508,10 @@ if (!$media_size){
 <td width="<?php echo $this->params->get('media_width');?>">	
     <?php echo $media1_link; ?>
     <?php if ($link_type > 0){$src = JURI::base().$download_image;
-					list($width,$height)=getimagesize($src);?>
-                    <a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&amp;id=<?php echo $media->id;?>&amp;view=studieslist&amp;controller=studieslist&amp;task=download"> <img src="<?php echo JURI::base().$download_image;?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" /></a><?php }?>
+	if(list($width,$height)=@getimagesize($src)){}
+						else {$width = 24; $height= 24;}
+					//list($width,$height)=getimagesize($src);?>
+                    <a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&amp;id=<?php echo $media->id;?>&amp;view=studieslist&amp;controller=studieslist&amp;task=download"> <img src="<?php echo JURI::base().$download_image;?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" /></a><?php } ?>
     <?php if ($this->params->get('show_filesize') > 0) 
 		{ ?>
          <br>
