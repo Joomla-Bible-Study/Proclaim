@@ -625,7 +625,7 @@ $color = $params->get('use_color');
                              ?>
                         <?php if (isset($column1[0]['position'])) { //This tests to see if there is anything in column1?>
                         <?php if ($entry_user >= $entry_access){//This adds a <td> for user frontend editing of the record?>
-                        <td valign="<?php echo $params->get('colalign');?>"><a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]=<?php echo $row->id;?>"><?php echo JText::_('[Edit]');?></a></td><?php } //End of front end user authorized to edit records?>
+                        <td width="10" valign="<?php echo $params->get('colalign');?>"><a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]=<?php echo $row->id;?>"><?php echo JText::_('[Edit]');?></a></td><?php } //End of front end user authorized to edit records?>
                     	<td width="<?php echo $widpos1;?>"><?php //Column 1 of 5?>
                         <table  border="<?php echo $params->get('border');?>" cellpadding="<?php echo $params->get('padding');?>" cellspacing="<?php echo $params->get('spacing');?>"> <?php //This is the table for the list. It's outside the foreach?>
                         	<?php

@@ -51,7 +51,8 @@ class Tablestudiesedit extends JTable
 	var $comments = 1;
 	var $hits = 0;
 	var $user_id = null;
-	var $user_name = null;	
+	var $user_name = null;
+	var $show_level = null;	
 	/**
 	 * Constructor
 	 *

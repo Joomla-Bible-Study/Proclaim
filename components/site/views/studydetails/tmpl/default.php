@@ -32,7 +32,7 @@ $db	= & JFactory::getDBO();
 $query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
 $db->setQuery($query);
 $bookresults = $db->loadObject();
-$book=$bookresults->bookname;
+if ($bookresults->bookname) {$book=$bookresults->bookname;} else {$book = '';}
 $b1 = ' ';
 $b2 = ':';
 $b2a = ':';
@@ -591,12 +591,15 @@ if ($user->name){$full_name = $user->name; } else {$full_name = ''; } ?>
 <tr><td><?php echo JText::_('Comment: ');?></td><td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr>
 <?php if ($this->params->get('use_captcha') == 1) { ?>
 <tr><td><?php // Beginning of row for captcha
-// Begin captcha . Thanks Adeptus 
-								
+// Begin captcha . Thanks OSTWigits 
+//Must be installed. Here we check that
+if (JPluginHelper::importPlugin('system', 'captcha'))
+	{ 								
 		echo JText::_('Enter the text in the picture').'&nbsp;'?>
-		<input name="txtNumber" type="text" id="txtNumber" value="" style="vertical-align:middle" size="10">&nbsp;
-		<img src="<?php echo JURI::base().'components/com_biblestudy/randomImage.php';?>" alt="" /><br />
-								
+		<input name="word" type="text" id="word" value="" style="vertical-align:middle" size="10">&nbsp;
+        <img src=<?php echo JURI::base().'index.php?option=com_biblestudy&view=studydetails&controller=studydetails&task=displayimg';?>>
+		<br />
+	<?php } else { echo JText::_('Captcha plugin not installed. Please inform site administrator'); } //end of check for OSTWigit plugin?>							
 </td></td><?php //end of row for captcha?>
 <?php
 	} // end of if for use of captcha

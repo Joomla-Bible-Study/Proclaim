@@ -46,37 +46,39 @@ class biblestudyControllerstudydetails extends JController
 		parent::display();
 	}
 	
+	function displayimg()
+        {	
+            global $mainframe;    
+            // By default, just display an image
+            $document = &JFactory::getDocument();
+            $doc = &JDocument::getInstance('raw');
+            // Swap the objects
+            $document = $doc;
+	    $mainframe->triggerEvent('onCaptcha_display', array());
+	}
+	
 	function comment()
 	{
 	global $option, $mainframe;
 	$params =& $mainframe->getPageParameters();
 	$cap = 1;
 	$model = $this->getModel('studydetails');
-		// Begin captcha
-			if ($params->get('use_captcha') == 1) {
-				//session_start();
-				$number = JRequest::getVar('txtNumber', 'null', 'POST');
-				//$image_random_value = JRequest::getVar('image_random_value');	
-				//if ($message != NULL)
-				//{
-					//if (md5($number) != $image_random_value)
-					//$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
-					$testit = JSession::get('image_random_value');
-					dump ($testit, 'testit: ');
-					if (md5($number) != $_SESSION['image_random_value'])
-					{
-						$mess = JText::_('Incorrect Key');
+		
+	//Begin Captcha with plugin
+	        $return = false;
+            $word = JRequest::getVar('word', false, '', 'CMD');
+            $mainframe->triggerEvent('onCaptcha_confirm', array($word, &$return));
+            if ($return) { $cap = 1; } else {
+		$mess = JText::_('Incorrect Key');
 						echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 						echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
 						return;
 						die();
 						$cap = 0;
 						//break;
-					}
-				//}
-			}
-			
-		// Finish captcha
+	    }	
+		
+		
 	if ($cap == 1) {
 		if ($model->storecomment()) {
 			$msg = JText::_( 'Comment Submitted!' );

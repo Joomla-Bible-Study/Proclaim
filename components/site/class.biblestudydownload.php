@@ -36,7 +36,7 @@ class Dump_File{
     while (@ob_end_clean());
     
 	$filesize = $size;
-	//dump ($filesize, 'Filesize: ');
+	/*//dump ($filesize, 'Filesize: ');
 	//dump ($download_file, 'Download File: ');
     header("HTTP/1.1 200 OK");
     header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -46,8 +46,36 @@ class Dump_File{
     header("Content-Type: application/force-download");
     header("Content-Disposition: attachment; filename=".$filename);
     header("Content-Transfer-Encoding: binary");
-	$this->readfile_chunked($download_file);
+	$this->readfile_chunked($download_file);*/
 
+//Begin Docman code
+
+
+		$cont_dis = $inline ? 'inline' : 'attachment';
+
+		// required for IE, otherwise Content-disposition is ignored
+		if(ini_get('zlib.output_compression'))  {
+			ini_set('zlib.output_compression', 'Off');
+		}
+
+        header("Pragma: public");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Expires: 0");
+
+        header("Content-Transfer-Encoding: binary");
+		header('Content-Disposition:' . $cont_dis .';'
+			. ' filename="' . $filename . '";'
+			. ' modification-date="' . $media->createdate . '";'
+			. ' size=' . $filesize .';'
+			); //RFC2183
+        header("Content-Type: "    . $mime_type );			// MIME type
+        header("Content-Length: "  . $filesize);
+
+        if( ! ini_get('safe_mode') ) { // set_time_limit doesn't work in safe mode
+		    @set_time_limit(0);
+        }
+		$this->readfile_chunked($download_file);
+//End DocMan Code
   }
 
   function readfile_chunked($download_file, $retbytes=true){
@@ -61,6 +89,10 @@ class Dump_File{
     while (!feof($handle)){
           $buffer = fread($handle, $chunksize);
           echo $buffer;
+		  //added from Docman
+		  @ob_flush();
+			flush();
+		//end added from Docman
           if ($retbytes){
              $cnt += strlen($buffer);
           }

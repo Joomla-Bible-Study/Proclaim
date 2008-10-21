@@ -149,7 +149,6 @@ function _buildContentWhere()
 			$where[] = " date_format(#__bsms_studies.studydate, '%Y')= ".(int) $filter_year;
 		}
 		
-
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 		
 		return $where;

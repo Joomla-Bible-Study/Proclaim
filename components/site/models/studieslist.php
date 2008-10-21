@@ -165,9 +165,14 @@ function _buildContentWhere()
 		if ($filter_year > 0) {
 			$where[] = " date_format(#__bsms_studies.studydate, '%Y')= ".(int) $filter_year;
 		}
-		//if ($search) {
-			//$where[] = 'LOWER(#__bsms_studies.' .$filter_searchby.') LIKE '.$this->_db->Quote('%'.$search.'%');
-		//}
+		//Added for user level control
+		$user =& JFactory::getUser();
+		$level_user = $user->get('gid');
+		//$level_user = $user->usertype;
+		//dump ($level_user, 'Level_user: ');
+		$where[] = ' #__bsms_studies.show_level <= '.$level_user;
+		
+		//End for user level control
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 		

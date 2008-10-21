@@ -80,6 +80,7 @@ class biblestudyModelstudiesedit extends JModel
 			$this->_data->hits = null;
 			$this->_data->user_id = null;
 			$this->_data->user_name = null;
+			$this->_data->show_level = null;
 		}
 		return $this->_data;
 	}

@@ -148,6 +148,22 @@ $user =& JFactory::getUser();?>
               
             </tr></table>
         <tr><td class="key" align="left"><?php echo JText::_('Allow comments for this study? -No- overrides global setting for this study only');?></td><td><?php echo $this->lists['comments'];?></td></tr>
+        <tr><td class="key" align="left"><?php echo JText::_('User Level to show');?></td><td>
+        <select name="show_level" id="show_level" class="inputbox" size="1">
+       
+        <?php 
+		$show = $this->studiesedit->show_level;
+		$selected2 = '';
+		?>
+        <option value="0" <?php if ($show == '0') {echo 'selected="selected"';}?>><?php echo JText::_('Everyone');?></option>
+        <option value="18" <?php if ($show == '18') {echo 'selected="selected"';}?>><?php echo JText::_('Registered Users');?></option>
+		<option value="19" <?php if ($show == '19') {echo 'selected="selected"';}?>><?php echo JText::_('Authors');?></option>
+		<option value="20" <?php if ($show == '20') {echo 'selected="selected"';}?>><?php echo JText::_('Editors');?></option>
+		<option value="21" <?php if ($show == '21') {echo 'selected="selected"';}?>><?php echo JText::_('Publishers');?></option>
+		<option value="23" <?php if ($show == '23') {echo 'selected="selected"';}?>><?php echo JText::_('Managers');?></option>
+		<option value="24" <?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
+        </select>
+        </td></td>
         <tr>
         <td class="key" align="left"><?php echo JText::_('Store');?></td>
         <td><table><tr><td><?php echo JText::_('Image for CD: ');?><?php echo $this->lists['image_cd'];?></td>
