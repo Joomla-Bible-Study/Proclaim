@@ -57,10 +57,18 @@ class biblestudyControllermediafilesedit extends JController
 		} else {
 			$msg = JText::_( 'Error Saving Media' );
 		}
-		global $mainframe, $option;
 		
+		global $mainframe, $option;
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
     	//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;
-		$link = JRoute::_('index.php?option='.$option.'&view=studieslist&msg='.$msg);
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist&msg='.$msg.$menureturn);
 		$database	= & JFactory::getDBO();
 		$query = "SELECT id"
 			. "\nFROM #__menu"
@@ -88,12 +96,18 @@ class biblestudyControllermediafilesedit extends JController
 		} else {
 			$msg = JText::_( 'Media Item(s) Deleted' );
 		}
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
 		global $mainframe, $option;
 		$params =& $mainframe->getPageParameters();
-		if ($params->get('view_link') == 1){
-		$link = 'index.php?option=com_biblestudy&view=studieslist&msg='.$msg;}
-		if ($params->get('view_link') == 2){
-    	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
+		$link = 'index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn;
+		$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
@@ -114,11 +128,17 @@ function publish()
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
 		global $mainframe, $option;
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
 		$params =& $mainframe->getPageParameters();
-		if ($params->get('view_link') == 1){
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
-		if ($params->get('view_link') == 2){
-    	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
@@ -129,7 +149,14 @@ function publish()
 	function unpublish()
 	{
 		global $mainframe;
-
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
@@ -142,10 +169,8 @@ function publish()
 		}
 		global $mainframe, $option;
 		$params =& $mainframe->getPageParameters();
-		if ($params->get('view_link') == 1){
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
-		if ($params->get('view_link') == 2){
-    	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		$link = 'index.php?option=com_biblestudy&view=studieslist'.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
@@ -158,14 +183,20 @@ function publish()
 	 */
 	function cancel()
 	{
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
 		$msg = JText::_( 'Operation Cancelled' );
 		global $mainframe, $option;
 		$params =& $mainframe->getPageParameters();
-		if ($params->get('view_link') == 1){
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
-		if ($params->get('view_link') == 2){
-    	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
-		
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		$link = 'index.php?option=com_biblestudy&view=studieslist'.$menureturn.'&msg='.$msg;
+	
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
 		//$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
@@ -184,17 +215,24 @@ function upload()
 	$folder = $db->loadObject();
 	$folderpath = $folder->folderpath;
 	
+	$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
 	$filename = strtolower($file['name']);
 	if ($filename == 'index.htm'){
-		$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
+		$mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "File of this type not allowed.");
 			  return;
 		}
 	if ($filename == 'index.html'){
-		$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
+		$mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "File of this type not allowed.");
 			  return;
 		}
 	if ($filename == 'index.php'){
-		$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
+		$mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "File of this type not allowed.");
 			  return;
 		}
 	if(isset($file) && is_array($file) && $file['name'] != '')
@@ -205,12 +243,12 @@ function upload()
 		   
 		   
 		   if (JFile::exists($fullfilename)) {
-			  $mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed, file already exists.");
+			  $mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "Upload failed, file already exists.");
 			  return;
 		   }
 	
 		   if (!JFile::upload($file['tmp_name'], $fullfilename)) {
-			  $mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed, check to make sure that /components/$option/calendars exists.");
+			  $mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "Upload failed, check to make sure that /components/$option/calendars exists.");
 			  return;
 		   }
 		   

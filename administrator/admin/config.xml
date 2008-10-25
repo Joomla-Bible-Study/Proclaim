@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-	<params>
+	<params addpath="/components/com_biblestudy/elements">
 	<param name="allow_deletes" type="radio" default="1" label="Allow admin to delete rows for teachers/series/servers etc" description="Default setting allows editing of certain rows only to avoid broken links. Set this to Allow for full control. But do so with caution.">
 		<option value="0">Restrict Deletes</option>
 		<option value="1">Allow admin deletes</option>
@@ -45,6 +45,32 @@
 			<option value="DESC">Descending</option>
 			<option value="ASC">Ascending</option>
 		</param>
+		<param name="items" type="text" size="2" default="5" label="Number of studies to display" description="Enter a number of studies to display in the module" />
+		<param name="teacher_id" type="teacher" default="" label="Teacher" description="Choose a teacher to display for this menu item" />
+		<param name="series_id" type="series" default="" label="Series" description="Choose a series to display for this menu item" />
+		<param name="booknumber" type="book" default="" label="Book" description="Choose a Book to display for this menu item" />
+		<param name="topic_id" type="topic" default="" label="Topic" description="Choose a topic to display for this menu item" />
+		<param name="messagetype" type="messagetype" default="" label="Message Type" description="Choose a message type to display for this menu item" />
+		<param name="use_headers" type="radio" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
+			<option value="0">No Header Row</option>
+			<option value="1">Use Header Row</option>
+		</param>
+		<param name="header_align" type="radio" default="center" label="Alignment for header row" description="Choose the alignment for the header row (must also be enabled)">
+			<option value="center">Center</option>
+			<option value="left">Left</option>
+			<option value="right">Right</option>
+		</param>
+		<param name="header_color" type="text" default="#333333" label="Header Background Color" description="Put in a Hex or other color for the header row background" />
+		<param name="header_span" type="text" default="" label="Span tag for Header" description="Put in span information like size, font, etc for the header" />
+		<param name="header_width" type="text" default="" label="Width for header row" description="Pixels or percentage for entire row with headers" />
+		<param name="header1_width" type="text" default="" label="Width for Header column 1" description="Pixesl or percentage for Header 1" />
+		<param name="header2_width" type="text" default="" label="Width for Header column 2" description="Pixesl or percentage for Header 2" />
+		<param name="header3_width" type="text" default="" label="Width for Header column 3" description="Pixesl or percentage for Header 3" />
+		<param name="header4_width" type="text" default="" label="Width for Header column 4" description="Pixesl or percentage for Header 4" />
+		<param name="header1" type="text" default="" label="Header Column 1" description="Text to appear in the header of column 1 - leave blank if not using that column" />
+		<param name="header2" type="text" default="" label="Header Column 2" description="Text to appear in the header of column 2 - leave blank if not using that column" />
+		<param name="header3" type="text" default="" label="Header Column 3" description="Text to appear in the header of column 3 - leave blank if not using that column" />
+		<param name="header4" type="text" default="" label="Header Column 4" description="Text to appear in the header of column 4 - leave blank if not using that column" />
 	<param name="show_full_text" type="radio" default="1" label="Text" description="Show/Hide link to text">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -900,7 +926,7 @@
 		<option value="0">Approval on backend</option>
 		<option value="1">No Approval needed</option>
 		</param>
-	<param name="use_captcha" type="radio" default="1" label="Use OSTWigits Captcha plugin for comments" description="Choose whether to use an image with text in it for users to enter before posting their comment. OSTWigits captcha plugin must be installed http://joomlacode.org/gf/project/ostwigits/frs/?action=FrsReleaseBrowse&frs_package_id=2652">
+	<param name="use_captcha" type="radio" default="1" label="Use OSTWigits Captcha plugin for comments" description="Choose whether to use an image with text in it for users to enter before posting their comment. OSTWigits captcha plugin must be installed - go to the Joomla website and search for OSTWigits">
 		<option value="0">No Captcha</option>
 		<option value="1">Use OSTWigits Captcha</option>
 		</param>

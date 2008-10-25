@@ -31,15 +31,7 @@ class biblestudyModelstudieslist extends JModel
 		// In case limit has been changed, adjust limitstart accordingly
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		
-		// Get the pagination request variables
-		//$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
-		//$limitstart = $mainframe->getUserStateFromRequest( $option.'limitstart', 'limitstart', 0, 'int' );
-		//$limitstart = $mainframe->getUserStateFromRequest( $option.'limitstart', 'limitstart', 0 );
-		// In case limit has been changed, adjust it
-		//$limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
 		
-		//$this->setState('limit', $limit);
-		//$this->setState('limitstart', $limitstart);
 	}
 
 	/**
@@ -113,11 +105,7 @@ class biblestudyModelstudieslist extends JModel
 			jimport('joomla.html.pagination');
 			$this->_pagination = new JPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
 			
-			/*jimport('joomla.html.pagination');
-			$total = $this->getTotal();
-			$limitstart = $this->getState('limitstart');
-			$limit = $this->getState('limit');
-			$this->_pagination = new JPagination( $total, $limitstart, $limit );*/
+			
 			
 		}
 
@@ -134,11 +122,11 @@ function _buildContentWhere()
 		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',		'filter_series',		0,				'int' );
 		$filter_messagetype	= $mainframe->getUserStateFromRequest( $option.'filter_messagetype','filter_messagetype',		0,				'int' );
 		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year',		'filter_year',		0,				'int' );
-		//$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		$default_order,				'word' );
-		//$search				= $mainframe->getUserStateFromRequest( $option.'search',			'search',			'',				'string' );
-		//$search				= JString::strtolower( $search );
-		//$filter_searchby	= $mainframe->getUserStateFromRequest( $option.'filter_searchby','filter_searchby','','word' );
-		//$filter_ordering		= $mainframe->getUserStateFromRequest( $option.'.filter_ordering',					'filter_ordering',		'c.ordering',	'cmd' );
+		$teacher_menu = $params->get('teacher_id', 1);
+		$topic_menu = $params->get('topic_id', 1);
+		$book_menu = $params->get('booknumber', 101);
+		$series_menu = $params->get('series_id', 1);
+		$messagetype_menu = $params->get('messagetype', 1); 
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',				'word' );
 
 
@@ -164,6 +152,21 @@ function _buildContentWhere()
 		}
 		if ($filter_year > 0) {
 			$where[] = " date_format(#__bsms_studies.studydate, '%Y')= ".(int) $filter_year;
+		}
+		if ($teacher_menu > 0) {
+			$where[] = ' #__bsms_studies.teacher_id = '.(int) $teacher_menu;
+		}
+		if ($book_menu > 0) {
+			$where[] = ' #__bsms_studies.booknumber = '.(int) $book_menu;
+		}
+		if ($series_menu > 0) {
+			$where[] = ' #__bsms_studies.series_id = '.(int) $series_menu;
+		}
+		if ($topic_menu > 0) {
+			$where[] = ' #__bsms_studies.topics_id = '.(int) $topic_menu;
+		}
+		if ($messagetype_menu > 0) {
+			$where[] = ' #__bsms_studies.messagetype = '.(int) $messagetype_menu;
 		}
 		//Added for user level control
 		$user =& JFactory::getUser();

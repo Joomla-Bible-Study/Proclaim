@@ -115,7 +115,7 @@ $ch_b = $this->studydetails->chapter_begin2;
 $ch_e = $this->studydetails->chapter_end2;
 $v_b = $this->studydetails->verse_begin2;
 $v_e = $this->studydetails->verse_end2;
-$scripture2 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);		
+if ($this->studydetails->booknumber2){$scripture2 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);}		
 //if ($studydetails->secondary_reference) { $scripture .= ' - '.$studydetails->secondary_reference; }
 $picture = $this->params->get('show_picture_view');
 switch ($picture) {

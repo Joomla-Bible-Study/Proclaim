@@ -29,7 +29,11 @@ global $mainframe, $option;
 $params =& $mainframe->getPageParameters();
 $message = JRequest::getVar('msg');
 $database	= & JFactory::getDBO();
- 
+$teacher_menu = $params->get('teacher_id', 1);
+$topic_menu = $params->get('topic_id', 1);
+$book_menu = $params->get('booknumber', 101);
+$series_menu = $params->get('series_id', 1);
+$messagetype_menu = $params->get('messagetype', 1); 
 //$params = &JComponentHelper::getParams($option);
 
 $color1 = $this->params->get('color1');
@@ -130,7 +134,7 @@ if(list($width,$height)=@getimagesize($src)){}
             <?php //This is the column that holds the search drop downs?>
 			
             
-                    <?php if ($this->params->get('show_book_search') >0){ ?>
+                    <?php if ($this->params->get('show_book_search') >0 && !($book_menu) ){ ?>
                          
 						<?php $query2 = 'SELECT booknumber AS value, bookname AS text, published'
                         . ' FROM #__bsms_books'
@@ -155,13 +159,13 @@ if(list($width,$height)=@getimagesize($src)){}
                         };
                          echo '</select>';?>
                     <?php } ?>
-                    <?php if ($this->params->get('show_teacher_search') >0) { ?>
+                    <?php if ($this->params->get('show_teacher_search') >0 && !($teacher_menu)) { ?>
                         <?php echo $this->lists['teacher_id'];?>
                     <?php } ?>
-                    <?php if ($this->params->get('show_series_search') >0){ ?>
+                    <?php if ($this->params->get('show_series_search') >0 && !($series_menu)){ ?>
                     <?php echo $this->lists['seriesid'];?>
                     <?php } ?>
-                    <?php if ($this->params->get('show_type_search') >0) { ?>
+                    <?php if ($this->params->get('show_type_search') >0 && !($messagetype_menu)) { ?>
                         <?php echo $this->lists['messagetypeid'];?>
                     <?php } ?>
                     <?php if ($this->params->get('show_year_search') >0){ ?>
@@ -219,9 +223,64 @@ if(list($width,$height)=@getimagesize($src)){}
                     
             </td></tr><?php //End of row for drop down boxes?>
             
+<?php // The table to hold header rows ?>
+
+<table width="<?php echo $params->get('header_width');?>"><?php //mirrors 6 colum table below?>
+<tr>
+<?php // begin array for positions to see if we need a column for the header
+$headercheck = array( array( 	'position' => $params->get('position1')),
+					  array( 	'position' => $params->get('position2')),
+					  array( 	'position' => $params->get('position3')),
+					  array( 	'position' => $params->get('position4')),
+					  array( 	'position' => $params->get('position5')),
+					  array( 	'position' => $params->get('position6')),
+					  array( 	'position' => $params->get('position7')),
+					  array( 	'position' => $params->get('position8')),
+					  array( 	'position' => $params->get('position9')),
+					  array( 	'position' => $params->get('position10')),
+					  array( 	'position' => $params->get('position11')),
+					  array( 	'position' => $params->get('position12')),
+					  array( 	'position' => $params->get('position13')),
+					  array( 	'position' => $params->get('position14')),
+					  array( 	'position' => $params->get('position15')),
+					  array( 	'position' => $params->get('position16')),
+					  array( 	'position' => $params->get('position17'))
+					 ); //print_r($headercheck);
+?>
+<?php
+
+//Beginning of header rows
+$isheader1 = 0;
+$isheader2 = 0;
+$isheader3 = 0;
+$isheader4 = 0;
+if ($params->get('use_headers') >0) {
+	//$header_count = count($headercheck);
+//dump ($header_count, 'Header_count');	
+$rows1=count($headercheck);
+for($j=0;$j<$rows1;$j++)
+	{
+		if ($headercheck[$j]['position']==1){ $isheader1 = 1;}
+		if ($headercheck[$j]['position']==2){ $isheader2 = 1;}
+		if ($headercheck[$j]['position']==3){ $isheader3 = 1;}
+		if ($headercheck[$j]['position']==4){ $isheader4 = 1;}
+	} 	
+	if ($isheader1 == 1)
+		{echo '<th align="'.$params->get('header_align').'" bgcolor="'.$params->get('header_color').'" width="'.$params->get('header1_width').'"><span '.$params->get('header_span').'>'.$params->get('header1').'</span></th>';}
+	if ($isheader2 == 1)
+		{echo '<th align="'.$params->get('header_align').'" bgcolor="'.$params->get('header_color').'" width="'.$params->get('header2_width').'"><span '.$params->get('header_span').'>'.$params->get('header2').'</span></th>';}
+	if ($isheader3 == 1)
+		{echo '<th align="'.$params->get('header_align').'" bgcolor="'.$params->get('header_color').'" width="'.$params->get('header3_width').'"><span '.$params->get('header_span').'>'.$params->get('header3').'</span></th>';}
+	if ($isheader4 == 1)
+		{echo '<th align="'.$params->get('header_align').'" bgcolor="'.$params->get('header_color').'" width="'.$params->get('header4_width').'"><span '.$params->get('header_span').'>'.$params->get('header4').'</span></th>';}
+?>
+</tr></table><?php
+} // end of if use headers						
+//End of Header rows?>
+
+<?php //End of table for header rows?>        
         
-        
-        	<tr><td><?php //Beginning of row for 6 column table?>
+        	
  
  <?php //This is where each result from the database of studies is diplayed with options for each 6 column table?>
  
@@ -299,10 +358,8 @@ return $scripture;
 		. ' WHERE #__bsms_mediafiles.study_id LIKE '.$row->id.' LIMIT 1';
 $database->setQuery( $query );
 $filesize = $database->loadObject();	
-
-	if (!$filesize){
-	}
-	else {
+$number_rows = $database->getAffectedRows($query);	
+if ($number_rows > 0) {
 	$file_size = $filesize->size;
 	switch ($file_size ) {
 	
@@ -339,7 +396,7 @@ $filesize = $database->loadObject();
 if (!$filesize){
 	}
 	else {	
-$filepath = 'http://'.$filesize->spath.$filesize->fpath.$filesize->filename;
+if ($number_rows > 0) {$filepath = 'http://'.$filesize->spath.$filesize->fpath.$filesize->filename;} else {$filepath = '';}
 }
 $show_media = $params->get('show_media',1);
 $filesize_showm = $params->get('filesize_showm');
@@ -437,6 +494,7 @@ $details_text = $this->params->get('details_text');
 $filesize_show = $this->params->get('filesize_show');
 $secondary = $row->secondary_reference;
 if (!$row->booknumber2){$scripture2 = '';}
+if ($number_rows < 1) {$file_size = '0';}
 $a = array( array( 	'element' => $scripture1,
 					'position' => $params->get('position1'),
 					'order' => $params->get('order1'),
@@ -596,7 +654,7 @@ foreach ($a as $key => $arow) {
 // Sort the data with position and order ascending
 // Add $a as the last parameter, to sort by the common key
 array_multisort($position, SORT_ASC, $order, SORT_ASC, $a);
-//print_r($a);
+
 //Copy the array into four so we can deal with them individually in each column
 $column1 = $a;
 $column2 = $a;
@@ -604,6 +662,8 @@ $column3 = $a;
 $column4 = $a;
 $color = $params->get('use_color');
 ?>
+
+     <tr><td><?php //Beginning of row for 6 column table?>
     <?php if ($params->get('line_break') > 0) {echo '<br />'; } ?>
         	<table <?php if ($color > 0){echo 'bgcolor="'.$bgcolor.'"';}?> width="<?php echo $page_width; ?>" cellpadding="0" cellspacing="0"><?php //6 Column table?>
             	<tr valign="<?php echo $params->get('colalign');?>"><?php //Row for 6 column table?>
@@ -813,6 +873,7 @@ $color = $params->get('use_color');
 							$span4=$c4['span'];
 							$islink4=$c4['islink'];
 							?>
+							
 							
 							<tr valign="<?php echo $params->get('colalign');?>"> <?php //We make a new row and td for each record in this column ?>
 							<td  valign="<?php echo $params->get('colalign');?>">
@@ -1062,7 +1123,7 @@ $color = $params->get('use_color');
 					$useavr = 0;
 					$useavr = $useavr + $params->get('useavr') + $media->internal_viewer;
 					$isfilesize = 0;
-						if ($filesize > 0)
+						if ($file_size > 0)
 						{ 
 							$isfilesize = 1;
 							$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';

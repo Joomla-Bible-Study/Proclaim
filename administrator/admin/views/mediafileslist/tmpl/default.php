@@ -45,7 +45,7 @@
 				<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
 				<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" <?php echo $disabled ?> class="text_area" style="text-align: center" />
 			</td>
-        <td> <a href="<?php echo $link; ?>"><?php echo $row->filename; ?></a> </td>
+        <td> <a href="<?php echo $link; ?>"><?php if (!$row->filename) { echo $row->createdate;} else {echo $row->filename;} ?></a> </td>
         <td> <?php echo $row->studytitle; ?> </td>
         <td> <?php echo $row->media_image_name; ?> </td>
         <td> <?php echo $row->createdate; ?> </td>

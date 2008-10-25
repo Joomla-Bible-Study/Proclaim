@@ -48,35 +48,41 @@ class biblestudyControllerstudydetails extends JController
 	
 	function displayimg()
         {	
-            global $mainframe;    
-            // By default, just display an image
-            $document = &JFactory::getDocument();
-            $doc = &JDocument::getInstance('raw');
-            // Swap the objects
-            $document = $doc;
-	    $mainframe->triggerEvent('onCaptcha_display', array());
+           if (JPluginHelper::importPlugin('system', 'captcha'))
+			{ 
+				global $mainframe;    
+				// By default, just display an image
+				$document = &JFactory::getDocument();
+				$doc = &JDocument::getInstance('raw');
+				// Swap the objects
+				$document = $doc;
+				$mainframe->triggerEvent('onCaptcha_display', array());
+			}
 	}
 	
 	function comment()
 	{
+	
 	global $option, $mainframe;
 	$params =& $mainframe->getPageParameters();
 	$cap = 1;
 	$model = $this->getModel('studydetails');
 		
 	//Begin Captcha with plugin
+	if (JPluginHelper::importPlugin('system', 'captcha'))
+	{ 
 	        $return = false;
             $word = JRequest::getVar('word', false, '', 'CMD');
             $mainframe->triggerEvent('onCaptcha_confirm', array($word, &$return));
             if ($return) { $cap = 1; } else {
-		$mess = JText::_('Incorrect Key');
+			$mess = JText::_('Incorrect Key');
 						echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 						echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
 						return;
 						die();
 						$cap = 0;
-						//break;
-	    }	
+			}
+	}	
 		
 		
 	if ($cap == 1) {

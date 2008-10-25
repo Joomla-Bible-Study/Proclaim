@@ -66,7 +66,14 @@ class biblestudyModelfoldersedit extends JModel
 		$row =& $this->getTable();
 
 		$data = JRequest::get( 'post' );
-
+		
+		$folderpath = $data['folderpath'];
+		$slash_begining = substr($folderpath, 0, 1);
+		$slash_ending = substr($folderpath,-1,1);
+		if ($slash_begining != '/'){$folderpath = '/'.$folderpath;}
+		if ($slash_ending != '/'){$folderpath = $folderpath.'/';}
+		//dump ($folderpath, '$folderpath: ');
+		$data['folderpath'] = $folderpath;
 		// Bind the form fields to the series table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());

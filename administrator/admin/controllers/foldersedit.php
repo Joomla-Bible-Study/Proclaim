@@ -46,7 +46,7 @@ class biblestudyControllerfoldersedit extends JController
 	function save()
 	{
 		$model = $this->getModel('foldersedit');
-
+		
 		if ($model->store($post)) {
 			$msg = JText::_( 'Folder Saved!' );
 		} else {
