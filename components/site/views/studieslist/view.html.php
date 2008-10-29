@@ -28,6 +28,7 @@ class biblestudyViewstudieslist extends JView
 		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',	'filter_series',0,'int' );
 		$filter_messagetype	= $mainframe->getUserStateFromRequest( $option.'filter_messagetype','filter_messagetype',0,'int' );
 		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year','filter_year',0,'int' );
+		$filter_location	= $mainframe->getuserStateFromRequest( $option.'filter_location','filter_location',0,'int');
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
 		$search				= $mainframe->getUserStateFromRequest( $option.'search','search','','string' );
 		$search				= JString::strtolower( $search );
@@ -73,36 +74,7 @@ class biblestudyViewstudieslist extends JView
 		$types 			= array_merge( $types, $db->loadObjectList() );
 		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_teacher" );
 		
-// Build Books list for drop down menu
 
-	
-		/*$query2 = 'SELECT booknumber AS value, bookname AS text, published'
-			. ' FROM #__bsms_books'
-			. ' WHERE published = 1'
-			. ' ORDER BY booknumber';
-		$database->setQuery( $query2 );
-		$bookid = $database->loadObjectList();
-		//$this->assignRef('bookid', $bookid);
-		//$bookid =& $database->loadAssocList();
-		//foreach ($bookid as $v) {
-			//$v[]['text'] = 'JText::_('.$v[]['text'].')';
-		//}
-		//$rows1=count($bookid);
-							//for($i=0;$i<$rows1;$i++)
-							//{
-							//$bookid[$i]['text'] = 'JText::_('.$bookid[0]['text'].')';
-							//} 
-		//foreach ($bookid as $c1) { 
-		//			$text = 'JText::_('.$c1['text'].')';
-		//}
-		//$this->assignRef('lists2',$text);
-		//$booksid->text = JText::_($booksid->text);
-		$types2[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Book' ) .' -' );
-		//$types2[]		= JHTML::_('select.option','0',JText::printf($bookid));
-		$types2 			= array_merge( $types2, $db->loadObjectList() );
-		//$types2 			= array_merge( $types2, $bookid );
-		$lists['bookid']	= JHTML::_('select.genericlist',  $types2, 'filter_book', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_book" );
-		*/
 //Build Series List for drop down menu
 
 $query3 = 'SELECT id AS value, series_text AS text, published'
@@ -144,7 +116,13 @@ $query6 = ' SELECT * FROM #__bsms_order '
 		$orders 			= array_merge( $orders, $db->loadObjectList() );
 		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders" );
 		
-
+$query7 = ' SELECT id AS value, location_text AS text, published FROM #__bsms_locations WHERE published = 1'
+		. ' ORDER BY id ';
+		$database->setQuery( $query7 );
+		$locationsorder = $database->loadObjectList();
+		$locations[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Location' ) .' -' );
+		$locations 			= array_merge( $locations, $db->loadObjectList() );
+		$lists['locations']	= JHTML::_('select.genericlist',   $locations, 'filter_location', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_location" );
 
 $query8 = 'SELECT DISTINCT #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text'
 			. ' FROM #__bsms_studies'

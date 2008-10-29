@@ -32,6 +32,7 @@ $database	= & JFactory::getDBO();
 $teacher_menu = $params->get('teacher_id', 1);
 $topic_menu = $params->get('topic_id', 1);
 $book_menu = $params->get('booknumber', 101);
+$location_menu = $params->get('locations', 1);
 $series_menu = $params->get('series_id', 1);
 $messagetype_menu = $params->get('messagetype', 1); 
 //$params = &JComponentHelper::getParams($option);
@@ -133,7 +134,7 @@ if(list($width,$height)=@getimagesize($src)){}
             
             <?php //This is the column that holds the search drop downs?>
 			
-            
+            <?php if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}?>
                     <?php if ($this->params->get('show_book_search') >0 && !($book_menu) ){ ?>
                          
 						<?php $query2 = 'SELECT booknumber AS value, bookname AS text, published'
@@ -244,7 +245,8 @@ $headercheck = array( array( 	'position' => $params->get('position1')),
 					  array( 	'position' => $params->get('position14')),
 					  array( 	'position' => $params->get('position15')),
 					  array( 	'position' => $params->get('position16')),
-					  array( 	'position' => $params->get('position17'))
+					  array( 	'position' => $params->get('position17')),
+					  array(	'position' => $params->get('position18'))
 					 ); //print_r($headercheck);
 ?>
 <?php
@@ -634,6 +636,13 @@ $a = array( array( 	'element' => $scripture1,
 					'islink' => $params->get('islink17'),
 					'span' => $params->get('span17'),
 					'isbullet' => $params->get('isbullet17')
+				),
+			array(	'element' => $row->location_text,
+					'position' => $params->get('position18'),
+					'order' => $params->get('order18'),
+					'islink' => $params->get('islink18'),
+					'span' => $params->get('span18'),
+					'isbullet' => $params->get('isbullet18')
 				),
 			array(	'element' => $row->message_type,
 					'position' => $params->get('position12'),
@@ -1148,6 +1157,13 @@ $color = $params->get('use_color');
 <param name="menu" value="false">
 <param name="wmode" value="transparent">
 </object> ';}
+	/*$abspath    = JPATH_SITE;
+	require_once($abspath.DS.'components/com_biblestudy/classes/class.biblestudymediadisplay.php');
+	$inputtype = 0;
+	$media_display = new biblestudymediadisplay($row->id, $inputtype);
+	$media_display->id = $row->id;
+	$media_display->inputtype = 0;*/
+	
 					?>
 					<td align="left" >
                     <?php //dump ($media1_link, 'Media1_link'); ?>

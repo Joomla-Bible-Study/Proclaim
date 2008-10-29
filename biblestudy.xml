@@ -3,14 +3,14 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>October 22, 2008</creationDate>
+	<creationDate>October 28, 2008</creationDate>
 	<author>Tom Fuller</author>
 	<authorEmail>TomFuller2@gmail.com</authorEmail>
 	<authorUrl>http://joomlacode.org/gf/project/biblestudy/</authorUrl>
 	<copyright>2008 Tom Fuller</copyright>
 	<license>GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
-	<version>6.0.11_RC1</version>
+	<version>6.0.11_RC2</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Bible Study Management System</description>
 	<installfile>install.biblestudy.php</installfile>
@@ -183,6 +183,7 @@
 		<filename>elements/topic.php</filename>
 		<filename>elements/teacher.php</filename>
 		<filename>elements/messagetype.php</filename>
+		<filename>elements/locations.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>
@@ -201,6 +202,7 @@
 			<menu link="option=com_biblestudy&amp;view=serverslist">Servers</menu>
 			<menu link="option=com_biblestudy&amp;view=folderslist">Server Folders</menu>
 			<menu link="option=com_biblestudy&amp;view=messagetypelist">Message Types</menu>
+			<menu link="option=com_biblestudy&amp;view=locationslist">Locations</menu>
 			<menu link="option=com_biblestudy&amp;view=topicslist">Topics</menu>
 			<menu link="option=com_biblestudy&amp;view=podcastlist">Podcasts</menu>
 			<menu link="option=com_biblestudy&amp;view=episodelist">Podcast Episodes</menu>
@@ -234,6 +236,8 @@
 			<filename>controllers/teacherlist.php</filename>
 			<filename>controllers/commentslist.php</filename>
 			<filename>controllers/commentsedit.php</filename>
+			<filename>controllers/locationsedit.php</filename>
+			<filename>controllers/locationslist.php</filename>
 			<filename>controllers/index.html</filename>
 			<filename>elements/studydetails.php</filename>
 			<filename>elements/mediafile.php</filename>
@@ -265,6 +269,8 @@
 			<filename>models/mediafilesedit.php</filename>
 			<filename>models/commentslist.php</filename>
 			<filename>models/commentsedit.php</filename>
+			<filename>models/locationsedit.php</filename>
+			<filename>models/locationslist.php</filename>
 			<filename>models/index.html</filename>
 			<filename>views/commentslist/view.html.php</filename>
 			<filename>views/commentslist/index.html</filename>
@@ -374,6 +380,14 @@
 			<filename>views/mediafilesedit/view.html.php</filename>
 			<filename>views/mediafilesedit/tmpl/index.html</filename>
 			<filename>views/mediafilesedit/tmpl/form.php</filename>
+			<filename>views/locationslist/index.html</filename>
+			<filename>views/locationslist/view.html.php</filename>
+			<filename>views/locationslist/tmpl/index.html</filename>
+			<filename>views/locationslist/tmpl/default.php</filename>
+			<filename>views/locationsedit/index.html</filename>
+			<filename>views/locationsedit/view.html.php</filename>
+			<filename>views/locationsedit/tmpl/index.html</filename>
+			<filename>views/locationsedit/tmpl/form.php</filename>
 			<filename>views/index.html</filename>
 			<filename>tables/teacheredit.php</filename>
 			<filename>tables/mediaedit.php</filename>
@@ -388,6 +402,7 @@
 			<filename>tables/mimetypeedit.php</filename>
 			<filename>tables/mediafilesedit.php</filename>
 			<filename>tables/commentsedit.php</filename>
+			<filename>tables/locationsedit.php</filename>
 			<filename>tables/index.html</filename>
 			<filename>convert1.htm</filename>
 			<filename>config.xml</filename>
@@ -409,6 +424,7 @@
 			<filename>help/en-GB/biblestudy.mediafileslist.html</filename>
 			<filename>help/en-GB/biblestudy.podcasts.html</filename>
 			<filename>help/en-GB/biblestudy.episodelist.html</filename>
+			<filename>help/en-GB/biblestudy.locations.html</filename>
 			</files>
 		<languages folder="admin/languages">
 			<language tag="en-GB">en-GB.com_biblestudy.ini</language>

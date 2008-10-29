@@ -45,13 +45,14 @@ class biblestudyModelstudieslist extends JModel
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-			. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text'
+			. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_locations.id AS lid, #__bsms_locations.location_text'
 			. ' FROM #__bsms_studies'
 			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
 			. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
 			. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
 			. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
 			. '	LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
+			. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
 			. $where
 			. $orderby
 			;
@@ -122,11 +123,13 @@ function _buildContentWhere()
 		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',		'filter_series',		0,				'int' );
 		$filter_messagetype	= $mainframe->getUserStateFromRequest( $option.'filter_messagetype','filter_messagetype',		0,				'int' );
 		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year',		'filter_year',		0,				'int' );
+		$filter_location	= $mainframe->getUserStateFromRequest( $option.'filter_location', 	'filter_location', 0, 'int');
 		$teacher_menu = $params->get('teacher_id', 1);
 		$topic_menu = $params->get('topic_id', 1);
 		$book_menu = $params->get('booknumber', 101);
 		$series_menu = $params->get('series_id', 1);
 		$messagetype_menu = $params->get('messagetype', 1); 
+		$location_menu = $params->get('locations', 1);
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',				'word' );
 
 
@@ -137,6 +140,9 @@ function _buildContentWhere()
 		
 		if ($filter_topic > 0) {
 			$where[] = ' #__bsms_studies.topics_id = '.(int) $filter_topic;
+		}
+		if ($filter_location > 0) {
+			$where[] = ' #__bsms_studies.location_id = '.(int) $filter_location;
 		}
 		if ($filter_book > 0) {
 			$where[] = ' #__bsms_studies.booknumber = '.(int) $filter_book;
@@ -167,6 +173,9 @@ function _buildContentWhere()
 		}
 		if ($messagetype_menu > 0) {
 			$where[] = ' #__bsms_studies.messagetype = '.(int) $messagetype_menu;
+		}
+		if ($location_menu > 0) {
+			$where[] = ' #__bsms_studies.location_id = '.(int) $location_menu;
 		}
 		//Added for user level control
 		$user =& JFactory::getUser();

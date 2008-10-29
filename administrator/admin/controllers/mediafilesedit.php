@@ -43,7 +43,7 @@ class biblestudyControllermediafilesedit extends JController
 	//$file_extension = JFile::getExt($file);
 	//$fname_reject = 'index.htm|index.html|index.php';
 	//$ext_reject = 'asp|php';
-	$filename = strtolower($file['name']);
+	$filename = $file['name'];
 	if ($filename == 'index.htm'){
 		$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
 			  return;

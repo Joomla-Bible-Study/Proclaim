@@ -11,16 +11,17 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 
 
-class biblestudyViewbookslist extends JView
+class biblestudyViewlocationslist extends JView
 {
 	
 	function display($tpl = null)
 	{
 		global $mainframe, $option;
+		
 		//$document =& JFactory::getDocument();
 		//$document->addStyleSheet('http://www.calvarychapelnewberg.net/j15/administrator/components/com_biblestudy/css/general.css');
  		$params = &JComponentHelper::getParams($option);
-		JToolBarHelper::title(   JText::_( 'Books Manager' ), 'generic.png' );
+		JToolBarHelper::title(   JText::_( 'Locations Manager' ), 'generic.png' );
 		//Checks to see if the admin allows rows to be deleted
 		if ($params->get('allow_deletes') > 0 ):
 			JToolBarHelper::deleteList();
@@ -31,7 +32,7 @@ class biblestudyViewbookslist extends JView
 		JToolBarHelper::addNewX();
 		JToolBarHelper::preferences('com_biblestudy', '550');
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.books', true );
+		JToolBarHelper::help( 'biblestudy.locations', true );
 		$db=& JFactory::getDBO();
 		$uri	=& JFactory::getURI();
 		

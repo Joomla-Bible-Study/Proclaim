@@ -51,6 +51,7 @@
 		<param name="booknumber" type="book" default="" label="Book" description="Choose a Book to display for this menu item" />
 		<param name="topic_id" type="topic" default="" label="Topic" description="Choose a topic to display for this menu item" />
 		<param name="messagetype" type="messagetype" default="" label="Message Type" description="Choose a message type to display for this menu item" />
+		<param name="locations" type="locations" default="" label="Locations" description="Choose a location to display for this menu item" />
 		<param name="use_headers" type="radio" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
 			<option value="0">No Header Row</option>
 			<option value="1">Use Header Row</option>
@@ -152,6 +153,10 @@
 			<option value="1">Show</option>
 		</param>
 	<param name="show_topic_search" type="radio" default="1" label="Show/Hide Topic search" description="Shows or hides the drop down topical list">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+	<param name="show_locations_search" type="radio" default="1" label="Show/Hide Locations search" description="Shows or hides the drop down locations list">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
@@ -730,6 +735,38 @@
 		</param>
 		<param name="@spacer" type="spacer" default="" label="" description="">
 		</param>
+		<param name="@spacer" type="spacer" default="Location" label="Location" description="Location">
+		</param>
+		<param name="position18" type="list" default="0" label="Location" description="Choose column 1-4 for the Location">
+			<option value="0">Don't show</option>
+			<option value="1">Column 1</option>
+			<option value="2">Column 2</option>
+			<option value="3">Column 3</option>
+			<option value="4">Column 4</option>
+		</param>
+		<param name="order18" type="list" default="1" label="Order for Location in list" description="Type a number of the order for this element in it's column">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+		</param>
+		<param name="islink18" type="list" default="0" label="Location a link to study" description="Choose whether Location should be a hyperlink to the study details or media">
+			<option value="0">Not a link</option>
+			<option value="1">Link to Details</option>
+			<option value="2">Link to 1st Media File</option>
+		</param>
+		<param name="span18" type="text" default="" label="Span tag for Location" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
+		<param name="isbullet18" type="list" default="0" label="Bullet Location" description="Add a bullet before this item">
+			<option value="0">No Bullet</option>
+			<option value="1">Bulleted</option>
+		</param>
+		<param name="@spacer" type="spacer" default="" label="" description="">
+		</param>
 		<param name="@spacer" type="spacer" default="Blank Line 1" label="Blank Line" description="Blank Line">
 		</param>
 		<param name="blank1" type="list" default="0" label="Blank Line 1" description="Choose a column if you want for a blank line">
@@ -910,6 +947,10 @@
 			<option value="1">Show</option>
 		</param>
 	<param name="show_duration" type="radio" default="1" label="Show/Hide duration in Study View" description="Shows or hides the duration of the study on the details page">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+	<param name="show_locations" type="radio" default="0" label="Show/Hide location in Study View" description="Shows or hides the location of the study on the details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>

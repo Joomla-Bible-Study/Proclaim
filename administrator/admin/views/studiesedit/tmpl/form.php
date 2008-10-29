@@ -122,6 +122,11 @@ $user =& JFactory::getUser();?>
         <td > <?php echo $this->lists['teacher_id']; ?> </td>
       </tr>
       <tr> 
+       <tr> 
+        <td class="key" align="left"><?php echo JText::_( 'Location' ); ?></td>
+        <td > <?php echo $this->lists['location_id']; ?> </td>
+      </tr>
+      <tr> 
         <td class="key" align="left"><?php echo JText::_( 'Series' ); ?></td>
         <td ><?php echo $this->lists['series_id']; ?></td>
       </tr>

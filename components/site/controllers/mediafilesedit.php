@@ -49,7 +49,7 @@ class biblestudyControllermediafilesedit extends JController
 		
 		$model = $this->getModel('mediafilesedit');
 		$file = JRequest::getVar('file', null, 'files', 'array' );
-		$filename_upload = strtolower($file['name']);
+		$filename_upload = $file['name'];
 		if (isset($filename_upload)){
 		$uploadFile=$this->upload();}
 		if ($model->store($post)) {

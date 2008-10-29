@@ -67,6 +67,16 @@ class biblestudyViewstudiesedit extends JView
 		$types3 			= array_merge( $types3, $database->loadObjectList() );
 		$lists['series_id'] = JHTML::_('select.genericlist', $types3, 'series_id', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->series_id );
 		
+		$query4 = 'SELECT id AS value, location_text AS text, published'
+			. ' FROM #__bsms_locations'
+			. ' WHERE published = 1'
+			. ' ORDER BY id';
+		$database->setQuery( $query4 );
+		$location_id = $database->loadObjectList();
+		$types10[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Location' ) .' -' );
+		$types10 			= array_merge( $types10, $database->loadObjectList() );
+		$lists['location_id'] = JHTML::_('select.genericlist', $types10, 'location_id', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->location_id );
+		
 			$query4 = 'SELECT id AS value, message_type AS text, published'
 			. ' FROM #__bsms_message_type'
 			. ' WHERE published = 1'

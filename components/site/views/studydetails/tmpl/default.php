@@ -296,7 +296,12 @@ if ($this->params->get('comment_publish') < 1){echo JText::_('Submissions may ne
 				<?php } 
 			}?>
 				
-			
+			<?php if ($this->params->get('show_locations') > 0 { 
+            	if (!$this->studydetails->location_text) {} else {?>
+					<span class="small">
+					<?php echo '<strong>'.JText::_('Location: ').'</strong>'.$this->studydetails->location_text; ?>
+					</span>
+				<?php } ?>
 			<?php if ($this->params->get('show_series_view') > 0){ ?>
 				<?php if (!$this->studydetails->stext) { ?>
 				<?php }

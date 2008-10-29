@@ -53,6 +53,7 @@ class Tablestudiesedit extends JTable
 	var $user_id = null;
 	var $user_name = null;
 	var $show_level = null;	
+	var $location_id = null;
 	/**
 	 * Constructor
 	 *

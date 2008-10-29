@@ -100,7 +100,7 @@ fclose($fp);
 //End code from webdigity*/
 
 //Begin code from OSU
-$ch = curl_init();
+/*$ch = curl_init();
    curl_setopt ($ch, CURLOPT_URL, $url);
    curl_setopt ($ch, CURLOPT_USERAGENT, $user_agent);
    curl_setopt ($ch, CURLOPT_HEADER, 0);
@@ -108,8 +108,39 @@ $ch = curl_init();
    $result = curl_exec ($ch);
    curl_close ($ch);
    return $result; 
-
+*/
 //End code from OSU
+
+//Begin code from Coffee House
+
+//$url     =    $_REQUEST['url'];
+/*$ch        =    curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1) ;
+$res    =    curl_exec($ch) ;
+curl_close($ch) ;
+
+echo $res;*/
+
+//End code from Coffee House
+
+//Begin Google Maps
+//if (!($getpage = file_get_contents($uri))) {
+            //$this->debug_log("URI couldn't be opened probably ALLOW_URL_FOPEN off");
+            if (function_exists('curl_init')) {
+               //$this->debug_log("curl_init does exists");
+               $ch = curl_init();
+               $timeout = 5; // set to zero for no timeout
+               curl_setopt ($ch, CURLOPT_URL, $url);
+               curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+               curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+               $getpage = curl_exec($ch);
+               curl_close($ch);
+            } //else
+			echo $getpage;
+              // $this->debug_log("curl_init doesn't exists");
+        // }
+
+//End Google maps
 //Begin Docman code
 
 
