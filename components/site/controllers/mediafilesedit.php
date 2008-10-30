@@ -20,6 +20,19 @@ class biblestudyControllermediafilesedit extends JController
 	 */
 	function __construct()
 	{
+		
+			$user =& JFactory::getUser();
+			global $mainframe, $option;
+			$params =& $mainframe->getPageParameters();
+			$entry_user = $user->get('gid');
+			$entry_access = ($params->get('entry_access')) ;
+			$allow_entry = $params->get('allow_entry_study');
+			if (!$allow_entry) {$allow_entry = 0;}
+			if ($allow_entry < 1) {return JError::raiseError('403', JText::_('Access Forbidden')); }
+			if (!$entry_user) { $entry_user = 0; }
+			if ($allow_entry > 0) {
+				if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('Access Forbidden')); }
+			}
 		parent::__construct();
 
 		// Register Extra tasks
@@ -33,9 +46,12 @@ class biblestudyControllermediafilesedit extends JController
 	 */
 	function edit()
 	{
+		
+		
 		JRequest::setVar( 'view', 'mediafilesedit' );
 		JRequest::setVar( 'layout', 'form'  );
 		JRequest::setVar('hidemainmenu', 1);
+
 
 		parent::display();
 	}
@@ -59,7 +75,7 @@ class biblestudyControllermediafilesedit extends JController
 		}
 		
 		global $mainframe, $option;
-		$db=& JFactory::getDBO(); 
+		/*$db=& JFactory::getDBO(); 
 		$query = "SELECT id"
 			. "\nFROM #__menu"
 			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
@@ -68,7 +84,7 @@ class biblestudyControllermediafilesedit extends JController
 		$menureturn='';
 		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
     	//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;
-		$link = JRoute::_('index.php?option='.$option.'&view=studieslist&msg='.$msg.$menureturn);
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist&msg='.$msg.$menureturn);*/
 		$database	= & JFactory::getDBO();
 		$query = "SELECT id"
 			. "\nFROM #__menu"
@@ -136,9 +152,9 @@ function publish()
 		$menuid = $db->loadResult();
 		$menureturn='';
 		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
-		$params =& $mainframe->getPageParameters();
+		//$params =& $mainframe->getPageParameters();
 		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
-		$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
@@ -170,7 +186,7 @@ function publish()
 		global $mainframe, $option;
 		$params =& $mainframe->getPageParameters();
 		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
-		$link = 'index.php?option=com_biblestudy&view=studieslist'.$menureturn.'&msg='.$msg;
+		//$link = 'index.php?option=com_biblestudy&view=studieslist'.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
@@ -195,7 +211,7 @@ function publish()
 		global $mainframe, $option;
 		$params =& $mainframe->getPageParameters();
 		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
-		$link = 'index.php?option=com_biblestudy&view=studieslist'.$menureturn.'&msg='.$msg;
+		//$link = 'index.php?option=com_biblestudy&view=studieslist'.$menureturn.'&msg='.$msg;
 	
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
@@ -222,7 +238,7 @@ function upload()
 		$menuid = $db->loadResult();
 		$menureturn='';
 		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
-	$filename = strtolower($file['name']);
+	$filename = $file['name'];
 	if ($filename == 'index.htm'){
 		$mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "File of this type not allowed.");
 			  return;
@@ -237,8 +253,8 @@ function upload()
 		}
 	if(isset($file) && is_array($file) && $file['name'] != '')
 		{
-		   $fullfilename = JPATH_SITE.$folderpath. strtolower($file['name']);
-		   $filename = strtolower($file['name']);
+		   $fullfilename = JPATH_SITE.$folderpath. $file['name'];
+		   $filename = $file['name'];
 		   jimport('joomla.filesystem.file');
 		   
 		   

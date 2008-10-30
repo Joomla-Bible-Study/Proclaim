@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<script type="text/javascript">
+<script type="text/javascript" language="javascript">
 function submitbutton(pressbutton)
 {
 	var form = document.adminForm;
@@ -12,7 +12,7 @@ function submitbutton(pressbutton)
 	}
 }
 </script>
-<script type="text/javascript">
+<script type="text/javascript" language="javascript">
 function openConverter1() 
 		{
 			var Wheight=125;
@@ -27,7 +27,7 @@ function openConverter1()
 		}
 
 </script>
-<?php 
+<?php /*
 $user =& JFactory::getUser();
 global $mainframe, $option;
 $params =& $mainframe->getPageParameters();
@@ -35,7 +35,7 @@ $entry_user = $user->get('gid');
 $entry_access = ($params->get('entry_access')) - 1;
 $allow_entry = $params->get('allow_entry_study');
 if ($allow_entry > 0) {
-if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else{ ?>
+if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else{ */?>
 <form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 <div class="col100">
 	<fieldset class="adminform">
@@ -149,5 +149,5 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
 <input type="hidden" name="task" value="save" />
 
 </form>
-<?php } //End for testing of user level access
-} // End of testing if front end submission allowed?>
+<?php //} //End for testing of user level access
+//} // End of testing if front end submission allowed?>

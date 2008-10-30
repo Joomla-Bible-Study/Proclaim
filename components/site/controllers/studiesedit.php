@@ -20,6 +20,18 @@ class biblestudyControllerstudiesedit extends JController
 	 */
 	function __construct()
 	{
+		$user =& JFactory::getUser();
+			global $mainframe, $option;
+			$params =& $mainframe->getPageParameters();
+			$entry_user = $user->get('gid');
+			$entry_access = ($params->get('entry_access')) ;
+			$allow_entry = $params->get('allow_entry_study');
+			if (!$allow_entry) {$allow_entry = 0;}
+			if ($allow_entry < 1) {return JError::raiseError('403', JText::_('Access Forbidden')); }
+			if (!$entry_user) { $entry_user = 0; }
+			if ($allow_entry > 0) {
+				if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('Access Forbidden')); }
+			}
 		parent::__construct();
 
 		// Register Extra tasks
@@ -32,6 +44,19 @@ class biblestudyControllerstudiesedit extends JController
 	 */
 	function edit()
 	{
+		/*$therequest = JRequest::getVar('controller', '0', 'GET', 'word' );
+		if ($therequest == 'studiesedit') {
+			$user =& JFactory::getUser();
+			global $mainframe, $option;
+			$params =& $mainframe->getPageParameters();
+			$entry_user = $user->get('gid');
+			$entry_access = ($params->get('entry_access')) ;
+			$allow_entry = $params->get('allow_entry_study');
+			if (!$entry_user) { $entry_user = 0; }
+			if ($allow_entry > 0) {
+				if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('Access Forbidden')); }
+			}
+		}*/
 		JRequest::setVar( 'view', 'studiesedit' );
 		JRequest::setVar( 'layout', 'form'  );
 		JRequest::setVar('hidemainmenu', 1);
@@ -59,11 +84,28 @@ class biblestudyControllerstudiesedit extends JController
 		//if ($params->get('view_link') == 1){
 		//$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
 		//if ($params->get('view_link') == 2){
+		
+		if ($new > 0){
 		$link = 'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form&new='.$new;
-    	//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
+		$mainframe->redirect ($link);
+		}
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
+    	//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
+		
+		// Check the table in so it can be edited.... we are done with it anyway
+		//$mainframe->redirect ($link);
 		//$link = 'index.php?option=com_biblestudy&view=studieslist&msg='.$msg;
 		//$this->setRedirect($link, $msg);
 	}
@@ -74,23 +116,35 @@ class biblestudyControllerstudiesedit extends JController
 	 */
 	function remove()
 	{
-		global $mainframe;
+		global $mainframe, $option;
 		$model = $this->getModel('studiesedit');
 		if(!$model->delete()) {
 			$msg = JText::_( 'Error: One or More studies Items Could not be Deleted' );
 		} else {
 			$msg = JText::_( 'Study or Studies Deleted' );
 		}
-		$params =& $mainframe->getPageParameters();
-
-		if ($params->get('view_link') == 1){
+		//$params =& $mainframe->getPageParameters();
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+		
+		// Check the table in so it can be edited.... we are done with it anyway
+		$mainframe->redirect ($link);
+		/*if ($params->get('view_link') == 1){
 		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
 		if ($params->get('view_link') == 2){
     	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 		
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
-		//$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
+		//$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );*/
 	}
 function publish()
 	{
@@ -106,7 +160,21 @@ function publish()
 		if(!$model->publish($cid, 1)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
-		$params =& $mainframe->getPageParameters();
+		global $mainframe, $option;
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+		
+		// Check the table in so it can be edited.... we are done with it anyway
+		$mainframe->redirect ($link);
+		/*$params =& $mainframe->getPageParameters();
 
 		if ($params->get('view_link') == 1){
 		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
@@ -114,7 +182,7 @@ function publish()
     	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 		
 		// Check the table in so it can be edited.... we are done with it anyway
-		$mainframe->redirect ($link);
+		$mainframe->redirect ($link);*/
 		//$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist' );
 	}
 
@@ -133,7 +201,22 @@ function publish()
 		if(!$model->publish($cid, 0)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
-		$params =& $mainframe->getPageParameters();
+		global $mainframe, $option;
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+		
+		// Check the table in so it can be edited.... we are done with it anyway
+		$mainframe->redirect ($link);
+		
+		/*$params =& $mainframe->getPageParameters();
 
 		if ($params->get('view_link') == 1){
 		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
@@ -141,7 +224,7 @@ function publish()
     	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 		
 		// Check the table in so it can be edited.... we are done with it anyway
-		$mainframe->redirect ($link);
+		$mainframe->redirect ($link);*/
 		//$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist' );
 	}
 
@@ -153,7 +236,22 @@ function publish()
 	{
 		global $mainframe;
 		$msg = JText::_( 'Operation Cancelled' );
-		$params =& $mainframe->getPageParameters();
+		
+		global $mainframe, $option;
+		$db=& JFactory::getDBO(); 
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+		
+		// Check the table in so it can be edited.... we are done with it anyway
+		$mainframe->redirect ($link);
+		/*$params =& $mainframe->getPageParameters();
 
 		if ($params->get('view_link') == 1){
 		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
@@ -161,7 +259,7 @@ function publish()
     	$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 		
 		// Check the table in so it can be edited.... we are done with it anyway
-		$mainframe->redirect ($link);
+		$mainframe->redirect ($link);*/
 		//$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
 	}
 }

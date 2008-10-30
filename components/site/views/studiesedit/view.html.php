@@ -112,6 +112,16 @@ class biblestudyViewstudiesedit extends JView
 			$database->setQuery( $query );
 			$mediafiles = $database->loadObjectList();
 		
+		$query4 = 'SELECT id AS value, location_text AS text, published'
+			. ' FROM #__bsms_locations'
+			. ' WHERE published = 1'
+			. ' ORDER BY id';
+		$database->setQuery( $query4 );
+		//$location_id = $database->loadObjectList();
+		$types10[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Location' ) .' -' );
+		$types10 			= array_merge( $types10, $database->loadObjectList() );
+		$lists['location_id'] = JHTML::_('select.genericlist', $types10, 'location_id', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->location_id );
+		
 		$query7 = 'SELECT id AS value, media_image_name AS text, published'
 			. ' FROM #__bsms_media'
 			. ' WHERE published = 1'
