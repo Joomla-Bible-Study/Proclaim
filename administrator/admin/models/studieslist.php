@@ -19,6 +19,7 @@ class biblestudyModelstudieslist extends JModel
 	var $_data;
 	var $_total = null;
 	var $_pagination = null;
+	var $_files = null;
 	
 function __construct()
 	{
@@ -75,6 +76,35 @@ function __construct()
 		}
 			//$this->setState('limitstart', $limitstart);
 		return $this->_data;
+	}
+	
+	/**
+	* Creates and executes a new query that retrieves the medifile information from the mediafiles table. 
+	* It then adds to the dataObject the mediafiles associated with the sermon.
+	* @return unknown_type
+	*/
+	function getFiles() {
+		$db =& JFactory::getDBO();
+		$i=0;
+		foreach($this->_data as $sermon) {
+			$i++;
+			$sermon_id = $sermon->id;
+			$query = 'SELECT study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path'
+				. ' FROM #__bsms_mediafiles'
+				. ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
+				. ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
+				. ' WHERE `study_id` ='
+				.$sermon_id
+			;
+			$db->setQuery($query);
+			//var_dump ($db->loadAssocList()).'<hr>';
+			//$files = array($i => $db->loadAssocList($sermon->id));
+			//var_dump ($files);
+			//var_dump ($db->loadAssocList());
+			$mediaFiles[$sermon->id] = $db->loadAssocList();		
+		}
+		$this->_files = $mediaFiles;
+		return $this->_files;
 	}
 /**
 	 * Method to get the total number of studies items
