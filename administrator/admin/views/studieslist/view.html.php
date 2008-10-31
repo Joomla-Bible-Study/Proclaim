@@ -54,7 +54,7 @@ class biblestudyViewstudieslist extends JView
 		$rows		= & $this->get( 'Data');
 		$total		= & $this->get( 'Total');
 		$pagination = & $this->get( 'Pagination' );
-		
+		$mediaFiles		= & $this->get( 'Files');
 //Build Teacher List for drop down menu
 
 
@@ -153,6 +153,7 @@ $query8 = 'SELECT id AS value, topic_text AS text, published'
 		$this->assignRef('rows', 		$rows);
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('request_url',	$uri->toString());
+		$this->assignRef('mediaFiles', $mediaFiles);
 
 		parent::display($tpl);
 	}
