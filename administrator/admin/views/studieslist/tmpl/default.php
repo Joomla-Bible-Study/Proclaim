@@ -1,5 +1,8 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 
+<?php 
+	jimport('joomla.filesystem.file')
+?>
 <form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
 <table>
 <tr>
@@ -76,6 +79,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		  <th><?php echo JHTML::_( 'grid.sort', 'Title', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
           <th><?php echo JHTML::_( 'grid.sort', 'Series', 'series_id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 		  <th><?php echo JHTML::_( 'grid.sort','Topic','topics_id', $this->lists['order_Dir'], $this->lists['order'] );?></th>
+		  <th><?php echo JHTML::_('grid.sort', 'Files', 'media_files', $this->lists['order_Dir'], $this->lists['order']); ?></th>
 		  <th align="center"><?php echo JHTML::_( 'grid.sort', 'Hits', 'hits', $this->lists['order_Dir'], $this->lists['order']); ?></th>
         </tr>
       </thead>
@@ -91,22 +95,40 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		$link 		= JRoute::_( 'index.php?option=' . $option . '&controller=studiesedit&task=edit&cid[]='. $row->id );
 		$published 	= JHTML::_('grid.published', $row, $i );
 		$date	= JHTML::_('date',  $row->studydate, JText::_('DATE_FORMAT_LC3') );
+		
+		//Check the mediafiles associated with the study
+		foreach($this->mediaFiles[$row->id] as $studyMediaFiles) {
+			$url = $studyMediaFiles['server_path'].$studyMediaFiles['folderpath'].$studyMediaFiles['filename'];
+			$headers = get_headers($url);
+			if(!stristr($headers[0],'OK')) {
+				$brokenLink = true;
+			}
+		}
+		if($brokenLink && count($this->mediaFiles[$row->id]) == 1) {
+			$mediaStatus = '<img border="0" alt="1 Bad" src="'.JPATH_COMPONENT_SITE.DS.'images'.DS.'1bad.png">';
+		}elseif($brokenLink && count($this->mediaFiles[$row->id] > 1)) {
+			$mediaStatus = '<img border="0" alt="Multiple Bad" src="'.JPATH_COMPONENT_SITE.DS.'images'.DS.'multiple.png">';
+		}else{
+			$mediaStatus = '<img border="0" alt="All Good" src="'.JPATH_COMPONENT_SITE.DS.'images'.DS.'good.png">';
+		}
 		?>
       <tr class="<?php echo "row$k"; ?>"> 
         <td> <?php echo $this->pagination->getRowOffset( $i ); ?> </td>
         <td> <?php echo $checked; ?> </td>
         <td align="center"> <?php echo $published; ?> </td>
 		<td> <a href="<?php echo $link; ?>"><?php echo $date; ?></a> </td>
-        <td><?php echo $row->message_type; ?></td>
+        <td><?php echo $row->id; ?></td>
         <td><?php echo $row->bookname; echo ' '; echo $row->chapter_begin; echo ':'; echo $row->verse_begin; echo '-'; echo $row->chapter_end; echo ':'; echo $row->verse_end;?></td>
         <td><?php echo $row->teachername; ?></td>
 		<td><?php echo $row->studytitle; ?></td>
         <td><?php echo $row->series_text; ?></td>
 		<td><?php echo $row->topic_text; ?></td>
+		<td align="center"><?php echo $mediaStatus; ?></td>
 		<td align="center"><?php echo $row->hits; ?></td>
       </tr>
       <?php
 		$k = 1 - $k;
+		unset($brokenLink);
 	}
 	?>
       <tfoot>
