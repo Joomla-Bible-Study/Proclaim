@@ -36,7 +36,7 @@ class Dump_File{
     while (@ob_end_clean());
     
 	$filesize = $size;
-	/*//dump ($filesize, 'Filesize: ');
+	//dump ($filesize, 'Filesize: ');
 	//dump ($download_file, 'Download File: ');
     header("HTTP/1.1 200 OK");
     header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -46,135 +46,30 @@ class Dump_File{
     header("Content-Type: application/force-download");
     header("Content-Disposition: attachment; filename=".$filename);
     header("Content-Transfer-Encoding: binary");
-	$this->readfile_chunked($download_file);*/
-
-//Begin code from studydetails
-$url = $download_file;
-/*$p = (get_extension_funcs("curl")); // This tests to see if the curl functions are there. It will return false if curl not installed
-  if ($p) { // If curl is installed then we go on
-  $ch = curl_init($url); // This will return false if curl is not enabled
-  if ($ch) { //This will return false if curl is not enabled
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-  $response = curl_exec($ch);
-  curl_close($ch);
-  
-  return $response;
-  	} // End of if ($ch)
-  } // End if ($p)
-//End code from studydetails
-*/
-//Begin code from weberdev
-/*$err_msg = '';
-    echo "<br>Attempting message download for $download_file<br>";
-    $out = fopen($filename, 'wb');
-    if ($out == FALSE){
-      print "File not opened<br>";
-      exit;
-    }
-   
+	$url = $download_file;
+	//start
+if(ini_get('allow_url_fopen') != 1) {
     $ch = curl_init();
-           
-    curl_setopt($ch, CURLOPT_FILE, $out);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_URL, $download_file);
-               
-    curl_exec($ch);
-    echo "<br>Error is : ".curl_error ( $ch);
-   
+    curl_setopt($ch, CURLOPT_URL,$download_file);
+    curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+    $contents = curl_exec($ch);
     curl_close($ch);
-    //fclose($handle); 
-//End code from weberdev*/
-
-//Begin code from webdigity
-/*set_time_limit(0);
-ini_set('display_errors',true);//Just in case we get some errors, let us know....
-
-$fp = fopen (dirname(__FILE__) . $filename, 'w+');//This is the file where we save the information
-$ch = curl_init($download_file);//Here is the file we are downloading
-curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-curl_setopt($ch, CURLOPT_FILE, $fp);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_exec($ch);
-curl_close($ch);
-fclose($fp);
-//End code from webdigity*/
-
-//Begin code from OSU
-/*$ch = curl_init();
-   curl_setopt ($ch, CURLOPT_URL, $url);
-   curl_setopt ($ch, CURLOPT_USERAGENT, $user_agent);
-   curl_setopt ($ch, CURLOPT_HEADER, 0);
-   curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-   $result = curl_exec ($ch);
-   curl_close ($ch);
-   return $result; 
-*/
-//End code from OSU
-
-//Begin code from Coffee House
-
-//$url     =    $_REQUEST['url'];
-/*$ch        =    curl_init($url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1) ;
-$res    =    curl_exec($ch) ;
-curl_close($ch) ;
-
-echo $res;*/
-
-//End code from Coffee House
-
-//Begin Google Maps
-//if (!($getpage = file_get_contents($uri))) {
-            //$this->debug_log("URI couldn't be opened probably ALLOW_URL_FOPEN off");
-            if (function_exists('curl_init')) {
-               //$this->debug_log("curl_init does exists");
-               $ch = curl_init();
-               $timeout = 5; // set to zero for no timeout
-               curl_setopt ($ch, CURLOPT_URL, $url);
-               curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-               curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-               $getpage = curl_exec($ch);
-               curl_close($ch);
-            } //else
-			echo $getpage;
-              // $this->debug_log("curl_init doesn't exists");
-        // }
-
-//End Google maps
-//Begin Docman code
-
-
-		/*$cont_dis = $inline ? 'inline' : 'attachment';
-
-		// required for IE, otherwise Content-disposition is ignored
-		if(ini_get('zlib.output_compression'))  {
-			ini_set('zlib.output_compression', 'Off');
-		}
-
-        header("Pragma: public");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Expires: 0");
-
-        header("Content-Transfer-Encoding: binary");
-		header('Content-Disposition:' . $cont_dis .';'
-			. ' filename="' . $filename . '";'
-			. ' modification-date="' . $media->createdate . '";'
-			. ' size=' . $filesize .';'
-			); //RFC2183
-        header("Content-Type: "    . $mime_type );			// MIME type
-        header("Content-Length: "  . $filesize);
-
-        if( ! ini_get('safe_mode') ) { // set_time_limit doesn't work in safe mode
-		    @set_time_limit(0);
-        }
-		$this->readfile_chunked($download_file);*/
-//End DocMan Code
+  } else {
+  $this->readfile_chunked($download_file);
+    //$contents = file_get_contents($download_file);
   }
+
+ }
+
+
 
   function readfile_chunked($download_file, $retbytes=true){
     $chunksize = 1*(1024*1024); // how many bytes per chunk
     $buffer = '';
     $cnt =0;
+	
     $handle = fopen($download_file, 'rb');
     if ($handle === false){
         return false;
@@ -194,9 +89,9 @@ echo $res;*/
     if ($retbytes && $status) {
        return $cnt; // return num. bytes delivered like readfile() does.
     }
-    return $status;
-  }
-}
+	
+} //end of function readfile	
+} //end of class
 
 
 ?>

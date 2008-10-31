@@ -23,11 +23,8 @@ $user_submit_name = $user->name;
 if ($user->name == ''){$user_submit_name = '';}
 $entry_access = ($params->get('entry_access')) ;
 $allow_entry = $params->get('allow_entry_study');
-//dump ($entry_access, 'Entry Access');
-//dump ($entry_user, 'Entry user');
-//dump ($allow_entry, 'Allow Entry');
-//if ($allow_entry > 0) {
-//if ($entry_user <= $entry_access){ echo JText::_('You are not authorized');}else{ ?>
+
+ ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
@@ -289,5 +286,3 @@ if ($user_name == ''){$user_name = $user->name;}
 <?php if (!$this->studiesedit->id) { ?>
 <input type="hidden" name="new" id="new" value="1" /> <?php } ?>
 </form>
-<?php //} //End for testing of user level access
-//} // End of testing if front end submission allowed?>
