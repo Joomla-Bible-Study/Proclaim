@@ -413,7 +413,8 @@ if (!$media_size){
 					$filesize = $media_size;
 					$mimetype = $media->mimetext;
 					$src = JURI::base().$media->impath;
-					list($width,$height)=getimagesize($src);
+					if(list($width,$height)=@getimagesize($src)){}
+						else {$width = 24; $height= 24;}
 					$ispath = 0;
 					if (!$media->filename){
 						$path1 = '';
