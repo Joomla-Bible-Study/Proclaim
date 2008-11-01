@@ -219,7 +219,7 @@ PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`;
 --
 -- Dumping data for table `#__bsms_locations`
 --
-INSERT INTO `#__bsms_locations` VALUES (1, 'Community Church', 1);
+INSERT IGNORE INTO `#__bsms_locations` VALUES (1, 'Community Church', 1);
 -- 
 -- Dumping data for table `#__bsms_books`
 -- 
