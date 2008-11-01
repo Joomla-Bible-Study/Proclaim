@@ -47,8 +47,71 @@ class Dump_File{
     header("Content-Disposition: attachment; filename=".$filename);
     header("Content-Transfer-Encoding: binary");
 	$url = $download_file;
+	$out_file_name = $filename;
 	//start
-if(ini_get('allow_url_fopen') != 1) {
+	}
+function auto_download($url,$out_file_name){
+	if( function_exists("curl_init") )
+        return curl_download($url,$out_file_name);
+	else
+        return normal_download($url,$out_file_name);
+}
+
+// PHP Funtion : curl_download uses PHP curl module to download the file.
+// It takes two parameter 1) Remote file url and 2) Local file name
+function curl_download($url,$out_file_name){
+	ini_set('memory_limit', '1000M');
+
+	$out = fopen($out_file_name,"wb");
+	
+	if($out){
+		$ch = curl_init(); 
+		
+		curl_setopt($ch, CURLOPT_FILE, $out); 
+		curl_setopt($ch, CURLOPT_HEADER, 0); 
+		curl_setopt($ch, CURLOPT_URL, $url); 
+		
+		curl_exec($ch); 
+		if(curl_error ($ch)){
+			echo "<br>Error in downloading file. Curl error says : ".curl_error ($ch); 
+		}
+		else{
+			echo "<br>File Download Success."; 
+		}
+		
+		curl_close($ch);
+	}else{
+		echo "Error : Set Permissions 777 to the current directory";
+	}
+	fclose($out);
+}
+
+// PHP Funtion: normal_download  uses file_get_contents PHP function to download the file.
+// It takes two parameter 1) Remote file url and 2) Local file name
+function normal_download($url,$out_file_name){
+	ini_set('memory_limit', '1000M');
+
+	$out = fopen($out_file_name,"wb");
+	
+	if($out){
+		
+		fwrite($out,file_get_contents($url));
+		
+		if(curl_error ($ch)){
+			echo "<br>Error in downloading file. Curl error says : ".curl_error ($ch); 
+		}
+		else{
+			echo "<br>File Download Success."; 
+		}
+		
+		
+	}else{
+		echo "Error : Set Permissions 777 to the current directory";
+	}
+	
+	fclose($out);
+}	
+/*if(ini_get('allow_url_fopen') != 1) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,$download_file);
     curl_setopt($ch, CURLOPT_FAILONERROR, 1);
@@ -90,7 +153,7 @@ if(ini_get('allow_url_fopen') != 1) {
        return $cnt; // return num. bytes delivered like readfile() does.
     }
 	
-} //end of function readfile	
+} //end of function readfile	*/
 } //end of class
 
 

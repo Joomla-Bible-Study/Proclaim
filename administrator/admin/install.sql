@@ -216,10 +216,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
 `location_text` VARCHAR(250) NULL,
 `published` TINYINT(1) NOT NULL DEFAULT '1',
 PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`;
---
--- Dumping data for table `#__bsms_locations`
---
-INSERT IGNORE INTO `#__bsms_locations` VALUES (1, 'Community Church', 1);
 -- 
 -- Dumping data for table `#__bsms_books`
 -- 
