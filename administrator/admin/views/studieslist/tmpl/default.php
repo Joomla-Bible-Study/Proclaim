@@ -84,7 +84,30 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
         </tr>
       </thead>
       <?php
-	
+      //Checks Url if its Valid
+      function checkUrl($url) {
+		  $return_val = FALSE; 
+		  $max_chunk           = 1024;
+		  $status_codes        = array("200","302"); // see function header for code details
+		  $url_info=parse_url($url); 
+		  $port=isset($url_info['port']) ? $url_info['port'] : 80;
+		  $fp=fsockopen($url_info['host'], $port, $errno, $errstr, 10);
+		  if(!$fp) return FALSE;
+		  stream_set_timeout($fp, 10);
+		  $head = "HEAD ".@$url_info['path']."?".@$url_info['query'];
+		  $head .= " HTTP/1.0\r\nHost: ".@$url_info['host']."\r\n\r\n";
+		  fputs($fp, $head);
+		  if($header=trim(fgets($fp, 1024))) {
+		    $header_array = explode(': ',$header);
+		    while((list(, $status_code)= each($status_codes)) && $return_val==FALSE) {
+		      if( strstr($header_array[0], $status_code)) {
+		        $return_val = TRUE;
+		      }
+		    }
+		  }
+		  fclose($fp);
+		  return $return_val;
+		}
 	$k = 0;
 	for ($i=0, $n=count( $this->rows ); $i < $n; $i++)
 	
@@ -99,17 +122,16 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		//Check the mediafiles associated with the study
 		foreach($this->mediaFiles[$row->id] as $studyMediaFiles) {
 			$url = $studyMediaFiles['server_path'].$studyMediaFiles['folderpath'].$studyMediaFiles['filename'];
-			$headers = get_headers($url);
-			if(!stristr($headers[0],'OK')) {
+			if(!checkUrl($url)){
 				$brokenLink = true;
 			}
 		}
 		if($brokenLink && count($this->mediaFiles[$row->id]) == 1) {
-			$mediaStatus = '<img border="0" alt="1 Bad" src="'.JPATH_COMPONENT_SITE.DS.'images'.DS.'1bad.png">';
+			$mediaStatus = '<img border="0" alt="1 Bad" src="components/com_biblestudy/images/1bad.png">';
 		}elseif($brokenLink && count($this->mediaFiles[$row->id] > 1)) {
-			$mediaStatus = '<img border="0" alt="Multiple Bad" src="'.JPATH_COMPONENT_SITE.DS.'images'.DS.'multiple.png">';
+			$mediaStatus = '<img border="0" alt="Multiple Bad" src="components/com_biblestudy/images/multiple.png">';
 		}else{
-			$mediaStatus = '<img border="0" alt="All Good" src="'.JPATH_COMPONENT_SITE.DS.'images'.DS.'good.png">';
+			$mediaStatus = '<img border="0" alt="All Good" src="components/com_biblestudy/images/good.png">';
 		}
 		?>
       <tr class="<?php echo "row$k"; ?>"> 
