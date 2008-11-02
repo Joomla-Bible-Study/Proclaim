@@ -87,7 +87,6 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
       //Checks Url if its Valid
       function checkUrl($url) {
 		  $return_val = FALSE; 
-		  $max_chunk           = 1024;
 		  $status_codes        = array("200","302"); // see function header for code details
 		  $url_info=parse_url($url); 
 		  $port=isset($url_info['port']) ? $url_info['port'] : 80;
