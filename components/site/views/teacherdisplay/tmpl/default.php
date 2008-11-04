@@ -72,7 +72,7 @@ else { ?>
 			<tr>
             <td> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->sid;?>"><?php echo $study->studytitle; ?></td>
             <td> <?php echo $study->bookname.' '.$study->chapter_begin;?></td>
-            <td> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC')); echo $date;?></td>
+            <td> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC') , '$offset'); echo $date;?></td>
             </tr>
             <?php } // end of foreach ?>
 	<?php	} // end of if show_teacher_studies ?>

@@ -116,7 +116,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		$checked 	= JHTML::_('grid.id',   $i, $row->id );
 		$link 		= JRoute::_( 'index.php?option=' . $option . '&controller=studiesedit&task=edit&cid[]='. $row->id );
 		$published 	= JHTML::_('grid.published', $row, $i );
-		$date	= JHTML::_('date',  $row->studydate, JText::_('DATE_FORMAT_LC3') );
+		$date	= JHTML::_('date',  $row->studydate, JText::_('DATE_FORMAT_LC3'),'$offset' );
 		
 		//Check the mediafiles associated with the study
 		foreach($this->mediaFiles[$row->id] as $studyMediaFiles) {

@@ -36,7 +36,7 @@
 		$podlink	= JRoute::_( 'index.php?option=' . $option . '&controller=podcastedit&task=edit&cid[]=' . $row->pid );
 		$studylink	= JRoute::_( 'index.php?option=' . $option . '&controller=studiesedit&task=edit&cid[]=' . $row->sid );
 		$published 	= JHTML::_('grid.published', $row, $i );
-		$date	= JHTML::_('date',  $row->createdate, JText::_('DATE_FORMAT_LC3') );
+		$date	= JHTML::_('date',  $row->createdate, JText::_('DATE_FORMAT_LC3') , '$offset');
 		?>
       <tr class="<?php echo "row$k"; ?>"> 
         <td> <?php echo $this->pagination->getRowOffset( $i ); ?> </td>

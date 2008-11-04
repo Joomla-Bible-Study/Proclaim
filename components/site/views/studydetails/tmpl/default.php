@@ -561,7 +561,7 @@ if (!$media_size){
 <?php 
 foreach ($this->comments as $comment){?>
 <tr><td><?php
-$comment_date_display = JHTML::_('date',  $comment->comment_date, JText::_('DATE_FORMAT_LC3') );
+$comment_date_display = JHTML::_('date',  $comment->comment_date, JText::_('DATE_FORMAT_LC3') , '$offset' );
 echo '<strong>'.$comment->full_name.'</strong> <i>'.$comment_date_display.'</i><br>';
 echo 'Comment: '.$comment->comment_text.'<br><hr>';?>
 </td></tr>

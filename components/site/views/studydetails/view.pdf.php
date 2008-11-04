@@ -247,7 +247,7 @@ $scripture2 = format_scripture2($booknumber, $ch_b, $ch_e, $v_b, $v_e);
 		if ($params->get('show_date_view')) 
 			{
 			// Display Created Date
-				$date = JHTML::_('date', $studydetails->studydate, JText::_('DATE_FORMAT_LC2'));
+				$date = JHTML::_('date', $studydetails->studydate, JText::_('DATE_FORMAT_LC2') , '$offset');
 				$text .="\n";
 				$text .= $date;
 			}
