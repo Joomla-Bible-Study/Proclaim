@@ -34,18 +34,24 @@ class Dump_File{
 	$mime_type = $media->mimetext;
     $user_agent = (isset($_SERVER["HTTP_USER_AGENT"]) ) ? $_SERVER["HTTP_USER_AGENT"] : $HTTP_USER_AGENT;
     while (@ob_end_clean());
-    
-	$filesize = $size;
-	//dump ($filesize, 'Filesize: ');
+	$full = $server.$path.$filename;
+    //dump ($filesize, 'Filesize: ');
 	//dump ($download_file, 'Download File: ');
-    header("HTTP/1.1 200 OK");
-    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-    header("Expires: 0");
-    header("Content-Length: ".$filesize);
+    //header("HTTP/1.1 200 OK");
+    //header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+   // header("Expires: 0");
+    //header("Location: http://".$server.$path."/2008/10-19-08-PM.mp3");
+    //header("Content-Length:5000000");
 //	header("Content-type: application/octet-stream");
-    header("Content-Type: application/force-download");
-    header("Content-Disposition: attachment; filename=".$filename);
+    //header("Content-Type: audio/mpeg");
+    header("Cache-Control: public");
+    header("Content-Description: File Transfer");
+	header("Content-Disposition: attachment; filename=".basename($download_file));
+    header("Content-Type: application/mp3");
     header("Content-Transfer-Encoding: binary");
+    header("Content-Length: ".$size);
+    readfile($download_file);
+	//header("Content-Transfer-Encoding: binary");
 	$url = $download_file;
 	$out_file_name = $filename;
 	//start
