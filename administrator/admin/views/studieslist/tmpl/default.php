@@ -83,7 +83,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		  <th align="center"><?php echo JHTML::_( 'grid.sort', 'Hits', 'hits', $this->lists['order_Dir'], $this->lists['order']); ?></th>
         </tr>
       </thead>
-      <?php
+      <?php 
       //Checks Url if its Valid
       function checkUrl($url) {
 		  $return_val = FALSE; 
@@ -107,6 +107,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		  fclose($fp);
 		  return $return_val;
 		}
+		
 	$k = 0;
 	for ($i=0, $n=count( $this->rows ); $i < $n; $i++)
 	
@@ -119,6 +120,8 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		$date	= JHTML::_('date',  $row->studydate, JText::_('DATE_FORMAT_LC3'),'$offset' );
 		
 		//Check the mediafiles associated with the study
+		$theversion = phpversion();
+	  if ($theversion > 5){
 		foreach($this->mediaFiles[$row->id] as $studyMediaFiles) {
 			$url = $studyMediaFiles['server_path'].$studyMediaFiles['folderpath'].$studyMediaFiles['filename'];
 			if(!checkUrl($url)){
@@ -132,6 +135,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		}else{
 			$mediaStatus = '<img border="0" alt="All Good" src="components/com_biblestudy/images/good.png">';
 		}
+		} // end check for php 5
 		?>
       <tr class="<?php echo "row$k"; ?>"> 
         <td> <?php echo $this->pagination->getRowOffset( $i ); ?> </td>
@@ -144,7 +148,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		<td><?php echo $row->studytitle; ?></td>
         <td><?php echo $row->series_text; ?></td>
 		<td><?php echo $row->topic_text; ?></td>
-		<td align="center"><?php echo $mediaStatus; ?></td>
+		<td align="center"><?php if ($theversion > 5) { echo $mediaStatus;} ?></td>
 		<td align="center"><?php echo $row->hits; ?></td>
       </tr>
       <?php
