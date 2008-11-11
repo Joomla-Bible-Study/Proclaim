@@ -49,6 +49,8 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_podcast VALUES (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'http://www.mywebsite/myimage.jpg', 30, 30, 'Pastor Billy', 'http://www.mywebsite/myimage.jpg', 'jesus', 'mypodcast.xml', 'en-us', 'Jim Editor', 'jim@mywebsite.com', 50, 1)");
 	$database->query();
+	$database->setQuery ("INSERT INTO #__bsms_locations VALUES (1, 'My Location', 1)");
+	$database->query();
 	}
 	
 	//end sample data
@@ -82,7 +84,7 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN secondary_reference TEXT NULL AFTER chapter_end");
 			$database->query();}
 	$hours	= isset( $fields[$tn]['show_level'] );	
-			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) default '0' NOT NULL AFTER secondary_reference");
+			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) NOT NULL default '0' AFTER secondary_reference");
 			$database->query();}
 	$hours	= isset( $fields[$tn]['location_id'] );	
 			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level");
