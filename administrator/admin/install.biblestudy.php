@@ -83,14 +83,14 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$hours	= isset( $fields[$tn]['secondary_reference'] );	
 			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN secondary_reference TEXT NULL AFTER chapter_end");
 			$database->query();}
-	$hours = false;
+	/*$hours = false;
 	$hours	= isset( $fields[$tn]['show_level'] );	
 			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) NOT NULL default '0' AFTER secondary_reference");
 			$database->query();}
 	$hours = false;
 	$hours	= isset( $fields[$tn]['location_id'] );	
 			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level");
-			$database->query();}
+			$database->query();}*/
 	///$studies = isset($fields[$tn] ['media_seconds']);
 	//if ($check != $studies) { echo 'Added Media duration columns to studies table <br />'; }
 	$tn = '#__bsms_teachers';
@@ -297,6 +297,12 @@ $database->setQuery ("ALTER TABLE #__bsms_studies, DROP media1_id, DROP media1_s
 		$database->query();}
 	$fieldcheck	= isset( $fields[$tn]['user_name'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN user_name VARCHAR(50) NULL AFTER user_id;");
+		$database->query();}
+	$fieldcheck	= isset( $fields[$tn]['show_level'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) NOT NULL default '0' AFTER user_name;");
+		$database->query();}
+	$fieldcheck	= isset( $fields[$tn]['location_id'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level;");
 		$database->query();}
 	$tn = '#__bsms_mediafiles';
 	$fields = $database->getTableFields( array( $tn ) );
