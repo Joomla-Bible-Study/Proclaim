@@ -83,9 +83,11 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$hours	= isset( $fields[$tn]['secondary_reference'] );	
 			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN secondary_reference TEXT NULL AFTER chapter_end");
 			$database->query();}
+	$hours = false;
 	$hours	= isset( $fields[$tn]['show_level'] );	
 			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) NOT NULL default '0' AFTER secondary_reference");
 			$database->query();}
+	$hours = false;
 	$hours	= isset( $fields[$tn]['location_id'] );	
 			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level");
 			$database->query();}
