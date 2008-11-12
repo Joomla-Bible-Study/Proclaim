@@ -298,12 +298,7 @@ $database->setQuery ("ALTER TABLE #__bsms_studies, DROP media1_id, DROP media1_s
 	$fieldcheck	= isset( $fields[$tn]['user_name'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN user_name VARCHAR(50) NULL AFTER user_id;");
 		$database->query();}
-	$fieldcheck	= isset( $fields[$tn]['show_level'] );
-		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) NOT NULL default '0' AFTER user_name;");
-		$database->query();}
-	$fieldcheck	= isset( $fields[$tn]['location_id'] );
-		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level;");
-		$database->query();}
+	
 	$tn = '#__bsms_mediafiles';
 	$fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;
@@ -318,17 +313,45 @@ $database->setQuery ("ALTER TABLE #__bsms_studies, DROP media1_id, DROP media1_s
 	$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 608)");
 		$database->query();
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
-		$schema_version3 = $database->loadResult();
-		echo 'The database schema for Bible Study upgraded to: '.$schema_version3.'<br>';
+		$608 = $database->loadResult();
+		$dbmessage =  'The current database schema for Bible Study is: '.$608.'<br>';
 //} //End check of $schema_version == 600	
+// Begin $schema_version 611
+$tn = '#__bsms_studies';
+	$fields = $database->getTableFields( array( $tn ) );
+	$fieldcheck = false;
+$fieldcheck	= isset( $fields[$tn]['show_level'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) NOT NULL default '0' AFTER user_name;");
+		$database->query();}
+$fieldcheck	= isset( $fields[$tn]['location_id'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level;");
+		$database->query();}
+$tn = '#__bsms_studies';
+	$611 = false;
+	$fields = $database->getTableFields( array( $tn ) );
+	$fieldcheck	= isset( $fields[$tn]['show_level'] );
+		if (!fieldcheck) { $show_level_message = 'Problem creating field show_level. Check permissions on your MySQL database'; $611 = false;}
+	$fieldcheck	= isset( $fields[$tn]['location_id'] );
+		if (!fieldcheck) { $location_id_message = 'Problem creating field location_id. Check permissions on your MySQL database'; $611 = false;}
+	if (!$611) { $dbmessage = 'There was a problem with the installation of this version as follows: <br>' echo $location_id_message.'<br>'.$show_level_message;}
+	else {
+		$database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
+		$database->query();
+	$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 611)");
+		$database->query();
+		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
+		$611 = $database->loadResult();
+		$dbmessage =  'The current database schema for Bible Study is: '.$611.'<br>';
+		}
+// End version 611 upgrade
 ?>
 <div class="header"><?php 
 global $mainframe; ?>
 <img src = "<?php echo $mainframe->getCfg("live_site"); ?>/components/com_biblestudy/images/openbible.png" alt = "" border = "0">Congratulations, Bible Study Message Manager has been installed successfully. </div>
 <p>
-
+<?php echo $dbmessage;
 <p>
-Welcome to the Bible Study Message System. This component is designed to help your church communicate the gospel and teachings in the Word of God. com_biblestudy allows you to enter detailed information about the studies given and links to multimedia content you have uploaded to your server. You can also display full text or notes. All this is searchable in many different ways and you have a lot of control over how much information is displayed on the front end. </p>
+Welcome to the Bible Study Message System. Please note if there are any error messages above. This component is designed to help your church communicate the gospel and teachings in the Word of God. com_biblestudy allows you to enter detailed information about the studies given and links to multimedia content you have uploaded to your server. You can also display full text or notes. All this is searchable in many different ways and you have a lot of control over how much information is displayed on the front end. </p>
 <p>
 It is very important that you do a couple of things when you first install the component. </p>
 <p>
