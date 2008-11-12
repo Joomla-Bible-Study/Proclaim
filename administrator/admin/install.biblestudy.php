@@ -24,8 +24,9 @@ $tables = $database->getTableList();
 	$fields = $database->getTableFields( array( $tn ) );
 	$bsms = false;
 	$bsms	= isset( $fields[$tn]['id'] );
-	if ($bsms) { echo 'Database is installed. <br />'; }
-	else { echo 'Database not installed. Upgrade halted. Please uninstall and check MySQL.<br />'; }
+	$isdb = '';
+	if ($bsms) { $isdb =  'Database is installed. <br />'; }
+	else { $isdb = 'Database not installed. Upgrade halted. Please uninstall and check MySQL.<br />'; }
 if ($bsms) { //this is the beginninng of the install block. It won't go if the database isn't installed at all
 
 // Sample Data install
@@ -239,7 +240,7 @@ $database->setQuery ("ALTER TABLE #__bsms_studies, DROP media1_id, DROP media1_s
 		$database->query();
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
 		$schema_version3 = $database->loadResult();
-		echo 'The database schema for Bible Study upgraded to: '.$schema_version3.'<br>';
+		$dbmessage =  'The current database schema for Bible Study is: '.$schema_version3.'<br>';
 		
 //Begin installation for version 6.0.08
 
@@ -313,8 +314,8 @@ $database->setQuery ("ALTER TABLE #__bsms_studies, DROP media1_id, DROP media1_s
 	$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 608)");
 		$database->query();
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
-		$608 = $database->loadResult();
-		$dbmessage =  'The current database schema for Bible Study is: '.$608.'<br>';
+		$db608 = $database->loadResult();
+		$dbmessage =  'The current database schema for Bible Study is: '.$db608.'<br>';
 //} //End check of $schema_version == 600	
 // Begin $schema_version 611
 $tn = '#__bsms_studies';
@@ -327,21 +328,21 @@ $fieldcheck	= isset( $fields[$tn]['location_id'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level;");
 		$database->query();}
 $tn = '#__bsms_studies';
-	$611 = false;
+	$db611 = true;
 	$fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck	= isset( $fields[$tn]['show_level'] );
-		if (!fieldcheck) { $show_level_message = 'Problem creating field show_level. Check permissions on your MySQL database'; $611 = false;}
+		if (!$fieldcheck) { $show_level_message = 'Problem creating field show_level. Check permissions on your MySQL database'; $db611 = false;}
 	$fieldcheck	= isset( $fields[$tn]['location_id'] );
-		if (!fieldcheck) { $location_id_message = 'Problem creating field location_id. Check permissions on your MySQL database'; $611 = false;}
-	if (!$611) { $dbmessage = 'There was a problem with the installation of this version as follows: <br>' echo $location_id_message.'<br>'.$show_level_message;}
+		if (!$fieldcheck) { $location_id_message = 'Problem creating field location_id. Check permissions on your MySQL database'; $db611 = false;}
+	if (!$db611) { $dbmessage = 'There was a problem with the installation of this version as follows: <br>' . $location_id_message.'<br>'.$show_level_message;}
 	else {
 		$database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
 		$database->query();
 	$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 611)");
 		$database->query();
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
-		$611 = $database->loadResult();
-		$dbmessage =  'The current database schema for Bible Study is: '.$611.'<br>';
+		$db611 = $database->loadResult();
+		$dbmessage =  'The current database schema for Bible Study is: '.$db611.'<br>';
 		}
 // End version 611 upgrade
 ?>
@@ -349,7 +350,7 @@ $tn = '#__bsms_studies';
 global $mainframe; ?>
 <img src = "<?php echo $mainframe->getCfg("live_site"); ?>/components/com_biblestudy/images/openbible.png" alt = "" border = "0">Congratulations, Bible Study Message Manager has been installed successfully. </div>
 <p>
-<?php echo $dbmessage;
+<?php echo $isdb.'<br>'.$dbmessage; ?>
 <p>
 Welcome to the Bible Study Message System. Please note if there are any error messages above. This component is designed to help your church communicate the gospel and teachings in the Word of God. com_biblestudy allows you to enter detailed information about the studies given and links to multimedia content you have uploaded to your server. You can also display full text or notes. All this is searchable in many different ways and you have a lot of control over how much information is displayed on the front end. </p>
 <p>
