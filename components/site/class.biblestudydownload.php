@@ -49,7 +49,13 @@ class Dump_File{
 	header("Content-Disposition: attachment; filename=".basename($download_file));
     header("Content-Type: application/mp3");
     header("Content-Transfer-Encoding: binary");
-    header("Content-Length: ".$size);
+    
+	/**
+	 * Set the "Content-Length" only if the filesize is above 0 byes
+	 */
+    if($size > 0) {
+    	header("Content-Length: ".$size);
+    }
     readfile($download_file);
 	//header("Content-Transfer-Encoding: binary");
 	$url = $download_file;
