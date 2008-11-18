@@ -1256,8 +1256,15 @@ $show_description = $this->params->get('show_description', 1);
 						}?> <?php if ($link_type > 0){ $src = JURI::base().$download_image;
 						if ($this->params->get('download_side') > 0) { echo '<td>';}
 							$width = 24;
-							$height= 24;?> <a
-							href="<?php echo JURI::base();?>index.php?option=com_biblestudy&amp;id=<?php echo $media->id;?>&amp;view=studieslist&amp;controller=studieslist&amp;task=download">
+							$height= 24; 
+							if(ini_get('allow_url_fopen')){
+								echo '<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';			
+							}else{
+								?>
+							<a href="http://<?php 
+								echo ($media->spath.$media->fpath.$media->filename.'">');
+							}
+							?>
 						<img src="<?php echo JURI::base().$download_image;?>"
 							alt="<?php echo JText::_('Download');?>"
 							height="<?php echo $height;?>" width="<?php echo $width;?>"
