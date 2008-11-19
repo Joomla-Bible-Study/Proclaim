@@ -33,7 +33,8 @@ $book_menu = $this->params->get('booknumber', 101);
 $location_menu = $this->params->get('locations', 1);
 $series_menu = $this->params->get('series_id', 1);
 $messagetype_menu = $this->params->get('messagetype', 1);
-
+$imageh = $this->params->get('imageh', 24);
+$imagew = $this->params->get('imagew', 24);
 $color1 = $this->params->get('color1');
 $color2 = $this->params->get('color2');
 $page_width = $this->params->get('page_width');
@@ -140,8 +141,10 @@ $show_description = $this->params->get('show_description', 1);
 			<?php $wtd = $this->params->get('pimagew');?>
 			<?php if ($this->params->get( 'show_page_image' ) >0) {
 				$src = JURI::base().$this->params->get('page_image');
-				$width = 24; 
-				$height= 24;
+				$pimagew = $this->params->get('pimagew');
+				$pimageh = $this->params->get('pimageh');
+				if ($pimagew) {$width = $pimagew;} else {$width = 24;}
+				if ($pimageh) {$height = $pimageh;} else {$height= 24;}
 				?>
 
 				<td width="<?php echo $width +2; ?>"><?php //Column  for logo?> <img
@@ -992,8 +995,8 @@ $show_description = $this->params->get('show_description', 1);
 							title="<strong>Sermon Info:</strong> ::<?php if ($study) {?><strong>Title:</strong> <?php echo $study;}?><br><br> <?php if ($intro) {?><strong>Details:</strong> <?php echo $intro;?><?php } ?><br><br><?php if ($snumber) {?><strong>Sermon Number:</strong> <?php echo $snumber;}?> <br><strong>Teacher:</strong> <?php echo $teacher;?><br><br><hr /><br><?php if ($scripture1) {?><strong>Scripture: </strong><?php echo $scripture1;?><?php } ?>">
 							<?php } //end of is show tooltip?> <?php
 							$src = JURI::base().$this->params->get('text_image');
-							$width = 24;
-							$height= 24;
+							if ($imagew) {$width = $imagew;} else {$width = 24;}
+							if ($imageh) {$height = $imageh;} else {$height= 24;}
 							?> <a href="<?php echo $link; ?>"><img
 							src="<?php echo JURI::base().$this->params->get('text_image');?>"
 							alt="<?php echo $details_text;?>" width="<?php echo $width;?>"
@@ -1007,8 +1010,8 @@ $show_description = $this->params->get('show_description', 1);
 						<?php $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf' ); ?>
 
 						<td><?php $src = JURI::base().$this->params->get('pdf_image');
-							$width = 24;
-							$height= 24;
+							if ($imagew) {$width = $imagew;} else {$width = 24;}
+							if ($imageh) {$height = $imageh;} else {$height= 24;}
 						?> <a href="<?php echo $link; ?>" target="_blank"
 							title="<?php echo $details_text;?>"><img
 							src="<?php echo JURI::base().$this->params->get('pdf_image');?>"
@@ -1050,15 +1053,15 @@ $show_description = $this->params->get('show_description', 1);
 
 					if ($cd->mid > 0){
 						$src = JURI::base().$cd->media_image_path;
-						$width = 24;
-						$height= 24;
+						if ($imagew) {$width = $imagew;} else {$width = 24;}
+						if ($imageh) {$height = $imageh;} else {$height= 24;}
 						?>
 						<td><?php echo '<a href="'.$cd->server_path.$cd->prod_cd.'" title="'.$cd->media_alttext.'"><img src="'.JURI::base().$cd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$cd->media_alttext.' "border="0"></a>';?></td>
 						<?php } ?>
 						<?php if ($dvd->mid > 0){
 							$src = JURI::base().$dvd->media_image_path;
-							$width = 24;
-							$height= 24;
+							if ($imagew) {$width = $imagew;} else {$width = 24;}
+							if ($imageh) {$height = $imageh;} else {$height= 24;}
 							?>
 						<td><?php echo '<a href="'.$dvd->server_path.$dvd->prod_dvd.'" title="'.$dvd->media_alttext.'"><img src="'.JURI::base().$dvd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$dvd->media_alttext.' "border="0"></a>';?></td>
 						<?php } ?>
@@ -1140,8 +1143,8 @@ $show_description = $this->params->get('show_description', 1);
 						$filesize = $media_size;
 						$mimetype = $media->mimetext;
 						$src = JURI::base().$media->impath;
-							$width = 24;
-							$height= 24;
+							if ($imagew) {$width = $imagew;} else {$width = 24;}
+							if ($imageh) {$height = $imageh;} else {$height= 24;}
 						$ispath = 0;
 						if (!$media->filename){
 							$path1 = '';
@@ -1255,8 +1258,8 @@ $show_description = $this->params->get('show_description', 1);
 
 						}?> <?php if ($link_type > 0){ $src = JURI::base().$download_image;
 						if ($this->params->get('download_side') > 0) { echo '<td>';}
-							$width = 24;
-							$height= 24; 
+							if ($imagew) {$width = $imagew;} else {$width = 24;}
+							if ($imageh) {$height = $imageh;} else {$height= 24;} 
 							if(ini_get('allow_url_fopen')){
 								echo '<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';			
 							}else{

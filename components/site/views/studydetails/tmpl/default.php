@@ -24,6 +24,8 @@ $pathway =& $mainframe->getPathWay();
 $uri 		=& JFactory::getURI();
 $database	= & JFactory::getDBO();
 $esv = 0;
+$imageh = $this->params->get('imageh', 24);
+$imagew = $this->params->get('imagew', 24);
 function format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv) {
 global $mainframe, $option;
 $params =& $mainframe->getPageParameters();
@@ -413,8 +415,8 @@ if (!$media_size){
 					$filesize = $media_size;
 					$mimetype = $media->mimetext;
 					$src = JURI::base().$media->impath;
-					if(list($width,$height)=@getimagesize($src)){}
-						else {$width = 24; $height= 24;}
+					if ($imagew) {$width = $imagew;} else {$width = 24;}
+					if ($imageh) {$height = $imageh;} else {$height= 24;}
 					$ispath = 0;
 					if (!$media->filename){
 						$path1 = '';
@@ -514,8 +516,8 @@ if (!$media_size){
 <td width="<?php echo $this->params->get('media_width');?>">	
     <?php echo $media1_link; ?>
     <?php if ($link_type > 0){$src = JURI::base().$download_image;
-	if(list($width,$height)=@getimagesize($src)){}
-						else {$width = 24; $height= 24;}
+	if ($imagew) {$width = $imagew;} else {$width = 24;}
+	if ($imageh) {$height = $imageh;} else {$height= 24;}
 					//list($width,$height)=getimagesize($src);?>
                     <a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&amp;id=<?php echo $media->id;?>&amp;view=studieslist&amp;controller=studieslist&amp;task=download"> <img src="<?php echo JURI::base().$download_image;?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" /></a><?php } ?>
     <?php if ($this->params->get('show_filesize') > 0) 
