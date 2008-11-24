@@ -1244,6 +1244,11 @@ $show_description = $this->params->get('show_description', 1);
 <param name="menu" value="false">
 <param name="wmode" value="transparent">
 </object> ';}
+		?>
+		<?php
+		$url = 'link to a file that would load the AVR';
+		echo ('<div><div class="inlinePlayer" id="media-'.$media->id.'">The AVR will be here, and load Media with id: '.$media->id.'</div></div>');
+		echo ('<a href="'.$url.'" class="btnPlay" alt="'.$media->id.'">Play</a>');
 							/*$abspath    = JPATH_SITE;
 							 require_once($abspath.DS.'components/com_biblestudy/classes/class.biblestudymediadisplay.php');
 							 $inputtype = 0;
