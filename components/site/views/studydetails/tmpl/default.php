@@ -27,82 +27,82 @@ $esv = 0;
 $imageh = $this->params->get('imageh', 24);
 $imagew = $this->params->get('imagew', 24);
 function format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv) {
-global $mainframe, $option;
-$params =& $mainframe->getPageParameters();
-//$params = &JComponentHelper::getParams($option);
-$db	= & JFactory::getDBO();
-$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
-$db->setQuery($query);
-$bookresults = $db->loadObject();
-if ($bookresults->bookname) {$book=$bookresults->bookname;} else {$book = '';}
-$b1 = ' ';
-$b2 = ':';
-$b2a = ':';
-$b3 = '-';
-$b3a = '-';
-if ($params->get('show_verses') >0)
+	global $mainframe, $option;
+	$params =& $mainframe->getPageParameters();
+	//$params = &JComponentHelper::getParams($option);
+	$db	= & JFactory::getDBO();
+	$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
+	$db->setQuery($query);
+	$bookresults = $db->loadObject();
+	if ($bookresults->bookname) {$book=$bookresults->bookname;} else {$book = '';}
+	$b1 = ' ';
+	$b2 = ':';
+	$b2a = ':';
+	$b3 = '-';
+	$b3a = '-';
+	if ($params->get('show_verses') >0)
 	{
-	$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
 		if ($ch_e == $ch_b) {
 			$ch_e = '';
 			$b2a = '';
-			}
+		}
 		if ($v_b == 0){
 			$v_b = '';
 			$v_e = '';
 			$b2a = '';
 			$b2 = '';
-			}
+		}
 		if ($v_e == 0) {
 			$v_e = '';
 			$b2a = '';
-			}
+		}
 		if ($ch_e == 0) {
 			$b2a = '';
 			$ch_e = '';
-				if ($v_e == 0) {
-					$b3 = '';
-				}
+			if ($v_e == 0) {
+				$b3 = '';
 			}
+		}
 		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-		
+
 	}
-	else 
+	else
 	{
 		if ($ch_e > $ch_b) {
 			$scripture = $book.$b1.$ch_b.$b3.$ch_e;
-			}
-			else {
+		}
+		else {
 			$scripture = $book.$b1.$ch_b;
-			}
+		}
 	}
 	if ($esv = 1){
 	 $scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
 		if ($ch_e == $ch_b) {
 			$ch_e = '';
 			$b2a = '';
-			}
+		}
 		if ($v_b == 0){
 			$v_b = '';
 			$v_e = '';
 			$b2a = '';
 			$b2 = '';
-			}
+		}
 		if ($v_e == 0) {
 			$v_e = '';
 			$b2a = '';
-			}
+		}
 		if ($ch_e == 0) {
 			$b2a = '';
 			$ch_e = '';
-				if ($v_e == 0) {
-					$b3 = '';
-				}
+			if ($v_e == 0) {
+				$b3 = '';
 			}
-		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
 		}
-return $scripture;
-}	  
+		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+	}
+	return $scripture;
+}
 
 
 $booknumber = $this->studydetails->booknumber;
@@ -117,7 +117,7 @@ $ch_b = $this->studydetails->chapter_begin2;
 $ch_e = $this->studydetails->chapter_end2;
 $v_b = $this->studydetails->verse_begin2;
 $v_e = $this->studydetails->verse_end2;
-if ($this->studydetails->booknumber2){$scripture2 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);}		
+if ($this->studydetails->booknumber2){$scripture2 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);}
 //if ($studydetails->secondary_reference) { $scripture .= ' - '.$studydetails->secondary_reference; }
 $picture = $this->params->get('show_picture_view');
 switch ($picture) {
@@ -126,66 +126,66 @@ switch ($picture) {
 		$imageh = $this->studydetails->imageh;
 		$imagew = $this->studydetails->imagew;
 		$space = ($imagew + 2);
-	break;
+		break;
 	case 2:
 		$image = $this->studydetails->thumb;
 		$imageh = $this->studydetails->thumbh;
 		$imagew = $this->studydetails->thumbw;
 		$space = ($imagew + 2);
-	break;
+		break;
 }
-	
+
 $details_text = $this->params->get('details_text');
 $filesize_show = $this->params->get('filesize_show');
 $duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
 $duration_type = $this->params->get('duration_type');
-	switch ($duration_type) {
-		case 1: 
-			$duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
-			if (!$duration){
+switch ($duration_type) {
+	case 1:
+		$duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
+		if (!$duration){
+		}
+		else {
+			if (!$this->studydetails->media_hours){
+				$duration = $this->studydetails->media_minutes.' mins '.$this->studydetails->media_seconds.' secs';
 			}
 			else {
-				if (!$this->studydetails->media_hours){
-					$duration = $this->studydetails->media_minutes.' mins '.$this->studydetails->media_seconds.' secs';
-				}
-				else {
-					$duration = $this->studydetails->media_hours.' hour(s) '.$this->studydetails->media_minutes.' mins '.$this->studydetails->media_seconds.' secs';
-				}
+				$duration = $this->studydetails->media_hours.' hour(s) '.$this->studydetails->media_minutes.' mins '.$this->studydetails->media_seconds.' secs';
 			}
-			break;
-		case 2: 
-			$duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
-			if (!$duration){
+		}
+		break;
+	case 2:
+		$duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
+		if (!$duration){
+		}
+		else {
+			if (!$this->studydetails->media_hours){
+				$duration = $this->studydetails->media_minutes.':'.$this->studydetails->media_seconds;
 			}
 			else {
-				if (!$this->studydetails->media_hours){
-					$duration = $this->studydetails->media_minutes.':'.$this->studydetails->media_seconds;
-				}
-				else {
-					$duration = $this->studydetails->media_hours.':'.$this->studydetails->media_minutes.':'.$this->studydetails->media_seconds;
-				}
+				$duration = $this->studydetails->media_hours.':'.$this->studydetails->media_minutes.':'.$this->studydetails->media_seconds;
 			}
-			break; 
-	} 
-$this->assignRef ('duration', $duration);// end switch	
-?>			
-<table class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
+		}
+		break;
+}
+$this->assignRef ('duration', $duration);// end switch
+?>
+<table
+	class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
 	<tr>
-		<?php if ($this->params->get('show_title_view') >0) : ?>
-		<td class="contentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>" width="100%">
-		<?php echo '<span '.$this->params->get('style_title_view').'>'.$this->studydetails->studytitle.'</span>'; ?>
-		<?php endif; ?>
-		<?php if ($this->params->get('show_print_view') > 0) : ?>
-		<td align="left" width="100%" class="buttonheading">
-		<?php 
+	<?php if ($this->params->get('show_title_view') >0) : ?>
+		<td
+			class="contentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>"
+			width="100%"><?php echo '<span '.$this->params->get('style_title_view').'>'.$this->studydetails->studytitle.'</span>'; ?>
+			<?php endif; ?> <?php if ($this->params->get('show_print_view') > 0) : ?>
+		
+		
+		<td align="left" width="100%" class="buttonheading"><?php 
 		$text = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'Print' ) );
-        echo '<a href="#&tmpl=component" onclick="window.print();return false;">'.$text.'</a>';
-		?>
-		</td>
-        <?php endif; ?>
-        <?php if ($this->params->get('show_pdf_view')) : ?>
-		<td align="right" width="100%" class="buttonheading">
-		<?php 
+		echo '<a href="#&tmpl=component" onclick="window.print();return false;">'.$text.'</a>';
+		?></td>
+		<?php endif; ?>
+		<?php if ($this->params->get('show_pdf_view')) : ?>
+		<td align="right" width="100%" class="buttonheading"><?php 
 		$url = 'index.php?option=com_biblestudy&view=studydetails&id='.$this->studydetails->id.'&format=pdf';
 		$status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
 
@@ -193,7 +193,7 @@ $this->assignRef ('duration', $duration);// end switch
 		//if ($params->get('show_icons')) {
 		$text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('PDF'), JText::_('PDF'));
 		//} else {
-			//$text = JText::_('PDF').'&nbsp;';
+		//$text = JText::_('PDF').'&nbsp;';
 		//}
 
 		$attribs['title']	= JText::_( 'PDF' );
@@ -201,308 +201,275 @@ $this->assignRef ('duration', $duration);// end switch
 		$attribs['rel']     = 'nofollow';
 
 		$link = JHTML::_('link', JRoute::_($url), $text, $attribs);
-		echo $link; ?>
-		</td>
-        <?php endif; ?>
+		echo $link; ?></td>
+		<?php endif; ?>
 	</tr>
-<?php if ($message) {?>
-<tr><td align="center"><?php echo '<h2>'.$message.'</h2><br>';
-if ($this->params->get('comment_publish') < 1){echo JText::_('Submissions may need approval prior to publication').'<br>';}?></td></tr><?php } //End of if $message?>
+	<?php if ($message) {?>
+	<tr>
+		<td align="center"><?php echo '<h2>'.$message.'</h2><br>';
+		if ($this->params->get('comment_publish') < 1){echo JText::_('Submissions may need approval prior to publication').'<br>';}?></td>
+	</tr>
+	<?php } //End of if $message?>
 	</tr>
 	<tr>
-    <td> <span class="small"><?php echo '<strong>Scripture: </strong>'.$scripture1; ;
+		<td><span class="small"><?php echo '<strong>Scripture: </strong>'.$scripture1; ;
 		if ($this->studydetails->booknumber2 > 0){echo ' - '.$scripture2;}
 		if ($this->studydetails->secondary_reference) {echo ' - '.$this->studydetails->secondary_reference;}?>
-        </span>
-        </td>
-     </tr>
-     <tr>
-     <?php if ($this->params->get('show_picture_view') > 0) { 
-	
-	?> <td width = "<?php $space;?>"><span class="small">
-				<?php	echo '<img src="'.$image.'" width="'.$imagew.'" height="'.$imageh.'"><br />';
-				
-				if ($this->params->get('show_teacher_view') > 0){
-				if (!$this->studydetails->tname) {
-			}
-			else { ?>
-				<?php echo '<strong> By: </strong>';?>
-				<?php echo $this->studydetails->tname; ?>
-                
-			<?php } 
-				echo '</span></td>'; 
-					}
-				} ?>
-    <?php if ($this->params->get('show_picture_view') < 1) { echo '<td><span class="small">';
-		if ($this->params->get('show_teacher_view')) {
-			if ($this->studydetails->tname) {
-				echo '<strong> By: </strong>';
-				echo $this->studydetails->tname;
-				}
-			}
-		echo '</span></td>';}?>
-		<td valign="top" ><span class="small">
-		
-		
-		
-		</span>
-		&nbsp;
-		</td>
+		</span></td>
 	</tr>
 	<tr>
-		<?php if ($this->params->get('show_date_view') > 0){ ?>
-		<td valign="top" >
-			<?php
-				$df = 	($this->params->get('date_format'));
-				switch ($df)
-					{
-						case 0:
-							$date	= date('M j, Y', strtotime($this->studydetails->studydate));
-						break;
-						case 1:
-							$date	= date('M j', strtotime($this->studydetails->studydate) );
-						break;
-						case 2:
-							$date	= date('n/j/Y',  strtotime($this->studydetails->studydate));
-						break;
-						case 3:
-							$date	= date('n/j', strtotime($this->studydetails->studydate));
-						break;
-						case 4:
-							$date	= date('l, F j, Y',  strtotime($this->studydetails->studydate));
-						break;
-						case 5:
-							$date	= date('F j, Y',  strtotime($this->studydetails->studydate));
-						break;
-						case 6:
-							$date = date('j F Y', strtotime($this->studydetails->studydate));
-						break;
-						case 7:
-							$date = date('j/n/Y', strtotime($this->studydetails->studydate));
-						break;
-						case 8:
-							$date = JHTML::_('date', $this->studydetails->studydate, JText::_('DATE_FORMAT_LC'));
-						break; 
-						default:
-							$date = date('n/j', strtotime($this->studydetails->studydate));
-						break;
-					}
-			?>
-				
-				<?php if (!$date) {
-				}
-				else { ?>
-				<span class="small">
-				<?php echo '<strong>'.JText::_('Date: ').'</strong>'.$date; ?>
-				</span>
-				<?php } 
-			}?>
-				
-			<?php if ($this->params->get('show_locations') > 0) { 
-            	if (!$this->studydetails->location_text) {} else {?>
-					<span class="small">
-					<?php echo '<strong>'.JText::_('Location: ').'</strong>'.$this->studydetails->location_text; ?>
-					</span>
-				<?php } }?>
-			<?php if ($this->params->get('show_series_view') > 0){ ?>
-				<?php if (!$this->studydetails->stext) { ?>
-				<?php }
-					else { ?>
-					<span class="small">
-					<?php echo '<strong>'.JText::_('Series: ').'</strong>'.$this->studydetails->stext; ?>
-					</span>
-				<?php } ?>
-				
-			<?php } ?>
-			<?php if ($this->params->get('show_studynumber_view') > 0){ ?>
-				<?php if (!$this->studydetails->studynumber) {
-				}
-				else { ?>
-				<span class="small">
-				<?php echo '<strong>'.JText::_('Study Number: ').'</strong>'.$this->studydetails->studynumber;?>
-				</span>
-				<?php } ?>
-			<?php } ?>
-            <?php if ($this->params->get('show_duration') > 0) { ?>
-                <span class="small">
-                <?php echo '<strong>'.JText::_('Duration: ').'</strong>'.$duration;?>
-                </span>
-            <?php } ?>
-		</td>
+	<?php if ($this->params->get('show_picture_view') > 0) {
+
+		?>
+		<td width="<?php $space;?>"><span class="small"> <?php	echo '<img src="'.$image.'" width="'.$imagew.'" height="'.$imageh.'"><br />';
+
+		if ($this->params->get('show_teacher_view') > 0){
+			if (!$this->studydetails->tname) {
+			}
+			else { ?> <?php echo '<strong> By: </strong>';?> <?php echo $this->studydetails->tname; ?>
+
+			<?php }
+			echo '</span></td>';
+		}
+	} ?> <?php if ($this->params->get('show_picture_view') < 1) { echo '<td><span class="small">';
+	if ($this->params->get('show_teacher_view')) {
+		if ($this->studydetails->tname) {
+			echo '<strong> By: </strong>';
+			echo $this->studydetails->tname;
+		}
+	}
+	echo '</span></td>';}?>
+		
+		
+		<td valign="top"><span class="small"> </span> &nbsp;</td>
+	</tr>
+	<tr>
+	<?php if ($this->params->get('show_date_view') > 0){ ?>
+		<td valign="top"><?php
+		$df = 	($this->params->get('date_format'));
+		switch ($df)
+		{
+			case 0:
+				$date	= date('M j, Y', strtotime($this->studydetails->studydate));
+				break;
+			case 1:
+				$date	= date('M j', strtotime($this->studydetails->studydate) );
+				break;
+			case 2:
+				$date	= date('n/j/Y',  strtotime($this->studydetails->studydate));
+				break;
+			case 3:
+				$date	= date('n/j', strtotime($this->studydetails->studydate));
+				break;
+			case 4:
+				$date	= date('l, F j, Y',  strtotime($this->studydetails->studydate));
+				break;
+			case 5:
+				$date	= date('F j, Y',  strtotime($this->studydetails->studydate));
+				break;
+			case 6:
+				$date = date('j F Y', strtotime($this->studydetails->studydate));
+				break;
+			case 7:
+				$date = date('j/n/Y', strtotime($this->studydetails->studydate));
+				break;
+			case 8:
+				$date = JHTML::_('date', $this->studydetails->studydate, JText::_('DATE_FORMAT_LC'));
+				break;
+			default:
+				$date = date('n/j', strtotime($this->studydetails->studydate));
+				break;
+		}
+		?> <?php if (!$date) {
+		}
+		else { ?> <span class="small"> <?php echo '<strong>'.JText::_('Date: ').'</strong>'.$date; ?>
+		</span> <?php } 
+	}?> <?php if ($this->params->get('show_locations') > 0) {
+		if (!$this->studydetails->location_text) {} else {?> <span
+			class="small"> <?php echo '<strong>'.JText::_('Location: ').'</strong>'.$this->studydetails->location_text; ?>
+		</span> <?php } }?> <?php if ($this->params->get('show_series_view') > 0){ ?>
+		<?php if (!$this->studydetails->stext) { ?> <?php }
+		else { ?> <span class="small"> <?php echo '<strong>'.JText::_('Series: ').'</strong>'.$this->studydetails->stext; ?>
+		</span> <?php } ?> <?php } ?> <?php if ($this->params->get('show_studynumber_view') > 0){ ?>
+		<?php if (!$this->studydetails->studynumber) {
+		}
+		else { ?> <span class="small"> <?php echo '<strong>'.JText::_('Study Number: ').'</strong>'.$this->studydetails->studynumber;?>
+		</span> <?php } ?> <?php } ?> <?php if ($this->params->get('show_duration') > 0) { ?>
+		<span class="small"> <?php echo '<strong>'.JText::_('Duration: ').'</strong>'.$duration;?>
+		</span> <?php } ?></td>
 	</tr>
 
 	<?php if ($this->params->get('show_description_view') > 0){ ?>
-		<tr>
-			<td valign="top">
-			<?php if (!$this->studydetails->studyintro) {
-			}
-			else { ?>
-				<span class="small">
-					<?php echo $this->studydetails->studyintro; ?>
-				</span>
-			<?php } ?>
-			</td>
-		</tr></table>
-	<?php } ?>
-	<?php if ($this->show_media > 0): 
-	?>
-<table><td>    
-<tr>    	
-<?php
- // Here's where get the media information from the mediafiles table, joining other tables to complete the information on images, servers, and paths
-
-		
-		$query_media1 = 'SELECT #__bsms_mediafiles.*,'
-		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-		. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-		. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname,'
-		. ' #__bsms_media.media_alttext AS malttext,'
-		. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
-		. ' FROM #__bsms_mediafiles'
-		. ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
-		. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-		. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-		. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-		. ' WHERE #__bsms_mediafiles.study_id = '.$this->studydetails->id;
-		$database->setQuery( $query_media1 );
-		$media1 = $database->loadObjectList('id');
-if (!$media1){} else { // This tests to make sure that there is a result to the media query or it will generate an arror
-foreach ($media1 as $media) {
-$params =& $mainframe->getPageParameters();
-$download_image = $params->get('download_image');
-if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
-$link_type = $media->link_type;
-$useavr = 0;
-$useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
-$media_size = $media->size;
-$useplayer = 0;
-	if ($params->get('media_player') > 0) {
-	//Look to see if it is an mp3
-		$ismp3 = substr($media->filename,-3,3);
-			if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
-	} //End if media_player param test
-	
-if (!$media_size){
-	}
-	else {
-	switch ($media_size ) {
-	
-		case $media_size < 1024 :
-			$media_size = $media_size.' '.'Bytes';
-			break;
-		case $media_size < 1048576 :
-			$media_size = $media_size / 1024;
-			$media_size = number_format($media_size,0);
-			$media_size = $media_size.' '.'KB';
-			break;
-		case $media_size < 1073741824 :
-			$media_size = $media_size / 1024;
-			$media_size = $media_size / 1024;
-			$media_size = number_format($media_size,1);
-			$media_size = $media_size.' '.'MB';
-			break;
-		case $media_size > 1073741824 :
-			$media_size = $media_size / 1024;
-			$media_size = $media_size / 1024;
-			$media_size = $media_size / 1024;
-			$media_size = number_format($media_size,1);
-			$media_size = $media_size.' '.'GB';
-			break;
+	<tr>
+		<td valign="top"><?php if (!$this->studydetails->studyintro) {
 		}
-		
-	}	//end of else for media_size
+		else { ?> <span class="small"> <?php echo $this->studydetails->studyintro; ?>
+		</span> <?php } ?></td>
+	</tr>
+</table>
+		<?php } ?>
+		<?php if ($this->show_media > 0):
+		?>
+<table>
+	<td>
+	
+	
+	<tr>
+	<?php
+	// Here's where get the media information from the mediafiles table, joining other tables to complete the information on images, servers, and paths
 
-					$filesize = $media_size;
-					$mimetype = $media->mimetext;
-					$src = JURI::base().$media->impath;
-					if ($imagew) {$width = $imagew;} else {$width = 24;}
-					if ($imageh) {$height = $imageh;} else {$height= 24;}
-					$ispath = 0;
-					if (!$media->filename){
-						$path1 = '';
-						$ispath = 0;
-						}
-						else {
-						$path1 = $media->spath.$media->fpath.$media->filename;
-						$isslash = substr_count($path1,'//');
+
+	$query_media1 = 'SELECT #__bsms_mediafiles.*,'
+	. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+	. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+	. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname,'
+	. ' #__bsms_media.media_alttext AS malttext,'
+	. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
+	. ' FROM #__bsms_mediafiles'
+	. ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
+	. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
+	. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
+	. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
+	. ' WHERE #__bsms_mediafiles.study_id = '.$this->studydetails->id;
+	$database->setQuery( $query_media1 );
+	$media1 = $database->loadObjectList('id');
+	if (!$media1){} else { // This tests to make sure that there is a result to the media query or it will generate an arror
+		foreach ($media1 as $media) {
+			$params =& $mainframe->getPageParameters();
+			$download_image = $params->get('download_image');
+			if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
+			$link_type = $media->link_type;
+			$useavr = 0;
+			$useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
+			$media_size = $media->size;
+			$useplayer = 0;
+			if ($params->get('media_player') > 0) {
+				//Look to see if it is an mp3
+				$ismp3 = substr($media->filename,-3,3);
+				if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
+			} //End if media_player param test
+
+			if (!$media_size){
+			}
+			else {
+				switch ($media_size ) {
+
+					case $media_size < 1024 :
+						$media_size = $media_size.' '.'Bytes';
+						break;
+					case $media_size < 1048576 :
+						$media_size = $media_size / 1024;
+						$media_size = number_format($media_size,0);
+						$media_size = $media_size.' '.'KB';
+						break;
+					case $media_size < 1073741824 :
+						$media_size = $media_size / 1024;
+						$media_size = $media_size / 1024;
+						$media_size = number_format($media_size,1);
+						$media_size = $media_size.' '.'MB';
+						break;
+					case $media_size > 1073741824 :
+						$media_size = $media_size / 1024;
+						$media_size = $media_size / 1024;
+						$media_size = $media_size / 1024;
+						$media_size = number_format($media_size,1);
+						$media_size = $media_size.' '.'GB';
+						break;
+				}
+
+			}	//end of else for media_size
+
+			$filesize = $media_size;
+			$mimetype = $media->mimetext;
+			$src = JURI::base().$media->impath;
+			if ($imagew) {$width = $imagew;} else {$width = 24;}
+			if ($imageh) {$height = $imageh;} else {$height= 24;}
+			$ispath = 0;
+			if (!$media->filename){
+				$path1 = '';
+				$ispath = 0;
+			}
+			else {
+				$path1 = $media->spath.$media->fpath.$media->filename;
+				$isslash = substr_count($path1,'//');
+				if (!$isslash) {
+					$path1 = 'http://'.$path1;
+				}
+				$pathname = $media->fpath;
+				$filename = $media->filename;
+				$ispath = 1;
+				$direct_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '
+				.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
+				.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
+				.'" height="'.$height.'" border="0" /></a>';
+			}
+			$isavr = 0;
+			if (JPluginHelper::importPlugin('system', 'avreloaded'))
+			{
+				$isavr = 1;
+				$studyfile = $media->spath.$media->fpath.$media->filename;
+				$mediacode = $media->mediacode;
+				$isrealfile = substr($studyfile, -4, 1);
+				$fileextension = substr($media->filename,-3,3);
+				if ($mediacode == ''){
+					$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
+				}
+				$mediacode = str_replace("'",'"',$mediacode);
+				$ispop = substr_count($mediacode, 'popup');
+				if ($ispop < 1) {
+					$bracketpos = strpos($mediacode,'}');
+					$mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
+				}
+				$isdivid = substr_count($mediacode, 'divid');
+				if ($isdivid < 1) {
+					$dividid = ' divid="'.$media->id.'"';
+					$bracketpos = strpos($mediacode, '}');
+					$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
+				}
+				$isonlydash = substr_count($mediacode, '}-{');
+				if ($isonlydash == 1){
+					$ishttp = substr_count($studyfile, 'http://');
+					if ($ishttp < 1) {
+						//We want to see if there is a file here or if it is streaming by testing to see if there is an extension
+						$isrealfile = substr($studyfile, -4, 1);
+						if ($isrealfile == '.') {
+							$isslash = substr_count($studyfile,'//');
 							if (!$isslash) {
-							$path1 = 'http://'.$path1;
+								$studyfile = substr_replace($studyfile,'http://',0,0);
 							}
-						$pathname = $media->fpath;
-						$filename = $media->filename;
-						$ispath = 1;
-						$direct_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '
-						.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
-						.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
-						.'" height="'.$height.'" border="0" /></a>';
 						}
-					$isavr = 0;
-					if (JPluginHelper::importPlugin('system', 'avreloaded'))
-						{ 
-							$isavr = 1;
-							$studyfile = $media->spath.$media->fpath.$media->filename;
-							$mediacode = $media->mediacode;
-							$isrealfile = substr($studyfile, -4, 1);
-							$fileextension = substr($media->filename,-3,3);
-								if ($mediacode == ''){
-									$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
-								}
-							$mediacode = str_replace("'",'"',$mediacode);
-							$ispop = substr_count($mediacode, 'popup');
-								if ($ispop < 1) { 
-									$bracketpos = strpos($mediacode,'}');
-									$mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
-								}
-							$isdivid = substr_count($mediacode, 'divid');
-								if ($isdivid < 1) {
-									$dividid = ' divid="'.$media->id.'"';
-									$bracketpos = strpos($mediacode, '}');
-									$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
-								}
-							$isonlydash = substr_count($mediacode, '}-{');
-								if ($isonlydash == 1){
-									$ishttp = substr_count($studyfile, 'http://');
-										if ($ishttp < 1) { 
-											//We want to see if there is a file here or if it is streaming by testing to see if there is an extension
-											$isrealfile = substr($studyfile, -4, 1);
-												if ($isrealfile == '.') {
-												$isslash = substr_count($studyfile,'//');
-													if (!$isslash) {
-													$studyfile = substr_replace($studyfile,'http://',0,0);
-													}
-												}
-										}
-										if ($isrealfile != '.')
-										{
-											$studyfile = $media->filename;
-										}
-									$mediacode = str_replace('-',$studyfile,$mediacode);
-								}
-							$avr_link = $mediacode.'{avrpopup type="window" id="'.$media->id
-							.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
-							.' '.$duration.' '.$media_size.'" width="'.$width
-							.'" height="'.$height.'" border="0" "title="'
-							.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
-						} 
-					$useavr = 0;
-					$useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
-					$isfilesize = 0;
-						if ($filesize > 0)
-						{ 
-							$isfilesize = 1;
-							$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
-						}
-						else {$media1_sizetext = '';}
-					$media1_link = $direct_link;
-						
-					if ($useavr > 0)
-						{ $media1_link = $avr_link;
-							
-						}
-					if ($useplayer == 1){
-					$player_width = $params->get('player_width');
-					if (!$player_width) { $player_width = '290'; }
-					$media1_link = 
+					}
+					if ($isrealfile != '.')
+					{
+						$studyfile = $media->filename;
+					}
+					$mediacode = str_replace('-',$studyfile,$mediacode);
+				}
+				$avr_link = $mediacode.'{avrpopup type="window" id="'.$media->id
+				.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
+				.' '.$duration.' '.$media_size.'" width="'.$width
+				.'" height="'.$height.'" border="0" "title="'
+				.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
+			}
+			$useavr = 0;
+			$useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
+			$isfilesize = 0;
+			if ($filesize > 0)
+			{
+				$isfilesize = 1;
+				$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
+			}
+			else {$media1_sizetext = '';}
+			$media1_link = $direct_link;
+
+			if ($useavr > 0)
+			{ $media1_link = $avr_link;
+
+			}
+			if ($useplayer == 1){
+				$player_width = $params->get('player_width');
+				if (!$player_width) { $player_width = '290'; }
+				$media1_link =
 					'<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
 <object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$media->id.'" height="24" width="290">
 <param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
@@ -511,15 +478,24 @@ if (!$media_size){
 <param name="menu" value="false">
 <param name="wmode" value="transparent">
 </object> ';}
-					?>
-<!-- this is where the media column td begins -->
-<td width="<?php echo $this->params->get('media_width');?>">	
-    <?php echo $media1_link; ?>
-    <?php if ($link_type > 0){$src = JURI::base().$download_image;
-	if ($imagew) {$width = $imagew;} else {$width = 24;}
-	if ($imageh) {$height = $imageh;} else {$height= 24;}
-					//list($width,$height)=getimagesize($src);?>
-                    <a href="<?php echo JURI::base();?>index.php?option=com_biblestudy&amp;id=<?php echo $media->id;?>&amp;view=studieslist&amp;controller=studieslist&amp;task=download"> <img src="<?php echo JURI::base().$download_image;?>" alt="<?php echo JText::_('Download');?>" height="<?php echo $height;?>" width="<?php echo $width;?>" title="<?php echo JText::_('Download');?>" /></a><?php } ?>
+				?>
+		<!-- this is where the media column td begins -->
+		<td width="<?php echo $this->params->get('media_width');?>"><?php echo $media1_link; ?>
+		<?php if ($link_type > 0){$src = JURI::base().$download_image;
+		if ($imagew) {$width = $imagew;} else {$width = 24;}
+		if ($imageh) {$height = $imageh;} else {$height= 24;}
+		//list($width,$height)=getimagesize($src);?> <?php
+		if(ini_get('allow_url_fopen')){
+			echo '<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
+		}else{
+			?> <a href="http://<?php echo ($media->spath.$media->fpath.$media->filename.'">');
+		}
+		?>
+		<img src="<?php echo JURI::base().$download_image;?>"
+							alt="<?php echo JText::_('Download');?>"
+							height="<?php echo $height;?>" width="<?php echo $width;?>"
+							title="<?php echo JText::_('Download');?>" /></a>
+		<?php } ?>
     <?php if ($this->params->get('show_filesize') > 0) 
 		{ ?>
          <br>
