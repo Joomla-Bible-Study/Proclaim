@@ -427,6 +427,7 @@
 			<filename>help/en-GB/biblestudy.podcasts.html</filename>
 			<filename>help/en-GB/biblestudy.episodelist.html</filename>
 			<filename>help/en-GB/biblestudy.locations.html</filename>
+			<filename>css/general.css</filename>
 			</files>
 		<languages folder="admin/languages">
 			<language tag="en-GB">en-GB.com_biblestudy.ini</language>
