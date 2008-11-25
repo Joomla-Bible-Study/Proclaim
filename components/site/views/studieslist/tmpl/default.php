@@ -1246,9 +1246,8 @@ $show_description = $this->params->get('show_description', 1);
 </object> ';}
 		?>
 		<?php
-		$url = 'link to a file that would load the AVR';
-		echo ('<div><div class="inlinePlayer" id="media-'.$media->id.'">The AVR will be here, and load Media with id: '.$media->id.'</div></div>');
-		echo ('<a href="'.$url.'" class="btnPlay" alt="'.$media->id.'">Play</a>');
+		echo ('<div class="inlinePlayer" id="media-'.$media->id.'"></div>');
+		echo ('<a href="'.$path1.'" class="btnPlay" alt="'.$media->id.'">Play</a>');
 							/*$abspath    = JPATH_SITE;
 							 require_once($abspath.DS.'components/com_biblestudy/classes/class.biblestudymediadisplay.php');
 							 $inputtype = 0;
