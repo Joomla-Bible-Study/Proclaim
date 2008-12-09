@@ -1208,7 +1208,9 @@ $show_description = $this->params->get('show_description', 1);
 								}
 								$mediacode = str_replace('-',$studyfile,$mediacode);
 							}
-							$avr_link = $mediacode.'{avrpopup type="window" id="'.$media->id
+							$popuptype = $this->params->get('popuptype');
+							if (!$popuptype) { $popuptype = 'window';}
+							$avr_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
 							.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
 							.' '.$duration.' '.$media_size.'" width="'.$width
 							.'" height="'.$height.'" border="0" title="'
