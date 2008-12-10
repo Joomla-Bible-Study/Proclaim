@@ -1209,7 +1209,7 @@ $show_description = $this->params->get('show_description', 1);
 								$mediacode = str_replace('-',$studyfile,$mediacode);
 							}
 							$popuptype = 'window';
-							if($this->params->get('popuptype') != 0) {
+							if($this->params->get('popuptype') != 'window') {
 								$popuptype = 'lightbox';
 							}
 							$avr_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
