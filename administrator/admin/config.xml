@@ -101,9 +101,9 @@
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-	<param name="popuptype" type="radio" default="0" label="Window or light box (inline) for AVR player" description="If installed, use AllVideosReloaded as a separate window or as a light box effect">
-			<option value="0">Window</option>
-			<option value="1">Lightbox</option>
+	<param name="popuptype" type="radio" default="window" label="Window or light box (inline) for AVR player" description="If installed, use AllVideosReloaded as a separate window or as a light box effect">
+			<option value="window">Window</option>
+			<option value="lightbox">Lightbox</option>
 		</param>
 	<param name="media_player" type="radio" default="0" label="MP3 Media Player" description="Use built-in media player for all mp3 files (overrides AVR)">
 			<option value="0">No</option>
