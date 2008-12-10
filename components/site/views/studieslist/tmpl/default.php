@@ -1208,8 +1208,10 @@ $show_description = $this->params->get('show_description', 1);
 								}
 								$mediacode = str_replace('-',$studyfile,$mediacode);
 							}
-							$popuptype = $this->params->get('popuptype');
-							if (!$popuptype) { $popuptype = 'window';}
+							$popuptype = 'window';
+							if($this->params->get('popuptype') != 0) {
+								$popuptype = 'lightbox';
+							}
 							$avr_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
 							.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
 							.' '.$duration.' '.$media_size.'" width="'.$width
@@ -1248,8 +1250,13 @@ $show_description = $this->params->get('show_description', 1);
 </object> ';}
 		?>
 		<?php
-		echo ('<div class="inlinePlayer" id="media-'.$media->id.'"></div>');
-		echo ('<a href="'.$path1.'" class="btnPlay" alt="'.$media->id.'">Play</a>');
+		/**
+		 * @desc: I hope to in the future load media files using this method
+		 */
+/*		echo ('<div class="inlinePlayer" id="media-'.$media->id.'"></div>');
+		echo ('<a href="'.$path1.'" class="btnPlay" alt="'.$media->id.'">Play</a>');*/
+		
+		
 							/*$abspath    = JPATH_SITE;
 							 require_once($abspath.DS.'components/com_biblestudy/classes/class.biblestudymediadisplay.php');
 							 $inputtype = 0;
