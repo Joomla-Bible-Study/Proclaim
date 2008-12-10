@@ -6,6 +6,7 @@ jimport('joomla.application.component.controller');
 
 class biblestudyControllerstudieslist extends JController
 {
+	var $mediaCode;
 	/**
 	 * Method to display the view
 	 *
@@ -34,23 +35,20 @@ class biblestudyControllerstudieslist extends JController
 		if ($task == 'avplayer')
 		{
 			$mediacode = JRequest::getVar('code');
+			$this->mediaCode = $mediacode;
 			echo $mediacode;
 			return;
 		}
 	}
-
+	
+	/**
+	 * @desc: This function is suppsed to generate the Media Player that is requested vie AJAX
+	 * from the studiesList view "default.php". It has not been implemented yet, so its not used.
+	 * @return unknown_type
+	 */
 	function inlinePlayer() {
-		$mediaPath = JRequest::getVar('url');
-		$player =
-					'<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer0" height="24" width="290">
-<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
-<param name="FlashVars" value="playerID=0&amp;soundFile='.$mediaPath.'">
-<param name="quality" value="high">
-<param name="menu" value="false">
-<param name="wmode" value="transparent">
-</object> ';
-		echo $player;
+		//echo $this->mediaCode;
+		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
 	}
 		
 }
