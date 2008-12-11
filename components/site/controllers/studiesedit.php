@@ -132,7 +132,11 @@ class biblestudyControllerstudiesedit extends JController
 		$menuid = $db->loadResult();
 		$menureturn='';
 		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		$item = JRequest::getVar('Itemid');
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
+		if ($item){
+    	$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
+		//$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
 		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -169,7 +173,11 @@ function publish()
 		$menuid = $db->loadResult();
 		$menureturn='';
 		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		$item = JRequest::getVar('Itemid');
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
+		if ($item){
+    	$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
+		//$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
 		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -210,7 +218,11 @@ function publish()
 		$menuid = $db->loadResult();
 		$menureturn='';
 		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		$item = JRequest::getVar('Itemid');
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
+		if ($item){
+    	$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
+		//$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
 		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -246,7 +258,11 @@ function publish()
 		$menuid = $db->loadResult();
 		$menureturn='';
 		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+		$item = JRequest::getVar('Itemid');
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
+		if ($item){
+    	$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
+		//$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
 		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 		
 		// Check the table in so it can be edited.... we are done with it anyway

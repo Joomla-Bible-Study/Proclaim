@@ -12,8 +12,9 @@ else { document.getElementById(d).style.display = "none"; }
 }
 </script>
 
-
+<
 <?php
+
 global $mainframe;
 
 //$menu = JSite::getMenu();
@@ -645,16 +646,20 @@ $scripture3 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);
 		<tr>
 	<td align="center">
 	<?php 
+	
     $link_text = $this->params->get('link_text');
 	if (!$link_text) {
 		$link_text = JText::_('Return to Studies List');
 		}
 	if ($this->params->get('view_link') == 0){}else{
 	if ($this->params->get('view_link') == 1){
+	$item = JRequest::getVar('Itemid');
 	$link = JRoute::_('index.php?option='.$option.'&view=studieslist');}
-	if ($this->menuid){
-    $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$this->menuid);}?>
-	<a href="<?php echo $link;?>">&lt; <?php echo $link_text; ?></a>
+	if ($item){
+    $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}?>
+	<a href="<?php echo $link;?>">&lt; <?php echo $link_text; ?>
+    
+    </a>
     <?php } //End of if view_link not 0?>
     
 	</td>
