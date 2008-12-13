@@ -9,6 +9,8 @@ jimport('joomla.application.component.model');
 
 class biblestudyModelmediafilesedit extends JModel
 {
+
+	var $_data;
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
@@ -23,7 +25,7 @@ class biblestudyModelmediafilesedit extends JModel
 		$this->setId((int)$array[0]);
 	}
 
-	
+
 	function setId($id)
 	{
 		// Set id and wipe data
@@ -32,7 +34,7 @@ class biblestudyModelmediafilesedit extends JModel
 	}
 
 
-	
+
 	function &getData()
 	{
 		// Load the data
@@ -72,19 +74,17 @@ class biblestudyModelmediafilesedit extends JModel
 	 * @access	public
 	 * @return	boolean	True on success
 	 */
-	function store()
+	function store($data)
 	{
 		$row =& $this->getTable();
-
-		$data = JRequest::get( 'post' );
-//This checks to see if the user has uploaded a file instead of just entered one in the box. It replaces the filename with the name of the uploaded file
+		//This checks to see if the user has uploaded a file instead of just entered one in the box. It replaces the filename with the name of the uploaded file
 		/*$file = JRequest::getVar('file', null, 'files', 'array' );
-		$filename_upload = strtolower($file['name']);
-		if (isset($filename_upload)){
+		 $filename_upload = strtolower($file['name']);
+		 if (isset($filename_upload)){
 			if (!$filename_upload) {
-				$data['filename'] = $filename_upload;
+			$data['filename'] = $filename_upload;
 			}
-		}*/
+			}*/
 		$data['mediacode'] = str_replace('"',"'",$data['mediacode']);
 		// Bind the form fields to the  table
 		if (!$row->bind($data)) {
@@ -97,11 +97,11 @@ class biblestudyModelmediafilesedit extends JModel
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Store the table to the database
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
-//			$this->setError( $row->getErrorMsg() );
+			//			$this->setError( $row->getErrorMsg() );
 			return false;
 		}
 
@@ -127,20 +127,20 @@ class biblestudyModelmediafilesedit extends JModel
 					$this->setError( $row->getErrorMsg() );
 					return false;
 				}
-			}						
+			}
 		}
 		return true;
 	}
-function publish($cid = array(), $publish = 1)
+	function publish($cid = array(), $publish = 1)
 	{
-		
+
 		if (count( $cid ))
 		{
 			$cids = implode( ',', $cid );
 
 			$query = 'UPDATE #__bsms_mediafiles'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
+			. ' SET published = ' . intval( $publish )
+			. ' WHERE id IN ( '.$cids.' )'
 				
 			;
 			$this->_db->setQuery( $query );
@@ -148,9 +148,9 @@ function publish($cid = array(), $publish = 1)
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
-		}		
-	}			
-/**
+		}
+	}
+	/**
 	 * Method to move a mediafile listing
 	 *
 	 * @access	public
