@@ -200,8 +200,7 @@ $show_description = $this->params->get('show_description', 1);
 			echo '>- '.JText::_('Select a Book').' -'.'</option>';
 			foreach ($bookid as $bookid2) {
 				$format = $bookid2['text'];
-				$output = JText::sprintf($format);
-				$output = htmlentities($output);
+				$output = JText::_($format);
 				$bookvalue = $bookid2['value'];
 				if ($bookvalue == $filter_book){$selected = 'selected="selected"';
 				echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
