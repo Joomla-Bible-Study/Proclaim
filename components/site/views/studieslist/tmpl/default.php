@@ -193,14 +193,14 @@ $show_description = $this->params->get('show_description', 1);
 		$database->setQuery( $query2 );
 		$bookid = $database->loadAssocList();
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
-		dump($bookid, 'Book ID');
+		//dump($bookid, 'Book ID');
 		echo '<select name="filter_book" id="filter_book" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
 		if (!$filter_book ) {
 			echo 'selected="selected"';}
 			echo '>- '.JText::_('Select a Book').' -'.'</option>';
 			foreach ($bookid as $bookid2) {
 				$format = $bookid2['text'];
-				dump($bookid2);
+				//dump($bookid2);
 				$output = JText::_($format);
 				$bookvalue = $bookid2['value'];
 				if ($bookvalue == $filter_book){$selected = 'selected="selected"';
