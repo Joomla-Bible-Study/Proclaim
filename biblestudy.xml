@@ -184,8 +184,6 @@
 		<filename>elements/teacher.php</filename>
 		<filename>elements/messagetype.php</filename>
 		<filename>elements/locations.php</filename>
-		<filename>js/jquery.js</filename>
-		<filename>js/biblestudy.js</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>
@@ -428,6 +426,8 @@
 			<filename>help/en-GB/biblestudy.episodelist.html</filename>
 			<filename>help/en-GB/biblestudy.locations.html</filename>
 			<filename>css/general.css</filename>
+			<filename>js/jquery.js</filename>
+			<filename>js/biblestudy.js</filename>
 			</files>
 		<languages folder="admin/languages">
 			<language tag="en-GB">en-GB.com_biblestudy.ini</language>
