@@ -186,24 +186,25 @@ $show_description = $this->params->get('show_description', 1);
 		<?php if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}?>
 		<?php if ($this->params->get('show_book_search') >0 && !($book_menu) ){ ?>
 
-		<?php $query2 = 'SELECT booknumber AS value, bookname AS text, published'
+		<?php $query2 = 'SELECT id, booknumber AS value, bookname AS text, published'
 		. ' FROM #__bsms_books'
 		. ' WHERE published = 1'
 		. ' ORDER BY booknumber';
 		$database->setQuery( $query2 );
 		$bookid = $database->loadAssocList();
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
-
+		dump($bookid, 'Book ID');
 		echo '<select name="filter_book" id="filter_book" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
 		if (!$filter_book ) {
 			echo 'selected="selected"';}
 			echo '>- '.JText::_('Select a Book').' -'.'</option>';
 			foreach ($bookid as $bookid2) {
 				$format = $bookid2['text'];
+				dump($bookid2);
 				$output = JText::_($format);
 				$bookvalue = $bookid2['value'];
 				if ($bookvalue == $filter_book){$selected = 'selected="selected"';
-				echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
+				echo '<option value="'.$bookvalue.'"'.$selected.' >'.$bookid2['text'].'</option>';}
 				echo '<option value="'.$bookvalue.'">'.$output.'</option>';
 			};
 			echo '</select>';?> <?php } ?> <?php if ($this->params->get('show_teacher_search') >0 && !($teacher_menu)) { ?>
