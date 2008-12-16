@@ -3,14 +3,14 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>October 28, 2008</creationDate>
+	<creationDate>December 16, 2008</creationDate>
 	<author>Tom Fuller</author>
 	<authorEmail>TomFuller2@gmail.com</authorEmail>
 	<authorUrl>http://joomlacode.org/gf/project/biblestudy/</authorUrl>
 	<copyright>2008 Tom Fuller</copyright>
 	<license>GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
-	<version>6.0.11_RC2</version>
+	<version>6.0.11_RC3</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Bible Study Management System</description>
 	<installfile>install.biblestudy.php</installfile>
