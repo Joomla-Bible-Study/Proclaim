@@ -79,17 +79,14 @@ $show_description = $this->params->get('show_description', 1);
 		<td><strong><?php echo JText::_('Studies');?></strong></td>
 	</tr>
 	<tr>
-		<td><a
-			href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form"><?php echo JText::_('Add a New Study');?></a></td>
+		<td><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form"><?php echo JText::_('Add a New Study');?></a></td>
 	</tr>
 	<tr>
-		<td><a
-			href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form"><?php echo JText::_('Add a New Media File Record');?></a></td>
+		<td><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form"><?php echo JText::_('Add a New Media File Record');?></a></td>
 	</tr>
 	<?php if ($this->params->get('show_comments') > 0){?>
 	<tr>
-		<td><a
-			href="<?php echo JURI::base()?>index.php?option=com_biblestudy&view=commentslist"><?php echo JText::_('Manage Comments');?></a></td>
+		<td><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&view=commentslist"><?php echo JText::_('Manage Comments');?></a></td>
 	</tr>
 	<?php } //end if show_comments?>
 	<?php 	} //End of testing for if user is authorized
@@ -111,8 +108,7 @@ $show_description = $this->params->get('show_description', 1);
 	
 	<tr>
 		<td><?php //This is a row to hold the podcast listings
-		?><a
-			href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form';?>"><?php echo JText::_('Add A Podcast');?></a></td>
+		?><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form';?>"><?php echo JText::_('Add A Podcast');?></a></td>
 	</tr>
 	<tr>
 		<td><?php foreach ($podcasts as $podcast) { $pod = $podcast['id']; $podtitle = $podcast['title'];
@@ -120,8 +116,7 @@ $show_description = $this->params->get('show_description', 1);
 	
 	
 	<tr>
-		<td><a
-			href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod;?>"><?php echo $podtitle;?></a></td>
+		<td><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod;?>"><?php echo $podtitle;?></a></td>
 	</tr>
 	<?php } // end foreach for podcasts as podcast
 	// End row for podcast?>

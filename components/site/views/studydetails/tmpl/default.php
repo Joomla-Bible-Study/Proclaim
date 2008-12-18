@@ -12,7 +12,7 @@ else { document.getElementById(d).style.display = "none"; }
 }
 </script>
 
-<
+
 <?php
 
 global $mainframe;
