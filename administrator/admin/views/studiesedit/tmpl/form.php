@@ -171,19 +171,19 @@ $user =& JFactory::getUser();?>
         </td></td>
         <tr>
         <td class="key" align="left"><?php echo JText::_('Store');?></td>
-        <td><table><tr><td><?php echo JText::_('Image for CD: ');?><?php echo $this->lists['image_cd'];?></td>
+        <td><table><tr><td><?php echo JText::_('Image for CD');?>:<?php echo $this->lists['image_cd'];?></td>
         </tr>
         <tr>
-        	<td><?php echo JText::_('Store URL for CD: ');?><?php echo $this->lists['server_cd'];?></td>
+        	<td><?php echo JText::_('Store URL for CD');?>:<?php echo $this->lists['server_cd'];?></td>
         </tr>
-        <tr><td><?php echo JText::_('Product ID for CD: ');?><input class="text_area" type="text" name="prod_cd" id="prod_cd" size="50" maxlength="50" value="<?php echo $this->studiesedit->prod_cd;?>"/></td>
+        <tr><td><?php echo JText::_('Product ID for CD');?>:<input class="text_area" type="text" name="prod_cd" id="prod_cd" size="50" maxlength="50" value="<?php echo $this->studiesedit->prod_cd;?>"/></td>
         </tr>
-        <tr><td><?php echo JText::_('Image for DVD: ');?><?php echo $this->lists['image_dvd'];?></td></tr>
+        <tr><td><?php echo JText::_('Image for DVD');?>:<?php echo $this->lists['image_dvd'];?></td></tr>
         <tr>
-        	<td><?php echo JText::_('Store URL for DVD: ');?><?php echo $this->lists['server_dvd'];?></td>
+        	<td><?php echo JText::_('Store URL for DVD');?>:<?php echo $this->lists['server_dvd'];?></td>
         </tr>
         <tr><td>
-        <?php echo JText::_('Product ID for DVD: ');?><input class="text_area" type="text" name="prod_dvd" id="prod_dvd" size="50" maxlength="50" value="<?php echo $this->studiesedit->prod_dvd;?>"/></td></tr>
+        <?php echo JText::_('Product ID for DVD');?>:<input class="text_area" type="text" name="prod_dvd" id="prod_dvd" size="50" maxlength="50" value="<?php echo $this->studiesedit->prod_dvd;?>"/></td></tr>
           </table></td>
             
                   </tr>
