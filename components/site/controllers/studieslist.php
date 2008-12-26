@@ -3,14 +3,13 @@
 defined('_JEXEC') or die();
 jimport('joomla.application.component.controller');
 
-
 class biblestudyControllerstudieslist extends JController
 {
 	var $mediaCode;
+	
 	/**
-	 * Method to display the view
-	 *
-	 * @access	public
+	 *@desc Method to display the view
+	 *@access public
 	 */
 	function display()
 	{
@@ -42,7 +41,7 @@ class biblestudyControllerstudieslist extends JController
 	}
 	
 	/**
-	 * @desc: This function is suppsed to generate the Media Player that is requested vie AJAX
+	 * @desc: This function is supposed to generate the Media Player that is requested via AJAX
 	 * from the studiesList view "default.php". It has not been implemented yet, so its not used.
 	 * @return unknown_type
 	 */
