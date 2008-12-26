@@ -1,12 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 
-
-<?php
-
-/*$params =& $mainframe->getPageParameters();
-
-*/
-?>
 <script
 	type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
 <link
@@ -46,6 +39,7 @@ $widpos2 = $this->params->get('widthcol2');
 $widpos3 = $this->params->get('widthcol3');
 $widpos4 = $this->params->get('widthcol4');
 $show_description = $this->params->get('show_description', 1);
+$downloadCompatibility = $this->params->get('compatibilityMode');
 ?>
 <table width="<?php echo $page_width; ?>">
 <?php //Overall table for the listing page?>
@@ -79,14 +73,17 @@ $show_description = $this->params->get('show_description', 1);
 		<td><strong><?php echo JText::_('Studies');?></strong></td>
 	</tr>
 	<tr>
-		<td><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form"><?php echo JText::_('Add a New Study');?></a></td>
+		<td><a
+			href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form"><?php echo JText::_('Add a New Study');?></a></td>
 	</tr>
 	<tr>
-		<td><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form"><?php echo JText::_('Add a New Media File Record');?></a></td>
+		<td><a
+			href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form"><?php echo JText::_('Add a New Media File Record');?></a></td>
 	</tr>
 	<?php if ($this->params->get('show_comments') > 0){?>
 	<tr>
-		<td><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&view=commentslist"><?php echo JText::_('Manage Comments');?></a></td>
+		<td><a
+			href="<?php echo JURI::base()?>index.php?option=com_biblestudy&view=commentslist"><?php echo JText::_('Manage Comments');?></a></td>
 	</tr>
 	<?php } //end if show_comments?>
 	<?php 	} //End of testing for if user is authorized
@@ -108,7 +105,8 @@ $show_description = $this->params->get('show_description', 1);
 	
 	<tr>
 		<td><?php //This is a row to hold the podcast listings
-		?><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form';?>"><?php echo JText::_('Add A Podcast');?></a></td>
+		?><a
+			href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form';?>"><?php echo JText::_('Add A Podcast');?></a></td>
 	</tr>
 	<tr>
 		<td><?php foreach ($podcasts as $podcast) { $pod = $podcast['id']; $podtitle = $podcast['title'];
@@ -116,7 +114,8 @@ $show_description = $this->params->get('show_description', 1);
 	
 	
 	<tr>
-		<td><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod;?>"><?php echo $podtitle;?></a></td>
+		<td><a
+			href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod;?>"><?php echo $podtitle;?></a></td>
 	</tr>
 	<?php } // end foreach for podcasts as podcast
 	// End row for podcast?>
@@ -188,14 +187,12 @@ $show_description = $this->params->get('show_description', 1);
 		$database->setQuery( $query2 );
 		$bookid = $database->loadAssocList();
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
-		//dump($bookid, 'Book ID');
 		echo '<select name="filter_book" id="filter_book" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
 		if (!$filter_book ) {
 			echo 'selected="selected"';}
 			echo '>- '.JText::_('Select a Book').' -'.'</option>';
 			foreach ($bookid as $bookid2) {
 				$format = $bookid2['text'];
-				//dump($bookid2);
 				$output = JText::_($format);
 				$bookvalue = $bookid2['value'];
 				if ($bookvalue == $filter_book){$selected = 'selected="selected"';
@@ -1005,8 +1002,8 @@ $show_description = $this->params->get('show_description', 1);
 						<?php $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf' ); ?>
 
 						<td><?php $src = JURI::base().$this->params->get('pdf_image');
-							if ($imagew) {$width = $imagew;} else {$width = 24;}
-							if ($imageh) {$height = $imageh;} else {$height= 24;}
+						if ($imagew) {$width = $imagew;} else {$width = 24;}
+						if ($imageh) {$height = $imageh;} else {$height= 24;}
 						?> <a href="<?php echo $link; ?>" target="_blank"
 							title="<?php echo $details_text;?>"><img
 							src="<?php echo JURI::base().$this->params->get('pdf_image');?>"
@@ -1138,8 +1135,8 @@ $show_description = $this->params->get('show_description', 1);
 						$filesize = $media_size;
 						$mimetype = $media->mimetext;
 						$src = JURI::base().$media->impath;
-							if ($imagew) {$width = $imagew;} else {$width = 24;}
-							if ($imageh) {$height = $imageh;} else {$height= 24;}
+						if ($imagew) {$width = $imagew;} else {$width = 24;}
+						if ($imageh) {$height = $imageh;} else {$height= 24;}
 						$ispath = 0;
 						if (!$media->filename){
 							$path1 = '';
@@ -1243,15 +1240,15 @@ $show_description = $this->params->get('show_description', 1);
 <param name="menu" value="false">
 <param name="wmode" value="transparent">
 </object> ';}
-		?>
-		<?php
-		/**
-		 * @desc: I hope to in the future load media files using this method
-		 */
-/*		echo ('<div class="inlinePlayer" id="media-'.$media->id.'"></div>');
-		echo ('<a href="'.$path1.'" class="btnPlay" alt="'.$media->id.'">Play</a>');*/
-		
-		
+							?>
+							<?php
+							/**
+							 * @desc: I hope to in the future load media files using this method
+							 */
+							/*		echo ('<div class="inlinePlayer" id="media-'.$media->id.'"></div>');
+							 echo ('<a href="'.$path1.'" class="btnPlay" alt="'.$media->id.'">Play</a>');*/
+
+
 							/*$abspath    = JPATH_SITE;
 							 require_once($abspath.DS.'components/com_biblestudy/classes/class.biblestudymediadisplay.php');
 							 $inputtype = 0;
@@ -1266,20 +1263,17 @@ $show_description = $this->params->get('show_description', 1);
 
 						}?> <?php if ($link_type > 0){ $src = JURI::base().$download_image;
 						if ($this->params->get('download_side') > 0) { echo '<td>';}
-							if ($imagew) {$width = $imagew;} else {$width = 24;}
-							if ($imageh) {$height = $imageh;} else {$height= 24;} 
-							if(ini_get('allow_url_fopen')){
-								echo '<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';			
-							}else{
-								?>
-							<a href="http://<?php 
-								echo ($media->spath.$media->fpath.$media->filename.'">');
-							}
-							?>
-						<img src="<?php echo JURI::base().$download_image;?>"
+						if ($imagew) {$width = $imagew;} else {$width = 24;}
+						if ($imageh) {$height = $imageh;} else {$height= 24;}
+						if($downloadCompatibility == 0) {
+							echo '<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
+						}else{
+							echo('<a href="http://joomlaoregon.com/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">');
+						}
+						?> <img src="<?php echo JURI::base().$download_image;?>"
 							alt="<?php echo JText::_('Download');?>"
 							height="<?php echo $height;?>" width="<?php echo $width;?>"
-							title="<?php echo JText::_('Download');?>" /></a><?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
+							title="<?php echo JText::_('Download');?>" /></a> <?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
 
 						</td>
 
