@@ -1,11 +1,6 @@
 <?php
-
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
 jimport( 'joomla.application.component.view' );
-
 
 class biblestudyViewstudieslist extends JView
 {
@@ -16,12 +11,9 @@ class biblestudyViewstudieslist extends JView
 	function display($tpl = null)
 	{
 		global $mainframe, $option;
-		//$params = &JComponentHelper::getParams($option);
-		$params =& $mainframe->getPageParameters();
-		//$model	  = &$this->getModel();
-		//JToolBarHelper::addNewX();
-		$db		=& JFactory::getDBO();
-		$uri	=& JFactory::getURI();
+		$params 			=& $mainframe->getPageParameters();
+		$db					=& JFactory::getDBO();
+		$uri				=& JFactory::getURI();
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
 		$filter_teacher		= $mainframe->getUserStateFromRequest( $option.'filter_teacher','filter_teacher',0,'int' );
@@ -48,9 +40,22 @@ class biblestudyViewstudieslist extends JView
 
 		//end of com_content experiment
 
-		$items		= & $this->get( 'Data');
-		$total		= & $this->get( 'Total');
-		$pagination = & $this->get( 'Pagination' );
+		/**
+		 * @desc Gets all data from model
+		 * @return Array
+		 */
+		$items = $this->get('Data');
+		$total = $this->get('Total');
+		$pagination = $this->get('Pagination');
+		$teachers = $this->get('Teachers');
+		$series = $this->get('Series');
+		$messageTypes = $this->get('MessageTypes');
+		$studyYears = $this->get('StudyYears');
+		$locations = $this->get('Locations');
+		$topics = $this->get('Topics');
+		$orders = $this->get('Orders');
+		
+
 		//jimport('joomla.html.pagination');
 		//$pagination = new JPagination($total, $limitstart, $limit);
 		//$this->assignRef('request_url',	$uri->toString());
@@ -65,78 +70,44 @@ class biblestudyViewstudieslist extends JView
 		//Include the Jquery Library
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/biblestudy.js');
-		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');		
-		$database	= & JFactory::getDBO();
-		$query = 'SELECT id AS value, teachername AS text, published'
-		. ' FROM #__bsms_teachers'
-		. ' WHERE published = 1'
-		. ' ORDER BY id';
-		$database->setQuery( $query );
-		$teacher_id = $database->loadObjectList();
-		$types[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
-		$types 			= array_merge( $types, $db->loadObjectList() );
+		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
+
+		//Build Teachers
+		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
+		$types 			= array_merge( $types, $teachers );
 		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_teacher" );
-
-
+		
 		//Build Series List for drop down menu
-
-		$query3 = 'SELECT id AS value, series_text AS text, published'
-		. ' FROM #__bsms_series'
-		. ' WHERE published = 1'
-		. ' ORDER BY id';
-		$database->setQuery( $query3 );
-		$seriesid = $database->loadObjectList();
 		$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Series' ) .' -' );
-		$types3 			= array_merge( $types3, $db->loadObjectList() );
+		$types3 			= array_merge( $types3, $series );
 		$lists['seriesid']	= JHTML::_('select.genericlist',   $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series" );
 
-		//Build the Message Type List for the drop down menu
-
-		$query4 = 'SELECT id AS value, message_type AS text, published'
-		. ' FROM #__bsms_message_type'
-		. ' WHERE published = 1'
-		. ' ORDER BY message_type';
-		$database->setQuery( $query4 );
-		$messagetypeid = $database->loadObjectList();
+		//Build message types
 		$types4[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Message Type' ) .' -' );
-		$types4 			= array_merge( $types4, $db->loadObjectList() );
+		$types4 			= array_merge( $types4, $messageTypes );
 		$lists['messagetypeid']	= JHTML::_('select.genericlist',   $types4, 'filter_messagetype', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_messagetype" );
 
-		$query5 = " SELECT DISTINCT date_format(studydate, '%Y') AS value, date_format(studydate, '%Y') AS text "
-		. ' FROM #__bsms_studies '
-		. ' ORDER BY value DESC';
-		$database->setQuery( $query5 );
-		$studyyear = $database->loadObjectList();
+		//buld study years
 		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Year' ) .' -' );
-		$years 			= array_merge( $years, $db->loadObjectList() );
+		$years 			= array_merge( $years, $studyYears );
 		$lists['studyyear']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_year" );
 
-		$query6 = ' SELECT * FROM #__bsms_order '
-		. ' ORDER BY id ';
-		$database->setQuery( $query6 );
-		$sortorder = $database->loadObjectList();
-		$orders[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
-		$orders 			= array_merge( $orders, $db->loadObjectList() );
+		//build orders
+		$ord[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
+		$orders 			= array_merge( $ord, $orders );
 		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders" );
 
-		$query7 = ' SELECT id AS value, location_text AS text, published FROM #__bsms_locations WHERE published = 1'
-		. ' ORDER BY id ';
-		$database->setQuery( $query7 );
-		$locationsorder = $database->loadObjectList();
-		$locations[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Location' ) .' -' );
-		$locations 			= array_merge( $locations, $db->loadObjectList() );
-		$lists['locations']	= JHTML::_('select.genericlist',   $locations, 'filter_location', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_location" );
 
-		$query8 = 'SELECT DISTINCT #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text'
-		. ' FROM #__bsms_studies'
-		. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
-		. ' WHERE #__bsms_topics.published = 1'
-		. ' ORDER BY #__bsms_topics.topic_text ASC';
-		$database->setQuery( $query8 );
-		$topicsid = $database->loadObjectList();
-		$topics[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Topic' ) .' -' );
-		$topics 			= array_merge( $topics, $db->loadObjectList() );
-		$lists['topics']	= JHTML::_('select.genericlist',   $topics, 'filter_topic', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_topic" );
+		$loc[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Location' ) .' -' );
+		$loc 			= array_merge( $loc, $locations );
+		$lists['locations']	= JHTML::_('select.genericlist',   $loc, 'filter_location', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_location" );
+
+		
+		//Build Topics
+
+		$top[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Topic' ) .' -' );
+		$top 			= array_merge( $top, $topics );
+		$lists['topics']	= JHTML::_('select.genericlist',   $top, 'filter_topic', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_topic" );
 
 
 
