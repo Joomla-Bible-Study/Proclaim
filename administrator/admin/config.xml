@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 	<params addpath="/components/com_biblestudy/elements">
+	<param name="compatibilityMode" type="radio" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
 	<param name="allow_deletes" type="radio" default="1" label="Allow admin to delete rows for teachers/series/servers etc" description="Default setting allows editing of certain rows only to avoid broken links. Set this to Allow for full control. But do so with caution.">
 		<option value="0">Restrict Deletes</option>
 		<option value="1">Allow admin deletes</option>
