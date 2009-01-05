@@ -13,6 +13,10 @@
 		<option value="0">Keep db Tables on Uninstall</option>
 		<option value="1">Drop db Tables on Uninstall</option>
 	</param>
+	<param name="admin_store" type="radio" default="0" label="Show Store on administration page" description="Choose whether to show the store options in the study details entry page">
+		<option value="0">Show Store Options</option>
+		<option value="1">Hide Store Options</option>
+	</param>
 	<param name="@spacer" type="spacer" default="Study List Options" label="" description="">
 		</param>
 	<param name="page_title" type="text" size="50" default="Bible Studies" label="Page Title" description="Title of Bible Study page to show" />
