@@ -5,8 +5,8 @@
 	<fieldset class="adminform">
 		<legend><?php echo JText::_( 'Bible Study Details' ); ?></legend>
 <?php $editor =& JFactory::getEditor();
-$user =& JFactory::getUser();?>
-		
+$user =& JFactory::getUser();		
+?>
     <table class="admintable">
 <?php    if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
     <tr><td class="key"><?php echo JText::_( 'Submitted by: ');?></td>
@@ -169,6 +169,7 @@ $user =& JFactory::getUser();?>
 		<option value="24" <?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
         </select>
         </td></td>
+        <?php if($this->enableStore == 1) {?>
         <tr>
         <td class="key" align="left"><?php echo JText::_('Store');?></td>
         <td><table><tr><td><?php echo JText::_('Image for CD');?>:<?php echo $this->lists['image_cd'];?></td>
@@ -187,6 +188,7 @@ $user =& JFactory::getUser();?>
           </table></td>
             
                   </tr>
+        <?php }?>
      </table></td>
       </tr>
       <tr> 
