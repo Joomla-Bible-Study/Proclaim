@@ -27,6 +27,7 @@ $database	= & JFactory::getDBO();
 $esv = 0;
 $imageh = $this->params->get('imageh', 24);
 $imagew = $this->params->get('imagew', 24);
+$downloadCompatibility = $this->params->get('compatibilityMode');
 function format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv) {
 	global $mainframe, $option;
 	$params =& $mainframe->getPageParameters();
@@ -486,10 +487,10 @@ $this->assignRef ('duration', $duration);// end switch
 		if ($imagew) {$width = $imagew;} else {$width = 24;}
 		if ($imageh) {$height = $imageh;} else {$height= 24;}
 		//list($width,$height)=getimagesize($src);?> <?php
-		if(ini_get('allow_url_fopen')){
+		if($downloadCompatibility == 0) {
 			echo '<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
 		}else{
-			?> <a href="http://<?php echo ($media->spath.$media->fpath.$media->filename.'">');
+			echo('<a href="http://joomlaoregon.com/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">');
 		}
 		?>
 		<img src="<?php echo JURI::base().$download_image;?>"
