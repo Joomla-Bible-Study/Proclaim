@@ -524,7 +524,7 @@ $this->assignRef ('duration', $duration);// end switch
 		<tr>
 		<td>
 			<br />
-			<?php echo $this->studydetails->studytext; ?>
+			<?php echo '<span '.$params->get('detailspan').'>'.$this->studydetails->studytext.'</span>'; ?>
 		</td>
 		</tr>
 	<?php endif; ?>

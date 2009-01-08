@@ -945,6 +945,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="detailspan" type="text" default="" size="50" label="Put in valid style information for the study notes" description="Put in any valid css style information with style= in front of it. This will affect the study notes main text section." /> 		
 	<param name="link_text" type="text" default="Return to Studies List" size="50" label="Text for bottom link to main list" description="Type in text to display on bottom link back to main component listing" />
 	<param name="view_link" type="radio" default="1" label="Show link to studies list" description="Choose whether to have a link back to the studies list">
 	<option value="0">No link</option>
