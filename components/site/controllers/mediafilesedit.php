@@ -1,29 +1,18 @@
 <?php
-/**
- * Media Edit Controller for Bible Study Component
- *
-
- */
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-/**
- * Media Edit Controller
- *
- */
-class biblestudyControllermediafilesedit extends JController
-{
-	/**
-	 * constructor (registers additional tasks to methods)
-	 * @return void
-	 */
-	function __construct()
-	{
+jimport('joomla.application.component.controller');
 
-		$user =& JFactory::getUser();
+class biblestudyControllermediafilesedit extends JController {
+
+	function __construct() {
 		global $mainframe, $option;
+		
+		$user =& JFactory::getUser();
 		$params =& $mainframe->getPageParameters();
+		
+		//@todo Improve
+		//ACL
 		$entry_user = $user->get('gid');
 		$entry_access = ($params->get('entry_access')) ;
 		$allow_entry = $params->get('allow_entry_study');
@@ -36,32 +25,27 @@ class biblestudyControllermediafilesedit extends JController
 		parent::__construct();
 
 		// Register Extra tasks
-		$this->registerTask( 'add'  , 	'edit' );
-		$this->registerTask( 'upload'  ,     'upload' );
+		$this->registerTask('add', 'edit');
+		$this->registerTask('upload', 'upload');
 	}
 
 	/**
-	 * display the edit form
+	 * @desc display the edit form
 	 * @return void
 	 */
-	function edit()
-	{
-
-
+	function edit() {
 		JRequest::setVar( 'view', 'mediafilesedit' );
 		JRequest::setVar( 'layout', 'form'  );
-		JRequest::setVar('hidemainmenu', 1);
-
-
+	
 		parent::display();
 	}
 
 	/**
-	 * save a record (and redirect to main page)
+	 * @desc Save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
-	{
+	function save() {
+		global $mainframe, $option;
 
 		$model = $this->getModel('mediafilesedit');
 		$file = JRequest::getVar('file', null, 'files', 'array' );
@@ -69,37 +53,27 @@ class biblestudyControllermediafilesedit extends JController
 		$data = JRequest::get( 'post' );
 		if(empty($data['filename'])) $data['filename'] = $file['name'];
 		if (isset($filename_upload)){
-			$uploadFile=$this->upload();}
-			if ($model->store($data)) {
-				$msg = JText::_( 'Media Saved!' );
-			} else {
-				$msg = JText::_( 'Error Saving Media' );
-			}
+			$this->upload();
+		}
+		if ($model->store($data)) {
+			$msg = JText::_('Media Saved!');
+		} else {
+			$msg = JText::_('Error Saving Media');
+		}
 
-			global $mainframe, $option;
-			/*$db=& JFactory::getDBO();
-			 $query = "SELECT id"
-			 . "\nFROM #__menu"
-			 . "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
-			 $db->setQuery($query);
-			 $menuid = $db->loadResult();
-			 $menureturn='';
-			 if ($menuid) {$menureturn = '&Itemid='.$menuid;}
-			 //$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;
-			 $link = JRoute::_('index.php?option='.$option.'&view=studieslist&msg='.$msg.$menureturn);*/
-			$database	= & JFactory::getDBO();
-			$query = "SELECT id"
-			. "\nFROM #__menu"
-			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
-			$database->setQuery($query);
-			$menuid = $database->loadResult();
-			if ($menuid){
-				$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$menuid.'&msg='.$msg);}
-				// Check the table in so it can be edited.... we are done with it anyway
-				$mainframe->redirect ($link);
-				// Check the table in so it can be edited.... we are done with it anyway
-				//$link = 'index.php?option=com_biblestudy&view=studieslist';
-				//$this->setRedirect($link, $msg);
+		$database	=& JFactory::getDBO();
+		$query = "SELECT id"
+		. "\nFROM #__menu"
+		. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$database->setQuery($query);
+		$menuid = $database->loadResult();
+		if ($menuid){
+			$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$menuid);}
+			// Check the table in so it can be edited.... we are done with it anyway
+			$mainframe->redirect ($link, $msg);
+			// Check the table in so it can be edited.... we are done with it anyway
+			//$link = 'index.php?option=com_biblestudy&view=studieslist';
+			//$this->setRedirect($link, $msg);
 	}
 
 	/**
@@ -241,35 +215,25 @@ class biblestudyControllermediafilesedit extends JController
 		$menureturn='';
 		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
 		$filename = $file['name'];
-		if ($filename == 'index.htm'){
-			$mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "File of this type not allowed.");
-			return;
-		}
-		if ($filename == 'index.html'){
-			$mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "File of this type not allowed.");
-			return;
-		}
-		if ($filename == 'index.php'){
-			$mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "File of this type not allowed.");
-			return;
+		if ($filename == 'index.htm' || $filename == 'index.html' || $filename == 'index.php'){
+			$mainframe->redirect("index.php?option=$option&view=studieslist".$menureturn, "File of this type not allowed.");
 		}
 		if(isset($file) && is_array($file) && $file['name'] != '')
 		{
 			$fullfilename = JPATH_SITE.$folderpath. $file['name'];
 			$filename = $file['name'];
 			jimport('joomla.filesystem.file');
-			 
-			 
+
 			if (JFile::exists($fullfilename)) {
-				$mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "Upload failed, file already exists.");
+				$mainframe->redirect("index.php?option=$option&view=studieslist".$menureturn, "Upload failed, file already exists.");
 				return;
 			}
 
 			if (!JFile::upload($file['tmp_name'], $fullfilename)) {
-				$mainframe->redirect("index.php?option=$option&view=mediafileslist".$menureturn, "Upload failed, check to make sure that /components/$option/calendars exists.");
+				$mainframe->redirect("index.php?option=$option&view=studieslist".$menureturn, 'Upload failed, check to make sure that the path "'.$folderpath.'" exists on this server');
 				return;
 			}
-			 
+
 		}
 	}
 
