@@ -1,22 +1,12 @@
 <?php
-
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
-
-class biblestudyModelmediafilesedit extends JModel
-{
+class biblestudyModelmediafilesedit extends JModel {
 
 	var $_data;
-	/**
-	 * Constructor that retrieves the ID from the request
-	 *
-	 * @access	public
-	 * @return	void
-	 */
+
 	function __construct()
 	{
 		parent::__construct();
