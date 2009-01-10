@@ -15,6 +15,7 @@ function submitbutton(pressbutton)
 </script>
 <?php 
 $user =& JFactory::getUser();
+
 global $mainframe, $option;
 $params =& $mainframe->getPageParameters();
 $entry_user = $user->get('gid');
@@ -23,8 +24,7 @@ $user_submit_name = $user->name;
 if ($user->name == ''){$user_submit_name = '';}
 $entry_access = ($params->get('entry_access')) ;
 $allow_entry = $params->get('allow_entry_study');
-
- ?>
+?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
@@ -58,9 +58,7 @@ $allow_entry = $params->get('allow_entry_study');
 		</tr>
         <tr> 
         <td class="key"><?php echo JText::_( 'Published' ); ?></td>
-        <td > <?php echo $this->lists['published'];
-		?>
-          </td>
+        <td><?php echo $this->lists['published']; ?> </td>
       </tr>
 		<tr>
         <td class="key" align="left"><?php echo JText::_( 'Study Number' ); ?></td>

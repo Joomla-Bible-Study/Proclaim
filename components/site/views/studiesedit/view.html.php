@@ -17,22 +17,8 @@ class biblestudyViewstudiesedit extends JView
 		$editor =& JFactory::getEditor();
 		$this->assignRef( 'editor', $editor );
 		$lists = array();
-		//$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		//JToolBarHelper::title(   JText::_( 'Edit Studies' ).': <small><small>[ ' . $text.' ]</small></small>' );
-		//JToolBarHelper::save();
-		//if ($isNew)  {
-			//JToolBarHelper::cancel();
-			// initialise new record
-			//$studiesedit->teacher_id 	= JRequest::getVar( 'teacher_id', 0, 'post', 'int' );
-			
-		//} else {
-			// for existing items the button is renamed `close`
-			//JToolBarHelper::cancel( 'cancel', 'Close' );
-		//}
-		//jimport( 'joomla.i18n.help' );
-		//JToolBarHelper::help( 'biblestudy.studiesedit', true );
+
 		// build the html select list for ordering
-		
 		$database	= & JFactory::getDBO();
 		$query = "SELECT id"
 			. "\nFROM #__menu"
@@ -49,7 +35,7 @@ class biblestudyViewstudiesedit extends JView
 		$types[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $database->loadObjectList() );
 		$lists['teacher_id'] = JHTML::_('select.genericlist', $types, 'teacher_id', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->teacher_id );
-		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $studiesedit->published);
+		$lists['published'] = JHTML::_('select.booleanlist', 'published', '', $studiesedit->published);
 		$lists['comments'] = JHTML::_('select.booleanlist', 'comments', 'class="inputbox"', $studiesedit->comments);
 		
 			$query2 = 'SELECT booknumber AS value, bookname AS text, published'
