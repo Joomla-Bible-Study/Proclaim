@@ -5,28 +5,82 @@ jimport('joomla.application.component.model');
 
 class biblestudyModelmediafilesedit extends JModel {
 
+	var $_id;
 	var $_data;
 
-	function __construct()
-	{
+	function __construct() {
 		parent::__construct();
 
-		$array = JRequest::getVar('cid',  0, '', 'array');
-		$this->setId((int)$array[0]);
+		$this->setId(JRequest::getInt('cid', 0));
 	}
 
-
-	function setId($id)
-	{
+	function setId($id) {
 		// Set id and wipe data
 		$this->_id		= $id;
 		$this->_data	= null;
 	}
 
+	function getStudy() {
+		$query = 'SELECT id, studytitle, studydate FROM #__bsms_studies ORDER BY id DESC LIMIT 1';
+		$this->_db->setQuery($query);
+		return $this->_db->loadObject();
+	}
 
+	function getStudies() {
+		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies ORDER BY studydate DESC";
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
 
-	function &getData()
-	{
+	function getServers() {
+		$query = 'SELECT id AS value, server_path AS text, published'
+		. ' FROM #__bsms_servers'
+		. ' WHERE published = 1'
+		. ' ORDER BY server_path';
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
+
+	function getFolders() {
+		$query = 'SELECT id AS value, folderpath AS text, published'
+		. ' FROM #__bsms_folders'
+		. ' WHERE published = 1'
+		. ' ORDER BY folderpath';
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
+
+	function getPodcasts() {
+		$query = 'SELECT id AS value, title AS text FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC';
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
+
+	function getMediaImages() {
+		$query = 'SELECT id AS value, media_image_name AS text, published'
+		. ' FROM #__bsms_media'
+		. ' WHERE published = 1'
+		. ' ORDER BY media_image_name';
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
+
+	function getMimeTypes() {
+		$query = 'SELECT id AS value, mimetext AS text, published FROM #__bsms_mimetype WHERE published = 1 ORDER BY id ASC';
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
+
+	function getOrdering() {
+		$query = 'SELECT ordering AS value, ordering AS text'
+		. ' FROM #__bsms_mediafiles'
+		. ' WHERE study_id = '.$this->_id
+		. ' ORDER BY ordering'
+		;
+		return $query;
+	}
+	
+	function &getData() {
 		// Load the data
 		if (empty( $this->_data )) {
 			$query = ' SELECT * FROM #__bsms_mediafiles '.
