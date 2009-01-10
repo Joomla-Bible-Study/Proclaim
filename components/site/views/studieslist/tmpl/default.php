@@ -52,8 +52,6 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 		$entry_access = $this->params->get('entry_access');
 		if (!$entry_access) {$entry_access = 23;}
 		$allow_entry = $this->params->get('allow_entry_study');
-		if (!$entry_user) { $entry_user = 0; }
-		if (!$entry_access) { $entry_access = 23; }
 		if ($allow_entry > 0) {
 			if ($entry_access <= $entry_user){
 				if ($message) {?>
