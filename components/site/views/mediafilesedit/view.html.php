@@ -1,16 +1,11 @@
 <?php
-
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
 
-class biblestudyViewmediafilesedit extends JView
-{
+class biblestudyViewmediafilesedit extends JView {
 	
-	function display($tpl = null)
-	{
+	function display($tpl = null) {
 		if (JPluginHelper::importPlugin('system', 'avreloaded'))
 			{
 				require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_avreloaded'.DS.'elements'.DS.'insertbutton.php');
@@ -37,7 +32,14 @@ class biblestudyViewmediafilesedit extends JView
 		//jimport( 'joomla.i18n.help' );
 		//JToolBarHelper::help( 'biblestudy.mediafilesedit', true );
 		// build the html select list for ordering
-		
+		$document = JFactory::getDocument();
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/noconflict.js');
+
+		//Load validation script
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/plugins/jquery.validate.js');
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/validation/validateMedia.js');
+
 		$database	= & JFactory::getDBO();
 		$study = JRequest::getVar('new', '0', 'get', 'int' );
 		if ($study == 1) {
