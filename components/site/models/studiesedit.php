@@ -1,14 +1,11 @@
 <?php
-
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
+class biblestudyModelstudiesedit extends JModel {
 
-class biblestudyModelstudiesedit extends JModel
-{
+	var $_data;
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
@@ -18,12 +15,11 @@ class biblestudyModelstudiesedit extends JModel
 	function __construct()
 	{
 		parent::__construct();
-
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
 
-	
+
 	function setId($id)
 	{
 		// Set id and wipe data
@@ -32,7 +28,7 @@ class biblestudyModelstudiesedit extends JModel
 	}
 
 
-	
+
 	function &getData()
 	{
 		// Load the data
@@ -43,9 +39,6 @@ class biblestudyModelstudiesedit extends JModel
 			$this->_data = $this->_db->loadObject();
 		}
 		if (!$this->_data) {
-			$this->_data = new stdClass();
-			$this->_data->id = 0;
-			//TF added these
 			$this->_data->published = 1;
 			$this->_data->studydate = null;
 			$this->_data->teacher_id = null;
@@ -92,37 +85,31 @@ class biblestudyModelstudiesedit extends JModel
 	 * @access	public
 	 * @return	boolean	True on success
 	 */
-	function store()
-	{
-		//$post           = JRequest::get( 'post' );
-
-		// fix up special html fields
-		
+	function store() {
 		$row =& $this->getTable();
-
-		$data = JRequest::get( 'post' );
 		//Allows HTML content to come through to the database row
-		$data['studytext'] = JRequest::getVar( 'studytext', '', 'post', 'string', JREQUEST_ALLOWRAW );
-		$data['studyintro'] = str_replace('"',"'",$data['studyintro']);
-		$data['studynumber'] = str_replace('"',"'",$data['studynumber']);
-		$data['secondary_reference'] = str_replace('"',"'",$data['secondary_reference']);
+		$this->_data['studytext'] = JRequest::getVar( 'studytext', '', 'post', 'string', JREQUEST_ALLOWRAW );
+		$this->_data['studyintro'] = str_replace('"',"'",$this->_data['studyintro']);
+		$this->_data['studynumber'] = str_replace('"',"'",$this->_data['studynumber']);
+		$this->_data['secondary_reference'] = str_replace('"',"'",$this->_data['secondary_reference']);
+		
 		// Bind the form fields to the table
-		if (!$row->bind($data)) {
+		if (!$row->bind($this->_data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
-		
+
+
 		// Make sure the record is valid
 		if (!$row->check()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Store the table to the database
 		//Checks to make sure a valid date field has been entered
 		if (!$row->studydate)
-			$row->studydate = date( 'Y-m-d H:i:s' );
+		$row->studydate = date( 'Y-m-d H:i:s' );
 		//if ($row->description) { $row->description = str_replace('"',"'",$row->description); }
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
@@ -153,20 +140,20 @@ class biblestudyModelstudiesedit extends JModel
 					$this->setError( $row->getErrorMsg() );
 					return false;
 				}
-			}						
+			}
 		}
 		return true;
 	}
-function publish($cid = array(), $publish = 1)
+	function publish($cid = array(), $publish = 1)
 	{
-		
+
 		if (count( $cid ))
 		{
 			$cids = implode( ',', $cid );
 
 			$query = 'UPDATE #__bsms_studies'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
+			. ' SET published = ' . intval( $publish )
+			. ' WHERE id IN ( '.$cids.' )'
 				
 			;
 			$this->_db->setQuery( $query );
@@ -174,8 +161,8 @@ function publish($cid = array(), $publish = 1)
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
-		}		
-	}			
+		}
+	}
 
 }
 ?>
