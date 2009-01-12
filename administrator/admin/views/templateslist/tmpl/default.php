@@ -25,7 +25,7 @@ foreach($this->templates as $template) {
 		$link 			= JRoute::_( 'index.php?option=com_biblestudy&controller=booksedit&task=edit&cid[]='. $row->id );
 		$checked 		= JHTML::_('grid.id',   $i, $template->id );
 		$published 		= JHTML::_('grid.published', $template, $i );
-		$tmplSnippet 	= strip_tags($template->tmpl);
+		$tmplSnippet 	= implode(', ', $this->loadTagList($template->tmpl));
 	
 ?>
 <tr class="row<?php echo $k; ?>">
