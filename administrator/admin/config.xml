@@ -17,6 +17,11 @@
 		<option value="1">Show Store Options</option>
 		<option value="0">Hide Store Options</option>
 	</param>
+	<param name="@spacer" type="spacer" default="Template Options" label="" description="Define the default templates" />
+	<param name="tmplStudiesList" type="template" default="" label="Studies List" description="Default Studies List template" />
+	<param name="tmplSingleStudy" type="template" default="" label="Single Study" description="Default Single Study template" />
+	<param name="tmplTeacherList" type="template" default="" label="Teacher List" description="Default Teacher List template" />
+	<param name="tmplSingleTeacher" tmplType="Single Teacher" type="template" default="" label="Single Teacher" description="Default Single Teacher template" />
 	<param name="@spacer" type="spacer" default="Study List Options" label="" description="">
 		</param>
 	<param name="page_title" type="text" size="50" default="Bible Studies" label="Page Title" description="Title of Bible Study page to show" />
