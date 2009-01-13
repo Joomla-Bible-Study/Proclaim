@@ -13,8 +13,8 @@ class biblestudyViewtemplateslist extends JView {
 		JToolBarHelper::addNew();
 
 		//Initialize templating class
-		JView::loadHelper('templates.helper');
-		$tmplEngine = bibleStudyTemplate::getInstance();
+		$tmplEngine = $this->loadHelper('templates.helper');
+		$tmplEngine =& bibleStudyTemplate::getInstance();
 
 		$templates = $this->get('templates');
 
