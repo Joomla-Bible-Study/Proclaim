@@ -1,5 +1,3 @@
-var $j = jQuery.noConflict();
-
 $j(document).ready( function() {
 	$j('.btnPlay').click( function() {
 		var mediaId = $j(this).attr('alt');
