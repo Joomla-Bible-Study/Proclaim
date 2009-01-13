@@ -6,7 +6,7 @@ class biblestudyViewtemplateedit extends JView {
 	function display() {
 		//Get template if editing
 		$template = $this->get('template');
-		
+
 		if(empty($template->id)) {
 			JToolbarHelper::title(JText::_('Create Template'), 'generic.png');
 		}else{
@@ -15,23 +15,17 @@ class biblestudyViewtemplateedit extends JView {
 		JToolbarHelper::preview();
 		JToolbarHelper::save();
 		JToolbarHelper::cancel();
-		
-		$tmplTypes = array();
-		$tmplTypes[] = JHTML::_('select.option', 'tmplSingleStudy', 'Single Study');
-		$tmplTypes[] = JHTML::_('select.option', 'tmplStudiesList', 'Studies List');
-		$tmplTypes[] = JHTML::_('select.option', 'tmplSingleStudy[List]', 'Single Study [List]');
-		$tmplTypes[] = JHTML::_('select.option', 'tmplSingleTeacher', 'Single Teacher');
-		$tmplTypes[] = JHTML::_('select.option', 'tmplTeacherList', 'Teacher List');
-		$tmplTypes[] = JHTML::_('select.option', 'tmplSingleTeacher[List]', 'Single Teacher [List]');
-		$tmplTypes[] = JHTML::_('select.option', 'tmplModule', 'Module');
-		
-		
+
+		//Initialize templating class
+		$tmplEngine = $this->loadHelper('templates.helper');
+		$tmplEngine =& bibleStudyTemplate::getInstance();
+
 		$data['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $template->published);
-		$data['tmplTypes'] = JHTML::_('select.genericlist', $tmplTypes, 'type', null, 'value', 'text', $template->type);
-	
+		$data['tmplTypes'] = $tmplEngine->loadTmplTypesOption($template->type); 
+
 		$this->assignRef('template', $template);
 		$this->assignRef('data', $data);
-		
+
 		//Include Edit Area Libraries
 		$document = JFactory::getDocument();
 		$document->addScript(JURI::base().'components/com_biblestudy/js/edit_area/edit_area_full.js');
