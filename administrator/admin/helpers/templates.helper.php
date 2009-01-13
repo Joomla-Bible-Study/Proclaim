@@ -7,14 +7,18 @@ class bibleStudyTemplate extends JObject {
 
 	//Template types
 	var $tmplTypes = array(
-		'tmplSingleStudy' => 'Single Study',
 		'tmplStudiesList' => 'Studies List',
-		'tmplSingleStudy[List]' => 'Single Study [List]',
+		'tmplSingleStudyList' => 'Single Study List',
+		'tmplSingleStudy' => 'Single Study',
+		'tmplTeachersList' => 'Teacher List',
+		'tmplSingleTeacherList' => 'Single Teacher List',
 		'tmplSingleTeacher' => 'Single Teacher',
-		'tmplTeacherList' => 'Teacher List',
-		'tmplSingleTeacher[List]' => 'Single Teacher [List]',
 		'tmplModule' => 'Module');
-
+	
+	/**
+	 * @desc Builds arrays of all the possible tags.
+	 * @return null
+	 */
 	function __construct() {
 		//Creates array of all the tags for the 4 main tag categories
 		$tagsStudy = array('[studyDate]', '[studyTeacher]', '[studyNumber]', '[studyScripture1]', '[studyScripture2]', '[studyDVD]', '[studyCD]', '[studyTitle]', '[studyIntro]', '[studyComments]', '[studyHits]', '[studyUserAdded]', '[studyLocation]', '[studyMediaDuration]', '[studyMessageType]', '[studySeries]', '[studyTopic]', '[studyText]', '[studyMedia]');
@@ -35,8 +39,9 @@ class bibleStudyTemplate extends JObject {
 	}
 
 	/**
-	 * @desc Generates a list of tags that are being used in the input template
-	 * @param $itemTmpl
+	 * @desc Generates a list of tags that are being used in the input template.
+	 * Used for the "Variable Summary" in the backend
+	 * @param $itemTmpl	String	Raw Html template
 	 * @return Array
 	 */
 	function loadTagList($itemTmpl) {
@@ -48,6 +53,20 @@ class bibleStudyTemplate extends JObject {
 			}
 		}
 		return $tagArray;
+	}
+	
+	/**
+	 * @desc Generates a drop down list of all the template types. Used in TemplateEdit View to
+	 * generate the dropdown box of template types.
+	 * @param $selected	 String	Defines the default item
+	 * @return HTML Dropdown box
+	 */
+	function loadTmplTypesOption($selected) {
+		foreach($this->tmplTypes as $type) {
+			$i[] = JHTML::_('select.option', key($this->tmplTypes), $type);
+			next($this->tmplTypes);
+		}
+		return JHTML::_('select.genericlist', $i, 'type', null, 'value', 'text', $selected);
 	}
 }
 ?>
