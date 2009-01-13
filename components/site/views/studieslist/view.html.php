@@ -8,8 +8,7 @@ class biblestudyViewstudieslist extends JView
 	 * studieslist view display method
 	 * @return void
 	 **/
-	function display($tpl = null)
-	{
+	function display($tpl = null) {
 		global $mainframe, $option;
 		$params 			=& $mainframe->getPageParameters();
 		$db					=& JFactory::getDBO();
@@ -54,7 +53,11 @@ class biblestudyViewstudieslist extends JView
 		$locations = $this->get('Locations');
 		$topics = $this->get('Topics');
 		$orders = $this->get('Orders');
-		
+
+		//Initialize templating class
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
+		$tmplEninge = $this->loadHelper('templates.helper');
+		$tmplEngine =& bibleStudyTemplate::getInstance();
 
 		//jimport('joomla.html.pagination');
 		//$pagination = new JPagination($total, $limitstart, $limit);
@@ -76,7 +79,7 @@ class biblestudyViewstudieslist extends JView
 		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );
 		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_teacher" );
-		
+
 		//Build Series List for drop down menu
 		$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Series' ) .' -' );
 		$types3 			= array_merge( $types3, $series );
@@ -102,7 +105,7 @@ class biblestudyViewstudieslist extends JView
 		$loc 			= array_merge( $loc, $locations );
 		$lists['locations']	= JHTML::_('select.genericlist',   $loc, 'filter_location', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_location" );
 
-		
+
 		//Build Topics
 
 		$top[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Topic' ) .' -' );
