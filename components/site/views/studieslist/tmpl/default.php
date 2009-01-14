@@ -28,8 +28,7 @@ $imagew = $this->params->get('imagew', 24);
 $color1 = $this->params->get('color1');
 $color2 = $this->params->get('color2');
 $page_width = $this->params->get('page_width');
-$tmplStudiesList = $this->params->get('tmplStudiesList');
-$tmplSingleStudyList = $this->params->get('tmplSingleStudyList');
+
 
 if (!$page_width){
 	$page_width = '100%';

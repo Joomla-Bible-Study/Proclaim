@@ -10,8 +10,17 @@ class biblestudyViewstudieslist extends JView
 	 **/
 	function display($tpl = null) {
 		global $mainframe, $option;
+		
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
+		$document =& JFactory::getDocument();
+		$model =& $this->getModel();
+		
+		//Initialize templating class
+		$tmplEninge = $this->loadHelper('templates.helper');
+		$tmplEngine =& bibleStudyTemplate::getInstance();
+
+
 		$params 			=& $mainframe->getPageParameters();
-		$db					=& JFactory::getDBO();
 		$uri				=& JFactory::getURI();
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
@@ -21,30 +30,22 @@ class biblestudyViewstudieslist extends JView
 		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year','filter_year',0,'int' );
 		$filter_location	= $mainframe->getuserStateFromRequest( $option.'filter_location','filter_location',0,'int');
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
-		$search				= $mainframe->getUserStateFromRequest( $option.'search','search','','string' );
-		$search				= JString::strtolower( $search );
-		//$filter_searchby	= $mainframe->getUserStateFromRequest( $option.'filter_searchby','filter_searchby','studytext','word' );
-		//$limit				= JRequest::getVar('limit',				$mainframe->getCfg('list_limit'),	'', 'int');
-		//$limitstart			= JRequest::getVar('limitstart',		0,				'', 'int');
-		//$options['limit']		= $limit;
-		//$options['limitstart']	= $limitstart;
-		//$javascript 	= 'onchange="document.adminForm.submit();"';
-		// Get data from the model
+		$search				= JString::strtolower($mainframe->getUserStateFromRequest( $option.'search','search','','string'));
 
-		//this is an experiment from com_content
-		//$limit		= $mainframe->getUserStateFromRequest('com_biblestudy.studieslist'.'.limit', 'limit', 'int');
-		//$limitstart	= JRequest::getVar('limitstart', 0, '', 'int');
-		//jimport('joomla.html.pagination');
-		//$pagination = new JPagination($total, $limitstart, $limit);
+		//Retrieve Parameters
+		$tmplStudiesList = $params->get('tmplStudiesList');
+		$tmplSingleStudyList = $params->get('tmplSingleStudyList');
 
-		//end of com_content experiment
+		//Retrieve the tags that are used in the current template
+		$tmplStudiesList = $tmplEngine->loadTagList(null, $tmplStudiesList);
+		$tmplSingleStudyList = $tmplEngine->loadTagList(null, $tmplSingleStudyList, true);
 
-		/**
-		 * @desc Gets all data from model
-		 * @return Array
-		 */
+		//@todo Find a way to assign the Return fo the buildSqlSelect to the Model Var
+		$model->_select = $tmplEngine->buildSqlSELECT($tmplSingleStudyList);
+		
 		$items = $this->get('Data');
 		$total = $this->get('Total');
+		
 		$pagination = $this->get('Pagination');
 		$teachers = $this->get('Teachers');
 		$series = $this->get('Series');
@@ -54,21 +55,11 @@ class biblestudyViewstudieslist extends JView
 		$topics = $this->get('Topics');
 		$orders = $this->get('Orders');
 
-		//Initialize templating class
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
-		$tmplEninge = $this->loadHelper('templates.helper');
-		$tmplEngine =& bibleStudyTemplate::getInstance();
 
-		//jimport('joomla.html.pagination');
-		//$pagination = new JPagination($total, $limitstart, $limit);
-		//$this->assignRef('request_url',	$uri->toString());
-		$document =& JFactory::getDocument();
+		
 		$this->assignRef('pagination',	$pagination);
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
-		//$params->def('page_title', $item->name);
-		//$document->setTitle($params->get('page_title'));
-		//Build Teacher List for drop down menu
 
 		//Include the Jquery Library
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
