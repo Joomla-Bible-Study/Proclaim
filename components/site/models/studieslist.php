@@ -23,6 +23,7 @@ class biblestudyModelstudieslist extends JModel
 	var $_locations;
 	var $_topics;
 	var $_orders;
+	var $_select;
 
 	function __construct()
 	{
@@ -37,9 +38,11 @@ class biblestudyModelstudieslist extends JModel
 		// In case limit has been changed, adjust limitstart accordingly
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 
-
+	dump($this->_select, 'why here');
 	}
-
+function setSelect($string){
+	
+}
 	/**
 	 * @desc Returns the query
 	 * @return string The query to be used to retrieve the rows from the database
