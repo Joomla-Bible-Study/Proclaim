@@ -424,7 +424,14 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 		if (!$filesize){
 		}
 		else {
-			if ($number_rows > 0) {$filepath = 'http://'.$filesize->spath.$filesize->fpath.$filesize->filename;} else {$filepath = '';}
+			if ($number_rows > 0) {
+				$ishttp = substr($filesize->spath,0,7);
+				if ($ishttp == 'http://'){ 
+					$filepath = $filesize->spath.$filesize->fpath.$filesize->filename;
+					}
+					else {
+					$filepath = 'http://'.$filesize->spath.$filesize->fpath.$filesize->filename;}
+			} else {$filepath = '';}
 		}
 		$show_media = $this->params->get('show_media',1);
 		$filesize_showm = $this->params->get('filesize_showm');
