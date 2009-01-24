@@ -1,5 +1,4 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-
 <script
 	type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
 <link
@@ -425,13 +424,14 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 		}
 		else {
 			if ($number_rows > 0) {
-				$ishttp = substr($filesize->spath,0,7);
-				if ($ishttp == 'http://'){ 
-					$filepath = $filesize->spath.$filesize->fpath.$filesize->filename;
-					}
-					else {
-					$filepath = 'http://'.$filesize->spath.$filesize->fpath.$filesize->filename;}
-			} else {$filepath = '';}
+				$filepath = $filesize->spath.$filesize->fpath.$filesize->filename;
+				//Check url for "http://" prefix, and add it if it doesn't exist
+				if(!eregi('http://', $filepath)) {
+					$filepath = 'http://'.$filepath;
+				}
+			} else {
+				$filepath = '';
+			}
 		}
 		$show_media = $this->params->get('show_media',1);
 		$filesize_showm = $this->params->get('filesize_showm');
