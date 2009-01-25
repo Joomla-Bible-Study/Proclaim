@@ -239,10 +239,14 @@
 			<filename>controllers/commentsedit.php</filename>
 			<filename>controllers/locationsedit.php</filename>
 			<filename>controllers/locationslist.php</filename>
+			<filename>controllers/templateslist.php</filename>
+			<filename>controllers/templateedit.php</filename>
 			<filename>controllers/index.html</filename>
 			<filename>elements/studydetails.php</filename>
 			<filename>elements/mediafile.php</filename>
 			<filename>elements/teacher.php</filename>
+			<filename>elements/series.php</filename>
+			<filename>helpers/templates.helper.php</filename>
 			<filename>models/teacherlist.php</filename>
 			<filename>models/teacheredit.php</filename>
 			<filename>models/medialist.php</filename>
@@ -414,6 +418,7 @@
 			<filename>tables/mediafilesedit.php</filename>
 			<filename>tables/commentsedit.php</filename>
 			<filename>tables/locationsedit.php</filename>
+			<filename>tables/templateedit.php</filename>
 			<filename>tables/index.html</filename>
 			<filename>convert1.htm</filename>
 			<filename>config.xml</filename>
