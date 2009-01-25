@@ -194,6 +194,7 @@
 		<submenu>
 			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
 			<menu link="option=com_biblestudy&amp;view=studieslist">Studies</menu>
+			<menu link="option=com_biblestudy&amp;view=templateslist">Templates</menu>
 			<menu link="option=com_biblestudy&amp;view=mediafileslist">Media Files</menu>
 			<menu link="option=com_biblestudy&amp;view=teacherlist">Teachers</menu>
 			<menu link="option=com_biblestudy&amp;view=bookslist">Bible Books</menu>
@@ -271,6 +272,8 @@
 			<filename>models/commentsedit.php</filename>
 			<filename>models/locationsedit.php</filename>
 			<filename>models/locationslist.php</filename>
+			<filename>models/templateedit.php</filename>
+			<filename>models/templateslist.php</filename>
 			<filename>models/index.html</filename>
 			<filename>views/commentslist/view.html.php</filename>
 			<filename>views/commentslist/index.html</filename>
@@ -388,6 +391,14 @@
 			<filename>views/locationsedit/view.html.php</filename>
 			<filename>views/locationsedit/tmpl/index.html</filename>
 			<filename>views/locationsedit/tmpl/form.php</filename>
+			<filename>views/templateedit/view.html.php</filename>
+			<filename>views/templateedit/index.html</filename>
+			<filename>views/templateedit/tmpl/form.php</filename>
+			<filename>views/templateedit/tmpl/index.html</filename>
+			<filename>views/templateslist/view.html.php</filename>
+			<filename>views/templateslist/index.html</filename>
+			<filename>views/templateslist/tmpl/default.php</filename>
+			<filename>views/templateslist/tmpl/index.html</filename>
 			<filename>views/index.html</filename>
 			<filename>tables/teacheredit.php</filename>
 			<filename>tables/mediaedit.php</filename>
