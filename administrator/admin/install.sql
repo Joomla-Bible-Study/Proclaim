@@ -221,7 +221,7 @@ PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`;
 --
 
 
-CREATE TABLE `jos_bsms_templates` (
+CREATE TABLE `#__bsms_templates` (
   
 `id` int(11) NOT NULL auto_increment,
   
@@ -233,6 +233,7 @@ CREATE TABLE `jos_bsms_templates` (
   
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+
 
 
 --
