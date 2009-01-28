@@ -38,7 +38,7 @@ class biblestudyModelstudieslist extends JModel
 		// In case limit has been changed, adjust limitstart accordingly
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 
-	dump($this->_select, 'why here');
+	//dump($this->_select, 'why here');
 	}
 function setSelect($string){
 	
