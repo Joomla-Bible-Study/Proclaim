@@ -525,7 +525,7 @@ $this->assignRef ('duration', $duration);// end switch
 	
 	<tr>
 		<td><br />
-		<?php echo $this->studydetails->studytext; ?></td>
+		<?php //echo $this->studydetails->studytext; ?></td>
 	</tr>
 
 	<table>
