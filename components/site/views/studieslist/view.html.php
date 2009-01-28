@@ -16,8 +16,8 @@ class biblestudyViewstudieslist extends JView
 		$model =& $this->getModel();
 		
 		//Initialize templating class
-		$tmplEninge = $this->loadHelper('templates.helper');
-		$tmplEngine =& bibleStudyTemplate::getInstance();
+		//$tmplEninge = $this->loadHelper('templates.helper');
+		//$tmplEngine =& bibleStudyTemplate::getInstance();
 
 
 		$params 			=& $mainframe->getPageParameters();
@@ -31,7 +31,7 @@ class biblestudyViewstudieslist extends JView
 		$filter_location	= $mainframe->getuserStateFromRequest( $option.'filter_location','filter_location',0,'int');
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
 		$search				= JString::strtolower($mainframe->getUserStateFromRequest( $option.'search','search','','string'));
-
+/*
 		//Retrieve Parameters
 		$tmplStudiesList = $params->get('tmplStudiesList');
 		$tmplSingleStudyList = $params->get('tmplSingleStudyList');
@@ -42,7 +42,7 @@ class biblestudyViewstudieslist extends JView
 
 		//@todo Find a way to assign the Return fo the buildSqlSelect to the Model Var
 		$model->_select = $tmplEngine->buildSqlSELECT($tmplSingleStudyList);
-		
+*/		
 		$items = $this->get('Data');
 		$total = $this->get('Total');
 		
