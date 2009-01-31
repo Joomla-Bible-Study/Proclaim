@@ -1,12 +1,8 @@
 <?php
-
-
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-
-class biblestudyControllerbooksedit extends JController
-{
+class biblestudyControllerbooksedit extends JController {
 	/**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
