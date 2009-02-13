@@ -5,8 +5,6 @@ jimport( 'joomla.application.component.view' );
 
 class biblestudyViewstudiesedit extends JView {
 	
-	var $_books = array();
-
 	function display($tpl = null) {
 		global $mainframe;
 
@@ -25,10 +23,8 @@ class biblestudyViewstudiesedit extends JView {
 		
 		
 		//Manipulate Data
-		foreach($books as $book) {
-			$this->_books[] = JHTML::_('select.option', $book->value, $book->text);			
-		}
-		array_unshift($this->_books, JHTML::_('select.option', null, JText::_('- Select a Book -')));
+		array_unshift($books, JHTML::_('select.option', null, JText::_('- Select a Book -')));
+		
 		$isNew		= ($studiesedit->id < 1);
 		$editor =& JFactory::getEditor();
 		$this->assignRef( 'editor', $editor );
@@ -172,7 +168,7 @@ class biblestudyViewstudiesedit extends JView {
 		$this->assignRef('mediafiles', $mediafiles);
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('studiesedit',		$studiesedit);
-		$this->assignRef('books', $this->_books);
+		$this->assignRef('books', $books);
 		
 		parent::display($tpl);
 	}
