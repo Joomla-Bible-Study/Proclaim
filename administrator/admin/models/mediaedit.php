@@ -1,14 +1,9 @@
 <?php
-
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
-
-class biblestudyModelmediaedit extends JModel
-{
+class biblestudyModelmediaedit extends JModel {
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
@@ -23,7 +18,7 @@ class biblestudyModelmediaedit extends JModel
 		$this->setId((int)$array[0]);
 	}
 
-	
+
 	function setId($id)
 	{
 		// Set id and wipe data
@@ -32,7 +27,7 @@ class biblestudyModelmediaedit extends JModel
 	}
 
 
-	
+
 	function &getData()
 	{
 		// Load the data
@@ -79,11 +74,11 @@ class biblestudyModelmediaedit extends JModel
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Store the web link table to the database
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
-//			$this->setError( $row->getErrorMsg() );
+			//			$this->setError( $row->getErrorMsg() );
 			return false;
 		}
 
@@ -109,20 +104,20 @@ class biblestudyModelmediaedit extends JModel
 					$this->setError( $row->getErrorMsg() );
 					return false;
 				}
-			}						
+			}
 		}
 		return true;
 	}
-function publish($cid = array(), $publish = 1)
+	function publish($cid = array(), $publish = 1)
 	{
-		
+
 		if (count( $cid ))
 		{
 			$cids = implode( ',', $cid );
 
 			$query = 'UPDATE #__bsms_media'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
+			. ' SET published = ' . intval( $publish )
+			. ' WHERE id IN ( '.$cids.' )'
 				
 			;
 			$this->_db->setQuery( $query );
@@ -130,8 +125,9 @@ function publish($cid = array(), $publish = 1)
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
-		}		
-	}			
+		}
+	}
+
 
 }
 ?>

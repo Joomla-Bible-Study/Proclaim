@@ -1,14 +1,9 @@
 <?php
-
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
-
-class biblestudyModelmediafilesedit extends JModel
-{
+class biblestudyModelmediafilesedit extends JModel {
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
@@ -66,6 +61,26 @@ class biblestudyModelmediafilesedit extends JModel
 		return $this->_data;
 	}
 
+	function getdocManCategories() {
+		$query = "SELECT id, title FROM #__categories
+				  WHERE `section` = 'com_docman' AND `published`=1";
+		return $this->_getList($query);
+	}
+	
+	function getdocManCategoryItems($catId) {
+		$query = "SELECT id, dmname FROM #__docman
+				  WHERE `catid`='$catId' AND `published`=1";
+		$itemsObject = $this->_getList($query);
+		$items = '[';
+		foreach($itemsObject as $object){
+			$items .= '{id: "'.$object->id.'", name: "'.$object->dmname.'"},';
+		}
+		$items .= ']';
+		
+		return $items;
+		
+	}
+	
 	/**
 	 * Method to store a record
 	 *
@@ -212,5 +227,7 @@ function publish($cid = array(), $publish = 1)
 
 		return true;
 	}
+	
+	
 }
 ?>
