@@ -31,12 +31,15 @@ function openConverter1()
           </td>
       </tr>
       <tr>
-      	<td class="key"><?php echo JText::_('Use DOCman')?>:</td>
+      	<td class="key">
+      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>" style="display: none;" />
+		<?php echo JText::_('Use DOCman')?>:</td>
       	<td>
       	<?php 
       	echo JText::_('Category').':';
       	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategories', null, 'id', 'title', null, 'docManCategory');
       	?>
+      	
       	<br />
       	<?php 
       	echo JText::_('Item').':';
