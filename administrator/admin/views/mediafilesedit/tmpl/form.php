@@ -17,6 +17,7 @@ function openConverter1()
 
 </script>	
 <form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+
 <div class="col100">
 	<fieldset class="adminform">
 		<legend><?php echo JText::_( 'Media File Details' ); ?></legend>
@@ -28,6 +29,20 @@ function openConverter1()
         <td > <?php echo $this->lists['published'];
 		?>
           </td>
+      </tr>
+      <tr>
+      	<td class="key"><?php echo JText::_('Use DOCman')?>:</td>
+      	<td>
+      	<?php 
+      	echo JText::_('Category').':';
+      	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategories', null, 'id', 'title', null, 'docManCategory');
+      	?>
+      	<br />
+      	<?php 
+      	echo JText::_('Item').':';
+      	?>
+      	<select id="docmanItems"><option selected="selected">- Select an Item -</option></select>
+      	</td>
       </tr>
       <tr> 
         <td class="key" align="left"><?php echo JText::_( 'Create Date YYYY-MM-DD' ); ?></td>
