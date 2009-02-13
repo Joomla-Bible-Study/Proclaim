@@ -1,29 +1,23 @@
 <?php
-
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
-
-class biblestudyModelstudiesedit extends JModel
-{
+class biblestudyModelstudiesedit extends JModel {
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
 	 * @access	public
 	 * @return	void
 	 */
-	function __construct()
-	{
+	function __construct() {
 		parent::__construct();
 
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
 
-	
+
 	function setId($id)
 	{
 		// Set id and wipe data
@@ -32,7 +26,7 @@ class biblestudyModelstudiesedit extends JModel
 	}
 
 
-	
+
 	function &getData()
 	{
 		// Load the data
@@ -97,7 +91,7 @@ class biblestudyModelstudiesedit extends JModel
 		//$post           = JRequest::get( 'post' );
 
 		// fix up special html fields
-		
+
 		$row =& $this->getTable();
 
 		$data = JRequest::get( 'post' );
@@ -111,18 +105,18 @@ class biblestudyModelstudiesedit extends JModel
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
-		
+
+
 		// Make sure the record is valid
 		if (!$row->check()) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Store the table to the database
 		//Checks to make sure a valid date field has been entered
 		if (!$row->studydate)
-			$row->studydate = date( 'Y-m-d H:i:s' );
+		$row->studydate = date( 'Y-m-d H:i:s' );
 		//if ($row->description) { $row->description = str_replace('"',"'",$row->description); }
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
@@ -153,20 +147,20 @@ class biblestudyModelstudiesedit extends JModel
 					$this->setError( $row->getErrorMsg() );
 					return false;
 				}
-			}						
+			}
 		}
 		return true;
 	}
-function publish($cid = array(), $publish = 1)
+	function publish($cid = array(), $publish = 1)
 	{
-		
+
 		if (count( $cid ))
 		{
 			$cids = implode( ',', $cid );
 
 			$query = 'UPDATE #__bsms_studies'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
+			. ' SET published = ' . intval( $publish )
+			. ' WHERE id IN ( '.$cids.' )'
 				
 			;
 			$this->_db->setQuery( $query );
@@ -174,8 +168,16 @@ function publish($cid = array(), $publish = 1)
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
-		}		
-	}			
+		}
+	}
 
+	function getBooks() {
+		$query = 'SELECT booknumber AS value, bookname AS text, published'
+		. ' FROM #__bsms_books'
+		. ' WHERE published = 1'
+		. ' ORDER BY booknumber';
+		$this->_db->setQuery($query);
+		return $this->_getList($query);
+	}
 }
 ?>
