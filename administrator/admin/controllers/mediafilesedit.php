@@ -1,19 +1,11 @@
 <?php
-/**
- * Media Edit Controller for Bible Study Component
- * 
- 
- */
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 /**
  * Media Edit Controller
  *
  */
-class biblestudyControllermediafilesedit extends JController
-{
+class biblestudyControllermediafilesedit extends JController {
 	/**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
@@ -174,6 +166,15 @@ function publish()
 	{
 		$msg = JText::_( 'Operation Cancelled' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
+	}
+	
+	function docmanCategoryItems() {
+		$catId = JRequest::getVar('catId');
+		
+		$model =& $this->getModel('mediafilesedit');
+		$items =& $model->getdocManCategoryItems($catId);
+		
+		echo $items;
 	}
 }
 ?>
