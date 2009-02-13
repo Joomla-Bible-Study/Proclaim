@@ -40,12 +40,21 @@ $j(document).ready( function() {
 		var catId = $j('#docManCategory option:selected').attr('value');
 		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=docmanCategoryItems&format=raw&catId='
 		
+		$j('#loading').ajaxStart(function() {
+			$j(this).show();
+		});
+		$j('#loading').ajaxStop(function() {
+			$j(this).hide();
+		});
 		// request the items
-		$j.getJSON(url+catId, function(data){
-			$j.each(data, function(entryIndex, entry) {
-				$j("#docmanItems").addOption(entry['id'], entry['name']);
-			})
-
+		$j.ajax({
+			dataType: "json",
+			url: url+catId,
+			success: function(data){
+				$j.each(data, function(entryIndex, entry) {
+					$j("#docmanItems").addOption(entry['id'], entry['name']);
+				})
+			}	
 		});
 	});
 });
