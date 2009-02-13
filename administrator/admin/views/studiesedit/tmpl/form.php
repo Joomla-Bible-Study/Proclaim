@@ -47,76 +47,26 @@ $user =& JFactory::getUser();
       </tr>
       <tr> 
         <td class="key" align="left"><?php echo JText::_( 'Scripture' ); ?></td>
-        <td> <table width="60" border="0" cellspacing="1" cellpadding="1">
-            <tr> 
-              <td size="20"><?php echo JText::_( 'Book' );?></td>
-              <td size="8"><?php echo JText::_( 'Ch Begin' );?></td>
-              <td size="8"><?php echo JText::_( 'Vs Begin' );?></td>
-              <td size="8"><?php echo JText::_( 'Ch End' ); ?></td>
-              <td size="8"><?php echo JText::_( 'Vs End' );?></td>
-            </tr>
-            <tr> 
-              <td ><?php //echo $this->lists['booknumber']; 
-			  $database =& JFactory::getDBO();
-			  $query2 = 'SELECT booknumber AS value, bookname AS text, published'
-                        . ' FROM #__bsms_books'
-                        . ' WHERE published = 1'
-                        . ' ORDER BY booknumber';
-						$database->setQuery( $query2 );
-						$bookid = $database->loadAssocList();
-						echo '<select name="booknumber" id="booknumber" class="inputbox" size="1" ><option value="0"';
-						echo '>- '.JText::_('Select a Book').' -'.'</option>';
-                        foreach ($bookid as $bookid2) {
-                        $format = $bookid2['text'];
-                        $output = JText::sprintf($format);
-                        $bookvalue = $bookid2['value'];
-						if ($bookvalue == $this->studiesedit->booknumber){$selected = 'selected="selected"';
-                        echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
-						echo '<option value="'.$bookvalue.'">'.$output.'</option>';
-                        };
-                         echo '</select>';?>
-              </td>
-              <td ><input class="text_area" type="text" name="chapter_begin" id="chapter_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_begin;?>"/></td>
-              <td ><input class="text_area" type="text" name="verse_begin" id="verse_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_begin;?>"/></td>
-              <td ><input class="text_area" type="text" name="chapter_end" id="chapter_end" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_end;?>"/></td>
-              <td ><input class="text_area" type="text" name="verse_end" id="verse_end" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_end;?>"/></td>
-            </tr>
-          </table></td>
+        <td> 
+        <div id="references">
+	        <div id="reference" style="margin-top: 2px;">
+	        <?php echo JText::_('Book'); ?>:
+	        	<?php 
+	        	echo JHTML::_('select.genericlist', $this->books, 'scripture', null , 'value', 'text', null);
+	        	?>
+	        <?php echo JText::_('Ch Begin'); ?>:
+		        <input type="text" id="chapter_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_begin;?>" />
+	        <?php echo JText::_('Vs Begin'); ?>:
+	        	<input type="text" name="verse_begin" id="verse_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_begin;?>" />
+	        <?php echo JText::_('Ch End'); ?>:
+	        	<input type="text" name="chapter_end" id="chapter_end" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_end;?>" />
+	        <?php echo JText::_('Vs End'); ?>:
+	        	<input type="text" name="verse_end" id="verse_end" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_end;?>" />
+	        </div>
+        </div>
+        <a href="#" id="addReference">Add Reference</a>
+		</td>
       </tr>
-      <tr> 
-        <td class="key" align="left"><?php echo JText::_( 'Scripture 2' ); ?></td>
-        <td> <table width="60" border="0" cellspacing="1" cellpadding="1">
-            <tr> 
-              <td size="20"><?php echo JText::_( 'Book 2' );?></td>
-              <td size="8"><?php echo JText::_( 'Ch Begin 2' );?></td>
-              <td size="8"><?php echo JText::_( 'Vs Begin 2' );?></td>
-              <td size="8"><?php echo JText::_( 'Ch End 2' ); ?></td>
-              <td size="8"><?php echo JText::_( 'Vs End 2' );?></td>
-            </tr>
-            <tr> 
-              <td ><?php //echo $this->lists['booknumber2']; 
-			  echo '<select name="booknumber2" id="booknumber2" class="inputbox" size="1" ><option value="0"';
-						echo '>- '.JText::_('Select a Book').' -'.'</option>';
-                        foreach ($bookid as $bookid2) {
-                        $format = $bookid2['text'];
-                        $output = JText::sprintf($format);
-                        $bookvalue = $bookid2['value'];
-						if ($bookvalue == $this->studiesedit->booknumber2){$selected = 'selected="selected"';
-                        echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
-						echo '<option value="'.$bookvalue.'">'.$output.'</option>';
-                        };
-                         echo '</select>';?>
-              </td>
-              <td ><input class="text_area" type="text" name="chapter_begin2" id="chapter_begin2" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_begin2;?>"/></td>
-              <td ><input class="text_area" type="text" name="verse_begin2" id="verse_begin2" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_begin2;?>"/></td>
-              <td ><input class="text_area" type="text" name="chapter_end2" id="chapter_end2" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_end2;?>"/></td>
-              <td ><input class="text_area" type="text" name="verse_end2" id="verse_end2" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_end2;?>"/></td>
-            </tr>
-          </table></td>
-      </tr>
-      <tr>
-      	<td class="key" align="left"><?php echo JText::_( 'Secondary References' );?></td>
-        <td><input class="text_area" type="text" name="secondary_reference" id="secondary_reference" size="150" maxlength="150" value="<?php echo $this->studiesedit->secondary_reference;?>"/></td>
       <tr> 
         <td class="key" align="left"><?php echo JText::_( 'Teacher' ); ?></td>
         <td > <?php echo $this->lists['teacher_id']; ?> </td>
