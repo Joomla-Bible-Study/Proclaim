@@ -1,21 +1,34 @@
 <?php
-
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
 
-class biblestudyViewstudiesedit extends JView
-{
+class biblestudyViewstudiesedit extends JView {
+	
+	var $_books = array();
 
-	function display($tpl = null)
-	{
+	function display($tpl = null) {
 		global $mainframe;
+
+		//Include the Jquery Library
+		$document = JFactory::getDocument();
+		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
+		
 		$config =& JComponentHelper::getParams( 'com_biblestudy' );
 		$enableStore = $config->get('admin_store');
+
+		//Get Data
+		$studiesedit =& $this->get('Data');
+		$books =& $this->get('books');
 		
-		$studiesedit		=& $this->get('Data');
+		
+		//Manipulate Data
+		foreach($books as $book) {
+			$this->_books[] = JHTML::_('select.option', $book->value, $book->text);			
+		}
+		array_unshift($this->_books, JHTML::_('select.option', null, JText::_('- Select a Book -')));
 		$isNew		= ($studiesedit->id < 1);
 		$editor =& JFactory::getEditor();
 		$this->assignRef( 'editor', $editor );
@@ -159,6 +172,8 @@ class biblestudyViewstudiesedit extends JView
 		$this->assignRef('mediafiles', $mediafiles);
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('studiesedit',		$studiesedit);
+		$this->assignRef('books', $this->_books);
+		
 		parent::display($tpl);
 	}
 }
