@@ -39,10 +39,8 @@ function openConverter1()
       	echo JText::_('Category').':';
       	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategories', null, 'id', 'title', null, 'docManCategory');
       	?>
-      	
-      	<br />
       	<?php 
-      	echo JText::_('Item').':';
+      	echo JText::_(' Item').': ';
       	?>
       	<select id="docmanItems"><option selected="selected">- Select an Item -</option></select>
       	</td>

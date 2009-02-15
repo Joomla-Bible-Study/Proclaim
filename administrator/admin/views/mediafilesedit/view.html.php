@@ -14,7 +14,7 @@ class biblestudyViewmediafilesedit extends JView {
 		}
 
 		//Include the Jquery Library
-		$document = JFactory::getDocument();
+		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
