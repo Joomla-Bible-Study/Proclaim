@@ -48,22 +48,22 @@ $user =& JFactory::getUser();
       <tr> 
         <td class="key" align="left"><?php echo JText::_( 'Scripture' ); ?></td>
         <td> 
-        <div id="references">
-	        <div id="reference" style="margin-top: 2px;">
-	        <?php echo JText::_('Book'); ?>:
-	        	<?php 
-	        	echo JHTML::_('select.genericlist', $this->books, 'scripture', null , 'value', 'text', null);
-	        	?>
-	        <?php echo JText::_('Ch Begin'); ?>:
-		        <input type="text" id="chapter_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_begin;?>" />
-	        <?php echo JText::_('Vs Begin'); ?>:
-	        	<input type="text" name="verse_begin" id="verse_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_begin;?>" />
-	        <?php echo JText::_('Ch End'); ?>:
-	        	<input type="text" name="chapter_end" id="chapter_end" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_end;?>" />
-	        <?php echo JText::_('Vs End'); ?>:
-	        	<input type="text" name="verse_end" id="verse_end" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_end;?>" />
-	        </div>
-        </div>
+ 		<div id="references">
+        <?php 
+        foreach($this->scriptures as $scripture) {
+        	echo ('<div id="reference" style="margin-top:2px;">');
+			echo JText::_('Book').': ';
+			echo JHTML::_('select.genericlist', $this->books, 'scripture[]', null, 'value', 'text', $scripture['bookId']);
+        	echo JText::_(' Text').': ';
+        	echo ('<input type="text" name="text[]" id="text" size="10" value="'.$scripture['text'].'">');
+			if($i){
+				echo ('<a href="#" class="referenceDelete">Delete</a>');
+			}
+        	echo ('</div>');
+        	$i = true;
+        }
+        ?>
+		</div>
         <a href="#" id="addReference">Add Reference</a>
 		</td>
       </tr>

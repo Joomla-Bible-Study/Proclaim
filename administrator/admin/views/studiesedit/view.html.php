@@ -9,10 +9,11 @@ class biblestudyViewstudiesedit extends JView {
 		global $mainframe;
 
 		//Include the Jquery Library
-		$document = JFactory::getDocument();
+		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 		
 		$config =& JComponentHelper::getParams( 'com_biblestudy' );
 		$enableStore = $config->get('admin_store');
@@ -21,9 +22,15 @@ class biblestudyViewstudiesedit extends JView {
 		$studiesedit =& $this->get('Data');
 		$books =& $this->get('books');
 		
-		
 		//Manipulate Data
-		array_unshift($books, JHTML::_('select.option', null, JText::_('- Select a Book -')));
+		$scriptures = explode(';', $studiesedit->scripture);
+		foreach($scriptures as $scripture){
+			$split = explode(' ', $scripture);
+			$scriptureBlocks[$scripture]['bookId'] =  $split[0];
+			$scriptureBlocks[$scripture]['text'] = $split[1];
+		}
+		array_unshift($books, JHTML::_('select.option', '0', JText::_('- Select a Book -')));
+
 		
 		$isNew		= ($studiesedit->id < 1);
 		$editor =& JFactory::getEditor();
@@ -58,17 +65,6 @@ class biblestudyViewstudiesedit extends JView {
 		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $studiesedit->published);
 		$lists['comments'] = JHTML::_('select.booleanlist', 'comments', 'class="inputbox"', $studiesedit->comments);
 
-		$query2 = 'SELECT booknumber AS value, bookname AS text, published'
-		. ' FROM #__bsms_books'
-		. ' WHERE published = 1'
-		. ' ORDER BY booknumber';
-		$database->setQuery( $query2 );
-		$books = $database->loadObjectList();
-		$types2[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Book' ) .' -' );
-		$types2 			= array_merge( $types2, $database->loadObjectList() );
-		$lists['booknumber'] = JHTML::_('select.genericlist', $types2, 'booknumber', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->booknumber );
-		$lists['booknumber2'] = JHTML::_('select.genericlist',$types2, 'booknumber2', 'class="inputbox" size="1" ', 'value', 'text', $studiesedit->booknumber2 );
-			
 		$query3 = 'SELECT id AS value, series_text AS text, published'
 		. ' FROM #__bsms_series'
 		. ' WHERE published = 1'
@@ -169,6 +165,7 @@ class biblestudyViewstudiesedit extends JView {
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('studiesedit',		$studiesedit);
 		$this->assignRef('books', $books);
+		$this->assignRef('scriptures', $scriptureBlocks);
 		
 		parent::display($tpl);
 	}
