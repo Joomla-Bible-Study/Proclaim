@@ -26,9 +26,17 @@ class biblestudyViewtemplateedit extends JView {
 		$this->assignRef('template', $template);
 		$this->assignRef('data', $data);
 
-		//Include Edit Area Libraries
-		$document = JFactory::getDocument();
-		$document->addScript(JURI::base().'components/com_biblestudy/js/edit_area/edit_area_full.js');
+		//Include the Jquery Library
+		$document =& JFactory::getDocument();
+		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
+		//Biblestudy User Interface
+		$document->addScript(JURI::base().'components/com_biblestudy/js/ui/jquery-ui.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy-ui.js');
+		$document->addStyleSheet(JURI::base().'components/com_biblestudy/js/ui/theme/ui.all.css');
+		$document->addStyleSheet(JURI::base().'components/com_biblestudy/js/ui/theme/biblestudy.generic.css');
+		
+/*		$document->addScript(JURI::base().'components/com_biblestudy/js/edit_area/edit_area_full.js');
 		$document->addScriptDeclaration('
 		editAreaLoader.init(
 			{	
@@ -42,7 +50,7 @@ class biblestudyViewtemplateedit extends JView {
 				font_size: 12
 			}
 		);
-		');
+		');*/
 		parent::display();
 	}
 }

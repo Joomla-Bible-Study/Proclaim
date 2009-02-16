@@ -1,91 +1,80 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
 ?>
-<form action="index.php" method="post" name="adminForm" id="adminForm">
-<table class="admintable">
-	<tr>
-		<td width="100" class="key"><?php echo JText::_('Published'); ?> </td>
-		<td><?php echo $this->data['published']; ?></td>
-	</tr>
-	<tr>
-		<td width="100" class="key"><?php echo JText::_('Type'); ?> </td>
-		<td><?php echo $this->data['tmplTypes']; ?></td>
-	</tr>
-	<tr>
-		<td width="100" class="key"><?php echo JText::_('Available Variables'); ?> </td>
-		<td>
-			<table class="admintable" width="100%">
-				<tr>
-					<td class="key"><?php echo JText::_('Studies List'); ?></td>
-					<td class="key"><?php echo JText::_('Study'); ?></td>
-					<td class="key"><?php echo JText::_('Teacher List')?></td>
-					<td class="key"><?php echo JText::_('Teacher')?></td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<ul>
-							<li>[filterLocation]</li>
-							<li>[filterBook]</li>
-							<li>[filterTeacher]</li>
-							<li>[filterSeries]</li>
-							<li>[fillterType]</li>
-							<li>[filterYear]</li>
-							<li>[filterTopic]</li>
-							<li>[filterOrder]</li>
-							<li>[studiesList]</li>
-						</ul>
-					</td>
-					<td valign="top">
-						<ul>
-							<li>[studyDate]</li>
-							<li>[teacherName]</li>
-							<li>[studyNumber]</li>
-							<li>[reference1]</li>
-							<li>[reference2]</li>
-							<li>[studyDVD]</li>
-							<li>[studyCD]</li>
-							<li>[studyText]</li>
-							<li>[studyHits]</li>
-							<li>[location]</li>
-							<li>[studyTitle]</li>
-							<li>[studyIntro]</li>
-							<li>[studyDuration]</li>
-							<li>[studyType]</li>
-							<li>[series]</li>
-							<li>[topic]</li>
-							<li>[studyText]</li>
-							<li>[mediaFiles]</li>
-							<li>[studyComments]</li>
-						</ul>
-					</td>
-					<td valign="top">
-						<ul>
-							<li>[teacherList]</li>
-						</ul>
-					</td>
-					<td valign="top">
-						<ul>
-							<li>[teacherName]</li>
-							<li>[teacherTitle]</li>
-							<li>[teacherPhone]</li>
-							<li>[teacherEmail]</li>
-							<li>[teacherWebsite]</li>
-							<li>[teacherInformation]</li>
-							<li>[teacherImage]</li>
-						</ul>
-					</td>
-					
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td width="100" class="key"><?php echo JText::_('Template'); ?> </td>
-		<td><textarea id="template" name="tmpl" cols="100" rows="10" class="text_area" id="studyintro"><?php echo $this->template->tmpl;?></textarea> </td>
-	</tr>
-</table>
-<input type="hidden" name="option" value="com_biblestudy" />
-<input type="hidden" name="id" value="<?php echo $this->template->id; ?>" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="controller" value="templateedit" />
-</form>
+<div id="templateTagsContainer">
+	<div>
+		<h3>Study Tags</h3>
+		<div>
+			<div id="studyDate" class="tmplTag">[studyDate]</div>
+			<div id="studyNumber" class="tmplTag">[studyNumber]</div>
+			<div id="studyScriptures" class="tmplTag">[studyScriptures]</div>
+			<div id="studyDVD" class="tmplTag">[studyDVD]</div>
+			<div id="secondaryReference" class="tmplTag">[secondaryReference]</div>
+			<div id="studyCD" class="tmplTag">[studyCD]</div>
+			<div id="hits" class="tmplTag">[hits]</div>
+			<div id="userName" class="tmplTag">[userName]</div>
+			<div id="studyLocation" class="tmplTag">[studyLocation]</div>
+			<div id="studyIntro" class="tmplTag">[studyIntro]</div>
+			<div id="studyDuration" class="tmplTag">[studyDuration]</div>
+			<div id="studySeries" class="tmplTag">[studySeries]</div>
+			<div id="studyTitle" class="tmplTag">[studyTitle]</div>
+			<div id="studyType" class="tmplTag">[studyType]</div>
+			<div id="studyTopic" class="tmplTag">[studyTopic]</div>
+			<div id="studyText" class="tmplTag">[studyText]</div>
+			<div id="studyMedia" class="tmplTag">[studyMedia]</div>		
+		</div>
+	</div>
+	<div>
+		<h3>Teacher Tags</h3>
+		<div>
+			<div id="teacherName" class="tmplTag">[teacherName]</div>
+			<div id="teacherTitle" class="tmplTag">[teacherTitle]</div>
+			<div id="teacherPhone" class="tmplTag">[teacherPhone]</div>
+			<div id="teacherEmail" class="tmplTag">[teacherEmail]</div>
+			<div id="teacherWebsite" class="tmplTag">[teacherWebsite]</div>
+			<div id="teacherInformation" class="tmplTag">[teacherInformation]</div>
+			<div id="teacherImage" class="tmplTag">[teacherImage]</div>
+			<div id="teacherShortBio" class="tmplTag">[teacherShortBio]</div>	
+		</div>
+	</div>
+	<div>
+		<h3>Media Tags</h3>
+		<div>
+			<div id="mediaImage" class="tmplTag">[mediaImage]</div>
+			<div id="mediaServer" class="tmplTag">[mediaServer]</div>
+			<div id="mediaPath" class="tmplTag">[mediaPath]</div>
+			<div id="mediaFilename" class="tmplTag">[mediaFilename]</div>
+			<div id="mediaSize" class="tmplTag">[mediaSize]</div>
+			<div id="mediaMimeType" class="tmplTag">[mediaMimeType]</div>
+			<div id="mediaPodcast" class="tmplTag">[mediaPodcast]</div>
+			<div id="mediaCreatedDate" class="tmplTag">[mediaCreatedDate]</div>
+			<div id="mediaHits" class="tmplTag">[mediaHits]</div>	
+		</div>
+	</div>	
+</div>
+<div id="tmplDesignSide">
+	<form action="index.php" method="post" name="adminForm" id="adminForm">
+	<table class="admintable" width="100%">
+		<tr>
+			<td width="100" class="key"><?php echo JText::_('Published'); ?> </td>
+			<td><?php echo $this->data['published']; ?></td>
+		</tr>
+		<tr>
+			<td width="100" class="key"><?php echo JText::_('Type'); ?> </td>
+			<td><?php echo $this->data['tmplTypes']; ?></td>
+		</tr>
+		<tr>
+			<td width="100" class="key"><?php echo JText::_('Template Designer'); ?> </td>
+			<td colspan="2">
+				<div id="tmplDesigner">
+				
+				</div>
+			</td>
+		</tr>
+	</table>
+	<input type="hidden" name="option" value="com_biblestudy" />
+	<input type="hidden" name="id" value="<?php echo $this->template->id; ?>" />
+	<input type="hidden" name="task" value="" />
+	<input type="hidden" name="controller" value="templateedit" />
+	</form>
+</div>
