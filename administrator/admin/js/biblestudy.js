@@ -17,10 +17,8 @@ $j(document).ready( function() {
 		var newReference = $j('#reference').clone();
 		var deleteButton = '<a href="#" class="referenceDelete">Delete</a>';
 		
-		$j(newReference).children('#chapter_begin').attr('value', '');
-		$j(newReference).children('#verse_begin').attr('value', '');
-		$j(newReference).children('#chapter_end').attr('value', '');
-		$j(newReference).children('#verse_end').attr('value', '');
+		$j(newReference).children('#text').attr('value', '');
+		$j(newReference).children('#scripture').selectOptions('0');
 		
 		$j(newReference).append(deleteButton);
 		$j(newReference).appendTo('#references');
@@ -31,11 +29,17 @@ $j(document).ready( function() {
 		})
 		return false;
 	});
+	$j(".referenceDelete").click(function() {
+		$j(this).parent("#reference").remove();
+		return false;
+	})
 	
 	
 	/**
 	 * @title Add Mediafile
 	 */
+	
+	//Docman integration
 	$j('#docManCategory').change(function() {
 		var catId = $j('#docManCategory option:selected').attr('value');
 		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=docmanCategoryItems&format=raw&catId='

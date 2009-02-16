@@ -1,0 +1,30 @@
+#templateTagsContainer {
+	float: right;
+	width: 22%;
+}
+
+#templateTagsContainer h3 {
+	height: 9px;
+	padding-top: 4px;
+	padding-left: 20px;
+	padding-bottom: 12px;
+}
+
+.tmplTag {
+	background-color: #ffffff;
+	border:1px solid black;
+	display:block;
+	margin:3px;
+	padding:2px;
+	width: 201px;
+}
+#tmplDesignSide {
+	float: left;
+	width: 77%;
+}
+
+#tmplDesigner {
+	border:1px solid black;
+	height:400px;
+	width:100%;
+}
