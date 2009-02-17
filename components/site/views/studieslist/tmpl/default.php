@@ -215,7 +215,8 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 					$output = JText::sprintf($format);
 					$sortvalue = $sortorder2['value'];
 					if ($sortvalue == $filter_orders){$selected = 'selected="selected"';
-					echo '<option value="'.$sortvalue.'"'.$selected.' >'.$output.'</option>';}
+					//echo '<option value="'.$sortvalue.'"'.$selected.' >'.$output.'</option>';
+					}
 					echo '<option value="'.$sortvalue.'">'.$output.'</option>';
 				};
 				echo '</select>';?> <?php //echo $this->lists['sorting'];?> <?php } ?>
