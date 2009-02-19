@@ -120,7 +120,7 @@ function publish()
 		$params = &JComponentHelper::getParams($option);
 		jimport('joomla.utilities.date');
 		$year = '('.date('Y').')';
-		$date = date('Y-m-d H:i:s');
+		$date = date('r');
 		global $mainframe, $option;
 		$cid	= JRequest::getVar('cid');
 		$db		=& JFactory::getDBO();
@@ -130,7 +130,7 @@ function publish()
 		$podinfo = $db->loadObject();
 		$client			=& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
 		$podhead = '<?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
   <channel>
     <title>'.$podinfo->title.'</title>
     <link>http://'.$podinfo->website.'</link>
@@ -144,7 +144,7 @@ function publish()
       <height>'.$podinfo->imageh.'</height>
       <width>'.$podinfo->imagew.'</width>
     </image>
-    <itunes:link rel="image" type="video/jpeg" href="'.$podinfo->image.'">'.$podinfo->title.'</itunes:link>
+    <itunes:image href="http://'.$podinfo->podcastimage.'" />
     <category>Religion &amp; Spirituality</category>
     <itunes:category text="Religion &amp; Spirituality">
       <itunes:category text="Christianity" />
@@ -154,15 +154,17 @@ function publish()
     <pubDate>'.$date.'</pubDate>
     <lastBuildDate>'.$date.'</lastBuildDate>
     <generator>Bible Study Message Management System</generator>
-    <managingEditor>'.$podinfo->editor_email.'('.$podinfo->editor_name.')</managingEditor>
-    <webMaster>'.$podinfo->editor_email.'</webMaster>
+    <managingEditor>'.$podinfo->editor_email.' ('.$podinfo->editor_name.')</managingEditor>
+    <webMaster>'.$podinfo->editor_email.' ('.$podinfo->editor_name.')</webMaster>
     <itunes:owner>
       <itunes:name>'.$podinfo->editor_name.'</itunes:name>
       <itunes:email>'.$podinfo->editor_email.'</itunes:email>
     </itunes:owner>
     <itunes:author>'.$podinfo->editor_name.'</itunes:author>
     <itunes:explicit>no</itunes:explicit>
-    <ttl>1</ttl>';
+    <ttl>1</ttl>
+    <atom:link href="http://'.$podinfo->website.'/'.$podinfo->filename.'" rel="self" type="application/rss+xml" />
+    ';
 		//Now let's get the podcast episodes
 		$limit = $podinfo->podcastlimit;
 			if ($limit > 0) {
@@ -193,7 +195,7 @@ function publish()
 			$episodes = $db->loadObjectList();
 		$episodedetail = '';
 		foreach ($episodes as $episode) {
-		$episodedate = $episode->createdate;
+		$episodedate = date("r",strtotime($episode->createdate));
 		$hours = $episode->media_hours;
 		if (!$hours) { $hours = '00'; }
 		if ($hours < 1) { $hours = '00'; }
@@ -234,7 +236,7 @@ function publish()
       <itunes:subtitle>'.$title.'</itunes:subtitle>
       <itunes:summary>'.$episode->studyintro.'</itunes:summary>
       <itunes:keywords>'.$podinfo->podcastsearch.'</itunes:keywords>
-      <itunes:duration>'.$hours.':'.$episode->media_minutes.':'.$episode->media_seconds.'</itunes:duration>
+      <itunes:duration>'.$hours.':'.sprintf("%02d", $episode->media_minutes).':'.sprintf("%02d", $episode->media_seconds).'</itunes:duration>
       <enclosure url="http://'.$episode->server_path.$episode->folderpath.$episode->filename.'" length="'.$episode->size.'" type="'.$episode->mimetype.'" />
       <guid>http://'.$episode->server_path.$episode->folderpath.$episode->filename.'</guid>
       <itunes:explicit>no</itunes:explicit>
