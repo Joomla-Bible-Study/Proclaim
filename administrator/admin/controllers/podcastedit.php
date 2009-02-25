@@ -145,6 +145,11 @@ function publish()
       <width>'.$podinfo->imagew.'</width>
     </image>
     <itunes:image href="http://'.$podinfo->podcastimage.'" />
+	<itunes:image>
+            <url>http://'.$podinfo->image.'</url>
+            <title>'.$podinfo->title.'</title>
+            <link>http:'.$podinfo->website.'</link>
+     </itunes:image>
     <category>Religion &amp; Spirituality</category>
     <itunes:category text="Religion &amp; Spirituality">
       <itunes:category text="Christianity" />
