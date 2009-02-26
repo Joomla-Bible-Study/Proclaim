@@ -425,6 +425,7 @@
 			<option value="0">Not a link</option>
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
+			<option value="3">Link to Teacher's Page</option>
 		</param>
 		<param name="span6" type="text" default="" label="Span tag for Teacher" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet6" type="list" default="0" label="Bullet Teacher" description="Add a bullet before this item">
@@ -457,6 +458,7 @@
 			<option value="0">Not a link</option>
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
+			<option value="3">Link to Teacher's Page</option>
 		</param>
 		<param name="span7" type="text" default="" label="Span tag for teacher title" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet7" type="list" default="0" label="Bullet Teacher Title" description="Add a bullet before this item">
@@ -489,6 +491,7 @@
 			<option value="0">Not a link</option>
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
+			<option value="3">Link to Teacher's Page</option>
 		</param>
 		<param name="span10" type="text" default="" label="Span tag for Title + Teacher" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet10" type="list" default="0" label="Bullet Title + Teacher" description="Add a bullet before this item">
