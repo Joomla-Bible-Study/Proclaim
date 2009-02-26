@@ -128,14 +128,15 @@ function publish()
 		$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.id = '.$cid;
 		$db->setQuery($query);
 		$podinfo = $db->loadObject();
+		$description = str_replace("&","and",$podinfo->description);
 		$client			=& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
 		$podhead = '<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
   <channel>
     <title>'.$podinfo->title.'</title>
     <link>http://'.$podinfo->website.'</link>
-    <description>'.$podinfo->description.'</description>
-    <itunes:summary>'.$podinfo->description.'</itunes:summary>
+    <description>'.$description.'</description>
+    <itunes:summary>'.$description.'</itunes:summary>
     <itunes:subtitle>'.$podinfo->title.'</itunes:subtitle>
     <image>
       <link>http://'.$podinfo->website.'</link>
@@ -148,7 +149,7 @@ function publish()
 	<itunes:image>
             <url>http://'.$podinfo->image.'</url>
             <title>'.$podinfo->title.'</title>
-            <link>http:'.$podinfo->website.'</link>
+            <link>http://'.$podinfo->website.'</link>
      </itunes:image>
     <category>Religion &amp; Spirituality</category>
     <itunes:category text="Religion &amp; Spirituality">
@@ -228,6 +229,7 @@ function publish()
 				break;
 			}
 		$title = str_replace('&',"and",$title);
+		$description = str_replace('&',"and",$episode->studyintro);
 		$episodedetailtemp = '';
 		$episodedetailtemp = '<item>
       <title>'.$title.'</title>
@@ -235,11 +237,11 @@ function publish()
       <comments>http://'.$episode->server_path.$episode->folderpath.$episode->filename.'</comments>
       <itunes:author>'.$episode->teachername.'</itunes:author>
       <dc:creator>'.$episode->teachername.'</dc:creator>
-      <description>'.$episode->studyintro.'</description>
-      <content:encoded>'.$episode->studyintro.'</content:encoded>
+      <description>'.$description.'</description>
+      <content:encoded>'.$description.'</content:encoded>
       <pubDate>'.$episodedate.'</pubDate>
       <itunes:subtitle>'.$title.'</itunes:subtitle>
-      <itunes:summary>'.$episode->studyintro.'</itunes:summary>
+      <itunes:summary>'.$description.'</itunes:summary>
       <itunes:keywords>'.$podinfo->podcastsearch.'</itunes:keywords>
       <itunes:duration>'.$hours.':'.sprintf("%02d", $episode->media_minutes).':'.sprintf("%02d", $episode->media_seconds).'</itunes:duration>
       <enclosure url="http://'.$episode->server_path.$episode->folderpath.$episode->filename.'" length="'.$episode->size.'" type="'.$episode->mimetype.'" />
