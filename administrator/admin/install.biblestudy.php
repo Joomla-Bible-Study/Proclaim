@@ -48,7 +48,7 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_mediafiles VALUES (7, 1, 2, 1, 1, '','myfile.mp3', 12332, 1, 1, 0, '', 0, '2008-06-20 00:00:00', 1)");
 	$database->query();
-	$database->setQuery ("INSERT INTO #__bsms_podcast VALUES (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'http://www.mywebsite/myimage.jpg', 30, 30, 'Pastor Billy', 'http://www.mywebsite/myimage.jpg', 'jesus', 'mypodcast.xml', 'en-us', 'Jim Editor', 'jim@mywebsite.com', 50, 1)");
+	$database->setQuery ("INSERT INTO #__bsms_podcast VALUES (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', 'en-us', 'Jim Editor', 'jim@mywebsite.com', 50, 1)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_locations VALUES (1, 'My Location', 1)");
 	$database->query();
