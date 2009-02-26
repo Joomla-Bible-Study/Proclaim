@@ -836,7 +836,7 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 									$link2 = JRoute::_($filepath);
 									echo '<a href="'.$link2.'">';
 									break;
-									case 3 :
+								case 3 :
 									$link2 = JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $row->tid );
 									echo '<a href="'.$link2.'">';
 									break;
@@ -904,7 +904,7 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 									$link3 = JRoute::_($filepath);
 									echo '<a href="'.$link3.'">';
 									break;
-									case 3 :
+								case 3 :
 									$link3 = JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $row->tid );
 									echo '<a href="'.$link3.'">';
 									break;
@@ -971,7 +971,7 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 									$link4 = JRoute::_($filepath);
 									echo '<a href="'.$link4.'">';
 									break;
-									case 3 :
+								case 3 :
 									$link4 = JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $row->tid );
 									echo '<a href="'.$link4.'">';
 									break;
