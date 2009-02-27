@@ -230,7 +230,7 @@ $this->assignRef ('duration', $duration);// end switch
 		if ($this->params->get('show_teacher_view') > 0){
 			if (!$this->studydetails->tname) {
 			}
-			else { ?> <?php echo '<span '.$this->params->get('span_teacher_view').'<strong> By: </strong>';?> <?php echo $this->studydetails->tname; ?></span>
+			else { ?> <?php echo '<span '.$this->params->get('span_teacher_view').'>'.'<strong> By: </strong>';?> <?php echo $this->studydetails->tname; ?></span>
 
 			<?php }
 			echo '</td>';
@@ -238,7 +238,7 @@ $this->assignRef ('duration', $duration);// end switch
 	} ?> <?php if ($this->params->get('show_picture_view') < 1) { echo '<td>';
 	if ($this->params->get('show_teacher_view')) {
 		if ($this->studydetails->tname) {
-			echo '<span '.$this->params->get('span_teacher_view').'<strong> By: </strong>';
+			echo '<span '.$this->params->get('span_teacher_view').'>'.'<strong> By: </strong>';
 			echo $this->studydetails->tname.'</span>';
 		}
 	}
@@ -289,17 +289,17 @@ $this->assignRef ('duration', $duration);// end switch
 		else { ?> <span <?php echo $this->params->get('span_date_view');?>> <?php echo '<strong>'.JText::_('Date: ').'</strong>'.$date; ?></span>
 		</span> <?php } 
 	}?> <?php if ($this->params->get('show_locations') > 0) {
-		if (!$this->studydetails->location_text) {} else {?> <span
-			class="small"> <?php echo '<strong>'.JText::_('Location: ').'</strong>'.$this->studydetails->location_text; ?>
+		if (!$this->studydetails->location_text) {} else {?> <span <?php echo $this->params->get('span_locations_view'); ?> >
+			 <?php echo '<strong>'.JText::_('Location: ').'</strong>'.$this->studydetails->location_text; ?>
 		</span> <?php } }?> <?php if ($this->params->get('show_series_view') > 0){ ?>
 		<?php if (!$this->studydetails->stext) { ?> <?php }
-		else { ?> <span class="small"> <?php echo '<strong>'.JText::_('Series: ').'</strong>'.$this->studydetails->stext; ?>
+		else { ?> <span <?php echo $this->params->get('span_series_view');?> > <?php echo '<strong>'.JText::_('Series: ').'</strong>'.$this->studydetails->stext; ?>
 		</span> <?php } ?> <?php } ?> <?php if ($this->params->get('show_studynumber_view') > 0){ ?>
 		<?php if (!$this->studydetails->studynumber) {
 		}
-		else { ?> <span class="small"> <?php echo '<strong>'.JText::_('Study Number: ').'</strong>'.$this->studydetails->studynumber;?>
+		else { ?> <span <?php echo $this->params->get('span_studynumber_view'); ?>> <?php echo '<strong>'.JText::_('Study Number: ').'</strong>'.$this->studydetails->studynumber;?>
 		</span> <?php } ?> <?php } ?> <?php if ($this->params->get('show_duration') > 0) { ?>
-		<span class="small"> <?php echo '<strong>'.JText::_('Duration: ').'</strong>'.$duration;?>
+		<span <?php echo $this->params->get('span_duration_view'); ?>> <?php echo '<strong>'.JText::_('Duration: ').'</strong>'.$duration;?>
 		</span> <?php } ?></td>
 	</tr>
 
@@ -307,7 +307,7 @@ $this->assignRef ('duration', $duration);// end switch
 	<tr>
 		<td valign="top"><?php if (!$this->studydetails->studyintro) {
 		}
-		else { ?> <span class="small"> <?php echo $this->studydetails->studyintro; ?>
+		else { ?> <span <?php echo $this->params->get('span_description_view'); ?>> <?php echo $this->studydetails->studyintro; ?>
 		</span> <?php } ?></td>
 	</tr>
 </table>
@@ -395,7 +395,7 @@ $this->assignRef ('duration', $duration);// end switch
 			}
 			else {
 				$path1 = $media->spath.$media->fpath.$media->filename;
-				if(!eregi('http://'. $path1)) {
+				if (!eregi('http://', $path1)) {
 					$path1 = 'http://'.$path1;
 				}
 				$pathname = $media->fpath;
@@ -537,7 +537,7 @@ $this->assignRef ('duration', $duration);// end switch
 		
 		<tr>
 			<td><br />
-			<?php echo '<span '.$params->get('detailspan').'>'.$this->studydetails->studytext.'</span>'; ?>
+			<?php echo '<span '.$this->params->get('detailspan').'>'.$this->studydetails->studytext.'</span>'; ?>
 			</td>
 		</tr>
 		<?php endif; ?>
@@ -686,8 +686,8 @@ $this->assignRef ('duration', $duration);// end switch
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 					$response = curl_exec($ch);
 					curl_close($ch);?> <strong><a class="heading"
-				href="javascript:ReverseDisplay('scripture')">>><?php echo JText::_('Show/Hide Scipture Passage');?><<</a>
-			<div id="scripture" style="display: none;">
+				href="javascript:ReverseDisplay('scripture')">>><?php echo '<span '.$this->params->get('span_passage_view').'>'.JText::_('Show/Hide Scipture Passage');?><<</a>
+			<div id="scripture" style="display: none;"></span>
 			
 			</strong> <?php echo "".$scripture1." (ESV)";
 			print $response;?>
@@ -711,7 +711,7 @@ $this->assignRef ('duration', $duration);// end switch
 					$link = JRoute::_('index.php?option='.$option.'&view=studieslist');}
 					if ($item){
 						$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}?>
-			<a href="<?php echo $link;?>">&lt; <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>
+			<a href="<?php echo $link;?>"> <?php echo '<span '.$this->params->get('span_link_view').'>'.$link_text; ?> </span></a> <?php } //End of if view_link not 0?>
 
 			</td>
 		</tr>

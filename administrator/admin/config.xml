@@ -943,6 +943,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="span_series_view" type="text" default="" label="Span tag for Series in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_description_view" type="radio" default="1" label="Show/Hide Description in Study View" description="Shows or hides the description on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -952,6 +953,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="span_studynumber_view" type="text" default="class='small'" label="Span tag for Study Number in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="show_text_view" type="radio" default="1" label="Show/Hide Text in Study View" description="Shows or hides the text on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
