@@ -909,10 +909,16 @@
 		</param>
 		<param name="@spacer" type="spacer" default="Study View Details" label="Study View Details" description="Study View Details">
 		</param>
+	<param name="show_scripture_view" type="radio" default="1" label="Show/Hide Scripture on View Page" description="Choose whether to show the Scripture on the page when the user clicks to see the study details">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="span_scripture_view" type="text" default="" label="Span tag for Title in Details view" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_title_view" type="radio" default="1" label="Show/Hide Study Title on View Page" description="Choose whether to show the study title on the page when the user clicks to see the study details">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+		<param name="span_title_view" type="text" default="" label="Span tag for Title in Details view" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_verses_view" type="radio" default="0" label="Show/Hide Verses on Study View page" description="Choose whether just chapter(s) of Bible study book shown or verses too">
 			<option value="0">Show only chapters</option>
 			<option value="1">Show verses and chapters</option>
@@ -922,6 +928,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="span_teacher_view" type="text" default="" label="Span tag for teacher name in Details view" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_picture_view" type="radio" default="0" label="Show Teacher picture in Study View" description="Choose which picture if any to show in the Study Details View">
 			<option value="0">Don't Show</option>
 			<option value="1">Large Picture</option>
@@ -931,6 +938,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+		<param name="span_date_view" type="text" default="" label="Span tag for Date in Details view" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_series_view" type="radio" default="1" label="Show/Hide Series in Study View" description="Shows or hides the series on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -939,6 +947,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+		<param name="span_description_view" type="text" default="" label="Span tag for description in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_studynumber_view" type="radio" default="1" label="Show/Hide Studynumber in Study View" description="Shows or hides the studynumber on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -947,6 +956,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="detailspan" type="text" default="" size="50" label="Put in valid style information for the study notes" description="Put in any valid css style information with style= in front of it. This will affect the study notes main text section." />
 	<param name="show_media_view" type="radio" default="1" label="Show/Hide Media Links in Study View" description="Shows or hides the media links on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -955,8 +965,9 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-	<param name="detailspan" type="text" default="" size="50" label="Put in valid style information for the study notes" description="Put in any valid css style information with style= in front of it. This will affect the study notes main text section." /> 		
+	<param name="span_passage_view" type="text" default="" size="50" label="Put in valid style information for the passage link" description="Put in any valid css style information with style= in front of it. This will affect the link text that shows or hides the passage." /> 		
 	<param name="link_text" type="text" default="Return to Studies List" size="50" label="Text for bottom link to main list" description="Type in text to display on bottom link back to main component listing" />
+	<param name="span_link_view" type="text" default="" label="Span tag for link to studies list in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="view_link" type="radio" default="1" label="Show link to studies list" description="Choose whether to have a link back to the studies list">
 	<option value="0">No link</option>
 	<option value="1">Link</option>
@@ -973,10 +984,12 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="span_duration_view" type="text" default="" label="Span tag for duration in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_locations" type="radio" default="0" label="Show/Hide location in Study View" description="Shows or hides the location of the study on the details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="span_locations_view" type="text" default="" label="Span tag for location in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_comments" type="radio" default="1" label="Allow comments for studies" description="Turns on or off the ability for users to leave comments on studies">
 		<option value="0">Hide</option>
 		<option value="1">Show</option>

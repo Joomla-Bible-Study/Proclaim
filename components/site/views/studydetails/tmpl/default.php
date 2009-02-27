@@ -213,34 +213,36 @@ $this->assignRef ('duration', $duration);// end switch
 	</tr>
 	<?php } //End of if $message?>
 	</tr>
+    <?php if ($this->params->get('show_scripture_view') > 0){?>
 	<tr>
-		<td><span class="small"><?php echo '<strong>Scripture: </strong>'.$scripture1; ;
+		<td><?php echo '<span '.$this->params->get('span_scripture_view').'><strong>Scripture: </strong>'.$scripture1; ;
 		if ($this->studydetails->booknumber2 > 0){echo ' - '.$scripture2;}
 		if ($this->studydetails->secondary_reference) {echo ' - '.$this->studydetails->secondary_reference;}?>
 		</span></td>
 	</tr>
+    <?php } //end of test for if show scripture ?>
 	<tr>
 	<?php if ($this->params->get('show_picture_view') > 0) {
 
 		?>
-		<td width="<?php $space;?>"><span class="small"> <?php	echo '<img src="'.$image.'" width="'.$imagew.'" height="'.$imageh.'"><br />';
+		<td width="<?php $space;?>"> <?php	echo '<img src="'.$image.'" width="'.$imagew.'" height="'.$imageh.'"><br />';
 
 		if ($this->params->get('show_teacher_view') > 0){
 			if (!$this->studydetails->tname) {
 			}
-			else { ?> <?php echo '<strong> By: </strong>';?> <?php echo $this->studydetails->tname; ?>
+			else { ?> <?php echo '<span '.$this->params->get('span_teacher_view').'<strong> By: </strong>';?> <?php echo $this->studydetails->tname; ?></span>
 
 			<?php }
-			echo '</span></td>';
+			echo '</td>';
 		}
-	} ?> <?php if ($this->params->get('show_picture_view') < 1) { echo '<td><span class="small">';
+	} ?> <?php if ($this->params->get('show_picture_view') < 1) { echo '<td>';
 	if ($this->params->get('show_teacher_view')) {
 		if ($this->studydetails->tname) {
-			echo '<strong> By: </strong>';
-			echo $this->studydetails->tname;
+			echo '<span '.$this->params->get('span_teacher_view').'<strong> By: </strong>';
+			echo $this->studydetails->tname.'</span>';
 		}
 	}
-	echo '</span></td>';}?>
+	echo '</td>';}?>
 		
 		
 		<td valign="top"><span class="small"> </span> &nbsp;</td>
@@ -284,7 +286,7 @@ $this->assignRef ('duration', $duration);// end switch
 		}
 		?> <?php if (!$date) {
 		}
-		else { ?> <span class="small"> <?php echo '<strong>'.JText::_('Date: ').'</strong>'.$date; ?>
+		else { ?> <span <?php echo $this->params->get('span_date_view');?>> <?php echo '<strong>'.JText::_('Date: ').'</strong>'.$date; ?></span>
 		</span> <?php } 
 	}?> <?php if ($this->params->get('show_locations') > 0) {
 		if (!$this->studydetails->location_text) {} else {?> <span
