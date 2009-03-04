@@ -8,19 +8,19 @@ class bibleStudyTemplate extends JObject {
 
 	//Template types
 	var $tmplTypes = array(
-		'tmplStudiesList' => 'Studies List',
-		'tmplSingleStudyList' => 'Single Study List',
-		'tmplSingleStudy' => 'Single Study',
-		'tmplTeachersList' => 'Teacher List',
-		'tmplSingleTeacherList' => 'Single Teacher List',
-		'tmplSingleTeacher' => 'Single Teacher',
-		'tmplModule' => 'Module');
-
+		'tmplList' => 'List',
+		'tmplListItem' => 'List Item',
+		'tmplSingleItem' => 'Single Item',
+		'tmplModuleList' => 'Module List',
+		'tmplModuleItem' => 'Module List Item',
+		'tmplPopup' => 'Popup Media Player'
+	);
 	/**
 	 * @desc Builds arrays of all the possible tags.
 	 * @return null
 	 */
 	function __construct() {
+		include(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'tagDefinitions.helper.php');
 		//Creates array of all the tags and their associated field names
 		$tagsStudy = array(
 			'[studyDate]' => array('fieldName' => 'studydate'), 
@@ -82,20 +82,28 @@ class bibleStudyTemplate extends JObject {
 	/**
 	 * @desc Generates a list of tags that are being used in the input template.
 	 * @param $itemTmpl	String	Raw Html template
+	 * @param $category String  The category of possible tags: "tagsStudy", "tagsStudyList", "tagsTeacher", or "tagsTeacherList"
+	 * @param $id Int  An Id of a template to load. This replaces the contents of the $itemTmpl
+	 * @param $fieldNames Boolean  Default False. Set to True of you want to load the db fieldnames that correspond to the tags
 	 * @return Array
 	 */
-	function loadTagList($itemTmpl, $id = null, $fieldNames = false) {
+	function loadTagList($itemTmpl = null, $id = null, $fieldNames = false) {
 		if(isset($id)) {
 			$itemTmpl = $this->queryTemplate($id);
 			$itemTmpl = $itemTmpl->tmpl;
 		}
 		foreach($this->_tags as $tagCategory) {
 			foreach($tagCategory as $tag) {
-				if(stristr($itemTmpl, key($tagCategory))) {
+				if(!is_array($tag)) {
+					$tagSearch = $tag;
+				}else{
+					$tagSearch = key($tagCategory);
+				}
+				if(stristr($itemTmpl, $tagSearch)) {
 					if($fieldNames) {
 						$tagArray[] = $tag['fieldName'];
 					}else{
-						$tagArray[] = key($tagCategory);
+						$tagArray[] = $tagSearch;
 					}
 				}
 				next($tagCategory);
@@ -110,12 +118,12 @@ class bibleStudyTemplate extends JObject {
 	 * @param $selected	 String	Defines the default item
 	 * @return HTML Dropdown box
 	 */
-	function loadTmplTypesOption($selected) {
+	function loadTmplTypesOption($DefaultSelected) {
 		foreach($this->tmplTypes as $type) {
 			$i[] = JHTML::_('select.option', key($this->tmplTypes), $type);
 			next($this->tmplTypes);
 		}
-		return JHTML::_('select.genericlist', $i, 'type', null, 'value', 'text', $selected);
+		return JHTML::_('select.genericlist', $i, 'type', null, 'value', 'text', $DefaultSelected);
 	}
 
 	/**
@@ -144,6 +152,10 @@ class bibleStudyTemplate extends JObject {
 			}
 		}
 		return implode(', ', $SELECT);
+	}
+	
+	function studyDate() {
+		return 'Some date';
 	}
 }
 ?>
