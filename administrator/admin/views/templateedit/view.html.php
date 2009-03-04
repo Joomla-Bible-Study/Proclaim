@@ -26,10 +26,16 @@ class biblestudyViewtemplateedit extends JView {
 		$this->assignRef('template', $template);
 		$this->assignRef('data', $data);
 
-		//Include the Jquery Library
+		//Include the Jquery Library and Plugins
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.contextmenu.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
+			
+		//BibleStudy Core
+		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
+		
 		//Biblestudy User Interface
 		$document->addScript(JURI::base().'components/com_biblestudy/js/ui/jquery-ui.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy-ui.js');

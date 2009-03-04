@@ -23,6 +23,7 @@ class Tablestudiesedit extends JTable
 	var	$studydate = null;
 	var $studynumber = null;
 	var	$booknumber = null;
+	var $scripture = null;
 	var $chapter_begin = null;
 	var $chapter_end = null;
 	var $verse_begin = null;
