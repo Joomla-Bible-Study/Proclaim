@@ -271,8 +271,8 @@ function publish()
   $episodedetailtemp = '';
   $episodedetailtemp = '	<item>
 		<title>'.$title.'</title>
-		<link>http://'.$episode->server_path.'/index.php?'.rawurlencode('option=com_biblestudy&view=studydetails&id=').$episode->sid.'</link>
-		<comments>http://'.$episode->server_path.'/index.php?'.rawurlencode('option=com_biblestudy&view=studydetails&id=').$episode->sid.'</comments>
+		<link>http://'.$podinfo->website.'/index.php?'.rawurlencode('option=com_biblestudy&view=studydetails&id=').$episode->sid.'</link>
+		<comments>http://'.$podinfo->website.'/index.php?'.rawurlencode('option=com_biblestudy&view=studydetails&id=').$episode->sid.'</comments>
 		<itunes:author>'.$episode->teachername.'</itunes:author>
 		<dc:creator>'.$episode->teachername.'</dc:creator>
 		<description>'.$description.'</description>
@@ -282,8 +282,8 @@ function publish()
 		<itunes:summary>'.$description.'</itunes:summary>
 		<itunes:keywords>'.$podinfo->podcastsearch.'</itunes:keywords>
 		<itunes:duration>'.$hours.':'.sprintf("%02d", $episode->media_minutes).':'.sprintf("%02d", $episode->media_seconds).'</itunes:duration>
-		<enclosure url="http://'.$episode->server_path.$episode->folderpath.rawurlencode($episode->filename).'" length="'.$episode->size.'" type="'.$episode->mimetype.'" />
-		<guid>http://'.$episode->server_path.$episode->folderpath.rawurlencode($episode->filename).'</guid>
+		<enclosure url="http://'.$episode->server_path.$episode->folderpath.str_replace(' ',"%20",$episode->filename).'" length="'.$episode->size.'" type="'.$episode->mimetype.'" />
+		<guid>http://'.$episode->server_path.$episode->folderpath.str_replace(' ',"%20",$episode->filename).'</guid>
 		<itunes:explicit>no</itunes:explicit>
 	</item>
 ';
