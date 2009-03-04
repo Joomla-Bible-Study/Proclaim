@@ -1,8 +1,8 @@
 <?php
 /**
  * studies Edit Controller for Bible Study Component
- * 
- 
+ *
+
  */
 
 // Check to ensure this file is included in Joomla!
@@ -43,8 +43,7 @@ class biblestudyControllerstudiesedit extends JController
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
-	{
+	function save() {
 		$model = $this->getModel('studiesedit');
 
 		if ($model->store($post)) {
@@ -73,7 +72,7 @@ class biblestudyControllerstudiesedit extends JController
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
 	}
-function publish()
+	function publish()
 	{
 		global $mainframe;
 
