@@ -95,11 +95,21 @@ class biblestudyModelstudiesedit extends JModel {
 		$row =& $this->getTable();
 
 		$data = JRequest::get( 'post' );
+
 		//Allows HTML content to come through to the database row
 		$data['studytext'] = JRequest::getVar( 'studytext', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		$data['studyintro'] = str_replace('"',"'",$data['studyintro']);
 		$data['studynumber'] = str_replace('"',"'",$data['studynumber']);
 		$data['secondary_reference'] = str_replace('"',"'",$data['secondary_reference']);
+
+		foreach($data['scripture'] as $scripture) {
+			if(!$data['text'][key($data['scripture'])] == ''){
+				$scriptures[] = $scripture.' '.$data['text'][key($data['scripture'])];
+			}
+			next($data['scripture']);
+		}
+		$data['scripture'] = implode(';', $scriptures);
+
 		// Bind the form fields to the table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
@@ -172,7 +182,7 @@ class biblestudyModelstudiesedit extends JModel {
 	}
 
 	function getBooks() {
-		$query = 'SELECT booknumber AS value, bookname AS text, published'
+		$query = 'SELECT booknumber AS value, bookname AS text'
 		. ' FROM #__bsms_books'
 		. ' WHERE published = 1'
 		. ' ORDER BY booknumber';
