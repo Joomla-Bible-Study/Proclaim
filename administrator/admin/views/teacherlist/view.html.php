@@ -29,6 +29,8 @@ class biblestudyViewteacherlist extends JView
 		if ($params->get('allow_deletes') > 0 ):
 			JToolBarHelper::deleteList();
 		endif;
+		JToolBarHelper::publishList();
+		JToolBarHelper::unpublishList();
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
 		JToolBarHelper::preferences('com_biblestudy', '550');

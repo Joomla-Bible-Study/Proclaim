@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
 <div id="editcell">
 	<table class="adminlist">
 	<thead>
@@ -58,7 +58,7 @@
 	}
 	?>
     <tfoot>
-      <td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tfoot>
+      <tr><td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tr></tfoot>
 	</table>
 </div>
 
