@@ -3,14 +3,6 @@
 <link
 	href="components/com_biblestudy/tooltip.css" rel="stylesheet"
 	type="text/css" media="screen" />
-
-<style type="text/css">
-/* CSS goes here */
-a[title]:hover :after { /*Shows the generated content*/
-	content: attr(title) " (" attr(href) ")";
-	visibility: visible;
-}
-</style>
 <?php
 global $mainframe, $option;
 $message = JRequest::getVar('msg');
@@ -38,6 +30,7 @@ $widpos4 = $this->params->get('widthcol4');
 $show_description = $this->params->get('show_description', 1);
 $downloadCompatibility = $this->params->get('compatibilityMode');
 ?>
+
 <form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
 <table width="<?php echo $page_width; ?>">
 <?php
@@ -103,45 +96,43 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 	}
 	//End test to see if frontend podcast entry is allowed?>
 	
-	<tr>
-	<?php //This is the beginning of the row for the page table?>
+	<tr><?php //This is the beginning of the row for the page table?>
 		<td><?php //This is the beginning of the column for the page table?>
-		<table width="100%">
-		<?php //Table to hold the logo?>
-			<tr>
-			<?php //Row for logo?>
-			<?php $wtd = $this->params->get('pimagew');?>
-			<?php if ($this->params->get( 'show_page_image' ) >0) {
-				$src = JURI::base().$this->params->get('page_image');
-				$pimagew = $this->params->get('pimagew');
-				$pimageh = $this->params->get('pimageh');
-				if ($pimagew) {$width = $pimagew;} else {$width = 24;}
-				if ($pimageh) {$height = $pimageh;} else {$height= 24;}
-				?>
-
-				<td width="<?php echo $width +2; ?>"><?php //Column  for logo?> <img
-					src="<?php echo JURI::base().$this->params->get('page_image');?>"
-					alt="<?php JText::_('Bible Studies');?>"
-					width="<?php echo $width;?>" height="<?php echo $height;?>"
-					border="0" /></td>
-					<?php //End of column for logo?>
-					<?php } //End of if statement for show page image?>
-					<?php if ( $this->params->get( 'show_page_title_list' ) >0 ) { ?>
-				<td><?php //Column 2 for logo?>
-				<H1
-					class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
-					<?php echo $this->params->get('page_title'); ?></H1>
-
-				</td>
-				<?php //End of column2 for logo?>
-				<?php } //End of if show page title?>
-			</tr>
-			<?php //End of row for logo table?>
-
-		</table>
-		<?php //End of table for logo?></td>
-	</tr>
-	<?php //end of row above drop down boxes?>
+			<table width="100%">
+			<?php //Table to hold the logo?>
+				<tr>
+				<?php //Row for logo?>
+				<?php $wtd = $this->params->get('pimagew');?>
+				<?php if ($this->params->get( 'show_page_image' ) >0) {
+					$src = JURI::base().$this->params->get('page_image');
+					$pimagew = $this->params->get('pimagew');
+					$pimageh = $this->params->get('pimageh');
+					if ($pimagew) {$width = $pimagew;} else {$width = 24;}
+					if ($pimageh) {$height = $pimageh;} else {$height= 24;}
+					?>
+	
+					<td width="<?php echo $width +2; ?>"><?php //Column  for logo?> <img
+						src="<?php echo JURI::base().$this->params->get('page_image');?>"
+						alt="<?php JText::_('Bible Studies');?>"
+						width="<?php echo $width;?>" height="<?php echo $height;?>"
+						border="0" /></td>
+						<?php //End of column for logo?>
+						<?php } //End of if statement for show page image?>
+						<?php if ( $this->params->get( 'show_page_title_list' ) >0 ) { ?>
+					<td><?php //Column 2 for logo?>
+					<H1
+						class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
+						<?php echo $this->params->get('page_title'); ?></H1>
+	
+					</td>
+					<?php //End of column2 for logo?>
+					<?php } //End of if show page title?>
+				</tr>
+				<?php //End of row for logo table?>
+	
+			</table>
+		</td><?php //End of table for logo?>
+	</tr><?php //end of row above drop down boxes?>
 	<?php if ($this->params->get('show_teacher_list') >0) { ?>
 	<tr>
 		<td width="<?php echo $this->params->get('teacherw');?>"><img
@@ -236,7 +227,7 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 	<?php //End of row for drop down boxes?>
 
 	<?php // The table to hold header rows ?>
-<tr><td>
+	<tr><td>
 	<table width="<?php echo $this->params->get('header_width');?>">
 	<?php //mirrors 6 colum table below?>
 		<tr>
@@ -287,15 +278,11 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 			{echo '<th align="'.$this->params->get('header_align').'" bgcolor="'.$this->params->get('header_color').'" width="'.$this->params->get('header3_width').'"><span '.$this->params->get('header_span').'>'.$this->params->get('header3').'</span></th>';}
 			if ($isheader4 == 1)
 			{echo '<th align="'.$this->params->get('header_align').'" bgcolor="'.$this->params->get('header_color').'" width="'.$this->params->get('header4_width').'"><span '.$this->params->get('header_span').'>'.$this->params->get('header4').'</span></th>';}
-			?>
+			
+		} // end of if use headers?>
 		</tr>
-	</table></td></tr>
-	<?php
-		} // end of if use headers
-		//End of Header rows?>
-
-		<?php //End of table for header rows?>
-
+	</table>
+	</td></tr><?php //End of table for header rows?>
 
 
 		<?php //This is where each result from the database of studies is diplayed with options for each 6 column table?>
@@ -1337,9 +1324,8 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 	</tr>
 	</tfoot>
 </table> <?php //This is the end of the table for the overall listing page?>
-	<input type="hidden" name="option" value="com_biblestudy" />
-	<input type="hidden" name="task" value="" />
-	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="controller" value="studieslist" />
-	</form>
-	
+<input type="hidden" name="option" value="com_biblestudy" />
+<input type="hidden" name="task" value="" />
+<input type="hidden" name="boxchecked" value="0" />
+<input type="hidden" name="controller" value="studieslist" />
+</form>
