@@ -700,6 +700,14 @@ $this->assignRef ('duration', $duration);// end switch
 		} // end of if show_passage_view ?>
 		<tr>
 			<td align="center"><?php 
+//Begin test for scripture_links
+JPluginHelper::importPlugin('content', 'scripturelinks' );
+$dispatcher =& JDispatcher::getInstance();
+$row->text = $scripture1;
+$results = $dispatcher->trigger( 'scripture_text', array( $row, &$return) );
+
+dump ($results, '$results: ');
+//End test for scripture_links
 
 			$link_text = $this->params->get('link_text');
 			if (!$link_text) {

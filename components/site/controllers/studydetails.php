@@ -98,6 +98,15 @@ class biblestudyControllerstudydetails extends JController
 		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&msg='.$msg, 'Comment Added.');
 	} // End of $cap
 	}
+	//Begin scripture links plugin function
+	function biblegateway_link()
+	{
+	$return = false;
+	$row->text = JRequest::getVar('scripture1');
+	
+	}
+	//End of scripture links plugin function
+	
 	/**
 	 * save a record (and redirect to main page)
 	 * @return void
