@@ -1,6 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<script
-	type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
+<script type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
 <link
 	href="components/com_biblestudy/tooltip.css" rel="stylesheet"
 	type="text/css" media="screen" />
@@ -39,88 +38,71 @@ $widpos4 = $this->params->get('widthcol4');
 $show_description = $this->params->get('show_description', 1);
 $downloadCompatibility = $this->params->get('compatibilityMode');
 ?>
+<form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
 <table width="<?php echo $page_width; ?>">
-<?php //Overall table for the listing page?>
-	<form action="<?php echo $this->request_url; ?>" method="post"
-		name="adminForm"><?php 
+<?php
+	$user =& JFactory::getUser();
+	$entry_user = $user->get('gid');
+	if (!$entry_user) {
+		$entry_user = 0;
+	}
+	$entry_access = $this->params->get('entry_access');
+	if (!$entry_access) {
+		$entry_access = 23;
+	}
+	$allow_entry = $this->params->get('allow_entry_study');
 
-		$user =& JFactory::getUser();
-		$entry_user = $user->get('gid');
-		if (!$entry_user) { $entry_user = 0;}
-		$entry_access = $this->params->get('entry_access');
-		if (!$entry_access) {$entry_access = 23;}
-		$allow_entry = $this->params->get('allow_entry_study');
-		if ($allow_entry > 0) {
-			if ($entry_access <= $entry_user){
-				if ($message) {?>
-	
-	
-	<tr>
-		<td align="center"><?php echo '<h2>'.$message.'</h2>';
-		//if ($this->params->get('study_publish') < 1){echo JText::_('Submissions must be approved prior to publication').'<br>';}?></td>
-	</tr>
-	<?php } //End of if $message
-	?>
+	//Start test to see if frontend study entry is allowed
+	if ($allow_entry > 0) {
+		if ($entry_access <= $entry_user) {
+			if ($message) {?>
+				<tr>
+					<td align="center"><h2><?php echo $message;?></h2></td>
+				</tr><?php
+			}?>
+			<tr>
+				<td><strong>Studies</strong></td>
+			</tr>
+			<tr>
+				<td><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">Add a New Study</a></td>
+			</tr>
+			<tr>
+				<td><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">Add a New Media File Record</a></td>
+			</tr><?php
+			if ($this->params->get('show_comments') > 0){?>
+				<tr>
+					<td><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&view=commentslist">Manage Comments</a></td>
+				</tr><?php
+			}
+		}
+	}
+	//End test to see if frontend study entry is allowed
 
-	</td>
-	</tr>
-	<?php //} //End of if $message?>
-	<tr>
-		<td><strong><?php echo JText::_('Studies');?></strong></td>
-	</tr>
-	<tr>
-		<td><a
-			href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form"><?php echo JText::_('Add a New Study');?></a></td>
-	</tr>
-	<tr>
-		<td><a
-			href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form"><?php echo JText::_('Add a New Media File Record');?></a></td>
-	</tr>
-	<?php if ($this->params->get('show_comments') > 0){?>
-	<tr>
-		<td><a
-			href="<?php echo JURI::base()?>index.php?option=com_biblestudy&view=commentslist"><?php echo JText::_('Manage Comments');?></a></td>
-	</tr>
-	<?php } //end if show_comments?>
-	<?php 	} //End of testing for if user is authorized
-		}//End of testing for $allow_entry?>
-		<?php // Here we start the test to see if podcast entry allowed
-		if ($this->params->get('allow_podcast') > 0){
-			$podcast_access = $this->params->get('podcast_access');
-			if (!$podcast_access) {$podcast_access = 23;}
-			if ($podcast_access <= $entry_user){
-				$query = ('SELECT id, title, published FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC');
-				$database->setQuery( $query );
-				$podcasts = $database->loadAssocList();
-				?>
-	<tr>
-		<td><strong><?php
-		echo JText::_('Podcasts').'</td></tr>';
-		?></strong>
+	//Start test to see if frontend podcast entry is allowed
+	if ($this->params->get('allow_podcast') > 0){
+		$podcast_access = $this->params->get('podcast_access');
+		if (!$podcast_access) {
+			$podcast_access = 23;
+		}
+		if ($podcast_access <= $entry_user){
+			$query = ('SELECT id, title, published FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC');
+			$database->setQuery( $query );
+			$podcasts = $database->loadAssocList();
+			?>
+			<tr>
+				<td><strong>Podcasts</strong></td>
+			</tr>
+			<tr>
+				<td><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form';?>">Add A Podcast</a></td>
+			</tr><?php 
+			foreach ($podcasts as $podcast){
+				$pod = $podcast['id']; $podtitle = $podcast['title'];?>
+				<tr><td><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod;?>"><?php echo $podtitle;?></a></td></tr><?php
+			}
+		}
+	}
+	//End test to see if frontend podcast entry is allowed?>
 	
-	
-	<tr>
-		<td><?php //This is a row to hold the podcast listings
-		?><a
-			href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form';?>"><?php echo JText::_('Add A Podcast');?></a></td>
-	</tr>
-	<tr>
-		<td><?php foreach ($podcasts as $podcast) { $pod = $podcast['id']; $podtitle = $podcast['title'];
-		?>
-	
-	
-	<tr>
-		<td><a
-			href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod;?>"><?php echo $podtitle;?></a></td>
-	</tr>
-	<?php } // end foreach for podcasts as podcast
-	// End row for podcast?>
-	</td>
-	</tr>
-	<?php
-			} // end of checking podcast authorization
-		} // end allow_entry_podcast
-		?>
 	<tr>
 	<?php //This is the beginning of the row for the page table?>
 		<td><?php //This is the beginning of the column for the page table?>
@@ -162,8 +144,7 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 	<?php //end of row above drop down boxes?>
 	<?php if ($this->params->get('show_teacher_list') >0) { ?>
 	<tr>
-		<td cellpadding="2"
-			width="<?php echo $this->params->get('teacherw');?>"><img
+		<td width="<?php echo $this->params->get('teacherw');?>"><img
 			src="<?php echo $this->params->get('teacherimage');?>" border="1"
 			width="<?php echo $this->params->get('teacherw');?>"
 			height="<?php echo $this->params->get('teacherh');?>" /><br />
@@ -191,9 +172,12 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 				$format = $bookid2['text'];
 				$output = JText::_($format);
 				$bookvalue = $bookid2['value'];
-				if ($bookvalue == $filter_book){$selected = 'selected="selected"';
-				echo '<option value="'.$bookvalue.'"'.$selected.' >'.$bookid2['text'].'</option>';}
-				echo '<option value="'.$bookvalue.'">'.$output.'</option>';
+				if ($bookvalue == $filter_book){
+					$selected = 'selected="selected"';
+					echo '<option value="'.$bookvalue.'"'.$selected.' >'.$bookid2['text'].'</option>';
+				} else {
+					echo '<option value="'.$bookvalue.'">'.$output.'</option>';
+				}
 			};
 			echo '</select>';?> <?php } ?> <?php if ($this->params->get('show_teacher_search') >0 && !($teacher_menu)) { ?>
 			<?php echo $this->lists['teacher_id'];?> <?php } ?> <?php if ($this->params->get('show_series_search') >0 && !($series_menu)){ ?>
@@ -214,10 +198,12 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 					$format = $sortorder2['text'];
 					$output = JText::sprintf($format);
 					$sortvalue = $sortorder2['value'];
-					if ($sortvalue == $filter_orders){$selected = 'selected="selected"';
-					//echo '<option value="'.$sortvalue.'"'.$selected.' >'.$output.'</option>';
+					if ($sortvalue == $filter_orders){
+						$selected = 'selected="selected"';
+						echo '<option value="'.$sortvalue.'"'.$selected.' >'.$output.'</option>';
+					} else {
+						echo '<option value="'.$sortvalue.'">'.$output.'</option>';
 					}
-					echo '<option value="'.$sortvalue.'">'.$output.'</option>';
 				};
 				echo '</select>';?> <?php //echo $this->lists['sorting'];?> <?php } ?>
 				<?php if ($this->params->get('show_topic_search') >0) { ?> <?php
@@ -237,9 +223,11 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 						$format = $topicsid2['text'];
 						$output = JText::sprintf($format);
 						$topicsvalue = $topicsid2['value'];
-						if ($topicsvalue == $filter_topic){$selected = 'selected="selected"';
-						echo '<option value="'.$topicsvalue.'"'.$selected.' >'.$output.'</option>';}
-						echo '<option value="'.$topicsvalue.'">'.$output.'</option>';
+						if ($topicsvalue == $filter_topic){
+							$selected = 'selected="selected"';
+							echo '<option value="'.$topicsvalue.'"'.$selected.' >'.$output.'</option>';
+						} else {
+						echo '<option value="'.$topicsvalue.'">'.$output.'</option>';}
 					};
 					echo '</select>';?> <?php //echo $this->lists['topics'];?> <?php } ?>
 
@@ -248,7 +236,7 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 	<?php //End of row for drop down boxes?>
 
 	<?php // The table to hold header rows ?>
-
+<tr><td>
 	<table width="<?php echo $this->params->get('header_width');?>">
 	<?php //mirrors 6 colum table below?>
 		<tr>
@@ -301,7 +289,7 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 			{echo '<th align="'.$this->params->get('header_align').'" bgcolor="'.$this->params->get('header_color').'" width="'.$this->params->get('header4_width').'"><span '.$this->params->get('header_span').'>'.$this->params->get('header4').'</span></th>';}
 			?>
 		</tr>
-	</table>
+	</table></td></tr>
 	<?php
 		} // end of if use headers
 		//End of Header rows?>
@@ -1294,7 +1282,7 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 						?> <img src="<?php echo JURI::base().$download_image;?>"
 							alt="<?php echo JText::_('Download');?>"
 							height="<?php echo $height;?>" width="<?php echo $width;?>"
-							title="<?php echo JText::_('Download');?>" /></a> <?php if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
+							title="<?php echo JText::_('Download');?>" /><?php echo JText::_('</a>'); if ($this->params->get('download_side') > 0) { echo '</td>';}}?>
 
 						</td>
 
@@ -1337,30 +1325,21 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
 	<?php //End of row for 6 column table?>
 
 
-	</td>
-	<?php //This is the end of the column for the overall table of the listing page?>
-	</tr>
-	<?php //This is the end of the row for the overall table of the listing page?>
-	<tr>
-	<?php //This is a row for the footer ?>
-	
-	
 	<tfoot>
+	<tr>
 		<td align="center"><?php 
 		echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
 		echo $this->pagination->getLimitBox();
 		echo $this->pagination->getPagesLinks();
 		echo $this->pagination->getPagesCounter();
-		//echo $this->pagination->getListFooter(); ?><?php //Column for footer?>
+		//echo $this->pagination->getListFooter(); ?>
 		</td>
-		<?php //End footer column?>
-	</tfoot>
 	</tr>
-	<?php //End footer row?>
+	</tfoot>
+</table> <?php //This is the end of the table for the overall listing page?>
 	<input type="hidden" name="option" value="com_biblestudy" />
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="controller" value="studieslist" />
 	</form>
-</table>
-	<?php //This is the end of the table for the overall listing page?>
+	
