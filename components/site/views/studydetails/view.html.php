@@ -18,6 +18,7 @@ class biblestudyViewstudydetails extends JView
 		$document =& JFactory::getDocument();
 		$pathway	   =& $mainframe->getPathWay();
 		$contentConfig = &JComponentHelper::getParams( 'com_biblestudy' );
+		$dispatcher	=& JDispatcher::getInstance();
 		// Get the menu item object
 		//$menus = &JMenu::getInstance();
 		$menu =& JSite::getMenu();
@@ -27,7 +28,7 @@ class biblestudyViewstudydetails extends JView
 		//$this->assignRef('params', $params);
 		//end TF added
 		$studydetails		=& $this->get('Data');
-		$this->assignRef('studydetails',		$studydetails);
+		
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');
 		$this->assignRef('show_media', $show_media);
@@ -53,9 +54,31 @@ class biblestudyViewstudydetails extends JView
 		$print = JRequest::getBool('print');
 		// build the html select list for ordering
 		
+		/*
+		 * Process the prepare content plugins
+		 */
+		JPluginHelper::importPlugin('content');
+		$results = $dispatcher->trigger('onPrepareContent', array (& $studydetails, & $params, $limitstart));
+		// End process prepare content plugins
+		
+		/*
+		 * Handle display events
+		 */
+		 $studydetails->text = $studydetails->studytext;
+		$studydetails->event = new stdClass();
+		$results = $dispatcher->trigger('onAfterDisplayTitle', array ($studydetails, &$params, $limitstart));
+		$studydetails->event->afterDisplayTitle = trim(implode("\n", $results));
+
+		$results = $dispatcher->trigger('onBeforeDisplayContent', array (& $studydetails, & $params, $limitstart));
+		$studydetails->event->beforeDisplayContent = trim(implode("\n", $results));
+
+		$results = $dispatcher->trigger('onAfterDisplayContent', array (& $studydetails, & $params, $limitstart));
+		$studydetails->event->afterDisplayContent = trim(implode("\n", $results));
+		
 		//$database	= & JFactory::getDBO();
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
+		$this->assignRef('studydetails',		$studydetails);
 		
 		parent::display($tpl);
 	}

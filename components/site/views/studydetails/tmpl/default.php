@@ -537,7 +537,8 @@ $this->assignRef ('duration', $duration);// end switch
 		
 		<tr>
 			<td><br />
-			<?php echo '<span '.$this->params->get('detailspan').'>'.$this->studydetails->studytext.'</span>'; ?>
+			<?php //echo '<span '.$this->params->get('detailspan').'>'.$this->studydetails->studytext.'</span>'; ?>
+            <?php echo $this->studydetails->text; ?>
 			</td>
 		</tr>
 		<?php endif; ?>
@@ -701,12 +702,13 @@ $this->assignRef ('duration', $duration);// end switch
 		<tr>
 			<td align="center"><?php 
 //Begin test for scripture_links
-JPluginHelper::importPlugin('content', 'scripturelinks' );
-$dispatcher =& JDispatcher::getInstance();
-$row->text = $scripture1;
-$results = $dispatcher->trigger( 'scripture_text', array( $row, &$return) );
-
-dump ($results, '$results: ');
+//JPluginHelper::importPlugin('content', 'scripturelinks' );
+//$slparams 	= new JParameter( $plugin->params );
+//$dispatcher =& JDispatcher::getInstance();
+//$row->text = '{bible}'.$scripture1.'{/bible}';
+//$results = $dispatcher->trigger( 'onPrepareContent', array( &$row, &$slparams) );
+//echo $scripture_link;
+//dump ($results, '$results: ');
 //End test for scripture_links
 
 			$link_text = $this->params->get('link_text');
