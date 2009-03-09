@@ -702,11 +702,15 @@ $this->assignRef ('duration', $duration);// end switch
 		<tr>
 			<td align="center"><?php 
 //Begin test for scripture_links
-//JPluginHelper::importPlugin('content', 'scripturelinks' );
-//$slparams 	= new JParameter( $plugin->params );
-//$dispatcher =& JDispatcher::getInstance();
-//$row->text = '{bible}'.$scripture1.'{/bible}';
-//$results = $dispatcher->trigger( 'onPrepareContent', array( &$row, &$slparams) );
+
+$row->text = '{bible}'.$scripture1.'{/bible}';
+JPluginHelper::importPlugin('content', 'scripturelinks' );
+$slparams 	= new JParameter( $plugin->params );
+$dispatcher =& JDispatcher::getInstance();
+//$results = $mainframe->triggerEvent( 'onPrepareContent', array( &$row, &$params , 1));
+$results = $dispatcher->trigger( 'onPrepareContent', array( &$row, &$slparams, 0));
+$data = $row->text;
+echo $data;
 //echo $scripture_link;
 //dump ($results, '$results: ');
 //End test for scripture_links
