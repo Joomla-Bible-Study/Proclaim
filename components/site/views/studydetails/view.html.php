@@ -58,27 +58,29 @@ class biblestudyViewstudydetails extends JView
 		 * Process the prepare content plugins
 		 */
 		JPluginHelper::importPlugin('content');
-		$results = $dispatcher->trigger('onPrepareContent', array (& $studydetails, & $params, $limitstart));
+		$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
 		// End process prepare content plugins
 		
 		/*
 		 * Handle display events
 		 */
-		 $studydetails->text = $studydetails->studytext;
-		$studydetails->event = new stdClass();
-		$results = $dispatcher->trigger('onAfterDisplayTitle', array ($studydetails, &$params, $limitstart));
-		$studydetails->event->afterDisplayTitle = trim(implode("\n", $results));
+		//$article->text = '{bible} John 3:1-6 {/bible}';
+	
+		$article->event = new stdClass();
+		$results = $dispatcher->trigger('onAfterDisplayTitle', array ($article, &$params, $limitstart));
+		$article->event->afterDisplayTitle = trim(implode("\n", $results));
 
-		$results = $dispatcher->trigger('onBeforeDisplayContent', array (& $studydetails, & $params, $limitstart));
-		$studydetails->event->beforeDisplayContent = trim(implode("\n", $results));
+		$results = $dispatcher->trigger('onBeforeDisplayContent', array (& $article, & $params, $limitstart));
+		$article->event->beforeDisplayContent = trim(implode("\n", $results));
 
-		$results = $dispatcher->trigger('onAfterDisplayContent', array (& $studydetails, & $params, $limitstart));
-		$studydetails->event->afterDisplayContent = trim(implode("\n", $results));
+		$results = $dispatcher->trigger('onAfterDisplayContent', array (& $article, & $params, $limitstart));
+		$article->event->afterDisplayContent = trim(implode("\n", $results));
 		
 		//$database	= & JFactory::getDBO();
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
 		$this->assignRef('studydetails',		$studydetails);
+		$this->assignRef('article', $article);
 		
 		parent::display($tpl);
 	}

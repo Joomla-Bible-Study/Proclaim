@@ -537,8 +537,8 @@ $this->assignRef ('duration', $duration);// end switch
 		
 		<tr>
 			<td><br />
-			<?php //echo '<span '.$this->params->get('detailspan').'>'.$this->studydetails->studytext.'</span>'; ?>
-            <?php echo $this->studydetails->text; ?>
+			<?php echo '<span '.$this->params->get('detailspan').'>'.$this->studydetails->studytext.'</span>'; ?>
+            <?php //echo $this->studydetails->text; ?>
 			</td>
 		</tr>
 		<?php endif; ?>
@@ -702,17 +702,24 @@ $this->assignRef ('duration', $duration);// end switch
 		<tr>
 			<td align="center"><?php 
 //Begin test for scripture_links
-
+JPluginHelper::importPlugin('content');
 $row->text = '{bible}'.$scripture1.'{/bible}';
-JPluginHelper::importPlugin('content', 'scripturelinks' );
-$slparams 	= new JParameter( $plugin->params );
+//JPluginHelper::importPlugin('content', 'scripturelinks' );
+
+//$slparams 	= new JParameter( $plugin->params );
+$params      =& $mainframe->getParams('com_content'); //call the params from content
 $dispatcher =& JDispatcher::getInstance();
-//$results = $mainframe->triggerEvent( 'onPrepareContent', array( &$row, &$params , 1));
-$results = $dispatcher->trigger( 'onPrepareContent', array( &$row, &$slparams, 0));
-$data = $row->text;
-echo $data;
+$results = $mainframe->triggerEvent( 'scripture_links', array( & $row, & $params , 1));
+//$results = $mainframe->triggerEvent( 'onPrepareContent', array( & $row, & $params , 1));
+//$results = $dispatcher->trigger( 'onPrepareContent', array( &$article, &$slparams, 0));
+//$results = $dispatcher->trigger( 'onPrepareContent', array( &$article, &$slparams, 0));
+//$data = $article->text;
+//echo $row->text;
 //echo $scripture_link;
 //dump ($results, '$results: ');
+//echo $this->article->text;
+$content = JHTML::_('content.prepare', $row->text);
+    echo $content;
 //End test for scripture_links
 
 			$link_text = $this->params->get('link_text');

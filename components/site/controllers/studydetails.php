@@ -103,7 +103,12 @@ class biblestudyControllerstudydetails extends JController
 	{
 	$return = false;
 	$row->text = JRequest::getVar('scripture1');
-	
+	JPluginHelper::importPlugin('content', 'scripturelinks' );
+	$slparams 	= new JParameter( $plugin->params );
+	$dispatcher =& JDispatcher::getInstance();
+	$results = $mainframe->triggerEvent( 'onPrepareContent', array( &$row, &$params , 1));
+	//$results = $dispatcher->trigger( 'onPrepareContent', array( &$article, &$slparams, 0));
+	//$results = $dispatcher->trigger( 'onPrepareContent', array( &$article, &$slparams, 0));
 	}
 	//End of scripture links plugin function
 	
