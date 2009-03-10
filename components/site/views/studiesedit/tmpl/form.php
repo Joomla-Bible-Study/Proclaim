@@ -32,17 +32,19 @@ $allow_entry = $params->get('allow_entry_study');
 <?php $editor =& JFactory::getEditor();?>
 		
     <table width=100% class="admintable">
-    <tr><div>
-	<button type="button" onclick="submitbutton('save')">
-		<?php echo JText::_('Save'); if (!$this->studiesedit->id){ echo JText::_(' & Enter Media Information');} ?>
-	</button>
-	<button type="button" onclick="submitbutton('cancel')">
-		<?php echo JText::_('Cancel') ?>
-	</button>
-</div></tr>
+    <tr>
+      <td colspan="0">
+	    <button type="button" onclick="submitbutton('save')">
+		  <?php echo JText::_('Save') ?>
+	    </button>
+	    <button type="button" onclick="submitbutton('cancel')">
+		  <?php echo JText::_('Cancel') ?>
+	    </button>
+      </td>
+    </tr>
 <?php    if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
       <tr><td class="key"><?php echo JText::_( 'Submitted by: ');?></td>
-    <td><input classs="text_area" type="text" name="user_name" id="user_name" size="25" maxlength="25" value="<?php echo $user_name;?>" /></td></tr>
+    <td><input class="text_area" type="text" name="user_name" id="user_name" size="25" maxlength="25" value="<?php echo $user_name;?>" /></td></tr>
       <tr> 
         <td class="key" align="left"><?php echo JText::_( 'Study Date YYYY-MM-DD' ); ?></td>
         <td>
@@ -79,11 +81,11 @@ $allow_entry = $params->get('allow_entry_study');
         <td class="key" align="left"><?php echo JText::_( 'Scripture' ); ?></td>
         <td> <table width="60" border="0" cellspacing="1" cellpadding="1">
             <tr> 
-              <td size="20"><?php echo JText::_( 'Book' );?></td>
-              <td size="8"><?php echo JText::_( 'Ch Begin' );?></td>
-              <td size="8"><?php echo JText::_( 'Vs Begin' );?></td>
-              <td size="8"><?php echo JText::_( 'Ch End' ); ?></td>
-              <td size="8"><?php echo JText::_( 'Vs End' );?></td>
+              <td width="20"><?php echo JText::_( 'Book' );?></td>
+              <td width="8"><?php echo JText::_( 'Ch Begin' );?></td>
+              <td width="8"><?php echo JText::_( 'Vs Begin' );?></td>
+              <td width="8"><?php echo JText::_( 'Ch End' ); ?></td>
+              <td width="8"><?php echo JText::_( 'Vs End' );?></td>
             </tr>
             <tr> 
               <td ><?php //echo $this->lists['booknumber']; 
@@ -117,11 +119,11 @@ $allow_entry = $params->get('allow_entry_study');
         <td class="key" align="left"><?php echo JText::_( 'Scripture 2' ); ?></td>
         <td> <table width="60" border="0" cellspacing="1" cellpadding="1">
             <tr> 
-              <td size="20"><?php echo JText::_( 'Book 2' );?></td>
-              <td size="8"><?php echo JText::_( 'Ch Begin 2' );?></td>
-              <td size="8"><?php echo JText::_( 'Vs Begin 2' );?></td>
-              <td size="8"><?php echo JText::_( 'Ch End 2' ); ?></td>
-              <td size="8"><?php echo JText::_( 'Vs End 2' );?></td>
+              <td width="20"><?php echo JText::_( 'Book 2' );?></td>
+              <td width="8"><?php echo JText::_( 'Ch Begin 2' );?></td>
+              <td width="8"><?php echo JText::_( 'Vs Begin 2' );?></td>
+              <td width="8"><?php echo JText::_( 'Ch End 2' ); ?></td>
+              <td width="8"><?php echo JText::_( 'Vs End 2' );?></td>
             </tr>
             <tr> 
               <td ><?php //echo $this->lists['booknumber2']; 
@@ -167,12 +169,13 @@ $allow_entry = $params->get('allow_entry_study');
         <td class="key" align="left"><?php echo JText::_( 'Message Type' );?></td>
 		<td ><?php echo $this->lists['messagetype']; ?></td>
       </tr>
+      <tr>
       	<td class="key" align="left"><?php echo JText::_('Duration');?></td>
         <td><table width="60" border="0" cellspacing="1" cellpadding="1">
         <tr>
-        	<td size="7"> <?php echo JText::_( 'Hours');?></td>
-            <td size="7"><?php echo JText::_( 'Minutes');?></td>
-            <td size="7"><?php echo JText::_( 'Seconds');?></td>
+        	<td width="7"> <?php echo JText::_( 'Hours');?></td>
+            <td width="7"><?php echo JText::_( 'Minutes');?></td>
+            <td width="7"><?php echo JText::_( 'Seconds');?></td>
             
         </tr>
         <tr>
@@ -197,7 +200,7 @@ $allow_entry = $params->get('allow_entry_study');
 		<option value="23" <?php if ($show == '23') {echo 'selected="selected"';}?>><?php echo JText::_('Managers');?></option>
 		<option value="24" <?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
         </select>
-        </td></td>
+        </td>
         <tr>
         <td class="key" align="left"><?php echo JText::_('Store');?></td>
         <td><table><tr><td><?php echo JText::_('Image for CD: ');?><?php echo $this->lists['image_cd'];?></td>
@@ -217,7 +220,7 @@ $allow_entry = $params->get('allow_entry_study');
             
                   </tr>
      
-      </tr>
+      
       <tr> 
         <td class="key"><?php echo JText::_( 'Study Text' );?></td>
         <td>

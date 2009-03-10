@@ -27,14 +27,14 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
 		<legend><?php echo JText::_( 'Details' ); ?></legend>
 
 		<table width = 100% class="admintable">
-        <tr><div>
+        <tr><td>
 	<button type="button" onclick="submitbutton('save')">
 		<?php echo JText::_('Save') ?>
 	</button>
 	<button type="button" onclick="submitbutton('cancel')">
 		<?php echo JText::_('Cancel') ?>
 	</button>
-</div></tr>
+</td></tr>
 <?php if ($params->get('study_publish') > 0) {?>
         <tr> 
         <td width="100" class="key"><label for="published"><?php echo JText::_( 'Published' ); ?></label></td>
@@ -58,7 +58,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
                 <td>
 				<?php echo $this->lists['ordering']; ?>
 			</td>
-
+		</tr>
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="teacher">
@@ -188,7 +188,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
             	<?php echo $this->editor->display('information', $this->teacheredit->information, '100%', '400', '70', '15'); ?>
             </td>
         </tr>
-        </tr>
+       
        
 	</table>
 	</fieldset>

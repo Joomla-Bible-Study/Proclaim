@@ -51,7 +51,7 @@ class biblestudyControllerstudiesedit extends JController
 		$new = JRequest::getVar('new', '0', 'post', 'int' );
 		if ($new > 0){
 			$link = 'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form&new='.$new;
-			$mainframe->redirect ($link);
+			$mainframe->redirect (str_replace("&amp;","&",$link));
 		}
 		$db=& JFactory::getDBO();
 		$query = "SELECT id"
@@ -65,7 +65,7 @@ class biblestudyControllerstudiesedit extends JController
 		//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 
 		// Check the table in so it can be edited.... we are done with it anyway
-		$mainframe->redirect ($link);
+		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
 
 	/**
@@ -98,14 +98,14 @@ class biblestudyControllerstudiesedit extends JController
 			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 
 			// Check the table in so it can be edited.... we are done with it anyway
-			$mainframe->redirect ($link);
+			$mainframe->redirect (str_replace("&amp;","&",$link));
 			/*if ($params->get('view_link') == 1){
 			 $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
 			 if ($params->get('view_link') == 2){
 			 $link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 
 			 // Check the table in so it can be edited.... we are done with it anyway
-			 $mainframe->redirect ($link);
+			 $mainframe->redirect (str_replace("&amp;","&",$link));
 			 //$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );*/
 	}
 	function publish()
@@ -139,7 +139,7 @@ class biblestudyControllerstudiesedit extends JController
 			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 
 			// Check the table in so it can be edited.... we are done with it anyway
-			$mainframe->redirect ($link);
+			$mainframe->redirect (str_replace("&amp;","&",$link));
 			/*$params =& $mainframe->getPageParameters();
 
 			if ($params->get('view_link') == 1){
@@ -148,7 +148,7 @@ class biblestudyControllerstudiesedit extends JController
 			$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 
 			// Check the table in so it can be edited.... we are done with it anyway
-			$mainframe->redirect ($link);*/
+			$mainframe->redirect (str_replace("&amp;","&",$link));*/
 			//$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist' );
 	}
 
@@ -184,7 +184,7 @@ class biblestudyControllerstudiesedit extends JController
 			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 
 			// Check the table in so it can be edited.... we are done with it anyway
-			$mainframe->redirect ($link);
+			$mainframe->redirect (str_replace("&amp;","&",$link));
 
 			/*$params =& $mainframe->getPageParameters();
 
@@ -194,7 +194,7 @@ class biblestudyControllerstudiesedit extends JController
 			$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 
 			// Check the table in so it can be edited.... we are done with it anyway
-			$mainframe->redirect ($link);*/
+			$mainframe->redirect (str_replace("&amp;","&",$link));*/
 			//$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist' );
 	}
 
@@ -224,7 +224,7 @@ class biblestudyControllerstudiesedit extends JController
 			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 
 			// Check the table in so it can be edited.... we are done with it anyway
-			$mainframe->redirect ($link);
+			$mainframe->redirect (str_replace("&amp;","&",$link));
 			/*$params =& $mainframe->getPageParameters();
 
 			if ($params->get('view_link') == 1){
@@ -233,7 +233,7 @@ class biblestudyControllerstudiesedit extends JController
 			$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
 
 			// Check the table in so it can be edited.... we are done with it anyway
-			$mainframe->redirect ($link);*/
+			$mainframe->redirect (str_replace("&amp;","&",$link));*/
 			//$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
 	}
 }

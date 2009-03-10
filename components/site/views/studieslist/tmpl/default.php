@@ -1,9 +1,7 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 <script type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
-<link
- href="components/com_biblestudy/tooltip.css" rel="stylesheet"
- type="text/css" media="screen" />
-<?php
+<link href="components/com_biblestudy/tooltip.css" rel="stylesheet" type="text/css" media="screen" /><?php
+
 global $mainframe, $option;
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
@@ -17,12 +15,7 @@ $imageh = $this->params->get('imageh', 24);
 $imagew = $this->params->get('imagew', 24);
 $color1 = $this->params->get('color1');
 $color2 = $this->params->get('color2');
-$page_width = $this->params->get('page_width');
-
-
-if (!$page_width){
- $page_width = '100%';
-}
+$page_width = $this->params->get('page_width', '100%');
 $widpos1 = $this->params->get('widthcol1');
 $widpos2 = $this->params->get('widthcol2');
 $widpos3 = $this->params->get('widthcol3');
@@ -31,8 +24,8 @@ $show_description = $this->params->get('show_description', 1);
 $downloadCompatibility = $this->params->get('compatibilityMode');
 ?>
 
-<form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
-<?php //Set some initalization parameters
+<form action="<?php echo $this->request_url; ?>" method="post" name="adminForm"><?php
+ //Set some initalization parameters
  $user =& JFactory::getUser();
  $entry_user = $user->get('gid');
  if (!$entry_user) {
@@ -45,16 +38,22 @@ $downloadCompatibility = $this->params->get('compatibilityMode');
  $allow_entry = $this->params->get('allow_entry_study');
 ?>
 
+<?php
+//Start test to see if message needs to be displayed
+if ($message) {?>
+ <!-- Begin Message -->
+ <div style="width:100%">
+  <h2><?php echo $message;?></h2>
+ </div>
+ <!-- End Message --><?php
+  }?>
 
 <?php
 //Start test to see if frontend study entry is allowed
 if ($allow_entry > 0) {
  if ($entry_access <= $entry_user) {?>
- <!-- Begin Front End Submission -->
+ <!-- Begin Front End Study Submission -->
  <div style="width:100%;">
-<?php if ($message) {?>
-  <h2><?php echo $message;?></h2><?php
-  }?>
   <strong>Studies</strong>
   <br><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">Add a New Study</a>
   <br><a href="<?php echo JURI::base()?>index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">Add a New Media File Record</a>
@@ -64,45 +63,42 @@ if ($allow_entry > 0) {
 <?php
   }?>
  </div>
- <!-- End Front End Submission --><?php
+ <!-- End Front End Study Submission --><?php
  }
 }
 //End test to see if frontend study entry is allowed?>
 
-
-<table width="<?php echo $page_width; ?>">
-
-
 <?php
  //Start test to see if frontend podcast entry is allowed
- if ($this->params->get('allow_podcast') > 0){
-  $podcast_access = $this->params->get('podcast_access');
-  if (!$podcast_access) {
-   $podcast_access = 23;
-  }
-  if ($podcast_access <= $entry_user){
-   $query = ('SELECT id, title, published FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC');
-   $database->setQuery( $query );
-   $podcasts = $database->loadAssocList();
-   ?>
-   <tr>
-    <td><strong>Podcasts</strong></td>
-   </tr>
-   <tr>
-    <td><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form';?>">Add A Podcast</a></td>
-   </tr>
-<?php 
-   foreach ($podcasts as $podcast){
-   $pod = $podcast['id']; $podtitle = $podcast['title'];?>
-   <tr>
-    <td><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod;?>"><?php echo $podtitle;?></a></td>
-   </tr>
-<?php
-   }
-  }
+if ($this->params->get('allow_podcast') > 0){
+ $podcast_access = $this->params->get('podcast_access');
+ if (!$podcast_access) {
+  $podcast_access = 23;
  }
+ if ($podcast_access <= $entry_user){
+  $query = ('SELECT id, title, published FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC');
+  $database->setQuery( $query );
+  $podcasts = $database->loadAssocList();
+  ?>
+ <!-- Begin Front End Podcast Submission -->
+ <div style="width:100%;">
+  <strong>Podcasts</strong>
+  <br><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form';?>">Add A Podcast</a>
+<?php 
+  foreach ($podcasts as $podcast){
+  $pod = $podcast['id']; $podtitle = $podcast['title'];?>
+  <br><a href="<?php echo JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod;?>"><?php echo $podtitle;?></a>
+<?php
+  }?>
+ </div>
+ <!-- End Front End Podcast Submission --><?php
+ }
+}
  //End test to see if frontend podcast entry is allowed?>
-<?php //This is the beginning of the row for the page table?>
+
+
+ <table width="<?php echo $page_width; ?>">
+  <?php //This is the beginning of the row for the page table?>
  <tr>
   <td colspan="0">
      <?php //Row for logo

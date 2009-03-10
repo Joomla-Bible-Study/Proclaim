@@ -106,6 +106,7 @@ function openConverter1()
 								<td><?php echo JText::_('Image: ');?> <?php echo $this->lists['image'];?></td>
 							</tr>
 							<tr>
+								<td>
 								<?php echo JText::_( 'Filesize (in bytes): ');?>
 								<input 
 									class="required"
@@ -119,6 +120,7 @@ function openConverter1()
 									onKeyPress="decOnly(this);" 
 									value="<?php echo $this->mediafilesedit->size;?>" />
 								<a href="javascript:openConverter1();"> <?php echo JText::_('- Filesize Converter');?></a>
+								</td>
 							</tr>
 							<tr>
 								<td><?php echo JText::_('Server: ');?> <?php echo $this->lists['server'];?></td>

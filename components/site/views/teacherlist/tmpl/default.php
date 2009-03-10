@@ -21,7 +21,7 @@ $allow_entry = $params->get('allow_entry_study');
 </table>
 <?php if ($allow_entry > 0) {
 if ($entry_access <= $entry_user){ ?>
-<table><tr><td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form"><strong><?php echo JText::_('Add a Teacher');?></a></strong></td></tr></table><?php } }?>
+<table><tr><td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form"><strong><?php echo JText::_('Add a Teacher');?></strong></a></td></tr></table><?php } }?>
 <table width="100%" class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
 <tr><td>
 <?php foreach ($this->items as $item) { ?>

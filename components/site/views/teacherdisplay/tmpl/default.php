@@ -62,23 +62,21 @@ else { ?>
 <tr><td><h2><?php echo $this->params->get('label_teacher');?></h2></td></tr>
 </table>
 
-<table cellpadding="1">
+<table cellpadding="1" width="100%">
 <tr>
 <td> <strong><?php echo JText::_('Title');?></strong></td>
 <td> <strong><?php echo JText::_('Scripture');?></strong></td>
 <td> <strong><?php echo JText::_('Date');?></strong></td>
 </tr>
 <?php foreach ($this->studies as $study) { ?>
-			<tr>
-            <td> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->sid;?>"><?php echo $study->studytitle; ?></td>
-            <td> <?php echo $study->bookname.' '.$study->chapter_begin;?></td>
-            <td> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC') , '$offset'); echo $date;?></td>
-            </tr>
-            <?php } // end of foreach ?>
-	<?php	} // end of if show_teacher_studies ?>
-    </td>
-</tr>
+ <tr>
+  <td> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->sid;?>"><?php echo $study->studytitle; ?></a></td>
+  <td> <?php echo $study->bookname.' '.$study->chapter_begin;?></td>
+  <td> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC') , '$offset'); echo $date;?></td>
+ </tr>
+<?php } // end of foreach ?>
+<?php	} // end of if show_teacher_studies ?>
 <?php } // end of else testing if $result 
 if ($this->menuid){$link = '&Itemid='.$this->menuid;}?>
-<tr><td align="center"><br /><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo $link;?>"><-<?php echo JText::_('Return to Teacher List');?></a>
+<tr><td align="center" colspan="0"><br /><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo $link;?>"><?php echo JText::_('<-Return to Teacher List');?></a>
 </table>
