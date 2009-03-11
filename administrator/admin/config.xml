@@ -991,9 +991,10 @@
 			<option value="1">Show</option>
 		</param>
 	<param name="span_locations_view" type="text" default="" label="Span tag for location in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
-        <param name="show_scripture_link" type="radio" default="0" label="Use Scripture Links Plugin" description="Choose whether to use the Scripturelinks plugin for all references in study text. Must be installed.">
-                <option value="0">No</option>
-		<option value="1">Yes</option>
+        <param name="show_scripture_link" type="radio" default="0" label="Use Content Plugins" description="Choose whether to apply content plugins on study text. You can use the Scripturelinks plugin for all references in study text, for example.">
+                <option value="0">No Plugins</option>
+		<option value="1">Use All Plugins</option>
+		<option value="2"> Use Only Scripture Links</option>
         </param>
         <param name="show_comments" type="radio" default="1" label="Allow comments for studies" description="Turns on or off the ability for users to leave comments on studies">
 		<option value="0">Hide</option>

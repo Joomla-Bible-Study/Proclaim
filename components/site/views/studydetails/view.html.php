@@ -24,7 +24,8 @@ class biblestudyViewstudydetails extends JView
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		//$params = &JComponentHelper::getParams($option);
-		$params = &$mainframe->getPageParameters();
+		//$params = &$mainframe->getPageParameters();
+		$params		=& $mainframe->getParams('com_biblestudy');
 		//$this->assignRef('params', $params);
 		//end TF added
 		$studydetails		=& $this->get('Data');
@@ -92,13 +93,22 @@ class biblestudyViewstudydetails extends JView
 		/*
 		 * Process the prepare content plugins
 		 */
-		JPluginHelper::importPlugin('content');
-		$testit = $params->show_scripture_link;
-		//dump ($testit, 'scripture link: ');
-		//if ($params->show_scripture_link > 0) {
-		$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
-                //}
-		$results = $dispatcher->trigger('onPrepareContent', array (& $link_scripture, & $params, $limitstart));
+		$linkit = $params->get('show_scripture_link');
+		if ($linkit) {
+			switch ($linkit) 
+			{
+			case 0:
+				break;
+			case 1:
+				JPluginHelper::importPlugin('content');
+				break;
+			case 2:
+				JPluginHelper::importPlugin('content', 'scripturelinks');
+				break;
+			}
+			$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
+			$results = $dispatcher->trigger('onPrepareContent', array (& $link_scripture, & $params, $limitstart));
+		} //end if $linkit
                 // End process prepare content plugins
 		
 
