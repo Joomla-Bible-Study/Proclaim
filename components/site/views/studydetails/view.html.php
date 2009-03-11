@@ -28,7 +28,42 @@ class biblestudyViewstudydetails extends JView
 		//$this->assignRef('params', $params);
 		//end TF added
 		$studydetails		=& $this->get('Data');
-		
+		$ch_b = $studydetails->chapter_begin;
+                $v_b = $studydetails->verse_begin;
+                $ch_e = $studydetails->chapter_end;
+                $v_e = $studydetails->verse_end;
+		//Formats the scripture for the plugin
+                $book = $studydetails->bname;
+                $b1 = ' ';
+                $b2 = ':';
+	        $b2a = ':';
+	        $b3 = '-';
+                $b3a = '-';
+		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		if ($ch_e == $ch_b) {
+			$ch_e = '';
+			$b2a = '';
+		}
+		if ($v_b == 0){
+			$v_b = '';
+			$v_e = '';
+			$b2a = '';
+			$b2 = '';
+		}
+		if ($v_e == 0) {
+			$v_e = '';
+			$b2a = '';
+		}
+		if ($ch_e == 0) {
+			$b2a = '';
+			$ch_e = '';
+			if ($v_e == 0) {
+				$b3 = '';
+			}
+		}
+		$link_scripture->text = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+
+  $article->text = $studydetails->studytext;
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');
 		$this->assignRef('show_media', $show_media);
@@ -58,30 +93,22 @@ class biblestudyViewstudydetails extends JView
 		 * Process the prepare content plugins
 		 */
 		JPluginHelper::importPlugin('content');
+		$testit = $params->show_scripture_link;
+		//dump ($testit, 'scripture link: ');
+		//if ($params->show_scripture_link > 0) {
 		$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
-		// End process prepare content plugins
+                //}
+		$results = $dispatcher->trigger('onPrepareContent', array (& $link_scripture, & $params, $limitstart));
+                // End process prepare content plugins
 		
-		/*
-		 * Handle display events
-		 */
-		//$article->text = '{bible} John 3:1-6 {/bible}';
-	
-		$article->event = new stdClass();
-		$results = $dispatcher->trigger('onAfterDisplayTitle', array ($article, &$params, $limitstart));
-		$article->event->afterDisplayTitle = trim(implode("\n", $results));
 
-		$results = $dispatcher->trigger('onBeforeDisplayContent', array (& $article, & $params, $limitstart));
-		$article->event->beforeDisplayContent = trim(implode("\n", $results));
-
-		$results = $dispatcher->trigger('onAfterDisplayContent', array (& $article, & $params, $limitstart));
-		$article->event->afterDisplayContent = trim(implode("\n", $results));
 		
 		//$database	= & JFactory::getDBO();
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
 		$this->assignRef('studydetails',		$studydetails);
 		$this->assignRef('article', $article);
-		
+  $this->assignRef('link_scripture', $link_scripture);
 		parent::display($tpl);
 	}
 	function _displayPagebreak($tpl)

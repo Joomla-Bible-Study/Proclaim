@@ -26,8 +26,7 @@
 	<param name="tmplSingleTeacher" tmplType="Single Teacher" type="template" default="" label="Single Teacher" description="Default Single Teacher template" />
 	<param name="@spacer" type="spacer" default="Study List Options" label="" description="">
 		</param>
-	<param name="page_title" type="text" size="50" default="Bible Studies" label="Page Title" description="Title of Bible Study page to show" />
-	<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or %" />
+ 	<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or %" />
 	<param name="show_page_title_list" type="radio" default="1" label="Hide/Show Page Title" description="Choose whether to hide or show a title on the top of the main page">
 		<option value="0">Hide</option>
 		<option value="1">Show</option>
@@ -992,7 +991,11 @@
 			<option value="1">Show</option>
 		</param>
 	<param name="span_locations_view" type="text" default="" label="Span tag for location in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
-	<param name="show_comments" type="radio" default="1" label="Allow comments for studies" description="Turns on or off the ability for users to leave comments on studies">
+        <param name="show_scripture_link" type="radio" default="0" label="Use Scripture Links Plugin" description="Choose whether to use the Scripturelinks plugin for all references in study text. Must be installed.">
+                <option value="0">No</option>
+		<option value="1">Yes</option>
+        </param>
+        <param name="show_comments" type="radio" default="1" label="Allow comments for studies" description="Turns on or off the ability for users to leave comments on studies">
 		<option value="0">Hide</option>
 		<option value="1">Show</option>
 		</param>
