@@ -29,6 +29,54 @@ class biblestudyViewstudydetails extends JView
 		//$this->assignRef('params', $params);
 		//end TF added
 		$studydetails		=& $this->get('Data');
+		  		
+		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
+		$show_media = $contentConfig->get('show_media_view');
+		$this->assignRef('show_media', $show_media);
+		
+		//Added database queries from the default template - moved here instead
+		$database	= & JFactory::getDBO();
+		$query = "SELECT id"
+			. "\nFROM #__menu"
+			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$database->setQuery($query);
+		$menuid = $database->loadResult();
+		$this->assignRef('menuid',$menuid);
+		$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1'
+		.' AND c.study_id = '.$this->studydetails->id.' ORDER BY c.comment_date ASC';
+		$database->setQuery($query);
+		$comments = $database->loadObjectList();
+		$this->assignRef('comments', $comments);
+		
+		if($this->getLayout() == 'pagebreak') {
+			$this->_displayPagebreak($tpl);
+			return;
+		}
+		$print = JRequest::getBool('print');
+		// build the html select list for ordering
+		
+		/*
+		 * Process the prepare content plugins
+		 */
+		$article->text = $studydetails->studytext;
+		$linkit = $params->get('show_scripture_link');
+		if ($linkit) {
+			switch ($linkit) 
+			{
+			case 0:
+				break;
+			case 1:
+				JPluginHelper::importPlugin('content');
+				break;
+			case 2:
+				JPluginHelper::importPlugin('content', 'scripturelinks');
+				break;
+			}
+			$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
+			$article->studytext = $article->text;
+			
+		} //end if $linkit
+                // End process prepare content plugins
 		$ch_b = $studydetails->chapter_begin;
                 $v_b = $studydetails->verse_begin;
                 $ch_e = $studydetails->chapter_end;
@@ -62,57 +110,10 @@ class biblestudyViewstudydetails extends JView
 				$b3 = '';
 			}
 		}
-		$link_scripture->text = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-
-  $article->text = $studydetails->studytext;
-		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
-		$show_media = $contentConfig->get('show_media_view');
-		$this->assignRef('show_media', $show_media);
 		
-		//Added database queries from the default template - moved here instead
-		$database	= & JFactory::getDBO();
-		$query = "SELECT id"
-			. "\nFROM #__menu"
-			. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
-		$database->setQuery($query);
-		$menuid = $database->loadResult();
-		$this->assignRef('menuid',$menuid);
-		$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1'
-		.' AND c.study_id = '.$this->studydetails->id.' ORDER BY c.comment_date ASC';
-		$database->setQuery($query);
-		$comments = $database->loadObjectList();
-		$this->assignRef('comments', $comments);
-		
-		if($this->getLayout() == 'pagebreak') {
-			$this->_displayPagebreak($tpl);
-			return;
-		}
-		$print = JRequest::getBool('print');
-		// build the html select list for ordering
-		
-		/*
-		 * Process the prepare content plugins
-		 */
-		$linkit = $params->get('show_scripture_link');
-		if ($linkit) {
-			switch ($linkit) 
-			{
-			case 0:
-				break;
-			case 1:
-				JPluginHelper::importPlugin('content');
-				break;
-			case 2:
-				JPluginHelper::importPlugin('content', 'scripturelinks');
-				break;
-			}
-			$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
-			$results = $dispatcher->trigger('onPrepareContent', array (& $link_scripture, & $params, $limitstart));
-		} //end if $linkit
-                // End process prepare content plugins
-		
-
-		
+		$article->text = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
+		dump ($article->text, 'article: ');
 		//$database	= & JFactory::getDBO();
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	

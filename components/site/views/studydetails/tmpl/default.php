@@ -537,7 +537,7 @@ $this->assignRef ('duration', $duration);// end switch
 		
 		<tr>
 			<td><br />
-			<?php echo '<span '.$this->params->get('detailspan').'>'.$this->article->text.'</span>'; ?>
+			<?php echo '<span '.$this->params->get('detailspan').'>'.$this->article->studytext.'</span>'; ?>
 
 			</td>
 		</tr>
@@ -702,7 +702,7 @@ $this->assignRef ('duration', $duration);// end switch
 		<tr>
 			<td align="center"><?php 
 
-echo $this->link_scripture->text;
+echo $this->article->text;
 
 //End test for scripture_links
 
