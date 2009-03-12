@@ -44,8 +44,8 @@
 	}
 	?>
     
-      <tfoot>
-      <td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tfoot>
+      <tfoot><tr>
+      <td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tr></tfoot>
     </table>
 
 

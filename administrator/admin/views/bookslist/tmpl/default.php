@@ -39,8 +39,8 @@ defined('_JEXEC') or die('Restricted access');
 			$k = 1 - $k;
 		}
 		?>
-	      <tfoot>
-	      <td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tfoot>
+	      <tfoot><tr>
+	      <td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tr></tfoot>
 	    </table>
 	</div>
 	

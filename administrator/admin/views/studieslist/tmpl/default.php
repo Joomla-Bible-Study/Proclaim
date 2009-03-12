@@ -136,8 +136,8 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		unset($brokenLink);
 	}
 	?>
-      <tfoot>
-      <td colspan="12"> <?php echo $this->pagination->getListFooter(); ?> </td></tfoot>
+      <tfoot><tr>
+      <td colspan="12"> <?php echo $this->pagination->getListFooter(); ?> </td></tr></tfoot>
     </table>
 </div>
 
