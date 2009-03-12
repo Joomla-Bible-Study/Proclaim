@@ -1,7 +1,6 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 <script type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
-<link href="components/com_biblestudy/tooltip.css" rel="stylesheet" type="text/css" media="screen" /><?php
-
+<?php
 global $mainframe, $option;
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
@@ -24,7 +23,7 @@ $show_description = $this->params->get('show_description', 1);
 $downloadCompatibility = $this->params->get('compatibilityMode');
 ?>
 
-<form action="<?php echo $this->request_url; ?>" method="post" name="adminForm"><?php
+<form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm"><?php
  //Set some initalization parameters
  $user =& JFactory::getUser();
  $entry_user = $user->get('gid');
@@ -97,26 +96,34 @@ if ($this->params->get('allow_podcast') > 0){
  //End test to see if frontend podcast entry is allowed?>
 
 
+<?php 
+ //Begin display page logo and title
+$wtd = $this->params->get('pimagew');?>
+ <!-- Begin Display Page image and Title -->
+ <div style="width:100%;">
+  <!-- <h1 class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>" style="border: 1px solid;"> -->
+<?php
+ if ($this->params->get( 'show_page_image' ) >0) {
+ $pimagew = $this->params->get('pimagew');
+ $pimageh = $this->params->get('pimageh');
+ if ($pimagew) {$width = $pimagew;} else {$width = 24;}
+ if ($pimageh) {$height = $pimageh;} else {$height= 24;}
+ ?>
+  <img src="<?php echo JURI::base().$this->params->get('page_image');?>" alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $width;?>" height="<?php echo $height;?>" />
+<?php //End of column for logo
+}
+if ( $this->params->get( 'show_page_title_list' ) >0 ) {
+?>
+  <span class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>" style="line-height:<?php echo $height; ?>px;"><?php echo $this->params->get('page_title');?></span>
+<?php
+}?>
+  <!-- </h1> -->
+ </div>
+ <!-- End Display Page image and Title --><?php
+ //End display page logo and title?>
+
+
  <table width="<?php echo $page_width; ?>">
-  <?php //This is the beginning of the row for the page table?>
- <tr>
-  <td colspan="0">
-     <?php //Row for logo
-     $wtd = $this->params->get('pimagew');
-     if ($this->params->get( 'show_page_image' ) >0) {
-      $src = JURI::base().$this->params->get('page_image');
-      $pimagew = $this->params->get('pimagew');
-      $pimageh = $this->params->get('pimageh');
-      if ($pimagew) {$width = $pimagew;} else {$width = 24;}
-      if ($pimageh) {$height = $pimageh;} else {$height= 24;}
-      ?><img src="<?php echo JURI::base().$this->params->get('page_image');?>" alt="Bible Studies" width="<?php echo $width;?>" height="<?php echo $height;?>" style="float:left;" />
-     <?php //End of column for logo
-     }
-     if ( $this->params->get( 'show_page_title_list' ) >0 ) {
-      ?><h1 class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>"><?php echo $this->params->get('page_title'); ?></h1><?php
-     } //End of if show page title?>
-  </td>
- </tr><?php //end of row above drop down boxes?>
  <?php if ($this->params->get('show_teacher_list') >0) { ?>
  <tr>
   <td width="<?php echo $this->params->get('teacherw');?>"><img
@@ -212,31 +219,30 @@ if ($this->params->get('allow_podcast') > 0){
 
  <?php // The table to hold header rows ?>
  <tr><td>
- <table width="<?php echo $this->params->get('header_width');?>">
- <?php //mirrors 6 colum table below?>
+ <table width="<?php echo $this->params->get('header_width', '100%');?>" cellpadding="0">
+<?php //mirrors 6 colum table below?>
   <tr>
-  <?php // begin array for positions to see if we need a column for the header
+   <td></td>
+<?php // begin array for positions to see if we need a column for the header
   $headercheck = array( array(  'position' => $this->params->get('position1')),
-  array(  'position' => $this->params->get('position2')),
-  array(  'position' => $this->params->get('position3')),
-  array(  'position' => $this->params->get('position4')),
-  array(  'position' => $this->params->get('position5')),
-  array(  'position' => $this->params->get('position6')),
-  array(  'position' => $this->params->get('position7')),
-  array(  'position' => $this->params->get('position8')),
-  array(  'position' => $this->params->get('position9')),
-  array(  'position' => $this->params->get('position10')),
-  array(  'position' => $this->params->get('position11')),
-  array(  'position' => $this->params->get('position12')),
-  array(  'position' => $this->params->get('position13')),
-  array(  'position' => $this->params->get('position14')),
-  array(  'position' => $this->params->get('position15')),
-  array(  'position' => $this->params->get('position16')),
-  array(  'position' => $this->params->get('position17')),
+  array( 'position' => $this->params->get('position2')),
+  array( 'position' => $this->params->get('position3')),
+  array( 'position' => $this->params->get('position4')),
+  array( 'position' => $this->params->get('position5')),
+  array( 'position' => $this->params->get('position6')),
+  array( 'position' => $this->params->get('position7')),
+  array( 'position' => $this->params->get('position8')),
+  array( 'position' => $this->params->get('position9')),
+  array( 'position' => $this->params->get('position10')),
+  array( 'position' => $this->params->get('position11')),
+  array( 'position' => $this->params->get('position12')),
+  array( 'position' => $this->params->get('position13')),
+  array( 'position' => $this->params->get('position14')),
+  array( 'position' => $this->params->get('position15')),
+  array( 'position' => $this->params->get('position16')),
+  array( 'position' => $this->params->get('position17')),
   array( 'position' => $this->params->get('position18'))
   ); //print_r($headercheck);
-  ?>
-  <?php
 
   //Beginning of header rows
   $isheader1 = 0;
@@ -326,6 +332,9 @@ if ($this->params->get('allow_podcast') > 0){
   }
   $k = 1;
   $row_count = 0;
+  ?>
+ <tr>
+  <td><?php 
   for ($i=0, $n=count( $this->items ); $i < $n; $i++)
   { // This is the beginning of a loop that will cycle through all the records according to the query?>
   <?php $bgcolor = ($row_count % 2) ? $color1 : $color2; //This code cycles through the two color choices made in the parameters?>
@@ -645,6 +654,7 @@ if ($this->params->get('allow_podcast') > 0){
      'isbullet' => $this->params->get('isbullet12'),
   )
   );
+
   // Obtain a list of columns
   foreach ($a as $key => $arow) {
    $position[$key]  = $arow['position'];
@@ -665,8 +675,7 @@ if ($this->params->get('allow_podcast') > 0){
   $color = $this->params->get('use_color');
   ?>
 
- <tr>
-  <td><?php //Beginning of row for 6 column table?> <?php if ($this->params->get('line_break') > 0) {echo '<br />'; } ?>
+<?php //Beginning of row for 6 column table?> <?php if ($this->params->get('line_break') > 0) {echo '<br />'; } ?>
   <table <?php if ($color > 0){echo 'bgcolor="'.$bgcolor.'"';}?>
    width="<?php echo $page_width; ?>" cellpadding="0" cellspacing="0">
    <?php //6 Column table?>
@@ -957,22 +966,29 @@ if ($this->params->get('allow_podcast') > 0){
     <table align="left">
      <tr valign="<?php echo $this->params->get('colalign');?>">
 
-     <?php if ($this->params->get('show_full_text') > 0) { ?>
-     <?php $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id ); ?>
-     <?php JHTML::_('behavior.tooltip');
-     ?>
-      <td><?php //This is the beginning of the column for the text image ?>
-      <?php if ($this->params->get('tooltip') >0) { ?> <span
-       class="zoomTip"
-       title="<strong>Sermon Info:</strong> ::<?php if ($study) {?><strong>Title:</strong> <?php echo $study;}?><br><br> <?php if ($intro) {?><strong>Details:</strong> <?php echo $intro;?><?php } ?><br><br><?php if ($snumber) {?><strong>Sermon Number:</strong> <?php echo $snumber;}?> <br><strong>Teacher:</strong> <?php echo $teacher;?><br><br><hr /><br><?php if ($scripture1) {?><strong>Scripture: </strong><?php echo $scripture1;?><?php } ?>">
-       <?php } //end of is show tooltip?> <?php
+     <?php
+     if ($this->params->get('show_full_text') > 0) {
+      $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id );
+      JHTML::_('behavior.tooltip');?>
+      <td><?php 
+       if ($this->params->get('tooltip') >0) {?>
+        <span class="zoomTip"
+         title="<strong>Sermon Info:</strong>::
+       	 <?php if ($study) {?><strong>Title:</strong> <?php echo $study;}?><br><br>
+       	 <?php if ($intro) {?><strong>Details:</strong> <?php echo $intro;}?><br><br>
+       	 <?php if ($snumber) {?><strong>Sermon Number:</strong> <?php echo $snumber;}?><br>
+       	 <strong>Teacher:</strong> <?php echo $teacher;?><br><br>
+       	 <hr /><br>
+       	 <?php if ($scripture1) {?><strong>Scripture: </strong><?php echo $scripture1;}?>"><?php
+       } //end of is show tooltip?> <?php
        $src = JURI::base().$this->params->get('text_image');
        if ($imagew) {$width = $imagew;} else {$width = 24;}
        if ($imageh) {$height = $imageh;} else {$height= 24;}
        ?> <a href="<?php echo $link; ?>"><img
        src="<?php echo JURI::base().$this->params->get('text_image');?>"
        alt="<?php echo $details_text;?>" width="<?php echo $width;?>"
-       height="<?php echo $height;?>" border="0"></a><?php if ($this->params->get('tooltip') >0) { ?></span><?php } ?>
+       height="<?php echo $height;?>" border="0" /></a>
+       <?php if ($this->params->get('tooltip') >0) { ?></span><?php } ?>
       </td>
       <?php //End of text column ?>
 
@@ -989,7 +1005,7 @@ if ($this->params->get('allow_podcast') > 0){
        src="<?php echo JURI::base().$this->params->get('pdf_image');?>"
        alt="<?php echo $details_text.JText::_('- PDF Version');?>"
        width="<?php echo $width;?>" height="<?php echo $height;?>"
-       border="0"></a></td>
+       border="0" /></a></td>
        <?php //This is the end of the column for the pdf image?>
 
        <?php } // End of show pdf text ?>
@@ -1028,14 +1044,14 @@ if ($this->params->get('allow_podcast') > 0){
       if ($imagew) {$width = $imagew;} else {$width = 24;}
       if ($imageh) {$height = $imageh;} else {$height= 24;}
       ?>
-      <td><?php echo '<a href="'.$cd->server_path.$cd->prod_cd.'" title="'.$cd->media_alttext.'"><img src="'.JURI::base().$cd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$cd->media_alttext.' "border="0"></a>';?></td>
+      <td><?php echo '<a href="'.$cd->server_path.$cd->prod_cd.'" title="'.$cd->media_alttext.'"><img src="'.JURI::base().$cd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$cd->media_alttext.' "border="0" /></a>';?></td>
       <?php } ?>
       <?php if ($dvd->mid > 0){
        $src = JURI::base().$dvd->media_image_path;
        if ($imagew) {$width = $imagew;} else {$width = 24;}
        if ($imageh) {$height = $imageh;} else {$height= 24;}
        ?>
-      <td><?php echo '<a href="'.$dvd->server_path.$dvd->prod_dvd.'" title="'.$dvd->media_alttext.'"><img src="'.JURI::base().$dvd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$dvd->media_alttext.' "border="0"></a>';?></td>
+      <td><?php echo '<a href="'.$dvd->server_path.$dvd->prod_dvd.'" title="'.$dvd->media_alttext.'"><img src="'.JURI::base().$dvd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$dvd->media_alttext.' "border="0" /></a>';?></td>
       <?php } ?>
      </tr>
      <tr>
@@ -1188,7 +1204,7 @@ if ($this->params->get('allow_podcast') > 0){
        .'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
        .' '.$duration.' '.$media_size.'" width="'.$width
        .'" height="'.$height.'" border="0" title="'
-       .$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
+       .$media->malttext.' '.$duration.' '.$media_size.'" />{/avrpopup}';
        //dump ($avr_link, 'AVR Lnk');
 
       }
@@ -1281,7 +1297,7 @@ if ($this->params->get('allow_podcast') > 0){
    <?php if ($this->params->get('line') > 0) { ?>
    <tr>
     <td width="<?php echo $this->params->get('mod_table_width');?>"><?php //This row is to hold the line and should run along the bottom of the 5 column table?>
-    <?php echo '<img src="'.JURI::base().'components/com_biblestudy/images/square.gif" height="2" width="100%">'; ?>
+    <?php echo '<img src="'.JURI::base().'components/com_biblestudy/images/square.gif" height="2" width="100%" alt="" />'; ?>
     <?php } //End of if show lines?></td>
    </tr>
    <?php } // End show description?>
@@ -1289,7 +1305,8 @@ if ($this->params->get('allow_podcast') > 0){
   </table>
 
   <?php    $row_count++; // This increments the row count and adjusts the variable for the color background
-  $k = 3 - $k; ?> <?php } //This is the end of the for statement for each result from the database that will create its own 6 column table?>
+  $k = 3 - $k;
+  } //This is the end of the for statement for each result from the database that will create its own 6 column table?>
 
   </td>
  </tr>

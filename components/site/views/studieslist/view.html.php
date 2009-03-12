@@ -65,7 +65,8 @@ class biblestudyViewstudieslist extends JView
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/biblestudy.js');
 		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
-
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/tooltip.css');
+		
 		//Build Teachers
 		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );

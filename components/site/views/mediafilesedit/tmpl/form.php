@@ -36,10 +36,10 @@ function openConverter1()
 			<legend><?php echo JText::_( 'Media File Details' ); ?></legend>
 			<table class="admintable">
 				<tr>
-					<div>
+					<td colspan="0">
 						<button type="button" onclick="submitbutton('save')"><?php echo JText::_('Save') ?></button>
 						<button type="button" onclick="submitbutton('cancel')"><?php echo JText::_('Cancel') ?></button>
-					</div>
+					</td>
 				</tr>
 				<tr>
 					<td class="key"><?php echo JText::_( 'Published' ); ?></td>

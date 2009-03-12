@@ -76,8 +76,8 @@ if ($entry_access <= $entry_user){
 	}
 	?>
     
-      <tfoot>
-      <td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tfoot>
+      <tfoot><tr>
+      <td colspan="0"> <?php echo $this->pagination->getListFooter(); ?> </td></tr></tfoot>
     </table>
 
 
