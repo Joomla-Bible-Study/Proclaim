@@ -912,6 +912,10 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="scripture_view_link" type="radio" default="0" label="Show Scripture as BibleGateway link" description="Choose whether to show the Scripture as a link to the passsage on BibleGateway. Scripturelinks plugin must be installed, configured, and enabled">
+			<option value="0">No Link</option>
+			<option value="1">Link</option>
+		</param>
 		<param name="span_scripture_view" type="text" default="" label="Span tag for Title in Details view" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_title_view" type="radio" default="1" label="Show/Hide Study Title on View Page" description="Choose whether to show the study title on the page when the user clicks to see the study details">
 			<option value="0">Hide</option>

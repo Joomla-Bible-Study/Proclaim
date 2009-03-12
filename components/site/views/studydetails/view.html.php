@@ -77,11 +77,11 @@ class biblestudyViewstudydetails extends JView
 			
 		} //end if $linkit
                 // End process prepare content plugins
+//Formats the scripture for the scripture links plugin
 		$ch_b = $studydetails->chapter_begin;
                 $v_b = $studydetails->verse_begin;
                 $ch_e = $studydetails->chapter_end;
                 $v_e = $studydetails->verse_end;
-		//Formats the scripture for the plugin
                 $book = $studydetails->bname;
                 $b1 = ' ';
                 $b2 = ':';
@@ -110,16 +110,20 @@ class biblestudyViewstudydetails extends JView
 				$b3 = '';
 			}
 		}
+		$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');
+ 		$st_params 	= new JParameter( $plugin->params );
+		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		$version = $st_params->get('bible_version');
+		$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
+		$passage_link = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture.'</a>';
 		
-		$article->text = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-		$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
-		dump ($article->text, 'article: ');
+		//$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
 		//$database	= & JFactory::getDBO();
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
 		$this->assignRef('studydetails',		$studydetails);
 		$this->assignRef('article', $article);
-  $this->assignRef('link_scripture', $link_scripture);
+  $this->assignRef('passage_link', $passage_link);
 		parent::display($tpl);
 	}
 	function _displayPagebreak($tpl)

@@ -113,13 +113,14 @@ $ch_e = $this->studydetails->chapter_end;
 $v_b = $this->studydetails->verse_begin;
 $v_e = $this->studydetails->verse_end;
 $scripture1 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);
-
+if ($this->params->get('scripture_view_link') > 0) { $scripture1 = $this->passage_link;}
 $booknumber = $this->studydetails->booknumber2;
 $ch_b = $this->studydetails->chapter_begin2;
 $ch_e = $this->studydetails->chapter_end2;
 $v_b = $this->studydetails->verse_begin2;
 $v_e = $this->studydetails->verse_end2;
 if ($this->studydetails->booknumber2){$scripture2 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);}
+
 //if ($studydetails->secondary_reference) { $scripture .= ' - '.$studydetails->secondary_reference; }
 $picture = $this->params->get('show_picture_view');
 switch ($picture) {
@@ -701,11 +702,6 @@ $this->assignRef ('duration', $duration);// end switch
 		} // end of if show_passage_view ?>
 		<tr>
 			<td align="center"><?php 
-
-echo $this->article->text;
-
-//End test for scripture_links
-
 			$link_text = $this->params->get('link_text');
 			if (!$link_text) {
 				$link_text = JText::_('Return to Studies List');
