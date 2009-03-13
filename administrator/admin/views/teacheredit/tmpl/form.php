@@ -156,9 +156,7 @@
         	<td>
             	<?php echo $this->editor->display('information', $this->teacheredit->information, '100%', '400', '70', '15'); ?>
             </td>
-        </tr>
-        </tr>
-       
+        </tr>       
 	</table>
 	</fieldset>
 </div>

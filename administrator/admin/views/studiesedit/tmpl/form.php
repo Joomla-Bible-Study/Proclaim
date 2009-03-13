@@ -10,7 +10,7 @@ $user =& JFactory::getUser();
     <table class="admintable">
 <?php    if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
     <tr><td class="key"><?php echo JText::_( 'Submitted by: ');?></td>
-    <td><input classs="text_area" type="text" name="user_name" id="user_name" size="25" maxlength="25" value="<?php echo $user_name;?>" /></td></tr>
+    <td><input class="text_area" type="text" name="user_name" id="user_name" size="25" maxlength="25" value="<?php echo $user_name;?>" /></td></tr>
       <tr> 
         <td class="key"><?php echo JText::_( 'Published' ); ?></td>
         <td > <?php echo $this->lists['published'];
@@ -88,12 +88,13 @@ $user =& JFactory::getUser();
         <td class="key" align="left"><?php echo JText::_( 'Message Type' );?></td>
 		<td ><?php echo $this->lists['messagetype']; ?></td>
       </tr>
+      <tr>
       	<td class="key" align="left"><?php echo JText::_('Duration');?></td>
         <td><table width="60" border="0" cellspacing="1" cellpadding="1">
-        <tr>
-        	<td size="7"> <?php echo JText::_( 'Hours');?></td>
-            <td size="7"><?php echo JText::_( 'Minutes');?></td>
-            <td size="7"><?php echo JText::_( 'Seconds');?></td>
+          <tr>
+        	<td width="7"> <?php echo JText::_( 'Hours');?></td>
+            <td width="7"><?php echo JText::_( 'Minutes');?></td>
+            <td width="7"><?php echo JText::_( 'Seconds');?></td>
             
         </tr>
         <tr>
@@ -118,7 +119,7 @@ $user =& JFactory::getUser();
 		<option value="23" <?php if ($show == '23') {echo 'selected="selected"';}?>><?php echo JText::_('Managers');?></option>
 		<option value="24" <?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
         </select>
-        </td></td>
+        </td>
         <?php if($this->enableStore == 1) {?>
         <tr>
         <td class="key" align="left"><?php echo JText::_('Store');?></td>
@@ -139,17 +140,14 @@ $user =& JFactory::getUser();
             
                   </tr>
         <?php }?>
-     </table></td>
-      </tr>
+     </table>
+     <table>
       <tr> 
         <td class="key"><?php echo JText::_( 'Study Text' );?></td>
+	  </tr>
+	  <tr>
         <td>
-        	<table> 
-            	
-                <tr><td>
 					<?php echo $editor->display('studytext', $this->studiesedit->studytext, '100%', '400', '70', '15'); ?>
-        		</td></tr>
-            </table>
 		</td>
       </tr>
     </table>
