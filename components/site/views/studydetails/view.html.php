@@ -7,6 +7,7 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 $uri 		=& JFactory::getURI();
 //$pathway	=& $mainframe->getPathway();
+
 class biblestudyViewstudydetails extends JView
 {
 	
@@ -29,7 +30,13 @@ class biblestudyViewstudydetails extends JView
 		//$this->assignRef('params', $params);
 		//end TF added
 		$studydetails		=& $this->get('Data');
-		  		
+		
+		//Begin test of using helper
+		$scripture = Jview::loadHelper('scripture');
+		//$scripture = getScripture(); 	
+		dump ($scripture, 'Scripture: ');
+		//End helper test
+		
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');
 		$this->assignRef('show_media', $show_media);
