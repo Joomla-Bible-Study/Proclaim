@@ -34,7 +34,8 @@ class biblestudyViewstudydetails extends JView
 		//Begin test of using helper
 		$scripture = Jview::loadHelper('scripture');
 		$thescripture = scripture('getScripture');
-		dump ($thescripture, 'Scripture: ');
+		dump ($script, 'Scripture: ');
+		
 		//End helper test
 		
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
