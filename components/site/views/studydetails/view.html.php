@@ -119,43 +119,7 @@ class biblestudyViewstudydetails extends JView
 			
 		} //end if $linkit
                 // End process prepare content plugins
-//Formats the scripture for the scripture links plugin
-		/*$ch_b = $studydetails->chapter_begin;
-                $v_b = $studydetails->verse_begin;
-                $ch_e = $studydetails->chapter_end;
-                $v_e = $studydetails->verse_end;
-                $book = $studydetails->bname;
-                $b1 = ' ';
-                $b2 = ':';
-	        $b2a = ':';
-	        $b3 = '-';
-                $b3a = '-';
-		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-		if ($ch_e == $ch_b) {
-			$ch_e = '';
-			$b2a = '';
-		}
-		if ($v_b == 0){
-			$v_b = '';
-			$v_e = '';
-			$b2a = '';
-			$b2 = '';
-		}
-		if ($v_e == 0) {
-			$v_e = '';
-			$b2a = '';
-		}
-		if ($ch_e == 0) {
-			$b2a = '';
-			$ch_e = '';
-			if ($v_e == 0) {
-				$b3 = '';
-			}
-		}*/
-		
-		
-		//$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
-		//$database	= & JFactory::getDBO();
+
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
 		$this->assignRef('studydetails', $studydetails);
