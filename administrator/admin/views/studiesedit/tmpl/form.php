@@ -10,7 +10,7 @@ $user =& JFactory::getUser();
     <table class="admintable">
 <?php    if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
     <tr><td class="key"><?php echo JText::_( 'Submitted by: ');?></td>
-    <td><input class="text_area" type="text" name="user_name" id="user_name" size="25" maxlength="25" value="<?php echo $user_name;?>" /></td></tr>
+    <td><input classs="text_area" type="text" name="user_name" id="user_name" size="25" maxlength="25" value="<?php echo $user_name;?>" /></td></tr>
       <tr> 
         <td class="key"><?php echo JText::_( 'Published' ); ?></td>
         <td > <?php echo $this->lists['published'];
@@ -47,26 +47,76 @@ $user =& JFactory::getUser();
       </tr>
       <tr> 
         <td class="key" align="left"><?php echo JText::_( 'Scripture' ); ?></td>
-        <td> 
- 		<div id="references">
-        <?php 
-        foreach($this->scriptures as $scripture) {
-        	echo ('<div id="reference" style="margin-top:2px;">');
-			echo JText::_('Book').': ';
-			echo JHTML::_('select.genericlist', $this->books, 'scripture[]', null, 'value', 'text', $scripture['bookId']);
-        	echo JText::_(' Text').': ';
-        	echo ('<input type="text" name="text[]" id="text" size="10" value="'.$scripture['text'].'">');
-			if($i){
-				echo ('<a href="#" class="referenceDelete">Delete</a>');
-			}
-        	echo ('</div>');
-        	$i = true;
-        }
-        ?>
-		</div>
-        <a href="#" id="addReference">Add Reference</a>
-		</td>
+        <td> <table width="60" border="0" cellspacing="1" cellpadding="1">
+            <tr> 
+              <td size="20"><?php echo JText::_( 'Book' );?></td>
+              <td size="8"><?php echo JText::_( 'Ch Begin' );?></td>
+              <td size="8"><?php echo JText::_( 'Vs Begin' );?></td>
+              <td size="8"><?php echo JText::_( 'Ch End' ); ?></td>
+              <td size="8"><?php echo JText::_( 'Vs End' );?></td>
+            </tr>
+            <tr> 
+              <td ><?php //echo $this->lists['booknumber']; 
+			  $database =& JFactory::getDBO();
+			  $query2 = 'SELECT booknumber AS value, bookname AS text, published'
+                        . ' FROM #__bsms_books'
+                        . ' WHERE published = 1'
+                        . ' ORDER BY booknumber';
+						$database->setQuery( $query2 );
+						$bookid = $database->loadAssocList();
+						echo '<select name="booknumber" id="booknumber" class="inputbox" size="1" ><option value="0"';
+						echo '>- '.JText::_('Select a Book').' -'.'</option>';
+                        foreach ($bookid as $bookid2) {
+                        $format = $bookid2['text'];
+                        $output = JText::sprintf($format);
+                        $bookvalue = $bookid2['value'];
+						if ($bookvalue == $this->studiesedit->booknumber){$selected = 'selected="selected"';
+                        echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
+						echo '<option value="'.$bookvalue.'">'.$output.'</option>';
+                        };
+                         echo '</select>';?>
+              </td>
+              <td ><input class="text_area" type="text" name="chapter_begin" id="chapter_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_begin;?>"/></td>
+              <td ><input class="text_area" type="text" name="verse_begin" id="verse_begin" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_begin;?>"/></td>
+              <td ><input class="text_area" type="text" name="chapter_end" id="chapter_end" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_end;?>"/></td>
+              <td ><input class="text_area" type="text" name="verse_end" id="verse_end" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_end;?>"/></td>
+            </tr>
+          </table></td>
       </tr>
+      <tr> 
+        <td class="key" align="left"><?php echo JText::_( 'Scripture 2' ); ?></td>
+        <td> <table width="60" border="0" cellspacing="1" cellpadding="1">
+            <tr> 
+              <td size="20"><?php echo JText::_( 'Book 2' );?></td>
+              <td size="8"><?php echo JText::_( 'Ch Begin 2' );?></td>
+              <td size="8"><?php echo JText::_( 'Vs Begin 2' );?></td>
+              <td size="8"><?php echo JText::_( 'Ch End 2' ); ?></td>
+              <td size="8"><?php echo JText::_( 'Vs End 2' );?></td>
+            </tr>
+            <tr> 
+              <td ><?php //echo $this->lists['booknumber2']; 
+			  echo '<select name="booknumber2" id="booknumber2" class="inputbox" size="1" ><option value="0"';
+						echo '>- '.JText::_('Select a Book').' -'.'</option>';
+                        foreach ($bookid as $bookid2) {
+                        $format = $bookid2['text'];
+                        $output = JText::sprintf($format);
+                        $bookvalue = $bookid2['value'];
+						if ($bookvalue == $this->studiesedit->booknumber2){$selected = 'selected="selected"';
+                        echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
+						echo '<option value="'.$bookvalue.'">'.$output.'</option>';
+                        };
+                         echo '</select>';?>
+              </td>
+              <td ><input class="text_area" type="text" name="chapter_begin2" id="chapter_begin2" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_begin2;?>"/></td>
+              <td ><input class="text_area" type="text" name="verse_begin2" id="verse_begin2" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_begin2;?>"/></td>
+              <td ><input class="text_area" type="text" name="chapter_end2" id="chapter_end2" size="3" maxlength="3" value="<?php echo $this->studiesedit->chapter_end2;?>"/></td>
+              <td ><input class="text_area" type="text" name="verse_end2" id="verse_end2" size="3" maxlength="3" value="<?php echo $this->studiesedit->verse_end2;?>"/></td>
+            </tr>
+          </table></td>
+      </tr>
+      <tr>
+      	<td class="key" align="left"><?php echo JText::_( 'Secondary References' );?></td>
+        <td><input class="text_area" type="text" name="secondary_reference" id="secondary_reference" size="150" maxlength="150" value="<?php echo $this->studiesedit->secondary_reference;?>"/></td>
       <tr> 
         <td class="key" align="left"><?php echo JText::_( 'Teacher' ); ?></td>
         <td > <?php echo $this->lists['teacher_id']; ?> </td>
@@ -88,13 +138,12 @@ $user =& JFactory::getUser();
         <td class="key" align="left"><?php echo JText::_( 'Message Type' );?></td>
 		<td ><?php echo $this->lists['messagetype']; ?></td>
       </tr>
-      <tr>
       	<td class="key" align="left"><?php echo JText::_('Duration');?></td>
         <td><table width="60" border="0" cellspacing="1" cellpadding="1">
-          <tr>
-        	<td width="7"> <?php echo JText::_( 'Hours');?></td>
-            <td width="7"><?php echo JText::_( 'Minutes');?></td>
-            <td width="7"><?php echo JText::_( 'Seconds');?></td>
+        <tr>
+        	<td size="7"> <?php echo JText::_( 'Hours');?></td>
+            <td size="7"><?php echo JText::_( 'Minutes');?></td>
+            <td size="7"><?php echo JText::_( 'Seconds');?></td>
             
         </tr>
         <tr>
@@ -119,7 +168,7 @@ $user =& JFactory::getUser();
 		<option value="23" <?php if ($show == '23') {echo 'selected="selected"';}?>><?php echo JText::_('Managers');?></option>
 		<option value="24" <?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
         </select>
-        </td>
+        </td></td>
         <?php if($this->enableStore == 1) {?>
         <tr>
         <td class="key" align="left"><?php echo JText::_('Store');?></td>
@@ -140,14 +189,17 @@ $user =& JFactory::getUser();
             
                   </tr>
         <?php }?>
-     </table>
-     <table>
+     </table></td>
+      </tr>
       <tr> 
         <td class="key"><?php echo JText::_( 'Study Text' );?></td>
-	  </tr>
-	  <tr>
         <td>
+        	<table> 
+            	
+                <tr><td>
 					<?php echo $editor->display('studytext', $this->studiesedit->studytext, '100%', '400', '70', '15'); ?>
+        		</td></tr>
+            </table>
 		</td>
       </tr>
     </table>

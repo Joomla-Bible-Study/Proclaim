@@ -184,6 +184,7 @@
 		<filename>elements/teacher.php</filename>
 		<filename>elements/messagetype.php</filename>
 		<filename>elements/locations.php</filename>
+		<filename>helpers/scripture.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>

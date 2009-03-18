@@ -31,10 +31,44 @@ class biblestudyViewstudydetails extends JView
 		//end TF added
 		$studydetails		=& $this->get('Data');
 		
+		//Passage link to BibleGateway
+		$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');
+ 		$st_params 	= new JParameter( $plugin->params );
+		//$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		$version = $st_params->get('bible_version');
+		$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
+		
+		
 		//Begin test of using helper
-		$scripture = Jview::loadHelper('scripture');
-		$thescripture = scripture('getScripture');
-		dump ($script, 'Scripture: ');
+		
+		$scripture_call = Jview::loadHelper('scripture');
+		//This formats the main scripture reference through the function
+		$booknumber = $studydetails->booknumber;
+		$esv = 0;
+		$ch_b = $studydetails->chapter_begin;
+		$ch_e = $studydetails->chapter_end;
+		$v_b = $studydetails->verse_begin;
+		$v_e = $studydetails->verse_end;
+		$id2 = $studydetails->id;
+		$scripture->scripture1 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e);
+		$passage_link1 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture1.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture1.'</a>';
+		//This formats the passage view at the bottom of the page(esv only) through the function
+		$esv = 1;
+		$scripture->scripture3 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e);
+		//This formats the secondary reference
+		$booknumber = $studydetails->booknumber2;
+		$ch_b = $studydetails->chapter_begin2;
+		$ch_e = $studydetails->chapter_end2;
+		$v_b = $studydetails->verse_begin2;
+		$v_e = $studydetails->verse_end2;
+		$esv = 0;
+		$scripture->scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e);
+		$passage_link2 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture2.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture2.'</a>';
+		if ($params->get('scripture_view_link') > 0) { $scripture->scripture1 = $passage_link1;}
+		if ($params->get('scripture_view_link') > 0) { $scripture->scripture2 = $passage_link2;}
+		//dump ($scripture->scripture2, 'Scripture2: ');
+		//dump ($scripture, 'Scripture: ');
+		
 		
 		//End helper test
 		
@@ -86,7 +120,7 @@ class biblestudyViewstudydetails extends JView
 		} //end if $linkit
                 // End process prepare content plugins
 //Formats the scripture for the scripture links plugin
-		$ch_b = $studydetails->chapter_begin;
+		/*$ch_b = $studydetails->chapter_begin;
                 $v_b = $studydetails->verse_begin;
                 $ch_e = $studydetails->chapter_end;
                 $v_e = $studydetails->verse_end;
@@ -117,21 +151,17 @@ class biblestudyViewstudydetails extends JView
 			if ($v_e == 0) {
 				$b3 = '';
 			}
-		}
-		$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');
- 		$st_params 	= new JParameter( $plugin->params );
-		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-		$version = $st_params->get('bible_version');
-		$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
-		$passage_link = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture.'</a>';
+		}*/
+		
 		
 		//$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
 		//$database	= & JFactory::getDBO();
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
-		$this->assignRef('studydetails',		$studydetails);
+		$this->assignRef('studydetails', $studydetails);
 		$this->assignRef('article', $article);
-  $this->assignRef('passage_link', $passage_link);
+  		$this->assignRef('passage_link', $passage_link);
+		$this->assignRef('scripture', $scripture);
 		parent::display($tpl);
 	}
 	function _displayPagebreak($tpl)
