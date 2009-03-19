@@ -278,58 +278,7 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
   <?php //This is where each result from the database of studies is diplayed with options for each 6 column table?>
 
   <?php
-  function format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e) {
-   global $mainframe, $option;
-   $params =& $mainframe->getPageParameters();
-   //$this->params = &JComponentHelper::getParams($option);
-   $db = & JFactory::getDBO();
-   $query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
-   $db->setQuery($query);
-   $bookresults = $db->loadObject();
-   $book=$bookresults->bookname;
-   $book = JText::sprintf($book);
-   $b1 = ' ';
-   $b2 = ':';
-   $b2a = ':';
-   $b3 = '-';
-   $b3a = '-';
-   if ($params->get('show_verses') >0)
-   {
-    $scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-    if ($ch_e == $ch_b) {
-     $ch_e = '';
-     $b2a = '';
-    }
-    if ($v_b == 0){
-     $v_b = '';
-     $v_e = '';
-     $b2a = '';
-     $b2 = '';
-    }
-    if ($v_e == 0) {
-     $v_e = '';
-     $b2a = '';
-    }
-    if ($ch_e == 0) {
-     $b2a = '';
-     $ch_e = '';
-     if ($v_e == 0) {
-      $b3 = '';
-     }
-    }
-    $scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-   }
-   else
-   {
-    if ($ch_e > $ch_b) {
-     $scripture = $book.$b1.$ch_b.$b3.$ch_e;
-    }
-    else {
-     $scripture = $book.$b1.$ch_b;
-    }
-   }
-   return $scripture;
-  }
+
   $k = 1;
   $row_count = 0;
   ?>
@@ -442,14 +391,17 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
   $ch_e = $row->chapter_end;
   $v_b = $row->verse_begin;
   $v_e = $row->verse_end;
-  $scripture1 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e);
+  $id2 = $row->id;
+  $show_verses = $this->params->get('show_verses');
+  $scripture1 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
   if ($row->booknumber2){
    $booknumber = $row->booknumber2;
    $ch_b = $row->chapter_begin2;
    $ch_e = $row->chapter_end2;
    $v_b = $row->verse_begin2;
    $v_e = $row->verse_end2;
-   $scripture2 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e);
+   $id2 = $row->id;
+  $scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
   }
   $df =  ($this->params->get('date_format'));
   switch ($df)

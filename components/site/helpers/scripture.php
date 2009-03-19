@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die();
 
-function format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e) {
+function format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses) {
 	global $mainframe, $option;
 	$params =& $mainframe->getPageParameters();
 	$db	= & JFactory::getDBO();
@@ -13,14 +13,14 @@ function format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e) {
 	$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
 	$db->setQuery($query);
 	$booknameresults = $db->loadObject();
-	
+	//dump ($show_verses, 'show_verses ');
 	if ($booknameresults->bookname) {$book=$booknameresults->bookname;} else {$book = '';}
 	$b1 = ' ';
 	$b2 = ':';
 	$b2a = ':';
 	$b3 = '-';
 	$b3a = '-';
-	if ($params->get('show_verses') >0)
+	if ($show_verses == 1)
 	{
 		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
 		if ($ch_e == $ch_b) {
@@ -45,9 +45,11 @@ function format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e) {
 			}
 		}
 		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		
 
 	}
-	else
+	//else
+	if ($show_verses == 0)
 	{
 		if ($ch_e > $ch_b) {
 			$scripture = $book.$b1.$ch_b.$b3.$ch_e;
@@ -56,7 +58,7 @@ function format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e) {
 			$scripture = $book.$b1.$ch_b;
 		}
 	}
-	if ($esv = 1){
+	if ($esv == 1){
 	 $scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
 		if ($ch_e == $ch_b) {
 			$ch_e = '';
@@ -80,6 +82,7 @@ function format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e) {
 			}
 		}
 		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
+		
 	}
 	
 	return $scripture;

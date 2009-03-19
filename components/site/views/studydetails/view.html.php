@@ -45,16 +45,17 @@ class biblestudyViewstudydetails extends JView
 		//This formats the main scripture reference through the function
 		$booknumber = $studydetails->booknumber;
 		$esv = 0;
+		$show_verses = $params->get('show_verses');
 		$ch_b = $studydetails->chapter_begin;
 		$ch_e = $studydetails->chapter_end;
 		$v_b = $studydetails->verse_begin;
 		$v_e = $studydetails->verse_end;
 		$id2 = $studydetails->id;
-		$scripture->scripture1 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e);
+		$scripture->scripture1 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
 		$passage_link1 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture1.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture1.'</a>';
 		//This formats the passage view at the bottom of the page(esv only) through the function
 		$esv = 1;
-		$scripture->scripture3 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e);
+		$scripture->scripture3 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $mod_show_verses, $com_show_verses);
 		//This formats the secondary reference
 		$booknumber = $studydetails->booknumber2;
 		$ch_b = $studydetails->chapter_begin2;

@@ -54,27 +54,9 @@ class biblestudyViewstudieslist extends JView
 		$topics = $this->get('Topics');
 		$orders = $this->get('Orders');
 
-                //This is the helper for scripture formatting
-                $scripture_call = Jview::loadHelper('scripture');
-		//This formats the main scripture reference through the function
-		$booknumber = $studieslist->booknumber;
-		$esv = 0;
-		$ch_b = $studieslist->chapter_begin;
-		$ch_e = $studieslist->chapter_end;
-		$v_b = $studieslist->verse_begin;
-		$v_e = $studieslist->verse_end;
-		$id2 = $studieslist->id;
-		$scripture->scripture1 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e);
-
-  		//This formats the secondary reference
-		$booknumber = $studieslist->booknumber2;
-		$ch_b = $studieslist->chapter_begin2;
-		$ch_e = $studieslist->chapter_end2;
-		$v_b = $studieslist->verse_begin2;
-		$v_e = $studieslist->verse_end2;
-		$esv = 0;
-		$scripture->scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e);
-                //end scripture helper
+        //This is the helper for scripture formatting
+        $scripture_call = Jview::loadHelper('scripture');
+		//end scripture helper
 		
 		$this->assignRef('pagination',	$pagination);
 		$menu =& JSite::getMenu();

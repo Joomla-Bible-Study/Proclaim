@@ -72,64 +72,22 @@ class biblestudyViewstudydetails extends JView
 		// prepare header lines
 		$document->setHeader($this->_getHeaderText($studydetails, $params));
 		echo $studydetails->studytext;
-
-function format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e) {
-global $mainframe, $scripture, $option;
-$params =& $mainframe->getPageParameters();
-//$params = &JComponentHelper::getParams($option);
-$db	= & JFactory::getDBO();
-$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
-$db->setQuery($query);
-$bookresults = $db->loadObject();
-$book=$bookresults->bookname;
-$b1 = ' ';
-$b2 = ':';
-$b2a = ':';
-$b3 = '-';
-$b3a = '-';
-
-	$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-		if ($ch_e == $ch_b) {
-			$ch_e = '';
-			$b2a = '';
-			}
-		if ($v_b == 0){
-			$v_b = '';
-			$v_e = '';
-			$b2a = '';
-			$b2 = '';
-			}
-		if ($v_e == 0) {
-			$v_e = '';
-			$b2a = '';
-			}
-		if ($ch_e == 0) {
-			$b2a = '';
-			$ch_e = '';
-				if ($v_e == 0) {
-					$b3 = '';
-				}
-			}
-		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-	
-	
-return $scripture;
-}	  
-
-
+$show_verses = $params->get('show_verses');
 $booknumber = $studydetails->booknumber;
 $ch_b = $studydetails->chapter_begin;
 $ch_e = $studydetails->chapter_end;
 $v_b = $studydetails->verse_begin;
 $v_e = $studydetails->verse_end;
-$scripture1 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e);
+$id2 = $studydetails->id;
+$scripture1 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
 
 $booknumber = $studydetails->booknumber2;
+$id2 = $studydetails->id;
 $ch_b = $studydetails->chapter_begin2;
 $ch_e = $studydetails->chapter_end2;
 $v_b = $studydetails->verse_begin2;
 $v_e = $studydetails->verse_end2;
-$scripture2 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e);		
+$scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);		
 
 		 //code added to provide Scripture reference at bottom 
  if ($params->get('show_passage_view') > 0) { 
