@@ -79,151 +79,162 @@ switch ($duration_type) {
 }
 $this->assignRef ('duration', $duration);// end switch
 ?>
-<table
-	class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
-	<tr>
-	<?php if ($this->params->get('show_title_view') >0) : ?>
-		<td
-			class="contentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>"
-			width="100%"><?php echo '<span '.$this->params->get('style_title_view').'>'.$this->studydetails->studytitle.'</span>'; ?>
-			<?php endif; ?> <?php if ($this->params->get('show_print_view') > 0) : ?>
-		
-		
-		<td align="left" width="100%" class="buttonheading"><?php 
-		$text = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'Print' ) );
-		echo '<a href="#&tmpl=component" onclick="window.print();return false;">'.$text.'</a>';
-		?></td>
-		<?php endif; ?>
-		<?php if ($this->params->get('show_pdf_view')) : ?>
-		<td align="right" width="100%" class="buttonheading"><?php 
-		$url = 'index.php?option=com_biblestudy&view=studydetails&id='.$this->studydetails->id.'&format=pdf';
-		$status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
+<table class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
+ <tr><?php //Title Row
+  if ($this->params->get('show_title_view') >0) { ?>
+  <td class="contentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>"width="100%">
+   <?php echo '<span '.$this->params->get('style_title_view').'>'.$this->studydetails->studytitle.'</span>';?>
+  </td><?php
+  } 
+  if ($this->params->get('show_print_view') > 0) { ?>
+  <td align="left" width="100%" class="buttonheading">
+   <?php 
+    $text = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'Print' ) );
+    echo '<a href="#&tmpl=component" onclick="window.print();return false;">'.$text.'</a>';
+   ?>
+  </td><?php
+  }
+  if ($this->params->get('show_pdf_view')) { ?>
+  <td align="right" width="100%" class="buttonheading"><?php 
+    $url = 'index.php?option=com_biblestudy&view=studydetails&id='.$this->studydetails->id.'&format=pdf';
+    $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
 
-		// checks template image directory for image, if non found default are loaded
-		//if ($params->get('show_icons')) {
-		$text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('PDF'), JText::_('PDF'));
-		//} else {
-		//$text = JText::_('PDF').'&nbsp;';
-		//}
+    // checks template image directory for image, if non found default are loaded
+    //if ($params->get('show_icons')) {
+   $text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('PDF'), JText::_('PDF'));
+   //} else {
+   //$text = JText::_('PDF').'&nbsp;';
+   //}
 
-		$attribs['title']	= JText::_( 'PDF' );
-		$attribs['onclick'] = "window.open(this.href,'win2','".$status."'); return false;";
-		$attribs['rel']     = 'nofollow';
+   $attribs['title']	= JText::_( 'PDF' );
+   $attribs['onclick'] = "window.open(this.href,'win2','".$status."'); return false;";
+   $attribs['rel']     = 'nofollow';
 
-		$link = JHTML::_('link', JRoute::_($url), $text, $attribs);
-		echo $link; ?></td>
-		<?php endif; ?>
-	</tr>
-	<?php if ($message) {?>
-	<tr>
-		<td align="center"><?php echo '<h2>'.$message.'</h2><br>';
-		if ($this->params->get('comment_publish') < 1){echo JText::_('Submissions may need approval prior to publication').'<br>';}?></td>
-	</tr>
-	<?php } //End of if $message?>
-	</tr>
-    <?php if ($this->params->get('show_scripture_view') > 0){?>
-	<tr>
-		<td><?php echo '<span '.$this->params->get('span_scripture_view').'><strong>Scripture: </strong>'.$this->scripture->scripture1; ;
+   $link = JHTML::_('link', JRoute::_($url), $text, $attribs);
+   echo $link; ?>
+  </td><?php 
+  } ?>
+ </tr><?php
+
+ if ($message) {?>
+ <tr>
+  <td align="center"><?php echo '<h2>'.$message.'</h2>';
+	if ($this->params->get('comment_publish') < 1){echo JText::_('Submissions may need approval prior to publication').'<br>';}?></td>
+ </tr><?php 
+ } //End of if $message
+
+ if ($this->params->get('show_scripture_view') > 0){?>
+ <tr>
+  <td><?php echo '<span '.$this->params->get('span_scripture_view').'><strong>Scripture: </strong>'.$this->scripture->scripture1; ;
 		if ($this->studydetails->booknumber2 > 0){echo ' - '.$this->scripture->scripture2;}
-		if ($this->studydetails->secondary_reference) {echo ' - '.$this->studydetails->secondary_reference;}?>
-		</span></td>
-	</tr>
-    <?php } //end of test for if show scripture ?>
-	<tr>
-	<?php if ($this->params->get('show_picture_view') > 0) {
-
-		?>
-		<td width="<?php $space;?>"> <?php	echo '<img src="'.$image.'" width="'.$imagew.'" height="'.$imageh.'"><br />';
-
-		if ($this->params->get('show_teacher_view') > 0){
-			if (!$this->studydetails->tname) {
-			}
-			else { ?> <?php echo '<span '.$this->params->get('span_teacher_view').'>'.'<strong> By: </strong>';?> <?php echo $this->studydetails->tname; ?></span>
-
-			<?php }
-			echo '</td>';
-		}
-	} ?> <?php if ($this->params->get('show_picture_view') < 1) { echo '<td>';
+		if ($this->studydetails->secondary_reference) {echo ' - '.$this->studydetails->secondary_reference.'</span>';}?>
+  </td>
+ </tr><?php 
+ } //end of test for if show scripture ?>
+ 
+ <tr><?php 
+  if ($this->params->get('show_picture_view') > 0) { ?>
+   <td width="<?php $space;?>">
+   <?php echo '<img src="'.$image.'" width="'.$imagew.'" height="'.$imageh.'"><br />';
+   if ($this->params->get('show_teacher_view') > 0){
+    if ($this->studydetails->tname) {
+     echo '<span '.$this->params->get('span_teacher_view').'>'.'<strong> By: </strong>';?> <?php echo $this->studydetails->tname.'</span>'; 
+    }
+   }
+   ?></td><?php
+  }
+  
+  if ($this->params->get('show_picture_view') < 1) {
+  	?><td><?php
 	if ($this->params->get('show_teacher_view')) {
 		if ($this->studydetails->tname) {
 			echo '<span '.$this->params->get('span_teacher_view').'>'.'<strong> By: </strong>';
 			echo $this->studydetails->tname.'</span>';
 		}
 	}
-	echo '</td>';}?>
-		
-		
-		<td valign="top"><span class="small"> </span> &nbsp;</td>
-	</tr>
-	<tr>
-	<?php if ($this->params->get('show_date_view') > 0){ ?>
-		<td valign="top"><?php
-		$df = 	($this->params->get('date_format'));
-		switch ($df)
-		{
-			case 0:
-				$date	= date('M j, Y', strtotime($this->studydetails->studydate));
-				break;
-			case 1:
-				$date	= date('M j', strtotime($this->studydetails->studydate) );
-				break;
-			case 2:
-				$date	= date('n/j/Y',  strtotime($this->studydetails->studydate));
-				break;
-			case 3:
-				$date	= date('n/j', strtotime($this->studydetails->studydate));
-				break;
-			case 4:
-				$date	= date('l, F j, Y',  strtotime($this->studydetails->studydate));
-				break;
-			case 5:
-				$date	= date('F j, Y',  strtotime($this->studydetails->studydate));
-				break;
-			case 6:
-				$date = date('j F Y', strtotime($this->studydetails->studydate));
-				break;
-			case 7:
-				$date = date('j/n/Y', strtotime($this->studydetails->studydate));
-				break;
-			case 8:
-				$date = JHTML::_('date', $this->studydetails->studydate, JText::_('DATE_FORMAT_LC'));
-				break;
-			default:
-				$date = date('n/j', strtotime($this->studydetails->studydate));
-				break;
-		}
-		?> <?php if (!$date) {
-		}
-		else { ?> <span <?php echo $this->params->get('span_date_view');?>> <?php echo '<strong>'.JText::_('Date: ').'</strong>'.$date; ?></span>
-		</span> <?php } 
-	}?> <?php if ($this->params->get('show_locations') > 0) {
-		if (!$this->studydetails->location_text) {} else {?> <span <?php echo $this->params->get('span_locations_view'); ?> >
-			 <?php echo '<strong>'.JText::_('Location: ').'</strong>'.$this->studydetails->location_text; ?>
-		</span> <?php } }?> <?php if ($this->params->get('show_series_view') > 0){ ?>
-		<?php if (!$this->studydetails->stext) { ?> <?php }
-		else { ?> <span <?php echo $this->params->get('span_series_view');?> > <?php echo '<strong>'.JText::_('Series: ').'</strong>'.$this->studydetails->stext; ?>
-		</span> <?php } ?> <?php } ?> <?php if ($this->params->get('show_studynumber_view') > 0){ ?>
-		<?php if (!$this->studydetails->studynumber) {
-		}
-		else { ?> <span <?php echo $this->params->get('span_studynumber_view'); ?>> <?php echo '<strong>'.JText::_('Study Number: ').'</strong>'.$this->studydetails->studynumber;?>
-		</span> <?php } ?> <?php } ?> <?php if ($this->params->get('show_duration') > 0) { ?>
-		<span <?php echo $this->params->get('span_duration_view'); ?>> <?php echo '<strong>'.JText::_('Duration: ').'</strong>'.$duration;?>
-		</span> <?php } ?></td>
-	</tr>
+	?></td><?php
+  }?>
 
-	<?php if ($this->params->get('show_description_view') > 0){ ?>
-	<tr>
-		<td valign="top"><?php if (!$this->studydetails->studyintro) {
-		}
-		else { ?> <span <?php echo $this->params->get('span_description_view'); ?>> <?php echo $this->studydetails->studyintro; ?>
-		</span> <?php } ?></td>
-	</tr>
+  <td valign="top"><span class="small"> </span> &nbsp;</td>
+ </tr>
+ <tr>
+  <td valign="top"><?php 
+  if ($this->params->get('show_date_view') > 0){ ?>
+   <?php
+    $df = ($this->params->get('date_format'));
+	switch ($df)
+	{
+	 case 0:
+		$date	= date('M j, Y', strtotime($this->studydetails->studydate));
+		break;
+	 case 1:
+		$date	= date('M j', strtotime($this->studydetails->studydate) );
+		break;
+	 case 2:
+		$date	= date('n/j/Y',  strtotime($this->studydetails->studydate));
+		break;
+	 case 3:
+		$date	= date('n/j', strtotime($this->studydetails->studydate));
+		break;
+	 case 4:
+		$date	= date('l, F j, Y',  strtotime($this->studydetails->studydate));
+		break;
+	 case 5:
+		$date	= date('F j, Y',  strtotime($this->studydetails->studydate));
+		break;
+	 case 6:
+		$date = date('j F Y', strtotime($this->studydetails->studydate));
+		break;
+	 case 7:
+		$date = date('j/n/Y', strtotime($this->studydetails->studydate));
+		break;
+	 case 8:
+		$date = JHTML::_('date', $this->studydetails->studydate, JText::_('DATE_FORMAT_LC'));
+		break;
+	 default:
+		$date = date('n/j', strtotime($this->studydetails->studydate));
+		break;
+	}
+	if ($date) { ?>
+	 <span <?php echo $this->params->get('span_date_view');?>> <?php echo '<strong>'.JText::_('Date').': </strong>'.$date; ?></span><?php 
+	}
+   }
+   if ($this->params->get('show_locations') > 0) {
+    if ($this->studydetails->location_text) {?>
+     <span <?php echo $this->params->get('span_locations_view');?>><?php echo '<strong>'.JText::_('Location').': </strong>'.$this->studydetails->location_text; ?></span><?php 
+    } 
+   }
+   if ($this->params->get('show_series_view') > 0){
+   	if ($this->studydetails->stext) { ?>
+   	 <span <?php echo $this->params->get('span_series_view');?>> <?php echo '<strong>'.JText::_('Series').': </strong>'.$this->studydetails->stext; ?></span> <?php 
+   	}
+   } 
+   if ($this->params->get('show_studynumber_view') > 0){
+   	if ($this->studydetails->studynumber) {?>
+     <span <?php echo $this->params->get('span_studynumber_view');?>> <?php echo '<strong>'.JText::_('Study Number').': </strong>'.$this->studydetails->studynumber;?></span> <?php
+   	}	 
+   } 
+   if ($this->params->get('show_duration') > 0) { ?>
+    <span <?php echo $this->params->get('span_duration_view');?>> <?php echo '<strong>'.JText::_('Duration').': </strong>'.$duration;?></span> <?php 
+   } ?>
+  </td>
+ </tr>
+ <?php if ($this->params->get('show_description_view') > 0){ ?>
+ <tr>
+  <td valign="top"><?php
+   if ($this->studydetails->studyintro) {?>
+    <span <?php echo $this->params->get('span_description_view'); ?>> <?php echo $this->studydetails->studyintro; ?></span><?php 
+   } ?>
+  </td>
+ </tr>
+<?php 
+ } ?>
 </table>
-		<?php } ?>
+ 
 		<?php if ($this->show_media > 0):
 		?>
 <table>
-	<td>
+	
 	
 	
 	<tr>
@@ -393,41 +404,47 @@ $this->assignRef ('duration', $duration);// end switch
 <param name="quality" value="high">
 <param name="menu" value="false">
 <param name="wmode" value="transparent">
-</object> ';}
-				?>
+</object> ';}?>
+
 		<!-- this is where the media column td begins -->
-		<td width="<?php echo $this->params->get('media_width');?>"><?php echo $media1_link; ?>
-		<?php if ($link_type > 0){$src = JURI::base().$download_image;
-		if ($imagew) {$width = $imagew;} else {$width = 24;}
-		if ($imageh) {$height = $imageh;} else {$height= 24;}
-		//list($width,$height)=getimagesize($src);?> <?php
-		if($downloadCompatibility == 0) {
-			echo '<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
-		}else{
-			echo('<a href="http://joomlaoregon.com/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">');
-		}
-		?> <img src="<?php echo JURI::base().$download_image;?>"
+		<td>
+		<?php echo $media1_link; ?>
+		<?php
+		if ($link_type > 0){
+		 $src = JURI::base().$download_image;
+		 if ($imagew) {$width = $imagew;} else {$width = 24;}
+		 if ($imageh) {$height = $imageh;} else {$height= 24;}
+		 //list($width,$height)=getimagesize($src);?> <?php
+		 if($downloadCompatibility == 0) {
+		  echo '<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
+		 }else{
+		  echo('<a href="http://joomlaoregon.com/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">');
+		 }?>
+		 <img src="<?php echo JURI::base().$download_image;?>"
 			alt="<?php echo JText::_('Download');?>"
 			height="<?php echo $height;?>" width="<?php echo $width;?>"
-			title="<?php echo JText::_('Download');?>" /></a> <?php } ?> <?php if ($this->params->get('show_filesize') > 0) 
-			{ ?> <br>
-			<?php echo $media1_sizetext;
-			}?> <!-- This is where the media column ends --></td>
-
+			title="<?php echo JText::_('Download');?>" /> <?php echo '</a>'; 
+		}
+		if ($this->params->get('show_filesize') > 0){?>
+		 <br />
+		 <?php echo $media1_sizetext;
+		}?>
+		</td>
+ 		<!-- This is where the media column ends -->
 
 
 
 			<?php } //end of foreach
 	} //end of the if test/else for the $media array?>
 	</tr>
-	</td>
+	
 </table>
 	<?php //} Took this out - seems left over from studylist if/endif show media ?>
 <!-- This is where the column that holds text and/or media ends, as well as the row and table for media and/or text -->
 
 
 
-
+<?php /*
 <table>
 	<tr>
 		<td><?php endif; //end of if params show media ?> <?php if ($this->params->get('show_text_view') > 0): ?>
@@ -437,7 +454,7 @@ $this->assignRef ('duration', $duration);// end switch
 		<td><br />
 		<?php //echo $this->studydetails->studytext; ?></td>
 	</tr>
-
+*/?>
 	<table>
 		<tr>
 			<td><?php endif; //end of if params show media ?> <?php if ($this->params->get('show_text_view') > 0): ?>
@@ -454,11 +471,10 @@ $this->assignRef ('duration', $duration);// end switch
 		<?php if ($this->studydetails->comments > 0) { ?>
 
 		<tr>
-			<td><?php //Row and column to hold overall commment table?> <strong><a
-				class="heading" href="javascript:ReverseDisplay('comments')">>><?php echo JText::_('Show/Hide Comments');?><<</a>
+			<td><?php //Row and column to hold overall commment table?>
+			 <strong><a class="heading" href="javascript:ReverseDisplay('comments')"><?php echo '>>'.JText::_('Show/Hide Comments').'<<';?></a></strong>
 			<div id="comments" style="display: none;">
 			
-			</strong>
 			<table width="<?php echo $this->params->get('comment_table');?>"
 				border="0" bgcolor="#000000">
 				<tr valign="top" align="center">
@@ -479,13 +495,12 @@ $this->assignRef ('duration', $duration);// end switch
 							echo 'Comment: '.$comment->comment_text.'<br><hr>';?></td>
 						</tr>
 						<?php } ?>
-						</td>
-						</tr>
 						<?php } // End of if(count($this->comments))?>
 
 
 					</table>
-					<?php //End of inside comment table?></td>
+					<?php //End of inside comment table?>
+				  </td>
 				</tr>
 			</table>
 			<?php //End of overall comment table?>
@@ -543,7 +558,6 @@ $this->assignRef ('duration', $duration);// end switch
 					<br />
 					<?php } else { echo JText::_('Captcha plugin not installed. Please inform site administrator'); } //end of check for OSTWigit plugin?>
 					</td>
-					</td>
 					<?php //end of row for captcha?>
 					<?php
 				} // end of if for use of captcha
@@ -594,11 +608,11 @@ $this->assignRef ('duration', $duration);// end switch
 				if ($ch) { //This will return false if curl is not enabled
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 					$response = curl_exec($ch);
-					curl_close($ch);?> <strong><a class="heading"
-				href="javascript:ReverseDisplay('scripture')">>><?php echo '<span '.$this->params->get('span_passage_view').'>'.JText::_('Show/Hide Scipture Passage');?><<</a>
-			<div id="scripture" style="display: none;"></span>
+					curl_close($ch);?>
+				<strong><a class="heading" href="javascript:ReverseDisplay('scripture')"><?php echo '>><span '.$this->params->get('span_passage_view').'>'.JText::_('Show/Hide Scipture Passage').'<<</span>';?></a></strong>
+			<div id="scripture" style="display: none;">
 			
-			</strong> <?php echo "".$scripture1." (ESV)";
+			 <?php echo "".$scripture1." (ESV)";
 			print $response;?>
 			</div>
 			<?php } // End of if ($ch)
@@ -619,14 +633,14 @@ $this->assignRef ('duration', $duration);// end switch
 					$link = JRoute::_('index.php?option='.$option.'&view=studieslist');}
 					if ($item){
 						$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}?>
-			<a href="<?php echo $link;?>"> <?php echo '<span '.$this->params->get('span_link_view').'>'.$link_text; ?> </span></a> <?php } //End of if view_link not 0?>
+			<a href="<?php echo $link;?>"> <?php echo '<span '.$this->params->get('span_link_view').'>'.$link_text.'</span>'; ?> </a> <?php } //End of if view_link not 0?>
 
 			</td>
 		</tr>
 	</table>
+	<form>
 	<input type="hidden" name="option" value="com_biblestudy" />
-	<input type="hidden" name="id"
-		value="<?php echo $this->studydetails->id; ?>" />
+	<input type="hidden" name="id" value="<?php echo $this->studydetails->id;?>" />
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="controller" value="studydetails" />
 	</form>
