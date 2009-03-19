@@ -28,7 +28,7 @@ class biblestudyViewstudieslist extends JView {
 		//Register relative models
 		//$booksList = $this->setModel('topicsedit', false, $test);
 		
-		dump($this->_models);
+		//dump($this->_models);
 
 		$db		=& JFactory::getDBO();
 		$uri	=& JFactory::getURI();

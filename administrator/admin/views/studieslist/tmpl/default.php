@@ -22,12 +22,14 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 						echo 'selected="selected"';}
 						echo '>- '.JText::_('Select a Book').' -'.'</option>';
                         foreach ($bookid as $bookid2) {
-                        $format = $bookid2['text'];
-                        $output = JText::sprintf($format);
-                        $bookvalue = $bookid2['value'];
-						if ($bookvalue == $filter_book){$selected = 'selected="selected"';
-                        echo '<option value="'.$bookvalue.'"'.$selected.' >'.$output.'</option>';}
-						echo '<option value="'.$bookvalue.'">'.$output.'</option>';
+	                        $format = $bookid2['text'];
+	                        $output = JText::sprintf($format);
+	                        $bookvalue = $bookid2['value'];
+							if ($bookvalue == $filter_book){
+		                        echo '<option value="'.$bookvalue.'" selected="selected">'.$output.'</option>';
+							}else{
+								echo '<option value="'.$bookvalue.'">'.$output.'</option>';
+							}
                         };
                          echo '</select>';?>
 		<?php echo $this->lists['teacher_id'];?>
@@ -50,12 +52,15 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 						echo 'selected="selected"';}
 						echo '>- '.JText::_('Select a Topic').' -'.'</option>';
                         foreach ($topicsid as $topicsid2) {
-                        $format = $topicsid2['text'];
-                        $output = JText::sprintf($format);
-                        $topicsvalue = $topicsid2['value'];
-						if ($topicsvalue == $filter_topic){$selected = 'selected="selected"';
-                        echo '<option value="'.$topicsvalue.'"'.$selected.' >'.$output.'</option>';}
-						echo '<option value="'.$topicsvalue.'">'.$output.'</option>';
+	                        $format = $topicsid2['text'];
+	                        $output = JText::sprintf($format);
+	                        $topicsvalue = $topicsid2['value'];
+							if ($topicsvalue == $filter_topic){
+								$selected = 'selected="selected"';
+	                        	echo '<option value="'.$topicsvalue.'" selected="selected">'.$output.'</option>';
+							}else{
+								echo '<option value="'.$topicsvalue.'">'.$output.'</option>';
+							}
                         };
                          echo '</select>';?>
 		<?php //echo $this->lists['topics'];?></td>
