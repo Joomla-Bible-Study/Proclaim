@@ -289,101 +289,33 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
   <?php $bgcolor = ($row_count % 2) ? $color1 : $color2; //This code cycles through the two color choices made in the parameters?>
   <?php $row = &$this->items[$i]; ?>
   <?php
-  $query = 'SELECT #__bsms_mediafiles.*,'
-  . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-  . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-  . ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname,'
-  . ' #__bsms_media.media_alttext AS malttext,'
-  . ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
-  . ' FROM #__bsms_mediafiles'
-  . ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
-  . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-  . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-  . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-  . ' WHERE #__bsms_mediafiles.study_id LIKE '.$row->id.' LIMIT 1';
-  $database->setQuery( $query );
-  $filesize = $database->loadObject();
-  $number_rows = $database->getAffectedRows($query);
-  if ($number_rows > 0) {
-   $file_size = $filesize->size;
-   switch ($file_size ) {
-
-    case $file_size < 1024 :
-     $file_size = $file_size.' '.'Bytes';
-     break;
-    case $file_size < 1048576 :
-     $file_size = $file_size / 1024;
-     $file_size = number_format($file_size,0);
-     $file_size = $file_size.' '.'KB';
-     break;
-    case $file_size < 1073741824 :
-     $file_size = $file_size / 1024;
-     $file_size = $file_size / 1024;
-     $file_size = number_format($file_size,1);
-     $file_size = $file_size.' '.'MB';
-     break;
-    case $file_size > 1073741824 :
-     $file_size = $file_size / 1024;
-     $file_size = $file_size / 1024;
-     $file_size = $file_size / 1024;
-     $file_size = number_format($file_size,1);
-     $file_size = $file_size.' '.'GB';
-     break;
-   }
-
-  } //end of else for file_size
+ 
 
   /* Now we do this small line which is basically going to tell
    PHP to alternate the colors between the two colors we defined above. */
   $bgcolor = ($row_count % 2) ? $color1 : $color2;
   ?>
   <?php
-  if (!$filesize){
-  }
-  else {
-   if ($number_rows > 0) {
-    $filepath = $filesize->spath.$filesize->fpath.$filesize->filename;
-    //Check url for "http://" prefix, and add it if it doesn't exist
-    if(!eregi('http://', $filepath)) {
-     $filepath = 'http://'.$filepath;
-    }
-   } else {
-    $filepath = '';
-   }
-  }
+$id3 = $row->id;
+//$filepath_call = JView::loadHelper('filepath'); 
+$filesize_call = JView::loadHelper('filesize');
+$file_size = getFilesize($id3);
+
+  
+  
   $show_media = $this->params->get('show_media',1);
   $filesize_showm = $this->params->get('filesize_showm');
   $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails&id=' . $row->id);
   $duration = $row->media_hours.$row->media_minutes.$row->media_seconds;
-  $duration_type = $this->params->get('duration_type');
-  switch ($duration_type) {
-   case 1:
-    $duration = $row->media_hours.$row->media_minutes.$row->media_seconds;
-    if (!$duration){
-    }
-    else {
-     if (!$row->media_hours){
-      $duration = $row->media_minutes.' mins '.$row->media_seconds.' secs';
-     }
-     else {
-      $duration = $row->media_hours.' hour(s) '.$row->media_minutes.' mins '.$row->media_seconds.' secs';
-     }
-    }
-    break;
-   case 2:
-    $duration = $row->media_hours.$row->media_minutes.$row->media_seconds;
-    if (!$duration){
-    }
-    else {
-     if (!$row->media_hours){
-      $duration = $row->media_minutes.':'.$row->media_seconds;
-     }
-     else {
-      $duration = $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds;
-     }
-    }
-    break;
-  } // end switch
+  if (!$duration) { $duration = '';}
+  else {
+	  $duration_type = $this->params->get('duration_type');
+	  $hours = $row->media_hours;
+	  $minutes = $row->media_minutes;
+	  $seconds = $row->media_seconds;
+	  $duration_call = JView::loadHelper('duration');
+	  $duration = getDuration($duration_type, $hours, $minutes, $seconds);
+  }
 
 
   $booknumber = $row->booknumber;
@@ -405,7 +337,7 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
   }
   $df =  ($this->params->get('date_format'));
   $date_call = JView::loadHelper('date');
- $date = getstudyDate($df, $row->studydate);	
+  $date = getstudyDate($df, $row->studydate);	
 
   $textwidth=$this->params->get('imagew');
   $textwidth = ($textwidth + 1);
@@ -420,7 +352,7 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
   $filesize_show = $this->params->get('filesize_show');
   $secondary = $row->secondary_reference;
   if (!$row->booknumber2){$scripture2 = '';}
-  if ($number_rows < 1) {$file_size = '0';}
+  //if ($number_rows < 1) {$file_size = '0';}
   $a = array( array(  'element' => $scripture1,
      'position' => $this->params->get('position1'),
      'order' => $this->params->get('order1'),
