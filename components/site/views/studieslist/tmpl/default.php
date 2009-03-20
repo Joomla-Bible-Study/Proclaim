@@ -404,39 +404,9 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
   $scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
   }
   $df =  ($this->params->get('date_format'));
-  switch ($df)
-  {
-   case 0:
-    $date = date('M j, Y', strtotime($row->studydate));
-    break;
-   case 1:
-    $date = date('M j', strtotime($row->studydate) );
-    break;
-   case 2:
-    $date = date('n/j/Y',  strtotime($row->studydate));
-    break;
-   case 3:
-    $date = date('n/j', strtotime($row->studydate));
-    break;
-   case 4:
-    $date = date('l, F j, Y',  strtotime($row->studydate));
-    break;
-   case 5:
-    $date = date('F j, Y',  strtotime($row->studydate));
-    break;
-   case 6:
-    $date = date('j F Y', strtotime($row->studydate));
-    break;
-   case 7:
-    $date = date('j/n/Y', strtotime($row->studydate));
-    break;
-   case 8:
-    $date = JHTML::_('date', $row->studydate, JText::_('DATE_FORMAT_LC'));
-    break;
-   default:
-    $date = date('n/j', strtotime($row->studydate));
-    break;
-  }
+  $date_call = JView::loadHelper('date');
+ $date = getstudyDate($df, $row->studydate);	
+
   $textwidth=$this->params->get('imagew');
   $textwidth = ($textwidth + 1);
   $storewidth = $this->params->get('storewidth');
