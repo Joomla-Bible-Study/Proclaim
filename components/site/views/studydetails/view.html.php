@@ -42,7 +42,7 @@ class biblestudyViewstudydetails extends JView
 		//Begin test of using helper
 		
 		$scripture_call = Jview::loadHelper('scripture');
-		//This formats the main scripture reference through the function
+  		//This formats the main scripture reference through the function
 		$booknumber = $studydetails->booknumber;
 		$esv = 0;
 		$show_verses = $params->get('show_verses');
@@ -55,7 +55,7 @@ class biblestudyViewstudydetails extends JView
 		$passage_link1 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture1.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture1.'</a>';
 		//This formats the passage view at the bottom of the page(esv only) through the function
 		$esv = 1;
-		$scripture->scripture3 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $mod_show_verses, $com_show_verses);
+		$scripture->scripture3 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
 		//This formats the secondary reference
 		$booknumber = $studydetails->booknumber2;
 		$ch_b = $studydetails->chapter_begin2;
@@ -63,16 +63,15 @@ class biblestudyViewstudydetails extends JView
 		$v_b = $studydetails->verse_begin2;
 		$v_e = $studydetails->verse_end2;
 		$esv = 0;
-		$scripture->scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e);
+		$scripture->scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
 		$passage_link2 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture2.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture2.'</a>';
 		if ($params->get('scripture_view_link') > 0) { $scripture->scripture1 = $passage_link1;}
 		if ($params->get('scripture_view_link') > 0) { $scripture->scripture2 = $passage_link2;}
-		//dump ($scripture->scripture2, 'Scripture2: ');
-		//dump ($scripture, 'Scripture: ');
-		
-		
-		//End helper test
-		
+
+ 		$date_call = JView::loadHelper('date');
+ 		$df = ($params->get('date_format'));
+ 		$date = getstudyDate($df, $studydetails->studydate);
+                $this->assignRef('date', $date);
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');
 		$this->assignRef('show_media', $show_media);

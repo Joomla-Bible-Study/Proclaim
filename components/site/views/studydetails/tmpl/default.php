@@ -196,7 +196,7 @@ $this->assignRef ('duration', $duration);// end switch
 		break;
 	}
 	if ($date) { ?>
-	 <span <?php echo $this->params->get('span_date_view');?>> <?php echo '<strong>'.JText::_('Date').': </strong>'.$date; ?></span><?php 
+	 <span <?php echo $this->params->get('span_date_view');?>> <?php echo '<strong>'.JText::_('Date').': </strong>'.$this->date; ?></span><?php
 	}
    }
    if ($this->params->get('show_locations') > 0) {
