@@ -67,11 +67,30 @@ class biblestudyViewstudydetails extends JView
 		$passage_link2 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture2.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture2.'</a>';
 		if ($params->get('scripture_view_link') > 0) { $scripture->scripture1 = $passage_link1;}
 		if ($params->get('scripture_view_link') > 0) { $scripture->scripture2 = $passage_link2;}
-
+                $duration_call = JView::loadHelper('duration');
+                $filepath_call = JView::loadHelper('filepath');
+                $filepath = getFilepath($id3);
+                $this->('filepath', $filepath);
+                $filesize_call = JView::loadHelper('filesize');
  		$date_call = JView::loadHelper('date');
  		$df = ($params->get('date_format'));
  		$date = getstudyDate($df, $studydetails->studydate);
                 $this->assignRef('date', $date);
+                $duration_call = getDuration();
+                $id3 = $studydetails->id;
+                $filesize = getFilesize($id3);
+                $this->assignRef('filesize', $filesize);
+                $duration = $studydetails->media_hours.$studydetails->media_minutes.$studydetails->media_seconds;
+  if (!$duration) { $duration = '';}
+  else {
+	  $duration_type = $params->get('duration_type');
+	  $hours = $studydetails->media_hours;
+	  $minutes = $studydetails->media_minutes;
+	  $seconds = $studydetails->media_seconds;
+	  $duration_call = JView::loadHelper('duration');
+	  $duration = getDuration($duration_type, $hours, $minutes, $seconds);
+  }
+  $this->assignRef('duration', $duration);
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');
 		$this->assignRef('show_media', $show_media);

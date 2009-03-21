@@ -161,7 +161,7 @@ $this->assignRef ('duration', $duration);// end switch
   <td valign="top"><?php 
   if ($this->params->get('show_date_view') > 0){ ?>
    <?php
-    $df = ($this->params->get('date_format'));
+/*    $df = ($this->params->get('date_format'));
 	switch ($df)
 	{
 	 case 0:
@@ -194,7 +194,7 @@ $this->assignRef ('duration', $duration);// end switch
 	 default:
 		$date = date('n/j', strtotime($this->studydetails->studydate));
 		break;
-	}
+	}  */
 	if ($date) { ?>
 	 <span <?php echo $this->params->get('span_date_view');?>> <?php echo '<strong>'.JText::_('Date').': </strong>'.$this->date; ?></span><?php
 	}
@@ -215,7 +215,7 @@ $this->assignRef ('duration', $duration);// end switch
    	}	 
    } 
    if ($this->params->get('show_duration') > 0) { ?>
-    <span <?php echo $this->params->get('span_duration_view');?>> <?php echo '<strong>'.JText::_('Duration').': </strong>'.$duration;?></span> <?php 
+    <span <?php echo $this->params->get('span_duration_view');?>> <?php echo '<strong>'.JText::_('Duration').': </strong>'.$this->duration;?></span> <?php
    } ?>
   </td>
  </tr>
@@ -272,7 +272,7 @@ $this->assignRef ('duration', $duration);// end switch
 				if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
 			} //End if media_player param test
 
-			if (!$media_size){
+			/*if (!$media_size){
 			}
 			else {
 				switch ($media_size ) {
@@ -302,7 +302,7 @@ $this->assignRef ('duration', $duration);// end switch
 
 			}	//end of else for media_size
 
-			$filesize = $media_size;
+			$filesize = $media_size;   */
 			$mimetype = $media->mimetext;
 			$src = JURI::base().$media->impath;
 			if ($imagew) {$width = $imagew;} else {$width = 24;}
