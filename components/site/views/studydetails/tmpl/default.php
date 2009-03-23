@@ -47,7 +47,7 @@ switch ($picture) {
 
 $details_text = $this->params->get('details_text');
 $filesize_show = $this->params->get('filesize_show');
-$duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
+/*$duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
 $duration_type = $this->params->get('duration_type');
 switch ($duration_type) {
 	case 1:
@@ -77,7 +77,7 @@ switch ($duration_type) {
 		}
 		break;
 }
-$this->assignRef ('duration', $duration);// end switch
+$this->assignRef ('duration', $duration);// end switch*/
 ?>
 <table class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
  <tr><?php //Title Row
@@ -161,40 +161,7 @@ $this->assignRef ('duration', $duration);// end switch
   <td valign="top"><?php 
   if ($this->params->get('show_date_view') > 0){ ?>
    <?php
-/*    $df = ($this->params->get('date_format'));
-	switch ($df)
-	{
-	 case 0:
-		$date	= date('M j, Y', strtotime($this->studydetails->studydate));
-		break;
-	 case 1:
-		$date	= date('M j', strtotime($this->studydetails->studydate) );
-		break;
-	 case 2:
-		$date	= date('n/j/Y',  strtotime($this->studydetails->studydate));
-		break;
-	 case 3:
-		$date	= date('n/j', strtotime($this->studydetails->studydate));
-		break;
-	 case 4:
-		$date	= date('l, F j, Y',  strtotime($this->studydetails->studydate));
-		break;
-	 case 5:
-		$date	= date('F j, Y',  strtotime($this->studydetails->studydate));
-		break;
-	 case 6:
-		$date = date('j F Y', strtotime($this->studydetails->studydate));
-		break;
-	 case 7:
-		$date = date('j/n/Y', strtotime($this->studydetails->studydate));
-		break;
-	 case 8:
-		$date = JHTML::_('date', $this->studydetails->studydate, JText::_('DATE_FORMAT_LC'));
-		break;
-	 default:
-		$date = date('n/j', strtotime($this->studydetails->studydate));
-		break;
-	}  */
+
 	if ($date) { ?>
 	 <span <?php echo $this->params->get('span_date_view');?>> <?php echo '<strong>'.JText::_('Date').': </strong>'.$this->date; ?></span><?php
 	}
@@ -264,7 +231,6 @@ $this->assignRef ('duration', $duration);// end switch
 			$link_type = $media->link_type;
 			$useavr = 0;
 			$useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
-			$media_size = $media->size;
 			$useplayer = 0;
 			if ($params->get('media_player') > 0) {
 				//Look to see if it is an mp3
@@ -272,37 +238,6 @@ $this->assignRef ('duration', $duration);// end switch
 				if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
 			} //End if media_player param test
 
-			/*if (!$media_size){
-			}
-			else {
-				switch ($media_size ) {
-
-					case $media_size < 1024 :
-						$media_size = $media_size.' '.'Bytes';
-						break;
-					case $media_size < 1048576 :
-						$media_size = $media_size / 1024;
-						$media_size = number_format($media_size,0);
-						$media_size = $media_size.' '.'KB';
-						break;
-					case $media_size < 1073741824 :
-						$media_size = $media_size / 1024;
-						$media_size = $media_size / 1024;
-						$media_size = number_format($media_size,1);
-						$media_size = $media_size.' '.'MB';
-						break;
-					case $media_size > 1073741824 :
-						$media_size = $media_size / 1024;
-						$media_size = $media_size / 1024;
-						$media_size = $media_size / 1024;
-						$media_size = number_format($media_size,1);
-						$media_size = $media_size.' '.'GB';
-						break;
-				}
-
-			}	//end of else for media_size
-
-			$filesize = $media_size;   */
 			$mimetype = $media->mimetext;
 			$src = JURI::base().$media->impath;
 			if ($imagew) {$width = $imagew;} else {$width = 24;}
@@ -321,7 +256,7 @@ $this->assignRef ('duration', $duration);// end switch
 				$filename = $media->filename;
 				$ispath = 1;
 				$direct_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '
-				.$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
+				.$this->filesize.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
 				.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
 				.'" height="'.$height.'" border="0" /></a>';
 			}

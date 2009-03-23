@@ -14,7 +14,7 @@ function format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $s
 	$db->setQuery($query);
 	$booknameresults = $db->loadObject();
 	//dump ($show_verses, 'show_verses ');
-	if ($booknameresults->bookname) {$book=$booknameresults->bookname;} else {$book = '';}
+	if ($booknameresults->bookname) {$book = JText::_($booknameresults->bookname);} else {$book = '';}
 	$b1 = ' ';
 	$b2 = ':';
 	$b2a = ':';
