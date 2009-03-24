@@ -1,24 +1,25 @@
 <?php defined('_JEXEC') or die();
 
-function getFilepath($id3) 
+function getFilepath($id3, $idfield) 
 {
 
 	global $mainframe;
-	
+	//dump ($id3, 'id3: ');
 	$database	= & JFactory::getDBO();
 	$query = 'SELECT #__bsms_mediafiles.*,'
 	  . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-	  . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+	  . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath'
 	  . ' FROM #__bsms_mediafiles'
 	  . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
 	  . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-	  . ' WHERE #__bsms_mediafiles.study_id LIKE '.$row->id.' LIMIT 1';
+	  . ' WHERE '.$idfield.' = '.$id3;
 	  $database->setQuery( $query );
-	  $filepath = $database->loadObject();
+	  $filepathresults = $database->loadObject();
 	  $number_rows = $database->getAffectedRows($query);
 	  if ($number_rows > 0) 
 		  {
-			$filepath = $filepath->spath.$filepath->fpath.$filepath->filename;
+			$filepath = $filepathresults->spath.$filepathresults->fpath.$filepathresults->filename;
+			//dump ($filepath, 'filepath: ');
 			//Check url for "http://" prefix, and add it if it doesn't exist
 			if(!eregi('http://', $filepath)) 
 				{
@@ -26,6 +27,6 @@ function getFilepath($id3)
 				}
 		  }
 		  else { $filepath = ''; }
-     
+   
   return $filepath;
 }

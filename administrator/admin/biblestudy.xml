@@ -234,12 +234,8 @@
 			<filename>controllers/podcastedit.php</filename>
 			<filename>controllers/mimetypeedit.php</filename>
 			<filename>controllers/mediafilesedit.php</filename>
-			<filename>controllers/mediafileslist.php</filename>
-			<filename>controllers/teacherlist.php</filename>
-			<filename>controllers/commentslist.php</filename>
 			<filename>controllers/commentsedit.php</filename>
 			<filename>controllers/locationsedit.php</filename>
-			<filename>controllers/locationslist.php</filename>
 			<filename>controllers/index.html</filename>
 			<filename>elements/studydetails.php</filename>
 			<filename>elements/mediafile.php</filename>

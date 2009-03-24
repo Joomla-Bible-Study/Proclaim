@@ -946,58 +946,27 @@ $file_size = getFilesize($id3);
       $download_image = $this->params->get('download_image');
       if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
       $link_type = $media->link_type;
-      $media_size = $media->size;
+	  
       $useplayer = 0;
+	  
       if ($this->params->get('media_player') > 0) {
        //Look to see if it is an mp3
        $ismp3 = substr($media->filename,-3,3);
        if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
-      } //End if media_player param test
-      if (!$media_size){ $media_size = '';
-      }
-      else {
-       switch ($media_size ) {
-
-        case $media_size < 1024 :
-         $media_size = $media_size.' '.'Bytes';
-         break;
-        case $media_size < 1048576 :
-         $media_size = $media_size / 1024;
-         $media_size = number_format($media_size,0);
-         $media_size = $media_size.' '.'KB';
-         break;
-        case $media_size < 1073741824 :
-         $media_size = $media_size / 1024;
-         $media_size = $media_size / 1024;
-         $media_size = number_format($media_size,1);
-         $media_size = $media_size.' '.'MB';
-         break;
-        case $media_size > 1073741824 :
-         $media_size = $media_size / 1024;
-         $media_size = $media_size / 1024;
-         $media_size = $media_size / 1024;
-         $media_size = number_format($media_size,1);
-         $media_size = $media_size.' '.'GB';
-         break;
-       }
-
-      } //end of else for media_size
-      $filesize = $media_size;
+	   } //End if media_player param test
+      $idfield = '#__bsms_mediafiles.id';
+	  $id3 = $media->id;
+	  $filesize_call = JView::loadHelper('filesize');
+	  $filesize = getFilesize($id3);
+	  $media_size = $filesize;
       $mimetype = $media->mimetext;
       $src = JURI::base().$media->impath;
       if ($imagew) {$width = $imagew;} else {$width = 24;}
       if ($imageh) {$height = $imageh;} else {$height= 24;}
       $ispath = 0;
-      if (!$media->filename){
-       $path1 = '';
-       $ispath = 0;
-      }
-      else {
-       $path1 = $media->spath.$media->fpath.$media->filename;
-       $isslash = substr_count($path1,'//');
-       if (!$isslash) {
-        $path1 = 'http://'.$path1;
-       }
+	  $call_filepath = JView::loadHelper('filepath');
+	  $path1 = getFilepath($id3, $idfield);
+  
        $pathname = $media->fpath;
        $filename = $media->filename;
        $ispath = 1;
@@ -1005,7 +974,6 @@ $file_size = getFilesize($id3);
        .$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
        .'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';
-      }
       $isavr = 0;
       if (JPluginHelper::importPlugin('system', 'avreloaded'))
       {
