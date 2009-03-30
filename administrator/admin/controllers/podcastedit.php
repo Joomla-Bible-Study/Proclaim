@@ -226,8 +226,8 @@ function publish()
   $episodedetailtemp = '';
   $episodedetailtemp = '	<item>
 		<title>'.$title.'</title>
-		<link>http://'.$podinfo->website.'/index.php?'.rawurlencode('option=com_biblestudy&view=studydetails&id=').$episode->sid.'</link>
-		<comments>http://'.$podinfo->website.'/index.php?'.rawurlencode('option=com_biblestudy&view=studydetails&id=').$episode->sid.'</comments>
+		<link>http://'.$podinfo->website.'/index.php?option=com_biblestudy&amp;view=studydetails&amp;id='.$episode->sid.'</link>
+		<comments>http://'.$podinfo->website.'/index.php?option=com_biblestudy&amp;view=studydetails&amp;id='.$episode->sid.'</comments>
 		<itunes:author>'.$episode->teachername.'</itunes:author>
 		<dc:creator>'.$episode->teachername.'</dc:creator>
 		<description>'.$description.'</description>

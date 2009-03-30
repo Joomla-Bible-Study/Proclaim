@@ -3,76 +3,76 @@
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend>Podcast Details</legend>
+		<legend><?php echo JText::_( 'Podcast Details' ); ?></legend>
 
 		
 	<table cellpadding="5" class="admintable">
 	<?php if ($this->podcastedit->id) {?>
 	<?php $link = JRoute::_( 'index.php?option=com_biblestudy&view=podcastedit&controller=podcastedit&task=writeXML&cid='. $this->podcastedit->id );?>
 	<tr>
-		<td class="key"><b>XML File:</b></td>
+		<td class="key"><b><?php echo JText::_('XML File');?>:</b></td>
 		<td><a href="<?php echo $link;?>"><img src="<?php echo JURI::base()?>images/backup.png" height="48" width="48" border="0"></a><br />
-		<a href="<?php echo $link;?>"><b>Write XML File</b></a><br />Be sure to save changes first.</td>
+		<a href="<?php echo $link;?>"><b><?php echo JText::_('Write XML File')?></b></a><br /><?php echo JText::_('Be sure to save changes first.')?></td>
 	</tr>
 	<?php } ?>
 	<tr>
-		<td class="key"><b>Published:</b></td>
+		<td class="key"><b><?php echo JText::_( 'Published' ); ?>:</b></td>
 		<td><?php echo $this->lists['published'];?></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Podcast Name:</b></td>
+		<td class="key"><b><?php echo JText::_( 'Podcast Name' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="title" id="title" size="100" maxlength="100" value="<?php echo $this->podcastedit->title;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Number of Records to include:</b><br />(blank for all)</td>
+		<td class="key"><b><?php echo JText::_( 'Number of Records to include' ); ?>:</b><br /><?php echo JText::_( '(blank for all)' ); ?></td>
 		<td><input class="text_area" type="text" name="podcastlimit" id="podcastlimit" size="5" maxlength="3" value="<?php echo $this->podcastedit->podcastlimit;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Website url:</b><br />(No http://)</td>
+		<td class="key"><b><?php echo JText::_( 'Website url' ); ?>:</b><br />(<?php echo JText::_( 'No http://' ); ?>)</td>
 		<td><input class="text_area" type="text" name="website" id="website" size="100" maxlength="100" value="<?php echo $this->podcastedit->website;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Description of Podcast:</b><br />(500 Characters Max)</td>
+		<td class="key"><b><?php echo JText::_( 'Description of Podcast' ); ?>:</b><br />(<?php echo JText::_( '500 Characters Max' ); ?>)</td>
 		<td><textarea cols="57" class="text_area" name="description" id="description" ><?php echo $this->podcastedit->description;?></textarea></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Image url:</b><br />(No http://)</td>
+		<td class="key"><b><?php echo JText::_( 'Image url' ); ?>:</b><br />(<?php echo JText::_( 'no http://' ); ?>)</td>
 		<td><input class="text_area" type="text" name="image" id="image" size="100" maxlength="130" value="<?php echo $this->podcastedit->image;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Image Height in pixels:</b></td>
+		<td class="key"><b><?php echo JText::_( 'Image Height' ); ?>:</b><br />(<?php echo JText::_( 'in pixels' ); ?>)</td>
 		<td><input class="text_area" type="text" name="imageh" id="imageh" size="5" maxlength="3" value="<?php echo $this->podcastedit->imageh;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Image Width in pixels:</b></td>
+		<td class="key"><b><?php echo JText::_( 'Image Width' ); ?>:</b><br />(<?php echo JText::_( 'in pixels' ); ?>)</td>
 		<td><input class="text_area" type="text" name="imagew" id="imagew" size="5" maxlength="3" value="<?php echo $this->podcastedit->imagew;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Podcast Author:</b></td>
+		<td class="key"><b><?php echo JText::_( 'Podcast Author' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="author" id="author" size="100" maxlength="100" value="<?php echo $this->podcastedit->author;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Podcast Logo or podcastimage url:</b><br />(No http://)</td>
+		<td class="key"><b><?php echo JText::_( 'Podcast Logo or podcastimage url' ); ?>:</b><br />(<?php echo JText::_( 'no http://' ); ?>)</td>
 		<td><input class="text_area" type="text" name="podcastimage" id="podcastimage" size="100" maxlength="130" value="<?php echo $this->podcastedit->podcastimage;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Podcast Search Words:</b><br />(seperate with commas)</td>
+		<td class="key"><b><?php echo JText::_( 'Podcast Search Words' ); ?>:</b><br />(<?php echo JText::_( 'separate with commas' ); ?>)</td>
 		<td><input class="text_area" type="text" name="podcastsearch" id="podcastsearch" size="100" maxlength="100" value="<?php echo $this->podcastedit->podcastsearch;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Podcast XML filename:</b><br />(path from root - No http://www.site.org - Just filename to put in root - recommended) like just biblestudies.xml</td>
+		<td class="key"><b><?php echo JText::_( 'Podcast XML filename' ); ?>:</b><br />(<?php echo JText::_( 'path from root - no http://www.site.org - Just filename to put in root - recommended) like just biblestudies.xml' ); ?></td>
 		<td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="150" value="<?php echo $this->podcastedit->filename;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Podcast language:</b><br />(like en-us)</td>
+		<td class="key"><b><?php echo JText::_( 'Podcast language' ); ?>:</b><br />(<?php echo JText::_( 'like en-us' ); ?>)</td>
 		<td><input class="text_area" type="text" name="language" id="language" size="5" maxlength="10" value="<?php echo $this->podcastedit->language;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Editor's Name:</b></td>
+		<td class="key"><b><?php echo JText::_( 'Editor\'s Name' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="editor_name" id="editor_name" size="100" maxlength="150" value="<?php echo $this->podcastedit->editor_name;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b>Editor's Email Address:</b></td>
+		<td class="key"><b><?php echo JText::_( 'Editor\'s Email Address' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="editor_email" id="editor_email" size="100" maxlength="150" value="<?php echo $this->podcastedit->editor_email;?>" /></td>
 	</tr>
 	</table>
@@ -82,14 +82,14 @@
 $params = &JComponentHelper::getParams($option);?>
 	<div class="editcell">
 	<fieldset class="adminlist">
-		<legend>Episodes for this Podcast</legend>
+		<legend><?php echo JText::_( 'Episodes for this Podcast' ); ?></legend>
 	<table class="admintable" width=100%><tr></tr>
 	
-	<thead><tr><th>Edit Media File</th>
-	<th>Media Create Date</th>
-	<th>Scripture</th>
-	<th>Edit Study</th>
-	<th>Teacher</th>
+	<thead><tr><th><?php echo JText::_('Edit Media File');?></th>
+	<th><?php echo JText::_('Media Create Date');?></th>
+	<th><?php echo JText::_('Scripture');?></th>
+	<th><?php echo JText::_('Edit Study');?></th>
+	<th><?php echo JText::_('Teacher');?></th>
 	</tr></thead>
 	
 	<?php
