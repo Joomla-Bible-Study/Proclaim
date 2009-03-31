@@ -955,10 +955,13 @@ $file_size = getFilesize($id3);
        if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
 	   } //End if media_player param test
       $idfield = '#__bsms_mediafiles.id';
-	  $id3 = $media->id;
+	  $id4 = $media->id;
+	  //dump ($media->id, 'id4: ');
 	  $filesize_call = JView::loadHelper('filesize');
-	  $filesize = getFilesize($id3);
+	  $filesize = getFilesize($id4);
+	  
 	  $media_size = $filesize;
+	 // dump ($media_size, 'filesize: ');
       $mimetype = $media->mimetext;
       $src = JURI::base().$media->impath;
       if ($imagew) {$width = $imagew;} else {$width = 24;}
@@ -1033,12 +1036,12 @@ $file_size = getFilesize($id3);
       $useavr = 0;
       $useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
       $isfilesize = 0;
-      if ($file_size > 0)
-      {
-       $isfilesize = 1;
+     // if ($media_size > 0)
+     // {
+      // $isfilesize = 1;
        $media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
-      }
-      else {$media1_sizetext = '';}
+     // }
+      //else {$media1_sizetext = '';}
       $media1_link = $direct_link;
 
       if ($useavr > 0)

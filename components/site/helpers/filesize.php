@@ -1,18 +1,19 @@
 <?php defined('_JEXEC') or die('Restricted Access');
 
-function getFilesize($id3) 
+function getFilesize($id4) 
 {
 
 	global $mainframe;
 	
 	$database	= & JFactory::getDBO();
-	
-	$query = 'SELECT #__bsms_mediafiles.id, #__bsms_mediafiles.study_id, #__bsms_mediafiles.size'
+	//dump ($id4, 'id4: ');
+	$query = 'SELECT #__bsms_mediafiles.id, #__bsms_mediafiles.size'
 	  . ' FROM #__bsms_mediafiles'
-	  . ' WHERE #__bsms_mediafiles.study_id LIKE '.$id3.' LIMIT 1';
+	  . ' WHERE #__bsms_mediafiles.id LIKE '.$id4.' LIMIT 1';
 	  $database->setQuery( $query );
 	  $filesize = $database->loadObject();
 	  $number_rows = $database->getAffectedRows($query);
+	  //dump ($filesize->size, 'Size: ');
 	  if ($number_rows > 0) 
 	  {
 		   $file_size = $filesize->size;
