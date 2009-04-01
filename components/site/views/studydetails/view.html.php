@@ -69,15 +69,18 @@ class biblestudyViewstudydetails extends JView
 		if ($params->get('scripture_view_link') > 0) { $scripture->scripture2 = $passage_link2;}
         $duration_call = JView::loadHelper('duration');
         $filepath_call = JView::loadHelper('filepath');
-        $filepath = getFilepath($id3);
+		$idfield = '#__bsms_mediafiles.study_id';
+        $filepath = getFilepath($id3, $idfield);
         $this->assignRef('filepath', $filepath);
         $filesize_call = JView::loadHelper('filesize');
  		$date_call = JView::loadHelper('date');
  		$df = ($params->get('date_format'));
  		$date = getstudyDate($df, $studydetails->studydate);
         $this->assignRef('date', $date);
-        $id3 = $studydetails->id;
-        $filesize = getFilesize($id3);
+        $id4 = $studydetails->id;
+		$filesizefield = '#__bsms_mediafiles.study_id';
+        $filesize = getFilesize($id4, $filesizefield);
+		
         $this->assignRef('filesize', $filesize);
         $duration = $studydetails->media_hours.$studydetails->media_minutes.$studydetails->media_seconds;
 		  if (!$duration) { $duration = 'xxx';}
