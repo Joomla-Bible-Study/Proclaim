@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die('Restricted Access');
 
-function getFilesize($id4) 
+function getFilesize($id4, $filesizefield) 
 {
 
 	global $mainframe;
@@ -9,7 +9,7 @@ function getFilesize($id4)
 	//dump ($id4, 'id4: ');
 	$query = 'SELECT #__bsms_mediafiles.id, #__bsms_mediafiles.size'
 	  . ' FROM #__bsms_mediafiles'
-	  . ' WHERE #__bsms_mediafiles.id LIKE '.$id4.' LIMIT 1';
+	  . ' WHERE '.$filesizefield.' LIKE '.$id4.' LIMIT 1';
 	  $database->setQuery( $query );
 	  $filesize = $database->loadObject();
 	  $number_rows = $database->getAffectedRows($query);

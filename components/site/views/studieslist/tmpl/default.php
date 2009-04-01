@@ -296,10 +296,11 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
   $bgcolor = ($row_count % 2) ? $color1 : $color2;
   ?>
   <?php
-$id3 = $row->id;
+$id4 = $row->id;
+$filesizefield = '#__bsms_mediafiles.study_id';
 //$filepath_call = JView::loadHelper('filepath'); 
 $filesize_call = JView::loadHelper('filesize');
-$file_size = getFilesize($id3);
+$file_size = getFilesize($id4, $filesizefield);
 
   
   
@@ -956,9 +957,10 @@ $file_size = getFilesize($id3);
 	   } //End if media_player param test
       $idfield = '#__bsms_mediafiles.id';
 	  $id4 = $media->id;
+	  $filesizefield = '#__bsms_mediafiles.id';
 	  //dump ($media->id, 'id4: ');
 	  $filesize_call = JView::loadHelper('filesize');
-	  $filesize = getFilesize($id4);
+	  $filesize = getFilesize($id4, $filesizefield);
 	  
 	  $media_size = $filesize;
 	 // dump ($media_size, 'filesize: ');
@@ -1039,7 +1041,7 @@ $file_size = getFilesize($id3);
      // if ($media_size > 0)
      // {
       // $isfilesize = 1;
-       $media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
+       $media1_sizetext = '<span style="font-size:0.60em;">'.$filesize.'</span>';
      // }
       //else {$media1_sizetext = '';}
       $media1_link = $direct_link;
