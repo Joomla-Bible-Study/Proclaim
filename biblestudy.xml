@@ -188,6 +188,8 @@
 		<filename>helpers/date.php</filename>
 		<filename>helpers/filesize.php</filename>
 		<filename>helpers/filepath.php</filename>
+		<filename>helpers/listarray.php</filename>
+		<filename>helpers/columnarray.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>

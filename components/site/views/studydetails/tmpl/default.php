@@ -47,37 +47,7 @@ switch ($picture) {
 
 $details_text = $this->params->get('details_text');
 $filesize_show = $this->params->get('filesize_show');
-/*$duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
-$duration_type = $this->params->get('duration_type');
-switch ($duration_type) {
-	case 1:
-		$duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
-		if (!$duration){
-		}
-		else {
-			if (!$this->studydetails->media_hours){
-				$duration = $this->studydetails->media_minutes.' mins '.$this->studydetails->media_seconds.' secs';
-			}
-			else {
-				$duration = $this->studydetails->media_hours.' hour(s) '.$this->studydetails->media_minutes.' mins '.$this->studydetails->media_seconds.' secs';
-			}
-		}
-		break;
-	case 2:
-		$duration = $this->studydetails->media_hours.$this->studydetails->media_minutes.$this->studydetails->media_seconds;
-		if (!$duration){
-		}
-		else {
-			if (!$this->studydetails->media_hours){
-				$duration = $this->studydetails->media_minutes.':'.$this->studydetails->media_seconds;
-			}
-			else {
-				$duration = $this->studydetails->media_hours.':'.$this->studydetails->media_minutes.':'.$this->studydetails->media_seconds;
-			}
-		}
-		break;
-}
-$this->assignRef ('duration', $duration);// end switch*/
+
 ?>
 <table class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
  <tr><?php //Title Row
