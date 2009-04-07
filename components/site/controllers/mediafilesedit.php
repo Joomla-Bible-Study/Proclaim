@@ -221,6 +221,9 @@ class biblestudyControllermediafilesedit extends JController {
 		if(isset($file) && is_array($file) && $file['name'] != '')
 		{
 			$fullfilename = JPATH_SITE.$folderpath. $file['name'];
+			
+			//$fullfilename = JPATH_ROOT.$folderpath. $file['name'];
+			dump ($fullfilename, 'fullfilename: ');
 			$filename = $file['name'];
 			jimport('joomla.filesystem.file');
 
