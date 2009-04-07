@@ -24,27 +24,27 @@
 		<td><input class="text_area" type="text" name="title" id="title" size="100" maxlength="100" value="<?php echo $this->podcastedit->title;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Number of Records to include' ); ?>:</b><br /><?php echo JText::_( '(blank for all)' ); ?></td>
+		<td class="key"><b><?php echo JText::_( 'Number of Records to include (blank for all)' ); ?></b></td>
 		<td><input class="text_area" type="text" name="podcastlimit" id="podcastlimit" size="5" maxlength="3" value="<?php echo $this->podcastedit->podcastlimit;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Website url' ); ?>:</b><br />(<?php echo JText::_( 'No http://' ); ?>)</td>
+		<td class="key"><b><?php echo JText::_( 'Website url (NO http://)' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="website" id="website" size="100" maxlength="100" value="<?php echo $this->podcastedit->website;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Description of Podcast' ); ?>:</b><br />(<?php echo JText::_( '500 Characters Max' ); ?>)</td>
+		<td class="key"><b><?php echo JText::_( 'Description of Podcast (500 Max)' ); ?>:</b></td>
 		<td><textarea cols="57" class="text_area" name="description" id="description" ><?php echo $this->podcastedit->description;?></textarea></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Image url' ); ?>:</b><br />(<?php echo JText::_( 'no http://' ); ?>)</td>
+		<td class="key"><b><?php echo JText::_( 'Image url (NO http://)' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="image" id="image" size="100" maxlength="130" value="<?php echo $this->podcastedit->image;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Image Height' ); ?>:</b><br />(<?php echo JText::_( 'in pixels' ); ?>)</td>
+		<td class="key"><b><?php echo JText::_( 'Image Height in pixels' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="imageh" id="imageh" size="5" maxlength="3" value="<?php echo $this->podcastedit->imageh;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Image Width' ); ?>:</b><br />(<?php echo JText::_( 'in pixels' ); ?>)</td>
+		<td class="key"><b><?php echo JText::_( 'Image Width in pixels' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="imagew" id="imagew" size="5" maxlength="3" value="<?php echo $this->podcastedit->imagew;?>" /></td>
 	</tr>
 	<tr>
@@ -52,19 +52,19 @@
 		<td><input class="text_area" type="text" name="author" id="author" size="100" maxlength="100" value="<?php echo $this->podcastedit->author;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Podcast Logo or podcastimage url' ); ?>:</b><br />(<?php echo JText::_( 'no http://' ); ?>)</td>
+		<td class="key"><b><?php echo JText::_( 'Podcast Logo or podcastimage url (NO http://)' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="podcastimage" id="podcastimage" size="100" maxlength="130" value="<?php echo $this->podcastedit->podcastimage;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Podcast Search Words' ); ?>:</b><br />(<?php echo JText::_( 'separate with commas' ); ?>)</td>
+		<td class="key"><b><?php echo JText::_( 'Podcast Search Words (seperate with commas)' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="podcastsearch" id="podcastsearch" size="100" maxlength="100" value="<?php echo $this->podcastedit->podcastsearch;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Podcast XML filename' ); ?>:</b><br />(<?php echo JText::_( 'path from root - no http://www.site.org - Just filename to put in root - recommended) like just biblestudies.xml' ); ?></td>
+		<td class="key"><b><?php echo JText::_( 'Podcast XML filename (path from root - NO http://www.site.org - Just filename to put in  root - recommended) like just biblestudies.xml' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="150" value="<?php echo $this->podcastedit->filename;?>" /></td>
 	</tr>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Podcast language' ); ?>:</b><br />(<?php echo JText::_( 'like en-us' ); ?>)</td>
+		<td class="key"><b><?php echo JText::_( 'Podcast language (like en-us)' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="language" id="language" size="5" maxlength="10" value="<?php echo $this->podcastedit->language;?>" /></td>
 	</tr>
 	<tr>
