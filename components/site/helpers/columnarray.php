@@ -6,15 +6,15 @@ function getColumnarray($a, $row, $columnnumber) {
    $rows1=count($a);
    for($j=0;$j<$rows1;$j++)
    {
-    if ($column[$j]['position']!= $columnnumber)
+    if ($a[$j]['position']!= $columnnumber)
     {
-     unset($column[$j]);
+     unset($a[$j]);
     }
    }
 
-   $columnelements = array_values($column);
+   $columnelements = array_values($a);
+   //$c = $columnelements;
    if (isset($columnelements[0]['position'])) { //This tests to see if there is anything in column
- if (isset($column1[0]['position'])) { //This tests to see if there is anything in column1
     
      //Now let's assign some elements and go through each of them.
      foreach ($columnelements as $c) {
@@ -23,10 +23,10 @@ function getColumnarray($a, $row, $columnnumber) {
       $isbullet=$c['isbullet'];
       $span=$c['span'];
       $islink=$c['islink'];
-      
+	 
 
       //Now we produce each element in turn with its parameters
-      $column = '<span '.$span.'>';
+      $column .= '<span '.$span.'>';
       if ($isbullet == 1) {
        $column .= '<ul><li>'; }
        switch ($islink) {
@@ -43,10 +43,12 @@ function getColumnarray($a, $row, $columnnumber) {
          $column .= '<a href="'.$link.'">';
          break;
        }
-       //echo $element;
+       $column .= $element;
        if ($islink > 0) { $column .= '</a>'; }
-       if ($isbullet == 1) { $column .= '</li></ul>';}
-       $column .= '</span><br>';
-
+       if ($isbullet == 1) { $column .= '</li></ul>';} else {$column .= '<br>';}
+       $column .= '</span>';
+	 } // end of foreach
+ } //end of test to see if anything is in the column
+	return $column;
  }
-return $column;
+//Need to fix ending <br> problem - perhaps with elseif to test to see if it is the last row in the array - but which array?

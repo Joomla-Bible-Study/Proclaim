@@ -411,21 +411,24 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
      cellspacing="<?php echo $this->params->get('spacing');?>">
      <?php //This is the table for the list. It's outside the foreach?>
      <?php
-
+$array_call = JView::loadHelper('columnarray');
+$columnnumber = 1;
+$column = getColumnarray($a, $row, $columnnumber);
      //Now let's assign some elements and go through each of them.
-     foreach ($column1 as $c1) {
+    /* foreach ($column1 as $c1) {
       $element1 = $c1['element'];
       $position1 = $c1['position'];
       $isbullet1=$c1['isbullet'];
       $span1=$c1['span'];
-      $islink1=$c1['islink'];
+      $islink1=$c1['islink'];*/
       ?>
 
      <tr valign="<?php echo $this->params->get('colalign');?>">
      <?php //We make a new row and td for each record in this column ?>
       <td valign="<?php echo $this->params->get('colalign');?>"><?php 
       //Now we produce each element in turn with its parameters
-      echo '<span '.$span1.'>';
+echo $column;
+/*	  echo '<span '.$span1.'>';
       if ($isbullet1 == 1) {
        echo '<ul><li>'; }
        switch ($islink1) {
@@ -446,11 +449,11 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
        if ($islink1 > 0) { echo '</a>'; }
        if ($isbullet1 == 1) { echo '</li></ul>';}
        echo '</span>';
-       ?></td>
+      */ ?></td>
      </tr>
      <?php //This is tne end of each td and row for the list ?>
      <?php
-     } //End of foreach Column1
+     //} //End of foreach Column1
      ?>
     </table>
     <?php //This ends the table inside of column 1 that holds the actual listings. ?>

@@ -205,8 +205,10 @@ class biblestudyControllermediafilesedit extends JController {
 		$query = 'SELECT id, folderpath FROM #__bsms_folders WHERE id = '.$path.' LIMIT 1';
 		$db->setQuery($query);
 		$folder = $db->loadObject();
+		//$DSS = DS;
 		$folderpath = $folder->folderpath;
-
+		$folderpath = str_replace("/",DS,$folderpath);
+		//dump ($folderpath, 'Folderpath: ');
 		$query = "SELECT id"
 		. "\nFROM #__menu"
 		. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
@@ -220,10 +222,10 @@ class biblestudyControllermediafilesedit extends JController {
 		}
 		if(isset($file) && is_array($file) && $file['name'] != '')
 		{
-			$fullfilename = JPATH_SITE.$folderpath. $file['name'];
+			//$fullfilename = JPATH_SITE.$folderpath. $file['name'];
 			
-			//$fullfilename = JPATH_ROOT.$folderpath. $file['name'];
-			dump ($fullfilename, 'fullfilename: ');
+			$fullfilename = JPATH_ROOT.$folderpath. $file['name'];
+			//dump ($fullfilename, 'fullfilename: ');
 			$filename = $file['name'];
 			jimport('joomla.filesystem.file');
 
@@ -231,7 +233,7 @@ class biblestudyControllermediafilesedit extends JController {
 				$mainframe->redirect("index.php?option=$option&view=studieslist".$menureturn, "Upload failed, file already exists.");
 				return;
 			}
-
+			//if (!JFile::upload($file['tmp_name'], $filepath)) {
 			if (!JFile::upload($file['tmp_name'], $fullfilename)) {
 				$mainframe->redirect("index.php?option=$option&view=studieslist".$menureturn, 'Upload failed, check to make sure that the path "'.$folderpath.'" exists on this server');
 				return;
