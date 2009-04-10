@@ -158,6 +158,6 @@ $a = array( array(  'element' => $scripture1,
      'isbullet' => $params->get('isbullet12'),
   )
   );
-
+//dump ($a, '$a: ');
 return $a;
 }

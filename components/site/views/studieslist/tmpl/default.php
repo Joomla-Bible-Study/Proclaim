@@ -357,7 +357,7 @@ $file_size = getFilesize($id4, $filesizefield);
   $params		=& $mainframe->getParams('com_biblestudy');
 $listarraycall = JView::loadHelper('listarray');
 $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $duration);
-
+//dump ($a, 'a: ');
   // Obtain a list of columns
   foreach ($a as $key => $arow) {
    $position[$key]  = $arow['position'];
@@ -375,6 +375,8 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
   $column2 = $a;
   $column3 = $a;
   $column4 = $a;
+  //This calls the helper once that will process each column's array, coming from the $a variable. We will then call a function in each column from this helper file
+  $array_call = JView::loadHelper('columnarray');
   $color = $this->params->get('use_color');
   ?>
 
@@ -386,7 +388,7 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
    <?php //Row for 6 column table?>
 
    <?php //Remove all rows in the array that are not Column1
-   $rows1=count($column1);
+/*   $rows1=count($column1);
    for($j=0;$j<$rows1;$j++)
    {
     if ($column1[$j]['position']!=1)
@@ -394,26 +396,27 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
      unset($column1[$j]);
     }
    }
-
+*/
    //$count1 = count($column1['element']);
-   $column1 = array_values($column1);
+   //$column1 = array_values($column1);
    //print_r ($column1);
-   //echo 'Rows1: '.$rows1;
-   ?>
-   <?php if (isset($column1[0]['position'])) { //This tests to see if there is anything in column1?>
+   //echo 'Rows1: '.$rows1; ?>
+   <?php $columnnumber = 1;
+	$column = getColumnarray($a, $row, $columnnumber, $params);
+	//if ($column) { //This tests to see if there is anything in column?>
+   <?php //if (isset($column1[0]['position'])) { //This tests to see if there is anything in column1?>
    <?php if ($entry_user >= $entry_access){//This adds a <td> for user frontend editing of the record?>
     <td width="10" valign="<?php echo $this->params->get('colalign');?>"><a
      href="<?php echo JURI::base();?>index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]=<?php echo $row->id;?>"><?php echo JText::_('[Edit]');?></a></td>
      <?php } //End of front end user authorized to edit records?>
-    <td width="<?php echo $widpos1;?>"><?php //Column 1 of 5?>
-    <table border="<?php echo $this->params->get('border');?>"
-     cellpadding="<?php echo $this->params->get('padding');?>"
-     cellspacing="<?php echo $this->params->get('spacing');?>">
+  <!--  <td width="<?php //echo $widpos1;?>"><?php //Column 1 of 5?>
+    <table border="<?php //echo $this->params->get('border');?>"
+     cellpadding="<?php //echo $this->params->get('padding');?>"
+     cellspacing="<?php //echo $this->params->get('spacing');?>">
      <?php //This is the table for the list. It's outside the foreach?>
      <?php
-$array_call = JView::loadHelper('columnarray');
-$columnnumber = 1;
-$column = getColumnarray($a, $row, $columnnumber);
+
+
      //Now let's assign some elements and go through each of them.
     /* foreach ($column1 as $c1) {
       $element1 = $c1['element'];
@@ -423,11 +426,12 @@ $column = getColumnarray($a, $row, $columnnumber);
       $islink1=$c1['islink'];*/
       ?>
 
-     <tr valign="<?php echo $this->params->get('colalign');?>">
+     <tr valign="<?php //echo $this->params->get('colalign');?>">
      <?php //We make a new row and td for each record in this column ?>
-      <td valign="<?php echo $this->params->get('colalign');?>"><?php 
+      <td valign="<?php //echo $this->params->get('colalign');?>"><?php 
       //Now we produce each element in turn with its parameters
-echo $column;
+	  	
+		echo $column;
 /*	  echo '<span '.$span1.'>';
       if ($isbullet1 == 1) {
        echo '<ul><li>'; }
@@ -460,11 +464,12 @@ echo $column;
 
 
 
-    </td>
-    <?php }//End of column 1 of 5 Also end of if ($column1->position)?>
+    </td> -->
+    <?php //}//End of column 1 of 5 Also end of if ($column1->position)?>
 
     <?php //Remove all rows in the array that are not Column 2
-    $rows2=count($column2);
+  /* 
+   $rows2=count($column2);
     for($j=0;$j<$rows2;$j++)
     {
      if ($column2[$j]['position']!=2)
@@ -473,32 +478,42 @@ echo $column;
      }
     }
     $column2 = array_values($column2);
+	*/
     //print_r($column2);
     //$testit = strlen($column2[0]['element']); echo 'Testit: '.$testit;
     ?>
-    <?php if (isset($column2[0]['position'])) { //This tests to see if there is anything in column2?>
-    <td width="<?php echo $widpos2;?>"><?php //Beginning of Column 2 of 5?>
+    <?php 
+		$columnnumber = 2;
+		$column = getColumnarray($a, $row, $columnnumber, $params);
+//	if ($column) { //This tests to see if there is anything in column?>
+    <?php //if (isset($column2[0]['position'])) { //This tests to see if there is anything in column2?>
+   <!-- <td width="<?php //echo $widpos2;?>"><?php //Beginning of Column 2 of 5?>
 
-    <table border="<?php echo $this->params->get('border');?>"
-     cellpadding="<?php echo $this->params->get('padding');?>"
-     cellspacing="<?php echo $this->params->get('spacing');?>">
+    <table border="<?php //echo $this->params->get('border');?>"
+     cellpadding="<?php //echo $this->params->get('padding');?>"
+     cellspacing="<?php //echo $this->params->get('spacing');?>">
      <?php //This is the table for the list. It's outside the foreach?>
      <?php
 
      //Now let's assign some elements and go through each of them.
-     foreach ($column2 as $c2) {
+   /* 
+	foreach ($column2 as $c2) {
       $element2 = $c2['element'];
       $position2 = $c2['position'];
       $isbullet2=$c2['isbullet'];
       $span2=$c2['span'];
       $islink2=$c2['islink'];
-      ?>
+    */
+	?>
 
-     <tr valign="<?php echo $this->params->get('colalign');?>">
+     <tr valign="<?php //echo $this->params->get('colalign');?>">
      <?php //We make a new row and td for each record in this column ?>
-      <td valign="<?php echo $this->params->get('colalign');?>"><?php 
+      <td valign="<?php //echo $this->params->get('colalign');?>"><?php 
       //Now we produce each element in turn with its parameters
-      echo '<span '.$span2.'>';
+	  	
+		echo $column;
+      /*
+	  echo '<span '.$span2.'>';
       if ($isbullet2 == 1) {
        echo '<ul><li>'; }
        switch ($islink2) {
@@ -519,20 +534,22 @@ echo $column;
        if ($islink2 > 0) { echo '</a>'; }
        if ($isbullet2 == 1) { echo '</li></ul>';}
        echo '</span>';
+	   */
        ?></td>
      </tr>
      <?php //This is tne end of each td and row for the list ?>
      <?php
-     } //End of foreach $column2
+     //} //End of foreach $column2
      ?>
     </table>
     <?php //This ends the table inside of column 2 that holds the actual listings. It is outside the foreach loop?>
 
 
-    </td>
-    <?php }//End of Column 2 of 5 And if($column2->position?>
+    </td> -->
+    <?php //}//End of Column 2 of 5 And if($column2->position?>
 
     <?php //Remove all rows in the array that are not Column1
+	/*
     $rows3=count($column3);
     for($j=0;$j<$rows3;$j++)
     {
@@ -542,31 +559,41 @@ echo $column;
      }
     }
     $column3 = array_values($column3);
+	*/
     //$testit3 = count($column3[0]['position']); echo 'Testit: '.$testit3;
     //print_r($column3);?>
-    <?php if (isset($column3[0]['position'])) { //This tests to see if there is anything in column3?>
-    <td width="<?php echo $widpos3;?>"><?php //Begin Column 3 of 5?>
+    <?php 
+		$columnnumber = 3;
+		$column = getColumnarray($a, $row, $columnnumber, $params);
+	//if ($column) { //This tests to see if there is anything in column?>
+    <?php //if (isset($column3[0]['position'])) { //This tests to see if there is anything in column3?>
+   <!-- <td width="<?php //echo $widpos3;?>"><?php //Begin Column 3 of 5?>
 
-    <table border="<?php echo $this->params->get('border');?>"
-     cellpadding="<?php echo $this->params->get('padding');?>"
-     cellspacing="<?php echo $this->params->get('spacing');?>">
+    <table border="<?php //echo $this->params->get('border');?>"
+     cellpadding="<?php //echo $this->params->get('padding');?>"
+     cellspacing="<?php //echo $this->params->get('spacing');?>">
      <?php //This is the table for the list. It's outside the foreach?>
      <?php
 
      //Now let's assign some elements and go through each of them.
+	/* 
      foreach ($column3 as $c3) {
       $element3 = $c3['element'];
       $position3 = $c3['position'];
       $isbullet3=$c3['isbullet'];
       $span3=$c3['span'];
       $islink3=$c3['islink'];
-      ?>
+     */
+	 ?>
 
-     <tr valign="<?php echo $this->params->get('colalign');?>">
+     <tr valign="<?php //echo $this->params->get('colalign');?>">
      <?php //We make a new row and td for each record in this column ?>
-      <td valign="<?php echo $this->params->get('colalign');?>"><?php 
+      <td valign="<?php //echo $this->params->get('colalign');?>"><?php 
       //Now we produce each element in turn with its parameters
-      echo '<span '.$span3.'>';
+	  	
+		echo $column;
+     /* 
+	  echo '<span '.$span3.'>';
       if ($isbullet3 == 1) {
        echo '<ul><li>'; }
        switch ($islink3) {
@@ -587,19 +614,21 @@ echo $column;
        if ($islink3 > 0) { echo '</a>'; }
        if ($isbullet3 == 1) { echo '</li></ul>';}
        echo '</span>';
+	   */
        ?></td>
      </tr>
      <?php //This is tne end of each td and row for the list ?>
      <?php
-     } //End of foreach $column3
+     //} //End of foreach $column3
      ?>
     </table>
     <?php //This ends the table inside of column 3 that holds the actual listings. It is outside the foreach loop?>
 
-    </td>
-    <?php }//End of Column 3 of 5 and $jf($column3->position)?>
+    </td> -->
+    <?php //}//End of Column 3 of 5 and $jf($column3->position)?>
 
     <?php //Remove all rows in the array that are not Column1
+	/*
     $rows4=count($column4);
     for($j=0;$j<$rows4;$j++)
     {
@@ -609,30 +638,44 @@ echo $column;
      }
     }
     $column4 = array_values($column4);
+	*/
     //print_r($column4);?>
-    <?php if (isset($column4[0]['position'])) { //This tests to see if there is anything in column4?>
-    <td width="<?php echo $widpos4;?>"><?php //Begin Column 4 of 5?>
+    <?php 
+	
+	 	$columnnumber = 4;
+		$column = getColumnarray($a, $row, $columnnumber, $params);
+	//if ($column) { //This tests to see if there is anything in column?>
+    <?php //if (isset($column4[0]['position'])) { //This tests to see if there is anything in column4?>
+  <!--  <td width="<?php //echo $widpos4;?>"><?php //Begin Column 4 of 5?>
 
-    <table border="<?php echo $this->params->get('border');?>"
-     cellpadding="<?php echo $this->params->get('padding');?>"
-     cellspacing="<?php echo $this->params->get('spacing');?>">
+    <table border="<?php// echo $this->params->get('border');?>"
+     cellpadding="<?php //echo $this->params->get('padding');?>"
+     cellspacing="<?php //echo $this->params->get('spacing');?>">
      <?php //This is the table for the list. It's outside the foreach?>
      <?php
 
      //Now let's assign some elements and go through each of them.
+	/*
      foreach ($column4 as $c4) {
       $element4 = $c4['element'];
       $position4 = $c4['position'];
       $isbullet4=$c4['isbullet'];
       $span4=$c4['span'];
       $islink4=$c4['islink'];
-      ?>
+      */
+	  ?>
 
 
-     <tr valign="<?php echo $this->params->get('colalign');?>">
+     <tr valign="<?php //echo $this->params->get('colalign');?>">
      <?php //We make a new row and td for each record in this column ?>
-      <td valign="<?php echo $this->params->get('colalign');?>"><?php 
+      <td valign="<?php //echo $this->params->get('colalign');?>"><?php 
       //Now we produce each element in turn with its parameters
+	 
+		echo $column;
+	/*	
+	  $columnnumber = 4;
+		$column = getColumnarray($a, $row, $columnnumber);
+		echo $column;
       echo '<span '.$span4.'>';
       if ($isbullet4 == 1) {
        echo '<ul><li>'; }
@@ -654,17 +697,18 @@ echo $column;
        if ($islink4 > 0) { echo '</a>'; }
        if ($isbullet4 == 1) { echo '</li></ul>';}
        echo '</span>';
+	   */
        ?></td>
      </tr>
      <?php //This is tne end of each td and row for the list ?>
      <?php
-     } //End of forach $column4
+    // } //End of forach $column4
      ?>
     </table>
     <?php //This ends the table inside of column 4 that holds the actual listings. It is outside the foreach loop?>
 
-    </td>
-    <?php }//End of Column 4 of 5 and if($column4->position)?>
+    </td> -->
+    <?php //}//End of Column 4 of 5 and if($column4->position)?>
 
     <?php if (($this->params->get('show_full_text') + $this->params->get('show_pdf_text')) > 0) { //Tests to see if show text and/or pdf is set to "show"?>
 
@@ -680,12 +724,12 @@ echo $column;
        if ($this->params->get('tooltip') >0) {?>
         <span class="zoomTip"
          title="<strong>Sermon Info:</strong>::
-       	 <?php if ($study) {?><strong>Title:</strong> <?php echo $study;}?><br><br>
-       	 <?php if ($intro) {?><strong>Details:</strong> <?php echo $intro;}?><br><br>
-       	 <?php if ($snumber) {?><strong>Sermon Number:</strong> <?php echo $snumber;}?><br>
-       	 <strong>Teacher:</strong> <?php echo $teacher;?><br><br>
+       	 <?php if ($study) {?><strong><?php echo JText::_('Title:');?></strong> <?php echo $study;}?><br><br>
+       	 <?php if ($intro) {?><strong><?php echo JText::_('Details:');?></strong> <?php echo $intro;}?><br><br>
+       	 <?php if ($snumber) {?><strong><?php echo JText::_('Sermon Number:');?></strong> <?php echo $snumber;}?><br>
+       	 <strong><?php echo JText::_('Teacher:');?>:</strong> <?php echo $teacher;?><br><br>
        	 <hr /><br>
-       	 <?php if ($scripture1) {?><strong>Scripture: </strong><?php echo $scripture1;}?>"><?php
+       	 <?php if ($scripture1) {?><strong><?php echo JText::_('Scripture:');?> </strong><?php echo $scripture1;}?>"><?php
        } //end of is show tooltip?> <?php
        $src = JURI::base().$this->params->get('text_image');
        if ($imagew) {$width = $imagew;} else {$width = 24;}
@@ -722,7 +766,7 @@ echo $column;
 
     <?php } //This is the end of the if statement to see if text and/or pdf images set to "show"?>
     <?php if ($this->params->get('show_store') > 0){?>
-
+<?php /*
     <td width="<?php echo $storewidth;?>"><?php //This td is for the store column?>
     <?php $query = 'SELECT m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
     .' s.image_cd, s.prod_cd, s.server_cd, sr.id AS srid, sr.server_path
@@ -766,6 +810,11 @@ echo $column;
      </tr>
     </table>
     <?php }?></td>
+    */
+	$rowid = $row->id;
+	$callstore = JView::loadHelper('store');
+	$store = getStore($this->params, $rowid);
+	echo $store; ?>
     <?php  }//End of store column?>
 
     <?php if ($this->params->get('show_media') > 0) { ?>
@@ -808,6 +857,7 @@ echo $column;
 	   } //End if media_player param test
       $idfield = '#__bsms_mediafiles.id';
 	  $id4 = $media->id;
+	  $id3 = $id4;
 	  $filesizefield = '#__bsms_mediafiles.id';
 	  //dump ($media->id, 'id4: ');
 	  $filesize_call = JView::loadHelper('filesize');
