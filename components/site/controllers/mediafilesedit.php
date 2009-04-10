@@ -225,6 +225,8 @@ class biblestudyControllermediafilesedit extends JController {
 			//$fullfilename = JPATH_SITE.$folderpath. $file['name'];
 			
 			$fullfilename = JPATH_ROOT.$folderpath. $file['name'];
+			
+			
 			//dump ($fullfilename, 'fullfilename: ');
 			$filename = $file['name'];
 			jimport('joomla.filesystem.file');
@@ -234,8 +236,10 @@ class biblestudyControllermediafilesedit extends JController {
 				return;
 			}
 			//if (!JFile::upload($file['tmp_name'], $filepath)) {
-			if (!JFile::upload($file['tmp_name'], $fullfilename)) {
-				$mainframe->redirect("index.php?option=$option&view=studieslist".$menureturn, 'Upload failed, check to make sure that the path "'.$folderpath.'" exists on this server');
+			//if (!JFile::upload($file['tmp_name'], $fullfilename)) {
+				//$fullfilename = $_SERVER['DOCUMENT_ROOT'].$folderpath. $file['name'];}
+			if (!JFile::upload($file['tmp_name'], $fullfilename)) {	
+				$mainframe->redirect("index.php?option=$option&view=studieslist".$menureturn, 'Upload failed, check to make sure that the path "'.$fullfilename.'" exists on this server');
 				return;
 			}
 
