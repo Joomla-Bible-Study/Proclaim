@@ -3,6 +3,20 @@ defined('_JEXEC') or die();
 
 function getColumnarray($a, $row, $columnnumber, $params) {
 	//dump ($a, '$a: ');
+	switch ($colmnnumber) {
+	case 1 :
+		$colwidth = $params->get('widthcol1');
+		break;
+	case 2:
+		$colwidth = $params->get('widthcol2');
+		break;
+	case 3 :
+		$colwidth = $params->get('widthcol3');
+		break;
+	case 4 :
+	$colwidth = $params->get('widthcol4');
+		break;
+}
    $rows1=count($a);
    for($j=0;$j<$rows1;$j++)
    {
@@ -19,20 +33,7 @@ function getColumnarray($a, $row, $columnnumber, $params) {
    if (isset($columnelements[0]['position'])) { //This tests to see if there is anything in column
 //First we create the tables, rows, and column for this display
 
-switch ($colmnnumber) {
-	case 1 :
-		$colwidth = $params->get('widthcol1');
-		break;
-	case 2:
-		$colwidth = $params->get('widthcol2');
-		break;
-	case 3 :
-		$colwidth = $params->get('widthcol3');
-		break;
-	case 4 :
-	$colwidth = $params->get('widthcol4');
-		break;
-}
+
 $column = '<td width="'.$colwidth.'">'
     .'<table border="'.$params->get('border').'"'
     .' cellpadding="'.$params->get('padding').'"'
@@ -47,7 +48,7 @@ $column = '<td width="'.$colwidth.'">'
       $isbullet=$c['isbullet'];
       $span=$c['span'];
       $islink=$c['islink'];
-
+//dump ($islink, 'islink: ');
 // Now we run an increment so that we only but a <br> at the end of every line except the last line
        //Now we produce each element in turn with its parameters
       $column .= '<span '.$span.'>';
@@ -55,15 +56,15 @@ $column = '<td width="'.$colwidth.'">'
        $column .= '<ul><li>'; }
        switch ($islink) {
         case 1 :
-         $link1 = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id );
-         $column .= '<a href="'.$link1.'">';
+         $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id );
+         $column .= '<a href="'.$link.'">';
          break;
         case 2 :
-         $link1 = JRoute::_($filepath);
+         $link = JRoute::_($filepath);
          $column .= '<a href="'.$link.'">';
          break;
         case 3 :
-         $link1 = JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $row->tid );
+         $link = JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $row->tid );
          $column .= '<a href="'.$link.'">';
          break;
        }

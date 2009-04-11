@@ -402,7 +402,7 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
    //print_r ($column1);
    //echo 'Rows1: '.$rows1; ?>
    <?php $columnnumber = 1;
-	$column = getColumnarray($a, $row, $columnnumber, $params);
+	$column = getColumnarray($a, $row, $columnnumber, $this->params);
 	//if ($column) { //This tests to see if there is anything in column?>
    <?php //if (isset($column1[0]['position'])) { //This tests to see if there is anything in column1?>
    <?php if ($entry_user >= $entry_access){//This adds a <td> for user frontend editing of the record?>
@@ -430,8 +430,8 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
      <?php //We make a new row and td for each record in this column ?>
       <td valign="<?php //echo $this->params->get('colalign');?>"><?php 
       //Now we produce each element in turn with its parameters
-	  	
-		echo $column;
+	 ?>--> <?php 	
+		echo $column; ?> <!-- <?php
 /*	  echo '<span '.$span1.'>';
       if ($isbullet1 == 1) {
        echo '<ul><li>'; }
@@ -484,7 +484,7 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
     ?>
     <?php 
 		$columnnumber = 2;
-		$column = getColumnarray($a, $row, $columnnumber, $params);
+		$column = getColumnarray($a, $row, $columnnumber, $this->params);
 //	if ($column) { //This tests to see if there is anything in column?>
     <?php //if (isset($column2[0]['position'])) { //This tests to see if there is anything in column2?>
    <!-- <td width="<?php //echo $widpos2;?>"><?php //Beginning of Column 2 of 5?>
@@ -510,8 +510,8 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
      <?php //We make a new row and td for each record in this column ?>
       <td valign="<?php //echo $this->params->get('colalign');?>"><?php 
       //Now we produce each element in turn with its parameters
-	  	
-		echo $column;
+	?>-->  	<?php
+		echo $column; ?> <!-- <?php
       /*
 	  echo '<span '.$span2.'>';
       if ($isbullet2 == 1) {
@@ -564,7 +564,7 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
     //print_r($column3);?>
     <?php 
 		$columnnumber = 3;
-		$column = getColumnarray($a, $row, $columnnumber, $params);
+		$column = getColumnarray($a, $row, $columnnumber, $this->params);
 	//if ($column) { //This tests to see if there is anything in column?>
     <?php //if (isset($column3[0]['position'])) { //This tests to see if there is anything in column3?>
    <!-- <td width="<?php //echo $widpos3;?>"><?php //Begin Column 3 of 5?>
@@ -590,8 +590,8 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
      <?php //We make a new row and td for each record in this column ?>
       <td valign="<?php //echo $this->params->get('colalign');?>"><?php 
       //Now we produce each element in turn with its parameters
-	  	
-		echo $column;
+	 ?> --> 	<?php
+		echo $column; ?> <!-- <?php
      /* 
 	  echo '<span '.$span3.'>';
       if ($isbullet3 == 1) {
@@ -643,7 +643,7 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
     <?php 
 	
 	 	$columnnumber = 4;
-		$column = getColumnarray($a, $row, $columnnumber, $params);
+		$column = getColumnarray($a, $row, $columnnumber, $this->params);
 	//if ($column) { //This tests to see if there is anything in column?>
     <?php //if (isset($column4[0]['position'])) { //This tests to see if there is anything in column4?>
   <!--  <td width="<?php //echo $widpos4;?>"><?php //Begin Column 4 of 5?>
@@ -670,8 +670,8 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
      <?php //We make a new row and td for each record in this column ?>
       <td valign="<?php //echo $this->params->get('colalign');?>"><?php 
       //Now we produce each element in turn with its parameters
-	 
-		echo $column;
+	 ?>--> <?php
+		echo $column; ?> <!-- <?php
 	/*	
 	  $columnnumber = 4;
 		$column = getColumnarray($a, $row, $columnnumber);
