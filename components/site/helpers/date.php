@@ -30,6 +30,9 @@ switch ($df)
 	 case 8:
 		$date = JHTML::_('date', $studydate, JText::_('DATE_FORMAT_LC'));
 		break;
+         case 9:
+                $date = date('Y/M/D', strtotime($studydate));
+                break;
 	 default:
 		$date = date('n/j', strtotime($studydate));
 		break;

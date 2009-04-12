@@ -54,6 +54,7 @@
 			<option value="6">1 September 2007</option>
 			<option value="7">1/9/2007</option>
 			<option value="8">Use Global System Date Format</option>
+			<option value="9"> 2009/10/13</option>
 		</param>
 	<param name="default_order" type="radio" default="1" label="Default Ascending/Descending" description="Choose whether the default listing of studies should be in ascending or descending order">
 			<option value="DESC">Descending</option>
