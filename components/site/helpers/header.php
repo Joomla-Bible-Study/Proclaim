@@ -51,5 +51,5 @@ function getHeader($params)
 	   {$header .= '<th align="'.$params->get('header_align').'" bgcolor="'.$params->get('header_color').'" width="'.$params->get('header4_width').'"><span '.$params->get('header_span').'>'.$params->get('header4').'</span></th>';}
 	   
 	  } // end of if use headers
-	return $header;
+	 return $header;
 }

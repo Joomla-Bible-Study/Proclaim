@@ -227,53 +227,7 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
 $header_call = JView::loadHelper('header');
 $header = getHeader($this->params);
 echo $header;
-// begin array for positions to see if we need a column for the header
-  /*$headercheck = array( array(  'position' => $this->params->get('position1')),
-  array( 'position' => $this->params->get('position2')),
-  array( 'position' => $this->params->get('position3')),
-  array( 'position' => $this->params->get('position4')),
-  array( 'position' => $this->params->get('position5')),
-  array( 'position' => $this->params->get('position6')),
-  array( 'position' => $this->params->get('position7')),
-  array( 'position' => $this->params->get('position8')),
-  array( 'position' => $this->params->get('position9')),
-  array( 'position' => $this->params->get('position10')),
-  array( 'position' => $this->params->get('position11')),
-  array( 'position' => $this->params->get('position12')),
-  array( 'position' => $this->params->get('position13')),
-  array( 'position' => $this->params->get('position14')),
-  array( 'position' => $this->params->get('position15')),
-  array( 'position' => $this->params->get('position16')),
-  array( 'position' => $this->params->get('position17')),
-  array( 'position' => $this->params->get('position18'))
-  ); //print_r($headercheck);
-
-  //Beginning of header rows
-  $isheader1 = 0;
-  $isheader2 = 0;
-  $isheader3 = 0;
-  $isheader4 = 0;
-  if ($this->params->get('use_headers') >0) {
-   //$header_count = count($headercheck);
-   //dump ($header_count, 'Header_count');
-   $rows1=count($headercheck);
-   for($j=0;$j<$rows1;$j++)
-   {
-    if ($headercheck[$j]['position']==1){ $isheader1 = 1;}
-    if ($headercheck[$j]['position']==2){ $isheader2 = 1;}
-    if ($headercheck[$j]['position']==3){ $isheader3 = 1;}
-    if ($headercheck[$j]['position']==4){ $isheader4 = 1;}
-   }
-   if ($isheader1 == 1)
-   {echo '<th align="'.$this->params->get('header_align').'" bgcolor="'.$this->params->get('header_color').'" width="'.$this->params->get('header1_width').'"><span '.$this->params->get('header_span').'>'.$this->params->get('header1').'</span></th>';}
-   if ($isheader2 == 1)
-   {echo '<th align="'.$this->params->get('header_align').'" bgcolor="'.$this->params->get('header_color').'" width="'.$this->params->get('header2_width').'"><span '.$this->params->get('header_span').'>'.$this->params->get('header2').'</span></th>';}
-   if ($isheader3 == 1)
-   {echo '<th align="'.$this->params->get('header_align').'" bgcolor="'.$this->params->get('header_color').'" width="'.$this->params->get('header3_width').'"><span '.$this->params->get('header_span').'>'.$this->params->get('header3').'</span></th>';}
-   if ($isheader4 == 1)
-   {echo '<th align="'.$this->params->get('header_align').'" bgcolor="'.$this->params->get('header_color').'" width="'.$this->params->get('header4_width').'"><span '.$this->params->get('header_span').'>'.$this->params->get('header4').'</span></th>';}
-   
-  } // end of if use headers*/?>
+?>
   </tr>
  </table>
  </td></tr><?php //End of table for header rows?>
