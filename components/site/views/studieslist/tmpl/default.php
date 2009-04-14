@@ -223,8 +223,12 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
 <?php //mirrors 6 colum table below?>
   <tr>
    <td></td>
-<?php // begin array for positions to see if we need a column for the header
-  $headercheck = array( array(  'position' => $this->params->get('position1')),
+<?php 
+$header_call = JView::loadHelper('header');
+$header = getHeader($this->params);
+echo $header;
+// begin array for positions to see if we need a column for the header
+  /*$headercheck = array( array(  'position' => $this->params->get('position1')),
   array( 'position' => $this->params->get('position2')),
   array( 'position' => $this->params->get('position3')),
   array( 'position' => $this->params->get('position4')),
@@ -269,7 +273,7 @@ if ( $this->params->get( 'show_page_title_list' ) >0 ) {
    if ($isheader4 == 1)
    {echo '<th align="'.$this->params->get('header_align').'" bgcolor="'.$this->params->get('header_color').'" width="'.$this->params->get('header4_width').'"><span '.$this->params->get('header_span').'>'.$this->params->get('header4').'</span></th>';}
    
-  } // end of if use headers?>
+  } // end of if use headers*/?>
   </tr>
  </table>
  </td></tr><?php //End of table for header rows?>
