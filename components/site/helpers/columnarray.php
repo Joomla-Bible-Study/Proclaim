@@ -3,6 +3,8 @@ defined('_JEXEC') or die();
 
 function getColumnarray($a, $row, $columnnumber, $params) {
 	//dump ($a, '$a: ');
+	if (!$params->get('menuid')) { $menuid = 0;}
+	else {$menuid = $params->get('menuid');}
 	switch ($colmnnumber) {
 	case 1 :
 		$colwidth = $params->get('widthcol1');
@@ -57,6 +59,7 @@ $column = '<td width="'.$colwidth.'">'
        switch ($islink) {
         case 1 :
          $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id );
+		 if ($menuid > 0) {$link .= '&Itemid='.$menuid;}
          $column .= '<a href="'.$link.'">';
          break;
         case 2 :
@@ -65,6 +68,7 @@ $column = '<td width="'.$colwidth.'">'
          break;
         case 3 :
          $link = JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $row->tid );
+		 if ($menuid > 0) {$link .= '&Itemid='.$menuid;}
          $column .= '<a href="'.$link.'">';
          break;
        }
