@@ -675,7 +675,7 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
      <tr valign="<?php echo $this->params->get('colalign');?>">
 
      <?php
-     $text_call = JView::loadHelper('textlink');
+$text_call = JView::loadHelper('textlink');
      if ($this->params->get('show_full_text') > 0) {
 
 $textorpdf = 'text';
