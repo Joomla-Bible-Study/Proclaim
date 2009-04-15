@@ -675,46 +675,20 @@ $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $d
      <tr valign="<?php echo $this->params->get('colalign');?>">
 
      <?php
+     $text_call = JView::loadHelper('textlink');
      if ($this->params->get('show_full_text') > 0) {
-      $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id );
-      JHTML::_('behavior.tooltip');?>
-      <td><?php 
-       if ($this->params->get('tooltip') >0) {?>
-        <span class="zoomTip"
-         title="<strong>Sermon Info:</strong>::
-       	 <?php if ($study) {?><strong><?php echo JText::_('Title:');?></strong> <?php echo $study;}?><br><br>
-       	 <?php if ($intro) {?><strong><?php echo JText::_('Details:');?></strong> <?php echo $intro;}?><br><br>
-       	 <?php if ($snumber) {?><strong><?php echo JText::_('Sermon Number:');?></strong> <?php echo $snumber;}?><br>
-       	 <strong><?php echo JText::_('Teacher:');?>:</strong> <?php echo $teacher;?><br><br>
-       	 <hr /><br>
-       	 <?php if ($scripture1) {?><strong><?php echo JText::_('Scripture:');?> </strong><?php echo $scripture1;}?>"><?php
-       } //end of is show tooltip?> <?php
-       $src = JURI::base().$this->params->get('text_image');
-       if ($imagew) {$width = $imagew;} else {$width = 24;}
-       if ($imageh) {$height = $imageh;} else {$height= 24;}
-       ?> <a href="<?php echo $link; ?>"><img
-       src="<?php echo JURI::base().$this->params->get('text_image');?>"
-       alt="<?php echo $details_text;?>" width="<?php echo $width;?>"
-       height="<?php echo $height;?>" border="0" /></a>
-       <?php if ($this->params->get('tooltip') >0) { ?></span><?php } ?>
-      </td>
-      <?php //End of text column ?>
+
+$textorpdf = 'text';
+$textlink = getTextlink($params, $row, $scripture1, $textorpdf);
+echo $textlink;    ?>
 
       <?php } // end of show_full_text if ?>
 
-      <?php if ($this->params->get('show_pdf_text') > 0) { ?>
-      <?php $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf' ); ?>
-
-      <td><?php $src = JURI::base().$this->params->get('pdf_image');
-      if ($imagew) {$width = $imagew;} else {$width = 24;}
-      if ($imageh) {$height = $imageh;} else {$height= 24;}
-      ?> <a href="<?php echo $link; ?>" target="_blank"
-       title="<?php echo $details_text;?>"><img
-       src="<?php echo JURI::base().$this->params->get('pdf_image');?>"
-       alt="<?php echo $details_text.JText::_('- PDF Version');?>"
-       width="<?php echo $width;?>" height="<?php echo $height;?>"
-       border="0" /></a></td>
-       <?php //This is the end of the column for the pdf image?>
+      <?php if ($this->params->get('show_pdf_text') > 0) {
+        $textorpdf = 'pdf';
+$pdflink = getTextlink($params, $row, $scripture1, $textorpdf);
+echo $pdflink;
+?>
 
        <?php } // End of show pdf text ?>
      </tr>

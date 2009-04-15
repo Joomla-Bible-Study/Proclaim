@@ -17,15 +17,15 @@ $intro = str_replace('"','',$row->studyintro);
 	}
 	if ($this->params->get('tooltip') >0) {
         $linktext .= '<span class="zoomTip" title="<strong>Sermon Info:</strong>';
-       	  if ($row->studytitle) {$linktext .= '<strong>'.JText::_('Title:').'</strong>'.$row->studytitle.'<br><br>'};
+       	  if ($row->studytitle) {$linktext .= '<strong>'.JText::_('Title:').'</strong>'.$row->studytitle.'<br><br>';}
        	  if ($intro) $linktext .= '<strong>'.JText::_('Details:').'</strong>'.$intro.'<br><br>';}
        	  if ($row->studynumber) { $linktext .= '<strong>'.JText::_('Sermon Number:').'</strong>'.$row->studynumber.'<br>';}
-       	  if ($row->teachername;) {$linktext .= '<strong>'.JText::_('Teacher:').'</strong>'.$row->teachername.'<br><br>';}
+       	  if ($row->teachername) {$linktext .= '<strong>'.JText::_('Teacher:').'</strong>'.$row->teachername.'<br><br>';}
        	 $linktext .= '<hr /><br>';
-       	  if ($scripture1) {$linktext .= '<strong>'.JText::_('Scripture:').'</strong>'.$scripture1.'">'}
+       	  if ($scripture1) {$linktext .= '<strong>'.JText::_('Scripture:').'</strong>'.$scripture1.'">';}
        } //end of is show tooltip
-	if ($params->get('imagew', 24)) {$width = $params->get('imagew', 24)} else {$width = 24;}
-    if ($params->get('imageh', 24)) {$height = $params->get('imageh', 24)} else {$height= 24;}
+	if ($params->get('imagew', 24)) {$width = $params->get('imagew', 24);} else {$width = 24;}
+    if ($params->get('imageh', 24)) {$height = $params->get('imageh', 24);} else {$height= 24;}
     
 	$linktext .= '<td><a href="'.$link.'"><img src="'.JURI::base().$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
     
