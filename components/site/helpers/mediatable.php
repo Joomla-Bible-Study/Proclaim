@@ -66,12 +66,15 @@ function getMediatable($params, $id, $ismodule, $duration)
        .'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';
       $isavr = 0;
+	  //dump ($isavr, 'isavr: ');
       if (JPluginHelper::importPlugin('system', 'avreloaded'))
       {
+		  JPluginHelper::importPlugin('system', 'avreloaded');
        $isavr = 1;
+	   
        $studyfile = $media->spath.$media->fpath.$media->filename;
        $mediacode = $media->mediacode;
-       //dump ($mediacode, 'mediacode');
+       
        $isrealfile = substr($media->filename, -4, 1);
        $fileextension = substr($media->filename,-3,3);
        if ($mediacode == ''){
