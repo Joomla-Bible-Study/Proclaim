@@ -30,7 +30,11 @@ function getHeader($params)
 	  $isheader3 = 0;
 	  $isheader4 = 0;
 	  $header = '';
-	  if ($params->get('use_headers') >0) {
+	  $w1 = $params->get('widthcol1');
+	  $w2 = $w1 + $params->get('widthcol2');
+	  $w3 = $w2 + $params->get('widthcol3');
+
+if ($params->get('use_headers') >0) {
 	   //$header_count = count($headercheck);
 	   //dump ($header_count, 'Header_count');
 	   $rows1=count($headercheck);
@@ -42,13 +46,15 @@ function getHeader($params)
 		if ($headercheck[$j]['position']==4){ $isheader4 = 1;}
 	   }
 	   if ($isheader1 == 1)
-	   {$header = '<th align="'.$params->get('header_align').'" bgcolor="'.$params->get('header_color').'" width="'.$params->get('header1_width').'"><span '.$params->get('header_span').'>'.$params->get('header1').'</span></th>';}
+	   {$header .= '<div id="header1">'.$params->get('header1').'</div>';}
 	   if ($isheader2 == 1)
-	   {$header .= '<th align="'.$params->get('header_align').'" bgcolor="'.$params->get('header_color').'" width="'.$params->get('header2_width').'"><span '.$params->get('header_span').'>'.$params->get('header2').'</span></th>';}
+	   {$header .= '<div id="header2">'.$params->get('header2').'</div>';}
 	   if ($isheader3 == 1)
-	   {$header .= '<th align="'.$params->get('header_align').'" bgcolor="'.$params->get('header_color').'" width="'.$params->get('header3_width').'"><span '.$params->get('header_span').'>'.$params->get('header3').'</span></th>';}
+	   {$header .= '<div id="header3">'.$params->get('header3').'</div>';}
 	   if ($isheader4 == 1)
-	   {$header .= '<th align="'.$params->get('header_align').'" bgcolor="'.$params->get('header_color').'" width="'.$params->get('header4_width').'"><span '.$params->get('header_span').'>'.$params->get('header4').'</span></th>';}
+	   {$header .= '<div id="header4">'.$params->get('header4').'</div>';}
+	   
+	  
 	   
 	  } // end of if use headers
 	 return $header;

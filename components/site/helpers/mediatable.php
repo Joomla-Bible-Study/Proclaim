@@ -27,8 +27,9 @@ function getMediatable($params, $id, $ismodule, $duration)
     $database->setQuery( $query_media1 );
     $media1 = $database->loadObjectList('id');
 	
-	$mediatable = '<td width="'.$params->get('media_width').'">';
-	$mediatable .= ' <table align="left"><tr valign="'.$params->get('colalign').'">';
+	//$mediatable = '<td width="'.$params->get('media_width').'">';
+	//$mediatable .= ' <table align="left"><tr valign="'.$params->get('colalign').'">';
+	$mediatable .= '<div style="width:'.$params->get('media_width').';">';
 	
 	foreach ($media1 as $media) {
       $download_image = $params->get('download_image');
@@ -169,8 +170,8 @@ function getMediatable($params, $id, $ismodule, $duration)
 
        // Here is where we begin to build the mediatable variable
 		
-     
-      $mediatable .= '<td align="left">'.$media1_link;
+     $mediatable .= '<div style="width:100%;">'.$media1_link;
+      //$mediatable .= '<td align="left">'.$media1_link;
 		if ($params->get('show_filesize') > 0)
       { $mediatable .= $media1_sizetext;}
 
@@ -190,12 +191,12 @@ function getMediatable($params, $id, $ismodule, $duration)
        title="'.JText::_('Download').'" />'.JText::_('</a>'); 
 	   if ($params->get('download_side') > 0) { $mediatable .= '</td>';}}
 
-     $mediatable .= '</td>';
-
+     //$mediatable .= '</td>';
+	$mediatable .= '</div>';
 
 	} //end of foreach of media results
-    $mediatable .= '</tr> </table> </td>';
-
+    //$mediatable .= '</tr> </table> </td>';
+	$mediatable .= '</div>';
 
  //} //This is the end of the if show media statement 
 	

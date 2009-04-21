@@ -29,13 +29,13 @@ $intro = str_replace('"','',$row->studyintro);
 	if ($params->get('imagew', 24)) {$width = $params->get('imagew', 24);} else {$width = 24;}
     if ($params->get('imageh', 24)) {$height = $params->get('imageh', 24);} else {$height= 24;}
     
-	$linktext .= '<td><a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
-    
+	//$linktext .= '<td><a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
+    $linktext .= '<div style="width:100%;"><a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
 	if ($params->get('tooltip') >0) {
 	$linktext .= '</span>';
 	}
-	$linktext .='</td>';
-	
+	//$linktext .='</td>';
+	$linktext .='</div>';
    return $linktext;
    
 }
