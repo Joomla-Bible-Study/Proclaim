@@ -25,8 +25,8 @@ class biblestudyViewstudydetails extends JView
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		//$params = &JComponentHelper::getParams($option);
-		//$params = &$mainframe->getPageParameters();
-		$params		=& $mainframe->getParams('com_biblestudy');
+		$params = &$mainframe->getPageParameters();
+		//$params		=& $mainframe->getParams('com_biblestudy');
 		//$this->assignRef('params', $params);
 		//end TF added
 		$studydetails		=& $this->get('Data');

@@ -26,11 +26,9 @@ function getMediatable($params, $id, $ismodule, $duration)
     . ' WHERE #__bsms_mediafiles.study_id = '.$id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC';
     $database->setQuery( $query_media1 );
     $media1 = $database->loadObjectList('id');
-	
-	//$mediatable = '<td width="'.$params->get('media_width').'">';
-	//$mediatable .= ' <table align="left"><tr valign="'.$params->get('colalign').'">';
-	$mediatable .= '<div style="width:'.$params->get('media_width').';">';
-	
+	$rows2 = count($media1);
+	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
+
 	foreach ($media1 as $media) {
       $download_image = $params->get('download_image');
       if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
@@ -170,13 +168,13 @@ function getMediatable($params, $id, $ismodule, $duration)
 
        // Here is where we begin to build the mediatable variable
 		
-     $mediatable .= '<div style="width:100%;">'.$media1_link;
-      //$mediatable .= '<td align="left">'.$media1_link;
+	 $mediatable .= $media1_link;
 		if ($params->get('show_filesize') > 0)
-      { $mediatable .= $media1_sizetext;}
+      { //$mediatable .= $media1_sizetext;
+	  }
 
 		if ($link_type > 0){ $src = JURI::base().$download_image;
-      	if ($params->get('download_side') > 0) { $mediatable .='<td>';}
+      	//if ($params->get('download_side') > 0) { $mediatable .='<td>';}
       if ($imagew) {$width = $imagew;} else {$width = 24;}
       if ($imageh) {$height = $imageh;} else {$height= 24;}
       if($params->get('compatibilityMode') == 0) {
@@ -189,16 +187,12 @@ function getMediatable($params, $id, $ismodule, $duration)
        alt="'.JText::_('Download').'"
        height="'.$height.'" width="'.$width.'"
        title="'.JText::_('Download').'" />'.JText::_('</a>'); 
-	   if ($params->get('download_side') > 0) { $mediatable .= '</td>';}}
+	  // if ($params->get('download_side') > 0) { $mediatable .= '</td>';}
+	  }
 
-     //$mediatable .= '</td>';
-	$mediatable .= '</div>';
 
 	} //end of foreach of media results
-    //$mediatable .= '</tr> </table> </td>';
-	$mediatable .= '</div>';
 
- //} //This is the end of the if show media statement 
 	
     return $mediatable;
 }
