@@ -33,7 +33,7 @@ function getColumnarray($a, $row, $columnnumber, $params) {
       $islink=$c['islink'];
 	  //dump ($element, 'element: ');
 //dump ($islink, 'islink: ');
-// Now we run an increment so that we only but a <br> at the end of every line except the last line
+// Now we run an increment so that we only but a <br /> at the end of every line except the last line
        //Now we produce each element in turn with its parameters
 	   //dump ($columnnumber, 'columnnumber: ');
 	   
@@ -59,11 +59,11 @@ function getColumnarray($a, $row, $columnnumber, $params) {
        if ($islink > 0) { $column .= '</a>'; }
        if ($isbullet == 1) { $column .= '</li></ul>';} 
 	   $j2++;
-	   if ($j2<$rows2) {$column .= '<br>';}
+	   if ($j2<$rows2) {$column .= '<br />';}
 	 } // end of foreach $columnelements
 	 
  } //end of test to see if anything is in the column
  //dump ($column, '$column: ');
- if (!$column) {$column = '<br>';}
+ if (!$column) {$column = '<br />';}
 	return $column;
  }

@@ -23,7 +23,7 @@ function getMediatable($params, $id, $ismodule, $duration)
     . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
     . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
     . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-    . ' WHERE #__bsms_mediafiles.study_id = '.$id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC';
+    . ' WHERE #__bsms_mediafiles.study_id = '.$id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
     $database->setQuery( $query_media1 );
     $media1 = $database->loadObjectList('id');
 	$rows2 = count($media1);
@@ -179,14 +179,13 @@ function getMediatable($params, $id, $ismodule, $duration)
       if ($imageh) {$height = $imageh;} else {$height= 24;}
       if($params->get('compatibilityMode') == 0) {
        $mediatable .='<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
+	   
       }else{
        $mediatable .='<a href="http://joomlaoregon.com/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
+	   
       }
       
-	  $mediatable .= '<img src="'.JURI::base().$download_image.'"
-       alt="'.JText::_('Download').'"
-       height="'.$height.'" width="'.$width.'"
-       title="'.JText::_('Download').'" />'.JText::_('</a>'); 
+	  $mediatable .= '<img src="'.JURI::base().$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
 	  // if ($params->get('download_side') > 0) { $mediatable .= '</td>';}
 	  }
 

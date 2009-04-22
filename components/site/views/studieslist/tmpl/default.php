@@ -29,41 +29,19 @@ defined('_JEXEC') or die();
     $show_description = $this->params->get('show_description', 1);
     $downloadCompatibility = $this->params->get('compatibilityMode');
 	$params = $mainframe->getPageParameters();
-	$w1 = $this->params->get('widthcol1');
-	  	$w2 = $w1 + $this->params->get('widthcol2');
-	  	$w3 = $w2 + $this->params->get('widthcol3');
-		$w4 = $this->params->get('widthcol4');
-		$mw = 150;
-		//$mw = $this->params->get('media_width');
 //to do: write an external function to create the css
 $document =& JFactory::getDocument();
 $type = 'text/css';
-$styles = '
-#column1 {float: left; width:'.$params->get('widthcol1').';}
-#column2 {float: left; width:'.$params->get('widthcol2').';}
-#column3 {float: left; width:'.$params->get('widthcol3').';}	
-#column4 {float: left; width:'.$params->get('widthcol4').';}
-#header1 {float: left; width:'.$params->get('widthcol1').'px; background-color: '.$params->get('header_color').'; text-align:'.$params->get('header_align').';}
-#header2 {float: left; width:'.$params->get('widthcol2').'px; background-color: '.$params->get('header_color').'; text-align:'.$params->get('header_align').';}
-#header3 {float: left; width:'.$params->get('widthcol3').'px; background-color: '.$params->get('header_color').'; text-align:'.$params->get('header_align').';}
-#header4 {float: left; width:'.$params->get('widthcol4').'px; background-color: '.$params->get('header_color').'; text-align:'.$params->get('header_align').';}
-#bspagecontainer {position:relative; width: '.$params->get('page_width').';}
-#bspageheader {float: left; width: 100%; }
-#bsteacher {float:left; width: 100%}
-#bsdropdownmenu {float: left; padding-bottom: 5px; border-bottom: medium solid #707070; width: '.$params->get('page_width').';}
-#bslistings {float: left; }
-#bstext {float:left; padding-right: 2px}
-#bsstore {float: left; padding-left: 2px; padding-right: 2px;}
-#bsmediatable {float:left; padding-left: 2px }
-#bsbottomlisting {float: left; width:100%; }
-#bslistingcontainer {float: left; padding: 3px 3px 3px 3px; border-bottom: thin solid #707070; width:'.$params->get('page_width').';}
-';
+$css_call = JView::loadHelper('css');
+$styles = getCss($params);
 $document->addStyleDeclaration($styles, $type);
-
+$url = $params->get('stylesheet');
+if ($url) {$document->addStyleSheet($url);}
+$suffix = $params->get('suffix');
 
     ?>
-<div id="bspagecontainer" > <!-- This div is the container for the whole page -->
-<div id="bspageheader">
+<div class="bspagecontainer<?php echo $suffix;?>" > <!-- This div is the container for the whole page -->
+<div class="bspageheader<?php echo $suffix;?>">
 	
 	<?php
      if ($this->params->get( 'show_page_image' ) >0) {
@@ -83,7 +61,7 @@ $document->addStyleDeclaration($styles, $type);
 
 </div><!--end of div for pageheader-->
 
-<div id="bsteacher">
+<div class="bsteacher<?php echo $suffix;?>">
     <img
     src="<?php echo $this->params->get('teacherimage');?>" border="1"
     width="<?php echo $this->params->get('teacherw');?>"
@@ -91,7 +69,7 @@ $document->addStyleDeclaration($styles, $type);
 	<?php echo $this->params->get('teachername');?>
 </div><!--end of bsteacher div-->
 
-<div id="bsdropdownmenu" >
+<div class="bsdropdownmenu<?php echo $suffix;?>" >
 
   <?php if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}?>
   <?php if ($this->params->get('show_book_search') >0 && !($book_menu) ){ ?>
@@ -173,16 +151,16 @@ $document->addStyleDeclaration($styles, $type);
 	 <?php //End of row for drop down boxes?>
  
 </div><!--end of bsdropdownmenu div-->
-
-<!--<div id="bslistheader" style="position: relative; width:<?php /*echo $w3 + $w4;?>px">
+<div class="headercontainer<?php echo $suffix;?>"><!--this is the container for all the headers, so that we can add a line underneath and have it go the while width-->
+<div class="bslistheader<?php echo $suffix;?>" >
 	<?php 
     $header_call = JView::loadHelper('header');
     $header = getHeader($this->params);
     echo $header;
-   */ ?>
-</div>--><!--end of bslistheader div-->
-
-<div id="bslistings" >
+   ?>
+</div><!--end of bslistheader div-->
+</div><!--end of headercontainer div-->
+<div class="bslistings<?php echo $suffix;?>" >
 
 	<?php // This is the count for the listing table items
      $k = 1;
@@ -191,7 +169,6 @@ $document->addStyleDeclaration($styles, $type);
   	{ // This is the beginning of a loop that will cycle through all the records according to the query
 		$bgcolor = ($row_count % 2) ? $color1 : $color2; //This code cycles through the two color choices made in the parameters
 		$row = &$this->items[$i];
-		$bgcolor = ($row_count % 2) ? $color1 : $color2;
 		$id4 = $row->id;
 		$filesizefield = '#__bsms_mediafiles.study_id';
 		$filesize_call = JView::loadHelper('filesize');
@@ -250,31 +227,33 @@ $document->addStyleDeclaration($styles, $type);
 		
 		  //This calls the helper once that will process each column's array, coming from the $a variable. We will then call a function in each column from this helper file
 		  $array_call = JView::loadHelper('columnarray');
-		  $color = $this->params->get('use_color');
-		  $w1 = $this->params->get('widthcol1');
-	  	  $w2 = $w1 + $this->params->get('widthcol2');
-	  	  $w3 = $w2 + $this->params->get('widthcol3');
-
- 		?><div id="bslistingcontainer"><?php
-        $columnnumber = 1;
+		  if ($this->params->get('use_color') > 0) {
+			  echo '<div class="bslistingcontainer'.$suffix.'" style="background-color: '.$bgcolor.';">';}
+			  else { echo '<div class="bslistingcontainer'.$suffix.'">';}
+        
+		$columnnumber = 1;
 		$column1 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column1) { echo '<div id="column'.$columnnumber.'">';}
+		if ($column1) { echo '<div class="column'.$columnnumber.$suffix.'">';}
 		echo $column1; 
+		
 		if ($column1) {echo '</div>';}
 		$columnnumber = 2;
 		$column2 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column2) { echo '<div id="column'.$columnnumber.'">';}
+		if ($column2) { echo '<div class="column'.$columnnumber.$suffix.'">';}
 		echo $column2; 
+		
 		if ($column2) {echo '</div>';}
         $columnnumber = 3;
 		$column3 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column3) { echo '<div id="column'.$columnnumber.'">';}
+		if ($column3) { echo '<div class="column'.$columnnumber.$suffix.'">';}
        	echo $column3; 
+		
 		if ($column3) {echo '</div>';}
 		$columnnumber = 4;
 		$column4 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column4) { echo '<div id="column'.$columnnumber.'">';}
+		if ($column4) { echo '<div class="column'.$columnnumber.$suffix.'">';}
 		echo $column4;
+		
 		if ($column4) {echo '</div>';}
 		
 		//Collects the details links
@@ -282,24 +261,30 @@ $document->addStyleDeclaration($styles, $type);
 				$textorpdf = 'text';
 				$textlink_call = JView::loadHelper('textlink');
 				$textlink = getTextlink($params, $row, $scripture1, $textorpdf);
-				echo '<div id="bstext">'.$textlink.'</div>';
+				echo '<div class="bstext'.$suffix.' zoomtip">'.$textlink.'</div>';
+				
 		}
+		
 		if 	($params->get('show_pdf_text') > 0) {
 				$textorpdf = 'pdf';
 				$textlink_call = JView::loadHelper('textlink');
 				$textlink = getTextlink($params, $row, $scripture1, $textorpdf);
-				echo '<div id="bstext">'.$textlink.'</div>';
+				echo '<div class="bstext'.$suffix.' zoomtip">'.$textlink.'</div>';
+				
 		}	//end details links
 		
 		//Store section
+		
 		if ($params->get('show_store') > 0) {
 			$store_call = JView::loadHelper('store');
 			$store = getStore($params, $row->id);
-			echo '<div id="bsstore">'.$store.'</div>';
+			echo '<div class="bsstore'.$suffix.'">'.$store.'</div>';
+			
 		} //end store
 		//show media section
+		
 		if ($params->get('show_media') > 0) {
-				echo '<div id="bsmediatable">';
+				echo '<div class="bsmediatable'.$suffix.'">';
         		$ismodule = 0;
 				$params = $this->params;
 				$filesize_call = JView::loadHelper('filesize');
@@ -307,24 +292,30 @@ $document->addStyleDeclaration($styles, $type);
 				$call_mediatable = JView::loadHelper('mediatable');
 				$mediatable = getMediatable($params, $row->id, $ismodule, $duration);
 				echo $mediatable.'</div>';
-		}//End of bsmediatable div?>
-                
-        </div><!--end of bslistingcontainer-->
-		<?php //column for description
+				
+		}//End of bsmediatable div
+		
+		//column for description
+		
 		if ($params->get('show_description') > 0) {
-	        echo '<div id="bsbottomlisting">'.$row->studyintro.'</div>';
+	        echo '<div class="bsbottomlisting'.$suffix.'">'.$row->studyintro.'</div>';
 			}//End of bsbottomlisting
-			
+        if ($params->get('line_break') > 0) { echo '<br />';}  ?>      
+        
+        </div><!--end of bslistingcontainer-->
+		
+<?php			
  //end of list - row count increment goes next
 	$row_count++; // This increments the row count and adjusts the variable for the color background
   	$k = 3 - $k;
+	
   } //This is the end of the for statement for each result from the database that will create its own 6 column table
 
  ?>
 	
 		
 	
-<div id="bsfooter" style="clear: both; position: relative; padding: 10px 10px; width: 100%; ">
+<div class="bsfooter<?php echo $suffix;?>" style="clear: both; position: relative; padding: 10px 10px; width: 100%; ">
 	<?php 
       //echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
       //echo $this->pagination->getLimitBox();

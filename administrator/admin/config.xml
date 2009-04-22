@@ -26,7 +26,7 @@
 	<param name="tmplSingleTeacher" tmplType="Single Teacher" type="template" default="" label="Single Teacher" description="Default Single Teacher template" />
 	<param name="@spacer" type="spacer" default="Study List Options" label="" description="">
 		</param>
- 	<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or %" />
+ 	<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or percentage. Needs px or % at end" />
 	<param name="show_page_title_list" type="radio" default="1" label="Hide/Show Page Title" description="Choose whether to hide or show a title on the top of the main page">
 		<option value="0">Hide</option>
 		<option value="1">Show</option>
@@ -44,6 +44,8 @@
 		<option value="0">No Background</option>
 		<option value="1">Use Background</option>
 		</param>
+	<param name="stylesheet" type="text" size="50" default="" label="Path to Your Stylesheet" description="Path from Joomla root to an alternate stylesheet (for advanced users only). Overrides page styles" />
+	<param name="suffix" type="text" size="20" default="" label="Custom styling suffix" description="Custom css you have added to template stylesheet - overrides page styles. For advanced users only" />
 	<param name="date_format" type="list"  default="2" label="Date format" description="Set the date display format">
 			<option value="0">Sep 1, 2007</option>
 			<option value="1">Sep 1</option>
@@ -56,7 +58,7 @@
 			<option value="8">Use Global System Date Format</option>
 			<option value="9"> 2009/10/13</option>
 		</param>
-	<param name="default_order" type="radio" default="1" label="Default Ascending/Descending" description="Choose whether the default listing of studies should be in ascending or descending order">
+	<param name="default_order" type="radio" default="1" label="Default Date Ascending/Descending" description="Choose whether the default listing of studies should be in date ascending or descending order">
 			<option value="DESC">Descending</option>
 			<option value="ASC">Ascending</option>
 		</param>
@@ -77,20 +79,17 @@
 			<option value="right">Right</option>
 		</param>
 		<param name="header_color" type="text" default="#333333" label="Header Background Color" description="Put in a Hex or other color for the header row background" />
-		<param name="header_span" type="text" default="" label="Span tag for Header" description="Put in span information like size, font, etc for the header" />
-		<param name="header_width" type="text" default="" label="Width for header row" description="Pixels or percentage for entire row with headers" />
-		<param name="header1_width" type="text" default="" label="Width for Header column 1" description="Pixesl or percentage for Header 1" />
-		<param name="header2_width" type="text" default="" label="Width for Header column 2" description="Pixesl or percentage for Header 2" />
-		<param name="header3_width" type="text" default="" label="Width for Header column 3" description="Pixesl or percentage for Header 3" />
-		<param name="header4_width" type="text" default="" label="Width for Header column 4" description="Pixesl or percentage for Header 4" />
 		<param name="header1" type="text" default="" label="Header Column 1" description="Text to appear in the header of column 1 - leave blank if not using that column" />
 		<param name="header2" type="text" default="" label="Header Column 2" description="Text to appear in the header of column 2 - leave blank if not using that column" />
 		<param name="header3" type="text" default="" label="Header Column 3" description="Text to appear in the header of column 3 - leave blank if not using that column" />
 		<param name="header4" type="text" default="" label="Header Column 4" description="Text to appear in the header of column 4 - leave blank if not using that column" />
+		<param name="header5" type="text" default="" label="Header for Details Column" description="Text to appear in the header of the column that links to the details and pdf" />
+		<param name="header6" type="text" default="" label="Header for Media Column" description="Text to appear in the header of the column that links to the media files" />
 	<param name="show_full_text" type="radio" default="1" label="Text" description="Show/Hide link to text">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+	<param name="details_width" type="text" default="48px" label="Width for details column" description="Width of column with links to details and pdf" />
 	<param name="tooltip" type="radio" default="1" label="Show/Hide Tooltip" description="Shows or hides a tooltip with details of your studies over the study details link">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -134,10 +133,6 @@
 	<param name="widthcol2" type="text" size="4" default="100" label="Column 2 width, # or %" description="width in number or percentage" />
 	<param name="widthcol3" type="text" size="4" default="250" label="Column 3 width, # or %" description="width in number or percentage" />
 	<param name="widthcol4" type="text" size="4" default="250" label="Column 4 width, # or %" description="width in number or percentage" />
-	<param name="colalign" type="text" default="top" label="Vertical align of columns" description="Use top, middle, bottom for the alignment of the module columns" />
-	<param name="padding" type="text" default="0" label="Cell Padding" description="Set the number for cell padding for each column table" />
-	<param name="spacing" type="text" default="0" label="Cell Spacing" description="Set the number for cell spacing for each column table" />
-	<param name="border" type="text" default="0" label="Table Border" description="Set a number of thickness for a table border" />
 	<param name="show_teacher_list" type="radio" default="0" label="Show/Hide a teacher image on list page" description="Choose whether to show or hide a teacher thumbnail and name in the list page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -230,7 +225,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span1" type="text" default="" label="Span tag for Scripture" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet1" type="list" default="0" label="Bullet Scripture" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -262,7 +256,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span13" type="text" default="" label="Span tag for Scripture 2" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet13" type="list" default="0" label="Bullet Scripture 2" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -294,7 +287,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span2" type="text" default="" label="Span tag for Title" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet2" type="list" default="0" label="Bullet Title" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -330,7 +322,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span3" type="text" default="" label="Span tag for Duration" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet3" type="list" default="0" label="Bullet Duration" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -362,7 +353,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span4" type="text" default="" label="Span tag for Description" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet4" type="list" default="0" label="Bullet Description" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -394,7 +384,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span5" type="text" default="" label="Span tag for date" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet5" type="list" default="0" label="Bullet date" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -427,7 +416,6 @@
 			<option value="2">Link to 1st Media File</option>
 			<option value="3">Link to Teacher's Page</option>
 		</param>
-		<param name="span6" type="text" default="" label="Span tag for Teacher" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet6" type="list" default="0" label="Bullet Teacher" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -460,7 +448,6 @@
 			<option value="2">Link to 1st Media File</option>
 			<option value="3">Link to Teacher's Page</option>
 		</param>
-		<param name="span7" type="text" default="" label="Span tag for teacher title" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet7" type="list" default="0" label="Bullet Teacher Title" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -493,7 +480,6 @@
 			<option value="2">Link to 1st Media File</option>
 			<option value="3">Link to Teacher's Page</option>
 		</param>
-		<param name="span10" type="text" default="" label="Span tag for Title + Teacher" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet10" type="list" default="0" label="Bullet Title + Teacher" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -525,7 +511,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span8" type="text" default="" label="Span tag for Filesize" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet8" type="list" default="0" label="Bullet Filesize" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -557,7 +542,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span9" type="text" default="" label="Span tag for Series" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet9" type="list" default="0" label="Bullet Series" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -589,7 +573,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span11" type="text" default="" label="Span tag for Secondary Reference" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet11" type="list" default="0" label="Bullet Secondary Reference" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -621,7 +604,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span12" type="text" default="" label="Span tag for Message Type" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet12" type="list" default="0" label="Bullet Message Type" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -653,7 +635,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span14" type="text" default="" label="Span tag for Submitted By" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet14" type="list" default="0" label="Bullet Submitted By" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -686,7 +667,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span15" type="text" default="" label="Span tag for Hits" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet15" type="list" default="0" label="Bullet Hits" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -718,7 +698,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span16" type="text" default="" label="Span tag for Study Number" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet16" type="list" default="0" label="Bullet Study Number" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -750,7 +729,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span17" type="text" default="" label="Span tag for Topic" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet17" type="list" default="0" label="Bullet Topic" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -782,7 +760,6 @@
 			<option value="1">Link to Details</option>
 			<option value="2">Link to 1st Media File</option>
 		</param>
-		<param name="span18" type="text" default="" label="Span tag for Location" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="isbullet18" type="list" default="0" label="Bullet Location" description="Add a bullet before this item">
 			<option value="0">No Bullet</option>
 			<option value="1">Bulleted</option>
@@ -881,18 +858,9 @@
 			<option value="1">Show</option>
 			<option value="0">Hide</option>
 		</param>
-		<param name="descriptionspan" label="Description Span" type="text" default="" description="Put in style information for the description text along bottom" />
-		<param name="line" type="list" default="1" label="Choose to show or hide lines" description="Showing lines puts a line seperator below each listing">
-			<option value="0">Line Off</option>
-			<option value="1">Line On</option>
-		</param>
-		<param name="download_side" type="list" default="0" label="Download icon to side or under" description="Choose whether the download icon (set in each media file) appears to the side or below the media file">
-			<option value="0">Below</option>
-			<option value="1">Beside</option>
-		</param>
-		<param name="line_break" type="radio" label="Space below each study" description="Put a line break below each listing">
-			<option value="1">Show</option>
-			<option value="0">Hide</option>
+		<param name="line_break" type="radio" default="0" label="Space below each study" description="Put a line break below each listing">
+			<option value="1">Break</option>
+			<option value="0">No Break</option>
 		</param>
 		<param name="@spacer" type="spacer" default="" label="" description="">
 		</param>
@@ -902,9 +870,8 @@
 			<option value="1">Show</option>
 			<option value="0">Hide</option>
 		</param>
-		<param name="storewidth" default="50" type="text" label="Store Width" description="Width in pixels or percent for the store - if shown" />
 		<param name="store_name" default="Store" type="text" label="Store Name" description="Name for the store on listing page" />
-		<param name="store_span" type="text" default='style="font-size:.70em;"' label="Span info for store name" description="Enter valid style information for this label" />
+		<param name="storewidth" default="50px" type="text" label="Store Width" description="Width in pixels (px) or percent for the store header - if shown" />
 		<param name="@spacer" type="spacer" default="" label="" description="">
 		</param>
 		<param name="@spacer" type="spacer" default="Study View Details" label="Study View Details" description="Study View Details">
@@ -917,12 +884,10 @@
 			<option value="0">No Link</option>
 			<option value="1">Link</option>
 		</param>
-		<param name="span_scripture_view" type="text" default="" label="Span tag for Title in Details view" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_title_view" type="radio" default="1" label="Show/Hide Study Title on View Page" description="Choose whether to show the study title on the page when the user clicks to see the study details">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-		<param name="span_title_view" type="text" default="" label="Span tag for Title in Details view" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_verses_view" type="radio" default="0" label="Show/Hide Verses on Study View page" description="Choose whether just chapter(s) of Bible study book shown or verses too">
 			<option value="0">Show only chapters</option>
 			<option value="1">Show verses and chapters</option>
@@ -932,7 +897,6 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-	<param name="span_teacher_view" type="text" default="" label="Span tag for teacher name in Details view" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_picture_view" type="radio" default="0" label="Show Teacher picture in Study View" description="Choose which picture if any to show in the Study Details View">
 			<option value="0">Don't Show</option>
 			<option value="1">Large Picture</option>
@@ -942,27 +906,22 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-		<param name="span_date_view" type="text" default="" label="Span tag for Date in Details view" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_series_view" type="radio" default="1" label="Show/Hide Series in Study View" description="Shows or hides the series on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-	<param name="span_series_view" type="text" default="" label="Span tag for Series in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_description_view" type="radio" default="1" label="Show/Hide Description in Study View" description="Shows or hides the description on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-		<param name="span_description_view" type="text" default="" label="Span tag for description in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_studynumber_view" type="radio" default="1" label="Show/Hide Studynumber in Study View" description="Shows or hides the studynumber on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-	<param name="span_studynumber_view" type="text" default="class='small'" label="Span tag for Study Number in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 		<param name="show_text_view" type="radio" default="1" label="Show/Hide Text in Study View" description="Shows or hides the text on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-	<param name="detailspan" type="text" default="" size="50" label="Put in valid style information for the study notes" description="Put in any valid css style information with style= in front of it. This will affect the study notes main text section." />
 	<param name="show_media_view" type="radio" default="1" label="Show/Hide Media Links in Study View" description="Shows or hides the media links on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -971,9 +930,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-	<param name="span_passage_view" type="text" default="" size="50" label="Put in valid style information for the passage link" description="Put in any valid css style information with style= in front of it. This will affect the link text that shows or hides the passage." /> 		
 	<param name="link_text" type="text" default="Return to Studies List" size="50" label="Text for bottom link to main list" description="Type in text to display on bottom link back to main component listing" />
-	<param name="span_link_view" type="text" default="" label="Span tag for link to studies list in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="view_link" type="radio" default="1" label="Show link to studies list" description="Choose whether to have a link back to the studies list">
 	<option value="0">No link</option>
 	<option value="1">Link</option>
@@ -990,12 +947,10 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-	<param name="span_duration_view" type="text" default="" label="Span tag for duration in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
 	<param name="show_locations" type="radio" default="0" label="Show/Hide location in Study View" description="Shows or hides the location of the study on the details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-	<param name="span_locations_view" type="text" default="" label="Span tag for location in Details View" description="Add any valid span or style information for this element such as: style='font-size:0.85em;'" />
         <param name="show_scripture_link" type="radio" default="0" label="Use Content Plugins" description="Choose whether to apply content plugins on study text. You can use the Scripturelinks plugin for all references in study text, for example.">
                 <option value="0">No Plugins</option>
 		<option value="1">Use All Plugins</option>

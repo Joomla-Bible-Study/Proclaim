@@ -26,13 +26,12 @@ function getStore($params, $rowid)
     
 	if (($cd->mid + $dvd->mid) > 0) 
 	{
-		$store = '<td width="'.$storewidth.'" <table><tr>'; //This td is for the store column
-    	if ($cd->mid > 0)
+		if ($cd->mid > 0)
 		{
       		$src = JURI::base().$cd->media_image_path;
       		if ($imagew) {$width = $imagew;} else {$width = 24;}
       		if ($imageh) {$height = $imageh;} else {$height= 24;}
-		$store .='<td><a href="'.$cd->server_path.$cd->prod_cd.'" title="'.$cd->media_alttext.'"><img src="'.JURI::base().$cd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$cd->media_alttext.' "border="0" /></a></td>';
+		$store .='<a href="'.$cd->server_path.$cd->prod_cd.'" title="'.$cd->media_alttext.'"><img src="'.JURI::base().$cd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$cd->media_alttext.' "border="0" /></a>';
     	}
     
 		if ($dvd->mid > 0)
@@ -40,7 +39,7 @@ function getStore($params, $rowid)
 		   $src = JURI::base().$dvd->media_image_path;
 		   if ($imagew) {$width = $imagew;} else {$width = 24;}
 		   if ($imageh) {$height = $imageh;} else {$height= 24;}
-		$store .='<td><a href="'.$dvd->server_path.$dvd->prod_dvd.'" title="'.$dvd->media_alttext.'"><img src="'.JURI::base().$dvd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$dvd->media_alttext.' "border="0" /></a></td></tr><tr><td colspan="2" align="center"><span'.$params->get('store_span').$params->get('store_name').'</span></td></tr></table></td>';
+		$store .='<a href="'.$dvd->server_path.$dvd->prod_dvd.'" title="'.$dvd->media_alttext.'"><img src="'.JURI::base().$dvd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$dvd->media_alttext.' "border="0" /></a></td></tr><tr><td colspan="2" align="center"><span'.$params->get('store_span').$params->get('store_name').'</span>';
 		}
 	}
 return $store;

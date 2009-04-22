@@ -46,14 +46,20 @@ if ($params->get('use_headers') >0) {
 		if ($headercheck[$j]['position']==4){ $isheader4 = 1;}
 	   }
 	   if ($isheader1 == 1)
-	   {$header .= '<div id="header1">'.$params->get('header1').'</div>';}
+	   		{$header .= '<div class="header1">'.$params->get('header1').'</div>';}
 	   if ($isheader2 == 1)
-	   {$header .= '<div id="header2">'.$params->get('header2').'</div>';}
+	   		{$header .= '<div class="header2">'.$params->get('header2').'</div>';}
 	   if ($isheader3 == 1)
-	   {$header .= '<div id="header3">'.$params->get('header3').'</div>';}
+	   		{$header .= '<div class="header3">'.$params->get('header3').'</div>';}
 	   if ($isheader4 == 1)
-	   {$header .= '<div id="header4">'.$params->get('header4').'</div>';}
-	   
+	   		{$header .= '<div class="header4">'.$params->get('header4').'</div>';}
+	   if ($params->get('show_full_text') > 0) 
+			{$header .= '<div class="header5">'.$params->get('header5').'</div>';}
+	   if ($params->get('show_store') > 0)
+	   		{$header .= '<div class="header6">'.$params->get('store_name').'</div>';}
+	   if ($params->get('show_media') > 0) 
+	   		{$header .= '<div class="header7">'.$params->get('header6').'</div>';}
+		
 	  
 	   
 	  } // end of if use headers
