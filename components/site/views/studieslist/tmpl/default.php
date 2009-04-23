@@ -17,19 +17,12 @@ defined('_JEXEC') or die();
     $location_menu = $this->params->get('locations', 1);
     $series_menu = $this->params->get('series_id', 1);
     $messagetype_menu = $this->params->get('messagetype', 1);
-    $imageh = $this->params->get('imageh', 24);
-    $imagew = $this->params->get('imagew', 24);
+    
     $color1 = $this->params->get('color1');
     $color2 = $this->params->get('color2');
-    $page_width = $this->params->get('page_width', '100%');
-    $widpos1 = $this->params->get('widthcol1');
-    $widpos2 = $this->params->get('widthcol2');
-    $widpos3 = $this->params->get('widthcol3');
-    $widpos4 = $this->params->get('widthcol4');
-    $show_description = $this->params->get('show_description', 1);
-    $downloadCompatibility = $this->params->get('compatibilityMode');
 	$params = $mainframe->getPageParameters();
-//to do: write an external function to create the css
+	
+//external function to create the css
 $document =& JFactory::getDocument();
 $type = 'text/css';
 $css_call = JView::loadHelper('css');
@@ -70,11 +63,11 @@ if ($editlisting) {echo $editlisting;} ?>
 </div><!--end of div for pageheader-->
 
 <div class="bsteacher<?php echo $suffix;?>">
-    <img
-    src="<?php echo $this->params->get('teacherimage');?>" border="1"
-    width="<?php echo $this->params->get('teacherw');?>"
-    height="<?php echo $this->params->get('teacherh');?>" /><br />
-	<?php echo $this->params->get('teachername');?>
+    <?php	
+	$teacher_call = JView::loadHelper('teacher');
+	$teacher = getTeacher($params);
+	if ($teacher) {echo $teacher;}
+	?>
 </div><!--end of bsteacher div-->
 
 <div class="bsdropdownmenu<?php echo $suffix;?>" >
@@ -178,60 +171,10 @@ if ($editlisting) {echo $editlisting;} ?>
 		$bgcolor = ($row_count % 2) ? $color1 : $color2; //This code cycles through the two color choices made in the parameters
 		$row = &$this->items[$i];
 		$id4 = $row->id;
-		$filesizefield = '#__bsms_mediafiles.study_id';
-		$filesize_call = JView::loadHelper('filesize');
-		$file_size = getFilesize($id4, $filesizefield);
-	 
-		  $show_media = $this->params->get('show_media',1);
-		  $filesize_showm = $this->params->get('filesize_showm');
-		  $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails&id=' . $row->id);
-		  $duration = $row->media_hours.$row->media_minutes.$row->media_seconds;
-		  if (!$duration) { $duration = '';}
-		  else {
-			  $duration_type = $this->params->get('duration_type');
-			  $hours = $row->media_hours;
-			  $minutes = $row->media_minutes;
-			  $seconds = $row->media_seconds;
-			  $duration_call = JView::loadHelper('duration');
-			  $duration = getDuration($duration_type, $hours, $minutes, $seconds);
-		  }
-		  $booknumber = $row->booknumber;
-		  $ch_b = $row->chapter_begin;
-		  $ch_e = $row->chapter_end;
-		  $v_b = $row->verse_begin;
-		  $v_e = $row->verse_end;
-		  $id2 = $row->id;
-		  $show_verses = $this->params->get('show_verses');
-		  $scripture1 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
-		  if ($row->booknumber2){
-		   $booknumber = $row->booknumber2;
-		   $ch_b = $row->chapter_begin2;
-		   $ch_e = $row->chapter_end2;
-		   $v_b = $row->verse_begin2;
-		   $v_e = $row->verse_end2;
-		   $id2 = $row->id;
-		  $scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
-		  }
-		  $df =  ($this->params->get('date_format'));
-		  $date_call = JView::loadHelper('date');
-		  $date = getstudyDate($df, $row->studydate);	
 		
-		  $textwidth=$this->params->get('imagew');
-		  $textwidth = ($textwidth + 1);
-		  $storewidth = $this->params->get('storewidth');
-		  $teacher = $row->teachername;
-		  $study = $row->studytitle;
-		  $sname = $row->series_text;
-		  $intro = str_replace('"','',$row->studyintro);
-		  $mtype = $row->message_type;
-		  $snumber = $row->studynumber;
-		  $details_text = $this->params->get('details_text');
-		  $filesize_show = $this->params->get('filesize_show');
-		  $secondary = $row->secondary_reference;
-		  if (!$row->booknumber2){$scripture2 = '';}
-		  
+				  
 		  $listarraycall = JView::loadHelper('listarray');
-		  $a = getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $duration);
+		  $a = getListarray($params, $row);
 		
 		  //This calls the helper once that will process each column's array, coming from the $a variable. We will then call a function in each column from this helper file
 		  $array_call = JView::loadHelper('columnarray');
@@ -312,7 +255,7 @@ if ($editlisting) {echo $editlisting;} ?>
         
         </div><!--end of bslistingcontainer-->
 		
-<?php		if ($params->get('line_break') > 0) { echo '<br />';}	
+<?php			
  //end of list - row count increment goes next
 	$row_count++; // This increments the row count and adjusts the variable for the color background
   	$k = 3 - $k;

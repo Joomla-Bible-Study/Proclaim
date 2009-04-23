@@ -1,14 +1,17 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 <?php 
-global $mainframe, $option;
-//$params = &JComponentHelper::getParams($option);
-$params =& $mainframe->getPageParameters();
 $user =& JFactory::getUser();
-$entry_user = $user->get('gid');
-$entry_access = $this->params->get('entry_access');
-$allow_entry = $this->params->get('allow_entry_study');
-if ($allow_entry > 0) {
-if ($entry_access <= $entry_user){ 
+		global $mainframe, $option;
+		$params =& $mainframe->getPageParameters();
+		$entry_user = $user->get('gid');
+		$entry_access = ($params->get('entry_access')) ;
+		$allow_entry = $params->get('allow_entry_study');
+		if (!$allow_entry) {$allow_entry = 0;}
+		//if ($allow_entry < 1) {return JError::raiseError('403', JText::_('Access Forbidden')); }
+		if (!$entry_user) { $entry_user = 0; }
+		if ($allow_entry > 0) {
+			if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('Access Forbidden')); }
+		}
 ?>
 <form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
 
@@ -90,6 +93,6 @@ if ($entry_access <= $entry_user){
 <input type="hidden" name="filter_order" value="<?php echo $this->lists['order']; ?>" />
 <input type="hidden" name="filter_order_Dir" value="<?php echo $this->lists['order_Dir']; ?>" />
 </form>
-<?php } // End of checking to see if allowed
-} // End of if authorized
-else { echo 'You are not authorized to view this page';}
+<?php //} // End of checking to see if allowed
+//} // End of if authorized
+//else { echo 'You are not authorized to view this page';}

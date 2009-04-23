@@ -11,7 +11,7 @@ class biblestudyControllerstudiesedit extends JController
 		$entry_access = ($params->get('entry_access')) ;
 		$allow_entry = $params->get('allow_entry_study');
 		if (!$allow_entry) {$allow_entry = 0;}
-		if ($allow_entry < 1) {return JError::raiseError('403', JText::_('Access Forbidden')); }
+		//if ($allow_entry < 1) {return JError::raiseError('403', JText::_('Access Forbidden')); }
 		if (!$entry_user) { $entry_user = 0; }
 		if ($allow_entry > 0) {
 			if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('Access Forbidden')); }
@@ -219,8 +219,8 @@ class biblestudyControllerstudiesedit extends JController
 		$item = JRequest::getVar('Itemid');
 		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
 		if ($item){
-			$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
-			//$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);
+			//$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
+			$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);}
 			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
 
 			// Check the table in so it can be edited.... we are done with it anyway

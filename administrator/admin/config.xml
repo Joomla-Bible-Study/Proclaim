@@ -137,10 +137,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-	<param name="teacherimage" type="text" width="150" default="" label="Full URL to Teacher Thumbnail" description="Put in a full url to an image to use in the studies list for your teacher" />
-	<param name="teacherw" type="text" width="3" default="" label="Width for Teacher Image" description="Set a width for the teacher thumbnail" />
-	<param name="teacherh" type="text" width="3" default="" label="Height for Teacher Image" description="Set a heighth for the teacher thumbnail" />
-	<param name="teachername" type="text" width="50" default="" label="Teacher Name" description="Name of teacher to show on list page" />
+	<param name="teacherids" type="text" size="30" default="1" label="Teacher ids to show" description="Teacher ids (in order) separated by commas" />
 	<param name="details_text" type="text" default="Study Details" size="50" label="Alt tag for details" description="Text to show on mouse over of details image link other than if you choose a tooltip" />
 	<param name="show_book_search" type="radio" default="1" label="Show/Hide book search" description="Shows or hides the drop down box for books">
 			<option value="0">Hide</option>

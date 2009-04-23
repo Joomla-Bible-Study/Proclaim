@@ -1,7 +1,28 @@
 <?php
 defined('_JEXEC') or die();
 
-function getListarray($params, $row, $scripture1, $scripture2, $date, $file_size, $duration) {
+function getListarray($params, $row) {
+
+$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+include_once($path1.'scripture.php');
+include_once($path1.'date.php');
+include_once($path1.'filesize.php');
+include_once($path1.'filepath.php');
+include_once($path1.'duration.php');
+
+$scripture1 = getScripture($params, $row, $esv);
+
+$scripture2 = '';
+if ($row->booknumber2){
+		  $esv = 0;
+		  $scripture2 = getScripture($params, $row, $esv);
+		  }
+
+$duration = getDuration($params, $row);
+
+$date = getstudyDate($params, $row->studydate);
+
+$file_size = getFilesize($row->filesize);
 
 $a = array( array(  'element' => $scripture1,
      'position' => $params->get('position1'),

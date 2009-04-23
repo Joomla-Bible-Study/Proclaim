@@ -1,8 +1,15 @@
 <?php defined('_JEXEC') or die();
 
-function getDuration($duration_type, $hours, $minutes, $seconds) 
+function getDuration($params, $row) 
 {
 
+	$duration = $row->media_hours.$row->media_minutes.$row->media_seconds;
+		  if (!$duration) { $duration = null; return $duration;}
+	$duration_type = $params->get('duration_type');
+	$hours = $row->media_hours;
+	$minutes = $row->media_minutes;
+	$seconds = $row->media_seconds;
+	
 switch ($duration_type) {
    case 1:
      if (!$hours){

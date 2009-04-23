@@ -19,7 +19,7 @@ $podcast_access = ($params->get('podcast_access')) - 1;
 $allow_podcast = $params->get('allow_podcast');
 //echo 'allow_podcast = '.$allow_podcast.' access: '.$podcast_access;
 
-if ($podcast_access >$entry_user){ echo JText::_('You are not authorized');}else{ ?>
+if ($podcast_access >$entry_user){ echo JText::_('You are not authorized');} else {?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">

@@ -53,9 +53,24 @@ class biblestudyControllercommentsedit extends JController
 			$msg = JText::_( 'Error Saving Comment' );
 		}
 
-		// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&view=commentslist';
-		$this->setRedirect($link, $msg);
+		global $mainframe, $option;
+		$db=& JFactory::getDBO();
+		$query = "SELECT id"
+		. "\nFROM #__menu"
+		. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
+		$item = JRequest::getVar('Itemid');
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
+		if ($item){
+			//$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
+			$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);}
+			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+
+			// Check the table in so it can be edited.... we are done with it anyway
+			$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
 
 	/**
@@ -116,8 +131,27 @@ function publish()
 	 */
 	function cancel()
 	{
+		global $mainframe;
 		$msg = JText::_( 'Operation Cancelled' );
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist', $msg );
+
+		global $mainframe, $option;
+		$db=& JFactory::getDBO();
+		$query = "SELECT id"
+		. "\nFROM #__menu"
+		. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+		$db->setQuery($query);
+		$menuid = $db->loadResult();
+		$menureturn='';
+		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
+		$item = JRequest::getVar('Itemid');
+		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
+		if ($item){
+			//$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
+			$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);}
+			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+
+			// Check the table in so it can be edited.... we are done with it anyway
+			$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
 }
 ?>
