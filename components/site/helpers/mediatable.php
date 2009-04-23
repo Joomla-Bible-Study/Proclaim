@@ -46,7 +46,7 @@ function getMediatable($params, $id, $ismodule, $duration)
 	  $id3 = $id4;
 	  $filesizefield = '#__bsms_mediafiles.id';
 	  //dump ($media->id, 'id4: ');
-	  $filesize = getFilesize($id4, $filesizefield);
+	  $filesize = getFilesize($media->size);
 	  
 	  $media_size = $filesize;
 	 // dump ($media_size, 'filesize: ');

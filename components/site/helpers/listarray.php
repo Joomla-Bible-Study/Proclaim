@@ -22,7 +22,7 @@ $duration = getDuration($params, $row);
 
 $date = getstudyDate($params, $row->studydate);
 
-$file_size = getFilesize($row->filesize);
+$file_size = getFilesize($row->size);
 
 $a = array( array(  'element' => $scripture1,
      'position' => $params->get('position1'),
