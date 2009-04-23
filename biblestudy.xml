@@ -195,6 +195,8 @@
 		<filename>helpers/textlink.php</filename>
 		<filename>helpers/mediatable.php</filename>
 		<filename>helpers/css.php</filename>
+		<filename>editlisting.php</filename>
+		<filename>editlink.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>

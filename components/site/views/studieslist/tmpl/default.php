@@ -40,7 +40,15 @@ if ($url) {$document->addStyleSheet($url);}
 $suffix = $params->get('suffix');
 
     ?>
+    
 <div class="bspagecontainer<?php echo $suffix;?>" > <!-- This div is the container for the whole page -->
+
+<div class="editcontainer<?php echo $suffix;?>">
+<?php $edit_call = JView::loadHelper('editlisting');
+$editlisting = getEditlisting($params);
+if ($editlisting) {echo $editlisting;} ?>
+</div>
+
 <div class="bspageheader<?php echo $suffix;?>">
 	
 	<?php
@@ -55,7 +63,7 @@ $suffix = $params->get('suffix');
     }
     if ( $this->params->get( 'show_page_title_list' ) >0 ) {
     ?>
-      <span class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>" style="line-height:<?php echo $height; ?>px;"><?php echo $this->params->get('page_title');?></span>
+      <span class="componentheading<?php echo $this->params->get( 'suffix' ); ?>" style="line-height:<?php echo $height; ?>px;"><?php echo $this->params->get('page_title');?></span>
     <?php
     }?>
 
@@ -261,7 +269,7 @@ $suffix = $params->get('suffix');
 				$textorpdf = 'text';
 				$textlink_call = JView::loadHelper('textlink');
 				$textlink = getTextlink($params, $row, $scripture1, $textorpdf);
-				echo '<div class="bstext'.$suffix.' zoomtip">'.$textlink.'</div>';
+				echo '<div class="bstext'.$suffix.'">'.$textlink.'</div>';
 				
 		}
 		
@@ -269,7 +277,7 @@ $suffix = $params->get('suffix');
 				$textorpdf = 'pdf';
 				$textlink_call = JView::loadHelper('textlink');
 				$textlink = getTextlink($params, $row, $scripture1, $textorpdf);
-				echo '<div class="bstext'.$suffix.' zoomtip">'.$textlink.'</div>';
+				echo '<div class="bstext'.$suffix.'">'.$textlink.'</div>';
 				
 		}	//end details links
 		
@@ -300,11 +308,11 @@ $suffix = $params->get('suffix');
 		if ($params->get('show_description') > 0) {
 	        echo '<div class="bsbottomlisting'.$suffix.'">'.$row->studyintro.'</div>';
 			}//End of bsbottomlisting
-        if ($params->get('line_break') > 0) { echo '<br />';}  ?>      
+          ?>      
         
         </div><!--end of bslistingcontainer-->
 		
-<?php			
+<?php		if ($params->get('line_break') > 0) { echo '<br />';}	
  //end of list - row count increment goes next
 	$row_count++; // This increments the row count and adjusts the variable for the color background
   	$k = 3 - $k;

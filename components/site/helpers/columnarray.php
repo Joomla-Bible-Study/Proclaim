@@ -3,6 +3,8 @@ defined('_JEXEC') or die();
 
 function getColumnarray($a, $row, $columnnumber, $params) {
 	//dump ($a, '$a: ');
+	$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+		include_once($path1.'editlink.php');
 	if (!$params->get('menuid')) { $menuid = 0;}
 	else {$menuid = $params->get('menuid');}
 	
@@ -61,7 +63,10 @@ function getColumnarray($a, $row, $columnnumber, $params) {
 	   $j2++;
 	   if ($j2<$rows2) {$column .= '<br />';}
 	 } // end of foreach $columnelements
-	 
+	 if ($columnnumber == 1) {
+		$editlink = getEditlink($row->id, $params);
+		if ($editlink) { echo $editlink.'<br />'; }
+	 }
  } //end of test to see if anything is in the column
  //dump ($column, '$column: ');
  if (!$column) {$column = '<br />';}
