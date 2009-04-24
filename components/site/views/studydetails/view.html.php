@@ -41,33 +41,23 @@ class biblestudyViewstudydetails extends JView
 		
 		//Begin test of using helper
 		
-		$scripture_call = Jview::loadHelper('scripture');
+		/*$scripture_call = Jview::loadHelper('scripture');
   		//This formats the main scripture reference through the function
 		$booknumber = $studydetails->booknumber;
 		$esv = 0;
-		$show_verses = $params->get('show_verses');
-		$ch_b = $studydetails->chapter_begin;
-		$ch_e = $studydetails->chapter_end;
-		$v_b = $studydetails->verse_begin;
-		$v_e = $studydetails->verse_end;
-		$id2 = $studydetails->id;
-		$scripture->scripture1 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
+		$scripture->scripture1 = getScripture($params, $row, $esv);
 		$passage_link1 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture1.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture1.'</a>';
 		//This formats the passage view at the bottom of the page(esv only) through the function
 		$esv = 1;
-		$scripture->scripture3 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
+		$scripture->scripture3 = getScripture($params, $row, $esv);
 		//This formats the secondary reference
-		$booknumber = $studydetails->booknumber2;
-		$ch_b = $studydetails->chapter_begin2;
-		$ch_e = $studydetails->chapter_end2;
-		$v_b = $studydetails->verse_begin2;
-		$v_e = $studydetails->verse_end2;
-		$esv = 0;
-		$scripture->scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
+		
+		$scripture->scripture2 = getScripture($params, $row, $esv);
 		$passage_link2 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture2.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture2.'</a>';
 		if ($params->get('scripture_view_link') > 0) { $scripture->scripture1 = $passage_link1;}
 		if ($params->get('scripture_view_link') > 0) { $scripture->scripture2 = $passage_link2;}
-        $duration_call = JView::loadHelper('duration');
+       
+	    $duration_call = JView::loadHelper('duration');
         $filepath_call = JView::loadHelper('filepath');
 		$idfield = '#__bsms_mediafiles.study_id';
         $filepath = getFilepath($id3, $idfield);
@@ -92,7 +82,7 @@ class biblestudyViewstudydetails extends JView
 			  $duration_call = JView::loadHelper('duration');
 			  $duration = getDuration($duration_type, $hours, $minutes, $seconds);
 		  }
-  $this->assignRef('duration', $duration);
+  $this->assignRef('duration', $duration);*/
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');
 		$this->assignRef('show_media', $show_media);
@@ -146,7 +136,7 @@ class biblestudyViewstudydetails extends JView
 		$this->assignRef('studydetails', $studydetails);
 		$this->assignRef('article', $article);
   		$this->assignRef('passage_link', $passage_link);
-		$this->assignRef('scripture', $scripture);
+		//$this->assignRef('scripture', $scripture);
 		parent::display($tpl);
 	}
 	function _displayPagebreak($tpl)

@@ -30,19 +30,19 @@ $styles = getCss($params);
 $document->addStyleDeclaration($styles, $type);
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
-$suffix = $params->get('suffix');
+$pageclass_sfx = $params->get('pageclass_sfx');
 
     ?>
     
-<div class="bspagecontainer<?php echo $suffix;?>" > <!-- This div is the container for the whole page -->
+<div class="bspagecontainer<?php echo $pageclass_sfx;?>" > <!-- This div is the container for the whole page -->
 
-<div class="editcontainer<?php echo $suffix;?>">
+<div class="editcontainer<?php echo $pageclass_sfx;?>">
 <?php $edit_call = JView::loadHelper('editlisting');
 $editlisting = getEditlisting($params);
 if ($editlisting) {echo $editlisting;} ?>
 </div>
 
-<div class="bspageheader<?php echo $suffix;?>">
+<div class="bspageheader<?php echo $pageclass_sfx;?>">
 	
 	<?php
      if ($this->params->get( 'show_page_image' ) >0) {
@@ -54,23 +54,25 @@ if ($editlisting) {echo $editlisting;} ?>
       <img src="<?php echo JURI::base().$this->params->get('page_image');?>" alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $width;?>" height="<?php echo $height;?>" />
     <?php //End of column for logo
     }
-    if ( $this->params->get( 'show_page_title_list' ) >0 ) {
     ?>
-      <span class="componentheading<?php echo $this->params->get( 'suffix' ); ?>" style="line-height:<?php echo $height; ?>px;"><?php echo $this->params->get('page_title');?></span>
-    <?php
-    }?>
 
 </div><!--end of div for pageheader-->
-
-<div class="bsteacher<?php echo $suffix;?>">
+<?php
+if ( $this->params->get( 'show_page_title' ) >0 ) {
+    echo '<div class="pageheadertext'.$this->params->get('pageclass_sfx').'">'.$this->params->get('page_title').'</div>';
+    }
+if ($params->get('show_teacher_list') > 0)
+	{	?>
+<div class="bsteacher<?php echo $pageclass_sfx;?>">
     <?php	
 	$teacher_call = JView::loadHelper('teacher');
-	$teacher = getTeacher($params);
+	$teacher = getTeacher($params, $id);
 	if ($teacher) {echo $teacher;}
+	}
 	?>
 </div><!--end of bsteacher div-->
 
-<div class="bsdropdownmenu<?php echo $suffix;?>" >
+<div class="bsdropdownmenu<?php echo $pageclass_sfx;?>" >
 
   <?php if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}?>
   <?php if ($this->params->get('show_book_search') >0 && !($book_menu) ){ ?>
@@ -152,16 +154,18 @@ if ($editlisting) {echo $editlisting;} ?>
 	 <?php //End of row for drop down boxes?>
  
 </div><!--end of bsdropdownmenu div-->
-<div class="headercontainer<?php echo $suffix;?>"><!--this is the container for all the headers, so that we can add a line underneath and have it go the while width-->
-<div class="bslistheader<?php echo $suffix;?>" >
+<div class="headercontainer<?php echo $pageclass_sfx;?>"><!--this is the container for all the headers, so that we can add a line underneath and have it go the while width-->
+<?php if ($params->get('use_headers') >0) { ?>
+<div class="bslistheader<?php echo $pageclass_sfx;?>" >
 	<?php 
     $header_call = JView::loadHelper('header');
     $header = getHeader($this->params);
     echo $header;
    ?>
 </div><!--end of bslistheader div-->
+<?php } ?>
 </div><!--end of headercontainer div-->
-<div class="bslistings<?php echo $suffix;?>" >
+<div class="bslistings<?php echo $pageclass_sfx;?>" >
 
 	<?php // This is the count for the listing table items
      $k = 1;
@@ -179,30 +183,30 @@ if ($editlisting) {echo $editlisting;} ?>
 		  //This calls the helper once that will process each column's array, coming from the $a variable. We will then call a function in each column from this helper file
 		  $array_call = JView::loadHelper('columnarray');
 		  if ($this->params->get('use_color') > 0) {
-			  echo '<div class="bslistingcontainer'.$suffix.'" style="background-color: '.$bgcolor.';">';}
-			  else { echo '<div class="bslistingcontainer'.$suffix.'">';}
+			  echo '<div class="bslistingcontainer'.$pageclass_sfx.'" style="background-color: '.$bgcolor.';">';}
+			  else { echo '<div class="bslistingcontainer'.$pageclass_sfx.'">';}
         
 		$columnnumber = 1;
 		$column1 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column1) { echo '<div class="column'.$columnnumber.$suffix.'">';}
+		if ($column1) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
 		echo $column1; 
 		
 		if ($column1) {echo '</div>';}
 		$columnnumber = 2;
 		$column2 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column2) { echo '<div class="column'.$columnnumber.$suffix.'">';}
+		if ($column2) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
 		echo $column2; 
 		
 		if ($column2) {echo '</div>';}
         $columnnumber = 3;
 		$column3 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column3) { echo '<div class="column'.$columnnumber.$suffix.'">';}
+		if ($column3) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
        	echo $column3; 
 		
 		if ($column3) {echo '</div>';}
 		$columnnumber = 4;
 		$column4 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column4) { echo '<div class="column'.$columnnumber.$suffix.'">';}
+		if ($column4) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
 		echo $column4;
 		
 		if ($column4) {echo '</div>';}
@@ -211,16 +215,16 @@ if ($editlisting) {echo $editlisting;} ?>
 		if ($params->get('show_full_text') > 0) {
 				$textorpdf = 'text';
 				$textlink_call = JView::loadHelper('textlink');
-				$textlink = getTextlink($params, $row, $scripture1, $textorpdf);
-				echo '<div class="bstext'.$suffix.'">'.$textlink.'</div>';
+				$textlink = getTextlink($params, $row, $textorpdf);
+				echo '<div class="bstext'.$pageclass_sfx.'">'.$textlink.'</div>';
 				
 		}
 		
 		if 	($params->get('show_pdf_text') > 0) {
 				$textorpdf = 'pdf';
 				$textlink_call = JView::loadHelper('textlink');
-				$textlink = getTextlink($params, $row, $scripture1, $textorpdf);
-				echo '<div class="bstext'.$suffix.'">'.$textlink.'</div>';
+				$textlink = getTextlink($params, $row, $textorpdf);
+				echo '<div class="bstext'.$pageclass_sfx.'">'.$textlink.'</div>';
 				
 		}	//end details links
 		
@@ -229,13 +233,13 @@ if ($editlisting) {echo $editlisting;} ?>
 		if ($params->get('show_store') > 0) {
 			$store_call = JView::loadHelper('store');
 			$store = getStore($params, $row->id);
-			echo '<div class="bsstore'.$suffix.'">'.$store.'</div>';
+			echo '<div class="bsstore'.$pageclass_sfx.'">'.$store.'</div>';
 			
 		} //end store
 		//show media section
 		
 		if ($params->get('show_media') > 0) {
-				echo '<div class="bsmediatable'.$suffix.'">';
+				echo '<div class="bsmediatable'.$pageclass_sfx.'">';
         		$ismodule = 0;
 				$params = $this->params;
 				$filesize_call = JView::loadHelper('filesize');
@@ -249,7 +253,7 @@ if ($editlisting) {echo $editlisting;} ?>
 		//column for description
 		
 		if ($params->get('show_description') > 0) {
-	        echo '<div class="bsbottomlisting'.$suffix.'">'.$row->studyintro.'</div>';
+	        echo '<div class="bsbottomlisting'.$pageclass_sfx.'">'.$row->studyintro.'</div>';
 			}//End of bsbottomlisting
           ?>      
         
@@ -266,7 +270,7 @@ if ($editlisting) {echo $editlisting;} ?>
 	
 		
 	
-<div class="bsfooter<?php echo $suffix;?>" style="clear: both; position: relative; padding: 10px 10px; width: 100%; ">
+<div class="bsfooter<?php echo $pageclass_sfx;?>" style="clear: both; position: relative; padding: 10px 10px; width: 100%; ">
 	<?php 
       //echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
       //echo $this->pagination->getLimitBox();

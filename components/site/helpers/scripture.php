@@ -7,7 +7,6 @@ function getScripture($params, $row, $esv) {
 	$ch_e = $row->chapter_end;
 	$v_b = $row->verse_begin;
 	$v_e = $row->verse_end;
-	$id2 = $row->id;
 	$show_verses = $params->get('show_verses');
 	$db	= & JFactory::getDBO();
 	$query = 'SELECT #__bsms_studies.*, #__bsms_books.bookname, #__bsms_books.id as bid '

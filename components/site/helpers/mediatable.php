@@ -30,6 +30,9 @@ function getMediatable($params, $id, $ismodule, $duration)
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
 
 	foreach ($media1 as $media) {
+		
+		$mediatable = '<div class="mediaimage'.$params->get('pageclass_sfx').'">';
+		
       $download_image = $params->get('download_image');
       if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
       $link_type = $media->link_type;
@@ -169,14 +172,15 @@ function getMediatable($params, $id, $ismodule, $duration)
        // Here is where we begin to build the mediatable variable
 		
 	 $mediatable .= $media1_link;
-		if ($params->get('show_filesize') > 0)
-      { //$mediatable .= $media1_sizetext;
-	  }
+		if ($params->get('show_filesize') > 0 ) {
+		$mediatable .= '<div class="mediasize'.$params->get('pageclass_sfx').'">'.$filesize.'</div>';  
+		}
 
 		if ($link_type > 0){ $src = JURI::base().$download_image;
       	//if ($params->get('download_side') > 0) { $mediatable .='<td>';}
       if ($imagew) {$width = $imagew;} else {$width = 24;}
       if ($imageh) {$height = $imageh;} else {$height= 24;}
+	   
       if($params->get('compatibilityMode') == 0) {
        $mediatable .='<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
 	   
@@ -184,11 +188,13 @@ function getMediatable($params, $id, $ismodule, $duration)
        $mediatable .='<a href="http://joomlaoregon.com/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
 	   
       }
-      
+     
 	  $mediatable .= '<img src="'.JURI::base().$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
+	  
+	  
 	  // if ($params->get('download_side') > 0) { $mediatable .= '</td>';}
 	  }
-
+	$mediatable .= '</div>';
 
 	} //end of foreach of media results
 

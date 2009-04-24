@@ -8,5 +8,8 @@
 	</layout>
 	<state>
 		<name>Teachers List Layout</name>
+		<params>
+			<param name="teacher_title" type="text" default="Our Teachers" label="Page Title" description="Text to show on teacher display page for title" />
+		</params>
 	</state>
 </metadata>

@@ -12,5 +12,15 @@
 		<url addpath="/administrator/components/com_biblestudy/elements">
 			<param name="id" type="teacher" default="" label="Select a Teacher" description="The teacher to link to" />
 		</url>
+		<params>
+			<param name="@spacer" type="spacer" default="Teacher View" label="Teacher View" description="Teacher View">
+				</param>
+			<param name="studies" type="text" default="5" label="Number of Studies in Teacher's view" description="Type in the number of studies to show for each teacher in the teacher's view. Leave blank for all" />
+			<param name="show_teacher_studies" type="radio" default="1" label="Show/Hide Teacher's Studies" description="Choose to show or hide the listing of latest studies by teacher in teacher display">
+				<option value="0">Hide Study Display</option>
+				<option value="1">Show Study Display</option>
+			</param>
+			<param name="label_teacher" type="text" default="Latest Messages" label="Text for Latest Studies Line" description="Enter some text to show when displaying teacher latest studies" />
+		</params>
 	</state>
 </metadata>
