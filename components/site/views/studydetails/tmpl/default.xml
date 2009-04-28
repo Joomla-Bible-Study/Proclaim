@@ -12,8 +12,10 @@
 		<url addpath="/administrator/components/com_biblestudy/elements">
 			<param name="id" type="studydetails" default="" label="Select a Study" description="The study to link to" />
 		</url>
-	<params>
-				<param name="@spacer" type="spacer" default="Study View Details" label="Study View Details" description="Study View Details">
+	<params addpath="/components/com_biblestudy/elements">
+		<param name="teacheritemid" type="teacheritemid" default="" label="Itemid of TeacherDisplay menu item" description="In order for styling to apply to teacher view from the list you should create a menu item to set those parameters, MUST BE PUBLISHED (But can be to a menu not used)" />
+		<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or percentage. Needs px or % at end" />
+		<param name="@spacer" type="spacer" default="Study View Details" label="Study View Details" description="Study View Details">
 		</param>
 		<param name="show_title_view" type="radio" default="1" label="Show/Hide Study Title on View Page" description="Choose whether to show the study title on the page when the user clicks to see the study details">
 			<option value="0">Hide</option>
@@ -37,7 +39,6 @@
 				<param name="header2" type="text" default="" label="Header Column 2" description="Text to appear in the header of column 2 - leave blank if not using that column" />
 				<param name="header3" type="text" default="" label="Header Column 3" description="Text to appear in the header of column 3 - leave blank if not using that column" />
 				<param name="header4" type="text" default="" label="Header Column 4" description="Text to appear in the header of column 4 - leave blank if not using that column" />
-				<param name="header5" type="text" default="" label="Header for Details Column" description="Text to appear in the header of the column that links to the details and pdf" />
 				<param name="header6" type="text" default="" label="Header for Media Column" description="Text to appear in the header of the column that links to the media files" />
 				<param name="show_media" type="radio" default="1" label="Media" description="Show/Hide media (can be overridden in each study)">
 					<option value="0">Hide</option>
@@ -66,11 +67,6 @@
 			<param name="widthcol2" type="text" size="4" default="100px" label="Column 2 width, # or %" description="width in number or percentage" />
 			<param name="widthcol3" type="text" size="4" default="250px" label="Column 3 width, # or %" description="width in number or percentage" />
 			<param name="widthcol4" type="text" size="4" default="250px" label="Column 4 width, # or %" description="width in number or percentage" />
-			<param name="show_teacher_list" type="radio" default="0" label="Show/Hide a teacher image on list page" description="Choose whether to show or hide a teacher thumbnail and name in the list page">
-					<option value="0">Hide</option>
-					<option value="1">Show</option>
-				</param>
-				
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
 			<param name="@spacer" type="spacer" default="Scripture" label="" description="Scripture">
@@ -92,11 +88,6 @@
 					<option value="7">7</option>
 					<option value="8">8</option>
 					<option value="9">9</option>
-				</param>
-				<param name="islink1" type="list" default="0" label="Scripture a link to study" description="Choose whether Scripture should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
 				</param>
 				<param name="isbullet1" type="list" default="0" label="Bullet Scripture" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
@@ -124,11 +115,6 @@
 					<option value="8">8</option>
 					<option value="9">9</option>
 				</param>
-				<param name="islink13" type="list" default="0" label="Scripture 2 a link to study" description="Choose whether Scripture 2 should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
 				<param name="isbullet13" type="list" default="0" label="Bullet Scripture 2" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
 					<option value="1">Bulleted</option>
@@ -154,11 +140,6 @@
 					<option value="7">7</option>
 					<option value="8">8</option>
 					<option value="9">9</option>
-				</param>
-				<param name="islink2" type="list" default="0" label="Title a link" description="Choose whether Title should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
 				</param>
 				<param name="isbullet2" type="list" default="0" label="Bullet Title" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
@@ -190,11 +171,6 @@
 					<option value="8">8</option>
 					<option value="9">9</option>
 				</param>
-				<param name="islink3" type="list" default="0" label="Duration a link" description="Choose whether Duration should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
 				<param name="isbullet3" type="list" default="0" label="Bullet Duration" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
 					<option value="1">Bulleted</option>
@@ -220,11 +196,6 @@
 					<option value="7">7</option>
 					<option value="8">8</option>
 					<option value="9">9</option>
-				</param>
-				<param name="islink4" type="list" default="0" label="Description a link" description="Choose whether description should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
 				</param>
 				<param name="isbullet4" type="list" default="0" label="Bullet Description" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
@@ -252,11 +223,6 @@
 					<option value="8">8</option>
 					<option value="9">9</option>
 				</param>
-				<param name="islink5" type="list" default="0" label="Date a link" description="Choose whether date should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
 				<param name="isbullet5" type="list" default="0" label="Bullet date" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
 					<option value="1">Bulleted</option>
@@ -282,12 +248,6 @@
 					<option value="7">7</option>
 					<option value="8">8</option>
 					<option value="9">9</option>
-				</param>
-				<param name="islink6" type="list" default="0" label="Teacher a link" description="Choose whether teacher should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-					<option value="3">Link to Teacher's Page</option>
 				</param>
 				<param name="isbullet6" type="list" default="0" label="Bullet Teacher" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
@@ -315,12 +275,6 @@
 					<option value="8">8</option>
 					<option value="9">9</option>
 				</param>
-				<param name="islink7" type="list" default="0" label="Teacher Title a link" description="Choose whether Teacher Title should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-					<option value="3">Link to Teacher's Page</option>
-				</param>
 				<param name="isbullet7" type="list" default="0" label="Bullet Teacher Title" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
 					<option value="1">Bulleted</option>
@@ -346,12 +300,6 @@
 					<option value="7">7</option>
 					<option value="8">8</option>
 					<option value="9">9</option>
-				</param>
-				<param name="islink10" type="list" default="0" label="Title + Teacher a link" description="Choose whether Title + Teacher should be a hyperlink to the study details or media file">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-					<option value="3">Link to Teacher's Page</option>
 				</param>
 				<param name="isbullet10" type="list" default="0" label="Bullet Title + Teacher" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
@@ -379,11 +327,6 @@
 					<option value="8">8</option>
 					<option value="9">9</option>
 				</param>
-				<param name="islink8" type="list" default="0" label="Filesize a link to study" description="Choose whether Filesize should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
 				<param name="isbullet8" type="list" default="0" label="Bullet Filesize" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
 					<option value="1">Bulleted</option>
@@ -409,11 +352,6 @@
 					<option value="7">7</option>
 					<option value="8">8</option>
 					<option value="9">9</option>
-				</param>
-				<param name="islink9" type="list" default="0" label="Series a link" description="Choose whether Series should be a hyperlink to the study details or media file">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
 				</param>
 				<param name="isbullet9" type="list" default="0" label="Bullet Series" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
@@ -441,11 +379,6 @@
 					<option value="8">8</option>
 					<option value="9">9</option>
 				</param>
-				<param name="islink11" type="list" default="0" label="Secondary Reference a link to study" description="Choose whether Scripture should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
 				<param name="isbullet11" type="list" default="0" label="Bullet Secondary Reference" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
 					<option value="1">Bulleted</option>
@@ -472,11 +405,6 @@
 					<option value="8">8</option>
 					<option value="9">9</option>
 				</param>
-				<param name="islink12" type="list" default="0" label="Messaage Type a link to study" description="Choose whether Scripture should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
 				<param name="isbullet12" type="list" default="0" label="Bullet Message Type" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
 					<option value="1">Bulleted</option>
@@ -502,11 +430,6 @@
 					<option value="7">7</option>
 					<option value="8">8</option>
 					<option value="9">9</option>
-				</param>
-				<param name="islink14" type="list" default="0" label="Submitted By a link to study" description="Choose whether Submitted by should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
 				</param>
 				<param name="isbullet14" type="list" default="0" label="Bullet Submitted By" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
@@ -535,11 +458,6 @@
 					<option value="8">8</option>
 					<option value="9">9</option>
 				</param>
-				<param name="islink15" type="list" default="0" label="Hits a link to study" description="Choose whether Hits should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
 				<param name="isbullet15" type="list" default="0" label="Bullet Hits" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
 					<option value="1">Bulleted</option>
@@ -565,11 +483,6 @@
 					<option value="7">7</option>
 					<option value="8">8</option>
 					<option value="9">9</option>
-				</param>
-				<param name="islink16" type="list" default="0" label="Study Number a link to study" description="Choose whether Study Number should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
 				</param>
 				<param name="isbullet16" type="list" default="0" label="Bullet Study Number" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
@@ -597,11 +510,6 @@
 					<option value="8">8</option>
 					<option value="9">9</option>
 				</param>
-				<param name="islink17" type="list" default="0" label="Topic a link to study" description="Choose whether Topic should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
 				<param name="isbullet17" type="list" default="0" label="Bullet Topic" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>
 					<option value="1">Bulleted</option>
@@ -627,11 +535,6 @@
 					<option value="7">7</option>
 					<option value="8">8</option>
 					<option value="9">9</option>
-				</param>
-				<param name="islink18" type="list" default="0" label="Location a link to study" description="Choose whether Location should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
 				</param>
 				<param name="isbullet18" type="list" default="0" label="Bullet Location" description="Add a bullet before this item">
 					<option value="0">No Bullet</option>

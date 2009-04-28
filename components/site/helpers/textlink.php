@@ -1,6 +1,6 @@
 <?php
 defined('_JEXEC') or die();
-
+//to do: $menureturnItemid
 function getTextlink($params, $row, $textorpdf)
 {
 $path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
@@ -8,17 +8,10 @@ include_once($path1.'scripture.php');
 $scripture1 = getScripture($params, $row, $esv);
 $intro = str_replace('"','',$row->studyintro);
 $detailsitemid = $params->get('detailsitemid');
-global $mainframe, $option;
-$db=& JFactory::getDBO();
-$query = "SELECT id "
-. "\nFROM #__menu"
-. "\nWHERE link = 'index.php?option=com_biblestudy&view=studydetails' and id = ".$detailsitemid;
-$db->setQuery($query);
-$menuid = $db->loadResult();
-//dump ($query, 'menuid ');
+$returnmenu = JRequest::getVar('Itemid');
 	if ($textorpdf == 'text') {
 	   $src = JURI::base().$params->get('text_image');
-       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&Itemid='.$menuid ).JHTML::_('behavior.tooltip');
+       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&returnmenu='.$returnmenu.'&Itemid='.$detailsitemid ).JHTML::_('behavior.tooltip');
 	   //dump ($link, 'link');
 	   $details_text = $params->get('details_text');
 	}

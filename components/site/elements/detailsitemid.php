@@ -14,7 +14,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class JElementstudydetails extends JElement
+class JElementdetailsitemid extends JElement
 {
 	/**
 	 * Element name
@@ -22,21 +22,22 @@ class JElementstudydetails extends JElement
 	 * @access	protected
 	 * @var		string
 	 */
-	var	$_name = 'studydetails';
+	var	$_name = 'detailsitemid';
 
 	function fetchElement($name, $value, &$node, $control_name)
 	{
 		$db = &JFactory::getDBO();
+//the menu items have link names like: index.php?option=com_biblestudy&view=studydetails&id=547 so how to query that?
 
-		$query = "SELECT #__bsms_studies.id, #__bsms_books.id AS bid, #__bsms_studies.booknumber AS bnumber, #__bsms_books.bookname, CONCAT(#__bsms_books.bookname,':',#__bsms_studies.chapter_begin,' - ',#__bsms_studies.studydate) AS text"
-		. "\n FROM #__bsms_studies"
-		. "\n LEFT JOIN #__bsms_books ON (#__bsms_books.booknumber = #__bsms_studies.booknumber)"
-		. "\n WHERE #__bsms_studies.published = 1"
-		. "\n ORDER BY #__bsms_studies.studydate DESC"
+		$query = "SELECT m.id, CONCAT(m.id,' - ',m.name) AS text, m.link"
+		. "\n FROM #__menu AS m"
+		. "\n WHERE m.link LIKE '%studydetails%'"
+		. "\n ORDER BY m.name ASC"
 		;
 		$db->setQuery( $query );
 		$options = $db->loadObjectList( );
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a Study to Link To').' -', 'id', 'text'));
+		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a Menu Item').' -', 'id', 'text'));
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'id', 'text', $value, $control_name.$name );
 	}
 }
+//CONCAT(#__bsms_books.bookname,':',#__bsms_studies.chapter_begin,' - ',#__bsms_studies.studydate)

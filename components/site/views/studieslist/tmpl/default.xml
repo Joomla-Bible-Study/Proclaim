@@ -7,9 +7,12 @@
 		</message>
 	</layout>
 	<state>
+	Todo: field to collect id's for multiple topics, etc
 		<name>Studies List Layout</name>
 		<params addpath="/components/com_biblestudy/elements">
-		<param name="detailsitemid" type="text" default="1" label="Itemid of studydetails menu item" description="In order for styling to apply to details view you should create a menu item to set those parameters, even if unpublished" />
+		<param name="detailsitemid" type="detailsitemid" default="" label="Itemid of studydetails menu item" description="In order for styling to apply to details view from the list you should create a menu item to set those parameters, MUST BE PUBLISHED (But can be to a menu not used)" />
+		<param name="teacheritemid" type="teacheritemid" default="" label="Itemid of TeacherDisplay menu item" description="In order for styling to apply to teacher view from the list you should create a menu item to set those parameters, MUST BE PUBLISHED (But can be to a menu not used)" />
+		<param name="teacherids" type="text" size="30" default="1" label="Teacher ids to show" description="Teacher ids (in order) separated by commas" />
 			<param name="compatibilityMode" type="radio" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
 				<option value="0">No</option>
 				<option value="1">Yes</option>
@@ -121,8 +124,7 @@
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="teacherids" type="text" size="30" default="1" label="Teacher ids to show" description="Teacher ids (in order) separated by commas" />
-			<param name="details_text" type="text" default="Study Details" size="50" label="Alt tag for details" description="Text to show on mouse over of details image link other than if you choose a tooltip" />
+				<param name="details_text" type="text" default="Study Details" size="50" label="Alt tag for details" description="Text to show on mouse over of details image link other than if you choose a tooltip" />
 			<param name="show_book_search" type="radio" default="1" label="Show/Hide book search" description="Shows or hides the drop down box for books">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>

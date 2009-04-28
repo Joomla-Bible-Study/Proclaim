@@ -12,7 +12,7 @@ function getScripture($params, $row, $esv) {
 	$query = 'SELECT #__bsms_studies.*, #__bsms_books.bookname, #__bsms_books.id as bid '
 			. ' FROM #__bsms_studies'
 			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-			. '  WHERE #__bsms_studies.id = '.$id2; 
+			. '  WHERE #__bsms_studies.id = '.$row->id; 
 	$db->setQuery($query);
 	$bookresults = $db->loadObject();
 	$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
