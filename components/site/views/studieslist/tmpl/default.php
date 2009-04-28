@@ -245,7 +245,7 @@ if ($params->get('show_teacher_list') > 0)
 				$filesize_call = JView::loadHelper('filesize');
 				$call_filepath = JView::loadHelper('filepath');
 				$call_mediatable = JView::loadHelper('mediatable');
-				$mediatable = getMediatable($params, $row->id, $ismodule, $duration);
+				$mediatable = getMediatable($params, $row);
 				echo $mediatable.'</div>';
 				
 		}//End of bsmediatable div

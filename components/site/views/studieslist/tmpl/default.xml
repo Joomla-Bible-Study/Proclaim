@@ -66,6 +66,7 @@
 					<option value="right">Right</option>
 				</param>
 				<param name="header_color" type="text" default="#333333" label="Header Background Color" description="Put in a Hex or other color for the header row background" />
+				<param name="header_font_color" type="text" default="#000000" label="Font Color for Header Text" description="Use HEX or name (like red) for header text color" />
 				<param name="header1" type="text" default="" label="Header Column 1" description="Text to appear in the header of column 1 - leave blank if not using that column" />
 				<param name="header2" type="text" default="" label="Header Column 2" description="Text to appear in the header of column 2 - leave blank if not using that column" />
 				<param name="header3" type="text" default="" label="Header Column 3" description="Text to appear in the header of column 3 - leave blank if not using that column" />

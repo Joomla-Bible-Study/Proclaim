@@ -1,16 +1,15 @@
 <?php
 defined('_JEXEC') or die();
 
-function getMediatable($params, $id, $ismodule, $duration)
+function getMediatable($params, $row)
 {
 
     global $mainframe, $option;
 	$database = & JFactory::getDBO();
-	if ($ismodule == 1) {
 		$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
 		include_once($path1.'filesize.php');
 		include_once($path1.'filepath.php');
-	}
+		include_once($path1.'duration.php');
 	
 	$query_media1 = 'SELECT #__bsms_mediafiles.*,'
     . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
@@ -23,15 +22,16 @@ function getMediatable($params, $id, $ismodule, $duration)
     . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
     . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
     . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-    . ' WHERE #__bsms_mediafiles.study_id = '.$id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
+    . ' WHERE #__bsms_mediafiles.study_id = '.$row->id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
     $database->setQuery( $query_media1 );
     $media1 = $database->loadObjectList('id');
 	$rows2 = count($media1);
+	//dump ($rows2, 'Rows2: ');
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
 
 	foreach ($media1 as $media) {
 		
-		$mediatable = '<div class="mediaimage'.$params->get('pageclass_sfx').'">';
+		$mediatable .= '<div class="mediaimage'.$params->get('pageclass_sfx').'">';
 		
       $download_image = $params->get('download_image');
       if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
@@ -47,10 +47,10 @@ function getMediatable($params, $id, $ismodule, $duration)
       $idfield = '#__bsms_mediafiles.id';
 	  $id4 = $media->id;
 	  $id3 = $id4;
-	  $filesizefield = '#__bsms_mediafiles.id';
 	  //dump ($media->id, 'id4: ');
 	  $filesize = getFilesize($media->size);
-	  
+	  //dump ($filesize, 'filesize');
+	  $duration = getDuration($params, $row);
 	  $media_size = $filesize;
 	 // dump ($media_size, 'filesize: ');
       $mimetype = $media->mimetext;

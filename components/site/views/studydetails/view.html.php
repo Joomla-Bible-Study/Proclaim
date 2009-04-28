@@ -39,50 +39,6 @@ class biblestudyViewstudydetails extends JView
 		$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 		
 		
-		//Begin test of using helper
-		
-		/*$scripture_call = Jview::loadHelper('scripture');
-  		//This formats the main scripture reference through the function
-		$booknumber = $studydetails->booknumber;
-		$esv = 0;
-		$scripture->scripture1 = getScripture($params, $row, $esv);
-		$passage_link1 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture1.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture1.'</a>';
-		//This formats the passage view at the bottom of the page(esv only) through the function
-		$esv = 1;
-		$scripture->scripture3 = getScripture($params, $row, $esv);
-		//This formats the secondary reference
-		
-		$scripture->scripture2 = getScripture($params, $row, $esv);
-		$passage_link2 = '<a href="http://bible.gospelcom.net/passage/?search='.$scripture->scripture2.';&version='.$version.'" target="_blank" onclick="'.$windowopen.'">'.$scripture->scripture2.'</a>';
-		if ($params->get('scripture_view_link') > 0) { $scripture->scripture1 = $passage_link1;}
-		if ($params->get('scripture_view_link') > 0) { $scripture->scripture2 = $passage_link2;}
-       
-	    $duration_call = JView::loadHelper('duration');
-        $filepath_call = JView::loadHelper('filepath');
-		$idfield = '#__bsms_mediafiles.study_id';
-        $filepath = getFilepath($id3, $idfield);
-        $this->assignRef('filepath', $filepath);
-        $filesize_call = JView::loadHelper('filesize');
- 		$date_call = JView::loadHelper('date');
- 		$df = ($params->get('date_format'));
- 		$date = getstudyDate($df, $studydetails->studydate);
-        $this->assignRef('date', $date);
-        $id4 = $studydetails->id;
-		$filesizefield = '#__bsms_mediafiles.study_id';
-        $filesize = getFilesize($id4, $filesizefield);
-		
-        $this->assignRef('filesize', $filesize);
-        $duration = $studydetails->media_hours.$studydetails->media_minutes.$studydetails->media_seconds;
-		  if (!$duration) { $duration = 'xxx';}
-		  else {
-			  $duration_type = $params->get('duration_type');
-			  $hours = $studydetails->media_hours;
-			  $minutes = $studydetails->media_minutes;
-			  $seconds = $studydetails->media_seconds;
-			  $duration_call = JView::loadHelper('duration');
-			  $duration = getDuration($duration_type, $hours, $minutes, $seconds);
-		  }
-  $this->assignRef('duration', $duration);*/
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');
 		$this->assignRef('show_media', $show_media);
@@ -95,11 +51,11 @@ class biblestudyViewstudydetails extends JView
 		$database->setQuery($query);
 		$menuid = $database->loadResult();
 		$this->assignRef('menuid',$menuid);
-		$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1'
+		/*$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1'
 		.' AND c.study_id = '.$this->studydetails->id.' ORDER BY c.comment_date ASC';
 		$database->setQuery($query);
 		$comments = $database->loadObjectList();
-		$this->assignRef('comments', $comments);
+		$this->assignRef('comments', $comments);*/
 		
 		if($this->getLayout() == 'pagebreak') {
 			$this->_displayPagebreak($tpl);
