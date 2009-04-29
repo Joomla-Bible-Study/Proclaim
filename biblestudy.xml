@@ -200,6 +200,8 @@
 		<filename>helpers/editlisting.php</filename>
 		<filename>helpers/editlink.php</filename>
 		<filename>helpers/teacher.php</filename>
+		<filename>helpers/passage.php</filename>
+		<filename>helpers/comments.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>

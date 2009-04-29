@@ -65,6 +65,7 @@ class biblestudyControllerstudydetails extends JController
 	
 	global $option, $mainframe;
 	$params =& $mainframe->getPageParameters();
+	$detailsitemid = JRequest::getVar('detailsitemid', 0, 'POST', 'WORD');
 	$cap = 1;
 	$model = $this->getModel('studydetails');
 		
@@ -95,7 +96,7 @@ class biblestudyControllerstudydetails extends JController
 		$EmailResult=$this->commentsEmail();
 		}
 		$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
-		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&msg='.$msg, 'Comment Added.');
+		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&Itemid='.$detailsitemid.'&msg='.$msg, 'Comment Added.');
 	} // End of $cap
 	}
 	//Begin scripture links plugin function
