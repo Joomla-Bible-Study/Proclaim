@@ -156,13 +156,13 @@ if ($params->get('show_teacher_list') > 0)
 </div><!--end of bsdropdownmenu div-->
 <div class="headercontainer<?php echo $pageclass_sfx;?>"><!--this is the container for all the headers, so that we can add a line underneath and have it go the while width-->
 <?php if ($params->get('use_headers') >0) { ?>
-<div class="bslistheader<?php echo $pageclass_sfx;?>" >
+
 	<?php 
     $header_call = JView::loadHelper('header');
     $header = getHeader($this->params);
     echo $header;
    ?>
-</div><!--end of bslistheader div-->
+
 <?php } ?>
 </div><!--end of headercontainer div-->
 <div class="bslistings<?php echo $pageclass_sfx;?>" >

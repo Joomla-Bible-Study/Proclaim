@@ -51,11 +51,7 @@ class biblestudyViewstudydetails extends JView
 		$database->setQuery($query);
 		$menuid = $database->loadResult();
 		$this->assignRef('menuid',$menuid);
-		/*$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1'
-		.' AND c.study_id = '.$this->studydetails->id.' ORDER BY c.comment_date ASC';
-		$database->setQuery($query);
-		$comments = $database->loadObjectList();
-		$this->assignRef('comments', $comments);*/
+		
 		
 		if($this->getLayout() == 'pagebreak') {
 			$this->_displayPagebreak($tpl);

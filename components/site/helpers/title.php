@@ -33,7 +33,7 @@ function getTitle($params, $row)
 			$title .= $row->topics_text;
 			break;
 		}
-	$title .= '</div>';
+	
 	}
 	
 	if ($params->get('title_line_2') > 0) 
@@ -69,7 +69,7 @@ function getTitle($params, $row)
 		}
 		$title .= '</div>';
 	} // end of if title2
-
+	$title .= '</div>';
 return $title;
 }
 

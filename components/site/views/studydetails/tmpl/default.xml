@@ -17,7 +17,7 @@
 		<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or percentage. Needs px or % at end" />
 		<param name="@spacer" type="spacer" default="Study View Details" label="Study View Details" description="Study View Details">
 		</param>
-		<param name="title_line_1" type="radio" default="1" label="Item to show on title line 1" description="Choose an item to show on the first line of the Title line of the study details">
+		<param name="title_line_1" type="list" default="1" label="Item to show on title line 1" description="Choose an item to show on the first line of the Title line of the study details">
 			<option value="0">Don't Show</option>
 			<option value="1">Study Title</option>
 			<option value="2">Teacher</option>
@@ -26,7 +26,7 @@
 			<option value="5">Series</option>
 			<option value="6">Topic</option>
 		</param>
-		<param name="title_line_2" type="radio" default="4" label="Item to show on title line 2" description="Choose an item to show on the second line of the Title line of the study details">
+		<param name="title_line_2" type="list" default="4" label="Item to show on title line 2" description="Choose an item to show on the second line of the Title line of the study details">
 			<option value="0">Don't Show</option>
 			<option value="1">Study Title</option>
 			<option value="2">Teacher</option>
@@ -67,7 +67,6 @@
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="media_width" type="text" width="3" default="30" label="Media Image Col Width" description="Set the width in pixels of each column of the media images" />
 			<param name="useavr" type="radio" default="0" label="Use AllVideosReloaded for all media" description="If installed, use AllVideosReloaded 1.2.3 or higher player for all video and audio (overrides local settings)">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
@@ -671,10 +670,6 @@
 				</param>
 				<param name="store_name" default="Store" type="text" label="Store Name" description="Name for the store on listing page" />
 				<param name="storewidth" default="50px" type="text" label="Store Width" description="Width in pixels (px) or percent for the store header - if shown" />	
-	<param name="show_verses_view" type="radio" default="0" label="Show/Hide Verses on Study View page" description="Choose whether just chapter(s) of Bible study book shown or verses too">
-			<option value="0">Show only chapters</option>
-			<option value="1">Show verses and chapters</option>
-		</param>
 		<param name="link_text" type="text" default="Return to Studies List" size="50" label="Text for bottom link to main list" description="Type in text to display on bottom link back to main component listing" />
 	<param name="view_link" type="radio" default="1" label="Show link to studies list" description="Choose whether to have a link back to the studies list">
 	<option value="0">No link</option>

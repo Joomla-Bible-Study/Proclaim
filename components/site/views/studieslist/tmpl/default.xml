@@ -42,7 +42,7 @@
 					<option value="6">1 September 2007</option>
 					<option value="7">1/9/2007</option>
 					<option value="8">Use Global System Date Format</option>
-					<option value="9"> 2009/10/13</option>
+					<option value="9">2009/10/13</option>
 				</param>
 			<param name="default_order" type="radio" default="1" label="Default Date Ascending/Descending" description="Choose whether the default listing of studies should be in date ascending or descending order">
 					<option value="DESC">Descending</option>
@@ -50,12 +50,17 @@
 				</param>
 				<param name="items" type="text" size="2" default="5" label="Number of studies to display" description="Enter a number of studies to display in each listing page" />
 				<param name="teacher_id" type="teacher" default="" label="Teacher" description="Choose a teacher to display for this menu item" />
+				<param name="mult_teachers" type="text" default="" label="Enter multiple teacher ids" description="Enter a series of teacher ids separated by commas as a filter" />
 				<param name="series_id" type="series" default="" label="Series" description="Choose a series to display for this menu item" />
+				<param name="mult_series" type="text" default="" label="Enter multiple series ids" description="Enter a number of series ids separated by commas as a filter" />
 				<param name="booknumber" type="book" default="" label="Book" description="Choose a Book to display for this menu item" />
+				<param name="mult_books" type="text" default="" label="Enter multiple booknumber ids" description="Enter a series of book ids separated by commas as a filter" />
 				<param name="topic_id" type="topic" default="" label="Topic" description="Choose a topic to display for this menu item" />
+				<param name="mult_topics" type="text" default="" label="Enter multiple topic ids" description="Enter a series of topic ids separated by commas as a filter" />
 				<param name="messagetype" type="messagetype" default="" label="Message Type" description="Choose a message type to display for this menu item" />
+				<param name="mult_messagetype" type="text" default="" label="Enter multiple message type ids" description="Enter a series of message type ids separated by commas as a filter" />
 				<param name="locations" type="locations" default="" label="Locations" description="Choose a location to display for this menu item" />
-		
+				<param name="mult_locations" type="text" default="" label="Enter multiple location ids" description="Enter a series of location ids separated by commas as a filter" />
 				<param name="use_headers" type="radio" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
 					<option value="0">No Header Row</option>
 					<option value="1">Use Header Row</option>
@@ -77,7 +82,6 @@
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="details_width" type="text" default="48px" label="Width for details column" description="Width of column with links to details and pdf" />
 			<param name="tooltip" type="radio" default="1" label="Show/Hide Tooltip" description="Shows or hides a tooltip with details of your studies over the study details link">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
@@ -98,7 +102,6 @@
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="media_width" type="text" width="3" default="30" label="Media Image Col Width" description="Set the width in pixels of each column of the media images" />
 			<param name="useavr" type="radio" default="0" label="Use AllVideosReloaded for all media" description="If installed, use AllVideosReloaded 1.2.3 or higher player for all video and audio (overrides local settings)">
 					<option value="0">No</option>
 					<option value="1">Yes</option>

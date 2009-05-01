@@ -3,8 +3,9 @@
 function getComments($params, $row, $Itemid)
 {
 		$database	= & JFactory::getDBO();
-		$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1'
-				.' AND c.study_id = '.$row->id.' ORDER BY c.comment_date ASC';
+		
+		$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = '.$row->id.' ORDER BY c.comment_date ASC';
+				//dump ($query, 'row');
 		$database->setQuery($query);
 		$commentsresult = $database->loadObjectList();
 		$pageclass_sfx = $params->get('pageclass_sfx');

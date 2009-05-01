@@ -11,541 +11,186 @@ if(document.getElementById(d).style.display == "none") { document.getElementById
 else { document.getElementById(d).style.display = "none"; }
 }
 </script>
-
-
 <?php
-
-global $mainframe;
-
-//$menu = JSite::getMenu();
-//$item = $menu->getActive();
-$message = JRequest::getVar('msg');
-//$path =& JURI::base()
-$pathway =& $mainframe->getPathWay();
-$uri 		=& JFactory::getURI();
-$database	= & JFactory::getDBO();
-//$esv = 0;
-$imageh = $this->params->get('imageh', 24);
-$imagew = $this->params->get('imagew', 24);
-$downloadCompatibility = $this->params->get('compatibilityMode');
-
-$picture = $this->params->get('show_picture_view');
-switch ($picture) {
-	case 1:
-		$image = $this->studydetails->image;
-		$imageh = $this->studydetails->imageh;
-		$imagew = $this->studydetails->imagew;
-		$space = ($imagew + 2);
-		break;
-	case 2:
-		$image = $this->studydetails->thumb;
-		$imageh = $this->studydetails->thumbh;
-		$imagew = $this->studydetails->thumbw;
-		$space = ($imagew + 2);
-		break;
-}
-
-$details_text = $this->params->get('details_text');
-$filesize_show = $this->params->get('filesize_show');
-
+global $mainframe, $option;
+$params = $mainframe->getPageParameters();
+$document =& JFactory::getDocument();
+$type = 'text/css';
+$css_call = JView::loadHelper('css');
+$styles = getCss($params);
+$document->addStyleDeclaration($styles, $type);
+$url = $params->get('stylesheet');
+if ($url) {$document->addStyleSheet($url);}
+$pageclass_sfx = $params->get('pageclass_sfx');
+$row = $this->studydetails;
 ?>
-<table class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
- <tr><?php //Title Row
-  if ($this->params->get('show_title_view') >0) { ?>
-  <td class="contentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>"width="100%">
-   <?php echo '<span '.$this->params->get('style_title_view').'>'.$this->studydetails->studytitle.'</span>';?>
-  </td><?php
-  } 
-  if ($this->params->get('show_print_view') > 0) { ?>
-  <td align="left" width="100%" class="buttonheading">
-   <?php 
-    $text = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'Print' ) );
-    echo '<a href="#&tmpl=component" onclick="window.print();return false;">'.$text.'</a>';
-   ?>
-  </td><?php
-  }
-  if ($this->params->get('show_pdf_view')) { ?>
-  <td align="right" width="100%" class="buttonheading"><?php 
-    $url = 'index.php?option=com_biblestudy&view=studydetails&id='.$this->studydetails->id.'&format=pdf';
-    $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
+<div class="detailspagecontainer<?php echo $pageclass_sfx;?>"> <!-- This div is the container for the whole page -->
 
-    // checks template image directory for image, if non found default are loaded
-    //if ($params->get('show_icons')) {
-   $text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('PDF'), JText::_('PDF'));
-   //} else {
-   //$text = JText::_('PDF').'&nbsp;';
-   //}
+<div id="detailstitlecontainer<?php echo $pageclass_sfx;?>">		
+<div class="buttonheading<?php echo $pageclass_sfx;?>">
 
-   $attribs['title']	= JText::_( 'PDF' );
-   $attribs['onclick'] = "window.open(this.href,'win2','".$status."'); return false;";
-   $attribs['rel']     = 'nofollow';
-
-   $link = JHTML::_('link', JRoute::_($url), $text, $attribs);
-   echo $link; ?>
-  </td><?php 
-  } ?>
- </tr><?php
-
- if ($message) {?>
- <tr>
-  <td align="center"><?php echo '<h2>'.$message.'</h2>';
-	if ($this->params->get('comment_publish') < 1){echo JText::_('Submissions may need approval prior to publication').'<br>';}?></td>
- </tr><?php 
- } //End of if $message
-
- if ($this->params->get('show_scripture_view') > 0){?>
- <tr>
-  <td><?php echo '<span '.$this->params->get('span_scripture_view').'><strong>Scripture: </strong>'.$this->scripture->scripture1; ;
-		if ($this->studydetails->booknumber2 > 0){echo ' - '.$this->scripture->scripture2;}
-		if ($this->studydetails->secondary_reference) {echo ' - '.$this->studydetails->secondary_reference.'</span>';}?>
-  </td>
- </tr><?php 
- } //end of test for if show scripture ?>
- 
- <tr><?php 
-  if ($this->params->get('show_picture_view') > 0) { ?>
-   <td width="<?php $space;?>">
-   <?php echo '<img src="'.$image.'" width="'.$imagew.'" height="'.$imageh.'"><br />';
-   if ($this->params->get('show_teacher_view') > 0){
-    if ($this->studydetails->tname) {
-     echo '<span '.$this->params->get('span_teacher_view').'>'.'<strong> By: </strong>';?> <?php echo $this->studydetails->tname.'</span>'; 
-    }
-   }
-   ?></td><?php
-  }
-  
-  if ($this->params->get('show_picture_view') < 1) {
-  	?><td><?php
-	if ($this->params->get('show_teacher_view')) {
-		if ($this->studydetails->tname) {
-			echo '<span '.$this->params->get('span_teacher_view').'>'.'<strong> By: </strong>';
-			echo $this->studydetails->tname.'</span>';
-		}
+	<?php 
+	if ($this->params->get('show_print_view') > 0) 
+	{
+		$text = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'Print' ) );
+        echo '<a href="#&tmpl=component" onclick="window.print();return false;">'.$text.'</a>';
 	}
-	?></td><?php
-  }?>
+	if ($this->params->get('show_pdf_view') > 0 ) 
+    { 
+        $url = 'index.php?option=com_biblestudy&view=studydetails&id='.$this->studydetails->id.'&format=pdf';
+        $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
+        $text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('PDF'), JText::_('PDF'));
+        $attribs['title']	= JText::_( 'PDF' );
+        $attribs['onclick'] = "window.open(this.href,'win2','".$status."'); return false;";
+        $attribs['rel']     = 'nofollow';
+        $link = JHTML::_('link', JRoute::_($url), $text, $attribs);
+        echo $link; 
+    } ?>
 
-  <td valign="top"><span class="small"> </span> &nbsp;</td>
- </tr>
- <tr>
-  <td valign="top"><?php 
-  if ($this->params->get('show_date_view') > 0){ ?>
-   <?php
+</div>
+<?php
+	if ($params->get('show_teacher_view') > 0)
+	{	?>        
+<div class="detailsteacher<?php echo $pageclass_sfx;?>">
+    
+    <?php	
+	$teacher_call = JView::loadHelper('teacher');
+	$teacher = getTeacher($params, $row->teacher_id);
+	if ($teacher) {echo $teacher;}
+	?>
+</div><!--end of detailsteacher div-->
+<?php } ?>
+<?php if ($params->get('title_line_1') + $params->get('title_line_2') > 0) 
+	{
+		$title_call = JView::loadHelper('title');
+		$title = getTitle($params, $row);
+		echo $title;
+	}?> 
+</div><!--end of titlecontainer div-->
+<?php if ($params->get('use_headers') >0) { ?>
+	
+	<div class="detailsheadercontainer<?php echo $pageclass_sfx;?>" >
+	<?php 
+    $header_call = JView::loadHelper('header');
+    $header = getHeader($this->params);
+    echo $header;
+	echo '</div>';
+	}?>
+    
 
-	if ($date) { ?>
-	 <span <?php echo $this->params->get('span_date_view');?>> <?php echo '<strong>'.JText::_('Date').': </strong>'.$this->date; ?></span><?php
-	}
-   }
-   if ($this->params->get('show_locations') > 0) {
-    if ($this->studydetails->location_text) {?>
-     <span <?php echo $this->params->get('span_locations_view');?>><?php echo '<strong>'.JText::_('Location').': </strong>'.$this->studydetails->location_text; ?></span><?php 
-    } 
-   }
-   if ($this->params->get('show_series_view') > 0){
-   	if ($this->studydetails->stext) { ?>
-   	 <span <?php echo $this->params->get('span_series_view');?>> <?php echo '<strong>'.JText::_('Series').': </strong>'.$this->studydetails->stext; ?></span> <?php 
-   	}
-   } 
-   if ($this->params->get('show_studynumber_view') > 0){
-   	if ($this->studydetails->studynumber) {?>
-     <span <?php echo $this->params->get('span_studynumber_view');?>> <?php echo '<strong>'.JText::_('Study Number').': </strong>'.$this->studydetails->studynumber;?></span> <?php
-   	}	 
-   } 
-   if ($this->params->get('show_duration') > 0) { ?>
-    <span <?php echo $this->params->get('span_duration_view');?>> <?php echo '<strong>'.JText::_('Duration').': </strong>'.$this->duration;?></span> <?php
-   } ?>
-  </td>
- </tr>
- <?php if ($this->params->get('show_description_view') > 0){ ?>
- <tr>
-  <td valign="top"><?php
-   if ($this->studydetails->studyintro) {?>
-    <span <?php echo $this->params->get('span_description_view'); ?>> <?php echo $this->studydetails->studyintro; ?></span><?php 
-   } ?>
-  </td>
- </tr>
-<?php 
- } ?>
-</table>
- 
-		<?php if ($this->show_media > 0):
+    
+   <?php  
+    $listarraycall = JView::loadHelper('listarray');
+	$a = getListarray($params, $row);
+		
+		  //This calls the helper once that will process each column's array, coming from the $a variable. We will then call a function in each column from this helper file
+		  $array_call = JView::loadHelper('columnarray');
+		echo '<div class="detailslistingcontainer'.$pageclass_sfx.'">';
+        
+		$columnnumber = 1;
+		$column1 = getColumnarray($a, $row, $columnnumber, $this->params);
+		if ($column1) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
+		echo $column1; 
+		
+		if ($column1) {echo '</div>';}
+		$columnnumber = 2;
+		$column2 = getColumnarray($a, $row, $columnnumber, $this->params);
+		if ($column2) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
+		echo $column2; 
+		
+		if ($column2) {echo '</div>';}
+        $columnnumber = 3;
+		$column3 = getColumnarray($a, $row, $columnnumber, $this->params);
+		if ($column3) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
+       	echo $column3; 
+		
+		if ($column3) {echo '</div>';}
+		$columnnumber = 4;
+		$column4 = getColumnarray($a, $row, $columnnumber, $this->params);
+		if ($column4) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
+		echo $column4;
+		
+		if ($column4) {echo '</div>';}
+		
+	
+		//Store section
+		
+		if ($params->get('show_store') > 0) {
+			$store_call = JView::loadHelper('store');
+			$store = getStore($params, $row->id);
+			echo '<div class="bsstore'.$pageclass_sfx.'">'.$store.'</div>';
+			
+		} //end store
+		//show media section
+		
+		if ($params->get('show_media') > 0) {
+				echo '<div class="bsmediatable'.$pageclass_sfx.'">';
+        		$ismodule = 0;
+				$filesize_call = JView::loadHelper('filesize');
+				$call_filepath = JView::loadHelper('filepath');
+				$call_mediatable = JView::loadHelper('mediatable');
+				$mediatable = getMediatable($params, $row);
+				echo $mediatable.'</div>';
+				
+		}//End of bsmediatable div
+		
+		//column for description
+		
+		if ($params->get('show_description') > 0) {
+	        echo '<div class="bsbottomlisting'.$pageclass_sfx.'">'.$row->studyintro.'</div>';
+			}//End of bsbottomlisting
+          ?>      
+        
+        </div><!--end of detailslistingcontainer-->
+        
+		<div class="detailsstudytext<?php echo $pageclass_sfx;?>">
+        <p><?php echo $this->article->studytext;?></p>
+        
+         <?php if ($params->get('show_comments') > 0)
+		{?>
+        <div class="commentstable<?php echo $params->get('pageclass_sfx');?>">
+		<?php $Itemid = JRequest::getVar('Itemid');
+		$comments_call = JView::loadHelper('comments');
+        $comments = getComments($params, $row, $Itemid);
+		echo $comments;
 		?>
-<table>
-	
-	
-	
-	<tr>
-	<?php
-	// Here's where get the media information from the mediafiles table, joining other tables to complete the information on images, servers, and paths
+               
+        </div><!--end of div for comments-->
+        
+        <?php } //end of if comments param?>
 
+        <?php if ($this->params->get('show_passage_view') > 0) { ?>
+		<div id="passagecontainer<?php echo $pageclass_sfx;?>">
+          <strong><a class="heading" href="javascript:ReverseDisplay('scripture')">>><?php echo JText::_('Show/Hide Scipture Passage');?><<</a>
 
-	$query_media1 = 'SELECT #__bsms_mediafiles.*,'
-	. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-	. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-	. ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname,'
-	. ' #__bsms_media.media_alttext AS malttext,'
-	. ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
-	. ' FROM #__bsms_mediafiles'
-	. ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
-	. ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-	. ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-	. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-	. ' WHERE #__bsms_mediafiles.study_id = '.$this->studydetails->id;
-	$database->setQuery( $query_media1 );
-	$media1 = $database->loadObjectList('id');
-	if (!$media1){} else { // This tests to make sure that there is a result to the media query or it will generate an arror
-		foreach ($media1 as $media) {
-			$params =& $mainframe->getPageParameters();
-			$download_image = $params->get('download_image');
-			if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
-			$link_type = $media->link_type;
-			$useavr = 0;
-			$useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
-			$useplayer = 0;
-			if ($params->get('media_player') > 0) {
-				//Look to see if it is an mp3
-				$ismp3 = substr($media->filename,-3,3);
-				if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
-			} //End if media_player param test
+        <div id="scripture" style="display:none;"></strong>
+          <?php 
+		  $passage_call = JView::loadHelper('passage');
+          $response = getPassage($params, $row);
+          echo $response;?>
+        </div>
 
-			$mimetype = $media->mimetext;
-			$src = JURI::base().$media->impath;
-			if ($imagew) {$width = $imagew;} else {$width = 24;}
-			if ($imageh) {$height = $imageh;} else {$height= 24;}
-			$ispath = 0;
-			if (!$media->filename){
-				$path1 = '';
-				$ispath = 0;
-			}
-			else {
-				$path1 = $media->spath.$media->fpath.$media->filename;
-				if (!eregi('http://', $path1)) {
-					$path1 = 'http://'.$path1;
-				}
-				$pathname = $media->fpath;
-				$filename = $media->filename;
-				$ispath = 1;
-				$direct_link = '<a href="'.$path1.'"title="'.$media->malttext.' '.$duration.' '
-				.$this->filesize.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
-				.'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
-				.'" height="'.$height.'" border="0" /></a>';
-			}
-			$isavr = 0;
-			if (JPluginHelper::importPlugin('system', 'avreloaded'))
-			{
-				$isavr = 1;
-				$studyfile = $media->spath.$media->fpath.$media->filename;
-				$mediacode = $media->mediacode;
-				$isrealfile = substr($studyfile, -4, 1);
-				$fileextension = substr($media->filename,-3,3);
-				if ($mediacode == ''){
-					$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
-				}
-				$mediacode = str_replace("'",'"',$mediacode);
-				$ispop = substr_count($mediacode, 'popup');
+        
+        </div>			
+		<?php } //end of if passage?>
 
-				if ($ispop < 1) {
-					$bracketpos = strpos($mediacode,'}');
-					$mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
-				}
-				$isdivid = substr_count($mediacode, 'divid');
-				if ($isdivid < 1) {
-					$dividid = ' divid="'.$media->id.'"';
-					$bracketpos = strpos($mediacode, '}');
-					$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
-				}
-				$isonlydash = substr_count($mediacode, '}-{');
-				if ($isonlydash == 1){
-					$ishttp = substr_count($studyfile, 'http://');
-					if ($ishttp < 1) {
-						//We want to see if there is a file here or if it is streaming by testing to see if there is an extension
-						$isrealfile = substr($studyfile, -4, 1);
-						if ($isrealfile == '.') {
-							$isslash = substr_count($studyfile,'//');
-							if (!$isslash) {
-								$studyfile = substr_replace($studyfile,'http://',0,0);
-							}
-						}
-					}
-					if ($isrealfile != '.')
-					{
-						$studyfile = $media->filename;
-					}
-					$mediacode = str_replace('-',$studyfile,$mediacode);
-				}
-				$popuptype = 'window';
-				if($this->params->get('popuptype') != 'window') {
-					$popuptype = 'lightbox';
-				}
-				$avr_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
-				.'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
-				.' '.$duration.' '.$media_size.'" width="'.$width
-				.'" height="'.$height.'" border="0" "title="'
-				.$media->malttext.' '.$duration.' '.$media_size.'"/>{/avrpopup}';
-			}
-			$useavr = 0;
-			$useavr = $useavr + $this->params->get('useavr') + $media->internal_viewer;
-			$isfilesize = 0;
-			if ($filesize > 0)
-			{
-				$isfilesize = 1;
-				$media1_sizetext = '<span style="font-size:0.60em;">'.$media_size.'</span>';
-			}
-			else {$media1_sizetext = '';}
-			$media1_link = $direct_link;
+        </div><!--end of detailsstudytext-->
+        
+       
 
-			if ($useavr > 0)
-			{ $media1_link = $avr_link;
-
-			}
-			if ($useplayer == 1){
-				$player_width = $params->get('player_width');
-				if (!$player_width) { $player_width = '290'; }
-				$media1_link =
-					'<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$media->id.'" height="24" width="290">
-<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
-<param name="FlashVars" value="playerID='.$media->id.'&amp;soundFile='.$path1.'">
-<param name="quality" value="high">
-<param name="menu" value="false">
-<param name="wmode" value="transparent">
-</object> ';}?>
-
-		<!-- this is where the media column td begins -->
-		<td>
-		<?php echo $media1_link; ?>
-		<?php
-		if ($link_type > 0){
-		 $src = JURI::base().$download_image;
-		 if ($imagew) {$width = $imagew;} else {$width = 24;}
-		 if ($imageh) {$height = $imageh;} else {$height= 24;}
-		 //list($width,$height)=getimagesize($src);?> <?php
-		 if($downloadCompatibility == 0) {
-		  echo '<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
-		 }else{
-		  echo('<a href="http://joomlaoregon.com/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">');
-		 }?>
-		 <img src="<?php echo JURI::base().$download_image;?>"
-			alt="<?php echo JText::_('Download');?>"
-			height="<?php echo $height;?>" width="<?php echo $width;?>"
-			title="<?php echo JText::_('Download');?>" /> <?php echo '</a>'; 
-		}
-		if ($this->params->get('show_filesize') > 0){?>
-		 <br />
-		 <?php echo $media1_sizetext;
-		}?>
-		</td>
- 		<!-- This is where the media column ends -->
-
-
-
-			<?php } //end of foreach
-	} //end of the if test/else for the $media array?>
-	</tr>
-	
-</table>
-	<?php //} Took this out - seems left over from studylist if/endif show media ?>
-<!-- This is where the column that holds text and/or media ends, as well as the row and table for media and/or text -->
-
-
-
-<?php /*
-<table>
-	<tr>
-		<td><?php endif; //end of if params show media ?> <?php if ($this->params->get('show_text_view') > 0): ?>
-	
-	
-	<tr>
-		<td><br />
-		<?php //echo $this->studydetails->studytext; ?></td>
-	</tr>
-*/?>
-	<table>
-		<tr>
-			<td><?php endif; //end of if params show media ?> <?php if ($this->params->get('show_text_view') > 0): ?>
-		
-		
-		<tr>
-			<td><br />
-			<?php echo '<span '.$this->params->get('detailspan').'>'.$this->article->studytext.'</span>'; ?>
-
-			</td>
-		</tr>
-		<?php endif; ?>
-		<?php if ($this->params->get('show_comments') > 0) {?>
-		<?php if ($this->studydetails->comments > 0) { ?>
-
-		<tr>
-			<td><?php //Row and column to hold overall commment table?>
-			 <strong><a class="heading" href="javascript:ReverseDisplay('comments')"><?php echo '>>'.JText::_('Show/Hide Comments').'<<';?></a></strong>
-			<div id="comments" style="display: none;">
-			
-			<table width="<?php echo $this->params->get('comment_table');?>"
-				border="0" bgcolor="#000000">
-				<tr valign="top" align="center">
-					<td bgcolor="#FFFFFF"><?php //Row for title of comments table?>
-					<h1><font color="#000000">Comments</font></h1>
-					<img
-						src="<?php echo JURI::base().'components/com_biblestudy/images/square.gif'?>"
-						height="3" width="100%" /><?php //Beginning of overall comment table?>
-					<table width="100%" bgcolor="#FFFFFF">
-					<?php //Inside comment table?>
-					<?php if (count($this->comments)) {?>
-					<?php
-					foreach ($this->comments as $comment){?>
-						<tr>
-							<td><?php
-							$comment_date_display = JHTML::_('date',  $comment->comment_date, JText::_('DATE_FORMAT_LC3') , '$offset' );
-							echo '<strong>'.$comment->full_name.'</strong> <i>'.$comment_date_display.'</i><br>';
-							echo 'Comment: '.$comment->comment_text.'<br><hr>';?></td>
-						</tr>
-						<?php } ?>
-						<?php } // End of if(count($this->comments))?>
-
-
-					</table>
-					<?php //End of inside comment table?>
-				  </td>
-				</tr>
-			</table>
-			<?php //End of overall comment table?>
-			</div>
-			<?php //End of div for show/hide comments?></td>
-		</tr>
-		<?php //End of row and column for overall comment able?>
-
-		<?php } // End of if $studydetails->comments > 0?>
-		<?php if ($this->params->get('show_comments') > 0) {?>
-		<tr>
-			<td><?php //Row for submit form for comments?> <?php $user =& JFactory::getUser();
-			$this->assignRef('thestudy',$this->studydetails->study_id);
-			$comment_access = $this->params->get('comment_access');
-			$comment_user = $user->usertype;
-			if (!$comment_user) { $comment_user = 0;}
-			//$comment_access = $this->params->get('comment_access');
-			//dump ($comment_access, 'Comment Access'); dump ($comment_user, 'Comment User');
-			if ($comment_access > $comment_user){echo '<strong><br />'.JText::_('You must be registered to post comments').'</strong>';}else{
-				if ($user->name){$full_name = $user->name; } else {$full_name = ''; } ?>
-				<?php if ($user->email) {$user_email = $user->email;} else {$user_email = '';}?>
-
-			<form action="index.php" method="post">
-			<table>
-				<tr>
-					<td><strong><?php echo JText::_('Post a Comment');?></strong></td>
-				</tr>
-				<tr>
-					<td><?php echo JText::_('First & Last Name: ');?></td>
-					<td><input class="text_area" size="50" type="text" name="full_name"
-						id="full_name" value="<?php echo $full_name;?>" /></td>
-				</tr>
-				<tr>
-					<td><?php echo JText::_('Email (Not displayed): ');?></td>
-					<td><input class="text_area" type="text" size="50"
-						name="user_email" id="user_email"
-						value="<?php echo $user->email;?>" /></td>
-				</tr>
-				<tr>
-					<td><?php echo JText::_('Comment: ');?></td>
-					<td><textarea class="text_area" cols="20" rows="4"
-						style="width: 400px" name="comment_text" id="comment_text"></textarea></td>
-				</tr>
-				<?php if ($this->params->get('use_captcha') == 1) { ?>
-				<tr>
-					<td><?php // Beginning of row for captcha
-				// Begin captcha . Thanks OSTWigits
-				//Must be installed. Here we check that
-				if (JPluginHelper::importPlugin('system', 'captcha'))
-				{
-					echo JText::_('Enter the text in the picture').'&nbsp;'?> <input
-						name="word" type="text" id="word" value=""
-						style="vertical-align: middle" size="10">&nbsp; <img
-						src=<?php echo JURI::base().'index.php?option=com_biblestudy&view=studydetails&controller=studydetails&task=displayimg';?>>
-					<br />
-					<?php } else { echo JText::_('Captcha plugin not installed. Please inform site administrator'); } //end of check for OSTWigit plugin?>
-					</td>
-					<?php //end of row for captcha?>
-					<?php
-				} // end of if for use of captcha
-				?>
-			
-			</table>
-			<?php //End of Form table?> <input type="hidden" name="study_id"
-				id="study_id" value="<?php echo $this->studydetails->id;?>" /> <input
-				type="hidden" name="task" value="comment" /> <input type="hidden"
-				name="option" value="com_biblestudy" /> <input type="hidden"
-				name="published" id="published"
-				value="<?php echo $this->params->get('comment_publish');?>" /> <input
-				type="hidden" name="view" value="studydetails" /> <input
-				type="hidden" name="controller" value="studydetails" /> <input
-				type="hidden" name="comment_date" id="comment_date"
-				value="<?php echo date('Y-m-d H:i:s');?>" /> <input type="hidden"
-				name="study_detail_id" id="study_detail_id"
-				value="<?php echo $this->studydetails->id;?>" /> <input
-				type="submit" class="button" id="button" value="Submit" /></form>
-				<?php } //End of if $comment_access < $comment_user?></td>
-		</tr>
-		<?php //End of row for submit form?>
-		<?php } //End of show_comments on for submit form?>
-
-		<?php } //End of params if show_comments?>
-		<?php //code added to provide Scripture reference at bottom ?>
-		<?php if ($this->params->get('show_passage_view') > 0) { ?>
-		<?php if ($this->scripture->scripture1) { ?>
-		<tr>
-			<td><br />
-			<?php
-
-			$key = "IP";
-			/*$booknumber = $this->studydetails->booknumber;
-			$ch_b = $this->studydetails->chapter_begin;
-			$ch_e = $this->studydetails->chapter_end;
-			$v_b = $this->studydetails->verse_begin;
-			$v_e = $this->studydetails->verse_end;
-			$esv = 1;
-			$scripture3 = format_scripture($booknumber, $ch_b, $ch_e, $v_b, $v_e, $esv);*/
-
-			$passage = urlencode($this->scripture->scripture3);
-			$options = "include-passage-references=false";
-			$url = "http://www.esvapi.org/v2/rest/passageQuery?key=$key&passage=$passage&$options";
-			$p = (get_extension_funcs("curl")); // This tests to see if the curl functions are there. It will return false if curl not installed
-			if ($p) { // If curl is installed then we go on
-				$ch = curl_init($url); // This will return false if curl is not enabled
-				if ($ch) { //This will return false if curl is not enabled
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-					$response = curl_exec($ch);
-					curl_close($ch);?>
-				<strong><a class="heading" href="javascript:ReverseDisplay('scripture')"><?php echo '>><span '.$this->params->get('span_passage_view').'>'.JText::_('Show/Hide Scipture Passage').'<<</span>';?></a></strong>
-			<div id="scripture" style="display: none;">
-			
-			 <?php echo "".$scripture1." (ESV)";
-			print $response;?>
-			</div>
-			<?php } // End of if ($ch)
-			} // End if ($p)
-			?></td>
-		</tr>
-		<?php }
-		} // end of if show_passage_view ?>
-		<tr>
-			<td align="center"><?php 
-			$link_text = $this->params->get('link_text');
+    <div class="detailsfooter<?php echo $pageclass_sfx;?>">
+    <?php $link_text = $this->params->get('link_text');
 			if (!$link_text) {
 				$link_text = JText::_('Return to Studies List');
 			}
 			if ($this->params->get('view_link') == 0){}else{
 				if ($this->params->get('view_link') == 1){
 					$item = JRequest::getVar('Itemid');
+					$returnmenu = JRequest::getVar('returnmenu');
+					if ($returnmenu) {$item = $returnmenu;}
 					$link = JRoute::_('index.php?option='.$option.'&view=studieslist');}
 					if ($item){
 						$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}?>
 			<a href="<?php echo $link;?>"> <?php echo '<span '.$this->params->get('span_link_view').'>'.$link_text.'</span>'; ?> </a> <?php } //End of if view_link not 0?>
-
-			</td>
-		</tr>
-	</table>
-	<form>
-	<input type="hidden" name="option" value="com_biblestudy" />
-	<input type="hidden" name="id" value="<?php echo $this->studydetails->id;?>" />
-	<input type="hidden" name="task" value="" />
-	<input type="hidden" name="controller" value="studydetails" />
-	</form>
+    </div><!--end of footer div-->
+</div><!--End of page container div-->

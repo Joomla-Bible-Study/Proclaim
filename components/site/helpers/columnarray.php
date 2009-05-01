@@ -31,14 +31,13 @@ function getColumnarray($a, $row, $columnnumber, $params) {
       $element = $c['element'];
       $position = $c['position'];
       $isbullet=$c['isbullet'];
-      $span=$c['span'];
       $islink=$c['islink'];
 	  //dump ($element, 'element: ');
 //dump ($islink, 'islink: ');
 // Now we run an increment so that we only but a <br /> at the end of every line except the last line
        //Now we produce each element in turn with its parameters
 	   //dump ($columnnumber, 'columnnumber: ');
-	   
+	  if ($element == '') {$element .= '-';} 
       if ($isbullet == 1) {
        $column .= '<ul><li>'; }
        switch ($islink) {

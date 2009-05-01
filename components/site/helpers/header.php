@@ -4,7 +4,8 @@ defined('_JEXEC') or die();
 function getHeader($params)
 {
 
-	$headercheck = array( array(  'position' => $params->get('position1')),
+	$headercheck = array( 
+	  array( 'position' => $params->get('position1')),
 	  array( 'position' => $params->get('position2')),
 	  array( 'position' => $params->get('position3')),
 	  array( 'position' => $params->get('position4')),

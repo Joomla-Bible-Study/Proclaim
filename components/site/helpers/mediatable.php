@@ -132,7 +132,7 @@ function getMediatable($params, $row)
      // if ($media_size > 0)
      // {
       // $isfilesize = 1;
-       $media1_sizetext = '<span style="font-size:0.60em;">'.$filesize.'</span>';
+       $media1_sizetext = $filesize;
      // }
       //else {$media1_sizetext = '';}
       $media1_link = $direct_link;
@@ -172,9 +172,11 @@ function getMediatable($params, $row)
        // Here is where we begin to build the mediatable variable
 		
 	 $mediatable .= $media1_link;
-		if ($params->get('show_filesize') > 0 ) {
-		$mediatable .= '<div class="mediasize'.$params->get('pageclass_sfx').'">'.$filesize.'</div>';  
-		}
+	 //showing of filesize removed for now - it was causing problems.
+		//if ($params->get('show_filesize') > 0 ) {
+		//$mediatable .= '<div class="mediasize'.$params->get('pageclass_sfx').'">'.$filesize.'</div>';
+		
+		//}
 
 		if ($link_type > 0){ $src = JURI::base().$download_image;
       	//if ($params->get('download_side') > 0) { $mediatable .='<td>';}
@@ -190,9 +192,7 @@ function getMediatable($params, $row)
       }
      
 	  $mediatable .= '<img src="'.JURI::base().$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
-	  
-	  
-	  // if ($params->get('download_side') > 0) { $mediatable .= '</td>';}
+  
 	  }
 	$mediatable .= '</div>';
 

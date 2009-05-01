@@ -268,6 +268,7 @@ function setSelect($string){
 		}
 		if ($teacher_menu > 0) {
 			$where[] = ' #__bsms_studies.teacher_id = '.(int) $teacher_menu;
+			
 		}
 		if ($book_menu > 0) {
 			$where[] = ' #__bsms_studies.booknumber = '.(int) $book_menu;
@@ -295,6 +296,79 @@ function setSelect($string){
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 
+		$where2 = array();
+		$continue = 0;
+		if ($params->get('mult_teachers')) 
+			{ 
+				
+				$continue = 1;
+				$filters = explode(",", $params->get('mult_teachers'));
+				foreach ($filters AS $filter)
+					{
+						$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
+					}
+			}
+		
+		if ($params->get('mult_locations')) 
+			{ 
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_locations'));
+				foreach ($filters AS $filter)
+					{
+						$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
+					}
+			}
+			
+		if ($params->get('mult_books')) 
+			{ 
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_books'));
+				foreach ($filters AS $filter)
+					{
+						//dump ($filter, 'filter: ');
+						$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
+					}
+			}
+		
+		if ($params->get('mult_series')) 
+			{ 
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_series'));
+				foreach ($filters AS $filter)
+					{
+						$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
+					}
+			}
+			
+		if ($params->get('mult_topics')) 
+			{ 
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_topics'));
+				foreach ($filters AS $filter)
+					{
+						$where2[] = '#__bsms_studies.topics_id = '.(int)$filter;
+					}
+			}
+			
+		if ($params->get('mult_messagetype')) 
+			{ 
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_messagetype'));
+				foreach ($filters AS $filter)
+					{
+						$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
+					}
+			}
+			
+		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
+
+		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}
+		
 		return $where;
 	}
 	function _buildContentOrderBy()
