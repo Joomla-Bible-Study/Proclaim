@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die();
 
-function getComments($params, $row)
+function getComments($params, $row, $Itemid)
 {
 		$database	= & JFactory::getDBO();
 		$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1'
@@ -8,7 +8,7 @@ function getComments($params, $row)
 		$database->setQuery($query);
 		$commentsresult = $database->loadObjectList();
 		$pageclass_sfx = $params->get('pageclass_sfx');
-		
+		$Itemid = JRequest::getVar('Itemid');
 		$commentjava = "javascript:ReverseDisplay('comments')";
 		$comments = '<strong><a class="heading'.$pageclass_sfx.'" href="'.$commentjava.'">>>'.JText::_('Show/Hide Comments').'<<</a>
 		<div id="comments" style="display:none;"></strong>';
@@ -53,8 +53,8 @@ $comments .= '
 		'.JText::_('First & Last Name: ').'<br /><input class="text_area" size="50" type="text" name="full_name" id="full_name" value="'.$full_name.'" /><br />
 		'.JText::_('Email (Not displayed): ').'<br /><input class="text_area" type="text" size="50" name="user_email" id="user_email" value="'.$user->email.'" /><br />
 		'.JText::_('Comment: ').'<br /><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea><br /><br />';
-
-		if ($params->get('use_captcha') == 1) { 
+//dump ($params->get('use_captcha'), 'captch: ');
+		if ($params->get('use_captcha') > 0) { 
 		
 		// Begin captcha . Thanks OSTWigits 
 		//Must be installed. Here we check that
@@ -81,7 +81,7 @@ $comments .= '
 		<input type="hidden" name="controller" value="studydetails" />
 		<input type="hidden" name="comment_date" id="comment_date" value="'.date('Y-m-d H:i:s').'"  />
 		<input type="hidden" name="study_detail_id" id="study_detail_id" value="'.$row->id.'"  />
-		<input type="hidden" name="detailsitemid" id="detailsitemid" value="'.$params->get('detailsitemid').'" />
+		<input type="hidden" name="Itemid" id="Itemid" value="'.$Itemid.'" />
 		<input type="submit" class="button" id="button" value="Submit"  />
 		</form></div>';
 		} //End of if $comment_access < $comment_user

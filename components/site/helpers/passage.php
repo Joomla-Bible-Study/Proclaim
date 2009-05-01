@@ -18,8 +18,8 @@ $response = "".$scripture." (ESV)";
   if ($ch) { //This will return false if curl is not enabled
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
   $response .= curl_exec($ch);
-  curl_close($ch);?>
-  <?php } // End of if ($ch)
+  curl_close($ch);
+  } // End of if ($ch)
   } // End if ($p)
   
   

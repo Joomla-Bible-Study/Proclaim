@@ -75,16 +75,18 @@ class biblestudyModelstudydetails extends JModel
 	{
 		// Load the data
 		if (empty( $this->_data )) {
-		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS tname, '
+		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS tname, #__bsms_teachers.title, '
 			. ' #__bsms_teachers.image, #__bsms_teachers.imagew, #__bsms_teachers.imageh, #__bsms_teachers.thumb, #__bsms_teachers.thumbw, #__bsms_teachers.thumbh,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text AS stext, #__bsms_message_type.id AS mid,'
-			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname AS bname, #__bsms_locations.id as lid, #__bsms_locations.location_text'
+			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname AS bname, #__bsms_locations.id as lid, #__bsms_locations.location_text,'
+			. ' #__bsms_topics.id AS tpid, #__bsms_topics.topic_text'
 			. ' FROM #__bsms_studies'
 			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
 			. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
 			. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
 			. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
 			. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
+			. ' LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
 			. '  WHERE #__bsms_studies.id = '.$this->_id;
 			$this->_db->setQuery( $query );
 			$this->_data = $this->_db->loadObject();
