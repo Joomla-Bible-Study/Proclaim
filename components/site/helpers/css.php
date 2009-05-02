@@ -25,21 +25,22 @@ if ($view == 'studieslist') {
 	.column2 {float: left; width:'.$params->get('widthcol2').';}
 	.column3 {float: left; width:'.$params->get('widthcol3').';}	
 	.column4 {float: left; width:'.$params->get('widthcol4').';}
-	.bspagecontainer {position:relative; width: '.$params->get('page_width').';}
+	.listingpagecontainer {position:relative; width: '.$params->get('page_width').';}
 	.pageheadertext {float: left; position: relative; top: 15px; font-size: 32px; font-weight: bold; padding: 5px 10px 3px 0px; line-height: 110%;}
-	.bspageheader {float: left; padding: 6px 6px 6px 6px; position: relative; top: 10px;}
-	.bsteacher {float:left; padding: 3px 0px 3px 0px; background-color: #F2F2F2; outline: #707070 solid thin; margin-left: auto; margin-right: auto;}
+	.listingpageheader {float: left; padding: 6px 6px 6px 6px; position: relative; top: 10px;}
+	.listingteacher {float:left; padding: 3px 0px 3px 0px; background-color: #F2F2F2; outline: #707070 solid thin; margin-left: auto; margin-right: auto;}
 	.teacher {float:left; font-weight: bold; padding: 0px 3px 0px 3px; text-align: center;}
-	.bsdropdownmenu {float: left; padding-bottom: 5px; padding-top: 8px; border-bottom: medium solid #707070; width: '.$params->get('page_width').';}
-	.bslistings {float: left; width: 100%;}
+	.listingdropdownmenu {float: left; padding-bottom: 5px; padding-top: 8px; border-bottom: medium solid #707070; width: '.$params->get('page_width').';}
+	.listinglistings {float: left; width: 100%;}
 	.bslistingcontainer {float: left; width: 100%;}
-	.bstext {float:left; padding-right: 2px}
-	.bsstore {float: left; padding-left: 2px; padding-right: 2px; }
-	.bsmediatable {float:left; padding-left: 2px; }
+	.listingtext {float:left; padding-right: 2px}
+	.listingstore {float: left; padding-left: 2px; padding-right: 2px; }
+	.listingmediatable {float:left; padding-left: 2px; }
 	.mediaimage {float:left; }
 	.mediasize {float: left; font-size: 8px; position: relative; top: -7px;  }
-	.bsbottomlisting {float: left; width:100%; padding-top: 3px; }
+	.listingbottomlisting {float: left; width:100%; padding-top: 3px; }
 	.listelements {float: left;}
+	.listingfooter {clear: both; float: left; border-top: thin solid #707070; padding-top: 5px; position: relative; top: 5px; width: 100%;}
 	';
 	if ($params->get('line_break') > 0) 
 	{ 
@@ -75,12 +76,12 @@ $styles = '
 	.teacher {float:left; font-weight: bold; padding: 0px 3px 0px 3px; text-align: center;}
 	.bslistings {float: left; width: 100%;}
 	.detailslistingcontainer {float: left; width: 100%; padding-top: 5px; padding-bottom: 5px; border-bottom: thin dotted #707070;}
-	.bstext {float:left; padding-right: 2px}
-	.bsstore {float: left; padding-left: 2px; padding-right: 2px; width: '.$params->get('storewidth').';}
-	.bsmediatable {float:left; padding-left: 2px; z-index:1; }
+	.detailstext {float:left; padding-right: 2px}
+	.detailsstore {float: left; padding-left: 2px; padding-right: 2px; width: '.$params->get('storewidth').';}
+	.detailsmediatable {float:left; padding-left: 2px; z-index:1; }
 	.mediaimage {float:left; z-index: 2;}
 	.mediasize {float: left; z-index:3; font-size: 8px; position: relative; top: -7px;  }
-	.bsbottomlisting {float: left; width:100%; padding-top: 3px; }
+	.detailsbottomlisting {float: left; width:100%; padding-top: 3px; }
 	#detailstitlecontainer {float: left; width: 100%; border-bottom: thick solid #707070; padding-bottom: 5px;}
 	#detailsheadertext {float: left; padding-left: 5px; font-size: 20px; font-weight: bold;}
 	#detailstitle2 {float: left; font-style: italic; font-size: 15px; font-weight: bold;}

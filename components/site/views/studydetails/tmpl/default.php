@@ -21,6 +21,7 @@ $styles = getCss($params);
 $document->addStyleDeclaration($styles, $type);
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
+$document->addStyleSheet(JPATH_BASE.DS.'components'.DS.'com_biblestudy/biblestudyviews.css');
 $pageclass_sfx = $params->get('pageclass_sfx');
 $row = $this->studydetails;
 ?>
@@ -118,13 +119,13 @@ $row = $this->studydetails;
 		if ($params->get('show_store') > 0) {
 			$store_call = JView::loadHelper('store');
 			$store = getStore($params, $row->id);
-			echo '<div class="bsstore'.$pageclass_sfx.'">'.$store.'</div>';
+			echo '<div class="detailsstore'.$pageclass_sfx.'">'.$store.'</div>';
 			
 		} //end store
 		//show media section
 		
 		if ($params->get('show_media') > 0) {
-				echo '<div class="bsmediatable'.$pageclass_sfx.'">';
+				echo '<div class="detailsmediatable'.$pageclass_sfx.'">';
         		$ismodule = 0;
 				$filesize_call = JView::loadHelper('filesize');
 				$call_filepath = JView::loadHelper('filepath');
@@ -137,13 +138,13 @@ $row = $this->studydetails;
 		//column for description
 		
 		if ($params->get('show_description') > 0) {
-	        echo '<div class="bsbottomlisting'.$pageclass_sfx.'">'.$row->studyintro.'</div>';
+	        echo '<div class="detailsbottomlisting'.$pageclass_sfx.'">'.$row->studyintro.'</div>';
 			}//End of bsbottomlisting
           ?>      
         
         </div><!--end of detailslistingcontainer-->
         
-		<div class="detailsstudytext<?php echo $pageclass_sfx;?>">
+		<div class="detailstext<?php echo $pageclass_sfx;?>">
         <p><?php echo $this->article->studytext;?></p>
         
          <?php if ($params->get('show_comments') > 0)

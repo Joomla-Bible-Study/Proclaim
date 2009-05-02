@@ -30,11 +30,12 @@ $styles = getCss($params);
 $document->addStyleDeclaration($styles, $type);
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
+$document->addStyleSheet(JPATH_BASE.DS.'components'.DS.'com_biblestudy/biblestudyviews.css');
 $pageclass_sfx = $params->get('pageclass_sfx');
 
     ?>
     
-<div class="bspagecontainer<?php echo $pageclass_sfx;?>" > <!-- This div is the container for the whole page -->
+<div class="listingpagecontainer<?php echo $pageclass_sfx;?>" > <!-- This div is the container for the whole page -->
 
 <div class="editcontainer<?php echo $pageclass_sfx;?>">
 <?php $edit_call = JView::loadHelper('editlisting');
@@ -42,7 +43,7 @@ $editlisting = getEditlisting($params);
 if ($editlisting) {echo $editlisting;} ?>
 </div>
 
-<div class="bspageheader<?php echo $pageclass_sfx;?>">
+<div class="listingpageheader<?php echo $pageclass_sfx;?>">
 	
 	<?php
      if ($this->params->get( 'show_page_image' ) >0) {
@@ -63,7 +64,7 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     }
 if ($params->get('show_teacher_list') > 0)
 	{	?>
-<div class="bsteacher<?php echo $pageclass_sfx;?>">
+<div class="listingteacher<?php echo $pageclass_sfx;?>">
     <?php	
 	$teacher_call = JView::loadHelper('teacher');
 	$teacher = getTeacher($params, $id);
@@ -72,7 +73,7 @@ if ($params->get('show_teacher_list') > 0)
 	?>
 </div><!--end of bsteacher div-->
 
-<div class="bsdropdownmenu<?php echo $pageclass_sfx;?>" >
+<div class="listingdropdownmenu<?php echo $pageclass_sfx;?>" >
 
   <?php if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}?>
   <?php if ($this->params->get('show_book_search') >0 && !($book_menu) ){ ?>
@@ -165,7 +166,7 @@ if ($params->get('show_teacher_list') > 0)
 
 <?php } ?>
 </div><!--end of headercontainer div-->
-<div class="bslistings<?php echo $pageclass_sfx;?>" >
+<div class="listinglistings<?php echo $pageclass_sfx;?>" >
 
 	<?php // This is the count for the listing table items
      $k = 1;
@@ -216,7 +217,7 @@ if ($params->get('show_teacher_list') > 0)
 				$textorpdf = 'text';
 				$textlink_call = JView::loadHelper('textlink');
 				$textlink = getTextlink($params, $row, $textorpdf);
-				echo '<div class="bstext'.$pageclass_sfx.'">'.$textlink.'</div>';
+				echo '<div class="listingtext'.$pageclass_sfx.'">'.$textlink.'</div>';
 				
 		}
 		
@@ -224,7 +225,7 @@ if ($params->get('show_teacher_list') > 0)
 				$textorpdf = 'pdf';
 				$textlink_call = JView::loadHelper('textlink');
 				$textlink = getTextlink($params, $row, $textorpdf);
-				echo '<div class="bstext'.$pageclass_sfx.'">'.$textlink.'</div>';
+				echo '<div class="listingtext'.$pageclass_sfx.'">'.$textlink.'</div>';
 				
 		}	//end details links
 		
@@ -233,13 +234,13 @@ if ($params->get('show_teacher_list') > 0)
 		if ($params->get('show_store') > 0) {
 			$store_call = JView::loadHelper('store');
 			$store = getStore($params, $row->id);
-			echo '<div class="bsstore'.$pageclass_sfx.'">'.$store.'</div>';
+			echo '<div class="listingstore'.$pageclass_sfx.'">'.$store.'</div>';
 			
 		} //end store
 		//show media section
 		
 		if ($params->get('show_media') > 0) {
-				echo '<div class="bsmediatable'.$pageclass_sfx.'">';
+				echo '<div class="listingmediatable'.$pageclass_sfx.'">';
         		$ismodule = 0;
 				$params = $this->params;
 				$filesize_call = JView::loadHelper('filesize');
@@ -253,7 +254,7 @@ if ($params->get('show_teacher_list') > 0)
 		//column for description
 		
 		if ($params->get('show_description') > 0) {
-	        echo '<div class="bsbottomlisting'.$pageclass_sfx.'">'.$row->studyintro.'</div>';
+	        echo '<div class="listingbottomlisting'.$pageclass_sfx.'">'.$row->studyintro.'</div>';
 			}//End of bsbottomlisting
           ?>      
         
@@ -270,7 +271,7 @@ if ($params->get('show_teacher_list') > 0)
 	
 		
 	
-<div class="bsfooter<?php echo $pageclass_sfx;?>" style="clear: both; position: relative; padding: 10px 10px; width: 100%; ">
+<div class="listingfooter<?php echo $pageclass_sfx;?>" style="clear: both; position: relative; padding: 10px 10px; width: 100%; ">
 	<?php 
       //echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
       //echo $this->pagination->getLimitBox();
