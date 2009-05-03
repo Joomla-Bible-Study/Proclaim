@@ -24,13 +24,14 @@ defined('_JEXEC') or die();
 	
 //external function to create the css
 $document =& JFactory::getDocument();
+$document->addStyleSheet(JPATH_BASE.DS.'components'.DS.'com_biblestudy/biblestudyviews.css');
+
 $type = 'text/css';
 $css_call = JView::loadHelper('css');
 $styles = getCss($params);
 $document->addStyleDeclaration($styles, $type);
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
-$document->addStyleSheet(JPATH_BASE.DS.'components'.DS.'com_biblestudy/biblestudyviews.css');
 $pageclass_sfx = $params->get('pageclass_sfx');
 
     ?>
