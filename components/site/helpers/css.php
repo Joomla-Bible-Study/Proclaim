@@ -5,7 +5,7 @@ function getCss($params)
 {
 $view = JRequest::getVar('view');
 //dump ($view, 'view: ');
-if ($view == 'studieslist') {
+
 	$styles = '
 	.headercontainer {float: left; width:100%; border-bottom: thin dotted #707070; background-color: '.$params->get('header_color').'; padding: 3px 3px 3px 3px; font-weight: bold; color: '.$params->get('header_font_color').';}
 	.header1 {float: left; width:'.$params->get('widthcol1').'; text-align:'.$params->get('header_align').'; padding-right: 2px;}
@@ -69,7 +69,7 @@ if ($view == 'studieslist') {
 	else {
 		$styles .= '.bslistingcontainer {float: left; width: 100%; padding: 3px 3px 3px 3px; border-bottom: thin solid #707070; width:'.$params->get('page_width').';}';
 	}
-}//end if studielist view
+//}//end if studielist view
 
 if ($view == 'studydetails') {
 //Details css

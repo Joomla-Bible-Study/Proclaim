@@ -17,6 +17,18 @@
 		<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or percentage. Needs px or % at end" />
 		<param name="@spacer" type="spacer" default="Study View Details" label="Study View Details" description="Study View Details">
 		</param>
+		<param name="date_format" type="list"  default="2" label="Date format" description="Set the date display format">
+					<option value="0">Sep 1, 2007</option>
+					<option value="1">Sep 1</option>
+					<option value="2">9/1/2007</option>
+					<option value="3">9/1</option>
+					<option value="4">Saturday, September 1, 2007</option>
+					<option value="5">September 1, 2007</option>
+					<option value="6">1 September 2007</option>
+					<option value="7">1/9/2007</option>
+					<option value="8">Use Global System Date Format</option>
+					<option value="9">2009/10/13</option>
+				</param>
 		<param name="title_line_1" type="list" default="1" label="Item to show on title line 1" description="Choose an item to show on the first line of the Title line of the study details">
 			<option value="0">Don't Show</option>
 			<option value="1">Study Title</option>

@@ -1,7 +1,9 @@
 <?php defined('_JEXEC') or die('Restricted access');
 
 function getstudyDate($params, $studydate) {
+	//dump ($params, 'params: ');
 switch ($params->get('date_format'))
+//switch ($params->date_format)
 	{
 	 case 0:
 		$date	= date('M j, Y', strtotime($studydate));

@@ -858,7 +858,6 @@
 					<option value="0">Hide</option>
 				</param>
 				<param name="store_name" default="Store" type="text" label="Store Name" description="Name for the store on listing page" />
-				<param name="storewidth" default="50px" type="text" label="Store Width" description="Width in pixels (px) or percent for the store header - if shown" />
 		</params>
 	</state>
 </metadata>
