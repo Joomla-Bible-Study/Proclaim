@@ -3,6 +3,20 @@ defined('_JEXEC') or die();
 
 function getCss($params)
 {
+	
+	switch ($params->get('type'))
+	{
+	 case 'studieslist':
+
+		break;
+	 case 'studydetails':
+	 
+	 	break;
+		
+	case 'module':
+	
+		break;
+	}
 $view = JRequest::getVar('view');
 //dump ($view, 'view: ');
 

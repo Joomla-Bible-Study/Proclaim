@@ -13,6 +13,7 @@
 			<param name="id" type="studydetails" default="" label="Select a Study" description="The study to link to" />
 		</url>
 	<params addpath="/components/com_biblestudy/elements">
+	<param name="type" type="hidden" default="studydetails" />
 		<param name="teacheritemid" type="teacheritemid" default="" label="Itemid of TeacherDisplay menu item" description="In order for styling to apply to teacher view from the list you should create a menu item to set those parameters, MUST BE PUBLISHED (But can be to a menu not used)" />
 		<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or percentage. Needs px or % at end" />
 		<param name="@spacer" type="spacer" default="Study View Details" label="Study View Details" description="Study View Details">
