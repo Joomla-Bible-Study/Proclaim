@@ -15,6 +15,7 @@
 	<params addpath="/components/com_biblestudy/elements">
 	<param name="type" type="hidden" default="studydetails" />
 		<param name="teacheritemid" type="teacheritemid" default="" label="Itemid of TeacherDisplay menu item" description="In order for styling to apply to teacher view from the list you should create a menu item to set those parameters, MUST BE PUBLISHED (But can be to a menu not used)" />
+		<param name="studieslistitemid" type="studieslistitemid" default="" label="Choose a studieslist menu item for parameters and styling" description="Chose a published menu item you want to use in the return to studies page link at bottom of details page. Must be published but can be unassigned in your template" />
 		<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or percentage. Needs px or % at end" />
 		<param name="@spacer" type="spacer" default="Study View Details" label="Study View Details" description="Study View Details">
 		</param>

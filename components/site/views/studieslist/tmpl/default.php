@@ -9,7 +9,7 @@ defined('_JEXEC') or die();
 
 	<?php
     global $mainframe, $option;
-    $message = JRequest::getVar('msg');
+	$message = JRequest::getVar('msg');
     $database = & JFactory::getDBO();
     $teacher_menu = $this->params->get('teacher_id', 1);
     $topic_menu = $this->params->get('topic_id', 1);
@@ -24,7 +24,7 @@ defined('_JEXEC') or die();
 	
 //external function to create the css
 $document =& JFactory::getDocument();
-$document->addStyleSheet(JPATH_BASE.DS.'components'.DS.'com_biblestudy/biblestudyviews.css');
+$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'biblestudyviews.css');
 
 $type = 'text/css';
 $css_call = JView::loadHelper('css');
@@ -272,7 +272,7 @@ if ($params->get('show_teacher_list') > 0)
 	
 		
 	
-<div class="listingfooter<?php echo $pageclass_sfx;?>" style="clear: both; position: relative; padding: 10px 10px; width: 100%; ">
+<div class="listingfooter<?php echo $pageclass_sfx;?>" >
 	<?php 
       //echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
       //echo $this->pagination->getLimitBox();

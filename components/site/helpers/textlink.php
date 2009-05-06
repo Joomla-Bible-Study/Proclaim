@@ -8,11 +8,12 @@ include_once($path1.'scripture.php');
 $scripture1 = getScripture($params, $row, $esv);
 $intro = str_replace('"','',$row->studyintro);
 $detailsitemid = $params->get('detailsitemid');
-$returnmenu = JRequest::getVar('Itemid');
+//$returnmenu = JRequest::getVar('Itemid');
 	if ($textorpdf == 'text') {
 	   $src = JURI::base().$params->get('text_image');
-       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&returnmenu='.$returnmenu.'&Itemid='.$detailsitemid ).JHTML::_('behavior.tooltip');
+       //$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&returnmenu='.$returnmenu.'&Itemid='.$detailsitemid ).JHTML::_('behavior.tooltip');
 	   //dump ($link, 'link');
+	   $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&Itemid='.$detailsitemid ).JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 	}
 	if ($textorpdf == 'pdf') 

@@ -21,7 +21,7 @@ $styles = getCss($params);
 $document->addStyleDeclaration($styles, $type);
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
-$document->addStyleSheet(JPATH_BASE.DS.'components'.DS.'com_biblestudy/biblestudyviews.css');
+$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'biblestudyviews.css');
 $pageclass_sfx = $params->get('pageclass_sfx');
 $row = $this->studydetails;
 ?>
@@ -187,11 +187,12 @@ $row = $this->studydetails;
 			if ($this->params->get('view_link') == 0){}else{
 				if ($this->params->get('view_link') == 1){
 					$item = JRequest::getVar('Itemid');
-					$returnmenu = JRequest::getVar('returnmenu');
+					$returnmenu = $this->params->get('studieslistitemid');
+					//dump ($returnmenu, 'returnmenu: ');
 					if ($returnmenu) {$item = $returnmenu;}
 					$link = JRoute::_('index.php?option='.$option.'&view=studieslist');}
 					if ($item){
 						$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}?>
-			<a href="<?php echo $link;?>"> <?php echo '<span '.$this->params->get('span_link_view').'>'.$link_text.'</span>'; ?> </a> <?php } //End of if view_link not 0?>
+			<a href="<?php echo $link;?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>
     </div><!--end of footer div-->
 </div><!--End of page container div-->
