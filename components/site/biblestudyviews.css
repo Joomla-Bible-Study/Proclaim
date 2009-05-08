@@ -1,6 +1,8 @@
 @charset "utf-8";
 /* CSS Document */
-/* This file can be used to generate css for each item in the list. Be sure to save this file to your computer as it is overwritten upon installation */
+/* This file can be used to generate css for each item in the list. Be sure to save this file to your computer as it is overwritten upon installation.*/
+
+/* These are the styles for the individual items used in the lists. They are self explanatory as to what they change, but you can always try one to see if you are not sure. */
 
 .scripture1 {
 }
@@ -56,6 +58,14 @@
 .studynumber {
 }
 
+/*Common styles to all views */
+
+.mediaimage {float:left; }
+
+.mediasize {float: left; font-size: 8px; position: relative; top: -7px;  }
+
+.teacher {float:left; font-weight: bold; padding: 0px 3px 0px 3px; text-align: center;}
+
 
 /* Listing view css */
 
@@ -77,8 +87,6 @@
 
 .listingteacher {float:left; padding: 3px 0px 3px 0px; background-color: #F2F2F2; outline: #707070 solid thin; margin-left: auto; margin-right: auto;}
 
-.teacher {float:left; font-weight: bold; padding: 0px 3px 0px 3px; text-align: center;}
-
 .listinglistings {float: left; width: 100%;}
 
 .listingtext {float:left; padding-right: 2px}
@@ -87,15 +95,12 @@
 
 .listingmediatable {float:left; padding-left: 2px; }
 
-.mediaimage {float:left; }
-
-.mediasize {float: left; font-size: 8px; position: relative; top: -7px;  }
-
 .listingbottomlisting {float: left; width:100%; padding-top: 3px; }
 
 .listelements {float: left;}
 
 .listingfooter {clear: both; float: left; border-top: thin solid #707070; padding-top: 5px; position: relative; top: 5px; width: 100%;}
+
 
 /* Study Details View css */
 
@@ -107,17 +112,11 @@
 
 .detailsteacher {float:left; padding: 3px 0px 3px 0px; background-color: #F2F2F2; outline: #707070 solid thin; }
 
-.teacher {float:left; font-weight: bold; padding: 0px 3px 0px 3px; text-align: center;}
-
 .bslistings {float: left; width: 100%;}
 
 .detailstext {float:left; padding-right: 2px}
 
 .detailsmediatable {float:left; padding-left: 2px; z-index:1; }
-
-.mediaimage {float:left; z-index: 2;}
-
-.mediasize {float: left; z-index:3; font-size: 8px; position: relative; top: -7px;  }
 
 .detailsbottomlisting {float: left; width:100%; padding-top: 3px; }
 
@@ -147,40 +146,3 @@
 
 /* Module Styles */
 
-#studyheader {float: left; font-weight: bold; width: 100%;}
-
-.editcontainer {float: left; width: 100%; border: thin #FFFFFF;}
-
-.message {float: left; width:100%;}
-
-.studyedit {float: left; width: 100%;}
-
-.podcastlist {float: left: width: 100%;}
-
-.editlink {float: left; width: 10px;}
-
-.pageheadertext {float: left; position: relative; top: 15px; font-size: 32px; font-weight: bold; padding: 5px 10px 3px 0px; line-height: 110%;}
-
-.listingpageheader {float: left; padding: 6px 6px 6px 6px; position: relative; top: 10px;}
-
-.listingteacher {float:left; padding: 3px 0px 3px 0px; background-color: #F2F2F2; outline: #707070 solid thin; margin-left: auto; margin-right: auto;}
-
-.teacher {float:left; font-weight: bold; padding: 0px 3px 0px 3px; text-align: center;}
-
-.listinglistings {float: left; width: 100%;}
-
-.listingtext {float:left; padding-right: 2px}
-
-.listingstore {float: left; padding-left: 2px; padding-right: 2px; }
-
-.listingmediatable {float:left; padding-left: 2px; }
-
-.mediaimage {float:left; }
-
-.mediasize {float: left; font-size: 8px; position: relative; top: -7px;  }
-
-.listingbottomlisting {float: left; width:100%; padding-top: 3px; }
-
-.listelements {float: left;}
-
-.listingfooter {clear: both; float: left; border-top: thin solid #707070; padding-top: 5px; position: relative; top: 5px; width: 100%;}

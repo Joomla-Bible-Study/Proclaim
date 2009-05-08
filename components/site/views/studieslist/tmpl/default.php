@@ -24,12 +24,13 @@ defined('_JEXEC') or die();
 	
 //external function to create the css
 $document =& JFactory::getDocument();
-$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'biblestudyviews.css');
+
 
 $type = 'text/css';
 $css_call = JView::loadHelper('css');
 $styles = getCss($params);
 $document->addStyleDeclaration($styles, $type);
+$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'biblestudyviews.css');
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
 $pageclass_sfx = $params->get('pageclass_sfx');
@@ -274,11 +275,13 @@ if ($params->get('show_teacher_list') > 0)
 	
 <div class="listingfooter<?php echo $pageclass_sfx;?>" >
 	<?php 
-      //echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
-      //echo $this->pagination->getLimitBox();
-      //echo $this->pagination->getPagesLinks();
-      //echo $this->pagination->getPagesCounter();
-      echo $this->pagination->getListFooter(); ?>
+      if ($params->get('show_limitbox') > 0) {
+		  echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
+      echo $this->pagination->getLimitBox();
+	  }
+      echo $this->pagination->getPagesLinks();
+      echo $this->pagination->getPagesCounter();
+      //echo $this->pagination->getListFooter(); ?>
 </div> <!--end of bsfooter div-->
 </div><!--end of bslisting div-->
     
