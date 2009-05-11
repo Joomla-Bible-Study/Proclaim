@@ -1,31 +1,106 @@
 <?php
-defined('_JEXEC') or die();
-		
-?>
+
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die(); ?>
 <script type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
+<style>
+#bsdropdownmenu {
+  margin-bottom: 10px;
+}
+#bslisttable {
+  margin: 0;
+  border-collapse:separate;
+}
+#bslisttable th, #bslisttable td {
+  text-align:left;
+  padding:0 5px 0 5px;
+  border:none;
+}
+#bslisttable .row1col1,
+#bslisttable .row2col1,
+#bslisttable .row3col1,
+#bslisttable .row4col1 {
+  border-left: gray 2px solid;
+}
+#bslisttable .lastcol {
+  border-right: gray 2px solid;
+}
+#bslisttable .lastrow td {
+  border-bottom:2px solid gray;
+  padding-bottom:7px;
+}
+#bslisttable th {
+  background-color:#C02121;
+  font-weight:bold;
+  color:white;
+}
+#bslisttable th.row1col1,
+#bslisttable th.row1col2,
+#bslisttable th.row1col3,
+#bslisttable th.row1col4 {
+  border-top: gray 2px solid;
+  padding-top:3px;
+}
+#bslisttable tr.lastrow th {
+  border-bottom:2px solid gray;
+  padding-bottom:3px;
+}
 
-<form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
+#bslisttable tr.bsodd td {
+  background-color:#FFFFFF;
+}
+#bslisttable tr.bseven td {
+  background-color:#FFFFF0;
+}
 
+#bslisttable .bsdate {
+  white-space:nowrap;
+  font-size:1.2em;
+  color:darkcyan;
+  font-weight:bold;
+}
+#bslisttable .bsscripture {
+  white-space:nowrap;
+  color:c02121;
+  font-weight:bold;
+}
+#bslisttable .bstitle {
+  font-size:1.2em;
+  color:#c02121;
+  font-weight:bold;
+}
+#bslisttable .bsseries {
+  white-space:nowrap;
+  color:darkcyan;
+}
+#bslisttable .bsduration {
+  white-space:nowrap;
+  font-style:italic;
+}
+#bslisttable .mediatable td {
+  border: none;
+  padding: 0 6px 0 0;
+}
+#bslisttable .mediatable span.bsfilesize {
+  font-size:0.6em;
+}
 
-	<?php
-    global $mainframe, $option;
-	$message = JRequest::getVar('msg');
-    $database = & JFactory::getDBO();
-    $teacher_menu = $this->params->get('teacher_id', 1);
-    $topic_menu = $this->params->get('topic_id', 1);
-    $book_menu = $this->params->get('booknumber', 101);
-    $location_menu = $this->params->get('locations', 1);
-    $series_menu = $this->params->get('series_id', 1);
-    $messagetype_menu = $this->params->get('messagetype', 1);
-    
-    $color1 = $this->params->get('color1');
-    $color2 = $this->params->get('color2');
-	$params = $mainframe->getPageParameters();
-	
+</style>
+<?php 
+global $mainframe, $option;
+$message = JRequest::getVar('msg');
+$database = & JFactory::getDBO();
+$teacher_menu = $this->params->get('teacher_id', 1);
+$topic_menu = $this->params->get('topic_id', 1);
+$book_menu = $this->params->get('booknumber', 101);
+$location_menu = $this->params->get('locations', 1);
+$series_menu = $this->params->get('series_id', 1);
+$messagetype_menu = $this->params->get('messagetype', 1);
+$color1 = $this->params->get('color1');
+$color2 = $this->params->get('color2');
+$params = $mainframe->getPageParameters();
 //external function to create the css
 $document =& JFactory::getDocument();
-
-
 $type = 'text/css';
 $css_call = JView::loadHelper('css');
 $styles = getCss($params);
@@ -34,20 +109,15 @@ $document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'bible
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
 $pageclass_sfx = $params->get('pageclass_sfx');
+?>
+<form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
 
-    ?>
-    
-<div class="listingpagecontainer<?php echo $pageclass_sfx;?>" > <!-- This div is the container for the whole page -->
-
-<div class="editcontainer<?php echo $pageclass_sfx;?>">
-<?php $edit_call = JView::loadHelper('editlisting');
-$editlisting = getEditlisting($params);
-if ($editlisting) {echo $editlisting;} ?>
-</div>
-
-<div class="listingpageheader<?php echo $pageclass_sfx;?>">
-	
-	<?php
+<tbody><tr>
+  <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+  
+    <div id="header<?php echo $pageclass_sfx;?>">
+      <h1 class="componentheading<?php echo $pageclass_sfx;?>">
+<?php
      if ($this->params->get( 'show_page_image' ) >0) {
      $pimagew = $this->params->get('pimagew');
      $pimageh = $this->params->get('pimageh');
@@ -58,26 +128,17 @@ if ($editlisting) {echo $editlisting;} ?>
     <?php //End of column for logo
     }
     ?>
-
-</div><!--end of div for pageheader-->
-<?php
+    <?php
 if ( $this->params->get( 'show_page_title' ) >0 ) {
-    echo '<div class="pageheadertext'.$this->params->get('pageclass_sfx').'">'.$this->params->get('page_title').'</div>';
+    echo $this->params->get('page_title');
     }
-if ($params->get('show_teacher_list') > 0)
-	{	?>
-<div class="listingteacher<?php echo $pageclass_sfx;?>">
-    <?php	
-	$teacher_call = JView::loadHelper('teacher');
-	$teacher = getTeacher($params, $id);
-	if ($teacher) {echo $teacher;}
-	}
 	?>
-</div><!--end of bsteacher div-->
+      </h1>
+    
+    </div><!--header-->
+    <div id="bsdropdownmenu">
 
-<div class="listingdropdownmenu<?php echo $pageclass_sfx;?>" >
-
-  <?php if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}?>
+        <?php if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}?>
   <?php if ($this->params->get('show_book_search') >0 && !($book_menu) ){ ?>
 
   <?php $query2 = 'SELECT id, booknumber AS value, bookname AS text, published'
@@ -152,127 +213,115 @@ if ($params->get('show_teacher_list') > 0)
       } else {
       echo '<option value="'.$topicsvalue.'">'.$output.'</option>';}
 
+
      };
      echo '</select>';?> <?php //echo $this->lists['topics'];?> <?php } ?>
-	 <?php //End of row for drop down boxes?>
- 
-</div><!--end of bsdropdownmenu div-->
-<div class="headercontainer<?php echo $pageclass_sfx;?>"><!--this is the container for all the headers, so that we can add a line underneath and have it go the while width-->
-<?php if ($params->get('use_headers') >0) { ?>
 
-	<?php 
-    $header_call = JView::loadHelper('header');
-    $header = getHeader($this->params);
-    echo $header;
-   ?>
 
-<?php } ?>
-</div><!--end of headercontainer div-->
-<div class="listinglistings<?php echo $pageclass_sfx;?>" >
+    </div><!--dropdownmenu-->
+     <table id="bslisttable" cellspacing="0">
+      <thead>
+        <tr>
+          <th id="bsdatehead" class="row1col1">Date</th>
+          <th id="bstitlehead" class="row1col2">Title</th>
+          <th id="bsserieshead" class="row1col3">Series</th>
 
-	<?php // This is the count for the listing table items
-     $k = 1;
-     $row_count = 0;
-    for ($i=0, $n=count( $this->items ); $i < $n; $i++)
-  	{ // This is the beginning of a loop that will cycle through all the records according to the query
-		$bgcolor = ($row_count % 2) ? $color1 : $color2; //This code cycles through the two color choices made in the parameters
-		$row = &$this->items[$i];
-		$id4 = $row->id;
-		
-				  
-		  $listarraycall = JView::loadHelper('listarray');
-		  $a = getListarray($params, $row);
-		
-		  //This calls the helper once that will process each column's array, coming from the $a variable. We will then call a function in each column from this helper file
-		  $array_call = JView::loadHelper('columnarray');
-		  if ($this->params->get('use_color') > 0) {
-			  echo '<div class="bslistingcontainer'.$pageclass_sfx.'" style="background-color: '.$bgcolor.';">';}
-			  else { echo '<div class="bslistingcontainer'.$pageclass_sfx.'">';}
-        
-		$columnnumber = 1;
-		$column1 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column1) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
-		echo $column1; 
-		
-		if ($column1) {echo '</div>';}
-		$columnnumber = 2;
-		$column2 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column2) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
-		echo $column2; 
-		
-		if ($column2) {echo '</div>';}
-        $columnnumber = 3;
-		$column3 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column3) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
-       	echo $column3; 
-		
-		if ($column3) {echo '</div>';}
-		$columnnumber = 4;
-		$column4 = getColumnarray($a, $row, $columnnumber, $this->params);
-		if ($column4) { echo '<div class="column'.$columnnumber.$pageclass_sfx.'">';}
-		echo $column4;
-		
-		if ($column4) {echo '</div>';}
-		
-		//Collects the details links
-		if ($params->get('show_full_text') > 0) {
-				$textorpdf = 'text';
-				$textlink_call = JView::loadHelper('textlink');
-				$textlink = getTextlink($params, $row, $textorpdf);
-				echo '<div class="listingtext'.$pageclass_sfx.'">'.$textlink.'</div>';
-				
-		}
-		
-		if 	($params->get('show_pdf_text') > 0) {
-				$textorpdf = 'pdf';
-				$textlink_call = JView::loadHelper('textlink');
-				$textlink = getTextlink($params, $row, $textorpdf);
-				echo '<div class="listingtext'.$pageclass_sfx.'">'.$textlink.'</div>';
-				
-		}	//end details links
-		
-		//Store section
-		
-		if ($params->get('show_store') > 0) {
-			$store_call = JView::loadHelper('store');
-			$store = getStore($params, $row->id);
-			echo '<div class="listingstore'.$pageclass_sfx.'">'.$store.'</div>';
-			
-		} //end store
-		//show media section
-		
-		if ($params->get('show_media') > 0) {
-				echo '<div class="listingmediatable'.$pageclass_sfx.'">';
-        		$ismodule = 0;
-				$params = $this->params;
-				$filesize_call = JView::loadHelper('filesize');
-				$call_filepath = JView::loadHelper('filepath');
-				$call_mediatable = JView::loadHelper('mediatable');
-				$mediatable = getMediatable($params, $row);
-				echo $mediatable.'</div>';
-				
-		}//End of bsmediatable div
-		
-		//column for description
-		
-		if ($params->get('show_description') > 0) {
-	        echo '<div class="listingbottomlisting'.$pageclass_sfx.'">'.$row->studyintro.'</div>';
-			}//End of bsbottomlisting
-          ?>      
-        
-        </div><!--end of bslistingcontainer-->
-		
-<?php			
- //end of list - row count increment goes next
-	$row_count++; // This increments the row count and adjusts the variable for the color background
-  	$k = 3 - $k;
-	
-  } //This is the end of the for statement for each result from the database that will create its own 6 column table
+          <th id="bsmediahead" class="row1col4 lastcol" rowspan="2">Media</th>
+        </tr>
+        <tr>
+          <th id="bsscripthead" class="row2col1">Scripture</th>
+          <th id="bsteacherhead" class="row2col2">Teacher</th>
+          <th id="bsdurhead" class="row2col3">Duration</th>
+        </tr>
 
- ?>
-	
-		
-	
+        <tr class="lastrow">
+          <th id="bsdeschead" class="row3col1 lastcol" colspan="4">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="bsodd">
+          <td class="row1col1 bsdate" headers="bsdatehead">Mar 29, 2009</td>
+
+          <td class="row1col2 bstitle" headers="bstitlehead"><a href="/if linked..."><span class="bstitle">A Great Party</span></a></td>
+          <td class="row1col3 bsseries" headers="bsserieshead">Luke</td>
+          <td class="row1col4 lastcol" rowspan="2" headers="bsmediahead">
+            <table class="mediatable"><tbody>
+              <tr>
+                <td>
+                  <a href="http://oicjapan.org/messages/luke/2009-03-29.mp3"
+                  title="mp3 audio file 34:31 7.9 MB" target="_blank"><img
+                  src="http://oicjapan.org/components/com_biblestudy/images/speaker24.png"
+                  alt="mp3 34:31 7.9 MB" width="24" border="0" height="24"></a><br />
+                  <span class="bsfilesize">7.9 MB</span>
+
+                </td>
+                <td>
+                  <a href="http:///messages/luke/2009-03-29.pdf" 
+                  title="PDF Document 34:31 237 KB" target="_blank"><img 
+                  src="http://oicjapan.org/components/com_biblestudy/images/pdf24.png" 
+                  alt="PDF 34:31 237 KB" width="24" border="0" height="24"></a><br />
+                  <span class="bsfilesize">237 KB</span>
+                </td>
+              </tr>
+            </tbody></table>
+          </td>
+
+        </tr>
+        <tr class="bsodd">
+          <td class="row2col1 bsscripture" headers="bsscripthead">Luke 5:27-39</td>
+          <td class="row2col2 bsteacher" headers="bsteacherhead">Dan Ellrick</td>
+          <td class="row2col3 bsduration" headers="bsdurhead">34:31</td>
+        </tr>
+        <tr class="bsodd lastrow">
+
+          <td class="row3col1 bsdesc lastcol" colspan="4" headers="bsdeschead">
+            <span class=>Jesus still speaks today saying, 'Follow me.' To those who say, 'Yes,' He brings a new miracle of freedom to live as we are meant to live, in fellowship with God.</span>
+          </td>
+        </tr>
+
+        <tr class="bseven">
+          <td class="row1col1 bsdate" headers="bsdatehead">Mar 22, 2009</span>
+          </td>
+
+          <td class="row1col2" headers="bstitlehead"><a href="/if linked..."><span class="bstitle">The Son of Man</span></a></td>
+          <td class="row1col3 bsseries" headers="bsserieshead">Luke</td>
+          <td class="row1col4 lastcol" rowspan="2" headers="bsmediahead">
+            <table class="mediatable"><tbody>
+              <tr>
+                <td>
+                  <a href="http://oicjapan.org/messages/luke/2009-03-22.mp3"
+                  title="mp3 audio file 46:02 10.5 MB" target="_blank"><img
+                  src="http://oicjapan.org/components/com_biblestudy/images/speaker24.png"
+                  alt="mp3 46:02 10.5 MB" width="24" border="0" height="24"></a><br />
+                  <span class="bsfilesize">10.5 MB</span>
+
+                </td>
+                <td>
+                  <a href="http:///messages/luke/2009-03-22.pdf" 
+                  title="PDF Document 46:02 213 KB" target="_blank"><img 
+                  src="http://oicjapan.org/components/com_biblestudy/images/pdf24.png" 
+                  alt="PDF 46:02 213 KB" width="24" border="0" height="24"></a><br />
+                  <span class="bsfilesize">213 KB</span>
+                </td>
+              </tr>
+            </tbody></table>
+          </td>
+
+        </tr>
+        <tr class="bseven">
+          <td class="row2col1 bsscripture" headers="bsscripthead">Luke 5:17-26</td>
+          <td class="row2col2 bsteacher" headers="bsteacherhead">Dan Ellrick</td>
+          <td class="row2col3 bsduration" headers="bsdyrhead">46:02</td>
+        <tr class="bseven lastrow">
+          <td class="row3col1 bsdesc lastcol" colspan="4" headers="bsdeschead">
+
+            <span class=>Friends bring friends to Jesus, just as the paralyzed man's friends brought him. Jesus did a great miracle when He healed the paralyzed man, but the even greater miracle was that He forgave the man of his sins. The healing gave him life for a few years, the forgiving gave him live forever.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table> <!--end of bslisttable-->
+
 <div class="listingfooter<?php echo $pageclass_sfx;?>" >
 	<?php 
       if ($params->get('show_limitbox') > 0) {
@@ -283,13 +332,11 @@ if ($params->get('show_teacher_list') > 0)
       echo $this->pagination->getPagesCounter();
       //echo $this->pagination->getListFooter(); ?>
 </div> <!--end of bsfooter div-->
-</div><!--end of bslisting div-->
-    
+  </div><!--end of bspagecontainer div-->
+  <input name="option" value="com_biblestudy" type="hidden">
 
-
-</div><!--end of page container div-->
-<input type="hidden" name="option" value="com_biblestudy" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="boxchecked" value="0" />
-<input type="hidden" name="controller" value="studieslist" />
+  <input name="task" value="" type="hidden">
+  <input name="boxchecked" value="0" type="hidden">
+  <input name="controller" value="studieslist" type="hidden">
 </form>
+
