@@ -95,9 +95,6 @@ defined('_JEXEC') or die(); ?>
 #bslisttable .bsmessagetype {
 	white-space:nowrap;
 }
-#bslisttable .bsmedia {
-	white-space:nowrap;
-}
 #bslisttable .bsstore {
 	white-space:nowrap;
 }
@@ -128,9 +125,6 @@ $color2 = $this->params->get('color2');
 $params = $mainframe->getPageParameters();
 //external function to create the css
 $document =& JFactory::getDocument();
-$type = 'text/css';
-$css_call = JView::loadHelper('css');
-$styles = getCss($params);
 $document->addStyleDeclaration($styles, $type);
 $document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'biblestudyviews.css');
 $url = $params->get('stylesheet');
