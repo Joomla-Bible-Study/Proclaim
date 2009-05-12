@@ -77,6 +77,33 @@ defined('_JEXEC') or die(); ?>
   white-space:nowrap;
   font-style:italic;
 }
+#bslisttable .bsscripture2 {
+	white-space:nowrap;
+}
+#bslisttable .bsdescription {
+	white-space:nowrap;
+}
+#bslisttable .bsteacher {
+	white-space:nowrap;
+}
+#bslisttable .bslocation {
+	white-space:nowrap;
+}
+#bslisttable .bstopic {
+	white-space:nowrap;
+}
+#bslisttable .bsmessagetype {
+	white-space:nowrap;
+}
+#bslisttable .bsmedia {
+	white-space:nowrap;
+}
+#bslisttable .bsstore {
+	white-space:nowrap;
+}
+#bslisttable .bsdetails {
+	white-space:nowrap;
+}
 #bslisttable .mediatable td {
   border: none;
   padding: 0 6px 0 0;
