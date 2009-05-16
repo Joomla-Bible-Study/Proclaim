@@ -1,0 +1,121 @@
+#bsdropdownmenu {
+	margin-bottom: 10px;
+}
+
+#bslisttable {
+	border-collapse: separate;
+	margin: 0;
+}
+
+#bslisttable th,#bslisttable td {
+	border: none;
+	padding: 0 5px 0 5px;
+	text-align: left;
+}
+
+#bslisttable .row1col1,#bslisttable .row2col1,#bslisttable .row3col1,#bslisttable .row4col1 {
+	border-left: gray 2px solid;
+}
+
+#bslisttable .lastcol {
+	border-right: gray 2px solid;
+}
+
+#bslisttable .lastrow td {
+	border-bottom: 2px solid gray;
+	padding-bottom: 7px;
+}
+
+#bslisttable th {
+	background-color: #C02121;
+	color: white;
+	font-weight: bold;
+}
+
+#bslisttable th.row1col1,#bslisttable th.row1col2,#bslisttable th.row1col3,#bslisttable th.row1col4 {
+	border-top: gray 2px solid;
+	padding-top: 3px;
+}
+
+#bslisttable tr.lastrow th {
+	border-bottom: 2px solid gray;
+	padding-bottom: 3px;
+}
+
+#bslisttable tr.bsodd td {
+	background-color: #FFFFFF;
+}
+
+#bslisttable tr.bseven td {
+	background-color: #FFFFF0;
+}
+
+#bslisttable .bsdate {
+	color: darkcyan;
+	font-size: 1.2em;
+	font-weight: bold;
+	white-space: nowrap;
+}
+
+#bslisttable .bsscripture {
+	color: c02121;
+	font-weight: bold;
+	white-space: nowrap;
+}
+
+#bslisttable .bstitle {
+	color: #c02121;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+#bslisttable .bsseries {
+	color: darkcyan;
+	white-space: nowrap;
+}
+
+#bslisttable .bsduration {
+	font-style: italic;
+	white-space: nowrap;
+}
+
+#bslisttable .bsscripture2 {
+	white-space: nowrap;
+}
+
+#bslisttable .bsdescription {
+	white-space: nowrap;
+}
+
+#bslisttable .bsteacher {
+	white-space: nowrap;
+}
+
+#bslisttable .bslocation {
+	white-space: nowrap;
+}
+
+#bslisttable .bstopic {
+	white-space: nowrap;
+}
+
+#bslisttable .bsmessagetype {
+	white-space: nowrap;
+}
+
+#bslisttable .bsstore {
+	white-space: nowrap;
+}
+
+#bslisttable .bsdetails {
+	white-space: nowrap;
+}
+
+#bslisttable .mediatable td {
+	border: none;
+	padding: 0 6px 0 0;
+}
+
+#bslisttable .mediatable span.bsfilesize {
+	font-size: 0.6em;
+}
