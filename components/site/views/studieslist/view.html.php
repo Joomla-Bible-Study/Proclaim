@@ -2,8 +2,8 @@
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 
-class biblestudyViewstudieslist extends JView
-{
+class biblestudyViewstudieslist extends JView {
+	
 	/**
 	 * studieslist view display method
 	 * @return void
@@ -62,17 +62,22 @@ class biblestudyViewstudieslist extends JView
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 
-		//Include the Jquery Library
+		//Import Scripts
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
+		
+		//Import Stylesheets
 		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
 		$document->addStylesheet(JURI::base().'components/com_biblestudy/tooltip.css');
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/studieslist.css');
+		
 		
 		//Build Teachers
 		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );
 		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_teacher" );
-
+		
 		//Build Series List for drop down menu
 		$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Series' ) .' -' );
 		$types3 			= array_merge( $types3, $series );
@@ -87,7 +92,7 @@ class biblestudyViewstudieslist extends JView
 		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Year' ) .' -' );
 		$years 			= array_merge( $years, $studyYears );
 		$lists['studyyear']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_year" );
-
+		
 		//build orders
 		$ord[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
 		$orders 			= array_merge( $ord, $orders );
