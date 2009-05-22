@@ -13,7 +13,6 @@ class biblestudyControllermediafilesedit extends JController {
 	function __construct()
 	{
 		parent::__construct();
-
 		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
 		$this->registerTask( 'upload'  ,     'upload' );
@@ -22,55 +21,55 @@ class biblestudyControllermediafilesedit extends JController {
 	{
 		global $mainframe, $option;
 
-	$db=& JFactory::getDBO();   
-	$file = JRequest::getVar('file', null, 'files', 'array' );
-	$filename = '';
-	$path = JRequest::getVar('path', null, 'POST', 'INT');
-	$query = 'SELECT id, folderpath FROM #__bsms_folders WHERE id = '.$path.' LIMIT 1';
-	$db->setQuery($query);
-	$folder = $db->loadObject();
-	$folderpath = $folder->folderpath;
-	
-	//This is where we check the make the extension is of a filetype that is okay to upload
-	//$file_extension = JFile::getExt($file);
-	//$fname_reject = 'index.htm|index.html|index.php';
-	//$ext_reject = 'asp|php';
-	$filename = $file['name'];
-	if ($filename == 'index.htm'){
-		$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
-			  return;
+		$db=& JFactory::getDBO();
+		$file = JRequest::getVar('file', null, 'files', 'array' );
+		$filename = '';
+		$path = JRequest::getVar('path', null, 'POST', 'INT');
+		$query = 'SELECT id, folderpath FROM #__bsms_folders WHERE id = '.$path.' LIMIT 1';
+		$db->setQuery($query);
+		$folder = $db->loadObject();
+		$folderpath = $folder->folderpath;
+
+		//This is where we check the make the extension is of a filetype that is okay to upload
+		//$file_extension = JFile::getExt($file);
+		//$fname_reject = 'index.htm|index.html|index.php';
+		//$ext_reject = 'asp|php';
+		$filename = $file['name'];
+		if ($filename == 'index.htm'){
+			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
+			return;
 		}
-	if ($filename == 'index.html'){
-		$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
-			  return;
+		if ($filename == 'index.html'){
+			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
+			return;
 		}
-	if ($filename == 'index.php'){
-		$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
-			  return;
+		if ($filename == 'index.php'){
+			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
+			return;
 		}
-	if(isset($file) && is_array($file) && $file['name'] != '')
+		if(isset($file) && is_array($file) && $file['name'] != '')
 		{
-		   $fullfilename = JPATH_SITE.$folderpath. strtolower($file['name']);
-		   $filename = strtolower($file['name']);
-		   jimport('joomla.filesystem.file');
-		   
-		   
-		   if (JFile::exists($fullfilename)) {
-			  $mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed, file already exists.");
-			  return;
-		   }
-	
-		   if (!JFile::upload($file['tmp_name'], $fullfilename)) {
-			  $mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed, check to make sure that /components/$option/calendars exists.");
-			  return;
-		   }
-		   
+			$fullfilename = JPATH_SITE.$folderpath. strtolower($file['name']);
+			$filename = strtolower($file['name']);
+			jimport('joomla.filesystem.file');
+
+
+			if (JFile::exists($fullfilename)) {
+				$mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed, file already exists.");
+				return;
+			}
+
+			if (!JFile::upload($file['tmp_name'], $fullfilename)) {
+				$mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed, check to make sure that /components/$option/calendars exists.");
+				return;
+			}
+
 		}
 
-		
+
 	}
 
-	
+
 	/**
 	 * display the edit form
 	 * @return void
@@ -97,13 +96,13 @@ class biblestudyControllermediafilesedit extends JController {
 		} else {
 			$msg = JText::_( 'Error Saving Media' );
 		}
-	$file = JRequest::getVar('file', null, 'files', 'array' );
+		$file = JRequest::getVar('file', null, 'files', 'array' );
 		$filename_upload = strtolower($file['name']);
 		if (isset($filename_upload)){
-		$uploadFile=$this->upload();}
-		// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&view=mediafileslist';
-		$this->setRedirect($link, $msg);
+			$uploadFile=$this->upload();}
+			// Check the table in so it can be edited.... we are done with it anyway
+			$link = 'index.php?option=com_biblestudy&view=mediafileslist';
+			$this->setRedirect($link, $msg);
 	}
 
 	/**
@@ -121,7 +120,7 @@ class biblestudyControllermediafilesedit extends JController {
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
 	}
-function publish()
+	function publish()
 	{
 		global $mainframe;
 
@@ -139,7 +138,63 @@ function publish()
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist' );
 	}
 
+	function orderup()
+	{
+		$cid	= JRequest::getVar( 'cid', array(), 'post', 'array' );
+		JArrayHelper::toInteger($cid);
+		
+		if (isset($cid[0]) && $cid[0]) {
+			$id = $cid[0];
+		} else {
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', JText::_('No Items Selected') );
+			return false;
+		}
 
+		$model =& $this->getModel('mediafilesedit');
+		$model->setid($id);
+		if ($model->move(-1)) {
+			$msg = JText::_( 'Media file Moved Up' );
+		} else {
+			$msg = $model->getError();
+		}
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
+	}
+	
+	function orderdown()
+	{
+		$cid	= JRequest::getVar( 'cid', array(), 'post', 'array' );
+		JArrayHelper::toInteger($cid);
+
+		if (isset($cid[0]) && $cid[0]) {
+			$id = $cid[0];
+		} else {
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', JText::_('No Items Selected') );
+			return false;
+		}
+
+		$model =& $this->getModel('mediafilesedit');
+		$model->setid($id);
+		if ($model->move(1)) {
+			$msg = JText::_('Media file Moved Down');
+		} else {
+			$msg = $model->getError();
+		}
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
+	}
+	
+	function saveorder()
+	{
+		$cid	= JRequest::getVar( 'cid', array(), 'post', 'array' );
+
+		$model =& $this->getModel('mediafilesedit');
+		if ($model->saveorder($cid, null)) {
+			$msg = JText::_( 'New ordering saved' );
+		} else {
+			$msg = $model->getError();
+		}
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
+	}
+	
 	function unpublish()
 	{
 		global $mainframe;
@@ -167,13 +222,13 @@ function publish()
 		$msg = JText::_( 'Operation Cancelled' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
 	}
-	
+
 	function docmanCategoryItems() {
 		$catId = JRequest::getVar('catId');
-		
+
 		$model =& $this->getModel('mediafilesedit');
 		$items =& $model->getdocManCategoryItems($catId);
-		
+
 		echo $items;
 	}
 }
