@@ -18,7 +18,7 @@ class biblestudyModelmediafilesedit extends JModel {
 		$this->setId((int)$array[0]);
 	}
 
-	
+
 	function setId($id)
 	{
 		// Set id and wipe data
@@ -27,7 +27,6 @@ class biblestudyModelmediafilesedit extends JModel {
 	}
 
 
-	
 	function &getData()
 	{
 		// Load the data
@@ -66,7 +65,7 @@ class biblestudyModelmediafilesedit extends JModel {
 				  WHERE `section` = 'com_docman' AND `published`=1";
 		return $this->_getList($query);
 	}
-	
+
 	function getdocManCategoryItems($catId) {
 		$query = "SELECT id, dmname FROM #__docman
 				  WHERE `catid`='$catId' AND `published`=1";
@@ -76,16 +75,19 @@ class biblestudyModelmediafilesedit extends JModel {
 			$items .= '{id: "'.$object->id.'", name: "'.$object->dmname.'"},';
 		}
 		$items .= ']';
-		
+
 		return $items;
-		
+
 	}
-	
+
 	/**
 	 * Method to store a record
 	 *
 	 * @access	public
 	 * @return	boolean	True on success
+	 * @todo Need to check the current order of the studies for that particular
+	 * study, so that it doesn't default to 0, buecause that will break the 
+	 * ordering functionality.
 	 */
 	function store()
 	{
@@ -96,12 +98,12 @@ class biblestudyModelmediafilesedit extends JModel {
 		$file = JRequest::getVar('file', null, 'files', 'array' );
 		$filename_upload = strtolower($file['name']);
 		if (isset($filename_upload)){
-		$name_bak = $data['filename'];
-		$data['filename'] = $filename_upload;
+			$name_bak = $data['filename'];
+			$data['filename'] = $filename_upload;
 		}
 		if ($filename_upload == ''){$data['filename'] = $name_bak;}
 		$data['mediacode'] = str_replace('"',"'",$data['mediacode']);
-		
+
 		//$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		// Bind the form fields to the  table
 		if (!$row->bind($data)) {
@@ -114,11 +116,11 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Store the table to the database
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
-//			$this->setError( $row->getErrorMsg() );
+			//			$this->setError( $row->getErrorMsg() );
 			return false;
 		}
 
@@ -144,20 +146,20 @@ class biblestudyModelmediafilesedit extends JModel {
 					$this->setError( $row->getErrorMsg() );
 					return false;
 				}
-			}						
+			}
 		}
 		return true;
 	}
-function publish($cid = array(), $publish = 1)
+	function publish($cid = array(), $publish = 1)
 	{
-		
+
 		if (count( $cid ))
 		{
 			$cids = implode( ',', $cid );
 
 			$query = 'UPDATE #__bsms_mediafiles'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
+			. ' SET published = ' . intval( $publish )
+			. ' WHERE id IN ( '.$cids.' )'
 				
 			;
 			$this->_db->setQuery( $query );
@@ -165,9 +167,9 @@ function publish($cid = array(), $publish = 1)
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
-		}		
-	}			
-/**
+		}
+	}
+	/**
 	 * Method to move a mediafile listing
 	 *
 	 * @access	public
@@ -227,7 +229,7 @@ function publish($cid = array(), $publish = 1)
 
 		return true;
 	}
-	
-	
+
+
 }
 ?>
