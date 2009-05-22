@@ -50,7 +50,7 @@ function openConverter1()
         <td>
         <?php if (!$this->mediafilesedit->id) 
 		{
-			echo JHTML::_('calendar', $this->mediafilesedit->createdate, 'createdate', 'createdate'); 
+			echo JHTML::_('calendar', date('Y-m-d'), 'createdate', 'createdate'); 
 		}
 		else {
 			echo JHTML::_('calendar', date('Y-m-d', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); 
@@ -86,7 +86,16 @@ function openConverter1()
              <?php //<tr>?> 
              <td> <?php echo JText::_('Image: ');?> 
                 <?php echo $this->lists['image'];?></td>
-            </tr><tr><td><?php echo JText::_( 'Filesize (in bytes): ');?><input class="text_area" type="text" name="size" id="size" size="20" maxlength="20" onChange="decOnly(this);" onKeyUp="decOnly(this);" onKeyPress="decOnly(this);" value="<?php echo $this->mediafilesedit->size;?>"/><a href="javascript:openConverter1();"> <?php echo JText::_('- Filesize Converter');?></a></td></tr>
+            </tr>
+            <tr>
+            <td>
+            <?php echo JText::_( 'Filesize: ');?>
+            <input class="text_area" type="text" name="size" id="size" size="20" maxlength="20" onChange="decOnly(this);" onKeyUp="decOnly(this);" onKeyPress="decOnly(this);" value="<?php echo $this->mediafilesedit->size;?>"/>
+            <a href="javascript:openConverter1();">
+            <?php echo JText::_('- Filesize Converter');?>
+            </a>
+            </td>
+            </tr>
              
             <tr>
               <td  ><?php echo JText::_('Server: ');?> <?php echo $this->lists['server'];?></td>
