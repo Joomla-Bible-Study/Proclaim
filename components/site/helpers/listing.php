@@ -8,7 +8,7 @@ function getListing($row, $params)
 					 	else $listing .='>';}
 					 if ($params->get('r1c1span') > 1) {$listing .= 'colspan="'.$params->get('r1c1span').'">';}
 						else {$listing .='>';}
-	
+	}
 	
 	
 return $listing;
