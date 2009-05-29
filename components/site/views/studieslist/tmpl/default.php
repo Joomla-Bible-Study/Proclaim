@@ -154,7 +154,7 @@ $pageclass_sfx = $params->get('pageclass_sfx');
 	        </tr>
 	      </thead>
 	      <tbody>
-	
+	<?php //foreach goes here Must send odd or even?>
 	        <tr class="bsodd">
 	          <td class="row1col1 bsdate" headers="bsdatehead">Mar 29, 2009</td>
 	

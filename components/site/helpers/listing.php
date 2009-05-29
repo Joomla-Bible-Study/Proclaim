@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 //Helper file - master list creater for study lists
-function getListing($row, $params)
+function getListing($row, $params, $oddeven)
 {
 	//Need to know if last column and last row
 	$columns = 1;
@@ -12,19 +12,8 @@ function getListing($row, $params)
 	if ($params->get('row3col1') > 0) {$rows = 3;}
 	if ($params->get('row4col1') > 0) {$rows = 4;}
 	
-	if ($params->get('row1col1') {
-					 $rowcolid = 'row1col1';
-					 $elementid = $this->getElementid($params->get('row1col1'));
-					 $colspan = $params->get('r1c1span');
-					 $rowspan = $params->get('rowspanr1c1');
-					 $lastcol = 0;
-					 if ($columns == 1) {$lastcol = 1;}
-					 $lastrow = 0;
-					 if ($rows == 1) {$lastrow = 1;}
-					 $listing .= $this->getCell($elementid, $rowcolid, $colspan, $rowspan, $lastcol, $lastrow);
-					 
-					 
-	}
+						 
+
 	
 	
 return $listing;
@@ -118,4 +107,57 @@ function getCell ($elementid, $rowcolid, $colspan, $rowspan, $lastcol, $lastrow)
 					 
 					 $cell .= '>';
 		return $cell;
+	}
+	
+	function getColumn($params, $rownumber, $rowcolid, $colspan, $rowspan, $columns, $oddeven)
+	{
+ 	$lastrow = 0;
+ 	if ($rows == 1) {$lastrow = 1;}
+	$listing .= '<tr class="'.$oddeven; //This begins the row of the display data
+	if ($lastrow == 1) {$listing .= ' lastrow ';}
+	
+	$listing .= '">'; 
+	
+		 $rowcolid = 'row'.$rownumber.'col1';
+		 $elementid = $this->getElementid($params->get($rowcolid));
+		 $colspan = $params->get('r'.$rownumber.'c1span');
+		 $rowspan = $params->get('rowspanr'.$rownumber.'c1');
+		 $lastcol = 0;
+		 if ($columns == 1) {$lastcol = 1;}
+		 $listing .= $this->getCell($elementid, $rowcolid, $colspan, $rowspan, $lastcol);
+ 	
+	if ($columns > 1)
+	{
+ 		$rowcolid = 'row1col2';
+ 		$elementid = $this->getElementid($params->get('row1col2'));
+ 		$colspan = $params->get('r1c2span');
+ 		$rowspan = $params->get('rowspanr1c2');
+ 		$lastcol = 0;
+ 		if ($columns == 2) {$lastcol = 1;}
+ 		$listing .= $this->getCell($elementid, $rowcolid, $colspan, $rowspan, $lastcol);
+	}
+	
+	if ($columns > 2) 
+	{
+		 $rowcolid = 'row1col3';
+		 $elementid = $this->getElementid($params->get('row1col3'));
+		 $colspan = $params->get('r1c3span');
+		 $rowspan = $params->get('rowspanr1c3');
+		 $lastcol = 0;
+		 if ($columns == 3) {$lastcol = 1;}
+		 $listing .= $this->getCell($elementid, $rowcolid, $colspan, $rowspan, $lastcol);
+	}
+	
+	if ($columns > 3)
+	{
+		 $rowcolid = 'row1col4';
+		 $elementid = $this->getElementid($params->get('row1col4'));
+		 $colspan = $params->get('r1c4span');
+		 $rowspan = $params->get('rowspanr1c4');
+		 $lastcol = 0;
+		 if ($columns == 4) {$lastcol = 1;}
+		 $listing .= $this->getCell($elementid, $rowcolid, $colspan, $rowspan, $lastcol);
+	}
+	$listing .= '</tr>'; //This ends the row of the data to be displayed				 
+	
 	}
