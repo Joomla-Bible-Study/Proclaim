@@ -24,7 +24,7 @@ $detailsitemid = $params->get('detailsitemid');
 	}
 	if ($params->get('tooltip') >0) {
 		JHTML::_('behavior.tooltip');
-        $linktext = '<div class="zoomTip'.$params->get('pageclass_sfx').'" title="<strong>'.JText::_('Sermon Info').'</strong> :: ';
+        $linktext = '<div class="zoomTip" title="<strong>'.JText::_('Sermon Info').'</strong> :: ';
        	  if ($row->studytitle) {$linktext .= '<strong>'.JText::_('Title: ').'</strong>'.$row->studytitle.'<br /><br />';}
        	  if ($intro) {$linktext .= '<strong>'.JText::_('Details: ').'</strong>'.$intro.'<br /><br />';}
        	  if ($row->studynumber) { $linktext .= '<strong>'.JText::_('Sermon Number: ').'</strong>'.$row->studynumber.'<br />';}

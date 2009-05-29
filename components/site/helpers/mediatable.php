@@ -28,10 +28,10 @@ function getMediatable($params, $row)
 	$rows2 = count($media1);
 	//dump ($rows2, 'Rows2: ');
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
-
+	$mediatable = '<table class="mediatable"><tbody><tr>';
 	foreach ($media1 as $media) {
 		
-		$mediatable .= '<div class="mediaimage'.$params->get('pageclass_sfx').'">';
+		$mediatable .= '<td>';
 		
       $download_image = $params->get('download_image');
       if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
@@ -194,10 +194,10 @@ function getMediatable($params, $row)
 	  $mediatable .= '<img src="'.JURI::base().$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
   
 	  }
-	$mediatable .= '</div>';
+	$mediatable .= '</td>';
 
 	} //end of foreach of media results
 
-	
+	$mediatable .= '</tr></table>';
     return $mediatable;
 }
