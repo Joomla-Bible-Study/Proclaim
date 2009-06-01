@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die();
 
-function getFilepath($id3, $idfield) 
+function getFilepath($id3, $idfield, $mime) 
 {
 
 	global $mainframe;
@@ -12,7 +12,7 @@ function getFilepath($id3, $idfield)
 	  . ' FROM #__bsms_mediafiles'
 	  . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
 	  . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-	  . ' WHERE '.$idfield.' = '.$id3;
+	  . ' WHERE '.$idfield.' = '.$id3.' AND #__bsms_mediafiles.published = 1 '.$mime;
 	  $database->setQuery( $query );
 	  $filepathresults = $database->loadObject();
 	  $number_rows = $database->getAffectedRows($query);

@@ -1,12 +1,21 @@
 <?php defined('_JEXEC') or die();
 
-function getScripture($params, $row, $esv) {
+function getScripture($params, $row, $esv, $scripturerow) {
 	global $mainframe, $option;
+	if ($scripturerow == 2) {
+		$booknumber = $row->booknumber2;
+		$ch_b = $row->chapter_begin2;
+		$ch_e = $row->chapter_end2;
+		$v_b = $row->verse_begin2;
+		$v_e = $row->verse_end2;
+	}
+	else {
 	$booknumber = $row->booknumber;
 	$ch_b = $row->chapter_begin;
 	$ch_e = $row->chapter_end;
 	$v_b = $row->verse_begin;
 	$v_e = $row->verse_end;
+	}
 	$show_verses = $params->get('show_verses');
 	$db	= & JFactory::getDBO();
 	$query = 'SELECT #__bsms_studies.*, #__bsms_books.bookname, #__bsms_books.id as bid '

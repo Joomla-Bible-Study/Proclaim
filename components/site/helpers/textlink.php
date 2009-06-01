@@ -4,8 +4,9 @@ defined('_JEXEC') or die();
 function getTextlink($params, $row, $textorpdf)
 {
 $path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
-include_once($path1.'scripture.php');	
-$scripture1 = getScripture($params, $row, $esv);
+include_once($path1.'scripture.php');
+$scripturerow = 1;	
+$scripture1 = getScripture($params, $row, $esv, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
 $detailsitemid = $params->get('detailsitemid');
 //$returnmenu = JRequest::getVar('Itemid');

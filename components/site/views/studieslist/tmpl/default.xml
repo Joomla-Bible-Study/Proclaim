@@ -13,21 +13,18 @@
 		<param name="detailsitemid" type="detailsitemid" default="" label="Itemid of studydetails menu item" description="In order for styling to apply to details view from the list you should create a menu item to set those parameters, MUST BE PUBLISHED (But can be to a menu not used)" />
 		<param name="teacheritemid" type="teacheritemid" default="" label="Itemid of TeacherDisplay menu item" description="In order for styling to apply to teacher view from the list you should create a menu item to set those parameters, MUST BE PUBLISHED (But can be to a menu not used)" />
 		<param name="teacherids" type="text" size="30" default="1" label="Teacher ids to show" description="Teacher ids (in order) separated by commas" />
-			<param name="compatibilityMode" type="radio" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
+			<param name="compatibilityMode" type="list" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
 				<option value="0">No</option>
 				<option value="1">Yes</option>
 			</param>
-			<param name="page_width" type="text" size="5" default="100%" label="Page Table Width" description="Set the overall page width as number or percentage. Needs px or % at end" />
 			<param name="page_image" type="text" size="55" default="components/com_biblestudy/images/openbible.png" label="Page Image" description="The image to show on the component site front page" />
 			<param name="pimagew" type="text" size="3" default="48" label="Width of Front Page image" description="Set the width of the Front page image (default is 48)" />
 			<param name="pimageh" type="text" size="3" default="48" label="Height of Front Page image" description="Set the height of the Front page image (default is 48)" />
-			<param name="show_page_image" type="radio" default="1" label="Show/Hide Front Page Image" description="Shows or hides the image on the top of the component site front page">
+			<param name="show_page_image" type="list" default="1" label="Show/Hide Front Page Image" description="Shows or hides the image on the top of the component site front page">
 				<option value="0">Hide</option>
 				<option value="1">Show</option>
 				</param>
-			<param name="color1" type="text" size="7" default="#DDDCEF" label="Background row color 1 in Hex code" description="Enter a hex code for studies list background color 1" />
-			<param name="color2" type="text" size="7" default="#FFFFFF" label="Background row color 2 in Hex code" description="Enter a hex code for studies list background color 2" />
-			<param name="use_color" type="radio" default="1" label="Colored backgrounds" description="Choose whether or not to have alternating color backgrounds to listings">
+			<param name="use_color" type="list" default="1" label="Colored backgrounds" description="Choose whether or not to have alternating color backgrounds to listings">
 				<option value="0">No Background</option>
 				<option value="1">Use Background</option>
 				</param>
@@ -44,7 +41,11 @@
 					<option value="8">Use Global System Date Format</option>
 					<option value="9">2009/10/13</option>
 				</param>
-			<param name="default_order" type="radio" default="1" label="Default Date Ascending/Descending" description="Choose whether the default listing of studies should be in date ascending or descending order">
+			<param name="duration_type" type="list" default="0" label="Choose : or hours/min/sec" description="Choose a seperator for the duration, either : or hours/mins/secs">
+			<option value="1">Hours/min/sec</option>
+			<option value="2">H:M:S</option>
+		</param>
+			<param name="default_order" type="list" default="1" label="Default Date Ascending/Descending" description="Choose whether the default listing of studies should be in date ascending or descending order">
 					<option value="DESC">Descending</option>
 					<option value="ASC">Ascending</option>
 				</param>
@@ -61,32 +62,11 @@
 				<param name="mult_messagetype" type="text" default="" label="Enter multiple message type ids" description="Enter a series of message type ids separated by commas as a filter" />
 				<param name="locations" type="locations" default="" label="Locations" description="Choose a location to display for this menu item" />
 				<param name="mult_locations" type="text" default="" label="Enter multiple location ids" description="Enter a series of location ids separated by commas as a filter" />
-				<param name="use_headers" type="radio" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
+				<param name="use_headers" type="list" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
 					<option value="0">No Header Row</option>
 					<option value="1">Use Header Row</option>
 				</param>
-				<param name="header_align" type="radio" default="center" label="Alignment for header row" description="Choose the alignment for the header row (must also be enabled)">
-					<option value="center">Center</option>
-					<option value="left">Left</option>
-					<option value="right">Right</option>
-				</param>
-				<param name="header_color" type="text" default="#333333" label="Header Background Color" description="Put in a Hex or other color for the header row background" />
-				<param name="header_font_color" type="text" default="#000000" label="Font Color for Header Text" description="Use HEX or name (like red) for header text color" />
-				<param name="header1" type="text" default="" label="Header Column 1" description="Text to appear in the header of column 1 - leave blank if not using that column" />
-				<param name="header2" type="text" default="" label="Header Column 2" description="Text to appear in the header of column 2 - leave blank if not using that column" />
-				<param name="header3" type="text" default="" label="Header Column 3" description="Text to appear in the header of column 3 - leave blank if not using that column" />
-				<param name="header4" type="text" default="" label="Header Column 4" description="Text to appear in the header of column 4 - leave blank if not using that column" />
-				<param name="header5" type="text" default="" label="Header for Details Column" description="Text to appear in the header of the column that links to the details and pdf" />
-				<param name="header6" type="text" default="" label="Header for Media Column" description="Text to appear in the header of the column that links to the media files" />
-			<param name="show_full_text" type="radio" default="1" label="Text" description="Show/Hide link to text">
-					<option value="0">Hide</option>
-					<option value="1">Show</option>
-				</param>
-			<param name="tooltip" type="radio" default="1" label="Show/Hide Tooltip" description="Shows or hides a tooltip with details of your studies over the study details link">
-					<option value="0">Hide</option>
-					<option value="1">Show</option>
-				</param>
-			<param name="show_pdf_text" type="radio" default="1" label="PDF" description="Show/Hide link to a pdf version">
+			<param name="tooltip" type="list" default="1" label="Show/Hide Tooltip" description="Shows or hides a tooltip with details of your studies over the study details link">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
@@ -94,74 +74,66 @@
 			<param name="imagew" type="text" size="3" default="24" label="Image width for all images" description="Enter a width for all media images" />
 			<param name="text_image" type="text" size="50" default="components/com_biblestudy/images/textfile24.png" label="Text Image Path" description="Image to show for text link" />
 			<param name="pdf_image" type="text" size="50" default="components/com_biblestudy/images/pdf24.png" label="PDF Image Path" description="Image to show for PDF link" />
-			<param name="show_verses" type="radio" default="0" label="Chapters/Verses" description="Choose whether just chapter(s) of Bible study book shown or verses too">
+			<param name="show_verses" type="list" default="0" label="Chapters/Verses" description="Choose whether just chapter(s) of Bible study book shown or verses too">
 					<option value="0">Show only chapters</option>
 					<option value="1">Show verses and chapters</option>
 				</param>
-			<param name="show_media" type="radio" default="1" label="Media" description="Show/Hide media (can be overridden in each study)">
-					<option value="0">Hide</option>
-					<option value="1">Show</option>
-				</param>
-			<param name="useavr" type="radio" default="0" label="Use AllVideosReloaded for all media" description="If installed, use AllVideosReloaded 1.2.3 or higher player for all video and audio (overrides local settings)">
+			<param name="useavr" type="list" default="0" label="Use AllVideosReloaded for all media" description="If installed, use AllVideosReloaded 1.2.3 or higher player for all video and audio (overrides local settings)">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
 				</param>
-			<param name="popuptype" type="radio" default="window" label="Window or light box (inline) for AVR player" description="If installed, use AllVideosReloaded as a separate window or as a light box effect">
+			<param name="popuptype" type="list" default="window" label="Window or light box (inline) for AVR player" description="If installed, use AllVideosReloaded as a separate window or as a light box effect">
 					<option value="window">Window</option>
 					<option value="lightbox">Lightbox</option>
 				</param>
-			<param name="media_player" type="radio" default="0" label="MP3 Media Player" description="Use built-in media player for all mp3 files (overrides AVR)">
+			<param name="media_player" type="list" default="0" label="MP3 Media Player" description="Use built-in media player for all mp3 files (overrides AVR)">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
 				</param>
 			<param name="player_width" type="text" default="290" label="Width for MP3 Player" description="Width in pixels of internal MP3 player" />
 			<param name="download_image" type="text" size="55" default="components/com_biblestudy/images/download.png" label="Download Icon Image" description="Path from root to download icon image file" />
-			<param name="show_filesize" type="radio" default="1" label="Show Filesize" description="Show/Hide filesize of the media">
+			<param name="show_filesize" type="list" default="1" label="Show Filesize" description="Show/Hide filesize of the media">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="widthcol1" type="text" size="4" default="75px" label="Column 1 width, # or %" description="width in number or percentage" />
-			<param name="widthcol2" type="text" size="4" default="100px" label="Column 2 width, # or %" description="width in number or percentage" />
-			<param name="widthcol3" type="text" size="4" default="250px" label="Column 3 width, # or %" description="width in number or percentage" />
-			<param name="widthcol4" type="text" size="4" default="250px" label="Column 4 width, # or %" description="width in number or percentage" />
-			<param name="show_teacher_list" type="radio" default="0" label="Show/Hide a teacher image on list page" description="Choose whether to show or hide a teacher thumbnail and name in the list page">
+			<param name="show_teacher_list" type="list" default="0" label="Show/Hide a teacher image on list page" description="Choose whether to show or hide a teacher thumbnail and name in the list page">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
 				<param name="details_text" type="text" default="Study Details" size="50" label="Alt tag for details" description="Text to show on mouse over of details image link other than if you choose a tooltip" />
-			<param name="show_book_search" type="radio" default="1" label="Show/Hide book search" description="Shows or hides the drop down box for books">
+			<param name="show_book_search" type="list" default="1" label="Show/Hide book search" description="Shows or hides the drop down box for books">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="show_teacher_search" type="radio" default="1" label="Show/Hide Teacher search" description="Shows or hides the drop down box for teachers">
+			<param name="show_teacher_search" type="list" default="1" label="Show/Hide Teacher search" description="Shows or hides the drop down box for teachers">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="show_series_search" type="radio" default="1" label="Show/Hide Series search" description="Shows or hides the drop down box for series">
+			<param name="show_series_search" type="list" default="1" label="Show/Hide Series search" description="Shows or hides the drop down box for series">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="show_type_search" type="radio" default="1" label="Show/Hide Message Type search" description="Shows or hides the drop down box for message types">
+			<param name="show_type_search" type="list" default="1" label="Show/Hide Message Type search" description="Shows or hides the drop down box for message types">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="show_year_search" type="radio" default="1" label="Show/Hide Year search" description="Shows or hides the year drop down box">
+			<param name="show_year_search" type="list" default="1" label="Show/Hide Year search" description="Shows or hides the year drop down box">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="show_order_search" type="radio" default="1" label="Show/Hide Ascending/Descending" description="Shows or hides the drop down for ordering the year display">
+			<param name="show_order_search" type="list" default="1" label="Show/Hide Ascending/Descending" description="Shows or hides the drop down for ordering the year display">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="show_topic_search" type="radio" default="1" label="Show/Hide Topic search" description="Shows or hides the drop down topical list">
+			<param name="show_topic_search" type="list" default="1" label="Show/Hide Topic search" description="Shows or hides the drop down topical list">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="show_locations_search" type="radio" default="1" label="Show/Hide Locations search" description="Shows or hides the drop down locations list">
+			<param name="show_locations_search" type="list" default="1" label="Show/Hide Locations search" description="Shows or hides the drop down locations list">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="show_limitbox" type="radio" label="Show/Hide Limit Box in Footer" default="1" description="Show or hide the limit box in the page footer to allow users to select a number of records to show.">
+			<param name="show_limitbox" type="list" label="Show/Hide Limit Box in Footer" default="1" description="Show or hide the limit box in the page footer to allow users to select a number of records to show.">
 				<option value="0">Hide</option>
 				<option value="1">Show</option>
 			</param>
@@ -169,7 +141,7 @@
 				</param>
 			<param name="@spacer" type="spacer" default="Front End Submission" label="" description="">
 				</param>
-			<param name="allow_entry_study" type="radio" default="0" label="Allow Front End Submission" description="Allow certain users to enter studes and mediafiles from the front end">
+			<param name="allow_entry_study" type="list" default="0" label="Allow Front End Submission" description="Allow certain users to enter studes and mediafiles from the front end">
 				<option value="0">No Frontend access</option>
 				<option value="1">Allow Frontend access</option>
 			</param>
@@ -181,685 +153,763 @@
 				<option value="23">Managers</option>
 				<option value="24">Administrators or superadmin</option>
 			</param>
-			<param name="study_publish" type="radio" default="0" label="Auto Publish front end submissions" description="Choose whether studies entered on the front end are automatically published or must be manually published by an admin on the backend">
+			<param name="study_publish" type="list" default="0" label="Auto Publish front end submissions" description="Choose whether studies entered on the front end are automatically published or must be manually published by an admin on the backend">
 				<option value="0">No Auto Publish</option>
 				<option value="1">Auto Publish Studies</option>
 			</param>
-			<param name="@spacer" type="spacer" default="" label="" description="Scripture">
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
 			<param name="@spacer" type="spacer" default="Study List Items" label="Study List Items" description="Study List Items">
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-			<param name="@spacer" type="spacer" default="Scripture" label="" description="Scripture">
+			<param name="@spacer" type="spacer" default="Row 1 Column 1" label="Row 1 Column 1" description="Row 1 Column 1">
 				</param>
-					<param name="position1" type="list" default="1" label="Scripture" description="Choose column 1-4 for Scripture to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="row1col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="order1" type="list" default="1" label="Order for Scripture in list" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
+			<param name="r1c1custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r1c1span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 1 - 2</option>
+				<option value="3">Columns 1 - 3</option>
+				<option value="4">Columns 1 - 4</option>
 				</param>
-				<param name="islink1" type="list" default="0" label="Scripture a link to study" description="Choose whether Scripture should be a hyperlink to the study details or media">
+			<param name="rowspanr1c1" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr1c1" type="list" default="0" label="Type of link" description="Choose what this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet1" type="list" default="0" label="Bullet Scripture" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 1 Column 2" label="Row 1 Column 2" description="Row 1 Column 2">
 				</param>
-			<param name="@spacer" type="spacer" default="Scripture 2" label="" description="Scripture">
+			<param name="row1col2" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-					<param name="position13" type="list" default="0" label="Scripture 2" description="Choose column 1-4 for Scripture 2 to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r1c2custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r1c2span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 2 - 3</option>
+				<option value="3">Columns 2 - 4</option>
 				</param>
-				<param name="order13" type="list" default="1" label="Order for Scripture 2 in list" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink13" type="list" default="0" label="Scripture 2 a link to study" description="Choose whether Scripture 2 should be a hyperlink to the study details or media">
+			<param name="rowspanr1c2" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr1c2" type="list" default="0" label="Type of link" description="Choose what this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet13" type="list" default="0" label="Bullet Scripture 2" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 1 Column 3" label="Row 1 Column 3" description="Row 1 Column 3">
 				</param>
-				<param name="@spacer" type="spacer" default="Title" label="Title" description="Title">
+			<param name="row1col3" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position2" type="list" default="2" label="Title" description="Choose column 1-4 for Title to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r1c3custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r1c3span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 3 - 4</option>
 				</param>
-				<param name="order2" type="list" default="1" label="Order for Title" description="Choose a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink2" type="list" default="0" label="Title a link" description="Choose whether Title should be a hyperlink to the study details or media">
+			<param name="rowspanr1c3" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr1c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet2" type="list" default="0" label="Bullet Title" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 1 Column 4" label="Row 1 Column 4" description="Row 1 Column 4">
 				</param>
-				<param name="@spacer" type="spacer" default="Duration" label="Duration" description="Duration">
+			<param name="row1col4" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="duration_type" type="list" default="2" label="Choose : or hours/min/sec" description="Choose a seperator for the duration, either : or hours/mins/secs">
-					<option value="1">Hours/min/sec</option>
-					<option value="2">H:M:S</option>
-				</param>
-				<param name="position3" type="list" default="1" label="Duration" description="Choose column 1-4 for Duration to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="order3" type="list" default="1" label="Order for Duration" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink3" type="list" default="0" label="Duration a link" description="Choose whether Duration should be a hyperlink to the study details or media">
+			<param name="r1c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+		<param name="rowspanr1c4" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr1c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet3" type="list" default="0" label="Bullet Duration" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 2 Column 1" label="Row 2 Column 1" description="Row 2 Column 1">
 				</param>
-				<param name="@spacer" type="spacer" default="Description" label="Description" description="Dscription">
+			<param name="row2col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position4" type="list" default="0" label="Description" description="Choose column 1-4 for description to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r2c1custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r2c1span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 1 - 2</option>
+				<option value="3">Columns 1 - 3</option>
+				<option value="4">Columns 1 - 4</option>
 				</param>
-				<param name="order4" type="list" default="1" label="Order for description" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink4" type="list" default="0" label="Description a link" description="Choose whether description should be a hyperlink to the study details or media">
+			<param name="rowspanr2c1" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr2c1" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet4" type="list" default="0" label="Bullet Description" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 2 Column 2" label="Row 2 Column 2" description="Row 2 Column 2">
 				</param>
-				<param name="@spacer" type="spacer" default="Date" label="Date" description="Date">
+			<param name="row2col2" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position5" type="list" default="3" label="Date" description="Choose column 1-4 for date to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r2c2custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r2c2span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 2 - 3</option>
+				<option value="3">Columns 3 - 4</option>
 				</param>
-				<param name="order5" type="list" default="1" label="Order for date" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink5" type="list" default="0" label="Date a link" description="Choose whether date should be a hyperlink to the study details or media">
+			<param name="rowspanr2c2" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr2c2" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet5" type="list" default="0" label="Bullet date" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 2 Column 3" label="Row 2 Column 3" description="Row 2 Column 3">
 				</param>
-				<param name="@spacer" type="spacer" default="Teacher" label="Teacher" description="Teacher">
+			<param name="row2col3" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position6" type="list" default="4" label="Teacher" description="Choose column 1-4 for teacher to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r2c3custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r2c3span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 3 - 4</option>
 				</param>
-				<param name="order6" type="list" default="1" label="Order for Teacher" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink6" type="list" default="0" label="Teacher a link" description="Choose whether teacher should be a hyperlink to the study details or media">
+			<param name="rowspanr2c3" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr2c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
-					<option value="3">Link to Teacher's Page</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet6" type="list" default="0" label="Bullet Teacher" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 2 Column 4" label="Row 2 Column 4" description="Row 2 Column 4">
 				</param>
-				<param name="@spacer" type="spacer" default="Teacher + Title" label="Teacher + Title" description="Teacher + Title">
+			<param name="row2col4" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position7" type="list" default="0" label="Teacher + Title" description="Choose column 1-4 for Teacher + Title to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="order7" type="list" default="1" label="Order for Teacher Title" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink7" type="list" default="0" label="Teacher Title a link" description="Choose whether Teacher Title should be a hyperlink to the study details or media">
+			<param name="r2c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+		<param name="rowspanr2c4" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr2c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
-					<option value="3">Link to Teacher's Page</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet7" type="list" default="0" label="Bullet Teacher Title" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 3 Column 1" label="Row 3 Column 1" description="Row 3 Column 1">
 				</param>
-				<param name="@spacer" type="spacer" default="Title + Teacher" label="Title + Teacher" description="Title + Teacher">
+			<param name="row3col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position10" type="list" default="0" label="Title + Teacher" description="Choose column 1-4 for Series to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r3c1custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r3c1span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 1 - 2</option>
+				<option value="3">Columns 1 - 3</option>
+				<option value="4">Columns 1 - 4</option>
 				</param>
-				<param name="order10" type="list" default="1" label="Order for Title + Teacher" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink10" type="list" default="0" label="Title + Teacher a link" description="Choose whether Title + Teacher should be a hyperlink to the study details or media file">
+			<param name="rowspanr3c1" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr3c1" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
-					<option value="3">Link to Teacher's Page</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet10" type="list" default="0" label="Bullet Title + Teacher" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 3 Column 2" label="Row 3 Column 2" description="Row 3 Column 2">
 				</param>
-				<param name="@spacer" type="spacer" default="Filesize" label="Filesize" description="Filesize">
+			<param name="row3col2" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position8" type="list" default="0" label="Filesize of 1st Media File" description="Choose column 1-4 for filesize to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r3c2custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r3c2span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 2 - 3</option>
+				<option value="3">Columns 3 - 4</option>
 				</param>
-				<param name="order8" type="list" default="1" label="Order for Filesize" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink8" type="list" default="0" label="Filesize a link to study" description="Choose whether Filesize should be a hyperlink to the study details or media">
+			<param name="rowspanr2c2" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr3c2" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet8" type="list" default="0" label="Bullet Filesize" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 3 Column 3" label="Row 3 Column 3" description="Row 3 Column 3">
 				</param>
-				<param name="@spacer" type="spacer" default="Series Text" label="Series Text" description="Series Text">
+			<param name="row3col3" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position9" type="list" default="0" label="Series Text" description="Choose column 1-4 for Series to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r3c3custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r3c3span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 3 - 4</option>
 				</param>
-				<param name="order9" type="list" default="1" label="Order for Series" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink9" type="list" default="0" label="Series a link" description="Choose whether Series should be a hyperlink to the study details or media file">
+			<param name="rowspanr3c3" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr3c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet9" type="list" default="0" label="Bullet Series" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 3 Column 4" label="Row 3 Column 4" description="Row 3 Column 4">
 				</param>
-				<param name="@spacer" type="spacer" default="Secondary References" label="Secondary References" description="Secondary References">
+			<param name="row3col4" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position11" type="list" default="0" label="Secondary References" description="Choose column 1-4 for Secondary References to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="order11" type="list" default="1" label="Order for Secondary Reference in list" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink11" type="list" default="0" label="Secondary Reference a link to study" description="Choose whether Scripture should be a hyperlink to the study details or media">
+			<param name="r3c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+		<param name="rowspanr3c4" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr3c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet11" type="list" default="0" label="Bullet Secondary Reference" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 4 Column 1" label="Row 4 Column 1" description="Row 4 Column 1">
 				</param>
-				<param name="@spacer" type="spacer" default="Message Type" label="Message Type" description="Message Type">
+			<param name="row4col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position12" type="list" default="0" label="Message Type" description="Choose column 1-4 for Message Type to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r4c1custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r4c1span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 1 - 2</option>
+				<option value="3">Columns 1 - 3</option>
+				<option value="4">Columns 1 - 4</option>
 				</param>
-				<param name="order12" type="list" default="1" label="Order for Message Type in list" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink12" type="list" default="0" label="Messaage Type a link to study" description="Choose whether Scripture should be a hyperlink to the study details or media">
+			<param name="rowspanr4c1" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr4c1" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet12" type="list" default="0" label="Bullet Message Type" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 4 Column 2" label="Row 4 Column 2" description="Row 4 Column 2">
 				</param>
-				<param name="@spacer" type="spacer" default="Submitted By" label="Submitted By" description="Submitted By">
+			<param name="row4col2" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position14" type="list" default="0" label="User Submitted" description="Choose column 1-4 for User who submitted the study to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r4c2custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r4c2span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 2 - 3</option>
+				<option value="3">Columns 3 - 4</option>
 				</param>
-				<param name="order14" type="list" default="1" label="Order for Submitted By in list" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink14" type="list" default="0" label="Submitted By a link to study" description="Choose whether Submitted by should be a hyperlink to the study details or media">
+			<param name="rowspanr4c2" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr4c2" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet14" type="list" default="0" label="Bullet Submitted By" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 4 Column 3" label="Row 4 Column 3" description="Row 4 Column 3">
 				</param>
-				<param name="@spacer" type="spacer" default="Hits" label="Hits" description="Hits">
+			<param name="row4col3" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position15" type="list" default="0" label="Hits" description="Choose column 1-4 for number of times study has been read to appear or not to show">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
+			<param name="r4c3custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+			<param name="r4c3span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
+				<option value="1">Just This Cell</option>
+				<option value="2">Columns 3 - 4</option>
 				</param>
-				<param name="hits_label" type="text" default="Hits" label="Label for Hits" description="Word or words to come before the hits number" />
-				<param name="order15" type="list" default="1" label="Order for Hits in list" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink15" type="list" default="0" label="Hits a link to study" description="Choose whether Hits should be a hyperlink to the study details or media">
+			<param name="rowspanr4c3" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr4c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet15" type="list" default="0" label="Bullet Hits" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
+			<param name="@spacer" type="spacer" default="Row 4 Column 4" label="Row 4 Column 4" description="Row 4 Column 4">
 				</param>
-				<param name="@spacer" type="spacer" default="Study Number" label="Study Number" description="Study Number">
+			<param name="row4col4" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+				<option value="0">Nothing</option>
+				<option value="1">Scripture {scripture1}</option>
+				<option value="2">Scripture2 {scripture2}</option>
+				<option value="3">Secondary Reference {secondary_reference}</option>
+				<option value="4">Duration {duration}</option>
+				<option value="5">Title {studytitle}</option>
+				<option value="6">Introduction {studyintro}</option>
+				<option value="7">Teacher {teachername}</option>
+				<option value="8">Title + Teacher {teacher-title-name}</option>
+				<option value="9">Series {series_text}</option>
+				<option value="10">Date {date}</option>
+				<option value="11">Submitted By {submitted}</option>
+				<option value="12">Hits {hits}</option>
+				<option value="13">Studynumber {studynumber}</option>
+				<option value="14">Topic {topic_text}</option>
+				<option value="15">Location {location_text}</option>
+				<option value="16">Messagetype {message_type}</option>
+				<option value="17">Details Text {details-text}</option>
+				<option value="18">Details Text-PDF {details-text-pdf}</option>
+				<option value="19">Details PDF {details-pdf}</option>
+				<option value="20">Media {media}</option>
+				<option value="22">Store {store}</option>
+				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="24">Custom</option>
 				</param>
-				<param name="position16" type="list" default="0" label="Study Number" description="Choose column 1-4 for the study number">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="order16" type="list" default="1" label="Order for Study Number in list" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink16" type="list" default="0" label="Study Number a link to study" description="Choose whether Study Number should be a hyperlink to the study details or media">
+			<param name="r4c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
+		<param name="rowspanr4c4" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
+				<option value="1">Just this row</option>
+				<option value="2">Span 2 rows</option>
+				<option value="3">Span 3 rows</option>
+				<option value="4">Span 4 rows</option>
+			</param>
+			<param name="linkr4c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="3">Link to Teacher's Profile</option>
 				</param>
-				<param name="isbullet16" type="list" default="0" label="Bullet Study Number" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
-				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-				<param name="@spacer" type="spacer" default="Topic" label="Topic" description="Topic">
-				</param>
-				<param name="position17" type="list" default="0" label="Topic" description="Choose column 1-4 for the Topic">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="order17" type="list" default="1" label="Order for Topic in list" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink17" type="list" default="0" label="Topic a link to study" description="Choose whether Topic should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
-				<param name="isbullet17" type="list" default="0" label="Bullet Topic" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
-				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-				<param name="@spacer" type="spacer" default="Location" label="Location" description="Location">
-				</param>
-				<param name="position18" type="list" default="0" label="Location" description="Choose column 1-4 for the Location">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="order18" type="list" default="1" label="Order for Location in list" description="Type a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="islink18" type="list" default="0" label="Location a link to study" description="Choose whether Location should be a hyperlink to the study details or media">
-					<option value="0">Not a link</option>
-					<option value="1">Link to Details</option>
-					<option value="2">Link to 1st Media File</option>
-				</param>
-				<param name="isbullet18" type="list" default="0" label="Bullet Location" description="Add a bullet before this item">
-					<option value="0">No Bullet</option>
-					<option value="1">Bulleted</option>
-				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-				<param name="@spacer" type="spacer" default="Blank Line 1" label="Blank Line" description="Blank Line">
-				</param>
-				<param name="blank1" type="list" default="0" label="Blank Line 1" description="Choose a column if you want for a blank line">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="blankorder1" type="list" default="1" label="Order Blank 1" description="Choose a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-				<param name="@spacer" type="spacer" default="Blank Line 2" label="Blank Line" description="Blank Line">
-				</param>
-				<param name="blank2" type="list" default="0" label="Blank Line 1" description="Choose a column if you want for a blank line">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="blankorder2" type="list" default="2" label="Order Blank 2" description="Choose a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-				<param name="@spacer" type="spacer" default="Blank Line 3" label="Blank Line" description="Blank Line">
-				</param>
-				<param name="blank3" type="list" default="0" label="Blank Line 3" description="Choose a column if you want for a blank line">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="blankorder3" type="list" default="0" label="Order Blank 3" description="Choose a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-				<param name="@spacer" type="spacer" default="Blank Line 4" label="Blank Line" description="Blank Line">
-				</param>
-				<param name="blank4" type="list" default="0" label="Blank Line 4" description="Choose a column if you want for a blank line">
-					<option value="0">Don't show</option>
-					<option value="1">Column 1</option>
-					<option value="2">Column 2</option>
-					<option value="3">Column 3</option>
-					<option value="4">Column 4</option>
-				</param>
-				<param name="blankorder4" type="list" default="1" label="Order Blank 4" description="Choose a number of the order for this element in it's column">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-				<param name="show_description" type="radio" default="1" label="Description along bottom" description="Choose whether to show or hide the Description in the module display below the other items across the table">
-					<option value="1">Show</option>
-					<option value="0">Hide</option>
-				</param>
-				<param name="line_break" type="radio" default="0" label="Space below each study" description="Put a line break below each listing">
-					<option value="1">Break</option>
-					<option value="0">No Break</option>
-				</param>
-				<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-				<param name="@spacer" type="spacer" default="Purchase Links" label="" description="">
-				</param>
-				<param name="show_store" default="0" type="radio" label="Show/Hide link to store" description="Show or hide a link to your site store to order DVD's or CD's">
-					<option value="1">Show</option>
-					<option value="0">Hide</option>
+			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
 				<param name="store_name" default="Store" type="text" label="Store Name" description="Name for the store on listing page" />
 		</params>
