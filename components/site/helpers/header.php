@@ -3,65 +3,49 @@ defined('_JEXEC') or die();
 
 function getHeader($params)
 {
-
-	$headercheck = array( 
-	  array( 'position' => $params->get('position1')),
-	  array( 'position' => $params->get('position2')),
-	  array( 'position' => $params->get('position3')),
-	  array( 'position' => $params->get('position4')),
-	  array( 'position' => $params->get('position5')),
-	  array( 'position' => $params->get('position6')),
-	  array( 'position' => $params->get('position7')),
-	  array( 'position' => $params->get('position8')),
-	  array( 'position' => $params->get('position9')),
-	  array( 'position' => $params->get('position10')),
-	  array( 'position' => $params->get('position11')),
-	  array( 'position' => $params->get('position12')),
-	  array( 'position' => $params->get('position13')),
-	  array( 'position' => $params->get('position14')),
-	  array( 'position' => $params->get('position15')),
-	  array( 'position' => $params->get('position16')),
-	  array( 'position' => $params->get('position17')),
-	  array( 'position' => $params->get('position18'))
-	  ); //print_r($headercheck);
+	$columns = 1;
+	if ($params->get('row1col2') > 0) {$columns = 2;}
+	if ($params->get('row1col3') > 0) {$columns = 3;}
+	if ($params->get('row1col4') > 0) {$columns = 4;}
+	$rows = 1;
+	if ($params->get('row2col1') > 0) {$rows = 2;}
+	if ($params->get('row3col1') > 0) {$rows = 3;}
+	if ($params->get('row4col1') > 0) {$rows = 4;}
 	
-	  //Beginning of header rows
-	  $isheader1 = 0;
-	  $isheader2 = 0;
-	  $isheader3 = 0;
-	  $isheader4 = 0;
-	  $header = '';
-	  $w1 = $params->get('widthcol1');
-	  $w2 = $w1 + $params->get('widthcol2');
-	  $w3 = $w2 + $params->get('widthcol3');
-
-
-	   //$header_count = count($headercheck);
-	   //dump ($header_count, 'Header_count');
-	   $rows1=count($headercheck);
-	   for($j=0;$j<$rows1;$j++)
-	   {
-		if ($headercheck[$j]['position']==1){ $isheader1 = 1;}
-		if ($headercheck[$j]['position']==2){ $isheader2 = 1;}
-		if ($headercheck[$j]['position']==3){ $isheader3 = 1;}
-		if ($headercheck[$j]['position']==4){ $isheader4 = 1;}
-	   }
-	   if ($isheader1 == 1)
-	   		{$header .= '<div class="header1'.$params->get('pageclass_sfx').'">'.$params->get('header1').'</div>';}
-	   if ($isheader2 == 1)
-	   		{$header .= '<div class="header2'.$params->get('pageclass_sfx').'">'.$params->get('header2').'</div>';}
-	   if ($isheader3 == 1)
-	   		{$header .= '<div class="header3'.$params->get('pageclass_sfx').'">'.$params->get('header3').'</div>';}
-	   if ($isheader4 == 1)
-	   		{$header .= '<div class="header4'.$params->get('pageclass_sfx').'">'.$params->get('header4').'</div>';}
-	   if ($params->get('show_full_text') > 0) 
-			{$header .= '<div class="header5'.$params->get('pageclass_sfx').'">'.$params->get('header5').'</div>';}
-	   if ($params->get('show_store') > 0)
-	   		{$header .= '<div class="header6'.$params->get('pageclass_sfx').'">'.$params->get('store_name').'</div>';}
-	   if ($params->get('show_media') > 0) 
-	   		{$header .= '<div class="header7'.$params->get('pageclass_sfx').'">'.$params->get('header6').'</div>';}
-		
+	//here we go through each position to see if it has a positive value, get the cell using getHeadercell and return the final header
 	  
 	   
 	 return $header;
+}
+
+function getHeadercell($params, $rowid)
+{
+	//In this function we would create the cell for each header using getHeadertext function
+<thead>
+        <tr>
+          <th id="bsdatehead" class="row1col1">Date</th>
+          <th id="bstitlehead" class="row1col2">Title</th>
+          <th id="bsserieshead" class="row1col3">Series</th>
+
+          <th id="bsmediahead" class="row1col4 lastcol" rowspan="2">Media</th>
+        </tr>
+        <tr>
+          <th id="bsscripthead" class="row2col1">Scripture</th>
+          <th id="bsteacherhead" class="row2col2">Teacher</th>
+          <th id="bsdurhead" class="row2col3">Duration</th>
+        </tr>
+
+        <tr class="lastrow">
+          <th id="bsdeschead" class="row3col1 lastcol" colspan="4">Description</th>
+        </tr>
+      </thead>
+
+return $headercell;
+}
+
+function getHeadertext($params)
+{
+	
+	//We would take the rowid and use a switch case to turn it into text and return the text
+	return $headertext;
 }

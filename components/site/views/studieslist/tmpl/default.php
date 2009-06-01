@@ -156,20 +156,13 @@ $book_menu = $this->params->get('booknumber', 101);
 $location_menu = $this->params->get('locations', 1);
 $series_menu = $this->params->get('series_id', 1);
 $messagetype_menu = $this->params->get('messagetype', 1);
-$color1 = $this->params->get('color1');
-$color2 = $this->params->get('color2');
 $params = $mainframe->getPageParameters();
 //external function to create the css
-//$document =& JFactory::getDocument();
+$document =& JFactory::getDocument();
 $listingcall = JView::loadHelper('listing');
-//$type = 'text/css';
-//$css_call = JView::loadHelper('css');
-//$styles = getCss($params);
-//$document->addStyleDeclaration($styles, $type);
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'biblestudyviews.css');
-//$url = $params->get('stylesheet');
-//if ($url) {$document->addStyleSheet($url);}
-//$pageclass_sfx = $params->get('pageclass_sfx');
+$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'biblestudy.css');
+$url = $params->get('stylesheet');
+if ($url) {$document->addStyleSheet($url);}
 ?>
 <form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
 
