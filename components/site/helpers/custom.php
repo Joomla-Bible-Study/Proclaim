@@ -7,10 +7,24 @@
 
 function getCustom($custom, $row, $params)
 {
-	$custom1 = substr($custom, 0); //returns part of a string
+	global $mainframe;
+	$db	= & JFactory::getDBO();
+	$countbraces = substr_count($custom, '{')
+	while ($countbraces > 0)
+	{
+		$bracebegin = strpos($custom,'{', $braceend);
+		$braceend = strpos($custom, '}', $bracebegin);
+		$subcustom = substr($custom, ($bracebegin + 1), ($braceend - 1));
+		$element = getElementid($params, $row, $subcustom);
+		$custom = substr_replace($custom,$subcustom,$bracebegin,($braceend - $bracebegin + 1));
+		$countbraces = $countbraces - 1;
+	}
+	return $custom;
+}	
 	
-	
-		switch ($custom)
+	function getElement($row, $params, $subcustom)
+	{
+		switch ($subcustom)
 		{
 	 case 'scripture1':
 		$elementid->id = 'scripture1';
@@ -116,7 +130,8 @@ function getCustom($custom, $row, $params)
 		$elementid->element = getFilesize($media1->size);
 		break;
 	}	
-	return $custom;
-}
+	return $subcustom;
+	}	
+
 
 ?>
