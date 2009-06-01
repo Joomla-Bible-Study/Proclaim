@@ -58,7 +58,8 @@ function getMediatable($params, $row)
       if ($imagew) {$width = $imagew;} else {$width = 24;}
       if ($imageh) {$height = $imageh;} else {$height= 24;}
       $ispath = 0;
-	  $path1 = getFilepath($id3, $idfield);
+	  $mime = '';
+	  $path1 = getFilepath($id3, $idfield, $mime);
   
        $pathname = $media->fpath;
        $filename = $media->filename;
