@@ -1,8 +1,10 @@
 <?php
 defined('_JEXEC') or die();
 
-function getHeader($params)
+function getHeader($row, $params)
 {
+	$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+	include_once($path1.'elements.php');
 	$columns = 1;
 	if ($params->get('row1col2') > 0) {$columns = 2;}
 	if ($params->get('row1col3') > 0) {$columns = 3;}
@@ -13,39 +15,192 @@ function getHeader($params)
 	if ($params->get('row4col1') > 0) {$rows = 4;}
 	
 	//here we go through each position to see if it has a positive value, get the cell using getHeadercell and return the final header
-	  
-	   
-	 return $header;
-}
+ 	$lastrow = 0;
+ 	if ($rows == 1) {$lastrow = 1;}
+ 	$listing = '<thead><tr';
+	if ($lastrow == 1) {$listing .= 'class = "lastrow"';}
+	$listing .='>';
 
-function getHeadercell($params, $rowid)
-{
-	//In this function we would create the cell for each header using getHeadertext function
-<thead>
-        <tr>
-          <th id="bsdatehead" class="row1col1">Date</th>
-          <th id="bstitlehead" class="row1col2">Title</th>
-          <th id="bsserieshead" class="row1col3">Series</th>
-
-          <th id="bsmediahead" class="row1col4 lastcol" rowspan="2">Media</th>
-        </tr>
-        <tr>
-          <th id="bsscripthead" class="row2col1">Scripture</th>
-          <th id="bsteacherhead" class="row2col2">Teacher</th>
-          <th id="bsdurhead" class="row2col3">Duration</th>
-        </tr>
-
-        <tr class="lastrow">
-          <th id="bsdeschead" class="row3col1 lastcol" colspan="4">Description</th>
-        </tr>
-      </thead>
-
-return $headercell;
-}
-
-function getHeadertext($params)
-{
+ 	//Beginning of first column
+ 	$colspan = $params->get('r1c1span');
+	$rowspan = $params->get('rowspanr1c1');
+	$rowcolid = 'row1col1';
+	$lastcol = 0;
+	if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
+ 	$listing .= getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	
+ 	
+ 	if ($columns > 1 && $params->get('row1col2') > 0)
+ 	{
+	 	$colspan = $params->get('r1c2span');
+ 		$rowspan = $params->get('rowspanr1c2');
+ 		$rowcolid = 'row1col2';
+ 		$lastcol = 0;
+ 		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row1col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	if ($columns > 1 && $params->get('row1col3') > 0)
+ 	{
+	 	$colspan = $params->get('r1c3span');
+		 $rowspan = $params->get('rowspanr1c3');
+		 $rowcolid = 'row1col3';
+		 $lastcol = 0;
+		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row1col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	if ($columns > 1 && $params->get('row1col4') > 0)
+ 	{
+	 	$colspan = $params->get('r1c4span');
+		 $rowspan = $params->get('rowspanr1c4');
+		 $rowcolid = 'row1col4';
+		 $lastcol = 0;
+		 if ($columns == 4) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row1col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	$listing .= '</tr>';
+ 	
+ 	
+	 	$lastrow = 0;
+	 	if ($rows == 2) {$lastrow = 1;}
+		$listing .= '<tr '; //This begins the row of the display data
+		if ($lastrow == 1) {$listing .= 'class="lastrow"';}
+		$listing .= '>';
+		 $colspan = $params->get('r2c1span');
+ 		$rowspan = $params->get('rowspanr2c1');
+ 		$rowcolid = 'row2col1';
+		 $lastcol = 0;
+		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row2col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	
+ 	if ($columns > 1 && $params->get('row2col2') > 0)
+ 	{
+	 	$colspan = $params->get('r2c2span');
+ 		$rowspan = $params->get('rowspanr2c2');
+ 		$rowcolid = 'row2col2';
+ 		$lastcol = 0;
+ 		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row2col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	if ($columns > 1 && $params->get('row2col3') > 0)
+ 	{
+	 	 $colspan = $params->get('r2c3span');
+		 $rowspan = $params->get('rowspanr2c3');
+		 $rowcolid = 'row2col2';
+		 $lastcol = 0;
+		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row2col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	if ($columns > 1 && $params->get('row2col4') > 0)
+ 	{
+	 	$colspan = $params->get('r2c4span');
+		 $rowspan = $params->get('rowspanr2c4');
+		 $rowcolid = 'row2col3';
+		 $lastcol = 0;
+		 if ($columns == 4) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row2col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	$listing .= '</tr>';
+ 	
+ 	$lastrow = 0;
+ 	if ($rows == 3) {$lastrow = 1;}
+	$listing .= '<tr class="'; //This begins the row of the display data
+	if ($lastrow == 1) {$listing .= ' lastrow';}
 	
-	//We would take the rowid and use a switch case to turn it into text and return the text
-	return $headertext;
+	$listing .= '">'; 
+	 	$colspan = $params->get('r3c1span');
+ 		$rowspan = $params->get('rowspanr3c1');
+ 		$rowcolid = 'row3col1';
+		 $lastcol = 0;
+		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row3col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	
+ 	if ($columns > 1 && $params->get('row3col2') > 0)
+ 	{
+	 	$colspan = $params->get('r3c2span');
+ 		$rowspan = $params->get('rowspanr3c2');
+ 		$rowcolid = 'row3col2';
+ 		$lastcol = 0;
+ 		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row3col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	if ($columns > 1 && $params->get('row3col3') > 0)
+ 	{
+	 	$colspan = $params->get('r3c3span');
+		 $rowspan = $params->get('rowspanr3c3');
+		 $rowcolid = 'row3col3';
+		 $lastcol = 0;
+		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row3col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	if ($columns > 1 && $params->get('row3col4') > 0)
+ 	{
+	 	$colspan = $params->get('r3c4span');
+		 $rowspan = $params->get('rowspanr3c4');
+		 $rowcolid = 'row3col4';
+		 $lastcol = 0;
+		 if ($columns == 4) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row3col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	$listing .= '</tr>';
+ 	
+	 	$colspan = $params->get('r4c1span');
+ 		$rowspan = $params->get('rowspanr4c1');
+ 		$rowcolid = 'row4col1';
+		 $lastcol = 0;
+		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row1col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	
+ 	$lastrow = 0;
+ 	if ($rows == 4) {$lastrow = 1;}
+	$listing .= '
+	<tr class="'; //This begins the row of the display data
+	if ($lastrow == 1) {$listing .= ' lastrow';}
+	
+	$listing .= '">'; 
+ 	if ($columns > 1 && $params->get('row4col2') > 0)
+ 	{
+	 	$colspan = $params->get('r4c2span');
+ 		$rowspan = $params->get('rowspanr4c2');
+ 		$rowcolid = 'row4col2';
+ 		$lastcol = 0;
+ 		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row4col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	if ($columns > 1 && $params->get('row4col3') > 0)
+ 	{
+	 	$colspan = $params->get('r4c3span');
+		 $rowspan = $params->get('rowspanr4c3');
+		 $rowcolid = 'row4col3';
+		 $lastcol = 0;
+		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row4col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	if ($columns > 1 && $params->get('row4col4') > 0)
+ 	{
+	 	 $colspan = $params->get('r4c4span');
+		 $rowspan = $params->get('rowspanr4c4');
+		 $rowcolid = 'row4col4';
+		 $lastcol = 0;
+		 if ($columns == 4) {$lastcol = 1;}
+		$listing .= getHeadercell($params->get('row4col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid);
+ 	}
+ 	$listing .= '</thead>';
+	 return $listing;
 }
+
+function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid)
+{
+		//$headercell .='>';
+	 	$headercell .= '<th id="';
+	 	$elementid = getElementid($rowid, $row, $params);
+	 	$headercell .= $elementid->headertext.'head';
+		$headercell .= '" class="'.$rowcolid.'" ';
+		if ($colspan > 1) {$headercell .= 'colspan="'.$colspan.'" ';}
+		if ($rowspan > 1){$headercell .='rowspan="'.$rowspan.'"';}
+		$headercell .= '>';
+	 	$headercell .= $elementid->headertext;
+	 	$headercell .= '</th>';
+ 	return $headercell;
+}
+        
+

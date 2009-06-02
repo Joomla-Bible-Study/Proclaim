@@ -274,24 +274,11 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 
     </div><!--dropdownmenu-->
      <table id="bslisttable" cellspacing="0">
-      <thead>
-        <tr>
-          <th id="bsdatehead" class="row1col1">Date</th>
-          <th id="bstitlehead" class="row1col2">Title</th>
-          <th id="bsserieshead" class="row1col3">Series</th>
-
-          <th id="bsmediahead" class="row1col4 lastcol" rowspan="2">Media</th>
-        </tr>
-        <tr>
-          <th id="bsscripthead" class="row2col1">Scripture</th>
-          <th id="bsteacherhead" class="row2col2">Teacher</th>
-          <th id="bsdurhead" class="row2col3">Duration</th>
-        </tr>
-
-        <tr class="lastrow">
-          <th id="bsdeschead" class="row3col1 lastcol" colspan="4">Description</th>
-        </tr>
-      </thead>
+     <?php 
+     $headerCall = JView::loadHelper('header');
+     $header = getHeader($row, $params);
+     echo $header;
+     ?>
       <tbody>
 
         <?php 
