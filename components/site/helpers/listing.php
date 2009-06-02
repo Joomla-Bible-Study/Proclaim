@@ -39,7 +39,7 @@ function getListing($row, $params, $oddeven)
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c1'),$id3, $tid, $smenu, $tmenu, $params->get('r1c1custom'));
  	
-	if ($columns > 1 || $params->get('r1c1span') < 2 )
+	if ($columns > 1 && $params->get('r1c1span') < 2 )
 	{
  		$rowcolid = 'row1col2';
 		if ($params->get('row1col2') == 24) {$elementid = getCustom($params->get('row1col2'), $params->get('r1c2custom'), $row, $params);}
@@ -51,7 +51,7 @@ function getListing($row, $params, $oddeven)
  		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c2'), $id3, $tid, $smenu, $tmenu, $params->get('r1c2custom'));
 	}
 	
-	if ($columns > 2  || $params->get('r1c1span') < 3 || $params->get('r1c2span') < 2) 
+	if ($columns > 2  && ( $params->get('r1c1span') < 3 && $params->get('r1c2span') < 2)) 
 	{
 		 $rowcolid = 'row1col3';
 		 if ($params->get('row1col3') == 24) {$elementid = getCustom($params->get('row1col3'), $params->get('r1c3custom'), $row, $params);}
@@ -63,7 +63,7 @@ function getListing($row, $params, $oddeven)
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c3'), $id3, $tid, $smenu, $tmenu, $params->get('r1c3custom'));
 	}
 	
-	if ($columns > 3 ||  $params->get('r1c1span') < 4 || $params->get('r1c2span') < 3 || $params->get('r1c3span') < 2)
+	if ($columns > 3 && ( $params->get('r1c1span') < 4 && $params->get('r1c2span') < 3 && $params->get('r1c3span') < 2))
 	{
 		 $rowcolid = 'row1col4';
 		 if ($params->get('row1col4') == 24) {$elementid = getCustom($params->get('row1col4'), $params->get('r1c4custom'), $row, $params);}
@@ -98,7 +98,7 @@ function getListing($row, $params, $oddeven)
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c1'), $id3, $tid, $smenu, $tmenu, $params->get('r2c1custom'));
  	
-	if ($columns > 1  || $params->get('r2c1span') < 2)
+	if ($columns > 1  && $params->get('r2c1span') < 2)
 	{
  		$rowcolid = 'row2col2';
 		if ($params->get('row2col2') == 24) {$elementid = getCustom($params->get('row2col2'), $params->get('r2c2custom'), $row, $params);}
@@ -110,7 +110,7 @@ function getListing($row, $params, $oddeven)
  		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c2'), $id3, $tid, $smenu, $tmenu, $params->get('r2c2custom'));
 	}
 	
-	if ($columns > 2   || $params->get('r2c1span') < 3 || $params->get('r2c2span') < 2) 
+	if ($columns > 2   && ( $params->get('r2c1span') < 3 && $params->get('r2c2span') < 2)) 
 	{
 		 $rowcolid = 'row2col3';
 		 if ($params->get('row2col3') == 24) {$elementid = getCustom($params->get('row2col3'), $params->get('r2c3custom'), $row, $params);}
@@ -123,7 +123,7 @@ function getListing($row, $params, $oddeven)
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c3'), $id3, $tid, $smenu, $tmenu, $params->get('r2c3custom'));
 	}
 	
-	if ($columns > 3  ||  $params->get('r2c1span') < 4 || $params->get('r2c2span') < 3 || $params->get('r2c3span') < 2)
+	if ($columns > 3  && (  $params->get('r2c1span') < 4 && $params->get('r2c2span') < 3 && $params->get('r2c3span') < 2))
 	{
 		 $rowcolid = 'row2col4';
 		 if ($params->get('row2col4') == 24) {$elementid = getCustom($params->get('row2col4'), $params->get('r2c4custom'), $row, $params);}
@@ -157,7 +157,7 @@ function getListing($row, $params, $oddeven)
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c1'), $id3, $tid, $smenu, $tmenu, $params->get('r3c1custom'));
  	
-	if ($columns > 1  || $params->get('r3c1span') < 2)
+	if ($columns > 1 && $params->get('r3c1span') < 2)
 	{
  		$rowcolid = 'row3col2';
 		if ($params->get('row3col2') == 24) {$elementid = getCustom($params->get('row3col2'), $params->get('r3c2custom'), $row, $params);}
@@ -169,7 +169,7 @@ function getListing($row, $params, $oddeven)
  		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c2'), $id3, $tid, $smenu, $tmenu, $params->get('r3c2custom'));
 	}
 	
-	if ($columns > 2   || $params->get('r3c1span') < 3 || $params->get('r3c2span') < 2) 
+	if ($columns > 2   && ( $params->get('r3c1span') < 3 && $params->get('r3c2span') < 2) )
 	{
 		 $rowcolid = 'row3col3';
 		 if ($params->get('row3col3') == 24) {$elementid = getCustom($params->get('row3col3'), $params->get('r3c3custom'), $row, $params);}
@@ -181,7 +181,7 @@ function getListing($row, $params, $oddeven)
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c3'), $id3, $tid, $smenu, $tmenu, $params->get('r3c3custom'));
 	}
 	
-	if ($columns > 3  ||  $params->get('r3c1span') < 4 || $params->get('r3c2span') < 3 || $params->get('r3c3span') < 2)
+	if ($columns > 3 && (  $params->get('r3c1span') < 4 && $params->get('r3c2span') < 3 && $params->get('r3c3span') < 2))
 	{
 		 $rowcolid = 'row3col4';
 		 if ($params->get('row3col4') == 24) {$elementid = getCustom($params->get('row3col4'), $params->get('r3c4custom'), $row, $params);}
@@ -217,7 +217,7 @@ function getListing($row, $params, $oddeven)
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c1'), $id3, $tid, $smenu, $tmenu, $params->get('r4c1custom'));
  	
-	if ($columns > 1  || $params->get('r4c1span') < 2)
+	if ($columns > 1  && $params->get('r4c1span') < 2)
 	{
  		$rowcolid = 'row4col2';
 		if ($params->get('row4col2') == 24) {$elementid = getCustom($params->get('row4col2'), $params->get('r4c2custom'), $row, $params);}
@@ -229,7 +229,7 @@ function getListing($row, $params, $oddeven)
  		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c2'), $id3, $tid, $smenu, $tmenu, $params->get('r4c2custom'));
 	}
 	
-	if ($columns > 2   || $params->get('r4c1span') < 3 || $params->get('r4c2span') < 2) 
+	if ($columns > 2   && ( $params->get('r4c1span') < 3 && $params->get('r4c2span') < 2) )
 	{
 		 $rowcolid = 'row4col3';
 		 if ($params->get('row4col3') == 24) {$elementid = getCustom($params->get('row4col3'), $params->get('r4c3custom'), $row, $params);}
@@ -241,7 +241,7 @@ function getListing($row, $params, $oddeven)
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c3'), $id3, $tid, $smenu, $tmenu, $params->get('r4c3custom'));
 	}
 	
-	if ($columns > 3  ||  $params->get('r4c1span') < 4 || $params->get('r4c2span') < 3 || $params->get('r4c3span') < 2)
+	if ($columns > 3 && ( $params->get('r4c1span') < 4 && $params->get('r4c2span') < 3 && $params->get('r4c3span') < 2))
 	{
 		 $rowcolid = 'row4col4';
 		 if ($params->get('row4col4') == 24) {$elementid = getCustom($params->get('row4col4'), $params->get('r4c4custom'), $row, $params);}
