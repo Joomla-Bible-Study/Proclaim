@@ -1,6 +1,6 @@
 <?php
 defined('_JEXEC') or die();
-//to do: $menureturnItemid
+
 function getTextlink($params, $row, $textorpdf)
 {
 $path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
@@ -9,12 +9,10 @@ $scripturerow = 1;
 $scripture1 = getScripture($params, $row, $esv, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
 $detailsitemid = $params->get('detailsitemid');
-//$returnmenu = JRequest::getVar('Itemid');
+
 	if ($textorpdf == 'text') {
 	   $src = JURI::base().$params->get('text_image');
-       //$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&returnmenu='.$returnmenu.'&Itemid='.$detailsitemid ).JHTML::_('behavior.tooltip');
-	   //dump ($link, 'link');
-	   $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&Itemid='.$detailsitemid ).JHTML::_('behavior.tooltip');
+       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&Itemid='.$detailsitemid ).JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 	}
 	if ($textorpdf == 'pdf') 
@@ -26,11 +24,11 @@ $detailsitemid = $params->get('detailsitemid');
 	if ($params->get('tooltip') >0) {
 		JHTML::_('behavior.tooltip');
         $linktext = '<div class="zoomTip" title="<strong>'.JText::_('Sermon Info').'</strong> :: ';
-       	  if ($row->studytitle) {$linktext .= '<strong>'.JText::_('Title: ').'</strong>'.$row->studytitle.'<br /><br />';}
+       	  if ($row->studytitle) {$linktext .= '<strong>'.JText::_('Title: ').'</strong>'.$row->studytitle.'<br />';}
        	  if ($intro) {$linktext .= '<strong>'.JText::_('Details: ').'</strong>'.$intro.'<br /><br />';}
        	  if ($row->studynumber) { $linktext .= '<strong>'.JText::_('Sermon Number: ').'</strong>'.$row->studynumber.'<br />';}
-       	  if ($row->teachername) {$linktext .= '<strong>'.JText::_('Teacher: ').'</strong>'.$row->teachername.'<br /><br />';}
-       	 $linktext .= '<hr /><br />';
+       	  if ($row->teachername) {$linktext .= '<strong>'.JText::_('Teacher: ').'</strong>'.$row->teachername.'<br />';}
+       	 $linktext .= '<br />';
        	  if ($scripture1) {$linktext .= '<strong>'.JText::_('Scripture: ').'</strong>'.$scripture1.'">';}
        } //end of is show tooltip
 	if ($params->get('imagew', 24)) {$width = $params->get('imagew', 24);} else {$width = 24;}
