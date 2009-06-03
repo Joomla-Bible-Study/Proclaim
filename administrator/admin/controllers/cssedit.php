@@ -44,24 +44,22 @@ class biblestudyControllercssedit extends JController
 	 * @return void
 	 */
 	function save()
-	{
-	// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&view=serieslist';
-		$this->setRedirect($link, $msg);
-	}
-	function saveCss($option) {
-	$config_css = mosGetParam( $_POST, 'config_css' );
+	 {
+	//$config_css = mosGetParam( $_POST, 'config_css' );
+	$config_css = JRequest::getVar('config_css', 'POST');
 		$configcss=str_replace("[CR][NL]","\n",$config_css);
 		$configcss=str_replace("[ES][SQ]","'",$configcss);
 		$configcss=nl2br($configcss);
 		$configcss=str_replace("<br />"," ",$configcss);
-		$filename=dirname(__FILE__)."/../../../components/com_prayercenter/css/prayercenter.css";
+		//$filename=dirname(__FILE__)."/../../../components/com_prayercenter/css/prayercenter.css";
+		$filename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
 		$cssfilein=fopen($filename,"w+") or die("Can't open file $filename");
 		$filecontent=fread($cssfilein,filesize($filename));
 		$cssfileout=fwrite($cssfilein,$configcss);
 		fclose($cssfilein);
-
-  mosRedirect( "index2.php?option=$option&task=manage_css", "Changes in CSS have been saved." );
+$msg = 'CSS Saved';
+  $link = 'index.php?option=com_biblestudy&view=studieslist';
+		$this->setRedirect($link, $msg);
 }
 
 function resetCss($option) {
