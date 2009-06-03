@@ -21,7 +21,7 @@ function &getData()
 	{
 		$filename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
 		$csscontents=fopen($filename,"rb");
-		$this->_data->initstring = fread($csscontents,filesize($filename));
+		$this->_data->filecontent = fread($csscontents,filesize($filename));
 		fclose($csscontents);
 		//$this->assignRef('lists',		$lists);
 		

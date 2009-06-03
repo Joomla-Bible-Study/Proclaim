@@ -23,7 +23,7 @@ class biblestudyControllercssedit extends JController
 		parent::__construct();
 
 		// Register Extra tasks
-		$this->registerTask( 'save'  , 	'edit' );
+		$this->registerTask( 'save'  , 	'edit', 'saveCSS' );
 	}
 
 	/**
@@ -45,7 +45,7 @@ class biblestudyControllercssedit extends JController
 	 */
 	function save()
 	 {
-		 
+		 global $mainframe, $option; 
 		//$filecontent = $podhead.$episodedetail.$podfoot;
   		$filecontent = JRequest::getVar('config_css', '', 'post', 'string', JREQUEST_ALLOWRAW);
 		dump ($filecontent, 'filecontent: ');
@@ -182,22 +182,22 @@ function resetCss($option) {
 		global $mainframe;
 
 		// Check for request forgeries
-		JRequest::checkToken() or jexit( 'Invalid Token' );
+		//JRequest::checkToken() or jexit( 'Invalid Token' );
 
 		// Initialize some variables
 		$option			= JRequest::getCmd('option');
 		$client			=& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
-		$template		= JRequest::getVar('id', '', 'post', 'cmd');
-		$filename		= JRequest::getVar('filename', '', 'post', 'cmd');
+		//$template		= JRequest::getVar('id', '', 'post', 'cmd');
+		//$filename		= JRequest::getVar('filename', '', 'post', 'cmd');
 		$filename		= 'biblestudy.css';
 		$filecontent	= JRequest::getVar('filecontent', '', 'post', 'string', JREQUEST_ALLOWRAW);
 
-		if (!$template) {
-			$mainframe->redirect('index.php?option='.$option.'&client='.$client->id, JText::_('Operation Failed').': '.JText::_('No template specified.'));
-		}
+		//if (!$template) {
+			//$mainframe->redirect('index.php?option='.$option.'&client='.$client->id, JText::_('Operation Failed').': '.JText::_('No template specified.'));
+		//}
 
 		if (!$filecontent) {
-			$mainframe->redirect('index.php?option='.$option.'&client='.$client->id, JText::_('Operation Failed').': '.JText::_('Content empty.'));
+			$mainframe->redirect('index.php?option='.$option, JText::_('Operation Failed').': '.JText::_('Content empty.'));
 		}
 
 		// Set FTP credentials, if given
@@ -205,20 +205,20 @@ function resetCss($option) {
 		JClientHelper::setCredentialsFromRequest('ftp');
 		$ftp = JClientHelper::getCredentials('ftp');
 
-		$file = $client->path.DS.'administrator'.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
-
+		//$file = $client->path.DS.'administrator'.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
+		$file = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
 		// Try to make the css file writeable
-		if (!$ftp['enabled'] && JPath::isOwner($file) && !JPath::setPermissions($file, '0755')) {
-			JError::raiseNotice('SOME_ERROR_CODE', JText::_('Could not make the css file writable'));
-		}
+		//if (!$ftp['enabled'] && JPath::isOwner($file) && !JPath::setPermissions($file, '0755')) {
+			//JError::raiseNotice('SOME_ERROR_CODE', JText::_('Could not make the css file writable'));
+		//}
 
 		jimport('joomla.filesystem.file');
 		$return = JFile::write($file, $filecontent);
 
 		// Try to make the css file unwriteable
-		if (!$ftp['enabled'] && JPath::isOwner($file) && !JPath::setPermissions($file, '0555')) {
-			JError::raiseNotice('SOME_ERROR_CODE', JText::_('Could not make the css file unwritable'));
-		}
+		//if (!$ftp['enabled'] && JPath::isOwner($file) && !JPath::setPermissions($file, '0555')) {
+			//JError::raiseNotice('SOME_ERROR_CODE', JText::_('Could not make the css file unwritable'));
+		//}
 
 		if ($return)
 		{

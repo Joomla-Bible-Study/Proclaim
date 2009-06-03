@@ -26,7 +26,7 @@ class biblestudyViewcssedit extends JView
 		//JToolBarHelper::save();
 		
 			// for existing items the button is renamed `close`
-			//JToolBarHelper::cancel( 'cancel', 'Close' );
+			JToolBarHelper::custom( 'saveCSS','','', 'Save CSS' );
 		
 		//jimport( 'joomla.i18n.help' );
 		//JToolBarHelper::help( 'biblestudy.series', true );
