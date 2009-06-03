@@ -23,7 +23,7 @@ class biblestudyControllercssedit extends JController
 		parent::__construct();
 
 		// Register Extra tasks
-		$this->registerTask( 'saveCSS'  , 	'editCSS' );
+		$this->registerTask( 'save'  , 	'edit' );
 	}
 
 	/**
@@ -33,8 +33,8 @@ class biblestudyControllercssedit extends JController
 	function edit()
 	{
 		JRequest::setVar( 'view', 'cssedit' );
-		JRequest::setVar( 'layout', 'form'  );
-		JRequest::setVar('hidemainmenu', 1);
+		JRequest::setVar( 'layout', 'default'  );
+		JRequest::setVar('hidemainmenu', 0);
 
 		parent::display();
 	}
@@ -45,21 +45,81 @@ class biblestudyControllercssedit extends JController
 	 */
 	function save()
 	 {
+		 
+		//$filecontent = $podhead.$episodedetail.$podfoot;
+  		$filecontent = JRequest::getVar('config_css', '', 'post', 'string', JREQUEST_ALLOWRAW);
+		dump ($filecontent, 'filecontent: ');
+  // Initialize some variables
+  $option = JRequest::getCmd('option');
+
+  if (!$filecontent) {
+   $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_('Operation Failed').': '.JText::_('Content empty.'));
+  }
+
+  // Set FTP credentials, if given
+  jimport('joomla.client.helper');
+  jimport('joomla.filesystem.file');
+  JClientHelper::setCredentialsFromRequest('ftp');
+  $ftp = JClientHelper::getCredentials('ftp');
+  $client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+  //$file = $client->path.DS.'templates'.DS.$template.DS.'index.php';
+  $file = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
+
+
+  // Try to make the template file writeable
+  if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755')) {
+   JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file writable');
+  }
+
+  $return = JFile::write($file, $filecontent);
+
+  // Try to make the template file unwriteable
+  if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')) {
+   JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
+  }
+
+  if ($return)
+  {
+   $task = JRequest::getCmd('task');
+   switch($task)
+   {
+    case 'apply_source':
+     $mainframe->redirect('index.php?option='.$option.'&view=studielist', JText::_($podinfo->filename.' saved'));
+     break;
+
+    case 'save_source':
+    default:
+     $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_($podinfo->filename.' saved'));
+     break;
+   }
+  }
+  else {
+   $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing.'));
+  }
+  
 	//$config_css = mosGetParam( $_POST, 'config_css' );
-	$config_css = JRequest::getVar('config_css', 'POST');
-		$configcss=str_replace("[CR][NL]","\n",$config_css);
-		$configcss=str_replace("[ES][SQ]","'",$configcss);
-		$configcss=nl2br($configcss);
-		$configcss=str_replace("<br />"," ",$configcss);
-		//$filename=dirname(__FILE__)."/../../../components/com_prayercenter/css/prayercenter.css";
-		$filename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
-		$cssfilein=fopen($filename,"w+") or die("Can't open file $filename");
-		$filecontent=fread($cssfilein,filesize($filename));
-		$cssfileout=fwrite($cssfilein,$configcss);
-		fclose($cssfilein);
-$msg = 'CSS Saved';
-  $link = 'index.php?option=com_biblestudy&view=studieslist';
-		$this->setRedirect($link, $msg);
+	//$config_css = JRequest::getVar('config_css', 'POST');
+	//$config_css = JRequest::getVar('config_css', '', 'post', 'string', JREQUEST_ALLOWRAW);
+	
+	//dump ($config_css, 'config_css');
+		//$configcss=str_replace("[CR][NL]","\n",$config_css);
+		//$configcss=str_replace("[ES][SQ]","'",$configcss);
+		//$configcss=nl2br($configcss);
+		//$configcss=str_replace("<br />"," ",$configcss);
+		//$filename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
+		//jimport('joomla.filesystem.file');
+		//$filecontent = $configcss;
+		//$return = JFile::write($filename, $filecontent);
+		//$cssfilein=fopen($filename,"w+") or die("Can't open file $filename");
+		//$filecontent=fread($cssfilein,filesize($filename));
+		//$cssfileout=fwrite($cssfilein,$configcss);
+		//fclose($cssfilein);
+		
+//if ($return) {$msg = 'CSS Saved';}
+//else { $msg = 'Problem writing file';
+//$mainframe->redirect('index.php?option=com_biblestudy&view=studieslist', JText::_('File Saved'));}
+ // $link = 'index.php?option=com_biblestudy&view=studieslist';
+		//$this->setRedirect($link, $msg);
 }
 
 function resetCss($option) {
