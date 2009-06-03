@@ -23,7 +23,7 @@ class biblestudyControllercssedit extends JController
 		parent::__construct();
 
 		// Register Extra tasks
-		$this->registerTask( 'add'  , 	'edit' );
+		$this->registerTask( 'saveCSS'  , 	'editCSS' );
 	}
 
 	/**
@@ -32,7 +32,7 @@ class biblestudyControllercssedit extends JController
 	 */
 	function edit()
 	{
-		JRequest::setVar( 'view', 'seriesedit' );
+		JRequest::setVar( 'view', 'cssedit' );
 		JRequest::setVar( 'layout', 'form'  );
 		JRequest::setVar('hidemainmenu', 1);
 
@@ -45,79 +45,141 @@ class biblestudyControllercssedit extends JController
 	 */
 	function save()
 	{
-		$model = $this->getModel('seriesedit');
-
-		if ($model->store($post)) {
-			$msg = JText::_( 'Series Saved!' );
-		} else {
-			$msg = JText::_( 'Error Saving Series' );
-		}
-
-		// Check the table in so it can be edited.... we are done with it anyway
+	// Check the table in so it can be edited.... we are done with it anyway
 		$link = 'index.php?option=com_biblestudy&view=serieslist';
 		$this->setRedirect($link, $msg);
 	}
+	function saveCss($option) {
+	$config_css = mosGetParam( $_POST, 'config_css' );
+		$configcss=str_replace("[CR][NL]","\n",$config_css);
+		$configcss=str_replace("[ES][SQ]","'",$configcss);
+		$configcss=nl2br($configcss);
+		$configcss=str_replace("<br />"," ",$configcss);
+		$filename=dirname(__FILE__)."/../../../components/com_prayercenter/css/prayercenter.css";
+		$cssfilein=fopen($filename,"w+") or die("Can't open file $filename");
+		$filecontent=fread($cssfilein,filesize($filename));
+		$cssfileout=fwrite($cssfilein,$configcss);
+		fclose($cssfilein);
 
-	/**
-	 * remove record(s)
-	 * @return void
-	 */
-	function remove()
-	{
-		$model = $this->getModel('seriesedit');
-		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Series Items Could not be Deleted' );
-		} else {
-			$msg = JText::_( 'Series Item(s) Deleted' );
-		}
+  mosRedirect( "index2.php?option=$option&task=manage_css", "Changes in CSS have been saved." );
+}
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=serieslist', $msg );
-	}
-function publish()
+function resetCss($option) {
+		$savfilename=dirname(__FILE__)."/../../../components/com_prayercenter/css/prayercenter.sav";
+		$savcssfilein=fopen($savfilename,"r") or die("Can't open file $savfilename");
+		$savfilecontent=fread($savcssfilein,filesize($savfilename));
+		$replacecss=str_replace("[CR][NL]","\n",$savfilecontent);
+		$replacecss=str_replace("[ES][SQ]","'",$replacecss);
+		$replacecss=nl2br($replacecss);
+		$replacecss=str_replace("<br />"," ",$replacecss);
+		$filename=dirname(__FILE__)."/../../../components/com_prayercenter/css/prayercenter.css";
+		$cssfilein=fopen($filename,"w+") or die("Can't open file $filename");
+		$cssfileout=fwrite($cssfilein,$replacecss);
+		fclose($cssfilein);
+		fclose($savcssfilein);
+
+  mosRedirect( "index2.php?option=$option&task=manage_css", "CSS has been reset to default settings." );
+}
+
+		
+
+		function editCSS()
 	{
 		global $mainframe;
 
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+		// Initialize some variables
+		$option		= JRequest::getCmd('option');
+		$client		=& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+		$template	= JRequest::getVar('id', '', 'method', 'cmd');
+		$filename	= JRequest::getVar('filename', '', 'method', 'cmd');
 
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+		jimport('joomla.filesystem.file');
+
+		if (JFile::getExt($filename) !== 'css') {
+			$msg = JText::_('Wrong file type given, only CSS files can be edited.');
+			$mainframe->redirect('index.php?option='.$option.'&client='.$client->id.'&task=choose_css', $msg, 'error');
 		}
 
-		$model = $this->getModel('seriesedit');
-		if(!$model->publish($cid, 1)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
+		$content = JFile::read($client->path.DS.'administrator'.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename);
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=serieslist' );
+		if ($content !== false)
+		{
+			// Set FTP credentials, if given
+			jimport('joomla.client.helper');
+			$ftp =& JClientHelper::setCredentialsFromRequest('ftp');
+
+			$content = htmlspecialchars($content, ENT_COMPAT, 'UTF-8');
+			require_once (JPATH_COMPONENT.DS.'admin.templates.html.php');
+			TemplatesView::editCSSSource($template, $filename, $content, $option, $client, $ftp);
+		}
+		else
+		{
+			$msg = JText::sprintf('Operation Failed Could not open', $client->path.$filename);
+			$mainframe->redirect('index.php?option='.$option.'&client='.$client->id, $msg);
+		}
 	}
 
-
-	function unpublish()
+	function saveCSS()
 	{
 		global $mainframe;
 
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+		// Check for request forgeries
+		JRequest::checkToken() or jexit( 'Invalid Token' );
 
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+		// Initialize some variables
+		$option			= JRequest::getCmd('option');
+		$client			=& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+		$template		= JRequest::getVar('id', '', 'post', 'cmd');
+		$filename		= JRequest::getVar('filename', '', 'post', 'cmd');
+		$filename		= 'biblestudy.css';
+		$filecontent	= JRequest::getVar('filecontent', '', 'post', 'string', JREQUEST_ALLOWRAW);
+
+		if (!$template) {
+			$mainframe->redirect('index.php?option='.$option.'&client='.$client->id, JText::_('Operation Failed').': '.JText::_('No template specified.'));
 		}
 
-		$model = $this->getModel('seriesedit');
-		if(!$model->publish($cid, 0)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
+		if (!$filecontent) {
+			$mainframe->redirect('index.php?option='.$option.'&client='.$client->id, JText::_('Operation Failed').': '.JText::_('Content empty.'));
 		}
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=serieslist' );
-	}
+		// Set FTP credentials, if given
+		jimport('joomla.client.helper');
+		JClientHelper::setCredentialsFromRequest('ftp');
+		$ftp = JClientHelper::getCredentials('ftp');
 
-	/**
-	 * cancel editing a record
-	 * @return void
-	 */
-	function cancel()
-	{
-		$msg = JText::_( 'Operation Cancelled' );
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=serieslist', $msg );
+		$file = $client->path.DS.'administrator'.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
+
+		// Try to make the css file writeable
+		if (!$ftp['enabled'] && JPath::isOwner($file) && !JPath::setPermissions($file, '0755')) {
+			JError::raiseNotice('SOME_ERROR_CODE', JText::_('Could not make the css file writable'));
+		}
+
+		jimport('joomla.filesystem.file');
+		$return = JFile::write($file, $filecontent);
+
+		// Try to make the css file unwriteable
+		if (!$ftp['enabled'] && JPath::isOwner($file) && !JPath::setPermissions($file, '0555')) {
+			JError::raiseNotice('SOME_ERROR_CODE', JText::_('Could not make the css file unwritable'));
+		}
+
+		if ($return)
+		{
+			$task = JRequest::getCmd('task');
+			switch($task)
+			{
+				case 'apply_css':
+					$mainframe->redirect('index.php?option='.$option.'&client='.$client->id.'&task=edit_css&filename='.$filename,  JText::_('File Saved'));
+					break;
+
+				case 'save_css':
+				default:
+					$mainframe->redirect('index.php?option='.$option.'&client='.$client->id.'&task=edit', JText::_('File Saved'));
+					break;
+			}
+		}
+		else {
+			$mainframe->redirect('index.php?option='.$option.'&client='.$client->id.'&task=choose_css', JText::_('Operation Failed').': '.JText::sprintf('Failed to open file for writing.', $file));
+		}
 	}
 }
 ?>
