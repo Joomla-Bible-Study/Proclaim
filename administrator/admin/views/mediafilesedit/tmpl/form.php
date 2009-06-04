@@ -105,7 +105,7 @@ function openConverter1()
             </tr>
             <tr>
               <td  ><?php echo JText::_('Filename: ');?><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->filename;?>"  /></td></tr>
-              <tr><td><?php echo JText::_( ' Or Upload File: ' ); ?><input type="file" id="file" name="file" size="75"/></td>
+              <tr><td><?php echo JText::_( ' Or Upload File: ' ); ?><input type="file" id="file" name="file" size="75"/><?php echo JText::_(' Try also using the Upload button at the top. You will still have to enter the server/folder/filename information.');?></td>
             </tr>
             <tr>
               <td><?php echo JText::_('Maximum upload allowed in your php.ini file using post_max_size is: ').ini_get('upload_max_filesize');?></td>

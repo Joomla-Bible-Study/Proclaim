@@ -23,10 +23,16 @@ class biblestudyViewcssedit extends JView
 	$lists		=& $this->get('Data');
 		$text = JText::_( 'Edit CSS' );
 		JToolBarHelper::title(   JText::_( 'CSS Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
-		//JToolBarHelper::save();
-		
+		JToolBarHelper::save();
+		JToolBarHelper::custom( 'reset', 'save', 'Reset CSS', 'Reset CSS', false, false );
+		//$alt = "Save CSS";
+		//$bar=& JToolBar::getInstance( 'toolbar' );
+
+		//$bar->appendButton( 'Standard', 'save', 'Reset CSS', "index.php?option=com_biblestudy&view=cssedit&task=reset",'' ,'' );
+//$bar->appendButton( 'Standard', 'save', $alt, "",'' ,'' );
+
 			// for existing items the button is renamed `close`
-			JToolBarHelper::custom( 'saveCSS','','', 'Save CSS' );
+			//JToolBarHelper::custom( 'save','','', 'Save CSS', 'false', 'false' );
 		
 		//jimport( 'joomla.i18n.help' );
 		//JToolBarHelper::help( 'biblestudy.series', true );

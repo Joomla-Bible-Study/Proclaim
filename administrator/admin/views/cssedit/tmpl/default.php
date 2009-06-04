@@ -6,14 +6,7 @@
 		<legend><?php echo JText::_( 'CSS - which controls the look and feel' ); ?></legend>
 
 		<table class="admintable">
-        <?php $link = JRoute::_( 'index.php?option=com_biblestudy&controller=cssedit&task=saveCSS');?>
-	<tr>
-		<td class="key"><b><?php echo JText::_('CSS File');?>:</b></td>
-		<td><a href="<?php echo $link;?>"><img src="<?php echo JURI::base()?>images/backup.png" height="48" width="48" border="0"></a><br />
-		<a href="<?php echo $link;?>"><b><?php echo JText::_('Write CSS File')?></b></a>
-        </td>
-	</tr>
-		<tr>
+        <tr>
 			<td width="100" align="right" class="key">
 				<label for="css">
 					<?php echo JText::_( 'CSS' ); ?>:
@@ -33,6 +26,8 @@
 
 <input type="hidden" name="option" value="com_biblestudy" />
 <input type="hidden" name="id" value="" />
-<input type="hidden" name="task" value="CSSsave" />
+<input type="hidden" name="task" value="save" />
 <input type="hidden" name="controller" value="cssedit" />
+
+<input type="hidden" name="view" value="cssedit" />
 </form>

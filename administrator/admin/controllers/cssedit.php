@@ -23,7 +23,7 @@ class biblestudyControllercssedit extends JController
 		parent::__construct();
 
 		// Register Extra tasks
-		$this->registerTask( 'save'  , 	'edit', 'saveCSS' );
+		//$this->registerTask( 'save'  , 	'edit', 'saveCSS' );
 	}
 
 	/**
@@ -43,7 +43,7 @@ class biblestudyControllercssedit extends JController
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
+	function save2()
 	 {
 		 global $mainframe, $option; 
 		//$filecontent = $podhead.$episodedetail.$podfoot;
@@ -122,21 +122,39 @@ class biblestudyControllercssedit extends JController
 		//$this->setRedirect($link, $msg);
 }
 
-function resetCss($option) {
-		$savfilename=dirname(__FILE__)."/../../../components/com_prayercenter/css/prayercenter.sav";
+function reset() {
+	global $mainframe, $option;
+		$savfilename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.sav';
 		$savcssfilein=fopen($savfilename,"r") or die("Can't open file $savfilename");
 		$savfilecontent=fread($savcssfilein,filesize($savfilename));
 		$replacecss=str_replace("[CR][NL]","\n",$savfilecontent);
 		$replacecss=str_replace("[ES][SQ]","'",$replacecss);
 		$replacecss=nl2br($replacecss);
 		$replacecss=str_replace("<br />"," ",$replacecss);
-		$filename=dirname(__FILE__)."/../../../components/com_prayercenter/css/prayercenter.css";
+		$filename=JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
 		$cssfilein=fopen($filename,"w+") or die("Can't open file $filename");
-		$cssfileout=fwrite($cssfilein,$replacecss);
+		$return = $cssfileout=fwrite($cssfilein,$replacecss);
 		fclose($cssfilein);
 		fclose($savcssfilein);
+if ($return)
+		{
+			$task = JRequest::getCmd('task');
+			switch($task)
+			{
+				case 'apply_css':
+					$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Reset to Default'));
+					break;
 
-  mosRedirect( "index2.php?option=$option&task=manage_css", "CSS has been reset to default settings." );
+				case 'save_css':
+				default:
+					$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('File Reset To Default'));
+					break;
+			}
+		}
+		else {
+			$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::sprintf('Failed to open file for writing.', $filename));
+		}
+ // mosRedirect( "index2.php?option=$option&task=manage_css", "CSS has been reset to default settings." );
 }
 
 		
@@ -177,7 +195,7 @@ function resetCss($option) {
 		}
 	}
 
-	function saveCSS()
+	function save()
 	{
 		global $mainframe;
 
@@ -197,7 +215,7 @@ function resetCss($option) {
 		//}
 
 		if (!$filecontent) {
-			$mainframe->redirect('index.php?option='.$option, JText::_('Operation Failed').': '.JText::_('Content empty.'));
+			$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::_('Content empty.'));
 		}
 
 		// Set FTP credentials, if given
@@ -226,17 +244,17 @@ function resetCss($option) {
 			switch($task)
 			{
 				case 'apply_css':
-					$mainframe->redirect('index.php?option='.$option.'&client='.$client->id.'&task=edit_css&filename='.$filename,  JText::_('File Saved'));
+					$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Saved'));
 					break;
 
 				case 'save_css':
 				default:
-					$mainframe->redirect('index.php?option='.$option.'&client='.$client->id.'&task=edit', JText::_('File Saved'));
+					$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('File Saved'));
 					break;
 			}
 		}
 		else {
-			$mainframe->redirect('index.php?option='.$option.'&client='.$client->id.'&task=choose_css', JText::_('Operation Failed').': '.JText::sprintf('Failed to open file for writing.', $file));
+			$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::sprintf('Failed to open file for writing.', $file));
 		}
 	}
 }
