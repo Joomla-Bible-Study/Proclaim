@@ -911,7 +911,6 @@
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
-				<param name="store_name" default="Store" type="text" label="Store Name" description="Name for the store on listing page" />
 		</params>
 	</state>
 </metadata>

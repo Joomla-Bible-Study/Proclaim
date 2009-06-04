@@ -138,3 +138,15 @@
 #bslisttable .mediatable span.bsfilesize {
   font-size:0.6em;
 }
+<!-- Study Details CSS -->
+
+#bsdetailstable th, #bsdetailstable td {
+  text-align:left;
+  padding:0 5px 0 5px;
+  border:none;
+}
+#bsdetailstable .studydetailstext td {
+	font-size:1.2em;
+  color:#707070;
+  font-family:Verdana, Geneva, sans-serif;
+}
