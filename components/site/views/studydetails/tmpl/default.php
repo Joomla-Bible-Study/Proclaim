@@ -47,6 +47,23 @@ $oddeven = 'bsodd';
  <tr><td id="studydetailstext">
  <?php echo $this->article->studytext;?>
  </td></tr></table>
+ <?php if ($params->get('show_comments') > 0)
+		{?>
+        <table id="commentstable" cellspacing="0">
+		<tr><td>
+	<?php $Itemid = JRequest::getVar('Itemid');
+		$comments_call = JView::loadHelper('comments');
+        $comments = getComments($params, $row, $Itemid);
+		echo $comments;
+		?>
+	</td></tr>
+		</table>
+		
+               
+        
+        
+        <?php } //end of if comments param?>
+
     <div class="listingfooter">
     <?php $link_text = $this->params->get('link_text');
 			if (!$link_text) {
