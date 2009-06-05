@@ -40,6 +40,25 @@
 			<option value="1">Hours/min/sec</option>
 			<option value="2">H:M:S</option>
 		</param>
+		<param name="title_line_1" type="list" default="1" label="Item to show on title line 1" description="Choose an item to show on the first line of the Title line of the study details">
+			<option value="0">Don't Show</option>
+			<option value="1">Study Title</option>
+			<option value="2">Teacher</option>
+			<option value="3">Title + Teacher</option>
+			<option value="4">Scripture</option>
+			<option value="5">Series</option>
+			<option value="6">Topic</option>
+		</param>
+		<param name="title_line_2" type="list" default="4" label="Item to show on title line 2" description="Choose an item to show on the second line of the Title line of the study details">
+			<option value="0">Don't Show</option>
+			<option value="1">Study Title</option>
+			<option value="2">Teacher</option>
+			<option value="3">Title + Teacher</option>
+			<option value="4">Scripture</option>
+			<option value="5">Series</option>
+			<option value="6">Topic</option>
+		</param>
+
 		<param name="show_teacher_view" type="radio" default="1" label="Show/Hide Teacher in Study View" description="Shows or hides the teacher on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>

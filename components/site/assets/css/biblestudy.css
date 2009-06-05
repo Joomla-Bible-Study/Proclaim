@@ -150,3 +150,12 @@
   color:#707070;
   font-family:Verdana, Geneva, sans-serif;
 }
+#header titletable td {
+	border: none:
+	padding 0 6px 0 0;
+	margin: 0;
+    border-collapse:separate;
+}
+#header .titletable .titlesecondline td {
+	font-weight: bold;
+}

@@ -23,9 +23,14 @@ $listingcall = JView::loadHelper('listing');
 ?>
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
  <div id="header">
- <h1 class="componentheading">
- <?php echo $row->studytitle;?>
-  </h1>
+ 
+ <?php if ($params->get('title_line_1') + $params->get('title_line_2') > 0) 
+	{
+		$title_call = JView::loadHelper('title');
+		$title = getTitle($params, $row);
+		echo $title;
+	}?> 
+
    </div><!-- header -->
  
  <table id="bslisttable" cellspacing="0">

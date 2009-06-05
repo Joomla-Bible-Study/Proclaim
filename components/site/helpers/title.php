@@ -4,7 +4,7 @@ function getTitle($params, $row)
 {
 	if ($params->get('title_line_1') > 0) 
 		{ 
-		$title = '<div id="detailsheadertext'.$params->get('pageclass_sfx').'">';
+		$title = '<table id="titletable" cellspacing="0"><tbody><tr><td><h1 class="componentheading">';
 	 switch ($params->get('title_line_1'))
 		{
 		case 0:
@@ -23,7 +23,7 @@ function getTitle($params, $row)
 			$esv = 0;
 			$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
 			include_once($path1.'scripture.php');
-			$scripture = getScripture($params, $row, $esv);
+			$scripture = getScripture($params, $row, $esv, $scripturerow = 1);
 			$title .= $scripture;
 			break;
 		case 5:
@@ -33,12 +33,12 @@ function getTitle($params, $row)
 			$title .= $row->topics_text;
 			break;
 		}
-	
+	$title .= '</h1></td></tr>';
 	}
 	
 	if ($params->get('title_line_2') > 0) 
 	{ 
-	$title .= '<br /><div id="detailstitle2'.$params->get('pageclass_sfx').'">';
+	$title .= '<tr><td id="titlesecondline" class="titletable">';
 	switch ($params->get('title_line_2'))
 		{
 		case 0:
@@ -57,7 +57,7 @@ function getTitle($params, $row)
 			$esv = 0;
 			$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
 			include_once($path1.'scripture.php');
-			$scripture = getScripture($params, $row, $esv);
+			$scripture = getScripture($params, $row, $esv, $scripturerow = 1);
 			$title .= $scripture;
 			break;
 		case 5:
@@ -67,9 +67,9 @@ function getTitle($params, $row)
 			$title .= $row->topics_text;
 			break;
 		}
-		$title .= '</div>';
+		$title .= '</td><tr></tbody></table>';
 	} // end of if title2
-	$title .= '</div>';
+	//$title .= '</div>';
 return $title;
 }
 

@@ -18,7 +18,7 @@ function getHeader($row, $params)
  	$lastrow = 0;
  	//if ($rows == 1) {$lastrow = 1;}
  	$listing = '<thead><tr';
-	if ($rows == 1) {$listing .= 'class = "lastrow"';}
+	if ($rows == 1) {$listing .= ' class = "lastrow"';}
 	$listing .='>
 	';
 
@@ -64,8 +64,8 @@ function getHeader($row, $params)
  	
 	 	$lastrow = 0;
 	 	if ($rows == 2) {$lastrow = 1;}
-		$listing .= '<tr '; //This begins the row of the display data
-		if ($lastrow == 1) {$listing .= 'class="lastrow"';}
+		$listing .= '<tr'; //This begins the row of the display data
+		if ($lastrow == 1) {$listing .= ' class="lastrow"';}
 		$listing .= '>';
 		 $colspan = $params->get('r2c1span');
  		$rowspan = $params->get('rowspanr2c1');
