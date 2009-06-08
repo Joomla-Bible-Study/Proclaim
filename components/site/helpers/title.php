@@ -4,7 +4,7 @@ function getTitle($params, $row)
 {
 	if ($params->get('title_line_1') > 0) 
 		{ 
-		$title = '<table id="titletable" cellspacing="0"><tbody><tr><td><h1 class="componentheading">';
+		$title = '<table id="titletable" cellspacing="0"><tbody><tr><td class="titlefirstline">';
 	 switch ($params->get('title_line_1'))
 		{
 		case 0:
@@ -33,12 +33,12 @@ function getTitle($params, $row)
 			$title .= $row->topics_text;
 			break;
 		}
-	$title .= '</h1></td></tr>';
+	$title .= '</td></tr>';
 	}
 	
 	if ($params->get('title_line_2') > 0) 
 	{ 
-	$title .= '<tr><td id="titlesecondline" class="titletable">';
+	$title .= '<tr><td class="titlesecondline" >';
 	switch ($params->get('title_line_2'))
 		{
 		case 0:

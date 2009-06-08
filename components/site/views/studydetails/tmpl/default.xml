@@ -59,7 +59,7 @@
 			<option value="6">Topic</option>
 		</param>
 
-		<param name="show_teacher_view" type="radio" default="1" label="Show/Hide Teacher in Study View" description="Shows or hides the teacher on the study details page">
+		<param name="show_teacher_view" type="list" default="1" label="Show/Hide Teacher in Study View" description="Shows or hides the teacher on the study details page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>

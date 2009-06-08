@@ -11,7 +11,7 @@ function getTeacher($params, $id)
 		
 		if ($id > 0) { $teacherids['id'] = $id;}
 		//dump ($id, 'tresult: ');
-		
+		$teacher = '<table id = "teacher"><tr>';
 		foreach ($teacherids as $teachers)
 		
 		{
@@ -22,11 +22,10 @@ function getTeacher($params, $id)
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			
-			$teacher .= '<div class="teacher'.$params->get('pageclass_sfx').'"><img src="'.$tresult->thumb.'" border="1" width="'.$tresult->thumbh.'" height="'.$tresult->thumbw.'" ><br />
-			<a href="index.php?option=com_biblestudy&view=teacherdisplay&amp;id='.$tresult->id.'&Itemid='.$teacheritemid.'">'.$tresult->teachername.'</a></div>';
+			$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$tresult->thumb.'" border="1" width="'.$tresult->thumbh.'" height="'.$tresult->thumbw.'" ></td></tr><tr><td><a href="index.php?option=com_biblestudy&view=teacherdisplay&amp;id='.$tresult->id.'&Itemid='.$teacheritemid.'">'.$tresult->teachername.'</a></td></tr></table></td>';
 		}
 	
-	
+		$teacher .= '</tr></table>';
 
 	return $teacher;
 }

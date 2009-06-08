@@ -44,7 +44,15 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     }
 	?>
       </h1>
+<?php if ($params->get('show_teacher_list') > 0)
+	{	?>        
     
+    <?php	
+	$teacher_call = JView::loadHelper('teacher');
+	$teacher = getTeacher($params, $row->teacher_id);
+	if ($teacher) {echo $teacher;}
+	
+	}?>    
     </div><!--header-->
     <div id="bsdropdownmenu">
 

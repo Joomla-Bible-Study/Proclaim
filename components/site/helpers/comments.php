@@ -12,48 +12,45 @@ function getComments($params, $row, $Itemid)
 		$Itemid = JRequest::getVar('Itemid');
 		$commentjava = "javascript:ReverseDisplay('comments')";
 		$comments = '<strong><a class="heading'.$pageclass_sfx.'" href="'.$commentjava.'">>>'.JText::_('Show/Hide Comments').'<<</a>
-		<div id="comments" style="display:none;"></strong>';
-
+		<div id="comments" style="display:none;"></strong><br />';
+if (count($commentsresult)) {
 $comments .= '
-		<div id="commentsheader'.$params->get('pageclass_sfx').'">
-		'.JText::_('Comments').'<br></div>';
+		<table id="bslisttable" cellspacing="0"><thead><tr class="lastrow"><th id="commentshead" class="row1col1">
+		'.JText::_('Comments').'</th></tr></thead>';
 
-	if (count($commentsresult)) {
- 		$comments .= '<div id="commentstext'.$pageclass_sfx.'">'
-		;
 		foreach ($commentsresult as $comment){
 
 		$comment_date_display = JHTML::_('date',  $comment->comment_date, JText::_('DATE_FORMAT_LC3') , '$offset' );
-		
-		$comments .= '<strong>'.$comment->full_name.'</strong> <i>'.$comment_date_display.'</i><br>'.JText::_('Comment: ').$comment->comment_text.'<br>';
+		$comments .= '<tbody>';
+		$comments .= '<tr><td><strong>'.$comment->full_name.'</strong> <i> - '.$comment_date_display.'</i></td></tr><tr><td>'.JText::_('Comment: ').$comment->comment_text.'</td></tr><tr><td><hr /></td></tr>';
 		}//end of foreach
 		
-		$comments .= '</div>';
+		$comments .= '</td></tr></tbody></table>';
 	} // End of if(count($commentsresult))
 		
 		
-		$comments .= '</div>';
 		
 		
 
 		
-		$comments .= '<div id="commentssubmittable'.$pageclass_sfx.'">';
+		$comments .= '<table id="commentssubmittable">';
 		
 		$user =& JFactory::getUser();
 		//$this->assignRef('thestudy',$this->studydetails->study_id);
 		$comment_access = $params->get('comment_access');
 		$comment_user = $user->usertype;
 		if (!$comment_user) { $comment_user = 0;}
-		if ($comment_access > $comment_user){$comments .= '<div id="register'.$pageclass_sfx.'"><strong><br />'.JText::_('You must be registered to post comments').'</strong></div>';}else{
-		$comments .= '<div id="register'.$pageclass_sfx.'">';
+		if ($comment_access > $comment_user){$comments .= '<tr><td><strong>'.JText::_('You must be registered to post comments').'</strong></td></tr>';}else{
+		$comments .= '<tr><td>';
 		if ($user->name){$full_name = $user->name; } else {$full_name = ''; } 
 		if ($user->email) {$user_email = $user->email;} else {$user_email = '';}
 		
-		$comments .= '<form action="index.php" method="post">
-		<div id="commentsheader'.$pageclass_sfx.'">'.JText::_('Post a Comment').'</div><br />
-		'.JText::_('First & Last Name: ').'<br /><input class="text_area" size="50" type="text" name="full_name" id="full_name" value="'.$full_name.'" /><br />
-		'.JText::_('Email (Not displayed): ').'<br /><input class="text_area" type="text" size="50" name="user_email" id="user_email" value="'.$user->email.'" /><br />
-		'.JText::_('Comment: ').'<br /><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea><br /><br />';
+		$comments .= '<form action="index.php" method="post"><strong>'
+		.JText::_('Post a Comment').'</strong></td></tr>
+		<tr><td>'.JText::_('First & Last Name: ').
+		'</td><td><input class="text_area" size="50" type="text" name="full_name" id="full_name" value="'.$full_name.'" /></td></tr>
+		<tr><td>'.JText::_('Email (Not displayed): ').'</td><td><input class="text_area" type="text" size="50" name="user_email" id="user_email" value="'.$user->email.'" /></td></tr>
+		<tr><td>'.JText::_('Comment: ').'</td><td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr></table>';
 //dump ($params->get('use_captcha'), 'captch: ');
 		if ($params->get('use_captcha') > 0) { 
 		
@@ -61,10 +58,10 @@ $comments .= '
 		//Must be installed. Here we check that
 		if (JPluginHelper::importPlugin('system', 'captcha'))
 			{ 								
-				$comments .= JText::_('Enter the text in the picture').'&nbsp
+				$comments .= '<table><tr><td>'.JText::_('Enter the text in the picture').'&nbsp
 				<input name="word" type="text" id="word" value="" style="vertical-align:middle" size="10">&nbsp;
 				<img src="'.JURI::base().'index.php?option=com_biblestudy&view=studydetails&controller=studydetails&task=displayimg">
-				<br />';
+				</td></tr>';
 			} 
 			else 
 			{ 
@@ -73,7 +70,7 @@ $comments .= '
 		
 			} // end of if for use of captcha
 		
-		$comments .=  '<br />
+		$comments .=  '<tr><td>
 		<input type="hidden" name="study_id" id="study_id" value="'.$row->id.'" />
 		<input type="hidden" name="task" value="comment" />
 		<input type="hidden" name="option" value="com_biblestudy" />
@@ -87,7 +84,7 @@ $comments .= '
 		</form></div>';
 		} //End of if $comment_access < $comment_user
 		//} //End of show_comments on for submit form
-		$comments .= '</div>';
+		$comments .= '</td></tr></table>';
         
 	return $comments;
 }
