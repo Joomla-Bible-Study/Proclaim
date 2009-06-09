@@ -13,6 +13,20 @@ $location_menu = $this->params->get('locations', 1);
 $series_menu = $this->params->get('series_id', 1);
 $messagetype_menu = $this->params->get('messagetype', 1);
 $params = $mainframe->getPageParameters();
+	$user =& JFactory::getUser();
+	$entry_user = $user->get('gid');
+	if (!$entry_user) { $entry_user = 0;}
+	$entry_access = $this->params->get('entry_access');
+	if (!$entry_access) {$entry_access = 23;}
+	$allow_entry = $this->params->get('allow_entry_study');
+	//if (($allow_entry > 0) && (entry_access <= $entry_user)) 
+			//{?>
+			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>
+			<?php 
+			$studiesedit_call = JView::loadHelper('studiesedit');
+			$studiesedit = getStudiesedit($row, $params);
+			echo $studiesedit;
+			//}
 //external function to create the css
 $document =& JFactory::getDocument();
 $listingcall = JView::loadHelper('listing');

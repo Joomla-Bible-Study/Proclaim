@@ -24,6 +24,8 @@ $user_submit_name = $user->name;
 if ($user->name == ''){$user_submit_name = '';}
 $entry_access = ($params->get('entry_access')) ;
 $allow_entry = $params->get('allow_entry_study');
+$item = JRequest::getVar('item');
+
 ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
@@ -185,6 +187,9 @@ $allow_entry = $params->get('allow_entry_study');
               
             </tr></table>
         <tr><td class="key" align="left"><?php echo JText::_('Allow comments for this study? -No- overrides global setting for this study only');?></td><td><?php echo $this->lists['comments'];?></td></tr>
+        <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail: ');?></td><td>><input type="text" name="thumbnailm" id="thumbnailm" size="100" maxlength="250" value="<?php echo $this->studiesedit->thumbnailm;?>" /></td></tr>
+            <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail Height: ');?></td><td>><input type="text" name="thumbhm" id="thumbhm" size="4" value="<?php echo $this->studiesedit->thumbhm;?>" /></td></tr>
+            <tr><td class="key" alsign="left"><?php echo JText::_('Width: ');?></td><td><input type="text" name="thumbwm" id="thumbwm" size="4" value="<?php echo $this->studiesedit->thumbwm;?>" /></td></tr>
         <tr><td class="key" align="left"><?php echo JText::_('User Level to show');?></td><td>
         <select name="show_level" id="show_level" class="inputbox" size="1">
        
@@ -255,7 +260,7 @@ $allow_entry = $params->get('allow_entry_study');
 	$mediafiles = &$this->mediafiles[$i];
 	//$row = $episodes[$i];
     //foreach ($episodes as $episode) { 
-	$link2 = JRoute::_( 'index.php?option=com_biblestudy&controller=mediafilesedit&task=edit&cid[]='. $mediafiles->mfid );
+	$link2 = JRoute::_( 'index.php?option=com_biblestudy&controller=mediafilesedit&item='.$item.'&task=edit&cid[]='.$mediafiles->mfid );
 	$scripture = $mediafiles->bookname.' '.$mediafiles->chapter_begin;?>
 	<tr class="<?php echo "row$k"; ?>">
     	<td width="30"><a href="<?php echo $link2; ?>"><?php echo $mediafiles->filename;?></a></td>
@@ -284,6 +289,7 @@ if ($user_name == ''){$user_name = $user->name;}
 <input type="hidden" name="user_id" value="<?php echo $user->get('id');?>"  />
 <input type="hidden" name="user_name" value="<?php echo $user_name;?>"  />
 <input type="hidden" name="published" id="published" value="<?php echo $params->get('study_publish');?>"  />
+<input type="hidden" name="item" id="item" value="<?php echo $item;?>" />
 <?php if (!$this->studiesedit->id) { ?>
 <input type="hidden" name="new" id="new" value="1" /> <?php } ?>
 </form>

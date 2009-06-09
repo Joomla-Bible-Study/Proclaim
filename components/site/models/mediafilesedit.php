@@ -108,6 +108,7 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->_data->link_type = null;
 			$this->_date->hits = null;
 			$this->_data->mime_type = null;
+			
 		}
 		return $this->_data;
 	}

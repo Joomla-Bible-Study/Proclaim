@@ -345,6 +345,32 @@ $tn = '#__bsms_studies';
 		$dbmessage =  'The current database schema for Bible Study is: '.$db611.'<br>';
 		}
 // End version 611 upgrade
+// Begin version 612 upgrade
+$tn = '#__bsms_studies';
+	$fields = $database->getTableFields( array( $tn ) );
+	$fieldcheck = false;
+$fieldcheck	= isset( $fields[$tn]['thumbnail'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbnail TEXT NULL AFTER studytext;");
+		$database->query();}
+$fieldcheck	= isset( $fields[$tn]['thumbh'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbh INT NULL AFTER thumbnail;");
+		$database->query();}
+$fieldcheck	= isset( $fields[$tn]['thumbw'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbw INT NULL AFTER thumbh;");
+		$database->query();}
+		
+		if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
+	if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}
+	else {
+		$database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
+		$database->query();
+	$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 612)");
+		$database->query();
+		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
+		$db612 = $database->loadResult();
+		$dbmessage =  'The current database schema for Bible Study is: '.$db612.'<br>';
+		}
+//End version 612 upgrade
 ?>
 <div class="header"><?php 
 global $mainframe; ?>

@@ -121,7 +121,9 @@ function openConverter1()
 				</td>
             </tr>
             <tr><td><?php echo JText::_('Show Download Icon');?><?php echo $this->lists['link_type'];?></td></tr>
-
+			<tr><td><?php echo JText::_('Thumbnail: ');?><input type="text" name="thumbnailm" id="thumbnailm" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->thumbnailm;?>" /></td></tr>
+            <tr><td><?php echo JText::_('Height: ');?><input type="text" name="thumbhm" id="thumbh" size="4" value="<?php echo $this->mediafilesedit->thumbhm;?>" /></td></tr>
+            <tr><td><?php echo JText::_('Width: ');?><input type="text" name="thumbwm" id="thumbw" size="4" value="<?php echo $this->mediafilesedit->thumbwm;?>" /></td></tr>
           </table>
           </td>
       </tr>

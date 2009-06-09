@@ -219,6 +219,9 @@ $user =& JFactory::getUser();
 			<?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
 		</select></td>
 	</tr>
+    <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail: ');?></td><td><input type="text" name="thumbnailm" id="thumbnailm" size="100" maxlength="250" value="<?php echo $this->studiesedit->thumbnailm;?>" /></td></tr>
+            <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail Height: ');?></td><td><input type="text" name="thumbhm" id="thumbhm" size="4" value="<?php echo $this->studiesedit->thumbhm;?>" /></td></tr>
+            <tr><td class="key" alsign="left"><?php echo JText::_('Width: ');?></td><td><input type="text" name="thumbwm" id="thumbwm" size="4" value="<?php echo $this->studiesedit->thumbwm;?>" /></td></tr>
 	<?php if($this->enableStore == 1) {?>
 	<tr>
 		<td class="key" align="left"><?php echo JText::_('Store');?></td>

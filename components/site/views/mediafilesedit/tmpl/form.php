@@ -1,6 +1,6 @@
 <?php 
 defined('_JEXEC') or die('Restricted access'); 
-
+$item = JRequest::getVar('item');
 $editor =& Jfactory::getEditor();
 ?>
 <script type="text/javascript" language="javascript">
@@ -173,6 +173,7 @@ function openConverter1()
 							<tr>
 								<td><?php echo JText::_('Show Download Icon');?><?php echo $this->lists['link_type'];?></td>
 							</tr>
+                            
 						</table>
 					</td>
 				</tr>
@@ -184,4 +185,5 @@ function openConverter1()
 	<input type="hidden" name="controller" value="mediafilesedit" /> 
 	<input type="hidden" name="view" value="mediafilesedit" /> 
 	<input type="hidden" name="task" value="save" />
+    <input type="hidden" name="item" id="item" value="<?php echo $item;?>" />
 </form>

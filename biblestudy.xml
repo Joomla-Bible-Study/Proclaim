@@ -208,6 +208,7 @@
 		<filename>helpers/title.php</filename>
 		<filename>helpers/custom.php</filename>
 		<filename>helpers/elementid.php</filename>
+		<filename>helpers/studiesedit.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>

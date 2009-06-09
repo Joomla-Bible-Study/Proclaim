@@ -55,6 +55,9 @@ class Tablestudiesedit extends JTable
 	var $user_name = null;
 	var $show_level = null;	
 	var $location_id = null;
+	var $thumbnailm = null;
+	var $thumbhm = null;
+	var $thumbwm = null;
 	/**
 	 * Constructor
 	 *
