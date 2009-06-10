@@ -27,7 +27,7 @@
   background-color:#707070;
   font-weight:bold;
   color:white;
-  border-bottom: gray 2px solid;
+
 }
 #bslisttable th.row1col1,
 #bslisttable th.row1col2,
@@ -99,13 +99,13 @@
 	white-space:nowrap;
 }
 #bslisttable .details-text {
-	
+	white-space:nowrap;
 }
 #bslisttable .details-pdf {
-	
+	white-space:nowrap;
 }
 #bslisttable .details-text-pdf {
-	
+	white-space:nowrap;
 }
 #bslisttable .detailstable td {
   border: none;
@@ -136,12 +136,16 @@
 	font-size: 2em;
 	font-weight:bold;
 }
+#bslisttable .thumbnail {
+	white-space:nowrap;
+}
 #bslisttable .mediatable td {
   border: none;
   padding: 0 6px 0 0;
 }
 #bslisttable .mediatable span.bsfilesize {
   font-size:0.6em;
+  position:relative; bottom: 7px;
 }
 <!-- Study Details CSS -->
 

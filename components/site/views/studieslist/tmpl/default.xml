@@ -193,6 +193,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r1c1custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -242,6 +243,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r1c2custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -290,6 +292,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r1c3custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -337,6 +340,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r1c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -380,6 +384,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r2c1custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -429,6 +434,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r2c2custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -477,6 +483,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r2c3custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -524,6 +531,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r2c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -567,6 +575,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r3c1custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -616,6 +625,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r3c2custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -664,6 +674,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r3c3custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -711,6 +722,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r3c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -754,6 +766,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r4c1custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -803,6 +816,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r4c2custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -851,6 +865,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r4c3custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
@@ -898,6 +913,7 @@
 				<option value="20">Media {media}</option>
 				<option value="22">Store {store}</option>
 				<option value="23">Filesize 1st mp3 file{filesize}</option>
+				<option value="25">Thumbnail {thumbnail}</option>
 				<option value="24">Custom</option>
 				</param>
 			<param name="r4c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />

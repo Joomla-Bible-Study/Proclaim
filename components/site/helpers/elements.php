@@ -144,6 +144,12 @@ function getElementid($rowid, $row, $params)
 			$media1 = $db->loadObjectList('id');
 			$elementid->element = getFilesize($media1->size);
 			break;
-			}
+		case 25:
+			$elementid->id = 'thumbnail';
+			$elementid->headertext = JText::_('Thumbnail');
+			$elementid->element = '<img src="'.$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" alt="'.$row->studytitle.'">';
+			break;
+		}
+		
 		return $elementid;
 	}

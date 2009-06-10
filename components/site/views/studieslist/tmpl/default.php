@@ -19,14 +19,15 @@ $params = $mainframe->getPageParameters();
 	$entry_access = $this->params->get('entry_access');
 	if (!$entry_access) {$entry_access = 23;}
 	$allow_entry = $this->params->get('allow_entry_study');
-	//if (($allow_entry > 0) && (entry_access <= $entry_user)) 
-			//{?>
+	//dump ($entry_access, 'entry_access: ');
+	if (($allow_entry > 0) && ($entry_access <= $entry_user)) 
+			{?>
 			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>
 			<?php 
 			$studiesedit_call = JView::loadHelper('studiesedit');
 			$studiesedit = getStudiesedit($row, $params);
 			echo $studiesedit;
-			//}
+			}
 //external function to create the css
 $document =& JFactory::getDocument();
 $listingcall = JView::loadHelper('listing');

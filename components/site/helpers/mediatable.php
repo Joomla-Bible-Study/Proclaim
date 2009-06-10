@@ -195,10 +195,26 @@ function getMediatable($params, $row)
 	  $mediatable .= '<img src="'.JURI::base().$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
   
 	  }
+	
+	
 	$mediatable .= '</td>';
-
+	
 	} //end of foreach of media results
+	
+	$mediatable .= '</tr>';
 
-	$mediatable .= '</tr></table>';
+if ($params->get('show_filesize') > 0 ) 
+	{
+		$mediatable .= '<tr>';
+		foreach ($media1 as $media) {
+			$filesize = getFilesize($media->size);
+			
+				$mediatable .= '<td><span class="bsfilesize">'.$filesize.'</span></td>';
+				 
+		} //end second foreach
+		$mediatable .= '</tr>';
+	} // end of if show_filesize
+
+	$mediatable .='</table>';
     return $mediatable;
 }

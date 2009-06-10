@@ -23,7 +23,7 @@ class biblestudyControllercssedit extends JController
 		parent::__construct();
 
 		// Register Extra tasks
-		//$this->registerTask( 'save'  , 	'edit', 'saveCSS' );
+		$this->registerTask( 'save'  , 	'apply' );
 	}
 
 	/**
@@ -63,20 +63,8 @@ function reset() {
 		fclose($savcssfilein);
 if ($return)
 		{
-			$task = JRequest::getCmd('task');
-			switch($task)
-			{
-				case 'apply_css':
-					$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Reset to Default'));
-					break;
-
-				case 'save_css':
-				default:
-					$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('File Reset To Default'));
-					break;
-			}
-		}
-		else {
+			
+		
 			$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::sprintf('Failed to open file for writing.', $filename));
 		}
  // mosRedirect( "index2.php?option=$option&task=manage_css", "CSS has been reset to default settings." );
@@ -118,11 +106,11 @@ if ($return)
 			$task = JRequest::getCmd('task');
 			switch($task)
 			{
-				case 'apply_css':
+				case 'apply':
 					$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Saved'));
 					break;
 
-				case 'save_css':
+				case 'save':
 				default:
 					$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('File Saved'));
 					break;

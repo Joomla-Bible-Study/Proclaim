@@ -349,14 +349,14 @@ $tn = '#__bsms_studies';
 $tn = '#__bsms_studies';
 	$fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;
-$fieldcheck	= isset( $fields[$tn]['thumbnail'] );
+$fieldcheck	= isset( $fields[$tn]['thumbnailm'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbnail TEXT NULL AFTER studytext;");
 		$database->query();}
-$fieldcheck	= isset( $fields[$tn]['thumbh'] );
-		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbh INT NULL AFTER thumbnail;");
+$fieldcheck	= isset( $fields[$tn]['thumbhm'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbhm INT NULL AFTER thumbnailm;");
 		$database->query();}
-$fieldcheck	= isset( $fields[$tn]['thumbw'] );
-		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbw INT NULL AFTER thumbh;");
+$fieldcheck	= isset( $fields[$tn]['thumbwm'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbwm INT NULL AFTER thumbhm;");
 		$database->query();}
 		
 		if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}

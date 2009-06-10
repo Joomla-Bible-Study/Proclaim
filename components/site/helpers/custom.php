@@ -95,6 +95,9 @@ function getElementnumber ($rowid)
 			case 'filesize' :
 				$rowid = 23;
 				break;
+			case 'thumbnail' :
+				$rowid = 25;
+				break;
 		}
 		
 	return $rowid;	
