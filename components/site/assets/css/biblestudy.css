@@ -27,6 +27,7 @@
   background-color:#707070;
   font-weight:bold;
   color:white;
+  border-bottom: gray 2px solid;
 }
 #bslisttable th.row1col1,
 #bslisttable th.row1col2,
