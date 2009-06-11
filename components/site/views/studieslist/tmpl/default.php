@@ -154,10 +154,10 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     </div><!--dropdownmenu-->
      <table id="bslisttable" cellspacing="0">
      <?php 
-	 if ($params->get('use_headers') > 0){
+	 
      $headerCall = JView::loadHelper('header');
      $header = getHeader($row, $params);
-     echo $header;}
+     echo $header;
      ?>
       <tbody>
 

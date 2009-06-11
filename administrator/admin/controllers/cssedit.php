@@ -23,7 +23,7 @@ class biblestudyControllercssedit extends JController
 		parent::__construct();
 
 		// Register Extra tasks
-		$this->registerTask( 'save'  , 	'apply' );
+		//$this->registerTask( 'save'  , 	'apply' );
 	}
 
 	/**
@@ -45,9 +45,9 @@ class biblestudyControllercssedit extends JController
 	 */
   
 	
-}
 
-function reset() {
+
+function resetcss() {
 	global $mainframe, $option;
 		$savfilename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.sav';
 		$savcssfilein=fopen($savfilename,"r") or die("Can't open file $savfilename");
@@ -103,7 +103,7 @@ if ($return)
 
 		if ($return)
 		{
-			$task = JRequest::getCmd('task');
+			/*$task = JRequest::getCmd('task');
 			switch($task)
 			{
 				case 'apply':
@@ -114,7 +114,8 @@ if ($return)
 				default:
 					$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('File Saved'));
 					break;
-			}
+			}*/
+		$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Saved'));
 		}
 		else {
 			$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::sprintf('Failed to open file for writing.', $file));

@@ -66,7 +66,7 @@
 				<param name="mult_messagetype" type="text" default="" label="Enter multiple message type ids" description="Enter a series of message type ids separated by commas as a filter" />
 				<param name="locations" type="locations" default="" label="Locations" description="Choose a location to display for this menu item" />
 				<param name="mult_locations" type="text" default="" label="Enter multiple location ids" description="Enter a series of location ids separated by commas as a filter" />
-				<param name="use_headers" type="list" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
+				<param name="use_headers_list" type="list" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
 					<option value="0">No Header Row</option>
 					<option value="1">Use Header Row</option>
 				</param>

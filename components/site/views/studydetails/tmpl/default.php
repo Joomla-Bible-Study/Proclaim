@@ -63,41 +63,39 @@ $listingcall = JView::loadHelper('listing');
 	}?>
    </div><!-- header -->
  
- <table id="bslisttable" cellspacing="0">
+ <table id="bsmsdetailstable" cellspacing="0">
      <?php 
-	 if ($params->get('use_headers') > 0){
+	
      $headerCall = JView::loadHelper('header');
      $header = getHeader($row, $params);
-     echo $header;}
+     echo $header;
      ?>
       <tbody>
 
         <?php 
- //This sets the alternativing colors for the background of the table cells
+
 $oddeven = 'bsodd';
  $listing = getListing($row, $params, $oddeven);
  echo $listing;?>
  </tbody></table>
- <table id="studydetailstable" cellspacing="0">
+ <table id="bsmsdetailstable" cellspacing="0">
  <tr><td id="studydetailstext">
  <?php echo $this->article->studytext;?>
  </td></tr></table>
- <?php if ($params->get('show_comments') > 0)
+ 
+<?php if ($params->get('show_comments') > 0)
 		{?>
         <table id="commentstable" cellspacing="0">
 		<tr><td>
-	<?php $Itemid = JRequest::getVar('Itemid');
+<?php $Itemid = JRequest::getVar('Itemid');
 		$comments_call = JView::loadHelper('comments');
         $comments = getComments($params, $row, $Itemid);
 		echo $comments;
 		?>
 	</td></tr>
 		</table>
-		
-               
-        
-        
-        <?php } //end of if comments param?>
+<?php } //end of if comments param?>
+
 <?php if ($this->params->get('show_passage_view') > 0) { ?>
 		
           <strong><a class="heading" href="javascript:ReverseDisplay('scripture')">>><?php echo JText::_('Show/Hide Scipture Passage');?><<</a>
@@ -108,11 +106,9 @@ $oddeven = 'bsodd';
           $response = getPassage($params, $row);
           echo $response;?>
         </div>
-
+<?php } //end of if passage?>
         
-       			
-		<?php } //end of if passage?>
-    <div class="listingfooter">
+	<div class="listingfooter">
     <?php $link_text = $this->params->get('link_text');
 			if (!$link_text) {
 				$link_text = JText::_('Return to Studies List');

@@ -63,15 +63,15 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-		<param name="show_verses_view" type="radio" default="0" label="Show/Hide Verses on Study View page" description="Choose whether just chapter(s) of Bible study book shown or verses too">
+		<param name="show_verses_view" type="list" default="0" label="Show/Hide Verses on Study View page" description="Choose whether just chapter(s) of Bible study book shown or verses too">
 			<option value="0">Show only chapters</option>
 			<option value="1">Show verses and chapters</option>
 		</param>
-		<param name="show_passage_view" type="radio" default="1" label="Show/Hide Passage in Study View footer" description="Shows the passage referenced in the Scripture of your study. Right now only ESV available">
+		<param name="show_passage_view" type="list" default="1" label="Show/Hide Passage in Study View footer" description="Shows the passage referenced in the Scripture of your study. Right now only ESV available">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
-		<param name="use_headers" type="radio" default="0" label="Header Row on Study Detail" description="Choose whether a header row will appear at the top of the study detail">
+		<param name="use_headers_view" type="list" default="0" label="Header Row on Study Detail" description="Choose whether a header row will appear at the top of the study detail">
 					<option value="0">No Header Row</option>
 					<option value="1">Use Header Row</option>
 				</param>
@@ -79,11 +79,11 @@
 					<option value="0">No</option>
 					<option value="1">Yes</option>
 				</param>
-			<param name="popuptype" type="radio" default="window" label="Window or light box (inline) for AVR player" description="If installed, use AllVideosReloaded as a separate window or as a light box effect">
+			<param name="popuptype" type="list" default="window" label="Window or light box (inline) for AVR player" description="If installed, use AllVideosReloaded as a separate window or as a light box effect">
 					<option value="window">Window</option>
 					<option value="lightbox">Lightbox</option>
 				</param>
-			<param name="media_player" type="radio" default="0" label="MP3 Media Player" description="Use built-in media player for all mp3 files (overrides AVR)">
+			<param name="media_player" type="list" default="0" label="MP3 Media Player" description="Use built-in media player for all mp3 files (overrides AVR)">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
 				</param>

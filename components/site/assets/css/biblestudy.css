@@ -36,6 +36,9 @@
   border-top: gray 2px solid;
   padding-top:3px;
 }
+#bslisttable th.firstrow {
+	border-bottom: gray 2px solid;
+}
 #bslisttable tr.lastrow th {
   border-bottom:2px solid gray;
   padding-bottom:3px;
@@ -147,8 +150,157 @@
   font-size:0.6em;
   position:relative; bottom: 7px;
 }
+
 <!-- Study Details CSS -->
 
+#bsmsdetailstable {
+  margin: 0;
+  border-collapse:separate;
+}
+#bsmsdetailstable th, #bsmsdetailstable td {
+  text-align:left;
+  padding:0 5px 0 5px;
+  border:none;
+}
+#bsmsdetailstable .row1col1,
+#bsmsdetailstable .row2col1,
+#bsmsdetailstable .row3col1,
+#bsmsdetailstable .row4col1 {
+  border-left: gray 2px solid;
+}
+#bsmsdetailstable .lastcol {
+  border-right: gray 2px solid;
+}
+#bsmsdetailstable .lastrow td {
+  border-bottom:2px solid gray;
+  padding-bottom:7px;
+}
+#bsmsdetailstable th {
+  background-color:#707070;
+  font-weight:bold;
+  color:white;
+
+}
+#bsmsdetailstable th.row1col1,
+#bsmsdetailstable th.row1col2,
+#bsmsdetailstable th.row1col3,
+#bsmsdetailstable th.row1col4 {
+  border-top: gray 2px solid;
+  padding-top:3px;
+}
+#bsmsdetailstable tr.lastrow th {
+  border-bottom:2px solid gray;
+  padding-bottom:3px;
+}
+#bsmsdetailstable th.firstrow {
+	border-bottom: gray 2px solid;
+}
+#bsmsdetailstable tr.bsodd td {
+  background-color:#FFFFFF;
+}
+#bsmsdetailstable tr.bseven td {
+  background-color:#FFFFF0;
+}
+
+#bsmsdetailstable .date {
+  white-space:nowrap;
+  font-size:1.2em;
+  color:grey;
+  font-weight:bold;
+}
+#bsmsdetailstable .scripture1 {
+  white-space:nowrap;
+  color:c02121;
+  font-weight:bold;
+}
+#bsmsdetailstable .scripture2 {
+  white-space:nowrap;
+  color:c02121;
+  font-weight:bold;
+}
+#bsmsdetailstable .title {
+  font-size:1.2em;
+  color:#707070;
+  font-weight:bold;
+}
+#bsmsdetailstable .series_text {
+  white-space:nowrap;
+  color:grey;
+}
+#bsmsdetailstable .duration {
+  white-space:nowrap;
+  font-style:italic;
+}
+#bsmsdetailstable .studyintro {
+	
+}
+#bsmsdetailstable .teacher {
+	white-space:nowrap;
+}
+#bsmsdetailstable .location_text {
+	white-space:nowrap;
+}
+#bsmsdetailstable .topic_text {
+	white-space:nowrap;
+}
+#bsmsdetailstable .message_type {
+	white-space:nowrap;
+}
+#bsmsdetailstable .media {
+	white-space:nowrap;
+}
+#bsmsdetailstable .store {
+	white-space:nowrap;
+}
+#bsmsdetailstable .details-text {
+	white-space:nowrap;
+}
+#bsmsdetailstable .details-pdf {
+	white-space:nowrap;
+}
+#bsmsdetailstable .details-text-pdf {
+	white-space:nowrap;
+}
+#bsmsdetailstable .detailstable td {
+  border: none;
+  padding: 0 2px 0 0;
+}
+#bsmsdetailstable .secondary_reference {
+	white-space:nowrap;
+}
+#bsmsdetailstable .teacher-title-name {
+	white-space:nowrap;
+}
+#bsmsdetailstable .submitted {
+	white-space:nowrap;
+}
+#bsmsdetailstable .hits {
+	white-space:nowrap;
+}
+#bsmsdetailstable .studynumber {
+	white-space:nowrap;
+}
+#bsmsdetailstable .filesize {
+	white-space:nowrap;
+}
+#bsmsdetailstable .custom {
+	white-space:nowrap;
+}
+#bsmsdetailstable .commentshead {
+	font-size: 2em;
+	font-weight:bold;
+}
+#bsmsdetailstable .thumbnail {
+	white-space:nowrap;
+}
+#bsmsdetailstable .mediatable td {
+  border: none;
+  padding: 0 6px 0 0;
+}
+#bsmsdetailstable .mediatable span.bsfilesize {
+  font-size:0.6em;
+  position:relative; bottom: 7px;
+}
 #bsdetailstable th, #bsdetailstable td {
   text-align:left;
   padding:0 5px 0 5px;
@@ -175,4 +327,155 @@
 #titletable .titlefirstline {
 	font-size:20px;
 	font-weight:bold;
+}
+<!-- Module Style Settings -->
+
+#bsmsmoduletable {
+  margin: 0;
+  border-collapse:separate;
+}
+#bsmsmoduletable th, #bsmsmoduletable td {
+  text-align:left;
+  padding:0 5px 0 5px;
+  border:none;
+}
+#bsmsmoduletable .row1col1,
+#bsmsmoduletable .row2col1,
+#bsmsmoduletable .row3col1,
+#bsmsmoduletable .row4col1 {
+  border-left: gray 2px solid;
+}
+#bsmsmoduletable .lastcol {
+  border-right: gray 2px solid;
+}
+#bsmsmoduletable .lastrow td {
+  border-bottom:2px solid gray;
+  padding-bottom:7px;
+}
+#bsmsmoduletable th {
+  background-color:#707070;
+  font-weight:bold;
+  color:white;
+
+}
+#bsmsmoduletable th.row1col1,
+#bsmsmoduletable th.row1col2,
+#bsmsmoduletable th.row1col3,
+#bsmsmoduletable th.row1col4 {
+  border-top: gray 2px solid;
+  padding-top:3px;
+}
+#bsmsmoduletable th.firstrow {
+	border-bottom: gray 2px solid;
+}
+#bsmsmoduletable tr.lastrow th {
+  border-bottom:2px solid gray;
+  padding-bottom:3px;
+}
+
+#bsmsmoduletable tr.bsodd td {
+  background-color:#FFFFFF;
+}
+#bsmsmoduletable tr.bseven td {
+  background-color:#FFFFF0;
+}
+
+#bsmsmoduletable .date {
+  white-space:nowrap;
+  font-size:1.2em;
+  color:grey;
+  font-weight:bold;
+}
+#bsmsmoduletable .scripture1 {
+  white-space:nowrap;
+  color:c02121;
+  font-weight:bold;
+}
+#bsmsmoduletable .scripture2 {
+  white-space:nowrap;
+  color:c02121;
+  font-weight:bold;
+}
+#bsmsmoduletable .title {
+  font-size:1.2em;
+  color:#707070;
+  font-weight:bold;
+}
+#bsmsmoduletable .series_text {
+  white-space:nowrap;
+  color:grey;
+}
+#bsmsmoduletable .duration {
+  white-space:nowrap;
+  font-style:italic;
+}
+#bsmsmoduletable .studyintro {
+	
+}
+#bsmsmoduletable .teacher {
+	white-space:nowrap;
+}
+#bsmsmoduletable .location_text {
+	white-space:nowrap;
+}
+#bsmsmoduletable .topic_text {
+	white-space:nowrap;
+}
+#bsmsmoduletable .message_type {
+	white-space:nowrap;
+}
+#bsmsmoduletable .media {
+	white-space:nowrap;
+}
+#bsmsmoduletable .store {
+	white-space:nowrap;
+}
+#bsmsmoduletable .details-text {
+	white-space:nowrap;
+}
+#bsmsmoduletable .details-pdf {
+	white-space:nowrap;
+}
+#bsmsmoduletable .details-text-pdf {
+	white-space:nowrap;
+}
+#bsmsmoduletable .detailstable td {
+  border: none;
+  padding: 0 2px 0 0;
+}
+#bsmsmoduletable .secondary_reference {
+	white-space:nowrap;
+}
+#bsmsmoduletable .teacher-title-name {
+	white-space:nowrap;
+}
+#bsmsmoduletable .submitted {
+	white-space:nowrap;
+}
+#bsmsmoduletable .hits {
+	white-space:nowrap;
+}
+#bsmsmoduletable .studynumber {
+	white-space:nowrap;
+}
+#bsmsmoduletable .filesize {
+	white-space:nowrap;
+}
+#bsmsmoduletable .custom {
+	white-space:nowrap;
+}
+#bsmsmoduletable .commentshead {
+	font-size: 2em;
+	font-weight:bold;
+}
+#bsmsmoduletable .thumbnail {
+	white-space:nowrap;
+}
+#bsmsmoduletable .mediatable td {
+  border: none;
+  padding: 0 6px 0 0;
+}
+#bsmsmoduletable .mediatable span.bsfilesize {
+  font-size:0.6em;
+  position:relative; bottom: 7px;
 }
