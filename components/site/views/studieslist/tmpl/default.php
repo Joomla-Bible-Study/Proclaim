@@ -2,8 +2,10 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die(); ?>
+
 <?php 
 global $mainframe, $option;
+JHTML::_('behavior.tooltip');
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
 $teacher_menu = $this->params->get('teacher_id', 1);
@@ -31,6 +33,8 @@ $params = $mainframe->getPageParameters();
 //external function to create the css
 $document =& JFactory::getDocument();
 $listingcall = JView::loadHelper('listing');
+$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
+$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}

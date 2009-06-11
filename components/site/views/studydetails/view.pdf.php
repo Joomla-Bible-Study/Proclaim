@@ -1,4 +1,4 @@
-<?php
+,<?php
 
 
 // Check to ensure this file is included in Joomla!
@@ -83,22 +83,11 @@ class biblestudyViewstudydetails extends JView
 	//}
 	
 $scripture_call = Jview::loadHelper('scripture');
-$show_verses = $params->get('show_verses');
-$booknumber = $studydetails->booknumber;
-$ch_b = $studydetails->chapter_begin;
-$ch_e = $studydetails->chapter_end;
-$v_b = $studydetails->verse_begin;
-$v_e = $studydetails->verse_end;
-$id2 = $studydetails->id;
-$scripture1 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
 
-$booknumber = $studydetails->booknumber2;
-$id2 = $studydetails->id;
-$ch_b = $studydetails->chapter_begin2;
-$ch_e = $studydetails->chapter_end2;
-$v_b = $studydetails->verse_begin2;
-$v_e = $studydetails->verse_end2;
-$scripture2 = format_scripture2($id2, $esv, $booknumber, $ch_b, $ch_e, $v_b, $v_e, $show_verses);
+$scripture1 = getScripture($params, $studydetails, $esv=0, $scripturerow=1);
+
+$scripture2 = getScripture($params, $studydetails, $esv=0, $scripturerow=2);
+
 if (!$studydetails->booknumber2) {$text .= $scripture1;}
 else {$text .= $scripture1.' - '.$scripture2;}
 			
@@ -109,16 +98,14 @@ else {$text .= $scripture1.' - '.$scripture2;}
 				$text .= JText::_('By').' '. ($studydetails->tname);
 			}
 
-		if ($params->get('show_date_view')) 
-			{
+		
 			// Display Created Date
-				$df = 	($params->get('date_format'));
 				$date_call = JView::loadHelper('date');
- 				$date = getstudyDate($df, $studydetails->studydate);		
+ 				$date = getstudyDate($params, $studydetails->studydate);		
 				//$date = JHTML::_('date', $studydetails->studydate, JText::_('DATE_FORMAT_LC2') , '$offset');
 				$text .="\n";
 				$text .= $date;
-			}
+			
 			return $text;
 		}
 	
