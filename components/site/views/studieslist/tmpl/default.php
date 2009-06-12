@@ -31,11 +31,11 @@ $params = $mainframe->getPageParameters();
 			echo $studiesedit;
 			}
 //external function to create the css
-$document =& JFactory::getDocument();
+//$document =& JFactory::getDocument();
 $listingcall = JView::loadHelper('listing');
-$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
-$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+//$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
+//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
+//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
 ?>
@@ -78,47 +78,45 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
         <?php if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}?>
   <?php if ($this->params->get('show_book_search') >0 && !($book_menu) ){ ?>
 
-  <?php $query2 = 'SELECT id, booknumber AS value, bookname AS text, published'
-  . ' FROM #__bsms_books'
-  . ' WHERE published = 1'
-  . ' ORDER BY booknumber';
-  $database->setQuery( $query2 );
-  $bookid = $database->loadAssocList();
+  <?php 
+  $bookid = $this->books;
   $filter_book  = $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
   echo '<select name="filter_book" id="filter_book" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
   if (!$filter_book ) {
    echo 'selected="selected"';}
    echo '>- '.JText::_('Select a Book').' -'.'</option>';
    foreach ($bookid as $bookid2) {
-    $format = $bookid2['text'];
+    $format = $bookid2->text;
     $output = JText::_($format);
-    $bookvalue = $bookid2['value'];
+    $bookvalue = $bookid2->value;
     if ($bookvalue == $filter_book){
      $selected = 'selected="selected"';
-     echo '<option value="'.$bookvalue.'"'.$selected.' >'.$bookid2['text'].'</option>';
+     echo '<option value="'.$bookvalue.'"'.$selected.' >'.$bookid2->text.'</option>';
     } else {
      echo '<option value="'.$bookvalue.'">'.$output.'</option>';
     }
    };
-   echo '</select>';?> <?php } ?> <?php if ($this->params->get('show_teacher_search') >0 && !($teacher_menu)) { ?>
+   echo '</select>';?> 
+   <?php } ?> 
+   <?php 
+   //echo $this->lists['books'];
+   if ($this->params->get('show_teacher_search') >0 && !($teacher_menu)) { ?>
    <?php echo $this->lists['teacher_id'];?> <?php } ?> <?php if ($this->params->get('show_series_search') >0 && !($series_menu)){ ?>
    <?php echo $this->lists['seriesid'];?> <?php } ?> <?php if ($this->params->get('show_type_search') >0 && !($messagetype_menu)) { ?>
    <?php echo $this->lists['messagetypeid'];?> <?php } ?> <?php if ($this->params->get('show_year_search') >0){ ?>
    <?php echo $this->lists['studyyear'];?> <?php } ?> <?php if ($this->params->get('show_order_search') >0) { ?>
    <?php
-   $query6 = ' SELECT * FROM #__bsms_order '
-   . ' ORDER BY id ';
-   $database->setQuery( $query6 );
-   $sortorder = $database->loadAssocList();
+   
+   $sortorder = $this->order;
    $filter_orders  = $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
    echo '<select name="filter_orders" id="filter_orders" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
    if (!$filter_orders ) {
     echo 'selected="selected"';}
     echo '>- '.JText::_('Select an Order').' -'.'</option>';
     foreach ($sortorder as $sortorder2) {
-     $format = $sortorder2['text'];
+     $format = $sortorder2->text;
      $output = JText::sprintf($format);
-     $sortvalue = $sortorder2['value'];
+     $sortvalue = $sortorder2->value;
      if ($sortvalue == $filter_orders){
       $selected = 'selected="selected"';
       echo '<option value="'.$sortvalue.'"'.$selected.' >'.$output.'</option>';
@@ -128,13 +126,8 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     };
     echo '</select>';?> <?php //echo $this->lists['sorting'];?> <?php } ?>
     <?php if ($this->params->get('show_topic_search') >0) { ?> <?php
-    $query8 = 'SELECT DISTINCT #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text'
-    . ' FROM #__bsms_studies'
-    . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
-    . ' WHERE #__bsms_topics.published = 1'
-    . ' ORDER BY #__bsms_topics.topic_text ASC';
-    $database->setQuery( $query8 );
-    $topicsid = $database->loadAssocList();
+    
+    $topicsid = $this->topic;
     $filter_topic  = $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
     echo '<select name="filter_topic" id="filter_topic" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
     if (!$filter_topic ) {

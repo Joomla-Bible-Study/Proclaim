@@ -24,6 +24,8 @@ class biblestudyModelstudieslist extends JModel
 	var $_topics;
 	var $_orders;
 	var $_select;
+	var $_books;
+	
 
 	function __construct()
 	{
@@ -169,6 +171,18 @@ function setSelect($string){
 		return $this->_Orders;
 	}
 
+function getBooks() {
+		if (empty($this->_Books)) {
+			$query = 'SELECT id, booknumber AS value, bookname AS text, published'
+  . ' FROM #__bsms_books'
+  . ' WHERE published = 1'
+  . ' ORDER BY booknumber';
+			$this->_Books = $this->_getList($query);
+		}
+		return $this->_Books;
+	}
+	
+		
 	function getData()
 	{
 		//dump($data, 'Data from Model');
