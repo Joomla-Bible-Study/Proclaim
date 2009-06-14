@@ -15,7 +15,7 @@
    <td class="key" align="left"><?php echo JText::_( 'Create Date YYYY-MM-DD' ); ?></td>
    <td><?php
     if (!$this->commentsedit->id) {
-     echo JHTML::_('calendar', $this->commentsedit->comment_date, 'comment_date', 'comment_date'); 
+     echo JHTML::_('calendar', date('Y-m-d'), 'comment_date', 'comment_date'); 
     } else {
      echo JHTML::_('calendar', date('Y-m-d', strtotime($this->commentsedit->comment_date)), 'comment_date', 'comment_date'); 
     }?>
