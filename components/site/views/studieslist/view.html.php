@@ -57,9 +57,9 @@ class biblestudyViewstudieslist extends JView {
         //This is the helper for scripture formatting
         $scripture_call = Jview::loadHelper('scripture');
 		//end scripture helper
-		//$translated_call = JView::loadHelper('translated');
-		//$book = getTranslated($books, $filter_book);
-		//dump ($book, 'book444: ');
+		$translated_call = JView::loadHelper('translated');
+		$book = getTranslated($books);
+		dump ($book, 'book444: ');
 		$this->assignRef('books', $books);
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('order', $orders);
@@ -117,9 +117,9 @@ class biblestudyViewstudieslist extends JView {
 
 
 		//Build Books
-		//$boo[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select a Book') . ' -');
-		//$boo		= array_merge($boo, $book);
-		//$lists['books'] = JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_book");
+		$boo[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select a Book') . ' -');
+		$boo		= array_merge($boo, $book);
+		$lists['books'] = JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_book");
 
 		$lists['search']= $search;
 		$this->assignRef('lists',		$lists);

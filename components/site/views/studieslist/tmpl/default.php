@@ -99,7 +99,7 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
    echo '</select>';?> 
    <?php } ?> 
    <?php 
-   //echo $this->lists['books'];
+   echo $this->lists['books'];
    if ($this->params->get('show_teacher_search') >0 && !($teacher_menu)) { ?>
    <?php echo $this->lists['teacher_id'];?> <?php } ?> <?php if ($this->params->get('show_series_search') >0 && !($series_menu)){ ?>
    <?php echo $this->lists['seriesid'];?> <?php } ?> <?php if ($this->params->get('show_type_search') >0 && !($messagetype_menu)) { ?>
@@ -125,7 +125,7 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
      }
     };
     echo '</select>';?> <?php //echo $this->lists['sorting'];?> <?php } ?>
-    <?php if ($this->params->get('show_topic_search') >0) { ?> <?php
+    <?php if ($this->params->get('show_topic_search') == 0) { ?> <?php
     
     $topicsid = $this->topic;
     $filter_topic  = $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );

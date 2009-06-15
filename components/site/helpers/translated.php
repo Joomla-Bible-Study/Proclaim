@@ -5,20 +5,32 @@
  * @copyright 2009
  */
 
-<?php defined('_JEXEC') or die('Restriced Access');
+defined('_JEXEC') or die('Restriced Access');
 
 function getTranslated($result)
 {
-	foreach ($result as $result2)
+	
+	
+	//$array1 = array('id' => '');
+	//$array2 = array( 'text' => '');
+	foreach ($result as $key => $value)
 	{
-		$format = $result2->text;
-		$output = JText::_($format);
-		$key = $result2->value;
-		$array1[] = $key;
-		$array2[] = $output;
+		$format = $value->text;
+		$output->text = JText::_($format);
+		$output->id = $key;
+		//$key = $result2->value;
+		//if ($format == $result->text)
+		//{
+			unset($result[$key]);
+			array_push($result,$output);	
+		//}
+		//$array1['id'] = $key;
+		//$array2['text'] = $output;
 	}
-	$translated = array_merge($array1, $array2);
-return $translated;
+	//$translated = array_combine($array1, $array2);
+//return $translated;
+return $result;
 }
 
-?>
+
+
