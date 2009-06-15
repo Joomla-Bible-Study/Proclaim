@@ -30,14 +30,9 @@ $params = $mainframe->getPageParameters();
 			$studiesedit = getStudiesedit($row, $params);
 			echo $studiesedit;
 			}
-//external function to create the css
-//$document =& JFactory::getDocument();
+
 $listingcall = JView::loadHelper('listing');
-//$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
-$url = $params->get('stylesheet');
-if ($url) {$document->addStyleSheet($url);}
+
 ?>
 <form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
 
@@ -64,88 +59,33 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 	?>
       </h1>
 <?php if ($params->get('show_teacher_list') > 0)
-	{	?>        
-    
-    <?php	
+	{	
 	$teacher_call = JView::loadHelper('teacher');
 	$teacher = getTeacher($params, $row->teacher_id);
 	if ($teacher) {echo $teacher;}
-	
 	}?>    
     </div><!--header-->
     <div id="bsdropdownmenu">
 
-        <?php if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}?>
-  <?php if ($this->params->get('show_book_search') >0 && !($book_menu) ){ ?>
+<?php 
 
-  <?php 
-  $bookid = $this->books;
-  $filter_book  = $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
-  echo '<select name="filter_book" id="filter_book" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
-  if (!$filter_book ) {
-   echo 'selected="selected"';}
-   echo '>- '.JText::_('Select a Book').' -'.'</option>';
-   foreach ($bookid as $bookid2) {
-    $format = $bookid2->text;
-    $output = JText::_($format);
-    $bookvalue = $bookid2->value;
-    if ($bookvalue == $filter_book){
-     $selected = 'selected="selected"';
-     echo '<option value="'.$bookvalue.'"'.$selected.' >'.$bookid2->text.'</option>';
-    } else {
-     echo '<option value="'.$bookvalue.'">'.$output.'</option>';
-    }
-   };
-   echo '</select>';?> 
-   <?php } ?> 
-   <?php 
-   echo $this->lists['books'];
-   if ($this->params->get('show_teacher_search') >0 && !($teacher_menu)) { ?>
-   <?php echo $this->lists['teacher_id'];?> <?php } ?> <?php if ($this->params->get('show_series_search') >0 && !($series_menu)){ ?>
-   <?php echo $this->lists['seriesid'];?> <?php } ?> <?php if ($this->params->get('show_type_search') >0 && !($messagetype_menu)) { ?>
-   <?php echo $this->lists['messagetypeid'];?> <?php } ?> <?php if ($this->params->get('show_year_search') >0){ ?>
-   <?php echo $this->lists['studyyear'];?> <?php } ?> <?php if ($this->params->get('show_order_search') >0) { ?>
-   <?php
-   
-   $sortorder = $this->order;
-   $filter_orders  = $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
-   echo '<select name="filter_orders" id="filter_orders" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
-   if (!$filter_orders ) {
-    echo 'selected="selected"';}
-    echo '>- '.JText::_('Select an Order').' -'.'</option>';
-    foreach ($sortorder as $sortorder2) {
-     $format = $sortorder2->text;
-     $output = JText::sprintf($format);
-     $sortvalue = $sortorder2->value;
-     if ($sortvalue == $filter_orders){
-      $selected = 'selected="selected"';
-      echo '<option value="'.$sortvalue.'"'.$selected.' >'.$output.'</option>';
-     } else {
-      echo '<option value="'.$sortvalue.'">'.$output.'</option>';
-     }
-    };
-    echo '</select>';?> <?php //echo $this->lists['sorting'];?> <?php } ?>
-    <?php if ($this->params->get('show_topic_search') == 0) { ?> <?php
-    
-    $topicsid = $this->topic;
-    $filter_topic  = $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
-    echo '<select name="filter_topic" id="filter_topic" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
-    if (!$filter_topic ) {
-     echo 'selected="selected"';}
-     echo '>- '.JText::_('Select a Topic').' -'.'</option>';
-     foreach ($topicsid as $topicsid2) {
-      $format = $topicsid2['text'];
-      $output = JText::sprintf($format);
-      $topicsvalue = $topicsid2['value'];
-      if ($topicsvalue == $filter_topic){
-       $selected = 'selected="selected"';
-       echo '<option value="'.$topicsvalue.'"'.$selected.' >'.$output.'</option>';
-      } else {
-      echo '<option value="'.$topicsvalue.'">'.$output.'</option>';}
+if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}
 
+if ($this->params->get('show_book_search') >0 && !($book_menu) ){ echo $this->lists['books'];  }
+ 
+if ($this->params->get('show_teacher_search') > 0 && !($teacher_menu)) { echo $this->lists['teacher_id'];  }   
+	
+if ($this->params->get('show_series_search') > 0 && !($series_menu)){ echo $this->lists['seriesid'];  }   
+	
+if ($this->params->get('show_type_search') > 0 && !($messagetype_menu)) { echo $this->lists['messagetypeid'];  }   
+	
+if ($this->params->get('show_year_search') > 0){ echo $this->lists['studyyear'];  }   
+	
+if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
+  
+if ($this->params->get('show_topic_search') > 0) {  echo $this->lists['topics'];}
 
-     };
-     echo '</select>';?> <?php //echo $this->lists['topics'];?> <?php } ?>
+?>
 
 
     </div><!--dropdownmenu-->
@@ -179,8 +119,8 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 <div class="listingfooter" >
 	<?php 
       if ($params->get('show_limitbox') > 0) {
-		  echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
-      echo $this->pagination->getLimitBox();
+		  //echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
+     // echo $this->pagination->getLimitBox();
 	  }
       echo $this->pagination->getPagesLinks();
       echo $this->pagination->getPagesCounter();

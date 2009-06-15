@@ -25,6 +25,7 @@ class biblestudyModelstudieslist extends JModel
 	var $_orders;
 	var $_select;
 	var $_books;
+	var $_thelimit;
 	
 
 	function __construct()
@@ -53,6 +54,7 @@ function setSelect($string){
 	{
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
+		$thelimit	= $this->_getLimit();
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
 		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
@@ -66,6 +68,7 @@ function setSelect($string){
 		. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
 		. $where
 		. $orderby
+		. $thelimit;
 		;
 		return $query;
 	}
@@ -400,6 +403,16 @@ function getBooks() {
 		
 		return $where;
 	}
+	
+	function _getLimit()
+	{
+		$params = &JComponentHelper::getParams($option);
+		$limit = $params->get('items');
+		if ($limit) {$thelimit = 'LIMIT '.$limit;}
+		else {$thelimit = '';}
+		return $thelimit;
+	}
+	
 	function _buildContentOrderBy()
 	{
 		global $mainframe, $option;

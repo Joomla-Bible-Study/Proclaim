@@ -58,9 +58,10 @@ class biblestudyViewstudieslist extends JView {
         $scripture_call = Jview::loadHelper('scripture');
 		//end scripture helper
 		$translated_call = JView::loadHelper('translated');
+		$topics = getTranslated($topics);
+		$orders = getTranslated($orders);
 		$book = getTranslated($books);
-		dump ($book, 'book444: ');
-		$this->assignRef('books', $books);
+		//$this->assignRef('books', $books);
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('order', $orders);
 		$this->assignRef('topic', $topics);
@@ -77,7 +78,8 @@ class biblestudyViewstudieslist extends JView {
 		$document->addStylesheet(JURI::base().'components/com_biblestudy/tooltip.css');
 		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/studieslist.css');
 		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-		
+		$url = $params->get('stylesheet');
+		if ($url) {$document->addStyleSheet($url);}
 		//Build Teachers
 		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );
@@ -121,7 +123,13 @@ class biblestudyViewstudieslist extends JView {
 		$boo		= array_merge($boo, $book);
 		$lists['books'] = JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_book");
 
+		//Build order
+		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select an Order') . ' -');
+		$ord		= array_merge($ord, $orders);
+		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_orders");
+		
 		$lists['search']= $search;
+		
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('items',		$items);
 
