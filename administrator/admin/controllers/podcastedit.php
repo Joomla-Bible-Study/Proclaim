@@ -200,6 +200,7 @@ function publish()
   if ($hours < 1) { $hours = '00'; }
   if ($hours > 0) { $hours = $hours; }
   else { $hours = '00'; }
+  if (!$episode->media_seconds) {$episode->media_seconds = 1;}
   //$podcast_title = 1;
   $pod_title = $params->get('podcast_title');
 

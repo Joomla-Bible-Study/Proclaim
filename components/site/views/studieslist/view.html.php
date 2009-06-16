@@ -20,6 +20,7 @@ class biblestudyViewstudieslist extends JView {
 		//$tmplEngine =& bibleStudyTemplate::getInstance();
 
 		$params 			=& $mainframe->getPageParameters();
+		//dump ($params, 'params: ');
 		$uri				=& JFactory::getURI();
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );

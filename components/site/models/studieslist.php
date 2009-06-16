@@ -25,7 +25,7 @@ class biblestudyModelstudieslist extends JModel
 	var $_orders;
 	var $_select;
 	var $_books;
-	var $_thelimit;
+	
 	
 
 	function __construct()
@@ -36,7 +36,7 @@ class biblestudyModelstudieslist extends JModel
 		$config = JFactory::getConfig();
 		// Get the pagination request variables
 		//$limitstart = JRequest::getVar('limitstart', 0, '', 'int');
-		$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $config->getValue('config.list_limit'), 'int'));
+		//$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $config->getValue('config.list_limit'), 'int'));
 		//$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $params->get('items'), 'int'));
 		//$this->setState('limit',$mainframe->getUserStateFromRequest('com_biblestudy.limit','limit',$params->get('items'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
@@ -57,7 +57,6 @@ function setSelect($string){
 	{
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
-		$thelimit	= $this->_getLimit();
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
 		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
@@ -71,7 +70,6 @@ function setSelect($string){
 		. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
 		. $where
 		. $orderby
-		. $thelimit;
 		;
 		return $query;
 	}
@@ -191,12 +189,15 @@ function getBooks() {
 		
 	function getData()
 	{
+		global $mainframe;
+		$params =& $mainframe->getPageParameters();
 		//dump($data, 'Data from Model');
 		// Lets load the data if it doesn't already exist
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
-			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
+			//$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
+			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $params->get('itemslimit') );
 		}
 
 		return $this->_data;
@@ -407,14 +408,7 @@ function getBooks() {
 		return $where;
 	}
 	
-	function _getLimit()
-	{
-		$params = &JComponentHelper::getParams($option);
-		$limit = $params->get('items');
-		if ($limit) {$thelimit = 'LIMIT '.$limit;}
-		else {$thelimit = '';}
-		return $thelimit;
-	}
+	
 	
 	function _buildContentOrderBy()
 	{

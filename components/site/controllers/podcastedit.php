@@ -263,7 +263,7 @@ function publish()
   else { $hours = '00'; }
   //$podcast_title = 1;
   $pod_title = $params->get('podcast_title');
-
+  if (!$episode->media_seconds) {$episode->media_seconds = 1;}
   switch ($pod_title)
   {
    case 0:

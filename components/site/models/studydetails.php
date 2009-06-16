@@ -87,7 +87,7 @@ class biblestudyModelstudydetails extends JModel
 			. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
 			. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
 			. ' LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
-			. '  WHERE #__bsms_studies.id = '.$this->_id;
+			. '  WHERE #__bsms_studies.id = '.$this->_id.;
 			$this->_db->setQuery( $query );
 			$this->_data = $this->_db->loadObject();
 		}
