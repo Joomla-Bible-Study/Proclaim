@@ -105,6 +105,19 @@ if ($podcast_access >$entry_user){ echo JText::_('You are not authorized');} els
 		<td class="key"><b><?php echo JText::_( 'Editor\'s Email Address' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="editor_email" id="editor_email" size="70" maxlength="150" value="<?php echo $this->podcastedit->editor_email;?>" /></td>
 	</tr>
+     <tr>
+    	<td class="key"><b><?php echo JText::_('Episode Title');?>:</b></td>
+        <td><select name="episodetitle" id="episodetitle">
+        	
+      		<option value="0" <?php if ($this->podcastedit->episodetitle == 0) {echo ' select="selected" ';}?>>Scripture + Title</option>
+			<option value="1"<?php if ($this->podcastedit->episodetitle == 1) {echo ' select="selected" ';}?>>Title Only</option>
+			<option value="2"<?php if ($this->podcastedit->episodetitle == 2) {echo ' select="selected" ';}?>>Scripture Only</option>
+			<option value="3"<?php if ($this->podcastedit->episodetitle == 3) {echo ' select="selected" ';}?>>Title + Scripture</option>
+			<option value="4"<?php if ($this->podcastedit->episodetitle == 4) {echo ' select="selected" ';}?>>Date + Scripture + Title</option>
+    		</select>
+            
+        </td>
+    </tr>
 	</table>
 	</fieldset>
 </div>

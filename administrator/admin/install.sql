@@ -234,7 +234,14 @@ CREATE TABLE `#__bsms_templates` (
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
-
+--Adding Admin Table
+--
+ CREATE TABLE `#__bsms_admin` (
+`compat_mode` TINYINT NOT NULL DEFAULT '0',
+`allow_deletes` TINYINT NOT NULL DEFAULT '1',
+`drop_tables` TINYINT NOT NULL DEFAULT '0',
+`admin_store` TINYINT NOT NULL DEFAULT '1'
+) ENGINE = MYISAM 
 
 --
 -- Dumping data for table `jos_bsms_templates`

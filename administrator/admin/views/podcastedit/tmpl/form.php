@@ -75,6 +75,19 @@
 		<td class="key"><b><?php echo JText::_( 'Editor\'s Email Address' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="editor_email" id="editor_email" size="100" maxlength="150" value="<?php echo $this->podcastedit->editor_email;?>" /></td>
 	</tr>
+    <tr>
+    	<td class="key"><b><?php echo JText::_('Episode Title');?>:</b></td>
+        <td><select name="episodetitle" id="episodetitle">
+        	
+      		<option <?php if ($this->podcastedit->episodetitle == 0) {echo ' select="selected" ';}?>value="0">Scripture + Title</option>
+			<option <?php if ($this->podcastedit->episodetitle == 1) {echo ' select="selected" ';}?>value="1">Title Only</option>
+			<option <?php if ($this->podcastedit->episodetitle == 2) {echo ' select="selected" ';}?>value="2">Scripture Only</option>
+			<option <?php if ($this->podcastedit->episodetitle == 3) {echo ' select="selected" ';}?>value="3">Title + Scripture</option>
+			<option <?php if ($this->podcastedit->episodetitle == 4) {echo ' select="selected" ';}?>value="4">Date + Scripture + Title</option>
+    		</select>
+            
+        </td>
+    </tr>
 	</table>
 	</fieldset>
 </div>

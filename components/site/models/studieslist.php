@@ -31,20 +31,20 @@ class biblestudyModelstudieslist extends JModel
 	function __construct()
 	{
 		parent::__construct();
-		$params = &JComponentHelper::getParams($option);
 		global $mainframe, $option;
+		$params =& $mainframe->getPageParameters();
 		$config = JFactory::getConfig();
 		// Get the pagination request variables
 		//$limitstart = JRequest::getVar('limitstart', 0, '', 'int');
 		//$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $config->getValue('config.list_limit'), 'int'));
 		//$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $params->get('items'), 'int'));
-		//$this->setState('limit',$mainframe->getUserStateFromRequest('com_biblestudy.limit','limit',$params->get('items'),'int');
+		$this->setState('limit',$params->get('itemslimit'),'limit',$params->get('itemslimit'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
 
 		// In case limit has been changed, adjust limitstart accordingly
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
-
-	//dump($this->_select, 'why here');
+		// In case we are on more than page 1 of results and the total changes in one of the drop downs to a selection that has fewer in its total, we change limitstart
+		if ($this->getTotal() < $this->getState('limitstart')) {$this->setState('limitstart', 0,'','int');}
 	}
 function setSelect($string){
 	
@@ -190,14 +190,14 @@ function getBooks() {
 	function getData()
 	{
 		global $mainframe;
-		$params =& $mainframe->getPageParameters();
+		//$params =& $mainframe->getPageParameters();
 		//dump($data, 'Data from Model');
 		// Lets load the data if it doesn't already exist
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
-			//$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
-			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $params->get('itemslimit') );
+			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
+			//$this->_data = $this->_getList( $query, $this->getState('limitstart'), $params->get('itemslimit') );
 		}
 
 		return $this->_data;
@@ -215,6 +215,8 @@ function getBooks() {
 		{
 			$query = $this->_buildQuery();
 			$this->_total = $this->_getListCount($query);
+			//dump ($this->getState('limitstart'), 'limitstart: ');
+			
 		}
 
 		return $this->_total;

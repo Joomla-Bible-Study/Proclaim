@@ -64,6 +64,7 @@ class biblestudyModelpodcastedit extends JModel
 			$this->_data->editor_name = null;
 			$this->_data->editor_email = null;
 			$this->_data->podcastlimit = null;
+			$this->_data->episodetitle = null;
 			$this->_data->published = 0;
 		}
 		return $this->_data;
