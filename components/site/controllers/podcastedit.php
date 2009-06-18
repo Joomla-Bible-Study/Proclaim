@@ -176,6 +176,8 @@ function publish()
 
   global $mainframe, $option;
   $params = &JComponentHelper::getParams($option);
+  $path1 = JPATH_COMPONENT_SITE.DS.'helpers'.DS;
+	include_once($path1.'custom.php');
   jimport('joomla.utilities.date');
   $year = '('.date('Y').')';
   $date = date('r');
@@ -262,7 +264,7 @@ function publish()
   if ($hours > 0) { $hours = $hours; }
   else { $hours = '00'; }
   //$podcast_title = 1;
-  $pod_title = $params->get('podcast_title');
+  $pod_title = $podinfo->episodetitle;
   if (!$episode->media_seconds) {$episode->media_seconds = 1;}
   switch ($pod_title)
   {
@@ -281,6 +283,11 @@ function publish()
    case 4:
     $title = $episodedate.' - '.$episode->bookname.' '.$episode->chapter_begin.' - '.$episode->studytitle;
     break;
+	case 5:
+    $element = getCustom($rowid='row1col1', $podinfo->custom, $episode, $params);
+	//dump ($episode->custom, 'custom: ');
+	$title = $element->element;
+	break;
   }
   $title = str_replace('&',"and",$title);
   $description = str_replace('&',"and",$episode->studyintro);

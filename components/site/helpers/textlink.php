@@ -3,7 +3,7 @@ defined('_JEXEC') or die();
 
 function getTextlink($params, $row, $textorpdf)
 {
-$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+$path1 = JPATH_COMPONENT_SITE.DS.'helpers'.DS;
 include_once($path1.'scripture.php');
 $scripturerow = 1;	
 $scripture1 = getScripture($params, $row, $esv, $scripturerow);

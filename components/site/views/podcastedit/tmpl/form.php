@@ -109,14 +109,20 @@ if ($podcast_access >$entry_user){ echo JText::_('You are not authorized');} els
     	<td class="key"><b><?php echo JText::_('Episode Title');?>:</b></td>
         <td><select name="episodetitle" id="episodetitle">
         	
-      		<option value="0" <?php if ($this->podcastedit->episodetitle == 0) {echo ' select="selected" ';}?>>Scripture + Title</option>
-			<option value="1"<?php if ($this->podcastedit->episodetitle == 1) {echo ' select="selected" ';}?>>Title Only</option>
-			<option value="2"<?php if ($this->podcastedit->episodetitle == 2) {echo ' select="selected" ';}?>>Scripture Only</option>
-			<option value="3"<?php if ($this->podcastedit->episodetitle == 3) {echo ' select="selected" ';}?>>Title + Scripture</option>
-			<option value="4"<?php if ($this->podcastedit->episodetitle == 4) {echo ' select="selected" ';}?>>Date + Scripture + Title</option>
+      		<option value="z"><?php echo JText::_('- Select an item -');?></option>
+        	<option <?php if ($this->podcastedit->episodetitle == 0) {echo 'selected ';}?>value="0"><?php echo JText::_('Scripture + Title');?></option>
+			<option <?php if ($this->podcastedit->episodetitle == 1) {echo 'selected ';}?>value="1"><?php echo JText::_('Title Only');?></option>
+			<option <?php if ($this->podcastedit->episodetitle == 2) {echo 'selected ';}?>value="2"><?php echo JText::_('Scripture Only');?></option>
+			<option <?php if ($this->podcastedit->episodetitle == 3) {echo 'selected ';}?>value="3"><?php echo JText::_('Title + Scripture');?></option>
+			<option <?php if ($this->podcastedit->episodetitle == 4) {echo 'selected ';}?>value="4"><?php echo JText::_('Date + Scripture + Title');?></option>
+            <option <?php if ($this->podcastedit->episodetitle == 5) {echo 'selected ';}?>value="5"><?php echo JText::_('Custom');?></option>
     		</select>
             
         </td>
+    </tr>
+    <tr>
+    	<td class="key"><b><?php echo JText::_('Custom');?></b></td>
+        <td><input class="text_area" type="text" name="custom" id="custom" size="200" value="<?php echo $this->podcastedit->custom;?>" /></td>
     </tr>
 	</table>
 	</fieldset>

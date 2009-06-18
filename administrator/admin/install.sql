@@ -221,7 +221,7 @@ PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`;
 --
 
 
-CREATE TABLE `#__bsms_templates` (
+CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
   
 `id` int(11) NOT NULL auto_increment,
   
@@ -236,7 +236,7 @@ PRIMARY KEY  (`id`)
 
 --Adding Admin Table
 --
- CREATE TABLE `#__bsms_admin` (
+ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 `compat_mode` TINYINT NOT NULL DEFAULT '0',
 `allow_deletes` TINYINT NOT NULL DEFAULT '1',
 `drop_tables` TINYINT NOT NULL DEFAULT '0',

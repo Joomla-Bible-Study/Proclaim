@@ -13,26 +13,5 @@
 		<option value="1">Show Store Options</option>
 		<option value="0">Hide Store Options</option>
 	</param>
-	<param name="@spacer" type="spacer" default="Podcast Parameters" label="Podcast Parameters" description="Podcast Parameters">
-		</param>
-	<param name="podcast_title" type="radio" default="0" label="Type of Title for Podcast Episodes" description="Choose a type of title you want displayed for podcast episodes">
-		<option value="0">Scripture + Title</option>
-		<option value="1">Title Only</option>
-		<option value="2">Scripture Only</option>
-		<option value="3">Title + Scripture</option>
-		<option value="4">Date + Scripture + Title</option>
-		</param>
-	<param name="allow_podcast" type="radio" default="0" label="Allow Podcast Frontend entry" description="Choose whether to allow or not podcast entry on the front end">
-		<option value="0">No Front End Entry</option>
-		<option value="1">Allow Front end Etnry</option>
-	</param>
-	<param name="podcast_access" type="list" default="23" label="Podcast Front End Submission" description="Enter the level of access required for users to enter podcast information on the front end">
-		<option value="18">Registered Users</option>
-		<option value="19">Authors</option>
-		<option value="20">Editors</option>
-		<option value="21">Publishers</option>
-		<option value="23">Managers</option>
-		<option value="24">Administrators or Superadmin</option>
-	</param>
 </params>
 </config>

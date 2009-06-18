@@ -6,7 +6,7 @@ function getHeader($row, $params)
 	$nh = FALSE;
 	if  (($params->get('use_headers_list') == 0) || ($params->get('use_headers_view') == 0)){$nh = TRUE;}
 	
-	$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+	$path1 = JPATH_COMPONENT_SITE.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	$columns = 1;
 	if ($params->get('row1col2') > 0) {$columns = 2;}

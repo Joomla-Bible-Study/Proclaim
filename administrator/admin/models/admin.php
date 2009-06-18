@@ -7,7 +7,7 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
 
-class biblestudyModellocationsedit extends JModel
+class biblestudyModeladmin extends JModel
 {
 	/**
 	 * Constructor that retrieves the ID from the request
@@ -37,7 +37,7 @@ class biblestudyModellocationsedit extends JModel
 	{
 		// Load the data
 		if (empty( $this->_data )) {
-			$query = ' SELECT * FROM #__bsms_locations '.
+			$query = ' SELECT * FROM #__bsms_admin '.
 					'  WHERE id = '.$this->_id;
 			$this->_db->setQuery( $query );
 			$this->_data = $this->_db->loadObject();
@@ -45,9 +45,10 @@ class biblestudyModellocationsedit extends JModel
 		if (!$this->_data) {
 			$this->_data = new stdClass();
 			$this->_data->id = 0;
-			$this->_data->location_text = null;
+			//$this->_data->bookname = null;
+			//$this->_data->booknumber = null;
 			//TF added this
-			$this->_data->published = 0;
+			//$this->_data->published = 0;
 		}
 		return $this->_data;
 	}
@@ -64,7 +65,7 @@ class biblestudyModellocationsedit extends JModel
 
 		$data = JRequest::get( 'post' );
 
-		// Bind the form fields to the table
+		// Bind the form fields to the hello table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
@@ -116,7 +117,7 @@ class biblestudyModellocationsedit extends JModel
 		{
 			$cids = implode( ',', $cid );
 
-			$query = 'UPDATE #__bsms_locations'
+			$query = 'UPDATE #__bsms_books'
 				. ' SET published = ' . intval( $publish )
 				. ' WHERE id IN ( '.$cids.' )'
 				

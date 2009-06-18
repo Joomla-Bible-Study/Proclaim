@@ -15,7 +15,7 @@ class Tableadmin extends JTable
 	 *
 	 * @var int
 	 */
-	//var $id = null;
+	var $id = null;
 	//var $published = null;
 
 	/**
@@ -25,7 +25,7 @@ class Tableadmin extends JTable
 	var $allow_deletes = null;
 	var $drop_tables = null;
 	var $admin_store = null;
-	
+
 	
 
 	/**

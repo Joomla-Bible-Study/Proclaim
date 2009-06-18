@@ -1,12 +1,8 @@
 <?php
-
-
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-
-class biblestudyControlleradmin extends JController
-{
+class biblestudyControlleradmin extends JController {
 	/**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
@@ -47,7 +43,7 @@ class biblestudyControlleradmin extends JController
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&view=admin';
+		$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
 		$this->setRedirect($link, $msg);
 	}
 
@@ -57,14 +53,14 @@ class biblestudyControlleradmin extends JController
 	 */
 	function remove()
 	{
-		$model = $this->getModel('admin');
+		$model = $this->getModel('booksedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Locations Could not be Deleted' );
+			$msg = JText::_( 'Error: One or More Books Could not be Deleted' );
 		} else {
-			$msg = JText::_( 'Location(s) Deleted' );
+			$msg = JText::_( 'Book(s) Deleted' );
 		}
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=locationslist', $msg );
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=bookslist', $msg );
 	}
 function publish()
 	{
@@ -76,12 +72,12 @@ function publish()
 			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
 		}
 
-		$model = $this->getModel('locationsedit');
+		$model = $this->getModel('booksedit');
 		if(!$model->publish($cid, 1)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=locationslist' );
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=bookslist' );
 	}
 
 
@@ -95,12 +91,12 @@ function publish()
 			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
 		}
 
-		$model = $this->getModel('locationsedit');
+		$model = $this->getModel('booksedit');
 		if(!$model->publish($cid, 0)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=locationslist' );
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=bookslist' );
 	}
 	/**
 	 * cancel editing a record
@@ -109,7 +105,7 @@ function publish()
 	function cancel()
 	{
 		$msg = JText::_( 'Operation Cancelled' );
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=admin', $msg );
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 	}
 }
 ?>

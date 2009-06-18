@@ -233,6 +233,7 @@
 			<menu link="option=com_biblestudy&amp;view=episodelist">Podcast Episodes</menu>
 			<menu link="option=com_biblestudy&amp;view=mimetypelist">Mime Types</menu>
 			<menu link="option=com_biblestudy&amp;view=commentslist">Study Comments</menu>
+			<menu link="option=com_biblestudy&amp;view=admin">Administration</menu>
 			<menu link="option=com_biblestudy&amp;view=cssedit">CSS Edit</menu>
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
@@ -267,6 +268,7 @@
 			<filename>controllers/templateslist.php</filename>
 			<filename>controllers/templateedit.php</filename>
 			<filename>controllers/cssedit.php</filename>
+			<filename>controllers/admin.php</filename>
 			<filename>controllers/index.html</filename>
 			<filename>elements/studydetails.php</filename>
 			<filename>elements/mediafile.php</filename>
@@ -305,6 +307,7 @@
 			<filename>models/locationslist.php</filename>
 			<filename>models/templateedit.php</filename>
 			<filename>models/templateslist.php</filename>
+			<filename>models/admin.php</filename>
 			<filename>models/index.html</filename>
 			<filename>views/cssedit/view.html.php</filename>
 			<filename>views/cssedit/index.html</filename>
@@ -434,6 +437,10 @@
 			<filename>views/templateslist/index.html</filename>
 			<filename>views/templateslist/tmpl/default.php</filename>
 			<filename>views/templateslist/tmpl/index.html</filename>
+			<filename>views/admin/index.html</filename>
+			<filename>views/admin/view.html.php</filename>
+			<filename>views/admin/tmpl/index.html</filename>
+			<filename>views/admin/tmpl/default.php</filename>
 			<filename>views/index.html</filename>
 			<filename>tables/teacheredit.php</filename>
 			<filename>tables/mediaedit.php</filename>
@@ -450,6 +457,7 @@
 			<filename>tables/commentsedit.php</filename>
 			<filename>tables/locationsedit.php</filename>
 			<filename>tables/templateedit.php</filename>
+			<filename>tables/admin.php</filename>
 			<filename>tables/index.html</filename>
 			<filename>convert1.htm</filename>
 			<filename>config.xml</filename>

@@ -6,7 +6,7 @@ function getMediatable($params, $row)
 
     global $mainframe, $option;
 	$database = & JFactory::getDBO();
-		$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+		$path1 = JPATH_COMPONENT_SITE.DS.'helpers'.DS;
 		include_once($path1.'filesize.php');
 		include_once($path1.'filepath.php');
 		include_once($path1.'duration.php');
