@@ -7,11 +7,15 @@
 <?php 
 global $mainframe, $option;
 $params = &JComponentHelper::getParams('com_biblestudy');
-$drop_tables = $params->get('drop_tables');
+$database	= & JFactory::getDBO();
+$database->setQuery ("SELECT drop_tables FROM #__bsms_admin WHERE id = 1");
+$database->query();
+$drop_tables = $database->loadResult();
+
 
 	if ($drop_tables >0)
 	{
-		$database	= & JFactory::getDBO();
+		
 		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_studies");
 		$database->query();
 		if ($database->getErrorNum()) {

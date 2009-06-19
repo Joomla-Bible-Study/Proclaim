@@ -20,6 +20,8 @@ class biblestudyModelteacherlist extends JModel
 	var $_data;
 	var $_total = null;
 	var $_pagination = null;
+	var $allow_deletes = null;
+	
 	function __construct()
 	{
 		parent::__construct();
@@ -120,6 +122,16 @@ function _buildContentOrderBy()
 			//$orderby 	= ' ORDER BY t.catid, ordering ';
 		}
 		return $orderby;
+	}
+function getDeletes()
+	{
+		if (empty($this->_deletes)) {
+			$query = 'SELECT allow_deletes'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_deletes = $this->_getList($query);
+		}
+		return $this->_deletes;
 	}
 }
 ?>

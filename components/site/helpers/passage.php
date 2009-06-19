@@ -5,7 +5,7 @@ function getPassage($params, $row)
 //global $mainframe, $option;
 $esv = 1;
 $scripturerow = 1;
-$path1 = JPATH_COMPONENT_SITE.DS.'helpers'.DS;
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'scripture.php');
 $scripture = getScripture($params, $row, $esv, $scripturerow);
 $key = "IP";

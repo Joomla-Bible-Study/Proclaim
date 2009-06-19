@@ -14,6 +14,7 @@ class biblestudyViewadmin extends JView
 	{
 		
 		$admin		=& $this->get('Data');
+		$this->assignRef('admin', $admin);
 		$isNew		= ($admin->id < 1);
 		//$lists = array();
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
@@ -24,7 +25,7 @@ class biblestudyViewadmin extends JView
 			//JToolBarHelper::cancel();
 		//} else {
 			// for existing items the button is renamed `close`
-			JToolBarHelper::cancel( 'cancel', 'Close' );
+			//JToolBarHelper::cancel( 'cancel', 'Close' );
 		//}
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.admin', true );

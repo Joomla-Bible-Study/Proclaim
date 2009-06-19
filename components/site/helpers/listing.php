@@ -2,7 +2,7 @@
 //Helper file - master list creater for study lists
 function getListing($row, $params, $oddeven)
 {
-	$path1 = JPATH_COMPONENT_SITE.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	//Need to know if last column and last row

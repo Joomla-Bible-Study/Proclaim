@@ -1,4 +1,5 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php defined('_JEXEC') or die('Restricted access');
+//dump ($this->admin, 'admin: ');?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
@@ -56,4 +57,5 @@
 <input type="hidden" name="option" value="com_biblestudy" />
 <input type="hidden" name="id" value="1" />
 <input type="hidden" name="controller" value="admin" />
+<input type="hidden" name="task" value="save" />
 </form>

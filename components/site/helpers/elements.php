@@ -2,7 +2,7 @@
 
 function getElementid($rowid, $row, $params)
 	{
-	 $path1 = JPATH_COMPONENT_SITE.DS.'helpers'.DS;
+	 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'scripture.php');
 	include_once($path1.'duration.php');
 	include_once($path1.'date.php');

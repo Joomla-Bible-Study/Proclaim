@@ -21,7 +21,7 @@ function getTitle($params, $row)
 			break;
 		case 4:
 			$esv = 0;
-			$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+			$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 			include_once($path1.'scripture.php');
 			$scripture = getScripture($params, $row, $esv, $scripturerow = 1);
 			$title .= $scripture;
@@ -55,7 +55,7 @@ function getTitle($params, $row)
 			break;
 		case 4:
 			$esv = 0;
-			$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+			$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 			include_once($path1.'scripture.php');
 			$scripture = getScripture($params, $row, $esv, $scripturerow = 1);
 			$title .= $scripture;

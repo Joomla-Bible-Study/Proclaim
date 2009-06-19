@@ -20,8 +20,9 @@ class biblestudyViewserverslist extends JView
 		$params = &JComponentHelper::getParams($option);
 		JToolBarHelper::title(   JText::_( 'Servers Manager' ), 'generic.png' );
 		//Checks to see if the admin allows rows to be deleted
-		if ($params->get('allow_deletes') > 0 ):
-			JToolBarHelper::deleteList();
+		$allow_deletes =& $this->get('Deletes');
+		if ($allow_deletes->allow_deletes > 0 ):
+		JToolBarHelper::deleteList();
 		endif;
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();

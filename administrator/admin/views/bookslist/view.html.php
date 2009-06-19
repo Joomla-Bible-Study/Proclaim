@@ -15,7 +15,8 @@ class biblestudyViewbookslist extends JView {
 		JToolBarHelper::title(JText::_('Books Manager'), 'generic.png');
 
 		//Checks to see if the admin allows rows to be deleted
-		if ($params->get('allow_deletes') > 0 ):
+		$allow_deletes =& $this->get('Deletes');
+		if ($allow_deletes->allow_deletes > 0 ):
 		JToolBarHelper::deleteList();
 		endif;
 
@@ -33,6 +34,7 @@ class biblestudyViewbookslist extends JView {
 		// Get data from the model
 		$items =& $this->get( 'Data');
 		$total =& $this->get( 'Total');
+		
 		$pagination =& $this->get( 'Pagination' );
 
 		$javascript = 'onchange="document.adminForm.submit();"';

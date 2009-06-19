@@ -6,7 +6,7 @@ function getMediatable($params, $row)
 
     global $mainframe, $option;
 	$database = & JFactory::getDBO();
-		$path1 = JPATH_COMPONENT_SITE.DS.'helpers'.DS;
+		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		include_once($path1.'filesize.php');
 		include_once($path1.'filepath.php');
 		include_once($path1.'duration.php');
@@ -26,6 +26,10 @@ function getMediatable($params, $row)
     $database->setQuery( $query_media1 );
     $media1 = $database->loadObjectList('id');
 	$rows2 = count($media1);
+	
+	$database->setQuery ("SELECT compat_mode FROM #__bsms_admin WHERE id = 1");
+	$database->query();
+	$compat_mode = $database->loadResult();
 	//dump ($rows2, 'Rows2: ');
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
 	$mediatable = '<table class="mediatable"><tbody><tr>';
@@ -184,7 +188,7 @@ function getMediatable($params, $row)
       if ($imagew) {$width = $imagew;} else {$width = 24;}
       if ($imageh) {$height = $imageh;} else {$height= 24;}
 	   
-      if($params->get('compatibilityMode') == 0) {
+      if($compat_mode == 0) {
        $mediatable .='<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
 	   
       }else{

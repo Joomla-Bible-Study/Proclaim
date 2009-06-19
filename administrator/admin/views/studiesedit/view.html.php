@@ -16,8 +16,9 @@ class biblestudyViewstudiesedit extends JView {
 		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 		
 		$config =& JComponentHelper::getParams( 'com_biblestudy' );
-		$enableStore = $config->get('admin_store');
-
+		$store =& $this->get('Store');
+		//$enableStore = $store->admin_store;
+		//dump ($store, 'store: ');
 		//Get Data
 		$studiesedit =& $this->get('Data');
 		$books =& $this->get('books');
@@ -160,7 +161,7 @@ class biblestudyViewstudiesedit extends JView {
 		$types6 			= array_merge( $types6, $database->loadObjectList() );
 		$lists['server_cd'] = JHTML::_('select.genericlist', $types6, 'server_cd', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->server_cd );
 
-		$this->assignRef('enableStore', $enableStore);
+		$this->assignRef('store', $store);
 		$this->assignRef('mediafiles', $mediafiles);
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('studiesedit',		$studiesedit);

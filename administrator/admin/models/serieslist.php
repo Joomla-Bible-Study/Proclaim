@@ -17,7 +17,7 @@ class biblestudyModelserieslist extends JModel
 	 * @var array
 	 */
 	var $_data;
-
+	var $allow_deletes = null;
 
 	/**
 	 * Returns the query
@@ -47,6 +47,15 @@ class biblestudyModelserieslist extends JModel
 
 		return $this->_data;
 	}
-
+function getDeletes()
+	{
+		if (empty($this->_deletes)) {
+			$query = 'SELECT allow_deletes'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_deletes = $this->_getList($query);
+		}
+		return $this->_deletes;
+	}
 }
 ?>

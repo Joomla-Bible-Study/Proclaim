@@ -23,6 +23,7 @@ class biblestudyModelstudiesedit extends JModel {
 		// Set id and wipe data
 		$this->_id		= $id;
 		$this->_data	= null;
+		$this->_store = null;
 	}
 
 
@@ -79,6 +80,7 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->thumbnailm = null;
 			$this->_data->thumbhm = null;
 			$this->_data->thumbwm = null;
+			
 		}
 		return $this->_data;
 	}
@@ -191,6 +193,16 @@ class biblestudyModelstudiesedit extends JModel {
 		. ' ORDER BY booknumber';
 		$this->_db->setQuery($query);
 		return $this->_getList($query);
+	}
+	function getStore()
+	{
+		if (empty($this->_store)) {
+			$query = 'SELECT admin_store'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_store = $this->_getList($query);
+		}
+		return $this->_store;
 	}
 }
 ?>

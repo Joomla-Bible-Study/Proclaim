@@ -36,7 +36,11 @@ class biblestudyModeladmin extends JModel
 	function &getData()
 	{
 		// Load the data
-		if (empty( $this->_data )) {
+		$query = ' SELECT * FROM #__bsms_admin '.
+					'  WHERE id = 1';
+			$this->_db->setQuery( $query );
+			$this->_data = $this->_db->loadObject();
+		/*if (empty( $this->_data )) {
 			$query = ' SELECT * FROM #__bsms_admin '.
 					'  WHERE id = '.$this->_id;
 			$this->_db->setQuery( $query );
@@ -49,7 +53,7 @@ class biblestudyModeladmin extends JModel
 			//$this->_data->booknumber = null;
 			//TF added this
 			//$this->_data->published = 0;
-		}
+		}*/
 		return $this->_data;
 	}
 
@@ -64,7 +68,7 @@ class biblestudyModeladmin extends JModel
 		$row =& $this->getTable();
 
 		$data = JRequest::get( 'post' );
-
+		//dump ($data, 'post: ');
 		// Bind the form fields to the hello table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());

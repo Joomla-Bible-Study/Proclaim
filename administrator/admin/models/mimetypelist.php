@@ -20,6 +20,7 @@ class biblestudyModelmimetypelist extends JModel
 	var $_data;
 	var $_total = null;
 	var $_pagination = null;
+	var $allow_deletes = null;
 
 function __construct()
 	{
@@ -93,6 +94,15 @@ function __construct()
 
 		return $this->_pagination;
 	}
-
+function getDeletes()
+	{
+		if (empty($this->_deletes)) {
+			$query = 'SELECT allow_deletes'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_deletes = $this->_getList($query);
+		}
+		return $this->_deletes;
+	}
 }
 ?>
