@@ -91,47 +91,6 @@ class biblestudyModeladmin extends JModel
 		return true;
 	}
 
-	/**
-	 * Method to delete record(s)
-	 *
-	 * @access	public
-	 * @return	boolean	True on success
-	 */
-	function delete()
-	{
-		$cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
-
-		$row =& $this->getTable();
-
-		if (count( $cids ))
-		{
-			foreach($cids as $cid) {
-				if (!$row->delete( $cid )) {
-					$this->setError( $row->getErrorMsg() );
-					return false;
-				}
-			}						
-		}
-		return true;
-	}
-	function publish($cid = array(), $publish = 1)
-	{
-		
-		if (count( $cid ))
-		{
-			$cids = implode( ',', $cid );
-
-			$query = 'UPDATE #__bsms_books'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
-				
-			;
-			$this->_db->setQuery( $query );
-			if (!$this->_db->query()) {
-				$this->setError($this->_db->getErrorMsg());
-				return false;
-			}
-		}		
-	}
+	
 }
 ?>

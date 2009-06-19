@@ -115,6 +115,7 @@ function publish()
  {
 
   global $mainframe, $option;
+  //$params =& $mainframe->getPageParameters();
   $params = &JComponentHelper::getParams($option);
   $path1 = JPATH_COMPONENT_SITE.DS.'helpers'.DS;
 	include_once($path1.'custom.php');
@@ -130,6 +131,8 @@ function publish()
   $podinfo = $db->loadObject();
   $description = str_replace("&","and",$podinfo->description);
   $client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+  $detailsitemid = $params->get('detailsitemid');
+  $detailsitemid = '&amp;Itemid='.$detailsitemid;
   $podhead = '<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>
@@ -234,8 +237,8 @@ function publish()
   $episodedetailtemp = '';
   $episodedetailtemp = '	<item>
 		<title>'.$title.'</title>
-		<link>http://'.$podinfo->website.'/index.php?option=com_biblestudy&amp;view=studydetails&amp;id='.$episode->sid.'</link>
-		<comments>http://'.$podinfo->website.'/index.php?option=com_biblestudy&amp;view=studydetails&amp;id='.$episode->sid.'</comments>
+		<link>http://'.$podinfo->website.'/index.php?option=com_biblestudy&amp;view=studydetails&amp;id='.$episode->sid.$detailsitemid.'</link>
+		<comments>http://'.$podinfo->website.'/index.php?option=com_biblestudy&amp;view=studydetails&amp;id='.$episode->sid.$detailsitemid.'</comments>
 		<itunes:author>'.$episode->teachername.'</itunes:author>
 		<dc:creator>'.$episode->teachername.'</dc:creator>
 		<description>'.$description.'</description>

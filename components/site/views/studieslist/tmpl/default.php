@@ -118,10 +118,7 @@ if ($this->params->get('show_topic_search') > 0) {  echo $this->lists['topics'];
  </tbody></table>
 <div class="listingfooter" >
 	<?php 
-      if ($params->get('show_limitbox') > 0) {
-		  //echo '&nbsp;&nbsp;&nbsp;'.JText::_('Display Num').'&nbsp;';
-     // echo $this->pagination->getLimitBox();
-	  }
+      
       echo $this->pagination->getPagesLinks();
       echo $this->pagination->getPagesCounter();
       //echo $this->pagination->getListFooter(); ?>
