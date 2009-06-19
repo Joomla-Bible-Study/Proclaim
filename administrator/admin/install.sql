@@ -240,7 +240,9 @@ PRIMARY KEY  (`id`)
 `compat_mode` TINYINT NOT NULL DEFAULT '0',
 `allow_deletes` TINYINT NOT NULL DEFAULT '1',
 `drop_tables` TINYINT NOT NULL DEFAULT '0',
-`admin_store` TINYINT NOT NULL DEFAULT '1'
+`admin_store` TINYINT NOT NULL DEFAULT '1',
+`id` INT(1) NOT NULL default '1',
+PRIMARY KEY (`id`)
 ) ENGINE = MYISAM 
 
 --
