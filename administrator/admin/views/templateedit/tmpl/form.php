@@ -1,29 +1,43 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
+?>
+<form action="index.php" method="post" name="adminForm" id="adminForm">
+<?php
 $pane =& JPane::getInstance( 'sliders' );
  
 echo $pane->startPane( 'content-pane' );
  
 // First slider panel
 // Create a slider panel with a title of SLIDER_PANEL_1_TITLE and a title id attribute of SLIDER_PANEL_1_NAME
-echo $pane->startPanel( JText::_( 'SLIDER_PANEL_1_TITLE' ), 'SLIDER_PANEL_1_NAME' );
+echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
 // Display the parameters defined in the <params> group with no 'group' attribute
 echo $this->params->render( 'params' );
 echo $pane->endPanel();
  
 //Second slider panel
 // Create a slider panel with a title of SLIDER_PANEL_2_TITLE and a title id attribute of SLIDER_PANEL_2_NAME
-echo $pane->startPanel( JText::_( 'SLIDER_PANEL_2_TITLE' ), 'SLIDER_PANEL_2_NAME' );
+echo $pane->startPanel( JText::_( 'Filters' ), 'FILTERS' );
 // Display the parameters defined in the <params> group with the 'group' attribute of 'GROUP_NAME'
-echo $this->params->render( 'params', 'ANOTHER_NAME' );
+echo $this->params->render( 'params', 'FILTERS' );
 echo $pane->endPanel();
- 
+
+echo $pane->startPanel( JText::_('Front Page Images'), 'FP_IMAGES');
+echo $this->params->render( 'params', 'FP_IMAGES');
+echo $pane->endPanel();
 // Repeat for each additional slider panel required
- 
+
+echo $pane->startPanel( JText::_('Verses, Dates, CSS'), 'VERSES');
+echo $this->params->render( 'params', 'VERSES');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Media'), 'MEDIA');
+echo $this->params->render( 'params', 'MEDIA');
+echo $pane->endPanel();
+
 echo $pane->endPane();
 
 ?>
-<div id="templateTagsContainer">
+<!--<div id="templateTagsContainer">
 	<div id="tabs">
 	<ul>
 		<li><a href="#tabs-1">BSM Tags</a></li>
@@ -84,9 +98,9 @@ echo $pane->endPane();
 	Tab 2 content
 	</div>
 	</div>
-</div>
+</div>-->
 <div id="tmplDesignSide">
-	<form action="index.php" method="post" name="adminForm" id="adminForm">
+	
 	<table class="admintable" width="100%">
 		<tr>
 			<td width="100" class="key"><?php echo JText::_('Published'); ?> </td>
@@ -97,13 +111,13 @@ echo $pane->endPane();
 			<td><?php echo $this->data['tmplTypes']; ?></td>
 		</tr>
 		<tr>
-			<td width="100" class="key"><?php echo JText::_('Template Designer'); ?> </td>
-			<td colspan="2">
-				<div id="tmplCanvas">
+			<td width="100" class="key"><?php echo JText::_('Template Name'); ?> </td>
+			<td colspan="2"><input type="text" name="title" id="title" length="100" value="<?php echo $this->template->title; ?>" />
+				<!--<div id="tmplCanvas">
 					<ul id="tmplTagCanvas">
 						<li class="canvasRow"></li>
 					</ul>
-				</div>
+				</div>-->
 			</td>
 		</tr>
 	</table>

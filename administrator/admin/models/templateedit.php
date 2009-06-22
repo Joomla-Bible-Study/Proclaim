@@ -91,5 +91,6 @@ class biblestudyModeltemplateedit extends JModel {
 			}
 		}
 	}
+
 }
 ?>

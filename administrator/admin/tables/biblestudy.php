@@ -12,7 +12,7 @@ defined('_JEXEC') or die('Restricted access');
  
  */
 function bind($array, $ignore = '')
-{
+{ //dump($array, 'array: ');
         if (key_exists( 'params', $array ) && is_array( $array['params'] ))
         {
                 $registry = new JRegistry();

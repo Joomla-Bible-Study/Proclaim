@@ -190,6 +190,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
 `published` int(1) NOT NULL,
 
 `params` longtext NULL,
+
+`title` TEXT NULL,
   
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;

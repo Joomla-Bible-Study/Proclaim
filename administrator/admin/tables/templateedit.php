@@ -1,5 +1,5 @@
 <?php
-defined('_JEXEC') or dieI('Restricted Access');
+defined('_JEXEC') or die('Restricted Access');
 
 class Tabletemplateedit extends JTable {
 	
@@ -8,13 +8,14 @@ class Tabletemplateedit extends JTable {
 	var $tmpl = null;
 	var $published = 1;
 	var $params = null;
+	var $title = null;
 	
 	function Tabletemplateedit(&$db) {
 		parent::__construct('#__bsms_templates', 'id', $db);
 	}
 //Not sure if this function belongs here, but is designed to save the params to their row in the database
 function bind($array, $ignore = '')
-{
+{ 
         if (key_exists( 'params', $array ) && is_array( $array['params'] ))
         {
                 $registry = new JRegistry();

@@ -234,6 +234,7 @@
 			<menu link="option=com_biblestudy&amp;view=mimetypelist">Mime Types</menu>
 			<menu link="option=com_biblestudy&amp;view=commentslist">Study Comments</menu>
 			<menu link="option=com_biblestudy&amp;view=admin&amp;layout=form">Administration</menu>
+			<menu link="option=com_biblestudy&amp;view=templatelist">Template Display Settings</menu>
 			<menu link="option=com_biblestudy&amp;view=cssedit">CSS Edit</menu>
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
