@@ -147,101 +147,6 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 			
 			
 
-//Here we check to see if there are already rows in the mediafiles table. If not, we assume this is upgrading from RC5 to 6.0.0 and we move the mediafiles from the studies table	
-$database->setQuery ('SELECT COUNT(*) FROM #__bsms_mediafiles');
-$database->query();
-$mediacheck = $database->loadResult();
-if ($mediacheck < 1) {
-	$tn = '#__bsms_studies';
-	$fields = $database->getTableFields( array( $tn ) );
-	$size = false;
-	$size	= isset( $fields[$tn]['media1_size'] );	
-			if ($size = false) {  // here we assume that this is an old version without media size fields 
-			//Now we move any old media records into their own table
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, createdate, published) SELECT id, media1_id, media1_server, media1_path, media1_special, media1_filename, studydate, published FROM #__bsms_studies WHERE media1_show = 1');
-			$database->query();
-			if ($database->getErrorNum()) {
-					echo 'Database Error: '.$database->stderr().' Error ';
-					return false;
-				}
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, createdate, published) SELECT id, media2_id, media2_server, media2_path, media2_special, media2_filename, studydate, published FROM #__bsms_studies WHERE media2_show = 1');
-			$database->query();
-			if ($database->getErrorNum()) {
-					echo 'Database Error: '.$database->stderr().' Error ';
-					return false;
-				}
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, createdate, published) SELECT id, media3_id, media3_server, media3_path, media3_special, media3_filename, studydate, published FROM #__bsms_studies WHERE media3_show = 1');
-			$database->query();
-			if ($database->getErrorNum()) {
-					echo 'Database Error: '.$database->stderr().' Error ';
-					return false;
-				}
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, createdate, published) SELECT id, media4_id, media4_server, media4_path, media4_special, media4_filename, studydate, published FROM #__bsms_studies WHERE media4_show = 1');
-			$database->query();
-			if ($database->getErrorNum()) {
-					echo 'Database Error: '.$database->stderr().' Error ';
-					return false;
-				}
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, createdate, published) SELECT id, media5_id, media5_server, media5_path, media5_special, media5_filename, studydate, published FROM #__bsms_studies WHERE media5_show = 1');
-			$database->query();
-			if ($database->getErrorNum()) {
-					echo 'Database Error: '.$database->stderr().' Error ';
-					return false;
-				}
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, createdate, published) SELECT id, media6_id, media6_server, media6_path, media6_special, media6_filename, studydate, published FROM #__bsms_studies WHERE media6_show = 1');
-			$database->query();
-			if ($database->getErrorNum()) {
-					echo 'Database Error: '.$database->stderr().' Error ';
-					return false;
-				}
-			//Now let's drop those media columns from the studies table. We don't need them anymore
-			$database->setQuery ("ALTER TABLE #__bsms_studies, DROP media1_id, DROP media1_server, DROP media1_path, DROP media1_special, DROP media1_filename, DROP media1_show, DROP media2_id, DROP media2_server, DROP media2_path, DROP media2_special, DROP media2_filename, DROP media2_show, DROP media3_id, DROP media3_server, DROP media3_path, DROP media3_special, DROP media3_filename, DROP media3_show, DROP media4_id, DROP media4_server, DROP media4_path, DROP media4_special, DROP media4_filename, DROP media4_show, DROP media5_id, DROP media5_server, DROP media5_path, DROP media5_special, DROP media5_filename, DROP media5_show, DROP media6_id, DROP media6_server, DROP media6_path, DROP media6_special, DROP media6_filename, DROP media6_show");
-			$database->query(); 
-				if ($database->getErrorNum()) {
-					echo 'Database Error: '.$database->stderr().'. Error dropping columns';
-					return false;
-				}
-			} //end of !$schema
-			
-			
-		if ($schema == 502) { // Here we assume the existance of media_hours and other fields
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, size, createdate, published) SELECT id, media1_id, media1_server, media1_path, media1_special, media1_filename, media1_size, studydate, published FROM #__bsms_studies WHERE media1_show = 1');
-			$database->query();
-			
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, size, createdate, published) SELECT id, media2_id, media2_server, media2_path, media2_special, media2_filename, media2_size, studydate, published FROM #__bsms_studies WHERE media2_show = 1');
-			$database->query();
-			
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, size, createdate, published) SELECT id, media3_id, media3_server, media3_path, media3_special, media3_filename, media3_size, studydate, published FROM #__bsms_studies WHERE media3_show = 1');
-			$database->query();
-			
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, size, createdate, published) SELECT id, media4_id, media4_server, media4_path, media4_special, media4_filename, media4_size, studydate, published FROM #__bsms_studies WHERE media4_show = 1');
-			$database->query();
-			
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, size, createdate, published) SELECT id, media5_id, media5_server, media5_path, media5_special, media5_filename, media5_size, studydate, published FROM #__bsms_studies WHERE media5_show = 1');
-			$database->query();
-			
-			$database->setQuery ('INSERT INTO #__bsms_mediafiles (study_id, media_image, server, path, special, filename, size, createdate, published) SELECT id, media6_id, media6_server, media6_path, media6_special, media6_filename, media6_size, studydate, published FROM #__bsms_studies WHERE media6_show = 1');
-			$database->query();
-			
-$database->setQuery ("ALTER TABLE #__bsms_studies, DROP media1_id, DROP media1_server, DROP media1_path, DROP media1_special, DROP media1_filename, DROP media1_show, DROP media2_id, DROP media2_server, DROP media2_path, DROP media2_special, DROP media2_filename, DROP media2_show, DROP media3_id, DROP media3_server, DROP media3_path, DROP media3_special, DROP media3_filename, DROP media3_show, DROP media4_id, DROP media4_server, DROP media4_path, DROP media4_special, DROP media4_filename, DROP media4_show, DROP media5_id, DROP media5_server, DROP media5_path, DROP media5_special, DROP media5_filename, DROP media5_show, DROP media6_id, DROP media6_server, DROP media6_path, DROP media6_special, DROP media6_filename, DROP media6_show, DROP media1_size, DROP media2_size, DROP media3_size, DROP media4_size, DROP media5_size, DROP media6_size");
-			$database->query(); 
-				if ($database->getErrorNum()) {
-					echo 'Database Error: '.$database->stderr().'. Error dropping columns';
-					return false;
-				}
-		} // end if schema == 502
-			
-} // end of if $mediacheck < 1
-			
-		
-		$database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
-		$database->query();
-		$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 600)");
-		$database->query();
-		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
-		$schema_version3 = $database->loadResult();
-		$dbmessage =  'The current database schema for Bible Study is: '.$schema_version3.'<br>';
-		
 //Begin installation for version 6.0.08
 
 //if ($schema_version3 == 600) {
@@ -366,6 +271,10 @@ $fieldcheck	= isset( $fields[$tn]['episodetitle'] );
 		$database->query();}
 $fieldcheck	= isset( $fields[$tn]['custom'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_podcast ADD COLUMN custom VARCHAR( 200 ) NULL AFTER episodetitle;");
+		$database->query();}
+$fieldcheck = false;	
+$fieldcheck	= isset( $fields[$tn]['detailsitemid'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_podcast ADD COLUMN detailsitemid INT NULL AFTER custom;");
 		$database->query();}
 if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
 	if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}
