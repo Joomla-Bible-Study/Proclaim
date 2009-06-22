@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+<params>
+	<param name="test1" type="text" length="50" label="Test Param" description="This is the description of the test paramter" />
+</params>
+<params group="ANOTHER_NAME">
+<param name="test2" type="list" label="Test 2 Parameter">
+	<option value="0">List1</option>
+	<option value="1">List2</option>
+</param>
+</params>
+
+</root>
