@@ -41,6 +41,7 @@ class Tablepodcastedit extends JTable
 			var $podcastlimit = null;
 			var $episodetitle = null;
 			var $custom = null;
+			var $detailsitemid = null
 	/**
 	 * Constructor
 	 *
