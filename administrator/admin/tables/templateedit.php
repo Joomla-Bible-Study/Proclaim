@@ -7,9 +7,22 @@ class Tabletemplateedit extends JTable {
 	var $type = null;
 	var $tmpl = null;
 	var $published = 1;
+	var $params = null;
 	
 	function Tabletemplateedit(&$db) {
 		parent::__construct('#__bsms_templates', 'id', $db);
 	}
+//Not sure if this function belongs here, but is designed to save the params to their row in the database
+function bind($array, $ignore = '')
+{
+        if (key_exists( 'params', $array ) && is_array( $array['params'] ))
+        {
+                $registry = new JRegistry();
+                $registry->loadArray($array['params']);
+                $array['params'] = $registry->toString();
+        }
+        return parent::bind($array, $ignore);
+}
+
 }
 ?>

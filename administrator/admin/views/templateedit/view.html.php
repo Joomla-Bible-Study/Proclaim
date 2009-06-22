@@ -19,7 +19,13 @@ class biblestudyViewtemplateedit extends JView {
 		//Initialize templating class
 		$tmplEngine = $this->loadHelper('templates.helper');
 		$tmplEngine =& bibleStudyTemplate::getInstance();
-
+		
+		//Load the template params from its row and assign to $this
+		$paramsdata = $template->params;
+		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'templateedit.xml';
+		$params = new JParameter($paramsdata, $paramsdefs);
+		$this->assignRef('params', $params);
+		//dump ($template, 'template: ');
 		$data['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $template->published);
 		$data['tmplTypes'] = $tmplEngine->loadTmplTypesOption($template->type); 
 

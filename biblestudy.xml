@@ -306,6 +306,7 @@
 			<filename>models/locationsedit.php</filename>
 			<filename>models/locationslist.php</filename>
 			<filename>models/templateedit.php</filename>
+			<filename>models/templateedit.xml</filename>
 			<filename>models/templateslist.php</filename>
 			<filename>models/admin.php</filename>
 			<filename>models/index.html</filename>

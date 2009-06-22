@@ -1,44 +1,25 @@
 <?php
 /**
- * Hello World table class
- * 
- * @package    Joomla.Tutorials
- * @subpackage Components
- * @link http://dev.joomla.org/component/option,com_jd-wiki/Itemid,31/id,tutorials:components/
+ 
  * @license		GNU/GPL
  */
-
+//This function is designed to save the template params to the database
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
 /**
- * Hello Table class
- *
- * @package    Joomla.Tutorials
- * @subpackage Components
+ 
  */
-class Tableteacheredit extends JTable
+function bind($array, $ignore = '')
 {
-	/**
-	 * Primary Key
-	 *
-	 * @var int
-	 */
-	var $id = null;
-
-	/**
-	 * @var string
-	 */
-	var $teachername = null;
-
-	/**
-	 * Constructor
-	 *
-	 * @param object Database connector object
-	 */
-	function Tableteacheredit(& $db) {
-		parent::__construct('#__bsms_teachers', 'id', $db);
-	}
+        if (key_exists( 'params', $array ) && is_array( $array['params'] ))
+        {
+                $registry = new JRegistry();
+                $registry->loadArray($array['params']);
+                $array['params'] = $registry->toString();
+        }
+        return parent::bind($array, $ignore);
 }
+
 ?>

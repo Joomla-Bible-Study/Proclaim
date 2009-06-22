@@ -1,5 +1,27 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
+$pane =& JPane::getInstance( 'sliders' );
+ 
+echo $pane->startPane( 'content-pane' );
+ 
+// First slider panel
+// Create a slider panel with a title of SLIDER_PANEL_1_TITLE and a title id attribute of SLIDER_PANEL_1_NAME
+echo $pane->startPanel( JText::_( 'SLIDER_PANEL_1_TITLE' ), 'SLIDER_PANEL_1_NAME' );
+// Display the parameters defined in the <params> group with no 'group' attribute
+echo $this->params->render( 'params' );
+echo $pane->endPanel();
+ 
+//Second slider panel
+// Create a slider panel with a title of SLIDER_PANEL_2_TITLE and a title id attribute of SLIDER_PANEL_2_NAME
+echo $pane->startPanel( JText::_( 'SLIDER_PANEL_2_TITLE' ), 'SLIDER_PANEL_2_NAME' );
+// Display the parameters defined in the <params> group with the 'group' attribute of 'GROUP_NAME'
+echo $this->params->render( 'params', 'ANOTHER_NAME' );
+echo $pane->endPanel();
+ 
+// Repeat for each additional slider panel required
+ 
+echo $pane->endPane();
+
 ?>
 <div id="templateTagsContainer">
 	<div id="tabs">
