@@ -25,6 +25,7 @@ class biblestudyModelstudieslist extends JModel
 	var $_orders;
 	var $_select;
 	var $_books;
+	var $_template;
 	
 	
 
@@ -32,7 +33,13 @@ class biblestudyModelstudieslist extends JModel
 	{
 		parent::__construct();
 		global $mainframe, $option;
-		$params =& $mainframe->getPageParameters();
+		//$params =& $mainframe->getPageParameters();
+		$params 			=& $mainframe->getPageParameters();
+		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$template = $this->getTemplate();
+		$params = new JParameter($template[0]->params);
+		
+		//dump ($params, 'params: ');
 		$config = JFactory::getConfig();
 		// Get the pagination request variables
 		//$limitstart = JRequest::getVar('limitstart', 0, '', 'int');
@@ -185,7 +192,19 @@ function getBooks() {
 		}
 		return $this->_Books;
 	}
-	
+
+function getTemplate() {
+		if(empty($this->_template)) {
+			$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+			//dump ($templateid, 'templateid: ');
+			$query = 'SELECT *'
+			. ' FROM #__bsms_templates'
+			. ' WHERE published = 1 AND id = '.$templateid;
+			$this->_template = $this->_getList($query);
+			//dump ($this->_template, 'this->_template');
+		}
+		return $this->_template;
+	}
 		
 	function getData()
 	{

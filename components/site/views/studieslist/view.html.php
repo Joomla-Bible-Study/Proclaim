@@ -21,6 +21,15 @@ class biblestudyViewstudieslist extends JView {
 
 		$params 			=& $mainframe->getPageParameters();
 		//dump ($params, 'params: ');
+		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$template = $this->get('Template');
+		$params = new JParameter($template[0]->params);
+		//$templateparams = $template[0]->params;
+		//$params->merge($templateparams);
+		//dump ($templateparams, 'templateparams: ');
+		//
+		
+		//dump ($params, 'params: ');
 		$uri				=& JFactory::getURI();
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
@@ -55,6 +64,7 @@ class biblestudyViewstudieslist extends JView {
 		$topics = $this->get('Topics');
 		$orders = $this->get('Orders');
 		$books = $this->get('Books');
+		
         //This is the helper for scripture formatting
         $scripture_call = Jview::loadHelper('scripture');
 		//end scripture helper
@@ -63,6 +73,7 @@ class biblestudyViewstudieslist extends JView {
 		$orders = getTranslated($orders);
 		$book = getTranslated($books);
 		//$this->assignRef('books', $books);
+		$this->assignRef('template', $template);
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('order', $orders);
 		$this->assignRef('topic', $topics);
