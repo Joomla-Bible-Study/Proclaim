@@ -2,6 +2,29 @@
 defined('_JEXEC') or die('Restricted Access');
 ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
+<div id="tmplDesignSide">
+	<table class="admintable" width="100%">
+		<tr>
+			<td width="100" class="key"><?php echo JText::_('Published'); ?> </td>
+			<td><?php echo $this->data['published']; ?></td>
+		</tr>
+		<tr>
+			<td width="100" class="key"><?php echo JText::_('Type'); ?> </td>
+			<td><?php echo $this->data['tmplTypes']; ?></td>
+		</tr>
+		<tr>
+			<td width="100" class="key"><?php echo JText::_('Template Name'); ?> </td>
+			<td colspan="2"><input type="text" name="title" id="title" length="100" value="<?php echo $this->template->title; ?>" />
+				<!--<div id="tmplCanvas">
+					<ul id="tmplTagCanvas">
+						<li class="canvasRow"></li>
+					</ul>
+				</div>-->
+			</td>
+		</tr>
+	</table>
+
+<table><tr><td>
 <?php
 $pane =& JPane::getInstance( 'sliders' );
  
@@ -14,8 +37,10 @@ echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
 echo $this->params->render( 'params' );
 echo $pane->endPanel();
  
-//Second slider panel
-// Create a slider panel with a title of SLIDER_PANEL_2_TITLE and a title id attribute of SLIDER_PANEL_2_NAME
+echo $pane->startPanel( JText::_( 'Templates' ), 'TEMPLATES' );
+echo $this->params->render( 'params', 'TEMPLATES' );
+echo $pane->endPanel();
+
 echo $pane->startPanel( JText::_( 'Filters' ), 'FILTERS' );
 // Display the parameters defined in the <params> group with the 'group' attribute of 'GROUP_NAME'
 echo $this->params->render( 'params', 'FILTERS' );
@@ -34,9 +59,19 @@ echo $pane->startPanel( JText::_('Media'), 'MEDIA');
 echo $this->params->render( 'params', 'MEDIA');
 echo $pane->endPanel();
 
+echo $pane->startPanel( JText::_('Details View'), 'DETAILS');
+echo $this->params->render( 'params', 'DETAILS');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Teacher View'), 'TEACHER');
+echo $this->params->render( 'params', 'TEACHER');
+echo $pane->endPanel();
+
+//This ends the parameter panes
 echo $pane->endPane();
 
 ?>
+</td></tr></table>
 <!--<div id="templateTagsContainer">
 	<div id="tabs">
 	<ul>
@@ -99,28 +134,8 @@ echo $pane->endPane();
 	</div>
 	</div>
 </div>-->
-<div id="tmplDesignSide">
+
 	
-	<table class="admintable" width="100%">
-		<tr>
-			<td width="100" class="key"><?php echo JText::_('Published'); ?> </td>
-			<td><?php echo $this->data['published']; ?></td>
-		</tr>
-		<tr>
-			<td width="100" class="key"><?php echo JText::_('Type'); ?> </td>
-			<td><?php echo $this->data['tmplTypes']; ?></td>
-		</tr>
-		<tr>
-			<td width="100" class="key"><?php echo JText::_('Template Name'); ?> </td>
-			<td colspan="2"><input type="text" name="title" id="title" length="100" value="<?php echo $this->template->title; ?>" />
-				<!--<div id="tmplCanvas">
-					<ul id="tmplTagCanvas">
-						<li class="canvasRow"></li>
-					</ul>
-				</div>-->
-			</td>
-		</tr>
-	</table>
 	<input type="hidden" name="option" value="com_biblestudy" />
 	<input type="hidden" name="id" value="<?php echo $this->template->id; ?>" />
 	<input type="hidden" name="task" value="" />

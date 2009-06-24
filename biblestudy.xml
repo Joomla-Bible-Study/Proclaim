@@ -186,9 +186,10 @@
 		<filename>elements/teacher.php</filename>
 		<filename>elements/messagetype.php</filename>
 		<filename>elements/locations.php</filename>
-		<filename>elements/detailsitemid.php</filename>
-		<filename>elements/studieslistitemid.php</filename>
-		<filename>teacheritemid.php</filename>
+		<filename>elements/detailstemplateid.php</filename>
+		<filename>elements/studieslisttemplateid.php</filename>
+		<filename>elements/teachertemplateid.php</filename>
+		<filename>elements/templatemenuid.php</filename>
 		<filename>helpers/scripture.php</filename>
 		<filename>helpers/date.php</filename>
 		<filename>helpers/filesize.php</filename>

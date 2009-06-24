@@ -14,7 +14,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class JElementdetailsitemid extends JElement
+class JElementdetailstemplateid extends JElement
 {
 	/**
 	 * Element name
@@ -22,7 +22,7 @@ class JElementdetailsitemid extends JElement
 	 * @access	protected
 	 * @var		string
 	 */
-	var	$_name = 'detailsitemid';
+	var	$_name = 'detailstemplateid';
 
 	function fetchElement($name, $value, &$node, $control_name)
 	{
@@ -35,7 +35,7 @@ class JElementdetailsitemid extends JElement
 		;
 		$db->setQuery( $query );
 		$options = $db->loadObjectList( );
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a Menu Item').' -', 'id', 'text'));
+		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a Details Template').' -', 'id', 'text'));
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'id', 'text', $value, $control_name.$name );
 	}
 }

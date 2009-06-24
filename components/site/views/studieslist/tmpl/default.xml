@@ -10,7 +10,7 @@
 		<name>Studies List Layout</name>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="studieslist" />
-			<param name="templatemenuid" type="templatemenuid" default="" label="Template for this page" description="Choose a template for your page (set in admin/templates tab)" />
+			<param name="studieslisttemplateid" type="studieslisttemplateid" default="" label="Template for this page" description="Choose a template for your page (set in admin/templates tab)" />
 		</params>
 	</state>
 </metadata>
