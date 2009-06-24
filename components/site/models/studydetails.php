@@ -15,28 +15,40 @@ class biblestudyModelstudydetails extends JModel
 	 * @access	public
 	 * @return	void
 	 */
+	 var $_template;
+	 
 	function __construct()
 	{
 		parent::__construct();
 		global $mainframe;
 		//added for single study view off of menu
-		$menu	=& JSite::getMenu();
-		$item    = $menu->getActive();
-		$params	=& $menu->getParams($item->id);
-		$params2 =& $mainframe->getPageParameters();
+		//$menu	=& JSite::getMenu();
+		//$item    = $menu->getActive();
+		//$params	=& $menu->getParams($item->id);
+		//$params2 =& $mainframe->getPageParameters();
+		//$id = $params2->get('id');
 		//$params =& JSiteHelper::getMenuParams();
-		$id = $params->get('id', 0);
-		if (!$id)
-			{
+		//$id = $params->get('id', 0);
+		//dump ($id, 'id: ');
+		//if (!$id)
+		//	{
 				$id = JRequest::getVar('id', 0,'GET','INT');
-			}
-		$this->_id = $id;
+				//dump ($id, 'id: ');
+			//}
+		
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$this->setId((int)$array[0]);
+		//$params 			=& $mainframe->getPageParameters();
 		
 		 ////set the default view search path
         $this->addTablePath(JPATH_COMPONENT.DS.'tables');
+        $params 			=& $mainframe->getPageParameters();
+		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		//JRequest::setVar('id', $params->get('id'), 'get');
+		$this->_id = $id;
+		$template = $this->getTemplate();
+		$params = new JParameter($template[0]->params);
 	//if($params2->get('record_hits') == 1){
 		$this->hit();
 	//}
@@ -75,6 +87,7 @@ class biblestudyModelstudydetails extends JModel
 	{
 		// Load the data
 		if (empty( $this->_data )) {
+			$id = JRequest::getVar('id', 0,'GET','INT');
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS tname, #__bsms_teachers.title, '
 			. ' #__bsms_teachers.image, #__bsms_teachers.imagew, #__bsms_teachers.imageh, #__bsms_teachers.thumb, #__bsms_teachers.thumbw, #__bsms_teachers.thumbh,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text AS stext, #__bsms_message_type.id AS mid,'
@@ -87,7 +100,8 @@ class biblestudyModelstudydetails extends JModel
 			. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
 			. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
 			. ' LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
-			. '  WHERE #__bsms_studies.id = '.$this->_id.;
+			. '  WHERE #__bsms_studies.id = '.$id;
+			//.$this->_id.;
 			$this->_db->setQuery( $query );
 			$this->_data = $this->_db->loadObject();
 		}
@@ -127,7 +141,18 @@ class biblestudyModelstudydetails extends JModel
 		return true;
 	}
 
-
+function getTemplate() {
+		if(empty($this->_template)) {
+			$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+			//dump ($templateid, 'templateid: ');
+			$query = 'SELECT *'
+			. ' FROM #__bsms_templates'
+			. ' WHERE published = 1 AND id = '.$templateid;
+			$this->_template = $this->_getList($query);
+			//dump ($this->_template, 'this->_template');
+		}
+		return $this->_template;
+	}
 	
 	
 //end class
