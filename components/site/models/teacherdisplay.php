@@ -15,6 +15,9 @@ class biblestudyModelteacherdisplay extends JModel
 	 * @access	public
 	 * @return	void
 	 */
+	 var $_data;
+	 var $_template;
+	 
 	function __construct()
 	{
 		parent::__construct();
@@ -31,6 +34,11 @@ class biblestudyModelteacherdisplay extends JModel
 		$this->_id = $id;
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
+		global $mainframe, $option;
+		$params 			=& $mainframe->getPageParameters();
+		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$template = $this->getTemplate();
+		$params = new JParameter($template[0]->params);
 		$this->setId((int)$array[0]);
 	}
 
@@ -55,81 +63,18 @@ class biblestudyModelteacherdisplay extends JModel
 		return $this->_data;
 	}
 
-	/**
-	 * Method to store a record
-	 *
-	 * @access	public
-	 * @return	boolean	True on success
-	 */
-	/*function store()
-	{
-		$row =& $this->getTable();
-
-		$data = JRequest::get( 'post' );
-
-		// Bind the form fields to the table
-		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
-			return false;
+function getTemplate() {
+		if(empty($this->_template)) {
+			$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+			//dump ($templateid, 'templateid: ');
+			$query = 'SELECT *'
+			. ' FROM #__bsms_templates'
+			. ' WHERE published = 1 AND id = '.$templateid;
+			$this->_template = $this->_getList($query);
+			//dump ($this->_template, 'this->_template');
 		}
-
-		// Make sure the record is valid
-		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
-			return false;
-		}
-		
-		// Store the table to the database
-		if (!$row->store()) {
-			$this->setError( $row->getErrorMsg() );
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Method to delete record(s)
-	 *
-	 * @access	public
-	 * @return	boolean	True on success
-	 */
-	/*function delete()
-	{
-		$cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
-
-		$row =& $this->getTable();
-
-		if (count( $cids ))
-		{
-			foreach($cids as $cid) {
-				if (!$row->delete( $cid )) {
-					$this->setError( $row->getErrorMsg() );
-					return false;
-				}
-			}						
-		}
-		return true;
-	}
-function publish($cid = array(), $publish = 1)
-	{
-		
-		if (count( $cid ))
-		{
-			$cids = implode( ',', $cid );
-
-			$query = 'UPDATE #__bsms_studies'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
-				
-			;
-			$this->_db->setQuery( $query );
-			if (!$this->_db->query()) {
-				$this->setError($this->_db->getErrorMsg());
-				return false;
-			}
-		}		
-	}*/			
+		return $this->_template;
+	}		
 //end class
 }
 ?>

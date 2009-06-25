@@ -114,20 +114,17 @@ $oddeven = 'bsodd';
         </div>
 <?php } //end of if passage?>
         
-	<div class="listingfooter">
+	<div class="listingfooter"><br />
     <?php $link_text = $this->params->get('link_text');
 			if (!$link_text) {
 				$link_text = JText::_('Return to Studies List');
 			}
-			if ($this->params->get('view_link') == 0){}else{
-				if ($this->params->get('view_link') == 1){
-					$item = JRequest::getVar('Itemid');
-					$returnmenu = $this->params->get('studieslistitemid');
+			if ($this->params->get('view_link') > 0){
+					//$returnmenu = $params->get('templatemenuid');
+					$returnmenu = JRequest::getVar('templatemenuid', 'get', 'int');
+					if (!returnmenu) {$returnmenu = 1);}
 					//dump ($returnmenu, 'returnmenu: ');
-					if ($returnmenu) {$item = $returnmenu;}
-					$link = JRoute::_('index.php?option='.$option.'&view=studieslist');}
-					if ($item){
-						$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}?>
+					$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$returnmenu);?>
 			<a href="<?php echo $link;?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>
     </div><!--end of footer div-->
 

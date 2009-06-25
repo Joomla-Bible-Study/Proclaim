@@ -19,7 +19,9 @@ class biblestudyViewteacherlist extends JView
 		//$params = &JComponentHelper::getParams($option);
 		$params =& $mainframe->getPageParameters();
 		//$model	  = &$this->getModel();
-		
+		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$template = $this->get('Template');
+		$params = new JParameter($template[0]->params);
 		$db		=& JFactory::getDBO();
 		$uri	=& JFactory::getURI();
 		

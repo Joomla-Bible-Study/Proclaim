@@ -24,6 +24,9 @@ class biblestudyViewteacherdisplay extends JView
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		$params = &$mainframe->getPageParameters();
+		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$template = $this->get('Template');
+		$params = new JParameter($template[0]->params);
 		//$params = &JComponentHelper::getParams($option);
 		//end TF added
 		$teacher		=& $this->get('Data');

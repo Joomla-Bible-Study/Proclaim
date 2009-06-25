@@ -7,14 +7,8 @@
 				<option value="1">Yes</option>
 		</param>
 	</params>
-	<params group="TEMPLATES" addpath="/components/com_biblestudy/elements">
-		<param name="studieslisttemplateid" type="studieslisttemplateid" default="" label="Template for Studies List View" description="Choose a template from the admin/templates for display of studies list view" />
-		<param name="detailstemplateid" type="detailstemplateid" default="" label="Template for Study Details" description="Choose a template from the admin/templates for display of study details view" />
-		<param name="teachertemplateid" type="teachertemplateid" default="" label="Template for Teacher View" description="Choose a template from the admin/templates for display of teacher details view" />
-	</params>
 	<params group="FILTERS" addpath="/components/com_biblestudy/elements">
 		<param name="teacher_id" type="teacher" default="" label="Teacher" description="Choose a teacher to display for this menu item" />
-		<param name="teacherids" type="text" size="30" default="1" label="Teacher ids to show" description="Teacher ids (in order) separated by commas" />
 		<param name="show_teacher_list" type="list" default="1" label="Show/Hide Teacher(s) in View" description="Shows or hides the teacher on the page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -34,11 +28,7 @@
 			<option value="DESC">Descending</option>
 			<option value="ASC">Ascending</option>
 		</param>
-		<param name="use_headers_list" type="list" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
-			<option value="0">No Header Row</option>
-			<option value="1">Use Header Row</option>
-		</param>		
-	</params>
+		</params>
 	<params group="FP_IMAGES">
 		<param name="page_image" type="text" size="55" default="components/com_biblestudy/images/openbible.png" label="Page Image" description="The image to show on the component site front page" />
 		<param name="pimagew" type="text" size="3" default="48" label="Width of Front Page image" description="Set the width of the Front page image (default is 48)" />
@@ -98,6 +88,17 @@
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
+		</params>
+		<params group="LISTITEMS">
+		<param name="show_page_title" type="list" default="1" label="Show/Hide Listing Page Title" description="Choose whether to show or hide the listing page title">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="page_title" type="text" default="Bible Studies" label="Title for Listing Page" description="Text to use as title for listing page" />
+		<param name="use_headers_list" type="list" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
+			<option value="0">No Header Row</option>
+			<option value="1">Use Header Row</option>
+		</param>
 			<param name="show_teacher_list" type="list" default="0" label="Show/Hide a teacher image on list page" description="Choose whether to show or hide a teacher thumbnail and name in the list page">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
@@ -135,10 +136,8 @@
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 				</param>
-			<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-			<param name="@spacer" type="spacer" default="Front End Submission" label="" description="">
-				</param>
+		</params>
+		<params group="SUBMISSION">	
 			<param name="allow_entry_study" type="list" default="0" label="Allow Front End Submission" description="Allow certain users to enter studes and mediafiles from the front end">
 				<option value="0">No Frontend access</option>
 				<option value="1">Allow Frontend access</option>
@@ -155,12 +154,8 @@
 				<option value="0">No Auto Publish</option>
 				<option value="1">Auto Publish Studies</option>
 			</param>
-			<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
-			<param name="@spacer" type="spacer" default="Study List Items" label="Study List Items" description="Study List Items">
-				</param>
-			<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
+		</params>
+		<params group="ROW1">
 			<param name="@spacer" type="spacer" default="Row 1 Column 1" label="Row 1 Column 1" description="Row 1 Column 1">
 				</param>
 			<param name="row1col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -350,8 +345,8 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-			<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
+		</params>
+		<params group="ROW2">
 			<param name="@spacer" type="spacer" default="Row 2 Column 1" label="Row 2 Column 1" description="Row 2 Column 1">
 				</param>
 			<param name="row2col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -541,8 +536,8 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-			<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
+		</params>
+		<params group="ROW3">
 			<param name="@spacer" type="spacer" default="Row 3 Column 1" label="Row 3 Column 1" description="Row 3 Column 1">
 				</param>
 			<param name="row3col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -732,8 +727,8 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-			<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
+		</params>
+		<params group="ROW4">
 			<param name="@spacer" type="spacer" default="Row 4 Column 1" label="Row 4 Column 1" description="Row 4 Column 1">
 				</param>
 			<param name="row4col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -923,8 +918,6 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-			<param name="@spacer" type="spacer" default="" label="" description="">
-				</param>
 		</params>
 		<params group="DETAILS">
 			<param name="show_print_view" type="list" default="1" label="Show/Hide Print Button" description="Shows or hides the print button">
@@ -938,6 +931,14 @@
 			<param name="show_teacher_view" type="list" default="1" label="Show/Hide PDF Button" description="Shows or hides the Teacher">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
+			</param>
+			<param name="show_passage_view" type="list" default="1" label="Show/Hide Passage in Study View footer" description="Shows the passage referenced in the Scripture of your study. Right now only ESV available">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+			</param>
+			<param name="use_headers_view" type="list" default="0" label="Header Row on Study Detail" description="Choose whether a header row will appear at the top of the study detail">
+					<option value="0">No Header Row</option>
+					<option value="1">Use Header Row</option>
 			</param>
 			<param name="title_line_1" type="list" default="1" label="Item to show on title line 1" description="Choose an item to show on the first line of the Title line of the study details">
 			<option value="0">Don't Show</option>
@@ -957,28 +958,33 @@
 				<option value="5">Series</option>
 				<option value="6">Topic</option>
 			</param>
-			<param name="show_scripture_link" type="radio" default="0" label="Use Content Plugins" description="Choose whether to apply content plugins on study text. You can use the Scripturelinks plugin for all references in study text, for example.">
+			<param name="view_link" type="list" default="1" label="Show link to studies list" description="Choose whether to have a link back to the studies list">
+				<option value="0">No link</option>
+				<option value="1">Link</option>
+			</param>
+			<param name="link_text" type="text" size="75" default="Return to Studies List" label="Text to show on bottom details page link to list" description="Put in text to show on the bottom of the study details page as a link back to the listing page." />
+			<param name="show_scripture_link" type="list" default="0" label="Use Content Plugins" description="Choose whether to apply content plugins on study text. You can use the Scripturelinks plugin for all references in study text, for example.">
                 <option value="0">No Plugins</option>
 				<option value="1">Use All Plugins</option>
 				<option value="2"> Use Only Scripture Links</option>
 				</param>
-				<param name="show_comments" type="radio" default="1" label="Allow comments for studies" description="Turns on or off the ability for users to leave comments on studies">
+				<param name="show_comments" type="list" default="1" label="Allow comments for studies" description="Turns on or off the ability for users to leave comments on studies">
 				<option value="0">Hide</option>
 				<option value="1">Show</option>
 				</param>
-			<param name="comment_access" type="radio" default="1" label="Access level for submitting comments" description="Set the level at which users can submit comments">
+			<param name="comment_access" type="list" default="1" label="Access level for submitting comments" description="Set the level at which users can submit comments">
 				<option value="0">All</option>
 				<option value="1">Registered</option>
 				</param>
-			<param name="comment_publish" type="radio" default="0" label="Publishing comments" description="Choose whether posts are published automatically or approved on backend by admins">
+			<param name="comment_publish" type="list" default="0" label="Publishing comments" description="Choose whether posts are published automatically or approved on backend by admins">
 				<option value="0">Approval on backend</option>
 				<option value="1">No Approval needed</option>
 				</param>
-			<param name="use_captcha" type="radio" default="1" label="Use OSTWigits Captcha plugin for comments" description="Choose whether to use an image with text in it for users to enter before posting their comment. OSTWigits captcha plugin must be installed - go to the Joomla website and search for OSTWigits">
+			<param name="use_captcha" type="list" default="1" label="Use OSTWigits Captcha plugin for comments" description="Choose whether to use an image with text in it for users to enter before posting their comment. OSTWigits captcha plugin must be installed - go to the Joomla website and search for OSTWigits">
 				<option value="0">No Captcha</option>
 				<option value="1">Use OSTWigits Captcha</option>
 				</param>
-			<param name="email_comments" type="radio" default="1" label="Email when comments entered" description="Set to yes if you want an email sent for every comment entered on studies">
+			<param name="email_comments" type="list" default="1" label="Email when comments entered" description="Set to yes if you want an email sent for every comment entered on studies">
 				<option value="0">No Email on Comments</option>
 				<option value="1">Email sent</option>
 				</param>
@@ -989,9 +995,11 @@
 				</param>
 		</params>
 		<params group="TEACHER">
-			<param name="show_teacher_studies" type="radio" default="1" label="Show/Hide Teacher's Studies" description="Choose to show or hide the listing of latest studies by teacher in teacher display">
+			<param name="show_teacher_studies" type="list" default="1" label="Show/Hide Teacher's Studies" description="Choose to show or hide the listing of latest studies by teacher in teacher display">
 				<option value="0">Hide Study Display</option>
 				<option value="1">Show Study Display</option>
 			</param>
+			<param name="studies" type="text" default="5" label="Number of Studies in Teacher's view" description="Type in the number of studies to show for each teacher in the teacher's view. Leave blank for all" />
+			<param name="label_teacher" type="text" default="Latest Messages" label="Text for Latest Studies Line" description="Enter some text to show when displaying teacher latest studies" />
 		</params>
 	</root>

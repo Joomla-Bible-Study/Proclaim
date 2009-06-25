@@ -18,8 +18,19 @@ class biblestudyModelteacherlist extends JModel
 	 * @var array
 	 */
 	var $_data;
+	var $_template;
+
+function __construct()
+	{
+		parent::__construct();
+		global $mainframe, $option;
+		$params 			=& $mainframe->getPageParameters();
+		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$template = $this->getTemplate();
+		$params = new JParameter($template[0]->params);
 
 
+	}
 	/**
 	 * Returns the query
 	 * @return string The query to be used to retrieve the rows from the database
@@ -47,6 +58,20 @@ class biblestudyModelteacherlist extends JModel
 		}
 
 		return $this->_data;
+	}
+
+function getTemplate() 
+		{
+			if(empty($this->_template)) {
+				$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+				//dump ($templateid, 'templateid: ');
+				$query = 'SELECT *'
+				. ' FROM #__bsms_templates'
+				. ' WHERE published = 1 AND id = '.$templateid;
+				$this->_template = $this->_getList($query);
+				//dump ($this->_template, 'this->_template');
+		}
+		return $this->_template;
 	}
 
 }

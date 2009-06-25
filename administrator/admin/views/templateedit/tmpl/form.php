@@ -36,10 +36,6 @@ echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
 // Display the parameters defined in the <params> group with no 'group' attribute
 echo $this->params->render( 'params' );
 echo $pane->endPanel();
- 
-echo $pane->startPanel( JText::_( 'Templates' ), 'TEMPLATES' );
-echo $this->params->render( 'params', 'TEMPLATES' );
-echo $pane->endPanel();
 
 echo $pane->startPanel( JText::_( 'Filters' ), 'FILTERS' );
 // Display the parameters defined in the <params> group with the 'group' attribute of 'GROUP_NAME'
@@ -59,6 +55,14 @@ echo $pane->startPanel( JText::_('Media'), 'MEDIA');
 echo $this->params->render( 'params', 'MEDIA');
 echo $pane->endPanel();
 
+echo $pane->startPanel( JText::_('List Items'), 'LISTITEMS');
+echo $this->params->render( 'params', 'LISTITEMS');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Front End Submission'), 'SUBMISSION');
+echo $this->params->render( 'params', 'SUBMISSION');
+echo $pane->endPanel();
+
 echo $pane->startPanel( JText::_('Details View'), 'DETAILS');
 echo $this->params->render( 'params', 'DETAILS');
 echo $pane->endPanel();
@@ -66,6 +70,23 @@ echo $pane->endPanel();
 echo $pane->startPanel( JText::_('Teacher View'), 'TEACHER');
 echo $this->params->render( 'params', 'TEACHER');
 echo $pane->endPanel();
+echo $pane->startPanel( JText::_('Row 1'), 'ROW1');
+echo $this->params->render( 'params', 'ROW1');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Row 2'), 'ROW2');
+echo $this->params->render( 'params', 'ROW2');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Row 3'), 'ROW3');
+echo $this->params->render( 'params', 'ROW3');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Row 4'), 'ROW4');
+echo $this->params->render( 'params', 'ROW4');
+echo $pane->endPanel();
+
+
 
 //This ends the parameter panes
 echo $pane->endPane();

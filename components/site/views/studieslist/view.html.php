@@ -14,7 +14,10 @@ class biblestudyViewstudieslist extends JView {
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
 		$document =& JFactory::getDocument();
 		$model =& $this->getModel();
-		
+		$document =& JFactory::getDocument();
+		$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
+		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
+		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 		//Initialize templating class
 		//$tmplEninge = $this->loadHelper('templates.helper');
 		//$tmplEngine =& bibleStudyTemplate::getInstance();
@@ -24,6 +27,7 @@ class biblestudyViewstudieslist extends JView {
 		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
+		//$params->merge($template[0]->params);
 		//$templateparams = $template[0]->params;
 		//$params->merge($templateparams);
 		//dump ($templateparams, 'templateparams: ');

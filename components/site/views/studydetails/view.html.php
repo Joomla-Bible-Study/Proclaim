@@ -25,11 +25,13 @@ class biblestudyViewstudydetails extends JView
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		//$params = &JComponentHelper::getParams($option);
-		$params 			=& $mainframe->getPageParameters();
-		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
-		JRequest::setVar('id', $params->get('id'), 'get');
+		//$params2 			=& $mainframe->getPageParameters();
+		
+		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		//JRequest::setVar('id', $params->get('id'), 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
+		//dump ($params, 'params: ');
 		//$params		=& $mainframe->getParams('com_biblestudy');
 		//$this->assignRef('params', $params);
 		//end TF added
