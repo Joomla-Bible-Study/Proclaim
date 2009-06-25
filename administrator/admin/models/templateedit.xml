@@ -927,6 +927,18 @@
 				</param>
 		</params>
 		<params group="DETAILS">
+			<param name="show_print_view" type="list" default="1" label="Show/Hide Print Button" description="Shows or hides the print button">
+					<option value="0">Hide</option>
+					<option value="1">Show</option>
+			</param>
+			<param name="show_pdf_view" type="list" default="1" label="Show/Hide PDF Button" description="Shows or hides the PDF button">
+					<option value="0">Hide</option>
+					<option value="1">Show</option>
+			</param>
+			<param name="show_teacher_view" type="list" default="1" label="Show/Hide PDF Button" description="Shows or hides the Teacher">
+					<option value="0">Hide</option>
+					<option value="1">Show</option>
+			</param>
 			<param name="title_line_1" type="list" default="1" label="Item to show on title line 1" description="Choose an item to show on the first line of the Title line of the study details">
 			<option value="0">Don't Show</option>
 			<option value="1">Study Title</option>
