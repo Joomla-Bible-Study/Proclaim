@@ -36,7 +36,10 @@ class biblestudyModelteacherdisplay extends JModel
 		$array = JRequest::getVar('id',  0, '', 'array');
 		global $mainframe, $option;
 		$params 			=& $mainframe->getPageParameters();
-		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$templatemenuid = $params->get('templatemenuid');
+		if (!$templatemenuid){$templatemenuid = 1;}
+		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
 		$this->setId((int)$array[0]);

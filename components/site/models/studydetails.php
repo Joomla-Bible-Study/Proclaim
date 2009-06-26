@@ -44,8 +44,11 @@ class biblestudyModelstudydetails extends JModel
 		 ////set the default view search path
         $this->addTablePath(JPATH_COMPONENT.DS.'tables');
         $params 			=& $mainframe->getPageParameters();
+		$templatemenuid = $params->get('templatemenuid');
+		if (!$templatemenuid){$templatemenuid = 1;}
+		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		//dump ($params, 'params: ');
-		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		//JRequest::setVar('id', $params->get('id'), 'get');
 		$this->_id = $id;
 		$template = $this->getTemplate();

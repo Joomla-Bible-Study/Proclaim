@@ -2,7 +2,10 @@
 
 function getTitle($params, $row)
 {
-	if ($params->get('title_line_1') > 0) 
+	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	include_once($path1.'custom.php');
+
+if ($params->get('title_line_1') > 0) 
 		{ 
 		$title = '<table id="titletable" cellspacing="0"><tbody><tr><td class="titlefirstline">';
 	 switch ($params->get('title_line_1'))
@@ -31,6 +34,10 @@ function getTitle($params, $row)
 			break;
 		case 6:
 			$title .= $row->topics_text;
+			break;
+		case 7:
+			$elementid = getCustom($rowid=null, $params->get('customtitle1'), $row, $params);
+			$title .= $elementid->element;
 			break;
 		}
 	$title .= '</td></tr>';
@@ -65,6 +72,10 @@ function getTitle($params, $row)
 			break;
 		case 6:
 			$title .= $row->topics_text;
+			break;
+		case 7:
+			$elementid = getCustom($rowid=null, $params->get('customtitle2'), $row, $params);
+			$title .= $elementid->element;
 			break;
 		}
 		$title .= '</td><tr></tbody></table>';

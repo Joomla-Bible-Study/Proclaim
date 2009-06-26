@@ -7,7 +7,9 @@ function getTeacher($params, $id)
 	global $mainframe, $option;
 	$teacher = null;
 	//$templatemenuid = $params->get('templatemenuid');
-	$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');
+	$templatemenuid = $params->get('teachertemplateid');
+	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+	
 
 	if ($id > 0) {$teacherids['id'] = $id;}
 	else {$teacherids = explode(",", $params->get('mult_teachers'));}

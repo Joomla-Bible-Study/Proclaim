@@ -9,6 +9,7 @@ class biblestudyControllertemplateedit extends JController {
 
 		//register extra tasks
 		$this->registerTask('add', 'edit');
+		$this->registerTask( 'apply',    'save');
 	}
 
 	function edit() {
@@ -28,8 +29,23 @@ class biblestudyControllertemplateedit extends JController {
 			$msg = JText::_( 'Error Saving Template' );
 		}
 
+
+switch ($this->_task) {
+         case 'apply':   
+            $msg = JText::_( 'Changes to Template Updated! (by Apply)' );
+			$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
+            $link = 'index.php?option=com_biblestudy&view=templateedit&layout=form&task=edit&cid[]='. $cid;
+           break;
+
+         case 'save':
+         default:         
+            //$msg = JText::_( 'Data Saved!' );
+            //$link = 'index.php?option=com_driver';
+            
 		// Check the table in so it can be edited.... we are done with it anyway
 		$link = 'index.php?option=com_biblestudy&view=templateslist';
+		break;
+		}
 		$this->setRedirect($link, $msg);
 	}
 
@@ -83,7 +99,9 @@ class biblestudyControllertemplateedit extends JController {
 	function remove(){
 		$model = $this->getModel('templateedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Templates Could not be Deleted' );
+			$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+			if ($cid[0] == 1) {$msg = JText::_( 'Error: You cannot delete the default template' );}
+			else {$msg = JText::_( 'Error: One or More Templates Could not be Deleted (You cannot delete the default template)' );}
 		} else {
 			$msg = JText::_( 'Template(s) Deleted' );
 		}

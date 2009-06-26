@@ -5,8 +5,12 @@ $pathway =& $mainframe->getPathWay();
 $uri 		=& JFactory::getURI();
 $database	= & JFactory::getDBO();
 $teacher = $this->teacher;
-$templatemenuid = JRequest::getVar('templatemenuid', 1,'get', 'int');
+//$templatemenuid = JRequest::getVar('templatemenuid', 1,'get', 'int');
 if (!$templatemenuid) {$templatemenuid = 1;}
+$templatemenuid = $this->params->get('teachertemplateid');
+	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+$studieslisttemplateid = $this->params->get('studieslisttemplateid');
+	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('templatemenuid',1,'get','int');}
 ?>
 <table width="100%" class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
 <tr><td align="center"><h1><?php echo $this->params->get('teacher_title');?></h1></td></tr></table>
@@ -72,7 +76,7 @@ else { ?>
 </tr>
 <?php foreach ($this->studies as $study) { ?>
  <tr>
-  <td> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->sid.'&templatemenuid='.$templatemenuid;?>"><?php echo $study->studytitle; ?></a></td>
+  <td> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->sid.'&templatemenuid='.$studieslisttemplateid;?>"><?php echo $study->studytitle; ?></a></td>
   <td> <?php echo $study->bookname.' '.$study->chapter_begin;?></td>
   <td> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC') , '$offset'); echo $date;?></td>
  </tr>

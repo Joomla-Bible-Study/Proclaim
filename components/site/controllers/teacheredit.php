@@ -47,8 +47,10 @@ class biblestudyControllerteacheredit extends JController
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&view=teacherlist';
-		$this->setRedirect($link, $msg);
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=teacherlist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$this->setRedirect($link);
 	}
 
 	/**
@@ -63,8 +65,10 @@ class biblestudyControllerteacheredit extends JController
 		} else {
 			$msg = JText::_( 'Teacher(s) Deleted' );
 		}
-
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=teacherlist', $msg );
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=teacherlist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$this->setRedirect( $link );
 	}
 function publish()
 	{
@@ -80,8 +84,10 @@ function publish()
 		if(!$model->publish($cid, 1)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
-
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=teacherlist' );
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=teacherlist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$this->setRedirect( $link);
 	}
 
 
@@ -99,8 +105,10 @@ function publish()
 		if(!$model->publish($cid, 0)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
-
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=teacherlist' );
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=teacherlist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$this->setRedirect($link);
 	}
 	/**
 	 * cancel editing a record
@@ -109,7 +117,11 @@ function publish()
 	function cancel()
 	{
 		$msg = JText::_( 'Operation Cancelled' );
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=teacherlist', $msg );
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		
+		$this->setRedirect($link);
 	}
 }
 ?>

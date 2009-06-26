@@ -17,6 +17,8 @@ class biblestudyModelteacherlist extends JModel
 	 *
 	 * @var array
 	 */
+	var $_total = null;
+	var $_pagination = null;
 	var $_data;
 	var $_template;
 
@@ -28,7 +30,13 @@ function __construct()
 		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
-
+		
+		$this->setState('limit',$params->get('itemslimit'),'limit',$params->get('itemslimit'),'int');
+		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
+		// In case limit has been changed, adjust limitstart accordingly
+		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
+		// In case we are on more than page 1 of results and the total changes in one of the drop downs to a selection that has fewer in its total, we change limitstart
+		if ($this->getTotal() < $this->getState('limitstart')) {$this->setState('limitstart', 0,'','int');}
 
 	}
 	/**
@@ -51,13 +59,44 @@ function __construct()
 	function getData()
 	{
 		// Lets load the data if it doesn't already exist
+		//if (empty( $this->_data ))
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
-			$this->_data = $this->_getList( $query );
+			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
 		}
 
 		return $this->_data;
+	}
+
+function getTotal()
+	{
+		// Lets load the content if it doesn't already exist
+		if (empty($this->_total))
+		{
+			$query = $this->_buildQuery();
+			$this->_total = $this->_getListCount($query);
+		}
+
+		return $this->_total;
+	}
+
+	/**
+	 * Method to get a pagination object for the teachers
+	 *
+	 * @access public
+	 * @return integer
+	 */
+	function getPagination()
+	{
+		// Lets load the content if it doesn't already exist
+		if (empty($this->_pagination))
+		{
+			jimport('joomla.html.pagination');
+			$this->_pagination = new JPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
+		}
+
+		return $this->_pagination;
 	}
 
 function getTemplate() 

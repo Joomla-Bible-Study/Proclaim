@@ -273,8 +273,8 @@ $fieldcheck	= isset( $fields[$tn]['custom'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_podcast ADD COLUMN custom VARCHAR( 200 ) NULL AFTER episodetitle;");
 		$database->query();}
 $fieldcheck = false;	
-$fieldcheck	= isset( $fields[$tn]['detailsitemid'] );
-		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_podcast ADD COLUMN detailsitemid INT NULL AFTER custom;");
+$fieldcheck	= isset( $fields[$tn]['detailstemplateid'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_podcast ADD COLUMN detailstemplateid INT NULL AFTER custom;");
 		$database->query();}
 if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
 	if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}

@@ -5,6 +5,8 @@ function getListing($row, $params, $oddeven)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
+	
+	
 	//Need to know if last column and last row
 	$columns = 1;
 	if ($params->get('row1col2') > 0) {$columns = 2;}

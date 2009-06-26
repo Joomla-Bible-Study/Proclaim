@@ -56,10 +56,9 @@ class biblestudyControllerstudiesedit extends JController
 			$mainframe->redirect (str_replace("&amp;","&",$link));
 		}
 		
-		$item = JRequest::getVar('item');
-		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
-			if ($item){
-				$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -78,10 +77,9 @@ class biblestudyControllerstudiesedit extends JController
 			$msg = JText::_( 'Study or Studies Deleted' );
 		}
 		//$params =& $mainframe->getPageParameters();
-		$item = JRequest::getVar('item');
-		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
-			if ($item){
-				$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 			
@@ -100,11 +98,9 @@ class biblestudyControllerstudiesedit extends JController
 		if(!$model->publish($cid, 1)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
-		global $mainframe, $option;
-		$item = JRequest::getVar('item');
-		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
-			if ($item){
-				$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -124,11 +120,9 @@ class biblestudyControllerstudiesedit extends JController
 		if(!$model->publish($cid, 0)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
-		global $mainframe, $option;
-		$item = JRequest::getVar('item');
-		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
-			if ($item){
-				$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -142,11 +136,9 @@ class biblestudyControllerstudiesedit extends JController
 		global $mainframe;
 		$msg = JText::_( 'Operation Cancelled' );
 
-		global $mainframe, $option;
-		$item = JRequest::getVar('item');
-		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
-			if ($item){
-				$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&Itemid='.$item);}
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}

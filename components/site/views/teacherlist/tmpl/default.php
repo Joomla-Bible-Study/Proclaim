@@ -9,6 +9,7 @@ if ($user->name == ''){$user_submit_name = '';}
 $entry_access = ($params->get('entry_access')) - 1;
 $allow_entry = $params->get('allow_entry_study');
 $templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+
 if (!$templatemenuid){$templatemenuid = 1;}
 ?>
 <table width="100%">
@@ -53,3 +54,9 @@ if ($entry_access <= $entry_user){ ?>
     <?php } //end of foreach ?>
 </td></tr>
 </table>
+<div class="listingfooter" >
+	<?php 
+      echo $this->pagination->getPagesLinks();
+      echo $this->pagination->getPagesCounter();
+	 ?>
+</div> <!--end of bsfooter div-->

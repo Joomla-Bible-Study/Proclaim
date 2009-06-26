@@ -24,7 +24,10 @@ class biblestudyViewteacherdisplay extends JView
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		$params = &$mainframe->getPageParameters();
-		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$templatemenuid = $params->get('templatemenuid');
+		if (!$templatemenuid){$templatemenuid = 1;}
+		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
 		//$params = &JComponentHelper::getParams($option);
@@ -43,12 +46,7 @@ class biblestudyViewteacherdisplay extends JView
 				$limit = '';
 				}
 		$database	= & JFactory::getDBO();
-		$query = "SELECT id"
-			. "\nFROM #__menu"
-			. "\nWHERE link ='index.php?option=com_biblestudy&view=teacherlist'";
-		$database->setQuery($query);
-		$menuid = $database->loadResult();
-		$this->assignRef('menuid',$menuid);
+		
 		$query = 'SELECT s.id as sid, s.studytitle, s.chapter_begin, s.studydate, s.teacher_id, s.booknumber,'
 		. ' t.id AS tid, b.id AS bid, b.booknumber AS bnumber, b.bookname'
 		. ' FROM #__bsms_studies AS s'

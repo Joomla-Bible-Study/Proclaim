@@ -35,7 +35,11 @@ class biblestudyModelstudieslist extends JModel
 		global $mainframe, $option;
 		//$params =& $mainframe->getPageParameters();
 		$params 			=& $mainframe->getPageParameters();
-		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$templatemenuid = $params->get('templatemenuid');
+		if (!$templatemenuid){$templatemenuid = 1;}
+		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
 		

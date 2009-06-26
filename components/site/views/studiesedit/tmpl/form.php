@@ -187,8 +187,8 @@ $item = JRequest::getVar('item');
               
             </tr></table>
         <tr><td class="key" align="left"><?php echo JText::_('Allow comments for this study? -No- overrides global setting for this study only');?></td><td><?php echo $this->lists['comments'];?></td></tr>
-        <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail: ');?></td><td>><input type="text" name="thumbnailm" id="thumbnailm" size="100" maxlength="250" value="<?php echo $this->studiesedit->thumbnailm;?>" /></td></tr>
-            <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail Height: ');?></td><td>><input type="text" name="thumbhm" id="thumbhm" size="4" value="<?php echo $this->studiesedit->thumbhm;?>" /></td></tr>
+        <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail: ');?></td><td><input type="text" name="thumbnailm" id="thumbnailm" size="100" maxlength="250" value="<?php echo $this->studiesedit->thumbnailm;?>" /></td></tr>
+            <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail Height: ');?></td><td><input type="text" name="thumbhm" id="thumbhm" size="4" value="<?php echo $this->studiesedit->thumbhm;?>" /></td></tr>
             <tr><td class="key" alsign="left"><?php echo JText::_('Width: ');?></td><td><input type="text" name="thumbwm" id="thumbwm" size="4" value="<?php echo $this->studiesedit->thumbwm;?>" /></td></tr>
         <tr><td class="key" align="left"><?php echo JText::_('User Level to show');?></td><td>
         <select name="show_level" id="show_level" class="inputbox" size="1">

@@ -36,6 +36,7 @@ class biblestudyControllerpodcastedit extends JController
  */
  function save()
  {
+	 global $mainframe;
   $model = $this->getModel('podcastedit');
 
   if ($model->store($post)) {
@@ -45,21 +46,9 @@ class biblestudyControllerpodcastedit extends JController
   }
   
 
-		global $mainframe, $option;
-		$db=& JFactory::getDBO();
-		$query = "SELECT id"
-		. "\nFROM #__menu"
-		. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
-		$db->setQuery($query);
-		$menuid = $db->loadResult();
-		$menureturn='';
-		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
-		$item = JRequest::getVar('Itemid');
-		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
-		if ($item){
-			//$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
-			$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);}
-			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
 
 			// Check the table in so it can be edited.... we are done with it anyway
 			$mainframe->redirect (str_replace("&amp;","&",$link));
@@ -71,19 +60,16 @@ class biblestudyControllerpodcastedit extends JController
  */
  function remove()
  {
+	 global $mainframe;
   $model = $this->getModel('podcastedit');
   if(!$model->delete()) {
    $msg = JText::_( 'Error: One or More podcast Could not be Deleted' );
   } else {
    $msg = JText::_( 'Podcast(s) Deleted' );
   }
-  global $mainframe;
-  $params =& $mainframe->getPageParameters();
-
-  if ($params->get('view_link') == 1){
-  $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
-  if ($params->get('view_link') == 2){
-  $link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
+ $templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
   
   // Check the table in so it can be edited.... we are done with it anyway
   $mainframe->redirect ($link);
@@ -103,12 +89,9 @@ function publish()
   if(!$model->publish($cid, 1)) {
    echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
   }
-  $params =& $mainframe->getPageParameters();
-
-  if ($params->get('view_link') == 1){
-  $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
-  if ($params->get('view_link') == 2){
-  $link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
+  $templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
   
   // Check the table in so it can be edited.... we are done with it anyway
   $mainframe->redirect ($link);
@@ -130,13 +113,9 @@ function publish()
   if(!$model->publish($cid, 0)) {
    echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
   }
-  $params =& $mainframe->getPageParameters();
-
-  if ($params->get('view_link') == 1){
-  $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
-  if ($params->get('view_link') == 2){
-  $link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
-  
+  $templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
   // Check the table in so it can be edited.... we are done with it anyway
   $mainframe->redirect ($link);
   $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist' );
@@ -150,21 +129,9 @@ function publish()
   global $mainframe;
 		$msg = JText::_( 'Operation Cancelled' );
 
-		global $mainframe, $option;
-		$db=& JFactory::getDBO();
-		$query = "SELECT id"
-		. "\nFROM #__menu"
-		. "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
-		$db->setQuery($query);
-		$menuid = $db->loadResult();
-		$menureturn='';
-		if ($menuid) {$menureturn = '&Itemid='.$menuid;}
-		$item = JRequest::getVar('Itemid');
-		$link = JRoute::_('index.php?option='.$option.'&view=studieslist');
-		if ($item){
-			//$link = JRoute::_('index.php?option='.$option.'&view=studieslist&Itemid='.$item.'&msg='.$msg);}
-			$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.$menureturn);}
-			//$link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$menureturn.'&msg='.$msg;
+		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
 
 			// Check the table in so it can be edited.... we are done with it anyway
 			$mainframe->redirect (str_replace("&amp;","&",$link));
@@ -322,10 +289,9 @@ function publish()
   $option = JRequest::getCmd('option');
   //$params =& $mainframe->getPageParameters();
 
-  if ($params->get('view_link') == 1){
-  $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg);}
-  if ($params->get('view_link') == 2){
-  $link = 'index.php?option=com_biblestudy&view=studieslist&Itemid='.$params->get('alt_link').'&msg='.$msg;}
+ $templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+		if (!$templatmenuid) {$templatemenuid = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
 
   if (!$filecontent) {
    $mainframe->redirect($link, JText::_('Operation Failed').': '.JText::_('Content empty.'));

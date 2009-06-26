@@ -14,19 +14,35 @@ class biblestudyViewstudieslist extends JView {
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
 		$document =& JFactory::getDocument();
 		$model =& $this->getModel();
+		
+		$params 			=& $mainframe->getPageParameters();
+		//dump ($params, 'params: ');
+		$templatemenuid = $params->get('templatemenuid');
+		if (!$templatemenuid){$templatemenuid = 1;}
+		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		$template = $this->get('Template');
+		$params = new JParameter($template[0]->params);
+		
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
 		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+		
+		//Import Scripts
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
+		
+		//Import Stylesheets
+		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
+		
+		$url = $params->get('stylesheet');
+		if ($url) {$document->addStyleSheet($url);}
 		//Initialize templating class
 		//$tmplEninge = $this->loadHelper('templates.helper');
 		//$tmplEngine =& bibleStudyTemplate::getInstance();
 
-		$params 			=& $mainframe->getPageParameters();
-		//dump ($params, 'params: ');
-		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
-		$template = $this->get('Template');
-		$params = new JParameter($template[0]->params);
+		
 		//$params->merge($template[0]->params);
 		//$templateparams = $template[0]->params;
 		//$params->merge($templateparams);
@@ -84,18 +100,7 @@ class biblestudyViewstudieslist extends JView {
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 
-		//Import Scripts
-		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
-		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/biblestudy.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 		
-		//Import Stylesheets
-		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
-		$document->addStylesheet(JURI::base().'components/com_biblestudy/tooltip.css');
-		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/studieslist.css');
-		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-		$url = $params->get('stylesheet');
-		if ($url) {$document->addStyleSheet($url);}
 		//Build Teachers
 		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );

@@ -23,9 +23,9 @@ $params = $this->params;
 	$user =& JFactory::getUser();
 	$entry_user = $user->get('gid');
 	if (!$entry_user) { $entry_user = 0;}
-	$entry_access = $this->params->get('entry_access');
+	$entry_access = $params->get('entry_access');
 	if (!$entry_access) {$entry_access = 23;}
-	$allow_entry = $this->params->get('allow_entry_study');
+	$allow_entry = $params->get('allow_entry_study');
 	//dump ($entry_access, 'entry_access: ');
 	if (($allow_entry > 0) && ($entry_access <= $entry_user)) 
 			{?>

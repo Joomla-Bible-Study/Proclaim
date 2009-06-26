@@ -25,13 +25,27 @@ class biblestudyViewteacherlist extends JView
 		$db		=& JFactory::getDBO();
 		$uri	=& JFactory::getURI();
 		
+		//Import Scripts
+		$document =& JFactory::getDocument();
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
+		
+		//Import Stylesheets
+		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/tooltip.css');
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/studieslist.css');
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
+		$url = $params->get('stylesheet');
+		if ($url) {$document->addStyleSheet($url);}
+		
 		// Get data from the model
 		$items		= & $this->get( 'Data');
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 
-
-		
+		$pagination = $this->get('Pagination');
+		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('items',		$items);
 		
 		$this->assignRef('request_url',	$uri->toString());

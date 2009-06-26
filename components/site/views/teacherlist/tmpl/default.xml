@@ -8,8 +8,9 @@
 	</layout>
 	<state>
 		<name>Teachers List Layout</name>
-		<params>
-			<param name="teacher_title" type="text" default="Our Teachers" label="Page Title" description="Text to show on teacher display page for title" />
+		<params addpath="/components/com_biblestudy/elements">
+			<param name="type" type="hidden" default="teacherlist" />
+			<param name="templatemenuid" type="templatemenuid" default="" label="Template for this page" description="Choose a template for your page (set in admin/templates tab)" />
 		</params>
 	</state>
 </metadata>

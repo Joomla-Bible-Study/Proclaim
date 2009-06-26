@@ -70,19 +70,29 @@ $listingcall = JView::loadHelper('listing');
    </div><!-- header -->
  
  <table id="bsmsdetailstable" cellspacing="0">
-     <?php 
-	
+     <?php //dump ($params->get('use_headers_view'), 'headers: ');
+if ($params->get('use_headers_view') > 0)
+	{	
      $headerCall = JView::loadHelper('header');
      $header = getHeader($row, $params);
      echo $header;
-     ?>
-      <tbody>
+	}	?>
+    <tbody>
 
         <?php 
-
-$oddeven = 'bsodd';
- $listing = getListing($row, $params, $oddeven);
- echo $listing;?>
+if ($params->get('list_items_view') == 1)
+		{
+			$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+			include_once($path1.'mediatable.php');
+			$listing = getMediatable($params, $row);	
+			echo $listing;
+		}
+if ($params->get('list_items_view') == 0)
+		{
+			$oddeven = 'bsodd';
+ 			$listing = getListing($row, $params, $oddeven);
+ 			echo $listing;
+		}?>
  </tbody></table>
  <table id="bsmsdetailstable" cellspacing="0">
  <tr><td id="studydetailstext">
@@ -121,10 +131,12 @@ $oddeven = 'bsodd';
 			}
 			if ($this->params->get('view_link') > 0){
 					//$returnmenu = $params->get('templatemenuid');
-					$returnmenu = JRequest::getVar('templatemenuid', 'get', 'int');
-					if (!returnmenu) {$returnmenu = 1);}
+					$templatemenuid = $params->get('studielisttemplateid');
+					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+					//$returnmenu = JRequest::getVar('templatemenuid', 'get', 'int');
+					if (!returnmenu) {$returnmenu = 1;}
 					//dump ($returnmenu, 'returnmenu: ');
-					$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$returnmenu);?>
+					$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$templatemenuid);?>
 			<a href="<?php echo $link;?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>
     </div><!--end of footer div-->
 

@@ -63,6 +63,10 @@
 		<td class="key"><b><?php echo JText::_( 'Podcast XML filename (path from root - NO http://www.site.org - Just filename to put in  root - recommended) like just biblestudies.xml' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="150" value="<?php echo $this->podcastedit->filename;?>" /></td>
 	</tr>
+    <tr>
+		<td class="key"><b><?php echo JText::_( 'Template for Details View Link' ); ?>:</b></td>
+		<td><?php echo $this->lists['templates'];?></td>
+	</tr>
 	<tr>
 		<td class="key"><b><?php echo JText::_( 'Podcast language (like en-us)' ); ?>:</b></td>
 		<td><input class="text_area" type="text" name="language" id="language" size="5" maxlength="10" value="<?php echo $this->podcastedit->language;?>" /></td>

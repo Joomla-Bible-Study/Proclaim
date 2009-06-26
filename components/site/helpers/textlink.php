@@ -8,8 +8,8 @@ include_once($path1.'scripture.php');
 $scripturerow = 1;	
 $scripture1 = getScripture($params, $row, $esv, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
-//$detailstemplateid = $params->get('detailstemplateid');
-$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');
+$templatemenuid = $params->get('detailstemplateid');
+if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 
 	if ($textorpdf == 'text') {
 	   $src = JURI::base().$params->get('text_image');

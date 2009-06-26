@@ -63,12 +63,18 @@ class biblestudyModeltemplateedit extends JModel {
 	function delete() {
 		$cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		$row =& $this->getTable();
-
+		
 		if (count( $cids ))
 		{
 			foreach($cids as $cid) {
+				if ($cid == 1)
+					{$this->setError('You cannot delete the default template');
+					return false;
+					}
 				if (!$row->delete( $cid )) {
-					$this->setError( $row->getErrorMsg() );
+					if($cid == 1)
+					{$this->setError('You cannot delete the default template');}
+					else {$this->setError( $row->getErrorMsg() );}
 					return false;
 				}
 			}

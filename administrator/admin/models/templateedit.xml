@@ -7,6 +7,11 @@
 				<option value="1">Yes</option>
 		</param>
 	</params>
+	<params group="TEMPLATES" addpath="/components/com_biblestudy/elements">
+		<param name="studieslisttemplateid" type="studieslisttemplateid" default="" label="Template for Studies List View" description="Choose a template from the admin/templates for display of studies list view linked from here" />
+		<param name="detailstemplateid" type="detailstemplateid" default="" label="Template for Study Details" description="Choose a template from the admin/templates for display of study details view linked from here" />
+		<param name="teachertemplateid" type="teachertemplateid" default="" label="Template for Teacher View" description="Choose a template from the admin/templates for display of teacher details view linked from here" />
+	</params>
 	<params group="FILTERS" addpath="/components/com_biblestudy/elements">
 		<param name="teacher_id" type="teacher" default="" label="Teacher" description="Choose a teacher to display for this menu item" />
 		<param name="show_teacher_list" type="list" default="1" label="Show/Hide Teacher(s) in View" description="Shows or hides the teacher on the page">
@@ -95,7 +100,7 @@
 			<option value="1">Show</option>
 		</param>
 		<param name="page_title" type="text" default="Bible Studies" label="Title for Listing Page" description="Text to use as title for listing page" />
-		<param name="use_headers_list" type="list" default="0" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
+		<param name="use_headers_list" type="list" default="1" label="Header Row on Study List" description="Choose whether a header row will appear at the top of the studies list">
 			<option value="0">No Header Row</option>
 			<option value="1">Use Header Row</option>
 		</param>
@@ -936,9 +941,14 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 			</param>
-			<param name="use_headers_view" type="list" default="0" label="Header Row on Study Detail" description="Choose whether a header row will appear at the top of the study detail">
+			<param name="use_headers_view" type="list" default="1" label="Header Row on Study Detail" description="Choose whether a header row will appear at the top of the study detail">
 					<option value="0">No Header Row</option>
 					<option value="1">Use Header Row</option>
+			</param>
+			<param name="list_items_view" type="list" default="0" label="Choose Display Items" description="Choose whether to show the same items as the list page, nothing, or just media">
+					<option value="0">Show List Items</option>
+					<option value="1">Show Media Only</option>
+					<option value="2">Show Nothing</option>
 			</param>
 			<param name="title_line_1" type="list" default="1" label="Item to show on title line 1" description="Choose an item to show on the first line of the Title line of the study details">
 			<option value="0">Don't Show</option>
@@ -948,7 +958,9 @@
 			<option value="4">Scripture</option>
 			<option value="5">Series</option>
 			<option value="6">Topic</option>
+			<option value="7">Custom</option>
 		</param>
+		<param name="customtitle1" type="text" default="" size="75" label="Custom Title 1" description="Use same items in {} and text as in custom list display" />
 			<param name="title_line_2" type="list" default="4" label="Item to show on title line 2" description="Choose an item to show on the second line of the Title line of the study details">
 				<option value="0">Don't Show</option>
 				<option value="1">Study Title</option>
@@ -957,7 +969,9 @@
 				<option value="4">Scripture</option>
 				<option value="5">Series</option>
 				<option value="6">Topic</option>
+				<option value="7">Custom</option>
 			</param>
+			<param name="customtitle2" type="text" default="" size="75" label="Custom Title 2" description="Use same items in {} and text as in custom list display" />
 			<param name="view_link" type="list" default="1" label="Show link to studies list" description="Choose whether to have a link back to the studies list">
 				<option value="0">No link</option>
 				<option value="1">Link</option>
@@ -995,6 +1009,7 @@
 				</param>
 		</params>
 		<params group="TEACHER">
+			<param name="teacher_title" type="text" default="Our Teachers" label="Page Title" description="Text to show on teacher display page for title" />
 			<param name="show_teacher_studies" type="list" default="1" label="Show/Hide Teacher's Studies" description="Choose to show or hide the listing of latest studies by teacher in teacher display">
 				<option value="0">Hide Study Display</option>
 				<option value="1">Show Study Display</option>

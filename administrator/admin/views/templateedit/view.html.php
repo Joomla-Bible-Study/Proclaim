@@ -12,10 +12,11 @@ class biblestudyViewtemplateedit extends JView {
 		}else{
 			JToolbarHelper::title(JText::_('Edit Template'), 'generic.png');
 		}
-		JToolbarHelper::preview();
+		//JToolbarHelper::preview();
 		JToolbarHelper::save();
+		JToolbarHelper::apply();
 		JToolbarHelper::cancel();
-
+		
 		//Initialize templating class
 		$tmplEngine = $this->loadHelper('templates.helper');
 		$tmplEngine =& bibleStudyTemplate::getInstance();

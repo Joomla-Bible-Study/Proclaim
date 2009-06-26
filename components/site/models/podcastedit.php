@@ -15,6 +15,8 @@ class biblestudyModelpodcastedit extends JModel
 	 * @access	public
 	 * @return	void
 	 */
+	 var $_template;
+	 
 	function __construct()
 	{
 		parent::__construct();
@@ -66,7 +68,7 @@ class biblestudyModelpodcastedit extends JModel
 			$this->_data->podcastlimit = null;
 			$this->_data->episodetitle = null;
 			$this->_data->custom = null;
-			$this->_data->detailsitemid = null;
+			$this->_data->detailstemplateid = null;
 			$this->_data->published = 0;
 		}
 		return $this->_data;
@@ -176,6 +178,7 @@ class biblestudyModelpodcastedit extends JModel
 			$this->_podinfo->editor_email = null;
 			$this->_podinfo->podcastlimit = null;
 			$this->_podinfo->published = 0;
+			$this->_podinfo->detailstemplateid = null;
 		}
 		return $this->_podinfo;
 	}
@@ -223,6 +226,19 @@ class biblestudyModelpodcastedit extends JModel
 			$this->_episodes->published = 0;
 		}
 		return $this->_episodes;
+	}
+
+function getTemplate() {
+		if(empty($this->_template)) {
+			//$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+			//dump ($templateid, 'templateid: ');
+			$query = 'SELECT id as value, title as text, published'
+			. ' FROM #__bsms_templates'
+			. ' WHERE published = 1 ORDER BY id ASC';
+			$this->_template = $this->_getList($query);
+			//dump ($this->_template, 'this->_template');
+		}
+		return $this->_template;
 	}
 }
 

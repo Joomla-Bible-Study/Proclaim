@@ -37,6 +37,11 @@ echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
 echo $this->params->render( 'params' );
 echo $pane->endPanel();
 
+echo $pane->startPanel( JText::_( 'Templates' ), 'TEMPLATES' );
+// Display the parameters defined in the <params> group with the 'group' attribute of 'GROUP_NAME'
+echo $this->params->render( 'params', 'TEMPLATES' );
+echo $pane->endPanel();
+
 echo $pane->startPanel( JText::_( 'Filters' ), 'FILTERS' );
 // Display the parameters defined in the <params> group with the 'group' attribute of 'GROUP_NAME'
 echo $this->params->render( 'params', 'FILTERS' );

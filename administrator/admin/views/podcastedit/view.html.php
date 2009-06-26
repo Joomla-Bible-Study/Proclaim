@@ -50,6 +50,14 @@ class biblestudyViewpodcastedit extends JView
 		}
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.podcasts', true );
+		
+		
+		$template = $this->get('Template');
+		$tem[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Template' ) .' -' );
+		$tem 			= array_merge( $tem, $template );
+		$lists['templates']	= JHTML::_('select.genericlist',   $tem, 'detailstemplateid', 'class="inputbox" size="1" ', 'value', 'text', $podcastedit->detailstemplateid );
+		
+		
 		$this->assignRef('podcastedit',		$podcastedit);
 		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $podcastedit->published);
 		$this->assignRef('lists',		$lists);
