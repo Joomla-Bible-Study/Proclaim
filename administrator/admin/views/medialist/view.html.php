@@ -19,9 +19,8 @@ class biblestudyViewmedialist extends JView
 		$params = &JComponentHelper::getParams($option);
 		JToolBarHelper::title(   JText::_( 'Media Manager' ), 'generic.png' );
 		//This checks the Preferences file to see if the admin is allowing rows to be deleted 
-		if ($params->get('allow_deletes') > 0 ):
-			JToolBarHelper::deleteList();
-		endif;
+		
+		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
 		JToolBarHelper::preferences('com_biblestudy', '550');

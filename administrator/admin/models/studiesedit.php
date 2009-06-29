@@ -10,9 +10,13 @@ class biblestudyModelstudiesedit extends JModel {
 	 * @access	public
 	 * @return	void
 	 */
+	 var $_admin;
+	 
 	function __construct() {
 		parent::__construct();
 
+		$admin = $this->getAdmin();
+		$this->_admin_params = new JParameter($admin[0]->params);
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
@@ -23,7 +27,7 @@ class biblestudyModelstudiesedit extends JModel {
 		// Set id and wipe data
 		$this->_id		= $id;
 		$this->_data	= null;
-		$this->_store = null;
+		$this->_admin = null;
 	}
 
 
@@ -42,8 +46,10 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->id = 0;
 			//TF added these
 			$this->_data->published = 1;
-			$this->_data->studydate = null;
-			$this->_data->teacher_id = null;
+			//$this->_data->studydate = null;
+			$today = date("Y-m-d H:i:s");
+			$this->_data->studydate = $today;
+			$this->_data->teacher_id = ($this->_admin_params->get('teacher_id') > 0 ? $this->_admin_params->get('teacher_id') : null);
 			$this->_data->studynumber = null;
 			$this->_data->booknumber = null;
 			$this->_data->chapter_begin = null;
@@ -194,15 +200,15 @@ class biblestudyModelstudiesedit extends JModel {
 		$this->_db->setQuery($query);
 		return $this->_getList($query);
 	}
-	function getStore()
+	function getAdmin()
 	{
-		if (empty($this->_store)) {
-			$query = 'SELECT admin_store'
+		if (empty($this->_admin)) {
+			$query = 'SELECT params'
 			. ' FROM #__bsms_admin'
 			. ' WHERE id = 1';
-			$this->_store = $this->_getList($query);
+			$this->_admin = $this->_getList($query);
 		}
-		return $this->_store;
+		return $this->_admin;
 	}
 }
 ?>

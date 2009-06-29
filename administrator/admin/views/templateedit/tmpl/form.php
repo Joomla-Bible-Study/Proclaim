@@ -72,6 +72,10 @@ echo $pane->startPanel( JText::_('Details View'), 'DETAILS');
 echo $this->params->render( 'params', 'DETAILS');
 echo $pane->endPanel();
 
+echo $pane->startPanel( JText::_('Module'), 'MODULE');
+echo $this->params->render( 'params', 'MODULE');
+echo $pane->endPanel();
+
 echo $pane->startPanel( JText::_('Teacher View'), 'TEACHER');
 echo $this->params->render( 'params', 'TEACHER');
 echo $pane->endPanel();

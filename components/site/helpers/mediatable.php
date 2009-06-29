@@ -27,9 +27,12 @@ function getMediatable($params, $row)
     $media1 = $database->loadObjectList('id');
 	$rows2 = count($media1);
 	
-	$database->setQuery ("SELECT compat_mode FROM #__bsms_admin WHERE id = 1");
+	$database->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
 	$database->query();
-	$compat_mode = $database->loadResult();
+	$compat = $database->loadObject();
+	$admin_params = new JParameter($compat->params);
+	$compat_mode = $admin_params->get('compat_mode');
+	//dump ($compat_mode, 'compat_mode: ');
 	//dump ($rows2, 'Rows2: ');
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
 	$mediatable = '<table class="mediatable"><tbody><tr>';

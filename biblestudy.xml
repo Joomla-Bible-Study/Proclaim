@@ -190,6 +190,7 @@
 		<filename>elements/studieslisttemplateid.php</filename>
 		<filename>elements/teachertemplateid.php</filename>
 		<filename>elements/templatemenuid.php</filename>
+		<filename>elements/modulemenuid.php</filename>
 		<filename>helpers/scripture.php</filename>
 		<filename>helpers/date.php</filename>
 		<filename>helpers/filesize.php</filename>
@@ -461,6 +462,7 @@
 			<filename>tables/locationsedit.php</filename>
 			<filename>tables/templateedit.php</filename>
 			<filename>tables/admin.php</filename>
+			<filename>tables/admin.xml</filename>
 			<filename>tables/index.html</filename>
 			<filename>convert1.htm</filename>
 			<filename>config.xml</filename>

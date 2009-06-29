@@ -8,10 +8,11 @@
 global $mainframe, $option;
 $params = &JComponentHelper::getParams('com_biblestudy');
 $database	= & JFactory::getDBO();
-$database->setQuery ("SELECT drop_tables FROM #__bsms_admin WHERE id = 1");
+$database->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
 $database->query();
-$drop_tables = $database->loadResult();
-
+$compat = $database->loadObject();
+$admin_params = new JParameter($compat->params);
+$drop_tables = $admin_params->get('drop_tables');
 
 	if ($drop_tables >0)
 	{
@@ -106,7 +107,19 @@ $drop_tables = $database->loadResult();
 					echo 'Database Error: '.$database->stderr().' Error ';
 					return false;
 				}
+		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_templates");
+		$database->query();
+		if ($database->getErrorNum()) {
+					echo 'Database Error: '.$database->stderr().' Error ';
+					return false;
+				}
 		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_comments");
+		$database->query();
+		if ($database->getErrorNum()) {
+					echo 'Database Error: '.$database->stderr().' Error ';
+					return false;
+				}
+		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_admin");
 		$database->query();
 		if ($database->getErrorNum()) {
 					echo 'Database Error: '.$database->stderr().' Error ';

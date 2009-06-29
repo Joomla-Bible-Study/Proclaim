@@ -26,10 +26,7 @@ class biblestudyViewteacherlist extends JView
 		$params = &JComponentHelper::getParams($option);
 		JToolBarHelper::title(   JText::_( 'Teacher Manager' ), 'generic.png' );
 		//Checks to see if the admin allows rows to be deleted
-		$allow_deletes =& $this->get('Deletes');
-		if ($allow_deletes->allow_deletes > 0 ):
 		JToolBarHelper::deleteList();
-		endif;
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::editListX();

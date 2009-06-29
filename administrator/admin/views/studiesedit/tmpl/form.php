@@ -25,11 +25,11 @@ $user =& JFactory::getUser();
 		<td><?php 
 		if (!$this->studiesedit->id)
 		{
-			echo JHTML::_('calendar', date('Y-m-d'), 'studydate', 'studydate');
+			echo JHTML::_('calendar', date('Y-m-d H:i:s'), 'studydate', 'studydate');
 		} else {
-			echo JHTML::_('calendar', date('Y-m-d', strtotime($this->studiesedit->studydate)), 'studydate', 'studydate');
+			echo JHTML::_('calendar', date('Y-m-d H:i:s', strtotime($this->studiesedit->studydate)), 'studydate', 'studydate');
 		} ?><br />
-		<span style="font-family: serif; color: gray;">(<?php echo JText::_( 'YYYY-MM-DD' ); ?>)</span>
+		<span style="font-family: serif; color: gray;">(<?php echo JText::_( 'YYYY-MM-DD HH:MM:SS' ); ?>)</span>
 		</td>
 	</tr>
 	<tr>
@@ -222,7 +222,7 @@ $user =& JFactory::getUser();
     <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail: ');?></td><td><input type="text" name="thumbnailm" id="thumbnailm" size="100" maxlength="250" value="<?php echo $this->studiesedit->thumbnailm;?>" /></td></tr>
             <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail Height: ');?></td><td><input type="text" name="thumbhm" id="thumbhm" size="4" value="<?php echo $this->studiesedit->thumbhm;?>" /></td></tr>
             <tr><td class="key" alsign="left"><?php echo JText::_('Width: ');?></td><td><input type="text" name="thumbwm" id="thumbwm" size="4" value="<?php echo $this->studiesedit->thumbwm;?>" /></td></tr>
-	<?php if($this->store[0]->admin_store == 0) {?>
+	<?php if($this->admin_params->get('admin_store') == 0) {?>
 	<tr>
 		<td class="key" align="left"><?php echo JText::_('Store');?></td>
 		<td>

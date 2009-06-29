@@ -1017,4 +1017,7 @@
 			<param name="studies" type="text" default="5" label="Number of Studies in Teacher's view" description="Type in the number of studies to show for each teacher in the teacher's view. Leave blank for all" />
 			<param name="label_teacher" type="text" default="Latest Messages" label="Text for Latest Studies Line" description="Enter some text to show when displaying teacher latest studies" />
 		</params>
+		<params group="MODULE">
+			<param name="moduleitems" type="text" size="2" default="5" label="Number of studies to display" description="Enter a number of studies to display in the module" />
+		</params>
 	</root>
