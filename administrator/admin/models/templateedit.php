@@ -22,10 +22,12 @@ class biblestudyModeltemplateedit extends JModel {
 		// Set id and wipe data
 		$this->_id		= $id;
 		$this->_tmpl	= null;
+		
 	}
 
 	function getTemplate(){
 		if(empty($this->_template)) {
+			
 			$query = ' SELECT * FROM #__bsms_templates '.
 					'  WHERE id = '.$this->_id;
 			$this->_db->setQuery( $query );

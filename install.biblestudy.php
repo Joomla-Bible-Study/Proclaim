@@ -276,6 +276,14 @@ $fieldcheck = false;
 $fieldcheck	= isset( $fields[$tn]['detailstemplateid'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_podcast ADD COLUMN detailstemplateid INT NULL AFTER custom;");
 		$database->query();}
+		
+$tn = '#__bsms_series';
+	$fields = $database->getTableFields( array( $tn ) );
+	$fieldcheck = false;	
+$fieldcheck	= isset( $fields[$tn]['series_thumbnail'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_series ADD COLUMN series_thumbnail VARCHAR(150) NULL AFTER series_text;");
+		$database->query();}
+
 if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
 	if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}
 	else {

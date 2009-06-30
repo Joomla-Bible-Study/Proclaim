@@ -16,24 +16,34 @@
  
 echo $pane->startPane( 'content-pane' );
  
-// First slider panel
-// Create a slider panel with a title of SLIDER_PANEL_1_TITLE and a title id attribute of SLIDER_PANEL_1_NAME
 echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
-// Display the parameters defined in the <params> group with no 'group' attribute
 echo $this->params->render( 'params' );
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_( 'Form Fillin' ), 'FILLIN-SITE' );
-// Display the parameters defined in the <params> group with no 'group' attribute
-echo $this->params->render( 'params' , 'FILLIN-SITE');
+echo $pane->startPanel( JText::_( 'Images Folders' ), 'FILLIN-IMAGES' );
+echo $this->params->render( 'params' , 'FILLIN-IMAGES');
 echo $pane->endPanel();
 
-echo $pane->endPane();
+echo $pane->startPanel( JText::_( 'Auto Fill Study Record' ), 'FILLIN-STUDY' );
+echo $this->params->render( 'params' , 'FILLIN-STUDY');
+echo $pane->endPanel();
 
+echo $pane->startPanel( JText::_( 'Auto Fill Media Record' ), 'FILLIN-MEDIA' );
+echo $this->params->render( 'params' , 'FILLIN-MEDIA');
+echo $pane->endPanel();
+//dump ($this->params, 'params: ');
+
+
+
+echo $pane->endPane();
+$studypath = $params->study_images;
+$fileList 	= JFolder::files($studypath);
 ?>
 </td></tr>
-   
-     
+ <tr><td class="key"><?php echo JText::_('Default Study Image');?></td>
+      	<td>  
+     </td>
+  </tr>
       <tr> <td class="key"><?php echo JText::_('Version');?></td>
       	<td><?php echo JText::_('Your Version: ').'6.1.0 - ';?>
         <strong>

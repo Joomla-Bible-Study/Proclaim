@@ -36,6 +36,7 @@ class JElementbook extends JElement
 				' ORDER BY #__bsms_books.booknumber ASC';
 		$db->setQuery($query);
 		$options = $db->loadObjectList();
+		//dump ($options, 'options: ');
 		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a Book').' -', 'booknumber', 'bookname'));
 
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'booknumber', 'bookname', $value, $control_name.$name );

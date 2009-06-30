@@ -64,7 +64,7 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->messagetype = ($this->_admin_params->get('messagetype') > 0 ? $this->_admin_params->get('messagetype') : null);
 			$this->_data->series_id = ($this->_admin_params->get('series_id') > 0 ? $this->_admin_params->get('series_id') : null);
 			$this->_data->studytext = null;
-			$this->_data->topics_id = ($this->_admin_params->get('topics_id') > 0 ? $this->_admin_params->get('topics_id') : null);
+			$this->_data->topics_id = ($this->_admin_params->get('topic_id') > 0 ? $this->_admin_params->get('topic_id') : null);
 			$this->_data->secondary_reference = null;
 			$this->_data->prod_cd = null;
 			$this->_data->prod_dvd = null;
@@ -83,7 +83,7 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->user_name = null;
 			$this->_data->show_level = null;
 			$this->_data->location_id = ($this->_admin_params->get('location_id') > 0 ? $this->_admin_params->get('location_id') : null);
-			$this->_data->thumbnailm = null;
+			$this->_data->thumbnailm = ($this->_admin_params->get('thumbnailm') > 0 ? $this->_admin_params->get('thumbnailm') : null);
 			$this->_data->thumbhm = null;
 			$this->_data->thumbwm = null;
 			

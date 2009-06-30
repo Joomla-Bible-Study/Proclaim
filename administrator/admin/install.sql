@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
   
 `tmpl` longtext NOT NULL,
   
-`published` int(1) NOT NULL,
+`published` int(1) NOT NULL DEFAULT '1',
 
 `params` longtext NULL,
 
@@ -207,12 +207,13 @@ INSERT INTO `jos_bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `
 --Adding Admin Table
 --
  CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
-`compat_mode` TINYINT NOT NULL DEFAULT '0',
-`allow_deletes` TINYINT NOT NULL DEFAULT '1',
-`drop_tables` TINYINT NOT NULL DEFAULT '0',
-`admin_store` TINYINT NOT NULL DEFAULT '1',
 `params` TEXT NULL,
 `id` INT(1) NOT NULL default '1',
+`podcast` TEXT NULL,
+`series` TEXT NULL,
+`study` TEXT NULL,
+`teacher` TEXT NULL,
+`media` TEXT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE = MYISAM 
 

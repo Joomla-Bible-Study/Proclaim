@@ -15,7 +15,11 @@
 			<td>
 				<input class="text_area" type="text" name="series_text" id="series_text" size="100" maxlength="250" value="<?php echo $this->seriesedit->series_text;?>" />
 			</td>
+            <td>
+				<input class="text_area" type="text" name="series_thumbnail" id="series_thumbnail" size="100" maxlength="250" value="<?php echo $this->seriesedit->series_thumbnail;?>" />
+			</td>
 		</tr>
+        
 	</table>
 	</fieldset>
 </div>

@@ -10,10 +10,12 @@ class biblestudyModelmediafilesedit extends JModel {
 	 * @access	public
 	 * @return	void
 	 */
+	 var $_admin;
 	function __construct()
 	{
 		parent::__construct();
-
+		$admin = $this->getAdmin();
+		$this->_admin_params = new JParameter($admin[0]->params);
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
@@ -40,22 +42,23 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->_data = new stdClass();
 			$this->_data->id = 0;
 			//TF added these
+			$today = date("Y-m-d H:i:s");
 			$this->_data->published = 1;
-			$this->_data->media_image = null;
-			$this->_data->server = null;
-			$this->_data->path = null;
+			$this->_data->media_image = ($this->_admin_params->get('media_image') > 0 ? $this->_admin_params->get('media_image') : null);
+			$this->_data->server = ($this->_admin_params->get('server') > 0 ? $this->_admin_params->get('server') : null);
+			$this->_data->path = ($this->_admin_params->get('path') > 0 ? $this->_admin_params->get('path') : null);
 			$this->_data->special = null;
 			$this->_data->filename = null;
 			$this->_data->size = null;
-			$this->_data->podcast_id = null;
-			$this->_data->internal_viewer = null;
+			$this->_data->podcast_id = ($this->_admin_params->get('podcast_id') > 0 ? $this->_admin_params->get('podcast_id') : null);
+			$this->_data->internal_viewer = ($this->_admin_params->get('internal_viewer') > 0 ? $this->_admin_params->get('internal_viewer') : null);
 			$this->_data->mediacode = null;
 			$this->_data->ordering = null;
 			$this->_data->study_id = null;
-			$this->_data->createdate = null;
-			$this->_data->link_type = null;
+			$this->_data->createdate = $today;
+			$this->_data->link_type = ($this->_admin_params->get('link_type') > 0 ? $this->_admin_params->get('link_type') : null);
 			$this->_date->hits = null;
-			$this->_data->mime_type = null;
+			$this->_data->mime_type = ($this->_admin_params->get('mime_type') > 0 ? $this->_admin_params->get('mime_type') : null);
 			
 		}
 		return $this->_data;
@@ -231,6 +234,16 @@ class biblestudyModelmediafilesedit extends JModel {
 		return true;
 	}
 
+function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT params'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}
 
 }
 ?>

@@ -40,6 +40,7 @@ class JElementlocations extends JElement
 				' ORDER BY #__bsms_locations.location_text ASC';*/
 		$db->setQuery( $query );
 		$options = $db->loadObjectList( );
+		//dump ($options, 'options: ');
 		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a location').' -', 'id', 'text'));
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'id', 'text', $value, $control_name.$name );
 	}

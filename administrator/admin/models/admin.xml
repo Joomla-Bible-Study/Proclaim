@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<params>
+		<param name="compat_mode" type="list" default="0" label="Compatibility Mode" description="If you experience problems with files downloading, try using this mode.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="drop_tables" type="list" default="0" label="Drop Tables on Uninstall" description="Drop com_biblestudy database tables on uninstall? Default does NOT drop tables.">
+			<option value="0">Do not drop tables</option>
+			<option value="1">Drop Tables</option>
+		</param>
+		<param name="admin_store" type="list" default="0" label="Show Store in Study Entry Screen" description="Show or Hide store on studielist edit form.">
+			<option value="0">Show</option>
+			<option value="1">Hide</option>
+		</param>
+	</params>
+	<params group="FILLIN-STUDY" addpath="/components/com_biblestudy/elements">
+		<param name="location_id" type="locations" label="Choose a Location" description="Choose a default location to display in the form." />
+		<param name="teacher_id" type="teacher" default="" label="Choose a Teacher" description="Choose a default teacher to display in the form" />
+		<param name="series_id" type="series" default="" label="Series" description="Choose a series to display as default" />
+		<param name="booknumber" type="book" default="" label="Book" description="Choose a Book to display as default" />
+		<param name="topic_id" type="topic" default="" label="Topic" description="Choose a topic to display as default" />
+		<param name="messagetype" type="messagetype" default="" label="Message Type" description="Choose a message type to display as default" />
+		<param name="thumbnailm" type="imagelist" hide_default="-1" directory="/images" label="Default Study Image" description="Choose a default study thumbnail image from the designated folder" />
+	</params>
+	<params group="FILLIN-MEDIA" addpath="/administrator/components/com_biblestudy/elements">
+		<param name="series_thumbnail" type="series_thumbnail" label="Default Series Image" description="Choose a default series image from the designated folder" />
+		<param name="media_image" type="thumbnailm" label="Default Media Type Image" description="Choose a default media type image from the designated folder" />
+	</params>
+	<params group="FILLIN-IMAGES">
+		<param name="series_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Series Thumbnail Folder" description="Path from images folder to series images like /images/series. If left blank then /images/stories is assumed." />
+		<param name="media_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Media Image Folder" description="Path from images folder to media images like /images/media. If left blank then /components/com_biblestudy/images is assumed." />
+		<param name="teachers_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Teacher Image Folder" description="Path from images folder to teacher images like /images/teachers. If left blank then /images/stories is assumed." />
+		<param name="study_images" type="folderlist" hide_none="-1" directory="/images" size="150" label="Study Thumbnails Image Folder" description="Path from images folder to study thumbnail images like /images/thumbnails. If left blank then /images/stories is assumed." />
+		<param name="podcast_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Podcast Image Folder" description="Path from images folder to podcast images like /images/podcast. If left blank then /images/stories is assumed." />
+	</params>
+</root>

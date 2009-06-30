@@ -23,6 +23,7 @@ class Tableseriesedit extends JTable
 	 * @var string
 	 */
 	var $series_text = null;
+	var $series_thumbnail = null;
 	
 	/**
 	 * Constructor

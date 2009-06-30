@@ -49,6 +49,7 @@ class biblestudyModelseriesedit extends JModel
 			//TF added these
 			$this->_data->published = 0;
 			$this->_data->series_text = null;
+			$this->_data->series_thumbnail = null;
 			
 		}
 		return $this->_data;
