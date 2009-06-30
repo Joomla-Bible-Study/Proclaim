@@ -11,7 +11,7 @@
 		<param name="studieslisttemplateid" type="studieslisttemplateid" default="" label="Template for Studies List View" description="Choose a template from the admin/templates for display of studies list view linked from here" />
 		<param name="detailstemplateid" type="detailstemplateid" default="" label="Template for Study Details" description="Choose a template from the admin/templates for display of study details view linked from here" />
 		<param name="teachertemplateid" type="teachertemplateid" default="" label="Template for Teacher View" description="Choose a template from the admin/templates for display of teacher details view linked from here" />
-	</params>
+		</params>
 	<params group="FILTERS" addpath="/components/com_biblestudy/elements">
 		<param name="teacher_id" type="teacher" default="" label="Teacher" description="Choose a teacher to display for this menu item" />
 		<param name="show_teacher_list" type="list" default="1" label="Show/Hide Teacher(s) in View" description="Shows or hides the teacher on the page">
