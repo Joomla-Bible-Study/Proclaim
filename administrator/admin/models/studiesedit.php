@@ -51,7 +51,7 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->studydate = $today;
 			$this->_data->teacher_id = ($this->_admin_params->get('teacher_id') > 0 ? $this->_admin_params->get('teacher_id') : null);
 			$this->_data->studynumber = null;
-			$this->_data->booknumber = null;
+			$this->_data->booknumber = ($this->_admin_params->get('booknumber') > 0 ? $this->_admin_params->get('booknumber') : null);
 			$this->_data->chapter_begin = null;
 			$this->_data->chapter_end = null;
 			$this->_data->verse_begin = null;
@@ -61,10 +61,10 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->media_hours = null;
 			$this->_data->media_minutes = null;
 			$this->_data->media_seconds = null;
-			$this->_data->messagetype = null;
-			$this->_data->series_id = null;
+			$this->_data->messagetype = ($this->_admin_params->get('messagetype') > 0 ? $this->_admin_params->get('messagetype') : null);
+			$this->_data->series_id = ($this->_admin_params->get('series_id') > 0 ? $this->_admin_params->get('series_id') : null);
 			$this->_data->studytext = null;
-			$this->_data->topics_id = null;
+			$this->_data->topics_id = ($this->_admin_params->get('topics_id') > 0 ? $this->_admin_params->get('topics_id') : null);
 			$this->_data->secondary_reference = null;
 			$this->_data->prod_cd = null;
 			$this->_data->prod_dvd = null;
@@ -82,7 +82,7 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->user_id = null;
 			$this->_data->user_name = null;
 			$this->_data->show_level = null;
-			$this->_data->location_id = null;
+			$this->_data->location_id = ($this->_admin_params->get('location_id') > 0 ? $this->_admin_params->get('location_id') : null);
 			$this->_data->thumbnailm = null;
 			$this->_data->thumbhm = null;
 			$this->_data->thumbwm = null;
