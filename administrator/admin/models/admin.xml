@@ -21,10 +21,10 @@
 		<param name="booknumber" type="book" default="" label="Book" description="Choose a Book to display as default" />
 		<param name="topic_id" type="topic" default="" label="Topic" description="Choose a topic to display as default" />
 		<param name="messagetype" type="messagetype" default="" label="Message Type" description="Choose a message type to display as default" />
-		<param name="thumbnailm" type="imagelist" hide_default="-1" directory="/images" label="Default Study Image" description="Choose a default study thumbnail image from the designated folder" />
+		<param name="thumbnailstudy" type="thumbnailm" hide_default="-1" directory="/images" label="Default Study Image" description="Choose a default study thumbnail image from the designated folder" />
 	</params>
 	<params group="FILLIN-MEDIA" addpath="/administrator/components/com_biblestudy/elements">
-		<param name="series_thumbnail" type="series_thumbnail" label="Default Series Image" description="Choose a default series image from the designated folder" />
+		<param name="series_thumbnail" type="thumbnailm" label="Default Series Image" description="Choose a default series image from the designated folder" />
 		<param name="media_image" type="thumbnailm" label="Default Media Type Image" description="Choose a default media type image from the designated folder" />
 	</params>
 	<params group="FILLIN-IMAGES">
