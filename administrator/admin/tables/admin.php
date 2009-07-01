@@ -21,10 +21,11 @@ class Tableadmin extends JTable
 	/**
 	 * @var string
 	 */
-	var $compat_mode = null;
-	var $allow_deletes = null;
-	var $drop_tables = null;
-	var $admin_store = null;
+	var $podcast = null;
+	var $series = null;
+	var $study = null;
+	var $teacher = null;
+	var $media = null;
 	var $params = null;
 
 	function bind($array, $ignore = '')

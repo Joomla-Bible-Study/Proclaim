@@ -50,21 +50,25 @@ class JElementthumbnailm extends JElement
 		//dump ($admin, 'params: ');
 		$paramsdefs = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'models'.DS.'admin.xml';
 		$admin_params = new JParameter($paramsdata, $paramsdefs);
-		$folder = JPATH_SITE.$admin_params->get('study_imagefolder', '/images/stories');
+		$itemselected = $admin_params->get('thumbnail_study');
+		
+		$folder = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images', '/images/stories');
+		//dump ($itemselected, 'control_name: ');
 		$folder = JFolder::makeSafe($folder);
 		$folders = JFolder::files($folder, '.', true);
-		//$folderfinal = array;
+		//$folderfinal = new stdClass;
+		//$folderfinal2 = new stdClass;
 		foreach($folders as $key=>$value)
 		{
-			$folderfinal1 = array('id'=>$key, 'text'=>$value);
+			$folderfinal1 = array('id'=>$key, 'value'=>$value);
 			$folderfinal2[] = $folderfinal1;
 			
 		}
 		//dump ($folderfinal2, 'folders: ');
-		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'id', 'text'));
+		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
 		//dump ($folderfinal2, 'control_name: ');
-		return JHTML::_('select.genericlist',  $folderfinal2, ''.$control_name.'['.$name.']', 'class="inputbox"', 'id', 'text', $value, $control_name.$name );
-		//return JHTML::_('select.genericlist',  $folderfinal2, ''.$control_name.'['.$name.']', 'class="inputbox"', 'thumbnailm', 'text', $value, $params->thumbnailm);
+		return JHTML::_('select.genericlist',  $folderfinal2, ''.$control_name.'['.$name.']', 'class="inputbox"', 'value', 'value', $control_name.$name );
+		//return JHTML::_('select.genericlist',  $folderfinal2, ''.$control_name.'['.$name.']', 'class="inputbox"', 'value', 'value', $value, $itemselected );
 		
 	}
 }

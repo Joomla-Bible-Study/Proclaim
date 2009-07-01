@@ -40,20 +40,6 @@ class biblestudyModeladmin extends JModel
 					'  WHERE id = 1';
 			$this->_db->setQuery( $query );
 			$this->_data = $this->_db->loadObject();
-		/*if (empty( $this->_data )) {
-			$query = ' SELECT * FROM #__bsms_admin '.
-					'  WHERE id = '.$this->_id;
-			$this->_db->setQuery( $query );
-			$this->_data = $this->_db->loadObject();
-		}
-		if (!$this->_data) {
-			$this->_data = new stdClass();
-			$this->_data->id = 0;
-			//$this->_data->bookname = null;
-			//$this->_data->booknumber = null;
-			//TF added this
-			//$this->_data->published = 0;
-		}*/
 		return $this->_data;
 	}
 

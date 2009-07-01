@@ -10,7 +10,7 @@
 
 		
     <table class="admintable">
-    <tr><td>
+    <tr><td class="key"><?php echo JText::_('Administrative Settings');?></td><td>
     <?php
 	$pane =& JPane::getInstance( 'sliders' );
  
@@ -26,24 +26,15 @@ echo $pane->endPanel();
 
 echo $pane->startPanel( JText::_( 'Auto Fill Study Record' ), 'FILLIN-STUDY' );
 echo $this->params->render( 'params' , 'FILLIN-STUDY');
-echo $pane->endPanel();
+echo $pane->endPanel(); 
 
-echo $pane->startPanel( JText::_( 'Auto Fill Media Record' ), 'FILLIN-MEDIA' );
-echo $this->params->render( 'params' , 'FILLIN-MEDIA');
-echo $pane->endPanel();
-//dump ($this->params, 'params: ');
+echo $pane->endPane();?>
+<tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php echo $this->lists['study']; echo JText::_(' Default for study thumbnail. Set Folder above.');?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Series Image');?></td><td><?php echo $this->lists['series']; echo JText::_(' Default for series thumbnail. Set Folder above.');?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Podcast Image');?></td><td><?php echo $this->lists['podcast']; echo JText::_(' Default for podcast thumbnail. Set Folder above.');?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Teacher Image');?></td><td><?php echo $this->lists['teacher']; echo JText::_(' Default for teacher thumbnail. Set Folder above.');?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Media Type Image');?></td><td><?php echo $this->lists['media']; echo JText::_(' Default for media type thumbnail. Set Folder above.');?></td></tr>
 
-
-
-echo $pane->endPane();
-$studypath = $params->study_images;
-$fileList 	= JFolder::files($studypath);
-?>
-</td></tr>
- <tr><td class="key"><?php echo JText::_('Default Study Image');?></td>
-      	<td>  
-     </td>
-  </tr>
       <tr> <td class="key"><?php echo JText::_('Version');?></td>
       	<td><?php echo JText::_('Your Version: ').'6.1.0 - ';?>
         <strong>

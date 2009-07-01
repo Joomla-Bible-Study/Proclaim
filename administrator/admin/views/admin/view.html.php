@@ -16,26 +16,77 @@ class biblestudyViewadmin extends JView
 		$admin		=& $this->get('Data');
 		$this->assignRef('admin', $admin);
 		$isNew		= ($admin->id < 1);
-		//$lists = array();
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Administration' ).': <small><small>[ ' . $text.' ]</small></small>' );
 		JToolBarHelper::save();
 		$paramsdata = $admin->params;
-		//dump ($admin, 'params: ');
 		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'admin.xml';
 		$params = new JParameter($paramsdata, $paramsdefs);
 		$this->assignRef('params', $params);
-		//if ($isNew)  {
-			//JToolBarHelper::cancel();
-		//} else {
-			// for existing items the button is renamed `close`
-			//JToolBarHelper::cancel( 'cancel', 'Close' );
-		//}
+		
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('study_images');
+		$fileList 	= JFolder::files($studypath);
+		foreach($fileList as $key=>$value)
+		{
+			$folderfinal1 = new JObject();
+			$folderfinal1->value = $value;
+			$folderfinal1->id = $key;
+			$folderfinal2[] = $folderfinal1;
+		}
+		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		$lists['study'] = JHTML::_('select.genericlist',  $folderfinal2, 'study', 'class="inputbox"', 'value', 'value', $admin->study );
+	
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('series_imagefolder');
+		$fileList 	= JFolder::files($studypath);
+		foreach($fileList as $key=>$value)
+		{
+			$folderfinal1 = new JObject();
+			$folderfinal1->value = $value;
+			$folderfinal1->id = $key;
+			$folderfinal3[] = $folderfinal1;
+		}
+		array_unshift($folderfinal3, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		$lists['series'] = JHTML::_('select.genericlist',  $folderfinal3, 'series', 'class="inputbox"', 'value', 'value', $admin->series );
+
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('media_imagefolder');
+		$fileList 	= JFolder::files($studypath);
+		foreach($fileList as $key=>$value)
+		{
+			$folderfinal1 = new JObject();
+			$folderfinal1->value = $value;
+			$folderfinal1->id = $key;
+			$folderfinal4[] = $folderfinal1;
+		}
+		array_unshift($folderfinal4, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		$lists['media'] = JHTML::_('select.genericlist',  $folderfinal4, 'media', 'class="inputbox"', 'value', 'value', $admin->media );
+		
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('teachers_imagefolder');
+		$fileList 	= JFolder::files($studypath);
+		foreach($fileList as $key=>$value)
+		{
+			$folderfinal1 = new JObject();
+			$folderfinal1->value = $value;
+			$folderfinal1->id = $key;
+			$folderfinal5[] = $folderfinal1;
+		}
+		array_unshift($folderfinal5, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		$lists['teacher'] = JHTML::_('select.genericlist',  $folderfinal5, 'teacher', 'class="inputbox"', 'value', 'value', $admin->teacher );
+
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('podcast_imagefolder');
+		$fileList 	= JFolder::files($studypath);
+		foreach($fileList as $key=>$value)
+		{
+			$folderfinal1 = new JObject();
+			$folderfinal1->value = $value;
+			$folderfinal1->id = $key;
+			$folderfinal6[] = $folderfinal1;
+		}
+		array_unshift($folderfinal6, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		$lists['podcast'] = JHTML::_('select.genericlist',  $folderfinal6, 'podcast', 'class="inputbox"', 'value', 'value', $admin->podcast );
+
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.admin', true );
-		//$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $locationsedit->published);
-		//$this->assignRef('lists', $lists);
-		//$this->assignRef('locationsedit',		$locationsedit);
+		$this->assignRef('lists', $lists);
 
 		parent::display($tpl);
 	}
