@@ -10,10 +10,10 @@
       <tr>
         <td width="100" align="left" class="key"><label for="media"> <?php echo JText::_( 'Media Extensions and Images' ); ?>: 
           </label></td>
-        <td width="100" align="Left" class="key"></td>
+        <td width="100" align="Left" ></td>
       </tr>
       <tr>
-        <td><?php echo JText::_( 'Published');?></td>
+        <td class="key"><?php echo JText::_( 'Published');?></td>
         <td> <select name="published" id="published">
 		<?php if ($this->mediaedit->published == 1) {
 		echo '<OPTION value="1"';
@@ -32,22 +32,20 @@
         </td>
       </tr>
       <tr>
-        <td><?php echo JText::_( 'Name for Image');?></td>
+        <td class="key"><?php echo JText::_( 'Name for Image');?></td>
         <td> <input class="text_area" type="text" name="media_image_name" id="media_image_name" size="100" maxlength="250" value="<?php echo $this->mediaedit->media_image_name;?>" /> 
         </td>
       </tr>
        <tr>
-        <td><?php echo JText::_( 'Description');?></td>
+        <td class="key"><?php echo JText::_( 'Description');?></td>
         <td> <input class="text_area" type="text" name="media_text" id="media_text" size="100" maxlength="250" value="<?php echo $this->mediaedit->media_text;?>" /> 
         </td>
       </tr>
-      <tr>
-        <td><?php echo JText::_( 'Path to Image (start from Joomla root - no leading / )');?></td>
-        <td> <input class="text_area" type="text" name="media_image_path" id="media_image_path" size="100" maxlength="250" value="<?php echo $this->mediaedit->media_image_path;?>" /> 
-        </td>
+      <tr><td class="key"><?php echo JText::_('Choose an image');?></td><td><?php echo $this->lists['media']; echo '  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('Set default folder here').'</a>';?></td>
       </tr>
+      
       <tr>
-        <td><?php echo JText::_( 'ALT Text for Image');?></td>
+        <td class="key"><?php echo JText::_( 'ALT Text for Image');?></td>
         <td> <input class="text_area" type="text" name="media_alttext" id="media_alttext" size="100" maxlength="250" value="<?php echo $this->mediaedit->media_alttext;?>" /> 
         </td>
       </tr>

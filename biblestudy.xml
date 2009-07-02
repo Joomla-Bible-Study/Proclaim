@@ -277,6 +277,9 @@
 			<filename>elements/mediafile.php</filename>
 			<filename>elements/teacher.php</filename>
 			<filename>elements/series.php</filename>
+			<filename>elements/server.php</filename>
+			<filename>elements/path.php</filename>
+			<filename>elements/podcast.php</filename>
 			<filename>helpers/templates.helper.php</filename>
 			<filename>models/cssedit.php</filename>
 			<filename>models/teacherlist.php</filename>

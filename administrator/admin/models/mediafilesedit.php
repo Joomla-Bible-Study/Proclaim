@@ -44,21 +44,21 @@ class biblestudyModelmediafilesedit extends JModel {
 			//TF added these
 			$today = date("Y-m-d H:i:s");
 			$this->_data->published = 1;
-			$this->_data->media_image = ($this->_admin_params->get('media_image') > 0 ? $this->_admin_params->get('media_image') : null);
+			$this->_data->media_image = ($this->_admin_params->get('media') != 'Use Default' ? $this->_admin_params->get('media') : null);
 			$this->_data->server = ($this->_admin_params->get('server') > 0 ? $this->_admin_params->get('server') : null);
 			$this->_data->path = ($this->_admin_params->get('path') > 0 ? $this->_admin_params->get('path') : null);
-			$this->_data->special = null;
+			$this->_data->special =($this->_admin_params->get('target') != 'No default' ? $this->_admin_params->get('target') : null);;
 			$this->_data->filename = null;
 			$this->_data->size = null;
-			$this->_data->podcast_id = ($this->_admin_params->get('podcast_id') > 0 ? $this->_admin_params->get('podcast_id') : null);
-			$this->_data->internal_viewer = ($this->_admin_params->get('internal_viewer') > 0 ? $this->_admin_params->get('internal_viewer') : null);
+			$this->_data->podcast_id = ($this->_admin_params->get('podcast') > 0 ? $this->_admin_params->get('podcast') : null);
+			$this->_data->internal_viewer = ($this->_admin_params->get('avr') > 0 ? $this->_admin_params->get('avr') : null);
 			$this->_data->mediacode = null;
 			$this->_data->ordering = null;
 			$this->_data->study_id = null;
 			$this->_data->createdate = $today;
-			$this->_data->link_type = ($this->_admin_params->get('link_type') > 0 ? $this->_admin_params->get('link_type') : null);
+			$this->_data->link_type = ($this->_admin_params->get('download') > 0 ? $this->_admin_params->get('download') : null);
 			$this->_date->hits = null;
-			$this->_data->mime_type = ($this->_admin_params->get('mime_type') > 0 ? $this->_admin_params->get('mime_type') : null);
+			$this->_data->mime_type = ($this->_admin_params->get('mime') > 0 ? $this->_admin_params->get('mime') : null);
 			
 		}
 		return $this->_data;

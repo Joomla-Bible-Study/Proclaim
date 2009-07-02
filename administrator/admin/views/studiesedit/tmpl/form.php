@@ -1,7 +1,35 @@
 <?php 
 	defined('_JEXEC') or die('Restricted access'); 
 //dump ($this->store[0]->admin_store, 'store: ');?>
-
+<script language="javascript" type="text/javascript">
+	
+		function changeDisplayImage() {
+			if (document.adminForm.thumbnailm.value !='') {
+				document.adminForm.imagelib.src='<?php echo '/images'.DS.$this->admin_params->get('study_images', 'stories');?>' + document.adminForm.thumbnailm.value;
+			} else {
+				document.adminForm.imagelib.src='images/blank.png';
+			}
+		function submitbutton(pressbutton) {
+			var form = document.adminForm;
+			if (pressbutton == 'cancel') {
+				submitform( pressbutton );
+				return;
+			}
+			if (form.name.value == "") {
+				alert( "<?php echo JText::_( 'You must provide a banner name.', true ); ?>" );
+			} else if (getSelectedValue('adminForm','cid') < 1) {
+				alert( "<?php echo JText::_( 'Please select a client.', true ); ?>" );
+			/*} else if (!getSelectedValue('adminForm','imageurl')) {
+				alert( "<?php echo JText::_( 'Please select an image.', true ); ?>" );*/
+			/*} else if (form.clickurl.value == "") {
+				alert( "<?php echo JText::_( 'Please fill in the URL for the banner.', true ); ?>" );*/
+			} else if ( getSelectedValue('adminForm','catid') == 0 ) {
+				alert( "<?php echo JText::_( 'Please select a category.', true ); ?>" );
+			} else {
+				submitform( pressbutton );
+			}
+		}
+</script>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 <fieldset class="adminform"><legend><?php echo JText::_( 'Bible Study Details' ); ?></legend>
@@ -219,9 +247,19 @@ $user =& JFactory::getUser();
 			<?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
 		</select></td>
 	</tr>
-    <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail: ');?></td><td><input type="text" name="thumbnailm" id="thumbnailm" size="100" maxlength="250" value="<?php echo $this->studiesedit->thumbnailm;?>" /></td></tr>
-            <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail Height: ');?></td><td><input type="text" name="thumbhm" id="thumbhm" size="4" value="<?php echo $this->studiesedit->thumbhm;?>" /></td></tr>
-            <tr><td class="key" alsign="left"><?php echo JText::_('Width: ');?></td><td><input type="text" name="thumbwm" id="thumbwm" size="4" value="<?php echo $this->studiesedit->thumbwm;?>" /></td></tr>
+    <tr><td class="key" alsign="left"><?php echo JText::_('Thumbnail: ');?></td><td><?php echo $this->lists['thumb'];//echo $this->studiesedit->thumbnailm;?></td></tr>
+    <tr><td valign="top" class="key">
+							<?php echo JText::_( 'Study Image' ); ?>:
+						</td>
+    <td> <?php if (eregi("gif|jpg|png", $studiesedit->thumbnailm)) { ?>
+    <img src="<?php echo DS.'imagess'.DS.$this->admin_params->get('study_images', 'stories').DS.$studiesedit->thumbnailm;?>" name="imagelib">
+    <?php }
+	else { ?>
+		<img src="/images/blank.png" name="imagelib" /> <?php } ?>
+    </td>
+    
+    </tr>
+            
 	<?php if($this->admin_params->get('admin_store') == 0) {?>
 	<tr>
 		<td class="key" align="left"><?php echo JText::_('Store');?></td>
@@ -254,12 +292,10 @@ $user =& JFactory::getUser();
 		</td>
 	</tr>
 	<?php }?>
-</table>
-<table>
+
 	<tr>
 		<td class="key"><?php echo JText::_( 'Study Text' );?></td>
-	</tr>
-	<tr>
+	
 		<td><?php echo $editor->display('studytext', $this->studiesedit->studytext, '100%', '400', '70', '15'); ?></td>
 	</tr>
 </table>

@@ -18,6 +18,7 @@ class biblestudyViewstudiesedit extends JView {
 		$config =& JComponentHelper::getParams( 'com_biblestudy' );
 		$admin=& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
+		
 		//dump ($admin_params, 'admin_params: ');
 		//$enableStore = $store->admin_store;
 		//dump ($store, 'store: ');
@@ -35,6 +36,7 @@ class biblestudyViewstudiesedit extends JView {
 		array_unshift($books, JHTML::_('select.option', '0', JText::_('- Select a Book -')));
 
 		
+		//dump ($lists['thumb'], 'lists: ');
 		$isNew		= ($studiesedit->id < 1);
 		$editor =& JFactory::getEditor();
 		$this->assignRef( 'editor', $editor );
@@ -55,6 +57,23 @@ class biblestudyViewstudiesedit extends JView {
 		JToolBarHelper::help( 'biblestudy.studiesedit', true );
 		// build the html select list for ordering
 
+		//Build the select list for the study image
+		$javascript			= 'onchange="changeDisplayImage();"';
+		$directory = DS.'images'.DS.$admin_params->get('study_images', 'stories');
+		$studypath = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images', 'stories');
+		$fileList 	= JFolder::files($studypath);
+		foreach($fileList as $key=>$value)
+		{
+			$folderfinal1 = new JObject();
+			$folderfinal1->value = $value;
+			$folderfinal1->id = $key;
+			$folderfinal2[] = $folderfinal1;
+		}
+		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+		//$lists['thumb'] = JHTML::_('select.genericlist',  $folderfinal2, 'thumbnailm', 'class="inputbox" size="1"', 'value', 'value', $studiesedit->thumbnailm );
+		
+		$lists['thumb']	= JHTML::_('list.images',  'thumbnailm', $studiesedit->thumbnailm, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
+		
 		$database	= & JFactory::getDBO();
 		$query = 'SELECT id AS value, teachername AS text, published'
 		. ' FROM #__bsms_teachers'

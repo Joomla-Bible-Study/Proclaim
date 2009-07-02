@@ -10,10 +10,11 @@ class biblestudyModelmediaedit extends JModel {
 	 * @access	public
 	 * @return	void
 	 */
+	 var $_admin;
 	function __construct()
 	{
 		parent::__construct();
-
+		$admin = $this->getAdmin;
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
@@ -41,7 +42,7 @@ class biblestudyModelmediaedit extends JModel {
 			$this->_data = new stdClass();
 			$this->_data->id = 0;
 			//TF added these
-			$this->_data->published = 0;
+			$this->_data->published = 1;
 			$this->_data->media_text = null;
 			$this->_data->media_image_name = null;
 			$this->_data->media_extension = null;
@@ -128,6 +129,15 @@ class biblestudyModelmediaedit extends JModel {
 		}
 	}
 
-
+function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT *'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}
 }
 ?>

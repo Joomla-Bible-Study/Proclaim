@@ -29,4 +29,25 @@
 		<param name="study_images" type="folderlist" hide_none="-1" directory="/images" size="150" label="Study Thumbnails Image Folder" description="Path from images folder to study thumbnail images like /images/thumbnails. If left blank then /images/stories is assumed." />
 		<param name="podcast_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Podcast Image Folder" description="Path from images folder to podcast images like /images/podcast. If left blank then /images/stories is assumed." />
 	</params>
+	<params group="FILLIN-MEDIAFILE" addpath="/administrator/components/com_biblestudy/elements">
+		<param name="avr" type="list" default="0" label="Default Use All Videos Reloaded" description="Set to Yes if you wish all mediafile records to automatically have Use AVR selected.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="download" type="list" default="0" label="Default Show Download Button" description="Set to Yes if you wish all mediafile records to automatically have the Show Download button selected.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="target" type="list" default="0" label="Default target type" description="Set to a particular target type as default.">
+			<option value="0">No default</option>
+			<option value="_blank">New Window</option>
+			<option value="_self">Same Window</option>
+			<option value="_parent">Parent Window</option>
+			<option value="_top">Full Body of the Window</option>
+		</param>
+		<param name="server" type="server" label="Default Server" description="Choose a default server from your list." default="" />
+		<param name="path" type="path" label="Default Folder" description="Choose a default folder from your list." default="" />
+		<param name="podcast" type="podcast" label="Default Podcast" description="Choose a default podcast from your list." default="" />
+		<param name="mime" type="mime" label="Default Mime Type" description="Choose a default mime type from your list." default="" />
+	</params>
 </root>

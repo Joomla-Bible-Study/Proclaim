@@ -33,7 +33,7 @@ class biblestudyViewadmin extends JView
 			$folderfinal1->id = $key;
 			$folderfinal2[] = $folderfinal1;
 		}
-		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		$lists['study'] = JHTML::_('select.genericlist',  $folderfinal2, 'study', 'class="inputbox"', 'value', 'value', $admin->study );
 	
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('series_imagefolder');
@@ -45,7 +45,7 @@ class biblestudyViewadmin extends JView
 			$folderfinal1->id = $key;
 			$folderfinal3[] = $folderfinal1;
 		}
-		array_unshift($folderfinal3, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		array_unshift($folderfinal3, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		$lists['series'] = JHTML::_('select.genericlist',  $folderfinal3, 'series', 'class="inputbox"', 'value', 'value', $admin->series );
 
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('media_imagefolder');
@@ -57,7 +57,7 @@ class biblestudyViewadmin extends JView
 			$folderfinal1->id = $key;
 			$folderfinal4[] = $folderfinal1;
 		}
-		array_unshift($folderfinal4, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		array_unshift($folderfinal4, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		$lists['media'] = JHTML::_('select.genericlist',  $folderfinal4, 'media', 'class="inputbox"', 'value', 'value', $admin->media );
 		
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('teachers_imagefolder');
@@ -69,7 +69,7 @@ class biblestudyViewadmin extends JView
 			$folderfinal1->id = $key;
 			$folderfinal5[] = $folderfinal1;
 		}
-		array_unshift($folderfinal5, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		array_unshift($folderfinal5, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		$lists['teacher'] = JHTML::_('select.genericlist',  $folderfinal5, 'teacher', 'class="inputbox"', 'value', 'value', $admin->teacher );
 
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('podcast_imagefolder');
@@ -81,7 +81,7 @@ class biblestudyViewadmin extends JView
 			$folderfinal1->id = $key;
 			$folderfinal6[] = $folderfinal1;
 		}
-		array_unshift($folderfinal6, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
+		array_unshift($folderfinal6, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		$lists['podcast'] = JHTML::_('select.genericlist',  $folderfinal6, 'podcast', 'class="inputbox"', 'value', 'value', $admin->podcast );
 
 		jimport( 'joomla.i18n.help' );

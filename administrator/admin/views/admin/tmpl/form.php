@@ -28,6 +28,10 @@ echo $pane->startPanel( JText::_( 'Auto Fill Study Record' ), 'FILLIN-STUDY' );
 echo $this->params->render( 'params' , 'FILLIN-STUDY');
 echo $pane->endPanel(); 
 
+echo $pane->startPanel( JText::_( 'Auto Fill Media File Record' ), 'FILLIN-MEDIAFILE' );
+echo $this->params->render( 'params' , 'FILLIN-MEDIAFILE');
+echo $pane->endPanel(); 
+
 echo $pane->endPane();?>
 <tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php echo $this->lists['study']; echo JText::_(' Default for study thumbnail. Set Folder above.');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Series Image');?></td><td><?php echo $this->lists['series']; echo JText::_(' Default for series thumbnail. Set Folder above.');?></td></tr>

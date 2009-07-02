@@ -84,7 +84,8 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->user_name = null;
 			$this->_data->show_level = null;
 			$this->_data->location_id = ($this->_admin_params->get('location_id') > 0 ? $this->_admin_params->get('location_id') : null);
-			$this->_data->thumbnailm = ($admin[0]->study != '- Select an Image -' ? $JPATH_SITE.DS.'images'.DS.$this->_admin_params->get('study_images').DS.$admin[0]->study : null);
+			$this->_data->thumbnailm = ($admin[0]->study != '- No Image -' ? $admin[0]->study : null);
+			//$this->_data->thumbnailm = null;
 			$this->_data->thumbhm = null;
 			$this->_data->thumbwm = null;
 			

@@ -68,6 +68,7 @@ class JElementthumbnailm extends JElement
 		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('Select an Image').' -', 'value', 'value'));
 		//dump ($folderfinal2, 'control_name: ');
 		return JHTML::_('select.genericlist',  $folderfinal2, ''.$control_name.'['.$name.']', 'class="inputbox"', 'value', 'value', $control_name.$name );
+		//return	= JHTML::_('list.images',  'thumbnailm', $studiesedit->thumbnailm, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
 		//return JHTML::_('select.genericlist',  $folderfinal2, ''.$control_name.'['.$name.']', 'class="inputbox"', 'value', 'value', $value, $itemselected );
 		
 	}

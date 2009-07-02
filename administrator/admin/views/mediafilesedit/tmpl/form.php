@@ -46,14 +46,14 @@ function openConverter1()
       	</td>
       </tr>
       <tr> 
-        <td class="key" align="left"><?php echo JText::_( 'Create Date YYYY-MM-DD' ); ?></td>
+        <td class="key" align="left"><?php echo JText::_( 'Create Date YYYY-MM-DD H:M:S' ); ?></td>
         <td>
         <?php if (!$this->mediafilesedit->id) 
 		{
-			echo JHTML::_('calendar', date('Y-m-d'), 'createdate', 'createdate'); 
+			echo JHTML::_('calendar', date('Y-m-d H:i:s'), 'createdate', 'createdate'); 
 		}
 		else {
-			echo JHTML::_('calendar', date('Y-m-d', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); 
+			echo JHTML::_('calendar', date('Y-m-d H:i:s', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); 
         }
 		
 		//echo JHTML::_('calendar', date('D M j Y', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); ?>
