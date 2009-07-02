@@ -20,7 +20,11 @@ class biblestudyViewmediaedit extends JView
 		$admin_params = new JParameter($admin[0]->params);
 		$directory = ($admin_params->get('media_imagefolder') != '' ? DS.'images'.DS.$admin_params->get('media_imagefolder') : DS.'components'.DS.'com_biblestudy'.DS.'images');
 		//dump ($directory, 'directory: ');
-		$javascript			= 'onchange="changeDisplayImage();"';
+		//$javascript			= 'onchange="changeDisplayImage();"';
+		//$path = 'components/com_productmanager/img_originals/';
+            $fullpath = JURI::root() . $path;
+           // $javascript = 'onchange="javascript:if (document.forms.adminForm.thumbnailm.options[selectedIndex].value!=\'\'){document.imagelib.src=\''.$directory.'\' + document.forms.adminForm.thumbnailm.options[selectedIndex].value}else{document.imagelib.src=\'../images/blank.png\'}" size="1" name="image">}"';
+            echo JHTML::_( 'list.images', 'originalimg', $mediaedit->thumbnailm , $customJS, $directory );
 		//array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		$lists['media']	= JHTML::_('list.images',  'media_image_path', $mediaedit->media_image_path, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
 
