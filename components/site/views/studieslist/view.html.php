@@ -14,7 +14,10 @@ class biblestudyViewstudieslist extends JView {
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
 		$document =& JFactory::getDocument();
 		$model =& $this->getModel();
-		
+		$admin=& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
+		$this->assignRef('admin_params', $admin_params);
+		$this->assignRef('admin', $admin);
 		$params 			=& $mainframe->getPageParameters();
 		//dump ($params, 'params: ');
 		$templatemenuid = $params->get('templatemenuid');

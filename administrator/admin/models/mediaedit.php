@@ -48,6 +48,7 @@ class biblestudyModelmediaedit extends JModel {
 			$this->_data->media_extension = null;
 			$this->_data->media_image_path = null;
 			$this->_data->media_alttext = null;
+			$this->_data->path2 = null;
 		}
 		return $this->_data;
 	}

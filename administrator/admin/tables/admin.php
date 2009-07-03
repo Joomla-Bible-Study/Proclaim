@@ -27,6 +27,7 @@ class Tableadmin extends JTable
 	var $teacher = null;
 	var $media = null;
 	var $params = null;
+	var $download = null;
 
 	function bind($array, $ignore = '')
 { 

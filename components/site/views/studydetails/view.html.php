@@ -24,23 +24,16 @@ class biblestudyViewstudydetails extends JView
 		//$menus = &JMenu::getInstance();
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
-		//$params = &JComponentHelper::getParams($option);
-		//$params2 			=& $mainframe->getPageParameters();
-		
-		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
-		//JRequest::setVar('id', $params->get('id'), 'get');
 		$params 			=& $mainframe->getPageParameters();
 		$templatemenuid = $params->get('templatemenuid');
 		if (!$templatemenuid){$templatemenuid = 1;}
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
-		//dump ($params, 'params: ');
-		//$params		=& $mainframe->getParams('com_biblestudy');
-		//$this->assignRef('params', $params);
-		//end TF added
 		$studydetails		=& $this->get('Data');
-		
+		$admin =& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
+		$this->assignRef('admin_params', $admin_params);
 		//Passage link to BibleGateway
 		$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');
  		$st_params 	= new JParameter( $plugin->params );

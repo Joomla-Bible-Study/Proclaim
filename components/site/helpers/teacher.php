@@ -2,7 +2,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-function getTeacher($params, $id)
+function getTeacher($params, $id, $admin_params)
 {
 	global $mainframe, $option;
 	$teacher = null;

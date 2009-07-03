@@ -283,7 +283,22 @@ $tn = '#__bsms_series';
 $fieldcheck	= isset( $fields[$tn]['series_thumbnail'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_series ADD COLUMN series_thumbnail VARCHAR(150) NULL AFTER series_text;");
 		$database->query();}
-
+$tn = '#__bsms_media';
+$fields = $database->getTableFields( array( $tn ) );
+	$fieldcheck = false;	
+$fieldcheck	= isset( $fields[$tn]['path2'] );
+		if (!$fieldcheck) 
+		{
+			$database->setQuery ("ALTER TABLE #__bsms_media ADD COLUMN path2 VARCHAR(150) NOT NULL AFTER media_image_path;");
+			$database->query();
+			$database->setQuery("SELECT * FROM #__bsms_media;");
+			$database->query();
+			$numrows = $database->getNumRows();
+			$query = "INSERT INTO #__bsms_media (media_text, media_image_name, media_image_path, path2, media_alttext, published) VALUES ('Download','Download', '', 'download.png', 'Download', '1');";
+			$database->setQuery = ($query);
+			$database->query();
+		}
+	
 if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
 	if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}
 	else {
@@ -307,7 +322,7 @@ Welcome to the Bible Study Message System. Please note if there are any error me
 <p>
 It is very important that you do a couple of things when you first install the component. </p>
 <p>
- 1. Go to Components | Bible Study Manager. There should be a sample study there. Look on the toolbar for Parameters. Click the link. It opens up a window where you set most of the global parameters of the component. For now, just save the preferences. Now go to Menu Main Menu and create a new menu item to the Bible Study List. Click on it after saving and open up the Component Parameters. This is where you should change parameters so they "stick" IF they involved entering a text value. For those with drop down boxes you can use either this menu item or the Parameters from the admin side of the component by leaving the value at Use Global.</p>
+ 1. Go to Components | Bible Study Manager. There should be a sample study there. Now click on the Administration tab. There you will find a few settings you can use. Next click on Templates. There should be a default template listed. This is where the display settings are kept. Take some time to look through the drop downs and see how they affect the various views you set up. You can create new templates if you like. </p>
  <p>
  2. Go back to Components | Bible Study. Click on the Servers and add your server, then go to the Folders link and add a folder under that server. Now you are set to add your first real study (be sure to delete the samples once you are familiar with how the component works). </p>
  <p>

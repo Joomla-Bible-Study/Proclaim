@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 
-function getElementid($rowid, $row, $params)
-	{
+function getElementid($rowid, $row, &$params, &$admin_params)
+	{//dump ($admin_params, 'admin_params-elements: ');
 	 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'scripture.php');
 	include_once($path1.'duration.php');
@@ -127,7 +127,7 @@ function getElementid($rowid, $row, $params)
 		case 20:
 			$elementid->id = 'media';
 			$elementid->headertext = JText::_('Media');
-			$elementid->element = getMediatable($params, $row);
+			$elementid->element = getMediatable($params, $row, &$admin_params);
 			break;
 		case 22:
 			$elementid->id = 'store';

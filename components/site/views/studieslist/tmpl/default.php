@@ -66,7 +66,7 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 <?php if ($params->get('show_teacher_list') > 0)
 	{	
 	$teacher_call = JView::loadHelper('teacher');
-	$teacher = getTeacher($params, $row->teacher_id);
+	$teacher = getTeacher($params, $row->teacher_id, $this->admin_params);
 	if ($teacher) {echo $teacher;}
 	}?>    
     </div><!--header-->
@@ -116,7 +116,7 @@ if ($this->params->get('show_topic_search') > 0) {  echo $this->lists['topics'];
 	$oddeven = $class1;
 	}
 
-	$listing = getListing($row, $params, $oddeven);
+	$listing = getListing($row, $params, $oddeven, $this->admin_params);
  	echo $listing;
  }
  ?>

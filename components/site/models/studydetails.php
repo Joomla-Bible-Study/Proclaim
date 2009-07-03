@@ -16,7 +16,7 @@ class biblestudyModelstudydetails extends JModel
 	 * @return	void
 	 */
 	 var $_template;
-	 
+	 var $_admin;
 	function __construct()
 	{
 		parent::__construct();
@@ -157,7 +157,16 @@ function getTemplate() {
 		}
 		return $this->_template;
 	}
-	
+ function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT *'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}	
 	
 //end class
 }

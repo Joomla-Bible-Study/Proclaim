@@ -64,7 +64,7 @@ $listingcall = JView::loadHelper('listing');
     
     <?php	
 	$teacher_call = JView::loadHelper('teacher');
-	$teacher = getTeacher($params, $row->teacher_id);
+	$teacher = getTeacher($params, $row->teacher_id, &$this->admin_params);
 	echo $teacher;
 	}?>
    </div><!-- header -->
@@ -84,13 +84,13 @@ if ($params->get('list_items_view') == 1)
 		{
 			$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 			include_once($path1.'mediatable.php');
-			$listing = getMediatable($params, $row);	
+			$listing = getMediatable($params, $row, &$this->admin_params);	
 			echo $listing;
 		}
 if ($params->get('list_items_view') == 0)
 		{
 			$oddeven = 'bsodd';
- 			$listing = getListing($row, $params, $oddeven);
+ 			$listing = getListing($row, $params, $oddeven, &$this->admin_params);
  			echo $listing;
 		}?>
  </tbody></table>

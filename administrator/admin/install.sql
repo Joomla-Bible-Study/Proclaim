@@ -214,6 +214,7 @@ INSERT INTO `jos_bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `
 `study` TEXT NULL,
 `teacher` TEXT NULL,
 `media` TEXT NULL,
+`download` TEXT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE = MYISAM 
 

@@ -22,6 +22,7 @@ class Tablemediaedit extends JTable
 	var $media_alttext = null;
 	var $media_image_path = null;
 	var $media_image_name = null;
+	var $path2 = null;
 	var $published = null;
 	var $media_extension = null;
 

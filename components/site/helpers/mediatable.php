@@ -1,20 +1,35 @@
 <?php
 defined('_JEXEC') or die();
 
-function getMediatable($params, $row)
+function getMediatable($params, $row, $admin_params)
 {
-
+//dump ($admin_params, 'admin_params: ');
     global $mainframe, $option;
 	$database = & JFactory::getDBO();
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		include_once($path1.'filesize.php');
 		include_once($path1.'filepath.php');
 		include_once($path1.'duration.php');
-	
+		include_once($path1.'image.php');
+	  $database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
+	  $database->query();
+	  $admin = $database->loadObjectList();
+	  //$admin_params =& new JParameter($admin[0]->params);
+	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images'.DS.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
+	$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
+	$d_path = $d_path1.$d_image;
+	//dump ($d_image, 'd_image: ');
+//if (!$media->path2) { $d_path = $media->impath; }
+	//  if ($media->path2 && !$admin_params->get('media_imagefolder')) { $d_path = 'components/com_biblestudy/images/'.$media->path2; }
+	  //if ($media->path2 && $admin_params->get('media_imagefolder')) { $d_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
+	  //$d_image = ($admin[0]->download ? $admin[0]->download : 'components/com_biblestudy/images/download.png');
+	  //$d_path = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
+	  $download_tmp = getImage($d_path);
+      $download_image = $download_tmp->path;
 	$query_media1 = 'SELECT #__bsms_mediafiles.*,'
     . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
     . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-    . ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname,'
+    . ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
     . ' #__bsms_media.media_alttext AS malttext,'
     . ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
     . ' FROM #__bsms_mediafiles'
@@ -27,21 +42,25 @@ function getMediatable($params, $row)
     $media1 = $database->loadObjectList('id');
 	$rows2 = count($media1);
 	
-	$database->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
-	$database->query();
-	$compat = $database->loadObject();
-	$admin_params = new JParameter($compat->params);
+	
 	$compat_mode = $admin_params->get('compat_mode');
 	//dump ($compat_mode, 'compat_mode: ');
 	//dump ($rows2, 'Rows2: ');
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
 	$mediatable = '<table class="mediatable"><tbody><tr>';
 	foreach ($media1 as $media) {
-		
+	if (!$media->path2) { $i_path = $media->impath; }
+	  if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
+	  if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
+	//$i_image = ($media->path2 ? $media->path2 : $media->impath);
+	//$i_path = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : '');
+	//dump ($admin_params, 'admin_params: ');
+	//if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images';}
+	$image = getImage($i_path);
+	
 		$mediatable .= '<td>';
 		
-      $download_image = $params->get('download_image');
-      if (!$download_image) { $download_image = 'components/com_biblestudy/images/download.png';}
+      
       $link_type = $media->link_type;
 	  
       $useplayer = 0;
@@ -61,9 +80,11 @@ function getMediatable($params, $row)
 	  $media_size = $filesize;
 	 // dump ($media_size, 'filesize: ');
       $mimetype = $media->mimetext;
-      $src = JURI::base().$media->impath;
-      if ($imagew) {$width = $imagew;} else {$width = 24;}
-      if ($imageh) {$height = $imageh;} else {$height= 24;}
+      $src = JURI::base().$image->path;
+	  $height = $image->height;
+	  $width = $image->width;
+      //if ($imagew) {$width = $imagew;} else {$width = 24;}
+      //if ($imageh) {$height = $imageh;} else {$height= 24;}
       $ispath = 0;
 	  $mime = '';
 	  $path1 = getFilepath($id3, $idfield, $mime);
@@ -72,8 +93,8 @@ function getMediatable($params, $row)
        $filename = $media->filename;
        $ispath = 1;
        $direct_link = '<a href="'.$path1.'" title="'.$media->malttext.' '.$duration.' '
-       .$media_size.'" target="'.$media->special.'"><img src="'.JURI::base().$media->impath
-       .'" alt="'.$media->imname.' '.$duration.' '.$media_size.'" width="'.$width
+       .$media_size.'" target="'.$media->special.'"><img src="'.$src
+       .'" alt="'.$media->malttext.' '.$duration.' '.$media_size.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';
       $isavr = 0;
 	  //dump ($isavr, 'isavr: ');
@@ -127,9 +148,9 @@ function getMediatable($params, $row)
         $popuptype = 'lightbox';
        }
        $avr_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
-       .'"}<img src="'.JURI::base().$media->impath.'" alt="'.$media->imname
-       .' '.$duration.' '.$media_size.'" width="'.$width
-       .'" height="'.$height.'" border="0" title="'
+       .'"}<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext
+       .' '.$duration.' '.$media_size.'" width="'.$image->width
+       .'" height="'.$image->height.'" border="0" title="'
        .$media->malttext.' '.$duration.' '.$media_size.'" />{/avrpopup}';
        //dump ($avr_link, 'AVR Lnk');
 
@@ -186,11 +207,9 @@ function getMediatable($params, $row)
 		
 		//}
 
-		if ($link_type > 0){ $src = JURI::base().$download_image;
-      	//if ($params->get('download_side') > 0) { $mediatable .='<td>';}
-      if ($imagew) {$width = $imagew;} else {$width = 24;}
-      if ($imageh) {$height = $imageh;} else {$height= 24;}
-	   
+		if ($link_type > 0){ //$src = JURI::base().$download_image;
+	   $width=$download_tmp->width;
+	   $height=$download_tmp->height;
       if($compat_mode == 0) {
        $mediatable .='<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
 	   
@@ -199,7 +218,7 @@ function getMediatable($params, $row)
 	   
       }
      
-	  $mediatable .= '<img src="'.JURI::base().$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
+	$mediatable .= '<img src="'.$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
   
 	  }
 	
@@ -225,3 +244,4 @@ if ($params->get('show_filesize') > 0 )
 	$mediatable .='</table>';
     return $mediatable;
 }
+
