@@ -98,7 +98,7 @@ if ($this->params->get('show_topic_search') > 0) {  echo $this->lists['topics'];
      <?php 
 	 
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($row, $params);
+     $header = getHeader($row, $params, $this->admin_params);
      echo $header;
      ?>
       <tbody>
