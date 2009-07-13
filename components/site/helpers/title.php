@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die('Restricted access'); 
 
-function getTitle($params, $row)
+function getTitle($params, $row, $admin_params)
 {
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'custom.php');
@@ -36,7 +36,7 @@ if ($params->get('title_line_1') > 0)
 			$title .= $row->topics_text;
 			break;
 		case 7:
-			$elementid = getCustom($rowid=null, $params->get('customtitle1'), $row, $params);
+			$elementid = getCustom($rowid=null, $params->get('customtitle1'), $row, $params, $admin_params);
 			$title .= $elementid->element;
 			break;
 		}
@@ -74,7 +74,7 @@ if ($params->get('title_line_1') > 0)
 			$title .= $row->topics_text;
 			break;
 		case 7:
-			$elementid = getCustom($rowid=null, $params->get('customtitle2'), $row, $params);
+			$elementid = getCustom($rowid=null, $params->get('customtitle2'), $row, $params, $admin_params);
 			$title .= $elementid->element;
 			break;
 		}

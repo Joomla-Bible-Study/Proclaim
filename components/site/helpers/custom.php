@@ -5,7 +5,7 @@
  * @copyright 2009
  */
 
-function getCustom($rowid, $custom, $row, $params)
+function getCustom($rowid, $custom, $row, $params, $admin_params)
 {
 	 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
@@ -17,7 +17,7 @@ function getCustom($rowid, $custom, $row, $params)
 		$braceend = strpos($custom, '}');
 		$subcustom = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
 		$rowid = getElementnumber($subcustom);
-		$elementid = getElementid($rowid, $row, $params);
+		$elementid = getElementid($rowid, $row, $params, $admin_params);
 		$custom = substr_replace($custom,$elementid->element,$bracebegin,(($braceend - $bracebegin) + 1));
 		$countbraces = $countbraces - 1;
 	}

@@ -55,7 +55,7 @@ $listingcall = JView::loadHelper('listing');
  <?php if ($params->get('title_line_1') + $params->get('title_line_2') > 0) 
 	{
 		$title_call = JView::loadHelper('title');
-		$title = getTitle($params, $row);
+		$title = getTitle($params, $row, $this->admin_params);
 		echo $title;
 	}?> 
 
@@ -64,7 +64,7 @@ $listingcall = JView::loadHelper('listing');
     
     <?php	
 	$teacher_call = JView::loadHelper('teacher');
-	$teacher = getTeacher($params, $row->teacher_id, &$this->admin_params);
+	$teacher = getTeacher($params, $row->teacher_id, $this->admin_params);
 	echo $teacher;
 	}?>
    </div><!-- header -->

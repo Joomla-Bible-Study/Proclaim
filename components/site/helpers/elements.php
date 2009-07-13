@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 
-function getElementid($rowid, $row, &$params, &$admin_params)
+function getElementid($rowid, $row, $params, $admin_params)
 	{//dump ($admin_params, 'admin_params-elements: ');
 	 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'scripture.php');
