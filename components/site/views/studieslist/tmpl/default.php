@@ -48,12 +48,9 @@ $listingcall = JView::loadHelper('listing');
       <h1 class="componentheading">
 <?php
      if ($this->params->get( 'show_page_image' ) >0) {
-     $pimagew = $this->params->get('pimagew');
-     $pimageh = $this->params->get('pimageh');
-     if ($pimagew) {$width = $pimagew;} else {$width = 24;}
-     if ($pimageh) {$height = $pimageh;} else {$height= 24;}
+     
      ?>
-      <img src="<?php echo JURI::base().$this->params->get('page_image');?>" alt="<?php echo $this->params->get('page_title'); ?>" width="<?php echo $width;?>" height="<?php echo $height;?>" />
+      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" />
     <?php //End of column for logo
     }
     ?>

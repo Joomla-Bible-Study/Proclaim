@@ -64,6 +64,19 @@ class biblestudyViewadmin extends JView
 		array_unshift($folderfinal4, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		$lists['media'] = JHTML::_('select.genericlist',  $folderfinal4, 'media', 'class="inputbox"', 'value', 'value', $admin->media );
 		
+		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('media_imagefolder', '../components/com_biblestudy/images');
+		$fileList 	= JFolder::files($studypath);
+		foreach($fileList as $key=>$value)
+		{
+			$folderfinal1 = new JObject();
+			$folderfinal1->value = $value;
+			$folderfinal1->id = $key;
+			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+			else {$folderfinal8[] = $folderfinal1;}
+		}
+		array_unshift($folderfinal8, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+		$lists['main'] = JHTML::_('select.genericlist',  $folderfinal8, 'main', 'class="inputbox"', 'value', 'value', $admin->main );
+		
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('teachers_imagefolder', 'stories');
 		$fileList 	= JFolder::files($studypath);
 		foreach($fileList as $key=>$value)

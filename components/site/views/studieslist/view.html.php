@@ -10,7 +10,8 @@ class biblestudyViewstudieslist extends JView {
 	 **/
 	function display($tpl = null) {
 		global $mainframe, $option;
-		
+		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		include_once($path1.'image.php');
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
 		$document =& JFactory::getDocument();
 		$model =& $this->getModel();
@@ -102,8 +103,18 @@ class biblestudyViewstudieslist extends JView {
 		$this->assignRef('topic', $topics);
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
-
+//dump ($admin[0]->main, 'main: ');
+		//Get the main study list image
+		if ($admin[0]->main == '- No Image -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}
+		else 
+		{
+				if ($admin[0]->main && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$admin[0]->main; }
+				if ($admin[0]->main && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$admin[0]->main;}
+		$main = getImage($i_path);
+		}
 		
+	  	$this->assignRef('main', $main);
+	  	
 		//Build Teachers
 		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );

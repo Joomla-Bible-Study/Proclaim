@@ -33,6 +33,7 @@ echo $this->params->render( 'params' , 'FILLIN-MEDIAFILE');
 echo $pane->endPanel(); 
 
 echo $pane->endPane();?>
+<tr><td class="key"><?php echo JText::_('Default Study List Image');?></td><td><?php echo $this->lists['main']; echo JText::_(' Default for Study List Page Image. Media images folder used (set above).');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php echo $this->lists['study']; echo JText::_(' Default for study thumbnail. Set Folder above.');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Series Image');?></td><td><?php echo $this->lists['series']; echo JText::_(' Default for series thumbnail. Set Folder above.');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Podcast Image');?></td><td><?php echo $this->lists['podcast']; echo JText::_(' Default for podcast thumbnail. Set Folder above.');?></td></tr>
