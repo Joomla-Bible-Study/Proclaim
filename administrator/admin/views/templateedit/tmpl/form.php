@@ -22,6 +22,9 @@ defined('_JEXEC') or die('Restricted Access');
 				</div>-->
 			</td>
 		</tr>
+        <tr><td class="key"><strong><?php echo JText::_('Details Link Image');?></strong></td>
+<td><?php echo $this->lists['text']; echo '  '.JText::_('Uses Media folder'); ?><a href="index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" target="_blank"><?php echo '  '.JText::_('Set Here');?></a></td></tr>
+<tr><td class="key"><?php echo JText::_('PDF Image');?></td><td><?php echo $this->lists['pdf']; echo '  '.JText::_('Uses Media folder'); ?><a href="index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" target="_blank"><?php echo '  '.JText::_('Set Here');?></a></td></tr>
 	</table>
 
 <table><tr><td>
@@ -101,7 +104,9 @@ echo $pane->endPanel();
 echo $pane->endPane();
 
 ?>
-</td></tr></table>
+</td></tr>
+
+</table>
 <!--<div id="templateTagsContainer">
 	<div id="tabs">
 	<ul>

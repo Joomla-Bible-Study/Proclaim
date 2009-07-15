@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 
-function getElementid($rowid, $row, $params, $admin_params)
+function getElementid($rowid, $row, $params, $admin_params, $template)
 	{//dump ($admin_params, 'admin_params-elements: ');
 	 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'scripture.php');
@@ -107,22 +107,22 @@ function getElementid($rowid, $row, $params, $admin_params)
 			$elementid->id = 'details';
 			$elementid->headertext = JText::_('Details');
 			$textorpdf = 'text';
-			$elementid->element = getTextlink($params, $row, $textorpdf);
+			$elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $template);
 			break;
 		case 18:
 			$elementid->id = 'details';
 			$elementid->headertext = JText::_('Details');
 			$textorpdf = 'text';
 			$elementid->element = '<table class="detailstable"><tbody><tr><td>';
-			$elementid->element .= getTextlink($params, $row, $textorpdf).'</td><td>';
+			$elementid->element .= getTextlink($params, $row, $textorpdf, $admin_params, $template).'</td><td>';
 			$textorpdf = 'pdf';
-			$elementid->element .= getTextlink($params, $row, $textorpdf).'</td></tr></table>';
+			$elementid->element .= getTextlink($params, $row, $textorpdf, $admin_params, $template).'</td></tr></table>';
 			break;
 		case 19:
 			$elementid->id = 'details';
 			$elementid->headertext = JText::_('Details');
 			$textorpdf = 'pdf';
-			$elementid->element = getTextlink($params, $row, $textorpdf);
+			$elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $template);
 			break;
 		case 20:
 			$elementid->id = 'media';

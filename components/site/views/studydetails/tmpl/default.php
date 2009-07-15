@@ -74,7 +74,7 @@ $listingcall = JView::loadHelper('listing');
 if ($params->get('use_headers_view') > 0)
 	{	
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($row, $params);
+     $header = getHeader($row, $params, $this->template);
      echo $header;
 	}	?>
     <tbody>
@@ -84,13 +84,13 @@ if ($params->get('list_items_view') == 1)
 		{
 			$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 			include_once($path1.'mediatable.php');
-			$listing = getMediatable($params, $row, &$this->admin_params);	
+			$listing = getMediatable($params, $row, $this->admin_params);	
 			echo $listing;
 		}
 if ($params->get('list_items_view') == 0)
 		{
 			$oddeven = 'bsodd';
- 			$listing = getListing($row, $params, $oddeven, &$this->admin_params);
+ 			$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template);
  			echo $listing;
 		}?>
  </tbody></table>

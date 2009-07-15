@@ -20,7 +20,7 @@ class biblestudyViewtemplateedit extends JView {
 		//Initialize templating class
 		$tmplEngine = $this->loadHelper('templates.helper');
 		$tmplEngine =& bibleStudyTemplate::getInstance();
-		
+		$lists = array();
 		//Load the template params from its row and assign to $this
 		$paramsdata = $template->params;
 		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'templateedit.xml';
@@ -33,6 +33,14 @@ class biblestudyViewtemplateedit extends JView {
 		$this->assignRef('template', $template);
 		$this->assignRef('data', $data);
 
+		//create the list for the text image
+		$javascript			= 'onchange="changeDisplayImage();"';
+		$directory			= 'components/com_biblestudy/images';
+		$lists['text']	= JHTML::_('list.images',  'text', $template->text, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
+		
+		
+		$lists['pdf']	= JHTML::_('list.images',  'pdf', $template->pdf, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
+		
 		//Include the Jquery Library and Plugins
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
@@ -64,6 +72,7 @@ class biblestudyViewtemplateedit extends JView {
 			}
 		);
 		');*/
+		$this->assignRef('lists', $lists);
 		parent::display();
 	}
 }

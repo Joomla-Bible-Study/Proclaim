@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die();
 
-function getHeader($row, $params, $admin_params)
+function getHeader($row, $params, $admin_params, $template)
 {
 	//$nh checks to see if there is a header in use, otherwise it puts a line at the top of the listing
 	$nh = FALSE;
@@ -39,7 +39,7 @@ function getHeader($row, $params, $admin_params)
 	$rowcolid = 'row1col1';
 	$lastcol = 0;
 	if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
- 	$listing .= getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $nh, $admin_params);
+ 	$listing .= getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $nh, $admin_params, $template);
  	
  	
  	if ($columns > 1  && $params->get('r1c1span') < 2)
@@ -49,7 +49,7 @@ function getHeader($row, $params, $admin_params)
  		$rowcolid = 'row1col2';
  		$lastcol = 0;
  		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row1col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row1col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	if ($columns > 2  && ($params->get('r1c1span') < 3 && $params->get('r1c2span') < 2))
  	{
@@ -58,7 +58,7 @@ function getHeader($row, $params, $admin_params)
 		 $rowcolid = 'row1col3';
 		 $lastcol = 0;
 		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row1col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row1col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	if ($columns > 3 && (  $params->get('r1c1span') < 4 && $params->get('r1c2span') < 3 && $params->get('r1c3span') < 2))
  	{
@@ -67,7 +67,7 @@ function getHeader($row, $params, $admin_params)
 		 $rowcolid = 'row1col4';
 		 $lastcol = 0;
 		 if ($columns == 4) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row1col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row1col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	$listing .= '</tr>
 	';
@@ -83,7 +83,7 @@ function getHeader($row, $params, $admin_params)
  		$rowcolid = 'row2col1';
 		 $lastcol = 0;
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row2col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row2col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	
  	if ($columns > 1  && $params->get('r2c1span') < 2)
  	{
@@ -92,7 +92,7 @@ function getHeader($row, $params, $admin_params)
  		$rowcolid = 'row2col2';
  		$lastcol = 0;
  		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row2col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row2col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	if ($columns > 2  && ($params->get('r2c1span') < 3 && $params->get('r2c2span') < 2))
  	{
@@ -101,7 +101,7 @@ function getHeader($row, $params, $admin_params)
 		 $rowcolid = 'row2col3';
 		 $lastcol = 0;
 		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row2col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row2col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	if ($columns > 3 && (  $params->get('r2c1span') < 4 && $params->get('r2c2span') < 3 && $params->get('r2c3span') < 2))
  	{
@@ -110,7 +110,7 @@ function getHeader($row, $params, $admin_params)
 		 $rowcolid = 'row2col4';
 		 $lastcol = 0;
 		 if ($columns == 4) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row2col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row2col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	$listing .= '</tr>
 	';
@@ -126,7 +126,7 @@ function getHeader($row, $params, $admin_params)
  		$rowcolid = 'row3col1';
 		 $lastcol = 0;
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row3col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row3col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	
  	if ($columns > 1  && $params->get('r3c1span') < 2)
  	{
@@ -135,7 +135,7 @@ function getHeader($row, $params, $admin_params)
  		$rowcolid = 'row3col2';
  		$lastcol = 0;
  		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row3col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row3col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	if ($columns > 2  && ($params->get('r3c1span') < 3 && $params->get('r3c2span') < 2))
  	{
@@ -144,7 +144,7 @@ function getHeader($row, $params, $admin_params)
 		 $rowcolid = 'row3col3';
 		 $lastcol = 0;
 		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row3col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row3col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	if ($columns > 3 && (  $params->get('r3c1span') < 4 && $params->get('r3c2span') < 3 && $params->get('r3c3span') < 2))
  	{
@@ -153,7 +153,7 @@ function getHeader($row, $params, $admin_params)
 		 $rowcolid = 'row3col4';
 		 $lastcol = 0;
 		 if ($columns == 4) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row3col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row3col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	$listing .= '</tr>
 	';
@@ -169,7 +169,7 @@ function getHeader($row, $params, $admin_params)
  		$rowcolid = 'row4col1';
 		 $lastcol = 0;
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row4col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row4col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	
  	
 	
@@ -180,7 +180,7 @@ function getHeader($row, $params, $admin_params)
  		$rowcolid = 'row4col2';
  		$lastcol = 0;
  		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row4col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row4col2'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	if ($columns > 2  && ($params->get('r4c1span') < 3 && $params->get('r4c2span') < 2))
  	{
@@ -189,7 +189,7 @@ function getHeader($row, $params, $admin_params)
 		 $rowcolid = 'row4col3';
 		 $lastcol = 0;
 		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row4col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row4col3'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
  	if ($columns > 3  && (  $params->get('r4c1span') < 4 && $params->get('r4c2span') < 3 && $params->get('r4c3span') < 2))
  	{
@@ -198,7 +198,7 @@ function getHeader($row, $params, $admin_params)
 		 $rowcolid = 'row4col4';
 		 $lastcol = 0;
 		 if ($columns == 4) {$lastcol = 1;}
-		$listing .= getHeadercell($params->get('row4col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params);
+		$listing .= getHeadercell($params->get('row4col4'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	}
 	$listing .= '</tr>
 	';
@@ -207,11 +207,11 @@ function getHeader($row, $params, $admin_params)
 	 return $listing;
 }
 
-function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params)
+function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template)
 {
 		
 	 	$headercell .= '<th id="';
-	 	$elementid = getElementid($rowid, $row, $params, $admin_params);
+	 	$elementid = getElementid($rowid, $row, $params, $admin_params, $template);
 		if (!$elementid->id) {$headercell .= 'customhead';}
 	 	else {$headercell .= $elementid->id.'head';}
 		$headercell .= '" class="'.$rowcolid;

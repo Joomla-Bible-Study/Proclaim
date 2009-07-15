@@ -35,10 +35,7 @@
 		</param>
 		</params>
 	<params group="FP_IMAGES">
-		<param name="page_image" type="text" size="55" default="components/com_biblestudy/images/openbible.png" label="Page Image" description="The image to show on the component site front page" />
-		<param name="pimagew" type="text" size="3" default="48" label="Width of Front Page image" description="Set the width of the Front page image (default is 48)" />
-		<param name="pimageh" type="text" size="3" default="48" label="Height of Front Page image" description="Set the height of the Front page image (default is 48)" />
-		<param name="show_page_image" type="list" default="1" label="Show/Hide Front Page Image" description="Shows or hides the image on the top of the component site front page">
+			<param name="show_page_image" type="list" default="1" label="Show/Hide Front Page Image" description="Shows or hides the image on the top of the component site front page">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
@@ -46,10 +43,6 @@
 				<option value="0">Hide</option>
 				<option value="1">Show</option>
 		</param>
-		<param name="imageh" type="text" size="3" default="24" label="Image height for all images" description="Enter a height for all media images" />
-		<param name="imagew" type="text" size="3" default="24" label="Image width for all images" description="Enter a width for all media images" />
-		<param name="text_image" type="text" size="50" default="components/com_biblestudy/images/textfile24.png" label="Text Image Path" description="Image to show for text link" />
-		<param name="pdf_image" type="text" size="50" default="components/com_biblestudy/images/pdf24.png" label="PDF Image Path" description="Image to show for PDF link" />
 	</params>
 	<params group="VERSES">
 		<param name="show_verses" type="list" default="0" label="Chapters/Verses" description="Choose whether just chapter(s) of Bible study book shown or verses too">

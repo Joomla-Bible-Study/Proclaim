@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 //Helper file - master list creater for study lists
-function getListing($row, &$params, $oddeven, &$admin_params)
+function getListing($row, $params, $oddeven, $admin_params, $template)
 {//dump ($admin_params, 'admin-listing: ');
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
@@ -38,7 +38,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	
 		$rowcolid = 'row1col1';
 		if ($params->get('row1col1') == 24) {$elementid = getCustom($params->get('row1col1'), $params->get('r1c1custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row1col1'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row1col1'), $row, $params, $admin_params, $template);}
 		//dump ($params->get('row1col1'), 'elementid: ');
  		$colspan = $params->get('r1c1span');
  		$rowspan = $params->get('rowspanr1c1');;
@@ -50,7 +50,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
  		$rowcolid = 'row1col2';
 		if ($params->get('row1col2') == 24) {$elementid = getCustom($params->get('row1col2'), $params->get('r1c2custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row1col2'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row1col2'), $row, $params, $admin_params, $template);}
  		$colspan = $params->get('r1c2span');
  		$rowspan = $params->get('rowspanr1c2');
  		$lastcol = 0;
@@ -62,7 +62,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
 		 $rowcolid = 'row1col3';
 		 if ($params->get('row1col3') == 24) {$elementid = getCustom($params->get('row1col3'), $params->get('r1c3custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row1col3'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row1col3'), $row, $params, $admin_params, $template);}
 		 $colspan = $params->get('r1c3span');
 		 $rowspan = $params->get('rowspanr1c3');
 		 $lastcol = 0;
@@ -74,7 +74,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
 		 $rowcolid = 'row1col4';
 		 if ($params->get('row1col4') == 24) {$elementid = getCustom($params->get('row1col4'), $params->get('r1c4custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row1col4'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row1col4'), $row, $params, $admin_params, $template);}
 		 $colspan = $params->get('r1c4span');
 		 $rowspan = $params->get('rowspanr1c4');
 		 $lastcol = 0;
@@ -98,7 +98,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	
 		 $rowcolid = 'row2col1';
 		 if ($params->get('row2col1') == 24) {$elementid = getCustom($params->get('row2col1'), $params->get('r2c1custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row2col1'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row2col1'), $row, $params, $admin_params, $template);}
  		$colspan = $params->get('r2c1span');
  		$rowspan = $params->get('rowspanr2c1');;
 		 $lastcol = 0;
@@ -109,7 +109,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
  		$rowcolid = 'row2col2';
 		if ($params->get('row2col2') == 24) {$elementid = getCustom($params->get('row2col2'), $params->get('r2c2custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row2col2'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row2col2'), $row, $params, $admin_params, $template);}
  		$colspan = $params->get('r2c2span');
  		$rowspan = $params->get('rowspanr2c2');
  		$lastcol = 0;
@@ -121,7 +121,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
 		 $rowcolid = 'row2col3';
 		 if ($params->get('row2col3') == 24) {$elementid = getCustom($params->get('row2col3'), $params->get('r2c3custom'), $row, $params);}
-		 else {$elementid = getElementid($params->get('row2col3'), $row, $params, &$admin_params);}
+		 else {$elementid = getElementid($params->get('row2col3'), $row, $params, $admin_params, $template);}
 		 if (!$elementid->id){$element->id = ''; $element->element = '';}
 		 $colspan = $params->get('r2c3span');
 		 $rowspan = $params->get('rowspanr2c3');
@@ -134,7 +134,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
 		 $rowcolid = 'row2col4';
 		 if ($params->get('row2col4') == 24) {$elementid = getCustom($params->get('row2col4'), $params->get('r2c4custom'), $row, $params);}
-		 else {$elementid = getElementid($params->get('row2col4'), $row, $params, &$admin_params);}
+		 else {$elementid = getElementid($params->get('row2col4'), $row, $params, $admin_params, $template);}
 		 $colspan = $params->get('r2c4span');
 		 $rowspan = $params->get('rowspanr2c4');
 		 $lastcol = 0;
@@ -157,7 +157,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	
 		 $rowcolid = 'row3col1';
 		 if ($params->get('row3col1') == 24) {$elementid = getCustom($params->get('row3col1'), $params->get('r3c1custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row3col1'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row3col1'), $row, $params, $admin_params, $template);}
  		$colspan = $params->get('r3c1span');
  		$rowspan = $params->get('rowspanr3c1');;
 		 $lastcol = 0;
@@ -168,7 +168,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
  		$rowcolid = 'row3col2';
 		if ($params->get('row3col2') == 24) {$elementid = getCustom($params->get('row3col2'), $params->get('r3c2custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row3col2'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row3col2'), $row, $params, $admin_params, $template);}
  		$colspan = $params->get('r3c2span');
  		$rowspan = $params->get('rowspanr3c2');
  		$lastcol = 0;
@@ -180,7 +180,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
 		 $rowcolid = 'row3col3';
 		 if ($params->get('row3col3') == 24) {$elementid = getCustom($params->get('row3col3'), $params->get('r3c3custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row3col3'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row3col3'), $row, $params, $admin_params, $template);}
 		 $colspan = $params->get('r3c3span');
 		 $rowspan = $params->get('rowspanr3c3');
 		 $lastcol = 0;
@@ -192,7 +192,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
 		 $rowcolid = 'row3col4';
 		 if ($params->get('row3col4') == 24) {$elementid = getCustom($params->get('row3col4'), $params->get('r3c4custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row3col4'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row3col4'), $row, $params, $admin_params, $template);}
 		 $colspan = $params->get('r3c4span');
 		 $rowspan = $params->get('rowspanr3c4');
 		 $lastcol = 0;
@@ -217,7 +217,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	
 		 $rowcolid = 'row4col1';
 		 if ($params->get('row4col1') == 24) {$elementid = getCustom($params->get('row4col1'), $params->get('r4c1custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row4col1'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row4col1'), $row, $params, $admin_params, $template);}
  		$colspan = $params->get('r4c1span');
  		$rowspan = $params->get('rowspanr4c1');;
 		 $lastcol = 0;
@@ -228,7 +228,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
  		$rowcolid = 'row4col2';
 		if ($params->get('row4col2') == 24) {$elementid = getCustom($params->get('row4col2'), $params->get('r4c2custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row4col2'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row4col2'), $row, $params, $admin_params, $template);}
  		$colspan = $params->get('r4c2span');
  		$rowspan = $params->get('rowspanr4c2');
  		$lastcol = 0;
@@ -240,7 +240,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
 		 $rowcolid = 'row4col3';
 		 if ($params->get('row4col3') == 24) {$elementid = getCustom($params->get('row4col3'), $params->get('r4c3custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row4col3'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row4col3'), $row, $params, $admin_params, $template);}
 		 $colspan = $params->get('r4c3span');
 		 $rowspan = $params->get('rowspanr4c3');
 		 $lastcol = 0;
@@ -252,7 +252,7 @@ function getListing($row, &$params, $oddeven, &$admin_params)
 	{
 		 $rowcolid = 'row4col4';
 		 if ($params->get('row4col4') == 24) {$elementid = getCustom($params->get('row4col4'), $params->get('r4c4custom'), $row, $params);}
-		else {$elementid = getElementid($params->get('row4col4'), $row, $params, &$admin_params);}
+		else {$elementid = getElementid($params->get('row4col4'), $row, $params, $admin_params, $template);}
 		 $colspan = $params->get('r4c4span');
 		 $rowspan = $params->get('rowspanr4c4');
 		 $lastcol = 0;

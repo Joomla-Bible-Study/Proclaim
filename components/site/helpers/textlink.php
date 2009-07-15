@@ -1,27 +1,48 @@
 <?php
 defined('_JEXEC') or die();
 
-function getTextlink($params, $row, $textorpdf)
+function getTextlink($params, $row, $textorpdf, $admin_params, $template)
 {
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'scripture.php');
+include_once($path1.'image.php');
 $scripturerow = 1;	
 $scripture1 = getScripture($params, $row, $esv, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
 $templatemenuid = $params->get('detailstemplateid');
+
 if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 
 	if ($textorpdf == 'text') {
-	   $src = JURI::base().$params->get('text_image');
+		if ($template[0]->text == '- No Image -') { $i_path = 'components/com_biblestudy/images/textfile24.png'; $textimage = getImage($i_path); }
+	else 
+	{
+	  	if ($template[0]->text && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->text; }
+	  	if ($template[0]->text && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$template[0]->text;}
+		$textimage = getImage($i_path);
+	}
+	   $src = JURI::base().$textimage->path;
+		$height = $textimage->height;
+		$width = $textimage->width;
        $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&templatemenuid='.$templatemenuid ).JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 	}
 	if ($textorpdf == 'pdf') 
 	{
-		$src = JURI::base().$params->get('pdf_image');
+		if ($template[0]->pdf == '- No Image -') { $i_path = 'components/com_biblestudy/images/pdf24.png'; $pdfimage = getImage($i_path); }
+	else 
+	{
+	  	if ($template[0]->pdf && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->pdf; }
+	  	if ($template[0]->pdf && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$template[0]->pdf;}
+		$pdfimage = getImage($i_path);
+	}
+		$src = JURI::base().$pdfimage->path;
+		$height = $pdfimage->height;
+		$width = $pdfimage->width;
 	    $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf' );
 		$details_text = $params->get('details_text').JText::_(' - PDF Version');
 	}
+	//dump ($i_path, 'text: ');
 	if ($params->get('tooltip') >0) {
 		//JHTML::_('behavior.tooltip');
         $linktext = '<div class="zoomTip" title="<strong>'.JText::_('Sermon Info').'</strong> :: ';
@@ -33,8 +54,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 		 <br />';
        	  if ($scripture1) {$linktext .= '<strong>'.JText::_('Scripture: ').'</strong>'.$scripture1.'">';}
        } //end of is show tooltip
-	if ($params->get('imagew', 24)) {$width = $params->get('imagew', 24);} else {$width = 24;}
-    if ($params->get('imageh', 24)) {$height = $params->get('imageh', 24);} else {$height= 24;}
+	
     
 	$linktext .= '
 	<a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';

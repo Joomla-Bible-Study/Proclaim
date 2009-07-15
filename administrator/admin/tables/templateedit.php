@@ -9,6 +9,8 @@ class Tabletemplateedit extends JTable {
 	var $published = 1;
 	var $params = null;
 	var $title = null;
+	var $text = null;
+	var $pdf = null;
 	
 	function Tabletemplateedit(&$db) {
 		parent::__construct('#__bsms_templates', 'id', $db);
