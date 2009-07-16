@@ -3,7 +3,7 @@ defined('_JEXEC') or die();
 
 function getHeader($row, $params, $admin_params, $template)
 { 
-
+//dump ($template, 'Header - Template: ');
 	//$nh checks to see if there is a header in use, otherwise it puts a line at the top of the listing
 	$nh = FALSE;
 	if  (($params->get('use_headers_list') == 0) || ($params->get('use_headers_view') == 0)){$nh = TRUE;}
