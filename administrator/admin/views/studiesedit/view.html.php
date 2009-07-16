@@ -72,7 +72,7 @@ class biblestudyViewstudiesedit extends JView {
 		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		//$lists['thumb'] = JHTML::_('select.genericlist',  $folderfinal2, 'thumbnailm', 'class="inputbox" size="1"', 'value', 'value', $studiesedit->thumbnailm );
 		
-		$lists['thumb']	= JHTML::_('list.images',  'thumbnailm', $studiesedit->thumbnailm, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
+		$lists['thumbnailm']	= JHTML::_('list.images',  'thumbnailm', $studiesedit->thumbnailm, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
 		
 		$database	= & JFactory::getDBO();
 		$query = 'SELECT id AS value, teachername AS text, published'
