@@ -26,7 +26,7 @@ class biblestudyViewstudieslist extends JView {
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
-		
+		//dump ($template, 'template: ');
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
 		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
@@ -75,7 +75,7 @@ class biblestudyViewstudieslist extends JView {
 
 		//@todo Find a way to assign the Return fo the buildSqlSelect to the Model Var
 		$model->_select = $tmplEngine->buildSqlSELECT($tmplSingleStudyList);
-*/		
+*/		//dump ($template, 'template: ');
 		$items = $this->get('Data');
 		$total = $this->get('Total');
 		

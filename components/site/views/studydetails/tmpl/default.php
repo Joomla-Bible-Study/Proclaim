@@ -55,7 +55,7 @@ $listingcall = JView::loadHelper('listing');
  <?php if ($params->get('title_line_1') + $params->get('title_line_2') > 0) 
 	{
 		$title_call = JView::loadHelper('title');
-		$title = getTitle($params, $row, $this->admin_params);
+		$title = getTitle($params, $row, $this->admin_params, $template);
 		echo $title;
 	}?> 
 

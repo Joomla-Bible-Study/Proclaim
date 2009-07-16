@@ -2,8 +2,8 @@
 defined('_JEXEC') or die();
 
 function getTextlink($params, $row, $textorpdf, $admin_params, $template)
-{
-$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+{dump ($template, 'templatetextlink: ');
+/*$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'scripture.php');
 include_once($path1.'image.php');
 $scripturerow = 1;	
@@ -61,5 +61,5 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	$linktext .= '</div>';
 	
    return $linktext;
-   
+*/   
 }
