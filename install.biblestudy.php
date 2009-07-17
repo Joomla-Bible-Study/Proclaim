@@ -283,6 +283,15 @@ $tn = '#__bsms_series';
 $fieldcheck	= isset( $fields[$tn]['series_thumbnail'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_series ADD COLUMN series_thumbnail VARCHAR(150) NULL AFTER series_text;");
 		$database->query();}
+	$fieldcheck = false;
+	$fieldcheck = isset($fields[$tn]['description']);
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_series ADD COLUMN description TEXT NULL AFTER series_text;");
+		$database->query();}
+	$fieldcheck = false;
+	$fieldcheck = isset($fields[$tn]['teacher']);
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_series ADD COLUMN teacher INT(3) NULL AFTER series_text;");
+		$database->query();}		
+
 $tn = '#__bsms_media';
 $fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;	

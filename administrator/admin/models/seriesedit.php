@@ -15,10 +15,14 @@ class biblestudyModelseriesedit extends JModel
 	 * @access	public
 	 * @return	void
 	 */
+	 var $_teacher;
+	 var $_admin;
+	 //$teacher = $this->getTeacher();
 	function __construct()
 	{
 		parent::__construct();
-
+		$teacher = $this->getTeacher();
+		$admin = $this->getAdmin();
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
@@ -50,11 +54,35 @@ class biblestudyModelseriesedit extends JModel
 			$this->_data->published = 0;
 			$this->_data->series_text = null;
 			$this->_data->series_thumbnail = null;
+			$this->_data->description = null;
+			$this->_data->teacher = null;
 			
 		}
 		return $this->_data;
 	}
 
+	
+	function getTeacher()
+	{
+		if (empty($this->_teacher)) {
+			$query = 'SELECT id AS value, teachername AS text'
+			. ' FROM #__bsms_teachers'
+			. ' WHERE published = 1';
+			$this->_teacher = $this->_getList($query);
+		}
+		return $this->_teacher;
+	}
+	
+	function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT *'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}
 	/**
 	 * Method to store a record
 	 *
@@ -66,7 +94,7 @@ class biblestudyModelseriesedit extends JModel
 		$row =& $this->getTable();
 
 		$data = JRequest::get( 'post' );
-
+		$data['description'] = JRequest::getVar( 'description', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		// Bind the form fields to the series table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());

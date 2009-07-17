@@ -55,7 +55,7 @@ $listingcall = JView::loadHelper('listing');
  <?php if ($params->get('title_line_1') + $params->get('title_line_2') > 0) 
 	{
 		$title_call = JView::loadHelper('title');
-		$title = getTitle($params, $row, $this->admin_params, $template);
+		$title = getTitle($params, $row, $this->admin_params, $this->template);
 		echo $title;
 	}?> 
 
@@ -74,7 +74,7 @@ $listingcall = JView::loadHelper('listing');
 if ($params->get('use_headers_view') > 0)
 	{	
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($row, $params, $this->template);
+     $header = getHeader($row, $params, $this->admin_params, $this->template);
      echo $header;
 	}	?>
     <tbody>

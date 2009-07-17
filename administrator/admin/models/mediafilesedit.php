@@ -106,6 +106,7 @@ class biblestudyModelmediafilesedit extends JModel {
 			$data['filename'] = $filename_upload;
 		}
 		if ($filename_upload == ''){$data['filename'] = $name_bak;}
+		$data['filename'] = str_replace(' ','_',$data['filename']);
 		$data['mediacode'] = str_replace('"',"'",$data['mediacode']);
 
 		//$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );

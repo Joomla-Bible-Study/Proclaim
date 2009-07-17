@@ -24,6 +24,8 @@ class Tableseriesedit extends JTable
 	 */
 	var $series_text = null;
 	var $series_thumbnail = null;
+	var $description = null;
+	var $teacher = null;
 	
 	/**
 	 * Constructor

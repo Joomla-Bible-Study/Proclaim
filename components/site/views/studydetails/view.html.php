@@ -85,7 +85,7 @@ class biblestudyViewstudydetails extends JView
 			
 		} //end if $linkit
                 // End process prepare content plugins
-
+		$this->assignRef('template', $template);
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
 		$this->assignRef('studydetails', $studydetails);
