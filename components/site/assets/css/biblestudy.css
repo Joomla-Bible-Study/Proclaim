@@ -1,3 +1,10 @@
+<!--Listing Page Items-->
+#listintro p, #listintro td {
+	margin: 0;
+	font-weight: bold;
+	color: black;
+}
+
 #bsdropdownmenu {
   margin-bottom: 10px;
 }

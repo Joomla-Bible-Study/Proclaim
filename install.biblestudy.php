@@ -307,7 +307,16 @@ $fieldcheck	= isset( $fields[$tn]['path2'] );
 			$database->setQuery = ($query);
 			$database->query();
 		}
-	
+$tn = '#__bsms_teachers';
+$fields = $database->getTableFields( array( $tn ) );
+	$fieldcheck = false;	
+$fieldcheck = isset($fields[$tn]['teacher_thumbnail']);
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_teachers ADD COLUMN teacher_thumbnail TEXT NULL AFTER id;");
+		$database->query();}	
+$fieldcheck = false;	
+$fieldcheck = isset($fields[$tn]['teacher_image']);
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_teachers ADD COLUMN teacher_image TEXT NULL AFTER id;");
+		$database->query();}		
 if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
 	if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}
 	else {

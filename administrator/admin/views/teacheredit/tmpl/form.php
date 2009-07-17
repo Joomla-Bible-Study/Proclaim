@@ -1,4 +1,13 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php defined('_JEXEC') or die('Restricted access'); 
+$js = 	"function changeDisplayImage() {
+			if (document.adminForm.series_thumbnail.value !='') {
+				document.adminForm.imagelib.src='../images".DS.$this->admin_params->get('series_imagefolder', 'stories').DS."' + document.adminForm.series_thumbnail.value;
+			} else {
+				document.adminForm.imagelib.src='images/blank.png';
+			}";
+$document =& JFactory::getDocument();
+$document->addScriptDeclaration($js);
+?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
@@ -48,6 +57,30 @@
             	<input class="text_area" type="text" name="title" id="title" size="50" maxlength="50" value="<?php echo $this->teacheredit->title;?>" />
             </td>
         </tr>
+        <tr><td class="key"><?php echo JText::_('Choose a Large Image');?></td><td><?php echo $this->lists['teacher_image']; echo '  '.JText::_('Current folder: ').$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('Set default folder here').'</a>';?><br /><?php echo JText::_('This field will be used instead of below if image selected');?></td>
+      </tr>
+       <tr><td valign="top" class="key">
+							<?php echo JText::_( 'Teacher Image' ); ?>:
+						</td>
+    <td> <?php  ?>
+    <img src="<?php echo '../images'.DS.$this->admin_params->get('teachers_images', 'stories').DS.$this->teacheredit->teacher_image;?>" name="imagelib">
+    <?php 
+	?>
+    </td>
+    
+    </tr>
+        <tr><td class="key"><?php echo JText::_('Choose a Thumbnail');?></td><td><?php echo $this->lists['teacher_thumbnail']; echo '  '.JText::_('Current folder: ').$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('Set default folder here').'</a>';?><br /><?php echo JText::_('This field will be used instead of below if image selected');?></td>
+      </tr>
+       <tr><td valign="top" class="key">
+							<?php echo JText::_( 'Teacher Thumbnail' ); ?>:
+						</td>
+    <td> <?php  ?>
+    <img src="<?php echo '../images'.DS.$this->admin_params->get('teachers_images', 'stories').DS.$this->teacheredit->teacher_thumbnail;?>" name="imagelib">
+    <?php 
+	?>
+    </td>
+    
+    </tr>
         <tr>
         <td width="100" align="right" class="key">
 				<label for="image">

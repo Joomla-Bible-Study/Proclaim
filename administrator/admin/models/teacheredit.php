@@ -15,18 +15,21 @@ class biblestudyModelteacheredit extends JModel
 	 * @access	public
 	 * @return	void
 	 */
+	 var $_admin;
 	function __construct()
 	{
 		parent::__construct();
 
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
+		$admin = $this->getAdmin();
 	}
 
 	
 	function setId($id)
 	{
 		// Set id and wipe data
+		 
 		$this->_id		= $id;
 		$this->_data	= null;
 	}
@@ -61,12 +64,23 @@ class biblestudyModelteacheredit extends JModel
 			$this->_data->ordering = null;
 			$this->_data->catid = null;
 			$this->_data->list_show = null;
+			$this->_data->teacher_thumbnail = null;
+			$this->_data->teacher_image = null;
 			//TF added this
 			$this->_data->published = 0;
 		}
 		return $this->_data;
 	}
-
+	function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT *'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}
 	/**
 	 * Method to store a record
 	 *

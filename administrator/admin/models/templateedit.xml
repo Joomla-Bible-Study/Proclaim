@@ -98,6 +98,10 @@
 			<option value="1">Use Header Row</option>
 		</param>
 		<param name="list_intro" type="textarea" cols="100" rows="10" label="List Introduction" description="Enter some text to use as an introduction to your list page" />
+		<param name="intro_show" type="list" default="1" label="Show/Hide Intro" description="Choose whether to hide or show the listing introduction text">
+					<option value="0">Hide</option>
+					<option value="1">Show</option>
+				</param>
 			<param name="show_teacher_list" type="list" default="0" label="Show/Hide a teacher image on list page" description="Choose whether to show or hide a teacher thumbnail and name in the list page">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>

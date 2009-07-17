@@ -35,6 +35,8 @@ class Tableteacheredit extends JTable
 	var $ordering = null;
 	var $catid = null;
 	var $list_show = null;
+	var $teacher_thumbnail = null;
+	var $teacher_image = null;
 	/**
 	 * Constructor
 	 *

@@ -67,6 +67,10 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 	if ($teacher) {echo $teacher;}
 	}?>    
     </div><!--header-->
+    
+    <div id="listintro"><table id="listintro"><tr><td><p>
+    <?php if ($params->get('intro_show') > 0) { echo $params->get('list_intro');}?>
+   </p></td></tr></table> </div>
     <div id="bsdropdownmenu">
 
 <?php 
