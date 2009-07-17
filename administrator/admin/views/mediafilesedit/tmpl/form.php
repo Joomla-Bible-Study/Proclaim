@@ -35,9 +35,9 @@ function openConverter1()
       	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>" style="display: none;" />
 		<?php echo JText::_('Use DOCman')?>:</td>
       	<td>
-      	<?php 
+      	<?php //dump ($this->DocManCategories, 'documan: ');
       	echo JText::_('Category').':';
-      	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategories', null, 'id', 'title', null, 'docManCategory');
+      	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategories', null, 'id', 'title', null, 'docManCategory'); //$this->lists['docman'];
       	?>
       	<?php 
       	echo JText::_(' Item').': ';

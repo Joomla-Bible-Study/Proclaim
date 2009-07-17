@@ -98,6 +98,12 @@ function getElementnumber ($rowid)
 			case 'thumbnail' :
 				$rowid = 25;
 				break;
+			case 'series_thumbnail':
+				$rowid = 26;
+				break;
+			case 'series_description':
+				$rowid = 27;
+				break;
 		}
 		
 	return $rowid;	

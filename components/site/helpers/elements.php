@@ -13,6 +13,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 	include_once($path1.'filepath.php');
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
+	include_once($path1.'image.php');
 	global $mainframe;
 	$db	= & JFactory::getDBO();
 	
@@ -147,7 +148,34 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 25:
 			$elementid->id = 'thumbnail';
 			$elementid->headertext = JText::_('Thumbnail');
-			$elementid->element = '<img src="'.$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" alt="'.$row->studytitle.'">';
+			$i_path = ($admin_params->get('study_images') ? 'images'.DS.$admin_params->get('study_images') : 'stories');
+			if ($row->thumbnailm) 
+			{
+				$i_image = $row->thumbnailm;
+				$i_path = $i_path.DS.$i_image;
+				$image = getImage($i_path);
+    			$elementid->element = '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->studytitle.'">';
+			}
+			else {$elementid->element = '';}
+			break;
+		case 26:
+			$elementid->id = 'series_thumbnail';
+			$elementid->headertext = JText::_('Thumbnail');
+			$i_path = ($admin_params->get('series_imagefolder') ? 'images'.DS.$admin_params->get('series_imagefolder') : 'stories');
+			if ($row->series_thumbnail) 
+			{
+				$i_image = $row->series_thumbnail;
+				$i_path = $i_path.DS.$i_image;
+				$image = getImage($i_path);
+    			$elementid->element = '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->series_text.'">';
+			}
+			else {$elementid->element = '';}
+			break;
+		case 27:
+			$elementid->id = 'series_description';
+			$elementid->headertext = JText::_('Description');
+			$elementid->element = $row->sdescription;
+			//dump ($element->element, 'element: ');
 			break;
 		}
 		

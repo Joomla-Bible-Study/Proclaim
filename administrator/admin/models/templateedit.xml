@@ -97,6 +97,7 @@
 			<option value="0">No Header Row</option>
 			<option value="1">Use Header Row</option>
 		</param>
+		<param name="list_intro" type="textarea" cols="100" rows="10" label="List Introduction" description="Enter some text to use as an introduction to your list page" />
 			<param name="show_teacher_list" type="list" default="0" label="Show/Hide a teacher image on list page" description="Choose whether to show or hide a teacher thumbnail and name in the list page">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
@@ -167,6 +168,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -217,6 +220,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -266,6 +271,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -314,6 +321,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -358,6 +367,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -408,6 +419,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -457,6 +470,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -505,6 +520,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -549,6 +566,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -599,6 +618,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -648,6 +669,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -696,6 +719,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -740,6 +765,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -790,6 +817,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -839,6 +868,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>
@@ -887,6 +918,8 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
+				<option value="26">Series Thumbail {series_thumbanil}</option>
+				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
 				<option value="12">Hits {hits}</option>

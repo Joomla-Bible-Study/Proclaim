@@ -18,14 +18,8 @@ function getMediatable($params, $row, $admin_params)
 	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images'.DS.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
 	$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
 	$d_path = $d_path1.$d_image;
-	//dump ($d_image, 'd_image: ');
-//if (!$media->path2) { $d_path = $media->impath; }
-	//  if ($media->path2 && !$admin_params->get('media_imagefolder')) { $d_path = 'components/com_biblestudy/images/'.$media->path2; }
-	  //if ($media->path2 && $admin_params->get('media_imagefolder')) { $d_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
-	  //$d_image = ($admin[0]->download ? $admin[0]->download : 'components/com_biblestudy/images/download.png');
-	  //$d_path = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
-	  $download_tmp = getImage($d_path);
-      $download_image = $download_tmp->path;
+	$download_tmp = getImage($d_path);
+    $download_image = $download_tmp->path;
 	$query_media1 = 'SELECT #__bsms_mediafiles.*,'
     . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
     . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
@@ -50,12 +44,8 @@ function getMediatable($params, $row, $admin_params)
 	$mediatable = '<table class="mediatable"><tbody><tr>';
 	foreach ($media1 as $media) {
 	if (!$media->path2) { $i_path = $media->impath; }
-	  if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-	  if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
-	//$i_image = ($media->path2 ? $media->path2 : $media->impath);
-	//$i_path = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : '');
-	//dump ($admin_params, 'admin_params: ');
-	//if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images';}
+	if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
+	if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
 	$image = getImage($i_path);
 	
 		$mediatable .= '<td>';

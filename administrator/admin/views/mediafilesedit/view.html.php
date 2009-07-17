@@ -23,7 +23,7 @@ class biblestudyViewmediafilesedit extends JView {
 		//Get Data
 		$mediafilesedit	=& $this->get('Data');
 		$docManCategories =& $this->get('docManCategories');
-
+	//dump ($docMancategories, 'docman: ');
 		//Manipulate Data
 		array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
 
