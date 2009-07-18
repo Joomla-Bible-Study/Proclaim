@@ -35,14 +35,14 @@ function openConverter1()
       	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>" style="display: none;" />
 		<?php echo JText::_('Use DOCman')?>:</td>
       	<td>
-      	<?php //dump ($this->DocManCategories, 'documan: ');
+      	<?php //dump ($this->DocManCategories, 'docman: ');
       	echo JText::_('Category').':';
-      	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategories', null, 'id', 'title', null, 'docManCategory'); //$this->lists['docman'];
+      	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategory', null, 'id', 'title', null, 'docManCategories'); //$this->lists['docman'];
       	?>
       	<?php 
       	echo JText::_(' Item').': ';
       	?>
-      	<select id="docmanItems"><option selected="selected">- Select an Item -</option></select>
+      	<select id="docManItems" name="docManItem"><option selected="selected">- Select an Item -</option></select>
       	</td>
       </tr>
       <tr> 

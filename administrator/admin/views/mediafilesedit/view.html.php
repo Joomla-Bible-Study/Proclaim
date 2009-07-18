@@ -23,7 +23,7 @@ class biblestudyViewmediafilesedit extends JView {
 		//Get Data
 		$mediafilesedit	=& $this->get('Data');
 		$docManCategories =& $this->get('docManCategories');
-	//dump ($docMancategories, 'docman: ');
+
 		//Manipulate Data
 		array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
 
@@ -45,10 +45,10 @@ class biblestudyViewmediafilesedit extends JView {
 		}
 		//JToolBarHelper::media_manager( '/' );
 		// Add an upload button and view a popup screen width 550 and height 400
-$alt = "Upload";
-$bar=& JToolBar::getInstance( 'toolbar' );
-//$bar->appendButton( 'Popup', 'upload', $alt, 'index.php', 650, 500 );
-$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=$directory", 800, 700 );
+		$alt = "Upload";
+		$bar=& JToolBar::getInstance( 'toolbar' );
+		//$bar->appendButton( 'Popup', 'upload', $alt, 'index.php', 650, 500 );
+		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=$directory", 800, 700 );
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.mediafilesedit', true );
 		// build the html select list for ordering
