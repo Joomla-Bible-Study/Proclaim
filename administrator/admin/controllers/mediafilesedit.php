@@ -224,11 +224,14 @@ class biblestudyControllermediafilesedit extends JController {
 	}
 
 	function docmanCategoryItems() {
+		//hide errors and warnings
+		error_reporting(0);
+		
 		$catId = JRequest::getVar('catId');
 
 		$model =& $this->getModel('mediafilesedit');
 		$items =& $model->getdocManCategoryItems($catId);
-
+		//dump($catId);
 		echo $items;
 	}
 }
