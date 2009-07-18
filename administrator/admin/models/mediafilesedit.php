@@ -79,7 +79,6 @@ class biblestudyModelmediafilesedit extends JModel {
 			$items .= '{id: "'.$object->id.'", name: "'.$object->dmname.'"},';
 		}
 		$items .= ']';
-
 		return $items;
 
 	}
@@ -113,6 +112,7 @@ class biblestudyModelmediafilesedit extends JModel {
 		$data['mediacode'] = str_replace('"',"'",$data['mediacode']);
 		//$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		// Bind the form fields to the  table
+		dump($data);
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
