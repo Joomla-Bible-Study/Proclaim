@@ -152,6 +152,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
 `ordering` INT(11) NOT NULL default '0',
 `createdate` DATETIME default NULL,
 `published` TINYINT(1) NOT NULL default '1',
+`docManCategory` INT(11) NULL,
+`docManItem` INT(5) NULL,
 PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`;
 --
 -- Adding a Comments table
