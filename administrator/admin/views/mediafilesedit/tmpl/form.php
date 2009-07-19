@@ -46,6 +46,24 @@ function openConverter1()
       	</td>
       </tr>
       <tr> 
+      <tr>
+      	<td class="key">
+		<?php echo JText::_('Use Article')?>:</td>
+      	<td>
+      	<?php
+      	echo JText::_('Section').':';
+      	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategory', null, 'id', 'title', null, 'docManCategories'); //$this->lists['docman'];
+      	?>
+      	<?php 
+      	echo JText::_('Category');
+      	?>
+      	<select id="docManItems" name="docManItem"><option selected="selected">- Select an Item -</option></select>
+      	<?php
+      	echo JText::_(' Item').': ';
+      	?>
+      	<select id="docManItems" name="docManItem"><option selected="selected">- Select an Item -</option></select>
+      	</td>
+      </tr>
         <td class="key" align="left"><?php echo JText::_( 'Create Date YYYY-MM-DD H:M:S' ); ?></td>
         <td>
         <?php if (!$this->mediafilesedit->id) 
