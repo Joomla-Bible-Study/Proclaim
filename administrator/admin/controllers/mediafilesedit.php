@@ -47,6 +47,11 @@ class biblestudyControllermediafilesedit extends JController {
 			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
 			return;
 		}
+		//This removes any characters that might cause headaches to browsers. This also does the same thing in the model
+		$badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '/', '>', '<', ',', '|', '\\', ';', ':');
+		$file['name'] = str_replace($badchars, '_', $file['name']);
+		$file['name'] = str_replace('&', '_and_', $file['name']);
+		
 		if(isset($file) && is_array($file) && $file['name'] != '')
 		{
 			$fullfilename = JPATH_SITE.$folderpath. strtolower($file['name']);
