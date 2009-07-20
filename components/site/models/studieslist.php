@@ -354,7 +354,7 @@ function getTemplate() {
 
 		$where2 = array();
 		$continue = 0;
-		if ($params->get('mult_teachers')) 
+		if ($params->get('mult_teachers') || $params->get('teacher_id')) 
 			{ 
 				if (!$filter_teacher)
 				{
@@ -364,6 +364,7 @@ function getTemplate() {
 						{
 							$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
 						}
+					if ($params->get('teacher_id')) {$where2[] = '#__bsms_studies.teacher_id = '.$params->get('teacher_id');}
 				}
 			}
 		

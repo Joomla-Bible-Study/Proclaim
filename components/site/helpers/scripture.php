@@ -2,6 +2,7 @@
 
 function getScripture($params, $row, $esv, $scripturerow) {
 	global $mainframe, $option;
+	if (!$row->id) {return;}
 	if ($scripturerow == 2) {
 		$booknumber = $row->booknumber2;
 		$ch_b = $row->chapter_begin2;
@@ -24,6 +25,8 @@ function getScripture($params, $row, $esv, $scripturerow) {
 			. '  WHERE #__bsms_studies.id = '.$row->id; 
 	$db->setQuery($query);
 	$bookresults = $db->loadObject();
+	$affectedrows = count($bookresults);
+	if ($bookresults < 1) { return; }
 	$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
 	$db->setQuery($query);
 	$booknameresults = $db->loadObject();

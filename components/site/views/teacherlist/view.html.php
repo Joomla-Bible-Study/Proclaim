@@ -24,7 +24,8 @@ class biblestudyViewteacherlist extends JView
 		$params = new JParameter($template[0]->params);
 		$db		=& JFactory::getDBO();
 		$uri	=& JFactory::getURI();
-		
+		$admin=& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
 		//Import Scripts
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
@@ -45,6 +46,7 @@ class biblestudyViewteacherlist extends JView
 		$item =& $menu->getActive();
 
 		$pagination = $this->get('Pagination');
+		$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('items',		$items);
 		

@@ -4,6 +4,7 @@ defined('_JEXEC') or die();
 
 function getTeacher($params, $id, $admin_params)
 {
+	
 	global $mainframe, $option;
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
@@ -11,11 +12,12 @@ function getTeacher($params, $id, $admin_params)
 	//$templatemenuid = $params->get('templatemenuid');
 	$templatemenuid = $params->get('teachertemplateid');
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
-	
+	$teacherid = $params->get('teacher_id');
 
-	if ($id > 0) {$teacherids['id'] = $id;}
-	else {$teacherids = explode(",", $params->get('mult_teachers'));}
-		
+	if ($teacherid > 0) {$teacherids['id'] = $teacherid;}
+	if ($params->get('mult_teachers')) { $teacherids = explode(",", $params->get('mult_teachers'));}
+	if ($params->get('mult_teachers') && $teacherid) {$teacherids = explode(",", $params->get('mult_teachers')); $teacherids[] = $teacherid;}
+	//if ($id) {$teacherids[] = $id;}	
 		
 		//dump ($teacherids['id'], 'tresult: ');
 		$teacher = '<table id = "teacher"><tr>';
@@ -29,10 +31,11 @@ function getTeacher($params, $id, $admin_params)
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			//dump ($tresult, 'tresult: ');
-			if (!$teachers->teacher_thumbnail) { $i_path = $teachers->thumb; }
-	if ($teachers->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$teachers->teacher_thumbnail; }
-	if ($teachers->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$teachers->teacher_thumbnail;}
+			if (!$tresult->teacher_thumbnail) { $i_path = $tresult->thumb; }
+	if ($tresult->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$tresult->teacher_thumbnail; }
+	if ($tresult->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$tresult->teacher_thumbnail;}
 	$image = getImage($i_path);
+	//dump ($image, 'i_path: ');
 			$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$image->path.'" border="1" width="'.$image->height.'" height="'.$image->width.'" ></td></tr><tr><td><a href="index.php?option=com_biblestudy&view=teacherdisplay&amp;id='.$tresult->id.'&templatemenuid='.$templatemenuid.'">'.$tresult->teachername.'</a></td></tr></table></td>';
 		}
 	

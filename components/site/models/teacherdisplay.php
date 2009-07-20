@@ -17,7 +17,7 @@ class biblestudyModelteacherdisplay extends JModel
 	 */
 	 var $_data;
 	 var $_template;
-	 
+	 var $_admin;
 	function __construct()
 	{
 		parent::__construct();
@@ -77,7 +77,19 @@ function getTemplate() {
 			//dump ($this->_template, 'this->_template');
 		}
 		return $this->_template;
-	}		
+	}
+	
+function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT params'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}
+	
 //end class
 }
 ?>

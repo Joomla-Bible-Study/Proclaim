@@ -5,21 +5,28 @@ $pathway =& $mainframe->getPathWay();
 $uri 		=& JFactory::getURI();
 $database	= & JFactory::getDBO();
 $teacher = $this->teacher;
+$admin_params = $this->admin_params;
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+include_once($path1.'image.php');
 //$templatemenuid = JRequest::getVar('templatemenuid', 1,'get', 'int');
 if (!$templatemenuid) {$templatemenuid = 1;}
 $templatemenuid = $this->params->get('teachertemplateid');
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 $studieslisttemplateid = $this->params->get('studieslisttemplateid');
 	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('templatemenuid',1,'get','int');}
+	if (!$teacher->teacher_image) { $i_path = $item->image; }
+	if ($teacher->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$teacher->teacher_image; }
+	if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$teacher->teacher_image;}
+	$image = getImage($i_path);
 ?>
 <table width="100%" class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
 <tr><td align="center"><h1><?php echo $this->params->get('teacher_title');?></h1></td></tr></table>
 <table width="100%" class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
 <tr>
 <td align="center" width="<?php echo $this->params->get('imagew');?>">
-<?php if ($teacher->image) 
+<?php if ($teacher->image || $teacher->teacher_image) 
 		{ ?>
-        <img src="<?php echo $teacher->image?>" border="1" alt="<?php echo $teacher->teachername.' - '.$teacher->title;?>" />
+        <img src="<?php echo $image->path;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" border="1" alt="<?php echo $teacher->teachername.' - '.$teacher->title;?>" />
         <?php 
 		}?>
      

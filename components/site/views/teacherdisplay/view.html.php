@@ -30,6 +30,8 @@ class biblestudyViewteacherdisplay extends JView
 		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
+		$admin=& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
 		//$params = &JComponentHelper::getParams($option);
 		//end TF added
 		$teacher		=& $this->get('Data');
@@ -66,6 +68,7 @@ class biblestudyViewteacherdisplay extends JView
 		$this->assignRef('studies', $studies);
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
+		$this->assignRef('admin_params', $admin_params);
 		
 		parent::display($tpl);
 	}

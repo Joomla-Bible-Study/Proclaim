@@ -9,7 +9,9 @@ if ($user->name == ''){$user_submit_name = '';}
 $entry_access = ($params->get('entry_access')) - 1;
 $allow_entry = $params->get('allow_entry_study');
 $templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+$admin_params = $this->admin_params;
+include_once($path1.'image.php');
 if (!$templatemenuid){$templatemenuid = 1;}
 ?>
 <table width="100%">
@@ -26,7 +28,12 @@ if ($entry_access <= $entry_user){ ?>
 <table><tr><td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form"><strong><?php echo JText::_('Add a Teacher');?></strong></a></td></tr></table><?php } }?>
 <table width="100%" class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
 <tr><td>
-<?php foreach ($this->items as $item) { ?>
+<?php foreach ($this->items as $item) { 
+if (!$item->teacher_thumbnail) { $i_path = $item->thumb; }
+	if ($item->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$item->teacher_thumbnail; }
+	if ($item->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$item->teacher_thumbnail;}
+	$image = getImage($i_path);
+?>
 	
     <table cellpadding="1" cellspacing="1">
     <tr>
@@ -34,8 +41,8 @@ if ($entry_access <= $entry_user){ ?>
 if ($entry_access <= $entry_user){ ?>
   <td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form&controller=teacheredit&cid[]=<?php echo $item->id?>"><?php echo '['.JText::_('Edit').']';?></a></td>
   <?php } }?>
-        <td width="<?php echo $item->thumbw;?>"><?php if ($item->thumb){?>
-        	<img src="<?php echo $item->thumb;?>" border="1" title="<?php echo $item->teachername;?>" alt="<?php echo $item->teachername;?>" /><?php } ?>
+        <td ><?php if ($item->thumb || $item->teacher_thumbnail){?>
+        	<img src="<?php echo $image->path;?>" border="1" title="<?php echo $item->teachername;?>" alt="<?php echo $item->teachername;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" /><?php } ?>
         </td>
         <td width="150" align="left">
             <a href="index.php?option=com_biblestudy&view=teacherdisplay&id=<?php echo $item->id.'&templatemenuid='.$templatemenuid;?>"><?php echo $item->teachername;?></a><?php echo JText::_(' - ');?>

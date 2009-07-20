@@ -4,6 +4,7 @@ defined('_JEXEC') or die();
 function getMediatable($params, $row, $admin_params)
 {
 //dump ($admin_params, 'admin_params: ');
+if (!$row-id) {return FALSE;}
     global $mainframe, $option;
 	$database = & JFactory::getDBO();
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;

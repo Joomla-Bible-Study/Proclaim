@@ -17,6 +17,7 @@ class biblestudyModelteacherlist extends JModel
 	 *
 	 * @var array
 	 */
+	 var $_admin;
 	var $_total = null;
 	var $_pagination = null;
 	var $_data;
@@ -25,6 +26,7 @@ class biblestudyModelteacherlist extends JModel
 function __construct()
 	{
 		parent::__construct();
+		//$admin = $this->_getAdmin;
 		global $mainframe, $option;
 		$params 			=& $mainframe->getPageParameters();
 		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
@@ -111,6 +113,17 @@ function getTemplate()
 				//dump ($this->_template, 'this->_template');
 		}
 		return $this->_template;
+	}
+
+function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT params'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
 	}
 
 }

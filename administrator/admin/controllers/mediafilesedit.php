@@ -20,7 +20,8 @@ class biblestudyControllermediafilesedit extends JController {
 	function upload()
 	{
 		global $mainframe, $option;
-
+		jimport('joomla.filesystem.file');
+		jimport('joomla.filesystem.path');
 		$db=& JFactory::getDBO();
 		$file = JRequest::getVar('file', null, 'files', 'array' );
 		$filename = '';
@@ -29,12 +30,13 @@ class biblestudyControllermediafilesedit extends JController {
 		$db->setQuery($query);
 		$folder = $db->loadObject();
 		$folderpath = $folder->folderpath;
-
+//dump ($folderpath, 'folderpath: ');
 		//This is where we check the make the extension is of a filetype that is okay to upload
 		//$file_extension = JFile::getExt($file);
 		//$fname_reject = 'index.htm|index.html|index.php';
 		//$ext_reject = 'asp|php';
 		$filename = $file['name'];
+		//dump ($file['name'], 'filename1: ');
 		if ($filename == 'index.htm'){
 			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
 			return;
@@ -51,12 +53,15 @@ class biblestudyControllermediafilesedit extends JController {
 		$badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '/', '>', '<', ',', '|', '\\', ';', ':');
 		$file['name'] = str_replace($badchars, '_', $file['name']);
 		$file['name'] = str_replace('&', '_and_', $file['name']);
-		
+		$filename = str_replace($badchars, '_', $file['name']);
+		$filename = str_replace('&', '_and_', $file['name']);
+		//dump ($file['name'], 'filename2: ');
 		if(isset($file) && is_array($file) && $file['name'] != '')
 		{
 			$fullfilename = JPATH_SITE.$folderpath. strtolower($file['name']);
+			//dump ($file['tmp_name'], 'tmp_name: ');
 			$filename = strtolower($file['name']);
-			jimport('joomla.filesystem.file');
+			//jimport('joomla.filesystem.file');
 
 
 			if (JFile::exists($fullfilename)) {
@@ -65,7 +70,7 @@ class biblestudyControllermediafilesedit extends JController {
 			}
 
 			if (!JFile::upload($file['tmp_name'], $fullfilename)) {
-				$mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed, check to make sure that /components/$option/calendars exists.");
+				$mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed.");
 				return;
 			}
 
