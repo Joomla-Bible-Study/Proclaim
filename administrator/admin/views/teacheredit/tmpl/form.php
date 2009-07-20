@@ -63,7 +63,7 @@ $document->addScriptDeclaration($js);
 							<?php echo JText::_( 'Teacher Image' ); ?>:
 						</td>
     <td> <?php  ?>
-    <img src="<?php echo '../images'.DS.$this->admin_params->get('teachers_images', 'stories').DS.$this->teacheredit->teacher_image;?>" name="imagelib">
+    <img src="<?php echo '..'.$this->directory.DS.$this->teacheredit->teacher_image;?>" name="imagelib">
     <?php 
 	?>
     </td>
@@ -75,7 +75,7 @@ $document->addScriptDeclaration($js);
 							<?php echo JText::_( 'Teacher Thumbnail' ); ?>:
 						</td>
     <td> <?php  ?>
-    <img src="<?php echo '../images'.DS.$this->admin_params->get('teachers_images', 'stories').DS.$this->teacheredit->teacher_thumbnail;?>" name="imagelib">
+    <img src="<?php echo '..'.$this->directory.DS.$this->teacheredit->teacher_thumbnail;?>" name="imagelib">
     <?php 
 	?>
     </td>
