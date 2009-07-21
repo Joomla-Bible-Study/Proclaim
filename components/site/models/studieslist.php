@@ -323,24 +323,7 @@ function getTemplate() {
 		if ($filter_year > 0) {
 			$where[] = " date_format(#__bsms_studies.studydate, '%Y')= ".(int) $filter_year;
 		}
-		if ($teacher_menu > 0) {
-			$where[] = ' #__bsms_studies.teacher_id = '.(int) $teacher_menu;
-		}
-		if ($book_menu > 0) {
-			$where[] = ' #__bsms_studies.booknumber = '.(int) $book_menu;
-		}
-		if ($series_menu > 0) {
-			$where[] = ' #__bsms_studies.series_id = '.(int) $series_menu;
-		}
-		if ($topic_menu > 0) {
-			$where[] = ' #__bsms_studies.topics_id = '.(int) $topic_menu;
-		}
-		if ($messagetype_menu > 0) {
-			$where[] = ' #__bsms_studies.messagetype = '.(int) $messagetype_menu;
-		}
-		if ($location_menu > 0) {
-			$where[] = ' #__bsms_studies.location_id = '.(int) $location_menu;
-		}
+		
 		//Added for user level control
 		$user =& JFactory::getUser();
 		$level_user = $user->get('gid');
@@ -379,6 +362,7 @@ function getTemplate() {
 						{
 							$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
 						}
+					if ($params->get('locations')) {$where2[] = '#__bsms_studies.location_id = '.$params->get('locations');}
 				}
 			}
 			
@@ -393,6 +377,7 @@ function getTemplate() {
 						{
 							$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
 						}
+					if ($params->get('booknumber')) {$where2[] = '#__bsms_studies.booknumber = '.$params->get('booknumber');}
 				}
 			}
 		
@@ -403,10 +388,13 @@ function getTemplate() {
 					$continue = 1;
 					$filters = null;
 					$filters = explode(",", $params->get('mult_series'));
+					//dump ($filters, 'filters: ');
 					foreach ($filters AS $filter)
 						{
 							$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
+							//dump ($where2, 'where2: ');
 						}
+					if ($params->get('series_id')) {$where2[] = '#__bsms_studies.series_id = '.$params->get('series_id');}
 				}
 			}
 			
@@ -421,6 +409,7 @@ function getTemplate() {
 						{
 							$where2[] = '#__bsms_studies.topics_id = '.(int)$filter;
 						}
+					if ($params->get('topic_id')) {$where2[] = '#__bsms_studies.topics_id = '.$params->get('topic_id');}
 				}
 			}
 			
@@ -435,13 +424,14 @@ function getTemplate() {
 						{
 							$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
 						}
+					if ($params->get('messagetype')) {$where2[] = '#__bsms_studies.messagetype = '.$params->get('messagetype');}
 				}
 			}
 			
 		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
 
 		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}
-		
+		//dump ($where, 'where: ');
 		return $where;
 	}
 	

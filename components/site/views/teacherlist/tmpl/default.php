@@ -29,10 +29,13 @@ if ($entry_access <= $entry_user){ ?>
 <table width="100%" class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
 <tr><td>
 <?php foreach ($this->items as $item) { 
-if (!$item->teacher_thumbnail) { $i_path = $item->thumb; }
-	if ($item->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$item->teacher_thumbnail; }
-	if ($item->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$item->teacher_thumbnail;}
-	$image = getImage($i_path);
+if (!$item->teacher_thumbnail) { $image->path = $item->thumb; $image->height = $item->thumbh; $image->width = $item->thumbw; }
+	else 
+	{
+		if ($item->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$item->teacher_thumbnail; }
+		if ($item->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$item->teacher_thumbnail;}
+		$image = getImage($i_path);
+	}
 ?>
 	
     <table cellpadding="1" cellspacing="1">

@@ -21,6 +21,7 @@ function getTeacher($params, $id, $admin_params)
 		
 		//dump ($teacherids['id'], 'tresult: ');
 		$teacher = '<table id = "teacher"><tr>';
+		if (!$teacherids) {return $teacher;}
 		foreach ($teacherids as $teachers)
 		
 		{
@@ -31,12 +32,12 @@ function getTeacher($params, $id, $admin_params)
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			//dump ($tresult, 'tresult: ');
-			if (!$tresult->teacher_thumbnail) { $i_path = $tresult->thumb; }
+			if ($tresult->teacher_thumbnail == '- Select Image -' || !$tresult->teacher_thumbnail) { $image->path = $tresult->thumb; $image->height = $tresult->thumbh; $image->width = $tresult->thumbw;}
 	if ($tresult->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$tresult->teacher_thumbnail; }
 	if ($tresult->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$tresult->teacher_thumbnail;}
 	$image = getImage($i_path);
 	//dump ($image, 'i_path: ');
-			$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$image->path.'" border="1" width="'.$image->height.'" height="'.$image->width.'" ></td></tr><tr><td><a href="index.php?option=com_biblestudy&view=teacherdisplay&amp;id='.$tresult->id.'&templatemenuid='.$templatemenuid.'">'.$tresult->teachername.'</a></td></tr></table></td>';
+			$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$image->path.'" border="1" width="'.$image->width.'" height="'.$image->height.'" ></td></tr><tr><td><a href="index.php?option=com_biblestudy&view=teacherdisplay&amp;id='.$tresult->id.'&templatemenuid='.$templatemenuid.'">'.$tresult->teachername.'</a></td></tr></table></td>';
 		}
 	
 		$teacher .= '</tr></table>';
