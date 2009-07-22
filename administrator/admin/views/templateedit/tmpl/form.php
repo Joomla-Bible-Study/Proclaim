@@ -98,7 +98,9 @@ echo $pane->startPanel( JText::_('Row 4'), 'ROW4');
 echo $this->params->render( 'params', 'ROW4');
 echo $pane->endPanel();
 
-
+echo $pane->startPanel( JText::_('Series List'), 'SERIES');
+echo $this->params->render( 'params', 'SERIES');
+echo $pane->endPanel();
 
 //This ends the parameter panes
 echo $pane->endPane();

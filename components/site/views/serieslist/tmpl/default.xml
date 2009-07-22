@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml tf 12-11-2007 $ -->
+<metadata>
+	<layout title="Series List Layout">
+		<message>
+			<![CDATA[Create a link to the main Series List Page]]>
+		</message>
+	</layout>
+	<state>
+		<name>Studies List Layout</name>
+		<params addpath="/components/com_biblestudy/elements">
+			<param name="type" type="hidden" default="serieslist" />
+			<param name="templatemenuid" type="templatemenuid" default="" label="Template for this page" description="Choose a template for your page (set in admin/templates tab)" />
+		</params>
+	</state>
+</metadata>

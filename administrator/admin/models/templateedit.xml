@@ -11,7 +11,9 @@
 		<param name="studieslisttemplateid" type="studieslisttemplateid" default="" label="Template for Studies List View" description="Choose a template from the admin/templates for display of studies list view linked from here" />
 		<param name="detailstemplateid" type="detailstemplateid" default="" label="Template for Study Details" description="Choose a template from the admin/templates for display of study details view linked from here" />
 		<param name="teachertemplateid" type="teachertemplateid" default="" label="Template for Teacher View" description="Choose a template from the admin/templates for display of teacher details view linked from here" />
-		</params>
+		<param name="serieslisttemplateid" type="serieslisttemplateid" default="" label="Template for Series List View" description="Choose a template from the admin/templates for display of the series list" />
+		<param name="seriesdetailtemplateid" type="seriesdetailtemplateid" default="" label="Template for Series Detail View" description="Choose a template from the admin/templates for display of the series detail" />
+	</params>
 	<params group="FILTERS" addpath="/components/com_biblestudy/elements">
 		<param name="teacher_id" type="teacher" default="" label="Teacher" description="Choose a teacher to display for this menu item" />
 		<param name="show_teacher_list" type="list" default="1" label="Show/Hide Teacher(s) in View" description="Shows or hides the teacher on the page">
@@ -1049,5 +1051,84 @@
 		</params>
 		<params group="MODULE">
 			<param name="moduleitems" type="text" size="2" default="5" label="Number of studies to display" description="Enter a number of studies to display in the module" />
+		</params>
+		<params group="SERIES" addpath="/components/com_biblestudy/elements">
+			<param name="series_title" default="Our Series" type="text" label="Title for Series List Page" description="Text to show at top of Series List Page" />
+			<param name="show_series_title" default="1" type="list" label="Show/Hide Series List Page Title" description="Show or hide the text for the top of the series list page.">
+				<option value="0">Hide Page Title</option>
+				<option value="1">Show Page Title</option>
+			</param>
+			<param name="show_page_image_series" default="1" type="list" label="Show/Hide Series Page Image" description="Show or hide the image for the top of the series list page. Same image as used for studies list page">
+				<option value="0">Hide Page Image</option>
+				<option value="1">Show Page Image</option>
+			</param>
+			<param name="serieselement1" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
+				<option value="0">Nothing</option>
+				<option value="1">Series Title {title}</option>
+				<option value="2">Thumbnail {thumbnail}</option>
+				<option value="3">Thumbnail + Title</option>
+				<option value="4">Teacher Name + Title {teacher}</option>
+				<option value="5">Teacher Image {teacherimage}</option>
+				<option value="6">Teacher Image + Name/Title</option>
+				<option value="7">Description {description}</option>
+				<option value="8">Custom</option>
+			</param>
+			<param name="seriescustom1" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
+			<param name="seriesislink1" type="list" default="1" label="Link To" description="Select what type of link">
+				<option value="0">Not Linked</option>
+				<option value="1">Link to Series Details</option>
+				<option value="3">Link to Teacher details</option>
+			</param>
+			<param name="serieselement2" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
+				<option value="0">Nothing</option>
+				<option value="1">Series Title {title}</option>
+				<option value="2">Thumbnail {thumbnail}</option>
+				<option value="3">Thumbnail + Title</option>
+				<option value="4">Teacher Name + Title {teacher}</option>
+				<option value="5">Teacher Image {teacherimage}</option>
+				<option value="6">Teacher Image + Name/Title</option>
+				<option value="7">Description {description}</option>
+				<option value="8">Custom</option>
+			</param>
+			<param name="seriescustom2" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
+			<param name="seriesislink2" type="list" default="1" label="Link To" description="Select what type of link">
+				<option value="0">Not Linked</option>
+				<option value="1">Link to Series Details</option>
+				<option value="3">Link to Teacher details</option>
+			</param>
+			<param name="serieselement3" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
+				<option value="0">Nothing</option>
+				<option value="1">Series Title {title}</option>
+				<option value="2">Thumbnail {thumbnail}</option>
+				<option value="3">Thumbnail + Title</option>
+				<option value="4">Teacher Name + Title {teacher}</option>
+				<option value="5">Teacher Image {teacherimage}</option>
+				<option value="6">Teacher Image + Name/Title</option>
+				<option value="7">Description {description}</option>
+				<option value="8">Custom</option>
+			</param>
+			<param name="seriescustom3" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
+			<param name="seriesislink3" type="list" default="1" label="Link To" description="Select what type of link">
+				<option value="0">Not Linked</option>
+				<option value="1">Link to Series Details</option>
+				<option value="3">Link to Teacher details</option>
+			</param>
+			<param name="serieselement4" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
+				<option value="0">Nothing</option>
+				<option value="1">Series Title {title}</option>
+				<option value="2">Thumbnail {thumbnail}</option>
+				<option value="3">Thumbnail + Title</option>
+				<option value="4">Teacher Name + Title {teacher}</option>
+				<option value="5">Teacher Image {teacherimage}</option>
+				<option value="6">Teacher Image + Name/Title</option>
+				<option value="7">Description {description}</option>
+				<option value="8">Custom</option>
+			</param>
+			<param name="seriescustom4" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
+			<param name="seriesislink4" type="list" default="1" label="Link To" description="Select what type of link">
+				<option value="0">Not Linked</option>
+				<option value="1">Link to Series Details</option>
+				<option value="3">Link to Teacher details</option>
+			</param>
 		</params>
 	</root>

@@ -101,6 +101,18 @@
 		<filename>views/teacheredit/tmpl/index.html</filename>
 		<filename>views/teacheredit/tmpl/form.php</filename>
 		<filename>views/teacheredit/tmpl/form.xml</filename>
+		<filename>views/serieslist/index.html</filename>
+		<filename>views/serieslist/view.html.php</filename>
+		<filename>views/serieslist/metadata.xml</filename>
+		<filename>views/serieslist/tmpl/index.html</filename>
+		<filename>views/serieslist/tmpl/default.php</filename>
+		<filename>views/serieslist/tmpl/default.xml</filename>
+		<filename>views/seriesdetails/index.html</filename>
+		<filename>views/seriesdetails/view.html.php</filename>
+		<filename>views/seriesdetails/metadata.xml</filename>
+		<filename>views/seriesdetails/tmpl/index.html</filename>
+		<filename>views/seriesdetails/tmpl/default.php</filename>
+		<filename>views/seriesdetails/tmpl/default.xml</filename>
 		<filename>models/teacheredit.php</filename>
 		<filename>models/studydetails.php</filename>
 		<filename>models/studieslist.php</filename>
@@ -191,6 +203,7 @@
 		<filename>elements/teachertemplateid.php</filename>
 		<filename>elements/templatemenuid.php</filename>
 		<filename>elements/modulemenuid.php</filename>
+		<filename>element/serieslisttemplateid.php</filename>
 		<filename>helpers/scripture.php</filename>
 		<filename>helpers/date.php</filename>
 		<filename>helpers/filesize.php</filename>
@@ -212,6 +225,7 @@
 		<filename>helpers/elementid.php</filename>
 		<filename>helpers/studiesedit.php</filename>
 		<filename>helpers/image.php</filename>
+		<filename>helpers/serieslist.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>
