@@ -78,6 +78,7 @@ if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
 	}
 
 	$listing = getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template);
+	//dump ($listing, 'listing: ');
  	echo $listing;
  }
  ?>

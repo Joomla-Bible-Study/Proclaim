@@ -1073,7 +1073,7 @@
 				<option value="7">Description {description}</option>
 				<option value="8">Custom</option>
 			</param>
-			<param name="seriescustom1" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
+			<param name="seriescustom1" size="150" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
 			<param name="seriesislink1" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>
@@ -1090,7 +1090,7 @@
 				<option value="7">Description {description}</option>
 				<option value="8">Custom</option>
 			</param>
-			<param name="seriescustom2" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
+			<param name="seriescustom2" size="150" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
 			<param name="seriesislink2" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>
@@ -1107,7 +1107,7 @@
 				<option value="7">Description {description}</option>
 				<option value="8">Custom</option>
 			</param>
-			<param name="seriescustom3" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
+			<param name="seriescustom3" size="150" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
 			<param name="seriesislink3" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>
@@ -1124,7 +1124,7 @@
 				<option value="7">Description {description}</option>
 				<option value="8">Custom</option>
 			</param>
-			<param name="seriescustom4" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
+			<param name="seriescustom4" type="text" size="150" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
 			<param name="seriesislink4" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>
