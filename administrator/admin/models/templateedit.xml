@@ -1062,69 +1062,74 @@
 				<option value="0">Hide Page Image</option>
 				<option value="1">Show Page Image</option>
 			</param>
+			<param name="series_show_description" default="1" type="list" label="Show/Hide Description along bottom" description="Choose to have a row spanning 4 columns showing the description of the series">
+				<option value="0">Hide Bottom Description</option>
+				<option value="1">Show Bottom Description</option>
+			</param>
+			<param name="search_series" default="1" type="list" label="Show/Hide Series Drop Down" description="Show or hide the drop down menu with all published series as a filter">
+				<option value="0">Hide Series</option>
+				<option value="1">Show Series</option>
+			</param>
+			<param name="series_limit" type="text" default="5" label="Series Per Page" description="Put in the number of series to show per page of results" />
 			<param name="serieselement1" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
 				<option value="0">Nothing</option>
 				<option value="1">Series Title {title}</option>
 				<option value="2">Thumbnail {thumbnail}</option>
-				<option value="3">Thumbnail + Title</option>
+				<option value="3">Thumbnail + Title {thumbnail-title}</option>
 				<option value="4">Teacher Name + Title {teacher}</option>
 				<option value="5">Teacher Image {teacherimage}</option>
-				<option value="6">Teacher Image + Name/Title</option>
+				<option value="6">Teacher Image + Name/Title {teacher-title}</option>
 				<option value="7">Description {description}</option>
 				<option value="8">Custom</option>
 			</param>
-			<param name="seriescustom1" size="150" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
 			<param name="seriesislink1" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>
 				<option value="3">Link to Teacher details</option>
 			</param>
-			<param name="serieselement2" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
+			<param name="serieselement2" type="list" default="1" label="Series List Element 2" description="Please pick an element from the list">
 				<option value="0">Nothing</option>
 				<option value="1">Series Title {title}</option>
 				<option value="2">Thumbnail {thumbnail}</option>
-				<option value="3">Thumbnail + Title</option>
+				<option value="3">Thumbnail + Title {thumbnail-title}</option>
 				<option value="4">Teacher Name + Title {teacher}</option>
 				<option value="5">Teacher Image {teacherimage}</option>
-				<option value="6">Teacher Image + Name/Title</option>
+				<option value="6">Teacher Image + Name/Title {teacher-title}</option>
 				<option value="7">Description {description}</option>
 				<option value="8">Custom</option>
 			</param>
-			<param name="seriescustom2" size="150" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
 			<param name="seriesislink2" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>
 				<option value="3">Link to Teacher details</option>
 			</param>
-			<param name="serieselement3" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
+			<param name="serieselement3" type="list" default="1" label="Series List Element 3" description="Please pick an element from the list">
 				<option value="0">Nothing</option>
 				<option value="1">Series Title {title}</option>
 				<option value="2">Thumbnail {thumbnail}</option>
-				<option value="3">Thumbnail + Title</option>
+				<option value="3">Thumbnail + Title {thumbnail-title}</option>
 				<option value="4">Teacher Name + Title {teacher}</option>
 				<option value="5">Teacher Image {teacherimage}</option>
-				<option value="6">Teacher Image + Name/Title</option>
+				<option value="6">Teacher Image + Name/Title {teacher-title}</option>
 				<option value="7">Description {description}</option>
 				<option value="8">Custom</option>
 			</param>
-			<param name="seriescustom3" size="150" type="text" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
 			<param name="seriesislink3" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>
 				<option value="3">Link to Teacher details</option>
 			</param>
-			<param name="serieselement4" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
+			<param name="serieselement4" type="list" default="1" label="Series List Element 4" description="Please pick an element from the list">
 				<option value="0">Nothing</option>
 				<option value="1">Series Title {title}</option>
 				<option value="2">Thumbnail {thumbnail}</option>
-				<option value="3">Thumbnail + Title</option>
+				<option value="3">Thumbnail + Title {thumbnail-title}</option>
 				<option value="4">Teacher Name + Title {teacher}</option>
 				<option value="5">Teacher Image {teacherimage}</option>
-				<option value="6">Teacher Image + Name/Title</option>
+				<option value="6">Teacher Image + Name/Title {teacher-title}</option>
 				<option value="7">Description {description}</option>
 				<option value="8">Custom</option>
 			</param>
-			<param name="seriescustom4" type="text" size="150" default="" label="Custom Line" description="Enter text and {} with codes from drop down for custom line" />
 			<param name="seriesislink4" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>

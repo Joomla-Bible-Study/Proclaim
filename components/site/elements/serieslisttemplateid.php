@@ -3,7 +3,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class JElementstudieslisttemplateid extends JElement
+class JElementserieslisttemplateid extends JElement
 {
 	var	$_name = 'serieslisttemplateid';
 

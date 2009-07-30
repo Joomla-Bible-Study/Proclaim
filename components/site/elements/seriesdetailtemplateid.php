@@ -5,7 +5,7 @@ defined('_JEXEC') or die();
 
 class JElementseriesdetailtemplateid extends JElement
 {
-	var	$_name = 'studieslisttemplateid';
+	var	$_name = 'seriesdetailtemplateid';
 
 	function fetchElement($name, $value, &$node, $control_name)
 	{

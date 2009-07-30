@@ -42,7 +42,7 @@ class biblestudyModelserieslist extends JModel
 		$params = new JParameter($template[0]->params);
 		
 		$config = JFactory::getConfig();
-		$this->setState('limit',$params->get('serieslimit'),'limit',$params->get('serieslimit'),'int');
+		$this->setState('limit',$params->get('series_limit'),'limit',$params->get('series_limit'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
 
 		// In case limit has been changed, adjust limitstart accordingly
@@ -63,19 +63,9 @@ function setSelect($string){
 		$orderby	= $this->_buildContentOrderBy();
 		$query = 'SELECT se.*, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
 		. ' FROM #__bsms_series AS se'
-/*				$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
-		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, #__bsms_series.series_thumbnail, #__bsms_message_type.id AS mid,'
-		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-		. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_locations.id AS lid, #__bsms_locations.location_text'
-		. ' FROM #__bsms_series'
-		. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)' */
 		. ' LEFT JOIN #__bsms_teachers AS t ON (se.teacher = t.id)'
-//		. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-//		. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-//		. '	LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
-//		. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
-		//. //$where
-		//. $orderby
+		. $where
+		. $orderby
 		; //dump ($query, 'query: ');
 		return $query;
 	}
@@ -84,6 +74,17 @@ function setSelect($string){
 	 * @desc Returns teachers
 	 * @return Array
 	 */
+	 
+	 function getSeries() {
+		if(empty($this->_series)) {
+			$query = 'SELECT id AS value, series_text AS text, published'
+			. ' FROM #__bsms_series'
+			. ' WHERE published = 1'
+			. ' ORDER BY series_text ASC';
+			$this->_series = $this->_getList($query);
+		}
+		return $this->_series;
+	}
 	 function getAdmin()
 	{
 		if (empty($this->_admin)) {
@@ -95,6 +96,15 @@ function setSelect($string){
 		return $this->_admin;
 	}
 	
+	function getStudyYears() {
+		if (empty($this->_StudyYears)) {
+			$query = " SELECT DISTINCT date_format(studydate, '%Y') AS value, date_format(studydate, '%Y') AS text "
+			. ' FROM #__bsms_studies '
+			. ' ORDER BY value DESC';
+			$this->_StudyYears = $this->_getList($query);
+		}
+		return $this->_StudyYears;
+	}
 	
 	function getOrders() {
 		if (empty($this->_Orders)) {
@@ -183,16 +193,18 @@ function getTemplate() {
 		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',		'filter_series',		0,				'int' );
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',				'word' );
 
-
+		//$series_menu = $params->get('series_id', 1);
 		$where = array();
 		//$rightnow = date('Y-m-d H:i:s');
-		$where[] = ' #__bsms_series.published = 1';
+		$where[] = ' se.published = 1';
 		//$where[] = " date_format(#__bsms_studies.studydate, '%Y-%m-%d %T') <= ".(int)$rightnow;
 
 		if ($filter_series > 0) {
-			$where[] = ' #__bsms_series.id = '.(int) $filter_series;
+			$where[] = ' se.id = '.(int) $filter_series;
 		}
-		
+		//if ($params->get('series_id')){
+		//	$where[]= ' se.id = '.$params->get('series_id');
+		//}
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 
 		$where2 = array();
@@ -208,10 +220,10 @@ function getTemplate() {
 					//dump ($filters, 'filters: ');
 					foreach ($filters AS $filter)
 						{
-							$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
+							$where2[] = 'se.id = '.(int)$filter;
 							//dump ($where2, 'where2: ');
 						}
-					if ($params->get('series_id')) {$where2[] = '#__bsms_studies.series_id = '.$params->get('series_id');}
+					if ($params->get('series_id')) {$where2[] = 'se.id = '.$params->get('series_id');}
 				}
 			}
 			

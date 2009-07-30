@@ -55,15 +55,15 @@ class biblestudyViewserieslist extends JView {
 		
 		//dump ($params, 'params: ');
 		$uri				=& JFactory::getURI();
-		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
-		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
-		$filter_teacher		= $mainframe->getUserStateFromRequest( $option.'filter_teacher','filter_teacher',0,'int' );
+		//$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
+		//$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
+		//$filter_teacher		= $mainframe->getUserStateFromRequest( $option.'filter_teacher','filter_teacher',0,'int' );
 		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',	'filter_series',0,'int' );
-		$filter_messagetype	= $mainframe->getUserStateFromRequest( $option.'filter_messagetype','filter_messagetype',0,'int' );
+		//$filter_messagetype	= $mainframe->getUserStateFromRequest( $option.'filter_messagetype','filter_messagetype',0,'int' );
 		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year','filter_year',0,'int' );
-		$filter_location	= $mainframe->getuserStateFromRequest( $option.'filter_location','filter_location',0,'int');
+		//$filter_location	= $mainframe->getuserStateFromRequest( $option.'filter_location','filter_location',0,'int');
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
-		$search				= JString::strtolower($mainframe->getUserStateFromRequest( $option.'search','search','','string'));
+		//$search				= JString::strtolower($mainframe->getUserStateFromRequest( $option.'search','search','','string'));
 /*
 		//Retrieve Parameters
 		$tmplStudiesList = $params->get('tmplStudiesList');
@@ -100,7 +100,7 @@ class biblestudyViewserieslist extends JView {
 		$this->assignRef('template', $template);
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('order', $orders);
-		$this->assignRef('topic', $topics);
+		//$this->assignRef('topic', $topics);
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 //dump ($admin[0]->main, 'main: ');
@@ -116,17 +116,15 @@ class biblestudyViewserieslist extends JView {
 	  	$this->assignRef('main', $main);
 	  	
 		//Build Series List for drop down menu
-		//$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Series' ) .' -' );
-		//$types3 			= array_merge( $types3, $series );
-		//$lists['seriesid']	= JHTML::_('select.genericlist',   $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series" );
+		$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Series' ) .' -' );
+		$types3 			= array_merge( $types3, $series );
+		$lists['seriesid']	= JHTML::_('select.genericlist',   $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series" );
 
 		//build orders
 		$ord[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
 		$orders 			= array_merge( $ord, $orders );
 		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders" );
 
-
-		//Build Topics
 
 		//Build order
 		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select an Order') . ' -');

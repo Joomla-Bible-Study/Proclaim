@@ -53,15 +53,15 @@ if ( $this->params->get( 'show_series_title' ) >0 ) {
 <?php 
 
 	
-if ($this->params->get('show_series_search_series') > 0 && !($series_menu)){ echo $this->lists['seriesid'];  }   
-	
-if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
+if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }   
+	 
+//if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
   
 ?>
 
 
     </div><!--dropdownmenu-->
-     <table id="bslisttable" cellspacing="0">
+     <table id="seriestable" cellspacing="0">
       <tbody>
 
         <?php 
@@ -71,6 +71,7 @@ if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
  $oddeven = $class1;
 
  foreach ($this->items as $row) { //Run through each row of the data result from the model
+ 	//echo '<table id="bslisttable" cellspacing="0">';
 	if($oddeven == $class1){ //Alternate the color background
 	$oddeven = $class2;
 	} else {
@@ -80,6 +81,8 @@ if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
 	$listing = getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template);
 	//dump ($listing, 'listing: ');
  	echo $listing;
+ 	
+ 	//echo '</table>';
  }
  ?>
  </tbody></table>
@@ -92,9 +95,9 @@ if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
 </div> <!--end of bsfooter div-->
   </div><!--end of bspagecontainer div-->
   <input name="option" value="com_biblestudy" type="hidden">
-
   <input name="task" value="" type="hidden">
   <input name="boxchecked" value="0" type="hidden">
   <input name="controller" value="serieslist" type="hidden">
+  </div>
 </form>
 

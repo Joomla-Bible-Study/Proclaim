@@ -61,7 +61,7 @@
 #bslisttable .date {
   white-space:nowrap;
   font-size:1.2em;
-  color:grey;
+  color:gray;
   font-weight:bold;
 }
 #bslisttable .scripture1 {
@@ -81,7 +81,7 @@
 }
 #bslisttable .series_text {
   white-space:nowrap;
-  color:grey;
+  color:gray;
 }
 #bslisttable .duration {
   white-space:nowrap;
@@ -485,4 +485,58 @@
 #bsmsmoduletable .mediatable span.bsfilesize {
   font-size:0.6em;
   position:relative; bottom: 7px;
+}
+<!--Series List-Details Items-->
+#seriestable {
+  margin: 0;
+  border-collapse:separate;
+}
+#seriestable th, #seriestable td {
+  text-align:left;
+  padding: 3px 3px 3px 3px;
+  border:none;
+}
+#seriestable .firstrow td {
+	border-top: gray 2px solid;
+}
+#seriestable .firstcol {
+  border-left: gray 2px solid;
+}
+#seriestable .lastcol {
+  border-right: gray 2px solid;
+}
+#seriestable .lastrow td {
+  border-bottom:2px solid gray;
+  border-left: 2px solid gray;
+  border-right: 2px solid gray;
+  padding-bottom:3px;
+}
+#seriesttable tr.bsodd td {
+  background-color:#FFFFFF;
+}
+#seriestable tr.bseven td {
+  background-color:#FFFFF0;
+}
+#seriestable tr.onlyrow td {
+	border-bottom: 2px solid gray;
+	border-top:  gray 2px solid;
+}
+#seriestable .thumbnail img {
+	border: 1px solid gray;
+}
+#seriestable .teacher img {
+	border: 1px solid gray;
+}
+#seriestable .title {
+	font-weight: bold;
+	font-size: larger;
+}
+#seriestable tr.noborder td{
+	border: none;
+}
+#seriestable .description p{
+	width:500px;
+}
+#seriestable .teacher {
+	font-weight: bold;
 }
