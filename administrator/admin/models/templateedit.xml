@@ -1066,6 +1066,7 @@
 				<option value="0">Hide Bottom Description</option>
 				<option value="1">Show Bottom Description</option>
 			</param>
+			<param name="series_characters" type="text" default="" label="Character limit for description on list page" description="The number of characters to show in the description on the listing page. All description shown on the details link. Leave blank for all" />
 			<param name="search_series" default="1" type="list" label="Show/Hide Series Drop Down" description="Show or hide the drop down menu with all published series as a filter">
 				<option value="0">Hide Series</option>
 				<option value="1">Show Series</option>

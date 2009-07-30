@@ -78,7 +78,7 @@ class biblestudyViewserieslist extends JView {
 */		//dump ($template, 'template: ');
 		$items = $this->get('Data');
 		$total = $this->get('Total');
-		
+		//dump ($items, 'items: ');
 		$pagination = $this->get('Pagination');
 		//$teachers = $this->get('Teachers');
 		$series = $this->get('Series');
@@ -97,6 +97,14 @@ class biblestudyViewserieslist extends JView {
 		//$orders = getTranslated($orders);
 		//$book = getTranslated($books);
 		//$this->assignRef('books', $books);
+		
+		//$dispatcher	=& JDispatcher::getInstance();
+		//$article->text = $items[$key]->description;
+		//JPluginHelper::importPlugin('content');
+		//$results = $dispatcher->trigger('onPrepareContent', array (& $items, & $params, $limitstart));
+		//dump ($items[0]->description, 'article: ');
+		//$items[$key]->description = $article->text;
+		//$this->assignRef('article', $article);
 		$this->assignRef('template', $template);
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('order', $orders);

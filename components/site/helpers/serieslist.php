@@ -71,7 +71,13 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template)
 	if ($params->get('series_show_description') > 0) 
 		{
 			$listing .= '<tr class="lastrow '.$oddeven.'">';
-			$listing .= '<td colspan="4" class="description">'.$row->description.'</td></tr>';
+			$listing .= '<td colspan="4" class="description">';
+			if ($params->get('series_characters') ) {
+				$listing .= substr($row->description,0,$params->get('series_characters'));
+				$listing .= ' - '.'<a href="index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$params->get('seriesdetailtemplateid', 1).'&id='.$row->id.'">'.JText::_('Read More').'</a>';
+			}
+			else {$listing .= $row->description;}
+			$listing .= '</td></tr>';
 		}
 	//dump ($listing, 'listing: ');
 	//$listing .= '</table>';
