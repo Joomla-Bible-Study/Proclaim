@@ -1137,4 +1137,125 @@
 				<option value="3">Link to Teacher details</option>
 			</param>
 		</params>
+		<params group="SERIESDETAIL">
+			<param name="series_detail_sort" default="1" type="list" label="Study sort column" description="Choose a study element to sort the studies list in the series detail section.">
+				<option value="0">Study Date</option>
+				<option value="1">Study Title</option>
+				<option value="2">Book</option>
+				<option value="3">Teacher</option>
+			</param>
+			<param name="series_detail_order" type="list" default="DESC" label="Sort Order" description="Choose ascending or descending for the order of studies">
+				<option value="DESC">Descending</option>
+				<option value="ASC">Ascending</option>
+			</param>
+			<param name="series_detail_limit" type="text" default="" label="Number of studies to show" description="Choose a number of studies to show on the list. Leave blank for all. A link will be provided to the rest of the studies if limit set" />
+			<param name="series_detail_1" type="list" default="5" label="Series Study List Element 1" description="Choose an element to show on the studies list in the series detail view">
+				<option value="5">Study Title</option>
+				<option value="10">Study Date</option>
+				<option value="7">Teacher Name</option>
+				<option value="8">Teacher Title + Name</option>
+				<option value="1">Scripture 1</option>
+				<option value="2">Scripture 2</option>
+				<option value="3">Secondary References</option>
+				<option value="4">Duration</option>
+				<option value="25">Thumbnail</option>
+				<option value="6">Study Introduction</option>
+				<option value="12">Hits</option>
+				<option value="13">Study Number</option>
+				<option value="14">Topic</option>
+				<option value="15">Location</option>
+				<option value="16">Message Type</option>
+				<option value="17">Details Text</option>
+				<option value="18">Details Text + PDF</option>
+				<option value="19">Details PDF</option>
+				<option value="20">Media</option>
+				<option value="22">Store</option>
+				<option value="23">File Size</option>
+			</param>
+			<param name="series_detail_islink1" type="list" default="1" label="Link to Study Details" description="Choose whether this is a link to the study details">
+				<option value="0">No Link</option>
+				<option value="1">Link to Study Details</option>
+			</param>
+			<param name="series_detail_2" type="list" default="7" label="Series Study List Element 2" description="Choose an element to show on the studies list in the series detail view">
+				<option value="5">Study Title</option>
+				<option value="10">Study Date</option>
+				<option value="7">Teacher Name</option>
+				<option value="8">Teacher Title + Name</option>
+				<option value="1">Scripture 1</option>
+				<option value="2">Scripture 2</option>
+				<option value="3">Secondary References</option>
+				<option value="4">Duration</option>
+				<option value="25">Thumbnail</option>
+				<option value="6">Study Introduction</option>
+				<option value="12">Hits</option>
+				<option value="13">Study Number</option>
+				<option value="14">Topic</option>
+				<option value="15">Location</option>
+				<option value="16">Message Type</option>
+				<option value="17">Details Text</option>
+				<option value="18">Details Text + PDF</option>
+				<option value="19">Details PDF</option>
+				<option value="20">Media</option>
+				<option value="22">Store</option>
+				<option value="23">File Size</option>
+			</param>
+			<param name="series_detail_islink2" type="list" default="0" label="Link to Study Details" description="Choose whether this is a link to the study details">
+				<option value="0">No Link</option>
+				<option value="1">Link to Study Details</option>
+			</param>
+			<param name="series_detail_3" type="list" default="10" label="Series Study List Element 3" description="Choose an element to show on the studies list in the series detail view">
+				<option value="5">Study Title</option>
+				<option value="10">Study Date</option>
+				<option value="7">Teacher Name</option>
+				<option value="8">Teacher Title + Name</option>
+				<option value="1">Scripture 1</option>
+				<option value="2">Scripture 2</option>
+				<option value="3">Secondary References</option>
+				<option value="4">Duration</option>
+				<option value="25">Thumbnail</option>
+				<option value="6">Study Introduction</option>
+				<option value="12">Hits</option>
+				<option value="13">Study Number</option>
+				<option value="14">Topic</option>
+				<option value="15">Location</option>
+				<option value="16">Message Type</option>
+				<option value="17">Details Text</option>
+				<option value="18">Details Text + PDF</option>
+				<option value="19">Details PDF</option>
+				<option value="20">Media</option>
+				<option value="22">Store</option>
+				<option value="23">File Size</option>
+			</param>
+			<param name="series_detail_islink3" type="list" default="0" label="Link to Study Details" description="Choose whether this is a link to the study details">
+				<option value="0">No Link</option>
+				<option value="1">Link to Study Details</option>
+			</param>
+			<param name="series_detail_4" type="list" default="20" label="Series Study List Element 4" description="Choose an element to show on the studies list in the series detail view">
+				<option value="5">Study Title</option>
+				<option value="10">Study Date</option>
+				<option value="7">Teacher Name</option>
+				<option value="8">Teacher Title + Name</option>
+				<option value="1">Scripture 1</option>
+				<option value="2">Scripture 2</option>
+				<option value="3">Secondary References</option>
+				<option value="4">Duration</option>
+				<option value="25">Thumbnail</option>
+				<option value="6">Study Introduction</option>
+				<option value="12">Hits</option>
+				<option value="13">Study Number</option>
+				<option value="14">Topic</option>
+				<option value="15">Location</option>
+				<option value="16">Message Type</option>
+				<option value="17">Details Text</option>
+				<option value="18">Details Text + PDF</option>
+				<option value="19">Details PDF</option>
+				<option value="20">Media</option>
+				<option value="22">Store</option>
+				<option value="23">File Size</option>
+			</param>
+			<param name="series_detail_islink4" type="list" default="0" label="Link to Study Details" description="Choose whether this is a link to the study details">
+				<option value="0">No Link</option>
+				<option value="1">Link to Study Details</option>
+			</param>
+			</params>	
 	</root>

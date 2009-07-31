@@ -78,7 +78,7 @@ if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }
 	$oddeven = $class1;
 	}
 
-	$listing = getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template);
+	$listing = getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template, $view = 0);
 	//dump ($listing, 'listing: ');
  	echo $listing;
  	

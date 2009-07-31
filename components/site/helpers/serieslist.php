@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restriced Access');
-function getSerieslist($row, $params, $oddeven, $admin_params, $template)
+function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 { //dump ($row->series_thumbnail, 'series: ');
 	
 	//$listing = '<table id="bslisttable" cellspacing="0">';
@@ -17,7 +17,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template)
 	$r = 'firstcol';
 	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
 	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);} 
-	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);
+	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
 	$listing .= $listelement;
 	if (!$listelementid)
 		{
@@ -31,7 +31,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template)
 	$r = '';
 	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
 	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
-	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params); 
+	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view); 
 		$listing .= $listelement;
 	if (!$listelementid)
 		{
@@ -44,7 +44,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template)
 	$r = '';
 	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
 	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
-	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params); 
+	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view); 
 	$listing .= $listelement;
 	if (!$listelementid)
 		{
@@ -59,7 +59,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template)
 	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
 	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);} 
 	$listing .= $listelement; //dump ($listelement, 'listelement: ');
-	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);
+	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
 		if (!$listelementid)
 		{
 			$listing .= '<td class="lastcol"></td>'; 
@@ -68,15 +68,16 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template)
 	
 	//add if last row to above
 	
-	if ($params->get('series_show_description') > 0) 
+	if ($params->get('series_show_description') > 0 ) 
 		{
 			$listing .= '<tr class="lastrow '.$oddeven.'">';
 			$listing .= '<td colspan="4" class="description">';
-			if ($params->get('series_characters') ) {
+			if ($params->get('series_characters') && $view == 0) {
 				$listing .= substr($row->description,0,$params->get('series_characters'));
 				$listing .= ' - '.'<a href="index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$params->get('seriesdetailtemplateid', 1).'&id='.$row->id.'">'.JText::_('Read More').'</a>';
 			}
 			else {$listing .= $row->description;}
+			//elseif ($view == 1) {$listing .= getSeriesstudies($row, $params, $admin_params);}
 			$listing .= '</td></tr>';
 		}
 	//dump ($listing, 'listing: ');
@@ -99,7 +100,7 @@ function getSerieslink($islink, $row, $element, $params, $admin_params)
 	return $link;
 }
 
-function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params)
+function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view)
 {//dump ($admin_params->get('teachers_imagefolder'), 'listelementidcheck: ');
 	
 	switch ($listelementid)
@@ -114,7 +115,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('series_imagefolder').DS.$row->series_thumbnail;}
 			$image = getImage($i_path);
 			$element = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
-			if ($islink > 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
+			if ($islink > 0 && $view == 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' thumbnail image">'.$element.'</td>';
 			break;
 		case 3: //dump ($admin_params->get('series_imagefolder'), 'imagefolder: ');
@@ -125,7 +126,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			$element2 = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
 			$element3 = '</td></tr>';
 			$element4 = $row->series_text;
-			if ($islink > 0) {$element4 = getSerieslink($islink, $row, $element4, $params, $admin_params);}
+			if ($islink > 0 && $view == 0) {$element4 = getSerieslink($islink, $row, $element4, $params, $admin_params);}
 			$element = $element1.$element2.$element3.'</td></tr>';
 			$element .= '<tr class="noborder"><td class="'.$r.' title">'.$element4.'</td>';
 			$element .= '</tr></table></td>';
@@ -220,4 +221,34 @@ function getseriesElementnumber($subcustom)
 	}
 	return $customelement;
 }
-
+function getSeriesstudies($id, $params, $admin_params, $template)
+{
+	$limit = '';
+	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
+	$db	= & JFactory::getDBO();
+	$query = 'SELECT s.*, se.id AS seid FROM #__bsms_studies AS s'
+	.' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
+	.' WHERE s.series_id = '.$id.' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC').$limit;
+	$db->setQuery($query);
+	$result = $db->loadObjectList();
+	
+	foreach ($result AS $row)
+	{
+		$studies .= '<tr>';
+		$element = getElementid($params->get('series_detail_1'), $row, $params, $admin_params, $template);
+		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
+		$element = getElementid($params->get('series_detail_2'), $row, $params, $admin_params, $template);
+		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
+		$element = getElementid($params->get('series_detail_3'), $row, $params, $admin_params, $template);
+		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
+		$element = getElementid($params->get('series_detail_4'), $row, $params, $admin_params, $template);
+		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
+		$studies .= '</tr>';
+		
+	}
+	//dump ($result, 'result: ');
+	//$studies = '<tr class="lastrow bsodd">';
+	//$studies .= '<td class="studies">';
+		
+return $studies;
+}
