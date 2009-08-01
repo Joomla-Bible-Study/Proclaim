@@ -100,6 +100,12 @@ function getSerieslink($islink, $row, $element, $params, $admin_params)
 	return $link;
 }
 
+function getStudieslink($islink, $row, $element, $params, $admin_params)
+{
+	$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=studydetails&templatemenuid='.$params->get('studiesdetailtemplateid', 1).'&id='.$row->id).'">'.$element.'</a>';
+	return $link;
+}
+
 function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view)
 {//dump ($admin_params->get('teachers_imagefolder'), 'listelementidcheck: ');
 	
@@ -236,12 +242,16 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	{
 		$studies .= '<tr>';
 		$element = getElementid($params->get('series_detail_1'), $row, $params, $admin_params, $template);
+		if ($params->get('series_detail_islink1') > 0) {$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);}
 		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
 		$element = getElementid($params->get('series_detail_2'), $row, $params, $admin_params, $template);
+		if ($params->get('series_detail_islink2') > 0) {$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);}
 		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
 		$element = getElementid($params->get('series_detail_3'), $row, $params, $admin_params, $template);
+		if ($params->get('series_detail_islink3') > 0) {$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);}
 		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
 		$element = getElementid($params->get('series_detail_4'), $row, $params, $admin_params, $template);
+		if ($params->get('series_detail_islink4') > 0) {$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);}
 		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
 		$studies .= '</tr>';
 		
