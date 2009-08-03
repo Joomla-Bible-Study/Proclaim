@@ -91,7 +91,7 @@ function getSerieslink($islink, $row, $element, $params, $admin_params)
 {
 	if ($islink == 1)
 	{
-		$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetails&templatemenuid='.$params->get('seriesdetailtemplateid', 1).'&id='.$row->id).'">'.$element.'</a>';
+		$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$params->get('seriesdetailtemplateid', 1).'&id='.$row->id).'">'.$element.'</a>';
 	}
 	else
 	{

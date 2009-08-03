@@ -1148,6 +1148,10 @@
 				<option value="DESC">Descending</option>
 				<option value="ASC">Ascending</option>
 			</param>
+			<param name="series_detail_show_link" type="list" default="1" label="Show/Hide All Studies Link" description="Show or hide a link to all studies in a series if you have put in a limit">
+				<option value="0">Hide Link</option>
+				<option value="1">Show Link</option>
+			</param>
 			<param name="series_detail_limit" type="text" default="" label="Number of studies to show" description="Choose a number of studies to show on the list. Leave blank for all. A link will be provided to the rest of the studies if limit set" />
 			<param name="series_detail_1" type="list" default="5" label="Series Study List Element 1" description="Choose an element to show on the studies list in the series detail view">
 				<option value="5">Study Title</option>
