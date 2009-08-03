@@ -40,7 +40,7 @@ $listingcall = JView::loadHelper('serieslist');
  
  ?>
  </tbody></table>
-<table id="seriestable" cellspacing="0">
+<table id="seriesstudytable" cellspacing="0">
 <tbody>
 <?php 
 $studies = getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);

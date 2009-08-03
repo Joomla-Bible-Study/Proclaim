@@ -1153,6 +1153,10 @@
 				<option value="1">Show Link</option>
 			</param>
 			<param name="series_detail_limit" type="text" default="" label="Number of studies to show" description="Choose a number of studies to show on the list. Leave blank for all. A link will be provided to the rest of the studies if limit set" />
+			<param name="series_list_return" type="list" default="1" label="Show Link Back to Series List" description="Show/Hide a link back to all Series at page bottom">
+				<option value="0">Hide Link</option>
+				<option value="1">Show Link</option>
+			</param>
 			<param name="series_detail_1" type="list" default="5" label="Series Study List Element 1" description="Choose an element to show on the studies list in the series detail view">
 				<option value="5">Study Title</option>
 				<option value="10">Study Date</option>
