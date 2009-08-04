@@ -239,6 +239,7 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	.' WHERE s.series_id = '.$id.' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC').$limit;
 	$db->setQuery($query);
 	$result = $db->loadObjectList();
+	$numrows = $db->getAffectedRows();
 	$class1 = 'bsodd';
  	$class2 = 'bseven';
  	$oddeven = $class1;
@@ -249,36 +250,46 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 		} else {
 			$oddeven = $class1;
 		}
-		$studies .= '<tr class="'.$oddeven.'">';
+		$studies .= '<tr class="'.$oddeven;
+		if ($numrows > 1) {$studies .=' studyrow';} else {$studies .= ' lastrow';}
+		$studies .= '">
+		';
 		$element = getElementid($params->get('series_detail_1'), $row, $params, $admin_params, $template);
 		if ($params->get('series_detail_islink1') > 0) {$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);}
-		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
+		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>
+		';
 		$element = getElementid($params->get('series_detail_2'), $row, $params, $admin_params, $template);
 		if ($params->get('series_detail_islink2') > 0) {$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);}
-		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
+		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>
+		';
 		$element = getElementid($params->get('series_detail_3'), $row, $params, $admin_params, $template);
 		if ($params->get('series_detail_islink3') > 0) {$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);}
-		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
+		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>
+		';
 		$element = getElementid($params->get('series_detail_4'), $row, $params, $admin_params, $template);
 		if ($params->get('series_detail_islink4') > 0) {$element->element = getStudieslink($params->get('series_detail_islink1'), $row, $element->element, $params, $admin_params);}
-		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>';
-		
+		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>
+		';
+		$numrows = $numrows - 1;
 		
 	}
 	//dump ($result, 'result: ');
 	//$studies = '<tr class="lastrow bsodd">';
 	//$studies .= '<td class="studies">';
-	$studies .= '</tr><tr><td>';
+	$templatemenuid = $params->get('serieslisttemplateid');
+					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+	$studies .= '</tr>
+	<tr><td>';
 		if ($params->get('series_detail_show_link') > 0 && $nolimit != 1) 
 			{
-				$studies .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&id='.$id.'&nolimit=1').'">'.JText::_('All Studies From This Series').'</a>';
+				$studies .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&id='.$id.'&nolimit=1&templatemenuid='.$templatemenuid).'">'.JText::_('All Studies From This Series').' >></a>';
 			}
-		$studies .= '</td></tr>';
+		$studies .= '</td></tr>
+		';
 	if ($params->get('series_list_return') > 0) 
 		{
-			$templatemenuid = $params->get('serieslisttemplateid');
-					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
-			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&templatemenuid=').$templatemenuid.'">'.' << '.JText::_('Return To Series List').'</a></td></tr>';
+			
+			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'">'.' << '.JText::_('Return To Series List').'</a></td></tr>';
 		}
 return $studies;
 }
