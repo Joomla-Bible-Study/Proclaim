@@ -31,6 +31,32 @@ function openConverter1()
           </td>
       </tr>
       <tr>
+       <td class="key" align="left"><?php echo JText::_( 'Create Date YYYY-MM-DD H:M:S' ); ?></td>
+        <td>
+        <?php if (!$this->mediafilesedit->id) 
+		{
+			echo JHTML::_('calendar', date('Y-m-d H:i:s'), 'createdate', 'createdate'); 
+		}
+		else {
+			echo JHTML::_('calendar', date('Y-m-d H:i:s', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); 
+        }
+		
+		//echo JHTML::_('calendar', date('D M j Y', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); ?>
+        </td>
+		</tr>
+        <tr> 
+        <td class="key"><?php echo JText::_( 'Study' );?></td>
+        <td >
+        
+        <?php echo $this->lists['studies'];?></td></tr>
+        <tr>
+        <td class="key"><?php echo JText::_( 'Ordering' );?></td>
+			<td >
+				
+				<?php echo $this->lists['ordering']; ?>
+			</td>
+		</tr>
+      <tr>
       	<td class="key">
       	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>" style="display: none;" />
 		<?php echo JText::_('Use DOCman')?>:</td>
@@ -46,7 +72,7 @@ function openConverter1()
       	</td>
       </tr>
       <tr> 
-      <tr>
+      
       	<td class="key">
 		<?php echo JText::_('Use Article')?>:</td>
       	<td>
@@ -63,51 +89,22 @@ function openConverter1()
       	?>
       	<select id="docManItems" name="docManItem"><option selected="selected">- Select an Item -</option></select>
       	</td>
-      </tr>
-        <td class="key" align="left"><?php echo JText::_( 'Create Date YYYY-MM-DD H:M:S' ); ?></td>
-        <td>
-        <?php if (!$this->mediafilesedit->id) 
-		{
-			echo JHTML::_('calendar', date('Y-m-d H:i:s'), 'createdate', 'createdate'); 
-		}
-		else {
-			echo JHTML::_('calendar', date('Y-m-d H:i:s', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); 
-        }
-		
-		//echo JHTML::_('calendar', date('D M j Y', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); ?>
-        </td>
-		</tr>
-
-      <tr> 
-        <td class="key"><?php echo JText::_( 'Media File' );?></td>
-        <td >
-        
-        <table width="100%" border="0" cellspacing="1" cellpadding="1">
-        <tr><td><?php echo JText::_( 'Study: '); echo $this->lists['studies'];?></td></tr>
-        <tr>
-			<td >
-				<label for="ordering">
-					<?php echo JText::_( 'Ordering' ); ?>:
-				</label>
-			
-				<?php echo $this->lists['ordering']; ?>
-			</td>
-		</tr>
-        
-              <tr><td><?php echo JText::_(' Use <a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">AVReloaded Viewer</a> (1.2.4 of higher Must be installed): ').$this->lists['internal_viewer']; ?></td>
+      </tr>   
+              <tr><td class="key"></td><td><?php echo JText::_(' Use <a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">AVReloaded Viewer</a> (1.2.4 of higher Must be installed): ').$this->lists['internal_viewer']; ?></td>
 			</tr>
-            <tr><td><?php echo JText::_('AVRELOADED');?></td></tr>
-            <tr><td><input class="text_area" name="mediacode" id="mediacode" size="200" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php 
+            <tr><td class="key"><?php echo JText::_('All Videos Reloaded');?></td><td><?php echo JText::_('AVRELOADED');?></td></tr>
+            <tr><td class="key"></td><td><input class="text_area" name="mediacode" id="mediacode" size="200" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php 
 			if (JPluginHelper::importPlugin('system', 'avreloaded'))
 					{echo $this->mbutton;}?></td></tr>
             <tr>
              <?php //<tr>?> 
-             <td> <?php echo JText::_('Image: ');?> 
-                <?php echo $this->lists['image'];?></td>
+             <td class="key"> <?php echo JText::_('Image: ');?> 
+              </td><td>  <?php echo $this->lists['image'];?></td>
             </tr>
             <tr>
+            <td class="key">
+            <?php echo JText::_( 'Filesize: ');?></td>
             <td>
-            <?php echo JText::_( 'Filesize: ');?>
             <input class="text_area" type="text" name="size" id="size" size="20" maxlength="20" onChange="decOnly(this);" onKeyUp="decOnly(this);" onKeyPress="decOnly(this);" value="<?php echo $this->mediafilesedit->size;?>"/>
             <a href="javascript:openConverter1();">
             <?php echo JText::_('- Filesize Converter');?>
@@ -116,33 +113,32 @@ function openConverter1()
             </tr>
              
             <tr>
-              <td  ><?php echo JText::_('Server: ');?> <?php echo $this->lists['server'];?></td>
+              <td class="key"><?php echo JText::_('Server: ');?></td><td> <?php echo $this->lists['server'];?></td>
             </tr>
             <tr>
-              <td  ><?php echo JText::_('Path or Folder: ');?><?php echo $this->lists['path'];?></td>
+              <td class="key" ><?php echo JText::_('Path or Folder: ');?></td><td><?php echo $this->lists['path'];?></td>
             </tr>
             <tr>
-              <td  ><?php echo JText::_('Filename: ');?><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->filename;?>"  /></td></tr>
-              <tr><td><?php echo JText::_( ' Or Upload File: ' ); ?><input type="file" id="file" name="file" size="75"/><?php echo JText::_(' Try also using the Upload button at the top. You will still have to enter the server/folder/filename information.');?></td>
+              <td class="key" ><?php echo JText::_('Filename: ');?></td><td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->filename;?>"  /></td></tr>
+              <tr><td class="key"><?php echo JText::_( ' Or Upload File: ' ); ?></td><td><input type="file" id="file" name="file" size="75"/><?php echo JText::_(' Try also using the Upload button at the top. You will still have to enter the server/folder/filename information.');?></td>
             </tr>
             <tr>
-              <td><?php echo JText::_('Maximum upload allowed in your php.ini file using post_max_size is: ').ini_get('upload_max_filesize');?></td>
+              <td class="key"></td><td><?php echo JText::_('Maximum upload allowed in your php.ini file using post_max_size is: ').ini_get('upload_max_filesize');?></td>
             </tr>
 			<tr>
-			  <td><?php echo JText::_('Use file name as entire path if you wish. Just don\'t select a server or path.(Don\'t use this option if uploading)');?>
+			  <td class="key"></td><td><?php echo JText::_('Use file name as entire path if you wish. Just don\'t select a server or path.(Don\'t use this option if uploading)');?>
               <?php echo JText::_('- Target for link (ie: _self, _blank): ')?> <input class="text_area" type="text" name="special" id="special" size="15" maxlength="15" value="<?php echo $this->mediafilesedit->special;?>" /></td>
             </tr>
             <tr>
-            	<td><?php echo JText::_('Choose a Podcast: ');?> <?php echo $this->lists['podcast'];?></td>
+            	<td class="key"><?php echo JText::_('Choose a Podcast: ');?> </td><td><?php echo $this->lists['podcast'];?></td>
                 </tr>
-                <tr><td><?php echo JText::_('Choose a Mime Type: ');?> <?php echo $this->lists['mime_type'];?>
+                <tr><td class="key"><?php echo JText::_('Choose a Mime Type: ');?></td><td> <?php echo $this->lists['mime_type'];?>
 				</td>
             </tr>
-            <tr><td><?php echo JText::_('Show Download Icon');?><?php echo $this->lists['link_type'];?></td></tr>
+            <tr><td class="key"><?php echo JText::_('Show Download Icon');?></td><td><?php echo $this->lists['link_type'];?></td></tr>
 			
-          </table>
-          </td>
-      </tr>
+          
+          
     </table>
 	</fieldset>
 </div>

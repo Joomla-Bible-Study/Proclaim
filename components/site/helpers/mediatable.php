@@ -190,8 +190,19 @@ if (!$row-id) {return FALSE;}
         $media_display->inputtype = 0;*/
 
        // Here is where we begin to build the mediatable variable
-		
+	
+	 //Here we test to see if docMan or article is used
+	 if ($media->docManItem)
+	 	{
+			$media1_link = getDocman($media, $width, $height, $src);
+		}
+	if ($media->articleTitle)
+		{
+			$media1_link = getArticle($media, $width, $height, $src);
+		}
 	 $mediatable .= $media1_link;
+	 
+	
 	 //showing of filesize removed for now - it was causing problems.
 		//if ($params->get('show_filesize') > 0 ) {
 		//$mediatable .= '<div class="mediasize'.$params->get('pageclass_sfx').'">'.$filesize.'</div>';
@@ -236,3 +247,22 @@ if ($params->get('show_filesize') > 0 )
     return $mediatable;
 }
 
+function getDocman($media, $width, $height, $src)
+	{
+		$docman = '<a href="index.php?option=com_docman&task=doc_download&gid='.$media->docManItem.'"
+		 title="'.$media->malttext.'" target="'.$media->special.'"><img src="'.$src
+       .'" alt="'.$media->malttext.' '.$duration.' '.$media_size.'" width="'.$width
+       .'" height="'.$height.'" border="0" /></a>';
+		
+		
+	return $docman;
+	}
+	
+function getArticle($media, $width, $height, $src)
+	{
+		$article = '<a href="/index.php?option=com_content&view=article&id='.$media->articleTitle.'"
+		 alt="'.$media->malttext.'" target="'.$media->special.'"><img src="'.$src.'" width="'.$width
+       	.'" height="'.$height.'" border="0" /></a>';
+		
+	return $article;
+	}

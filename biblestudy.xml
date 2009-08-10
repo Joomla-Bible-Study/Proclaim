@@ -107,12 +107,12 @@
 		<filename>views/serieslist/tmpl/index.html</filename>
 		<filename>views/serieslist/tmpl/default.php</filename>
 		<filename>views/serieslist/tmpl/default.xml</filename>
-		<filename>views/seriesdetails/index.html</filename>
-		<filename>views/seriesdetails/view.html.php</filename>
-		<filename>views/seriesdetails/metadata.xml</filename>
-		<filename>views/seriesdetails/tmpl/index.html</filename>
-		<filename>views/seriesdetails/tmpl/default.php</filename>
-		<filename>views/seriesdetails/tmpl/default.xml</filename>
+		<filename>views/seriesdetail/index.html</filename>
+		<filename>views/seriesdetail/view.html.php</filename>
+		<filename>views/seriesdetail/metadata.xml</filename>
+		<filename>views/seriesdetail/tmpl/index.html</filename>
+		<filename>views/seriesdetail/tmpl/default.php</filename>
+		<filename>views/seriesdetail/tmpl/default.xml</filename>
 		<filename>models/teacheredit.php</filename>
 		<filename>models/studydetails.php</filename>
 		<filename>models/studieslist.php</filename>
@@ -124,6 +124,8 @@
 		<filename>models/podcastedit.php</filename>
 		<filename>models/commentslist.php</filename>
 		<filename>models/commentsedit.php</filename>
+		<filename>models/serieslist.php</filename>
+		<filename>models/seriesdetail.php</filename>
 		<filename>tables/studydetails.php</filename>
 		<filename>tables/commentsedit.php</filename>
 		<filename>tables/teacherdisplay.php</filename>

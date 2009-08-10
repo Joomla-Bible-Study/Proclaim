@@ -234,12 +234,17 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
 	if ($nolimit == 1) {$limit = '';}
 	$db	= & JFactory::getDBO();
+	$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = '.$id;
+	$db->setQuery($query);
+	$allrows = $db->loadObjectList();
+	$rows = $db->getAffectedRows();
 	$query = 'SELECT s.*, se.id AS seid FROM #__bsms_studies AS s'
 	.' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
 	.' WHERE s.series_id = '.$id.' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC').$limit;
 	$db->setQuery($query);
 	$result = $db->loadObjectList();
 	$numrows = $db->getAffectedRows();
+	//dump ($rows, 'rows: ');
 	$class1 = 'bsodd';
  	$class2 = 'bseven';
  	$oddeven = $class1;
@@ -280,9 +285,9 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 	$studies .= '</tr>
 	<tr><td>';
-		if ($params->get('series_detail_show_link') > 0 && $nolimit != 1) 
+		if ($params->get('series_detail_show_link') > 0 && $nolimit != 1 && $rows > $params->get('series_detail_limit')) 
 			{
-				$studies .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&id='.$id.'&nolimit=1&templatemenuid='.$templatemenuid).'">'.JText::_('All Studies From This Series').' >></a>';
+				$studies .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&id='.$id.'&nolimit=1&templatemenuid='.$templatemenuid).'">'.JText::_('Show All '.$rows.' Studies From This Series').' >></a>';
 			}
 		$studies .= '</td></tr>
 		';
@@ -293,3 +298,4 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 		}
 return $studies;
 }
+
