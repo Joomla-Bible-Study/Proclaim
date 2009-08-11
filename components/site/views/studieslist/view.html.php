@@ -29,14 +29,14 @@ class biblestudyViewstudieslist extends JView {
 		//dump ($template, 'template: ');
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
+		//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 		
 		//Import Scripts
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/biblestudy.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
-		
+		//$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
+		//Styles from tooltip.css moved to assets/css/biblestudy.css
 		//Import Stylesheets
 		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
 		

@@ -34,7 +34,7 @@ class biblestudyViewteacherlist extends JView
 		
 		//Import Stylesheets
 		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
-		$document->addStylesheet(JURI::base().'components/com_biblestudy/tooltip.css');
+		//$document->addStylesheet(JURI::base().'components/com_biblestudy/tooltip.css');
 		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/studieslist.css');
 		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 		$url = $params->get('stylesheet');
