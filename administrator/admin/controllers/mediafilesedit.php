@@ -99,14 +99,33 @@ class biblestudyControllermediafilesedit extends JController {
 	 */
 	function save()
 	{
+		
 		$model = $this->getModel('mediafilesedit');
-
+		//dump ($post, 'post: ');
+		$file = JRequest::getVar('file', null, 'files', 'array' );
+		$setDocman = JRequest::getVar('docManItem', null, 'post');
+		$setFile = $file['name'];
+		$setArticle = JRequest::getVar('articleTitle', null, 'post');
+		
+		if ($setFile && ($setDocman || $setArticle))
+		{
+			echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
+		}
+		if ($setDocman && ($setArticle || $setFile))
+		{
+			echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
+		}
+		if ($setArticle && ($setDocman || $setFile))
+		{
+		echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
+		}
+		
 		if ($model->store($post)) {
 			$msg = JText::_( 'Media Saved!' );
 		} else {
 			$msg = JText::_( 'Error Saving Media' );
 		}
-		$file = JRequest::getVar('file', null, 'files', 'array' );
+		
 		$filename_upload = strtolower($file['name']);
 		if (isset($filename_upload)){
 			$uploadFile=$this->upload();}
