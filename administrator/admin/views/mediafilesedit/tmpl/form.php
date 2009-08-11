@@ -21,6 +21,7 @@ function openConverter1()
 <div class="col100">
 	<fieldset class="adminform">
 		<legend><?php echo JText::_( 'Media File Details' ); ?></legend>
+		      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>"/>
 <?php $editor =& JFactory::getEditor();?>
 	
     <table class="admintable">
@@ -58,15 +59,14 @@ function openConverter1()
 		</tr>
       <tr>
       	<td class="key">
-      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>" style="display: none;" />
 		<?php echo JText::_('Use DOCman')?>:</td>
       	<td>
-      	<?php //dump ($this->DocManCategories, 'docman: ');
-      	echo JText::_('Category').':';
-      	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategory', null, 'id', 'title', null, 'docManCategories'); //$this->lists['docman'];
+      	<?php
+      		echo JText::_('Category').':';
+      		echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategory', null, 'id', 'title', null, 'docManCategories');
       	?>
       	<?php 
-      	echo JText::_(' Item').': ';
+      		echo JText::_(' Item').': ';
       	?>
       	<select id="docManItems" name="docManItem"><option selected="selected">- Select an Item -</option></select>
       	</td>
@@ -77,17 +77,18 @@ function openConverter1()
 		<?php echo JText::_('Use Article')?>:</td>
       	<td>
       	<?php
-      	echo JText::_('Section').':';
-      	echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategory', null, 'id', 'title', null, 'docManCategories'); //$this->lists['docman'];
+      		echo JText::_('Section').':';
+      		echo JHTML::_('select.genericlist', $this->articlesSections, 'articlesSections', null, 'id', 'title', null, 'articlesSections');
       	?>
       	<?php 
       	echo JText::_('Category');
       	?>
-      	<select id="docManItems" name="docManItem"><option selected="selected">- Select an Item -</option></select>
+      	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected">- Select a category -</option></select>
       	<?php
       	echo JText::_(' Item').': ';
       	?>
-      	<select id="docManItems" name="docManItem"><option selected="selected">- Select an Item -</option></select>
+      	<select id="categoryItems" name="categoryItems"><option selected="selected">- Select an Article -</option></select>
+      	<?php echo '<span id="activeArticleContainer">'.JText::_('Using article').': <span id="activeArticle"></a></span>'?>
       	</td>
       </tr>   
               <tr><td class="key"></td><td><?php echo JText::_(' Use <a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">AVReloaded Viewer</a> (1.2.4 of higher Must be installed): ').$this->lists['internal_viewer']; ?></td>

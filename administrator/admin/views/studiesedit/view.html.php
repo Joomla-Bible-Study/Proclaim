@@ -8,8 +8,8 @@ class biblestudyViewstudiesedit extends JView {
 	function display($tpl = null) {
 		global $mainframe;
 
-		//Include the Jquery Library
 		$document =& JFactory::getDocument();
+		//$document->addStyleSheet(JURI::base().'components/com_biblestudy/css/general.css');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');

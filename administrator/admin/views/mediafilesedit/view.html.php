@@ -13,8 +13,8 @@ class biblestudyViewmediafilesedit extends JView {
 			$this->assignRef('mbutton', $mbutton);
 		}
 
-		//Include the Jquery Library
 		$document =& JFactory::getDocument();
+		$document->addStyleSheet(JURI::base().'components/com_biblestudy/css/mediafilesedit.css');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
@@ -23,9 +23,11 @@ class biblestudyViewmediafilesedit extends JView {
 		//Get Data
 		$mediafilesedit	=& $this->get('Data');
 		$docManCategories =& $this->get('docManCategories');
+		$articlesSections =& $this->get('ArticlesSections');
 
 		//Manipulate Data
 		array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
+		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
 
 		$isNew		= ($mediafilesedit->id < 1);
 		//$editor =& JFactory::getEditor();
@@ -122,6 +124,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('mediafilesedit',		$mediafilesedit);
 		$this->assignRef('docManCategories', $docManCategories);
+		$this->assignRef('articlesSections', $articlesSections);
 		parent::display($tpl);
 	}
 }
