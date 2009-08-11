@@ -1268,4 +1268,97 @@
 				<option value="1">Link to Study Details</option>
 			</param>
 			</params>	
+			<params group="TOOLTIP">
+				<param name="tip_title" type="text" default="Sermon Information" size="100" label="ToolTip Title" description="Type in a title for the ToolTip" />
+				<param name="tip_item1_title" type="text" default="Title" label="ToolTip Label 1" description="Type in a label for this ToolTip item" size="100" />
+				<param name="tip_item1" type="list" default="5" label="Tool Tip Item 1" description="Choose an item for this ToolTip">
+					<option value="5">Study Title</option>
+					<option value="10">Study Date</option>
+					<option value="7">Teacher Name</option>
+					<option value="8">Teacher Title + Name</option>
+					<option value="1">Scripture 1</option>
+					<option value="2">Scripture 2</option>
+					<option value="3">Secondary References</option>
+					<option value="4">Duration</option>
+					<option value="6">Study Introduction</option>
+					<option value="12">Hits</option>
+					<option value="13">Study Number</option>
+					<option value="14">Topic</option>
+					<option value="15">Location</option>
+					<option value="16">Message Type</option>
+					<option value="23">File Size</option>
+				</param>
+				<param name="tip_item2_title" type="text" default="Details" label="ToolTip Label 2" description="Type in a label for this ToolTip item" size="100" />
+				<param name="tip_item2" type="list" default="6" label="Tool Tip Item 2" description="Choose an item for this ToolTip">
+					<option value="5">Study Title</option>
+					<option value="10">Study Date</option>
+					<option value="7">Teacher Name</option>
+					<option value="8">Teacher Title + Name</option>
+					<option value="1">Scripture 1</option>
+					<option value="2">Scripture 2</option>
+					<option value="3">Secondary References</option>
+					<option value="4">Duration</option>
+					<option value="6">Study Introduction</option>
+					<option value="12">Hits</option>
+					<option value="13">Study Number</option>
+					<option value="14">Topic</option>
+					<option value="15">Location</option>
+					<option value="16">Message Type</option>
+					<option value="23">File Size</option>
+				</param>
+				<param name="tip_item3_title" type="text" default="Teacher" label="ToolTip Label 3" description="Type in a label for this ToolTip item" size="100" />
+				<param name="tip_item3" type="list" default="7" label="Tool Tip Item 3" description="Choose an item for this ToolTip">
+					<option value="5">Study Title</option>
+					<option value="10">Study Date</option>
+					<option value="7">Teacher Name</option>
+					<option value="8">Teacher Title + Name</option>
+					<option value="1">Scripture 1</option>
+					<option value="2">Scripture 2</option>
+					<option value="3">Secondary References</option>
+					<option value="4">Duration</option>
+					<option value="6">Study Introduction</option>
+					<option value="12">Hits</option>
+					<option value="13">Study Number</option>
+					<option value="14">Topic</option>
+					<option value="15">Location</option>
+					<option value="16">Message Type</option>
+					<option value="23">File Size</option>
+				</param>
+				<param name="tip_item4_title" type="text" default="Reference" label="ToolTip Label 4" description="Type in a label for this ToolTip item" size="100" />
+				<param name="tip_item4" type="list" default="1" label="Tool Tip Item 4" description="Choose an item for this ToolTip">
+					<option value="5">Study Title</option>
+					<option value="10">Study Date</option>
+					<option value="7">Teacher Name</option>
+					<option value="8">Teacher Title + Name</option>
+					<option value="1">Scripture 1</option>
+					<option value="2">Scripture 2</option>
+					<option value="3">Secondary References</option>
+					<option value="4">Duration</option>
+					<option value="6">Study Introduction</option>
+					<option value="12">Hits</option>
+					<option value="13">Study Number</option>
+					<option value="14">Topic</option>
+					<option value="15">Location</option>
+					<option value="16">Message Type</option>
+					<option value="23">File Size</option>
+				</param>
+				<param name="tip_item5_title" type="text" default="Date" label="ToolTip Label 5" description="Type in a label for this ToolTip item" size="100" />
+				<param name="tip_item5" type="list" default="10" label="Tool Tip Item 5" description="Choose an item for this ToolTip">
+					<option value="5">Study Title</option>
+					<option value="10">Study Date</option>
+					<option value="7">Teacher Name</option>
+					<option value="8">Teacher Title + Name</option>
+					<option value="1">Scripture 1</option>
+					<option value="2">Scripture 2</option>
+					<option value="3">Secondary References</option>
+					<option value="4">Duration</option>
+					<option value="6">Study Introduction</option>
+					<option value="12">Hits</option>
+					<option value="13">Study Number</option>
+					<option value="14">Topic</option>
+					<option value="15">Location</option>
+					<option value="16">Message Type</option>
+					<option value="23">File Size</option>
+				</param>
+			</params>
 	</root>

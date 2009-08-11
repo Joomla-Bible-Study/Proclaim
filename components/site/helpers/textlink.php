@@ -46,27 +46,40 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 		$details_text = $params->get('details_text').JText::_(' - PDF Version');
 	}
 	//dump ($i_path, 'text: ');
-	if ($params->get('tooltip') >0) {
-		
-		//JHTML::_('behavior.tooltip', '.custom');
-		$toolTipArray = array('className'=>'custom');
-		JHTML::_('behavior.tooltip', '.zoomTip', $toolTipArray);
-
-        $linktext = '<span class="zoomTip" title="<strong>'.JText::_('Sermon Info').'</strong> :: ';
-       	  if ($row->studytitle) {$linktext .= '<strong>'.JText::_('Title: ').'</strong>'.$row->studytitle.'<br />';}
-       	  if ($intro) {$linktext .= '<strong>'.JText::_('Details: ').'</strong>'.$intro.'<br /><br />';}
-       	  if ($row->studynumber) { $linktext .= '<strong>'.JText::_('Sermon Number: ').'</strong>'.$row->studynumber.'<br />';}
-       	  if ($row->teachername) {$linktext .= '<strong>'.JText::_('Teacher: ').'</strong>'.$row->teachername.'<br />';}
-       	 $linktext .= '
-		 <br />';
-       	  if ($scripture1) {$linktext .= '<strong>'.JText::_('Scripture: ').'</strong>'.$scripture1.'">';}
-       } //end of is show tooltip
+	if ($params->get('tooltip') >0) 
+		{
+			$linktext = getTooltip($row->id, $row, $params, $admin_params, $template);
+       	} //end of is show tooltip
 	
     
 	$linktext .= '
 	<a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
-	$linktext .= '</span>';
+	
+	if ($params->get('tooltip') >0) {$linktext .= '</span>';}
 	
    return $linktext;
 } // end of if object_vars is FALSE
 }
+
+function getTooltip($rowid, $row, $params, $admin_params, $template)
+	{
+		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		include_once($path1.'elements.php');
+		$toolTipArray = array('className'=>'custom');
+		JHTML::_('behavior.tooltip', '.zoomTip', $toolTipArray);
+
+        $linktext = '<span class="zoomTip" title="<strong>'.$params->get('tip_title').': </strong> :: ';
+       	$tip1 = getElementid($params->get('tip_item1'), $row, $params, $admin_params, $template);  
+		$tip2 = getElementid($params->get('tip_item2'), $row, $params, $admin_params, $template);
+		$tip3 = getElementid($params->get('tip_item3'), $row, $params, $admin_params, $template);
+		$tip4 = getElementid($params->get('tip_item4'), $row, $params, $admin_params, $template);
+		$tip5 = getElementid($params->get('tip_item5'), $row, $params, $admin_params, $template);
+		
+		$linktext .= '<strong>'.$params->get('tip_item1_title').'</strong>: '.$tip1->element.'<br />';
+		$linktext .= '<strong>'.$params->get('tip_item2_title').'</strong>: '.$tip2->element.'<br /><br />';
+		$linktext .= '<strong>'.$params->get('tip_item3_title').'</strong>: '.$tip3->element.'<br />';
+		$linktext .= '<strong>'.$params->get('tip_item4_title').'</strong>: '.$tip4->element.'<br />';
+		$linktext .= '<strong>'.$params->get('tip_item5_title').'</strong>: '.$tip5->element;
+ 
+	return $linktext;	
+	}

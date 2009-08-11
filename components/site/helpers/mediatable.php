@@ -277,3 +277,4 @@ function getArticle($media, $width, $height, $src)
 		
 	return $article;
 	}
+	

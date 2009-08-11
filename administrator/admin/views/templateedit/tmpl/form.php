@@ -67,6 +67,25 @@ echo $pane->startPanel( JText::_('List Items'), 'LISTITEMS');
 echo $this->params->render( 'params', 'LISTITEMS');
 echo $pane->endPanel();
 
+echo $pane->startPanel( JText::_('ToolTip Items'), 'TOOLTIP');
+echo $this->params->render( 'params', 'TOOLTIP');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Study List Row 1'), 'ROW1');
+echo $this->params->render( 'params', 'ROW1');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Study List Row 2'), 'ROW2');
+echo $this->params->render( 'params', 'ROW2');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Study List Row 3'), 'ROW3');
+echo $this->params->render( 'params', 'ROW3');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Study List Row 4'), 'ROW4');
+echo $this->params->render( 'params', 'ROW4');
+echo $pane->endPanel();
 echo $pane->startPanel( JText::_('Front End Submission'), 'SUBMISSION');
 echo $this->params->render( 'params', 'SUBMISSION');
 echo $pane->endPanel();
@@ -91,21 +110,7 @@ echo $pane->startPanel( JText::_('Series Detail'), 'SERIESDETAIL');
 echo $this->params->render( 'params', 'SERIESDETAIL');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Study List Row 1'), 'ROW1');
-echo $this->params->render( 'params', 'ROW1');
-echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Study List Row 2'), 'ROW2');
-echo $this->params->render( 'params', 'ROW2');
-echo $pane->endPanel();
-
-echo $pane->startPanel( JText::_('Study List Row 3'), 'ROW3');
-echo $this->params->render( 'params', 'ROW3');
-echo $pane->endPanel();
-
-echo $pane->startPanel( JText::_('Study List Row 4'), 'ROW4');
-echo $this->params->render( 'params', 'ROW4');
-echo $pane->endPanel();
 
 
 //This ends the parameter panes

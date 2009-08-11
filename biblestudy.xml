@@ -33,7 +33,6 @@
 		<filename>metadata.xml</filename>
 		<filename>biblestudy.php</filename>
 		<filename>controller.php</filename>
-		<filename>tooltip.css</filename>
 		<filename>biblestudyviews.css</filename>
 		<filename>tooltip.js</filename>
 		<filename>convert1.htm</filename>
@@ -506,6 +505,7 @@
 			<filename>help/en-GB/biblestudy.episodelist.html</filename>
 			<filename>help/en-GB/biblestudy.locations.html</filename>
 			<filename>css/general.css</filename>
+			<filename>css/mediafilesedit.css</filename>
 			<filename>js/jquery.js</filename>
 			<filename>js/biblestudy.js</filename>
 			</files>
