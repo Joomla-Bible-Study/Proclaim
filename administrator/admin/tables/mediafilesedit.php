@@ -39,6 +39,8 @@ class Tablemediafilesedit extends JTable
 	var $articleSection = null;
 	var $articleCategory = null;
 	var $articleTitle = null;
+	var $comment = null;
+	
 	
 
 	/**

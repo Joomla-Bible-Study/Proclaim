@@ -64,6 +64,7 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->_data->articleSection = null;
 			$this->_data->articleCategory = null;
 			$this->_data->articleTitle = null;
+			$this->_data->comment = null;
 				
 		}
 		return $this->_data;

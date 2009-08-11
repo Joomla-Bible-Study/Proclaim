@@ -83,9 +83,9 @@ if (!$row-id) {return FALSE;}
        $pathname = $media->fpath;
        $filename = $media->filename;
        $ispath = 1;
-       $direct_link = '<a href="'.$path1.'" title="'.$media->malttext.' '.$duration.' '
+       $direct_link = '<a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
        .$media_size.'" target="'.$media->special.'"><img src="'.$src
-       .'" alt="'.$media->malttext.' '.$duration.' '.$media_size.'" width="'.$width
+       .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$media_size.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';
       $isavr = 0;
 	  //dump ($isavr, 'isavr: ');
@@ -139,10 +139,10 @@ if (!$row-id) {return FALSE;}
         $popuptype = 'lightbox';
        }
        $avr_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
-       .'"}<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext
+       .'"}<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext. ' - '.$media->comment
        .' '.$duration.' '.$media_size.'" width="'.$image->width
        .'" height="'.$image->height.'" border="0" title="'
-       .$media->malttext.' '.$duration.' '.$media_size.'" />{/avrpopup}';
+       .$media->malttext.' - '.$media->comment.' '.$duration.' '.$media_size.'" />{/avrpopup}';
        //dump ($avr_link, 'AVR Lnk');
 
       }
@@ -235,7 +235,18 @@ if ($params->get('show_filesize') > 0 )
 	{
 		$mediatable .= '<tr>';
 		foreach ($media1 as $media) {
-			$filesize = getFilesize($media->size);
+			switch ($params->get('show_filesize'))
+				{
+					case 1:
+						$filesize = getFilesize($media->size);
+					break;
+					case 2:
+						$filesize = $media->comment;
+					break;
+					case 3:
+						if ($media->comment ? $filesize = $media->comment : $filesize = getFilesize($media->size));
+					break;
+				}
 			
 				$mediatable .= '<td><span class="bsfilesize">'.$filesize.'</span></td>';
 				 
@@ -250,7 +261,7 @@ if ($params->get('show_filesize') > 0 )
 function getDocman($media, $width, $height, $src)
 	{
 		$docman = '<a href="index.php?option=com_docman&task=doc_download&gid='.$media->docManItem.'"
-		 title="'.$media->malttext.'" target="'.$media->special.'"><img src="'.$src
+		 title="'.$media->malttext.' - '.$media->comment.'" target="'.$media->special.'"><img src="'.$src
        .'" alt="'.$media->malttext.' '.$duration.' '.$media_size.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';
 		
@@ -261,7 +272,7 @@ function getDocman($media, $width, $height, $src)
 function getArticle($media, $width, $height, $src)
 	{
 		$article = '<a href="/index.php?option=com_content&view=article&id='.$media->articleTitle.'"
-		 alt="'.$media->malttext.'" target="'.$media->special.'"><img src="'.$src.'" width="'.$width
+		 alt="'.$media->malttext.' - '.$media->comment.'" target="'.$media->special.'"><img src="'.$src.'" width="'.$width
        	.'" height="'.$height.'" border="0" /></a>';
 		
 	return $article;

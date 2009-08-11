@@ -47,8 +47,12 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	}
 	//dump ($i_path, 'text: ');
 	if ($params->get('tooltip') >0) {
-		//JHTML::_('behavior.tooltip');
-        $linktext = '<div class="zoomTip" title="<strong>'.JText::_('Sermon Info').'</strong> :: ';
+		
+		//JHTML::_('behavior.tooltip', '.custom');
+		$toolTipArray = array('className'=>'custom');
+		JHTML::_('behavior.tooltip', '.zoomTip', $toolTipArray);
+
+        $linktext = '<span class="zoomTip" title="<strong>'.JText::_('Sermon Info').'</strong> :: ';
        	  if ($row->studytitle) {$linktext .= '<strong>'.JText::_('Title: ').'</strong>'.$row->studytitle.'<br />';}
        	  if ($intro) {$linktext .= '<strong>'.JText::_('Details: ').'</strong>'.$intro.'<br /><br />';}
        	  if ($row->studynumber) { $linktext .= '<strong>'.JText::_('Sermon Number: ').'</strong>'.$row->studynumber.'<br />';}
@@ -61,7 +65,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
     
 	$linktext .= '
 	<a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
-	$linktext .= '</div>';
+	$linktext .= '</span>';
 	
    return $linktext;
 } // end of if object_vars is FALSE

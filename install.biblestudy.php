@@ -336,6 +336,9 @@ $fieldcheck = isset($fields[$tn]['articleCategory']);
 $fieldcheck = isset($fields[$tn]['articleTitle']);
 		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN articleTitle INT NULL AFTER articleCategory;");
 		$database->query();}
+$fieldcheck = isset($fields[$tn]['comment']);
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN comment TEXT NULL AFTER articleTitle;");
+		$database->query();}
 if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
 	if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}
 	else {
