@@ -38,18 +38,18 @@ $j(document).ready( function() {
 	/**
 	 * @title Add Mediafile
 	 */
+	$j('#loading').ajaxStart(function() {
+		$j(this).show();
+	});
+	$j('#loading').ajaxStop(function() {
+		$j(this).hide();
+	});
 	
 	//Docman integration
 	$j('#docManCategories').change(function() {
+		$j('#docManItems').removeOption(/./);
 		var catId = $j('#docManCategories option:selected').attr('value');
-		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=docmanCategoryItems&format=raw&catId='
-		
-		$j('#loading').ajaxStart(function() {
-			$j(this).show();
-		});
-		$j('#loading').ajaxStop(function() {
-			$j(this).hide();
-		});
+		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=docmanCategoryItems&format=raw&catId=';
 		// request the items
 		$j.ajax({
 			dataType: "json",
@@ -60,6 +60,42 @@ $j(document).ready( function() {
 				})
 			}	
 		});
+	});
+	
+	//Articles Integration
+	$j('#articlesSections').change(function() {
+		$j('#articleSectionCategories').removeOption(/./);
+		var secId = $j('#articlesSections option:selected').attr('value');
+		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesSectionCategories&format=raw&secId='+secId;
+		$j.ajax({
+			dataType: "json",
+			url: url,
+			success: function(data){
+				$j.each(data, function(entryIndex, entry){
+					$j('#articleSectionCategories').addOption(entry['id'], entry['title']);
+				})
+			}		
+		});
+		$j('#categoryItems').removeOption(/./);
+	});
+	
+	$j('#articleSectionCategories').change(function() {
+		$j('#categoryItems').removeOption(/./);
+		var catId = $j('#articleSectionCategories option:selected').attr('value');
+		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesCategoryItems&format=raw&catId='+catId;
+		$j.ajax({
+			dataType: "json",
+			url: url,
+			success: function(data){
+				$j.each(data, function(entryIndex, entry){
+					$j('#categoryItems').addOption(entry['id'], entry['title']);
+				})
+			}		
+		});
+	});
+	$j('#categoryItems').change(function() {
+		$j('#activeArticleContainer').show();
+		$j('#activeArticle').html($j('#categoryItems').selectedTexts()[0]);
 	});
 	
 	/**
