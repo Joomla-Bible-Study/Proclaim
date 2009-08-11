@@ -10,7 +10,7 @@ class biblestudyModelmediafilesedit extends JModel {
 	 * @access	public
 	 * @return	void
 	 */
-	 var $_admin;
+	var $_admin;
 	function __construct()
 	{
 		parent::__construct();
@@ -64,28 +64,9 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->_data->articleSection = null;
 			$this->_data->articleCategory = null;
 			$this->_data->articleTitle = null;
-			
+				
 		}
 		return $this->_data;
-	}
-
-	function getdocManCategories() {
-		$query = "SELECT id, title FROM #__categories
-				  WHERE `section` = 'com_docman' AND `published`=1";
-		return $this->_getList($query);
-	}
-
-	function getdocManCategoryItems($catId) {
-		$query = "SELECT id, dmname FROM #__docman
-				  WHERE `catid`='$catId' AND `published`=1";
-		$itemsObject = $this->_getList($query);
-		$items = '[';
-		foreach($itemsObject as $object){
-			$items .= '{id: "'.$object->id.'", name: "'.$object->dmname.'"},';
-		}
-		$items .= ']';
-		return $items;
-
 	}
 
 	/**
@@ -94,7 +75,7 @@ class biblestudyModelmediafilesedit extends JModel {
 	 * @access	public
 	 * @return	boolean	True on success
 	 * @todo Need to check the current order of the studies for that particular
-	 * study, so that it doesn't default to 0, buecause that will break the 
+	 * study, so that it doesn't default to 0, buecause that will break the
 	 * ordering functionality.
 	 */
 	function store()
@@ -242,7 +223,7 @@ class biblestudyModelmediafilesedit extends JModel {
 		return true;
 	}
 
-function getAdmin()
+	function getAdmin()
 	{
 		if (empty($this->_admin)) {
 			$query = 'SELECT params'
@@ -253,5 +234,35 @@ function getAdmin()
 		return $this->_admin;
 	}
 
+	
+	/**
+	 * @desc Functions to satisfy the ajax requests
+	 */
+	function getdocManCategories() {
+		$query = "SELECT id, title FROM #__categories
+				  WHERE `section` = 'com_docman' AND `published`=1";
+		return $this->_getList($query);
+	}
+
+	function getdocManCategoryItems($catId) {
+		$query = "SELECT id, dmname as name FROM #__docman
+				  WHERE `catid`='$catId' AND `published`=1";
+		return json_encode($this->_getList($query));
+	}
+
+	function getArticlesSections(){
+		$query = "SELECT id, title FROM #__sections WHERE `published` = 1";
+		return $this->_getList($query);
+	}
+
+	function getArticlesSectionCategories($secId) {
+		$query = "SELECT id, title FROM #__categories WHERE `section` = '$secId' AND `published` = 1";
+		return json_encode($this->_getList($query));
+	}
+
+	function getCategoryItems($catId) {
+		$query = "SELECT id, title FROM #__content WHERE `state` = 1 AND `catid` = '$catId'";
+		return json_encode($this->_getList($query));
+	}
 }
 ?>
