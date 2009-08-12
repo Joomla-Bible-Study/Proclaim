@@ -34,11 +34,8 @@ class Tablemediafilesedit extends JTable
 	var $createdate = null;
 	var $link_type = null;
 	var $hits = null;
-	var $docManCategory = null;
-	var $docManItem = null;
-	var $articleSection = null;
-	var $articleCategory = null;
-	var $articleTitle = null;
+	var $docMan_id = null;
+	var $article_id = null;
 	var $comment = null;
 	
 	
