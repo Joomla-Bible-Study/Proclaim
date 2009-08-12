@@ -19,12 +19,14 @@ class biblestudyViewmediafilesedit extends JView {
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/views/mediafilesedit.js');
-
+		
+		
 		//Get Data
 		$mediafilesedit	=& $this->get('Data');
 		$docManCategories =& $this->get('docManCategories');
 		$articlesSections =& $this->get('ArticlesSections');
-
+		$admin = $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
 		//Manipulate Data
 		array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
 		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
@@ -74,9 +76,10 @@ class biblestudyViewmediafilesedit extends JView {
 		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $mediafilesedit->published);
 		
 		$lists['link_type'] = JHTML::_('select.booleanlist','link_type', 'class="inputbox"', $mediafilesedit->link_type);
-
+		$studylimit = '';
+		if ($admin_params->get('studylistlimit') && $mediafilesedit->id < 1) $studylimit = ' LIMIT '.$admin_params->get('studylistlimit').' ';
 		$lists['internal_viewer'] = JHTML::_('select.booleanlist', 'internal_viewer', 'class="inputbox"', $mediafilesedit->internal_viewer);
-		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
+		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC".$studylimit;
 		$database->setQuery($query);
 		//$studies = $database->loadObjectList();
 		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );
