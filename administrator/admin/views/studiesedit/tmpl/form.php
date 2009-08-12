@@ -306,7 +306,7 @@ $user =& JFactory::getUser();
 		$link2 = JRoute::_( 'index.php?option=com_biblestudy&controller=mediafilesedit&task=edit&cid[]='. $mediafiles->mfid );
 		$scripture = $mediafiles->bookname.' '.$mediafiles->chapter_begin;?>
 	<tr class="<?php echo "row$k"; ?>">
-		<td><a href="<?php echo $link2; ?>"><?php echo $mediafiles->filename;?></a></td>
+		<td><a href="<?php echo $link2; ?>"><?php echo $mediafiles->filename.' - '.$mediafiles->mfid;?></a></td>
 		<td><?php echo $mediafiles->studydate;?></td>
 		<td><?php echo $scripture;?></td>
 		<td><?php echo $mediafiles->teachername;?></td>

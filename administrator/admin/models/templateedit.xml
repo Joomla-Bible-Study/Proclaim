@@ -133,8 +133,7 @@
 				</param>
 			<param name="show_year_search" type="list" default="1" label="Show/Hide Year search" description="Shows or hides the year drop down box">
 					<option value="0">Hide</option>
-					<option value="1">Show unless filtered</option>
-					<option value="2">Show Always</option>
+					<option value="1">Show </option>
 				</param>
 			<param name="show_order_search" type="list" default="1" label="Show/Hide Ascending/Descending" description="Shows or hides the drop down for ordering the year display">
 					<option value="0">Hide</option>

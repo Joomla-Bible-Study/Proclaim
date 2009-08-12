@@ -263,7 +263,7 @@ $item = JRequest::getVar('item');
 	$link2 = JRoute::_( 'index.php?option=com_biblestudy&controller=mediafilesedit&item='.$item.'&task=edit&cid[]='.$mediafiles->mfid );
 	$scripture = $mediafiles->bookname.' '.$mediafiles->chapter_begin;?>
 	<tr class="<?php echo "row$k"; ?>">
-    	<td width="30"><a href="<?php echo $link2; ?>"><?php echo $mediafiles->filename;?></a></td>
+    	<td width="30"><a href="<?php echo $link2; ?>"><?php echo $mediafiles->filename.' - '.$mediafiles->mfid;?></a></td>
     	<td width="25"><?php echo $mediafiles->studydate;?></td>
         <td width="30"><?php echo $scripture;?></td>
         <td width="30"><?php echo $mediafiles->teachername;?></td>

@@ -263,7 +263,7 @@ if ($params->get('show_filesize') > 0 )
 
 function getDocman($media, $width, $height, $src)
 	{
-		$docman = '<a href="index.php?option=com_docman&task=doc_download&gid='.$media->docManItem.'"
+		$docman = '<a href="index.php?option=com_docman&task=doc_download&gid='.$media->docMan_id.'"
 		 title="'.$media->malttext.' - '.$media->comment.'" target="'.$media->special.'"><img src="'.$src
        .'" alt="'.$media->malttext.' '.$duration.' '.$media_size.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';
@@ -274,7 +274,7 @@ function getDocman($media, $width, $height, $src)
 	
 function getArticle($media, $width, $height, $src)
 	{
-		$article = '<a href="/index.php?option=com_content&view=article&id='.$media->articleTitle.'"
+		$article = '<a href="/index.php?option=com_content&view=article&id='.$media->article_id.'"
 		 alt="'.$media->malttext.' - '.$media->comment.'" target="'.$media->special.'"><img src="'.$src.'" width="'.$width
        	.'" height="'.$height.'" border="0" /></a>';
 		
