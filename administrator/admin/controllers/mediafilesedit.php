@@ -280,7 +280,5 @@ class biblestudyControllermediafilesedit extends JController {
 		$items =& $model->getCategoryItems($catId);
 		echo $items;
 	}
-
-	
 }
 ?>
