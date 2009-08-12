@@ -351,7 +351,7 @@ function getTemplate() {
 				}
 			}
 		
-		if ($params->get('mult_locations')) 
+		if ($params->get('mult_locations') || $params->get('locations')) 
 			{ 
 				if (!$filter_location)
 				{
@@ -366,7 +366,7 @@ function getTemplate() {
 				}
 			}
 			
-		if ($params->get('mult_books')) 
+		if ($params->get('mult_books') || $params->get('booknumber')) 
 			{ 
 				if (!$filter_book)
 				{
@@ -381,7 +381,7 @@ function getTemplate() {
 				}
 			}
 		
-		if ($params->get('mult_series')) 
+		if ($params->get('mult_series') || $params->get('series_id')) 
 			{ 
 				if (!$filter_series)
 				{
@@ -398,7 +398,7 @@ function getTemplate() {
 				}
 			}
 			
-		if ($params->get('mult_topics')) 
+		if ($params->get('mult_topics') || $params->get('topic_id')) 
 			{ 
 				if (!$filter_topic) 
 				{
@@ -413,7 +413,7 @@ function getTemplate() {
 				}
 			}
 			
-		if ($params->get('mult_messagetype')) 
+		if ($params->get('mult_messagetype') || $params->get('messagetype')) 
 			{ 
 				if (!$filter_messagetype)
 				{
