@@ -18,7 +18,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/views/mediafilesedit.js');
 
 		//Get Data
 		$mediafilesedit	=& $this->get('Data');
@@ -30,6 +30,20 @@ class biblestudyViewmediafilesedit extends JView {
 		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
 
 		$isNew		= ($mediafilesedit->id < 1);
+		
+		//Retrieve any Docman items or articles that may exist
+		$model = $this->getModel();
+		dump($mediafilesedit);
+		
+		if($mediafilesedit->docMan_id !== 0 && !$isNew) {
+			$this->assignRef('docManItem', $model->getDocManItem($mediafilesedit->docMan_id));
+			$this->assign('docManStyle', 'display: none');
+		}else if($mediafilesedit->article_id !== 0 && !$isNew){
+			$this->assignRef('articleItem', $model->getArticleItem($mediafilesedit->article_id));
+			$this->assign('articleStyle', 'display: none');
+		}
+
+		
 		//$editor =& JFactory::getEditor();
 		//this->assignRef( 'editor', $editor );
 		$lists = array();

@@ -61,14 +61,20 @@ function openConverter1()
       	<td class="key">
 		<?php echo JText::_('Use DOCman')?>:</td>
       	<td>
+      	<?php 
+      	if(isset($this->docManItem)){
+      		echo $this->docManItem;
+      	}
+      	?>
+      	<div id="docMainCategoriesContainer" class="selectContainer" style="<?php echo $this->docManStyle; ?>">
       	<?php
       		echo JText::_('Category').':';
       		echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategory', null, 'id', 'title', null, 'docManCategories');
       	?>
-      	<?php 
-      		echo JText::_(' Item').': ';
-      	?>
-      	<select id="docManItems" name="docManItem"><option selected="selected">- Select an Item -</option></select>
+      	</div>
+      	<div id="docManItemsContainer" class="selectContainer">
+      		<?php echo JText::_('Item').': '; ?><select id="docManItems" name="docManItem"></select>
+      	</div>
       	</td>
       </tr>
       <tr> 
@@ -76,19 +82,29 @@ function openConverter1()
       	<td class="key">
 		<?php echo JText::_('Use Article')?>:</td>
       	<td>
+      	<?php 
+      	if(isset($this->articleItem)){
+      		echo $this->articleItem;
+      	}
+      	?>
+      	<div id="articlesSectionsContainer" class="selectContainer" style="<?php echo $this->articleStyle; ?>">
       	<?php
       		echo JText::_('Section').':';
       		echo JHTML::_('select.genericlist', $this->articlesSections, 'articlesSections', null, 'id', 'title', null, 'articlesSections');
       	?>
+      	</div>
+      	<div id="articlesCategoriesContainer" class="selectContainer">
       	<?php 
       	echo JText::_('Category');
       	?>
       	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected">- Select a category -</option></select>
+      	</div>
+      	<div id="articlesItemsContainer" class="selectContainer">
       	<?php
       	echo JText::_(' Item').': ';
       	?>
       	<select id="categoryItems" name="categoryItems"><option selected="selected">- Select an Article -</option></select>
-      	<?php echo '<span id="activeArticleContainer">'.JText::_('Using article').': <span id="activeArticle"></a></span>'?>
+      	</div>
       	</td>
       </tr>   
               <tr><td class="key"></td><td><?php echo JText::_(' Use <a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">AVReloaded Viewer</a> (1.2.4 of higher Must be installed): ').$this->lists['internal_viewer']; ?></td>
