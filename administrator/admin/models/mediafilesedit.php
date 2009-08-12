@@ -99,7 +99,9 @@ class biblestudyModelmediafilesedit extends JModel {
 		$data['mediacode'] = str_replace('"',"'",$data['mediacode']);
 		//$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		// Bind the form fields to the  table
-		//dump($data);
+		$data['article_id'] = $data['categoryItems'];
+		$data['docMan_id'] = $data['docManItem'];
+		
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
@@ -264,6 +266,20 @@ class biblestudyModelmediafilesedit extends JModel {
 	function getCategoryItems($catId) {
 		$query = "SELECT id, title FROM #__content WHERE `state` = 1 AND `catid` = '$catId'";
 		return json_encode($this->_getList($query));
+	}
+	
+	function getDocManItem($id) {
+		$query = "SELECT dmname FROM #__docman WHERE `id` = '$id'";
+		$this->_db->setQuery($query);
+		$data = $this->_db->loadRow();
+		return $data[0];
+	}
+	
+	function getArticleItem($id) {
+		$query = "SELECT title FROM #__content WHERE `id` = '$id'";
+		$this->_db->setQuery($query);
+		$data = $this->_db->loadRow();
+		return $data[0];
 	}
 }
 ?>
