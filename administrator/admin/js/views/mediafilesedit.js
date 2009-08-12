@@ -10,8 +10,7 @@ $j(document).ready( function() {
 	$j('#docManCategories').change(function() {
 			docManItems = $j('#docManItems');
 			docManItems.removeOption(/./);
-			var catId = $j('#docManCategories option:selected').attr(
-					'value');
+			var catId = $j('#docManCategories option:selected').attr('value');
 			var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=docmanCategoryItems&format=raw&catId=';
 			// request the items
 			$j.ajax( {
@@ -27,6 +26,8 @@ $j(document).ready( function() {
 						
 						$j('#articleSectionCategories').removeOption(/./);
 						$j('#categoryItems').removeOption(/./);
+						
+						$j('#articleSections').selectOptions(1);
 						
 					})
 				}
