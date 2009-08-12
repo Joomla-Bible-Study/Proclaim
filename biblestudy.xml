@@ -508,6 +508,7 @@
 			<filename>css/mediafilesedit.css</filename>
 			<filename>js/jquery.js</filename>
 			<filename>js/biblestudy.js</filename>
+			<filename>js/views/mediafilesedit.php</filename>
 			</files>
 		<languages folder="admin/languages">
 			<language tag="en-GB">en-GB.com_biblestudy.ini</language>

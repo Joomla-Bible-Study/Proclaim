@@ -113,23 +113,28 @@
 				<param name="details_text" type="text" default="Study Details" size="50" label="Alt tag for details" description="Text to show on mouse over of details image link other than if you choose a tooltip" />
 			<param name="show_book_search" type="list" default="1" label="Show/Hide book search" description="Shows or hides the drop down box for books">
 					<option value="0">Hide</option>
-					<option value="1">Show</option>
+					<option value="1">Show unless filtered</option>
+					<option value="2">Show Always</option>
 				</param>
 			<param name="show_teacher_search" type="list" default="1" label="Show/Hide Teacher search" description="Shows or hides the drop down box for teachers">
 					<option value="0">Hide</option>
-					<option value="1">Show</option>
+					<option value="1">Show unless filtered</option>
+					<option value="2">Show Always</option>
 				</param>
 			<param name="show_series_search" type="list" default="1" label="Show/Hide Series search" description="Shows or hides the drop down box for series">
 					<option value="0">Hide</option>
-					<option value="1">Show</option>
+					<option value="1">Show unless filtered</option>
+					<option value="2">Show Always</option>
 				</param>
 			<param name="show_type_search" type="list" default="1" label="Show/Hide Message Type search" description="Shows or hides the drop down box for message types">
 					<option value="0">Hide</option>
-					<option value="1">Show</option>
+					<option value="1">Show unless filtered</option>
+					<option value="2">Show Always</option>
 				</param>
 			<param name="show_year_search" type="list" default="1" label="Show/Hide Year search" description="Shows or hides the year drop down box">
 					<option value="0">Hide</option>
-					<option value="1">Show</option>
+					<option value="1">Show unless filtered</option>
+					<option value="2">Show Always</option>
 				</param>
 			<param name="show_order_search" type="list" default="1" label="Show/Hide Ascending/Descending" description="Shows or hides the drop down for ordering the year display">
 					<option value="0">Hide</option>
@@ -137,11 +142,13 @@
 				</param>
 			<param name="show_topic_search" type="list" default="1" label="Show/Hide Topic search" description="Shows or hides the drop down topical list">
 					<option value="0">Hide</option>
-					<option value="1">Show</option>
+					<option value="1">Show unless filtered</option>
+					<option value="2">Show Always</option>
 				</param>
 			<param name="show_locations_search" type="list" default="1" label="Show/Hide Locations search" description="Shows or hides the drop down locations list">
 					<option value="0">Hide</option>
-					<option value="1">Show</option>
+					<option value="1">Show unless filtered</option>
+					<option value="2">Show Always</option>
 				</param>
 		</params>
 		<params group="SUBMISSION">	

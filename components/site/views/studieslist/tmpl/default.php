@@ -75,21 +75,14 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 
 <?php 
 
-if ($this->params->get('show_locations_search') > 0 && !($location_menu)) { echo $this->lists['locations'];}
-
-if ($this->params->get('show_book_search') >0 && !($book_menu) ){ echo $this->lists['books'];  }
- 
-if ($this->params->get('show_teacher_search') > 0 && !($teacher_menu)) { echo $this->lists['teacher_id'];  }   
-	
-if ($this->params->get('show_series_search') > 0 && !($series_menu)){ echo $this->lists['seriesid'];  }   
-	
-if ($this->params->get('show_type_search') > 0 && !($messagetype_menu)) { echo $this->lists['messagetypeid'];  }   
-	
-if ($this->params->get('show_year_search') > 0){ echo $this->lists['studyyear'];  }   
-	
+if (($this->params->get('show_locations_search') > 0 && !($location_menu)) || $this->params->get('show_locations_search') > 1) { echo $this->lists['locations'];}
+if (($this->params->get('show_book_search') > 0 && !($book_menu)) || $this->params->get('show_book_search') > 1) { echo $this->lists['books'];  }
+if (($this->params->get('show_teacher_search') > 0 && !($teacher_menu)) || $this->params->get('show_teacher_search') > 1) { echo $this->lists['teacher_id'];  }   
+if (($this->params->get('show_series_search') > 0 && !($series_menu)) || $this->params->get('show_series_search') > 1) { echo $this->lists['seriesid'];  }   
+if (($this->params->get('show_type_search') > 0 && !($messagetype_menu)) || $this->params->get('show_type_search') > 1) { echo $this->lists['messagetypeid'];  }   
+if ($this->params->get('show_year_search') > 0) { echo $this->lists['studyyear'];  }   
 if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
-  
-if ($this->params->get('show_topic_search') > 0) {  echo $this->lists['topics'];}
+if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->params->get('show_topic_search') > 1) {  echo $this->lists['topics'];}
 
 ?>
 
