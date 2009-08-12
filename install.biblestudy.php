@@ -321,22 +321,12 @@ $fieldcheck = isset($fields[$tn]['teacher_image']);
 $tn = '#__bsms_mediafiles';
 $fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;	
-$fieldcheck = isset($fields[$tn]['docManCategory']);
-		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN docManCategory INT NULL AFTER published;");
+$fieldcheck = isset($fields[$tn]['docMan_id']);
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN docMan_id INT NULL AFTER published;");
 		$database->query();}
-$fieldcheck = isset($fields[$tn]['docManItem']);
-		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN docManItem INT NULL AFTER docManCategory;");
+$fieldcheck = isset($fields[$tn]['article_id']);
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN article_id INT NULL AFTER docMan_id;");
 		$database->query();}
-$fieldcheck = isset($fields[$tn]['articleSection']);
-		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN articleSection INT NULL AFTER docManItem;");
-		$database->query();}
-$fieldcheck = isset($fields[$tn]['articleCategory']);
-		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN articleCategory INT NULL AFTER articleSection;");
-		$database->query();}
-$fieldcheck = isset($fields[$tn]['articleTitle']);
-		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN articleTitle INT NULL AFTER articleCategory;");
-		$database->query();}
-$fieldcheck = isset($fields[$tn]['comment']);
 		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN comment TEXT NULL AFTER articleTitle;");
 		$database->query();}
 if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}

@@ -107,7 +107,7 @@ class biblestudyControllermediafilesedit extends JController {
 		$setFile = $file['name'];
 		$setArticle = JRequest::getVar('articleTitle', null, 'post');
 		
-		if ($setFile && ($setDocman || $setArticle))
+		/*if ($setFile && ($setDocman || $setArticle))
 		{
 			echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
 		}
@@ -118,7 +118,7 @@ class biblestudyControllermediafilesedit extends JController {
 		if ($setArticle && ($setDocman || $setFile))
 		{
 		echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
-		}
+		}*/
 		
 		if ($model->store($post)) {
 			$msg = JText::_( 'Media Saved!' );
