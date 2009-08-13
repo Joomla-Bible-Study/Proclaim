@@ -5,6 +5,7 @@
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
+jimport('joomla.application.component.helper');
 
 class biblestudyViewstudiesedit extends JView
 {
@@ -17,6 +18,12 @@ class biblestudyViewstudiesedit extends JView
 		$editor =& JFactory::getEditor();
 		$this->assignRef( 'editor', $editor );
 		$lists = array();
+		$document =& JFactory::getDocument();
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/icon.css');
+		$document->addStylesheet(JURI::base().'templates/system/css/system.css');
+		//$document->addScript(JURI::base().'includes/js/joomla.javascript.js');
+		require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );
+		echo biblestudyHelperToolbar::getToolbar();
 
 		// build the html select list for ordering
 		$database	= & JFactory::getDBO();
