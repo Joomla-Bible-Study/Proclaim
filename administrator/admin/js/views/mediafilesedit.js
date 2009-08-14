@@ -97,4 +97,18 @@ $j(document).ready( function() {
 			}
 		});
 	}
+	
+	//for existing docman and articles
+	$j('#docmanChange').click(function() {
+		$j(this).hide();
+		$j('#docMainCategoriesContainer').show();
+		$j('#activeDocMan').hide();
+		return false;
+	});
+	$j('#articleChange').click(function() {
+		$j(this).hide();
+		$j('#articlesSectionsContainer').show();
+		$j('#activeArticle').hide();
+		return false;
+	});
 });
