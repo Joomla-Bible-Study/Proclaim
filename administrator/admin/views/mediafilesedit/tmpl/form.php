@@ -63,7 +63,8 @@ function openConverter1()
       	<td>
       	<?php 
       	if(isset($this->docManItem)){
-      		echo $this->docManItem;
+      		echo '<span id="activeDocMan">'.$this->docManItem.'</span>';
+      		echo ' <a href="#" id="docmanChange">'.JText::_('Change').'</a>';
       	}
       	?>
       	<div id="docMainCategoriesContainer" class="selectContainer" style="<?php echo $this->docManStyle; ?>">
@@ -84,7 +85,8 @@ function openConverter1()
       	<td>
       	<?php 
       	if(isset($this->articleItem)){
-      		echo $this->articleItem;
+      		echo '<span id="activeArticle">'.$this->articleItem.'</span>';
+      		echo ' <a href="#" id="articleChange">'.JText::_('Change').'</a>';
       	}
       	?>
       	<div id="articlesSectionsContainer" class="selectContainer" style="<?php echo $this->articleStyle; ?>">
