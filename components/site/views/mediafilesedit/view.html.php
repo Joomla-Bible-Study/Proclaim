@@ -19,7 +19,16 @@ class biblestudyViewmediafilesedit extends JView {
 		$mediaImages =& $this->get('MediaImages');
 		$mimeTypes =& $this->get('MimeTypes');
 		$ordering =& $this->get('Ordering');
+		$document =& JFactory::getDocument();
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/icon.css');
+		$document->addStylesheet(JURI::base().'administrator/templates/system/css/system.css');
+		$document->addStylesheet(JURI::base().'media/system/css/modal.css');
+		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/rounded.css');
+		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/template.css');
 
+		require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );
+		$toolbar = biblestudyHelperToolbar::getToolbar();
+		$this->assignRef('toolbar', $toolbar);
 		$isNew		= ($mediafilesedit->id < 1);
 
 		$lists = array();

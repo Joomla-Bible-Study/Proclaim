@@ -8,10 +8,13 @@ jimport('joomla.html.toolbar');
  
  
                 $bar =& new JToolBar( 'Toolbar' );
-                $bar->appendButton( 'Standard', 'save', 'Save', "index.php?option=com_biblestudy&controller=studiesedit&task=save", false );
+                //$bar->appendButton( 'Standard', 'save', 'Save', "index.php?option=com_biblestudy&controller=studiesedit&task=save", false );
+                $bar->appendButton( 'Standard', 'save', 'Save', 'save', false );
                 $bar->appendButton( 'Separator' );
-                $bar->appendButton( 'Standard', 'delete', 'Delete', 'delete', false );
- 				$bar->appendButton( 'Popup', 'upload', 'Upload', "index.php?option=com_media&tmpl=component&task=popupUpload&directory=$directory", 800, 700 );
+                $bar->appendButton( 'Standard', 'cancel', 'Cancel', 'cancel', false );
+ 				$toolview = JRequest::getVar('view');
+ 				if ($toolview = 'mediafilesedit')
+				 {$bar->appendButton( 'Popup', 'upload', 'Upload', "index.php?option=com_media&tmpl=component&task=popupUpload&directory=$directory", 600, 400 );}
  
                 return $bar->render();
  

@@ -1,18 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<script language="javascript" type="text/javascript">
-function submitbutton(pressbutton)
-{
-	var form = document.adminForm;
-	if (pressbutton == 'cancel') {
-		submitform( pressbutton );
-		return;
-	
 
-	} else {
-		submitform( pressbutton );
-	}
-}
-</script>
 <?php 
 $user =& JFactory::getUser();
 
@@ -34,16 +21,10 @@ $item = JRequest::getVar('item');
 <?php $editor =& JFactory::getEditor();?>
 		
     <table width=100% class="admintable">
+    
     <tr>
-      <td colspan="0">
-	    <button type="button" onclick="submitbutton('save')">
-		  <?php echo JText::_('Save') ?>
-	    </button>
-	    <button type="button" onclick="submitbutton('cancel')">
-		  <?php echo JText::_('Cancel') ?>
-	    </button>
-      </td>
-    </tr>
+
+    <td class="key"><?php echo JText::_('Toolbar');?></td><td><?php echo $this->toolbar;?></td></tr>
 <?php    if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
       <tr><td class="key"><?php echo JText::_( 'Submitted by: ');?></td>
     <td><input class="text_area" type="text" name="user_name" id="user_name" size="25" maxlength="25" value="<?php echo $user_name;?>" /></td></tr>

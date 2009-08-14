@@ -4,18 +4,6 @@ $item = JRequest::getVar('item');
 $editor =& Jfactory::getEditor();
 ?>
 <script type="text/javascript" language="javascript">
-function submitbutton(pressbutton)
-{
-	var form = document.adminForm;
-	if (pressbutton == 'cancel') {
-		submitform( pressbutton );
-		return;
-	} else {
-		submitform( pressbutton );
-	}
-}
-</script>
-<script type="text/javascript" language="javascript">
 function openConverter1() 
 		{
 			var Wheight=125;
@@ -35,12 +23,9 @@ function openConverter1()
 		<fieldset class="adminform">
 			<legend><?php echo JText::_( 'Media File Details' ); ?></legend>
 			<table class="admintable">
-				<tr>
-					<td colspan="0">
-						<button type="button" onclick="submitbutton('save')"><?php echo JText::_('Save') ?></button>
-						<button type="button" onclick="submitbutton('cancel')"><?php echo JText::_('Cancel') ?></button>
-					</td>
-				</tr>
+				
+
+    <td class="key"><?php echo JText::_('Toolbar');?></td><td><?php echo $this->toolbar;?></td></tr>
 				<tr>
 					<td class="key"><?php echo JText::_( 'Published' ); ?></td>
 					<td><?php echo $this->lists['published'];?></td>
