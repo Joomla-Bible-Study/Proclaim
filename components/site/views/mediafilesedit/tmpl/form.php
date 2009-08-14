@@ -18,14 +18,25 @@ function openConverter1()
 		}
 
 </script>
+<div id="content-box">
+		<div class="border">
+			<div class="padding">
+				<div id="toolbar-box">
+   			
+				
+<div class="toolbar" id="toolbar">
+
+    <td class="key"><?php echo JText::_('Toolbar');?></td><td><?php echo $this->toolbar;?></td></tr>
+</div>
+</div>
+</div>
+</div>
 <form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 	<div class="col100">
 		<fieldset class="adminform">
 			<legend><?php echo JText::_( 'Media File Details' ); ?></legend>
 			<table class="admintable">
-				
 
-    <td class="key"><?php echo JText::_('Toolbar');?></td><td><?php echo $this->toolbar;?></td></tr>
 				<tr>
 					<td class="key"><?php echo JText::_( 'Published' ); ?></td>
 					<td><?php echo $this->lists['published'];?></td>
