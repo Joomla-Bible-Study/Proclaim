@@ -100,7 +100,11 @@ class biblestudyModelmediafilesedit extends JModel {
 		//$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		// Bind the form fields to the  table
 		$data['article_id'] = $data['categoryItems'];
-		$data['docMan_id'] = $data['docManItem'];
+		if($data['docManItem'] == null) {
+			$data['docMan_id'] = 0;
+		}else{
+			$data['docMan_id'] = $data['docManItem'];
+		}
 		
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
@@ -119,7 +123,6 @@ class biblestudyModelmediafilesedit extends JModel {
 			//			$this->setError( $row->getErrorMsg() );
 			return false;
 		}
-
 		return true;
 	}
 
