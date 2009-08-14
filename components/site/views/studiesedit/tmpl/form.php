@@ -213,7 +213,7 @@ $item = JRequest::getVar('item');
         	<table> 
             	
                 <tr><td>
-					<?php echo $editor->display('studytext', $this->studiesedit->studytext, '100%', '400', '70', '15'); ?>
+					<?php echo $editor->display('studytext', $this->studiesedit->studytext, '600', '400', '70', '15'); ?>
         		</td></tr>
             </table>
 		</td>

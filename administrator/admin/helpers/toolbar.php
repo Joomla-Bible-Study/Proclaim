@@ -10,7 +10,7 @@ jimport('joomla.html.toolbar');
                 $bar =& new JToolBar( 'Toolbar' );
                 //$bar->appendButton( 'Standard', 'save', 'Save', "index.php?option=com_biblestudy&controller=studiesedit&task=save", false );
                 $bar->appendButton( 'Standard', 'save', 'Save', 'save', false );
-                $bar->appendButton( 'Separator' );
+               // $bar->appendButton( 'Separator' );
                 $bar->appendButton( 'Standard', 'cancel', 'Cancel', 'cancel', false );
  				$toolview = JRequest::getVar('view');
  				if ($toolview = 'mediafilesedit')

@@ -18,19 +18,7 @@ function openConverter1()
 		}
 
 </script>
-<div id="content-box">
-		<div class="border">
-			<div class="padding">
-				<div id="toolbar-box">
-   			
-				
-<div class="toolbar" id="toolbar">
 
-    <td class="key"><?php echo JText::_('Toolbar');?></td><td><?php echo $this->toolbar;?></td></tr>
-</div>
-</div>
-</div>
-</div>
 <form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 	<div class="col100">
 		<fieldset class="adminform">
@@ -38,6 +26,9 @@ function openConverter1()
 			<table class="admintable">
 
 				<tr>
+                <tr>
+    <td class="key"></td><td><?php echo $this->toolbar;?></td></tr>
+    
 					<td class="key"><?php echo JText::_( 'Published' ); ?></td>
 					<td><?php echo $this->lists['published'];?></td>
 				</tr>
