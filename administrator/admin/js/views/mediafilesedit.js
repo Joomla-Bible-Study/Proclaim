@@ -27,7 +27,7 @@ $j(document).ready( function() {
 						$j('#articleSectionCategories').removeOption(/./);
 						$j('#categoryItems').removeOption(/./);
 						
-						$j('#articleSections').selectOptions(1);
+						$j('#articlesSections').val('');
 						
 					})
 				}
@@ -49,6 +49,7 @@ $j(document).ready( function() {
 						$j('#articlesCategoriesContainer').show();	
 						$j('#docManItemsContainer').hide();
 						$j('#docManItems').removeOption(/./);
+						$j('#docManCategories').val('');
 					})	
 					refreshArticleItems();
 				}
