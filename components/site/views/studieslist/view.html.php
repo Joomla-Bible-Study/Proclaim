@@ -156,12 +156,12 @@ class biblestudyViewstudieslist extends JView {
 		//Build Books
 		$boo[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select a Book') . ' -');
 		$boo		= array_merge($boo, $book);
-		$lists['books'] = JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_book");
+		$lists['books'] 	= JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_book");
 
 		//Build order
 		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select an Order') . ' -');
 		$ord		= array_merge($ord, $orders);
-		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_orders");
+		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders");
 		
 		$lists['search']= $search;
 		
