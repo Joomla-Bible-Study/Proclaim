@@ -195,11 +195,11 @@ if (!$row-id) {return FALSE;}
        // Here is where we begin to build the mediatable variable
 	
 	 //Here we test to see if docMan or article is used
-	 if ($media->docManItem)
+	 if ($media->docMan_id)
 	 	{
 			$media1_link = getDocman($media, $width, $height, $src);
 		}
-	if ($media->articleTitle)
+	if ($media->article_id)
 		{
 			$media1_link = getArticle($media, $width, $height, $src);
 		}
@@ -274,7 +274,7 @@ function getDocman($media, $width, $height, $src)
 	
 function getArticle($media, $width, $height, $src)
 	{
-		$article = '<a href="/index.php?option=com_content&view=article&id='.$media->article_id.'"
+		$article = '<a href="index.php?option=com_content&view=article&id='.$media->article_id.'"
 		 alt="'.$media->malttext.' - '.$media->comment.'" target="'.$media->special.'"><img src="'.$src.'" width="'.$width
        	.'" height="'.$height.'" border="0" /></a>';
 		

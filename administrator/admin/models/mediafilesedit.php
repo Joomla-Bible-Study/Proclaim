@@ -59,11 +59,8 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->_data->link_type = ($this->_admin_params->get('download') > 0 ? $this->_admin_params->get('download') : null);
 			$this->_date->hits = null;
 			$this->_data->mime_type = ($this->_admin_params->get('mime') > 0 ? $this->_admin_params->get('mime') : null);
-			$this->_data->docManCategory = null;
-			$this->_data->docManItem = null;
-			$this->_data->articleSection = null;
-			$this->_data->articleCategory = null;
-			$this->_data->articleTitle = null;
+			$this->_data->docMan_id = null;
+			$this->_data->article_id = null;
 			$this->_data->comment = null;
 				
 		}

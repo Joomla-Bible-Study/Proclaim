@@ -33,7 +33,7 @@ class biblestudyViewmediafilesedit extends JView {
 		
 		//Retrieve any Docman items or articles that may exist
 		$model = $this->getModel();
-		dump($mediafilesedit);
+		//dump($mediafilesedit);
 		
 		if($mediafilesedit->docMan_id != 0 && !$isNew) {
 			$this->assignRef('docManItem', $model->getDocManItem($mediafilesedit->docMan_id));
