@@ -90,6 +90,7 @@
 					<option value="2">Show Comment only</option>
 					<option value="3">Show Comment (if comment present) or Filesize (if no comment)</option>
 				</param>
+				<param name="store_page" type="text" default="flypage.tpl" label="Virtuemart Display Page" description="If using Virtuemart item, setting for display page in url to store item." size="60" />
 		</params>
 		<params group="LISTITEMS">
 		<param name="show_page_title" type="list" default="1" label="Show/Hide Listing Page Title" description="Choose whether to show or hide the listing page title">

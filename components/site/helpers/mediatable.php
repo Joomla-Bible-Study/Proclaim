@@ -77,8 +77,6 @@ if (!$row-id) {return FALSE;}
       $src = JURI::base().$image->path;
 	  $height = $image->height;
 	  $width = $image->width;
-      //if ($imagew) {$width = $imagew;} else {$width = 24;}
-      //if ($imageh) {$height = $imageh;} else {$height= 24;}
       $ispath = 0;
 	  $mime = '';
 	  $path1 = getFilepath($id3, $idfield, $mime);
@@ -90,67 +88,7 @@ if (!$row-id) {return FALSE;}
        .$media_size.'" target="'.$media->special.'"><img src="'.$src
        .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$media_size.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';
-      $isavr = 0;
-	  //dump ($isavr, 'isavr: ');
-      if (JPluginHelper::importPlugin('system', 'avreloaded'))
-      {
-		  JPluginHelper::importPlugin('system', 'avreloaded');
-       $isavr = 1;
-	   
-       $studyfile = $media->spath.$media->fpath.$media->filename;
-       $mediacode = $media->mediacode;
-       
-       $isrealfile = substr($media->filename, -4, 1);
-       $fileextension = substr($media->filename,-3,3);
-       if ($mediacode == ''){
-        $mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
-       }
-       $mediacode = str_replace("'",'"',$mediacode);
-       $ispop = substr_count($mediacode, 'popup');
-       if ($ispop < 1) {
-        $bracketpos = strpos($mediacode,'}');
-        $mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
-       }
-       $isdivid = substr_count($mediacode, 'divid');
-       if ($isdivid < 1) {
-        $dividid = ' divid="'.$media->id.'"';
-        $bracketpos = strpos($mediacode, '}');
-        $mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
-       }
-       $isonlydash = substr_count($mediacode, '}-{');
-       if ($isonlydash == 1){
-        $ishttp = substr_count($studyfile, 'http://');
-        if ($ishttp < 1) {
-         //We want to see if there is a file here or if it is streaming by testing to see if there is an extension
-         $isrealfile = substr($media->filename, -4, 1);
-         if ($isrealfile == '.') {
-          $isslash = substr_count($studyfile,'//');
-          if (!$isslash) {
-           $studyfile = substr_replace($studyfile,'http://',0,0);
-          }
-         }
-        }
-
-        if ($isrealfile != '.')
-        {
-         $studyfile = $media->filename;
-        }
-        $mediacode = str_replace('-',$studyfile,$mediacode);
-       }
-       $popuptype = 'window';
-       if($params->get('popuptype') != 'window') {
-        $popuptype = 'lightbox';
-       }
-       $avr_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
-       .'"}<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext. ' - '.$media->comment
-       .' '.$duration.' '.$media_size.'" width="'.$image->width
-       .'" height="'.$image->height.'" border="0" title="'
-       .$media->malttext.' - '.$media->comment.' '.$duration.' '.$media_size.'" />{/avrpopup}';
-       //dump ($avr_link, 'AVR Lnk');
-
-      }
-      $useavr = 0;
-      $useavr = $useavr + $params->get('useavr') + $media->internal_viewer;
+      
       $isfilesize = 0;
      // if ($media_size > 0)
      // {
@@ -160,11 +98,7 @@ if (!$row-id) {return FALSE;}
       //else {$media1_sizetext = '';}
       $media1_link = $direct_link;
 
-      if ($useavr > 0)
-      { $media1_link = $avr_link;
-      //dump ($avr_link, 'AVR Link');
-       
-      }
+      
       if ($useplayer == 1){
        $player_width = $params->get('player_width');
        if (!$player_width) { $player_width = '290'; }
@@ -205,13 +139,18 @@ if (!$row-id) {return FALSE;}
 		}
 	 $mediatable .= $media1_link;
 	 
-	
-	 //showing of filesize removed for now - it was causing problems.
-		//if ($params->get('show_filesize') > 0 ) {
-		//$mediatable .= '<div class="mediasize'.$params->get('pageclass_sfx').'">'.$filesize.'</div>';
-		
-		//}
-
+	if ($media->product_id)
+		{
+			$media1_link = getVirtuemart($media, $width, $height, $src);
+		}
+	//dump ($useavr, 'useavr');
+	if ($media->internal_viewer > 0 && JPluginHelper::importPlugin('system', 'avreloaded'))
+      	{ 
+	  		$media1_link = getAVR($media, $width, $height, $src, $params); 
+			//dump ($media1_link, 'media1_link');
+	  	}
+	  
+		//Download icon
 		if ($link_type > 0){ //$src = JURI::base().$download_image;
 	   $width=$download_tmp->width;
 	   $height=$download_tmp->height;
@@ -281,3 +220,84 @@ function getArticle($media, $width, $height, $src)
 	return $article;
 	}
 	
+function getVirtuemart($media, $width, $height, $src)
+	{
+		
+		$vm = '<a href="index.php?option=com_virtuemart&page=shop.product_details&flypage='.$params->get('store_page', 'flypage.tpl').'&product_id=26"
+		alt="'.$media->malttext.' - '.$media->comment.'" target="'.$media->special.'"><img src="'.$src.'" width="'.$width
+       	.'" height="'.$height.'" border="0" /></a>';
+		
+	return $vm;
+	}
+	
+function getAVR($media, $width, $height, $src, $params)
+	{
+		
+       JPluginHelper::importPlugin('system', 'avreloaded');
+	   
+       $studyfile = $media->spath.$media->fpath.$media->filename;
+       $mediacode = $media->mediacode;
+       
+       $isrealfile = substr($media->filename, -4, 1);
+       $fileextension = substr($media->filename,-3,3);
+       if ($mediacode == '')
+	   	{
+			$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
+       	}
+       $mediacode = str_replace("'",'"',$mediacode);
+       $ispop = substr_count($mediacode, 'popup');
+       if ($ispop < 1) 
+	   	{
+        	$bracketpos = strpos($mediacode,'}');
+        	$mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
+		}
+       
+	   $isdivid = substr_count($mediacode, 'divid');
+       if ($isdivid < 1) 
+	   	{
+        	$dividid = ' divid="'.$media->id.'"';
+        	$bracketpos = strpos($mediacode, '}');
+        	$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
+       	}
+       $isonlydash = substr_count($mediacode, '}-{');
+       if ($isonlydash == 1)
+	   	{
+        	$ishttp = substr_count($studyfile, 'http://');
+        	if ($ishttp < 1) 
+				{
+         		$isrealfile = substr($media->filename, -4, 1);
+         			if ($isrealfile == '.') 
+						{
+          					$isslash = substr_count($studyfile,'//');
+          						if (!$isslash) 
+									{
+           								$studyfile = substr_replace($studyfile,'http://',0,0);
+          							}
+         				}
+        		}
+		
+		
+			if ($isrealfile != '.')
+				{
+				 $studyfile = $media->filename;
+				}
+			$mediacode = str_replace('-',$studyfile,$mediacode);
+       }
+       
+	   $popuptype = 'window';
+       if($params->get('popuptype') != 'window') 
+	   	{
+        	$popuptype = 'lightbox';
+       	}
+       
+	   $avr_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
+       .'"}<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext. ' - '.$media->comment
+       .' '.$duration.' '.$media_size.'" width="'.$image->width
+       .'" height="'.$image->height.'" border="0" title="'
+       .$media->malttext.' - '.$media->comment.' '.$duration.' '.$media_size.'" />{/avrpopup}';
+       //dump ($avr_link, 'AVR Lnk');
+
+      
+      
+	return $avr_link;	
+	}
