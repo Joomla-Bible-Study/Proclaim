@@ -47,6 +47,7 @@ if (!$row-id) {return FALSE;}
 	$mediatable = '<table class="mediatable"><tbody><tr>';
 	
 	foreach ($media1 as $media) {
+		
 	if (!$media->path2) { $i_path = $media->impath; }
 	if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
 	if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
@@ -97,7 +98,7 @@ if (!$row-id) {return FALSE;}
      // }
       //else {$media1_sizetext = '';}
       $media1_link = $direct_link;
-
+//dump ($media1_link);
       
       if ($useplayer == 1){
        $player_width = $params->get('player_width');
@@ -144,6 +145,7 @@ if (!$row-id) {return FALSE;}
 			$media1_link = getVirtuemart($media, $width, $height, $src);
 		}
 	//dump ($useavr, 'useavr');
+	//dump ($media->internal_viewer);
 	if ($media->internal_viewer > 0 && JPluginHelper::importPlugin('system', 'avreloaded'))
       	{ 
 	  		$media1_link = getAVR($media, $width, $height, $src, $params); 
@@ -298,6 +300,6 @@ function getAVR($media, $width, $height, $src, $params)
        //dump ($avr_link, 'AVR Lnk');
 
       
-      
+      dump ($avr_link);
 	return $avr_link;	
 	}
