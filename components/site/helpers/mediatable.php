@@ -138,20 +138,21 @@ if (!$row-id) {return FALSE;}
 		{
 			$media1_link = getArticle($media, $width, $height, $src);
 		}
-	 $mediatable .= $media1_link;
+	 
 	 
 	if ($media->product_id)
 		{
 			$media1_link = getVirtuemart($media, $width, $height, $src);
 		}
+	
 	//dump ($useavr, 'useavr');
 	//dump ($media->internal_viewer);
 	if ($media->internal_viewer > 0 && JPluginHelper::importPlugin('system', 'avreloaded'))
       	{ 
-	  		$media1_link = getAVR($media, $width, $height, $src, $params); 
+	  		$media1_link = getAVR($media, $width, $height, $src, $params, $image); 
 			//dump ($media1_link, 'media1_link');
 	  	}
-	  
+	$mediatable .= $media1_link; 
 		//Download icon
 		if ($link_type > 0){ //$src = JURI::base().$download_image;
 	   $width=$download_tmp->width;
@@ -232,7 +233,7 @@ function getVirtuemart($media, $width, $height, $src)
 	return $vm;
 	}
 	
-function getAVR($media, $width, $height, $src, $params)
+function getAVR($media, $width, $height, $src, $params, $image)
 	{
 		
        JPluginHelper::importPlugin('system', 'avreloaded');
@@ -300,6 +301,6 @@ function getAVR($media, $width, $height, $src, $params)
        //dump ($avr_link, 'AVR Lnk');
 
       
-      dump ($avr_link);
+      //dump ($avr_link);
 	return $avr_link;	
 	}
