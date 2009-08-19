@@ -7,11 +7,13 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 jimport('joomla.application.component.helper');
 
+
 class biblestudyViewstudiesedit extends JView
 {
 	
 	function display($tpl = null)
 	{
+		
 		
 		$studiesedit		=& $this->get('Data');
 		$isNew		= ($studiesedit->id < 1);
@@ -19,15 +21,52 @@ class biblestudyViewstudiesedit extends JView
 		$this->assignRef( 'editor', $editor );
 		$lists = array();
 		$document =& JFactory::getDocument();
+		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/icon.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/system/css/system.css');
 		$document->addStylesheet(JURI::base().'media/system/css/modal.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/rounded.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/template.css');
 
+		$config =& JComponentHelper::getParams( 'com_biblestudy' );
+		$admin=& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
+		
+		$studiesedit =& $this->get('Data');
+		$books =& $this->get('books');
+		
+		//Manipulate Data
+		$scriptures = explode(';', $studiesedit->scripture);
+		foreach($scriptures as $scripture){
+			$split = explode(' ', $scripture);
+			$scriptureBlocks[$scripture]['bookId'] =  $split[0];
+			$scriptureBlocks[$scripture]['text'] = $split[1];
+		}
+		array_unshift($books, JHTML::_('select.option', '0', JText::_('- Select a Book -')));
+		
+		
 		require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );
 		$toolbar = biblestudyHelperToolbar::getToolbar();
 		$this->assignRef('toolbar', $toolbar);
+		
+		$javascript			= 'onchange="changeDisplayImage();"';
+		$directory = DS.'images'.DS.$admin_params->get('study_images', 'stories');
+		$studypath = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images', 'stories');
+		$fileList 	= JFolder::files($studypath);
+		foreach($fileList as $key=>$value)
+		{
+			$folderfinal1 = new JObject();
+			$folderfinal1->value = $value;
+			$folderfinal1->id = $key;
+			$folderfinal2[] = $folderfinal1;
+		}
+		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+		//$lists['thumb'] = JHTML::_('select.genericlist',  $folderfinal2, 'thumbnailm', 'class="inputbox" size="1"', 'value', 'value', $studiesedit->thumbnailm );
+		
+		$lists['thumbnailm']	= JHTML::_('list.images',  'thumbnailm', $studiesedit->thumbnailm, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
 		// build the html select list for ordering
 		$database	= & JFactory::getDBO();
 		$query = "SELECT id"
@@ -154,9 +193,12 @@ class biblestudyViewstudiesedit extends JView
 		$types6 			= array_merge( $types6, $database->loadObjectList() );
 		$lists['server_cd'] = JHTML::_('select.genericlist', $types6, 'server_cd', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->server_cd );
 		
+		$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('mediafiles', $mediafiles);
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('studiesedit',		$studiesedit);
+		$this->assignRef('books', $books);
+		$this->assignRef('scriptures', $scriptureBlocks);
 		parent::display($tpl);
 	}
 }

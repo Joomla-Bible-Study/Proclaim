@@ -4,17 +4,19 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
 class biblestudyModelstudiesedit extends JModel {
-
-	var $_data;
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
 	 * @access	public
 	 * @return	void
 	 */
-	function __construct()
-	{
+	 var $_admin;
+	 
+	function __construct() {
 		parent::__construct();
+
+		$admin = $this->getAdmin();
+		$this->_admin_params = new JParameter($admin[0]->params);
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
@@ -25,6 +27,7 @@ class biblestudyModelstudiesedit extends JModel {
 		// Set id and wipe data
 		$this->_id		= $id;
 		$this->_data	= null;
+		$this->_admin = null;
 	}
 
 
@@ -32,6 +35,8 @@ class biblestudyModelstudiesedit extends JModel {
 	function &getData()
 	{
 		// Load the data
+		$admin = $this->getAdmin();
+		//dump ($admin, 'admin: ');
 		if (empty( $this->_data )) {
 			$query = ' SELECT * FROM #__bsms_studies '.
 					'  WHERE id = '.$this->_id;
@@ -39,11 +44,15 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data = $this->_db->loadObject();
 		}
 		if (!$this->_data) {
+			$this->_data = new stdClass();
+			$this->_data->id = 0;
+			//TF added these
 			$this->_data->published = 1;
-			$this->_data->studydate = null;
-			$this->_data->teacher_id = null;
+			$today = date("Y-m-d H:i:s");
+			$this->_data->studydate = $today;
+			$this->_data->teacher_id = ($this->_admin_params->get('teacher_id') > 0 ? $this->_admin_params->get('teacher_id') : null);
 			$this->_data->studynumber = null;
-			$this->_data->booknumber = null;
+			$this->_data->booknumber = ($this->_admin_params->get('booknumber') > 0 ? $this->_admin_params->get('booknumber') : null);
 			$this->_data->chapter_begin = null;
 			$this->_data->chapter_end = null;
 			$this->_data->verse_begin = null;
@@ -53,10 +62,10 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->media_hours = null;
 			$this->_data->media_minutes = null;
 			$this->_data->media_seconds = null;
-			$this->_data->messagetype = null;
-			$this->_data->series_id = null;
+			$this->_data->messagetype = ($this->_admin_params->get('messagetype') > 0 ? $this->_admin_params->get('messagetype') : null);
+			$this->_data->series_id = ($this->_admin_params->get('series_id') > 0 ? $this->_admin_params->get('series_id') : null);
 			$this->_data->studytext = null;
-			$this->_data->topics_id = null;
+			$this->_data->topics_id = ($this->_admin_params->get('topic_id') > 0 ? $this->_admin_params->get('topic_id') : null);
 			$this->_data->secondary_reference = null;
 			$this->_data->prod_cd = null;
 			$this->_data->prod_dvd = null;
@@ -69,15 +78,17 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->chapter_end2 = null;
 			$this->_data->verse_begin2 = null;
 			$this->_data->verse_end2 = null;
-			$this->_data->comments = null;
+			$this->_data->comments = 1;
 			$this->_data->hits = null;
 			$this->_data->user_id = null;
 			$this->_data->user_name = null;
 			$this->_data->show_level = null;
-			$this->_data->location_id = null;
-			$this->_data->thumbnailm = null;
+			$this->_data->location_id = ($this->_admin_params->get('location_id') > 0 ? $this->_admin_params->get('location_id') : null);
+			$this->_data->thumbnailm = ($admin[0]->study != '- No Image -' ? $admin[0]->study : null);
+			//$this->_data->thumbnailm = null;
 			$this->_data->thumbhm = null;
 			$this->_data->thumbwm = null;
+			
 		}
 		return $this->_data;
 	}
@@ -88,16 +99,32 @@ class biblestudyModelstudiesedit extends JModel {
 	 * @access	public
 	 * @return	boolean	True on success
 	 */
-	function store() {
+	function store()
+	{
+		//$post           = JRequest::get( 'post' );
+
+		// fix up special html fields
+
 		$row =& $this->getTable();
+
+		$data = JRequest::get( 'post' );
+
 		//Allows HTML content to come through to the database row
-		$this->_data['studytext'] = JRequest::getVar( 'studytext', '', 'post', 'string', JREQUEST_ALLOWRAW );
-		$this->_data['studyintro'] = str_replace('"',"'",$this->_data['studyintro']);
-		$this->_data['studynumber'] = str_replace('"',"'",$this->_data['studynumber']);
-		$this->_data['secondary_reference'] = str_replace('"',"'",$this->_data['secondary_reference']);
-		
+		$data['studytext'] = JRequest::getVar( 'studytext', '', 'post', 'string', JREQUEST_ALLOWRAW );
+		$data['studyintro'] = str_replace('"',"'",$data['studyintro']);
+		$data['studynumber'] = str_replace('"',"'",$data['studynumber']);
+		$data['secondary_reference'] = str_replace('"',"'",$data['secondary_reference']);
+
+		foreach($data['scripture'] as $scripture) {
+			if(!$data['text'][key($data['scripture'])] == ''){
+				$scriptures[] = $scripture.' '.$data['text'][key($data['scripture'])];
+			}
+			next($data['scripture']);
+		}
+		$data['scripture'] = implode(';', $scriptures);
+
 		// Bind the form fields to the table
-		if (!$row->bind($this->_data)) {
+		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
@@ -167,5 +194,23 @@ class biblestudyModelstudiesedit extends JModel {
 		}
 	}
 
+	function getBooks() {
+		$query = 'SELECT booknumber AS value, bookname AS text'
+		. ' FROM #__bsms_books'
+		. ' WHERE published = 1'
+		. ' ORDER BY booknumber';
+		$this->_db->setQuery($query);
+		return $this->_getList($query);
+	}
+	function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT *'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}
 }
 ?>

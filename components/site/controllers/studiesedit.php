@@ -41,15 +41,17 @@ class biblestudyControllerstudiesedit extends JController
 	{
 		
 		global $mainframe, $option;
-		$params =& $mainframe->getPageParameters();
+		//$params =& $mainframe->getPageParameters();
 		$model = $this->getModel('studiesedit');
+		$admin=& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
 		$model->_data = JRequest::get('post');
 		if ($model->store()) {
 			$msg = JText::_( 'Study Saved!' );
 		} else {
 			$msg = JText::_( 'Error Saving Study' );
 		}
-		$params =& $mainframe->getPageParameters();
+		//$params =& $mainframe->getPageParameters();
 		$new = JRequest::getVar('new', '0', 'post', 'int' );
 		if ($new > 0){
 			$link = 'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form&new='.$new;
