@@ -14,7 +14,7 @@ class biblestudyViewstudiesedit extends JView
 	function display($tpl = null)
 	{
 		
-		
+		global $mainframe, $option;
 		$studiesedit		=& $this->get('Data');
 		$isNew		= ($studiesedit->id < 1);
 		$editor =& JFactory::getEditor();
@@ -30,10 +30,27 @@ class biblestudyViewstudiesedit extends JView
 		$document->addStylesheet(JURI::base().'media/system/css/modal.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/rounded.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/template.css');
-
+		$user =& JFactory::getUser();
 		$config =& JComponentHelper::getParams( 'com_biblestudy' );
 		$admin=& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
+		$params =& $mainframe->getPageParameters();
+		//$templatemenuid = $params->get('templatemenuid', 1);
+		//dump ($admin_params, 'template: ');
+		//JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		//$template = $this->get('Template');
+		//$params = new JParameter($template[0]->params);
+		
+		$entry_user = $user->get('gid');
+		$entry_access = $admin_params->get('entry_access', 24) ;
+		$allow_entry = $admin_params->get('allow_entry_study', 0);
+		//dump ($allow_entry, 'allow_entry: ');
+		if ($allow_entry < 1) {return JError::raiseError('403', JText::_('Access Forbidden')); }
+		if (!$entry_user) { $entry_user = 0; }
+		
+			if ($entry_user < $entry_access ){return JError::raiseError('403', JText::_('Access Forbidden'));}
+			//$mainframe->redirect('http://www.joomlaoregon.org/biblestudy');}
+		
 		
 		$studiesedit =& $this->get('Data');
 		$books =& $this->get('books');

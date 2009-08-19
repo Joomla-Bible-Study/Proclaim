@@ -1,12 +1,16 @@
 <?php
 defined('_JEXEC') or die();
-
+jimport('joomla.application.component.controller');
 class biblestudyControllerstudiesedit extends JController
 {
 	function __construct() {
 		$user =& JFactory::getUser();
 		global $mainframe, $option;
 		$params =& $mainframe->getPageParameters();
+		
+		//$model = $this->getModel('studiesedit');
+		//$templatemenuid = $params->get('templatemenuid');
+		
 		$entry_user = $user->get('gid');
 		$entry_access = ($params->get('entry_access')) ;
 		$allow_entry = $params->get('allow_entry_study');
@@ -16,6 +20,7 @@ class biblestudyControllerstudiesedit extends JController
 		if ($allow_entry > 0) {
 			if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('Access Forbidden')); }
 		}
+		//dump ($entry_user, 'entry_user: ');
 		parent::__construct();
 
 		// Register Extra tasks

@@ -11,6 +11,7 @@ class biblestudyModelstudiesedit extends JModel {
 	 * @return	void
 	 */
 	 var $_admin;
+	 var $_template;
 	 
 	function __construct() {
 		parent::__construct();
@@ -193,6 +194,19 @@ class biblestudyModelstudiesedit extends JModel {
 			}
 		}
 	}
+
+function getTemplate() {
+		if(empty($this->_template)) {
+			$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+			//dump ($templateid, 'templateid: ');
+			$query = 'SELECT *'
+			. ' FROM #__bsms_templates'
+			. ' WHERE published = 1 AND id = '.$templateid;
+			$this->_template = $this->_getList($query);
+			//dump ($this->_template, 'this->_template');
+		}
+		return $this->_template;
+}
 
 	function getBooks() {
 		$query = 'SELECT booknumber AS value, bookname AS text'

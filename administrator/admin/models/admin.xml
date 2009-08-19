@@ -51,4 +51,22 @@
 		<param name="podcast" type="podcast" label="Default Podcast" description="Choose a default podcast from your list." default="" />
 		<param name="mime" type="mime" label="Default Mime Type" description="Choose a default mime type from your list." default="" />
 	</params>
+	<params group="SUBMISSION">	
+			<param name="allow_entry_study" type="list" default="0" label="Allow Front End Submission" description="Allow certain users to enter studes and mediafiles from the front end">
+				<option value="0">No Frontend access</option>
+				<option value="1">Allow Frontend access</option>
+			</param>
+			<param name="entry_access" type="list" default="23" label="Access Front End Submission" description="Enter the level of access required for users to enter study information on the front end">
+				<option value="18">Registered Users</option>
+				<option value="19">Authors</option>
+				<option value="20">Editors</option>
+				<option value="21">Publishers</option>
+				<option value="23">Managers</option>
+				<option value="24">Administrators or superadmin</option>
+			</param>
+			<param name="study_publish" type="list" default="0" label="Auto Publish front end submissions" description="Choose whether studies entered on the front end are automatically published or must be manually published by an admin on the backend">
+				<option value="0">No Auto Publish</option>
+				<option value="1">Auto Publish Studies</option>
+			</param>
+		</params>
 </root>

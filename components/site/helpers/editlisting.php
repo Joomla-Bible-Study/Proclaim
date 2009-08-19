@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die();
 
-function getEditlisting($params) {
+function getEditlisting($admin_params, $params) {
 	
 	global $mainframe, $option;
 	$database	= & JFactory::getDBO();
@@ -10,9 +10,9 @@ function getEditlisting($params) {
 	$user =& JFactory::getUser();
 	$entry_user = $user->get('gid');
 	if (!$entry_user) { $entry_user = 0;}
-	$entry_access = $params->get('entry_access');
+	$entry_access = $admin_params->get('entry_access');
 	if (!$entry_access) {$entry_access = 23;}
-	$allow_entry = $params->get('allow_entry_study');
+	$allow_entry = $admin_params->get('allow_entry_study');
 	if (!$entry_user) { $entry_user = 0; }
 	if (!$entry_access) { $entry_access = 23; }
 	if ($allow_entry > 0) {

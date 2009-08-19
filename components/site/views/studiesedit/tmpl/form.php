@@ -30,10 +30,13 @@ $user =& JFactory::getUser();
 			id="user_name" size="25" maxlength="25"
 			value="<?php echo $user_name;?>" /></td>
 	</tr>
-	<tr>
-		<td class="key"><?php echo JText::_( 'Published' ); ?>:</td>
-		<td><?php echo $this->lists['published'];?></td>
-	</tr>
+    <?php if ($this->admin_params->get('study_publish') > 0)
+		{ ?>
+			<tr>
+			<td class="key"><?php echo JText::_( 'Published' ); ?>:</td>
+			<td><?php echo $this->lists['published'];?></td>
+			</tr>
+     <?php } ?>    
 	<tr>
 		<td class="key" align="left"><?php echo JText::_( 'Study Date' ); ?>:</td>
 		<td><?php 
@@ -331,4 +334,9 @@ $user =& JFactory::getUser();
 	type="hidden" name="id" value="<?php echo $this->studiesedit->id; ?>" />
 <input type="hidden" name="task" value="" /> <input type="hidden"
 	name="controller" value="studiesedit" /> <input type="hidden"
-	name="user_id" value="<?php echo $user->get('id');?>" /></form>
+	name="user_id" value="<?php echo $user->get('id');?>" />
+    <?php if ($this->admin_params->get('study_publish') > 0)
+		{ ?>
+    <input type="hidden" name="published" value="0"  />
+    <?php } ?>
+    </form>

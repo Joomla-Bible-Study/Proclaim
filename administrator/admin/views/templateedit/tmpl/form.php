@@ -86,9 +86,6 @@ echo $pane->endPanel();
 echo $pane->startPanel( JText::_('Study List Row 4'), 'ROW4');
 echo $this->params->render( 'params', 'ROW4');
 echo $pane->endPanel();
-echo $pane->startPanel( JText::_('Front End Submission'), 'SUBMISSION');
-echo $this->params->render( 'params', 'SUBMISSION');
-echo $pane->endPanel();
 
 echo $pane->startPanel( JText::_('Details View'), 'DETAILS');
 echo $this->params->render( 'params', 'DETAILS');

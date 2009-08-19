@@ -20,12 +20,13 @@ $document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.j
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 $params = $this->params;
+//dump ($this->admin_params);
 	$user =& JFactory::getUser();
 	$entry_user = $user->get('gid');
 	if (!$entry_user) { $entry_user = 0;}
-	$entry_access = $params->get('entry_access');
+	$entry_access = $this->admin_params->get('entry_access');
 	if (!$entry_access) {$entry_access = 23;}
-	$allow_entry = $params->get('allow_entry_study');
+	$allow_entry = $this->admin_params->get('allow_entry_study');
 	//dump ($entry_access, 'entry_access: ');
 	if (($allow_entry > 0) && ($entry_access <= $entry_user)) 
 			{?>
