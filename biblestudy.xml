@@ -3,7 +3,7 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>June 1, 2009</creationDate>
+	<creationDate>September 1, 2009</creationDate>
 	<author>Tom Fuller</author>
 	<authorEmail>TomFuller2@gmail.com</authorEmail>
 	<authorUrl>http://joomlacode.org/gf/project/biblestudy/</authorUrl>
@@ -204,18 +204,15 @@
 		<filename>elements/teachertemplateid.php</filename>
 		<filename>elements/templatemenuid.php</filename>
 		<filename>elements/modulemenuid.php</filename>
-		<filename>element/serieslisttemplateid.php</filename>
+		<filename>elements/serieslisttemplateid.php</filename>
 		<filename>helpers/scripture.php</filename>
 		<filename>helpers/date.php</filename>
 		<filename>helpers/filesize.php</filename>
 		<filename>helpers/filepath.php</filename>
-		<filename>helpers/listarray.php</filename>
-		<filename>helpers/columnarray.php</filename>
 		<filename>helpers/store.php</filename>
 		<filename>helpers/header.php</filename>
 		<filename>helpers/textlink.php</filename>
 		<filename>helpers/mediatable.php</filename>
-		<filename>helpers/css.php</filename>
 		<filename>helpers/editlisting.php</filename>
 		<filename>helpers/editlink.php</filename>
 		<filename>helpers/teacher.php</filename>
@@ -223,10 +220,14 @@
 		<filename>helpers/comments.php</filename>
 		<filename>helpers/title.php</filename>
 		<filename>helpers/custom.php</filename>
-		<filename>helpers/elementid.php</filename>
+		<filename>helpers/elements.php</filename>
 		<filename>helpers/studiesedit.php</filename>
 		<filename>helpers/image.php</filename>
 		<filename>helpers/serieslist.php</filename>
+		<filename>helpers/duration.php</filename>
+		<filename>helpers/listing.php</filename>
+		<filename>helpers/translated.php</filename>
+		<filename>helpers/index.html</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>
@@ -278,12 +279,8 @@
 			<filename>controllers/podcastedit.php</filename>
 			<filename>controllers/mimetypeedit.php</filename>
 			<filename>controllers/mediafilesedit.php</filename>
-			<filename>controllers/mediafileslist.php</filename>
-			<filename>controllers/teacherlist.php</filename>
-			<filename>controllers/commentslist.php</filename>
 			<filename>controllers/commentsedit.php</filename>
 			<filename>controllers/locationsedit.php</filename>
-			<filename>controllers/locationslist.php</filename>
 			<filename>controllers/templateslist.php</filename>
 			<filename>controllers/templateedit.php</filename>
 			<filename>controllers/cssedit.php</filename>
@@ -297,6 +294,10 @@
 			<filename>elements/path.php</filename>
 			<filename>elements/podcast.php</filename>
 			<filename>helpers/templates.helper.php</filename>
+			<filename>helpers/toolbar.php</filename>
+			<filename>helpers/bsmCore.php</filename>
+			<filename>helpers/tagDefinitions.helper.php</filename>
+			<filename>templates.helper.php</filename>
 			<filename>models/cssedit.php</filename>
 			<filename>models/teacherlist.php</filename>
 			<filename>models/teacheredit.php</filename>
