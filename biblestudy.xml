@@ -297,7 +297,6 @@
 			<filename>helpers/toolbar.php</filename>
 			<filename>helpers/bsmCore.php</filename>
 			<filename>helpers/tagDefinitions.helper.php</filename>
-			<filename>templates.helper.php</filename>
 			<filename>models/cssedit.php</filename>
 			<filename>models/teacherlist.php</filename>
 			<filename>models/teacheredit.php</filename>
@@ -332,6 +331,7 @@
 			<filename>models/templateedit.xml</filename>
 			<filename>models/templateslist.php</filename>
 			<filename>models/admin.php</filename>
+			<filename>models/admin.xml</filename>
 			<filename>models/index.html</filename>
 			<filename>views/cssedit/view.html.php</filename>
 			<filename>views/cssedit/index.html</filename>
@@ -464,7 +464,7 @@
 			<filename>views/admin/index.html</filename>
 			<filename>views/admin/view.html.php</filename>
 			<filename>views/admin/tmpl/index.html</filename>
-			<filename>views/admin/tmpl/default.php</filename>
+			<filename>views/admin/tmpl/form.php</filename>
 			<filename>views/index.html</filename>
 			<filename>tables/teacheredit.php</filename>
 			<filename>tables/mediaedit.php</filename>
@@ -482,14 +482,11 @@
 			<filename>tables/locationsedit.php</filename>
 			<filename>tables/templateedit.php</filename>
 			<filename>tables/admin.php</filename>
-			<filename>tables/admin.xml</filename>
 			<filename>tables/index.html</filename>
 			<filename>convert1.htm</filename>
 			<filename>config.xml</filename>
 			<filename>install.sql</filename>
 			<filename>uninstall.sql</filename>
-			<filename>install.biblestudy.php</filename>
-			<filename>uninstall.biblestudy.php</filename>
 			<filename>help/en-GB/biblestudy.comments.html</filename>
 			<filename>help/en-GB/biblestudy.books.html</filename>
 			<filename>help/en-GB/biblestudy.messagetype.html</filename>
@@ -509,7 +506,7 @@
 			<filename>css/mediafilesedit.css</filename>
 			<filename>js/jquery.js</filename>
 			<filename>js/biblestudy.js</filename>
-			<filename>js/views/mediafilesedit.php</filename>
+			<filename>js/views/mediafilesedit.js</filename>
 			</files>
 		<languages folder="admin/languages">
 			<language tag="en-GB">en-GB.com_biblestudy.ini</language>

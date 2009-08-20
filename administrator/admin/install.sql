@@ -193,21 +193,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
 `pdf` TEXT NULL,
   
 PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
-
---
--- Dumping default data for table `jos_bsms_templates`
---
+) ENGINE=MyISAM  CHARACTER SET `utf8` AUTO_INCREMENT=20;
 
 
-INSERT INTO `jos_bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `title`) VALUES
-(1, 'tmplStudiesList', '', 1, 'itemslimit=10\ncompatibilityMode=0\nstudieslisttemplateid=20\ndetailstemplateid=21\nteachertemplateid=20\nteacher_id=1\nshow_teacher_list=1\nmult_teachers=1,2\nseries_id=0\nmult_series=\nbooknumber=0\nmult_books=\ntopic_id=0\nmult_topics=\nmessagetype=0\nmult_messagetype=\nlocations=0\nmult_locations=\ndefault_order=DESC\npage_image=components/com_biblestudy/images/openbible.png\npimagew=48\npimageh=48\nshow_page_image=1\ntooltip=1\nimageh=24\nimagew=24\ntext_image=components/com_biblestudy/images/textfile24.png\npdf_image=components/com_biblestudy/images/pdf24.png\nshow_verses=0\nstylesheet=\ndate_format=2\nduration_type=1\nuseavr=0\npopuptype=window\nmedia_player=0\nplayer_width=290\ndownload_image=components/com_biblestudy/images/download.png\nshow_filesize=1\nshow_page_title=1\npage_title=Bible Studies\nuse_headers_list=1\ndetails_text=Study Details\nshow_book_search=1\nshow_teacher_search=1\nshow_series_search=1\nshow_type_search=1\nshow_year_search=1\nshow_order_search=1\nshow_topic_search=1\nshow_locations_search=1\nallow_entry_study=0\nentry_access=23\nstudy_publish=0\nshow_print_view=1\nshow_pdf_view=1\nshow_teacher_view=1\nshow_passage_view=1\nuse_headers_view=1\ntitle_line_1=1\ntitle_line_2=4\nview_link=1\nlink_text=Return to Studies List\nshow_scripture_link=1\nshow_comments=0\ncomment_access=1\ncomment_publish=0\nuse_captcha=1\nemail_comments=1\nrecipient=tomfuller2@gmail.com\nsubject=Comments on studies\nbody=Comments entered.\nshow_teacher_studies=1\nstudies=5\nlabel_teacher=Latest Messages2\nrow1col1=18\nr1c1custom=\nr1c1span=1\nrowspanr1c1=1\nlinkr1c1=0\nrow1col2=5\nr1c2custom=\nr1c2span=1\nrowspanr1c2=1\nlinkr1c2=0\nrow1col3=7\nr1c3custom=\nr1c3span=1\nrowspanr1c3=1\nlinkr1c3=0\nrow1col4=20\nr1c4custom=\nrowspanr1c4=1\nlinkr1c4=0\nrow2col1=0\nr2c1custom=\nr2c1span=1\nrowspanr2c1=1\nlinkr2c1=0\nrow2col2=0\nr2c2custom=\nr2c2span=1\nrowspanr2c2=1\nlinkr2c2=0\nrow2col3=0\nr2c3custom=\nr2c3span=1\nrowspanr2c3=1\nlinkr2c3=0\nrow2col4=0\nr2c4custom=\nrowspanr2c4=1\nlinkr2c4=0\nrow3col1=0\nr3c1custom=\nr3c1span=1\nrowspanr3c1=1\nlinkr3c1=0\nrow3col2=0\nr3c2custom=\nr3c2span=1\nlinkr3c2=0\nrow3col3=0\nr3c3custom=\nr3c3span=1\nrowspanr3c3=1\nlinkr3c3=0\nrow3col4=0\nr3c4custom=\nrowspanr3c4=1\nlinkr3c4=0\nrow4col1=0\nr4c1custom=\nr4c1span=1\nrowspanr4c1=1\nlinkr4c1=0\nrow4col2=0\nr4c2custom=\nr4c2span=1\nrowspanr4c2=1\nlinkr4c2=0\nrow4col3=0\nr4c3custom=\nr4c3span=1\nrowspanr4c3=1\nlinkr4c3=0\nrow4col4=0\nr4c4custom=\nrowspanr4c4=1\nlinkr4c4=0\n\n', 'Default');
+CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 
---Adding Admin Table
---
- CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 `params` TEXT NULL,
-`id` INT(1) NOT NULL default '1',
+`id` INT(11) NOT NULL,
 `podcast` TEXT NULL,
 `series` TEXT NULL,
 `study` TEXT NULL,
@@ -216,7 +208,7 @@ INSERT INTO `jos_bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `
 `download` TEXT NULL,
 `main` TEXT NULL,
 PRIMARY KEY (`id`)
-) ENGINE = MYISAM 
+) ENGINE = MYISAM CHARACTER SET `utf8`;
 
 
 
