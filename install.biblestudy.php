@@ -254,10 +254,10 @@ $tn = '#__bsms_studies';
 $query = 'SELECT id FROM #__bsms_templates WHERE id = 1';
 $database->query();
 $defaulttemplate = $database->getAffectedRows;
-if ($defaulttemplate < 1) 
-	{
-	include_once('sql/templatedefault.sql');	
-	}
+//if ($defaulttemplate < 1) 
+	//{
+	//include_once('sql/templatedefault.sql');	
+	//}
 $tn = '#__bsms_studies';
 	$fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;
