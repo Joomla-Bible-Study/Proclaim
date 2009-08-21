@@ -12,6 +12,7 @@
     <table class="admintable">
     <tr><td class="key"><?php echo JText::_('Administrative Settings');?></td><td>
     <?php
+	jimport('joomla.html.pane');
 	$pane =& JPane::getInstance( 'sliders' );
  
 echo $pane->startPane( 'content-pane' );

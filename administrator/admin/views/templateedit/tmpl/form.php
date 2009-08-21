@@ -29,6 +29,7 @@ defined('_JEXEC') or die('Restricted Access');
 
 <table><tr><td>
 <?php
+jimport('joomla.html.pane');
 $pane =& JPane::getInstance( 'sliders' );
  
 echo $pane->startPane( 'content-pane' );

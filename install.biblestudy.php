@@ -1,6 +1,31 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php defined('_JEXEC') or die('Restricted access'); 
+@set_time_limit(300);
+$kn_maxTime = @ini_get('max_execution_time');
 
-<?php function com_install()
+$maxMem = trim(@ini_get('memory_limit'));
+if ($maxMem) {
+	$unit = strtolower($maxMem{strlen($maxMem) - 1});
+	switch($unit) {
+		case 'g':
+			$maxMem	*=	1024;
+		case 'm':
+			$maxMem	*=	1024;
+		case 'k':
+			$maxMem	*=	1024;
+	}
+	if ($maxMem < 16000000) {
+		@ini_set('memory_limit', '16M');
+	}
+	if ($maxMem < 32000000) {
+		@ini_set('memory_limit', '32M');
+	}
+	if ($maxMem < 48000000) {
+		@ini_set('memory_limit', '48M');
+	}
+}
+ignore_user_abort(true);
+
+function com_install()
 {
 ?>
 <table width = "100%" border = "0" cellpadding = "0" cellspacing = "0">
@@ -84,16 +109,7 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$hours	= isset( $fields[$tn]['secondary_reference'] );	
 			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN secondary_reference TEXT NULL AFTER chapter_end");
 			$database->query();}
-	/*$hours = false;
-	$hours	= isset( $fields[$tn]['show_level'] );	
-			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) NOT NULL default '0' AFTER secondary_reference");
-			$database->query();}
-	$hours = false;
-	$hours	= isset( $fields[$tn]['location_id'] );	
-			if (!$hours) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level");
-			$database->query();}*/
-	///$studies = isset($fields[$tn] ['media_seconds']);
-	//if ($check != $studies) { echo 'Added Media duration columns to studies table <br />'; }
+	
 	$tn = '#__bsms_teachers';
 	$fields = $database->getTableFields( array( $tn ) );
 	$title = false;
@@ -254,10 +270,204 @@ $tn = '#__bsms_studies';
 $query = 'SELECT id FROM #__bsms_templates WHERE id = 1';
 $database->query();
 $defaulttemplate = $database->getAffectedRows;
-//if ($defaulttemplate < 1) 
-	//{
-	//include_once('sql/templatedefault.sql');	
-	//}
+if ($defaulttemplate < 1) 
+	{
+	$query = 
+	("
+	INSERT INTO `#__bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `title`) VALUES
+(1, 'tmplStudiesList', '', 1, 'itemslimit=10
+compatibilityMode=0
+studieslisttemplateid=1
+detailstemplateid=1
+teachertemplateid=1
+serieslisttemplateid=0
+seriesdetailtemplateid=0
+teacher_id=1
+show_teacher_list=1
+mult_teachers=
+series_id=0
+mult_series=
+booknumber=0
+mult_books=
+topic_id=0
+mult_topics=
+messagetype=0
+mult_messagetype=
+locations=0
+mult_locations=
+default_order=DESC
+show_page_image=1
+tooltip=1
+show_verses=0
+stylesheet=
+date_format=2
+duration_type=1
+useavr=0
+popuptype=window
+media_player=0
+player_width=290
+download_image=components/com_biblestudy/images/download.png
+show_filesize=1
+store_page=flypage.tpl
+show_page_title=1
+page_title=Bible Studies
+use_headers_list=1
+list_intro=
+intro_show=1
+details_text=Study Details
+show_book_search=1
+show_teacher_search=1
+show_series_search=1
+show_type_search=1
+show_year_search=1
+show_order_search=1
+show_topic_search=1
+show_locations_search=1
+tip_title=Sermon Information
+tip_item1_title=Title
+tip_item1=5
+tip_item2_title=Details
+tip_item2=6
+tip_item3_title=Teacher
+tip_item3=7
+tip_item4_title=Reference
+tip_item4=1
+tip_item5_title=Date
+tip_item5=10
+row1col1=18
+r1c1custom=
+r1c1span=1
+rowspanr1c1=1
+linkr1c1=0
+row1col2=5
+r1c2custom=
+r1c2span=1
+rowspanr1c2=1
+linkr1c2=0
+row1col3=7
+r1c3custom=
+r1c3span=1
+rowspanr1c3=1
+linkr1c3=0
+row1col4=20
+r1c4custom=
+rowspanr1c4=1
+linkr1c4=0
+row2col1=0
+r2c1custom=
+r2c1span=1
+rowspanr2c1=1
+linkr2c1=0
+row2col2=0
+r2c2custom=
+r2c2span=1
+rowspanr2c2=1
+linkr2c2=0
+row2col3=0
+r2c3custom=
+r2c3span=1
+rowspanr2c3=1
+linkr2c3=0
+row2col4=0
+r2c4custom=
+rowspanr2c4=1
+linkr2c4=0
+row3col1=0
+r3c1custom=
+r3c1span=1
+rowspanr3c1=1
+linkr3c1=0
+row3col2=0
+r3c2custom=
+r3c2span=1
+linkr3c2=0
+row3col3=0
+r3c3custom=
+r3c3span=1
+rowspanr3c3=1
+linkr3c3=0
+row3col4=0
+r3c4custom=
+rowspanr3c4=1
+linkr3c4=0
+row4col1=0
+r4c1custom=
+r4c1span=1
+rowspanr4c1=1
+linkr4c1=0
+row4col2=0
+r4c2custom=
+r4c2span=1
+rowspanr4c2=1
+linkr4c2=0
+row4col3=0
+r4c3custom=
+r4c3span=1
+rowspanr4c3=1
+linkr4c3=0
+row4col4=0
+r4c4custom=
+rowspanr4c4=1
+linkr4c4=0
+show_print_view=1
+show_pdf_view=1
+show_teacher_view=1
+show_passage_view=1
+use_headers_view=0
+list_items_view=2
+title_line_1=7
+customtitle1=Title: {studytitle}
+title_line_2=7
+customtitle2=Date: {studydate}
+view_link=1
+link_text=Return to Studies List
+show_scripture_link=1
+show_comments=0
+comment_access=1
+comment_publish=0
+use_captcha=1
+email_comments=1
+recipient=
+subject=Comments on studies
+body=Comments entered.
+moduleitems=3
+teacher_title=Our Teachers
+show_teacher_studies=1
+studies=5
+label_teacher=Latest Messages
+series_title=Our Series
+show_series_title=1
+show_page_image_series=1
+series_show_description=1
+series_characters=
+search_series=1
+series_limit=5
+serieselement1=1
+seriesislink1=1
+serieselement2=1
+seriesislink2=1
+serieselement3=1
+seriesislink3=1
+serieselement4=1
+seriesislink4=1
+series_detail_sort=1
+series_detail_order=DESC
+series_detail_show_link=1
+series_detail_limit=
+series_list_return=1
+series_detail_1=5
+series_detail_islink1=1
+series_detail_2=7
+series_detail_islink2=0
+series_detail_3=10
+series_detail_islink3=0
+series_detail_4=20
+series_detail_islink4=0
+
+', 'Default');
+	");	
+	$database->query();
+	}
 $tn = '#__bsms_studies';
 	$fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;
