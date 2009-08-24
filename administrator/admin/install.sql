@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_media` (
 `media_text` text NULL default '',
 `media_image_name` VARCHAR(250) NULL,
 `media_image_path` VARCHAR(250) NULL, 
+`path2` VARCHAR(150) NOT NULL,
 `media_alttext` VARCHAR(250) NULL,
 `published` TINYINT(1) NOT NULL default '1',
 PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`;
@@ -152,8 +153,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
 `ordering` INT(11) NOT NULL default '0',
 `createdate` DATETIME default NULL,
 `published` TINYINT(1) NOT NULL default '1',
-`docManCategory` INT(11) NULL,
-`docManItem` INT(5) NULL,
 PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`;
 --
 -- Adding a Comments table
@@ -198,7 +197,7 @@ PRIMARY KEY  (`id`)
 
 CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 
-`params` TEXT NULL,
+
 `id` INT(11) NOT NULL,
 `podcast` TEXT NULL,
 `series` TEXT NULL,
@@ -207,6 +206,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 `media` TEXT NULL,
 `download` TEXT NULL,
 `main` TEXT NULL,
+`params` TEXT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE = MYISAM CHARACTER SET `utf8`;
 
@@ -379,29 +379,6 @@ INSERT IGNORE INTO `#__bsms_topics` VALUES (1,'Abortion',1);
   INSERT IGNORE INTO `#__bsms_topics` VALUES (101,'Workplace Issues',1);
   INSERT IGNORE INTO `#__bsms_topics` VALUES (102,'World Religions',1);
   INSERT IGNORE INTO `#__bsms_topics` VALUES (106,'Worship',1);
--- 
--- Dumping data for table `#__bsms_media`
--- 
-DELETE FROM #__bsms_media WHERE id = 2 LIMIT 1;
-DELETE FROM #__bsms_media WHERE id = 3 LIMIT 1;
-DELETE FROM #__bsms_media WHERE id = 4 LIMIT 1;
-DELETE FROM #__bsms_media WHERE id = 6 LIMIT 1;
-DELETE FROM #__bsms_media WHERE id = 7 LIMIT 1;
-DELETE FROM #__bsms_media WHERE id = 8 LIMIT 1;
-DELETE FROM #__bsms_media WHERE id = 9 LIMIT 1;
-DELETE FROM #__bsms_media WHERE id = 10 LIMIT 1;
-DELETE FROM #__bsms_media WHERE id = 11 LIMIT 1;
-DELETE FROM #__bsms_media WHERE id = 12 LIMIT 1;
-INSERT IGNORE INTO `#__bsms_media` VALUES (2, 'mp3 compressed audio file', 'mp3', 'components/com_biblestudy/images/speaker24.png', 'mp3 audio file', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (3, 'Video', 'Video File', 'components/com_biblestudy/images/video24.png', 'Video File', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (4, 'm4v', 'Video Podcast', 'components/com_biblestudy/images/podcast-video24.png', 'Video Podcast', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (6, 'Streaming Audio', 'Streaming Audio', 'components/com_biblestudy/images/streamingaudio24.png', 'Streaming Audio', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (7, 'Streaming Video', 'Streaming Video', 'components/com_biblestudy/images/streamingvideo24.png', 'Streaming Video', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (8, 'Real Audio', 'Real Audio', 'components/com_biblestudy/images/realplayer24.png', 'Real Audio', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (9, 'Windows Media Audio', 'Windows Media Audio', 'components/com_biblestudy/images/windows-media24.png', 'Windows Media File', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (10, 'Podcast Audio', 'Podcast Audio', 'components/com_biblestudy/images/podcast-audio24.png', 'Podcast Audio', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (11, 'CD', 'CD', 'components/com_biblestudy/images/cd.png', 'CD', 1);
-INSERT IGNORE INTO `#__bsms_media` VALUES (12, 'DVD', 'DVD', 'components/com_biblestudy/images/dvd.png', 'DVD', 1);
 --
 -- Dumping Data into Mime Type
 --

@@ -30,7 +30,7 @@ defined('_JEXEC') or die('Restricted Access');
 <table><tr><td>
 <?php
 jimport('joomla.html.pane');
-$pane =& JPane::getInstance( 'sliders' );
+$pane =& JPane::getInstance( 'sliders');
  
 echo $pane->startPane( 'content-pane' );
  
@@ -38,7 +38,7 @@ echo $pane->startPane( 'content-pane' );
 // Create a slider panel with a title of SLIDER_PANEL_1_TITLE and a title id attribute of SLIDER_PANEL_1_NAME
 echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
 // Display the parameters defined in the <params> group with no 'group' attribute
-echo $this->params->render( 'params' );
+echo $this->params->render( 'params');
 echo $pane->endPanel();
 
 echo $pane->startPanel( JText::_( 'Templates' ), 'TEMPLATES' );

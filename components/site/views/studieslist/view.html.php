@@ -88,12 +88,13 @@ class biblestudyViewstudieslist extends JView {
 		$topics = $this->get('Topics');
 		$orders = $this->get('Orders');
 		$books = $this->get('Books');
-		
+		//dump ($topics);
         //This is the helper for scripture formatting
         $scripture_call = Jview::loadHelper('scripture');
 		//end scripture helper
 		$translated_call = JView::loadHelper('translated');
 		$topics = getTranslated($topics);
+		
 		$orders = getTranslated($orders);
 		$book = getTranslated($books);
 		//$this->assignRef('books', $books);

@@ -3,11 +3,11 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>September 1, 2009</creationDate>
-	<author>Tom Fuller</author>
+	<creationDate>October 1, 2009</creationDate>
+	<author>Tom Fuller - Joomla Oregon</author>
 	<authorEmail>TomFuller2@gmail.com</authorEmail>
 	<authorUrl>http://joomlacode.org/gf/project/biblestudy/</authorUrl>
-	<copyright>2008-09 Tom Fuller</copyright>
+	<copyright>2008-09 Tom Fuller - Joomla Oregon</copyright>
 	<license>GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
 	<version>6.1.00</version>
@@ -205,6 +205,7 @@
 		<filename>elements/templatemenuid.php</filename>
 		<filename>elements/modulemenuid.php</filename>
 		<filename>elements/serieslisttemplateid.php</filename>
+		<filename>elements/seriesdetailtemplateid.php</filename>
 		<filename>helpers/scripture.php</filename>
 		<filename>helpers/date.php</filename>
 		<filename>helpers/filesize.php</filename>

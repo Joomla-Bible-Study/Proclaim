@@ -180,7 +180,7 @@ function setSelect($string){
 			. ' WHERE #__bsms_topics.published = 1'
 			. ' ORDER BY #__bsms_topics.topic_text ASC';
 			$this->_Topics = $this->_getList($query);
-		}
+		} 
 		return $this->_Topics;
 	}
 

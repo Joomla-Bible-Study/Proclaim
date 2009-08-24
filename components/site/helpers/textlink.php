@@ -43,6 +43,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 		$height = $pdfimage->height;
 		$width = $pdfimage->width;
 	    $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf' );
+		//$link = 'index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf';
 		$details_text = $params->get('details_text').JText::_(' - PDF Version');
 	}
 	//dump ($i_path, 'text: ');
@@ -53,10 +54,10 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	
     
 	$linktext .= '
-	<a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
+	<a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" />';
 	
 	if ($params->get('tooltip') >0) {$linktext .= '</span>';}
-	
+	$linktext .= '</a>';
    return $linktext;
 } // end of if object_vars is FALSE
 }
@@ -80,6 +81,6 @@ function getTooltip($rowid, $row, $params, $admin_params, $template)
 		$linktext .= '<strong>'.$params->get('tip_item3_title').'</strong>: '.$tip3->element.'<br />';
 		$linktext .= '<strong>'.$params->get('tip_item4_title').'</strong>: '.$tip4->element.'<br />';
 		$linktext .= '<strong>'.$params->get('tip_item5_title').'</strong>: '.$tip5->element;
- 
+ 		$linktext .= '">';
 	return $linktext;	
 	}
