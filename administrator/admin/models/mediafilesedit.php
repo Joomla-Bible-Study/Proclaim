@@ -96,11 +96,20 @@ class biblestudyModelmediafilesedit extends JModel {
 		$data['mediacode'] = str_replace('"',"'",$data['mediacode']);
 		//$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		// Bind the form fields to the  table
-		$data['article_id'] = $data['categoryItems'];
 		if($data['docManItem'] == null) {
 			$data['docMan_id'] = 0;
 		}else{
 			$data['docMan_id'] = $data['docManItem'];
+		}
+		if($data['virtueMartItem'] == null){
+			$data['virtueMart_id'] = 0;
+		}else{
+			$data['virtueMart_id'] = $data['virtueMartItem'];
+		}
+		if($data['categoryItem'] == null){
+			$data['article_id'] = 0;
+		}else{
+			$data['article_id'] = $data['categoryItem'];
 		}
 		
 		if (!$row->bind($data)) {
@@ -246,7 +255,11 @@ class biblestudyModelmediafilesedit extends JModel {
 				  WHERE `section` = 'com_docman' AND `published`=1";
 		return $this->_getList($query);
 	}
-
+	
+	function getvirtueMartCategories(){
+		$query = "SELECT category_id AS id, category_name AS title FROM `#__vm_category` WHERE `category_publish` = 'Y'";
+		return $this->_getList($query);
+	}
 	function getdocManCategoryItems($catId) {
 		$query = "SELECT id, dmname as name FROM #__docman
 				  WHERE `catid`='$catId' AND `published`=1";
@@ -268,6 +281,16 @@ class biblestudyModelmediafilesedit extends JModel {
 		return json_encode($this->_getList($query));
 	}
 	
+	function getVirtueMartItems($catId){
+		$query = "SELECT #__vm_product_category_xref.product_id AS id, #__vm_product.product_name as title
+				  FROM #__vm_product_category_xref 
+				  LEFT JOIN jos_vm_product 
+				  ON #__vm_product_category_xref.product_id=#__vm_product.product_id 
+				  WHERE #__vm_product_category_xref.category_id = $catId 
+				  ORDER BY #__vm_product.product_name ASC LIMIT 0, 30 ";
+		return json_encode($this->_getList($query));	
+	}
+	
 	function getDocManItem($id) {
 		$query = "SELECT dmname FROM #__docman WHERE `id` = '$id'";
 		$this->_db->setQuery($query);
@@ -277,6 +300,12 @@ class biblestudyModelmediafilesedit extends JModel {
 	
 	function getArticleItem($id) {
 		$query = "SELECT title FROM #__content WHERE `id` = '$id'";
+		$this->_db->setQuery($query);
+		$data = $this->_db->loadRow();
+		return $data[0];
+	}
+	function getVirtueMartItem($id){
+		$query = "SELECT product_name AS name FROM #__vm_product WHERE `product_id` = $id";
 		$this->_db->setQuery($query);
 		$data = $this->_db->loadRow();
 		return $data[0];
