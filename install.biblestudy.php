@@ -517,7 +517,7 @@ $fieldcheck	= isset( $fields[$tn]['series_thumbnail'] );
 		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_series ADD COLUMN teacher INT(3) NULL AFTER series_text;");
 		$database->query();}		
 
-$database->setQuery ("SELECT id FROM #__bsms_media");
+$database->setQuery ("SELECT id FROM #__bsms_media;");
 	$database->query();
 	$isitnew = $database->getNumRows;
 	if (!$isitnew)
