@@ -2,6 +2,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+define('JSTART', '$j(document).ready( function() {');
+define('JSTOP', '});');
+
+
 // Require the base controller
 require_once (JPATH_COMPONENT.DS.'controller.php');
 
