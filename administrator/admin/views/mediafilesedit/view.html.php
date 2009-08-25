@@ -24,10 +24,12 @@ class biblestudyViewmediafilesedit extends JView {
 		$mediafilesedit	=& $this->get('Data');
 		$docManCategories =& $this->get('docManCategories');
 		$articlesSections =& $this->get('ArticlesSections');
+		$virtueMartCategories =& $this->get('virtueMartCategories');
 
 		//Manipulate Data
 		array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
 		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
+		array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
 
 		$isNew		= ($mediafilesedit->id < 1);
 		
@@ -38,9 +40,14 @@ class biblestudyViewmediafilesedit extends JView {
 		if($mediafilesedit->docMan_id != 0 && !$isNew) {
 			$this->assignRef('docManItem', $model->getDocManItem($mediafilesedit->docMan_id));
 			$this->assign('docManStyle', 'display: none');
-		}else if($mediafilesedit->article_id != 0 && !$isNew){
+		}
+		if($mediafilesedit->article_id != 0 && !$isNew){
 			$this->assignRef('articleItem', $model->getArticleItem($mediafilesedit->article_id));
 			$this->assign('articleStyle', 'display: none');
+		}
+		if($mediafilesedit->virtueMart_id != 0 && !$isNew){
+			$this->assignRef('virtueMartItem', $model->getVirtueMartItem($mediafilesedit->virtueMart_id));
+			$this->assign('virtueMartStyle', 'display: none');
 		}
 
 		
@@ -139,6 +146,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$this->assignRef('mediafilesedit',		$mediafilesedit);
 		$this->assignRef('docManCategories', $docManCategories);
 		$this->assignRef('articlesSections', $articlesSections);
+		$this->assignRef('virtueMartCategories', $virtueMartCategories);
 		parent::display($tpl);
 	}
 }

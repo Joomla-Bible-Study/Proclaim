@@ -77,7 +77,7 @@ function openConverter1()
       		<?php echo JText::_('Item').': '; ?><select id="docManItems" name="docManItem"></select>
       	</div>
       	</td>
-      </tr>
+      </tr>      
       <tr> 
       
       	<td class="key">
@@ -105,10 +105,31 @@ function openConverter1()
       	<?php
       	echo JText::_(' Item').': ';
       	?>
-      	<select id="categoryItems" name="categoryItems"><option selected="selected">- Select an Article -</option></select>
+      	<select id="categoryItems" name="categoryItem"><option selected="selected">- Select an Article -</option></select>
       	</div>
       	</td>
       </tr>   
+      <tr>
+      	<td class="key">
+		<?php echo JText::_('Use VirtueMart')?>:</td>
+      	<td>
+      	<?php 
+      	if(isset($this->virtueMartItem)){
+      		echo '<span id="activeVirtueMart">'.$this->virtueMartItem.'</span>';
+      		echo ' <a href="#" id="virtueMartChange">'.JText::_('Change').'</a>';
+      	}
+      	?>
+      	<div id="virtueMartCategoriesContainer" class="selectContainer" style="<?php echo $this->virtueMartStyle; ?>">
+      	<?php
+      		echo JText::_('Category').':';
+      		echo JHTML::_('select.genericlist', $this->virtueMartCategories, 'virtueMartCategory', null, 'id', 'title', null, 'virtueMartCategories');
+      	?>
+      	</div>
+      	<div id="virtueMartItemsContainer" class="selectContainer">
+      		<?php echo JText::_('Item').': '; ?><select id="virtueMartItems" name="virtueMartItem"></select>
+      	</div>
+      	</td>
+      </tr> 
               <tr><td class="key"></td><td><?php echo JText::_(' Use <a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">AVReloaded Viewer</a> (1.2.4 of higher Must be installed): ').$this->lists['internal_viewer']; ?></td>
 			</tr>
             <tr><td class="key"><?php echo JText::_('All Videos Reloaded');?></td><td><?php echo JText::_('AVRELOADED');?></td></tr>
