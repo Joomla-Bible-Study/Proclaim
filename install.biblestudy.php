@@ -519,28 +519,28 @@ $fieldcheck	= isset( $fields[$tn]['series_thumbnail'] );
 
 $database->setQuery ("SELECT id FROM #__bsms_media");
 	$database->query();
-	$isitnew = $database->loadResult();
+	$isitnew = $database->getNumRows;
 	if (!$isitnew)
 		{
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (2, 'mp3 compressed audio file', 'mp3', '','speaker24.png', 'mp3 audio file', 1");
+			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (2, 'mp3 compressed audio file', 'mp3', '','speaker24.png', 'mp3 audio file', 1;");
 			$database->query();	
 			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (3, 'Video', 'Video File', '','video24.png', 'Video File', 1");
 			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (4, 'm4v', 'Video Podcast', '','podcast-video24.png', 'Video Podcast', 1");
+			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (4, 'm4v', 'Video Podcast', '','podcast-video24.png', 'Video Podcast', 1;");
 			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (6, 'Streaming Audio', 'Streaming Audio', '','streamingaudio24.png', 'Streaming Audio', 1");
+			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (6, 'Streaming Audio', 'Streaming Audio', '','streamingaudio24.png', 'Streaming Audio', 1;");
 			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (7, 'Streaming Video', 'Streaming Video', '','streamingvideo24.png', 'Streaming Video', 1");
+			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (7, 'Streaming Video', 'Streaming Video', '','streamingvideo24.png', 'Streaming Video', 1;");
 			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (8, 'Real Audio', 'Real Audio', '','realplayer24.png', 'Real Audio', 1");
+			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (8, 'Real Audio', 'Real Audio', '','realplayer24.png', 'Real Audio', 1;");
 			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (9, 'Windows Media Audio', 'Windows Media Audio', '','windows-media24.png', 'Windows Media File', 1");
+			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (9, 'Windows Media Audio', 'Windows Media Audio', '','windows-media24.png', 'Windows Media File', 1;");
 			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (10, 'Podcast Audio', 'Podcast Audio', '','podcast-audio24.png', 'Podcast Audio', 1");
+			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (10, 'Podcast Audio', 'Podcast Audio', '','podcast-audio24.png', 'Podcast Audio', 1;");
 			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (11, 'CD', 'CD', '','cd.png', 'CD', 1");
+			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (11, 'CD', 'CD', '','cd.png', 'CD', 1;");
 			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (12, 'DVD', 'DVD', '','dvd.png', 'DVD', 1");
+			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (12, 'DVD', 'DVD', '','dvd.png', 'DVD', 1;");
 			$database->query();
 		} //End of check for new media table
 $tn = '#__bsms_media';
@@ -554,15 +554,15 @@ $fieldcheck	= isset( $fields[$tn]['path2'] );
 			$database->query();
 		}
 
-			$database->setQuery("SELECT id FROM #__bsms_media WHERE path2 LIKE 'download.png';");
-			$database->query();
-			$numrows = $database->getNumRows();
-			if (!$numrows)
-			{
-				$query = "INSERT INTO #__bsms_media (media_text, media_image_name, media_image_path, path2, media_alttext, published) VALUES ('Download','Download', '', 'download.png', 'Download', '1');";
-				$database->setQuery = ($query);
-				$database->query();
-			}
+$database->setQuery("SELECT id FROM #__bsms_media WHERE path2 LIKE 'download.png';");
+$database->query();
+$numrows = $database->getNumRows();
+if (!$numrows)
+	{
+		$query = "INSERT INTO #__bsms_media (media_text, media_image_name, media_image_path, path2, media_alttext, published) VALUES ('Download','Download', '', 'download.png', 'Download', '1');";
+		$database->setQuery = ($query);
+		$database->query();
+	}
 $tn = '#__bsms_teachers';
 $fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;	
