@@ -36,6 +36,7 @@ class Tablemediafilesedit extends JTable
 	var $hits = null;
 	var $docMan_id = null;
 	var $article_id = null;
+	var $virtueMart_id = null;
 	var $comment = null;
 	
 	
