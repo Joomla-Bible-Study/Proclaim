@@ -50,6 +50,10 @@ $j(document).ready( function() {
 						$j('#docManItemsContainer').hide();
 						$j('#docManItems').removeOption(/./);
 						$j('#docManCategories').val('');
+						$j('#virtueMartItemsContainer').hide();
+						$j('#virtueMartItems').removeOption(/./);
+						$j('#virtueMartCategories').val('');
+						
 					})	
 					refreshArticleItems();
 				}
@@ -99,7 +103,36 @@ $j(document).ready( function() {
 		});
 	}
 	
-	//for existing docman and articles
+	// VirtueMart integration
+	$j('#virtueMartCategories').change(function() {
+			virtueMartItems = $j('#virtueMartItems');
+			virtueMartItems.removeOption(/./);
+			var catId = $j('#virtueMartCategories option:selected').attr('value');
+			var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=virtueMartItems&format=raw&catId=';
+			// request the items
+			$j.ajax( {
+				dataType : "json",
+				url : url + catId,
+				success : function(data) {
+					$j.each(data, function(entryIndex, entry) {
+						virtueMartItems.addOption(entry['id'], entry['title']);
+						$j('#virtueMartItemsContainer').show();
+						
+						$j('#articlesCategoriesContainer').hide();
+						$j('#articlesItemsContainer').hide();
+						$j('#docManItemsContainer').hide();
+						$j('#docManItems').removeOption(/./);
+						
+						$j('#articleSectionCategories').removeOption(/./);
+						$j('#categoryItems').removeOption(/./);
+						
+						$j('#articlesSections').val('');
+						
+					})
+				}
+			});
+		});
+	//for existing docman,  articles, and virtuemart
 	$j('#docmanChange').click(function() {
 		$j(this).hide();
 		$j('#docMainCategoriesContainer').show();
@@ -112,4 +145,10 @@ $j(document).ready( function() {
 		$j('#activeArticle').hide();
 		return false;
 	});
+	$j('#virtueMartChange').click(function() {
+		$j(this).hide();
+		$j('#virtueMartCategoriesContainer').show();
+		$j('#activeVirtueMart').hide();
+		return false;
+	});	
 });
