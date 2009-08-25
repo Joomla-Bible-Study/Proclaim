@@ -25,6 +25,7 @@ $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
 $row = $this->studydetails;
 $listingcall = JView::loadHelper('listing');
+//dump ($row, 'row: ');
 ?>
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
  <div id="header">
@@ -73,7 +74,7 @@ $listingcall = JView::loadHelper('listing');
 if ($params->get('use_headers_view') > 0)
 	{	
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($row, $params, $this->admin_params, $this->template);
+     $header = getHeader($row, $params, $this->admin_params, $this->template, $showheader=$params->get('use_headers_view'));
      echo $header;
 	}	?>
     <tbody>
@@ -133,7 +134,7 @@ if ($params->get('list_items_view') == 0)
 					$templatemenuid = $params->get('studielisttemplateid');
 					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 					//$returnmenu = JRequest::getVar('templatemenuid', 'get', 'int');
-					if (!returnmenu) {$returnmenu = 1;}
+					if (!isset($returnmenu)) {$returnmenu = 1;}
 					//dump ($returnmenu, 'returnmenu: ');
 					$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$templatemenuid);?>
 			<a href="<?php echo $link;?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>

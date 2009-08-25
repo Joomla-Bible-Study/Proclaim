@@ -1,4 +1,4 @@
-<form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm">
 	<table class="adminlist">
 	      <thead>
 	        <tr> 

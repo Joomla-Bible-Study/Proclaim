@@ -21,7 +21,7 @@ function getTeacher($params, $id, $admin_params)
 		
 		//dump ($teacherids['id'], 'tresult: ');
 		$teacher = '<table id = "teacher"><tr>';
-		if (!$teacherids) {return $teacher;}
+		if (!isset($teacherids)) {return $teacher;}
 		foreach ($teacherids as $teachers)
 		
 		{

@@ -7,9 +7,9 @@ function getImage($path)
 	//dump ($path, 'ppath: ');
 	//dump ($file, 'file: ');
 	$tmp = new JObject();
-	$tmp->name = $file;
+	//$tmp->name = $file;
 	$tmp->path = $path;
-	
+	//dump ($path, 'path: ');
 
 	$tmp->size = filesize($tmp->path);	
 	$ext = strtolower(JFile::getExt($path));

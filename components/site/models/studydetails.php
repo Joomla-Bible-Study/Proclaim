@@ -92,7 +92,7 @@ class biblestudyModelstudydetails extends JModel
 		// Load the data
 		if (empty( $this->_data )) {
 			$id = JRequest::getVar('id', 0,'GET','INT');
-		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS tname, #__bsms_teachers.title, '
+		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS teachername, #__bsms_teachers.title, '
 			. ' #__bsms_teachers.image, #__bsms_teachers.imagew, #__bsms_teachers.imageh, #__bsms_teachers.thumb, #__bsms_teachers.thumbw, #__bsms_teachers.thumbh,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text AS stext, #__bsms_message_type.id AS mid,'
 			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname AS bname, #__bsms_locations.id as lid, #__bsms_locations.location_text,'

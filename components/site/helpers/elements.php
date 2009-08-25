@@ -1,7 +1,8 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 
 function getElementid($rowid, $row, $params, $admin_params, $template)
-	{//dump ($template, 'admin_params-elements: ');
+	{
+	$elementid = null;
 	 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'scripture.php');
 	include_once($path1.'duration.php');

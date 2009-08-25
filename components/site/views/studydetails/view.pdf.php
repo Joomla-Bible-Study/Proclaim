@@ -23,6 +23,18 @@ class biblestudyViewstudydetails extends JView
 		$params = &$mainframe->getPageParameters();
 		//$params = &JComponentHelper::getParams($option);
 		// process the new plugins
+		$templatemenuid = $params->get('templatemenuid');
+		if (!$templatemenuid){$templatemenuid = 1;}
+		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		$template = $this->get('Template');
+		$params = new JParameter($template[0]->params);
+		$studydetails		=& $this->get('Data');
+		$admin =& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
+		
+		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		include_once($path1.'date.php');
+		include_once($path1.'scripture.php');
 		JPluginHelper::importPlugin('content', 'image');
 		$dispatcher->trigger('onPrepareContent', array (& $studydetails, & $params, 0));
 
@@ -34,7 +46,7 @@ class biblestudyViewstudydetails extends JView
 		$document->setDescription($studydetails->studyintro);
 		
                 
-
+		$date = getstudyDate($params, $studydetails->studydate);
 		$document->setModifiedDate($date);
 		//$document->setMetaData('keywords', $article->metakey);
 
@@ -45,7 +57,7 @@ class biblestudyViewstudydetails extends JView
 
 		 //code added to provide Scripture reference at bottom 
  if ($params->get('show_passage_view') > 0) { 
- if ($scripture1) { 
+ if (isset($scripture1)) { 
 	
 
    $key = "IP";
@@ -82,7 +94,7 @@ class biblestudyViewstudydetails extends JView
 		//return $text;
 	//}
 	
-$scripture_call = Jview::loadHelper('scripture');
+//$scripture_call = Jview::loadHelper('scripture');
 
 $scripture1 = getScripture($params, $studydetails, $esv=0, $scripturerow=1);
 

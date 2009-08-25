@@ -10,6 +10,7 @@ defined('_JEXEC') or die('Restriced Access');
 function getTranslated($result)
 
 {
+	//dump ($result);
     $output2 = array();
 	foreach ($result as $value)
     {

@@ -65,7 +65,7 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$database->query();
 	$isitnew = $database->loadResult();
 	if (!$isitnew){
-	$database->setQuery ("INSERT INTO #__bsms_studies VALUES (1, '2009-09-13 00:10:00', 1, '2009-001', 101, 01, 01, 01, 31, 'Sample Study Title', 'Sample text you can use as an introduction to your study', '1', 1, 1, 'This is where you would put study notes or other information. This could be the full text of your study as well.', 1)");
+	$database->setQuery ("INSERT INTO #__bsms_studies VALUES (1, '2009-09-13 00:10:00', 1, '2009-001', 101, 01, 01, 01, 31, 'Sample Study Title', 'Sample text you can use as an introduction to your study', '1', 4, 1, 'This is where you would put study notes or other information. This could be the full text of your study as well.', 1)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_servers VALUES (1, 'Your Server Name', 'www.mywebsite.com', 1)");
 	$database->query();
@@ -82,6 +82,28 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$database->setQuery ("INSERT INTO #__bsms_podcast VALUES (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', 'en-us', 'Jim Editor', 'jim@mywebsite.com', 50, 1)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_locations VALUES (1, 'My Location', 1)");
+	$database->query();
+	//this is inserting default values into the #__bsms_media table
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (2, 'mp3 compressed audio file', 'mp3', '','speaker24.png', 'mp3 audio file', 1);");
+	$database->query();	
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (3, 'Video', 'Video File', '','video24.png', 'Video File', 1)");
+	$database->query();
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (4, 'm4v', 'Video Podcast', '','podcast-video24.png', 'Video Podcast', 1;)");
+	$database->query();
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (6, 'Streaming Audio', 'Streaming Audio', '','streamingaudio24.png', 'Streaming Audio', 1);");
+	$database->query();
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (7, 'Streaming Video', 'Streaming Video', '','streamingvideo24.png', 'Streaming Video', 1);");
+	$database->query();
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (8, 'Real Audio', 'Real Audio', '','realplayer24.png', 'Real Audio', 1;");
+	$database->query();
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (9, 'Windows Media Audio', 'Windows Media Audio', '','windows-media24.png', 'Windows Media File', 1);");
+	$database->query();
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (10, 'Podcast Audio', 'Podcast Audio', '','podcast-audio24.png', 'Podcast Audio', 1);");
+	$database->query();
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (11, 'CD', 'CD', '','cd.png', 'CD', 1);");
+	$database->query();
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (12, 'DVD', 'DVD', '','dvd.png', 'DVD', 1);");
+	$database->setQuery("INSERT INTO #__bsms_media VALUES (13,'Download','Download', '', 'download.png', 'Download', '1');");
 	$database->query();
 	}
 	
@@ -283,13 +305,13 @@ $database->setQuery ("SELECT id FROM #__bsms_templates");
 	$database->setQuery  
 	("
 	INSERT INTO `#__bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `title`, `text`, `pdf`) VALUES
-(1, 'tmplStudiesList', '', 1, 'itemslimit=10
+(1, 'tmplList', '', 1, 'itemslimit=10
 compatibilityMode=0
 studieslisttemplateid=1
 detailstemplateid=1
 teachertemplateid=1
-serieslisttemplateid=0
-seriesdetailtemplateid=0
+serieslisttemplateid=1
+seriesdetailtemplateid=1
 teacher_id=
 show_teacher_list=0
 mult_teachers=
@@ -314,7 +336,6 @@ useavr=0
 popuptype=window
 media_player=0
 player_width=290
-download_image=components/com_biblestudy/images/download.png
 show_filesize=1
 store_page=flypage.tpl
 show_page_title=1
@@ -351,8 +372,8 @@ row1col2=5
 r1c2custom=
 r1c2span=1
 rowspanr1c2=1
-linkr1c2=0
-row1col3=7
+linkr1c2=1
+row1col3=1
 r1c3custom=
 r1c3span=1
 rowspanr1c3=1
@@ -361,9 +382,9 @@ row1col4=20
 r1c4custom=
 rowspanr1c4=1
 linkr1c4=0
-row2col1=0
+row2col1=6
 r2c1custom=
-r2c1span=1
+r2c1span=4
 rowspanr2c1=1
 linkr2c1=0
 row2col2=0
@@ -421,7 +442,7 @@ show_print_view=1
 show_pdf_view=1
 show_teacher_view=1
 show_passage_view=1
-use_headers_view=0
+use_headers_view=1
 list_items_view=2
 title_line_1=7
 customtitle1=
@@ -517,32 +538,7 @@ $fieldcheck	= isset( $fields[$tn]['series_thumbnail'] );
 		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_series ADD COLUMN teacher INT(3) NULL AFTER series_text;");
 		$database->query();}		
 
-$database->setQuery ("SELECT id FROM #__bsms_media;");
-	$database->query();
-	$isitnew = $database->getNumRows;
-	if (!$isitnew)
-		{
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (2, 'mp3 compressed audio file', 'mp3', '','speaker24.png', 'mp3 audio file', 1;");
-			$database->query();	
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (3, 'Video', 'Video File', '','video24.png', 'Video File', 1");
-			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (4, 'm4v', 'Video Podcast', '','podcast-video24.png', 'Video Podcast', 1;");
-			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (6, 'Streaming Audio', 'Streaming Audio', '','streamingaudio24.png', 'Streaming Audio', 1;");
-			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (7, 'Streaming Video', 'Streaming Video', '','streamingvideo24.png', 'Streaming Video', 1;");
-			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (8, 'Real Audio', 'Real Audio', '','realplayer24.png', 'Real Audio', 1;");
-			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (9, 'Windows Media Audio', 'Windows Media Audio', '','windows-media24.png', 'Windows Media File', 1;");
-			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (10, 'Podcast Audio', 'Podcast Audio', '','podcast-audio24.png', 'Podcast Audio', 1;");
-			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (11, 'CD', 'CD', '','cd.png', 'CD', 1;");
-			$database->query();
-			$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (12, 'DVD', 'DVD', '','dvd.png', 'DVD', 1;");
-			$database->query();
-		} //End of check for new media table
+
 $tn = '#__bsms_media';
 $fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;	
@@ -554,7 +550,7 @@ $fieldcheck	= isset( $fields[$tn]['path2'] );
 			$database->query();
 		}
 
-$database->setQuery("SELECT id FROM #__bsms_media WHERE path2 LIKE 'download.png';");
+$database->setQuery("SELECT id FROM #__bsms_media WHERE path2 LIKE '%download.png%';");
 $database->query();
 $numrows = $database->getNumRows();
 if (!$numrows)
@@ -583,11 +579,15 @@ $fieldcheck = isset($fields[$tn]['docMan_id']);
 $fieldcheck = isset($fields[$tn]['article_id']);
 		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN article_id INT NULL AFTER docMan_id;");
 		$database->query();}
-		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN comment TEXT NULL AFTER articleTitle;");
+$fieldcheck = isset($fields[$tn]['comment']);		
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN comment TEXT NULL AFTER article_id;");
 		$database->query();}
-if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
-	if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}
-	else {
+$fieldcheck = isset($fields[$tn]['virtueMart_id']);		
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN virtueMart_id INT NULL AFTER comment;");
+		$database->query();}		
+//if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
+	//if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}
+	//else {
 		$database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
 		$database->query();
 	$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 612)");
@@ -595,7 +595,7 @@ if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields.
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
 		$db612 = $database->loadResult();
 		$dbmessage =  'The current database schema for Bible Study is: '.$db612.'<br>';
-		}
+		//}
 //Check to see if the admin row exists
 
 $database->setQuery ("SELECT id FROM #__bsms_admin");

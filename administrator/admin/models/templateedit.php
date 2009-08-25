@@ -33,6 +33,18 @@ class biblestudyModeltemplateedit extends JModel {
 			$this->_db->setQuery( $query );
 			$this->_template = $this->_db->loadObject();
 		}
+		
+		if (!$this->_template) 
+		{
+			$this->_template = new stdClass();
+			$this->_template->id = 0;
+			$this->_template->type = null;
+			$this->_template->published = 1;
+			$this->_template->params = null;
+			$this->_template->title = null;
+			$this->_template->text = null;
+			$this->_template->pdf = null;
+		}
 		return $this->_template;
 	}
 

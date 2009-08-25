@@ -64,7 +64,7 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 <?php if ($params->get('show_teacher_list') > 0)
 	{	
 	$teacher_call = JView::loadHelper('teacher');
-	$teacher = getTeacher($params, $row->teacher_id, $this->admin_params);
+	$teacher = getTeacher($params, $id=null, $this->admin_params);
 	if ($teacher) {echo $teacher;}
 	}?>    
     </div><!--header-->
@@ -93,8 +93,8 @@ if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->pa
      <?php 
 	 
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($row, $params, $this->admin_params, $this->template);
-     echo $header;
+     $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'));
+	 echo $header;
      ?>
       <tbody>
 

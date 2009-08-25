@@ -27,10 +27,15 @@ class biblestudyViewmediafilesedit extends JView {
 		$virtueMartCategories =& $this->get('virtueMartCategories');
 
 		//Manipulate Data
-		array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
+		if ($docManCategories)
+			{
+				array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
+			}
 		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
-		array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
-
+		if ($virtueMartCategories)
+			{
+				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
+			}
 		$isNew		= ($mediafilesedit->id < 1);
 		
 		//Retrieve any Docman items or articles that may exist
@@ -71,7 +76,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$alt = "Upload";
 		$bar=& JToolBar::getInstance( 'toolbar' );
 		//$bar->appendButton( 'Popup', 'upload', $alt, 'index.php', 650, 500 );
-		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=$directory", 800, 700 );
+		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=", 800, 700 );
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.mediafilesedit', true );
 		// build the html select list for ordering

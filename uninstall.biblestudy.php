@@ -126,10 +126,10 @@ $drop_tables = $admin_params->get('drop_tables');
 					return false;
 				}
 		if ($database->query()) {
-                                    print '<li >Successful - Bible Study Tables Dropped</li>';
+                                    print '<tr><td><li >Successful - Bible Study Tables Dropped</li></td></tr>';
                                     }
                                 else {
-                                    print '<li >Attempt to drop tables not successfull. They must be manually removed.</li>';
+                                    print '<tr><td><li >Attempt to drop tables not successfull. They must be manually removed.</li></td></tr>';
                                     }
 	}
 	else

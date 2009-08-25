@@ -6,7 +6,7 @@ class biblestudyViewtemplateedit extends JView {
 	function display() {
 		//Get template if editing
 		$template = $this->get('template');
-
+//dump ($template, 'template: ');
 		if(empty($template->id)) {
 			JToolbarHelper::title(JText::_('Create Template'), 'generic.png');
 		}else{

@@ -57,6 +57,8 @@ function openConverter1()
 				<?php echo $this->lists['ordering']; ?>
 			</td>
 		</tr>
+     <?php if (isset($this->docManItem))
+	 { ?>
       <tr>
       	<td class="key">
 		<?php echo JText::_('Use DOCman')?>:</td>
@@ -78,6 +80,8 @@ function openConverter1()
       	</div>
       	</td>
       </tr>      
+      <?php } //end of if $this->docManItem ?>
+      
       <tr> 
       
       	<td class="key">
@@ -108,7 +112,10 @@ function openConverter1()
       	<select id="categoryItems" name="categoryItem"><option selected="selected">- Select an Article -</option></select>
       	</div>
       	</td>
-      </tr>   
+      </tr>  
+      
+       <?php if (isset($this->virtueMartItem))
+	   { ?>
       <tr>
       	<td class="key">
 		<?php echo JText::_('Use VirtueMart')?>:</td>
@@ -130,6 +137,8 @@ function openConverter1()
       	</div>
       	</td>
       </tr> 
+      <?php } // end if $this->virtueMartItem ?>
+      
               <tr><td class="key"></td><td><?php echo JText::_(' Use <a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">AVReloaded Viewer</a> (1.2.4 of higher Must be installed): ').$this->lists['internal_viewer']; ?></td>
 			</tr>
             <tr><td class="key"><?php echo JText::_('All Videos Reloaded');?></td><td><?php echo JText::_('AVRELOADED');?></td></tr>

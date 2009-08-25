@@ -2,7 +2,7 @@
 
 function getScripture($params, $row, $esv, $scripturerow) {
 	global $mainframe, $option;
-	if (!$row->id) {return;}
+	if (!isset($row->id)) {return;}
 	if ($scripturerow == 2) {
 		$booknumber = $row->booknumber2;
 		$ch_b = $row->chapter_begin2;
@@ -26,11 +26,12 @@ function getScripture($params, $row, $esv, $scripturerow) {
 	$db->setQuery($query);
 	$bookresults = $db->loadObject();
 	$affectedrows = count($bookresults);
-	if ($bookresults < 1) { return; }
+	if ($affectedrows < 1) { return; }
 	$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
 	$db->setQuery($query);
 	$booknameresults = $db->loadObject();
 	//dump ($show_verses, 'show_verses ');
+	if (!isset($booknameresults)){$scripture = ''; return $scripture;}
 	if ($booknameresults->bookname) {$book = JText::_($booknameresults->bookname);} else {$book = '';}
 	$b1 = ' ';
 	$b2 = ':';

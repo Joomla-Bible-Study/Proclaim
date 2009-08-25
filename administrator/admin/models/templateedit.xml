@@ -83,7 +83,6 @@
 					<option value="1">Yes</option>
 				</param>
 			<param name="player_width" type="text" default="290" label="Width for MP3 Player" description="Width in pixels of internal MP3 player" />
-			<param name="download_image" type="text" size="55" default="components/com_biblestudy/images/download.png" label="Download Icon Image" description="Path from root to download icon image file" />
 			<param name="show_filesize" type="list" default="1" label="Media Label" description="Choose a label for under the media file">
 					<option value="0">Hide</option>
 					<option value="1">Show Filesize only</option>

@@ -1,13 +1,13 @@
 <?php
 defined('_JEXEC') or die();
 
-function getHeader($row, $params, $admin_params, $template)
+function getHeader($row, $params, $admin_params, $template, $showheader)
 { 
 //dump ($template, 'Header - Template: ');
 	//$nh checks to see if there is a header in use, otherwise it puts a line at the top of the listing
 	$nh = FALSE;
-	if  (($params->get('use_headers_list') == 0) || ($params->get('use_headers_view') == 0)){$nh = TRUE;}
-	
+	if  ($showheader < 1){$nh = TRUE;}
+	//dump ($params->get('use_headers_list'), 'nh: ');
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	$columns = 1;
@@ -211,9 +211,9 @@ function getHeader($row, $params, $admin_params, $template)
 function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template)
 {
 		
-	 	$headercell .= '<th id="';
+	 	$headercell = '<th id="';
 	 	$elementid = getElementid($rowid, $row, $params, $admin_params, $template);
-		if (!$elementid->id) {$headercell .= 'customhead';}
+		if (!isset($elementid->id)) {$headercell .= 'customhead';}
 	 	else {$headercell .= $elementid->id.'head';}
 		$headercell .= '" class="'.$rowcolid;
 		if ($lastcol == 1) {$headercell .= ' lastcol';}
@@ -222,7 +222,7 @@ function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $row
 		if ($rowspan > 1){$headercell .='rowspan="'.$rowspan.'"';}
 		$headercell .= '>';
 		//if (!$elementid->headertext) {$headercell .= JText::_('Study Information');}
-	 	$headercell .= $elementid->headertext;
+	 	if (isset($elementid)) {$headercell .= $elementid->headertext;}
 	 	$headercell .= '</th>
 		';
  	return $headercell;

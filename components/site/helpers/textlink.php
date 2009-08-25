@@ -7,7 +7,7 @@ $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'scripture.php');
 include_once($path1.'image.php');
 $scripturerow = 1;	
-$scripture1 = getScripture($params, $row, $esv, $scripturerow);
+$scripture1 = getScripture($params, $row, $esv=null, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
 $templatemenuid = $params->get('detailstemplateid');
 //I put in the below check because for some reason when showing teacher and/or header with a textlink caused an error, saying the a JParameter type was being sent. I was not able to figure out where it was coming from, so added this check because if it is a JParameter object, get_object_vars will return with the object, otherwise it returns FALSE

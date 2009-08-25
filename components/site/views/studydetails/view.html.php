@@ -36,11 +36,13 @@ class biblestudyViewstudydetails extends JView
 		$this->assignRef('admin_params', $admin_params);
 		//Passage link to BibleGateway
 		$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');
- 		$st_params 	= new JParameter( $plugin->params );
-		//$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-		$version = $st_params->get('bible_version');
-		$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
-		
+		if ($plugin)
+			{
+ 				$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');
+				$st_params 	= new JParameter( $plugin->params );
+				$version = $st_params->get('bible_version');
+				$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
+			}
 		
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');
@@ -80,6 +82,7 @@ class biblestudyViewstudydetails extends JView
 				JPluginHelper::importPlugin('content', 'scripturelinks');
 				break;
 			}
+			$limitstart = JRequest::getVar('limitstart','int');
 			$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
 			$article->studytext = $article->text;
 			

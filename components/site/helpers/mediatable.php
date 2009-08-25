@@ -4,7 +4,7 @@ defined('_JEXEC') or die();
 function getMediatable($params, $row, $admin_params)
 {
 //dump ($admin_params, 'admin_params: ');
-if (!$row-id) {return FALSE;}
+if (!$row->id) {return FALSE;}
     global $mainframe, $option;
 	$database = & JFactory::getDBO();
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -130,19 +130,19 @@ if (!$row-id) {return FALSE;}
        // Here is where we begin to build the mediatable variable
 	
 	 //Here we test to see if docMan or article is used
-	 if ($media->docMan_id)
+	 if (isset($media->docMan_id))
 	 	{
-			$media1_link = getDocman($media, $width, $height, $src);
+			$media1_link = getDocman($media, $width, $height, $src, $duration, $media_size);
 		}
-	if ($media->article_id)
+	if (isset($media->article_id))
 		{
 			$media1_link = getArticle($media, $width, $height, $src);
 		}
 	 
 	 
-	if ($media->product_id)
+	if (isset($media->virtueMart_id))
 		{
-			$media1_link = getVirtuemart($media, $width, $height, $src);
+			$media1_link = getVirtuemart($media, $width, $height, $src, $params);
 		}
 	
 	//dump ($useavr, 'useavr');
@@ -203,7 +203,7 @@ if ($params->get('show_filesize') > 0 )
     return $mediatable;
 }
 
-function getDocman($media, $width, $height, $src)
+function getDocman($media, $width, $height, $src, $duration, $media_size)
 	{
 		$docman = '<a href="index.php?option=com_docman&task=doc_download&gid='.$media->docMan_id.'"
 		 title="'.$media->malttext.' - '.$media->comment.'" target="'.$media->special.'"><img src="'.$src
@@ -223,10 +223,10 @@ function getArticle($media, $width, $height, $src)
 	return $article;
 	}
 	
-function getVirtuemart($media, $width, $height, $src)
+function getVirtuemart($media, $width, $height, $src, $params)
 	{
 		
-		$vm = '<a href="index.php?option=com_virtuemart&page=shop.product_details&flypage='.$params->get('store_page', 'flypage.tpl').'&product_id=26"
+		$vm = '<a href="index.php?option=com_virtuemart&page=shop.product_details&flypage='.$params->get('store_page', 'flypage.tpl').'&product_id='.$media->virtueMart_id.'"
 		alt="'.$media->malttext.' - '.$media->comment.'" target="'.$media->special.'"><img src="'.$src.'" width="'.$width
        	.'" height="'.$height.'" border="0" /></a>';
 		
