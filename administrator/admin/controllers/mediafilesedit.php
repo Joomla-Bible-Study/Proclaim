@@ -280,5 +280,13 @@ class biblestudyControllermediafilesedit extends JController {
 		$items =& $model->getCategoryItems($catId);
 		echo $items;
 	}
+	function virtueMartItems(){
+		error_reporting(0);
+		$catId = JRequest::getVar('catId');
+		
+		$model =& $this->getModel('mediafilesedit');
+		$items =& $model->getVirtueMartItems($catId);
+		echo $items;		
+	}
 }
 ?>
