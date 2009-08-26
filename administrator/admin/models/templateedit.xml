@@ -105,18 +105,19 @@
 		<param name="intro_show" type="list" default="1" label="Show/Hide Intro" description="Choose whether to hide or show the listing introduction text">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
-				</param>
-			<param name="show_teacher_list" type="list" default="0" label="Show/Hide a teacher image on list page" description="Choose whether to show or hide a teacher thumbnail and name in the list page">
-					<option value="0">Hide</option>
-					<option value="1">Show</option>
-				</param>
-				<param name="details_text" type="text" default="Study Details" size="50" label="Alt tag for details" description="Text to show on mouse over of details image link other than if you choose a tooltip" />
-			<param name="show_book_search" type="list" default="1" label="Show/Hide book search" description="Shows or hides the drop down box for books">
+		</param>
+		<param name="listteachers" type="text" default="" label="Ids of teachers on list page" description="Enter a comma separated list of teacher ids to show on the list page" />
+		<param name="teacherlink" type="list" default="1" label="Show link to teacher details page" description="Creates a link out of the teacher name to their details page">
+			<option value="0">No Link</option>
+			<option value="1">Show Link</option>
+		</param>
+		<param name="details_text" type="text" default="Study Details" size="50" label="Alt tag for details" description="Text to show on mouse over of details image link other than if you choose a tooltip" />
+		<param name="show_book_search" type="list" default="1" label="Show/Hide book search" description="Shows or hides the drop down box for books">
 					<option value="0">Hide</option>
 					<option value="1">Show unless filtered</option>
 					<option value="2">Show Always</option>
-				</param>
-			<param name="show_teacher_search" type="list" default="1" label="Show/Hide Teacher search" description="Shows or hides the drop down box for teachers">
+		</param>
+		<param name="show_teacher_search" type="list" default="1" label="Show/Hide Teacher search" description="Shows or hides the drop down box for teachers">
 					<option value="0">Hide</option>
 					<option value="1">Show unless filtered</option>
 					<option value="2">Show Always</option>
@@ -955,7 +956,7 @@
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 			</param>
-			<param name="show_teacher_view" type="list" default="1" label="Show/Hide PDF Button" description="Shows or hides the Teacher">
+			<param name="show_teacher_view" type="list" default="1" label="Show/Hide Teacher" description="Shows or hides the Teacher">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 			</param>

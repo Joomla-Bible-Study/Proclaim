@@ -65,19 +65,19 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$database->query();
 	$isitnew = $database->loadResult();
 	if (!$isitnew){
-	$database->setQuery ("INSERT INTO #__bsms_studies VALUES (1, '2009-09-13 00:10:00', 1, '2009-001', 101, 01, 01, 01, 31, 'Sample Study Title', 'Sample text you can use as an introduction to your study', '1', 4, 1, 'This is where you would put study notes or other information. This could be the full text of your study as well.', 1)");
+	$database->setQuery ("INSERT INTO #__bsms_studies VALUES (1, '2009-09-13 00:10:00', 1, '2009-001', 101, 01, 01, 01, 31, 'Sample Study Title', 'Sample text you can use as an introduction to your study', '1', 4, 1, 'This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com', 1)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_servers VALUES (1, 'Your Server Name', 'www.mywebsite.com', 1)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_series VALUES (1, 'Worship Series', 1)");
 	$database->query();
-	$database->setQuery ("INSERT INTO #__bsms_teachers VALUES (1, 'Billy Graham', 1)");
+	$database->setQuery ("INSERT INTO #__bsms_teachers VALUES (1,'','', 'Billy Sunday','Pastor','555-555-5555','billy@sunday.com','http://billysunday.com','William Ashley Sunday (November 19 1862 – November 6 1935) was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century.','components/com_biblestudy/images/billy_sunday11.jpg','735','525','components/com_biblestudy/images/images.jpg','101','141','Billy Sunday: 1862-1935',0,1,1,1)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_message_type VALUES (1, 'Sunday', 1)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_folders VALUES (1, 'My Folder Name', '/media/', 1)");
 	$database->query();
-	$database->setQuery ("INSERT INTO #__bsms_mediafiles VALUES (1, 1, 2, 1, 1, '','myfile.mp3', 12332, 1, 1, 0, '', 0, '2009-09-13 00:10:00', 1)");
+	$database->setQuery ("INSERT INTO #__bsms_mediafiles VALUES (1, 1, 2, 1, 1, '','myfile.mp3', 12332, 1, 1, 0, '', 0, '2009-09-13 00:10:00', 1,'',1,0,0,'',0)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_podcast VALUES (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', 'en-us', 'Jim Editor', 'jim@mywebsite.com', 50, 1)");
 	$database->query();
@@ -343,6 +343,8 @@ page_title=Bible Studies
 use_headers_list=1
 list_intro=
 intro_show=1
+listteachers=1
+teacherlink=1
 details_text=Study Details
 show_book_search=1
 show_teacher_search=1
@@ -444,9 +446,9 @@ show_teacher_view=1
 show_passage_view=1
 use_headers_view=1
 list_items_view=2
-title_line_1=7
+title_line_1=1
 customtitle1=
-title_line_2=7
+title_line_2=4
 customtitle2=
 view_link=1
 link_text=Return to Studies List

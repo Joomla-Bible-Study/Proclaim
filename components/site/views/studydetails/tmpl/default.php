@@ -20,7 +20,7 @@ JHTML::_('behavior.tooltip');
 $params = $this->params;
 $document =& JFactory::getDocument();
 $document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
 $row = $this->studydetails;
@@ -82,9 +82,11 @@ if ($params->get('use_headers_view') > 0)
         <?php 
 if ($params->get('list_items_view') == 1)
 		{
+			echo '<tr class="bseven"><td class="media">';
 			$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 			include_once($path1.'mediatable.php');
-			$listing = getMediatable($params, $row, $this->admin_params);	
+			$listing = getMediatable($params, $row, $this->admin_params);
+			echo '</td></tr>';
 			echo $listing;
 		}
 if ($params->get('list_items_view') == 0)

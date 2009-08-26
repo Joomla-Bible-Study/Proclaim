@@ -28,6 +28,8 @@ function getImage($path)
 			$tmp->height	= @$info[1];
 			$tmp->type		= @$info[2];
 			$tmp->mime		= @$info['mime'];
+			if (!$tmp->width) {$tmp->width=0;}
+			if (!$tmp->height) {$tmp->height=0;}
 	}
 return $tmp;
 }

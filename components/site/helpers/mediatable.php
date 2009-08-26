@@ -91,13 +91,24 @@ if (!$row->id) {return FALSE;}
        .'" height="'.$height.'" border="0" /></a>';
       
       $isfilesize = 0;
-     // if ($media_size > 0)
-     // {
-      // $isfilesize = 1;
        $media1_sizetext = $filesize;
-     // }
-      //else {$media1_sizetext = '';}
-      $media1_link = $direct_link;
+
+	$media1_link = $direct_link;
+	
+	  if ($media->docMan_id > 0)
+	 	{
+			$media1_link = getDocman($media, $width, $height, $src, $duration, $media_size);
+		}
+	if ($media->article_id > 0)
+		{
+			$media1_link = getArticle($media, $width, $height, $src);
+		}
+	if ($media->virtueMart_id > 0)
+		{
+			$media1_link = getVirtuemart($media, $width, $height, $src, $params);
+		}
+		
+      
 //dump ($media1_link);
       
       if ($useplayer == 1){
@@ -130,20 +141,7 @@ if (!$row->id) {return FALSE;}
        // Here is where we begin to build the mediatable variable
 	
 	 //Here we test to see if docMan or article is used
-	 if (isset($media->docMan_id))
-	 	{
-			$media1_link = getDocman($media, $width, $height, $src, $duration, $media_size);
-		}
-	if (isset($media->article_id))
-		{
-			$media1_link = getArticle($media, $width, $height, $src);
-		}
 	 
-	 
-	if (isset($media->virtueMart_id))
-		{
-			$media1_link = getVirtuemart($media, $width, $height, $src, $params);
-		}
 	
 	//dump ($useavr, 'useavr');
 	//dump ($media->internal_viewer);

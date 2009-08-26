@@ -61,7 +61,7 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     }
 	?>
       </h1>
-<?php if ($params->get('show_teacher_list') > 0)
+<?php if ($params->get('listteachers') )
 	{	
 	$teacher_call = JView::loadHelper('teacher');
 	$teacher = getTeacher($params, $id=null, $this->admin_params);
