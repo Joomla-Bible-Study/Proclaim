@@ -144,5 +144,13 @@
 
 #register {float: left;}
 
+/* Teacher List Styles */
+
+.bsm_separator { }
+.bsm_teachertable { }
+.bsm_teacherthumbnail { }
+.bsm_teachername { }
+.bsm_short { }
+
 /* Module Styles */
 
