@@ -14,16 +14,21 @@ $templatemenuid = $this->params->get('teachertemplateid');
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 $studieslisttemplateid = $this->params->get('studieslisttemplateid');
 	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('templatemenuid',1,'get','int');}
-	if (!$teacher->teacher_image) { $i_path = $teacher->image; }
-	if ($teacher->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$teacher->teacher_image; }
-	if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$teacher->teacher_image;}
-	$image = getImage($i_path);
+	if (!$teacher->teacher_image) { $image->path = $teacher->image; $image->height = $teacher->imageh; $image->width = $teacher->imagew; }
+	//if (!$teacher->teacher_image) { $i_path = $teacher->image; }
+	else
+	{
+		if ($teacher->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$teacher->teacher_image; }
+		if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$teacher->teacher_image;}
+		$image = getImage($i_path);
+	}
 ?>
-<table width="100%" class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
-<tr><td align="center"><h1><?php echo $this->params->get('teacher_title');?></h1></td></tr></table>
-<table width="100%" class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
+<div id="biblestudy" class="noRefTagger">
+<table id="bsm_teachertable" cellspacing="0">
+<tr class="titlerow"><td colspan="2"><?php echo $this->params->get('teacher_title');?></td></tr>
+
 <tr>
-<td align="center" width="<?php echo $this->params->get('imagew');?>">
+<td class="bsm_teacherthumbnail">
 <?php if ($teacher->image || $teacher->teacher_image) 
 		{ ?>
         <img src="<?php echo $image->path;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" border="1" alt="<?php echo $teacher->teachername.' - '.$teacher->title;?>" />
@@ -31,8 +36,8 @@ $studieslisttemplateid = $this->params->get('studieslisttemplateid');
 		}?>
      
 </td>
-<td align="left">
-<strong><?php echo $teacher->teachername;?></strong>
+<td class="bsm_teachername">
+<?php echo $teacher->teachername;?>
      <?php echo ' - '.$teacher->title;?><br />
 <?php echo $teacher->phone;?><br /><br />
 <?php if ($teacher->email) {
@@ -49,16 +54,11 @@ $studieslisttemplateid = $this->params->get('studieslisttemplateid');
     <?php } ?>
 	</td>
 </tr>
-</table>
-<table width="100%">
+
 <?php if ($teacher->information) { ?>
+
 <tr>
-	<td>
-		<img src="<?php echo JURI::base().'components/com_biblestudy/images/square.gif'?>" height="1" width="100%" />
-	</td>
-</tr>
-<tr>
-	<td>
+	<td class="bsm_teacherlong" colspan="2">
 		<?php echo $teacher->information;?>
 	</td>
 </tr>
@@ -93,3 +93,4 @@ else { ?>
 //if ($this->menuid){$link = '&Itemid='.$this->menuid;}?>
 <tr><td align="center" colspan="0"><br /><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&templatemenuid='.$templatemenuid;?>"><?php echo '<--'.JText::_('Return to Teacher List');?></a>
 </table>
+</div>

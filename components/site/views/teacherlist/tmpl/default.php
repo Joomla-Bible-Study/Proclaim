@@ -14,55 +14,63 @@ $admin_params = $this->admin_params;
 include_once($path1.'image.php');
 if (!$templatemenuid){$templatemenuid = 1;}
 ?>
-<table width="100%">
-    <tr><td align="center"><h1><?php echo $this->params->get('teacher_title');?></h1></td></tr>
-    <tr>
-        <td class='bsm_separator'>
-            <img src="<?php echo JURI::base().'components/com_biblestudy/images/square.gif'?>" height="3" width="100%" />
-        </td>
-    </tr>
-
-</table>
+<div id="biblestudy" class="noRefTagger">
+<table id="bsm_teachertable" cellspacing="0">
+<tbody>
+    <tr class="titlerow"><td align="center" colspan="3" class="title" ><?php echo $this->params->get('teacher_title');?></td></tr>
+   
 <?php if ($allow_entry > 0) {
 if ($entry_access <= $entry_user){ ?>
-<table><tr><td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form"><strong><?php echo JText::_('Add a Teacher');?></strong></a></td></tr></table><?php } }?>
-<table width="100%" class="contentpaneopen<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
+<tr><td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form"><strong><?php echo JText::_('Add a Teacher');?></strong></a></td></tr><?php } }?>
+
 <tr><td>
+<?php 
+$class1 = 'bsodd';
+ $class2 = 'bseven';
+ $oddeven = $class1;
+?>
+ 
+	
+    
 <?php foreach ($this->items as $item) {
+	if($oddeven == $class1){ //Alternate the color background
+	$oddeven = $class2;
+	} else {
+	$oddeven = $class1;
+	}
 if (!$item->teacher_thumbnail) { $image->path = $item->thumb; $image->height = $item->thumbh; $image->width = $item->thumbw; }
 	else
 	{
-		if ($item->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$item->teacher_thumbnail; }
+		if ($item->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$item->teacher_thumbnail; }
 		if ($item->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$item->teacher_thumbnail;}
 		$image = getImage($i_path);
 	}
 ?>
 
-    <table cellpadding="1" cellspacing="1" class='bsm_teachertable' id='bsm_teacher_<?php echo $this>id?>'>
-    <tr>
+    
+    <tr class="<?php echo $oddeven; ?> lastrow">
     <?php if ($allow_entry > 0) {
 if ($entry_access <= $entry_user){ ?>
   <td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form&controller=teacheredit&cid[]=<?php echo $item->id?>"><?php echo '['.JText::_('Edit').']';?></a></td>
   <?php } }?>
-        <td class='bsm_teacherthumbnail' id='bsm_teacher_thumbnail_<?php echo $this>id?>'><?php if ($item->thumb || $item->teacher_thumbnail){?>
+        <td class="bsm_teacherthumbnail" ><?php if ($item->thumb || $item->teacher_thumbnail){?>
         	<img src="<?php echo $image->path;?>" border="1" title="<?php echo $item->teachername;?>" alt="<?php echo $item->teachername;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" /><?php } ?>
         </td>
-        <td width="150" align="left" class='bsm_teachername' id='bsm_teacher_name_<?php echo $this>id?>'>
+        <td class="bsm_teachername">
             <a href="index.php?option=com_biblestudy&view=teacherdisplay&id=<?php echo $item->id.'&templatemenuid='.$templatemenuid;?>"><?php echo $item->teachername;?></a><?php echo JText::_(' - ');?>
             <?php echo $item->title;?>
         </td>
-        <td width="5">  </td>
-        <td align="left" class='bsm_short' id='bsm_teacher_short_<?php echo $this>id?>'>
+        
+        <td align="left" class="bsm_short">
 			<?php echo $item->short;?>
         </td>
      </tr>
-    </table>
+   
+    	
 
-<table >
-    	<tr><td class='bsm_separator'><img src="<?php echo JURI::base().'components/com_biblestudy/images/square.gif'?>" height="1" width="100%" /></td></tr>
-</table>
     <?php } //end of foreach ?>
 </td></tr>
+</tbody>
 </table>
 <div class="listingfooter" >
 	<?php 
@@ -70,3 +78,4 @@ if ($entry_access <= $entry_user){ ?>
       echo $this->pagination->getPagesCounter();
 	 ?>
 </div> <!--end of bsfooter div-->
+</div>

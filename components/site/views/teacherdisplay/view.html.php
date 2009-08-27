@@ -17,6 +17,7 @@ class biblestudyViewteacherdisplay extends JView
 		global $mainframe, $option;
 		
 		$document =& JFactory::getDocument();
+		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 		$pathway	   =& $mainframe->getPathWay();
 		$contentConfig = &JComponentHelper::getParams( 'com_biblestudy' );
 		// Get the menu item object
@@ -30,6 +31,8 @@ class biblestudyViewteacherdisplay extends JView
 		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
+		$url = $params->get('stylesheet');
+		if ($url) {$document->addStyleSheet($url);}
 		$admin=& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
 		//$params = &JComponentHelper::getParams($option);
