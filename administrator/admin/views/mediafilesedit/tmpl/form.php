@@ -1,4 +1,6 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php defined('_JEXEC') or die('Restricted access'); 
+jimport (joomla.application.component.helper);
+?>
 
 <script type="text/javascript">
 
