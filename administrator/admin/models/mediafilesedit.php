@@ -62,6 +62,7 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->_data->docMan_id = null;
 			$this->_data->article_id = null;
 			$this->_data->comment = null;
+			$this->_data->virtueMart_id = null;
 				
 		}
 		return $this->_data;

@@ -116,7 +116,7 @@ if (!$row->id) {return FALSE;}
        if (!$player_width) { $player_width = '290'; }
        $media1_link =
      '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="290">
+<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="'.$params->get('player_width', 290).'">
 <param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
 <param name="FlashVars" value="playerID='.$row_count.'&amp;soundFile='.$path1.'">
 <param name="quality" value="high">

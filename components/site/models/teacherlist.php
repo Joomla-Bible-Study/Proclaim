@@ -104,8 +104,8 @@ function getTotal()
 function getTemplate() 
 		{
 			if(empty($this->_template)) {
-				$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
-				//dump ($templateid, 'templateid: ');
+				$templateid = JRequest::getVar('templatemenuid','1','get','int');
+				if ($templateid < 1) {$templateid = 1;}
 				$query = 'SELECT *'
 				. ' FROM #__bsms_templates'
 				. ' WHERE published = 1 AND id = '.$templateid;

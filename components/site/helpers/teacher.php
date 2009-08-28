@@ -44,13 +44,17 @@ function getTeacher($params, $id, $admin_params)
 			if ($tresult->teacher_thumbnail != '- Select Image -' || $tresult->teacher_thumbnail)
 			{
 				if ($tresult->teacher_thumbnail == '- Select Image -' || !$tresult->teacher_thumbnail) { $image->path = $tresult->thumb; $image->height = $tresult->thumbh; $image->width = $tresult->thumbw;}
+			}
+			else
+			{
 				if ($tresult->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$tresult->teacher_thumbnail; }
 				if ($tresult->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$tresult->teacher_thumbnail;}
 				
 				$image = getImage($i_path);
 				if (!$image) {$image->path = ''; $image->width=0; $image->height=0;}
-				$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$image->path.'" border="1" width="'.$image->width.'" height="'.$image->height.'" ></td></tr>';
 			}
+				$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$image->path.'" border="1" width="'.$image->width.'" height="'.$image->height.'" ></td></tr>';
+			
 		$teacher .= '<tr><td>';
 		if ($params->get('teacherlink') > 0)
 			{

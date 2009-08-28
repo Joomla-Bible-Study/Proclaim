@@ -71,13 +71,9 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_series VALUES (1, 'Worship Series', 1)");
 	$database->query();
-	$database->setQuery ("INSERT INTO #__bsms_teachers VALUES (1,'','', 'Billy Sunday','Pastor','555-555-5555','billy@sunday.com','http://billysunday.com','William Ashley Sunday (November 19 1862 – November 6 1935) was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century.','components/com_biblestudy/images/billy_sunday11.jpg','735','525','components/com_biblestudy/images/images.jpg','101','141','Billy Sunday: 1862-1935',0,1,1,1)");
-	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_message_type VALUES (1, 'Sunday', 1)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_folders VALUES (1, 'My Folder Name', '/media/', 1)");
-	$database->query();
-	$database->setQuery ("INSERT INTO #__bsms_mediafiles VALUES (1, 1, 2, 1, 1, '','myfile.mp3', 12332, 1, 1, 0, '', 0, '2009-09-13 00:10:00', 1,'',1,0,0,'',0)");
 	$database->query();
 	$database->setQuery ("INSERT INTO #__bsms_podcast VALUES (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', 'en-us', 'Jim Editor', 'jim@mywebsite.com', 50, 1)");
 	$database->query();
@@ -598,6 +594,22 @@ $fieldcheck = isset($fields[$tn]['virtueMart_id']);
 		$db612 = $database->loadResult();
 		$dbmessage =  'The current database schema for Bible Study is: '.$db612.'<br>';
 		//}
+//We insert a teacher row into a fresh database
+$database->setQuery ("SELECT id FROM #__bsms_teachers");
+	$database->query();
+	$isitnew = $database->loadResult();
+	if (!$isitnew){
+$database->setQuery ("INSERT INTO #__bsms_teachers VALUES (1,'','', 'Billy Sunday','Pastor','555-555-5555','billy@sunday.com','http://billysunday.com','William Ashley Sunday (November 19 1862–November 6 1935) was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ','components/com_biblestudy/images/billy_sunday11.jpg','276','197','components/com_biblestudy/images/images.jpg','101','141','Billy Sunday: 1862-1935',0,1,1,1)");
+$database->query();
+	}
+//We insert a mediafile row into a fresh database
+$database->setQuery ("SELECT id FROM #__bsms_mediafiles");
+	$database->query();
+	$isitnew = $database->loadResult();
+	if (!$isitnew){
+	$database->setQuery ("INSERT INTO #__bsms_mediafiles VALUES (1, 1, 2, 1, 1, '','myfile.mp3', 12332, 1, 1, 0, '', 0, '2009-09-13 00:10:00', 1,'',1,0,0,'',0)");
+	$database->query();
+	}
 //Check to see if the admin row exists
 
 $database->setQuery ("SELECT id FROM #__bsms_admin");

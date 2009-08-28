@@ -17,7 +17,7 @@ if (!$templatemenuid){$templatemenuid = 1;}
 <div id="biblestudy" class="noRefTagger">
 <table id="bsm_teachertable" cellspacing="0">
 <tbody>
-    <tr class="titlerow"><td align="center" colspan="3" class="title" ><?php echo $this->params->get('teacher_title');?></td></tr>
+    <tr class="titlerow"><td align="center" colspan="3" class="title" ><?php echo $this->params->get('teacher_title', JText::_('Our Teachers'));?></td></tr>
    
 <?php if ($allow_entry > 0) {
 if ($entry_access <= $entry_user){ ?>

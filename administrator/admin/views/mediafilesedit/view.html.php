@@ -2,17 +2,28 @@
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
+jimport ('joomla.application.component.helper');
 
 class biblestudyViewmediafilesedit extends JView {
 
 	function display($tpl = null) {
-
+		
 		if (JPluginHelper::importPlugin('system', 'avreloaded')) {
 			require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_avreloaded'.DS.'elements'.DS.'insertbutton.php');
 			$mbutton = JElementInsertButton::fetchElementImplicit('mediacode',JText::_('AVR Media'));
 			$this->assignRef('mbutton', $mbutton);
 		}
 
+		//Check to see if Docman and/or VirtueMart installed
+		
+		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
+		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
+		$this->assignRef('vmenabled', $vmenabled);
+		$this->assignRef('dmenabled', $dmenabled);
+		//dump ($vmenabled->enabled, 'vm');
+		//dump ($dmenabled->enabled, 'dm');
+		
+		//Get the js and css files
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/css/mediafilesedit.css');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
@@ -27,34 +38,52 @@ class biblestudyViewmediafilesedit extends JView {
 		$virtueMartCategories =& $this->get('virtueMartCategories');
 
 		//Manipulate Data
-		if ($docManCategories)
-			{
-				array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
-			}
-		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
-		if ($virtueMartCategories)
+		//Run only if Docman is enabled
+		if ($dmenabled)
+		{
+			if ($docManCategories)
+				{
+					array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
+				}
+			array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
+		}
+		
+		//Run only if Virtuemart enabled
+		if ($vmenabled)
+		{
+			if ($virtueMartCategories)
 			{
 				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
 			}
+		}
 		$isNew		= ($mediafilesedit->id < 1);
 		
 		//Retrieve any Docman items or articles that may exist
 		$model = $this->getModel();
 		//dump($mediafilesedit);
 		
-		if($mediafilesedit->docMan_id != 0 && !$isNew) {
-			$this->assignRef('docManItem', $model->getDocManItem($mediafilesedit->docMan_id));
-			$this->assign('docManStyle', 'display: none');
-		}
+		//if ($dmenabled)
+		//{
+			if($mediafilesedit->docMan_id != 0 && !$isNew) {
+				$this->assignRef('docManItem', $model->getDocManItem($mediafilesedit->docMan_id));
+				$this->assign('docManStyle', 'display: none');
+			}
+			$this->assignRef('docManCategories', $docManCategories);
+		//}
+		
 		if($mediafilesedit->article_id != 0 && !$isNew){
 			$this->assignRef('articleItem', $model->getArticleItem($mediafilesedit->article_id));
 			$this->assign('articleStyle', 'display: none');
 		}
-		if($mediafilesedit->virtueMart_id != 0 && !$isNew){
-			$this->assignRef('virtueMartItem', $model->getVirtueMartItem($mediafilesedit->virtueMart_id));
-			$this->assign('virtueMartStyle', 'display: none');
-		}
-
+		
+		//if ($vmenabled)
+		//{
+			if($mediafilesedit->virtueMart_id != 0 && !$isNew){
+				$this->assignRef('virtueMartItem', $model->getVirtueMartItem($mediafilesedit->virtueMart_id));
+				$this->assign('virtueMartStyle', 'display: none');
+			}
+			$this->assignRef('virtueMartCategories', $virtueMartCategories);
+		//}
 		
 		//$editor =& JFactory::getEditor();
 		//this->assignRef( 'editor', $editor );
@@ -149,9 +178,9 @@ class biblestudyViewmediafilesedit extends JView {
 
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('mediafilesedit',		$mediafilesedit);
-		$this->assignRef('docManCategories', $docManCategories);
+		
 		$this->assignRef('articlesSections', $articlesSections);
-		$this->assignRef('virtueMartCategories', $virtueMartCategories);
+		
 		parent::display($tpl);
 	}
 }

@@ -24,10 +24,12 @@ class biblestudyModelteacherdisplay extends JModel
 		//added for single study view off of menu
 		$menu	=& JSite::getMenu();
 		$item    = $menu->getActive();
-		$params	=& $menu->getParams($item->id);
-		//$params =& JSiteHelper::getMenuParams();
-		$id = $params->get('id', 0);
-		if (!$id)
+		if ($item) 
+		{
+			$params	=& $menu->getParams($item->id);
+			$id = $params->get('id', 0);
+		}
+		else
 			{
 				$id = JRequest::getVar('id', 0,'GET','INT');
 			}

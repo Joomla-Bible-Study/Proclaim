@@ -766,28 +766,57 @@
 
 .bsm_teacherthumbnail 
 	{
-	padding: 8px 4px 4px;
-	white-space:nowrap;
-   
+		   
 	}
 #bsm_teachertable .bsm_teachername
 	{ 
 		font-weight: bold;
-		font-size: 11px;
-		margin: 0;
+		font-size: 14px;
 		color: #000000;
-		padding: 8px 4px 4px;
 		white-space:nowrap;
 		
+	}
+#bsm_teachertable .bsm_teacheremail
+	{
+		font-weight:normal;
+		font-size: 11px;
+	}
+#bsm_teachertable .bsm_teacherwebsite
+	{
+		font-weight:normal;
+		font-size: 11px;
+	}
+#bsm_teachertable .bsm_teacherphone
+	{
+		font-weight:normal;
+		font-size: 11px;
 	}
 #bsm_teachertable .bsm_short 
 	{
 		padding: 8px 4px 4px;
 	}
-
+#bsm_teachertable .bsm_studiestitlerow {
+	background-color: #666;	
+}
+#bsm_teachertable .bsm_titletitle
+	{
+		font-weight:bold;
+		color:#FFFFFF;
+	}
+#bsm_teachertable .bsm_titlescripture
+	{
+		font-weight:bold;
+		color:#FFFFFF;
+	}
+#bsm_teachertable .bsm_titledate
+	{
+		font-weight:bold;
+		color:#FFFFFF;
+	}
 #bsm_teachertable .bsm_teacherlong
 {
 	padding: 8px 4px 4px;
+	border-bottom: 1px solid #999999;
 }
 #bsm_teachertable tr.bsodd {
   background-color:#FFFFFF;
@@ -803,3 +832,8 @@
   padding-bottom:7px;
   padding-top:7px;
 }
+#bsm_teachertable .bsm_teacherfooter
+	{
+		border-top: 1px solid #999999;
+		padding: 4px 1px 1px 4px;
+	}
