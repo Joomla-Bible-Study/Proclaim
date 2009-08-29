@@ -58,8 +58,9 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	$r = 'lastcol';
 	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
 	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);} 
-	$listing .= $listelement; //dump ($listelement, 'listelement: ');
+	//dump ($listelement, 'listelement: ');
 	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
+	$listing .= $listelement; 
 	//dump ($listelement);
 		if (!$listelementid)
 		{
