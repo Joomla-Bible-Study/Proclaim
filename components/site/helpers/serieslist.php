@@ -60,6 +60,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);} 
 	$listing .= $listelement; //dump ($listelement, 'listelement: ');
 	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
+	//dump ($listelement);
 		if (!$listelementid)
 		{
 			$listing .= '<td class="lastcol"></td>'; 
@@ -108,7 +109,7 @@ function getStudieslink($islink, $row, $element, $params, $admin_params)
 
 function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view)
 {//dump ($admin_params->get('teachers_imagefolder'), 'listelementidcheck: ');
-	
+	//dump ($r);
 	switch ($listelementid)
 	{ 
 		case 1:
