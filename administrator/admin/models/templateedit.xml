@@ -78,7 +78,7 @@
 					<option value="window">Window</option>
 					<option value="lightbox">Lightbox</option>
 				</param>
-			<param name="media_player" type="list" default="0" label="MP3 Media Player" description="Use built-in media player for all mp3 files (overrides AVR)">
+			<param name="media_player" type="list" default="0" label="MP3 Media Player for all MP3s" description="Use built-in media player for all mp3 files (overrides AVR) and can be set for an individual study.">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
 				</param>

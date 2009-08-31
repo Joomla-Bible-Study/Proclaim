@@ -30,7 +30,8 @@ class biblestudyViewmediafilesedit extends JView {
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/views/mediafilesedit.js');
-
+		
+		
 		//Get Data
 		$mediafilesedit	=& $this->get('Data');
 		$docManCategories =& $this->get('docManCategories');
@@ -60,6 +61,13 @@ class biblestudyViewmediafilesedit extends JView {
 		
 		//Retrieve any Docman items or articles that may exist
 		$model = $this->getModel();
+		
+		//Add the params from the model
+		$paramsdata = $mediafilesedit->params;
+		$paramsdefs = JPATH_COMPONENT_ADMINISTRATOR.DS.'models'.DS.'mediafilesedit.xml';
+		$params = new JParameter($paramsdata, $paramsdefs);
+		$this->assignRef('params', $params);
+		
 		//dump($mediafilesedit);
 		
 		//if ($dmenabled)

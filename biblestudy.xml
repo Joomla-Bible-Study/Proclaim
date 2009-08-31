@@ -326,6 +326,7 @@
 			<filename>models/mimetypeedit.php</filename>
 			<filename>models/mediafileslist.php</filename>
 			<filename>models/mediafilesedit.php</filename>
+			<filename>models/mediafilesedit.xml</filename>
 			<filename>models/commentslist.php</filename>
 			<filename>models/commentsedit.php</filename>
 			<filename>models/locationsedit.php</filename>

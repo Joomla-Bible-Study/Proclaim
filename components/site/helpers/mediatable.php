@@ -3,6 +3,7 @@ defined('_JEXEC') or die();
 
 function getMediatable($params, $row, $admin_params)
 {
+jimport ('joomla.application.component.helper');
 //dump ($admin_params, 'admin_params: ');
 if (!$row->id) {return FALSE;}
     global $mainframe, $option;
@@ -47,7 +48,10 @@ if (!$row->id) {return FALSE;}
 	$mediatable = '<table class="mediatable"><tbody><tr>';
 	
 	foreach ($media1 as $media) {
-		
+	
+	//Load the parameters
+	$itemparams = new JParameter ($media->params);
+	
 	if (!$media->path2) { $i_path = $media->impath; }
 	if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
 	if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
@@ -60,7 +64,7 @@ if (!$row->id) {return FALSE;}
 	  
       $useplayer = 0;
 	  
-      if ($params->get('media_player') > 0) {
+      if ($params->get('media_player') > 0 || $itemparams->get('use_mp3_player') > 0) {
        //Look to see if it is an mp3
        $ismp3 = substr($media->filename,-3,3);
        if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}

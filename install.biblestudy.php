@@ -583,9 +583,10 @@ $fieldcheck = isset($fields[$tn]['comment']);
 $fieldcheck = isset($fields[$tn]['virtueMart_id']);		
 		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN virtueMart_id INT NULL AFTER comment;");
 		$database->query();}		
-//if (!$fieldcheck) { $location_id_message = 'Problem creating one or more fields. Check permissions on your MySQL database'; $db612 = false;}
-	//if (!$db612) { $dbmessage = 'There was a problem with the installation of this version.';}
-	//else {
+$fieldcheck = isset($fields[$tn]['params']);		
+		if	 (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_mediafiles ADD COLUMN params TEXT NULL AFTER virtueMart_id;");
+		$database->query();}	
+		
 		$database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
 		$database->query();
 	$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 612)");
@@ -593,7 +594,7 @@ $fieldcheck = isset($fields[$tn]['virtueMart_id']);
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
 		$db612 = $database->loadResult();
 		$dbmessage =  'The current database schema for Bible Study is: '.$db612.'<br>';
-		//}
+		
 //We insert a teacher row into a fresh database
 $database->setQuery ("SELECT id FROM #__bsms_teachers");
 	$database->query();
