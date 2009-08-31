@@ -508,7 +508,11 @@
 			<filename>css/general.css</filename>
 			<filename>css/mediafilesedit.css</filename>
 			<filename>js/jquery.js</filename>
+			<filename>js/noconflict.js</filename>
 			<filename>js/biblestudy.js</filename>
+			<filename>js/plugins/jquery.contextmenu.js</filename>
+			<filename>js/plugins/jquery.selectboxes.js</filename>
+			<filename>js/plugins/jquery.validate.js</filename>
 			<filename>js/views/mediafilesedit.js</filename>
 			</files>
 		<languages folder="admin/languages">
