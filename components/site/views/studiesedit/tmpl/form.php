@@ -1,5 +1,6 @@
 <?php 
 	defined('_JEXEC') or die('Restricted access'); 
+	jimport('joomla.pane.html');
 //dump ($this->store[0]->admin_store, 'store: ');
 
 	$js = 	"function changeDisplayImage() {
@@ -22,7 +23,18 @@ $user =& JFactory::getUser();
 <tr>
 
     <td class="key"><?php echo JText::_('Toolbar');?></td><td><?php echo $this->toolbar;?></td></tr>
-    
+<tr><td class="key"><?php echo JText::_('Parameters');?></td>
+<td>
+<?php
+$pane =& JPane::getInstance ('sliders');
+
+echo $pane->startPane ('content-pane');
+echo $pane->startPanel(JText::_('Study Parameters'), 'STUDY_1');
+echo $this->params->render ('params');
+echo $pane->endPanel();
+echo $pane->endPane();
+?>
+</td></tr>
 <?php    if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
 	<tr>
 		<td class="key"><?php echo JText::_( 'Submitted by');?>:</td>

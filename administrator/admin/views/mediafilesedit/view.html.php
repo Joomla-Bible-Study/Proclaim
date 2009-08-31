@@ -23,7 +23,18 @@ class biblestudyViewmediafilesedit extends JView {
 		//dump ($vmenabled->enabled, 'vm');
 		//dump ($dmenabled->enabled, 'dm');
 		
-		//Get the js and css files
+		
+		//To do - implement this from the site side.
+		//$studiesList =& $this->get('Studies');
+		//$serversList =& $this->get('Servers');
+		//$foldersList =& $this->get('Folders');
+		//$podcastsList =& $this->get('Podcasts');
+		//$mediaImages =& $this->get('MediaImages');
+		//$mimeTypes =& $this->get('MimeTypes');
+		//$ordering =& $this->get('Ordering');
+		
+				//Get the js and css files
+
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/css/mediafilesedit.css');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
@@ -125,6 +136,8 @@ class biblestudyViewmediafilesedit extends JView {
 		$lists['link_type'] = JHTML::_('select.booleanlist','link_type', 'class="inputbox"', $mediafilesedit->link_type);
 
 		$lists['internal_viewer'] = JHTML::_('select.booleanlist', 'internal_viewer', 'class="inputbox"', $mediafilesedit->internal_viewer);
+		
+		
 		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
 		$database->setQuery($query);
 		//$studies = $database->loadObjectList();

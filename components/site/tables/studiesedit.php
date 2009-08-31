@@ -23,6 +23,7 @@ class Tablestudiesedit extends JTable
 	var	$studydate = null;
 	var $studynumber = null;
 	var	$booknumber = null;
+	var $scripture = null;
 	var $chapter_begin = null;
 	var $chapter_end = null;
 	var $verse_begin = null;
@@ -48,15 +49,16 @@ class Tablestudiesedit extends JTable
 	var $chapter_end2 = null;
 	var $verse_begin2 = null;
 	var $verse_end2 = null;	
-	var $comments = null;
-	var $hits = null;
-	var $user_id = null;	
+	var $comments = 1;
+	var $hits = 0;
+	var $user_id = null;
 	var $user_name = null;
-	var $show_level = null;
+	var $show_level = null;	
 	var $location_id = null;
 	var $thumbnailm = null;
 	var $thumbhm = null;
 	var $thumbwm = null;
+	var $params = null;
 	/**
 	 * Constructor
 	 *
@@ -65,5 +67,17 @@ class Tablestudiesedit extends JTable
 	function Tablestudiesedit(& $db) {
 		parent::__construct('#__bsms_studies', 'id', $db);
 	}
+	
+	function bind($array, $ignore = '')
+{ 
+        if (key_exists( 'params', $array ) && is_array( $array['params'] ))
+        {
+                $registry = new JRegistry();
+                $registry->loadArray($array['params']);
+                $array['params'] = $registry->toString();
+        }
+        return parent::bind($array, $ignore);
+}
+
 }
 ?>

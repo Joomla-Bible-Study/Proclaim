@@ -34,6 +34,12 @@ class Tablemediafilesedit extends JTable
 	var $createdate = null;
 	var $link_type = null;
 	var $hits = null;
+	var $docMan_id = null;
+	var $article_id = null;
+	var $virtueMart_id = null;
+	var $comment = null;
+	var $params = null;
+	
 	
 
 	/**
@@ -44,5 +50,18 @@ class Tablemediafilesedit extends JTable
 	function Tablemediafilesedit(& $db) {
 		parent::__construct('#__bsms_mediafiles', 'id', $db);
 	}
+	
+	function bind($array, $ignore = '')
+{
+        if (key_exists( 'params', $array ) && is_array( $array['params'] ))
+        {
+                $registry = new JRegistry();
+                $registry->loadArray($array['params']);
+                $array['params'] = $registry->toString();
+        }
+        return parent::bind($array, $ignore);
+}
+
+		
 }
 ?>
