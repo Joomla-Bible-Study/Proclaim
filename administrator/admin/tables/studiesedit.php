@@ -58,6 +58,7 @@ class Tablestudiesedit extends JTable
 	var $thumbnailm = null;
 	var $thumbhm = null;
 	var $thumbwm = null;
+	var $params = null;
 	/**
 	 * Constructor
 	 *
@@ -66,5 +67,17 @@ class Tablestudiesedit extends JTable
 	function Tablestudiesedit(& $db) {
 		parent::__construct('#__bsms_studies', 'id', $db);
 	}
+	
+	function bind($array, $ignore = '')
+{ 
+        if (key_exists( 'params', $array ) && is_array( $array['params'] ))
+        {
+                $registry = new JRegistry();
+                $registry->loadArray($array['params']);
+                $array['params'] = $registry->toString();
+        }
+        return parent::bind($array, $ignore);
+}
+
 }
 ?>

@@ -499,13 +499,16 @@ $tn = '#__bsms_studies';
 	$fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;
 $fieldcheck	= isset( $fields[$tn]['thumbnailm'] );
-		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbnail TEXT NULL AFTER studytext;");
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbnailm TEXT NULL AFTER studytext;");
 		$database->query();}
 $fieldcheck	= isset( $fields[$tn]['thumbhm'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbhm INT NULL AFTER thumbnailm;");
 		$database->query();}
 $fieldcheck	= isset( $fields[$tn]['thumbwm'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbwm INT NULL AFTER thumbhm;");
+		$database->query();}
+$fieldcheck	= isset( $fields[$tn]['params'] );
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN params INT NULL AFTER thumwhm;");
 		$database->query();}
 $tn = '#__bsms_podcast';
 	$fields = $database->getTableFields( array( $tn ) );
@@ -520,7 +523,8 @@ $fieldcheck = false;
 $fieldcheck	= isset( $fields[$tn]['detailstemplateid'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_podcast ADD COLUMN detailstemplateid INT NULL AFTER custom;");
 		$database->query();}
-		
+
+
 $tn = '#__bsms_series';
 	$fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;	

@@ -45,7 +45,7 @@ class biblestudyControllerstudiesedit extends JController
 	 */
 	function save() {
 		$model = $this->getModel('studiesedit');
-
+//dump ($model);
 		if ($model->store($post)) {
 			$msg = JText::_( 'Study Saved!' );
 		} else {

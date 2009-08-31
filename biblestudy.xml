@@ -317,6 +317,7 @@
 			<filename>models/messagetypelist.php</filename>
 			<filename>models/studieslist.php</filename>
 			<filename>models/studiesedit.php</filename>
+			<filename>models/studiesedit.xml</filename>
 			<filename>models/topicslist.php</filename>
 			<filename>models/topicsedit.php</filename>
 			<filename>models/podcastedit.php</filename>

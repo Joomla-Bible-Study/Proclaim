@@ -26,6 +26,12 @@ class biblestudyViewstudiesedit extends JView {
 		$studiesedit =& $this->get('Data');
 		$books =& $this->get('books');
 		
+		//Add the params from the model
+		$paramsdata = $studiesedit->params;
+		$paramsdefs = JPATH_COMPONENT_ADMINISTRATOR.DS.'models'.DS.'studiesedit.xml';
+		$params = new JParameter($paramsdata, $paramsdefs);
+		$this->assignRef('params', $params);
+		
 		//Manipulate Data
 		$scriptures = explode(';', $studiesedit->scripture);
 		foreach($scriptures as $scripture){

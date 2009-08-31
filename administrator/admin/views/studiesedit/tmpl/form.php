@@ -1,6 +1,7 @@
 <?php 
 	defined('_JEXEC') or die('Restricted access'); 
-//dump ($this->store[0]->admin_store, 'store: ');
+	jimport('joomla.pane.html');
+
 
 	$js = 	"function changeDisplayImage() {
 			if (document.adminForm.thumbnailm.value !='') {
@@ -18,7 +19,22 @@ $document->addScriptDeclaration($js);
 $user =& JFactory::getUser();
 ?>
 <table class="admintable">
-<?php    if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
+<?php    
+
+
+if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
+<tr><td class="key"><?php echo JText::_('Parameters');?></td>
+<td>
+<?php
+$pane =& JPane::getInstance ('sliders');
+
+echo $pane->startPane ('content-pane');
+echo $pane->startPanel(JText::_('Study Parameters'), 'STUDY_1');
+echo $this->params->render ('params');
+echo $pane->endPanel();
+echo $pane->endPane();
+?>
+</td></tr>
 	<tr>
 		<td class="key"><?php echo JText::_( 'Submitted by');?>:</td>
 		<td><input class="text_area" type="text" name="user_name"
