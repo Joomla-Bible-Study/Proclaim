@@ -19,10 +19,11 @@ $document->addScriptDeclaration($js);
 $user =& JFactory::getUser();
 ?>
 <table class="admintable">
-
+<div class="content-box">
 <tr>
 
-    <td class="key"><?php echo JText::_('Toolbar');?></td><td><?php echo $this->toolbar;?></td></tr>
+<tr>    <td class="key"><?php echo JText::_('Toolbar');?></td><td id="white" style="backround-color:white;"><div class="icon-48-generic"><?php echo $this->toolbar;?></td></div></tr></div>
+
 <tr><td class="key"><?php echo JText::_('Parameters');?></td>
 <td>
 <?php

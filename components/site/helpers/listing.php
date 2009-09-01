@@ -21,12 +21,8 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 	$smenu = $params->get('detailsitemid');
 	$tmenu = $params->get('teacheritemid');
 	$tid = $row->tid;
-	//$user =& JFactory::getUser();
-	//$entry_user = $user->get('gid');
-	//if (!$entry_user) { $entry_user = 0;}
-	$entry_access = $params->get('entry_access');
-	//if (!$entry_access) {$entry_access = 23;}
-	$allow_entry = $params->get('allow_entry_study');
+	$entry_access = $admin_params->get('entry_access');
+	$allow_entry = $admin_params->get('allow_entry_study');
 	//This is the beginning of row 1
 	$lastrow = 0;
  	if ($rows == 1) {$lastrow = 1;}

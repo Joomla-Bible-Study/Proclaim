@@ -837,3 +837,11 @@
 		border-top: 1px solid #999999;
 		padding: 4px 1px 1px 4px;
 	}
+/*Study Edit CSS */
+#toolbar td.white {
+	background-color:#FFFFFF;
+}
+#toolbar a hover visited{
+	color:0B55C4;
+}
+

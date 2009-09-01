@@ -25,7 +25,7 @@ class biblestudyViewstudiesedit extends JView
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
-		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/icon.css');
+		//$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/icon.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/system/css/system.css');
 		$document->addStylesheet(JURI::base().'media/system/css/modal.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/rounded.css');
