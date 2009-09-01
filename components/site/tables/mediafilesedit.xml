@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-	<params>
-		<param name="use_mp3_player" default="0" type="list" label="Use Internal MP3 Player" description="Use the internal mp3 player for this study only. Set the default width in the Bible Study template you are using">
-			<option value="0">Do NOT use mp3 player</option>
-			<option value="1">Use MP3 Player for this study</option>
-		</param>
-	</params>
-</root>

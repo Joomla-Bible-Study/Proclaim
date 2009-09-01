@@ -13,10 +13,7 @@ if (!$row->id) {return FALSE;}
 		include_once($path1.'filepath.php');
 		include_once($path1.'duration.php');
 		include_once($path1.'image.php');
-	  $database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
-	  $database->query();
-	  $admin = $database->loadObjectList();
-	  //$admin_params =& new JParameter($admin[0]->params);
+	 
 	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images'.DS.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
 	$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
 	$d_path = $d_path1.$d_image;
@@ -40,68 +37,70 @@ if (!$row->id) {return FALSE;}
 	
 	
 	$compat_mode = $admin_params->get('compat_mode');
-	//dump ($compat_mode, 'compat_mode: ');
-	//dump ($rows2, 'Rows2: ');
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
 	
 	
 	$mediatable = '<table class="mediatable"><tbody><tr>';
-	
+	$row_count = 0;
 	foreach ($media1 as $media) {
-	
+		
+	$row_count = $row_count + 1;
 	//Load the parameters
 	$itemparams = new JParameter ($media->params);
-	
+	$Itemid = $params->get('detailstemplateid', 1);
 	if (!$media->path2) { $i_path = $media->impath; }
 	if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
 	if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
 	$image = getImage($i_path);
 	
 	$mediatable .= '<td>';
-		
-      
-      $link_type = $media->link_type;
-	  
-      $useplayer = 0;
-	  
-      if ($params->get('media_player') > 0 || $itemparams->get('use_mp3_player') > 0) {
-       //Look to see if it is an mp3
-       $ismp3 = substr($media->filename,-3,3);
-       if ($ismp3 == 'mp3'){$useplayer = 1;}else {$useplayer = 0;}
-	   } //End if media_player param test
-      $idfield = '#__bsms_mediafiles.id';
-	  $id4 = $media->id;
-	  $id3 = $id4;
-	  //dump ($media->id, 'id4: ');
+	
+	//todo - not sure how much of this is needed
+	 $idfield = '#__bsms_mediafiles.id';
 	  $filesize = getFilesize($media->size);
-	  //dump ($filesize, 'filesize');
 	  $duration = getDuration($params, $row);
-	  $media_size = $filesize;
-	 // dump ($media_size, 'filesize: ');
       $mimetype = $media->mimetext;
       $src = JURI::base().$image->path;
 	  $height = $image->height;
 	  $width = $image->width;
       $ispath = 0;
 	  $mime = '';
-	  $path1 = getFilepath($id3, $idfield, $mime);
-  
-       $pathname = $media->fpath;
-       $filename = $media->filename;
-       $ispath = 1;
-       $direct_link = '<a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
-       .$media_size.'" target="'.$media->special.'"><img src="'.$src
-       .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$media_size.'" width="'.$width
-       .'" height="'.$height.'" border="0" /></a>';
-      
-      $isfilesize = 0;
-       $media1_sizetext = $filesize;
+	  $path1 = getFilepath($media->id, $idfield, $mime);
+	  
+      //Get the type of player to use
+	  switch ($itemparams->get('player', 0))
+			{
+				case 0:
+				$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
+				break;
+				
+				case 1:
+				$ismp3 = substr($media->filename,-3,3);
+				 if ($ismp3 == 'mp3')
+				 	{
+						$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
+					}
+					else 
+					{
+						$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
+					}
+				break;
+				
+				case 2:
+				$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+      			break;
+			}
+	  
+	  //Here we check to see if the old useavr is selected in the database. We will eventually get rid of this
+	 
+	 if ($media->internal_viewer > 0 && JPluginHelper::importPlugin('system', 'avreloaded'))
+      	{ 
+	  		$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid); 
+	  	}
 
-	$media1_link = $direct_link;
-	
 	  if ($media->docMan_id > 0)
 	 	{
-			$media1_link = getDocman($media, $width, $height, $src, $duration, $media_size);
+			$media1_link = getDocman($media, $width, $height, $src, $duration, $filesize);
 		}
 	if ($media->article_id > 0)
 		{
@@ -113,21 +112,6 @@ if (!$row->id) {return FALSE;}
 		}
 		
       
-//dump ($media1_link);
-      
-      if ($useplayer == 1){
-       $player_width = $params->get('player_width');
-       if (!$player_width) { $player_width = '290'; }
-       $media1_link =
-     '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="'.$params->get('player_width', 290).'">
-<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
-<param name="FlashVars" value="playerID='.$row_count.'&amp;soundFile='.$path1.'">
-<param name="quality" value="high">
-<param name="menu" value="false">
-<param name="wmode" value="transparent">
-</object> ';}
-       
        /**
         * @desc: I hope to in the future load media files using this method
         */
@@ -147,15 +131,11 @@ if (!$row->id) {return FALSE;}
 	 //Here we test to see if docMan or article is used
 	 
 	
-	//dump ($useavr, 'useavr');
-	//dump ($media->internal_viewer);
-	if ($media->internal_viewer > 0 && JPluginHelper::importPlugin('system', 'avreloaded'))
-      	{ 
-	  		$media1_link = getAVR($media, $width, $height, $src, $params, $image); 
-			//dump ($media1_link, 'media1_link');
-	  	}
+	
 	$mediatable .= $media1_link; 
 		//Download icon
+		
+		$link_type = $media->link_type;
 		if ($link_type > 0){ //$src = JURI::base().$download_image;
 	   $width=$download_tmp->width;
 	   $height=$download_tmp->height;
@@ -205,11 +185,11 @@ if ($params->get('show_filesize') > 0 )
     return $mediatable;
 }
 
-function getDocman($media, $width, $height, $src, $duration, $media_size)
+function getDocman($media, $width, $height, $src, $duration, $filesize)
 	{
 		$docman = '<a href="index.php?option=com_docman&task=doc_download&gid='.$media->docMan_id.'"
 		 title="'.$media->malttext.' - '.$media->comment.'" target="'.$media->special.'"><img src="'.$src
-       .'" alt="'.$media->malttext.' '.$duration.' '.$media_size.'" width="'.$width
+       .'" alt="'.$media->malttext.' '.$duration.' '.$filesize.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';
 		
 		
@@ -235,9 +215,9 @@ function getVirtuemart($media, $width, $height, $src, $params)
 	return $vm;
 	}
 	
-function getAVR($media, $width, $height, $src, $params, $image)
+function getAVR($media, $width, $height, $src, $params, $image, $Itemid)
 	{
-		
+		//dump ($media);
        JPluginHelper::importPlugin('system', 'avreloaded');
 	   
        $studyfile = $media->spath.$media->fpath.$media->filename;
@@ -295,14 +275,41 @@ function getAVR($media, $width, $height, $src, $params, $image)
         	$popuptype = 'lightbox';
        	}
        
-	   $avr_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
+	   $media1_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
        .'"}<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext. ' - '.$media->comment
-       .' '.$duration.' '.$media_size.'" width="'.$image->width
+       .' '.$duration.' '.$filesize.'" width="'.$image->width
        .'" height="'.$image->height.'" border="0" title="'
-       .$media->malttext.' - '.$media->comment.' '.$duration.' '.$media_size.'" />{/avrpopup}';
+       .$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" />{/avrpopup}';
        //dump ($avr_link, 'AVR Lnk');
 
       
       //dump ($avr_link);
-	return $avr_link;	
+	return $media1_link;	
+	}
+	
+	function getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1)
+		{
+			
+			   $player_width = $params->get('player_width', 290);
+			   $media1_link =
+			 '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
+		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="'.$params->get('player_width', 290).'">
+		<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
+		<param name="FlashVars" value="playerID='.$row_count.'&amp;soundFile='.$path1.'">
+		<param name="quality" value="high">
+		<param name="menu" value="false">
+		<param name="wmode" value="transparent">
+		</object> ';
+			
+		return $media1_link;
+		}
+
+function getDirect($media, $width, $height, $duration, $src, $path1, $filesize)
+	{
+       $media1_link = '<a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
+       .$filesize.'" target="'.$media->special.'"><img src="'.$src
+       .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
+       .'" height="'.$height.'" border="0" /></a>';
+	   
+	   return $media1_link;
 	}

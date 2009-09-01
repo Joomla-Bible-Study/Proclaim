@@ -65,7 +65,7 @@ class biblestudyControllerstudiesedit extends JController
 		
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
 		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid.'&Itemid=1');
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -86,7 +86,7 @@ class biblestudyControllerstudiesedit extends JController
 		//$params =& $mainframe->getPageParameters();
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
 		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid.'&Itemid=1');
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 			
@@ -107,7 +107,7 @@ class biblestudyControllerstudiesedit extends JController
 		}
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
 		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid.'&Itemid=1');
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -129,7 +129,7 @@ class biblestudyControllerstudiesedit extends JController
 		}
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
 		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid.'&Itemid=1');
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}

@@ -30,7 +30,7 @@ class biblestudyViewstudiesedit extends JView
 		$document->addStylesheet(JURI::base().'media/system/css/modal.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/rounded.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/template.css');
-		
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 		$config =& JComponentHelper::getParams( 'com_biblestudy' );
 		$admin=& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);

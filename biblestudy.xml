@@ -119,7 +119,9 @@
 		<filename>models/teacherdisplay.php</filename>
 		<filename>models/teacherlist.php</filename>
 		<filename>models/studiesedit.php</filename>
+		<filename>models/studiesedit.xml</filename>
 		<filename>models/mediafilesedit.php</filename>
+		<filename>models/mediafilesedit.xml</filename>
 		<filename>models/podcastedit.php</filename>
 		<filename>models/commentslist.php</filename>
 		<filename>models/commentsedit.php</filename>
