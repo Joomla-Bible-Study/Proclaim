@@ -35,18 +35,20 @@ $(document).ready(function() {
 </script>
 </td></tr>
 
-<tr><td class="key"><?php echo JText::_('Parameters');?></td>
+<!--<tr><td class="key"><?php echo JText::_('Parameters');?></td>
 <td>
 <?php
-$pane =& JPane::getInstance ('sliders');
+
+/*$pane =& JPane::getInstance ('sliders');
 
 echo $pane->startPane ('content-pane');
 echo $pane->startPanel(JText::_('Study Parameters'), 'STUDY_1');
 echo $this->params->render ('params');
 echo $pane->endPanel();
 echo $pane->endPane();
+*/
 ?>
-</td></tr>
+</td></tr>-->
 <?php    if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
 	<tr>
 		<td class="key"><?php echo JText::_( 'Submitted by');?>:</td>

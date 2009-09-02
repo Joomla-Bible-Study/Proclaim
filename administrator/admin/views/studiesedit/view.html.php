@@ -27,20 +27,21 @@ class biblestudyViewstudiesedit extends JView {
 		$books =& $this->get('books');
 		
 		//Add the params from the model
+		/*
 		$paramsdata = $studiesedit->params;
 		$paramsdefs = JPATH_COMPONENT_ADMINISTRATOR.DS.'models'.DS.'studiesedit.xml';
 		$params = new JParameter($paramsdata, $paramsdefs);
 		$this->assignRef('params', $params);
-		
+		*/
 		//Manipulate Data
-		$scriptures = explode(';', $studiesedit->scripture);
+	/*	$scriptures = explode(';', $studiesedit->scripture);
 		foreach($scriptures as $scripture){
 			$split = explode(' ', $scripture);
 			$scriptureBlocks[$scripture]['bookId'] =  $split[0];
 			$scriptureBlocks[$scripture]['text'] = $split[1];
 		}
 		array_unshift($books, JHTML::_('select.option', '0', JText::_('- Select a Book -')));
-
+*/
 		
 		//dump ($lists['thumb'], 'lists: ');
 		$isNew		= ($studiesedit->id < 1);
