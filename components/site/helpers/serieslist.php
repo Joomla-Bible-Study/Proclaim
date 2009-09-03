@@ -289,7 +289,7 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	<tr><td>';
 		if ($params->get('series_detail_show_link') > 0 && $nolimit != 1 && $rows > $params->get('series_detail_limit')) 
 			{
-				$studies .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&id='.$id.'&nolimit=1&templatemenuid='.$templatemenuid).'">'.JText::_('Show All '.$rows.' Studies From This Series').' >></a>';
+				$studies .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&id='.$id.'&nolimit=1&templatemenuid='.$templatemenuid).'">'.JText::_('Show All').' '.$rows.' '.JText::_('Studies From This Series').' >></a>';
 			}
 		$studies .= '</td></tr>
 		';
