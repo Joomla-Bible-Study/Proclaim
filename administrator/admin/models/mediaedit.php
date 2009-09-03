@@ -14,7 +14,7 @@ class biblestudyModelmediaedit extends JModel {
 	function __construct()
 	{
 		parent::__construct();
-		$admin = $this->getAdmin;
+		$admin = $this->getAdmin();
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
