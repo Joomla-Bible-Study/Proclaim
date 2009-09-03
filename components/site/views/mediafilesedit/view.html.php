@@ -30,10 +30,10 @@ class biblestudyViewmediafilesedit extends JView {
 		$document->addStylesheet(JURI::base().'media/system/css/modal.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/rounded.css');
 		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/template.css');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/views/mediafilesedit.js');
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/plugins/jquery.selectboxes.js');
+		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/views/mediafilesedit.js');
 		
 		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
 		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
