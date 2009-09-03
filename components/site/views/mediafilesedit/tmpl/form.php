@@ -68,7 +68,9 @@ echo $pane->endPane();
         <td class="key"><?php echo JText::_( 'Study' );?></td>
         <td >
         
-        <?php echo $this->lists['studies'];?></td></tr>
+        <?php echo $this->studies;
+		
+		//echo $this->lists['studies'];?></td></tr>
         <tr>
         <td class="key"><?php echo JText::_( 'Ordering' );?></td>
 			<td >

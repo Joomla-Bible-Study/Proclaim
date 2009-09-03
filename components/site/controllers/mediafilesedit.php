@@ -198,5 +198,43 @@ class biblestudyControllermediafilesedit extends JController {
 		}
 	}
 
+
+	function docmanCategoryItems() {
+		//hide errors and warnings
+		error_reporting(0);
+		$catId = JRequest::getVar('catId');
+
+		$model =& $this->getModel('mediafilesedit');
+		$items =& $model->getdocManCategoryItems($catId);
+		echo $items;
+	}
+	
+	function articlesSectionCategories() {
+		error_reporting(0);
+		$secId = JRequest::getVar('secId');
+		
+		$model =& $this->getModel('mediafilesedit');
+		$items =& $model->getArticlesSectionCategories($secId);
+		echo $items;
+		
+	}
+	
+	function articlesCategoryItems() {
+		error_reporting(0);
+		$catId = JRequest::getVar('catId');
+		
+		$model =& $this->getModel('mediafilesedit');
+		$items =& $model->getCategoryItems($catId);
+		echo $items;
+	}
+	function virtueMartItems(){
+		error_reporting(0);
+		$catId = JRequest::getVar('catId');
+		
+		$model =& $this->getModel('mediafilesedit');
+		$items =& $model->getVirtueMartItems($catId);
+		echo $items;		
+	}
+
 }
 ?>

@@ -57,8 +57,10 @@ class biblestudyViewmediafilesedit extends JView {
 				{
 					array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
 				}
-			array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
 		}
+		
+		//articles
+		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
 		
 		//Run only if Virtuemart enabled
 		if ($vmenabled)

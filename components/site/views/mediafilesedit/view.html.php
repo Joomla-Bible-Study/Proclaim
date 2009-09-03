@@ -2,6 +2,7 @@
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
+jimport ('joomla.application.component.helper');
 
 class biblestudyViewmediafilesedit extends JView {
 
@@ -22,6 +23,24 @@ class biblestudyViewmediafilesedit extends JView {
 			$mbutton = JElementInsertButton::fetchElementImplicit('mediacode',JText::_('AVR Media'));
 			$this->assignRef('mbutton', $mbutton);
 		}
+		
+		$document =& JFactory::getDocument();
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/icon.css');
+		$document->addStylesheet(JURI::base().'administrator/templates/system/css/system.css');
+		$document->addStylesheet(JURI::base().'media/system/css/modal.css');
+		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/rounded.css');
+		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/template.css');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/views/mediafilesedit.js');
+		
+		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
+		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
+		$this->assignRef('vmenabled', $vmenabled);
+		$this->assignRef('dmenabled', $dmenabled);
+		
+		//Get Data
 		$mediafilesedit =& $this->get('Data');
 		$studiesList =& $this->get('Studies');
 		$serversList =& $this->get('Servers');
@@ -30,13 +49,10 @@ class biblestudyViewmediafilesedit extends JView {
 		$mediaImages =& $this->get('MediaImages');
 		$mimeTypes =& $this->get('MimeTypes');
 		$ordering =& $this->get('Ordering');
-		$document =& JFactory::getDocument();
-		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/icon.css');
-		$document->addStylesheet(JURI::base().'administrator/templates/system/css/system.css');
-		$document->addStylesheet(JURI::base().'media/system/css/modal.css');
-		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/rounded.css');
-		$document->addStylesheet(JURI::base().'administrator/templates/khepri/css/template.css');
-
+		$docManCategories =& $this->get('docManCategories');
+		$articlesSections =& $this->get('ArticlesSections');
+		$virtueMartCategories =& $this->get('virtueMartCategories');
+		
 		require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );
 		$toolbar = biblestudyHelperToolbar::getToolbar();
 		$this->assignRef('toolbar', $toolbar);
@@ -56,8 +72,9 @@ class biblestudyViewmediafilesedit extends JView {
 				{
 					array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
 				}
-			array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
 		}
+		
+		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
 		
 		//Run only if Virtuemart enabled
 		if ($vmenabled)
@@ -105,6 +122,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$lists = array();
 
 		//Special tasks to perform depending on whether its a new study or not
+		//dump ($studiesList);
 		$newStudy = JRequest::getVar('new', null, 'GET', 'int');
 		if(isset($newStudy)){
 			$study = $this->get('Study');
@@ -148,6 +166,14 @@ class biblestudyViewmediafilesedit extends JView {
 		// build the html select list for ordering
 		$lists['ordering'] = JHTML::_('list.specificordering',  $mediafilesedit, $mediafilesedit->id, $ordering, 1 );
 
+//TF added this to make studies work in mediafiles
+		//$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
+		//$database->setQuery($query);
+		//$studies = $database->loadObjectList();
+		//$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );
+		//$studies = array_merge($studies,$database->loadObjectList() );
+		//$lists['studies'] = JHTML::_('select.genericlist', $studies, 'study_id', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->study_id);
+		
 		$this->assignRef('lists', $lists);
 		$this->assignRef('mediafilesedit', 	$mediafilesedit);
 		$this->assignRef('articlesSections', $articlesSections);

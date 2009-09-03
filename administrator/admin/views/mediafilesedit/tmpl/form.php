@@ -72,7 +72,7 @@ echo $pane->endPane();
 	 { ?>
       <tr>
       	<td class="key">
-		<?php echo JText::_('Use DOCman')?>:</td>
+		<?php echo JText::_('Use DocMan')?>:</td>
       	<td>
       	<?php 
       	if(isset($this->docManItem)){
