@@ -13,7 +13,10 @@ if (!$row->id) {return FALSE;}
 		include_once($path1.'filepath.php');
 		include_once($path1.'duration.php');
 		include_once($path1.'image.php');
-	 
+	$database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
+	$database->query();
+	$admin = $database->loadObjectList();
+ 
 	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images'.DS.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
 	$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
 	$d_path = $d_path1.$d_image;
@@ -93,7 +96,7 @@ if (!$row->id) {return FALSE;}
 	  
 	  //Here we check to see if the old useavr is selected in the database. We will eventually get rid of this
 	 
-	 if ($media->internal_viewer > 0 && JPluginHelper::importPlugin('system', 'avreloaded'))
+	 if ($media->internal_viewer > 0 && $itemparams->get('player') < 1)
       	{ 
 	  		$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid); 
 	  	}

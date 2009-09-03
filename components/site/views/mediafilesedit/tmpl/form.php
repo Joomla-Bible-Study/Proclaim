@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); 
-jimport('joomla.pane.html');
+
 ?>
 
 <script type="text/javascript">
@@ -34,6 +34,7 @@ function openConverter1()
     <td class="key"></td><td align="left"><?php echo $this->toolbar;?></td></tr>
 <tr><td class="key"><?php echo JText::_('Parameters');?></td><td>
 <?php
+jimport('joomla.pane.html');
 $pane =& JPane::getInstance ('sliders');
 
 echo $pane->startPane ('content-pane');

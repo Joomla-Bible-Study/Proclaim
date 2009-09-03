@@ -508,8 +508,9 @@ $fieldcheck	= isset( $fields[$tn]['thumbwm'] );
 		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN thumbwm INT NULL AFTER thumbhm;");
 		$database->query();}
 $fieldcheck	= isset( $fields[$tn]['params'] );
-		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN params INT NULL AFTER thumwhm;");
+		if (!$fieldcheck) {$database->setQuery ("ALTER TABLE #__bsms_studies ADD COLUMN params TEXT NULL AFTER thumbwm;");
 		$database->query();}
+		
 $tn = '#__bsms_podcast';
 	$fields = $database->getTableFields( array( $tn ) );
 	$fieldcheck = false;	
@@ -612,7 +613,7 @@ $database->setQuery ("SELECT id FROM #__bsms_mediafiles");
 	$database->query();
 	$isitnew = $database->loadResult();
 	if (!$isitnew){
-	$database->setQuery ("INSERT INTO #__bsms_mediafiles VALUES (1, 1, 2, 1, 1, '','myfile.mp3', 12332, 1, 1, 0, '', 0, '2009-09-13 00:10:00', 1,'',1,0,0,'',0)");
+	$database->setQuery ("INSERT INTO #__bsms_mediafiles VALUES (1, 1, 2, 1, 1, '','myfile.mp3', 12332, 1, 1, 0, '', 0, '2009-09-13 00:10:00', 1,'',1,0,0,'',0,'player=0')");
 	$database->query();
 	}
 //Check to see if the admin row exists
@@ -624,7 +625,7 @@ $database->setQuery ("SELECT id FROM #__bsms_admin");
 	{
 		$database->setQuery ("INSERT INTO #__bsms_admin VALUES 	(1, '', '', '', '', 'speaker24.png', 'download.png', 'openbible.png', 'compat_mode=0
 drop_tables=0
-admin_store=0
+admin_store=1
 studylistlimit=10
 series_imagefolder=
 media_imagefolder=

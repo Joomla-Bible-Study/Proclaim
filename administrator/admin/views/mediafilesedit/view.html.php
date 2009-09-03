@@ -124,7 +124,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$alt = "Upload";
 		$bar=& JToolBar::getInstance( 'toolbar' );
 		//$bar->appendButton( 'Popup', 'upload', $alt, 'index.php', 650, 500 );
-		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=", 800, 700 );
+		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=", 650, 400 );
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.mediafilesedit', true );
 		// build the html select list for ordering

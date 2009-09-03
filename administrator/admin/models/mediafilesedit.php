@@ -313,12 +313,6 @@ class biblestudyModelmediafilesedit extends JModel {
 		return $data[0];
 	}
 	
-	function setId($id) {
-		// Set id and wipe data
-		$this->_id		= $id;
-		$this->_data	= null;
-	}
-
 	function getStudy() {
 		$query = 'SELECT id, studytitle, studydate FROM #__bsms_studies ORDER BY id DESC LIMIT 1';
 		$this->_db->setQuery($query);

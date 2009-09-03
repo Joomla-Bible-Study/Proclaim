@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); 
-jimport('joomla.pane.html');
+
 ?>
 
 <script type="text/javascript">
@@ -25,8 +25,9 @@ function openConverter1()
 		<legend><?php echo JText::_( 'Media File Details' ); ?></legend>
 		      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>"/>
 <?php $editor =& JFactory::getEditor();
-$pane =& JPane::getInstance ('sliders');
 
+jimport('joomla.html.pane');
+$pane =& JPane::getInstance( 'sliders');
 echo $pane->startPane ('content-pane');
 echo $pane->startPanel(JText::_('Media File Parameters'), 'MEDIAFILE_1');
 echo $this->params->render ('params');

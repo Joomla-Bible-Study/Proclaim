@@ -89,7 +89,7 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_data->thumbhm = null;
 			$this->_data->thumbwm = null;
 			$this->_data->params = null;
-			
+			//dump ($this->_data);
 		}
 		return $this->_data;
 	}

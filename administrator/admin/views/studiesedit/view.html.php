@@ -25,7 +25,7 @@ class biblestudyViewstudiesedit extends JView {
 		//Get Data
 		$studiesedit =& $this->get('Data');
 		$books =& $this->get('books');
-		
+		//dump ($studiesedit);
 		//Add the params from the model
 		/*
 		$paramsdata = $studiesedit->params;
