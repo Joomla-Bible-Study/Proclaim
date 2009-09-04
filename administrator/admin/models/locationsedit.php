@@ -47,7 +47,7 @@ class biblestudyModellocationsedit extends JModel
 			$this->_data->id = 0;
 			$this->_data->location_text = null;
 			//TF added this
-			$this->_data->published = 0;
+			$this->_data->published = 1;
 		}
 		return $this->_data;
 	}

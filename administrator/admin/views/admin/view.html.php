@@ -74,7 +74,7 @@ class biblestudyViewadmin extends JView
 			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
 			else {$folderfinal8[] = $folderfinal1;}
 		}
-		array_unshift($folderfinal8, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+		array_unshift($folderfinal8, JHTML::_('select.option', '0', '- '.JText::_('Default Image').' -', 'value', 'value'));
 		$lists['main'] = JHTML::_('select.genericlist',  $folderfinal8, 'main', 'class="inputbox"', 'value', 'value', $admin->main );
 		
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('teachers_imagefolder', 'stories');

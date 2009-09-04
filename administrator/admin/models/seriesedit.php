@@ -41,6 +41,7 @@ class biblestudyModelseriesedit extends JModel
 	function &getData()
 	{
 		// Load the data
+		$admin = $this->getAdmin();
 		if (empty( $this->_data )) {
 			$query = ' SELECT * FROM #__bsms_series '.
 					'  WHERE id = '.$this->_id;
@@ -53,7 +54,7 @@ class biblestudyModelseriesedit extends JModel
 			//TF added these
 			$this->_data->published = 0;
 			$this->_data->series_text = null;
-			$this->_data->series_thumbnail = null;
+			$this->_data->series_thumbnail = ($admin[0]->series ? $admin[0]->series : null);
 			$this->_data->description = null;
 			$this->_data->teacher = null;
 			

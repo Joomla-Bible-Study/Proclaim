@@ -28,13 +28,8 @@
 		<param name="media_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Media Image Folder" description="Path from images folder to media images like /images/media. If left blank then /components/com_biblestudy/images is assumed." />
 		<param name="teachers_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Teacher Image Folder" description="Path from images folder to teacher images like /images/teachers. If left blank then /images/stories is assumed." />
 		<param name="study_images" type="folderlist" hide_none="-1" directory="/images" size="150" label="Study Thumbnails Image Folder" description="Path from images folder to study thumbnail images like /images/thumbnails. If left blank then /images/stories is assumed." />
-		<param name="podcast_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Podcast Image Folder" description="Path from images folder to podcast images like /images/podcast. If left blank then /images/stories is assumed." />
 	</params>
 	<params group="FILLIN-MEDIAFILE" addpath="/administrator/components/com_biblestudy/elements">
-		<param name="avr" type="list" default="0" label="Default Use All Videos Reloaded" description="Set to Yes if you wish all mediafile records to automatically have Use AVR selected.">
-			<option value="0">No</option>
-			<option value="1">Yes</option>
-		</param>
 		<param name="download" type="list" default="0" label="Default Show Download Button" description="Set to Yes if you wish all mediafile records to automatically have the Show Download button selected.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>

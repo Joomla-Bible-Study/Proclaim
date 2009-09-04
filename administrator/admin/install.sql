@@ -396,7 +396,7 @@ INSERT IGNORE INTO `#__bsms_mimetype` VALUES (11,'audio/x-pn-realaudio','Read Au
 INSERT IGNORE INTO `#__bsms_mimetype` VALUES (12,'video/mpeg',' Mpeg video .mpg',1);
 INSERT IGNORE INTO `#__bsms_mimetype` VALUES (13,'audio/mpeg','Video .mp2 File',1);
 INSERT IGNORE INTO `#__bsms_mimetype` VALUES (14,'video/x-msvideo',' Video .avi File',1);
-INSERT IGNORE INTO `#__bsms_mimetype` VALUES (15,'video/x-flv .flv',' Flash Video FLV',1);
+INSERT IGNORE INTO `#__bsms_mimetype` VALUES (15,'video/x-flv',' Flash Video FLV',1);
 
 
 

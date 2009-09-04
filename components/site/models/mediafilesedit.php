@@ -11,10 +11,12 @@ class biblestudyModelmediafilesedit extends JModel {
 	 * @return	void
 	 */
 	var $_admin;
+	
 	function __construct()
 	{
 		parent::__construct();
 		$admin = $this->getAdmin();
+		dump ($admin);
 		$this->_admin_params = new JParameter($admin[0]->params);
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
@@ -44,14 +46,14 @@ class biblestudyModelmediafilesedit extends JModel {
 			//TF added these
 			$today = date("Y-m-d H:i:s");
 			$this->_data->published = 1;
-			$this->_data->media_image = ($this->_admin_params->get('media') != 'Use Default' ? $this->_admin_params->get('media') : null);
+			$this->_data->media_image = null);
 			$this->_data->server = ($this->_admin_params->get('server') > 0 ? $this->_admin_params->get('server') : null);
 			$this->_data->path = ($this->_admin_params->get('path') > 0 ? $this->_admin_params->get('path') : null);
 			$this->_data->special =($this->_admin_params->get('target') != 'No default' ? $this->_admin_params->get('target') : null);;
 			$this->_data->filename = null;
 			$this->_data->size = null;
 			$this->_data->podcast_id = ($this->_admin_params->get('podcast') > 0 ? $this->_admin_params->get('podcast') : null);
-			$this->_data->internal_viewer = ($this->_admin_params->get('avr') > 0 ? $this->_admin_params->get('avr') : null);
+			$this->_data->internal_viewer = null;
 			$this->_data->mediacode = null;
 			$this->_data->ordering = null;
 			$this->_data->study_id = null;
@@ -63,7 +65,7 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->_data->article_id = null;
 			$this->_data->comment = null;
 			$this->_data->virtueMart_id = null;
-			$this->_data->params = null;
+			$this->_data->params = null);
 				
 		}
 		return $this->_data;
@@ -245,7 +247,7 @@ class biblestudyModelmediafilesedit extends JModel {
 			. ' WHERE id = 1';
 			$this->_admin = $this->_getList($query);
 			//dump ($this->_admin);
-		}
+		} //dump $this->_admin;
 		return $this->_admin;
 	}
 

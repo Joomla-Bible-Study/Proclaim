@@ -33,7 +33,7 @@ $params = $this->params;
 			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>
 			<?php 
 			$studiesedit_call = JView::loadHelper('studiesedit');
-			$studiesedit = getStudiesedit($row, $params);
+			$studiesedit = getStudiesedit($row = null, $params);
 			echo $studiesedit;
 			}
 

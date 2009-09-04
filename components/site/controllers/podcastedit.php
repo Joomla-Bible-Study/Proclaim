@@ -159,7 +159,7 @@ function publish()
   $description = str_replace("&","and",$podinfo->description);
   $client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
   $detailsitemid = $podinfo->detailsitemid;
-  $detailsitemid = '&amp;Itemid='.$detailsitemid;
+  $detailstemplateid = '&amp;templatemenuid='.$detailstemplateid.'&amp;Itemid=1';
   $podhead = '<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>

@@ -41,9 +41,8 @@ echo $pane->endPane();?>
 <tr><td class="key"><?php echo JText::_('Default Study List Image');?></td><td><?php echo $this->lists['main']; echo JText::_(' Default for Study List Page Image. Media images folder used (set above).');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php echo $this->lists['study']; echo JText::_(' Default for study thumbnail. Set Folder above.');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Series Image');?></td><td><?php echo $this->lists['series']; echo JText::_(' Default for series thumbnail. Set Folder above.');?></td></tr>
-<tr><td class="key"><?php echo JText::_('Default Podcast Image');?></td><td><?php echo $this->lists['podcast']; echo JText::_(' Default for podcast thumbnail. Set Folder above.');?></td></tr>
+
 <tr><td class="key"><?php echo JText::_('Default Teacher Image');?></td><td><?php echo $this->lists['teacher']; echo JText::_(' Default for teacher thumbnail. Set Folder above.');?></td></tr>
-<tr><td class="key"><?php echo JText::_('Default Media Type Image');?></td><td><?php echo $this->lists['media']; echo JText::_(' Default for media type thumbnail. Set Folder above.');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Download Image');?></td><td><?php echo $this->lists['download']; echo JText::_(' Default for download image. Must be called download.png. Media images folder used (set above).');?></td></tr>
 
       <tr> <td class="key"><?php echo JText::_('Version');?></td>

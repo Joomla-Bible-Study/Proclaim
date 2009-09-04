@@ -16,7 +16,7 @@ class biblestudyModelpodcastedit extends JModel
 	 * @return	void
 	 */
 	 var $_template;
-	 
+	 var $_admin;
 	function __construct()
 	{
 		parent::__construct();
@@ -33,6 +33,7 @@ class biblestudyModelpodcastedit extends JModel
 		$this->_data	= null;
 		$this->_episodes = null;
 		$this->_podinfo = null;
+		$this->_admin = null;
 	}
 
 
@@ -40,6 +41,7 @@ class biblestudyModelpodcastedit extends JModel
 	function &getData()
 	{
 		// Load the data
+		$admin = $this->getAdmin();
 		if (empty( $this->_data )) {
 			$query = ' SELECT * FROM #__bsms_podcast '.
 					'  WHERE id = '.$this->_id;
@@ -69,7 +71,7 @@ class biblestudyModelpodcastedit extends JModel
 			$this->_data->episodetitle = null;
 			$this->_data->custom = null;
 			$this->_data->detailstemplateid = null;
-			$this->_data->published = 0;
+			$this->_data->published = 1;
 		}
 		return $this->_data;
 	}
@@ -80,6 +82,18 @@ class biblestudyModelpodcastedit extends JModel
 	 * @access	public
 	 * @return	boolean	True on success
 	 */
+	 
+	 function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT *'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}
+	
 	function store()
 	{
 		$row =& $this->getTable();

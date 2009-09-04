@@ -298,6 +298,7 @@
 			<filename>elements/server.php</filename>
 			<filename>elements/path.php</filename>
 			<filename>elements/podcast.php</filename>
+			<filename>elements/mime.php</filename>
 			<filename>helpers/templates.helper.php</filename>
 			<filename>helpers/toolbar.php</filename>
 			<filename>helpers/bsmCore.php</filename>
