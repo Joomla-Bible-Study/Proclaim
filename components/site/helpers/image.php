@@ -2,6 +2,7 @@
 
 function getImage($path)
 {
+	error_reporting(0);
 	jimport('joomla.filesystem.folder');
 	jimport('joomla.filesystem.file');
 	//dump ($path, 'ppath: ');
