@@ -18,6 +18,7 @@ class biblestudyViewteacherdisplay extends JView
 		
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+		
 		$pathway	   =& $mainframe->getPathWay();
 		$contentConfig = &JComponentHelper::getParams( 'com_biblestudy' );
 		// Get the menu item object
@@ -25,6 +26,8 @@ class biblestudyViewteacherdisplay extends JView
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		$params = &$mainframe->getPageParameters();
+		$url = $params->get('stylesheet');
+		if ($url) {$document->addStyleSheet($url);}
 		$templatemenuid = $params->get('templatemenuid');
 		if (!$templatemenuid){$templatemenuid = 1;}
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');

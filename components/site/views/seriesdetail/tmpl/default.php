@@ -12,7 +12,8 @@ $document =& JFactory::getDocument();
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 //$params = $this->params;
-	
+$url = $this->params->get('stylesheet');
+if ($url) {$document->addStyleSheet($url);}	
 $listingcall = JView::loadHelper('serieslist');
 
 ?>
