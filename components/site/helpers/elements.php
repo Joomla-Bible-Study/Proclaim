@@ -58,7 +58,6 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			$elementid->id = 'teacher';
 			$elementid->headertext = JText::_('Teacher');
 			$elementid->element = $row->teachername;
-			
 			break;
 		case 8:
 			$elementid->id = 'teacher';

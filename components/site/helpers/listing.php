@@ -41,7 +41,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c1'),$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c1'),$id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
 	if ($columns > 1 && $params->get('r1c1span') < 2 )
 	{
@@ -53,7 +53,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
  		$lastcol = 0;
  		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
  		if (isset($elementid)) {
-		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		}
 	}
 	
@@ -67,7 +67,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
 	}
 	
@@ -81,7 +81,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 4) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
 	}
 	$listing .= '
@@ -107,7 +107,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c1'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c1'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
  	//dump ($elementid, 'elementid: ');
 	if ($columns > 1  && $params->get('r2c1span') < 2)
@@ -120,7 +120,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
  		$lastcol = 0;
  		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
 		if (isset($elementid)) {
- 		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+ 		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		}
 	}
 	
@@ -129,13 +129,13 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $rowcolid = 'row2col3';
 		 if ($params->get('row2col3') == 24) {$elementid = getCustom($params->get('row2col3'), $params->get('r2c3custom'), $row, $params, $admin_params, $template);}
 		 else {$elementid = getElementid($params->get('row2col3'), $row, $params, $admin_params, $template);}
-		 if (!$elementid->id){$element->id = ''; $element->element = '';}
+		 //if (!$elementid->id){$element->id = ''; $element->element = '';}
 		 $colspan = $params->get('r2c3span');
 		 $rowspan = $params->get('rowspanr2c3');
 		 $lastcol = 0;
 		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
 	}
 	
@@ -149,7 +149,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 4) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
 	}
 	$listing .= '
@@ -174,7 +174,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
 		 if (isset($elementid))
-		 {$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c1'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 {$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c1'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
 	if ($columns > 1 && $params->get('r3c1span') < 2)
 	{
@@ -186,7 +186,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
  		$lastcol = 0;
  		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
 		if (isset($elementid)) {
- 		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+ 		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		}
 	}
 	
@@ -200,7 +200,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
 	}
 	
@@ -214,7 +214,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 4) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
 	}
 	$listing .= '
@@ -241,7 +241,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c1'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c1'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
  	
 	if ($columns > 1  && $params->get('r4c1span') < 2)
@@ -254,7 +254,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
  		$lastcol = 0;
  		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
 		if (isset($elementid)) {
- 		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+ 		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		}
 	}
 	
@@ -282,7 +282,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 		 $lastcol = 0;
 		 if ($columns == 4) {$lastcol = 1;}
 		 if (isset($elementid)) {
-		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry);
+		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c4'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params);
 		 }
 	}
 	$listing .= '
@@ -292,7 +292,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 return $listing;
 }
 
-	function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, $islink, $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry)
+	function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, $islink, $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params)
 		{
 $entry_user = 0;			
 if (($allow_entry > 0) && ($rowcolid == 'row1col1')){
@@ -312,19 +312,20 @@ $item = JRequest::getVar('Itemid');
 						$cell .= '>';
 						if (($rowcolid == 'row1col1') && ($entry_user >= $entry_access) && ($allow_entry > 0)){
 							$cell .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id3.'&item='.$item.'">'.JText::_(' [Edit] ').'</a>';}
-						if ($islink > 0){$cell .= getLink($islink, $id3, $tid, $smenu, $tmenu);}
+						if ($islink > 0){$cell .= getLink($islink, $id3, $tid, $smenu, $tmenu, $params);}
 						$cell .= $element;
 						if ($islink > 0){$cell .= '</a>';}
 						$cell .='</td>';
 			return $cell;
 		}
 	
-	function getLink($islink, $id3, $tid, $smenu, $tmenu)
+	function getLink($islink, $id3, $tid, $smenu, $tmenu, $params)
 		{
+			$column = '';
 			$mime = ' AND #__bsms_mediafiles.mime_type = 1';
 			switch ($islink) {
 			case 1 :
-			 $link = 'index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3;
+			 $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
 			 if ($smenu > 0) {$link .= '&Itemid='.$smenu;}
 			 $column = '<a href="'.$link.'">';
 			 break;
@@ -334,7 +335,7 @@ $item = JRequest::getVar('Itemid');
 			 $column .= '<a href="'.$link.'">';
 			 break;
 			case 3 :
-			 $link = 'index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $tid;
+			 $link = JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $tid.'&templatemenuid='.$params->get('teachertemplateid'));
 			 if ($tmenu > 0) {$link .= '&Itemid='.$tmenu;}
 			 $column .= '<a href="'.$link.'">';
 			 break;

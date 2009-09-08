@@ -32,6 +32,7 @@ class biblestudyViewseriesdetail extends JView
 		$params = new JParameter($template[0]->params);
 		//dump ($params, 'params2: ');
 		$items		=& $this->get('Data');
+		//dump ($items);
 		$admin =& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
 		
@@ -53,6 +54,7 @@ class biblestudyViewseriesdetail extends JView
 		/*
 		 * Process the prepare content plugins
 		 */
+		$limitstart = 0;
 		$article->text = $items->description;
 		$linkit = $params->get('show_scripture_link');
 		if ($linkit) {

@@ -133,7 +133,7 @@ if ($params->get('list_items_view') == 0)
 			}
 			if ($this->params->get('view_link') > 0){
 					//$returnmenu = $params->get('templatemenuid');
-					$templatemenuid = $params->get('studielisttemplateid');
+					$templatemenuid = $params->get('studieslisttemplateid');
 					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 					//$returnmenu = JRequest::getVar('templatemenuid', 'get', 'int');
 					if (!isset($returnmenu)) {$returnmenu = 1;}

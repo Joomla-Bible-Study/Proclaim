@@ -20,13 +20,17 @@ class biblestudyViewstudieslist extends JView {
 		$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('admin', $admin);
 		$params 			=& $mainframe->getPageParameters();
-		//dump ($params, 'params: ');
-		$templatemenuid = $params->get('templatemenuid');
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
-		$template = $this->get('Template');
-		$params = new JParameter($template[0]->params);
-		//dump ($template, 'template: ');
+
+//dump ($params, 'params: ');
+		//if (!$params)
+			//{
+				$templatemenuid = $params->get('templatemenuid');
+				if (!$templatemenuid){$templatemenuid = 1;}
+				JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+				$template = $this->get('Template');
+				$params = new JParameter($template[0]->params);
+			//}
+//dump ($template, 'template: ');
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
 		//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');

@@ -2,10 +2,6 @@
 <root>
 	<params>
 		<param name="itemslimit" type="text" size="2" default="5" label="Number of studies to display" description="Enter a number of studies to display in each listing page" />
-		<param name="compatibilityMode" type="list" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
-				<option value="0">No</option>
-				<option value="1">Yes</option>
-		</param>
 	</params>
 	<params group="TEMPLATES" addpath="/components/com_biblestudy/elements">
 		<param name="studieslisttemplateid" type="studieslisttemplateid" default="" label="Template for Studies List View" description="Choose a template from the admin/templates for display of studies list view linked from here" />
@@ -16,10 +12,6 @@
 	</params>
 	<params group="FILTERS" addpath="/components/com_biblestudy/elements">
 		<param name="teacher_id" type="teacher" default="" label="Teacher" description="Choose a teacher to display for this menu item" />
-		<param name="show_teacher_list" type="list" default="1" label="Show/Hide Teacher(s) in View" description="Shows or hides the teacher on the page">
-			<option value="0">Hide</option>
-			<option value="1">Show</option>
-		</param>
 		<param name="mult_teachers" type="text" default="" label="Enter multiple teacher ids" description="Enter a series of teacher ids separated by commas as a filter" />
 		<param name="series_id" type="series" default="" label="Series" description="Choose a series to display for this menu item" />
 		<param name="mult_series" type="text" default="" label="Enter multiple series ids" description="Enter a number of series ids separated by commas as a filter" />
@@ -69,7 +61,11 @@
 			<option value="2">H:M:S</option>
 		</param>
 		</params>	
-		<params group="MEDIA">			
+		<params group="MEDIA">	
+			<param name="compatibilityMode" type="list" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+		</param>		
 			<param name="useavr" type="list" default="0" label="Use AllVideosReloaded for all media" description="If installed, use AllVideosReloaded 1.2.3 or higher player for all video and audio (overrides local settings)">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
@@ -956,7 +952,7 @@
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 			</param>
-			<param name="show_teacher_view" type="list" default="1" label="Show/Hide Teacher" description="Shows or hides the Teacher">
+			<param name="show_teacher_view" type="list" default="0" label="Show/Hide Teacher" description="Shows or hides the Teacher">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
 			</param>
@@ -1079,7 +1075,7 @@
 				<option value="1">Link to Series Details</option>
 				<option value="3">Link to Teacher details</option>
 			</param>
-			<param name="serieselement2" type="list" default="1" label="Series List Element 2" description="Please pick an element from the list">
+			<param name="serieselement2" type="list" default="6" label="Series List Element 2" description="Please pick an element from the list">
 				<option value="0">Nothing</option>
 				<option value="1">Series Title {title}</option>
 				<option value="2">Thumbnail {thumbnail}</option>
@@ -1095,7 +1091,7 @@
 				<option value="1">Link to Series Details</option>
 				<option value="3">Link to Teacher details</option>
 			</param>
-			<param name="serieselement3" type="list" default="1" label="Series List Element 3" description="Please pick an element from the list">
+			<param name="serieselement3" type="list" default="0" label="Series List Element 3" description="Please pick an element from the list">
 				<option value="0">Nothing</option>
 				<option value="1">Series Title {title}</option>
 				<option value="2">Thumbnail {thumbnail}</option>
@@ -1111,7 +1107,7 @@
 				<option value="1">Link to Series Details</option>
 				<option value="3">Link to Teacher details</option>
 			</param>
-			<param name="serieselement4" type="list" default="1" label="Series List Element 4" description="Please pick an element from the list">
+			<param name="serieselement4" type="list" default="0" label="Series List Element 4" description="Please pick an element from the list">
 				<option value="0">Nothing</option>
 				<option value="1">Series Title {title}</option>
 				<option value="2">Thumbnail {thumbnail}</option>
@@ -1130,10 +1126,10 @@
 		</params>
 		<params group="SERIESDETAIL">
 			<param name="series_detail_sort" default="1" type="list" label="Study sort column" description="Choose a study element to sort the studies list in the series detail section.">
-				<option value="0">Study Date</option>
-				<option value="1">Study Title</option>
-				<option value="2">Book</option>
-				<option value="3">Teacher</option>
+				<option value="studydate">Study Date</option>
+				<option value="studytitle">Study Title</option>
+				<option value="booknumber">Book</option>
+				<option value="teacher_id">Teacher</option>
 			</param>
 			<param name="series_detail_order" type="list" default="DESC" label="Sort Order" description="Choose ascending or descending for the order of studies">
 				<option value="DESC">Descending</option>

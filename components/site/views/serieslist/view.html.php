@@ -45,23 +45,11 @@ class biblestudyViewserieslist extends JView {
 		//Initialize templating class
 		//$tmplEninge = $this->loadHelper('templates.helper');
 		//$tmplEngine =& bibleStudyTemplate::getInstance();
-
-		
-		//$params->merge($template[0]->params);
-		//$templateparams = $template[0]->params;
-		//$params->merge($templateparams);
-		//dump ($templateparams, 'templateparams: ');
-		//
-		
+	
 		//dump ($params, 'params: ');
 		$uri				=& JFactory::getURI();
-		//$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
-		//$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
-		//$filter_teacher		= $mainframe->getUserStateFromRequest( $option.'filter_teacher','filter_teacher',0,'int' );
 		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',	'filter_series',0,'int' );
-		//$filter_messagetype	= $mainframe->getUserStateFromRequest( $option.'filter_messagetype','filter_messagetype',0,'int' );
 		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year','filter_year',0,'int' );
-		//$filter_location	= $mainframe->getuserStateFromRequest( $option.'filter_location','filter_location',0,'int');
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
 		//$search				= JString::strtolower($mainframe->getUserStateFromRequest( $option.'search','search','','string'));
 /*
@@ -82,29 +70,11 @@ class biblestudyViewserieslist extends JView {
 		$pagination = $this->get('Pagination');
 		//$teachers = $this->get('Teachers');
 		$series = $this->get('Series');
-		//$messageTypes = $this->get('MessageTypes');
-		//$studyYears = $this->get('StudyYears');
-		//$locations = $this->get('Locations');
-		//$topics = $this->get('Topics');
 		$orders = $this->get('Orders');
-		//$books = $this->get('Books');
 		
         //This is the helper for scripture formatting
         $scripture_call = Jview::loadHelper('scripture');
 		//end scripture helper
-		//$translated_call = JView::loadHelper('translated');
-		//$topics = getTranslated($topics);
-		//$orders = getTranslated($orders);
-		//$book = getTranslated($books);
-		//$this->assignRef('books', $books);
-		
-		//$dispatcher	=& JDispatcher::getInstance();
-		//$article->text = $items[$key]->description;
-		//JPluginHelper::importPlugin('content');
-		//$results = $dispatcher->trigger('onPrepareContent', array (& $items, & $params, $limitstart));
-		//dump ($items[0]->description, 'article: ');
-		//$items[$key]->description = $article->text;
-		//$this->assignRef('article', $article);
 		$this->assignRef('template', $template);
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('order', $orders);
@@ -113,14 +83,17 @@ class biblestudyViewserieslist extends JView {
 		$item =& $menu->getActive();
 //dump ($admin[0]->main, 'main: ');
 		//Get the main study list image
-		if ($admin[0]->main == '- No Image -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}
+		if ($admin[0]->main == '- Default Image -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}
 		else 
 		{
 				if ($admin[0]->main && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$admin[0]->main; }
 				if ($admin[0]->main && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$admin[0]->main;}
 		$main = getImage($i_path);
 		}
-		
+		if ($admin[0]->main == '- Default Image -' && $admin_params->get('media_imagefolder')) 
+		{
+			$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);
+		}
 	  	$this->assignRef('main', $main);
 	  	
 		//Build Series List for drop down menu
@@ -139,7 +112,7 @@ class biblestudyViewserieslist extends JView {
 		$ord		= array_merge($ord, $orders);
 		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_orders");
 		
-		$lists['search']= $search;
+		//$lists['search']= $search;
 		
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('items',		$items);

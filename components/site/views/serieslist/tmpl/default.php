@@ -6,21 +6,13 @@ defined('_JEXEC') or die(); ?>
 <?php 
 global $mainframe, $option;
 JHTML::_('behavior.tooltip');
-//$message = JRequest::getVar('msg');
-//$database = & JFactory::getDBO();
-//$teacher_menu = $this->params->get('teacher_id', 1);
-//$topic_menu = $this->params->get('topic_id', 1);
-//$book_menu = $this->params->get('booknumber', 101);
-//$location_menu = $this->params->get('locations', 1);
 $series_menu = $this->params->get('series_id', 1);
-//$messagetype_menu = $this->params->get('messagetype', 1);
-//$params = $mainframe->getPageParameters();
 $document =& JFactory::getDocument();
 $document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 $params = $this->params;
-	
+$url = $params->get('stylesheet');
+if ($url) {$document->addStyleSheet($url);}	
 $listingcall = JView::loadHelper('serieslist');
 
 ?>

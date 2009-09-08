@@ -39,7 +39,7 @@ if (!$row->id) {return FALSE;}
 	$rows2 = count($media1);
 	
 	
-	$compat_mode = $admin_params->get('compat_mode');
+	$compat_mode = $params->get('compatibilityMode');
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
 	
 	
@@ -142,6 +142,8 @@ if (!$row->id) {return FALSE;}
 		if ($link_type > 0){ //$src = JURI::base().$download_image;
 	   $width=$download_tmp->width;
 	   $height=$download_tmp->height;
+	   
+	   
       if($compat_mode == 0) {
        $mediatable .='<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
 	   

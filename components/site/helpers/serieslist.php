@@ -1,7 +1,8 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 { //dump ($row->series_thumbnail, 'series: ');
-	
+	//dump ($row);
+	$listing = '';
 	//$listing = '<table id="bslisttable" cellspacing="0">';
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
@@ -29,6 +30,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	$listelementid = $params->get('serieselement2');
 	$islink = $params->get('seriesislink2');
 	$r = '';
+	//dump ($row);
 	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
 	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
 	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view); 
@@ -111,6 +113,7 @@ function getStudieslink($islink, $row, $element, $params, $admin_params)
 function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view)
 {//dump ($admin_params->get('teachers_imagefolder'), 'listelementidcheck: ');
 	//dump ($r);
+	$element = '';
 	switch ($listelementid)
 	{ 
 		case 1:
@@ -231,6 +234,7 @@ function getseriesElementnumber($subcustom)
 }
 function getSeriesstudies($id, $params, $admin_params, $template)
 {
+	$studies = '';
 	$limit = '';
 	$nolimit = JRequest::getVar('nolimit', 'int', 0);
 	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
@@ -240,8 +244,10 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	$db->setQuery($query);
 	$allrows = $db->loadObjectList();
 	$rows = $db->getAffectedRows();
-	$query = 'SELECT s.*, se.id AS seid FROM #__bsms_studies AS s'
+	$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
+	.' FROM #__bsms_studies AS s'
 	.' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
+	.' LEFT JOIN #__bsms_teachers AS t ON (s.teacher_id = t.id)'
 	.' WHERE s.series_id = '.$id.' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC').$limit;
 	$db->setQuery($query);
 	$result = $db->loadObjectList();

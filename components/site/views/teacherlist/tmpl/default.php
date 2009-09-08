@@ -2,17 +2,19 @@
 <?php //$params = &JComponentHelper::getParams($option);  
 $user =& JFactory::getUser();
 global $mainframe, $option;
-$params =& $mainframe->getPageParameters();
+$params = $this->params;
 $entry_user = $user->get('gid');
 $user_submit_name = $user->name;
 if ($user->name == ''){$user_submit_name = '';}
 $entry_access = ($params->get('entry_access')) - 1;
 $allow_entry = $params->get('allow_entry_study');
-$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
+$templatemenuid = $params->get('teachertemplateid');
+//dump ($templatemenuid);
+if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');}
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 $admin_params = $this->admin_params;
 include_once($path1.'image.php');
-if (!$templatemenuid){$templatemenuid = 1;}
+//if (!$templatemenuid){$templatemenuid = 1;}
 ?>
 <div id="biblestudy" class="noRefTagger">
 <table id="bsm_teachertable" cellspacing="0">

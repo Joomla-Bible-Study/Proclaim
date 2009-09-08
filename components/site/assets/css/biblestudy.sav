@@ -1,4 +1,4 @@
-<!--Listing Page Items-->
+/* Listing Page Items */
 #listintro p, #listintro td {
 	margin: 0;
 	font-weight: bold;
@@ -158,7 +158,7 @@
   position:relative; bottom: 7px;
 }
 
-<!-- Study Details CSS -->
+/* Study Details CSS */
 
 #bsmsdetailstable {
   margin: 0;
@@ -335,7 +335,7 @@
 	font-size:20px;
 	font-weight:bold;
 }
-<!-- Module Style Settings -->
+/* Module Style Settings */
 
 #bsmsmoduletable {
   margin: 0;
@@ -540,7 +540,7 @@
 #seriestable .teacher {
 	font-weight: bold;
 }
-<!-- Series Detail Study Links Items -->
+/* Series Detail Study Links Items */
 #seriesstudytable {
   margin: 0;
   border-collapse:separate;
@@ -699,7 +699,7 @@
         width: 300px;
         z-index: 13000;
 }
-<!-- Tooltip Styles-->
+/* Tooltip Styles */
 
 .tool-title {
         font-weight: bold;
@@ -737,3 +737,117 @@
        padding: 4px 8px 8px;
        background: #999999;
     }
+/* Teacher List Styles */
+#bsm_teachertable 
+	{
+	margin: 0;
+ 	border-collapse:separate;
+	}
+#bsm_teachertable td {
+  text-align:left;
+  padding:0 5px 0 5px;
+  border:none;
+}
+#bsm_teachertable .titlerow
+	{
+		border-bottom: thick;
+	}
+#bsm_teachertable .title
+	{
+		font-size:18px;
+		font-weight:bold;
+		border-bottom: 3px solid #999999;
+		padding: 4px 0px 4px 4px;
+	}
+#bsm_teachertable .bsm_separator
+	{ 
+	border-bottom: 1px solid #999999;
+	}
+
+.bsm_teacherthumbnail 
+	{
+		   
+	}
+#bsm_teachertable .bsm_teachername
+	{ 
+		font-weight: bold;
+		font-size: 14px;
+		color: #000000;
+		white-space:nowrap;
+		
+	}
+#bsm_teachertable .bsm_teacheremail
+	{
+		font-weight:normal;
+		font-size: 11px;
+	}
+#bsm_teachertable .bsm_teacherwebsite
+	{
+		font-weight:normal;
+		font-size: 11px;
+	}
+#bsm_teachertable .bsm_teacherphone
+	{
+		font-weight:normal;
+		font-size: 11px;
+	}
+#bsm_teachertable .bsm_short 
+	{
+		padding: 8px 4px 4px;
+	}
+#bsm_teachertable .bsm_studiestitlerow {
+	background-color: #666;	
+}
+#bsm_teachertable .bsm_titletitle
+	{
+		font-weight:bold;
+		color:#FFFFFF;
+	}
+#bsm_teachertable .bsm_titlescripture
+	{
+		font-weight:bold;
+		color:#FFFFFF;
+	}
+#bsm_teachertable .bsm_titledate
+	{
+		font-weight:bold;
+		color:#FFFFFF;
+	}
+#bsm_teachertable .bsm_teacherlong
+{
+	padding: 8px 4px 4px;
+	border-bottom: 1px solid #999999;
+}
+#bsm_teachertable tr.bsodd {
+  background-color:#FFFFFF;
+  border-bottom: 1px solid #999999;
+}
+#bsm_teachertable tr.bseven {
+  background-color:#FFFFF0;
+  border-bottom: 1px solid #999999;
+}
+
+#bsm_teachertable .lastrow td {
+  border-bottom:1px solid gray;
+  padding-bottom:7px;
+  padding-top:7px;
+}
+#bsm_teachertable .bsm_teacherfooter
+	{
+		border-top: 1px solid #999999;
+		padding: 4px 1px 1px 4px;
+	}
+/*Study Edit CSS */
+
+.bsmbutton
+    {
+        background-color:white;
+		
+    }
+#toolbar td.white {
+	background-color:#FFFFFF;
+}
+#toolbar a hover visited{
+	color:0B55C4;
+}
+
