@@ -96,11 +96,23 @@ if (!$row->id) {return FALSE;}
 	  
 	  //Here we check to see if the old useavr is selected in the database. We will eventually get rid of this
 	 
-	 if ($media->internal_viewer > 0 && $itemparams->get('player') < 1)
+	 if ($media->internal_viewer > 0 && $itemparams->get('player') < 1 || $params->get('useavr') > 0)
       	{ 
 	  		$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid); 
 	  	}
 
+	if ($params->get('media_player') > 0)
+		{
+			$ismp3 = substr($media->filename,-3,3);
+				 if ($ismp3 == 'mp3')
+				 	{
+						$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
+					}
+					else 
+					{
+						$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
+					}
+		}
 	  if ($media->docMan_id > 0)
 	 	{
 			$media1_link = getDocman($media, $width, $height, $src, $duration, $filesize);
