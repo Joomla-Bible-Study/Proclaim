@@ -342,10 +342,14 @@ function getTemplate() {
 				if (!$filter_teacher)
 				{
 					$continue = 1;
-					$filters = explode(",", $params->get('mult_teachers'));
-					foreach ($filters AS $filter)
-						{
-							$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
+					$filters = null;
+					if ($params->get('mult_teachers'))
+						{					
+							$filters = explode(",", $params->get('mult_teachers'));
+							foreach ($filters AS $filter)
+								{
+									$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
+								}
 						}
 					if ($params->get('teacher_id')) {$where2[] = '#__bsms_studies.teacher_id = '.$params->get('teacher_id');}
 				}
@@ -357,10 +361,13 @@ function getTemplate() {
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_locations'));
-					foreach ($filters AS $filter)
+					if ($params->get('mult_locations'))
 						{
-							$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
+							$filters = explode(",", $params->get('mult_locations'));
+							foreach ($filters AS $filter)
+								{
+									$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
+								}
 						}
 					if ($params->get('locations')) {$where2[] = '#__bsms_studies.location_id = '.$params->get('locations');}
 				}
@@ -372,10 +379,13 @@ function getTemplate() {
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_books'));
-					foreach ($filters AS $filter)
-						{
-							$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
+					if ($params->get('mult_books'))
+						{					
+							$filters = explode(",", $params->get('mult_books'));
+							foreach ($filters AS $filter)
+								{
+									$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
+								}
 						}
 					if ($params->get('booknumber')) {$where2[] = '#__bsms_studies.booknumber = '.$params->get('booknumber');}
 				}
@@ -387,12 +397,15 @@ function getTemplate() {
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_series'));
-					//dump ($filters, 'filters: ');
-					foreach ($filters AS $filter)
+					if ($params->get('mult_series'))
 						{
-							$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
-							//dump ($where2, 'where2: ');
+							$filters = explode(",", $params->get('mult_series'));
+							//dump ($filters, 'filters: ');
+							foreach ($filters AS $filter)
+								{
+									$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
+									//dump ($where2, 'where2: ');
+								}
 						}
 					if ($params->get('series_id')) {$where2[] = '#__bsms_studies.series_id = '.$params->get('series_id');}
 				}
@@ -404,11 +417,14 @@ function getTemplate() {
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_topics'));
-					foreach ($filters AS $filter)
+					if ($params->get('mult_topics'))
 						{
-							$where2[] = '#__bsms_studies.topics_id = '.(int)$filter;
-						}
+							$filters = explode(",", $params->get('mult_topics'));
+							foreach ($filters AS $filter)
+								{
+									$where2[] = '#__bsms_studies.topics_id = '.(int)$filter;
+								}
+					}
 					if ($params->get('topic_id')) {$where2[] = '#__bsms_studies.topics_id = '.$params->get('topic_id');}
 				}
 			}
@@ -419,10 +435,13 @@ function getTemplate() {
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_messagetype'));
-					foreach ($filters AS $filter)
+					if ($params->get('mult_messagetype'))
 						{
-							$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
+							$filters = explode(",", $params->get('mult_messagetype'));
+							foreach ($filters AS $filter)
+								{
+									$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
+								}
 						}
 					if ($params->get('messagetype')) {$where2[] = '#__bsms_studies.messagetype = '.$params->get('messagetype');}
 				}
@@ -440,15 +459,27 @@ function getTemplate() {
 	function _buildContentOrderBy()
 	{
 		global $mainframe, $option;
+		$params = &JComponentHelper::getParams($option);
+		
+		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'word' );
 
-		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',	'word' );
-
-		if ($filter_orders == 'ASC'){
-			$orderby 	= ' ORDER BY studydate ASC ';
-		} else {
-			$orderby 	= ' ORDER BY studydate DESC ';
+		if ($filter_orders)
+			{
+				if ($filter_orders == 'ASC'){
+					$orderby 	= ' ORDER BY studydate ASC ';
+				} else {
+					$orderby 	= ' ORDER BY studydate DESC ';
+				}
+			}
+		if (!$filter_orders)
+		{	
+			if ($params->get('default_order'))
+				{
+					$orderby 	= ' ORDER BY studydate ASC ';
+				} else {
+					$orderby 	= ' ORDER BY studydate DESC ';
+				}
 		}
-
 		return $orderby;
 	}
 }
