@@ -8,6 +8,14 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 	
 	
 	//Need to know if last column and last row
+	$rowspan1 = $params->get('rowspanr1c1') + $params->get('rowspanr2c1') + $params->get('rowspanr3c1') + $params->get('rowspanr4c1');
+	$rowspan2 = $params->get('rowspanr1c2') + $params->get('rowspanr2c2') + $params->get('rowspanr3c2') + $params->get('rowspanr4c2');
+	$rowspan3 = $params->get('rowspanr3c3') + $params->get('rowspanr3c3') + $params->get('rowspanr3c3') + $params->get('rowspanr4c3');
+	$rowspan4 = $params->get('rowspanr1c4') + $params->get('rowspanr2c4') + $params->get('rowspanr3c4') + $params->get('rowspanr4c4');
+	/*dump ($rowspan1, '1: ');
+	dump ($rowspan2, '2: ');
+	dump ($rowspan3, '3: ');
+	dump ($rowspan4, '4: '); */
 	$columns = 1;
 	if ($params->get('row1col2') > 0) {$columns = 2;}
 	if ($params->get('row1col3') > 0) {$columns = 3;}
@@ -28,7 +36,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
  	if ($rows == 1) {$lastrow = 1;}
 	
 	$listing = '<tr class="'.$oddeven; //This begins the row of the display data
-	if ($lastrow == 1) {$listing .= ' lastrow';}
+	//if ($lastrow == 1) {$listing .= ' lastrow';}
 	$listing .= '">
 	'; 
 	
@@ -94,7 +102,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 	$lastrow = 0;
  	if ($rows == 2) {$lastrow = 1;}
 	$listing .= '<tr class="'.$oddeven; //This begins the row of the display data
-	if ($lastrow == 1) {$listing .= ' lastrow';}
+	//if ($lastrow == 1) {$listing .= ' lastrow';}
 	
 	$listing .= '">
 	'; 
@@ -162,7 +170,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
 	$lastrow = 0;
  	if ($rows == 3) {$lastrow = 1;}
 	$listing .= '<tr class="'.$oddeven; //This begins the row of the display data
-	if ($lastrow == 1) {$listing .= ' lastrow';}
+	//if ($lastrow == 1) {$listing .= ' lastrow';}
 	
 	$listing .= '">'; 
 	
@@ -228,8 +236,8 @@ function getListing($row, $params, $oddeven, $admin_params, $template)
  	if ($rows == 4) {$lastrow = 1;}
 	$listing .= '
 	<tr class="'.$oddeven; //This begins the row of the display data
-	if ($lastrow == 1) {$listing .= ' lastrow';}
-	
+	//if ($lastrow == 1) {$listing .= ' lastrow';}
+	$listing .= ' lastrow';
 	$listing .= '">
 	'; 
 	

@@ -434,7 +434,7 @@
 			<param name="r2c2span" type="list" default="1" size="4" label="Columns to Combine" description="Put in the number of columns this item should span">
 				<option value="1">Just This Cell</option>
 				<option value="2">Columns 2 - 3</option>
-				<option value="3">Columns 3 - 4</option>
+				<option value="3">Columns 2 - 4</option>
 				</param>
 			<param name="rowspanr2c2" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
 				<option value="1">Just this row</option>
