@@ -34,7 +34,9 @@ class biblestudyModelserieslist extends JModel
 		parent::__construct();
 		global $mainframe, $option;
 		$params 			=& $mainframe->getPageParameters();
+		//dump ($params);
 		$templatemenuid = $params->get('templatemenuid');
+		//dump ($templatemenuid);
 		if (!$templatemenuid){$templatemenuid = 1;}
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		

@@ -5,6 +5,7 @@
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
+//jimport ('joomla.application.plugin.helper');
 $uri 		=& JFactory::getURI();
 //$pathway	=& $mainframe->getPathway();
 
@@ -34,6 +35,8 @@ class biblestudyViewstudydetails extends JView
 		$admin =& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
 		$this->assignRef('admin_params', $admin_params);
+		
+		
 		//Passage link to BibleGateway
 		$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');
 		if ($plugin)
@@ -85,6 +88,7 @@ class biblestudyViewstudydetails extends JView
 			$limitstart = JRequest::getVar('limitstart','int');
 			$results = $dispatcher->trigger('onPrepareContent', array (& $article, & $params, $limitstart));
 			$article->studytext = $article->text;
+			
 			
 		} //end if $linkit
                 // End process prepare content plugins

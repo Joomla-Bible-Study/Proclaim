@@ -186,12 +186,6 @@
 				<option value="3">Columns 1 - 3</option>
 				<option value="4">Columns 1 - 4</option>
 				</param>
-			<param name="rowspanr1c1" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr1c1" type="list" default="0" label="Type of link" description="Choose what this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -237,12 +231,6 @@
 				<option value="2">Columns 2 - 3</option>
 				<option value="3">Columns 2 - 4</option>
 				</param>
-			<param name="rowspanr1c2" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr1c2" type="list" default="0" label="Type of link" description="Choose what this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -287,12 +275,6 @@
 				<option value="1">Just This Cell</option>
 				<option value="2">Columns 3 - 4</option>
 				</param>
-			<param name="rowspanr1c3" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr1c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -333,12 +315,6 @@
 				<option value="24">Custom</option>
 				</param>
 			<param name="r1c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
-		<param name="rowspanr1c4" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr1c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -385,12 +361,6 @@
 				<option value="3">Columns 1 - 3</option>
 				<option value="4">Columns 1 - 4</option>
 				</param>
-			<param name="rowspanr2c1" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr2c1" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -436,12 +406,6 @@
 				<option value="2">Columns 2 - 3</option>
 				<option value="3">Columns 2 - 4</option>
 				</param>
-			<param name="rowspanr2c2" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr2c2" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -486,12 +450,6 @@
 				<option value="1">Just This Cell</option>
 				<option value="2">Columns 3 - 4</option>
 				</param>
-			<param name="rowspanr2c3" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr2c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -584,12 +542,6 @@
 				<option value="3">Columns 1 - 3</option>
 				<option value="4">Columns 1 - 4</option>
 				</param>
-			<param name="rowspanr3c1" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr3c1" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -635,12 +587,6 @@
 				<option value="2">Columns 2 - 3</option>
 				<option value="3">Columns 3 - 4</option>
 				</param>
-			<param name="rowspanr2c2" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr3c2" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -685,12 +631,6 @@
 				<option value="1">Just This Cell</option>
 				<option value="2">Columns 3 - 4</option>
 				</param>
-			<param name="rowspanr3c3" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr3c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -731,12 +671,6 @@
 				<option value="24">Custom</option>
 				</param>
 			<param name="r3c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
-		<param name="rowspanr3c4" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr3c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -783,12 +717,6 @@
 				<option value="3">Columns 1 - 3</option>
 				<option value="4">Columns 1 - 4</option>
 				</param>
-			<param name="rowspanr4c1" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr4c1" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -834,12 +762,6 @@
 				<option value="2">Columns 2 - 3</option>
 				<option value="3">Columns 3 - 4</option>
 				</param>
-			<param name="rowspanr4c2" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr4c2" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -884,12 +806,6 @@
 				<option value="1">Just This Cell</option>
 				<option value="2">Columns 3 - 4</option>
 				</param>
-			<param name="rowspanr4c3" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr4c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -930,12 +846,6 @@
 				<option value="24">Custom</option>
 				</param>
 			<param name="r4c4custom" type="text" size="100" default="" label="Create a custom cell" description="Put field names in {}. Refer to dropdown for list of field names. Use text and/or html" />
-		<param name="rowspanr4c4" type="list" default="1" label="Rows to span" description="Choose rows in this column to span for this item">
-				<option value="1">Just this row</option>
-				<option value="2">Span 2 rows</option>
-				<option value="3">Span 3 rows</option>
-				<option value="4">Span 4 rows</option>
-			</param>
 			<param name="linkr4c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
@@ -971,24 +881,24 @@
 			</param>
 			<param name="title_line_1" type="list" default="1" label="Item to show on title line 1" description="Choose an item to show on the first line of the Title line of the study details">
 			<option value="0">Don't Show</option>
-			<option value="1">Study Title</option>
-			<option value="2">Teacher</option>
-			<option value="3">Title + Teacher</option>
-			<option value="4">Scripture</option>
-			<option value="5">Series</option>
-			<option value="6">Topic</option>
+			<option value="1">Study Title {studytitle}</option>
+			<option value="2">Teacher {teachername}</option>
+			<option value="3">Title + Teacher {teacher-title-name}</option>
+			<option value="4">Scripture {scripture1}</option>
+			<option value="5">Series {series_text}</option>
+			<option value="6">Topic {topic_text}</option>
 			<option value="7">Custom</option>
 		</param>
 		<param name="customtitle1" type="text" default="" size="75" label="Custom Title 1" description="Use same items in {} and text as in custom list display" />
 			<param name="title_line_2" type="list" default="4" label="Item to show on title line 2" description="Choose an item to show on the second line of the Title line of the study details">
 				<option value="0">Don't Show</option>
-				<option value="1">Study Title</option>
-				<option value="2">Teacher</option>
-				<option value="3">Title + Teacher</option>
-				<option value="4">Scripture</option>
-				<option value="5">Series</option>
-				<option value="6">Topic</option>
-				<option value="7">Custom</option>
+			<option value="1">Study Title {studytitle}</option>
+			<option value="2">Teacher {teachername}</option>
+			<option value="3">Title + Teacher {teacher-title-name}</option>
+			<option value="4">Scripture {scripture1}</option>
+			<option value="5">Series {series_text}</option>
+			<option value="6">Topic {topic_text}</option>
+			<option value="7">Custom</option>
 			</param>
 			<param name="customtitle2" type="text" default="" size="75" label="Custom Title 2" description="Use same items in {} and text as in custom list display" />
 			<param name="view_link" type="list" default="1" label="Show link to studies list" description="Choose whether to have a link back to the studies list">
@@ -1028,7 +938,7 @@
 				</param>
 		</params>
 		<params group="TEACHER">
-			<param name="teacher_title" type="text" default="Our Teachers" label="Page Title" description="Text to show on teacher display page for title" />
+			<param name="teacher_title" type="text" default="Our Teachers" label="List Page Title" description="Text to show on teacher list display page for title" />
 			<param name="show_teacher_studies" type="list" default="1" label="Show/Hide Teacher's Studies" description="Choose to show or hide the listing of latest studies by teacher in teacher display">
 				<option value="0">Hide Study Display</option>
 				<option value="1">Show Study Display</option>
@@ -1084,7 +994,6 @@
 				<option value="5">Teacher Image {teacherimage}</option>
 				<option value="6">Teacher Image + Name/Title {teacher-title}</option>
 				<option value="7">Description {description}</option>
-				<option value="8">Custom</option>
 			</param>
 			<param name="seriesislink2" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
@@ -1100,7 +1009,6 @@
 				<option value="5">Teacher Image {teacherimage}</option>
 				<option value="6">Teacher Image + Name/Title {teacher-title}</option>
 				<option value="7">Description {description}</option>
-				<option value="8">Custom</option>
 			</param>
 			<param name="seriesislink3" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
@@ -1116,8 +1024,7 @@
 				<option value="5">Teacher Image {teacherimage}</option>
 				<option value="6">Teacher Image + Name/Title {teacher-title}</option>
 				<option value="7">Description {description}</option>
-				<option value="8">Custom</option>
-			</param>
+				</param>
 			<param name="seriesislink4" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>

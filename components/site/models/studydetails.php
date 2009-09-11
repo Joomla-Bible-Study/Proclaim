@@ -123,7 +123,7 @@ class biblestudyModelstudydetails extends JModel
 		$row =& $this->getTable('commentsedit');
 
 		$data = JRequest::get( 'post' );
-
+		$data['comment_text'] = JRequest::getVar( 'comment_text', '', 'post', 'string', JREQUEST_ALLOWRAW );
 		// Bind the form fields to the table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());

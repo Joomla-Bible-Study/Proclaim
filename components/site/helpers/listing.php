@@ -308,7 +308,7 @@ $item = JRequest::getVar('Itemid');
 						if ($lastcol == 1) {$cell .= ' lastcol';}
 						$cell .= '" ';
 						if ($colspan > 1) {$cell .= 'colspan="'.$colspan.'" ';}
-						if ($rowspan > 1){$cell .='rowspan="'.$rowspan.'"';}
+						//if ($rowspan > 1){$cell .='rowspan="'.$rowspan.'"';}
 						$cell .= '>';
 						if (($rowcolid == 'row1col1') && ($entry_user >= $entry_access) && ($allow_entry > 0)){
 							$cell .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id3.'&item='.$item.'">'.JText::_(' [Edit] ').'</a>';}

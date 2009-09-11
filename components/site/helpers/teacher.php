@@ -14,7 +14,8 @@ function getTeacher($params, $id, $admin_params)
 	$templatemenuid = $params->get('teachertemplateid');
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 	$viewtype = JRequest::getVar('view');
-		if ($viewtype = 'studieslist')
+	//dump ($viewtype, 'view: ');
+		if ($viewtype == 'studieslist')
 			{
 				$teacherid = $params->get('listteachers');
 				$teacherids = explode(",", $params->get('listteachers'));

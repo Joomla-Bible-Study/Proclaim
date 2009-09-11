@@ -45,7 +45,7 @@ class biblestudyViewteacherdisplay extends JView
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');
 		$this->assignRef('show_media', $show_media);
-		$studies_param = $params->get('itemslimit');
+		$studies_param = $params->get('studies');
 		//$studies_param = $contentConfig->get('studies');
 			if ($studies_param > 0) {
 				$limit = ' LIMIT '.$studies_param;

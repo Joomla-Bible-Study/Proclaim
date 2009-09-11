@@ -98,7 +98,10 @@ if ($params->get('list_items_view') == 0)
  </tbody></table>
  <table id="bsmsdetailstable" cellspacing="0">
  <tr><td id="studydetailstext">
- <?php echo $this->article->studytext;?>
+ <?php 
+ if ($this->params->get('show_scripture_link') > 0)
+ 	{ echo $this->article->studytext;}
+	else {echo $this->studydetails->studytext;}?>
  </td></tr></table>
  
 <?php if ($params->get('show_comments') > 0)

@@ -3,6 +3,7 @@
 function getComments($params, $row, $Itemid)
 {
 		$database	= & JFactory::getDBO();
+		$editor =& JFactory::getEditor();
 		
 		$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = '.$row->id.' ORDER BY c.comment_date ASC';
 				//dump ($query, 'row');
@@ -50,7 +51,9 @@ $comments .= '
 		<tr><td>'.JText::_('First & Last Name: ').
 		'</td><td><input class="text_area" size="50" type="text" name="full_name" id="full_name" value="'.$full_name.'" /></td></tr>
 		<tr><td>'.JText::_('Email (Not displayed): ').'</td><td><input class="text_area" type="text" size="50" name="user_email" id="user_email" value="'.$user->email.'" /></td></tr>
-		<tr><td>'.JText::_('Comment: ').'</td><td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr></table>';
+		<tr><td>'.JText::_('Comment: ').'</td>';
+		//$comments .= $editor->display('comment_text', 'comment_text', '100%', '400', '70', '15').'</td></tr></table>';	
+		$comments .= '<td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr></table>';
 //dump ($params->get('use_captcha'), 'captch: ');
 		if ($params->get('use_captcha') > 0) { 
 		
@@ -69,7 +72,7 @@ $comments .= '
 			} //end of check for OSTWigit plugin							
 		
 			} // end of if for use of captcha
-		
+		//dump ($params->get('comment_publish'));
 		$comments .=  '<tr><td>
 		<input type="hidden" name="study_id" id="study_id" value="'.$row->id.'" />
 		<input type="hidden" name="task" value="comment" />

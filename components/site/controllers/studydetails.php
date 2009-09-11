@@ -64,7 +64,7 @@ class biblestudyControllerstudydetails extends JController
 	{
 	
 	global $option, $mainframe;
-	$menuitemid = JRequest::getInt( 'Itemid' );
+/*	$menuitemid = JRequest::getInt( 'Itemid' );
   if ($menuitemid)
   {
     $menu = JSite::getMenu();
@@ -73,9 +73,20 @@ class biblestudyControllerstudydetails extends JController
   
 	$params =& $mainframe->getPageParameters();
 	$returnmenu = JRequest::getVar('Itemid', '0', 'POST', 'INT');
-	$cap = 1;
+	*/
 	$model = $this->getModel('studydetails');
-	if ($menuparams->get('use_captcha') > 0) 
+	$menu =& JSite::getMenu();
+		$item =& $menu->getActive();
+		$params 			=& $mainframe->getPageParameters();
+		$templatemenuid = $params->get('templatemenuid');
+		if (!$templatemenuid){$templatemenuid = 1;}
+		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		//$template = $model->get('Template');
+		$params = new JParameter($model->_template[0]->params);
+		//dump ($params);
+	$cap = 1;
+	
+	if ($params->get('use_captcha') > 0) 
 	{
 	//Begin Captcha with plugin
 		if (JPluginHelper::importPlugin('system', 'captcha'))
@@ -100,12 +111,13 @@ class biblestudyControllerstudydetails extends JController
 		} else {
 			$msg = JText::_( 'Error Submitting Comment' );
 		}
-		//dump ($menuparams, 'menu params: ');
-		if ($menuparams->get('email_comments') > 0){
-		$EmailResult=$this->commentsEmail();
+		
+		if ($params->get('email_comments') > 0){
+		$EmailResult=$this->commentsEmail($params);
 		}
 		$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
-		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&Itemid='.$returnmenu.'&msg='.$msg, 'Comment Added.');
+		
+		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&Itemid='.$returnmenu.'&templatemenuid='.$templatemenuid.'&msg='.$msg, 'Comment Added');
 	} // End of $cap
 	}
 	//Begin scripture links plugin function
@@ -214,7 +226,7 @@ function publish()
 		 die;
   		}
 	}
-function commentsEmail() {
+function commentsEmail($params) {
 		global $mainframe;
 		$menuitemid = JRequest::getInt( 'Itemid' );
   if ($menuitemid)
@@ -243,9 +255,9 @@ function commentsEmail() {
 		$comment_title = $comment_details->studytitle;
 		$comment_study_date = $comment_details->studydate;
 		$mail =& JFactory::getMailer();
-		$ToEmail       = $menuparams->get( 'recipient', '' );
-		$Subject       = $menuparams->get( 'subject', 'Comments' );
-		$FromName       = $menuparams->get( 'fromname', $comment_fromname );
+		$ToEmail       = $params->get( 'recipient', '' );
+		$Subject       = $params->get( 'subject', 'Comments' );
+		$FromName       = $params->get( 'fromname', $comment_fromname );
 		if (empty($ToEmail) ) $ToEmail=$comment_mailfrom;
 		$Body = $comment_author.JText::_(' has entered a comment for the study entitled: ').$comment_title.' - '.$comment_study_date.JText::_(' on: ').$comment_date;
 		if ($comment_published > 0){$Body = $Body.JText::_(' This comment has been published.');}else{$Body=$Body.JText::_(' This comment has not been published.');}
