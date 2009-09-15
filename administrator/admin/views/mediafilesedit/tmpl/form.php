@@ -54,6 +54,8 @@ echo $pane->endPane();
         }
 		
 		//echo JHTML::_('calendar', date('D M j Y', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); ?>
+        <br />
+		<span style="font-family: serif; color: gray;">(<?php echo JText::_( 'YYYY-MM-DD HH:MM:SS' ); ?>)</span>
         </td>
 		</tr>
         <tr> 

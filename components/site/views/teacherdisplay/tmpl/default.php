@@ -94,7 +94,7 @@ else { ?>
 <?php foreach ($this->studies as $study) { ?>
  <tr>
   <td class="bsm_studylink"> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->sid.'&templatemenuid='.$studieslisttemplateid;?>"><?php echo $study->studytitle; ?></a></td>
-  <td class="bsm_scripture"> <?php echo $study->bookname.' '.$study->chapter_begin;?></td>
+  <td class="bsm_scripture"> <?php if ($study->bookname) {echo $study->bookname.' '.$study->chapter_begin;}?></td>
   <td class="bsm_date"> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC') , '$offset'); echo $date;?></td>
  </tr>
 <?php } // end of foreach ?>

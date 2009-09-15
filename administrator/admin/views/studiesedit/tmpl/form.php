@@ -3,14 +3,14 @@
 	jimport('joomla.pane.html');
 
 
-	$js = 	"function changeDisplayImage() {
+	/*$js = 	"function changeDisplayImage() {
 			if (document.adminForm.thumbnailm.value !='') {
 				document.adminForm.imagelib.src='../images".DS.$this->admin_params->get('study_images', 'stories').DS."' + document.adminForm.thumbnailm.value;
 			} else {
 				document.adminForm.imagelib.src='images/blank.png';
-			}";
+			}";*/
 $document =& JFactory::getDocument();
-$document->addScriptDeclaration($js);
+//$document->addScriptDeclaration($js);
 ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">

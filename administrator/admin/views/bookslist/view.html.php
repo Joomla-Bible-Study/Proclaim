@@ -23,7 +23,7 @@ class biblestudyViewbookslist extends JView {
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
-		JToolBarHelper::preferences('com_biblestudy', '550');
+		//JToolBarHelper::preferences('com_biblestudy', '550');
 		JToolBarHelper::help('biblestudy.books', true);
 
 

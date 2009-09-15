@@ -15,7 +15,7 @@ class biblestudyViewstudieslist extends JView {
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
-		JToolBarHelper::preferences('com_biblestudy', '550');
+		//JToolBarHelper::preferences('com_biblestudy', '550');
 		JToolBarHelper::help('biblestudy.studiesedit', true );
 
 		//Include the Jquery Library

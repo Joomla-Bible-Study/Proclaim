@@ -29,7 +29,7 @@ class biblestudyViewmessagetypelist extends JView
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
-		JToolBarHelper::preferences('com_biblestudy', '550');
+		//JToolBarHelper::preferences('com_biblestudy', '550');
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.messagetype', true );
 

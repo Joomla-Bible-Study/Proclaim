@@ -26,7 +26,7 @@ class biblestudyViewmediafileslist extends JView {
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
-		JToolBarHelper::preferences('com_biblestudy', '550');
+		//JToolBarHelper::preferences('com_biblestudy', '550');
 		JToolBarHelper::help( 'biblestudy.mediafileslist', true );
 
 		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year','filter_year',0,'int' );

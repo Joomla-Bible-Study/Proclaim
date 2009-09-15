@@ -8,10 +8,10 @@ defined('_JEXEC') or die('Restricted Access');
 			<td width="100" class="key"><?php echo JText::_('Published'); ?> </td>
 			<td><?php echo $this->data['published']; ?></td>
 		</tr>
-		<tr>
-			<td width="100" class="key"><?php echo JText::_('Type'); ?> </td>
-			<td><?php echo $this->data['tmplTypes']; ?></td>
-		</tr>
+		<!--<tr>
+			<td width="100" class="key"><?php //echo JText::_('Type'); ?> </td>
+			<td><?php //echo $this->data['tmplTypes']; ?></td>
+		</tr>-->
 		<tr>
 			<td width="100" class="key"><?php echo JText::_('Template Name'); ?> </td>
 			<td colspan="2"><input type="text" name="title" id="title" length="100" value="<?php echo $this->template->title; ?>" />

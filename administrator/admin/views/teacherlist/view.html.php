@@ -31,7 +31,7 @@ class biblestudyViewteacherlist extends JView
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
-		JToolBarHelper::preferences('com_biblestudy', '550');
+		//JToolBarHelper::preferences('com_biblestudy', '550');
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.teachers', true );
 		$uri	=& JFactory::getURI();

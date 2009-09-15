@@ -7,9 +7,9 @@
 	          <th width="5">
 	          	<?php echo JText::_('Template ID'); ?>
 	          </th>
-	          <th width="10">
-	          	<?php echo JText::_('Template Type'); ?>
-	          </th>
+	          <!--<th width="10">
+	          	<?php //echo JText::_('Template Type'); ?>
+	          </th>-->
 	          <th width="40">
 	          	<?php //echo JText::_('Variable Summary'); ?>
 	          </th>
@@ -31,7 +31,7 @@ foreach($this->templates as $template) {
 <tr class="row<?php echo $k; ?>">
   	<td align="center"><?php echo $checked; ?></td>
 	<td align="center"><a href="<?php echo $link; ?>"><?php echo $template->id.'-'.$template->title ; ?></a></td>
-	<td align="center"><?php echo $this->tmplEngine->tmplTypes[$template->type]; ?></td>
+	<!--<td align="center"><?php //echo $this->tmplEngine->tmplTypes[$template->type]; ?></td>-->
 	<td align="center"><?php //echo $tmplSnippet; ?></td>
 	<td align="center"><?php echo $published; ?></td>
 </tr>

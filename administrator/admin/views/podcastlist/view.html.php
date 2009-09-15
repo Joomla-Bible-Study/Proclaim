@@ -28,7 +28,7 @@ class biblestudyViewpodcastlist extends JView
 		JToolBarHelper::addNewX();
 		//JToolBarHelper::custom('task', 'icon', '', 'Alt', false);
 		//JToolBarHelper::customX('writeXML','save.png','writeXML','Write XML');
-		JToolBarHelper::preferences('com_biblestudy', '550');
+		//JToolBarHelper::preferences('com_biblestudy', '550');
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.podcasts', true );
 		$db=& JFactory::getDBO();

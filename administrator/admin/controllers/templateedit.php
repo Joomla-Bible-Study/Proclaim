@@ -68,17 +68,19 @@ switch ($this->_task) {
 	function unpublish(){
 		global $mainframe;
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
-
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+		if ($cid[0] == 1) {$msg = JText::_( 'Error: You cannot unpublish the default template' );}
+		else
+		{
+			if (!is_array( $cid ) || count( $cid ) < 1) {
+				JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+			}
+	
+			$model = $this->getModel('templateedit');
+			if(!$model->publish($cid, 0)) {
+				echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
+			}
 		}
-
-		$model = $this->getModel('templateedit');
-		if(!$model->publish($cid, 0)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
-
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=templateslist' );
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=templateslist', $msg );
 	}
 
 	function makeDefault() {

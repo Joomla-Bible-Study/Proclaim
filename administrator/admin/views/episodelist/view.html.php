@@ -15,7 +15,7 @@ class biblestudyViewepisodelist extends JView
 		
 		JToolBarHelper::title(   JText::_( 'Podcast Episodes Manager' ), 'generic.png' );
 		
-		JToolBarHelper::preferences('com_biblestudy', '550');
+		//JToolBarHelper::preferences('com_biblestudy', '550');
 		
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.episodelist', true );
