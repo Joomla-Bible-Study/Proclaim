@@ -1,4 +1,6 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php defined('_JEXEC') or die('Restricted access'); 
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+include_once($path1.'image.php');?>
 <form action="index.php" method="post" name="adminForm">
 <div id="editcell">
 	<table class="adminlist">
@@ -12,10 +14,13 @@
 			</th>
 			<th width="20" align="center">
 				<?php echo JText::_( 'Published' ); ?>
-			</th>					
-			<th>
+			</th>	
+            <th width="50" align="left">
+            	<?php echo JText::_('Image');?>
+             </th>
+             <th align="left">
 				<?php echo JText::_( 'Media' ); ?>
-			</th>
+			</th>	
 		</tr>			
 	</thead>
 	<?php
@@ -28,18 +33,31 @@
 		$published 	= JHTML::_('grid.published', $row, $i );
 		?>
 		<tr class="<?php echo "row$k"; ?>">
-			<td width="5">
+			<td >
 				<?php echo $row->id; ?>
 			</td>
-			<td width="20">
+			<td>
 				<?php echo $checked; ?>
 			</td>
-			<td width="20" align="center">
+			<td  align="center">
 				<?php echo $published; ?>
 			</td>
-			<td>
+            <td align="center">
+            	<?php
+				if (!$row->path2) { $i_path = '../'.$row->media_image_path; }
+			if ($row->path2 && !$this->admin_params->get('media_imagefolder')) { $i_path = '../components/com_biblestudy/images/'.$row->path2; }
+			if ($row->path2 && $this->admin_params->get('media_imagefolder')) { $i_path = '../images'.DS.$this->admin_params->get('media_imagefolder').DS.$row->path2;}
+			$image = getImage($i_path);
+			if ($image)
+				{
+					echo '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->media_image_name.'">';
+				}
+			?>
+            </td>
+			<td >
 				<a href="<?php echo $link; ?>"><?php echo $row->media_image_name; ?></a>
 			</td>
+            
 		</tr>
 		<?php
 		$k = 1 - $k;

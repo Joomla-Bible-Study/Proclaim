@@ -17,8 +17,17 @@ class biblestudyModelmedialist extends JModel
 	 * @var array
 	 */
 	var $_data;
-
-
+	var $_admin;
+function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT params'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}
 	/**
 	 * Returns the query
 	 * @return string The query to be used to retrieve the rows from the database

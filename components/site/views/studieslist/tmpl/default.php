@@ -48,10 +48,10 @@ $listingcall = JView::loadHelper('listing');
     <div id="header">
       <h1 class="componentheading">
 <?php
-     if ($this->params->get( 'show_page_image' ) >0) {
+     if ($this->params->get( 'show_page_image' ) >0) { 
      
      ?>
-      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" />
+      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" alt="Bible Study" />
     <?php //End of column for logo
     }
     ?>

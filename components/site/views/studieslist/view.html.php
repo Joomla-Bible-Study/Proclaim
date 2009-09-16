@@ -109,9 +109,7 @@ class biblestudyViewstudieslist extends JView {
 		$this->assignRef('topic', $topics);
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
-//dump ($admin[0]->main, 'main: ');
 		//Get the main study list image
-		
 		if ($admin[0]->main == '- Default Image -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}
 		else 
 		{

@@ -29,8 +29,13 @@ class biblestudyViewmedialist extends JView
 
 		// Get data from the model
 		$items		= & $this->get( 'Data');
-
 		$this->assignRef('items',		$items);
+		//Get the admin params
+		$admin=& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
+		$this->assignRef('admin_params', $admin_params);
+		$this->assignRef('admin', $admin);
+		
 
 		parent::display($tpl);
 	}

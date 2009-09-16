@@ -47,6 +47,10 @@ class biblestudyViewmediaedit extends JView
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
+		// Add an upload button and view a popup screen width 550 and height 400
+		$alt = "Upload";
+		$bar=& JToolBar::getInstance( 'toolbar' );
+		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=", 650, 400 );
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.media', true );
 		$this->assignRef('directory', $directory);
