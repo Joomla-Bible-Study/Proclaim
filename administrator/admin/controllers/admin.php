@@ -7,9 +7,11 @@ class biblestudyControlleradmin extends JController {
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
+	
 	function __construct()
 	{
 		parent::__construct();
+	
 
 		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
@@ -107,5 +109,8 @@ function publish()
 		$msg = JText::_( 'Operation Cancelled' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 	}
+
+
+
 }
 ?>

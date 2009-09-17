@@ -99,6 +99,7 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (11, 'CD', 'CD', '','cd.png', 'CD', 1);");
 	$database->query();
 	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (12, 'DVD', 'DVD', '','dvd.png', 'DVD', 1);");
+	$database->query();
 	$database->setQuery("INSERT INTO #__bsms_media VALUES (13,'Download','Download', '', 'download.png', 'Download', '1');");
 	$database->query();
 	}
@@ -552,6 +553,14 @@ $fieldcheck	= isset( $fields[$tn]['path2'] );
 			$database->setQuery ("ALTER TABLE #__bsms_media ADD COLUMN path2 VARCHAR(150) NOT NULL AFTER media_image_path;");
 			$database->query();
 		}
+$database->setQuery("SELECT id FROM #__bsms_media WHERE path2 LIKE 'textfile24.png';");
+$database->query();
+$numrows = $database->getNumRows();
+if (!$numrows)
+	{
+		$database->setQuery("INSERT INTO #__bsms_media (media_text, media_image_name, media_image_path, path2, media_alttext, published) VALUES ('Article','Article', '', 'textfile24.png', 'Article', '1');");
+		$database->query();
+	}
 
 $database->setQuery("SELECT id FROM #__bsms_media WHERE path2 LIKE '%download.png%';");
 $database->query();
@@ -650,7 +659,15 @@ entry_access=23
 study_publish=0')");
 		$database->query();
 	}
-
+//Check to see if the css file exists. If it does, don't do anything. If not, install the css file
+jimport('joomla.filesystem.file');
+$src = JPATH_SITE.DS.'components/com_biblestudy/assets/css/biblestudy.css.dist';
+$dest = JPATH_SITE.DS.'components/com_biblestudy/assets/css/biblestudy.css';
+$cssexists = JFile::exists($dest);
+if (!$cssexists)
+	{
+		JFile::copy($src, $dest);
+	}
 
 //End version 612 upgrade
 ?>

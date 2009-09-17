@@ -44,16 +44,14 @@ echo $pane->endPane();?>
 
 <tr><td class="key"><?php echo JText::_('Default Teacher Image');?></td><td><?php echo $this->lists['teacher']; echo JText::_(' Default for teacher thumbnail. Set Folder above.');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Download Image');?></td><td><?php echo $this->lists['download']; echo JText::_(' Default for download image. Must be called download.png. Media images folder used (set above).');?></td></tr>
-<?php
-if( function_exists("curl_init") )
-{ ?>
+
       <tr> <td class="key"><?php echo JText::_('Version');?></td>
       	<td><?php echo JText::_('Your Version: ').'6.1.0 - ';?>
         <strong>
-		<?php echo JText::_('Current Version:').' '; $bsmsversion = include("http://www.joomlaoregon.org/bsmsversion.php"); ?></strong><br />
+		<?php echo JText::_('Current Version:').' '.$this->versioncheck; ?></strong><br />
         <a href="http://joomlacode.org/gf/project/biblestudy/" target="_blank"><?php echo JText::_('Get Latest Version');?></a></td>
       </tr>
-<?php } ?>
+
     </table>
 	</fieldset>
 </div>
