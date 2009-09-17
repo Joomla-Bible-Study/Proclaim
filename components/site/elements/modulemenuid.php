@@ -24,7 +24,7 @@ class JElementmodulemenuid extends JElement
 		;
 		$db->setQuery( $query );
 		$options = $db->loadObjectList( );
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a Template').' -', 'id', 'text'));
+		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Use Module Settings').' -', 'id', 'text'));
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'id', 'text', $value, $control_name.$name );
 	}
 }
