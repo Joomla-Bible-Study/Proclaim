@@ -179,7 +179,8 @@ function publish()
     $limit = '';
    }
   $query = 'SELECT p.id AS pid, p.podcastlimit,'
-   . ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate,'
+   . ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate, mf.params,'
+   . ' mf.docMan_id, mf.article_id,'
    . ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin, s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
    . ' s.media_hours, s.media_minutes, s.media_seconds,'
    . ' sr.id AS srid, sr.server_path,'
@@ -248,10 +249,32 @@ function publish()
 		<itunes:subtitle>'.$title.'</itunes:subtitle>
 		<itunes:summary>'.$description.'</itunes:summary>
 		<itunes:keywords>'.$podinfo->podcastsearch.'</itunes:keywords>
-		<itunes:duration>'.$hours.':'.sprintf("%02d", $episode->media_minutes).':'.sprintf("%02d", $episode->media_seconds).'</itunes:duration>
-		<enclosure url="http://'.$episode->server_path.$episode->folderpath.str_replace(' ',"%20",$episode->filename).'" length="'.$episode->size.'" type="'.$episode->mimetype.'" />
-		<guid>http://'.$episode->server_path.$episode->folderpath.str_replace(' ',"%20",$episode->filename).'</guid>
-		<itunes:explicit>no</itunes:explicit>
+		<itunes:duration>'.$hours.':'.sprintf("%02d", $episode->media_minutes).':'.sprintf("%02d", $episode->media_seconds).'</itunes:duration>';
+		//Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
+		if ($episode->article_id)
+			{
+			$episodedetailtemp .=
+				'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_content&view=article&id='.$episode->article_id.'" length="'.$episode->size.'" type="'
+				.$episode->mimetype.'" />
+				<guid>http://'.$episode->server_path.'/index.php?option=com_content&view=article&id='.$episode->article_id.'</guid>';	
+				
+			}
+		if ($episode->docMan_id)
+			{
+			$episodedetailtemp .=
+				'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_docman&task=doc_download&gid='.$episode->docMan_id.'" length="'.$episode->size.'" type="'
+				.$episode->mimetype.'" />
+				<guid>http://'.$episode->server_path.'/index.php?option=com_docman&task=doc_download&gid='.$episode->docMan_id.'</guid>';
+			}
+		else
+			{
+				$episodedetailtemp .=
+				'<enclosure url="http://'.$episode->server_path.$episode->folderpath.str_replace(' ',"%20",$episode->filename).'" length="'.$episode->size.'" type="'
+				.$episode->mimetype.'" />
+				<guid>http://'.$episode->server_path.$episode->folderpath.str_replace(' ',"%20",$episode->filename).'</guid>';
+			}
+		$episodedetailtemp .=
+		'<itunes:explicit>no</itunes:explicit>
 	</item>
 ';
   $episodedetail = $episodedetail.$episodedetailtemp;
