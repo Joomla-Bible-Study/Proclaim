@@ -92,6 +92,24 @@ echo $pane->startPanel( JText::_('Details View'), 'DETAILS');
 echo $this->params->render( 'params', 'DETAILS');
 echo $pane->endPanel();
 
+echo $pane->startPanel( JText::_('Details List Row 1'), 'DETAILSROW1');
+echo $this->params->render('params', 'DETAILSROW1');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Details List Row 2'), 'DETAILSROW2');
+echo $this->params->render('params', 'DETAILSROW2');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Details List Row 3'), 'DETAILSROW3');
+echo $this->params->render('params', 'DETAILSROW3');
+echo $pane->endPanel();
+
+echo $pane->startPanel( JText::_('Details List Row 4'), 'DETAILSROW4');
+echo $this->params->render('params', 'DETAILSROW4');
+echo $pane->endPanel();
+
+
+
 echo $pane->startPanel( JText::_('Module'), 'MODULE');
 echo $this->params->render( 'params', 'MODULE');
 echo $pane->endPanel();

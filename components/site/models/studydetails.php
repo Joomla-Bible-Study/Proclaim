@@ -47,12 +47,13 @@ class biblestudyModelstudydetails extends JModel
 		$templatemenuid = $params->get('templatemenuid');
 		if (!$templatemenuid){$templatemenuid = 1;}
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
-		//dump ($params, 'params: ');
+		
 		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		//JRequest::setVar('id', $params->get('id'), 'get');
 		$this->_id = $id;
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
+		//dump ($params, 'params: ');
 	//if($params2->get('record_hits') == 1){
 		$this->hit();
 	//}

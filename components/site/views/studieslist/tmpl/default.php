@@ -93,7 +93,7 @@ if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->pa
      <?php 
 	 
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'));
+     $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule=0);
 	 echo $header;
      ?>
       <tbody>
@@ -111,7 +111,7 @@ if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->pa
 	$oddeven = $class1;
 	}
 
-	$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template);
+	$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
  	echo $listing;
  }
  ?>

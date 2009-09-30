@@ -254,17 +254,17 @@ function publish()
 		if ($episode->article_id)
 			{
 			$episodedetailtemp .=
-				'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_content&view=article&id='.$episode->article_id.'" length="'.$episode->size.'" type="'
+				'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_content&amp;view=article&amp;id='.$episode->article_id.'" length="'.$episode->size.'" type="'
 				.$episode->mimetype.'" />
-				<guid>http://'.$episode->server_path.'/index.php?option=com_content&view=article&id='.$episode->article_id.'</guid>';	
+				<guid>http://'.$episode->server_path.'/index.php?option=com_content&amp;view=article&amp;id='.$episode->article_id.'</guid>';	
 				
 			}
 		if ($episode->docMan_id)
 			{
 			$episodedetailtemp .=
-				'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_docman&task=doc_download&gid='.$episode->docMan_id.'" length="'.$episode->size.'" type="'
+				'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_docman&amp;task=doc_download&amp;gid='.$episode->docMan_id.'" length="'.$episode->size.'" type="'
 				.$episode->mimetype.'" />
-				<guid>http://'.$episode->server_path.'/index.php?option=com_docman&task=doc_download&gid='.$episode->docMan_id.'</guid>';
+				<guid>http://'.$episode->server_path.'/index.php?option=com_docman&amp;task=doc_download&amp;gid='.$episode->docMan_id.'</guid>';
 			}
 		else
 			{

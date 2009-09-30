@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die();
 
-function getHeader($row, $params, $admin_params, $template, $showheader)
+function getHeader($row, $params, $admin_params, $template, $showheader, $ismodule)
 { 
 //dump ($template, 'Header - Template: ');
 	//$nh checks to see if there is a header in use, otherwise it puts a line at the top of the listing
@@ -10,6 +10,93 @@ function getHeader($row, $params, $admin_params, $template, $showheader)
 	//dump ($params->get('use_headers_list'), 'nh: ');
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
+	
+	//Here we test to see if this is a studydetails or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.
+	$view = JRequest::getVar('view', 'get');
+	if ($view == 'studydetails' && $ismodule < 1)
+		{
+			
+		$params->set('row1col1', $params->get('drow1col1'));
+		$params->set('r1c1custom', $params->get('dr1c1custom'));
+		$params->set('r1c1span', $params->get('dr1c1span'));
+		$params->set('linkr1c1', $params->get('dlinkr1c1'));
+		
+		$params->set('row1col2', $params->get('drow1col2'));
+		$params->set('r1c2custom', $params->get('dr1c2custom'));
+		$params->set('r1c2span', $params->get('dr1c2span'));
+		$params->set('linkr1c2', $params->get('dlinkr1c2'));
+		
+		$params->set('row1col3', $params->get('drow1col3'));
+		$params->set('r1c3custom', $params->get('dr1c3custom'));
+		$params->set('r1c3span', $params->get('dr1c3span'));
+		$params->set('linkr1c3', $params->get('dlinkr1c3'));
+		
+		$params->set('row1col4', $params->get('drow1col4'));
+		$params->set('r1c4custom', $params->get('dr1c4custom'));
+		$params->set('linkr1c4', $params->get('dlinkr1c4'));
+		
+		
+		$params->set('row2col1', $params->get('drow2col1'));
+		$params->set('r2c1custom', $params->get('dr2c1custom'));
+		$params->set('r2c1span', $params->get('dr2c1span'));
+		$params->set('linkr2c1', $params->get('dlinkr2c1'));
+		
+		$params->set('row2col2', $params->get('drow2col2'));
+		$params->set('r2c2custom', $params->get('dr2c2custom'));
+		$params->set('r2c2span', $params->get('dr2c2span'));
+		$params->set('linkr2c2', $params->get('dlinkr2c2'));
+		
+		$params->set('row2col3', $params->get('drow2col3'));
+		$params->set('r2c3custom', $params->get('dr2c3custom'));
+		$params->set('r2c3span', $params->get('dr2c3span'));
+		$params->set('linkr2c3', $params->get('dlinkr2c3'));
+		
+		$params->set('row2col4', $params->get('drow2col4'));
+		$params->set('r2c4custom', $params->get('dr2c4custom'));
+		$params->set('linkr2c4', $params->get('dlinkr2c4'));
+		
+		
+		$params->set('row3col1', $params->get('drow3col1'));
+		$params->set('r3c1custom', $params->get('dr3c1custom'));
+		$params->set('r3c1span', $params->get('dr3c1span'));
+		$params->set('linkr3c1', $params->get('dlinkr3c1'));
+		
+		$params->set('row3col2', $params->get('drow3col2'));
+		$params->set('r3c2custom', $params->get('dr3c2custom'));
+		$params->set('r3c2span', $params->get('dr3c2span'));
+		$params->set('linkr3c2', $params->get('dlinkr3c2'));
+		
+		$params->set('row3col3', $params->get('drow3col3'));
+		$params->set('r3c3custom', $params->get('dr3c3custom'));
+		$params->set('r3c3span', $params->get('dr3c3span'));
+		$params->set('linkr3c3', $params->get('dlinkr3c3'));
+		
+		$params->set('row3col4', $params->get('drow3col4'));
+		$params->set('r3c4custom', $params->get('dr3c4custom'));
+		$params->set('linkr3c4', $params->get('dlinkr3c4'));
+		
+	
+		$params->set('row4col1', $params->get('drow4col1'));
+		$params->set('r4c1custom', $params->get('dr4c1custom'));
+		$params->set('r4c1span', $params->get('dr4c1span'));
+		$params->set('linkr4c1', $params->get('dlinkr4c1'));
+		
+		$params->set('row4col2', $params->get('drow4col2'));
+		$params->set('r4c2custom', $params->get('dr4c2custom'));
+		$params->set('r4c2span', $params->get('dr4c2span'));
+		$params->set('linkr4c2', $params->get('dlinkr4c2'));
+		
+		$params->set('row4col3', $params->get('drow4col3'));
+		$params->set('r4c3custom', $params->get('dr4c3custom'));
+		$params->set('r4c3span', $params->get('dr4c3span'));
+		$params->set('linkr4c3', $params->get('dlinkr4c3'));
+		
+		$params->set('row4col4', $params->get('drow4col4'));
+		$params->set('r4c4custom', $params->get('dr4c4custom'));
+		$params->set('linkr4c4', $params->get('dlinkr4c4'));
+		
+		}
+	
 	$columns = 1;
 	if ($params->get('row1col2') > 0) {$columns = 2;}
 	if ($params->get('row1col3') > 0) {$columns = 3;}

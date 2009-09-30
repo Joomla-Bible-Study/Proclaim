@@ -31,6 +31,7 @@ class biblestudyViewstudydetails extends JView
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
+		//dump ($params);
 		$studydetails		=& $this->get('Data');
 		$admin =& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);

@@ -18,6 +18,7 @@ global $mainframe, $option;
 JHTML::_('behavior.tooltip');
 //$params = $mainframe->getPageParameters();
 $params = $this->params;
+//dump ($params);
 $document =& JFactory::getDocument();
 $document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
 $document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
@@ -71,12 +72,12 @@ $listingcall = JView::loadHelper('listing');
  
  <table id="bsmsdetailstable" cellspacing="0">
      <?php //dump ($params->get('use_headers_view'), 'headers: ');
-if ($params->get('use_headers_view') > 0)
-	{	
+//if ($params->get('use_headers_view') > 0)
+	//{	
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($row, $params, $this->admin_params, $this->template, $showheader=$params->get('use_headers_view'));
+     $header = getHeader($row, $params, $this->admin_params, $this->template, $showheader=$params->get('use_headers_view'), $ismodule=0);
      echo $header;
-	}	?>
+	//}	?>
     <tbody>
 
         <?php 
@@ -92,7 +93,7 @@ if ($params->get('list_items_view') == 1)
 if ($params->get('list_items_view') == 0)
 		{
 			$oddeven = 'bsodd';
- 			$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template);
+ 			$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
  			echo $listing;
 		}?>
  </tbody></table>
