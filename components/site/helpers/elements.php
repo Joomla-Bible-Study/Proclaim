@@ -176,6 +176,11 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			$elementid->element = $row->sdescription;
 			//dump ($element->element, 'element: ');
 			break;
+		case 100:
+			$elementid->id = '';
+			$elementid->headertext = '';
+			$elementid->element = '';
+			break;
 		}
 		
 		return $elementid;
