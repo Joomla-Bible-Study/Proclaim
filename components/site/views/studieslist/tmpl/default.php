@@ -45,7 +45,7 @@ $listingcall = JView::loadHelper('listing');
 <!--<tbody><tr>-->
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
   
-    <div id="header">
+    <div id="bsheader">
       <h1 class="componentheading">
 <?php
      if ($this->params->get( 'show_page_image' ) >0) { 
@@ -61,7 +61,7 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     }
 	?>
       </h1>
-<?php if ($params->get('listteachers') )
+<?php if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 	{	
 	$teacher_call = JView::loadHelper('teacher');
 	$teacher = getTeacher($params, $id=null, $this->admin_params);
