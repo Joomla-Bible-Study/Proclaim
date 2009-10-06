@@ -23,6 +23,11 @@ class biblestudyViewmediafilesedit extends JView {
 		//dump ($vmenabled->enabled, 'vm');
 		//dump ($dmenabled->enabled, 'dm');
 		
+		//Get Admin params
+		$admin=& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
+		$this->assignRef('admin_params', $admin_params);
+		$this->assignRef('admin', $admin);
 		
 		//To do - implement this from the site side.
 		//$studiesList =& $this->get('Studies');
@@ -139,8 +144,14 @@ class biblestudyViewmediafilesedit extends JView {
 
 		$lists['internal_viewer'] = JHTML::_('select.booleanlist', 'internal_viewer', 'class="inputbox"', $mediafilesedit->internal_viewer);
 		
-		
-		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
+		if ($admin_params->get('show_location_media') > 0)
+			{
+				$query = "SELECT s.id AS value, CONCAT(s.studytitle,' - ', date_format(s.studydate, '%a %b %e %Y'), ' - ', s.studynumber, ' - ',l.location_text) AS text FROM #__bsms_studies AS s LEFT JOIN #__bsms_locations AS l ON (s.location_id = l.id) WHERE s.published = 1 ORDER BY s.studydate DESC";
+			}
+		else 
+			{
+				$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
+			}
 		$database->setQuery($query);
 		//$studies = $database->loadObjectList();
 		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );

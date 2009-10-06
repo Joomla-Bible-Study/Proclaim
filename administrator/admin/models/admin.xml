@@ -14,6 +14,10 @@
 			<option value="1">Hide</option>
 		</param>
 		<param name="studylistlimit" type="text" size="3" label="Study Limit in MediaFile" description="Limit for number of studies to show in MediaFile Record drop down on admin side - leave blank for all" default="" />
+		<param name="show_location_media" type="list" default="0" label="Show Location with Study on Media drop down" description="Choose Show if you want the location information to show up with the study and date on the drop down in the mediafile edit view on the backend">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
 	</params>
 	<params group="FILLIN-STUDY" addpath="/components/com_biblestudy/elements">
 		<param name="location_id" type="locations" label="Choose a Location" description="Choose a default location to display in the form." />
