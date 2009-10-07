@@ -3,14 +3,14 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>October 5, 2009</creationDate>
+	<creationDate>October 7, 2009</creationDate>
 	<author>Tom Fuller - Joomla Oregon</author>
 	<authorEmail>TomFuller2@gmail.com</authorEmail>
 	<authorUrl>http://joomlabiblestudy.org</authorUrl>
 	<copyright>2008-09 Tom Fuller - Joomla Oregon</copyright>
 	<license>GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
-	<version>6.1.0_beta5</version>
+	<version>6.1.0_beta6</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Bible Study Management System</description>
 	<installfile>install.biblestudy.php</installfile>
@@ -35,6 +35,7 @@
 		<filename>controller.php</filename>
 		<filename>tooltip.js</filename>
 		<filename>convert1.htm</filename>
+		<filename>sef_ext/com_biblestudy.php</filename>
 		<filename>class.biblestudydownload.php</filename>
 		<filename>assets/css/biblestudy.css.dist</filename>
 		<filename>assets/css/biblestudy.sav</filename>
@@ -145,6 +146,7 @@
 		<filename>controllers/podcastedit.php</filename>
 		<filename>controllers/commentslist.php</filename>
 		<filename>controllers/commentsedit.php</filename>
+		<filename>controllers/serieslist.php</filename>
 		<filename>images/textfile24.png</filename>
 		<filename>images/podcast-audio24.png</filename>
 		<filename>images/podcast-video24.png</filename>
