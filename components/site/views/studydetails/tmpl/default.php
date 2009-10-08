@@ -72,12 +72,12 @@ $listingcall = JView::loadHelper('listing');
  
  <table id="bsmsdetailstable" cellspacing="0">
      <?php //dump ($params->get('use_headers_view'), 'headers: ');
-//if ($params->get('use_headers_view') > 0)
-	//{	
+if ($params->get('use_headers_view') > 0 || $params->get('list_items_view')< 1)
+	{	
      $headerCall = JView::loadHelper('header');
      $header = getHeader($row, $params, $this->admin_params, $this->template, $showheader=$params->get('use_headers_view'), $ismodule=0);
      echo $header;
-	//}	?>
+	}	?>
     <tbody>
 
         <?php 
