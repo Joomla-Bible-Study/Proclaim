@@ -87,8 +87,9 @@ if ($params->get('list_items_view') == 1)
 			$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 			include_once($path1.'mediatable.php');
 			$listing = getMediatable($params, $row, $this->admin_params);
-			echo '</td></tr>';
 			echo $listing;
+			echo '</td></tr>';
+			
 		}
 if ($params->get('list_items_view') == 0)
 		{
