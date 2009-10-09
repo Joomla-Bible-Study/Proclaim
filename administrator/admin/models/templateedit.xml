@@ -1260,7 +1260,7 @@
 			<params group="DETAILSROW1">
 			<param name="@spacer" type="spacer" default="Row 1 Column 1" label="Row 1 Column 1" description="Row 1 Column 1">
 				</param>
-			<param name="drow1col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+			<param name="drow1col1" type="list" default="1" label="Choose an item to display" description="Choose an item from the list to display in this position">
 				<option value="0">Nothing</option>
 				<option value="1">Scripture {scripture1}</option>
 				<option value="2">Scripture2 {scripture2}</option>
@@ -1306,7 +1306,7 @@
 				</param>
 			<param name="@spacer" type="spacer" default="Row 1 Column 2" label="Row 1 Column 2" description="Row 1 Column 2">
 				</param>
-			<param name="drow1col2" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
+			<param name="drow1col2" type="list" default="5" label="Choose an item to display" description="Choose an item from the list to display in this position">
 				<option value="0">Nothing</option>
 				<option value="1">Scripture {scripture1}</option>
 				<option value="2">Scripture2 {scripture2}</option>
