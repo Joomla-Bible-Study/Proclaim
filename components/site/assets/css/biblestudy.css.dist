@@ -66,12 +66,12 @@
 }
 #bslisttable .scripture1 {
   white-space:nowrap;
-  color:c02121;
+  color:#c02121;
   font-weight:bold;
 }
 #bslisttable .scripture2 {
   white-space:nowrap;
-  color:c02121;
+  color:#c02121;
   font-weight:bold;
 }
 #bslisttable .title {
@@ -217,12 +217,12 @@
 }
 #bsmsdetailstable .scripture1 {
   white-space:nowrap;
-  color:c02121;
+  color:#c02121;
   font-weight:bold;
 }
 #bsmsdetailstable .scripture2 {
   white-space:nowrap;
-  color:c02121;
+  color:#c02121;
   font-weight:bold;
 }
 #bsmsdetailstable .title {
@@ -395,12 +395,12 @@
 }
 #bsmsmoduletable .scripture1 {
   white-space:nowrap;
-  color:c02121;
+  color:#c02121;
   font-weight:bold;
 }
 #bsmsmoduletable .scripture2 {
   white-space:nowrap;
-  color:c02121;
+  color:#c02121;
   font-weight:bold;
 }
 #bsmsmoduletable .title {
@@ -599,12 +599,12 @@
 }
 #seriesstudytable .scripture1 {
   white-space:nowrap;
-  color:c02121;
+  color:#c02121;
   font-weight:bold;
 }
 #seriesstudytable .scripture2 {
   white-space:nowrap;
-  color:c02121;
+  color:#c02121;
   font-weight:bold;
 }
 #seriesstudytable .title {
