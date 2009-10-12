@@ -16,7 +16,7 @@ class biblestudyModelmediafilesedit extends JModel {
 	{
 		parent::__construct();
 		$admin = $this->getAdmin();
-		dump ($admin);
+		//dump ($admin);
 		$this->_admin_params = new JParameter($admin[0]->params);
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
@@ -46,7 +46,7 @@ class biblestudyModelmediafilesedit extends JModel {
 			//TF added these
 			$today = date("Y-m-d H:i:s");
 			$this->_data->published = 1;
-			$this->_data->media_image = null);
+			$this->_data->media_image = null;
 			$this->_data->server = ($this->_admin_params->get('server') > 0 ? $this->_admin_params->get('server') : null);
 			$this->_data->path = ($this->_admin_params->get('path') > 0 ? $this->_admin_params->get('path') : null);
 			$this->_data->special =($this->_admin_params->get('target') != 'No default' ? $this->_admin_params->get('target') : null);;
@@ -65,7 +65,7 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->_data->article_id = null;
 			$this->_data->comment = null;
 			$this->_data->virtueMart_id = null;
-			$this->_data->params = null);
+			$this->_data->params = null;
 				
 		}
 		return $this->_data;

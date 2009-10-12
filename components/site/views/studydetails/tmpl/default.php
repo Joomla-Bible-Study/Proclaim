@@ -52,22 +52,30 @@ $listingcall = JView::loadHelper('listing');
     } ?>
 
 </div>
-
- <?php if ($params->get('title_line_1') + $params->get('title_line_2') > 0) 
-	{
-		$title_call = JView::loadHelper('title');
-		$title = getTitle($params, $row, $this->admin_params, $this->template);
-		echo $title;
-	}?> 
-
-<?php if ($params->get('show_teacher_view') > 0)
+<table><tr><td>
+  
+ 
+ <?php if ($params->get('show_teacher_view') > 0)
 	{	?>        
     
     <?php	
 	$teacher_call = JView::loadHelper('teacher');
 	$teacher = getTeacher($params, $row->teacher_id, $this->admin_params);
 	echo $teacher;
+	echo '</td><td>';
 	}?>
+	
+	
+	<?php
+	if ($params->get('title_line_1') + $params->get('title_line_2') > 0) 
+	{
+		$title_call = JView::loadHelper('title');
+		$title = getTitle($params, $row, $this->admin_params, $this->template);
+		echo $title;
+	}?> 
+
+
+</td></tr></table>
    </div><!-- header -->
  
  <table id="bsmsdetailstable" cellspacing="0">
