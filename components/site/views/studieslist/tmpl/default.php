@@ -61,16 +61,20 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     }
 	?>
       </h1>
-<?php if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
+<?php 
+
+if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 	{	
 	$teacher_call = JView::loadHelper('teacher');
 	$teacher = getTeacher($params, $id=null, $this->admin_params);
 	if ($teacher) {echo $teacher;}
-	}?>    
+	}
+
+	?>    
     </div><!--header-->
     
     <div id="listintro"><table id="listintro"><tr><td><p>
-    <?php if ($params->get('intro_show') > 0) { echo $params->get('list_intro');}?>
+    <?php if ($params->get('intro_show') == 1) { echo $params->get('list_intro');}?>
    </p></td></tr></table> </div>
     <div id="bsdropdownmenu">
 

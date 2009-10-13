@@ -92,8 +92,11 @@ class biblestudyModelmediafilesedit extends JModel {
 		}
 		if ($filename_upload == ''){$data['filename'] = $name_bak;}
 		//$data['filename'] = str_replace(' ','_',$data['filename']);
-		$badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');
-		$data['filename'] = str_replace($badchars, '_', $data['filename']);
+		if ($this->_admin_params->get('character_filter') > 0)
+			{
+				$badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');
+				$data['filename'] = str_replace($badchars, '_', $data['filename']);
+			}
 		$data['filename'] = str_replace('&', '_and_', $data['filename']);
 		$data['mediacode'] = str_replace('"',"'",$data['mediacode']);
 		//$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );

@@ -18,6 +18,10 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+		<param name="character_filter" type="list" default="1" label="Filter characters in filename" description="Set to Filter if you want characters that are not acceptable in a web filename filtered. Set to No to turn off this function">
+					<option value="0">No Filter</option>
+					<option value="1">Filter</option>
+		</param>
 	</params>
 	<params group="FILLIN-STUDY" addpath="/components/com_biblestudy/elements">
 		<param name="location_id" type="locations" label="Choose a Location" description="Choose a default location to display in the form." />

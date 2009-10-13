@@ -152,8 +152,15 @@ class biblestudyControllermediafilesedit extends JController {
 	function upload()
 	{
 		global $mainframe, $option;
-
+		//get admin params
 		$db=& JFactory::getDBO();
+		$query = 'SELECT params'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+		$db->setQuery($query);
+		$admin = $db->loadObject();
+		$admin_params = new JParameter($admin->params);
+		//end get admin params
 		$file = JRequest::getVar('file', null, 'files', 'array' );
 		$filename = '';
 		$path = JRequest::getVar('path', null, 'POST', 'INT');
@@ -172,6 +179,15 @@ class biblestudyControllermediafilesedit extends JController {
 		if ($filename == 'index.htm' || $filename == 'index.html' || $filename == 'index.php'){
 			$mainframe->redirect("index.php?option=$option&view=studieslist".$templatemenuid, "File of this type not allowed.");
 		}
+		if ()$admin_params->get('character_filter') > 0)
+		{
+			//This removes any characters that might cause headaches to browsers. This also does the same thing in the model
+			$badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');
+			$file['name'] = str_replace($badchars, '_', $file['name']);
+		}
+		$file['name'] = str_replace('&', '_and_', $file['name']);
+		$filename = str_replace($badchars, '_', $file['name']);
+		$filename = str_replace('&', '_and_', $file['name']);
 		if(isset($file) && is_array($file) && $file['name'] != '')
 		{
 			//$fullfilename = JPATH_SITE.$folderpath. $file['name'];

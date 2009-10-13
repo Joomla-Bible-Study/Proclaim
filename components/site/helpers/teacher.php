@@ -77,7 +77,10 @@ function getTeacher($params, $id, $admin_params)
 			}
 		$teacher .= '</td></tr></table></td>';
 		}
-	
+	if ($params->get('intro_show') == 2 && $viewtype == 'studieslist')
+		{
+			$teacher .= '<td><div id="listintro"><table id="listintro"><tr><td><p>'.$params->get('list_intro').'</p></td></tr></table> </div></td>';
+		}
 		$teacher .= '</tr></table>';
 
 	return $teacher;

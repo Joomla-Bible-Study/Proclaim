@@ -100,7 +100,8 @@
 		<param name="list_intro" type="textarea" cols="100" rows="10" label="List Introduction" description="Enter some text to use as an introduction to your list page" />
 		<param name="intro_show" type="list" default="1" label="Show/Hide Intro" description="Choose whether to hide or show the listing introduction text">
 					<option value="0">Hide</option>
-					<option value="1">Show</option>
+					<option value="1">Show Below Teacher(s)</option>
+					<option value="2">Show Beside Teacher(s)</option>
 		</param>
 		<param name="list_teacher_show" type="list" default="1" label="Show/Hide Teachers" description="Choose whether to hide or show the teachers identified below on the studieslist page">
 					<option value="0">Hide</option>
