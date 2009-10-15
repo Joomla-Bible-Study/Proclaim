@@ -21,7 +21,7 @@ $listingcall = JView::loadHelper('serieslist');
 <!--<tbody><tr>-->
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
   
-    <div id="header">
+    <div id="bsmHeader">
       <h1 class="componentheading">
 <?php
      if ($this->params->get( 'show_page_image_series' ) >0) {
