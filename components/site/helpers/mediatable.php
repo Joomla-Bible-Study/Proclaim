@@ -39,7 +39,7 @@ if (!$row->id) {return FALSE;}
 	$rows2 = count($media1);
 	
 	
-	$compat_mode = $params->get('compatibilityMode');
+	$compat_mode = $admin_params->get('compatibilityMode');
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
 	
 	
@@ -160,7 +160,7 @@ if (!$row->id) {return FALSE;}
        $mediatable .='<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
 	   
       }else{
-       $mediatable .='<a href="http://joomlaoregon.com/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
+       $mediatable .='<a href="http://joomlabiblestudy.org/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
 	   
       }
      
