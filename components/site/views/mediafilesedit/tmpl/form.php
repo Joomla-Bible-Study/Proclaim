@@ -29,7 +29,7 @@ function openConverter1()
 ?>
 	
     <table class="admintable">
-    
+   <!-- <tr><td><input type="submit" value="submit" /> <input type="button" value="cancel"> </td></tr>-->
     <tr>
     <td class="key"></td><td align="left"><?php echo $this->toolbar;?></td></tr>
 <tr><td class="key"><?php echo JText::_('Parameters');?></td><td>

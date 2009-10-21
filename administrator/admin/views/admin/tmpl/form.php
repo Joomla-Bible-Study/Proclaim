@@ -49,7 +49,7 @@ echo $pane->endPane();?>
       	<td><?php echo JText::_('Your Version: ').'6.1.0 - ';?>
         <strong>
 		<?php echo JText::_('Current Version:').' '.$this->versioncheck; ?></strong><br />
-        <a href="http://joomlacode.org/gf/project/biblestudy/" target="_blank"><?php echo JText::_('Get Latest Version');?></a></td>
+        <a href="http://www.JoomlaBibleStudy.org" target="_blank"><?php echo JText::_('Get Latest Version');?></a></td>
       </tr>
 
     </table>

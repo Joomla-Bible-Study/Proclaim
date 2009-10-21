@@ -7,7 +7,7 @@ function latestVersion(){
 	$s = new Snoopy();
 	$s->read_timeout = 90;
 	$s->referer = JPATH_SITE;
-	@$s->fetch('http://www.joomlaoregon.org/bsmsversion.php');
+	@$s->fetch('http://www.joomlabiblestudy.org/bsmsversion.php');
 	$version = $s->results;
 	
 	if($s->error || $s->status != 200){

@@ -112,8 +112,9 @@ if ($params->get('list_items_view') == 0)
  if ($this->params->get('show_scripture_link') > 0)
  	{ echo $this->article->studytext;}
 	else {echo $this->studydetails->studytext;}?>
+	
  </td></tr></table>
- 
+<?php $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS; include_once($path1.'share.php'); $shareit = biblestudyShare(); echo $shareit;?>
 <?php if ($params->get('show_comments') > 0)
 		{?>
         <table id="commentstable" cellspacing="0">

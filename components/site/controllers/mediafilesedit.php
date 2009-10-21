@@ -179,7 +179,7 @@ class biblestudyControllermediafilesedit extends JController {
 		if ($filename == 'index.htm' || $filename == 'index.html' || $filename == 'index.php'){
 			$mainframe->redirect("index.php?option=$option&view=studieslist".$templatemenuid, "File of this type not allowed.");
 		}
-		if ()$admin_params->get('character_filter') > 0)
+		if ($admin_params->get('character_filter') > 0)
 		{
 			//This removes any characters that might cause headaches to browsers. This also does the same thing in the model
 			$badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');
