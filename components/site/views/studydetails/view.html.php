@@ -92,6 +92,14 @@ class biblestudyViewstudydetails extends JView
 			
 			
 		} //end if $linkit
+		
+		//Prepares a link string for use in social networking
+		$u =& JURI::getInstance();
+		$detailslink = htmlspecialchars($u->toString());
+		$detailslink = JRoute::_($detailslink);
+		$this->assignRef('detailslink', $detailslink);
+		//End social networking
+	 	
                 // End process prepare content plugins
 		$this->assignRef('template', $template);
 		$this->assignRef('print', $print);
@@ -100,6 +108,7 @@ class biblestudyViewstudydetails extends JView
 		$this->assignRef('article', $article);
   		$this->assignRef('passage_link', $passage_link);
 		//$this->assignRef('scripture', $scripture);
+		
 		parent::display($tpl);
 	}
 	function _displayPagebreak($tpl)
@@ -107,6 +116,7 @@ class biblestudyViewstudydetails extends JView
 		$document =& JFactory::getDocument();
 		$document->setTitle(JText::_('PGB ARTICLE PAGEBRK'));
 		parent::display($tpl);
+		
 	}
 }
 ?>

@@ -26,6 +26,7 @@ $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
 $row = $this->studydetails;
 $listingcall = JView::loadHelper('listing');
+$sharecall = JView::loadHelper('share');
 //dump ($row, 'row: ');
 ?>
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
@@ -34,6 +35,8 @@ $listingcall = JView::loadHelper('listing');
 <div class="buttonheading">
 
 	<?php 
+	
+	
 	if ($this->params->get('show_print_view') > 0) 
 	{
 		$text = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'Print' ) );
@@ -49,7 +52,14 @@ $listingcall = JView::loadHelper('listing');
         $attribs['rel']     = 'nofollow';
         $link = JHTML::_('link', JRoute::_($url), $text, $attribs);
         echo $link; 
-    } ?>
+    } 
+//Social Networking begins here
+	$social = getShare($this->detailslink, $row, $params, $this->admin_params);
+	echo $social;
+	//dump ($social);
+	//End Social Networking		
+	
+	?>
 
 </div>
 <table><tr><td>
@@ -114,7 +124,9 @@ if ($params->get('list_items_view') == 0)
 	else {echo $this->studydetails->studytext;}?>
 	
  </td></tr></table>
-<?php $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS; include_once($path1.'share.php'); $shareit = biblestudyShare(); echo $shareit;?>
+<?php 
+
+?>
 <?php if ($params->get('show_comments') > 0)
 		{?>
         <table id="commentstable" cellspacing="0">
