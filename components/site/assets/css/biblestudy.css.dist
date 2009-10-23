@@ -848,6 +848,23 @@
 	background-color:#FFFFFF;
 }
 #toolbar a hover visited{
-	color:0B55C4;
+	color:#0B55C4;
 }
 
+/*Social Networking Items */
+#bsmsshare {
+  margin: 0;
+  border-collapse:separate;
+  float:right;
+  border: 1px solid #CFCFCF;
+  background-color: #F5F5F5;
+}
+#bsmsshare th, #bsmsshare td {
+  text-align:center;
+  padding:0 0 0 0;
+  border:none;
+}
+#bsmsshare th {
+	color:#0b55c4;
+	font-weight:bold;
+}

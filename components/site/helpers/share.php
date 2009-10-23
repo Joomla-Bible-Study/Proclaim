@@ -10,6 +10,8 @@ function getShare($link, $row, $params, $admin_params)
 {
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
+	include_once($path1.'custom.php');
+	include_once($path1.'image.php');
 	$sharetitle = 'Share This'; //this will come from $admin_params
 	//Get the information from the database on what social networking sites to use
 	$db = JFactory::getDBO();
@@ -20,10 +22,10 @@ function getShare($link, $row, $params, $admin_params)
 	if ($sharerows < 1) { $share = null; return $share; }
 	
 	//Begin to form the table
-	$shareit = '<table class="bsmsshare">
+	$shareit = '<table id="bsmsshare"><thead>
 	<tr class="bsmssharetitlerow">
-	<td id="bsmssharetitle">'.$sharetitle.'</td></tr>
-	<tr class="bsmsshareiconrow">';
+	<th id="bsmssharetitle" colspan='.$sharerows.'>'.$sharetitle.'</th></tr></thead>
+	<tbody><tr class="bsmsshareiconrow">';
 	foreach ($rows as $sharerow)
 	{
 		$share_params = new JParameter($sharerow->params);
@@ -55,22 +57,40 @@ function getShare($link, $row, $params, $admin_params)
 		{
 			$element1->element = $url;
 		}
+	
+		elseif ($share_params->get('item1')== 24)
+		{
+			$element = getCustom($share_params->get('item1'), $share_params->get('item1custom'), $row, $params, $admin_params, $template=1);
+			$element1->element = $element->element;
+		}
 		else {$element1 = getElementid($share_params->get('item1'), $row, $params, $admin_params, $template=1);}
-	}
+	}	
 	if ($share_params->get('item2'))
 	{
 		if ($share_params->get('item2') == 200)
 		{
 			$element2->element = $url;
 		}
+	
+		elseif ($share_params->get('item2')== 24)
+		{
+			$element = getCustom($share_params->get('item2'), $share_params->get('item2custom'), $row, $params, $admin_params, $template=1);
+			$element2->element = $element->element;
+			}
 		else {$element2 = getElementid($share_params->get('item2'), $row, $params, $admin_params, $template=1); }
-	}
+	}	
 	if ($share_params->get('item3'))
 	{
 		if ($share_params->get('item3') == 200)
 		{
 			$element3->element = $url;
 		}
+	
+		elseif ($share_params->get('item3')== 24)
+		{
+			$element = getCustom($share_params->get('item3'), $share_params->get('item3custom'), $row, $params, $admin_params, $template=1);
+			$element3->element = $element->element;
+			}
 		else {$element3 = getElementid($share_params->get('item3'), $row, $params, $admin_params, $template=1);}
 	}
 	if ($share_params->get('item4'))
@@ -79,6 +99,12 @@ function getShare($link, $row, $params, $admin_params)
 		{
 			$element4->element = $url;
 		}
+	
+		elseif ($share_params->get('item4')== 24)
+		{
+			$element = getCustom($share_params->get('item4'), $share_params->get('item4custom'), $row, $params, $admin_params, $template=1);
+			$element4->element = $element->element;
+			}
 		else {$element4 = getElementid($share_params->get('item4'), $row, $params, $admin_params, $template=1);}
 	}
 	
@@ -104,12 +130,12 @@ function getShare($link, $row, $params, $admin_params)
 	$shareit .= '
 	
 	<td id="bsmsshareicons">
-	<a href="'.$mainlink.$share_params->get('item1prefix').$sharelink.'" target="_blank"><img src="'.$image.'" alt="Share" width="'.$width.'" height="'.$height.'" border="0"></a>
+	<a href="'.$mainlink.$share_params->get('item1prefix').$sharelink.'" target="_blank"><img src="'.$image.'" alt="'.JText::_($share_params->get('alttext')).'" title="'.JText::_($share_params->get('alttext')).'" width="'.$width.'" height="'.$height.'" border="0"></a>
 	</td>';
 	
 } //end of foreach
 $shareit .=
-'</tr>
+'</tr></tbody>
 </table>';
 
 	return $shareit;

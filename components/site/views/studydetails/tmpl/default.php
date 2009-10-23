@@ -53,20 +53,26 @@ $sharecall = JView::loadHelper('share');
         $link = JHTML::_('link', JRoute::_($url), $text, $attribs);
         echo $link; 
     } 
-//Social Networking begins here
-	$social = getShare($this->detailslink, $row, $params, $this->admin_params);
-	echo $social;
-	//dump ($social);
-	//End Social Networking		
+	
 	
 	?>
 
 </div>
+<?php //Social Networking begins here
+if ($this->admin_params->get('socialnetworking')> 0)
+	{ ?>
+<div id="bsms_share">
+<?php
+		$social = getShare($this->detailslink, $row, $params, $this->admin_params);
+		echo $social;
+?>
+</div>
+<?php } //End Social Networking ?>
 <table><tr><td>
   
  
  <?php if ($params->get('show_teacher_view') > 0)
-	{	?>        
+	{ ?>        
     
     <?php	
 	$teacher_call = JView::loadHelper('teacher');

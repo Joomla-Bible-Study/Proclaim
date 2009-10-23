@@ -22,6 +22,10 @@
 					<option value="0">No Filter</option>
 					<option value="1">Filter</option>
 		</param>
+		<param name="socialnetworking" type="list" default="1" label="Use Social Networking Links" description="Show or Hide links for users to post studydetails link on social networking sites (configure on Share tab)">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
 	</params>
 	<params group="FILLIN-STUDY" addpath="/components/com_biblestudy/elements">
 		<param name="location_id" type="locations" label="Choose a Location" description="Choose a default location to display in the form." />
