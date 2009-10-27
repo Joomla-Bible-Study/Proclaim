@@ -670,12 +670,63 @@ if (!$cssexists)
 	}
 
 //End version 612 upgrade
+
+//Begin version 613 upgrade
+$database->setQuery ("SELECT id FROM #__bsms_share");
+	$database->query();
+	$isitnew = $database->loadResult();
+	if (!$isitnew)
+	{
+		$database->setQuery ("INSERT INTO `#__bsms_share` (`id`, `name`, `params`, `published`) VALUES
+(1, 'FaceBook', 'mainlink=http://www.facebook.com/sharer.php?\nitem1prefix=u=\nitem1=200\nitem1custom=\nitem2prefix=t=\nitem2=5\nitem2custom=\nitem3prefix=\nitem3=6\nitem3custom=\nitem4prefix=\nitem4=8\nitem4custom=\nuse_bitly=0\nusername=\napi=\nshareimage=components/com_biblestudy/images/facebook.png\nshareimageh=33px\nshareimagew=33px\ntotalcharacters=\nalttext=FaceBook\n\n', 1),
+(2, 'Twitter', 'mainlink=http://twitter.com/home?\r\nitem1prefix=status=\r\nitem1=200\r\nitem1custom=\r\nitem2prefix=\r\nitem2=5\r\nitem2custom=\r\nitem3prefix=\r\nitem3=1\r\nitem3custom=\r\nitem4prefix=\r\nitem4=\r\nitem4custom=\r\nuse_bitly=0\r\nusername=\r\napi=\r\nshareimage=components/com_biblestudy/images/twitter.png\r\nshareimagew=33px\r\nshareimageh=33px\r\ntotalcharacters=140\r\nalttext=Twitter', 1),
+(3, 'Delicious', 'mainlink=http://delicious.com/save?\r\nitem1prefix=url=\r\nitem1=200\r\nitem1custom=\r\nitem2prefix=&title=\r\nitem2=5\r\nitem2custom=\r\nitem3prefix=\r\nitem3=6\r\nitem3custom=\r\nitem4prefix=\r\nitem4=\r\nitem4custom=\r\nuse_bitly=0\r\nusername=\r\napi=\r\nshareimage=components/com_biblestudy/images/delicious.png\r\nshareimagew=33px\r\nshareimageh=33px\r\ntotalcharacters=\r\nalttext=Delicious', 1),
+(4, 'MySpace', 'mainlink=http://www.myspace.com/index.cfm?\r\nitem1prefix=fuseaction=postto&t=\r\nitem1=5\r\nitem1custom=\r\nitem2prefix=&c=\r\nitem2=6\r\nitem2custom=\r\nitem3prefix=&u=\r\nitem3=200\r\nitem3custom=\r\nitem4prefix=&l=1\r\nitem4=\r\nitem4custom=\r\nuse_bitly=0\r\nusername=\r\napi=\r\nshareimage=components/com_biblestudy/images/myspace.png\r\nshareimagew=33px\r\nshareimageh=33px\r\ntotalcharacters=\r\nalttext=MySpace', 1)");
+$database->query();
+	}
+
+//Read current css file, add share information if not already there, write and close
+$cssread = JFile::read($dest);
+$shareexists = stristr($csread,'#bsmsshare');
+if (!$shareexists)
+{
+	
+	$cssshared = '
+/*Social Networking Items */
+#bsmsshare {
+  margin: 0;
+  border-collapse:separate;
+  float:right;
+  border: 1px solid #CFCFCF;
+  background-color: #F5F5F5;
+}
+#bsmsshare th, #bsmsshare td {
+  text-align:center;
+  padding:0 0 0 0;
+  border:none;
+}
+#bsmsshare th {
+	color:#0b55c4;
+	font-weight:bold;
+}';
+	$cssread = $cssread.$cssshared;
+	if (!JFile::write($dest, $cssread))
+	{$errcss = 'There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org';}
+}
+$database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
+		$database->query();
+	$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 613)");
+		$database->query();
+		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
+		$db613 = $database->loadResult();
+		$dbmessage613 =  'Upgraded database to version: '.$db613.'<br>';
+//End of upgrade to databse version 613
 ?>
 <div class="header"><?php 
 global $mainframe; ?>
 <img src = "<?php echo $mainframe->getCfg("live_site"); ?>/components/com_biblestudy/images/openbible.png" alt = "" border = "0">Congratulations, Bible Study Message Manager has been installed successfully. </div>
 <p>
-<?php echo $isdb.'<br>'.$dbmessage; ?>
+<?php if ($errcss) {echo $errcss.'<br>';} echo $isdb.'<br>'.$dbmessage.'<br>'.$dbmessage613; ?>
 <p>
 Welcome to the Bible Study Message System. Please note if there are any error messages above. This component is designed to help your church communicate the gospel and teachings in the Word of God. com_biblestudy allows you to enter detailed information about the studies given and links to multimedia content you have uploaded to your server. You can also display full text or notes. All this is searchable in many different ways and you have a lot of control over how much information is displayed on the front end. </p>
 <p>

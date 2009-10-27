@@ -13,7 +13,7 @@
 			<th width="20" align="center">
 				<?php echo JText::_( 'Published' ); ?>
 			</th>
-            		
+            <th><?php echo JText::_('Image');?></th>		
 			<th>
 				<?php echo JText::_( 'Social Network' ); ?>
 			</th>
@@ -23,7 +23,9 @@
 	$k = 0;
 	for ($i=0, $n=count( $this->items ); $i < $n; $i++)
 	{
+		
 		$row = &$this->items[$i];
+		$params = new JParameter($row->params);
 		$checked 	= JHTML::_('grid.id',   $i, $row->id );
 		$link 		= JRoute::_( 'index.php?option=com_biblestudy&controller=shareedit&task=edit&cid[]='. $row->id );
 		$published 	= JHTML::_('grid.published', $row, $i );
@@ -39,10 +41,16 @@
 			<td width="20" align="center">
 				<?php echo $published; ?>
 			</td>
+			<td width="60" align="left">
+			<?php 
+			$isweb = stristr($params->get('shareimage'), 'http');
+			if ($isweb) { echo '<img src="'.$params->get('shareimage').'">';}
+			else {echo '<img src="'.$mainframe->getCfg('live_site').DS.$params->get('shareimage').'">';} ?>
+			</td>
             <td>
 				<a href="<?php echo $link; ?>"><?php echo $row->name; ?></a>
 			</td
-			</td>
+			></td>
 		</tr>
 		<?php
 		$k = 1 - $k;

@@ -11,21 +11,11 @@
 <?php $editor =& JFactory::getEditor();
 $user =& JFactory::getUser();
 ?>
-<table class="admintable">
+<table class="admintable" width="100%">
 
 <tr>
 
-<tr>    <td class="key"><?php echo JText::_('Toolbar');?></td><td ><?php echo $this->toolbar;?><script>
-  $('.button').addClass('bsmbutton');
-</script>
-<script>
-
-$(document).ready(function() {  
-  $('.button').addClass('bsmbutton');
-
-});
-
-</script>
+<tr>    <td ><?php echo $this->toolbar;?>
 </td></tr>
 
 <!--<tr><td class="key"><?php echo JText::_('Parameters');?></td>

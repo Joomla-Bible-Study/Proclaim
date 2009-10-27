@@ -22,7 +22,7 @@
 					<option value="0">No Filter</option>
 					<option value="1">Filter</option>
 		</param>
-		<param name="socialnetworking" type="list" default="1" label="Use Social Networking Links" description="Show or Hide links for users to post studydetails link on social networking sites (configure on Share tab)">
+		<param name="socialnetworking" type="list" default="1" label="Use Social Networking Links" description="Show or Hide links for users to post studydetails link on social networking sites (configure on Social Networks tab)">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>

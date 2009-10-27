@@ -108,6 +108,10 @@ if (!$row->id) {return FALSE;}
 				 	{
 						$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
 					}
+					elseif ($itemparams->get('player') < 1 || $params->get('useavr') > 0)
+					{
+						$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+					}
 					else 
 					{
 						$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);

@@ -31,8 +31,8 @@ function openConverter1()
     <table class="admintable">
    <!-- <tr><td><input type="submit" value="submit" /> <input type="button" value="cancel"> </td></tr>-->
     <tr>
-    <td class="key"></td><td align="left"><?php echo $this->toolbar;?></td></tr>
-<tr><td class="key"><?php echo JText::_('Parameters');?></td><td>
+    <td align="left"><?php echo $this->toolbar;?></td></tr>
+<tr><td class="key"><?php echo JText::_('Parameters');?></td><td width="75">
 <?php
 jimport('joomla.pane.html');
 $pane =& JPane::getInstance ('sliders');
@@ -170,7 +170,7 @@ echo $pane->endPane();
 	</tr>
     <?php   } ?>
             <tr><td class="key"><?php echo JText::_('All Videos Reloaded');?></td><td><?php echo JText::_('AVRELOADED');?></td></tr>
-            <tr><td class="key"></td><td><input class="text_area" name="mediacode" id="mediacode" size="200" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php 
+            <tr><td class="key"></td><td><input class="text_area" name="mediacode" id="mediacode" size="100" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php 
 			if (JPluginHelper::importPlugin('system', 'avreloaded'))
 					{echo $this->mbutton;}?></td></tr>
             <tr>
@@ -197,7 +197,7 @@ echo $pane->endPane();
             </tr>
             <tr>
               <td class="key" ><?php echo JText::_('Filename: ');?></td><td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->filename;?>"  /></td></tr>
-              <tr><td class="key"><?php echo JText::_( ' Or Upload File: ' ); ?></td><td><input type="file" id="file" name="file" size="75"/><?php echo JText::_(' Try also using the Upload button at the top. You will still have to enter the server/folder/filename information.');?></td>
+              <tr><td class="key"><?php echo JText::_( ' Or Upload File: ' ); ?></td><td><input type="file" id="file" name="file" size="75"/><?php echo '<br>'.JText::_(' Try also using the Upload button at the top. You will still have to enter the server/folder/filename information.');?></td>
             </tr>
             <tr>
               <td class="key"></td><td><?php echo JText::_('Maximum upload allowed in your php.ini file using post_max_size is: ').ini_get('upload_max_filesize');?></td>
@@ -213,7 +213,7 @@ echo $pane->endPane();
 				</td>
             </tr>
             <tr><td class="key"><?php echo JText::_('Show Download Icon');?></td><td><?php echo $this->lists['link_type'];?></td></tr>
-			<tr><td class="key"><?php echo JText::_('Comment');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="150" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('Appears under file or in Tooltip - set in Template parameters');?></td>
+			<tr><td class="key"><?php echo JText::_('Comment');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="100" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('Appears under file or in Tooltip - set in Template parameters');?></td>
             </tr>
             
           

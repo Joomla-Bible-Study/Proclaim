@@ -210,7 +210,17 @@ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 PRIMARY KEY (`id`)
 ) ENGINE = MYISAM CHARACTER SET `utf8`;
 
+--
+-- Table structure for table `jos_bsms_share`
+--
 
+CREATE TABLE IF NOT EXISTS `#__bsms_share` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(250) default NULL,
+  `params` text,
+  `published` tinyint(1) NOT NULL default '1',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 -- 
 -- Dumping data for table `#__bsms_books`

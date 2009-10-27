@@ -3,14 +3,14 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>October 19, 2009</creationDate>
+	<creationDate>October 27, 2009</creationDate>
 	<author>Tom Fuller - Joomla Bible Study</author>
 	<authorEmail>TomFuller2@gmail.com</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
 	<copyright>2008-09 Tom Fuller - Joomla Bible Study</copyright>
 	<license>GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
-	<version>6.1.0_RC3</version>
+	<version>6.1.0_RC4</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Bible Study Management System</description>
 	<installfile>install.biblestudy.php</installfile>
@@ -199,6 +199,10 @@
 		<filename>images/download.png</filename>
 		<filename>images/billy_sunday11.jpg</filename>
 		<filename>images/images.jpg</filename>
+		<filename>images/twitter.png</filename>
+		<filename>images/myspace.png</filename>
+		<filename>images/facebook.png</filename>
+		<filename>images/delicious.png</filename>
 		<filename>images/index.html</filename>
 		<filename>elements/series.php</filename>
 		<filename>elements/book.php</filename>
@@ -235,6 +239,7 @@
 		<filename>helpers/duration.php</filename>
 		<filename>helpers/listing.php</filename>
 		<filename>helpers/translated.php</filename>
+		<filename>helpers/share.php</filename>
 		<filename>helpers/index.html</filename>
 		</files>
 	<languages folder="site/languages">
@@ -260,6 +265,7 @@
 			<menu link="option=com_biblestudy&amp;view=episodelist">Podcast Episodes</menu>
 			<menu link="option=com_biblestudy&amp;view=mimetypelist">Mime Types</menu>
 			<menu link="option=com_biblestudy&amp;view=commentslist">Study Comments</menu>
+			<menu link="option=com_biblestudy&amp;view=sharelist">Social Network Links</menu>
 			<menu link="option=com_biblestudy&amp;view=admin&amp;layout=form">Administration</menu>
 			<menu link="option=com_biblestudy&amp;view=templateslist">Template Display Settings</menu>
 			<menu link="option=com_biblestudy&amp;view=cssedit">CSS Edit</menu>
@@ -294,6 +300,7 @@
 			<filename>controllers/templateedit.php</filename>
 			<filename>controllers/cssedit.php</filename>
 			<filename>controllers/admin.php</filename>
+			<filename>controllers/shareedit.php</filename>
 			<filename>controllers/index.html</filename>
 			<filename>elements/studydetails.php</filename>
 			<filename>elements/mediafile.php</filename>
@@ -345,6 +352,9 @@
 			<filename>models/templateslist.php</filename>
 			<filename>models/admin.php</filename>
 			<filename>models/admin.xml</filename>
+			<filename>models/sharelist.php</filename>
+			<filename>models/shareedit.php</filename>
+			<filename>models/shareedit.xml</filename>
 			<filename>models/index.html</filename>
 			<filename>views/cssedit/view.html.php</filename>
 			<filename>views/cssedit/index.html</filename>
@@ -478,6 +488,14 @@
 			<filename>views/admin/view.html.php</filename>
 			<filename>views/admin/tmpl/index.html</filename>
 			<filename>views/admin/tmpl/form.php</filename>
+			<filename>views/shareedit/index.html</filename>
+			<filename>views/shareedit/view.html.php</filename>
+			<filename>views/shareedit/tmpl/index.html</filename>
+			<filename>views/shareedit/tmpl/form.php</filename>
+			<filename>views/sharelist/index.html</filename>
+			<filename>views/sharelist/view.html.php</filename>
+			<filename>views/sharelist/tmpl/index.html</filename>
+			<filename>views/sharelist/tmpl/default.php</filename>
 			<filename>views/index.html</filename>
 			<filename>tables/teacheredit.php</filename>
 			<filename>tables/mediaedit.php</filename>
@@ -495,6 +513,7 @@
 			<filename>tables/locationsedit.php</filename>
 			<filename>tables/templateedit.php</filename>
 			<filename>tables/admin.php</filename>
+			<filename>tables/shareedit.php</filename>
 			<filename>tables/index.html</filename>
 			<filename>convert1.htm</filename>
 			<filename>config.xml</filename>

@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); 
-
+global $mainframe;
 ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
@@ -25,6 +25,21 @@
 				<input class="text_area" type="text" name="name" id="name" size="32" maxlength="250" value="<?php echo $this->shareedit->name;?>" />
 			</td>
         </tr>
+<?php if ($this->shareedit->id > 0) { ?>
+
+        <tr><td class="key">
+        <label for="image">
+        <?php echo JText::_('Image: ');?>
+        </td><td>
+        
+        <?php 
+		$isweb = stristr($this->params->get('shareimage'), 'http');
+		if ($isweb) { echo '<img src="'.$this->params->get('shareimage').'">';}
+		else {echo '<img src="'.$mainframe->getCfg('live_site').DS.$this->params->get('shareimage').'">';}
+		?>
+        </td></tr>
+<?php } ?>
+
     <tr><td class="key">
 		<label for="parameters">
 		<?php echo JText::_('Parameters');?>
@@ -43,7 +58,7 @@ echo $this->params->render( 'params' );
 echo $pane->endPanel();
 echo $pane->endPane();
 ?>
-</td><tr>
+</td></tr>
 	</table>
 	</fieldset>
 </div>

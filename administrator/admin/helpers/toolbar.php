@@ -6,7 +6,7 @@ jimport('joomla.html.toolbar');
  {        
         function getToolbar() {
  
- 
+ 				$directory='images';
                 $bar =& new JToolBar( 'Toolbar' );
                 $bar->appendButton( 'Standard', 'save', 'Save', 'save', false );
                 $bar->appendButton( 'Standard', 'cancel', 'Cancel', 'cancel', false );
