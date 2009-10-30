@@ -23,7 +23,7 @@ class biblestudyViewsharelist extends JView
 	function display($tpl = null)
 	{
 		global $mainframe, $option; 
-		$params = &JComponentHelper::getParams($option);
+		//$params = &JComponentHelper::getParams($option);
 		JToolBarHelper::title(   JText::_( 'Social Network Manager' ), 'generic.png' );
 		//Checks to see if the admin allows rows to be deleted
 		JToolBarHelper::deleteList();
@@ -40,7 +40,11 @@ class biblestudyViewsharelist extends JView
 		$items		= & $this->get( 'Data');
 		$total		= & $this->get( 'Total');
 		$pagination = & $this->get( 'Pagination' );
-		
+		//$paramsdata = $items->params;
+		//$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'shareedit.xml';
+		//$params = new JParameter($items[0]->params);
+		//dump ($items);
+	//$this->assignRef('params', $params);	
 	$this->assignRef('items',		$items);
 	$this->assignRef('pagination',	$pagination);
 // table order

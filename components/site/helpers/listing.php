@@ -424,8 +424,17 @@ $item = JRequest::getVar('Itemid');
 			$mime = ' AND #__bsms_mediafiles.mime_type = 1';
 			switch ($islink) {
 			case 1 :
-			 $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
-			 if ($smenu > 0) {$link .= '&Itemid='.$smenu;}
+			$Itemid = JRequest::getVar('Itemid','','get');
+			if (!$Itemid)
+				{
+				$Itemid='1';
+			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).'&Itemid='.$Itemid;
+			 	}
+			 else 
+			 	{
+			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
+		 		}
+			// if ($smenu > 0) {$link .= '&Itemid='.$smenu;}
 			 $column = '<a href="'.$link.'">';
 			 break;
 			case 2 :

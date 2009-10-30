@@ -301,8 +301,10 @@ function getAVR($media, $width, $height, $src, $params, $image, $Itemid)
        .' '.$duration.' '.$filesize.'" width="'.$image->width
        .'" height="'.$image->height.'" border="0" title="'
        .$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" />{/avrpopup}';
-       //dump ($avr_link, 'AVR Lnk');
-
+       //dump ($media1_link, 'AVR Lnk');
+	//	$gettest = JRequest::getVar('Itemid','','get');
+		//if (!$gettest){JRequest::setVar('Itemid',1,'get');}
+		//dump ($gettest, 'gettest: ');
       
       //dump ($avr_link);
 	return $media1_link;	

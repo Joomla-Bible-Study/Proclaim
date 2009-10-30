@@ -34,7 +34,7 @@ function openConverter1()
     <td align="left"><?php echo $this->toolbar;?></td></tr>
 <tr><td class="key"><?php echo JText::_('Parameters');?></td><td width="75">
 <?php
-jimport('joomla.pane.html');
+jimport('joomla.html.pane');
 $pane =& JPane::getInstance ('sliders');
 
 echo $pane->startPane ('content-pane');
@@ -213,7 +213,7 @@ echo $pane->endPane();
 				</td>
             </tr>
             <tr><td class="key"><?php echo JText::_('Show Download Icon');?></td><td><?php echo $this->lists['link_type'];?></td></tr>
-			<tr><td class="key"><?php echo JText::_('Comment');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="100" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('Appears under file or in Tooltip - set in Template parameters');?></td>
+			<tr><td class="key"><?php echo JText::_('Comment');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="75" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('Appears under file or in Tooltip - set in Template parameters');?></td>
             </tr>
             
           
