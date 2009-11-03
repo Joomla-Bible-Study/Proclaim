@@ -69,7 +69,7 @@ if (!$row->id) {return FALSE;}
       $ispath = 0;
 	  $mime = '';
 	  $path1 = getFilepath($media->id, $idfield, $mime);
-	  
+	  //dump ($media->id);
       //Get the type of player to use
 	  switch ($itemparams->get('player', 0))
 			{
@@ -90,7 +90,12 @@ if (!$row->id) {return FALSE;}
 				break;
 				
 				case 2:
+				$fileextension = substr($media->filename, -3,3);
+				$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
+				if ($textfiles > 0){$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);}
+				else {
 				$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+					}
       			break;
 			}
 	  
@@ -98,7 +103,12 @@ if (!$row->id) {return FALSE;}
 	 
 	 if ($media->internal_viewer > 0 && $itemparams->get('player') < 1 || $params->get('useavr') > 0)
       	{ 
-	  		$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid); 
+	  		$fileextension = substr($media->filename, -3,3);
+				$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
+				if ($textfiles > 0){$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);}
+				else {
+					$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+					} 
 	  	}
 
 	if ($params->get('media_player') > 0)
@@ -110,7 +120,10 @@ if (!$row->id) {return FALSE;}
 					}
 					elseif ($itemparams->get('player') < 1 || $params->get('useavr') > 0)
 					{
-						$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+						$fileextension = substr($media->filename, -3,3);
+				$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
+				if ($textfiles > 0){$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);}
+				else {$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);}
 					}
 					else 
 					{

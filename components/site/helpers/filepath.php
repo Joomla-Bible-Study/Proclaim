@@ -13,10 +13,11 @@ function getFilepath($id3, $idfield, $mime)
 	  . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
 	  . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
 	  . ' WHERE '.$idfield.' = '.$id3.' AND #__bsms_mediafiles.published = 1 '.$mime;
-	  $database->setQuery( $query );
-	  $filepathresults = $database->loadObject();
-	  $number_rows = $database->getAffectedRows($query);
-	  if ($number_rows > 0) 
+	  $database->setQuery( $query ); 
+	  $filepathresults = $database->loadObject(); //dump ($filepathresults);
+	  //$number_rows = $database->getAffectedRows($query); dump ($number_rows);
+	  //if ($database->getNumRows() > 0) 
+	  if ($filepathresults)
 		  {
 			$filepath = $filepathresults->spath.$filepathresults->fpath.$filepathresults->filename;
 			//dump ($filepath, 'filepath: ');
@@ -27,6 +28,6 @@ function getFilepath($id3, $idfield, $mime)
 				}
 		  }
 		  else { $filepath = ''; }
-   
+  
   return $filepath;
 }
