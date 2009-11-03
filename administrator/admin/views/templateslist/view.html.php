@@ -10,6 +10,7 @@ class biblestudyViewtemplateslist extends JView {
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::editList();
 		JToolBarHelper::deleteList();
+		JToolBarHelper::custom('copy', 'copy.png', 'copy_f2.png', 'Copy', true);
 		JToolBarHelper::addNew();
 
 		//Initialize templating class
