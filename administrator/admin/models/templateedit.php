@@ -22,19 +22,19 @@ class biblestudyModeltemplateedit extends JModel {
 		// Set id and wipe data
 		$this->_id		= $id;
 		$this->_tmpl	= null;
-		
+
 	}
 
 	function getTemplate(){
 		if(empty($this->_template)) {
-			
+
 			$query = ' SELECT * FROM #__bsms_templates '.
 					'  WHERE id = '.$this->_id;
 			$this->_db->setQuery( $query );
 			$this->_template = $this->_db->loadObject();
 		}
-		
-		if (!$this->_template) 
+
+		if (!$this->_template)
 		{
 			$this->_template = new stdClass();
 			$this->_template->id = 0;
@@ -48,11 +48,14 @@ class biblestudyModeltemplateedit extends JModel {
 		return $this->_template;
 	}
 
-	function store(){
+	function store($data = null, $tmpl = null){
 		$row =& $this->getTable();
 		//@todo Clean this up
-		$data = JRequest::get('post');
+		if(!isset($data)) {
+			$data = JRequest::get('post');
+		}
 		$data['tmpl'] = JRequest::getVar( 'tmpl', '', 'post', 'string', JREQUEST_ALLOWRAW );
+
 		// Bind the form fields to the hello table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
@@ -70,6 +73,21 @@ class biblestudyModeltemplateedit extends JModel {
 		}
 		return true;
 	}
+
+	function copy($cid) {
+		foreach($cid as $id) {
+			$tmplCurr =& JTable::getInstance('templateedit', 'Table');
+
+			$tmplCurr->load($id);
+			$tmplCurr->id = null;
+			$tmplCurr->title .= " - copy";
+			if (!$tmplCurr->store()) {
+				$this->setError($curr->getError());
+				return false;
+			}
+		}
+		return true;
+	}
 	/**
 	 * @todo Make sure there is at least one template of each type
 	 * @return unknown_type
@@ -77,14 +95,14 @@ class biblestudyModeltemplateedit extends JModel {
 	function delete() {
 		$cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		$row =& $this->getTable();
-		
+
 		if (count( $cids ))
 		{
 			foreach($cids as $cid) {
 				if ($cid == 1)
-					{$this->setError('You cannot delete the default template');
-					return false;
-					}
+				{$this->setError('You cannot delete the default template');
+				return false;
+				}
 				if (!$row->delete( $cid )) {
 					if($cid == 1)
 					{$this->setError('You cannot delete the default template');}
