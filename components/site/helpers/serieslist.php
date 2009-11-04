@@ -244,11 +244,20 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	$db->setQuery($query);
 	$allrows = $db->loadObjectList();
 	$rows = $db->getAffectedRows();
-	$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
-	.' FROM #__bsms_studies AS s'
-	.' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
-	.' LEFT JOIN #__bsms_teachers AS t ON (s.teacher_id = t.id)'
-	.' WHERE s.series_id = '.$id.' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC').$limit;
+	
+	$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
+	. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
+	. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
+	. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+	. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_locations.id AS lid, #__bsms_locations.location_text '
+	. ' FROM #__bsms_studies AS s'
+	. ' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
+	. ' LEFT JOIN #__bsms_teachers AS t ON (s.teacher_id = t.id)'
+	. ' LEFT JOIN #__bsms_books ON (s.booknumber = #__bsms_books.booknumber)'
+	. ' LEFT JOIN #__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)'
+	. '	LEFT JOIN #__bsms_topics ON (s.topics_id = #__bsms_topics.id)'
+	. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)'
+	.' WHERE s.series_id = '.$id.' AND s.published = 1 ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC').$limit;
 	$db->setQuery($query);
 	$result = $db->loadObjectList();
 	$numrows = $db->getAffectedRows();
