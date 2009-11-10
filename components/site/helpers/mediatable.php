@@ -314,13 +314,34 @@ function getAVR($media, $width, $height, $src, $params, $image, $Itemid)
        .' '.$duration.' '.$filesize.'" width="'.$image->width
        .'" height="'.$image->height.'" border="0" title="'
        .$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" />{/avrpopup}';
-       //dump ($media1_link, 'AVR Lnk');
-	//	$gettest = JRequest::getVar('Itemid','','get');
-		//if (!$gettest){JRequest::setVar('Itemid',1,'get');}
-		//dump ($gettest, 'gettest: ');
-      
-      //dump ($avr_link);
-	return $media1_link;	
+         
+		//we are adding something here to see if All Videos Reloaded is going to error out and fix the problem
+		//AVR needs to have an Itemid in order to access its own database table. We'll supply one if needed
+	/*	$ret = '';
+        $code = '';
+        $itemid = JRequest::getInt('Itemid', -1);
+        //$divid = JRequest::getString('divid', null);
+        //if (($itemid >= 0) && ($divid != null)) {
+            $db =& JFactory::getDBO();
+            $query = "SELECT code FROM #__avr_popup WHERE id = ".
+                $itemid;
+            $db->setQuery($query);
+            $db->query();
+            $data =& $db->loadObject();
+           // if (empty($data) || empty($data->code)) {
+            	$query = "SELECT * FROM #__avr_popup";
+                $db->setQuery($query);
+	            $db->query();
+	            $data =& $db->loadAssoc();
+	            dump ($data->Itemid);
+            	//$itemid = JRequest::setvar('Itemid',)
+            //	}
+           */ 	
+           	//End test for All Videos Reloaded and Itemid
+           	$itemid = JRequest::getVar('Itemid','get');
+           	if (!$itemid) {$itemid = JRequest::setVar('Itemid',1,'get');}
+		   //dump ($itemid);	
+     return $media1_link;	
 	}
 	
 	function getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1)

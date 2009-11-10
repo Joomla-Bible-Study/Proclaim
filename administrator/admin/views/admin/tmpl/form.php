@@ -46,7 +46,7 @@ echo $pane->endPane();?>
 <tr><td class="key"><?php echo JText::_('Download Image');?></td><td><?php echo $this->lists['download']; echo JText::_(' Default for download image. Must be called download.png. Media images folder used (set above).');?></td></tr>
 
       <tr> <td class="key"><?php echo JText::_('Version');?></td>
-      	<td><?php echo JText::_('Your Version: ').'6.1.0_RC4 - ';?>
+      	<td><?php echo JText::_('Your Version: ').'6.1.0_RC5 - ';?>
         <strong>
 		<?php echo JText::_('Current Version:').' '.$this->versioncheck; ?></strong><br />
         <a href="http://www.JoomlaBibleStudy.org" target="_blank"><?php echo JText::_('Get Latest Version');?></a></td>
