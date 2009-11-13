@@ -58,6 +58,10 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	
 	if ($params->get('tooltip') >0) {$linktext .= '</span>';}
 	$linktext .= '</a>';
+	//This was added to see if we could get AVR to behave properly. In somes cases it errors out with Popup Database Error is there is no Itemid
+	$itemid = JRequest::getVar('Itemid','get');
+	if (!$itemid) {$itemid = JRequest::setVar('Itemid',1,'get');}
+	//End AVR
    return $linktext;
 } // end of if object_vars is FALSE
 }
