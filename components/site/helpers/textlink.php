@@ -71,6 +71,7 @@ function getTooltip($rowid, $row, $params, $admin_params, $template)
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		include_once($path1.'elements.php');
 		$toolTipArray = array('className'=>'custom');
+		JHTML::_('behavior.mootools');
 		JHTML::_('behavior.tooltip', '.zoomTip', $toolTipArray);
 
         $linktext = '<span class="zoomTip" title="<strong>'.$params->get('tip_title').': </strong> :: ';
