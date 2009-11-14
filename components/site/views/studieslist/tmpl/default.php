@@ -5,7 +5,6 @@ defined('_JEXEC') or die(); ?>
 
 <?php 
 global $mainframe, $option;
-JHTML::_('behavior.tooltip');
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
 $teacher_menu = $this->params->get('teacher_id', 1);
@@ -16,7 +15,7 @@ $series_menu = $this->params->get('series_id', 1);
 $messagetype_menu = $this->params->get('messagetype', 1);
 //$params = $mainframe->getPageParameters();
 $document =& JFactory::getDocument();
-$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
+//$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
 $params = $this->params;
