@@ -147,7 +147,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 25:
 			$elementid->id = 'thumbnail';
 			$elementid->headertext = JText::_('Thumbnail');
-			$i_path = ($admin_params->get('study_images') ? 'images'.DS.$admin_params->get('study_images') : 'stories');
+			$i_path = ($admin_params->get('study_images') ? 'images'.DS.$admin_params->get('study_images') : 'images'.DS.'stories');
 			if ($row->thumbnailm) 
 			{
 				$i_image = $row->thumbnailm;
@@ -160,7 +160,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 26:
 			$elementid->id = 'series_thumbnail';
 			$elementid->headertext = JText::_('Thumbnail');
-			$i_path = ($admin_params->get('series_imagefolder') ? 'images'.DS.$admin_params->get('series_imagefolder') : 'stories');
+			$i_path = ($admin_params->get('series_imagefolder') ? 'images'.DS.$admin_params->get('series_imagefolder') : 'images'.DS.'stories');
 			if ($row->series_thumbnail) 
 			{
 				$i_image = $row->series_thumbnail;
