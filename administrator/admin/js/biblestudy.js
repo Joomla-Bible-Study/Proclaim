@@ -32,7 +32,25 @@ $j(document).ready( function() {
 	$j(".referenceDelete").click(function() {
 		$j(this).parent("#reference").remove();
 		return false;
-	})
+	});
+	
+	var basePath;
+	$j('.imgChoose').change(function(){
+		var targetImage = $j('#img'+$j(this).attr('id'));
+		
+		if($j(this).val().substr(0,1) == 0) {
+			targetImage.hide();
+		} else {
+			targetImage.show();
+		}
+
+		if (basePath == null) {
+			basePath = targetImage.attr('src');
+		}	
+		
+		targetImage.attr('src', basePath+$j(this).val());
+		
+	});
 	
 	/**
 	 * @title Templating Procedures
