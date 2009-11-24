@@ -1,10 +1,4 @@
 <?php defined('_JEXEC') or die('Restricted access'); 
-$js = 	"function changeDisplayImage() {
-			if (document.adminForm.series_thumbnail.value !='') {
-				document.adminForm.imagelib.src='../images".DS.$this->admin_params->get('series_imagefolder', 'stories').DS."' + document.adminForm.series_thumbnail.value;
-			} else {
-				document.adminForm.imagelib.src='images/blank.png';
-			}";
 $document =& JFactory::getDocument();
 $document->addScriptDeclaration($js);
 ?>
@@ -63,7 +57,7 @@ $document->addScriptDeclaration($js);
 							<?php echo JText::_( 'Teacher Image' ); ?>:
 						</td>
     <td> <?php  ?>
-    <img src="<?php echo '..'.$this->directory.DS.$this->teacheredit->teacher_image;?>" name="imagelib">
+    <img id="imgteacher_image" style="display: none" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_image;?>" name="teacherImage">
     <?php 
 	?>
     </td>
@@ -75,7 +69,7 @@ $document->addScriptDeclaration($js);
 							<?php echo JText::_( 'Teacher Thumbnail' ); ?>:
 						</td>
     <td> <?php  ?>
-    <img src="<?php echo '..'.$this->directory.DS.$this->teacheredit->teacher_thumbnail;?>" name="imagelib">
+    <img id="imgteacher_thumbnail" style="display: none" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_thumbnail;?>" name="teacherThumb">
     <?php 
 	?>
     </td>

@@ -12,6 +12,10 @@ class biblestudyViewteacheredit extends JView
 	
 	function display($tpl = null)
 	{
+		$document =& JFactory::getDocument();
+		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
 		
 		$teacheredit		=& $this->get('Data');
 		$admin=& $this->get('Admin');
@@ -29,10 +33,23 @@ class biblestudyViewteacheredit extends JView
 		}
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.teachers', true );
-		$javascript			= 'onchange="changeDisplayImage();"';
-		$directory = DS.'images'.DS.$admin_params->get('teachers_imagefolder', 'stories');
-		$lists['teacher_thumbnail']	= JHTML::_('list.images',  'teacher_thumbnail', $teacheredit->teacher_thumbnail, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
-		$lists['teacher_image']	= JHTML::_('list.images',  'teacher_image', $teacheredit->teacher_image, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
+		
+		$teacherImagePath = JPATH_SITE.DS.'images'.DS.$admin_params->get('teachers_imagefolder', 'stories');
+		$teacherImageList = JFolder::files($teacherImagePath, null, null, null, array('index.html'));
+
+		array_unshift($teacherImageList, '- '.JText::_('No Image').' -');
+		
+		foreach($teacherImageList as $key=>$value) {
+			$teacherImageOptions[] = JHTML::_('select.option', $value, $value);
+		}
+		$teacherImageOptions[0]->value = 0; //Set the value of the "- No Image -" to 0. Makes it easier for jquery
+		
+		$lists['teacher_thumbnail'] = JHTML::_('select.genericlist',  $teacherImageOptions, 'teacher_thumbnail', 'class="imgChoose" size="1"', 'value', 'text',  $teacheredit->teacher_thumbnail);
+		$lists['teacher_image'] = JHTML::_('select.genericlist',  $teacherImageOptions, 'teacher_image', 'class="imgChoose" size="1"', 'value', 'text', $teacheredit->teacher_image);
+		
+		//$directory = DS.'images'.DS.$admin_params->get('teachers_imagefolder', 'stories');
+		//$lists['teacher_thumbnail']	= JHTML::_('list.images',  'teacher_thumbnail', $teacheredit->teacher_thumbnail, ' ', $directory, "bmp|gif|jpg|png|swf"  );
+		//$lists['teacher_image']	= JHTML::_('list.images',  'teacher_image', $teacheredit->teacher_image, 'something=somethi ', $directory, "bmp|gif|jpg|png|swf"  );
 // build the html select list for ordering
 	$query = 'SELECT ordering AS value, ordering AS text'
 	. ' FROM #__bsms_teachers'
@@ -45,7 +62,6 @@ class biblestudyViewteacheredit extends JView
 		$this->assignRef('teacheredit',		$teacheredit);
 		$this->assignRef('lists', $lists);
 		$this->assignRef('admin_params', $admin_params);
-		$this->assignRef('directory', $directory);
 		parent::display($tpl);
 	}
 }
