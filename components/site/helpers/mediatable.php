@@ -61,7 +61,9 @@ if (!$row->id) {return FALSE;}
 	//todo - not sure how much of this is needed
 	 $idfield = '#__bsms_mediafiles.id';
 	  $filesize = getFilesize($media->size);
-	  $duration = getDuration($params, $row);
+	  $duration = getDuration($params, $row); //This one IS needed
+	  //dump ($duration, 'duration: ');
+	  //dump ($params);
       $mimetype = $media->mimetext;
       $src = JURI::base().$image->path;
 	  $height = $image->height;

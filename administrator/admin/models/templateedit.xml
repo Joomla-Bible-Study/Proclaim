@@ -56,7 +56,7 @@
 					<option value="8">Use Global System Date Format</option>
 					<option value="9">2009/10/13</option>
 				</param>
-			<param name="duration_type" type="list" default="0" label="Choose : or hours/min/sec" description="Choose a seperator for the duration, either : or hours/mins/secs">
+			<param name="duration_type" type="list" default="2" label="Choose : or hours/min/sec" description="Choose a seperator for the duration, either : or hours/mins/secs">
 			<option value="1">Hours/min/sec</option>
 			<option value="2">H:M:S</option>
 		</param>
