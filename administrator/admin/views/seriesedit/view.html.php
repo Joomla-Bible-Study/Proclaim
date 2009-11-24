@@ -12,6 +12,10 @@ class biblestudyViewseriesedit extends JView
 	
 	function display($tpl = null)
 	{
+		$document =& JFactory::getDocument();
+		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
 		
 		$seriesedit		=& $this->get('Data');
 		$admin=& $this->get('Admin');
@@ -24,12 +28,18 @@ class biblestudyViewseriesedit extends JView
 		$types 			= array_merge( $types, $teachers );
 		$lists['teacher'] = JHTML::_('select.genericlist', $types, 'teacher', 'class="inputbox" size="1" ', 'value', 'text',  $seriesedit->teacher );
 		
-		$javascript			= 'onchange="changeDisplayImage();"';
-		$directory = DS.'images'.DS.$admin_params->get('series_imagefolder', 'stories');
-		$lists['series_thumbnail']	= JHTML::_('list.images',  'series_thumbnail', $seriesedit->series_thumbnail, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
 		
-	
+		$seriesImagePath = JPATH_SITE.DS.'images'.DS.$admin_params->get('series_imagefolder', 'stories');
+		$seriesImageList = JFolder::files($seriesImagePath, null, null, null, array('index.html'));
+		array_unshift($seriesImageList, '- '.JText::_('No Image').' -');
 		
+		foreach($seriesImageList as $key=>$value) {
+			$seriesImageOptions[] = JHTML::_('select.option', $value, $value);
+		}
+		$seriesImageOptions[0]->value = 0; //Set the value of the "- No Image -" to 0. Makes it easier for jquery
+		
+		$lists['series_thumbnail'] = JHTML::_('select.genericlist',  $seriesImageOptions, 'series_thumbnail', 'class="imgChoose" size="1"', 'value', 'text',  $teacheredit->series_thumbnail);
+
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Series Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
 		JToolBarHelper::save();

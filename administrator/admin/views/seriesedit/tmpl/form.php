@@ -1,13 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); 
 $editor =& JFactory::getEditor();
-$js = 	"function changeDisplayImage() {
-			if (document.adminForm.series_thumbnail.value !='') {
-				document.adminForm.imagelib.src='../images".DS.$this->admin_params->get('series_imagefolder', 'stories').DS."' + document.adminForm.series_thumbnail.value;
-			} else {
-				document.adminForm.imagelib.src='images/blank.png';
-			}";
-$document =& JFactory::getDocument();
-$document->addScriptDeclaration($js);
 ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
@@ -35,7 +27,7 @@ $document->addScriptDeclaration($js);
 			</td>
 		</tr>
 		<tr><td class="key"><?php echo JText::_('Series Thumbnail Image');?></td>
-            <td><img src="<?php echo '../images'.DS.$this->admin_params->get('series_imagefolder', 'stories').DS.$this->seriesedit->series_thumbnail;?>" name="imagelib" /></td></tr>
+            <td><img id="imgseries_thumbnail" src="<?php echo '../images/'.$this->admin_params->get('series_imagefolder', 'stories').'/'.$this->seriesedit->series_thumbnail;?>" /></td></tr>
         <tr>
 				<td class="key"><?php echo JText::_('Description');?></td>
 				<td> <?php echo $editor->display('description', $this->seriesedit->description, '100%', '400', '70', '15'); ?></td>
