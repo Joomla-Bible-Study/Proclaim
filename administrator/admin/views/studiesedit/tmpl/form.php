@@ -244,12 +244,21 @@ echo $pane->endPane(); */
 			<?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
 		</select></td>
 	</tr>
-    <tr><td class="key" alsign="left"><label for="thumbnailm"><?php echo JText::_('Thumbnail: ');?></label></td><td><?php echo $this->lists['thumbnailm'];//echo $this->studiesedit->thumbnailm;?></td></tr>
+    <tr>
+    	<td class="key" alsign="left">
+    		<label for="thumbnailm">
+    			<?php echo JText::_('Thumbnail: ');?>
+    		</label>
+    	</td>
+    	<td>
+    		<?php echo $this->lists['thumbnailm'];//echo $this->studiesedit->thumbnailm;?>
+    	</td>
+    </tr>
     <tr><td valign="top" class="key">
 							<?php echo JText::_( 'Study Image' ); ?>:
 						</td>
     <td> <?php  ?>
-    <img src="<?php echo '../images'.DS.$this->admin_params->get('study_images', 'stories').DS.$this->studiesedit->thumbnailm;?>" name="imagelib">
+    <img style="display: none;" id="imgthumbnailm" src="<?php echo '../images/'.$this->admin_params->get('study_images', 'stories').'/'.$this->studiesedit->thumbnailm;?>" class="imgPath">
     <?php 
 	?>
     </td>

@@ -65,22 +65,22 @@ class biblestudyViewstudiesedit extends JView {
 		// build the html select list for ordering
 
 		//Build the select list for the study image
-		$javascript			= 'onchange="changeDisplayImage();"';
-		$directory = DS.'images'.DS.$admin_params->get('study_images', 'stories');
-		$studypath = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images', 'stories');
-		$fileList 	= JFolder::files($studypath);
-		foreach($fileList as $key=>$value)
-		{
-			$folderfinal1 = new JObject();
-			$folderfinal1->value = $value;
-			$folderfinal1->id = $key;
-			$folderfinal2[] = $folderfinal1;
+		//$directory = DS.'images'.DS.$admin_params->get('study_images', 'stories');
+		$imagesPath = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images', 'stories');
+		$imageList 	= JFolder::files($imagesPath, null, null, null, array('index.html'));
+
+		array_unshift($imageList, '- '.JText::_('No Image').' -');
+		
+		foreach($imageList as $key=>$value) {
+			$imageOptions[] = JHTML::_('select.option', $value, $value);
 		}
-		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
-		//$lists['thumb'] = JHTML::_('select.genericlist',  $folderfinal2, 'thumbnailm', 'class="inputbox" size="1"', 'value', 'value', $studiesedit->thumbnailm );
-		
-		$lists['thumbnailm']	= JHTML::_('list.images',  'thumbnailm', $studiesedit->thumbnailm, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
-		
+		$imageOptions[0]->value = 0; //Set the value of the "- No Image -" to 0. Makes it easier for jquery
+
+		//array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+		$lists['thumbnailm'] = JHTML::_('select.genericlist',  $imageOptions, 'thumbnailm', 'class="imgChoose" size="1"', 'value', 'text', $studiesedit->thumbnailm );
+
+		//$lists['thumbnailm']	= JHTML::_('list.images',  'thumbnailm', $studiesedit->thumbnailm, ' ', $directory, "bmp|gif|jpg|png|swf"  );
+
 		$database	= & JFactory::getDBO();
 		$query = 'SELECT id AS value, teachername AS text, published'
 		. ' FROM #__bsms_teachers'
