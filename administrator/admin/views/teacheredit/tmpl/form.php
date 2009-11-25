@@ -57,7 +57,7 @@ $document->addScriptDeclaration($js);
 							<?php echo JText::_( 'Teacher Image' ); ?>:
 						</td>
     <td> <?php  ?>
-    <img id="imgteacher_image" style="display: none" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_image;?>" name="teacherImage">
+    <img <?php if(empty($this->teacheredit->teacher_image)){echo ('style="display: none;"');}?> id="imgteacher_image" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_image;?>" name="teacherImage">
     <?php 
 	?>
     </td>
@@ -69,7 +69,7 @@ $document->addScriptDeclaration($js);
 							<?php echo JText::_( 'Teacher Thumbnail' ); ?>:
 						</td>
     <td> <?php  ?>
-    <img id="imgteacher_thumbnail" style="display: none" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_thumbnail;?>" name="teacherThumb">
+    <img <?php if(empty($this->teacheredit->teacher_thumbnail)){echo ('style="display: none;"');}?> id="imgteacher_thumbnail" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_thumbnail;?>" name="teacherThumb">
     <?php 
 	?>
     </td>
