@@ -38,7 +38,7 @@ class biblestudyViewseriesedit extends JView
 		}
 		$seriesImageOptions[0]->value = 0; //Set the value of the "- No Image -" to 0. Makes it easier for jquery
 		
-		$lists['series_thumbnail'] = JHTML::_('select.genericlist',  $seriesImageOptions, 'series_thumbnail', 'class="imgChoose" size="1"', 'value', 'text',  $teacheredit->series_thumbnail);
+		$lists['series_thumbnail'] = JHTML::_('select.genericlist',  $seriesImageOptions, 'series_thumbnail', 'class="imgChoose" size="1"', 'value', 'text',  $seriesedit->series_thumbnail);
 
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Series Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
