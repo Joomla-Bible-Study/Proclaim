@@ -34,7 +34,6 @@ $j(document).ready( function() {
 		return false;
 	});
 	
-	var basePath;
 	$j('.imgChoose').change(function(){
 		var targetImage = $j('#img'+$j(this).attr('id'));
 		
@@ -43,13 +42,7 @@ $j(document).ready( function() {
 		} else {
 			targetImage.show();
 		}
-
-		if (basePath == null) {
-			basePath = targetImage.attr('src');
-		}	
-		
-		targetImage.attr('src', basePath+$j(this).val());
-		
+		targetImage.attr('src', targetImage.attr('src').split('/').reverse().splice(1).reverse().join('/') + '/' + $j(this).val());	
 	});
 	
 	/**
