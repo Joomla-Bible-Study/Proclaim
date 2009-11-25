@@ -36,13 +36,16 @@ $j(document).ready( function() {
 	
 	$j('.imgChoose').change(function(){
 		var targetImage = $j('#img'+$j(this).attr('id'));
+		var activeDir = targetImage.attr('src').split('/');
+		activeDir.pop(); //Remove the previous image
 		
 		if($j(this).val().substr(0,1) == 0) {
 			targetImage.hide();
 		} else {
 			targetImage.show();
 		}
-		targetImage.attr('src', targetImage.attr('src').split('/').reverse().splice(1).reverse().join('/') + '/' + $j(this).val());	
+
+		targetImage.attr('src', activeDir.join('/') + '/' + $j(this).val());	
 	});
 	
 	/**
