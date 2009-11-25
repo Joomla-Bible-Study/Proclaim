@@ -27,7 +27,7 @@ $editor =& JFactory::getEditor();
 			</td>
 		</tr>
 		<tr><td class="key"><?php echo JText::_('Series Thumbnail Image');?></td>
-            <td><img id="imgseries_thumbnail" src="<?php echo '../images/'.$this->admin_params->get('series_imagefolder', 'stories').'/'.$this->seriesedit->series_thumbnail;?>" /></td></tr>
+            <td><img <?php if(empty($this->seriesedit->series_thumbnail)){echo ('style="display: none;"');}?> id="imgseries_thumbnail" src="<?php echo '../images/'.$this->admin_params->get('series_imagefolder', 'stories').'/'.$this->seriesedit->series_thumbnail;?>" /></td></tr>
         <tr>
 				<td class="key"><?php echo JText::_('Description');?></td>
 				<td> <?php echo $editor->display('description', $this->seriesedit->description, '100%', '400', '70', '15'); ?></td>
