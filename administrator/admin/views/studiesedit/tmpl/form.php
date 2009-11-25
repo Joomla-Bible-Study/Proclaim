@@ -258,7 +258,7 @@ echo $pane->endPane(); */
 							<?php echo JText::_( 'Study Image' ); ?>:
 						</td>
     <td> <?php  ?>
-    <img style="display: none;" id="imgthumbnailm" src="<?php echo '../images/'.$this->admin_params->get('study_images', 'stories').'/'.$this->studiesedit->thumbnailm;?>" class="imgPath">
+    <img <?php if(empty($this->studiesedit->thumbnailm)){echo ('style="display: none;"');}?> id="imgthumbnailm" src="<?php echo '../images/'.$this->admin_params->get('study_images', 'stories').'/'.$this->studiesedit->thumbnailm;?>">
     <?php 
 	?>
     </td>
