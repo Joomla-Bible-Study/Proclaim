@@ -298,6 +298,8 @@ echo $pane->endPane();
 </table>
 </fieldset>
 </div>
+<?php if ($this->studiesedit->id > 1)
+	{ ?>
 <div class="editcell">
 <fieldset class="adminlist"><legend><?php echo JText::_( 'Media Files for this Study' ); ?></legend>
 <table class="admintable" width=100%>
@@ -314,6 +316,7 @@ echo $pane->endPane();
 	<?php
 
 	//$episodes = $this->episodes;
+	
 	$k = 0;
 	for ($i=0, $n=count( $this->mediafiles ); $i < $n; $i++)
 	{
@@ -335,6 +338,7 @@ echo $pane->endPane();
 </table>
 	<?php //} ?></fieldset>
 </div>
+<?php } ?>
 <div class="clr"></div>
 	<?php $user =& JFactory::getUser();
 	$user_name = $this->studiesedit->user_name;
@@ -346,6 +350,7 @@ echo $pane->endPane();
 	name="user_id" value="<?php echo $user->get('id');?>" />
     <?php if ($this->admin_params->get('study_publish') > 0)
 		{ ?>
-    <input type="hidden" name="published" value="0"  />
-    <?php } ?>
+    <input type="hidden" name="published" value="1"  />
+    <?php }
+	else { ?><input type="hidden" name="published" value="0"  /><?php } ?>
     </form>

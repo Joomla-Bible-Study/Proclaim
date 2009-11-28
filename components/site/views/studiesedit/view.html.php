@@ -216,6 +216,7 @@ class biblestudyViewstudiesedit extends JView
 		$lists['server_cd'] = JHTML::_('select.genericlist', $types6, 'server_cd', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->server_cd );
 		
 		$this->assignRef('admin_params', $admin_params);
+		if ($studiesedit->id < 1) { $mediafiles = false;}
 		$this->assignRef('mediafiles', $mediafiles);
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('studiesedit',		$studiesedit);
