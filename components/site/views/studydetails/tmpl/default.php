@@ -170,7 +170,15 @@ if ($params->get('list_items_view') == 0)
 					//$returnmenu = JRequest::getVar('templatemenuid', 'get', 'int');
 					if (!isset($returnmenu)) {$returnmenu = 1;}
 					//dump ($returnmenu, 'returnmenu: ');
-					$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$templatemenuid);?>
+			$Itemid = JRequest::getVar('Itemid','','get');
+			if (!$Itemid)
+				{
+				$Itemid='1';
+		 	$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$templatemenuid).'&Itemid='.$Itemid;}
+			 else
+			 {
+			 $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$templatemenuid);	
+			 }?>
 			<a href="<?php echo $link;?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>
     </div><!--end of footer div-->
 
