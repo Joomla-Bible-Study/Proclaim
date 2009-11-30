@@ -761,8 +761,8 @@ It is very important that you do a couple of things when you first install the c
  <p>
  3. Click on Studies. Just put in some text to add a new study. Then go to the Media Files tab and enter a media file associated with that study. </p>
  <?php } // end of if ($bsms) for whole db update block	?>
- <p><a href="http://www.joomlaoregon.org/index.php?option=com_fireboard" target="_blank">Visit our forum with your questions</a></p>
- <p><a href="http://www.joomlaoregon.org" target="_blank">Get more help and information at JoomlaOregon.org</a></p>
+ <p><a href="http://www.joomlabiblestudy.org/forums.html" target="_blank">Visit our forum with your questions</a></p>
+ <p><a href="http://www.joomlabiblestudy.org" target="_blank">Get more help and information at JoomlaBibleStudy.org</a></p>
  </td>
  </tr>
  </table>
