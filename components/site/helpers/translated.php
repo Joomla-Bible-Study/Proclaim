@@ -12,6 +12,7 @@ function getTranslated($result)
 {
 	//dump ($result);
     $output2 = array();
+    $output = array();
 	foreach ($result as $value)
     {
 		empty($output2);
