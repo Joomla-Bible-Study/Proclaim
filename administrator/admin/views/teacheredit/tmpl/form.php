@@ -1,7 +1,4 @@
-<?php defined('_JEXEC') or die('Restricted access'); 
-$document =& JFactory::getDocument();
-$document->addScriptDeclaration($js);
-?>
+<?php defined('_JEXEC') or die('Restricted access'); ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
