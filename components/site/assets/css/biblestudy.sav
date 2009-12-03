@@ -486,7 +486,7 @@
   font-size:0.6em;
   position:relative; bottom: 7px;
 }
-<!--Series List-Details Items-->
+/* Series List-Details Items */
 #seriestable {
   margin: 0;
   border-collapse:separate;
