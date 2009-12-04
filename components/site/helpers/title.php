@@ -78,8 +78,9 @@ if ($params->get('title_line_1') > 0)
 			$title .= $elementid->element;
 			break;
 		}
-		$title .= '</td><tr></tbody></table>';
+		$title .= '</td></tr>';
 	} // end of if title2
+	$title .= '</table>';
 	//$title .= '</div>';
 return $title;
 }

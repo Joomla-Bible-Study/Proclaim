@@ -12,8 +12,8 @@ function getComments($params, $row, $Itemid)
 		$pageclass_sfx = $params->get('pageclass_sfx');
 		$Itemid = JRequest::getVar('Itemid');
 		$commentjava = "javascript:ReverseDisplay('comments')";
-		$comments = '<strong><a class="heading'.$pageclass_sfx.'" href="'.$commentjava.'">>>'.JText::_('Show/Hide Comments').'<<</a>
-		<div id="comments" style="display:none;"></strong><br />';
+		$comments = '<strong><a class="heading'.$pageclass_sfx.'" href="'.$commentjava.'">>>'.JText::_('Show/Hide Comments').'<<</a></strong>
+		<div id="comments" style="display:none;"><br />';
 if (count($commentsresult)) {
 $comments .= '
 		<table id="bslisttable" cellspacing="0"><thead><tr class="lastrow"><th id="commentshead" class="row1col1">
@@ -84,10 +84,10 @@ $comments .= '
 		<input type="hidden" name="study_detail_id" id="study_detail_id" value="'.$row->id.'"  />
 		<input type="hidden" name="Itemid" id="Itemid" value="'.$Itemid.'" />
 		<input type="submit" class="button" id="button" value="Submit"  />
-		</form></div>';
+		</form>';
 		} //End of if $comment_access < $comment_user
 		//} //End of show_comments on for submit form
-		$comments .= '</td></tr></table>';
+		$comments .= '</td></tr></table></div>';
         
 	return $comments;
 }
