@@ -198,14 +198,32 @@ function setSelect($string){
 	}
 
 function getBooks() {
-		if (empty($this->_Books)) {
+		if (empty($this->_Books)) 
+			{
+			$template = $this->getTemplate();
+			$params = new JParameter($template[0]->params);
+			//$booklist = $params->get('booklist');
+		//dump ($booklist);
+		if ($params->get('booklist')> 0)
+	{
+  		$query = 'SELECT DISTINCT b.id, s.booknumber AS value, b.bookname AS text, b.published, b.booknumber '
+  		. ' FROM #__bsms_studies AS s'
+  		. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
+  		. ' WHERE b.published = 1'
+  		. ' ORDER BY b.booknumber';
+	}
+	else
+		{
 			$query = 'SELECT id, booknumber AS value, bookname AS text, published'
-  . ' FROM #__bsms_books'
-  . ' WHERE published = 1'
-  . ' ORDER BY booknumber';
-			$this->_Books = $this->_getList($query);
+  		. ' FROM #__bsms_books'
+  		. ' WHERE published = 1'
+  		. ' ORDER BY booknumber';
+			
 		}
-		return $this->_Books;
+	$this->_Books = $this->_getList($query);
+	return $this->_Books;
+	}
+
 	}
 
 function getTemplate() {

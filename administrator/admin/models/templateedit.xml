@@ -118,6 +118,10 @@
 					<option value="1">Show unless filtered</option>
 					<option value="2">Show Always</option>
 		</param>
+		<param name="booklist" type="list" default="0" label="Books to Show" description="Choose whether you want to show all Bible books in the drop down or only those that have studies associated with them">
+			<option value="0">Show All Books</option>
+			<option value="1">Show Only Books with Studies</option>
+		</param>
 		<param name="show_teacher_search" type="list" default="1" label="Show/Hide Teacher search" description="Shows or hides the drop down box for teachers">
 					<option value="0">Hide</option>
 					<option value="1">Show unless filtered</option>
