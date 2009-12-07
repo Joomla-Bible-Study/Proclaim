@@ -341,7 +341,27 @@ function getAVR($media, $width, $height, $src, $params, $image, $Itemid)
            */ 	
            	//End test for All Videos Reloaded and Itemid
            	$itemid = JRequest::getVar('Itemid','get');
-           	if (!$itemid) {$itemid = JRequest::setVar('Itemid',1,'get');}
+           	if (!$itemid) {$itemid = JRequest::setVar('Itemid',1,'get');
+			   if ($params->get('itemidlinktype') > 0)
+					   {
+					   		switch ($params->get('itemidlinktype'))
+					   			{
+					   				case 1:
+					   				//Look for an itemid in the com_menu table from the /helpers/helper.php file
+					   				$item = getItemidLink();
+					   				break;
+					   				case 2:
+					   				//Add in an Itemid from the parameter
+					   				$item = $params->get('itemidlinknumber',1);
+					   				break;
+					   			} 
+					  	 	$itemid = JRequest::setVar('Itemid',$item,'get');
+					   }
+					else
+						{
+							$itemid = JRequest::setVar('Itemid',1,'get');
+						}
+			   }
 		   //dump ($itemid);	
      return $media1_link;	
 	}

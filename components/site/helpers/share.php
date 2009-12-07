@@ -19,6 +19,7 @@ function getShare($link, $row, $params, $admin_params)
 	$db->setQuery($query);
 	$rows = $db->loadObjectList();
 	$sharerows = count($rows);
+	//dump ($sharerows);
 	if ($sharerows < 1) { $share = null; return $share; }
 	
 	//Begin to form the table
@@ -29,7 +30,7 @@ function getShare($link, $row, $params, $admin_params)
 	foreach ($rows as $sharerow)
 	{
 		$share_params = new JParameter($sharerow->params);
-		//dump ($share_params);
+		//dump ($sharerow);
 		$image = $share_params->get('shareimage');
 		$height = $share_params->get('shareimageh','44px');
 		$width = $share_params->get('shareimagew', '44px');
@@ -44,18 +45,24 @@ function getShare($link, $row, $params, $admin_params)
 		$url = make_bitly_url($link, $login, $appkey, 'json', '2.0.1');
 		}
 		else {$url = $link;}
-
-	
-	$element1 = '';
-	$element2 = '';
-	$element3 = '';
-	$element4 = '';
+	$element1 = new stdClass;
+	$element1->element = '';
+	$element2 = new stdClass;
+	$element2->element = '';
+	$element3 = new stdClass;
+	$element3->element = '';
+	$element4 = new stdClass;
+	$element4->element = '';
+//	$element1 = '';
+//	$element2 = '';
+//	$element3 = '';
+//	$element4 = '';
 	
 	if ($share_params->get('item1'))
 	{
 		if ($share_params->get('item1') == 200)
 		{
-			$element1->element = $url;
+			$element1->element = $url; 
 		}
 	
 		elseif ($share_params->get('item1')== 24)
@@ -108,7 +115,7 @@ function getShare($link, $row, $params, $admin_params)
 		else {$element4 = getElementid($share_params->get('item4'), $row, $params, $admin_params, $template=1);}
 	}
 	
-	$sharelink = $element1->element.' '.$share_params->get('item2prefix').$element2->element.' '.$share_params->get('item3prefix').$element3->element.' '.$share_params->get('item4prefix').$element4->element;
+	$sharelink = $element1->element.' '.$share_params->get('item2prefix').$element2->element.' '.$share_params->get('item3prefix').$element3->element.' '.$share_params->get('item4prefix').$element4->element; 
 	
 	if ($share_params->get('totalcharacters'))
 	{

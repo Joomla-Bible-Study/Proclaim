@@ -240,6 +240,7 @@
 		<filename>helpers/listing.php</filename>
 		<filename>helpers/translated.php</filename>
 		<filename>helpers/share.php</filename>
+		<filename>helpers/helper.php</filename>
 		<filename>helpers/index.html</filename>
 		</files>
 	<languages folder="site/languages">

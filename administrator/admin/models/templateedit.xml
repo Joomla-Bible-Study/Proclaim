@@ -74,6 +74,12 @@
 					<option value="window">Window</option>
 					<option value="lightbox">Lightbox</option>
 				</param>
+			<param name="itemidlinktype" type="list" default="0" label="AVR Itemid" description="If experience problems with AVR, try using one of these settings">
+				<option value="0">Use 1 as Itemid</option>
+				<option value="1">Try to find an Itemid from the menu</option>
+				<option value="2">Use the Itemid from below</option>
+			</param>
+			<param name="itemidlinknumber" type="text" default="" label="Itemid to use (set above)" length="4" description="Put in an Itemid for AVR to use and set the choice above" />
 			<param name="media_player" type="list" default="0" label="MP3 Media Player for all MP3s" description="Use built-in media player for all mp3 files (overrides AVR) and can be set for an individual study.">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
