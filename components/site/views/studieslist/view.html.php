@@ -104,10 +104,6 @@ class biblestudyViewstudieslist extends JView {
 		//$orders = getTranslated($orders);
 		$book = getTranslated($books);
 		//$this->assignRef('books', $books);
-		$this->assignRef('template', $template);
-		$this->assignRef('pagination',	$pagination);
-		$this->assignRef('order', $orders);
-		$this->assignRef('topic', $topics);
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		//Get the main study list image
@@ -159,8 +155,8 @@ class biblestudyViewstudieslist extends JView {
 		//Build Topics
 
 		$top[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Topic' ) .' -' );
-		$top 			= array_merge( $top, $topics );
-		$lists['topics']	= JHTML::_('select.genericlist',   $top, 'filter_topic', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_topic" );
+		$top2 			= array_merge( $top, $topics );
+		$lists['topics']	= JHTML::_('select.genericlist',   $top2, 'filter_topic', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_topic" );
 
 
 		//Build Books
@@ -177,7 +173,10 @@ class biblestudyViewstudieslist extends JView {
 		
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('items',		$items);
-
+		$this->assignRef('template', $template);
+		$this->assignRef('pagination',	$pagination);
+		$this->assignRef('order', $orders);
+		$this->assignRef('topic', $topics);
 		$this->assignRef('request_url',	$uri->toString());
 		$this->assignRef('params', $params);
 		parent::display($tpl);

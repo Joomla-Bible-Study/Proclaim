@@ -1,4 +1,3 @@
-<?php
 <?php defined('_JEXEC') or die('Restriced Access');
 /**
  * @author Joomla Bible Study
@@ -25,8 +24,8 @@
    if (!isset($itemid) && count($items)) {
     $itemid = $items[0]->id;
    }
-  }
-  return($itemid ? '&Itemid='.$itemid : '');
+  } //dump ($itemid, 'helper: ');
+  return($itemid ? $itemid : '');
  }
 
 ?>

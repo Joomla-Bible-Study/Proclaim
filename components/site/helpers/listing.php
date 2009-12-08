@@ -5,6 +5,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
+	include_once($path1.'helper.php');
 	//Here we test to see if this is a studydetails or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.
 	$view = JRequest::getVar('view', 'get');
 	if ($view == 'studydetails' && $ismodule < 1)
@@ -422,17 +423,33 @@ $item = JRequest::getVar('Itemid');
 		{
 			$column = '';
 			$mime = ' AND #__bsms_mediafiles.mime_type = 1';
-			switch ($islink) {
-			case 1 :
-			$Itemid = JRequest::getVar('Itemid','','get');
+			$Itemid = '';
+			$itemlink = $params->get('itemidlinktype');
+			//dump ($params, 'islink: ');
+			switch ($islink) { 
+			case 1 : 
+			switch ($params->get('itemidlinktype'))
+	   			{
+	   				case 1:
+	   				//Look for an itemid in the com_menu table from the /helpers/helper.php file
+	   				$Itemid = getItemidLink(); //dump ($Itemid, 'item :');
+	   				break;
+	   				case 2:
+	   				//Add in an Itemid from the parameter
+	   				$Itemid = $params->get('itemidlinknumber',1);
+	   				break;
+	   			} 
+			//$Itemid = JRequest::getVar('Itemid','','get'); //dump ($Itemid, 'Itemid: ');
+			//$Itemid = getItemidLink();
 			if (!$Itemid)
 				{
-				$Itemid='1';
-			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).'&Itemid='.$Itemid;
+					
+				JRequest::setVar('Itemid',$Itemid,'get');
+			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).'&Itemid='.$Itemid; 
 			 	}
 			 else 
 			 	{
-			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
+			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).'&Itemid='.$Itemid; 
 		 		}
 			// if ($smenu > 0) {$link .= '&Itemid='.$smenu;}
 			 $column = '<a href="'.$link.'">';

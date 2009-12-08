@@ -10,6 +10,10 @@ $scripturerow = 1;
 $scripture1 = getScripture($params, $row, $esv=null, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
 $templatemenuid = $params->get('detailstemplateid');
+	//This was added to see if we could get AVR to behave properly. In somes cases it errors out with Popup Database Error is there is no Itemid
+	$itemid = JRequest::getVar('Itemid','get');
+	if (!$itemid) {JRequest::setVar('Itemid',1,'get'); $itemid='1';}
+	//End AVR
 //I put in the below check because for some reason when showing teacher and/or header with a textlink caused an error, saying the a JParameter type was being sent. I was not able to figure out where it was coming from, so added this check because if it is a JParameter object, get_object_vars will return with the object, otherwise it returns FALSE
 $object_vars = get_object_vars( $template ) ;
 //dump ($object_vars, 'myobject: ');
@@ -21,7 +25,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	else 
 	{
 	  	if ($template[0]->text && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->text; }
-	  	if ($template[0]->text && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$template[0]->text;}
+	  	if ($template[0]->text && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').DS.$template[0]->text;}
 		$textimage = getImage($i_path);
 	}
 	   $src = JURI::base().$textimage->path;
@@ -36,7 +40,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	else 
 	{
 	  	if ($template[0]->pdf && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->pdf; }
-	  	if ($template[0]->pdf && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$template[0]->pdf;}
+	  	if ($template[0]->pdf && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').DS.$template[0]->pdf;}
 		$pdfimage = getImage($i_path);
 	}
 		$src = JURI::base().$pdfimage->path;
@@ -58,10 +62,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	
 	if ($params->get('tooltip') >0) {$linktext .= '</span>';}
 	$linktext .= '</a>';
-	//This was added to see if we could get AVR to behave properly. In somes cases it errors out with Popup Database Error is there is no Itemid
-	$itemid = JRequest::getVar('Itemid','get');
-	if (!$itemid) {$itemid = JRequest::setVar('Itemid',1,'get');}
-	//End AVR
+
    return $linktext;
 } // end of if object_vars is FALSE
 }

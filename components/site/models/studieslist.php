@@ -174,7 +174,7 @@ function setSelect($string){
 	 */
 	function getTopics() {
 		if (empty($this->_Topics)) {
-			$query = 'SELECT DISTINCT #__bsms_studies.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text, #__bsms_topics.published'
+			$query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text, #__bsms_topics.published'
 			. ' FROM #__bsms_studies'
 			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
 			. ' WHERE #__bsms_topics.published = 1'

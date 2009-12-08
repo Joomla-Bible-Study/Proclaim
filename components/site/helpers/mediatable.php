@@ -13,11 +13,12 @@ if (!$row->id) {return FALSE;}
 		include_once($path1.'filepath.php');
 		include_once($path1.'duration.php');
 		include_once($path1.'image.php');
+		include_once ($path1.'helper.php');
 	$database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
 	$database->query();
 	$admin = $database->loadObjectList();
  
-	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images'.DS.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
+	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
 	$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
 	$d_path = $d_path1.$d_image;
 	$download_tmp = getImage($d_path);
@@ -278,6 +279,7 @@ function getAVR($media, $width, $height, $src, $params, $image, $Itemid)
 	   	{
         	$dividid = ' divid="'.$media->id.'"';
         	$bracketpos = strpos($mediacode, '}');
+        	$dividid = $dividid.' Itemid="2"';
         	$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
        	}
        $isonlydash = substr_count($mediacode, '}-{');
@@ -311,58 +313,12 @@ function getAVR($media, $width, $height, $src, $params, $image, $Itemid)
         	$popuptype = 'lightbox';
        	}
        
-	   $media1_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
+	  
+		   $media1_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
        .'"}<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext. ' - '.$media->comment
        .' '.$duration.' '.$filesize.'" width="'.$image->width
        .'" height="'.$image->height.'" border="0" title="'
-       .$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" />{/avrpopup}';
-         
-		//we are adding something here to see if All Videos Reloaded is going to error out and fix the problem
-		//AVR needs to have an Itemid in order to access its own database table. We'll supply one if needed
-	/*	$ret = '';
-        $code = '';
-        $itemid = JRequest::getInt('Itemid', -1);
-        //$divid = JRequest::getString('divid', null);
-        //if (($itemid >= 0) && ($divid != null)) {
-            $db =& JFactory::getDBO();
-            $query = "SELECT code FROM #__avr_popup WHERE id = ".
-                $itemid;
-            $db->setQuery($query);
-            $db->query();
-            $data =& $db->loadObject();
-           // if (empty($data) || empty($data->code)) {
-            	$query = "SELECT * FROM #__avr_popup";
-                $db->setQuery($query);
-	            $db->query();
-	            $data =& $db->loadAssoc();
-	            dump ($data->Itemid);
-            	//$itemid = JRequest::setvar('Itemid',)
-            //	}
-           */ 	
-           	//End test for All Videos Reloaded and Itemid
-           	$itemid = JRequest::getVar('Itemid','get');
-           	if (!$itemid) {$itemid = JRequest::setVar('Itemid',1,'get');
-			   if ($params->get('itemidlinktype') > 0)
-					   {
-					   		switch ($params->get('itemidlinktype'))
-					   			{
-					   				case 1:
-					   				//Look for an itemid in the com_menu table from the /helpers/helper.php file
-					   				$item = getItemidLink();
-					   				break;
-					   				case 2:
-					   				//Add in an Itemid from the parameter
-					   				$item = $params->get('itemidlinknumber',1);
-					   				break;
-					   			} 
-					  	 	$itemid = JRequest::setVar('Itemid',$item,'get');
-					   }
-					else
-						{
-							$itemid = JRequest::setVar('Itemid',1,'get');
-						}
-			   }
-		   //dump ($itemid);	
+       .$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" />{/avrpopup}';	
      return $media1_link;	
 	}
 	
