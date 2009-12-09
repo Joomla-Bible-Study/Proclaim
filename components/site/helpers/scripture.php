@@ -103,6 +103,8 @@ function getScripture($params, $row, $esv, $scripturerow) {
 		
 	}
 	
+		if ($row->booknumber > 166) {$scripture = $book;}
+		
 	return $scripture;
 }
 

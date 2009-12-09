@@ -61,7 +61,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 8:
 			$elementid->id = 'teacher';
 			$elementid->headertext = JText::_('Teacher');
-			$elementid->element = $row->title.' '.$row->teachername;
+			$elementid->element = $row->teachertitle.' '.$row->teachername;
 			break;
 		case 9:
 			$elementid->id = 'series';
