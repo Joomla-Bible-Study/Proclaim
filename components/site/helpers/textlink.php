@@ -2,14 +2,15 @@
 defined('_JEXEC') or die();
 
 function getTextlink($params, $row, $textorpdf, $admin_params, $template)
-{//dump ($template, 'templatetextlink: ');
+{//dump ($template, 'template: ');
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'scripture.php');
 include_once($path1.'image.php');
+include_once($path1.'helper.php');
 $scripturerow = 1;	
 $scripture1 = getScripture($params, $row, $esv=null, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
-$templatemenuid = $params->get('detailstemplateid');
+$templatemenuid = $params->get('detailstemplateid',1);
 	//This was added to see if we could get AVR to behave properly. In somes cases it errors out with Popup Database Error is there is no Itemid
 	$itemid = JRequest::getVar('Itemid','get');
 	if (!$itemid) {JRequest::setVar('Itemid',1,'get'); $itemid='1';}
@@ -21,26 +22,28 @@ if (!$object_vars) {
 if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 
 	if ($textorpdf == 'text') {
-		if ($template[0]->text == '- No Image -') { $i_path = 'components/com_biblestudy/images/textfile24.png'; $textimage = getImage($i_path); }
+		if ($template[0]->text == '- Use Default -') { $i_path = 'components/com_biblestudy/images/textfile24.png'; $textimage = getImage($i_path); }
 	else 
 	{
-	  	if ($template[0]->text && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->text; }
-	  	if ($template[0]->text && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').DS.$template[0]->text;}
+ 	 if ($template[0]->text && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->text; }
+	  	
 		$textimage = getImage($i_path);
 	}
 	   $src = JURI::base().$textimage->path;
 		$height = $textimage->height;
 		$width = $textimage->width;
-       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&templatemenuid='.$templatemenuid ).JHTML::_('behavior.tooltip');
+		$addItemid = '';
+		$addItemid = getItemidLink($params, $isplugin=0);
+       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&templatemenuid='.$templatemenuid ).$addItemid.JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 	}
 	if ($textorpdf == 'pdf') 
 	{
-		if ($template[0]->pdf == '- No Image -') { $i_path = 'components/com_biblestudy/images/pdf24.png'; $pdfimage = getImage($i_path); }
+		if ($template[0]->pdf == '- Use Default -') { $i_path = 'components/com_biblestudy/images/pdf24.png'; $pdfimage = getImage($i_path); }
 	else 
 	{
 	  	if ($template[0]->pdf && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->pdf; }
-	  	if ($template[0]->pdf && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').DS.$template[0]->pdf;}
+	  	if ($template[0]->pdf && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$template[0]->pdf;}
 		$pdfimage = getImage($i_path);
 	}
 		$src = JURI::base().$pdfimage->path;

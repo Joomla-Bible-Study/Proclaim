@@ -428,28 +428,16 @@ $item = JRequest::getVar('Itemid');
 			//dump ($params, 'islink: ');
 			switch ($islink) { 
 			case 1 : 
-			switch ($params->get('itemidlinktype'))
-	   			{
-	   				case 1:
-	   				//Look for an itemid in the com_menu table from the /helpers/helper.php file
-	   				$Itemid = getItemidLink(); //dump ($Itemid, 'item :');
-	   				break;
-	   				case 2:
-	   				//Add in an Itemid from the parameter
-	   				$Itemid = $params->get('itemidlinknumber',1);
-	   				break;
-	   			} 
-			//$Itemid = JRequest::getVar('Itemid','','get'); //dump ($Itemid, 'Itemid: ');
-			//$Itemid = getItemidLink();
+			$addItemid = getItemidLink($params, $isplugin=0);
 			if (!$Itemid)
 				{
 					
 				JRequest::setVar('Itemid',$Itemid,'get');
-			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).'&Itemid='.$Itemid; 
+			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).$addItemid; 
 			 	}
 			 else 
 			 	{
-			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).'&Itemid='.$Itemid; 
+			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).$addItemid; 
 		 		}
 			// if ($smenu > 0) {$link .= '&Itemid='.$smenu;}
 			 $column = '<a href="'.$link.'">';
