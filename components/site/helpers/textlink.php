@@ -33,7 +33,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 		$height = $textimage->height;
 		$width = $textimage->width;
 		$addItemid = '';
-		$addItemid = getItemidLink($params, $isplugin=0);
+		$addItemid = getItemidLink($isplugin=0, $admin_params);
        $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&templatemenuid='.$templatemenuid ).$addItemid.JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 	}

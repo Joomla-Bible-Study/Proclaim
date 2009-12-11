@@ -14,7 +14,8 @@ class biblestudyControllerpodcastedit extends JController
   parent::__construct();
 
   // Register Extra tasks
-  $this->registerTask( 'add' , 'edit', 'WriteXML' );
+  	$this->registerTask( 'add' , 'edit', 'WriteXMLFile' );
+  
  }
 
  /**
@@ -111,9 +112,9 @@ function publish()
  }
  
  
- function writeXML()
+ function writeXMLFile()
  {
-
+/*
   global $mainframe, $option;
   //$params =& $mainframe->getPageParameters();
   $params = &JComponentHelper::getParams($option);
@@ -311,7 +312,13 @@ function publish()
   if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')) {
    JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
   }
-
+*/
+	$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
+	include_once($path1.'writexml.php');
+	include_once($path1.'helper.php');
+	$adminsettings = getAdminsettings(); //dump ($adminsettings, 'adminsettings: ');
+	$admin_params = new JParameter($adminsettings->params);	
+ $result= writeXML($admin_params, $isplugin=0);
   if ($return)
   {
    $task = JRequest::getCmd('task');

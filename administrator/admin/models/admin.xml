@@ -76,4 +76,20 @@
 				<option value="1">Auto Publish Studies</option>
 			</param>
 		</params>
+		<params group="ALLVIDEOSRELOADED">
+			<param name="itemidlinktype" type="list" default="0" label="AVR Itemid" description="If you experience problems with AVR, try using one of these settings">
+				<option value="0">Don't add an Itemid</option>
+				<option value="1">Try to find an Itemid from the menu</option>
+				<option value="2">Use the Itemid from below</option>
+			</param>
+		<param name="itemidlinkview" type="list" default="studieslist" label="Choose type of view for Itemid" description="Pick the type of view to search for an Itemid in the menu">
+			<option value="studieslist">studieslist</option>
+			<option value="studydetails">studydetails</option>
+			<option value="teacherlist">teacherlist</option>
+			<option value="teacherdisplay">teacherdisplay</option>
+			<option value="serieslist">serieslist</option>
+			<option value="seriesdetail">seriesdetail</option>
+		</param>
+			<param name="itemidlinknumber" type="text" default="" label="Itemid to use (set above)" length="4" description="Put in an Itemid for AVR to use and set the choice above" />
+	</params>
 </root>

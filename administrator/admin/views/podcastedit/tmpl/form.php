@@ -8,7 +8,7 @@
 		
 	<table cellpadding="5" class="admintable">
 	<?php if ($this->podcastedit->id) {?>
-	<?php $link = JRoute::_( 'index.php?option=com_biblestudy&view=podcastedit&controller=podcastedit&task=writeXML&cid='. $this->podcastedit->id );?>
+	<?php $link = JRoute::_( 'index.php?option=com_biblestudy&view=podcastedit&controller=podcastedit&task=writeXMLFile&cid='. $this->podcastedit->id );?>
 	<tr>
 		<td class="key"><b><?php echo JText::_('XML File');?>:</b></td>
 		<td><a href="<?php echo $link;?>"><img src="<?php echo JURI::base()?>images/backup.png" height="48" width="48" border="0"></a><br />

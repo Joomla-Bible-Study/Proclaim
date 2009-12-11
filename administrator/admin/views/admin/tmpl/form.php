@@ -37,6 +37,10 @@ echo $pane->startPanel( JText::_( 'Front End Submission' ), 'SUBMISSION' );
 echo $this->params->render( 'params' , 'SUBMISSION');
 echo $pane->endPanel(); 
 
+echo $pane->startPanel( JText::_( 'All Videos Reloaded Compatability' ), 'ALLVIDEOSRELOADED' );
+echo $this->params->render( 'params' , 'ALLVIDEOSRELOADED');
+echo $pane->endPanel(); 
+
 echo $pane->endPane();?>
 <tr><td class="key"><?php echo JText::_('Default Study List Image');?></td><td><?php echo $this->lists['main']; echo JText::_(' Default for Study List Page Image. Media images folder used (set above).');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php echo $this->lists['study']; echo JText::_(' Default for study thumbnail. Set Folder above.');?></td></tr>

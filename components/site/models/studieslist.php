@@ -95,7 +95,7 @@ function setSelect($string){
 			$query = 'SELECT *'
 			. ' FROM #__bsms_admin'
 			. ' WHERE id = 1';
-			$this->_admin = $this->_getList($query);
+			$this->_admin = $this->_getList($query); //dump ($this->_admin, 'this->_admin: ');
 		}
 		return $this->_admin;
 	}
