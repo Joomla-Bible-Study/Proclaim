@@ -18,7 +18,7 @@ defined('_JEXEC') or die('Restricted access');
 		$lb_fromname   = $config->getValue('config.fromname');
 		$lb_livesite   = JURI::root();
 		//$pluginParams = new JParameter( $plugin->params );
-		$Body   = $pluginParams->def( 'Body', '<strong>Podcast Publishing Update confirmation.</strong><br><br> The following podcasts have been published:<br> '.$lb_fromname );
+		$Body   = '<strong>Podcast Publishing Update confirmation.</strong><br><br> The following podcasts have been published:<br> '.$lb_fromname;
 		//global $mainframe, $option;
 		$params = &JComponentHelper::getParams('com_biblestudy');
 		jimport('joomla.utilities.date');
@@ -226,6 +226,7 @@ defined('_JEXEC') or die('Restricted access');
 	else { $output = 'No podcasts were set as published on the site, so no files were written.';
 		return array('output'=>$output);
 		}
+		$return = true;
 	} // end of function
 
 

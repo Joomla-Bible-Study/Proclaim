@@ -37,7 +37,11 @@ class biblestudyViewpodcastedit extends JView
 			. ' WHERE mf.podcast_id = '.$podcastedit->id.' ORDER BY mf.createdate DESC';
 			$db->setQuery( $query );
 			$episodes = $db->loadObjectList();
-			
+		$model =& $this->getModel();
+		$admin=& $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
+		$this->assignRef('admin_params', $admin_params);
+		$this->assignRef('admin', $admin);	
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Podcast Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
 		JToolBarHelper::save();
