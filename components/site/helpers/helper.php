@@ -23,15 +23,15 @@
   }
   $component =& JComponentHelper::getComponent('com_biblestudy');
   $menus  = &JApplication::getMenu('site', array()); 
-  if ($menus->_active > 0)
+  /*if ($menus->_active > 0)
   {
   	$activeMenu = $menus->getActive(); 
 	if ($activeMenu->componentid == $component->id) 
   	{
    		$itemid = $activeMenu->id;
   	}
-  }
-   else {
+  } */
+  // else {
    $items  = $menus->getItems('componentid', $component->id);
    foreach ($items as &$menu) {
     if (@$menu->query['view'] == $itemidlinkview) {
@@ -42,9 +42,9 @@
    if (!isset($itemid) && count($items)) {
     $itemid = $items[0]->id;
    }
-  } //dump ($itemid, 'helper: ');
+  //} //dump ($itemid, 'helper: ');
   	$itemidprefix = '&Itemid=';
-	if ($isplugin > 0){$itemidprefix = '&amp;Itemid=';}
+	if ($isplugin > 0){$itemidprefix = '&amp;Itemid=';} //dump ($activeMenu, 'itemidlinktype: ');
   switch ($itemidlinktype)
    			{
 			   	case 0:
