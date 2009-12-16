@@ -45,7 +45,7 @@
 			<?php 
 			$isweb = stristr($params->get('shareimage'), 'http');
 			if ($isweb) { echo '<img src="'.$params->get('shareimage').'">';}
-			else {echo '<img src="'.$mainframe->getCfg('live_site').DS.$params->get('shareimage').'">';} ?>
+			else {echo '<img src="'.$mainframe->getCfg('live_site').'/'.$params->get('shareimage').'">';} ?>
 			</td>
             <td>
 				<a href="<?php echo $link; ?>"><?php echo $row->name; ?></a>

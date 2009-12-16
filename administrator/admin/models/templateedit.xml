@@ -920,13 +920,14 @@
 				<option value="1">Use All Plugins</option>
 				<option value="2"> Use Only Scripture Links</option>
 				</param>
-				<param name="show_comments" type="list" default="1" label="Allow comments for studies" description="Turns on or off the ability for users to leave comments on studies">
-				<option value="0">Hide</option>
-				<option value="1">Show</option>
+				<param name="show_comments" type="list" default="1" label="Access level for showing comments" description="Sets access level for viewing comments.">
+				<option value="0">Everyone</option>
+				<option value="1">Registered</option>
+				<option value="2">Hide</option>
 				</param>
 			<param name="comment_access" type="list" default="1" label="Access level for submitting comments" description="Set the level at which users can submit comments">
-				<option value="0">All</option>
-				<option value="1">Registered</option>
+				<option value="0">Everyone</option>
+				<option value="1">Registered Users</option>
 				</param>
 			<param name="comment_publish" type="list" default="0" label="Publishing comments" description="Choose whether posts are published automatically or approved on backend by admins">
 				<option value="0">Approval on backend</option>

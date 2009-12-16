@@ -34,7 +34,7 @@ class biblestudyViewteacheredit extends JView
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.teachers', true );
 		
-		$teacherImagePath = JPATH_SITE.DS.'images'.DS.$admin_params->get('teachers_imagefolder', 'stories');
+		$teacherImagePath = JPATH_SITE.'/images/'.$admin_params->get('teachers_imagefolder', 'stories');
 		$teacherImageList = JFolder::files($teacherImagePath, null, null, null, array('index.html'));
 
 		array_unshift($teacherImageList, '- '.JText::_('No Image').' -');

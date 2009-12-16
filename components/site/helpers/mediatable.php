@@ -54,7 +54,7 @@ if (!$row->id) {return FALSE;}
 	$Itemid = $params->get('detailstemplateid', 1);
 	if (!$media->path2) { $i_path = $media->impath; }
 	if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-	if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
+	if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').DS.$media->path2;}
 	$image = getImage($i_path);
 	
 	$mediatable .= '<td>';

@@ -29,7 +29,7 @@ class biblestudyViewmediaedit extends JView
 		$lists = array();
 		$admin = $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
-		$directory = ($admin_params->get('media_imagefolder') != '' ? DS.'images'.DS.$admin_params->get('media_imagefolder') : DS.'components'.DS.'com_biblestudy'.DS.'images');
+		$directory = ($admin_params->get('media_imagefolder') != '' ? '/images/'.$admin_params->get('media_imagefolder') : '/components/com_biblestudy/images');
 		//dump ($directory, 'directory: ');
 		$javascript			= 'onchange="changeDisplayImage();"';
            // $fullpath = JURI::root() . $path;

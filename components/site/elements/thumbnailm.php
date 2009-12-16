@@ -52,7 +52,7 @@ class JElementthumbnailm extends JElement
 		$admin_params = new JParameter($paramsdata, $paramsdefs);
 		$itemselected = $admin_params->get('thumbnail_study');
 		
-		$folder = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images', '/images/stories');
+		$folder = JPATH_SITE.'/images/'.$admin_params->get('study_images', '/images/stories');
 		//dump ($itemselected, 'control_name: ');
 		$folder = JFolder::makeSafe($folder);
 		$folders = JFolder::files($folder, '.', true);

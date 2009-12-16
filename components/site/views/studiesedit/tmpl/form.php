@@ -250,7 +250,7 @@ echo $pane->endPane();
 							<?php echo JText::_( 'Study Image' ); ?>:
 						</td>
     <td> <?php  ?>
-    <img src="<?php echo '../images'.DS.$this->admin_params->get('study_images', 'stories').DS.$this->studiesedit->thumbnailm;?>" name="imagelib">
+    <img src="<?php echo '../images'.DS.$this->admin_params->get('study_images', 'stories/').$this->studiesedit->thumbnailm;?>" name="imagelib">
     <?php 
 	?>
     </td>

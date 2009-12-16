@@ -44,7 +44,7 @@ if (!$item->teacher_thumbnail) { $image->path = $item->thumb; $image->height = $
 	else
 	{
 		if ($item->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$item->teacher_thumbnail; }
-		if ($item->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$item->teacher_thumbnail;}
+		if ($item->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$item->teacher_thumbnail;}
 		$image = getImage($i_path);
 	}
 ?>

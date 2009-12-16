@@ -78,7 +78,7 @@ function getTooltip($rowid, $row, $params, $admin_params, $template)
 		JHTML::_('behavior.mootools');
 		JHTML::_('behavior.tooltip', '.zoomTip', $toolTipArray);
 
-        $linktext = '<span class="zoomTip" title="<strong>'.$params->get('tip_title').': </strong> :: ';
+        $linktext = '<span class="zoomTip" title="<strong>'.$params->get('tip_title').' </strong> :: ';
        	$tip1 = getElementid($params->get('tip_item1'), $row, $params, $admin_params, $template);  
 		$tip2 = getElementid($params->get('tip_item2'), $row, $params, $admin_params, $template);
 		$tip3 = getElementid($params->get('tip_item3'), $row, $params, $admin_params, $template);

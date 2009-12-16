@@ -29,7 +29,7 @@ class biblestudyViewseriesedit extends JView
 		$lists['teacher'] = JHTML::_('select.genericlist', $types, 'teacher', 'class="inputbox" size="1" ', 'value', 'text',  $seriesedit->teacher );
 		
 		
-		$seriesImagePath = JPATH_SITE.DS.'images'.DS.$admin_params->get('series_imagefolder', 'stories');
+		$seriesImagePath = JPATH_SITE.'/images/'.$admin_params->get('series_imagefolder', 'stories');
 		$seriesImageList = JFolder::files($seriesImagePath, null, null, null, array('index.html'));
 		array_unshift($seriesImageList, '- '.JText::_('No Image').' -');
 		

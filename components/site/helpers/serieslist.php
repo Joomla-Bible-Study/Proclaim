@@ -123,7 +123,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			break;
 		case 2:
 			if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-			if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('series_imagefolder').DS.$row->series_thumbnail;}
+			if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images/'.$admin_params->get('series_imagefolder').DS.$row->series_thumbnail;}
 			$image = getImage($i_path);
 			$element = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
 			if ($islink > 0 && $view == 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
@@ -131,7 +131,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			break;
 		case 3: //dump ($admin_params->get('series_imagefolder'), 'imagefolder: ');
 			if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-			if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('series_imagefolder').DS.$row->series_thumbnail;}
+			if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images/'.$admin_params->get('series_imagefolder').DS.$row->series_thumbnail;}
 			$image = getImage($i_path); //dump ($image, 'image: ');
 			$element1 = '<td class="'.$r.' thumbnail"> <table id="seriestable" cellspacing="0"><tr class="noborder"><td>';
 			$element2 = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
@@ -150,7 +150,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 		case 5:
 			if ($row->teacher_thumbnail == '- Select Image -' || !$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw;}
 			if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$row->teacher_thumbnail; }
-			if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$row->teacher_thumbnail;}
+			if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').DS.$row->teacher_thumbnail;}
 			$image = getImage($i_path);
 			$element = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->teachername.'">';
 			if ($islink > 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
@@ -162,7 +162,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			else 
 			{
 				if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$row->teacher_thumbnail; }
-				if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$row->teacher_thumbnail;}
+				if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').DS.$row->teacher_thumbnail;}
 				$image = getImage($i_path);
 			}
 			$element2 = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->teachername.'">';

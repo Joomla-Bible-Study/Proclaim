@@ -2,6 +2,18 @@
 
 function getComments($params, $row, $Itemid)
 {
+		$user =& JFactory::getUser();
+		$comment_access = $params->get('comment_access');
+		$comment_user = $user->usertype;
+		if (!$comment_user) { $comment_user = 0;} $comm = $params->get('show_comments'); //dump ($comment_user);
+		if ($params->get('show_comments') >= $comment_user || $params->get('show_comments') == 2)
+		{
+			$comments = '';
+			return $comments; 	
+		}
+		else
+		{
+
 		$database	= & JFactory::getDBO();
 		$editor =& JFactory::getEditor();
 		
@@ -15,6 +27,7 @@ function getComments($params, $row, $Itemid)
 		$comments = '<strong><a class="heading'.$pageclass_sfx.'" href="'.$commentjava.'">>>'.JText::_('Show/Hide Comments').'<<</a></strong>
 		<div id="comments" style="display:none;"><br />';
 if (count($commentsresult)) {
+		
 $comments .= '
 		<table id="bslisttable" cellspacing="0"><thead><tr class="lastrow"><th id="commentshead" class="row1col1">
 		'.JText::_('Comments').'</th></tr></thead>';
@@ -36,11 +49,8 @@ $comments .= '
 		
 		$comments .= '<table id="commentssubmittable">';
 		
-		$user =& JFactory::getUser();
-		//$this->assignRef('thestudy',$this->studydetails->study_id);
-		$comment_access = $params->get('comment_access');
-		$comment_user = $user->usertype;
-		if (!$comment_user) { $comment_user = 0;}
+		
+		
 		if ($comment_access > $comment_user){$comments .= '<tr><td><strong>'.JText::_('You must be registered to post comments').'</strong></td></tr>';}else{
 		$comments .= '<tr><td>';
 		if ($user->name){$full_name = $user->name; } else {$full_name = ''; } 
@@ -53,7 +63,7 @@ $comments .= '
 		<tr><td>'.JText::_('Email (Not displayed): ').'</td><td><input class="text_area" type="text" size="50" name="user_email" id="user_email" value="'.$user->email.'" /></td></tr>
 		<tr><td>'.JText::_('Comment: ').'</td>';
 		//$comments .= $editor->display('comment_text', 'comment_text', '100%', '400', '70', '15').'</td></tr></table>';	
-		$comments .= '<td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr></table>';
+		$comments .= '<td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr>';
 //dump ($params->get('use_captcha'), 'captch: ');
 		if ($params->get('use_captcha') > 0) { 
 		
@@ -90,4 +100,5 @@ $comments .= '
 		$comments .= '</td></tr></table></div>';
         
 	return $comments;
+	} //end else if ($params->get('show_comments') < $comment_user)
 }

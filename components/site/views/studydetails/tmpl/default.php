@@ -137,7 +137,7 @@ if ($params->get('list_items_view') == 0)
 		{?>
         <table id="commentstable" cellspacing="0">
 		<tr><td>
-<?php $Itemid = JRequest::getVar('Itemid');
+<?php $Itemid = JRequest::getVar('Itemid',1);
 		$comments_call = JView::loadHelper('comments');
         $comments = getComments($params, $row, $Itemid);
 		echo $comments;

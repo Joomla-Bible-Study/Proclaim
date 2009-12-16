@@ -46,7 +46,7 @@ include_once($path1.'image.php');?>
             	<?php
 				if (!$row->path2) { $i_path = '../'.$row->media_image_path; }
 			if ($row->path2 && !$this->admin_params->get('media_imagefolder')) { $i_path = '../components/com_biblestudy/images/'.$row->path2; }
-			if ($row->path2 && $this->admin_params->get('media_imagefolder')) { $i_path = '../images'.DS.$this->admin_params->get('media_imagefolder').DS.$row->path2;}
+			if ($row->path2 && $this->admin_params->get('media_imagefolder')) { $i_path = '../images/'.$this->admin_params->get('media_imagefolder').DS.$row->path2;}
 			$image = getImage($i_path);
 			if ($image)
 				{
