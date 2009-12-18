@@ -173,8 +173,9 @@ if ($params->get('list_items_view') == 0)
 			$Itemid = JRequest::getVar('Itemid','','get');
 			if (!$Itemid)
 				{
-				$Itemid='1';
-		 	$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$templatemenuid).'&Itemid='.$Itemid;}
+					$itemid_call = JView::loadHelper('helper');
+					$addItemid = getItemidLink($isplugin=0, $admin_params);
+		 	$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$templatemenuid).'&Itemid='.$addItemid;}
 			 else
 			 {
 			 $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$templatemenuid);	

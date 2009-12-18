@@ -432,7 +432,7 @@ $item = JRequest::getVar('Itemid');
 			if (!$Itemid)
 				{
 					
-				JRequest::setVar('Itemid',$Itemid,'get');
+				//JRequest::setVar('Itemid',$Itemid,'get');
 			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).$addItemid; 
 			 	}
 			 else 

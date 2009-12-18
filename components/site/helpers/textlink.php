@@ -12,8 +12,8 @@ $scripture1 = getScripture($params, $row, $esv=null, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
 $templatemenuid = $params->get('detailstemplateid',1);
 	//This was added to see if we could get AVR to behave properly. In somes cases it errors out with Popup Database Error is there is no Itemid
-	$itemid = JRequest::getVar('Itemid','get');
-	if (!$itemid) {JRequest::setVar('Itemid',1,'get'); $itemid='1';}
+//	$itemid = JRequest::getVar('Itemid','get');
+//	if (!$itemid) {JRequest::setVar('Itemid',1,'get'); $itemid='1';}
 	//End AVR
 //I put in the below check because for some reason when showing teacher and/or header with a textlink caused an error, saying the a JParameter type was being sent. I was not able to figure out where it was coming from, so added this check because if it is a JParameter object, get_object_vars will return with the object, otherwise it returns FALSE
 $object_vars = get_object_vars( $template ) ;
