@@ -437,7 +437,7 @@ $item = JRequest::getVar('Itemid');
 			 	}
 			 else 
 			 	{
-			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).$addItemid; 
+			 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')); 
 		 		}
 			// if ($smenu > 0) {$link .= '&Itemid='.$smenu;}
 			 $column = '<a href="'.$link.'">';
@@ -453,6 +453,12 @@ $item = JRequest::getVar('Itemid');
 			 if ($tmenu > 0) {$link .= '&Itemid='.$tmenu;}
 			 $column .= '<a href="'.$link.'">';
 			 break;
+			 case 0 :
+			 $column = //put the refernce to gettooltip here 
+		   	$column .= '<a href="'.$link.'">';
+		   	$column .= '</span>';
+		   	break;
 		   }
+		   
 		   return $column;
 		}
