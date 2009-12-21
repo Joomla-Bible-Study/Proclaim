@@ -14,12 +14,14 @@
   	$itemidlinkview = JRequest::getVar('itemidlinkview','studieslist','get','word');
   	$itemidlinktype = JRequest::getInt('itemidlinktype','1','get');
   	$itemidlinknumber = JRequest::getInt('itemidlinknumber','','get');
+  	
   }
   else
   {
   	$itemidlinkview = $admin_params->get('itemidlinkview','studieslist');
   	$itemidlinktype = $admin_params->get('itemidlinktype',1);
   	$itemidlinknumber = $admin_params->get('itemidlinknumber',1);
+  	//dump ($itemidlinkview, 'itemlinkview: ');
   }
   $component =& JComponentHelper::getComponent('com_biblestudy');
   $menus  = &JApplication::getMenu('site', array()); 
@@ -35,7 +37,7 @@
    $items  = $menus->getItems('componentid', $component->id);
    foreach ($items as &$menu) {
     if (@$menu->query['view'] == $itemidlinkview) {
-     $itemid = $menu->id;
+     $itemid = $menu->id; 
      break;
     }
    }
@@ -54,7 +56,7 @@
 			   	
 			   	case 1:
    				//Look for an itemid in the com_menu table from the /helpers/helper.php file
-   				$itemid = $itemidprefix.$itemid;
+   				$itemid = $itemidprefix.$itemid; //dump($itemid, 'itemid: ');
    				return ($itemid ? $itemid : '');
    				break;
    				

@@ -202,7 +202,7 @@ defined('_JEXEC') or die('Restricted access');
 		$ftp = JClientHelper::getCredentials('ftp');
 		$client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
 		//$file = $client->path.DS.'templates'.DS.$template.DS.'index.php';
-		$file = $client->path.DS.$podinfo->filename;
+		$file = $client->path.'/'.$podinfo->filename;
 
 
 		// Try to make the template file writeable

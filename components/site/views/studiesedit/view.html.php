@@ -76,7 +76,7 @@ class biblestudyViewstudiesedit extends JView
 		
 		$javascript			= 'onchange="changeDisplayImage();"';
 		$directory = DS.'images/'.$admin_params->get('study_images', 'stories');
-		$studypath = JPATH_SITE.DS.'images/'.$admin_params->get('study_images', 'stories');
+		$studypath = JPATH_SITE.'/images/'.$admin_params->get('study_images', 'stories');
 		$fileList 	= JFolder::files($studypath);
 		foreach($fileList as $key=>$value)
 		{

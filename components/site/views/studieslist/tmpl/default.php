@@ -17,7 +17,7 @@ $messagetype_menu = $this->params->get('messagetype', 1);
 $document =& JFactory::getDocument();
 //$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
-$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
 //dump ($this->admin_params);
 	$user =& JFactory::getUser();

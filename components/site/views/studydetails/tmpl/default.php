@@ -20,8 +20,8 @@ JHTML::_('behavior.tooltip');
 $params = $this->params;
 //dump ($params);
 $document =& JFactory::getDocument();
-$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
+$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
 $row = $this->studydetails;

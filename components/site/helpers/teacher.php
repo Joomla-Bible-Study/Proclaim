@@ -55,7 +55,7 @@ function getTeacher($params, $id, $admin_params)
 					}
 				if ($tresult->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) 
 					{
-						$i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').'/'.$tresult->teacher_thumbnail;
+						$i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$tresult->teacher_thumbnail;
 					}
 			$image = getImage($i_path);
 				if (!$image) 
