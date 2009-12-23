@@ -64,32 +64,9 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	<a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" />';
 	
 	if ($params->get('tooltip') >0) {$linktext .= '</span>';}
-	$linktext .= '</a>';
+	$linktext .= '</a></span>';
 
    return $linktext;
 } // end of if object_vars is FALSE
 }
 
-function getTooltip($rowid, $row, $params, $admin_params, $template)
-	{
-		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
-		include_once($path1.'elements.php');
-		$toolTipArray = array('className'=>'custom');
-		JHTML::_('behavior.mootools');
-		JHTML::_('behavior.tooltip', '.zoomTip', $toolTipArray);
-
-        $linktext = '<span class="zoomTip" title="<strong>'.$params->get('tip_title').' </strong> :: ';
-       	$tip1 = getElementid($params->get('tip_item1'), $row, $params, $admin_params, $template);  
-		$tip2 = getElementid($params->get('tip_item2'), $row, $params, $admin_params, $template);
-		$tip3 = getElementid($params->get('tip_item3'), $row, $params, $admin_params, $template);
-		$tip4 = getElementid($params->get('tip_item4'), $row, $params, $admin_params, $template);
-		$tip5 = getElementid($params->get('tip_item5'), $row, $params, $admin_params, $template);
-		
-		$linktext .= '<strong>'.$params->get('tip_item1_title').'</strong>: '.$tip1->element.'<br />';
-		$linktext .= '<strong>'.$params->get('tip_item2_title').'</strong>: '.$tip2->element.'<br /><br />';
-		$linktext .= '<strong>'.$params->get('tip_item3_title').'</strong>: '.$tip3->element.'<br />';
-		$linktext .= '<strong>'.$params->get('tip_item4_title').'</strong>: '.$tip4->element.'<br />';
-		$linktext .= '<strong>'.$params->get('tip_item5_title').'</strong>: '.$tip5->element;
- 		$linktext .= '">';
-	return $linktext;	
-	}

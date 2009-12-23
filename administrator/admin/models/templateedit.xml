@@ -198,7 +198,9 @@
 			<param name="linkr1c1" type="list" default="0" label="Type of link" description="Choose what this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -241,9 +243,11 @@
 				<option value="3">Columns 2 - 4</option>
 				</param>
 			<param name="linkr1c2" type="list" default="0" label="Type of link" description="Choose what this item should link to - if anything">
-					<option value="0">Not a link</option>
+				<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -287,7 +291,9 @@
 			<param name="linkr1c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -327,7 +333,9 @@
 			<param name="linkr1c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 		</params>
@@ -373,7 +381,9 @@
 			<param name="linkr2c1" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -418,7 +428,9 @@
 			<param name="linkr2c2" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -462,7 +474,9 @@
 			<param name="linkr2c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -508,7 +522,9 @@
 			<param name="linkr2c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 		</params>
@@ -554,7 +570,9 @@
 			<param name="linkr3c1" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -599,7 +617,9 @@
 			<param name="linkr3c2" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -643,7 +663,9 @@
 			<param name="linkr3c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -683,7 +705,9 @@
 			<param name="linkr3c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 		</params>
@@ -729,7 +753,9 @@
 			<param name="linkr4c1" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -774,7 +800,9 @@
 			<param name="linkr4c2" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -818,7 +846,9 @@
 			<param name="linkr4c3" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
@@ -858,7 +888,9 @@
 			<param name="linkr4c4" type="list" default="0" label="Type of link" description="Choose whether this item should link to - if anything">
 					<option value="0">Not a link</option>
 					<option value="1">Link to Details</option>
+					<option value="4">Link to Details with ToolTip</option>
 					<option value="2">Link to 1st Media File</option>
+					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 		</params>

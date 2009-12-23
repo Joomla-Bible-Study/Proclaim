@@ -182,6 +182,6 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			$elementid->element = '';
 			break;
 		}
-		
+		//dump ($elementid, 'elementid: ');
 		return $elementid;
 	}
