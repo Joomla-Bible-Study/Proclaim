@@ -3,14 +3,14 @@
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
-	<creationDate>December 26, 2009</creationDate>
-	<author>Tom Fuller, Eugen Istok, Kyle Holder - Joomla Bible Study</author>
+	<creationDate>January 1, 2010</creationDate>
+	<author>Joomla Bible Study</author>
 	<authorEmail>TomFuller2@gmail.com</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-	<copyright>2008-09 Tom Fuller - Joomla Bible Study</copyright>
+	<copyright>2008-10 Joomla Bible Study</copyright>
 	<license>GNU/GPL</license>
 	<!--  The version string is recorded in the components table -->
-	<version>6.1.1_RC1</version>
+	<version>6.2.0</version>
 	<!-- The description is optional and defaults to the name -->
 	<description>Bible Study Management System</description>
 	<installfile>install.biblestudy.php</installfile>
@@ -41,7 +41,13 @@
 		<filename>assets/css/biblestudy.sav</filename>
 		<filename>sef_ext/com_biblestudy.php</filename>
 		<filename>views/index.html</filename>
-		<filename>views/studieslist/index.html</filename>
+        <filename>views/landingpage/index.html</filename>
+        <filename>views/landingpage/view.html.php</filename>
+        <filename>views/landingpage/metadata.xml</filename>
+        <filename>views/landingpage/tmpl/index.html</filename>
+        <filename>views/landingpage/tmpl/default.php</filename>
+        <filename>views/landingpage/tmpl/default.xml</filename>
+        <filename>views/studieslist/index.html</filename>
 		<filename>views/studieslist/view.html.php</filename>
 		<filename>views/studieslist/metadata.xml</filename>
 		<filename>views/studieslist/tmpl/index.html</filename>
@@ -115,6 +121,7 @@
 		<filename>views/seriesdetail/tmpl/default.php</filename>
 		<filename>views/seriesdetail/tmpl/default.xml</filename>
 		<filename>models/teacheredit.php</filename>
+        <filename>models/landingpage.php</filename>
 		<filename>models/studydetails.php</filename>
 		<filename>models/studieslist.php</filename>
 		<filename>models/mediaplayer.php</filename>
@@ -195,6 +202,7 @@
 		<filename>images/pdf24.png</filename>
 		<filename>images/pdf16.png</filename>
 		<filename>images/dvd.png</filename>
+    <filename>images/mp3.png</filename>
 		<filename>images/cd.png</filename>
 		<filename>images/download.png</filename>
 		<filename>images/billy_sunday11.jpg</filename>
@@ -217,31 +225,37 @@
 		<filename>elements/modulemenuid.php</filename>
 		<filename>elements/serieslisttemplateid.php</filename>
 		<filename>elements/seriesdetailtemplateid.php</filename>
-		<filename>helpers/scripture.php</filename>
+    <filename>elements/editor.php</filename>
+		<filename>helpers/book.php</filename>
+        <filename>helpers/comments.php</filename>
+		<filename>helpers/custom.php</filename>
 		<filename>helpers/date.php</filename>
-		<filename>helpers/filesize.php</filename>
-		<filename>helpers/filepath.php</filename>
-		<filename>helpers/store.php</filename>
-		<filename>helpers/header.php</filename>
-		<filename>helpers/textlink.php</filename>
-		<filename>helpers/mediatable.php</filename>
+		<filename>helpers/duration.php</filename>
 		<filename>helpers/editlisting.php</filename>
 		<filename>helpers/editlink.php</filename>
-		<filename>helpers/teacher.php</filename>
-		<filename>helpers/passage.php</filename>
-		<filename>helpers/comments.php</filename>
-		<filename>helpers/title.php</filename>
-		<filename>helpers/custom.php</filename>
 		<filename>helpers/elements.php</filename>
-		<filename>helpers/studiesedit.php</filename>
-		<filename>helpers/image.php</filename>
-		<filename>helpers/serieslist.php</filename>
-		<filename>helpers/duration.php</filename>
+		<filename>helpers/filesize.php</filename>
+		<filename>helpers/filepath.php</filename>
+		<filename>helpers/header.php</filename>
+        <filename>helpers/image.php</filename>
+        <filename>helpers/index.html</filename>
 		<filename>helpers/listing.php</filename>
-		<filename>helpers/translated.php</filename>
-		<filename>helpers/share.php</filename>
-		<filename>helpers/helper.php</filename>
-		<filename>helpers/index.html</filename>
+        <filename>helpers/location.php</filename>
+    <filename>helpers/media.php</filename>
+        <filename>helpers/mediatable.php</filename>
+        <filename>helpers/messagetype.php</filename>
+        <filename>helpers/passage.php</filename>
+        <filename>helpers/scripture.php</filename>
+        <filename>helpers/share.php</filename>
+        <filename>helpers/studiesedit.php</filename>
+		<filename>helpers/serieslist.php</filename>
+		<filename>helpers/store.php</filename>        
+        <filename>helpers/teacher.php</filename>
+        <filename>helpers/textlink.php</filename>
+        <filename>helpers/title.php</filename>
+		<filename>helpers/topics.php</filename>
+        <filename>helpers/translated.php</filename>
+    <filename>helpers/year.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>
@@ -316,6 +330,7 @@
 			<filename>helpers/bsmCore.php</filename>
 			<filename>helpers/tagDefinitions.helper.php</filename>
 			<filename>helpers/version.php</filename>
+      <filename>helpers/server.php</filename>
 			<filename>models/cssedit.php</filename>
 			<filename>models/teacherlist.php</filename>
 			<filename>models/teacheredit.php</filename>
@@ -516,6 +531,7 @@
 			<filename>tables/admin.php</filename>
 			<filename>tables/shareedit.php</filename>
 			<filename>tables/index.html</filename>
+      <filename>tables/studytopics.php</filename>
 			<filename>convert1.htm</filename>
 			<filename>config.xml</filename>
 			<filename>install.sql</filename>
@@ -537,12 +553,14 @@
 			<filename>help/en-GB/biblestudy.locations.html</filename>
 			<filename>css/general.css</filename>
 			<filename>css/mediafilesedit.css</filename>
-			<filename>js/jquery.js</filename>
+      <filename>css/token-input-facebook.css</filename>
+      <filename>js/jquery.js</filename>
 			<filename>js/noconflict.js</filename>
 			<filename>js/biblestudy.js</filename>
 			<filename>js/plugins/jquery.contextmenu.js</filename>
 			<filename>js/plugins/jquery.selectboxes.js</filename>
 			<filename>js/plugins/jquery.validate.js</filename>
+      <filename>js/plugins/jquery.tokeninput.js</filename>
 			<filename>js/views/mediafilesedit.js</filename>
 			</files>
 		<languages folder="admin/languages">

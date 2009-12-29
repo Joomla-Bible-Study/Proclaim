@@ -53,31 +53,44 @@ if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }
 
 
     </div><!--dropdownmenu-->
-     <table id="seriestable" cellspacing="0">
-      <tbody>
+      <?php
 
-        <?php 
- //This sets the alternativing colors for the background of the table cells
- $class1 = 'bsodd';
- $class2 = 'bseven';
- $oddeven = $class1;
-
- foreach ($this->items as $row) { //Run through each row of the data result from the model
- 	//echo '<table id="bslisttable" cellspacing="0">';
-	if($oddeven == $class1){ //Alternate the color background
-	$oddeven = $class2;
-	} else {
-	$oddeven = $class1;
-	}
-
-	$listing = getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template, $view = 0);
-	//dump ($listing, 'listing: ');
- 	echo $listing;
- 	
- 	//echo '</table>';
+//dump ($params->get('series_wrapcode'), "Series Wrap");
+  switch ($params->get('series_wrapcode')) {
+      case '0':
+        //Do Nothing
+        break;
+      case 'T':
+        //Table
+        echo '<table id="bsms_studytable" width="100%">'; 
+        break;
+      case 'D':
+        //DIV
+        echo '<div>';
+        break;
+      }
+  echo $params->get('series_headercode');
+  
+  foreach ($this->items as $row) { //Run through each row of the data result from the model
+  $listing = getSerieslistExp($row, $params, $oddeven, $this->admin_params, $this->template);
+	echo $listing;
  }
- ?>
- </tbody></table>
+ 
+    switch ($params->get('series_wrapcode')) {
+      case '0':
+        //Do Nothing
+        break;
+      case 'T':
+        //Table
+        echo '</table>'; 
+        break;
+      case 'D':
+        //DIV
+        echo '</div>';
+        break;
+      }
+
+?>
 <div class="listingfooter" >
 	<?php 
       

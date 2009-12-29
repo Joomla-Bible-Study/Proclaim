@@ -348,3 +348,24 @@ function getDirect($media, $width, $height, $duration, $src, $path1, $filesize)
 	   
 	   return $media1_link;
 	}
+	
+	function getMediaRows($study_id) {
+    $query = 'SELECT #_bsms_mediafiles.*,'
+       . ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'
+       . ' #_bsms_folders.id AS fid, #_bsms_folders.folderpath AS fpath,'
+       . ' #_bsms_media.id AS mid, #_bsms_media.media_image_path AS impath, #_bsms_media.media_image_name AS imname, #_bsms_media.path2 AS path2,'
+       . ' #_bsms_media.media_alttext AS malttext,'
+       . ' #_bsms_mimetype.id AS mtid, #_bsms_mimetype.mimetext'
+       . ' FROM #_bsms_mediafiles'
+       . ' LEFT JOIN #_bsms_media ON (#_bsms_media.id = #_bsms_mediafiles.media_image)'
+       . ' LEFT JOIN #_bsms_servers ON (#_bsms_servers.id = #_bsms_mediafiles.server)'
+       . ' LEFT JOIN #_bsms_folders ON (#_bsms_folders.id = #_bsms_mediafiles.path)'
+       . ' LEFT JOIN #_bsms_mimetype ON (#_bsms_mimetype.id = #_bsms_mediafiles.mime_type)'
+       . ' WHERE #_bsms_mediafiles.study_id = '.$study_id.' AND #_bsms_mediafiles.published = 1 ORDER BY ordering ASC, #_bsms_mediafiles.mime_type ASC;';
+        
+    $database = & JFactory::getDBO();
+    $database->setQuery( $query );
+    $database->query();
+    $mediaRows = $database->loadObjectList();
+    return $mediaRows;
+    }

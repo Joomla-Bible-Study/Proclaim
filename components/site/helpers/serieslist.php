@@ -313,6 +313,209 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 			
 			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'">'.' << '.JText::_('Return To Series List').'</a></td></tr>';
 		}
+		
+function getSeriesLandingPage($params, $id, $admin_params)
+{
+	
+	global $mainframe, $option;
+	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	include_once($path1.'image.php');
+	$series = null;
+	$seriesid = null;
+	$templatemenuid = $params->get('templatemenuid');
+	//$templatemenuid = $params->get('teachertemplateid');
+	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+
+		$series = '<table id="bsm_series" width="100%"><tr>';
+		$db	=& JFactory::getDBO();
+		$query = 'select distinct a.* from #__bsms_series a inner join #__bsms_studies b on a.id = b.series_id';
+		
+		$db->setQuery($query);
+		
+        $tresult = $db->loadObjectList();
+        $series .= '<tr>';        
+        foreach ($tresult as &$b) {
+            
+            $series .= '<td width="33%">';
+            if ($params->get('series_linkto') == '0') {
+                $series .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_series='.$b->id.'&filter_book=0&filter_teacher=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
+            } else {
+                $series .= '<a href="index.php?option=com_biblestudy&view=seriesdetail&id='.$b->id.'&templatemenuid='.$templatemenuid.'">';    
+            }
+		    
+		    $series .= $numRows;
+		    $series .= $b->series_text;
+    		
+            $series .='</a>';
+            
+            $series .= '</td>';
+            
+            $i++;
+            if ($i == 3) {
+                $series .= '</tr><tr>';
+                $i = 0;
+            }
+        }
+        if ($i == 1) {
+            $series .= '<td width="33%"></td><td width="33%"></td>';
+        };
+        if ($i == 2) {
+            $series .= '<td width="33%"></td>';
+        };
+        $series .= '</tr>';
+		$series .= '</table>';
+        
+	return $series;
+}
+
+function getSerieslistExp($row, $params, $admin_params)
+{ //dump ($row->series_thumbnail, 'series: ');
+	
+	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	include_once($path1.'elements.php');
+	include_once($path1.'custom.php');
+	include_once($path1.'image.php');
+	
+	$templatemenuid = $params->get('serieslisttemplateid');
+	
+	//dump ($templatemenuid, "Template");
+	//dump ($row, "Row - SeriesList.php");
+
+	$label = $params->get('series_templatecode');
+    $label = str_replace('{{teacher}}', $row->teachername, $label);
+    $label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
+	$label = str_replace('{{title}}', $row->series_text, $label);
+	$label = str_replace('{{description}}', $row->description, $label);
+	$label = str_replace('{{thumbnail}}', '<img src="'. $row->thumb .'" width="' .$row->thumbw .'" height="' . $row->thumbh . '" />', $label);
+	$label = str_replace('{{thumbh}}', $row->thumbh, $label);
+	$label = str_replace('{{thumbw}}', $row->thumbw, $label);
+	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$templatemenuid.'&id='.$row->id, $label);
+	return $label;
+}
+
+function getSeriesDetailsExp($row, $params, $admin_params, $template)
+    {
+        //seriesdesc_template
+        $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	    include_once($path1.'elements.php');
+	    include_once($path1.'scripture.php');
+	    include_once($path1.'custom.php');
+	    include_once($path1.'passage.php');
+	    //include_once($path1.'mediatable.php');
+	    //This will eventually replace mediatable in this context.  Just for clarity.
+	    include_once($path1.'media.php');
+        include_once($path1.'share.php');
+        include_once($path1.'comments.php');
+        include_once($path1.'date.php');
+            
+        $label = $params->get('seriesdesc_template');
+        $label = str_replace('{{teacher}}', $row->teachername, $label);
+        $label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
+        $label = str_replace('{{description}}', $row->description, $label);
+	    $label = str_replace('{{title}}', $row->series_text, $label);
+	    
+	    return $label;
+	
+    }
+
+/*
+
+*/
+function getSeriesstudiesExp($id, $params, $admin_params, $template)
+{
+    $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+    include_once($path1.'listing.php');
+    $path2 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'models'.DS;
+    include_once($path2.'studieslist.php');
+    
+	$limit = '';
+	$nolimit = JRequest::getVar('nolimit', 'int', 0);
+	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
+	if ($nolimit == 1) {$limit = '';}
+	$db	= & JFactory::getDBO();
+	$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = '.$id;
+	$db->setQuery($query);
+	$allrows = $db->loadObjectList();
+	$rows = $db->getAffectedRows();
+	/*
+	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
+		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, #__bsms_series.series_thumbnail, #__bsms_message_type.id AS mid,'
+		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+		. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_locations.id AS lid, #__bsms_locations.location_text'
+		. ' FROM #__bsms_studies'
+		. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
+		. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
+		. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
+		. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
+		. '	LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
+		. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
+		. ' where #__bsms_series.id = ' .$id;
+	*/
+	// 6.2
+	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
+        . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
+        . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+        . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
+        . ' FROM #__bsms_studies'
+        . ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
+        . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
+        . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
+        . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
+        . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
+        . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+        . ' where #__bsms_series.id = ' .$id
+        . ' GROUP BY #__bsms_studies.id'
+        . ' order by studydate desc'
+        ;	
+	$db->setQuery($query);
+	$result = $db->loadObjectList();
+	$numrows = $db->getAffectedRows();
+	
+	$studies = '';
+	
+	switch ($params->get('series_wrapcode')) {
+      case '0':
+        //Do Nothing
+        break;
+      case 'T':
+        //Table
+        $studies .= '<table id="bsms_seriestable" width="100%">'; 
+        break;
+      case 'D':
+        //DIV
+        $studies .= '<div>';
+        break;
+      }
+  echo $params->get('series_headercode');
+  
+	
+	foreach ($result AS $row)
+	{
+	    $studies .= getListingExp($row, $params, $oddeven, $params, $params->seriesdetailtemplateid);	
+	}
+	
+switch ($params->get('series_wrapcode')) {
+      case '0':
+        //Do Nothing
+        break;
+      case 'T':
+        //Table
+        $studies .= '</table>'; 
+        break;
+      case 'D':
+        //DIV
+        $studies .= '</div>';
+        break;
+      }
+  echo $params->get('series_headercode');
+  
+	
+	if ($params->get('series_list_return') > 0) 
+		{		
+			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'">'.' << '.JText::_('Return To Series List').'</a></td></tr>';
+		}
 return $studies;
 }
+
+
 

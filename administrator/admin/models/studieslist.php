@@ -46,6 +46,8 @@ function __construct()
 	{
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
+        //dump ($this->test());
+  		/*
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 			. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
@@ -59,6 +61,22 @@ function __construct()
 			. $where
 			. $orderby
 			;
+	    */
+	    $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
+			  . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
+			  . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+			  . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
+			  . ' FROM #__bsms_studies'
+			  . ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
+			  . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
+			  . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
+			  . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
+			  . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
+			  . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+			  . $where
+			  . ' GROUP BY #__bsms_studies.id'
+			  . $orderby
+			  ;
 		return $query;
 	}
 
@@ -161,7 +179,7 @@ function _buildContentWhere()
 		$where = array();
 
 	if ($filter_topic > 0) {
-			$where[] = ' #__bsms_studies.topics_id = '.(int) $filter_topic;
+			$where[] = ' #__bsms_studytopics.topic_id = '.(int) $filter_topic;
 		}
 		if ($filter_book > 0) {
 			$where[] = ' #__bsms_studies.booknumber = '.(int) $filter_book;
@@ -198,5 +216,6 @@ function _buildContentOrderBy()
 		
 		return $orderby;
 	}
+
 }
 ?>

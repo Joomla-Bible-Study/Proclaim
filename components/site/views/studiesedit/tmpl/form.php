@@ -5,8 +5,18 @@
 
 	
 ?>
+<style>
+  li {list-style-type:none;}
+  
+</style>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
-<div class="col100">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
+
+  <script type="text/javascript" src="administrator/components/com_biblestudy/js/plugins/jquery.tokeninput.js"></script>
+
+  <link rel="stylesheet" href="administrator/components/com_biblestudy/css/token-input-facebook.css" type="text/css" />
+
+  <div class="col100">
 <fieldset class="adminform"><legend><?php echo JText::_( 'Bible Study Details' ); ?></legend>
 <?php $editor =& JFactory::getEditor();
 $user =& JFactory::getUser();
@@ -190,7 +200,16 @@ echo $pane->endPane();
 		<td class="key" align="left"><?php echo JText::_( 'Topic' );?>:</td>
 		<td><?php echo $this->lists['topics_id'];?></td>
 	</tr>
-	<tr>
+  <tr>
+    <td class="key" align="left">
+      <?php echo JText::_( 'Topic' );?>:
+    </td>
+    <td>
+      <input type="text" id="topic_tags" name="topic_tags"></input>
+    </td>
+  </tr>
+
+  <tr>
 		<td class="key" align="left"><?php echo JText::_( 'Message Type' );?>:</td>
 		<td><?php echo $this->lists['messagetype']; ?></td>
 	</tr>
@@ -354,3 +373,36 @@ echo $pane->endPane();
     <?php }
 	else { ?><input type="hidden" name="published" value="0"  /><?php } ?>
     </form>
+<script>
+
+  var vData;
+
+
+  $(document).ready(function() {
+
+  //Get Prepopulate Tags here...
+  $.get("index.php?option=com_biblestudy&task=getTags&format=raw&q=<?php echo $this->studiesedit->id?>", function(data){
+  vData = eval(data);
+  run(vData);
+  });
+
+  function run(d) {
+  $("#topic_tags").tokenInput("index.php?option=com_biblestudy&task=AjaxTags&format=raw", {
+  prePopulate: d,
+  classes: {
+  tokenList: "token-input-list-facebook",
+  token: "token-input-token-facebook",
+  tokenDelete: "token-input-delete-token-facebook",
+  selectedToken: "token-input-selected-token-facebook",
+  highlightedToken: "token-input-highlighted-token-facebook",
+  dropdown: "token-input-dropdown-facebook",
+  dropdownItem: "token-input-dropdown-item-facebook",
+  dropdownItem2: "token-input-dropdown-item2-facebook",
+  selectedDropdownItem: "token-input-selected-dropdown-item-facebook",
+  inputToken: "token-input-input-token-facebook"
+  }
+  });
+  }
+
+  });
+</script>

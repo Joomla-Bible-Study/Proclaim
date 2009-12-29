@@ -23,7 +23,7 @@ function getShare($link, $row, $params, $admin_params)
 	if ($sharerows < 1) { $share = null; return $share; }
 	
 	//Begin to form the table
-	$shareit = '<table id="bsmsshare"><thead>
+	$shareit = '<div id="bsms_share"><table id="bsmsshare"><thead>
 	<tr class="bsmssharetitlerow">
 	<th id="bsmssharetitle" colspan='.$sharerows.'>'.$sharetitle.'</th></tr></thead>
 	<tbody><tr class="bsmsshareiconrow">';
@@ -143,7 +143,7 @@ function getShare($link, $row, $params, $admin_params)
 } //end of foreach
 $shareit .=
 '</tr></tbody>
-</table>';
+</table></div>';
 
 	return $shareit;
 }

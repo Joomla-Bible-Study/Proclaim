@@ -20,7 +20,44 @@ function openConverter1()
 </script>	
 <form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
-<div class="col100">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
+  <script type="text/javascript" src="components/com_biblestudy/js/plugins/jquery.selectboxes.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      getFiles();
+      $("#server").bind("change", function() {
+        getFiles();
+      });
+      $("#path").bind("change", function() {
+        getFiles();
+      });
+    });
+
+    function getFiles() {
+
+    $("#filename").removeOption(/./);
+    t = $("#tempFilename").val();
+
+    $.get("index.php?option=com_biblestudy&task=getFileList&format=raw&server=" + $("#server").val() + "&path=" + $("#path").val(), function(data){
+    
+    vData = eval(data);
+    
+    for (i=0; i < vData.length; i++)
+        {
+          if (vData[i].substring(0,1) != ".") {
+            $("#filename").addOption(vData[i], vData[i]);
+          }
+        }
+      
+      $("#filename").sortOptions(false);
+    
+      $("#filename").selectOptions(t);      
+    
+      });
+    }
+
+  </script>
+  <div class="col100">
 	<fieldset class="adminform">
 		<legend><?php echo JText::_( 'Media File Details' ); ?></legend>
 		      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>"/>
@@ -188,9 +225,20 @@ echo $pane->endPane();
             <tr>
               <td class="key" ><?php echo JText::_('Path or Folder: ');?></td><td><?php echo $this->lists['path'];?></td>
             </tr>
-            <tr>
-              <td class="key" ><?php echo JText::_('Filename: ');?></td><td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->filename;?>"  /></td></tr>
-              <tr><td class="key"><?php echo JText::_( ' Or Upload File: ' ); ?></td><td><input type="file" id="file" name="file" size="75"/><?php echo JText::_(' Try also using the Upload button at the top. You will still have to enter the server/folder/filename information.');?></td>
+         <!--   <tr>
+              <td class="key" ><?php echo JText::_('Filename: ');?></td><td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->filename;?>"  /></td></tr>-->
+      <tr>
+        <td class="key" >
+          <?php echo JText::_('Filename: ');?>
+        </td>
+        <td>
+          <input type="hidden" id='tempFilename' value="<?php echo $this->mediafilesedit->filename;?>"></input>
+          <select id="filename" name="filename" class="">
+          </select>
+        </td>
+      </tr>
+
+      <tr><td class="key"><?php echo JText::_( ' Or Upload File: ' ); ?></td><td><input type="file" id="file" name="file" size="75"/><?php echo JText::_(' Try also using the Upload button at the top. You will still have to enter the server/folder/filename information.');?></td>
             </tr>
             <tr>
               <td class="key"></td><td><?php echo JText::_('Maximum upload allowed in your php.ini file using post_max_size is: ').ini_get('upload_max_filesize');?></td>

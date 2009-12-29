@@ -47,6 +47,9 @@ class biblestudyModelserversedit extends JModel
 			$this->_data->id = 0;
 			$this->_data->server_name = null;
 			$this->_data->server_path = null;
+			$this->_data->server_type = null;
+			$this->_data->ftp_username = null;
+			$this->_data->ftp_password = null;
 			//TF added this
 			$this->_data->published = 0;
 		}

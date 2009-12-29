@@ -33,7 +33,7 @@ function com_install()
             	<td width = "100%" valign = "top" style = "padding:10px;">
                 
 <?php 
-$installresults = array();
+
 $database	= & JFactory::getDBO();
 
 //Change the admin menu icon
@@ -51,10 +51,7 @@ $tables = $database->getTableList();
 	$bsms	= isset( $fields[$tn]['id'] );
 	$isdb = '';
 	if ($bsms) { $isdb =  'Database is installed. <br />'; }
-	else { 
-		$isdb = 'Database not installed. Upgrade halted. Please uninstall and check MySQL.<br />'; 
-		$installresults[] = 'Database not installed. Upgrade halted. Please uninstall and check MySQL.';
-		}
+	else { $isdb = 'Database not installed. Upgrade halted. Please uninstall and check MySQL.<br />'; }
 if ($bsms) { //this is the beginninng of the install block. It won't go if the database isn't installed at all
 
 // Sample Data install
@@ -265,7 +262,6 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
 		$db608 = $database->loadResult();
 		$dbmessage =  'The current database schema for Bible Study is: '.$db608.'<br>';
-		$installresults[] = 'Database version 608 installed';
 //} //End check of $schema_version == 600	
 // Begin $schema_version 611
 $tn = '#__bsms_studies';
@@ -293,7 +289,6 @@ $tn = '#__bsms_studies';
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
 		$db611 = $database->loadResult();
 		$dbmessage =  'The current database schema for Bible Study is: '.$db611.'<br>';
-		$installresults[] = 'Database version 611 installed';
 		}
 // End version 611 upgrade
 // Begin version 612 upgrade
@@ -500,7 +495,6 @@ series_detail_islink4=0
 ', 'Default','textfile24.png','pdf24.png');
 	");	
 	$database->query();
-	$installresults[] = 'Default template data installed';
 	}
 $tn = '#__bsms_studies';
 	$fields = $database->getTableFields( array( $tn ) );
@@ -614,16 +608,14 @@ $fieldcheck = isset($fields[$tn]['params']);
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
 		$db612 = $database->loadResult();
 		$dbmessage =  'The current database schema for Bible Study is: '.$db612.'<br>';
-		$installresults[] = 'Database version 612 installed';
 		
 //We insert a teacher row into a fresh database
 $database->setQuery ("SELECT id FROM #__bsms_teachers");
 	$database->query();
 	$isitnew = $database->loadResult();
 	if (!$isitnew){
-$database->setQuery ("INSERT INTO #__bsms_teachers VALUES (1,'','', 'Billy Sunday','Pastor','555-555-5555','billy@sunday.com','http://billysunday.com','William Ashley Sunday (November 19 1862â€“November 6 1935) was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ','components/com_biblestudy/images/billy_sunday11.jpg','276','197','components/com_biblestudy/images/images.jpg','101','141','Billy Sunday: 1862-1935',0,1,1,1)");
+$database->setQuery ("INSERT INTO #__bsms_teachers VALUES (1,'','', 'Billy Sunday','Pastor','555-555-5555','billy@sunday.com','http://billysunday.com','William Ashley Sunday (November 19 1862–November 6 1935) was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ','components/com_biblestudy/images/billy_sunday11.jpg','276','197','components/com_biblestudy/images/images.jpg','101','141','Billy Sunday: 1862-1935',0,1,1,1)");
 $database->query();
-$installresults[] = 'Teacher sample data installed';
 	}
 //We insert a mediafile row into a fresh database
 $database->setQuery ("SELECT id FROM #__bsms_mediafiles");
@@ -666,7 +658,6 @@ allow_entry_study=0
 entry_access=23
 study_publish=0')");
 		$database->query();
-		$installresults[] = 'Administration data installed';
 	}
 //Check to see if the css file exists. If it does, don't do anything. If not, install the css file
 jimport('joomla.filesystem.file');
@@ -676,7 +667,6 @@ $cssexists = JFile::exists($dest);
 if (!$cssexists)
 	{
 		JFile::copy($src, $dest);
-		$installresults[] = 'CSS data installed';
 	}
 
 //End version 612 upgrade
@@ -693,14 +683,12 @@ $database->setQuery ("SELECT id FROM #__bsms_share");
 (3, 'Delicious', 'mainlink=http://delicious.com/save?\r\nitem1prefix=url=\r\nitem1=200\r\nitem1custom=\r\nitem2prefix=&title=\r\nitem2=5\r\nitem2custom=\r\nitem3prefix=\r\nitem3=6\r\nitem3custom=\r\nitem4prefix=\r\nitem4=\r\nitem4custom=\r\nuse_bitly=0\r\nusername=\r\napi=\r\nshareimage=components/com_biblestudy/images/delicious.png\r\nshareimagew=33px\r\nshareimageh=33px\r\ntotalcharacters=\r\nalttext=Delicious', 1),
 (4, 'MySpace', 'mainlink=http://www.myspace.com/index.cfm?\r\nitem1prefix=fuseaction=postto&t=\r\nitem1=5\r\nitem1custom=\r\nitem2prefix=&c=\r\nitem2=6\r\nitem2custom=\r\nitem3prefix=&u=\r\nitem3=200\r\nitem3custom=\r\nitem4prefix=&l=1\r\nitem4=\r\nitem4custom=\r\nuse_bitly=0\r\nusername=\r\napi=\r\nshareimage=components/com_biblestudy/images/myspace.png\r\nshareimagew=33px\r\nshareimageh=33px\r\ntotalcharacters=\r\nalttext=MySpace', 1)");
 $database->query();
-$installresults[] = 'Social Networking data installed';
 	}
 
 //Read current css file, add share information if not already there, write and close
 $cssread = JFile::read($dest);
-$shareexists = 0;
-$shareexists = substr_count($cssread,'#bsmsshare');
-if ($shareexists < 1)
+$shareexists = stristr($csread,'#bsmsshare');
+if (!$shareexists)
 {
 	
 	$cssshared = '
@@ -722,10 +710,8 @@ if ($shareexists < 1)
 	font-weight:bold;
 }';
 	$cssread = $cssread.$cssshared;
-	$errcss = '';
 	if (!JFile::write($dest, $cssread))
-	{$errcss = 'There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org';
-	$installresults[] = 'There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org';}
+	{$errcss = 'There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org';}
 }
 $database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
 		$database->query();
@@ -734,56 +720,13 @@ $database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
 		$db613 = $database->loadResult();
 		$dbmessage613 =  'Upgraded database to version: '.$db613.'<br>';
-		$installresults[] = 'Database version 613 installed';
 //End of upgrade to databse version 613
-
-//Begin upgrade to 614 database version - this is the first one for component 6.2
-//6.2.0 Upgrade
-$database->setQuery ("CREATE TABLE IF NOT EXISTS #__bsms_studytopics (id INT (3) NOT NULL AUTO_INCREMENT, study_id INT (3) DEFAULT '0' NOT NULL, topic_id INT (3) DEFAULT '0' NOT NULL, PRIMARY KEY(id), UNIQUE(id), INDEX(id)) ENGINE = MYISAM CHARACTER SET `utf8`;");
-$database->query();
-
-$tn = '#__bsms_studytopics';
-$fields = $database->getTableFields( array( $tn ) );
-$fieldcheck = false;	
-$fieldcheck = isset($fields[$tn]['server_type']);
-	if	 (!$fieldcheck)
-	{
-		$database->setQuery("ALTER TABLE jos_bsms_servers ADD server_type CHAR(5) DEFAULT 'local'");
-$database->query();
-	}
-$fieldcheck = isset($fields[$tn]['ftp_username']);
-	if (!$fieldcheck)
-	{
-		$database->setQuery("ALTER TABLE jos_bsms_servers ADD ftp_username CHAR(255)");
-$database->query();
-	}
-$fieldcheck = isset($fields[$tn]['ftp_password']);
-	if (!$fieldcheck)
-	{
-		$database->setQuery("ALTER TABLE jos_bsms_servers ADD ftp_password CHAR(255)");
-$database->query();
-	}
-$database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
-		$database->query();
-	$database->setQuery ("INSERT IGNORE INTO #__bsms_schemaVersion VALUES (1, 614)");
-		$database->query();
-		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
-		$installresults[] = 'Database version 614 installed';
-//End 614 upgrade
-?><p>
-<?php echo '<strong>Messages: </strong><br>';
-foreach($installresults as $key => $value)
-{
-	echo $value.'<br>';
-}
-?></p>
+?>
 <div class="header"><?php 
 global $mainframe; ?>
-
-<img src = "<?php echo $mainframe->getCfg("live_site"); ?>/components/com_biblestudy/images/openbible.png" alt = "" border = "0">
-Congratulations, Bible Study Message Manager has been installed successfully. </div>
+<img src = "<?php echo $mainframe->getCfg("live_site"); ?>/components/com_biblestudy/images/openbible.png" alt = "" border = "0">Congratulations, Bible Study Message Manager has been installed successfully. </div>
 <p>
-
+<?php if ($errcss) {echo $errcss.'<br>';} echo $isdb.'<br>'.$dbmessage.'<br>'.$dbmessage613; ?>
 <p>
 Welcome to the Bible Study Message System. Please note if there are any error messages above. This component is designed to help your church communicate the gospel and teachings in the Word of God. com_biblestudy allows you to enter detailed information about the studies given and links to multimedia content you have uploaded to your server. You can also display full text or notes. All this is searchable in many different ways and you have a lot of control over how much information is displayed on the front end. </p>
 <p>

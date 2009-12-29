@@ -21,22 +21,34 @@ $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/bibl
 $params = $this->params;
 //dump ($this->admin_params);
 	$user =& JFactory::getUser();
+  //dump ($user, "U");
 	$entry_user = $user->get('gid');
+  //dump ($entry_user, "EU");
 	if (!$entry_user) { $entry_user = 0;}
-	$entry_access = $this->admin_params->get('entry_access');
+  //dump ($this->admin_params->get('entry_access'), "EA");
+
+$entry_access = $this->admin_params->get('entry_access');
 	if (!$entry_access) {$entry_access = 23;}
 	$allow_entry = $this->admin_params->get('allow_entry_study');
-	//dump ($entry_access, 'entry_access: ');
-	if (($allow_entry > 0) && ($entry_access <= $entry_user)) 
+	//dump ($allow_entry, 'allow_entry: ');
+ 	if (($allow_entry > 0) && ($entry_access <= $entry_user)) 
 			{?>
 			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>
 			<?php 
 			$studiesedit_call = JView::loadHelper('studiesedit');
-			$studiesedit = getStudiesedit($row = null, $params);
+			$studiesedit = getStudiesedit($row, $params);
 			echo $studiesedit;
 			}
 
 $listingcall = JView::loadHelper('listing');
+
+$menuitemid = JRequest::getInt( 'Itemid' );
+  if ($menuitemid)
+  {
+    $menu = JSite::getMenu();
+    $menuparams = $menu->getParams( $menuitemid );
+  }
+
 
 ?>
 <form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
@@ -44,13 +56,13 @@ $listingcall = JView::loadHelper('listing');
 <!--<tbody><tr>-->
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
   
-    <div id="bsheader">
+    <div id="bsms_header">
       <h1 class="componentheading">
 <?php
-     if ($this->params->get( 'show_page_image' ) >0) { 
+     if ($this->params->get( 'show_page_image' ) >0) {
      
      ?>
-      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" alt="Bible Study" />
+      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" />
     <?php //End of column for logo
     }
     ?>
@@ -59,28 +71,29 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     echo $this->params->get('page_title');
     }
 	?>
-      </h1>
-<?php 
-
-if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
+    </h1>
+<?php if ($params->get('listteachers') )
 	{	
 	$teacher_call = JView::loadHelper('teacher');
 	$teacher = getTeacher($params, $id=null, $this->admin_params);
-	if ($teacher) {echo $teacher;}
-	}
-
-	?>    
+	//if ($teacher) {echo $teacher;}
+	}?>    
     </div><!--header-->
     
-    <div id="listintro"><table id="listintro"><tr><td><p>
-    <?php if ($params->get('intro_show') == 1) { echo $params->get('list_intro');}?>
-   </p></td></tr></table> </div>
+    <div id="listintro">
+    <?php if ($params->get('intro_show') > 0) { echo $params->get('list_intro');}?>
+    </div>
     <div id="bsdropdownmenu">
 
 <?php 
 
 if (($this->params->get('show_locations_search') > 0 && !($location_menu)) || $this->params->get('show_locations_search') > 1) { echo $this->lists['locations'];}
 if (($this->params->get('show_book_search') > 0 && !($book_menu)) || $this->params->get('show_book_search') > 1) { echo $this->lists['books'];  }
+if (JRequest::getInt('filter_book') >0 ) {
+  if (($this->params->get('show_book_search') > 0 && !($book_menu)) || $this->params->get('show_book_search') > 1) { echo $this->lists['chapters'];  }
+} else {
+  
+}
 if (($this->params->get('show_teacher_search') > 0 && !($teacher_menu)) || $this->params->get('show_teacher_search') > 1) { echo $this->lists['teacher_id'];  }   
 if (($this->params->get('show_series_search') > 0 && !($series_menu)) || $this->params->get('show_series_search') > 1) { echo $this->lists['seriesid'];  }   
 if (($this->params->get('show_type_search') > 0 && !($messagetype_menu)) || $this->params->get('show_type_search') > 1) { echo $this->lists['messagetypeid'];  }   
@@ -92,34 +105,62 @@ if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->pa
 
 
     </div><!--dropdownmenu-->
-     <table id="bslisttable" cellspacing="0">
-     <?php 
-	 
-     $headerCall = JView::loadHelper('header');
-     $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule=0);
-	 echo $header;
-     ?>
-      <tbody>
+<?php
 
-        <?php 
- //This sets the alternativing colors for the background of the table cells
- $class1 = 'bsodd';
- $class2 = 'bseven';
- $oddeven = $class1;
-
- foreach ($this->items as $row) { //Run through each row of the data result from the model
-	if($oddeven == $class1){ //Alternate the color background
-	$oddeven = $class2;
-	} else {
-	$oddeven = $class1;
-	}
-
-	$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
- 	echo $listing;
+  switch ($params->get('wrapcode')) {
+      case '0':
+        //Do Nothing
+        break;
+      case 'T':
+        //Table
+        echo '<table id="bsms_studytable" width="100%">'; 
+        break;
+      case 'D':
+        //DIV
+        echo '<div>';
+        break;
+      }
+  echo $params->get('headercode');
+  
+  
+  foreach ($this->items as $row) { //Run through each row of the data result from the model
+  
+  
+  $listing = '';
+  if (($allow_entry > 0) && ($entry_access <= $entry_user)) {
+    
+    $listing .= "<tr><td style='background-color:#FAF1EB;' align=center>";
+    $listing .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$row->id.'">'.JText::_(' [Edit] ').'</a>';
+    $listing .= "</td>";
+    $listing .= "<td><table>";
+  }
+  $listing .= getListingExp($row, $params, $oddeven, $this->admin_params, $this->template);
+  
+  if (($allow_entry > 0) && ($entry_access <= $entry_user)) {
+    $listing .= "</table></td></tr>";
+  }
+  
+	echo $listing;
  }
- ?>
- </tbody></table>
-<div class="listingfooter" >
+ 
+    switch ($params->get('wrapcode')) {
+      case '0':
+        //Do Nothing
+        break;
+      case 'T':
+        //Table
+        echo '</table>'; 
+        break;
+      case 'D':
+        //DIV
+        echo '</div>';
+        break;
+      }
+//dump ($this->items);
+?>
+
+
+      <div class="listingfooter" >
 	<?php 
       
       echo $this->pagination->getPagesLinks();

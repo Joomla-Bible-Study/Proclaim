@@ -210,6 +210,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 PRIMARY KEY (`id`)
 ) ENGINE = MYISAM CHARACTER SET `utf8`;
 
+CREATE TABLE IF NOT EXISTS #__bsms_studytopics (
+id INT (3) NOT NULL AUTO_INCREMENT, 
+study_id INT (3) DEFAULT '0' NOT NULL, 
+topic_id INT (3) DEFAULT '0' NOT NULL, 
+PRIMARY KEY(id), 
+UNIQUE(id), INDEX(id)
+) ENGINE = MYISAM CHARACTER SET `utf8`; 
 --
 -- Table structure for table `jos_bsms_share`
 --

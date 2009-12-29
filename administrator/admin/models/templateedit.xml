@@ -978,6 +978,7 @@
 				<param name="body" type="text" default="Comments entered." size="40" label="Body" description="" />
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
+				 <param name="study_detailtemplate" type="editor" rows="10" cols="100" label="Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;Codes:&lt;BR&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;" />
 		</params>
 		<params group="TEACHER">
 			<param name="teacher_title" type="text" default="Our Teachers" label="List Page Title" description="Text to show on teacher list display page for title" />
@@ -2001,4 +2002,119 @@
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
 		</params>
-	</root>
+	<params group="LANDINGPAGE" addpath="/components/com_biblestudy/elements">
+    <param type="list" name="headingorder_1" default="teacher" label="Heading 1">
+      <option value="teacher">Teacher</option>
+      <option value="series">Series</option>
+      <option value="book">Books</option>
+      <option value="topics">Topics</option>
+      <option value="locations">Locations</option>
+      <option value="types">Message Types</option>
+      <option value="years">Years</option>
+    </param>
+    <param type="list" name="headingorder_2" default="series" label="Heading 2">
+      <option value="teacher">Teacher</option>
+      <option value="series">Series</option>
+      <option value="book">Books</option>
+      <option value="topics">Topics</option>
+      <option value="locations">Locations</option>
+      <option value="messagetype">Message Types</option>
+      <option value="years">Years</option>
+    </param>
+    <param type="list" name="headingorder_3" default="books" label="Heading 3">
+      <option value="teacher">Teacher</option>
+      <option value="series">Series</option>
+      <option value="book">Books</option>
+      <option value="topics">Topics</option>
+      <option value="locations">Locations</option>
+      <option value="messagetype">Message Types</option>
+      <option value="years">Years</option>
+    </param>
+    <param type="list" name="headingorder_4" default="topics" label="Heading 4">
+      <option value="teacher">Teacher</option>
+      <option value="series">Series</option>
+      <option value="book">Books</option>
+      <option value="topics">Topics</option>
+      <option value="locations">Locations</option>
+      <option value="messagetype">Message Types</option>
+      <option value="years">Years</option>
+    </param>
+    <param type="list" name="headingorder_5" default="locations" label="Heading 5">
+      <option value="teacher">Teacher</option>
+      <option value="series">Series</option>
+      <option value="book">Books</option>
+      <option value="topics">Topics</option>
+      <option value="locations">Locations</option>
+      <option value="messagetype">Message Types</option>
+      <option value="years">Years</option>
+    </param>
+    <param type="list" name="headingorder_6" default="types" label="Heading 6">
+      <option value="teacher">Teacher</option>
+      <option value="series">Series</option>
+      <option value="book">Books</option>
+      <option value="topics">Topics</option>
+      <option value="locations">Locations</option>
+      <option value="messagetype">Message Types</option>
+      <option value="years">Years</option>
+    </param>
+    <param type="list" name="headingorder_7" default="years" label="Heading 7">
+      <option value="teacher">Teacher</option>
+      <option value="series">Series</option>
+      <option value="book">Books</option>
+      <option value="topics">Topics</option>
+      <option value="locations">Locations</option>
+      <option value="messagetype">Message Types</option>
+      <option value="years">Years</option>
+    </param>
+    <param type="spacer"></param>
+    <param name="showteacher" type="radio" label="Show Teachers" default="1">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="teacherlabel" type="text" label="Teachers Label" default="Speakers" size="45"></param>
+    <param name="linkto" type="radio" label="Link To View" default="1">
+      <option value="0">Studies List</option>
+      <option value="1">Teacher Display</option>
+    </param>
+    <param type="spacer"></param>
+    <param name="showseries" type="radio" label="Show Series" default="1">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="serieslabel" type="text" label="Series Label" default="Series" size="45"></param>
+    <param name="series_linkto" type="radio" label="Link To View" default="0">
+      <option value="0">Studies List</option>
+      <option value="1">Series Details</option>
+    </param>
+    <param type="spacer"></param>
+    <param name="showbook" type="radio" label="Show Books" default="1">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="booklabel" type="text" label="Books Label" default="Books" size="45"></param>
+    <param type="spacer"></param>
+    <param name="showtopics" type="radio" label="Show Topics" default="1">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="topicslabel" type="text" label="Topics Label" default="Topics" size="45"></param>
+    <param type="spacer"></param>
+    <param name="showlocations" type="radio" label="Show Locations" default="1">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="locationslabel" type="text" label="Locations Label" default="Locations" size="45"></param>
+    <param type="spacer"></param>
+    <param name="showmessagetype" type="radio" label="Show Message Types" default="1">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="messagetypelabel" type="text" label="Message Types Label" default="Message Types" size="45"></param>
+    <param type="spacer"></param>
+    <param name="showyears" type="radio" label="Show Years" default="1">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="yearslabel" type="text" label="Years Label" default="Years" size="45"></param>
+  </params>
+</root>

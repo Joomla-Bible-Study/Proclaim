@@ -15,6 +15,7 @@ function getFilepath($id3, $idfield, $mime)
 	  . ' WHERE '.$idfield.' = '.$id3.' AND #__bsms_mediafiles.published = 1 '.$mime;
 	  $database->setQuery( $query ); 
 	  $filepathresults = $database->loadObject(); //dump ($filepathresults);
+	  //dump ($filepathresults, "FPR");
 	  //$number_rows = $database->getAffectedRows($query); dump ($number_rows);
 	  //if ($database->getNumRows() > 0) 
 	  if ($filepathresults)

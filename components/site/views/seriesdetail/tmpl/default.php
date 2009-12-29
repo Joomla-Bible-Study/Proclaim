@@ -11,7 +11,7 @@ $document =& JFactory::getDocument();
 //$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-//$params = $this->params;
+$params = $this->params;
 $url = $this->params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}	
 $listingcall = JView::loadHelper('serieslist');
@@ -22,33 +22,16 @@ $listingcall = JView::loadHelper('serieslist');
 <!--<tbody><tr>-->
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
   
+<?php 
     
-   
-<!--header-->
+    //dump ($this->items);
+    echo getSeriesDetailsExp($this->items, $this->params, $this->admin_params, $this->template);
     
-    
-   
-     <table id="seriestable" cellspacing="0">
-      <tbody>
-
-        <?php 
- 
-	$listing = getSerieslist($this->items, $this->params, $oddeven = 'bsodd', $this->admin_params, $this->template, $view = 1);
-	//dump ($listing, 'listing: ');
- 	echo $listing;
- 	
- 	//echo '</table>';
+    $studies = getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);	echo $listing;
+    echo $studies;
  
  ?>
- </tbody></table>
-<table id="seriesstudytable" cellspacing="0">
-<tbody>
-<?php 
-$studies = getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
-echo $studies;
-
-?>
-</tbody></table>
+        
   </div><!--end of bspagecontainer div-->
   <input name="option" value="com_biblestudy" type="hidden">
   <input name="task" value="" type="hidden">
@@ -56,4 +39,5 @@ echo $studies;
   <input name="controller" value="seriesdetail" type="hidden">
   
 </form>
+
 

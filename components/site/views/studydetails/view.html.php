@@ -33,8 +33,11 @@ class biblestudyViewstudydetails extends JView
 		$params = new JParameter($template[0]->params);
 		//dump ($params);
 		$studydetails		=& $this->get('Data');
+		//dump ($studydetails, "SD");
 		$admin =& $this->get('Admin');
+		
 		$admin_params = new JParameter($admin[0]->params);
+		
 		$this->assignRef('admin_params', $admin_params);
 		
 		
@@ -93,13 +96,14 @@ class biblestudyViewstudydetails extends JView
 			
 		} //end if $linkit
 		
+		/*
 		//Prepares a link string for use in social networking
 		$u =& JURI::getInstance();
 		$detailslink = htmlspecialchars($u->toString());
 		$detailslink = JRoute::_($detailslink); 
 		$this->assignRef('detailslink', $detailslink);
 		//End social networking
-	 	
+	 	*/
                 // End process prepare content plugins
 		$this->assignRef('template', $template);
 		$this->assignRef('print', $print);

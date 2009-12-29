@@ -39,9 +39,9 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		<?php //echo $this->lists['sorting'];?>
          
                           <?php 
-						$query8 = 'SELECT DISTINCT #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text'
-						. ' FROM #__bsms_studies'
-						. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
+						$query8 = 'SELECT DISTINCT #__bsms_studytopics.topic_id AS value, #__bsms_topics.topic_text AS text'
+						. ' FROM #__bsms_studytopics'
+						. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
 						. ' WHERE #__bsms_topics.published = 1'
 						. ' ORDER BY #__bsms_topics.topic_text ASC';
 						$database->setQuery( $query8 );

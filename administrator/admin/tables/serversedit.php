@@ -23,6 +23,9 @@ class Tableserversedit extends JTable
 	 */
 	var $server_name = null;
 	var $server_path = null;
+	var $server_type = null;
+	var $ftp_username = null;
+	var $ftp_password = null;
 
 	/**
 	 * Constructor

@@ -94,6 +94,7 @@ class biblestudyModelstudiesedit extends JModel {
 		return $this->_data;
 	}
 
+
 	/**
 	 * Method to store a record
 	 *
@@ -115,6 +116,9 @@ class biblestudyModelstudiesedit extends JModel {
 		$data['studyintro'] = str_replace('"',"'",$data['studyintro']);
 		$data['studynumber'] = str_replace('"',"'",$data['studynumber']);
 		$data['secondary_reference'] = str_replace('"',"'",$data['secondary_reference']);
+   		$data['studytext'] = JRequest::getVar( 'studytext', '', 'post', 'string', JREQUEST_ALLOWRAW );
+   		
+   		
 
 		foreach($data['scripture'] as $scripture) {
 			if(!$data['text'][key($data['scripture'])] == ''){
@@ -149,8 +153,85 @@ class biblestudyModelstudiesedit extends JModel {
 			//return false;
 		}
 
+        //Get Tags
+   		$vTags = JRequest::getVar( 'topic_tags', '', 'post', 'string', JREQUEST_ALLOWRAW );
+   		$iTags = explode(",", $vTags);
+        
+        JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'tables');
+        
+        //$tagRow->load( 1 );
+            
+        foreach ($iTags as $aTag) {
+            if (is_numeric($aTag)) {
+                //It's an existing tag.  Add it
+                if ($aTag != "") {
+                
+                    $tagRow =& JTable::getInstance('studytopics', 'Table');
+                    
+                    //dump ($isDup, "D");
+	    
+	                $isDup = $this->isDuplicate($row->id, $aTag);
+	                
+                    if (!$isDup) {
+                        $tagRow->study_id = $row->id;
+                        $tagRow->topic_id = $aTag;        
+                
+                        if (!$tagRow->store()) {
+			                $this->setError($this->_db->getErrorMsg());
+			                return false;
+		                }
+                    }
+                }
+            } else {
+                //It's a new tag.  Gotta insert it into the Topics table.
+                if ($aTag != "") {
+                $topicRow =& JTable::getInstance('topicsedit', 'Table');
+                $tempText = $aTag;
+                $tempText = str_replace("0_", "", $tempText);
+                $topicRow->topic_text = $tempText;
+                $topicRow->published = 1;
+                if (!$topicRow->store()) {
+		            $this->setError($this->_db->getErrorMsg());
+		            return false;
+	            }
+                
+                //Gotta somehow make sure this isn't a duplicate...
+                $tagRow =& JTable::getInstance('studytopics', 'Table');
+                $tagRow->study_id = $row->id;
+                $tagRow->topic_id = $topicRow->id;        
+                
+                $isDup = $this->isDuplicate($row->id, $aTag);
+                
+                if (!$isDup) {
+                    if (!$tagRow->store()) {
+		                $this->setError($this->_db->getErrorMsg());
+		                return false;
+	                }
+	            }
+	            }
+            }
+        }
 		return true;
 	}
+	
+    function isDuplicate($study_id, $topic_id)
+    {
+        $db	=& JFactory::getDBO();
+        $query = 'select * from #__bsms_studytopics where study_id = '.$study_id.' and topic_id = '.$topic_id;
+    		
+        $db->setQuery($query);
+    	
+        $tresult = $db->loadObject();
+        
+        if (empty($tresult)) {
+          return false;
+        } else {
+          return true;
+        }
+        
+    }        
+
+	
 
 	/**
 	 * Method to delete record(s)
@@ -213,5 +294,6 @@ class biblestudyModelstudiesedit extends JModel {
 		}
 		return $this->_admin;
 	}
+	
 }
 ?>

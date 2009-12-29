@@ -39,5 +39,10 @@ switch ($params->get('date_format'))
 		$date = date('n/j', strtotime($studydate));
 		break;
 	}
+	
+	$customDate = $params->get('custom_date_format');
+	if ($customDate != '') {
+	    $date = date($customDate, strtotime($studydate));
+	}
    return $date;
 }

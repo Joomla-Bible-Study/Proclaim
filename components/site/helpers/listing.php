@@ -506,3 +506,135 @@ $Itemid = JRequest::getVar('Itemid');
 		   
 		   return $column;
 		}
+		
+		function getListingExp($row, $params, $oddeven, $admin_params, $template)
+{
+	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	include_once($path1.'elements.php');
+	include_once($path1.'scripture.php');
+	include_once($path1.'custom.php');
+	include_once($path1.'date.php');
+	include_once($path1.'media.php');
+	
+    dump (JPATH_SITE);
+    $label = $params->get('templatecode');
+    $label = str_replace('{{teacher}}', $row->teachername, $label);
+	$label = str_replace('{{title}}', $row->studytitle, $label);
+	$label = str_replace('{{date}}', getStudydate($params, $row->studydate), $label);
+	$label = str_replace('{{studyintro}}', $row->studyintro, $label);
+	$label = str_replace('{{scripture}}', getScripture($params, $row, 0, 1), $label);
+	$label = str_replace('{{topics}}', $row->topic_text, $label);
+    $label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id .'&templatemenuid='.$template, $label);
+    $label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
+    $label = str_replace('{{thumbnail}}', '<img src="images/'.$admin_params->get('study_images')."/".$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);
+    $label = str_replace('{{seriestext}}', $row->series_text, $label);
+    $label = str_replace('{{messagetype}}', $row->message_type, $label);
+    $label = str_replace('{{bookname}}', $row->bookname, $label);
+    $label = str_replace('{{topics}}', $row->topic_text, $label);
+//    		$social = getShare($this->detailslink, $row, $params, $this->admin_params);
+//		echo $social;
+    $media = getMedia($row->id);
+
+    $mediaTable = "<table id='bsms_mediatable'><TR>";
+    foreach ($media as $item) {
+        //Loop through the media items and see what each is.
+        $mediaTable .= "<td>".getDownloadLink ($item, $params, $admin_params)."</td>";
+    }
+    $mediaTable .= "<td>".getPdf($row, $params, $admin_params)."</td>";
+    $mediaTable .= "</TR></table>";
+    
+    $label = str_replace('{{media}}', $mediaTable, $label);
+    //Need to add template items for media...
+    
+	return $label;
+}
+
+function getStudyExp($row, $params, $admin_params, $template)
+{
+    $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	include_once($path1.'elements.php');
+	include_once($path1.'scripture.php');
+	include_once($path1.'custom.php');
+	include_once($path1.'passage.php');
+	//include_once($path1.'mediatable.php');
+	//This will eventually replace mediatable in this context.  Just for clarity.
+	include_once($path1.'media.php');
+    include_once($path1.'share.php');
+    include_once($path1.'comments.php');
+    include_once($path1.'date.php');
+        
+    $label = $params->get('study_detailtemplate');
+    $label = str_replace('{{teacher}}', $row->teachername, $label);
+	$label = str_replace('{{title}}', $row->studytitle, $label);
+	$label = str_replace('{{date}}', getStudydate($params, $row->studydate), $label);
+	$label = str_replace('{{studyintro}}', $row->studyintro, $label);
+	$label = str_replace('{{scripture}}', getScripture($params, $row, 0, 1), $label);
+	$label = str_replace('{{topics}}', $row->topic_text, $label);
+    $label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
+    $label = str_replace('{{thumbnail}}', '<img src="'.$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);
+    $label = str_replace('{{seriestext}}', $row->series_text, $label);
+    $label = str_replace('{{messagetype}}', $row->message_type, $label);
+    $label = str_replace('{{bookname}}', $row->bookname, $label);
+    $label = str_replace('{{studytext}}', $row->studytext, $label);
+    //Passage
+    $link = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">>>'. JText::_('Show/Hide Scipture Passage').'<<</a>';
+    $link .= '<div id="bsms_scripture" style="display:none;"></strong>';
+    $response = getPassage($params, $row);
+    $link .= $response;
+    $link .= '</div>';
+    $label = str_replace('{{scripturelink}}', $link, $label);
+    
+    //Media
+    $media = getMedia($row->id);
+    
+    $mediaTable = "<table class='bsms_mediatable'>";
+    //File Type - Download - Player 
+    foreach ($media as $item) {
+        $mediaTable .= "<TR>";
+        $mediaTable .= "<TD>" . getTypeIcon($item, $params, $admin_params) . "</TD>";
+        $mediaTable .= "<TD>" . getDownloadLink($item, $params, $admin_params) . "</TD>";
+        if (strpos($item->imname, "mp3") !== false) {
+            $mediaTable .= "<TD>" . getInternalPlayer($item, $params, $admin_params) . "</TD>";
+        } else {
+            $mediaTable .= "<TD></TD>";
+        }
+        $mediaTable .= "</TR>";
+    }
+    $mediaTable .= "</table>";
+    
+    $label = str_replace('{{media}}', $mediaTable, $label);
+    
+    //Share
+    //Prepares a link string for use in social networking
+	$u =& JURI::getInstance();
+	$detailslink = htmlspecialchars($u->toString());
+	$detailslink = JRoute::_($detailslink);
+	//$this->assignRef('detailslink', $detailslink);
+	//End social networking
+    //$label = str_replace('{{media}}', $mt, $label);
+    $share = getShare($detailslink, $row, $params, $admin_params);
+    $label = str_replace('{{share}}', $share, $label);
+
+    //PrintableView
+    $printview = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'Print' ) );
+    $printview = '<a href="#&tmpl=component" onclick="window.print();return false;">'.$printview.'</a>';
+	
+	$label = str_replace('{{printview}}', $printview, $label);
+	
+	//PDF View
+	$url = 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id.'&format=pdf';
+    $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
+    $text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('PDF'), JText::_('PDF'));
+    $attribs['title']	= JText::_( 'PDF' );
+    $attribs['onclick'] = "window.open(this.href,'win2','".$status."'); return false;";
+    $attribs['rel']     = 'nofollow';
+    $link = JHTML::_('link', JRoute::_($url), $text, $attribs);
+    
+    $label = str_replace('{{pdfview}}', $link, $label);
+    
+    //Comments
+    $comments = getComments($params, $row, $row->id);
+	$label = str_replace('{{comments}}', $comments, $label);
+
+    return $label;
+}

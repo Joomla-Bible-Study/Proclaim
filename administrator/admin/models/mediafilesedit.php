@@ -92,6 +92,7 @@ class biblestudyModelmediafilesedit extends JModel {
 		}
 		if ($filename_upload == ''){$data['filename'] = $name_bak;}
 		//$data['filename'] = str_replace(' ','_',$data['filename']);
+		
 		if ($this->_admin_params->get('character_filter') > 0)
 			{
 				$badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');

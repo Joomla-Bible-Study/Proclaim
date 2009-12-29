@@ -1,8 +1,10 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
+JHTML::_('behavior.tooltip');
+
 ?>
-<form action="index.php" method="post" name="adminForm" id="adminForm">
-<div id="tmplDesignSide">
+<form action="index.php" method="post" name="adminForm" id="adminForm">  
+  <div id="tmplDesignSide">
 	<table class="admintable" width="100%">
 		<tr>
 			<td width="100" class="key"><?php echo JText::_('Published'); ?> </td>
@@ -126,6 +128,21 @@ echo $pane->startPanel( JText::_('Series Detail'), 'SERIESDETAIL');
 echo $this->params->render( 'params', 'SERIESDETAIL');
 echo $pane->endPanel();
 
+echo $pane->startPanel( JText::_('Landing Page'), 'LANDINGPAGE');
+echo $this->params->render( 'params', 'LANDINGPAGE');
+echo $pane->endPanel();
+
+//echo $pane->startPanel( JText::_('Studies List View'), 'STUDIESVIEW');
+//echo $this->params->render( 'params', 'STUDIESVIEW');
+//echo $pane->endPanel();
+
+//echo $pane->startPanel( JText::_('Teacher Display View'), 'TEACHERDETAIL');
+//echo $this->params->render( 'params', 'TEACHERDETAIL');
+//echo $pane->endPanel();
+
+//echo $pane->startPanel( JText::_('Study Display View'), 'STUDYDETAIL');
+//echo $this->params->render( 'params', 'STUDYDETAIL');
+//echo $pane->endPanel();
 
 
 
@@ -199,7 +216,7 @@ echo $pane->endPane();
 	</div>
 </div>-->
 
-	
+  
 	<input type="hidden" name="option" value="com_biblestudy" />
 	<input type="hidden" name="id" value="<?php echo $this->template->id; ?>" />
 	<input type="hidden" name="task" value="" />
