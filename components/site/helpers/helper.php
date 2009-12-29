@@ -80,7 +80,7 @@ function getAdminsettings()
 			//$handler =& JRegistryFormat::getInstance('INI');
 			//$adminparameters = $handler->objectToString($adminsettings[0]);
 			//$admin_params = new JParameter($adminparameters);
-			//$admin_params = new JParameter($adminsettings[0]->params); //dump ($adminsettings, 'adminsettings: ');
+			$admin_params = new JParameter($adminsettings[0]->params); //dump ($adminsettings, 'adminsettings: ');
 			
 		
 		return $admin_params;
