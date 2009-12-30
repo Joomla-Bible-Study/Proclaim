@@ -14,7 +14,8 @@ function getTeacher($params, $id, $admin_params)
 	$templatemenuid = $params->get('teachertemplateid');
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 	$viewtype = JRequest::getVar('view');
-		if ($viewtype = 'studieslist')
+	//dump ($viewtype, 'view: ');
+		if ($viewtype == 'studieslist')
 			{
 				$teacherid = $params->get('listteachers');
 				$teacherids = explode(",", $params->get('listteachers'));
@@ -33,24 +34,37 @@ function getTeacher($params, $id, $admin_params)
 		
 		{
 			$database	= & JFactory::getDBO();
-			$query = 'select distinct a.* from #__bsms_teachers a inner join #__bsms_studies b on a.id = b.teacher_id where list_show = 1'.
-					' and a.id = '.$teachers['id'];
+			$query = 'SELECT * FROM #__bsms_teachers'.
+					'  WHERE id = '.$teachers['id'];
 			//dump ($teachers, 'teachers: ');		
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			$i_path = null;
 			//dump ($tresult, 'tresult: ');
 			//Check to see if there is a teacher image, if not, skip this step
-			if ($tresult->teacher_thumbnail != '- Select Image -' || $tresult->teacher_thumbnail)
+			
+			if ($tresult->teacher_thumbnail == '- Select Image -' || !$tresult->teacher_thumbnail) 
+				{ 
+					$image->path = $tresult->thumb; $image->height = $tresult->thumbh; $image->width = $tresult->thumbw;
+				}
+			else
 			{
-				if ($tresult->teacher_thumbnail == '- Select Image -' || !$tresult->teacher_thumbnail) { $image->path = $tresult->thumb; $image->height = $tresult->thumbh; $image->width = $tresult->thumbw;}
-				if ($tresult->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$tresult->teacher_thumbnail; }
-				if ($tresult->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('teachers_imagefolder').DS.$tresult->teacher_thumbnail;}
-				
-				$image = getImage($i_path);
-				if (!$image) {$image->path = ''; $image->width=0; $image->height=0;}
-				$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$image->path.'" border="1" width="'.$image->width.'" height="'.$image->height.'" ></td></tr>';
+				if ($tresult->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) 
+					{ 
+						$i_path = 'images/stories/'.$tresult->teacher_thumbnail; 
+					}
+				if ($tresult->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) 
+					{
+						$i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$tresult->teacher_thumbnail;
+					}
+			$image = getImage($i_path);
+				if (!$image) 
+					{
+						$image->path = ''; $image->width=0; $image->height=0;
+					}
 			}
+				$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$image->path.'" border="1" width="'.$image->width.'" height="'.$image->height.'" ></td></tr>';
+			
 		$teacher .= '<tr><td>';
 		if ($params->get('teacherlink') > 0)
 			{
@@ -63,18 +77,23 @@ function getTeacher($params, $id, $admin_params)
 			}
 		$teacher .= '</td></tr></table></td>';
 		}
-	
+	if ($params->get('intro_show') == 2 && $viewtype == 'studieslist')
+		{
+			$teacher .= '<td><div id="listintro"><table id="listintro"><tr><td><p>'.$params->get('list_intro').'</p></td></tr></table> </div></td>';
+		}
 		$teacher .= '</tr></table>';
 
 	return $teacher;
 }
-
 function getTeacherLandingPage($params, $id, $admin_params)
 {
 	
 	global $mainframe, $option;
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
+	include_once($path1.'helper.php');
+	$addItemid = '';
+	//$addItemid = getItemidLink($isplugin=0, $admin_params); 
 	$teacher = null;
 	$teacherid = null;
 	$templatemenuid = $params->get('templatemenuid');
@@ -96,10 +115,10 @@ function getTeacherLandingPage($params, $id, $admin_params)
             
             $teacher .= '<td width="33%">';
             if ($params->get('linkto') == 0) {
-		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'&itemid='.$itemid.'">';
+		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'&Itemid='.$itemid.'">';
             } else {
 		    
-		        $teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&templatemenuid='.$templatemenuid.'&itemid='.$itemid.'">';
+		        $teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&templatemenuid='.$templatemenuid.'&Itemid='.$itemid.'">';
 		    };
 		    $teacher .= $b->teachername;
     		

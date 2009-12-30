@@ -6,37 +6,15 @@ defined('_JEXEC') or die(); ?>
 <?php 
 global $mainframe, $option;
 JHTML::_('behavior.tooltip');
-$message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
-$teacher_menu = $this->params->get('teacher_id', 1);
-$topic_menu = $this->params->get('topic_id', 1);
-$book_menu = $this->params->get('booknumber', 101);
-$location_menu = $this->params->get('locations', 1);
-$series_menu = $this->params->get('series_id', 1);
-$messagetype_menu = $this->params->get('messagetype', 1);
-//$params = $mainframe->getPageParameters();
 $document =& JFactory::getDocument();
-$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
-$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
+//$document->addStyleSheet(JURI::base().'components/com_biblestudy'.DS.'tooltip.css');
+$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
 //dump( $params, 'Variable Name' );
 //dump ($this->admin_params);
-	$user =& JFactory::getUser();
-	$entry_user = $user->get('gid');
-	if (!$entry_user) { $entry_user = 0;}
-	$entry_access = $this->admin_params->get('entry_access');
-	if (!$entry_access) {$entry_access = 23;}
-	$allow_entry = $this->admin_params->get('allow_entry_study');
-	//dump ($entry_access, 'entry_access: ');
-	if (($allow_entry > 0) && ($entry_access <= $entry_user)) 
-			{?>
-			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>
-			<?php 
-			$studiesedit_call = JView::loadHelper('studiesedit');
-			$studiesedit = getStudiesedit($row, $params);
-			echo $studiesedit;
-			}
+	
 
 $listingcall = JView::loadHelper('listing');
 
@@ -62,6 +40,7 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     }
 	?>
       </h1>
+ </div>
 <?php 
 
 $i = 1;
@@ -70,11 +49,12 @@ for ($i=1;$i<=7;$i++) {
       
   $showIt = $params->get('headingorder_'.$i);
 
-  //Wrap each in a DIV...
-  echo "<div id='bsms_landingpage_" . $showIt ."'>";
+  
   
   if ($params->get('show'.$showIt) == 1 )
     {
+    	//Wrap each in a DIV...
+  echo "<div id='bsms_landingpage_" . $showIt ."'>";
     ?>
 <h2 class="bsms_landingpage_title">
   <?php echo $params->get($showIt.'label'); ?>
@@ -119,14 +99,15 @@ for ($i=1;$i<=7;$i++) {
 	      $heading = getYears($params, $id=null, $this->admin_params);
         break;
      
-    }
+    }// End Switch
 	  if ($heading) {echo $heading;}
-  } // End Switch
-  echo "</div>";
+	  echo "</div>";
+  } 
+  
 } // End Loop
 
 ?>    
-
+</div>
   <input name="option" value="com_biblestudy" type="hidden">
 
   <input name="task" value="" type="hidden">

@@ -313,7 +313,9 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 			
 			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'">'.' << '.JText::_('Return To Series List').'</a></td></tr>';
 		}
-		
+return $studies;
+}
+
 function getSeriesLandingPage($params, $id, $admin_params)
 {
 	
@@ -516,6 +518,4 @@ switch ($params->get('series_wrapcode')) {
 		}
 return $studies;
 }
-
-
 
