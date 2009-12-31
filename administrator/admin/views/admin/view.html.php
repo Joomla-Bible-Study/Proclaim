@@ -117,6 +117,19 @@ class biblestudyViewadmin extends JView
 		array_unshift($folderfinal7, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		$lists['download'] = JHTML::_('select.genericlist',  $folderfinal7, 'download', 'class="inputbox"', 'value', 'value', $admin->download );
 		
+		$studypath = JPATH_SITE.'/images/'.$params->get('media_imagefolder', '../components/com_biblestudy/images');
+		$fileList 	= JFolder::files($studypath);
+		foreach($fileList as $key=>$value)
+		{
+			$folderfinal1 = new JObject();
+			$folderfinal1->value = $value;
+			$folderfinal1->id = $key;
+			if (strtolower($folderfinal1->value) == 'index.html') { unset($folderfinal1->value); unset($folderfinal1->key);}
+			else {$folderfinal9[] = $folderfinal1;}
+		}
+		array_unshift($folderfinal9, JHTML::_('select.option', '0', '- '.JText::_('Default Image').' -', 'value', 'value'));
+		$lists['showhide'] = JHTML::_('select.genericlist',  $folderfinal9, 'showhide', 'class="inputbox"', 'value', 'value', $admin->showhide );
+		
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.admin', true );
 		$this->assignRef('lists', $lists);

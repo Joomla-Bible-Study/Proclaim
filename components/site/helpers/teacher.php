@@ -93,12 +93,13 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
 	$addItemid = '';
-	//$addItemid = getItemidLink($isplugin=0, $admin_params); 
+	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$teacher = null;
 	$teacherid = null;
 	$templatemenuid = $params->get('templatemenuid');
 	//$templatemenuid = $params->get('teachertemplateid');
-	
+	$limit = $params->get('landingteacherlimit');
+	if (!$limit) {$limit = 10000;}
 	$menu =& JSite::getMenu();
 	
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
@@ -110,15 +111,28 @@ function getTeacherLandingPage($params, $id, $admin_params)
 		$db->setQuery($query);
 		
         $tresult = $db->loadObjectList();
+         $t = 0;
         $teacher .= '<tr>';        
         foreach ($tresult as &$b) {
             
             $teacher .= '<td width="33%">';
+             if ($t >= $limit)
+		{
+			if ($showdiv < 1)
+			{
+			
+			$teacher .= "</td></tr></table>";
+			$teacher .= '<div id="showhideteacher" style="display:none;">';
+			$teacher .= '<table width = "100%"><tr><td>';
+		
+			$showdiv = 1;
+			}
+		}   
             if ($params->get('linkto') == 0) {
-		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'&Itemid='.$itemid.'">';
+		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.$addItemid.'">';
             } else {
 		    
-		        $teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&templatemenuid='.$templatemenuid.'&Itemid='.$itemid.'">';
+		        $teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&templatemenuid='.$templatemenuid.$addItemid.'">';
 		    };
 		    $teacher .= $b->teachername;
     		
@@ -127,6 +141,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
             $teacher .= '</td>';
             
             $i++;
+            $t++; //dump ($t, 't: ');
             if ($i == 3) {
                 $teacher .= '</tr><tr>';
                 $i = 0;
@@ -138,6 +153,12 @@ function getTeacherLandingPage($params, $id, $admin_params)
         if ($i == 2) {
             $teacher .= '<td width="33%"></td>';
         };
+         if ($showdiv == 1)
+			{	
+        	$teacher .= '</td></tr></table>';
+			$teacher .= '</div>';
+			$showdiv = 2;
+			}
         $teacher .= '</tr>';
 		$teacher .= '</table>';
         

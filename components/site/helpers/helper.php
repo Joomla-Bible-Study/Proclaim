@@ -8,6 +8,7 @@
 // All Videos Reloaded
  function getItemidLink($isplugin, $admin_params){
   $itemid = null;
+  //dump ($admin_params, 'admin_params: ');
   //Test $admin_params = if null then get the params from the GET variable
   if (!$admin_params)
   {
@@ -119,5 +120,23 @@ function getTooltip($rowid, $row, $params, $admin_params, $template)
 		$linktext .= '<strong>'.$params->get('tip_item5_title').'</strong>: '.$tip5->element;
  		$linktext .= '">';
 	return $linktext;	
+	}
+	
+	function getShowhide ()
+	{
+		$showhide = '
+function HideContent(d) {
+document.getElementById(d).style.display = "none";
+}
+function ShowContent(d) {
+document.getElementById(d).style.display = "block";
+}
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+';
+
+		return $showhide;
 	}
 ?>

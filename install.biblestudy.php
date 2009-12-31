@@ -748,20 +748,29 @@ $fieldcheck = false;
 $fieldcheck = isset($fields[$tn]['server_type']);
 	if	 (!$fieldcheck)
 	{
-		$database->setQuery("ALTER TABLE jos_bsms_servers ADD server_type CHAR(5) DEFAULT 'local'");
+		$database->setQuery("ALTER TABLE #__bsms_servers ADD server_type CHAR(5) DEFAULT 'local'");
 $database->query();
 	}
 $fieldcheck = isset($fields[$tn]['ftp_username']);
 	if (!$fieldcheck)
 	{
-		$database->setQuery("ALTER TABLE jos_bsms_servers ADD ftp_username CHAR(255)");
+		$database->setQuery("ALTER TABLE #__bsms_servers ADD ftp_username CHAR(255)");
 $database->query();
 	}
 $fieldcheck = isset($fields[$tn]['ftp_password']);
 	if (!$fieldcheck)
 	{
-		$database->setQuery("ALTER TABLE jos_bsms_servers ADD ftp_password CHAR(255)");
+		$database->setQuery("ALTER TABLE #__bsms_servers ADD ftp_password CHAR(255)");
 $database->query();
+	}
+$tn = '#__bsms_admin';
+$fields = $database->getTableFields( array( $tn ) );
+$fieldcheck = false;	
+$fieldcheck = isset($fields[$tn]['showhide']);
+	if	 (!$fieldcheck)	
+	{	
+		$database->setQuery("ALTER TABLE #__bsms_admin ADD showhide CHAR(255)");
+		$database->query();
 	}
 $database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
 		$database->query();

@@ -2003,7 +2003,7 @@
 				</param>
 		</params>
 	<params group="LANDINGPAGE" addpath="/components/com_biblestudy/elements">
-    <param type="list" name="headingorder_1" default="teacher" label="Heading 1">
+    <param type="list" name="headingorder_1" default="teacher" label="Heading 1" description="Set the order of items on the Landing Page (Set whether to show or not below)">
       <option value="teacher">Teacher</option>
       <option value="series">Series</option>
       <option value="book">Books</option>
@@ -2012,7 +2012,7 @@
       <option value="types">Message Types</option>
       <option value="years">Years</option>
     </param>
-    <param type="list" name="headingorder_2" default="series" label="Heading 2">
+    <param type="list" name="headingorder_2" default="series" label="Heading 2" description="Set the order of items on the Landing Page (Set whether to show or not below)">
       <option value="teacher">Teacher</option>
       <option value="series">Series</option>
       <option value="book">Books</option>
@@ -2021,7 +2021,7 @@
       <option value="messagetype">Message Types</option>
       <option value="years">Years</option>
     </param>
-    <param type="list" name="headingorder_3" default="books" label="Heading 3">
+    <param type="list" name="headingorder_3" default="books" label="Heading 3" description="Set the order of items on the Landing Page (Set whether to show or not below)">
       <option value="teacher">Teacher</option>
       <option value="series">Series</option>
       <option value="book">Books</option>
@@ -2030,7 +2030,7 @@
       <option value="messagetype">Message Types</option>
       <option value="years">Years</option>
     </param>
-    <param type="list" name="headingorder_4" default="topics" label="Heading 4">
+    <param type="list" name="headingorder_4" default="topics" label="Heading 4" description="Set the order of items on the Landing Page (Set whether to show or not below)">
       <option value="teacher">Teacher</option>
       <option value="series">Series</option>
       <option value="book">Books</option>
@@ -2039,7 +2039,7 @@
       <option value="messagetype">Message Types</option>
       <option value="years">Years</option>
     </param>
-    <param type="list" name="headingorder_5" default="locations" label="Heading 5">
+    <param type="list" name="headingorder_5" default="locations" label="Heading 5" description="Set the order of items on the Landing Page (Set whether to show or not below)">
       <option value="teacher">Teacher</option>
       <option value="series">Series</option>
       <option value="book">Books</option>
@@ -2048,7 +2048,7 @@
       <option value="messagetype">Message Types</option>
       <option value="years">Years</option>
     </param>
-    <param type="list" name="headingorder_6" default="types" label="Heading 6">
+    <param type="list" name="headingorder_6" default="types" label="Heading 6" description="Set the order of items on the Landing Page (Set whether to show or not below)">
       <option value="teacher">Teacher</option>
       <option value="series">Series</option>
       <option value="book">Books</option>
@@ -2057,7 +2057,7 @@
       <option value="messagetype">Message Types</option>
       <option value="years">Years</option>
     </param>
-    <param type="list" name="headingorder_7" default="years" label="Heading 7">
+    <param type="list" name="headingorder_7" default="years" label="Heading 7" description="Set the order of items on the Landing Page (Set whether to show or not below)">
       <option value="teacher">Teacher</option>
       <option value="series">Series</option>
       <option value="book">Books</option>
@@ -2071,6 +2071,7 @@
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
+    <param name ="landingteacherlimit" type="text" label="# Teachers before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="teacherlabel" type="text" label="Teachers Label" default="Speakers" size="45"></param>
     <param name="linkto" type="radio" label="Link To View" default="1">
       <option value="0">Studies List</option>
@@ -2081,6 +2082,7 @@
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
+    <param name ="landingserieslimit" type="text" label="# Series before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="serieslabel" type="text" label="Series Label" default="Series" size="45"></param>
     <param name="series_linkto" type="radio" label="Link To View" default="0">
       <option value="0">Studies List</option>
@@ -2091,30 +2093,35 @@
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
+    <param name ="landingbooklimit" type="text" label="# Books before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="booklabel" type="text" label="Books Label" default="Books" size="45"></param>
     <param type="spacer"></param>
     <param name="showtopics" type="radio" label="Show Topics" default="1">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
+    <param name ="landingtopicslimit" type="text" label="# Topics before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="topicslabel" type="text" label="Topics Label" default="Topics" size="45"></param>
     <param type="spacer"></param>
     <param name="showlocations" type="radio" label="Show Locations" default="1">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
+    <param name ="landinglocationslimit" type="text" label="# Locations before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="locationslabel" type="text" label="Locations Label" default="Locations" size="45"></param>
     <param type="spacer"></param>
     <param name="showmessagetype" type="radio" label="Show Message Types" default="1">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
+    <param name ="landingmessagetypelimit" type="text" label="# Messagetypes before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="messagetypelabel" type="text" label="Message Types Label" default="Message Types" size="45"></param>
     <param type="spacer"></param>
     <param name="showyears" type="radio" label="Show Years" default="1">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
+    <param name ="landingyearslimit" type="text" label="# Years before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="yearslabel" type="text" label="Years Label" default="Years" size="45"></param>
   </params>
 </root>

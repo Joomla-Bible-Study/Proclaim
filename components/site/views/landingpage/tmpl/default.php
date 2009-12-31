@@ -7,11 +7,17 @@ defined('_JEXEC') or die(); ?>
 global $mainframe, $option;
 JHTML::_('behavior.tooltip');
 $database = & JFactory::getDBO();
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+include_once($path1.'helper.php');
 $document =& JFactory::getDocument();
 $document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
+$showhide = getShowhide(); //dump ($showhide, 'showhide: ');
+$document->addScriptDeclaration($showhide);
 //$document->addStyleSheet(JURI::base().'components/com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+include_once($path1.'image.php');
 //dump( $params, 'Variable Name' );
 //dump ($this->admin_params);
 	
@@ -49,8 +55,7 @@ for ($i=1;$i<=7;$i++) {
       
   $showIt = $params->get('headingorder_'.$i);
 
-  
-  
+   
   if ($params->get('show'.$showIt) == 1 )
     {
     	//Wrap each in a DIV...
@@ -58,8 +63,27 @@ for ($i=1;$i<=7;$i++) {
     ?>
 <h2 class="bsms_landingpage_title">
   <?php echo $params->get($showIt.'label'); ?>
-</h2>
+
+
 <?php
+if ($params->get('landing'.$showIt.'limit')) 
+{
+	$d_path1 = ($this->admin_params->get('media_imagefolder') ? 'images/'.$this->admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
+	$d_image = ($this->admin[0]->showhide ? DS.$this->admin[0]->showhide : '/showhide.gif');
+	$d_path = $d_path1.$d_image;
+	$showhide_tmp = getImage($d_path);
+    $showhide_image = $showhide_tmp->path;
+	
+	$showhideall = "<a class='showhideheading' ";
+	$showhideall .=  "href=";
+	$showhideall .= "javascript:ReverseDisplay(";
+	$showhideall .= "'showhide".$showIt."'";
+	$showhideall .= ")"; 
+	$showhideall .= ' <img src="'.$showhide_image.'" alt="'.JText::_('Show/Hide All '.$showIt).'" title="'.JText::_('Show/Hide All '.$showIt).'"></a>';
+	echo $showhideall;
+}
+?></h2><?php
+			
     $heading_call = null;
     $heading = null;
 	  switch ($showIt) {
@@ -67,41 +91,48 @@ for ($i=1;$i<=7;$i++) {
       
       $heading_call = JView::loadHelper('teacher');  
       $heading = getTeacherLandingPage($params, $id=null, $this->admin_params);
+      echo "</div>";
       break;
       
       case 'series':
         $heading_call = JView::loadHelper('serieslist');
         $heading = getSeriesLandingPage($params, $id=null, $this->admin_params);
+        echo "</div>";
         break;
       
       case 'locations':
        	$heading_call = JView::loadHelper('location');
       	$heading = getLocations($params, $id=null, $this->admin_params);
+      	echo "</div>";
         break;
       
       case 'messagetype':
        	$heading_call = JView::loadHelper('messagetype');
       	$heading = getMessageTypes($params, $id=null, $this->admin_params);
+      	echo "</div>";
         break;
       
       case 'topics':
          	$heading_call = JView::loadHelper('topics');
         	$heading = getTopics($params, $id=null, $this->admin_params);
+        	echo "</div>";
       break;
       
       case 'book':
        	$heading_call = JView::loadHelper('book');
 	      $heading = getBooks($params, $id=null, $this->admin_params);
+	      echo "</div>";
         break;
          
       case 'years':
        	$heading_call = JView::loadHelper('year');
 	      $heading = getYears($params, $id=null, $this->admin_params);
+	      echo "</div>";
         break;
      
     }// End Switch
 	  if ($heading) {echo $heading;}
-	  echo "</div>";
+	  //echo "</div>";
   } 
   
 } // End Loop
