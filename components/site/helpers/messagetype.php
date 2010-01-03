@@ -15,7 +15,7 @@ function getMessageTypes($params, $id, $admin_params)
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 	$limit = $params->get('landingmessagetypelimit');
 	if (!$limit) {$limit = 10000;}
-		$messagetype = '<table id="bsm_messagetype" width="100%"><tr>';
+		$messagetype = '<table id="landing_table" width="100%"><tr>';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype';
 		
@@ -27,7 +27,7 @@ function getMessageTypes($params, $id, $admin_params)
         $showdiv = 0;
         foreach ($tresult as &$b) {
             
-            $messagetype .= '<td width="33%">';
+            $messagetype .= '<td id="landing_td">';
             if ($t >= $limit)
 		{
 			if ($showdiv < 1)
@@ -35,7 +35,7 @@ function getMessageTypes($params, $id, $admin_params)
 			
 			$messagetype .= "</td></tr></table>";
 			$messagetype .= '<div id="showhidemessagetype" style="display:none;">';
-			$messagetype .= '<table width = "100%"><tr><td>';
+			$messagetype .= '<table width = "100%" id="landing_table"><tr><td>';
 		
 			$showdiv = 1;
 			}
@@ -56,10 +56,10 @@ function getMessageTypes($params, $id, $admin_params)
             }
         }
         if ($i == 1) {
-            $messagetype .= '<td width="33%"></td><td width="33%"></td>';
+            $messagetype .= '<td id="landing_td"></td><td id="landing_td"></td>';
         };
         if ($i == 2) {
-            $messagetype .= '<td width="33%"></td>';
+            $messagetype .= '<td id="landing_td"></td>';
         };
         if ($showdiv == 1)
 			{	

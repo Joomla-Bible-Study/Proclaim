@@ -16,7 +16,7 @@ function getBooks($params, $id, $admin_params)
 	if (!$limit) {$limit = 10000;}
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 
-		$book = '<table id="bsm_books" width=100%><tr>';
+		$book = '<table id="landing_table" width=100%><tr>';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber';
 		
@@ -31,7 +31,7 @@ function getBooks($params, $id, $admin_params)
 		$showdiv = 0;
         foreach ($tresult as &$b) {
             
-            $book .= '<td width="33%">';
+            $book .= '<td id="landing_td">';
             if ($t >= $limit)
 		{
 			if ($showdiv < 1)
@@ -39,7 +39,7 @@ function getBooks($params, $id, $admin_params)
 			
 			$book .= "</td></tr></table>";
 			$book .= '<div id="showhidebook" style="display:none;">';
-			$book .= '<table width = "100%"><tr><td>';
+			$book .= '<table width = "100%" id="landing_table"><tr><td id="landing_td">';
 		
 			$showdiv = 1;
 			}
@@ -60,10 +60,10 @@ function getBooks($params, $id, $admin_params)
             }
         }
         if ($i == 1) {
-            $book .= '<td width="33%"></td><td width="33%"></td>';
+            $book .= '<td  id="landing_td"></td><td id="landing_td"></td>';
         };
         if ($i == 2) {
-            $book .= '<td width="33%"></td>';
+            $book .= '<td  id="landing_td"></td>';
         };
         if ($showdiv == 1)
 			{	

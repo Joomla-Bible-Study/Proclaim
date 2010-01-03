@@ -333,7 +333,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 	$limit = $params->get('landingserieslimit');
 	if (!$limit) {$limit = 10000;}
 	
-		$series = '<table id="bsm_series" width="100%"><tr>';
+		$series = '<table id="landing_table" width="100%"><tr>';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_series a inner join #__bsms_studies b on a.id = b.series_id';
 		
@@ -346,7 +346,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 		$showdiv = 0;       
         foreach ($tresult as &$b) {
             
-            $series .= '<td width="33%">';
+            $series .= '<td id="landing_td">';
             if ($t >= $limit)
 		{
 			if ($showdiv < 1)
@@ -354,7 +354,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 			
 			$series .= "</td></tr></table>";
 			$series .= '<div id="showhideseries" style="display:none;">';
-			$series .= '<table width = "100%"><tr><td>';
+			$series .= '<table width = "100%" id="landing_table"><tr><td>';
 		
 			$showdiv = 1;
 			}
@@ -380,10 +380,10 @@ function getSeriesLandingPage($params, $id, $admin_params)
             }
         }
         if ($i == 1) {
-            $series .= '<td width="33%"></td><td width="33%"></td>';
+            $series .= '<td id="landing_td"></td><td id="landing_td"></td>';
         };
         if ($i == 2) {
-            $series .= '<td width="33%"></td>';
+            $series .= '<td id="landing_td"></td>';
         };
          if ($showdiv == 1)
 			{	

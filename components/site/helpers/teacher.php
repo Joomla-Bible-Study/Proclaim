@@ -104,7 +104,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 
-		$teacher = '<table id="bsm_teacher" width="100%"><tr>';
+		$teacher = '<table id="landing_table" width="100%"><tr>';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_teachers a inner join #__bsms_studies b on a.id = b.teacher_id where list_show = 1';
 		
@@ -115,7 +115,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
         $teacher .= '<tr>';        
         foreach ($tresult as &$b) {
             
-            $teacher .= '<td width="33%">';
+            $teacher .= '<td id="landing_td">';
              if ($t >= $limit)
 		{
 			if ($showdiv < 1)
@@ -123,7 +123,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
 			
 			$teacher .= "</td></tr></table>";
 			$teacher .= '<div id="showhideteacher" style="display:none;">';
-			$teacher .= '<table width = "100%"><tr><td>';
+			$teacher .= '<table width = "100%" id="landing_table"><tr><td>';
 		
 			$showdiv = 1;
 			}
@@ -148,10 +148,10 @@ function getTeacherLandingPage($params, $id, $admin_params)
             }
         }
         if ($i == 1) {
-            $teacher .= '<td width="33%"></td><td width="33%"></td>';
+            $teacher .= '<td id="landing_td"></td><td id="landing_td"></td>';
         };
         if ($i == 2) {
-            $teacher .= '<td width="33%"></td>';
+            $teacher .= '<td id="landing_td"></td>';
         };
          if ($showdiv == 1)
 			{	

@@ -2003,6 +2003,12 @@
 				</param>
 		</params>
 	<params group="LANDINGPAGE" addpath="/components/com_biblestudy/elements">
+	<param type="list" name="landing_hide" default="0" label="Choose type of Show/Hide Label" description="Choose if you want a label or button or both to appear if limit set below to each item.">
+		<option value="0">Button Only</option>
+		<option value="1">Button and Label</option>
+		<option value="2">Label Only</option>
+	</param>
+	<param type="text" name="landing_hidelabel" size="100" default="Show/Hide All" label="Label to use for Show/Hide link" description="If you choose the option above, put in words for the Show/Hide label" />
     <param type="list" name="headingorder_1" default="teacher" label="Heading 1" description="Set the order of items on the Landing Page (Set whether to show or not below)">
       <option value="teacher">Teacher</option>
       <option value="series">Series</option>

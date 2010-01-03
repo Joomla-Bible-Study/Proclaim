@@ -16,7 +16,7 @@ function getTopics($params, $id, $admin_params)
 	if (!$limit) {$limit = 10000;}
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 
-		$topic = '<table id="bsm_books" width=100%><tr>';
+		$topic = '<table id="landing_table" width=100%><tr>';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_topics a inner join #__bsms_studytopics b on a.id = b.topic_id';
 		
@@ -30,7 +30,7 @@ function getTopics($params, $id, $admin_params)
         $showdiv = 0;
         foreach ($tresult as &$b) {
             
-            $topic .= '<td width="33%">';
+            $topic .= '<td id="landing_td">';
             if ($t >= $limit)
 		{
 			if ($showdiv < 1)
@@ -38,7 +38,7 @@ function getTopics($params, $id, $admin_params)
 			
 			$topic .= "</td></tr></table>";
 			$topic .= '<div id="showhidetopics" style="display:none;">';
-			$topic .= '<table width = "100%"><tr><td>';
+			$topic .= '<table width = "100%" id="landing_table"><tr><td>';
 		
 			$showdiv = 1;
 			}
@@ -58,10 +58,10 @@ function getTopics($params, $id, $admin_params)
             }
         }
         if ($i == 1) {
-            $topic .= '<td width="33%"></td><td width="33%"></td>';
+            $topic .= '<td id="landing_td"></td><td id="landing_td"></td>';
         };
         if ($i == 2) {
-            $topic .= '<td width="33%"></td>';
+            $topic .= '<td id="landing_td"></td>';
         };
          if ($showdiv == 1)
 			{	

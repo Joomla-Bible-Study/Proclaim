@@ -16,7 +16,7 @@ function getLocations($params, $id, $admin_params)
 	$limit = $params->get('landinglocationslimit');
 	if (!$limit) {$limit = 10000;}
 
-		$location = '<table id="bsm_books" width=100%><tr>';
+		$location = '<table id="landing_table" width=100%><tr>';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_locations a inner join #__bsms_studies b on a.id = b.location_id';
 		
@@ -30,7 +30,7 @@ function getLocations($params, $id, $admin_params)
         $showdiv = 0;
         foreach ($tresult as &$b) {
             
-            $location .= '<td width="33%">';
+            $location .= '<td id="landing_td">';
             if ($t >= $limit)
 		{
 			if ($showdiv < 1)
@@ -38,7 +38,7 @@ function getLocations($params, $id, $admin_params)
 			
 			$location .= "</td></tr></table>";
 			$location .= '<div id="showhidelocations" style="display:none;">';
-			$location .= '<table width = "100%"><tr><td>';
+			$location .= '<table width = "100%" id="landing_table"><tr><td>';
 		
 			$showdiv = 1;
 			}
@@ -58,10 +58,10 @@ function getLocations($params, $id, $admin_params)
             }
         }
         if ($i == 1) {
-            $location .= '<td width="33%"></td><td width="33%"></td>';
+            $location .= '<td id="landing_td"></td><td id="landing_td"></td>';
         };
         if ($i == 2) {
-            $location .= '<td width="33%"></td>';
+            $location .= '<td id="landing_td"></td>';
         };
         if ($showdiv == 1)
 			{	
