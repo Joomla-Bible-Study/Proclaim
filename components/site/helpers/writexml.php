@@ -43,7 +43,7 @@ defined('_JEXEC') or die('Restricted access');
 		$description = str_replace("&","and",$podinfo->description);
 		$detailstemplateid = $podinfo->detailstemplateid;
 		$addItemid = '';
-		$addItemid = getItemidLink($isplugin, $admin_params);
+		$addItemid = getItemidLink($isplugin=1, $admin_params);
 		if (!$detailstemplateid) {$detailstemplateid = 1;}
   		$detailstemplateid = '&amp;templatemenuid='.$detailstemplateid.$addItemid;
 		$podhead = '<?xml version="1.0" encoding="utf-8"?>

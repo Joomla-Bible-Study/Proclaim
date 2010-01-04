@@ -778,6 +778,70 @@ $database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
 		$database->query();
 		$database->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
 		$installresults[] = 'Database version 614 installed';
+
+$cssread = JFile::read($dest);
+$landingexists = 0;
+$landingexists = substr_count($cssread,'biblestudy_landing');
+if ($landingexists < 1)
+{
+	$csslanding = '
+	/* Landing Page Items */
+#biblestudy_landing
+{
+	outline:1px #DDDDDD solid thin;
+}
+#bsms_header
+{
+	 
+}
+#landing_table
+{
+	
+}
+#landing_title a link, #landing_title
+{
+       	padding:3px;
+        font-size:150%;
+        font-family: calibri;
+        font-weight: bold;
+        text-decoration:none;
+}
+#landinglist td
+{
+	margin: 1px;
+        padding-left:25px;
+        background-color:#EEEEFF;
+        /* for IE 
+        filter:alpha(opacity=50);
+         CSS3 standard */
+        opacity:0.5; */
+        font-family:calibri;
+        font-weight: bold;	
+}
+#landing_item
+{
+	background-color:#eeeeff;
+        margin: 6px;
+}
+#landing_td 
+{
+        width:100px;
+}
+#landing_label
+{
+        font-size:70%;
+        font-weight:normal;
+        text-decoration:none;
+}
+a.showhide {
+text-decoration:none;
+}';
+$cssread = $cssread.$csslanding;
+	$errcss = '';
+	if (!JFile::write($dest, $cssread))
+	{$errcss = 'There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org';
+	$installresults[] = 'There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org';}
+}
 //End 614 upgrade
 ?><p>
 <?php echo '<strong>Messages: </strong><br>';
