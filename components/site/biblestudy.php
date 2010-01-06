@@ -14,18 +14,7 @@ require_once (JPATH_COMPONENT.DS.'controller.php');
 // Require specific controller if requested
 	if($controller = JRequest::getWord('controller')) 
 	{
-	/*	if ($controller == 'studielist' || $controller == 'studydetails' || $controller == 'serieslist' || $controller == 'seriesdetail' 
-	|| $controller == 'teacherlist' || $controller == 'teacheredit' || $controller == 'teacherdisplay' || $controller == 'commentsedit' 
-	|| $controller == 'commentslist' || $controller == 'landingpage' || $controller == 'mediafilesedit' || $controller == 'podcastedit'
-	 || $controller == 'studiesedit')
-	 {
-	 	$controller = $controller;
-	 	
-	 }
-	 else
-	 {
-	 	$controller = 'studieslist';
-	 }*/
+	
 	 $controllercheck = array('studieslist','studydetails','serieslist','seriesdetail','teacherlist', 'teacheredit', 'teacherdisplay', 'commentsedit', 'commentslist', 'landingpage', 'mediafilesedit', 'podcastedit', 'studiesedit');
 	//dump ($controllercheck, 'controllercheck: ');
 	$success = 0;

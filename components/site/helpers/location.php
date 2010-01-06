@@ -6,8 +6,8 @@ function getLocations($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-	$addItemid = '';
-	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
+	//$addItemid = '';
+	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$location = null;
 	$teacherid = null;
 	$templatemenuid = $params->get('templatemenuid');
@@ -43,7 +43,7 @@ function getLocations($params, $id, $admin_params)
 			$showdiv = 1;
 			}
 		}   
-		    $location .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_location='.$b->id.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.$addItemid.'">';
+		    $location .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_location='.$b->id.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
 		    
 		    $location .= $b->location_text;
     		

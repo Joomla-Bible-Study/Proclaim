@@ -453,15 +453,12 @@ $Itemid = JRequest::getVar('Itemid');
 			switch ($islink) { 
 		
 			case 1 : 
-				$addItemid = getItemidLink($isplugin=0, $admin_params);
+			//$addItemid = getItemidLink($isplugin=0, $admin_params);
 				if (!$Itemid)
 					{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).$addItemid; 
-				 	}
-				 else 
-				 	{
 				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')); 
-		 		}
+				 	}
+				}
 				$column = '<a href="'.$link.'">';
 			 break;
 
@@ -479,10 +476,10 @@ $Itemid = JRequest::getVar('Itemid');
 
 			case 4 :
 				//Case 4 is a details link with tooltip
-				$addItemid = getItemidLink($isplugin=0, $admin_params);
+				//$addItemid = getItemidLink($isplugin=0, $admin_params);
 				if (!$Itemid)
 					{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')).$addItemid; 
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')); 
 				 	}
 				 else 
 				 	{

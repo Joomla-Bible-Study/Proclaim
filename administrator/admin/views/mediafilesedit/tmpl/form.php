@@ -63,6 +63,16 @@ function openConverter1()
 		      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>"/>
 <?php $editor =& JFactory::getEditor();
 
+//AVR test
+jimport('joomla.filesystem.file');
+$dest = JPATH_SITE.DS.'/components/com_avreloaded/views/popup/view.html.php';
+$avrexists = JFile::exists($dest);
+$avrread = JFile::read($dest);
+$isbsms = substr_count($avrread,'JoomlaBibleStudy');
+if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set parameters in Administration tab.</strong>';} else {echo '<strong>All Videos Reloaded NOT Bible Study ready. <br><a href="'.JURI::base().'index.php?option=com_biblestudy&controller=mediafilesedit&task=fixAVR">Click HERE to attempt a fix</a> or go to: <a href="http://www.JoomlaBibleStudy.org" target="_blank"> JoomlaBibleStudy.org </a> and look for All Videos Reloaded Fix file in the Downloads area, then install.</strong>';}
+//End AVR test
+
+
 jimport('joomla.html.pane');
 $pane =& JPane::getInstance( 'sliders');
 echo $pane->startPane ('content-pane');

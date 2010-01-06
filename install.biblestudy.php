@@ -842,6 +842,23 @@ $cssread = $cssread.$csslanding;
 	{$errcss = 'There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org';
 	$installresults[] = 'There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org';}
 }
+// Here we check to see if All Videos Reloaded is installed and if so, we put in our edited file
+$src = JPATH_SITE.DS.'components/com_biblestudy/assets/avr/view.html.php';
+$dest = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view.html.php';
+$avrbackup = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view2.html.php';
+$avrexists = JFile::exists($dest);
+if ($avrexists)
+	{
+		$avrread = JFile::read($dest);
+		$isbsms = substr_count($avrread,'JoomlaBibleStudy');
+		if (!$isbsms)
+		{
+			JFile::copy($dest, $avrbackup);
+			JFile::copy($src, $dest);
+			$installresults[] = 'AVR Edited File installed';
+		}
+		
+	}
 //End 614 upgrade
 ?><p>
 <?php echo '<strong>Messages: </strong><br>';

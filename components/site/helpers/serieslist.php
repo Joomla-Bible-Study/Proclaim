@@ -323,8 +323,8 @@ function getSeriesLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-	$addItemid = '';
-	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
+//	$addItemid = '';
+//	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$series = null;
 	$seriesid = null;
 	$templatemenuid = $params->get('templatemenuid');
@@ -360,7 +360,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 			}
 		}   
             if ($params->get('series_linkto') == '0') {
-                $series .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_series='.$b->id.'&filter_book=0&filter_teacher=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.$addItemid.'">';
+                $series .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_series='.$b->id.'&filter_book=0&filter_teacher=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
             } else {
                 $series .= '<a href="index.php?option=com_biblestudy&view=seriesdetail&id='.$b->id.'&templatemenuid='.$templatemenuid.$addItemid.'">';    
             }
@@ -420,7 +420,7 @@ function getSerieslistExp($row, $params, $admin_params)
 	$label = str_replace('{{thumbnail}}', '<img src="'. $row->thumb .'" width="' .$row->thumbw .'" height="' . $row->thumbh . '" />', $label);
 	$label = str_replace('{{thumbh}}', $row->thumbh, $label);
 	$label = str_replace('{{thumbw}}', $row->thumbw, $label);
-	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$templatemenuid.'&id='.$row->id.$addItemid, $label);
+	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$templatemenuid.'&id='.$row->id, $label);
 	return $label;
 }
 
@@ -543,7 +543,7 @@ switch ($params->get('series_wrapcode')) {
 	
 	if ($params->get('series_list_return') > 0) 
 		{		
-			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).$addItemid.'">'.' << '.JText::_('Return To Series List').'</a></td></tr>';
+			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'">'.' << '.JText::_('Return To Series List').'</a></td></tr>';
 		}
 return $studies;
 }

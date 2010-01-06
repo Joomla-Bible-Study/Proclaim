@@ -7,6 +7,32 @@
 <?php 
 global $mainframe, $option;
 $params = &JComponentHelper::getParams('com_biblestudy');
+
+//Here we reinstate the All Videos Reloaded view.html.php file to its original state
+jimport('joomla.filesystem.file');
+$dest = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view.html.php';
+$avrbackup = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view2.html.php';
+$avrexists = JFile::exists($dest);
+if ($avrexists)
+{
+	$avrread = JFile::read($dest);
+	$isbsms = substr_count($avrread,'JoomlaBibleStudy');
+}
+if ($isbsms)
+{
+	if (!JFile::delete($dest))
+	{
+		echo 'Unable to delete Joomla Bible Study All Videos Reloaded File in /components/com_avreloaded/views/popup/view.html.php<br>';
+	}
+	if (!JFile::copy($avrbackup, $dest))
+	{
+		echo 'Unable to copy original All Videos Reloaded File /components/com_avreloaded/components/views/popup/view2.html.php to view.html.php. Please copy manually<br>';
+	}
+	else
+	{
+		echo 'Successfully reinstated All Videos Reloaded file<br>';
+	}
+}
 $database	= & JFactory::getDBO();
 $database->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
 $database->query();

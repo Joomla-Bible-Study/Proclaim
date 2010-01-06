@@ -92,8 +92,8 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-	$addItemid = '';
-	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
+	//$addItemid = '';
+	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$teacher = null;
 	$teacherid = null;
 	$templatemenuid = $params->get('templatemenuid');
@@ -129,7 +129,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
 			}
 		}   
             if ($params->get('linkto') == 0) {
-		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.$addItemid.'">';
+		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
             } else {
 		    
 		        $teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&templatemenuid='.$templatemenuid.$addItemid.'">';

@@ -32,9 +32,9 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	   $src = JURI::base().$textimage->path;
 		$height = $textimage->height;
 		$width = $textimage->width;
-		$addItemid = '';
-		$addItemid = getItemidLink($isplugin=0, $admin_params);
-       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&templatemenuid='.$templatemenuid ).$addItemid.JHTML::_('behavior.tooltip');
+		//$addItemid = '';
+		//$addItemid = getItemidLink($isplugin=0, $admin_params);
+       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&templatemenuid='.$templatemenuid ).JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 	}
 	if ($textorpdf == 'pdf') 

@@ -6,36 +6,24 @@
  */
 //This function is designed to extract an Itemid for the component if none exists in the GET variable. Mainly to address problems with 
 // All Videos Reloaded
- function getItemidLink($isplugin, $admin_params){
+ function getItemidLink(){
   $itemid = null;
-  //dump ($admin_params, 'admin_params: ');
-  //Test $admin_params = if null then get the params from the GET variable
-  if (!$admin_params)
-  {
-  	$itemidlinkview = JRequest::getVar('itemidlinkview','studieslist','get','word');
-  	$itemidlinktype = JRequest::getInt('itemidlinktype','1','get');
-  	$itemidlinknumber = JRequest::getInt('itemidlinknumber','','get');
-  	
-  }
-  else
-  {
-  	$itemidlinkview = $admin_params->get('itemidlinkview','studieslist');
-  	$itemidlinktype = $admin_params->get('itemidlinktype',1);
-  	$itemidlinknumber = $admin_params->get('itemidlinknumber',1);
-  	//dump ($itemidlinkview, 'itemlinkview: ');
-  }
-  $component =& JComponentHelper::getComponent('com_biblestudy');
+  
+  $admin_params = getAdminsettings();
+  $itemidlinktype = $admin_params->get('itemidlinktype', 1);
+  $itemidlinkview = $admin_params->get('itemidlinkview', 'studieslist');
+  $itemidlinknumber = $admin_params->get('itemidlinknumber',1);
   $menus  = &JApplication::getMenu('site', array()); 
-  /*if ($menus->_active > 0)
-  {
-  	$activeMenu = $menus->getActive(); 
-	if ($activeMenu->componentid == $component->id) 
-  	{
-   		$itemid = $activeMenu->id;
-  	}
-  } */
-  // else {
-   $items  = $menus->getItems('componentid', $component->id);
+  
+  //Get the correct componentid from #__menu
+  $db	= & JFactory::getDBO();
+  $query = "SELECT id, componentid, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
+  $db->setQuery($query);
+  $db->query();
+  $component = $db->loadObject();
+    
+  $items  = $menus->getItems('componentid', $component->componentid);
+  
    foreach ($items as &$menu) {
     if (@$menu->query['view'] == $itemidlinkview) {
      $itemid = $menu->id; 
@@ -43,31 +31,27 @@
     }
    }
    if (!isset($itemid) && count($items)) {
-    $itemid = $items[0]->id;
+    $itemid = $items[0]->id; 
    }
-  //} //dump ($itemid, 'helper: ');
-  	$itemidprefix = '&Itemid=';
-	if ($isplugin > 0){$itemidprefix = '&amp;Itemid=';} //dump ($activeMenu, 'itemidlinktype: ');
+ 
   switch ($itemidlinktype)
    			{
 			   	case 0:
 			   	$itemid = '';
-			   	return $itemid;
 			   	break;
 			   	
 			   	case 1:
    				//Look for an itemid in the com_menu table from the /helpers/helper.php file
-   				$itemid = $itemidprefix.$itemid; //dump($itemid, 'itemid: ');
-   				return ($itemid ? $itemid : '');
+   				$itemid = $itemid; //dump($itemid, 'itemid: ');
    				break;
    				
 			   	case 2:
    				//Add in an Itemid from the parameter
-   				$itemid = $itemidprefix.$itemidlinknumber;
-   				return ($itemid ? $itemid : '');
+   				$itemid = $itemidlinknumber;
    				break;
    			} 
-  //return($itemid ? $itemid : '');
+   			
+  return($itemid);
  }
 function getAdminsettings()
 	{

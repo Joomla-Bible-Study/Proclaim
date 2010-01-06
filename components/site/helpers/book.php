@@ -6,8 +6,8 @@ function getBooks($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-	$addItemid = '';
-	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
+//	$addItemid = '';
+//	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$book = null;
 	$teacherid = null;
 	$templatemenuid = $params->get('templatemenuid');
@@ -44,7 +44,7 @@ function getBooks($params, $id, $admin_params)
 			$showdiv = 1;
 			}
 		}   
-		    $book .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_book='.$b->booknumber.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.$addItemid.'">';
+		    $book .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_book='.$b->booknumber.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
 		    
 		    $book .= $numRows;
 		    $book .= $b->bookname;
