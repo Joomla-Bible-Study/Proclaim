@@ -87,6 +87,15 @@
 				</param>
 				<param name="store_page" type="text" default="flypage.tpl" label="Virtuemart Display Page" description="If using Virtuemart item, setting for display page in url to store item." size="60" />
 		</params>
+		 <params group="STUDIESVIEW" addpath="/components/com_biblestudy/elements">
+    <param name="headercode" type="textarea" rows="10" cols="100" label="Header Code"></param>
+    <param name="templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;BR&gt;{{printview}} - Print View Icon&lt;BR&gt;{{pdfview}} - PDF View Icon&lt;BR&gt;{{comments}} - Comments&lt;BR&gt;"></param>
+    <param name="wrapcode" type="radio" label="Wrap Code in TABLE or DIV tags?" default="0">
+      <option value="0">No</option>
+      <option value="T">TABLE</option>
+      <option value="D">DIV</option>
+    </param>
+
 		<params group="LISTITEMS">
 		<param name="show_page_title" type="list" default="1" label="Show/Hide Listing Page Title" description="Choose whether to show or hide the listing page title">
 			<option value="0">Hide</option>
@@ -988,11 +997,22 @@
 			</param>
 			<param name="studies" type="text" default="5" label="Number of Studies in Teacher's view" description="Type in the number of studies to show for each teacher in the teacher's view. Leave blank for all" />
 			<param name="label_teacher" type="text" default="Latest Messages" label="Text for Latest Studies Line" description="Enter some text to show when displaying teacher latest studies" />
-		</params>
-		<params group="MODULE">
-			<param name="moduleitems" type="text" size="2" default="5" label="Number of studies to display" description="Enter a number of studies to display in the module" />
-		</params>
-		<params group="SERIES" addpath="/components/com_biblestudy/elements">
+			<param type="spacer" label=""></param>
+    <param name="teacher_headercode" type="textarea" rows="10" cols="100" label="Header Code"></param>
+    <param name="teacher_templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title"></param>
+    <param name="teacher_wrapcode" type="radio" label="Wrap Code in TABLE or DIV tags?" default="0">
+      <option value="0">No</option>
+      <option value="T">TABLE</option>
+      <option value="D">DIV</option>
+    </param>
+</params>
+<params group="TEACHERDETAIL" addpath="/components/com_biblestudy/elements">
+    <param name="teacher_detailtemplate" type="editor" rows="10" cols="100" label="Detail Template Code"></param>
+  </params>
+  <params group="STUDYDETAIL" addpath="/components/com_biblestudy/elements">
+    <param name="study_detailtemplate" type="editor" rows="10" cols="100" label="Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;Codes:&lt;BR&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;BR&gt;{{printview}} - Print View Icon&lt;BR&gt;{{pdfview}} - PDF View Icon&lt;BR&gt;{{comments}} - Comments&lt;BR&gt;"></param>
+  </params>
+<params group="SERIES" addpath="/components/com_biblestudy/elements">
 			<param name="series_title" default="Our Series" type="text" label="Title for Series List Page" description="Text to show at top of Series List Page" />
 			<param name="show_series_title" default="1" type="list" label="Show/Hide Series List Page Title" description="Show or hide the text for the top of the series list page.">
 				<option value="0">Hide Page Title</option>
@@ -1073,7 +1093,15 @@
 				<option value="1">Link to Series Details</option>
 				<option value="3">Link to Teacher details</option>
 			</param>
-		</params>
+			 <param name="series_headercode" type="textarea" rows="10" cols="100" label="Header Code"></param>
+    <param name="series_templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title"></param>
+    <param name="series_wrapcode" type="radio" label="Wrap Code in TABLE or DIV tags?" default="0">
+      <option value="0">No</option>
+      <option value="T">TABLE</option>
+      <option value="D">DIV</option>
+    </param>
+  </params>
+</params>
 		<params group="SERIESDETAIL">
 			<param name="series_detail_sort" default="1" type="list" label="Study sort column" description="Choose a study element to sort the studies list in the series detail section.">
 				<option value="studydate">Study Date</option>

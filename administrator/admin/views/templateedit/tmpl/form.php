@@ -132,17 +132,17 @@ echo $pane->startPanel( JText::_('Landing Page'), 'LANDINGPAGE');
 echo $this->params->render( 'params', 'LANDINGPAGE');
 echo $pane->endPanel();
 
-//echo $pane->startPanel( JText::_('Studies List View'), 'STUDIESVIEW');
-//echo $this->params->render( 'params', 'STUDIESVIEW');
-//echo $pane->endPanel();
+echo $pane->startPanel( JText::_('Studies List View'), 'STUDIESVIEW');
+echo $this->params->render( 'params', 'STUDIESVIEW');
+echo $pane->endPanel();
 
-//echo $pane->startPanel( JText::_('Teacher Display View'), 'TEACHERDETAIL');
-//echo $this->params->render( 'params', 'TEACHERDETAIL');
-//echo $pane->endPanel();
+echo $pane->startPanel( JText::_('Teacher Display View'), 'TEACHERDETAIL');
+echo $this->params->render( 'params', 'TEACHERDETAIL');
+echo $pane->endPanel();
 
-//echo $pane->startPanel( JText::_('Study Display View'), 'STUDYDETAIL');
-//echo $this->params->render( 'params', 'STUDYDETAIL');
-//echo $pane->endPanel();
+echo $pane->startPanel( JText::_('Study Display View'), 'STUDYDETAIL');
+echo $this->params->render( 'params', 'STUDYDETAIL');
+echo $pane->endPanel();
 
 
 
