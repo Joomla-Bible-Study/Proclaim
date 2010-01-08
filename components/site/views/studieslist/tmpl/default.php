@@ -3,7 +3,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die(); ?>
 
-<?php 
+<?php //dump ($this->items, 'items: ');
 global $mainframe, $option;
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
@@ -18,7 +18,7 @@ $document =& JFactory::getDocument();
 //$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-$params = $this->params;
+$params = $this->params; //dump ($params, 'params: ');
 //dump ($this->admin_params);
 	$user =& JFactory::getUser();
 	$entry_user = $user->get('gid');
@@ -92,33 +92,108 @@ if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->pa
 
 
     </div><!--dropdownmenu-->
-     <table id="bslisttable" cellspacing="0">
-     <?php 
-	 
-     $headerCall = JView::loadHelper('header');
-     $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule=0);
-	 echo $header;
-     ?>
-      <tbody>
-
-        <?php 
- //This sets the alternativing colors for the background of the table cells
- $class1 = 'bsodd';
- $class2 = 'bseven';
- $oddeven = $class1;
-
- foreach ($this->items as $row) { //Run through each row of the data result from the model
-	if($oddeven == $class1){ //Alternate the color background
-	$oddeven = $class2;
-	} else {
-	$oddeven = $class1;
+    
+<?php 
+     if ($params->get('useexpert_list')> 0)
+     {
+     	 switch ($params->get('wrapcode')) 
+		  {
+	      case '0':
+	        //Do Nothing
+	        break;
+	      case 'T':
+	        //Table
+	        echo '<table id="bslisttable" width="100%">'; 
+	        break;
+	      case 'D':
+	        //DIV
+	        echo '<div>';
+	        break;
+      	}
+  		echo $params->get('headercode');
+     }
+	else
+	{
+		echo '<table id="bslisttable" cellspacing="0">';
+		$headerCall = JView::loadHelper('header');
+     	$header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule=0);
+	 	echo $header;
 	}
 
-	$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
- 	echo $listing;
+ $class1 = 'bsodd';
+	 $class2 = 'bseven';
+	 $oddeven = $class1;
+	 
+if ($params->get('useexpert_list')> 0)
+{
+	foreach ($this->items as $row) 
+	{ //Run through each row of the data result from the model
+	if($oddeven == $class1){ //Alternate the color background
+		$oddeven = $class2;
+		} else {
+		$oddeven = $class1;
+		}
+	  $listing = '';
+	  if (($allow_entry > 0) && ($entry_access <= $entry_user)) {
+	    
+	    $listing .= "<tr><td style='background-color:#FAF1EB;' align=center>";
+	    $listing .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$row->id.'">'.JText::_(' [Edit] ').'</a>';
+	    $listing .= "</td>";
+	    $listing .= "<td><table>";
+	  }
+	 	  $listing .= getListingExp($row, $params, $oddeven, $this->admin_params, $this->template);
+	  
+	  if (($allow_entry > 0) && ($entry_access <= $entry_user)) {
+	    $listing .= "</table></td></tr>";
+	  }
+	  
+		echo $listing;
+	 }  
+}  	 
+else
+{
+	echo '<tbody>';
+
+	//This sets the alternativing colors for the background of the table cells
+	
+	
+	 foreach ($this->items as $row) 
+	 { //Run through each row of the data result from the model
+		if($oddeven == $class1){ //Alternate the color background
+		$oddeven = $class2;
+		} else {
+		$oddeven = $class1;
+		}
+	
+		$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
+	 	echo $listing;
+	}
+} 
+     
+ 
+ if ($params->get('useexpert_list')> 0)
+ {
+ 	switch ($params->get('wrapcode')) 
+	 {
+      case '0':
+        //Do Nothing
+        break;
+      case 'T':
+        //Table
+        echo '</table>'; 
+        break;
+      case 'D':
+        //DIV
+        echo '</div>';
+        break;
+      }
  }
+ else
+ {
+ 	echo ' </tbody></table>';
+ } 
  ?>
- </tbody></table>
+
 <div class="listingfooter" >
 	<?php 
       

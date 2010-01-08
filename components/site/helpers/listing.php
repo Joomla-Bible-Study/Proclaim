@@ -453,12 +453,15 @@ $Itemid = JRequest::getVar('Itemid');
 			switch ($islink) { 
 		
 			case 1 : 
-			//$addItemid = getItemidLink($isplugin=0, $admin_params);
+				$addItemid = getItemidLink($isplugin=0, $admin_params);
 				if (!$Itemid)
 					{
 				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')); 
 				 	}
-				}
+				 else 
+				 	{
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')); 
+		 		}
 				$column = '<a href="'.$link.'">';
 			 break;
 
@@ -479,7 +482,7 @@ $Itemid = JRequest::getVar('Itemid');
 				//$addItemid = getItemidLink($isplugin=0, $admin_params);
 				if (!$Itemid)
 					{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')); 
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));//.$addItemid; 
 				 	}
 				 else 
 				 	{
@@ -503,8 +506,7 @@ $Itemid = JRequest::getVar('Itemid');
 		   
 		   return $column;
 		}
-		
-		function getListingExp($row, $params, $oddeven, $admin_params, $template)
+function getListingExp($row, $params, $oddeven, $admin_params, $template)
 {
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
@@ -513,7 +515,7 @@ $Itemid = JRequest::getVar('Itemid');
 	include_once($path1.'date.php');
 	include_once($path1.'media.php');
 	
-    dump (JPATH_SITE);
+    //dump (JPATH_SITE);
     $label = $params->get('templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->studytitle, $label);

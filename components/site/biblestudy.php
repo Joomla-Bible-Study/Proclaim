@@ -10,7 +10,32 @@ define('JSTOP', '});');
 // Require the base controller
 require_once (JPATH_COMPONENT.DS.'controller.php');
 
+if ($controller = JRequest::getWord('controller')) {
+$approvedControllers = array(
+'studielist',
+'studydetails',
+'serieslist',
+'seriesdetail',
+'teacherlist', 
+'teacheredit', 
+'teacherdisplay', 
+'commentsedit', 
+'commentslist', 
+'landingpage', 
+'mediafilesedit', 
+'podcastedit', 
+'studiesedit',
+'landingpage'
+);
 
+if ( ! in_array($controller, $approvedControllers)) {
+$controller = 'studieslist';
+
+}
+
+require_once JPATH_COMPONENT . DS . 'controllers' . DS . $controller . '.php';
+}
+/*
 // Require specific controller if requested
 	if($controller = JRequest::getWord('controller')) 
 	{
@@ -49,7 +74,7 @@ require_once (JPATH_COMPONENT.DS.'controller.php');
 	//dump ($controller, 'controller: ');
 }	
 
-
+*/
 // Create the controller
 //
 	$classname	= 'biblestudyController'.$controller;

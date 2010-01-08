@@ -15,13 +15,14 @@ function getTranslated($result)
     $output = array();
 	foreach ($result as $value)
     {
+		//dump ($value, 'value: ');
 		empty($output2);
 		$format = $value->text;
 		$text = JText::_($format);
 		$bookn = $value->value;
 		$id1 = $value->id;
-		$published1 = $value->published;
-		$output2 = array('value'=>$bookn, 'text'=>$text, 'published'=>$published1, 'id'=>$id1);
+		//$published1 = $value->published;
+		$output2 = array('value'=>$bookn, 'text'=>$text, /*'published'=>$published1,*/ 'id'=>$id1);
 		$output[] = $output2;
     }
 return $output;

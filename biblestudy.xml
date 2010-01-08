@@ -228,8 +228,7 @@
 		<filename>elements/serieslisttemplateid.php</filename>
 		<filename>elements/seriesdetailtemplateid.php</filename>
 		<filename>elements/editor.php</filename>
-    	<filename>elements/editor.php</filename>
-		<filename>helpers/book.php</filename>
+    	<filename>helpers/book.php</filename>
         <filename>helpers/comments.php</filename>
 		<filename>helpers/custom.php</filename>
 		<filename>helpers/date.php</filename>
