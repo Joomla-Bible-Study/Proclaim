@@ -27,7 +27,7 @@
 			<option value="DESC">Descending</option>
 			<option value="ASC">Ascending</option>
 		</param>
-		</params>
+	</params>
 	<params group="FP_IMAGES">
 			<param name="show_page_image" type="list" default="1" label="Show/Hide Front Page Image" description="Shows or hides the image on the top of the component site front page">
 			<option value="0">Hide</option>
@@ -37,8 +37,8 @@
 				<option value="0">Hide</option>
 				<option value="1">Show</option>
 		</param>
-	</params>
-	<params group="VERSES">
+</params>
+<params group="VERSES">
 		<param name="show_verses" type="list" default="0" label="Chapters/Verses" description="Choose whether just chapter(s) of Bible study book shown or verses too">
 				<option value="0">Show only chapters</option>
 				<option value="1">Show verses and chapters</option>
@@ -60,8 +60,8 @@
 			<option value="1">Hours/min/sec</option>
 			<option value="2">H:M:S</option>
 		</param>
-		</params>	
-		<params group="MEDIA">	
+</params>	
+<params group="MEDIA">	
 			<param name="compatibilityMode" type="list" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
 				<option value="0">No</option>
 				<option value="1">Yes</option>
@@ -86,8 +86,8 @@
 					<option value="3">Show Comment (if comment present) or Filesize (if no comment)</option>
 				</param>
 				<param name="store_page" type="text" default="flypage.tpl" label="Virtuemart Display Page" description="If using Virtuemart item, setting for display page in url to store item." size="60" />
-		</params>
-		 <params group="STUDIESVIEW" addpath="/components/com_biblestudy/elements">
+</params>
+<params group="STUDIESVIEW" addpath="/components/com_biblestudy/elements">
     <param name="headercode" type="textarea" rows="10" cols="100" label="Header Code"></param>
     <param name="templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;BR&gt;{{printview}} - Print View Icon&lt;BR&gt;{{pdfview}} - PDF View Icon&lt;BR&gt;{{comments}} - Comments&lt;BR&gt;"></param>
     <param name="wrapcode" type="radio" label="Wrap Code in TABLE or DIV tags?" default="0">
@@ -95,8 +95,8 @@
       <option value="T">TABLE</option>
       <option value="D">DIV</option>
     </param>
-
-		<params group="LISTITEMS">
+</params>
+<params group="LISTITEMS">
 		<param name="show_page_title" type="list" default="1" label="Show/Hide Listing Page Title" description="Choose whether to show or hide the listing page title">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
@@ -164,8 +164,8 @@
 					<option value="1">Show unless filtered</option>
 					<option value="2">Show Always</option>
 				</param>
-		</params>
-		<params group="ROW1">
+</params>
+<params group="ROW1">
 			<param name="@spacer" type="spacer" default="Row 1 Column 1" label="Row 1 Column 1" description="Row 1 Column 1">
 				</param>
 			<param name="row1col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -347,8 +347,8 @@
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-		</params>
-		<params group="ROW2">
+</params>
+<params group="ROW2">
 			<param name="@spacer" type="spacer" default="Row 2 Column 1" label="Row 2 Column 1" description="Row 2 Column 1">
 				</param>
 			<param name="row2col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -536,8 +536,8 @@
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-		</params>
-		<params group="ROW3">
+</params>
+<params group="ROW3">
 			<param name="@spacer" type="spacer" default="Row 3 Column 1" label="Row 3 Column 1" description="Row 3 Column 1">
 				</param>
 			<param name="row3col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -719,8 +719,8 @@
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-		</params>
-		<params group="ROW4">
+</params>
+<params group="ROW4">
 			<param name="@spacer" type="spacer" default="Row 4 Column 1" label="Row 4 Column 1" description="Row 4 Column 1">
 				</param>
 			<param name="row4col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -902,8 +902,8 @@
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-		</params>
-		<params group="DETAILS">
+</params>
+<params group="DETAILS">
 			<param name="show_print_view" type="list" default="1" label="Show/Hide Print Button" description="Shows or hides the print button">
 					<option value="0">Hide</option>
 					<option value="1">Show</option>
@@ -988,8 +988,8 @@
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
 				 <param name="study_detailtemplate" type="editor" rows="10" cols="100" label="Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;Codes:&lt;BR&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;" />
-		</params>
-		<params group="TEACHER">
+</params>
+<params group="TEACHER">
 			<param name="teacher_title" type="text" default="Our Teachers" label="List Page Title" description="Text to show on teacher list display page for title" />
 			<param name="show_teacher_studies" type="list" default="1" label="Show/Hide Teacher's Studies" description="Choose to show or hide the listing of latest studies by teacher in teacher display">
 				<option value="0">Hide Study Display</option>
@@ -1101,8 +1101,7 @@
       <option value="D">DIV</option>
     </param>
   </params>
-</params>
-		<params group="SERIESDETAIL">
+<params group="SERIESDETAIL">
 			<param name="series_detail_sort" default="1" type="list" label="Study sort column" description="Choose a study element to sort the studies list in the series detail section.">
 				<option value="studydate">Study Date</option>
 				<option value="studytitle">Study Title</option>
@@ -1230,8 +1229,8 @@
 				<option value="0">No Link</option>
 				<option value="1">Link to Study Details</option>
 			</param>
-			</params>	
-			<params group="TOOLTIP">
+</params>	
+<params group="TOOLTIP">
 				<param name="tip_title" type="text" default="Sermon Information" size="100" label="ToolTip Title" description="Type in a title for the ToolTip" />
 				<param name="tip_item1_title" type="text" default="Title" label="ToolTip Label 1" description="Type in a label for this ToolTip item" size="100" />
 				<param name="tip_item1" type="list" default="5" label="Tool Tip Item 1" description="Choose an item for this ToolTip">
@@ -1323,8 +1322,8 @@
 					<option value="16">Message Type</option>
 					<option value="23">File Size</option>
 				</param>
-			</params>
-			<params group="DETAILSROW1">
+</params>
+<params group="DETAILSROW1">
 			<param name="@spacer" type="spacer" default="Row 1 Column 1" label="Row 1 Column 1" description="Row 1 Column 1">
 				</param>
 			<param name="drow1col1" type="list" default="1" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -1498,8 +1497,8 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-		</params>
-		<params group="DETAILSROW2">
+</params>
+<params group="DETAILSROW2">
 			<param name="@spacer" type="spacer" default="Row 2 Column 1" label="Row 2 Column 1" description="Row 2 Column 1">
 				</param>
 			<param name="drow2col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -1679,8 +1678,8 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-		</params>
-		<params group="DETAILSROW3">
+</params>
+<params group="DETAILSROW3">
 			<param name="@spacer" type="spacer" default="Row 3 Column 1" label="Row 3 Column 1" description="Row 3 Column 1">
 				</param>
 			<param name="drow3col1" type="list" default="" label="Choose an item to display" description="Choose an item from the list to display in this position">
@@ -2029,8 +2028,8 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
 				</param>
-		</params>
-	<params group="LANDINGPAGE" addpath="/components/com_biblestudy/elements">
+</params>
+<params group="LANDINGPAGE" addpath="/components/com_biblestudy/elements">
 	<param type="list" name="landing_hide" default="0" label="Choose type of Show/Hide Label" description="Choose if you want a label or button or both to appear if limit set below to each item.">
 		<option value="0">Button Only</option>
 		<option value="1">Button and Label</option>

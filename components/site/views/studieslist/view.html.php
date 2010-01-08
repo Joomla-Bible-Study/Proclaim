@@ -113,7 +113,7 @@ class biblestudyViewstudieslist extends JView {
 		$item =& $menu->getActive();
 //dump ($admin[0]->main, 'main: ');
 		//Get the main study list image
-		if ($admin[0]->main == '- Use Default -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}
+		if ($admin[0]->main == '- Default Image -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}
 		else 
 		{
 				if ($admin[0]->main && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$admin[0]->main; }
