@@ -16,6 +16,7 @@ class biblestudyControllertemplateedit extends JController {
 		JRequest::setVar('view', 'templateedit');
 		JRequest::setVar('layout', 'form');
 		JRequest::setVar('hidemenu', 1);
+		JRequest::setVar('hidemainmenu', 1);
 
 		parent::display();
 	}

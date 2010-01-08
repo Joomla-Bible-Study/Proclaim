@@ -227,7 +227,8 @@
 		<filename>elements/modulemenuid.php</filename>
 		<filename>elements/serieslisttemplateid.php</filename>
 		<filename>elements/seriesdetailtemplateid.php</filename>
-    <filename>elements/editor.php</filename>
+		<filename>elements/editor.php</filename>
+    	<filename>elements/editor.php</filename>
 		<filename>helpers/book.php</filename>
         <filename>helpers/comments.php</filename>
 		<filename>helpers/custom.php</filename>
@@ -243,7 +244,7 @@
         <filename>helpers/index.html</filename>
 		<filename>helpers/listing.php</filename>
         <filename>helpers/location.php</filename>
-    <filename>helpers/media.php</filename>
+   		<filename>helpers/media.php</filename>
         <filename>helpers/mediatable.php</filename>
         <filename>helpers/messagetype.php</filename>
         <filename>helpers/passage.php</filename>
@@ -257,8 +258,8 @@
         <filename>helpers/title.php</filename>
 		<filename>helpers/topics.php</filename>
         <filename>helpers/translated.php</filename>
-    <filename>helpers/year.php</filename>
-    <filename>helpers/writexml.php</filename>
+	    <filename>helpers/year.php</filename>
+	    <filename>helpers/writexml.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>
@@ -328,7 +329,6 @@
 			<filename>elements/path.php</filename>
 			<filename>elements/podcast.php</filename>
 			<filename>elements/mime.php</filename>
-			<filename>elements/editor.php</filename>
 			<filename>helpers/templates.helper.php</filename>
 			<filename>helpers/toolbar.php</filename>
 			<filename>helpers/bsmCore.php</filename>
@@ -376,6 +376,7 @@
 			<filename>models/shareedit.php</filename>
 			<filename>models/shareedit.xml</filename>
 			<filename>models/index.html</filename>
+			<filename>models/model.php</filename>
 			<filename>views/cssedit/view.html.php</filename>
 			<filename>views/cssedit/index.html</filename>
 			<filename>views/cssedit/tmpl/default.php</filename>

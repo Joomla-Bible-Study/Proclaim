@@ -24,13 +24,23 @@ class JElementeditor extends JElement
 	 */
 	var	$_name = 'editor';
 
-	function fetchElement($name, $value, &$node, $control_name)
-	{
-		$value = str_replace('<br />', "\n", $value);
-		$editor =& JFactory::getEditor();
-		return $editor->display( $control_name.'['.$name.']', 
-			$value, '80%', '400', '40', '15', null ) ;
-	}
+	  function fetchElement($name, $value, &$node, $control_name) 
+	  {
+                $rows = $node->attributes('rows');
+                if ($rows == '') $rows = 20;
+                $cols = $node->attributes('cols');
+                if ($cols == '') $colss = 60;
+                $width = $node->attributes('width');
+                if ($width == '') $width = '100%';
+                $height = $node->attributes('height');
+                if ($height == '') $height = '100%';
+                $buttons = $node->attributes('buttons');
+                if ($buttons == 'false') $buttons = false;
+                else $buttons = true;
+                $editor = & JFactory::getEditor(); //dump ($editor, 'editor: ');
+                return '<div style="text-align: left;">'.$editor->display($control_name .'['. $name .']', $value, $width, $height, $cols,
+$rows, $buttons).'</div>';
+        } 
 
 
 }

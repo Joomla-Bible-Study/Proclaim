@@ -34,7 +34,7 @@ class biblestudyControllercssedit extends JController
 	{
 		JRequest::setVar( 'view', 'cssedit' );
 		JRequest::setVar( 'layout', 'default'  );
-		JRequest::setVar('hidemainmenu', 0);
+		JRequest::setVar('hidemainmenu', 1);
 
 		parent::display();
 	}

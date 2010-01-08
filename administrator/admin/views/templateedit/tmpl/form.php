@@ -110,12 +110,6 @@ echo $pane->startPanel( JText::_('Details List Row 4'), 'DETAILSROW4');
 echo $this->params->render('params', 'DETAILSROW4');
 echo $pane->endPanel();
 
-
-
-echo $pane->startPanel( JText::_('Module'), 'MODULE');
-echo $this->params->render( 'params', 'MODULE');
-echo $pane->endPanel();
-
 echo $pane->startPanel( JText::_('Teacher View'), 'TEACHER');
 echo $this->params->render( 'params', 'TEACHER');
 echo $pane->endPanel();

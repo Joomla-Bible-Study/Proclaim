@@ -19,7 +19,7 @@ if (!$row->id) {return FALSE;}
 	$admin = $database->loadObjectList();
  
 	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
-	$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
+	$d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');
 	$d_path = $d_path1.$d_image;
 	$download_tmp = getImage($d_path);
     $download_image = $download_tmp->path;
