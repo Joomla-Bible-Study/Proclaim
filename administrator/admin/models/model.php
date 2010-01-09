@@ -5,15 +5,15 @@ jimport('joomla.application.component.model');
 
 /**
  * @desc Generic class to serve the models
- * @author Eugen
+ * @author Eugen,
  */
 class BSMModel extends JModel{
 	var $association;
 	var $data = null;
 	var $id = false;
+	var $name;
 	var $table;
-
-	var $filters = array();
+	var $total;
 
 	function __construct() {
 		parent::__construct();
@@ -27,24 +27,36 @@ class BSMModel extends JModel{
 		$this->id = $cid[0];
 	}
 
-	function getData($conditions = array(), $fields = array('*'), $order = null, $prefix = 'bsms_') {
+	function getData($fields = array('*'), $conditions = array(), $order = null, $prefix = 'bsms_') {
 		global $mainframe, $option;
 		
 		$SELECT = array();
 		$JOIN = '';
 		$WHERE = array();
+		
+		//Include the ID in the fields, if its not already
+		if(!in_array('id', $fields) && !in_array('*', $fields))
+			array_unshift($fields, 'id');
+			
 		foreach($fields as $field) {
 			array_push($SELECT, $this->table.'.'.$field);
 		}
 		
-		//SELECT ASSOCIATIONS
+		//Handle Associations
 		foreach($this->association as $table) {
+			if(!in_array('id', $table['fields']) && !in_array('*', $table['fields']))
+				array_unshift($table['fields'], 'id');
+
 			foreach($table['fields'] as $foreignField) {
-				array_push($SELECT, $table['table'].'.'.$foreignField);
+				array_push($SELECT, $table['table'].'.'.$foreignField.' AS "'.$table['alias'].'.'.$foreignField.'"');
 			}
-			if(empty($table['prefix']))
+
+			if(!key_exists('prefix', $table)) {
 				$table['prefix'] = 'bsms_';
+			}
+
 			$JOIN .= ' LEFT JOIN #__'.$table['prefix'].$table['table'].' AS '.$table['table'].' ON ('.$table['table'].'.id = '.$this->table.'.'.$table['foreign_key'].') ';
+			unset($table['prefix']);
 		}
 		
 		//WHERE CONDITIONS
@@ -66,14 +78,27 @@ class BSMModel extends JModel{
 		
 		if (!$this->id) 
 			$query .= ' '.$ORDER;
-		echo $query;
-		
-		if($this->data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'))) {
-			return $this->data;
-		} else {
-			$this->setError(get_class($this).':'.__FUNCTION__.':('.$this->table.'):: Query failed');
-			return false;
+			
+		echo $query.'<hr>';
+		$this->_db->setQuery($query, $this->getState('limitstart'), $this->getState('limit'));
+		$result = $this->_db->loadAssocList();
+		$this->total = $this->_db->getAffectedRows();
+
+		//Format the results into an array
+		$i = 0;
+		foreach($result as $data) {
+			$this->data[$i][$this->name] = $data;
+			foreach($this->association as $foreignTable) {
+				$this->data[$i][$foreignTable['alias']]['id'] = $this->data[$i][$this->name][$foreignTable['alias'].'.id'];
+				foreach($foreignTable['fields'] as $foreignField) {
+					$this->data[$i][$foreignTable['alias']][$foreignField] = $this->data[$i][$this->name][$foreignTable['alias'].'.'.$foreignField];	
+					unset($this->data[$i][$this->name][$foreignTable['alias'].'.'.$foreignField], $this->data[$i][$this->name][$foreignTable['alias'].'.id']);
+				}
+			}
+			$i++;
 		}
+		//dump($this->data);
+		return $this->data;
 	}
 
 	function save($data = null) {
