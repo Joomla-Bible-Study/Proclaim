@@ -62,7 +62,7 @@
 		</param>
 </params>	
 <params group="MEDIA">	
-			<param name="compatibilityMode" type="list" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
+			<param name="compat_mode" type="list" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
 				<option value="0">No</option>
 				<option value="1">Yes</option>
 		</param>		
@@ -110,7 +110,7 @@
 			<option value="0">No Header Row</option>
 			<option value="1">Use Header Row</option>
 		</param>
-		<param name="list_intro" type="textarea" cols="100" rows="10" label="List Introduction" description="Enter some text to use as an introduction to your list page" />
+		<param name="list_intro" type="textarea" rows="10" cols="100" label="List Introduction" description="Enter some text to use as an introduction to your list page" />
 		<param name="intro_show" type="list" default="1" label="Show/Hide Intro" description="Choose whether to hide or show the listing introduction text">
 					<option value="0">Hide</option>
 					<option value="1">Show Below Teacher(s)</option>
@@ -995,7 +995,7 @@
 	<option value="0">Don't Use</option>
 	<option value="1">Use This as View</option>
 </param>
-				 <param name="study_detailtemplate" type="editor" rows="10" cols="100" label="Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;Codes:&lt;BR&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;" />
+				 <param name="study_detailtemplate" type="editor" label="Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;Codes:&lt;BR&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;" />
 </params>
 <params group="TEACHER">
 			<param name="teacher_title" type="text" default="Our Teachers" label="List Page Title" description="Text to show on teacher list display page for title" />
@@ -1019,16 +1019,9 @@
     </param>
 </params>
 <params group="TEACHERDETAIL" addpath="/components/com_biblestudy/elements">
-    <param name="teacher_detailtemplate" type="editor" rows="10" cols="100" label="Detail Template Code"></param>
+    <param name="teacher_detailtemplate" type="editor" label="Detail Template Code"></param>
   </params>
-  <params group="STUDYDETAIL" addpath="/components/com_biblestudy/elements">
-  <param name="useexpert_details2" type="list" label="Use custom view" default="0" description="Choose whether or not to use this as the view">
-	<option value="0">Don't Use</option>
-	<option value="1">Use This as view</option>
-</param>
-    <param name="study_detailtemplate" type="editor" rows="10" cols="100" label="Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;Codes:&lt;BR&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;BR&gt;{{printview}} - Print View Icon&lt;BR&gt;{{pdfview}} - PDF View Icon&lt;BR&gt;{{comments}} - Comments&lt;BR&gt;"></param>
-  </params>
-<params group="SERIES" addpath="/components/com_biblestudy/elements">
+ <params group="SERIES" addpath="/components/com_biblestudy/elements">
 			<param name="series_title" default="Our Series" type="text" label="Title for Series List Page" description="Text to show at top of Series List Page" />
 			<param name="show_series_title" default="1" type="list" label="Show/Hide Series List Page Title" description="Show or hide the text for the top of the series list page.">
 				<option value="0">Hide Page Title</option>
@@ -1113,8 +1106,8 @@
 	<option value="0">Don't Use</option>
 	<option value="1">Use This as view</option>
 </param>
-			 <param name="series_headercode" type="textarea" rows="10" cols="100" label="Header Code"></param>
-    <param name="series_templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title"></param>
+			 <param name="series_headercode" type="editor" label="Header Code"></param>
+    <param name="series_templatecode" type="editor" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title"></param>
     <param name="series_wrapcode" type="radio" label="Wrap Code in TABLE or DIV tags?" default="0">
       <option value="0">No</option>
       <option value="T">TABLE</option>

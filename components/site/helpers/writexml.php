@@ -4,7 +4,7 @@ defined('_JEXEC') or die('Restricted access');
  * @author Joomla Bible Study
  * @copyright 2009
  */
- function writeXML($admin_params, $isplugin)
+ function writeXML()
 	{ //dump($plugin, 'plugin: ');
 		
 		$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';

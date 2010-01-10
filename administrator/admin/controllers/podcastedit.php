@@ -129,7 +129,7 @@ function publish()
 		//$admin_params = new JParameter($admin[0]->params);
 	//$adminsettings = getAdminsettings(); //dump ($adminsettings, 'adminsettings: ');
 	//$admin_params = new JParameter($adminsettings->params);	
- $result= writeXML($admin_params, $isplugin=1);
+ $result= writeXML();
   if ($result)
   {
    $task = JRequest::getCmd('task');

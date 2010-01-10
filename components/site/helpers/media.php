@@ -89,7 +89,7 @@
 	        $database->query();
 	        $admin = $database->loadObjectList();
             
-            $d_path1 = ($admin_params->get('media_imagefolder') ? 'images'.DS.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
+            $d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
             //$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
 	        $d_image = ($admin[0]->download);
 	        $d_path = $d_path1.$d_image;
@@ -141,7 +141,7 @@
     	    $Itemid = $params->get('detailstemplateid', 1);
 	        if (!$media->path2) { $i_path = $media->impath; }
 	        if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-	        if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
+	        if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$media->path2;}
 	        $image = getImage($i_path);
 	        
 	        $database = & JFactory::getDBO();
@@ -150,7 +150,7 @@
 	        $database->query();
 	        $admin = $database->loadObjectList();
             
-            $d_path1 = ($admin_params->get('media_imagefolder') ? 'images'.DS.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
+            $d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
             //$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
 	        $d_image = ($admin[0]->download);
 	        $d_path = $d_path1.$d_image;
@@ -190,7 +190,7 @@
     	    $Itemid = $params->get('detailstemplateid', 1);
 	        if (!$media->path2) { $i_path = $media->impath; }
 	        if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-	        if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
+	        if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$media->path2;}
 	        $image = getImage($i_path);
 
             $idfield = '#__bsms_mediafiles.id';
