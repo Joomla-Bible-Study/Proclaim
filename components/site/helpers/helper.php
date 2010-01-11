@@ -60,8 +60,9 @@ function getAdminsettings()
 			. ' FROM #__bsms_admin'
 			. ' WHERE id = 1';
 			$db->setQuery($query);
-			$adminsettings = $db->loadObjectList();
+			$adminsettings = $db->loadObject();
 			$admin_params = null;
+			//dump ($adminsettings[0]->params, 'adminsettings: ');
 			//$handler =& JRegistryFormat::getInstance('INI');
 			//$adminparameters = $handler->objectToString($adminsettings[0]);
 			//$admin_params = new JParameter($adminparameters);

@@ -12,7 +12,7 @@ require_once (JPATH_COMPONENT.DS.'controller.php');
 
 if ($controller = JRequest::getWord('controller')) {
 $approvedControllers = array(
-'studielist',
+'studieslist',
 'studydetails',
 'serieslist',
 'seriesdetail',
