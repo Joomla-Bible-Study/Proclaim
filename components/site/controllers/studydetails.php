@@ -32,8 +32,27 @@ class biblestudyControllerstudydetails extends JController
 	 */
 	function view()
 	{
+		
+		//Get the params so we can set the proper view
+		$model = $this->getModel('studydetails');
+		$menu =& JSite::getMenu();
+		$item =& $menu->getActive();
+		$params 			=& $mainframe->getPageParameters();
+		$templatemenuid = $params->get('templatemenuid');
+		if (!$templatemenuid){$templatemenuid = 1;}
+		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		//$template = $model->get('Template');
+		$params = new JParameter($model->_template[0]->params); dump ($params, 'params: ');
+		if ($params->get('useexpert_details') > 0)
+		{
+			JRequest::setVar('layout', 'custom');
+		}
+		else
+		{
+			JRequest::setVar( 'layout', 'default'  );
+		}
 		JRequest::setVar( 'view', 'studydetails' );
-		JRequest::setVar( 'layout', 'default'  );
+		
 		//JRequest::setVar('hidemainmenu', 1);
 		//update the hit count for the study
 		//if(JRequest::getCmd('view') == 'studydetails')

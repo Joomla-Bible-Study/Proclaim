@@ -995,7 +995,7 @@
 	<option value="0">Don't Use</option>
 	<option value="1">Use This as View</option>
 </param>
-				 <param name="study_detailtemplate" type="editor" label="Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;Codes:&lt;BR&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;" />
+		<param name="study_detailtemplate" type="textarea"  rows="10" cols="100" label="Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;Codes:&lt;BR&gt;&lt;BR&gt;{{title}} - Sermon Title&lt;BR&gt;{{teacher}} - Teacher Name&lt;BR&gt;{{date}} - Date&lt;BR&gt;{{studyintro}} - Intro Text&lt;BR&gt;{{scripture}} - Scripture Reference&lt;BR&gt;{{topics}} - Topics (Tags)&lt;BR&gt;{{mediatime}} - Time&lt;BR&gt;{{thumbnail}} - Thumbnail Image&lt;BR&gt;{{seriestext}} - Series Name&lt;BR&gt;{{messagetype}} - Message Type&lt;BR&gt;{{bookname}} - Book Name&lt;BR&gt;{{studytext}} - Study Notes&lt;BR&gt;{{scripturelink}} - Scripture Link&lt;BR&gt;{{media}} - Media Table&lt;BR&gt;{{share}} - Social Networking Links&lt;" />
 </params>
 <params group="TEACHER">
 			<param name="teacher_title" type="text" default="Our Teachers" label="List Page Title" description="Text to show on teacher list display page for title" />
@@ -1018,10 +1018,7 @@
       <option value="D">DIV</option>
     </param>
 </params>
-<params group="TEACHERDETAIL" addpath="/components/com_biblestudy/elements">
-    <param name="teacher_detailtemplate" type="editor" label="Detail Template Code"></param>
-  </params>
- <params group="SERIES" addpath="/components/com_biblestudy/elements">
+<params group="SERIES" addpath="/components/com_biblestudy/elements">
 			<param name="series_title" default="Our Series" type="text" label="Title for Series List Page" description="Text to show at top of Series List Page" />
 			<param name="show_series_title" default="1" type="list" label="Show/Hide Series List Page Title" description="Show or hide the text for the top of the series list page.">
 				<option value="0">Hide Page Title</option>
@@ -1106,15 +1103,15 @@
 	<option value="0">Don't Use</option>
 	<option value="1">Use This as view</option>
 </param>
-			 <param name="series_headercode" type="editor" label="Header Code"></param>
-    <param name="series_templatecode" type="editor" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title"></param>
+			 <param name="series_headercode" type="textarea" rows="10" cols="100" label="Header Code"></param>
+    <param name="series_templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title"></param>
     <param name="series_wrapcode" type="radio" label="Wrap Code in TABLE or DIV tags?" default="0">
       <option value="0">No</option>
       <option value="T">TABLE</option>
       <option value="D">DIV</option>
     </param>
   </params>
-<params group="SERIESDETAIL">
+<params group="SERIESDETAIL" addpath="/components/com_biblestudy/elements">
 			<param name="series_detail_sort" default="1" type="list" label="Study sort column" description="Choose a study element to sort the studies list in the series detail section.">
 				<option value="studydate">Study Date</option>
 				<option value="studytitle">Study Title</option>
@@ -1242,6 +1239,11 @@
 				<option value="0">No Link</option>
 				<option value="1">Link to Study Details</option>
 			</param>
+			<param name="useexpert_seriesdetail" type="list" label="Use Expert Template" description="Choose whether to use the custom template you define below">
+			<option value="0">Don't Use</option>
+	<option value="1">Use This as view</option>
+			</param>
+			<param name="series_detailcode" type="editor" label="Series Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title" />
 </params>	
 <params group="TOOLTIP">
 				<param name="tip_title" type="text" default="Sermon Information" size="100" label="ToolTip Title" description="Type in a title for the ToolTip" />

@@ -96,14 +96,14 @@ class biblestudyViewstudydetails extends JView
 			
 		} //end if $linkit
 		
-		/*
+		
 		//Prepares a link string for use in social networking
 		$u =& JURI::getInstance();
 		$detailslink = htmlspecialchars($u->toString());
 		$detailslink = JRoute::_($detailslink); 
 		$this->assignRef('detailslink', $detailslink);
 		//End social networking
-	 	*/
+	 	
                 // End process prepare content plugins
 		$this->assignRef('template', $template);
 		$this->assignRef('print', $print);

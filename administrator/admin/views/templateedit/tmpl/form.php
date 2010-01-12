@@ -114,16 +114,8 @@ echo $pane->startPanel( JText::_('Details List Row 4'), 'DETAILSROW4');
 echo $this->params->render('params', 'DETAILSROW4');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Study Display Custom View'), 'STUDYDETAIL');
-echo $this->params->render( 'params', 'STUDYDETAIL');
-echo $pane->endPanel();
-
 echo $pane->startPanel( JText::_('Teacher View'), 'TEACHER');
 echo $this->params->render( 'params', 'TEACHER');
-echo $pane->endPanel();
-
-echo $pane->startPanel( JText::_('Teacher Display Custom View'), 'TEACHERDETAIL');
-echo $this->params->render( 'params', 'TEACHERDETAIL');
 echo $pane->endPanel();
 
 echo $pane->startPanel( JText::_('Series List'), 'SERIES');
