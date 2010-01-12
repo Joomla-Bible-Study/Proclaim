@@ -4,7 +4,7 @@
  * Author : Nick Fossen
  * Contact : nfossen@gmail
  * Home URL : http://www.newhorizoncf.org
- * {shSourceVersionTag: Version 1.0 - 2009-09-15}
+ * {shSourceVersionTag: Version 1.1 - 2010-01-12}
  *    
  */
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
@@ -79,11 +79,13 @@ switch ($view) {
 }
 
 // Change the URL for downloading file
- if($task == 'download')
- {
-	 $title[] = 'download';
-	 shRemoveFromGETVarsList('controller');
-	 shRemoveFromGETVarsList('task');
+ if(isset($task)){
+	 if($task == 'download')
+	 {
+		 $title[] = 'download';
+		 shRemoveFromGETVarsList('controller');
+		 shRemoveFromGETVarsList('task');
+	 }
  }
  
  // remove biblestudy URL from GET vars list, so that they don't show up as query string in the URL

@@ -107,7 +107,7 @@ if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->pa
 	        break;
 	      case 'D':
 	        //DIV
-	        echo '<div>';
+	        echo '<div id="bslisttable">';
 	        break;
       	}
   		echo $params->get('headercode');

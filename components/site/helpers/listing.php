@@ -6,6 +6,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'helper.php');
+	
 	//Here we test to see if this is a studydetails or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.
 	$view = JRequest::getVar('view', 'get');
 	if ($view == 'studydetails' && $ismodule < 1)
@@ -514,6 +515,7 @@ function getListingExp($row, $params, $oddeven, $admin_params, $template)
 	include_once($path1.'custom.php');
 	include_once($path1.'date.php');
 	include_once($path1.'media.php');
+	include_once($path1.'mediatable.php');
 	
     //dump (JPATH_SITE);
     $label = $params->get('templatecode');
@@ -532,7 +534,7 @@ function getListingExp($row, $params, $oddeven, $admin_params, $template)
     $label = str_replace('{{topics}}', $row->topic_text, $label);
 //    		$social = getShare($this->detailslink, $row, $params, $this->admin_params);
 //		echo $social;
-    $media = getMedia($row->id);
+    /*$media = getMedia($row->id);
 
     $mediaTable = "<table id='bsms_mediatable'><TR>";
     foreach ($media as $item) {
@@ -540,8 +542,9 @@ function getListingExp($row, $params, $oddeven, $admin_params, $template)
         $mediaTable .= "<td>".getDownloadLink ($item, $params, $admin_params)."</td>";
     }
     $mediaTable .= "<td>".getPdf($row, $params, $admin_params)."</td>";
-    $mediaTable .= "</TR></table>";
-    
+    $mediaTable .= "</TR></table>";*/
+    //For now we need to use the existing mediatable function to get all the media
+    $mediaTable = getMediatable($params, $row, $admin_params); //dump ($mediaTable, 'mediatable: ');
     $label = str_replace('{{media}}', $mediaTable, $label);
     //Need to add template items for media...
     
@@ -555,7 +558,7 @@ function getStudyExp($row, $params, $admin_params, $template)
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'passage.php');
-	//include_once($path1.'mediatable.php');
+	include_once($path1.'mediatable.php');
 	//This will eventually replace mediatable in this context.  Just for clarity.
 	include_once($path1.'media.php');
     include_once($path1.'share.php');
@@ -584,9 +587,9 @@ function getStudyExp($row, $params, $admin_params, $template)
     $label = str_replace('{{scripturelink}}', $link, $label);
     
     //Media
-    $media = getMedia($row->id);
+    //$media = getMedia($row->id);
     
-    $mediaTable = "<table class='bsms_mediatable'>";
+    /*$mediaTable = "<table class='bsms_mediatable'>";
     //File Type - Download - Player 
     foreach ($media as $item) {
         $mediaTable .= "<TR>";
@@ -599,8 +602,8 @@ function getStudyExp($row, $params, $admin_params, $template)
         }
         $mediaTable .= "</TR>";
     }
-    $mediaTable .= "</table>";
-    
+    $mediaTable .= "</table>";*/
+    $mediaTable = getMediatable($params, $row, $admin_params);
     $label = str_replace('{{media}}', $mediaTable, $label);
     
     //Share
