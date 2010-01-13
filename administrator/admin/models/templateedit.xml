@@ -1006,17 +1006,23 @@
 			<param name="studies" type="text" default="5" label="Number of Studies in Teacher's view" description="Type in the number of studies to show for each teacher in the teacher's view. Leave blank for all" />
 			<param name="label_teacher" type="text" default="Latest Messages" label="Text for Latest Studies Line" description="Enter some text to show when displaying teacher latest studies" />
 			<param type="spacer" label=""></param>
-<param name="useexpert_teacherlist" type="list" label="Use custom view" default="0" description="Choose whether or not to use this as the view">
+<param name="useexpert_teacherlist" type="list" label="Use custom Teacher List view" default="0" description="Choose whether or not to use this as the view">
 	<option value="0">Don't Use</option>
 	<option value="1">Use This as view</option>
 </param>
-    <param name="teacher_headercode" type="textarea" rows="10" cols="100" label="Header Code"></param>
-    <param name="teacher_templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title"></param>
+    <param name="teacher_headercode" type="textarea" rows="10" cols="100" label="Header Code" description="Put any HTML in here you want for the header"></param>
+    <param name="teacher_templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{short}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{information}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Teacher Title &lt;BR&gt; {{teacher}} - Teacher Title &lt;BR&gt; {{phone}} - Phone &lt;BR&gt; {{website}} - Website &lt;BR&gt; {{information}} - Extended Information &lt;BR&gt; {{image}} - Large Image &lt;BR&gt; {{thumbnail}} - Small Image &lt;BR&gt; {{short}} Short Description"></param>
     <param name="teacher_wrapcode" type="radio" label="Wrap Code in TABLE or DIV tags?" default="0">
       <option value="0">No</option>
       <option value="T">TABLE</option>
       <option value="D">DIV</option>
     </param>
+    <param type="spacer" label=""></param>
+    <param name="useexpert_teacherdetail" type="list" label="Use custom Teacher Detail view" default="0" description="Choose whether or not to use this as the view">
+	<option value="0">Don't Use</option>
+	<option value="1">Use This as view</option>
+</param>
+    <param name="teacher_detailtemplate" type="textarea" rows="10" cols="100" label="Teacher Detail Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{short}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{information}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Teacher Title &lt;BR&gt; {{teacher}} - Teacher Title &lt;BR&gt; {{phone}} - Phone &lt;BR&gt; {{website}} - Website &lt;BR&gt; {{information}} - Extended Information &lt;BR&gt; {{image}} - Large Image &lt;BR&gt; {{thumbnail}} - Small Image &lt;BR&gt; {{short}} Short Description"></param>
 </params>
 <params group="SERIES" addpath="/components/com_biblestudy/elements">
 			<param name="series_title" default="Our Series" type="text" label="Title for Series List Page" description="Text to show at top of Series List Page" />
@@ -1104,7 +1110,7 @@
 	<option value="1">Use This as view</option>
 </param>
 			 <param name="series_headercode" type="textarea" rows="10" cols="100" label="Header Code"></param>
-    <param name="series_templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title"></param>
+    <param name="series_templatecode" type="textarea" rows="10" cols="100" label="Display Code" default="" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Series Title &lt;BR&gt; {{teacher}} - Teacher &lt;BR&gt; {{teachertitle}} - Teacher Title &lt;BR&gt; {{description}} - Description &lt;BR&gt; {{thumbnail}} - Thumbnail Image &lt;BR&gt; {{thumbh}} - Thumbnail Height &lt;BR&gt; {{thumbw}} Thumbnail Width &lt;BR&gt; {{url}} - Link to Series Details and Studies"></param>
     <param name="series_wrapcode" type="radio" label="Wrap Code in TABLE or DIV tags?" default="0">
       <option value="0">No</option>
       <option value="T">TABLE</option>
@@ -1243,7 +1249,7 @@
 			<option value="0">Don't Use</option>
 	<option value="1">Use This as view</option>
 			</param>
-			<param name="series_detailcode" type="editor" label="Series Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Sermon Title" />
+			<param name="series_detailcode" type="textarea" rows="10" cols="100" label="Series Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Series Title &lt;BR&gt; {{teacher}} - Teacher &lt;BR&gt; {{teachertitle}} - Teacher Title &lt;BR&gt; {{description}} - Series Description" />
 </params>	
 <params group="TOOLTIP">
 				<param name="tip_title" type="text" default="Sermon Information" size="100" label="ToolTip Title" description="Type in a title for the ToolTip" />

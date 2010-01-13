@@ -405,8 +405,6 @@ function getSerieslistExp($row, $params, $admin_params)
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-	$addItemid = '';
-	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$templatemenuid = $params->get('serieslisttemplateid');
 	
 	//dump ($templatemenuid, "Template");
@@ -439,7 +437,7 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
         include_once($path1.'comments.php');
         include_once($path1.'date.php');
             
-        $label = $params->get('seriesdesc_template');
+        $label = $params->get('series_detailcode');
         $label = str_replace('{{teacher}}', $row->teachername, $label);
         $label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
         $label = str_replace('{{description}}', $row->description, $label);
@@ -522,7 +520,8 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	
 	foreach ($result AS $row)
 	{
-	    $studies .= getListingExp($row, $params, $oddeven, $params, $params->seriesdetailtemplateid);	
+	    $oddeven = 0;
+		$studies .= getListingExp($row, $params, $oddeven, $params, $params->get('seriesdetailtemplateid'));	
 	}
 	
 switch ($params->get('series_wrapcode')) {

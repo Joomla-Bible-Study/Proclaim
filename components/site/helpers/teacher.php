@@ -171,7 +171,7 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	include_once($path1.'elements.php');
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
-		
+	
 	$label = $params->get('teacher_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->title, $label);
@@ -203,8 +203,8 @@ function getTeacherDetailsExp($row, $params, $template)
 	$label = str_replace('{{image}}', '<img src="'. $row->image .'" width="'.$row->imagew.'" height="'.$row->imageh.'" id="bsms_teacherImage" />', $label);
 	$label = str_replace('{{short}}', $row->short, $label);
 	$label = str_replace('{{thumbnail}}', '<img src="'. $row->thumb .'" width="'.$row->thumbw.'" height="'.$row->thumbh.'" id="bsms_teacherThumbnail" />', $label);
-    $label = str_replace('{{information}}', $row->information, $label);
-    $label = str_replace('{{shortinformation}}', $row->short, $label);
+    //$label = str_replace('{{information}}', $row->information, $label);
+    //$label = str_replace('{{short}}', $row->short, $label);
     
 	return $label;
 }

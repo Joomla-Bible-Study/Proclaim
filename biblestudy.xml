@@ -53,6 +53,8 @@
 		<filename>views/studieslist/metadata.xml</filename>
 		<filename>views/studieslist/tmpl/index.html</filename>
 		<filename>views/studieslist/tmpl/default.php</filename>
+		<filename>views/studieslist/tmpl/default_custom.php</filename>
+		<filename>views/studieslist/tmpl/default_main.php</filename>
 		<filename>views/studieslist/tmpl/default.xml</filename>
 		<filename>views/studydetails/index.html</filename>
 		<filename>views/studydetails/view.html.php</filename>
@@ -60,6 +62,8 @@
 		<filename>views/studydetails/tmpl/index.html</filename>
 		<filename>views/studydetails/tmpl/default.php</filename>
 		<filename>views/studydetails/tmpl/default.xml</filename>
+		<filename>views/studydetails/tmpl/default_custom.php</filename>
+		<filename>views/studydetails/tmpl/default_main.php</filename>
 		<filename>views/studydetails/metadata.xml</filename>
 		<filename>views/teacherdisplay/index.html</filename>
 		<filename>views/teacherdisplay/view.html.php</filename>
@@ -67,12 +71,16 @@
 		<filename>views/teacherdisplay/tmpl/index.html</filename>
 		<filename>views/teacherdisplay/tmpl/default.php</filename>
 		<filename>views/teacherdisplay/tmpl/default.xml</filename>
+		<filename>views/teacherdisplay/tmpl/default_custom.php</filename>
+		<filename>views/teacherdisplay/tmpl/default_main.php</filename>
 		<filename>views/teacherlist/index.html</filename>
 		<filename>views/teacherlist/view.html.php</filename>
 		<filename>views/teacherlist/metadata.xml</filename>
 		<filename>views/teacherlist/tmpl/index.html</filename>
 		<filename>views/teacherlist/tmpl/default.php</filename>
 		<filename>views/teacherlist/tmpl/default.xml</filename>
+		<filename>views/teacherlist/tmpl/default_custom.php</filename>
+		<filename>views/teacherlist/tmpl/default_main.php</filename>
 		<filename>views/mediafilesedit/index.html</filename>
 		<filename>views/mediafilesedit/view.html.php</filename>
 		<filename>views/mediafilesedit/metadata.xml</filename>
@@ -115,12 +123,16 @@
 		<filename>views/serieslist/tmpl/index.html</filename>
 		<filename>views/serieslist/tmpl/default.php</filename>
 		<filename>views/serieslist/tmpl/default.xml</filename>
+		<filename>views/serieslist/tmpl/default_custom.php</filename>
+		<filename>views/serieslist/tmpl/default_main.php</filename>
 		<filename>views/seriesdetail/index.html</filename>
 		<filename>views/seriesdetail/view.html.php</filename>
 		<filename>views/seriesdetail/metadata.xml</filename>
 		<filename>views/seriesdetail/tmpl/index.html</filename>
 		<filename>views/seriesdetail/tmpl/default.php</filename>
 		<filename>views/seriesdetail/tmpl/default.xml</filename>
+		<filename>views/seriesdetail/tmpl/default_custom.php</filename>
+		<filename>views/seriesdetail/tmpl/default_main.php</filename>
 		<filename>models/teacheredit.php</filename>
         <filename>models/landingpage.php</filename>
 		<filename>models/studydetails.php</filename>
@@ -259,6 +271,7 @@
         <filename>helpers/translated.php</filename>
 	    <filename>helpers/year.php</filename>
 	    <filename>helpers/writexml.php</filename>
+	    <filename>helpers/updatesef.php</filename>
 		</files>
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>

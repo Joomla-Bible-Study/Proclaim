@@ -735,6 +735,21 @@ $database->setQuery ("DELETE FROM #__bsms_schemaVersion WHERE id = 1 LIMIT 1");
 		$db613 = $database->loadResult();
 		$dbmessage613 =  'Upgraded database to version: '.$db613.'<br>';
 		$installresults[] = 'Database version 613 installed';
+		
+//Update the sh404SEF redirection table if it exists. This is also for AVR problems
+jimport('joomla.filesystem.file');
+$dest = JPATH_SITE.DS.'/components/com_sh404sef/index.html';
+$sh404exists = JFile::exists($dest);
+if ($sh404exists)
+{
+	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	include_once($path1.'updatesef.php');
+	$sh404 =  updateSEF();
+	if ($sh404)
+	{
+		$installresults[] = $sh404;
+	}
+}
 //End of upgrade to databse version 613
 
 //Begin upgrade to 614 database version - this is the first one for component 6.2

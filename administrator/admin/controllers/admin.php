@@ -110,7 +110,22 @@ function publish()
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 	}
 
-
+	function updatesef()
+		{
+			$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+			include_once($path1.'updatesef.php');
+			$update = updateSEF();
+			if ($update)
+			{
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $update );	
+			}
+			else
+			{
+				$msg = JText::_('Update successful. No error messages generated.');
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+			}
+			
+		}
 
 }
 ?>

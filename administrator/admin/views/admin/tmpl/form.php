@@ -49,6 +49,18 @@ echo $pane->endPane();?>
 <tr><td class="key"><?php echo JText::_('Default Teacher Image');?></td><td><?php echo $this->lists['teacher']; echo JText::_(' Default for teacher thumbnail. Set Folder above.');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Download Image');?></td><td><?php echo $this->lists['download']; echo JText::_(' Default for download image. Must be called download.png. Media images folder used (set above).');?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Show/Hide Image for Landing Page');?></td><td><?php echo $this->lists['showhide']; echo JText::_(' Default for Show/Hide Image on Landing Page. Media images folder used (set above).');?></td></tr>
+
+<?php //test for sh404SEF
+jimport('joomla.filesystem.file');
+$dest = JPATH_SITE.DS.'/components/com_sh404sef/index.html';
+$sh404exists = JFile::exists($dest);
+if ($sh404exists)
+{
+	?>
+	<tr><td class="key"><?php echo JText::_('sh404SEF maintenance'); ?></td><td><a href="index.php?option=com_biblestudy&view=admin&controller=admin&task=updatesef">Update sh404SEF links for com_biblestudy</a></td></tr>
+	<?php
+}
+?>
       <tr> <td class="key"><?php echo JText::_('Version');?></td>
       	<td><?php echo JText::_('Your Version: ').'6.1.0 - ';?>
         <strong>

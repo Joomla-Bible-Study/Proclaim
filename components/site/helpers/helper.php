@@ -59,16 +59,10 @@ function getAdminsettings()
 			$query = 'SELECT *'
 			. ' FROM #__bsms_admin'
 			. ' WHERE id = 1';
-			$db->setQuery($query);
-			$adminsettings = $db->loadObject();
+			$adminsettings = $db->loadAssoc();
 			$admin_params = null;
-			//dump ($adminsettings[0]->params, 'adminsettings: ');
-			//$handler =& JRegistryFormat::getInstance('INI');
-			//$adminparameters = $handler->objectToString($adminsettings[0]);
-			//$admin_params = new JParameter($adminparameters);
-			$admin_params = new JParameter($adminsettings[0]->params); //dump ($adminsettings, 'adminsettings: ');
-			
-		
+			$admin_params = new JParameter($adminsettings['params']); 
+					
 		return $admin_params;
 	}
 
