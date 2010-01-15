@@ -253,12 +253,13 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
 	  . ' where #__bsms_teachers.id = ' .$id
 	  . ' GROUP BY #__bsms_studies.id'
 	  . ' order by studydate desc'
-	  ;
+	  . $limit;
 	
 	$db->setQuery($query);
 	$result = $db->loadObjectList();
-	$numrows = $db->getAffectedRows();
-	
+	$numrows = $db->getAffectedRows(); 
+	$studieslimit = $params->get('studies',10);
+	//dump($studieslimit, 'numrows: ');
 	$studies = '';
 	
 	  switch ($params->get('wrapcode')) {
@@ -276,9 +277,15 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
       }
 	
 	$params->get('headercode');
+	$i = 0;
 	foreach ($result AS $row)
 	{
-	    $studies .= getListingExp($row, $params, $oddeven, $params, $params->seriesdetailtemplateid);	
+	    if ($i > $studieslimit) 
+	    {
+	       	break;
+	    }
+		$studies .= getListingExp($row, $params, $oddeven, $params, $params->get('studieslisttemplateid'));	
+	    $i++;
 	}
 	
 	  switch ($params->get('wrapcode')) {

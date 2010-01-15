@@ -495,7 +495,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
         . ' where #__bsms_series.id = ' .$id
         . ' GROUP BY #__bsms_studies.id'
         . ' order by studydate desc'
-        ;	
+        . $limit;	
 	$db->setQuery($query);
 	$result = $db->loadObjectList();
 	$numrows = $db->getAffectedRows();
@@ -538,12 +538,22 @@ switch ($params->get('series_wrapcode')) {
         break;
       }
   echo $params->get('series_headercode');
-  
+
+
+if ($params->get('series_detail_show_link') > 0 && $nolimit != 1 && $rows > $params->get('series_detail_limit')) 
+			{
+				$studies .= '<table id="bsms_seriestable" width="100%"><tr><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&id='.$id.'&nolimit=1&templatemenuid='.$templatemenuid).'">'.JText::_('Show All').' '.$rows.' '.JText::_('Studies From This Series').' >></a>';
+			}
+		$studies .= '</td></tr>
+		';
 	
+			
 	if ($params->get('series_list_return') > 0) 
 		{		
-			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'">'.' << '.JText::_('Return To Series List').'</a></td></tr>';
+			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'">'.' << '.JText::_('Return To Series List').'</a></td></tr></table>';
 		}
+		
+	
 return $studies;
 }
 

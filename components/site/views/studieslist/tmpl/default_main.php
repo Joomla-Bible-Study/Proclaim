@@ -19,7 +19,7 @@ $document =& JFactory::getDocument();
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
-//dump ($this->admin_params);
+//dump ($this->params);
 	$user =& JFactory::getUser();
 	$entry_user = $user->get('gid');
 	if (!$entry_user) { $entry_user = 0;}
@@ -124,7 +124,9 @@ if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->pa
       
       echo $this->pagination->getPagesLinks();
       echo $this->pagination->getPagesCounter();
-      //echo $this->pagination->getListFooter(); ?>
+      //echo $this->pagination->getListFooter(); 
+	  
+	  ?>
 </div> <!--end of bsfooter div-->
   </div><!--end of bspagecontainer div-->
   <input name="option" value="com_biblestudy" type="hidden">

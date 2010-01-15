@@ -74,6 +74,77 @@ if (!$row->id) {return FALSE;}
 	  $path1 = getFilepath($media->id, $idfield, $mime);
 	  //dump ($media->id);
       //Get the type of player to use
+      
+      //Players: 0 = getDirect, 1 = getAVR, 2 = getInternal
+      $playertype = 0;
+      $continue = 0;
+     //$avrtest = $itemparams->get('player'); dump($avrtest, 'avrtest: ');
+     if ($media->internal_viewer == 1) //dump ($media->internal_viewer, 'internal_viewer: ');
+      {
+      	if (($params->get('useavr') == 1 || !$params->get('useavr')) || $itemparams->get('player') == 2)
+      		{
+      			$playertype = 1;
+   				$continue = 1;
+				$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
+				if ($textfiles > 0)
+				{
+					$playertype = 0;
+					$continue = 1; 
+				}
+				 	
+     		}
+      } 	 //dump ($continue, 'continue - after oldavr: ');
+      //Check to see if we have set the media player from above, if so, we skip the next step
+      if ($continue == 0)
+      {
+	      	if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
+	      	{
+	      		$fileextension = substr($media->filename, -3,3);
+		  		$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
+				if ($textfiles > 0)
+				{
+					$playertype = 0;
+					$continue = 1;
+				}
+				else
+				{
+					$playertype = 1;
+	      			$continue = 1;
+	      		}
+	      	}
+      } //dump ($textfiles, 'continue: ');
+      if ($continue == 0)
+      {
+      		if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
+      		{
+      			$ismp3 = substr($media->filename,-3,3);
+      			if ($ismp3 == 'mp3')
+      			{
+      				$playertype = 2;
+      				$continue = 1;
+      			}
+      		}
+      }
+      if ($continue == 0)
+     	{
+      		$playertype = 0;      	
+      	}
+      //dump ($playertype, 'playertype: ');
+      switch ($playertype)
+      {
+      	case 0:
+      	$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
+		break;
+		
+		case 1:
+		$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+		break;
+		
+		case 2:
+		$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
+		break;
+      }
+      /* We have removed this logic and hopefully handled it more simply above. 
 	  switch ($itemparams->get('player', 0))
 			{
 				case 0:
@@ -124,15 +195,22 @@ if (!$row->id) {return FALSE;}
 					elseif ($itemparams->get('player') < 1 || $params->get('useavr') > 0)
 					{
 						$fileextension = substr($media->filename, -3,3);
-				$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
-				if ($textfiles > 0){$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);}
-				else {$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);}
+						$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
+						if ($textfiles > 0)
+							{
+								$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
+							}
+						//else 
+						//{
+						//	$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+						//}
 					}
 					else 
 					{
 						$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
 					}
 		}
+		*/
 	  if ($media->docMan_id > 0)
 	 	{
 			$media1_link = getDocman($media, $width, $height, $src, $duration, $filesize);

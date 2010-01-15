@@ -40,6 +40,7 @@
 		<filename>assets/css/biblestudy.css.dist</filename>
 		<filename>assets/css/biblestudy.sav</filename>
 		<filename>assets/avr/view.html.php</filename>
+		<filename>assets/upgrade/upgrade614.php</filename>
 		<filename>sef_ext/com_biblestudy.php</filename>
 		<filename>views/index.html</filename>
         <filename>views/landingpage/index.html</filename>
@@ -240,6 +241,7 @@
 		<filename>elements/serieslisttemplateid.php</filename>
 		<filename>elements/seriesdetailtemplateid.php</filename>
 		<filename>elements/editor.php</filename>
+		<filename>elements/sqlmultilistx.php</filename>
     	<filename>helpers/book.php</filename>
         <filename>helpers/comments.php</filename>
 		<filename>helpers/custom.php</filename>

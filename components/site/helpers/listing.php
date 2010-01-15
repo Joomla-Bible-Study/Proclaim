@@ -516,8 +516,9 @@ function getListingExp($row, $params, $oddeven, $admin_params, $template)
 	include_once($path1.'date.php');
 	include_once($path1.'media.php');
 	include_once($path1.'mediatable.php');
+	include_once($path1.'duration.php');
 	
-    //dump (JPATH_SITE);
+    //dump ($row, 'row: ');
     $label = $params->get('templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->studytitle, $label);
@@ -526,13 +527,16 @@ function getListingExp($row, $params, $oddeven, $admin_params, $template)
 	$label = str_replace('{{scripture}}', getScripture($params, $row, 0, 1), $label);
 	$label = str_replace('{{topics}}', $row->topic_text, $label);
     $label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id .'&templatemenuid='.$template, $label);
-    $label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
-    $label = str_replace('{{thumbnail}}', '<img src="images/'.$admin_params->get('study_images')."/".$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);
+    //$label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
+    $label = str_replace('{{mediatime}}', getDuration($params, $row), $label);
+	$label = str_replace('{{thumbnail}}', '<img src="images/'.$admin_params->get('study_images')."/".$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);
     $label = str_replace('{{seriestext}}', $row->series_text, $label);
     $label = str_replace('{{messagetype}}', $row->message_type, $label);
     $label = str_replace('{{bookname}}', $row->bookname, $label);
     $label = str_replace('{{topics}}', $row->topic_text, $label);
-//    		$social = getShare($this->detailslink, $row, $params, $this->admin_params);
+    $label = str_replace('{{hits}}',$row->hits, $label);
+    $label = str_replace('{{location}}',$row->location_text, $label);
+    //    		$social = getShare($this->detailslink, $row, $params, $this->admin_params);
 //		echo $social;
     /*$media = getMedia($row->id);
 
@@ -564,6 +568,7 @@ function getStudyExp($row, $params, $admin_params, $template)
     include_once($path1.'share.php');
     include_once($path1.'comments.php');
     include_once($path1.'date.php');
+    include_once($path1.'duration.php');
         //dump ($row, 'row: ');
     $label = $params->get('study_detailtemplate');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -572,12 +577,15 @@ function getStudyExp($row, $params, $admin_params, $template)
 	$label = str_replace('{{studyintro}}', $row->studyintro, $label);
 	$label = str_replace('{{scripture}}', getScripture($params, $row, 0, 1), $label);
 	$label = str_replace('{{topics}}', $row->topic_text, $label);
-    $label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
+    //$label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
+    $label = str_replace('{{mediatime}}', getDuration($params, $row), $label);
     $label = str_replace('{{thumbnail}}', '<img src="'.$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);
     $label = str_replace('{{seriestext}}', $row->stext, $label);
     $label = str_replace('{{messagetype}}', $row->message_type, $label);
     $label = str_replace('{{bookname}}', $row->bname, $label);
     $label = str_replace('{{studytext}}', $row->studytext, $label);
+    $label = str_replace('{{hits}}',$row->hits, $label);
+    $label = str_replace('{{location}}',$row->location_text, $label);
     //Passage
     $link = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">>>'. JText::_('Show/Hide Scipture Passage').'<<</a>';
     $link .= '<div id="bsms_scripture" style="display:none;"></strong>';

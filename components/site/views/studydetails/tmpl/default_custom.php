@@ -75,7 +75,5 @@ $listingcall = JView::loadHelper('listing');
 
 </div><!--End of page container div-->
 
-</div><!--End of page container div-->
 
 
-?>

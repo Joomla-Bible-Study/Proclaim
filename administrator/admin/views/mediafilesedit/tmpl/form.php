@@ -199,7 +199,7 @@ echo $pane->endPane();
       </tr> 
       <?php } // end if $this->virtueMartItem ?>
       
-              <?php if (isset($this->mediafilesedit->internal_viewer) )
+              <?php if ($this->mediafilesedit->internal_viewer > 0) 
 	{ ?>
      <tr>
      	<td class="key"><?php echo JText::_('<a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">AVReloaded Viewer</a>')?>

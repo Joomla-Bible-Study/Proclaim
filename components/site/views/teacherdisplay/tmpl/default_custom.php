@@ -97,7 +97,10 @@ if ($teacher->image || $teacher->teacher_image)
 if ($this->params->get('show_teacher_studies') > 0) {
   $studies = getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);
   echo $studies;
-} // end of if show_teacher_studies ?>
+}
+
+echo '<table><tr><td id="bsmsteacherstudyfooter"><a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$teacher->id).'">'.JText::_('See more from this teacher').' --></a></td><tr></table>';
+	 // end of if show_teacher_studies ?>
 <?php 
 //if ($this->menuid){$link = '&Itemid='.$this->menuid;}?>
 <tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&templatemenuid='.$templatemenuid;?>"><?php echo '<--'.JText::_('Return to Teacher List');?></a>

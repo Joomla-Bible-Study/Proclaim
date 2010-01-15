@@ -22,127 +22,137 @@ function updateSEF()
 			$today = date("Y-m-d");
 			$itemid = getItemidLink();
 			if (!$itemid) {$itemid = 2;}
-			
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=studieslist', 'Biblestudy/studieslist.html ', '".$today."');";
+			//oldurl is sh404SEF url and newurl is the joomla url
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0',  'Biblestudy/studieslist.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=studieslist','".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'studieslist redirection table update error: '.$error.' | ';
+				$msg[] = 'studieslist redirection table update error: '.$error;
 			}
 			
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=studydetails', 'Biblestudy/studydetails.html ', '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/studydetails.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=studydetails', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'studydetails redirection table update error: '.$error.' | ';
+				$msg[] = 'studydetails redirection table update error: '.$error;
 			}
 		
-		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=teacherlist', 'Biblestudy/teacherlist.html ', '".$today."');";
+		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/teacherlist.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=teacherlist', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'teacherlist redirection table update error: '.$error.' | ';
+				$msg[] = 'teacherlist redirection table update error: '.$error;
 			}
 			
-		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=serieslist', 'Biblestudy/serieslist.html ', '".$today."');";
+		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/serieslist.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=serieslist','".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'serieslist redirection table update error: '.$error.' | ';
+				$msg[] = 'serieslist redirection table update error: '.$error;
 			}
 		
-		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=seriesdetail', 'Biblestudy/seriesdetail.html ', '".$today."');";
+		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/seriesdetail.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=seriesdetail', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'seriesdetail redirection table update error: '.$error.' | ';
+				$msg[] = 'seriesdetail redirection table update error: '.$error;
 			}
 		
-		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=teacheredit', 'Biblestudy/teacheredit.html ', '".$today."');";
+		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/teacheredit.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=teacheredit', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'teacheredit redirection table update error: '.$error.' | ';
+				$msg[] = 'teacheredit redirection table update error: '.$error;
 			}
 		
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=teacherdisplay', 'Biblestudy/teacherdisplay.html ', '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/teacherdisplay.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=teacherdisplay', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'teacherdisplay redirection table update error: '.$error.' | ';
+				$msg[] = 'teacherdisplay redirection table update error: '.$error;
 			}
 		
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=commentsedit', 'Biblestudy/commentsedit.html ', '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/commentsedit.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=commentsedit', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'commentsedit redirection table update error: '.$error.' | ';
+				$msg[] = 'commentsedit redirection table update error: '.$error;
 			}
 		
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=commentslist', 'Biblestudy/commentslist.html ', '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/commentslist.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=commentslist', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'commentslist redirection table update error: '.$error.' | ';
+				$msg[] = 'commentslist redirection table update error: '.$error;
 			}
 	
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=landingpage', 'Biblestudy/landingpage.html ', '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/landingpage.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=landingpage',  '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'landingpage redirection table update error: '.$error.' | ';
+				$msg[] = 'landingpage redirection table update error: '.$error;
 			}
 		
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=mediafilesedit', 'Biblestudy/mediafilesedit.html ', '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/mediafilesedit.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=mediafilesedit',  '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'mediafilesedit redirection table update error: '.$error.' | ';
+				$msg[] = 'mediafilesedit redirection table update error: '.$error;
 			}
 	
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=podcastedit', 'Biblestudy/podcastedit.html ', '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/podcastedit.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=podcastedit', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'podcastedit redirection table update error: '.$error.' | ';
+				$msg[] = 'podcastedit redirection table update error: '.$error;
 			}
 		
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=studiesedit', 'Biblestudy/studiesedit.html ', '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/studiesedit.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=studiesedit', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
 			{
 				$error = $db->getErrorMsg();
-				$msg[] = 'studiesedit redirection table update error: '.$error.' | ';
+				$msg[] = 'studiesedit redirection table update error: '.$error;
 			}
 		
 		}
-	$msg = implode('|',$msg);
-	return $msg;
+		if ($msg)
+{
+	$messagetable = '<table>';
+	foreach ($msg as $messages)
+	{
+		$messagetable .= '<tr><td>'.$messages.'</td></tr>';
+	}
+	$messagetable .= '</table>';
+}
+
+	//$msg = implode('|',$msg);
+	return $messagetable;
 	
 }
 
