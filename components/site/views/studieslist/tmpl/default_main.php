@@ -19,7 +19,8 @@ $document =& JFactory::getDocument();
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
-//dump ($this->params);
+$teachers = $params->get('teacher_id');
+//dump ($teachers,'Teachers: ');
 	$user =& JFactory::getUser();
 	$entry_user = $user->get('gid');
 	if (!$entry_user) { $entry_user = 0;}

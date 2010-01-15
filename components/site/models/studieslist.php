@@ -370,21 +370,29 @@ function getTemplate() {
 
 		$where2 = array();
 		$continue = 0;
-		if ($params->get('mult_teachers') || $params->get('teacher_id')) 
+		if ($params->get('teacher_id')) 
 			{ 
 				if (!$filter_teacher)
 				{
 					$continue = 1;
 					$filters = null;
-					if ($params->get('mult_teachers'))
-						{					
-							$filters = explode(",", $params->get('mult_teachers'));
+										
+							//$filters = explode(",", $params->get('mult_teachers'));
+							$filters = $params->get('teacher_id'); //dump ($filters, 'filters: ');
 							foreach ($filters AS $filter)
 								{
-									$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
+									if ($filter == -1)
+									{
+										//break;
+									}
+									else
+									{
+										$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
+									}
+									
 								}
-						}
-					if ($params->get('teacher_id')) {$where2[] = '#__bsms_studies.teacher_id = '.$params->get('teacher_id');}
+						
+					//if ($params->get('teacher_id')) {$where2[] = '#__bsms_studies.teacher_id = '.$params->get('teacher_id');}
 				}
 			}
 		

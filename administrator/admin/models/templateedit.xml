@@ -11,10 +11,9 @@
 		<param name="seriesdetailtemplateid" type="seriesdetailtemplateid" default="" label="Template for Series Detail View" description="Choose a template from the admin/templates for display of the series detail" />
 	</params>
 	<params group="FILTERS" addpath="/components/com_biblestudy/elements">
-	<param name="teachermulti" type="sqlmultilistx" sql="SELECT * FROM #__bsms_teachers WHERE published = '1'" key_field="id" value_field="teachername" default="OPT1" multiple="multiple" label="Select one or more items" description="Use Ctrl-click to select more than one item.">
+	<param name="teacher_id" type="sqlmultilistx" sql="SELECT * FROM #__bsms_teachers WHERE published = '1'" key_field="id" value_field="teachername" default="-1" multiple="multiple" label="Select one or more teachers" description="Use Ctrl-click to select more than one item. Select Show All to show all teachers">
+	<option value="-1">Show All</option>
         </param>
-		<param name="teacher_id" type="teacher" default="" label="Teacher" description="Choose a teacher to display for this menu item" />
-		<param name="mult_teachers" type="text" default="" label="Enter multiple teacher ids" description="Enter a series of teacher ids separated by commas as a filter" />
 		<param name="series_id" type="series" default="" label="Series" description="Choose a series to display for this menu item" />
 		<param name="mult_series" type="text" default="" label="Enter multiple series ids" description="Enter a number of series ids separated by commas as a filter" />
 		<param name="booknumber" type="book" default="" label="Book" description="Choose a Book to display for this menu item" />
