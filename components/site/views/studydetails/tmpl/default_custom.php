@@ -43,20 +43,20 @@ $listingcall = JView::loadHelper('listing');
 		echo $details;
     ?>
 
-<!--
-<?php if ($params->get('show_comments') > 0)
+
+<?php if ($params->get('show_comments') < 2)
 		{?>
-        <table id="commentstable" cellspacing="0">
-		<tr><td>
+        <div id="commentstable" >
+	
 <?php $Itemid = JRequest::getVar('Itemid');
 		$comments_call = JView::loadHelper('comments');
         $comments = getComments($params, $row, $Itemid);
 		echo $comments;
 		?>
-	</td></tr>
-		</table>
+	
+		</div>
 <?php } //end of if comments param?>
--->
+
 	<div class="listingfooter"><br />
     <?php $link_text = $this->params->get('link_text');
 			if (!$link_text) {

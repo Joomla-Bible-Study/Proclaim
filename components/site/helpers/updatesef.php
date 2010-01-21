@@ -1,9 +1,10 @@
 <?php
 defined('_JEXEC') or die('Restriced Access');
 /**
- * @author Joomla Bible Study
- * @copyright 2010
- */
+* @author Joomla Bible Study
+* @copyright 2010
+* Need to have sh404SEF version 1.5.5 or greater
+*/
 
 function updateSEF()
 {
@@ -16,14 +17,26 @@ function updateSEF()
 	$sef = isset( $fields[$tn]['id'] );
 	if ($sef) 
 		{
+			
+			//Delete Old records for Biblestudy
+			$query = "DELETE FROM `#__redirection` WHERE `newurl` LIKE '%biblestudy%' AND `dateadd` > '2009-12-31'";
+			$db->setQuery($query);
+			$db->query();
+			if ($db->getErrorNum() > 0)
+			{
+				$error = $db->getErrorMsg();
+				$msg[] = 'Delete redirection table error: '.$error;
+			}
+			
+			
 			$document =& JFactory::getDocument();
 			$language = $document->getLanguage();
 			$msg = array();
 			$today = date("Y-m-d");
 			$itemid = getItemidLink();
 			if (!$itemid) {$itemid = 2;}
-			//oldurl is sh404SEF url and newurl is the joomla url
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0',  'Biblestudy/studieslist.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=studieslist','".$today."');";
+			
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/studieslist.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=studieslist', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
@@ -50,7 +63,7 @@ function updateSEF()
 				$msg[] = 'teacherlist redirection table update error: '.$error;
 			}
 			
-		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/serieslist.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=serieslist','".$today."');";
+		$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/serieslist.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=serieslist', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
@@ -104,7 +117,7 @@ function updateSEF()
 				$msg[] = 'commentslist redirection table update error: '.$error;
 			}
 	
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/landingpage.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=landingpage',  '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/landingpage.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=landingpage', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
@@ -113,7 +126,7 @@ function updateSEF()
 				$msg[] = 'landingpage redirection table update error: '.$error;
 			}
 		
-			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/mediafilesedit.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=mediafilesedit',  '".$today."');";
+			$query = "INSERT INTO `#__redirection` (`id`, `cpt`, `rank`, `oldurl`, `newurl`, `dateadd`) VALUES (NULL, '0', '0', 'Biblestudy/mediafilesedit.html','index.php?option=com_biblestudy&Itemid=".$itemid."&lang=".$language."&view=mediafilesedit', '".$today."');";
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
@@ -141,6 +154,7 @@ function updateSEF()
 			}
 		
 		}
+	
 		if ($msg)
 {
 	$messagetable = '<table>';
@@ -149,10 +163,17 @@ function updateSEF()
 		$messagetable .= '<tr><td>'.$messages.'</td></tr>';
 	}
 	$messagetable .= '</table>';
+
+}
+else
+{
+	$messagetable = 'UpdateSEF was successful';
 }
 
 	//$msg = implode('|',$msg);
 	return $messagetable;
+//	$msg = implode('|',$msg);
+	//return $msg;
 	
 }
 

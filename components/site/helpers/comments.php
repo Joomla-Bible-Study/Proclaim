@@ -6,11 +6,35 @@ function getComments($params, $row, $Itemid)
 		$comment_access = $params->get('comment_access');
 		$comment_user = $user->usertype;
 		if (!$comment_user) { $comment_user = 0;} $comm = $params->get('show_comments'); //dump ($comment_user);
-		if ($params->get('show_comments') >= $comment_user || $params->get('show_comments') == 2)
+		$yes = 0;
+		switch ($comm)
+		{
+			case 2:
+				$yes = 0;
+			break;
+			
+			case 1:
+				if ($comment_user >= $comm)
+				{
+					$yes = 1;
+				}
+			break;
+			
+			case 0:
+				$yes = 1;
+			break;
+		}
+		
+		if ($yes == 0)
+		{
+			$comments = '';
+			return $comments;
+		}
+		/*if ($params->get('show_comments') >= $comment_user || $params->get('show_comments') == 2)
 		{
 			$comments = '';
 			return $comments; 	
-		}
+		}*/
 		else
 		{
 

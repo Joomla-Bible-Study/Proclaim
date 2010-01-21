@@ -236,7 +236,10 @@ function getBooks() {
 		}
 		return $this->_Books;
 	}
-
+/**
+	 * @desc Returns the Template to display the list
+	 * @return Array
+	 */
 function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
@@ -310,15 +313,15 @@ function getTemplate() {
 		global $mainframe, $option;
 		$params = &JComponentHelper::getParams($option);
 		$default_order = $params->get('default_order');
-		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic',		'filter_topic',		0,				'int' );
-		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book',		'filter_book',		0,				'int' );
-		$filter_chapter		= $mainframe->getUserStateFromRequest( $option.'filter_chapter',	'filter_chapter',		0,				'int' );
-		$filter_teacher		= $mainframe->getUserStateFromRequest( $option.'filter_teacher',	'filter_teacher',		0,				'int' );
-		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',		'filter_series',		0,				'int' );
-		$filter_messagetype	= $mainframe->getUserStateFromRequest( $option.'filter_messagetype','filter_messagetype',		0,				'int' );
-		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year',		'filter_year',		0,				'int' );
-		$filter_location	= $mainframe->getUserStateFromRequest( $option.'filter_location', 	'filter_location', 0, 'int');
-		$teacher_menu = $params->get('teacher_id', 1);
+		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic',		'filter_topic',		0,		'int' );
+		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book',		'filter_book',		0,		'int' );
+		$filter_chapter		= $mainframe->getUserStateFromRequest( $option.'filter_chapter',	'filter_chapter',	0,		'int' );
+		$filter_teacher		= $mainframe->getUserStateFromRequest( $option.'filter_teacher',	'filter_teacher',	0,		'int' );
+		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',		'filter_series',	0,		'int' );
+		$filter_messagetype	= $mainframe->getUserStateFromRequest( $option.'filter_messagetype','filter_messagetype',	0,	'int' );
+		$filter_year		= $mainframe->getUserStateFromRequest( $option.'filter_year',		'filter_year',		0,		'int' );
+		$filter_location	= $mainframe->getUserStateFromRequest( $option.'filter_location', 	'filter_location', 	0, 		'int');
+		$teacher_menu = $params->get('teacher_id', -1);
 		$topic_menu = $params->get('topic_id', 1);
 		$book_menu = $params->get('booknumber', 101);
 		$series_menu = $params->get('series_id', 1);
@@ -370,129 +373,200 @@ function getTemplate() {
 
 		$where2 = array();
 		$continue = 0;
-		if ($params->get('teacher_id')) 
+		if ($params->get('teacher_id')&& !$filter_teacher) 
 			{ 
-				if (!$filter_teacher)
-				{
-					$continue = 1;
-					$filters = null;
-										
-							//$filters = explode(",", $params->get('mult_teachers'));
-							$filters = $params->get('teacher_id'); //dump ($filters, 'filters: ');
+				
+					$filters = $params->get('teacher_id'); //dump ($filters, 'filters: ');
+					switch ($filters)
+					{
+						case is_array($filters) :
 							foreach ($filters AS $filter)
 								{
 									if ($filter == -1)
+										{
+											//$continue = 0;
+											break;
+										}
 									{
-										//break;
+										$continue = 1;
+										$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter; //dump ($where2, 'where2: ');
 									}
-									else
-									{
-										$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
-									}
-									
 								}
+							break;
+							
+						case -1:
+							//$continue = 0;
+						break;
 						
-					//if ($params->get('teacher_id')) {$where2[] = '#__bsms_studies.teacher_id = '.$params->get('teacher_id');}
-				}
-			}
-		
-		if ($params->get('mult_locations') || $params->get('locations')) 
-			{ 
-				if (!$filter_location)
-				{
-					$continue = 1;
-					$filters = null;
-					if ($params->get('mult_locations'))
-						{
-							$filters = explode(",", $params->get('mult_locations'));
-							foreach ($filters AS $filter)
-								{
-									$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
-								}
-						}
-					if ($params->get('locations')) {$where2[] = '#__bsms_studies.location_id = '.$params->get('locations');}
-				}
-			}
-			
-		if ($params->get('mult_books') || $params->get('booknumber')) 
-			{ 
-				if (!$filter_book)
-				{
-					$continue = 1;
-					$filters = null;
-					if ($params->get('mult_books'))
-						{					
-							$filters = explode(",", $params->get('mult_books'));
-							foreach ($filters AS $filter)
-								{
-									$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
-								}
-						}
-					if ($params->get('booknumber')) {$where2[] = '#__bsms_studies.booknumber = '.$params->get('booknumber');}
-				}
-			}
-		
-		if ($params->get('mult_series') || $params->get('series_id')) 
-			{ 
-				if (!$filter_series)
-				{
-					$continue = 1;
-					$filters = null;
-					if ($params->get('mult_series'))
-						{
-							$filters = explode(",", $params->get('mult_series'));
-							//dump ($filters, 'filters: ');
-							foreach ($filters AS $filter)
-								{
-									$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
-									//dump ($where2, 'where2: ');
-								}
-						}
-					if ($params->get('series_id')) {$where2[] = '#__bsms_studies.series_id = '.$params->get('series_id');}
-				}
-			}
-			
-		if ($params->get('mult_topics') || $params->get('topic_id')) 
-			{ 
-				if (!$filter_topic) 
-				{
-					$continue = 1;
-					$filters = null;
-					if ($params->get('mult_topics'))
-						{
-							$filters = explode(",", $params->get('mult_topics'));
-							foreach ($filters AS $filter)
-								{
-									$where2[] = '#__bsms_studytopics.topic_id = '.(int)$filter;
-								}
+						default:
+							$continue = 1;
+							$where2[] = '#__bsms_studies.teacher_id = '.(int)$filters;
+							break;
 					}
-					
-					if ($params->get('topic_id')) {$where2[] = '#__bsms_study.topic_id = '.$params->get('topic_id');}
 				}
-			}
-			
-		if ($params->get('mult_messagetype') || $params->get('messagetype')) 
+		if ($params->get('locations')&& !$filter_location) 
 			{ 
-				if (!$filter_messagetype)
-				{
-					$continue = 1;
-					$filters = null;
-					if ($params->get('mult_messagetype'))
-						{
-							$filters = explode(",", $params->get('mult_messagetype'));
+				
+					$filters = $params->get('locations'); //dump ($filters, 'filters: ');
+					switch ($filters)
+					{
+						case is_array($filters) :
 							foreach ($filters AS $filter)
 								{
-									$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
+									if ($filter == -1)
+										{
+											//$continue = 0;
+											break;
+										}
+									{
+										$continue = 1;
+										$where2[] = '#__bsms_studies.location_id = '.(int)$filter; //dump ($where2, 'where2: ');
+									}
 								}
-						}
-					if ($params->get('messagetype')) {$where2[] = '#__bsms_studies.messagetype = '.$params->get('messagetype');}
+							break;
+							
+						case -1:
+							//$continue = 0;
+						break;
+						
+						default:
+							$continue = 1;
+							$where2[] = '#__bsms_studies.location_id = '.(int)$filters;
+							break;
+					}
+				} 	
+		if ($params->get('booknumber')&& !$filter_book) 
+			{ 
+				
+					$filters = $params->get('booknumber'); //dump ($filters, 'filters: ');
+					switch ($filters)
+					{
+						case is_array($filters) :
+							foreach ($filters AS $filter)
+								{
+									if ($filter == -1)
+										{
+											//$continue = 0;
+											break;
+										}
+									{
+										$continue = 1;
+										$where2[] = '#__bsms_studies.booknumber = '.(int)$filter; //dump ($where2, 'where2: ');
+									}
+								}
+							break;
+							
+						case -1:
+							//$continue = 0;
+						break;
+						
+						default:
+							$continue = 1;
+							$where2[] = '#__bsms_studies.booknumber = '.(int)$filters;
+							break;
+					}
 				}
-			}
-			
+		if ($params->get('series_id')&& !$filter_series) 
+			{ 
+				
+					$filters = $params->get('series_id'); //dump ($filters, 'filters: ');
+					switch ($filters)
+					{
+						case is_array($filters) :
+							foreach ($filters AS $filter)
+								{
+									if ($filter == -1)
+										{
+											//$continue = 0;
+											break;
+										}
+									{
+										$continue = 1;
+										$where2[] = '#__bsms_studies.series_id = '.(int)$filter; //dump ($where2, 'where2: ');
+									}
+								}
+							break;
+							
+						case -1:
+							//$continue = 0;
+						break;
+						
+						default:
+							$continue = 1;
+							$where2[] = '#__bsms_studies.series_id = '.(int)$filters;
+							break;
+					}
+				}
+		if ($params->get('topic_id')&& !$filter_topic) 
+			{ 
+				
+					$filters = $params->get('topic_id'); //dump ($filters, 'filters: ');
+					switch ($filters)
+					{
+						case is_array($filters) :
+							foreach ($filters AS $filter)
+								{
+									if ($filter == -1)
+										{
+											//$continue = 0;
+											break;
+										}
+									{
+										$continue = 1;
+										$where2[] = '#__bsms_studytopics.topic_id = '.(int)$filter; //dump ($where2, 'where2: ');
+										$where2[] = '#__bsms_studies.topics_id = '.(int)$filter; 
+									}
+								}
+							break;
+							
+						case -1:
+							//$continue = 0;
+						break;
+						
+						default:
+							$continue = 1;
+							$where2[] = '#__bsms_studytopics.topic_id = '.(int)$filters;
+							$where2[] = '#__bsms_studies.topics_id = '.(int)$filters;
+							break;
+					}
+				}
+		if ($params->get('messagetype')&& !$filter_messagetype) 
+			{ 
+				
+					$filters = $params->get('messagetype'); //dump ($filters, 'filters: ');
+					switch ($filters)
+					{
+						case is_array($filters) :
+							foreach ($filters AS $filter)
+								{
+									if ($filter == -1)
+										{
+											//$continue = 0;
+											break;
+										}
+									{
+										$continue = 1;
+										$where2[] = '#__bsms_studies.messagetype = '.(int)$filter; //dump ($where2, 'where2: ');
+									}
+								}
+							break;
+							
+						case -1:
+							//$continue = 0;
+						break;
+						
+						default:
+							$continue = 1;
+							$where2[] = '#__bsms_studies.messagetype = '.(int)$filters;
+							break;
+					}
+				}
+					
 		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
-
+//dump ($where2, 'where2: ');
+//dump ($continue, 'continue: ');
 		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}
-		//dump ($where2, 'where: ');
+		//dump ($where, 'where: ');
 		return $where;
 	}
 	

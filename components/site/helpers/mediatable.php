@@ -144,73 +144,7 @@ if (!$row->id) {return FALSE;}
 		$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
 		break;
       }
-      /* We have removed this logic and hopefully handled it more simply above. 
-	  switch ($itemparams->get('player', 0))
-			{
-				case 0:
-				$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
-				break;
-				
-				case 1:
-				$ismp3 = substr($media->filename,-3,3);
-				 if ($ismp3 == 'mp3')
-				 	{
-						$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
-					}
-					else 
-					{
-						$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
-					}
-				break;
-				
-				case 2:
-				$fileextension = substr($media->filename, -3,3);
-				$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
-				if ($textfiles > 0){$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);}
-				else {
-				$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
-					}
-      			break;
-			}
-	  
-	  //Here we check to see if the old useavr is selected in the database. We will eventually get rid of this
-	 
-	 if ($media->internal_viewer > 0 && $itemparams->get('player') < 1 || $params->get('useavr') > 0)
-      	{ 
-	  		$fileextension = substr($media->filename, -3,3);
-				$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
-				if ($textfiles > 0){$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);}
-				else {
-					$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
-					} 
-	  	}
 
-	if ($params->get('media_player') > 0)
-		{
-			$ismp3 = substr($media->filename,-3,3);
-				 if ($ismp3 == 'mp3')
-				 	{
-						$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
-					}
-					elseif ($itemparams->get('player') < 1 || $params->get('useavr') > 0)
-					{
-						$fileextension = substr($media->filename, -3,3);
-						$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
-						if ($textfiles > 0)
-							{
-								$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
-							}
-						//else 
-						//{
-						//	$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
-						//}
-					}
-					else 
-					{
-						$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
-					}
-		}
-		*/
 	  if ($media->docMan_id > 0)
 	 	{
 			$media1_link = getDocman($media, $width, $height, $src, $duration, $filesize);

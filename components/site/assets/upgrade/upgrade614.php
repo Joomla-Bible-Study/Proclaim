@@ -17,11 +17,6 @@ function biblestudyUpgrade614($schema)
 		return $messagetable;
 	}
 
-
-//first function call to fix the problem with internal_player in mediafilesedit
-$result = $this->getMediafilefix();	
-if ($result){$messagetable[] = $result;}
-
 //Other function calls go here
 
 
@@ -31,16 +26,11 @@ if ($result){$messagetable[] = $result;}
 	return $messagetable;
 }
 
-function getMediafilefix()
+function updateTemplate()
 {
 	$db = & JFactory::getDBO();
-	$db->setQuery("UPDATE #__bsms_mediafiles SET params = 'player=2' WHERE internal_viewer = '1'";)
+	$db->setQuery('SELECT params, id FROM #__bsms_templates');
 	$db->query();
-	if ($db->getErrorNum() > 0)
-			{
-				$error = $db->getErrorMsg();
-				$result = '<tr><td>An error occured while updating mediafiles table: '.$error.'</td></tr>';
-			}
-	return $result;
+	$rows = $db->loadObjectList();
 }
 ?>
