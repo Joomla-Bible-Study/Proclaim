@@ -13,28 +13,8 @@
     <tr><td class="key"><?php echo JText::_('Administrative Settings');?></td><td>
     <?php
     
-   	$db = & JFactory::getDBO();
-	$db->setQuery('SELECT params, id FROM #__bsms_templates');
-	$db->query();
-	$rows = $db->loadObjectList();
-	//dump ($rows, 'rows: ');
-	foreach ($rows as $key => $value)
-	{
-		$param = $value->params;
-		//echo $param;
-		//Look for: mult_series= mult_books= mult_topics= mult_messagetype= mult_locations=
-		//booknumber=101|102|106 mult_books=
-		$oldbook = 'mult_books=';
-		//$isoldbook = substr_count($param,$oldbook);
-		$oldbookposition = strpos($param,$oldbook);
-		$endofbook = $oldbookposition + 11;
-		$endofstring = strpos($param,' ',$endofbook); echo $endofstring;
-		$oldbookafter = substr($param,$oldbookposition,11); //echo $oldbookafter;
-		$isnotnull = substr($oldbookafter,12,1);
-		$stringvalue = ord($isnotnull);
-		//echo $stringvalue;
-	}
-	
+  
+
 	jimport('joomla.html.pane');
 	$pane =& JPane::getInstance( 'sliders' );
  
