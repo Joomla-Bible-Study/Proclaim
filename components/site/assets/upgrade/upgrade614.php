@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 function biblestudyUpgrade614($schema)
 {
 	$messagetable = '<table>';
-	if ($schema > 613)
+	if ($schema == 614)
 	{
 		$messagetable = '<tr><td>Bible Study Database Schema set at 614. No update necessary</td></tr></table>';
 		return $messagetable;

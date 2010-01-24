@@ -15,7 +15,6 @@ $templatemenuid = $this->params->get('teachertemplateid');
 $studieslisttemplateid = $this->params->get('studieslisttemplateid');
 	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('templatemenuid',1,'get','int');}
 	if (!$teacher->teacher_image) { $image->path = $teacher->image; $image->height = $teacher->imageh; $image->width = $teacher->imagew; }
-	//if (!$teacher->teacher_image) { $i_path = $teacher->image; }
 	else
 	{
 		if ($teacher->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$teacher->teacher_image; }

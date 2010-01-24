@@ -171,6 +171,23 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	include_once($path1.'elements.php');
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
+	include_once($path1.'image.php');
+	
+	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
+	else
+	{
+		if ($row->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_image; }
+		if ($row->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
+		$imagelarge = getImage($i_path);
+	}
+	
+	if (!$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw; }
+	else
+	{
+		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_thumbnail; }
+		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
+		$imagesmall = getImage($i_path);
+	}
 	
 	$label = $params->get('teacher_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -178,9 +195,9 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	$label = str_replace('{{phone}}', $row->phone, $label);
 	$label = str_replace('{{website}}', '<A href="' .$row->website .'">Website</a>', $label);
 	$label = str_replace('{{information}}', $row->information, $label);
-	$label = str_replace('{{image}}', '<img src="'. $row->image .'" width="'.$row->imagew.'" height="'.$row->imageh.'" />', $label);
+	$label = str_replace('{{image}}', '<img src="'. $imagelarge->path.'" width="'.$imagelarge->width.'" height="'.$imagelarge->height.'" />', $label);
 	$label = str_replace('{{short}}', $row->short, $label);
-	$label = str_replace('{{thumbnail}}', '<img src="'. $row->thumb .'" width="'.$row->thumbw.'" height="'.$row->thumbh.'" />', $label);
+	$label = str_replace('{{thumbnail}}', '<img src="'. $imagesmall->path.'" width="'.$imagesmall->width.'" height="'.$imagesmall->height.'" />', $label);
     $label = str_replace('{{url}}', 'index.php?component=com_biblestudy&view=teacherdisplay&id='.$row->id .'&templatemenuid='.$template, $label);
 	return $label;
 
@@ -192,17 +209,36 @@ function getTeacherDetailsExp($row, $params, $template)
 	include_once($path1.'elements.php');
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
+	include_once($path1.'image.php');
 	//dump ($row);
     
+    //Get the image folders and images
+    
+    	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
+	else
+	{
+		if ($row->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_image; }
+		if ($row->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
+		$imagelarge = getImage($i_path);
+	}
+	
+	if (!$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw; }
+	else
+	{
+		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_thumbnail; }
+		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
+		$imagesmall = getImage($i_path);
+	}
+	
     $label = $params->get('teacher_detailtemplate');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->title, $label);
 	$label = str_replace('{{phone}}', $row->phone, $label);
 	$label = str_replace('{{website}}', '<A href="' .$row->website .'">Website</a>', $label);
 	$label = str_replace('{{information}}', $row->information, $label);
-	$label = str_replace('{{image}}', '<img src="'. $row->image .'" width="'.$row->imagew.'" height="'.$row->imageh.'" id="bsms_teacherImage" />', $label);
+	$label = str_replace('{{image}}', '<img src="'. $imagelarge->path.'" width="'.$imagelarge->width.'" height="'.$imagelarge->height.'" />', $label);
 	$label = str_replace('{{short}}', $row->short, $label);
-	$label = str_replace('{{thumbnail}}', '<img src="'. $row->thumb .'" width="'.$row->thumbw.'" height="'.$row->thumbh.'" id="bsms_teacherThumbnail" />', $label);
+	$label = str_replace('{{thumbnail}}', '<img src="'. $imagesmall->path.'" width="'.$imagesmall->width.'" height="'.$imagesmall->height.'" />', $label);
     //$label = str_replace('{{information}}', $row->information, $label);
     //$label = str_replace('{{short}}', $row->short, $label);
     
