@@ -134,7 +134,7 @@ if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->pa
     $listing .= "</td>";
     $listing .= "<td><table>";
   }
-  $listing .= getListingExp($row, $params, $oddeven, $this->admin_params, $this->template);
+  $listing .= getListingExp($row, $params, $this->admin_params, $this->template);
   
   if (($allow_entry > 0) && ($entry_access <= $entry_user)) {
     $listing .= "</table></td></tr>";

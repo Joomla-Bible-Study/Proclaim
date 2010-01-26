@@ -397,7 +397,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 	return $series;
 }
 
-function getSerieslistExp($row, $params, $admin_params)
+function getSerieslistExp($row, $params, $admin_params, $template)
 { //dump ($row->series_thumbnail, 'series: ');
 	
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -406,25 +406,32 @@ function getSerieslistExp($row, $params, $admin_params)
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
 	$templatemenuid = $params->get('serieslisttemplateid');
-	
+	include_once($path1.'image.php');
 	//dump ($templatemenuid, "Template");
 	//dump ($row, "Row - SeriesList.php");
 
+if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
+	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
+if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 
+	{ $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
+$image = getImage($i_path);
+			
 	$label = $params->get('series_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
     $label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
 	$label = str_replace('{{title}}', $row->series_text, $label);
 	$label = str_replace('{{description}}', $row->description, $label);
-	$label = str_replace('{{thumbnail}}', '<img src="'. $row->thumb .'" width="' .$row->thumbw .'" height="' . $row->thumbh . '" />', $label);
-	$label = str_replace('{{thumbh}}', $row->thumbh, $label);
-	$label = str_replace('{{thumbw}}', $row->thumbw, $label);
+	$label = str_replace('{{thumbnail}}', '<img src="'. $image->path .'" width="' .$image->width .'" height="' . $image->height . '" />', $label);
+	//$label = str_replace('{{thumbh}}', $row->thumbh, $label);
+	//$label = str_replace('{{thumbw}}', $row->thumbw, $label);
 	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$templatemenuid.'&id='.$row->id, $label);
 	return $label;
 }
 
 function getSeriesDetailsExp($row, $params, $admin_params, $template)
     {
-        //seriesdesc_template
+        //dump ($admin_params, 'admin_params: ');
+		//seriesdesc_template
         $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	    include_once($path1.'elements.php');
 	    include_once($path1.'scripture.php');
@@ -436,12 +443,20 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
         include_once($path1.'share.php');
         include_once($path1.'comments.php');
         include_once($path1.'date.php');
-            
+        include_once($path1.'image.php');    
+        
+if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
+	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
+if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 
+	{ $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
+$image = getImage($i_path);
+
         $label = $params->get('series_detailcode');
         $label = str_replace('{{teacher}}', $row->teachername, $label);
         $label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
         $label = str_replace('{{description}}', $row->description, $label);
 	    $label = str_replace('{{title}}', $row->series_text, $label);
+	    $label = str_replace('{{thumbnail}}', '<img src="'. $image->path .'" width="' .$image->width .'" height="' . $image->height . '" />', $label);
 	    
 	    return $label;
 	
@@ -521,7 +536,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	foreach ($result AS $row)
 	{
 	    $oddeven = 0;
-		$studies .= getListingExp($row, $params, $oddeven, $params, $params->get('seriesdetailtemplateid'));	
+		$studies .= getListingExp($row, $params, $params, $params->get('seriesdetailtemplateid'));	
 	}
 	
 switch ($params->get('series_wrapcode')) {

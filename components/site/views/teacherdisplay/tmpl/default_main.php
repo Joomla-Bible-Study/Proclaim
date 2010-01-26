@@ -32,7 +32,7 @@ if (!$teacher->teacher_image) { $image->path = $teacher->image; $image->height =
 	else
 	{
 		if ($teacher->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$teacher->teacher_image; }
-		if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
+		if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
 		$image = getImage($i_path);
 	}
 

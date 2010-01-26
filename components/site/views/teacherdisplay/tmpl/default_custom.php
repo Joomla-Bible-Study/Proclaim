@@ -40,7 +40,7 @@ if (!$teacher->teacher_image) { $image->path = $teacher->image; $image->height =
 	else
 	{
 		if ($teacher->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$teacher->teacher_image; }
-		if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
+		if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
 		$image = getImage($i_path);
 	}
 
@@ -92,7 +92,7 @@ if ($teacher->image || $teacher->teacher_image)
 -->
 <?php
 
-  $listing = getTeacherDetailsExp($teacher, $params, $this->template);
+  $listing = getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
   echo $listing;
 if ($this->params->get('show_teacher_studies') > 0) {
   $studies = getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);

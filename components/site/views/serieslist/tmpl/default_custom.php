@@ -72,8 +72,8 @@ if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }
   echo $params->get('series_headercode');
   
   foreach ($this->items as $row) { //Run through each row of the data result from the model
-  $listing = getSerieslistExp($row, $params, $oddeven, $this->admin_params, $this->template);
-	echo $listing;
+	 $listing = getSerieslistExp($row, $params, $this->admin_params, $this->template);
+	 echo $listing;
  }
  
     switch ($params->get('series_wrapcode')) {

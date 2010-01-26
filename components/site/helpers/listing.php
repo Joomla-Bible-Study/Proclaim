@@ -507,7 +507,7 @@ $Itemid = JRequest::getVar('Itemid');
 		   
 		   return $column;
 		}
-function getListingExp($row, $params, $oddeven, $admin_params, $template)
+function getListingExp($row, $params, $admin_params, $template)
 {
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
@@ -517,8 +517,13 @@ function getListingExp($row, $params, $oddeven, $admin_params, $template)
 	include_once($path1.'media.php');
 	include_once($path1.'mediatable.php');
 	include_once($path1.'duration.php');
-	
+	include_once($path1.'image.php');
     //dump ($row, 'row: ');
+    //dump ($admin_params, 'admin_params: ');
+   	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
+	$i_image = $row->thumbnailm;
+	$i_path = $i_path.'/'.$i_image;
+	$image = getImage($i_path);
     $label = $params->get('templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->studytitle, $label);
@@ -529,7 +534,8 @@ function getListingExp($row, $params, $oddeven, $admin_params, $template)
     $label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id .'&templatemenuid='.$template, $label);
     //$label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
     $label = str_replace('{{mediatime}}', getDuration($params, $row), $label);
-	$label = str_replace('{{thumbnail}}', '<img src="images/'.$admin_params->get('study_images')."/".$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);
+//	$label = str_replace('{{thumbnail}}', '<img src="images/'.$admin_params->get('study_images')."/".$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);
+	$label = str_replace('{{thumbnail}}', '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" id="bsms_studyThumbnail" />', $label);
     $label = str_replace('{{seriestext}}', $row->series_text, $label);
     $label = str_replace('{{messagetype}}', $row->message_type, $label);
     $label = str_replace('{{bookname}}', $row->bookname, $label);
@@ -569,6 +575,11 @@ function getStudyExp($row, $params, $admin_params, $template)
     include_once($path1.'comments.php');
     include_once($path1.'date.php');
     include_once($path1.'duration.php');
+    include_once($path1.'image.php');
+   	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
+	$i_image = $row->thumbnailm;
+	$i_path = $i_path.'/'.$i_image;
+	$image = getImage($i_path);
         //dump ($row, 'row: ');
     $label = $params->get('study_detailtemplate');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -579,7 +590,7 @@ function getStudyExp($row, $params, $admin_params, $template)
 	$label = str_replace('{{topics}}', $row->topic_text, $label);
     //$label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
     $label = str_replace('{{mediatime}}', getDuration($params, $row), $label);
-    $label = str_replace('{{thumbnail}}', '<img src="'.$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);
+    $label = str_replace('{{thumbnail}}', '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" id="bsms_studyThumbnail" />', $label);
     $label = str_replace('{{seriestext}}', $row->stext, $label);
     $label = str_replace('{{messagetype}}', $row->message_type, $label);
     $label = str_replace('{{bookname}}', $row->bname, $label);

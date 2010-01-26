@@ -203,7 +203,7 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 
 }
 
-function getTeacherDetailsExp($row, $params, $template)
+function getTeacherDetailsExp($row, $params, $template, $admin_params)
 {
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
@@ -320,7 +320,7 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
 	    {
 	       	break;
 	    }
-		$studies .= getListingExp($row, $params, $oddeven, $params, $params->get('studieslisttemplateid'));	
+		$studies .= getListingExp($row, $params, $params, $params->get('studieslisttemplateid'));	
 	    $i++;
 	}
 	
