@@ -62,6 +62,10 @@ function getAdminsettings()
 			$adminsettings = $db->loadAssoc();
 			$admin_params = null;
 			$admin_params = new JParameter($adminsettings['params']); 
+		
+	//	ToDo: A better way to access parameters. maybe use the model/table from admin?
+	//	jimport( 'joomla.application.component.view' );
+	//	jimport( 'joomla.application.component.model' );
 					
 		return $admin_params;
 	}

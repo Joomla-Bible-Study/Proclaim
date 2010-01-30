@@ -12,8 +12,7 @@
     <table class="admintable">
     <tr><td class="key"><?php echo JText::_('Administrative Settings');?></td><td>
     <?php
-    
-  
+   
 
 	jimport('joomla.html.pane');
 	$pane =& JPane::getInstance( 'sliders' );
@@ -65,7 +64,7 @@ if ($sh404exists)
 }
 ?>
       <tr> <td class="key"><?php echo JText::_('Version');?></td>
-      	<td><?php echo JText::_('Your Version: ').'6.1.0 - ';?>
+      	<td><?php echo JText::_('Your Version: ').'6.2.0 - '; //We are going to change this to pull from the new version table?>
         <strong>
 		<?php echo JText::_('Current Version:').' '.$this->versioncheck; ?></strong><br />
         <a href="http://www.JoomlaBibleStudy.org" target="_blank"><?php echo JText::_('Get Latest Version');?></a></td>

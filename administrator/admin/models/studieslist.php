@@ -102,6 +102,7 @@ function __construct()
 	* @return unknown_type
 	*/
 	function getFiles() {
+		$mediaFiles = null;
 		$db =& JFactory::getDBO();
 		$i=0;
 		foreach($this->_data as $sermon) {

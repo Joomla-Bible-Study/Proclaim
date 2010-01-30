@@ -90,7 +90,7 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$database->query();
 	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (7, 'Streaming Video', 'Streaming Video', '','streamingvideo24.png', 'Streaming Video', 1);");
 	$database->query();
-	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (8, 'Real Audio', 'Real Audio', '','realplayer24.png', 'Real Audio', 1;");
+	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (8, 'Real Audio', 'Real Audio', '','realplayer24.png', 'Real Audio', 1);");
 	$database->query();
 	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (9, 'Windows Media Audio', 'Windows Media Audio', '','windows-media24.png', 'Windows Media File', 1);");
 	$database->query();
@@ -100,7 +100,7 @@ if ($bsms) { //this is the beginninng of the install block. It won't go if the d
 	$database->query();
 	$database->setQuery("INSERT  INTO `#__bsms_media` VALUES (12, 'DVD', 'DVD', '','dvd.png', 'DVD', 1);");
 	$database->query();
-	$database->setQuery("INSERT INTO #__bsms_media VALUES (13,'Download','Download', '', 'download.png', 'Download', '1');");
+	$database->setQuery("INSERT INTO `#__bsms_media` VALUES (13,'Download','Download', '', 'download.png', 'Download', '1');");
 	$database->query();
 	}
 	
