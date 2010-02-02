@@ -101,6 +101,7 @@ function __construct()
 	* It then adds to the dataObject the mediafiles associated with the sermon.
 	* @return unknown_type
 	*/
+	/* Tom commented this out because it caused the query to fail - needs work. */
 	function getFiles() {
 		$mediaFiles = null;
 		$db =& JFactory::getDBO();
@@ -124,7 +125,7 @@ function __construct()
 		}
 		$this->_files = $mediaFiles;
 		return $this->_files;
-	}
+	} 
 /**
 	 * Method to get the total number of studies items
 	 *

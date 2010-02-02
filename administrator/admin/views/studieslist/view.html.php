@@ -150,7 +150,7 @@ class biblestudyViewstudieslist extends JView {
 		$this->assignRef('rows', 		$rows);
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('request_url',	$uri->toString());
-		$this->assignRef('mediaFiles', $mediaFiles);
+	// commented out for now - broken in model (Tom)	$this->assignRef('mediaFiles', $mediaFiles);
 
 		parent::display($tpl);
 	}

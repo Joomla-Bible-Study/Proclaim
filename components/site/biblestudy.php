@@ -77,10 +77,12 @@ require_once JPATH_COMPONENT . DS . 'controllers' . DS . $controller . '.php';
 */
 // Create the controller
 //
+
 	$classname	= 'biblestudyController'.$controller;
-//	dump ($controller, 'controller: ');
+	//dump ($classname, 'controller');
+//	
 	$controller = new $classname( );
-	
+	//dump ($controller, 'controller: ');
 	// Perform the Request task
 	$controller->execute( JRequest::getWord('task'));
 	
