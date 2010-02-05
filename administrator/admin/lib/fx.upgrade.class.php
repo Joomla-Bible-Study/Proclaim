@@ -107,40 +107,54 @@ class fx_Upgrade {
 		//First we want to see if there is a schema number. This is pre-6.2 way of tracking versions
 		$biblestudy_db =& JFactory::getDBO();
 		$biblestudy_db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
-		$schema = $biblestudy_db->loadResult();
+		$schema = $biblestudy_db->loadResult(); //dump ($schema, 'schema: ');
 		if ($schema)
 		{
 			switch ($schema)
 			{
-				case 600:
+				case '600':
 				$vers = '6.0.7';
 				$dt = '2008-04-10';
 				$bld = '600';
 				$vername = 'Genesis';
 				break;
 			
-				case 608:
+				case '608':
 				$vers = '6.0.8';
 				$dt = '2008-08-14';
 				$bld = '608';
 				$vername = 'Exodus';
 				break;
 				
-				case 611:
+				case '611':
 				$vers = '6.0.11';
 				$dt = '2008-10-22';
 				$bld = '611';
 				$vername = 'Leviticus';
 				break;
 				
-				case 612:
+				case '612':
 				$vers = '6.1.0';
 				$dt = '2009-11-30';
-				$bld = '612';
+				$bld = '613';
 				$vername = 'Numbers';
 				break;
+				
+				case '613':
+				$vers = '6.1.0';
+				$dt = '2009-11-30';
+				$bld = '613';
+				$vername = 'Numbers';
+				break;
+				
+				default:
+				$vers = '6.0.7';
+				$dt = '2008-04-10';
+				$bld = '600';
+				$vername = 'Genesis';
+				break;
 			}
-			
+		//dump ($vers, '$vers: '); dump ($dt, '$dt: '); dump ($bld, '$bld: '); dump ($vername, '$vername: ');	
 		}
 		$this->insertVersionData($vers,$dt,$bld,$vername);
 	}

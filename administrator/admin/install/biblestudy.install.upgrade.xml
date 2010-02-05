@@ -405,6 +405,7 @@
 		</version>
 		<version version="6.2.0" versiondate="2010-03-01" build="613" versionname="Deuteronomy">
 			<query>ALTER TABLE #__bsms_teachers MODIFY `title` varchar(250)</query>
+			<query mode="silenterror">ALTER TABLE #__bsms_admin ADD COLUMN showhide char(255) DEFAULT NULL</query>
 			<phpfile name="biblestudy.613.upgrade.php" />
 		</version>
 	</upgrade>

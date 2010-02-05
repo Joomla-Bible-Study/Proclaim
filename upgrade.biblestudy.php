@@ -1,1 +1,0 @@
-//CREATE TABLE jos_bsms_studycategories (id INT (18) NOT NULL AUTO_INCREMENT, study_id INT (18) DEFAULT '0' NOT NULL, category_id INT (18) DEFAULT '0' NOT NULL, PRIMARY KEY(id), UNIQUE(id), INDEX(id)) 

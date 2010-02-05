@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install type="component" version="1.5.0" method="upgrade">
-	<name>Joomla Bible Study</name>
+	<name>Bible Study</name>
 	<version>6.2.0</version>
 	<versionname>Deuteronomy</versionname>
 	<creationDate>2010-03-01</creationDate>
@@ -40,8 +40,9 @@
 		<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_biblestudy.ini</language>
 	</languages>
+	<administration>
 		<!-- Administration Menu Section -->
-		<menu>Joomla Bible Study</menu>
+		<menu>Bible Study</menu>
 		<submenu>
 			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
 			<menu link="option=com_biblestudy&amp;view=studieslist">Studies</menu>
@@ -66,9 +67,7 @@
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
 		<!-- Administration Main File Copy Section -->
-	<administration>
 		<files folder="admin">
-			<filename>manifest.xml</filename>
 			<filename>index.html</filename>
 			<filename>admin.biblestudy.php</filename>
 			<filename>controller.php</filename>
