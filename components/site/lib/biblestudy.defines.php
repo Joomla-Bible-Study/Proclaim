@@ -11,8 +11,8 @@
 // Version information
 define ('BIBLESTUDY_VERSION', '6.2.0');
 define ('BIBLESTUDY_VERSION_DATE', '2010-02-23');
-define ('BIBLESTUDY_VERSION_NAME', 'Genesis');
-define ('BIBLESTUDY_VERSION_BUILD', '769');
+define ('BIBLESTUDY_VERSION_NAME', 'Deuteronomy');
+define ('BIBLESTUDY_VERSION_BUILD', '614');
 
 // Default values
 define('BIBLESTUDY_COMPONENT_NAME', 'com_biblestudy');

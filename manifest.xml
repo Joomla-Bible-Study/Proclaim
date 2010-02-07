@@ -45,6 +45,7 @@
 		<menu>Bible Study</menu>
 		<submenu>
 			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
+			<menu link="option=com_biblestudy&amp;view=cpanel">Control Panel</menu>
 			<menu link="option=com_biblestudy&amp;view=studieslist">Studies</menu>
 			<menu link="option=com_biblestudy&amp;view=mediafileslist">Media Files</menu>
 			<menu link="option=com_biblestudy&amp;view=templateslist">Template Display Settings</menu>

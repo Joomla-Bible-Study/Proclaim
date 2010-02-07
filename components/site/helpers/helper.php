@@ -24,7 +24,7 @@
     
   $items  = $menus->getItems('componentid', $component->componentid);
   
-   foreach ($items as &$menu) {
+   foreach ($items as $menu) {
     if (@$menu->query['view'] == $itemidlinkview) {
      $itemid = $menu->id; 
      break;

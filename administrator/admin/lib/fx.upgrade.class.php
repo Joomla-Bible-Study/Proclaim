@@ -120,7 +120,7 @@ class fx_Upgrade {
 				break;
 			
 				case '608':
-				$vers = '6.0.8';
+				$vers = '6.0.8-10';
 				$dt = '2008-08-14';
 				$bld = '608';
 				$vername = 'Exodus';

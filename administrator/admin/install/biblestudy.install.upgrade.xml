@@ -355,15 +355,7 @@
 				  `published` tinyint(1) NOT NULL DEFAULT '1',
 				  PRIMARY KEY (`id`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1</query>
-					<query>CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
-				  `id` int(3) NOT NULL AUTO_INCREMENT,
-				  `study_id` int(3) NOT NULL DEFAULT '0',
-				  `topic_id` int(3) NOT NULL DEFAULT '0',
-				  PRIMARY KEY (`id`),
-				  UNIQUE KEY `id` (`id`),
-				  KEY `id_2` (`id`)
-				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1</query>
-				<query>CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
+			<query>CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `type` varchar(255) NOT NULL,
 				  `tmpl` longtext NOT NULL,
@@ -404,6 +396,14 @@
 			<phpfile name="biblestudy.612.upgrade.php" />	
 		</version>
 		<version version="6.2.0" versiondate="2010-03-01" build="613" versionname="Deuteronomy">
+		<query>CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
+				  `id` int(3) NOT NULL AUTO_INCREMENT,
+				  `study_id` int(3) NOT NULL DEFAULT '0',
+				  `topic_id` int(3) NOT NULL DEFAULT '0',
+				  PRIMARY KEY (`id`),
+				  UNIQUE KEY `id` (`id`),
+				  KEY `id_2` (`id`)
+				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1</query>
 			<query>ALTER TABLE #__bsms_teachers MODIFY `title` varchar(250)</query>
 			<query mode="silenterror">ALTER TABLE #__bsms_admin ADD COLUMN showhide char(255) DEFAULT NULL</query>
 			<phpfile name="biblestudy.613.upgrade.php" />
