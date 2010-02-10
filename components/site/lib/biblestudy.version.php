@@ -78,7 +78,7 @@ class CBiblestudyVersion {
 	function version()
 	{
 		$version = CBiblestudyVersion::versionArray();
-		return '<table><tr><td>Biblestudy '.$version->version.'</td></tr><tr><td>'.$version->versiondate.'</td></tr><tr><td>'.$version->build.'</td></tr><tr><td>'.$version->versionname.'</td></tr></table>';
+		return '<table><tr><td><strong>Joomla Bible Study</strong></td></tr><tr><td>Version: '.$version->version.'</td></tr><tr><td> Date: '.$version->versiondate.'</td></tr><tr><td>Build: '.$version->build.'</td></tr><tr><td> Version Name: '.$version->versionname.'</td></tr></table>';
 	}
 
 	/** 

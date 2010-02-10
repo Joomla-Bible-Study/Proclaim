@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <comupgrade version="1.0">
-	<install version="6.2.0" versiondate="2010-01-23" build="614" versionname="Judges">
+	<install version="6.2.0" versiondate="2010-01-23" build="614" versionname="Deuteronomy">
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `id` int(11) NOT NULL,
 					  `podcast` text,
@@ -334,7 +334,7 @@
 			<query mode="silenterror">ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) NOT NULL default '0' AFTER user_name</query>
 			<query mode="silenterror">ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level</query>
 		</version>
-		<version version="6.1.0" versiondate="2009-11-30" build="612" versionname="Numbers">
+		<version version="6.1.0" versiondate="2009-11-30" build="613" versionname="Numbers">
 			<query>CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `id` int(11) NOT NULL,
 					  `podcast` text,
@@ -393,9 +393,9 @@
 			<query mode="silenterror">ALTER TABLE #__bsms_mediafiles ADD COLUMN comment TEXT NULL AFTER article_id</query>
 			<query mode="silenterror">ALTER TABLE #__bsms_mediafiles ADD COLUMN virtueMart_id INT NULL AFTER comment</query>
 			<query mode="silenterror">ALTER TABLE #__bsms_mediafiles ADD COLUMN params TEXT NULL AFTER virtueMart_id</query>
-			<phpfile name="biblestudy.612.upgrade.php" />	
+			<phpfile name="biblestudy.613.upgrade.php" />	
 		</version>
-		<version version="6.2.0" versiondate="2010-03-01" build="613" versionname="Deuteronomy">
+		<version version="6.2.0" versiondate="2010-03-01" build="614" versionname="Deuteronomy">
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 				  `id` int(3) NOT NULL AUTO_INCREMENT,
 				  `study_id` int(3) NOT NULL DEFAULT '0',
@@ -405,8 +405,8 @@
 				  KEY `id_2` (`id`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1</query>
 			<query>ALTER TABLE #__bsms_teachers MODIFY `title` varchar(250)</query>
-			<query mode="silenterror">ALTER TABLE #__bsms_admin ADD COLUMN showhide char(255) DEFAULT NULL</query>
-			<phpfile name="biblestudy.613.upgrade.php" />
+			<query>ALTER TABLE #__bsms_admin ADD COLUMN showhide char(255) DEFAULT NULL</query>
+			<phpfile name="biblestudy.614.upgrade.php" />
 		</version>
 	</upgrade>
 </comupgrade>

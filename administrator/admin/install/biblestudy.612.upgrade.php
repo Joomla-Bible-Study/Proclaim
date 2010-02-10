@@ -23,6 +23,20 @@ $db->setQuery("UPDATE #__bsms_mediafiles SET params = 'player=2', internal_viewe
 		}
 		
 	}
+//Let's check to see if there is a css file - if not, we'll copy one over
+$cssexists = JFile::exists($dest);
+if (!$cssexists)
+	{
+		if (!JFile::copy($src, $dest))
+		{
+			$result_table .= '<tr><td>There was a problem installing the CSS data file. Copy manually /components/com_biblestudy/assets/css/biblestudy.css.dist to same folder with .css only extension</td></tr>';
+		}
+		else
+		{
+			$result_table .= '<tr><td>CSS data installed</td></tr>';
+		}
+		
+	}
 $result_table .= '</table>';
 echo $result_table;
 ?>

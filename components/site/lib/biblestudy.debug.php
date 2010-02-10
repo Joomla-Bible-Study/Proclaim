@@ -42,7 +42,7 @@ function trigger_dberror($text = '', $back=0)
 	$dberror = $biblestudy_db->stderr(true);
 	echo debug_callstackinfo($back+1);
 
-	require_once (KUNENA_PATH_LIB .DS. 'kunena.version.php');
+	require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
 	$biblestudyVersion = CBiblestudyVersion::version();
 	$biblestudyPHPVersion = CBiblestudyVersion::PHPVersion();
 	$biblestudyMySQLVersion = CBiblestudyVersion::MySQLVersion();
@@ -54,7 +54,7 @@ Installed version:  <?php echo $biblestudyVersion; ?> | php <?php echo $biblestu
 <!-- /Version Info -->
 <?php
 
-	kunena_error($text.'<br /><br />'.$dberror, E_USER_ERROR, $back+1);
+	biblestudy_error($text.'<br /><br />'.$dberror, E_USER_ERROR, $back+1);
 }
 
 function check_dberror($text='', $back=0)
@@ -144,7 +144,7 @@ function debug_callstackinfo($back=1)
 	return debug_vars($trace);
 }
 
-function kunena_error($message, $level=E_USER_NOTICE, $back=1) {
+function biblestudy_error($message, $level=E_USER_NOTICE, $back=1) {
 	$trace = debug_backtrace();
 	$caller = $trace[$back];
 	trigger_error($message.' in <strong>'.$caller['function'].'()</strong> called from <strong>'.$caller['file'].'</strong> on line <strong>'.$caller['line'].'</strong>'."\n<br /><br />Error reported", $level);

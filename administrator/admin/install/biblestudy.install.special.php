@@ -33,8 +33,12 @@ $dest = JPATH_SITE.DS.'components/com_biblestudy/assets/css/biblestudy.css';
 $cssexists = JFile::exists($dest);
 if (!$cssexists)
 	{
-		JFile::copy($src, $dest);
-		$result_table .= '<tr><td>CSS data installed</td></tr>';
+		if (!JFile::copy($src, $dest))
+		{
+			$result_table .= '<tr><td>There was a problem copying the css data. Please manually copy /assets/css/biblestudy.css.dist to biblestudy.css</td></tr>';
+		}
+		else
+		{$result_table .= '<tr><td>CSS data installed</td></tr>';}
 	}
 $result_table .= '</table>';
 echo $result_table;

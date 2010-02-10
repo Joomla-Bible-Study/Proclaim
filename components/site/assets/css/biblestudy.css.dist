@@ -868,3 +868,21 @@
 	color:#0b55c4;
 	font-weight:bold;
 }
+/* Landing Page Items */
+#landinglist
+{
+	
+}
+
+#landing_label {
+	
+}
+#landing_item {
+	
+}
+#landing_title {
+	
+}
+#biblestudy_landing {
+	
+}

@@ -1,6 +1,7 @@
 <?php defined('_JEXEC') or die('Restricted access');
-
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.debug.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
 //dump ($this->admin, 'admin: ');?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
@@ -64,8 +65,9 @@ if ($sh404exists)
 }
 ?>
       <tr> <td class="key"><?php echo JText::_('Version');?></td>
-      	<td><?php echo JText::_('Your Version: ').'6.2.0 - '; //We are going to change this to pull from the new version table?>
-        <strong>
+      	<td> 
+		<?php echo CBiblestudyVersion::versionHTML();?>
+       <br />
 		<?php echo JText::_('Current Version:').' '.$this->versioncheck; ?></strong><br />
         <a href="http://www.JoomlaBibleStudy.org" target="_blank"><?php echo JText::_('Get Latest Version');?></a></td>
       </tr>

@@ -78,8 +78,13 @@ class jbStats {
 				'AND hits > 0  ORDER BY hits DESC LIMIT 5');
 		$results=$biblestudy_db->loadObjectList();
 		        check_dberror("Unable to load messages.");
-
-		return count($results) > 0 ? $results : array();
+  		$top_studies = null;
+		foreach ($results as $result)
+		{
+			$top_studies .= $result->hits.' hits - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->id.'">'.$result->studytitle.'</a> - '.date('Y-m-d', strtotime($result->studydate)).'<br>';
+		}
+		//return count($results) > 0 ? $results : array();
+		return  $top_studies;
 	}
 
 	/**
@@ -95,23 +100,27 @@ class jbStats {
 	 * Get top books
 	 * @return array
 	 */
-	function get_top_categories() {
+	function get_top_books() {
 		$biblestudy_db = &JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT booknumber,COUNT(id) as totalmsg FROM #__bsms_studies' .
-				' GROUP BY c.id ORDER BY booknumber LIMIT 5');
-		$results=$biblestudy_db->loadObjectList();
+		//$biblestudy_db->setQuery('SELECT booknumber, COUNT(hits) as totalmsg FROM #__bsms_studies' .
+		//		' GROUP BY id ORDER BY booknumber LIMIT 5');
+				
+				$biblestudy_db->setQuery('SELECT booknumber, COUNT( hits ) AS totalmsg FROM jos_bsms_studies GROUP BY booknumber ORDER BY totalmsg DESC LIMIT 5'); 
+		$results=$biblestudy_db->loadObjectList(); 
+		$results=$biblestudy_db->query(); 
 		        check_dberror("Unable to load books.");
 
 		if (count($results)>0) {
 				$ids=implode(',',$results);
-				$biblestudy_db->setQuery('SELECT bookname FROM #__bsms_books WHERE id IN ('.$ids.') ORDER BY booknumber');
+				$biblestudy_db->setQuery('SELECT bookname FROM #__bsms_books WHERE booknumber IN ('.$ids.') ORDER BY booknumber');
 				$names=$biblestudy_db->loadResultArray();
 				$i=0;
 				foreach ($results as $result)
-					$result->name=$names[$i++];
+					{$result->bookname=$names[$i++];}
 		}
-		else
-			$results=array();
+		else 
+		{$results=array();}
+			
 		return $results;
 	}
 	/**
@@ -124,61 +133,40 @@ class jbStats {
 		return intval($biblestudy_db->loadResult());
 	}
 
-	/**
-	 * Latest Joomla members
-	 * @return string
-	 */
-/*	function get_latest_member() {
+	
+	function get_topthirtydays() {
+		$month = mktime(0, 0, 0, date("m")-3 , date("d"), date("Y")); 
+		$lastmonth = date("Y-m-d 00:00:01",$month); //echo $lastmonth;
 		$biblestudy_db = &JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT username FROM #__users WHERE block=0 AND activation=\'\' ORDER BY id DESC LIMIT 1');
-		return $biblestudy_db->loadResult();
+		$query = 'SELECT * FROM #__bsms_studies WHERE published = "1" AND hits >0 AND UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "'.$lastmonth.'" )ORDER BY hits DESC LIMIT 5 '; //echo $query;
+			//$query = 'SELECT * FROM #__bsms_studies WHERE UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "2009-02-10 00:00:00" )ORDER BY hits DESC LIMIT 5 ';
+	
+		$biblestudy_db->setQuery($query);
+		$results = $biblestudy_db->loadObjectList(); //dump ($results, 'results: ');
+		$top_studies = null;
+		if (!$results)
+		{
+			$top_studies = 'No information available';
+		}
+		else
+		{
+			foreach ($results as $result)
+			{
+				$top_studies .= $result->hits.' hits - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->id.'">'.$result->studytitle.'</a> - '.date('Y-m-d', strtotime($result->studydate)).'<br>';
+			}
+		}
+		//return count($results) > 0 ? $results : array(); 
+		//dump ($results, 'results: ');
+		return  $top_studies;
+		//return intval($biblestudy_db->loadResult());
 	}
-*/
-	/**
-	 * Total joomla members
-	 * @return int
-	 */
-/*	function get_total_members() {
+	function total_mediafiles()
+	{
 		$biblestudy_db = &JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT COUNT(*) FROM #__users');
-		return intval($biblestudy_db->loadresult());
+		$biblestudy_db->setQuery('SELECT COUNT(*) FROM #__bsms_mediafiles WHERE published = 1');
+		return intval($biblestudy_db->loadResult());
 	}
-*/
-	/**
-	 * Top posters
-	 * @return array
-	 */
-/*	function get_top_posters() {
-		$biblestudy_db = &JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT s.userid,s.posts,u.username FROM #__fb_users as s ' .
-				"\n INNER JOIN  #__users as u ON s.userid=u.id" .
-				"\n WHERE s.posts > 0 ORDER BY s.posts DESC LIMIT 10");
-		return count($biblestudy_db->loadObjectList()) > 0 ? $biblestudy_db->loadObjectList() : array();
-	}
-*/
-	/**
-	 * Top profiles
-	 * @return array
-	 */
-/*	function get_top_profiles() {
-		$biblestudy_db = &JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT s.userid,s.uhits,u.username FROM #__fb_users as s ' .
-				"\n INNER JOIN  #__users as u ON s.userid=u.id" .
-				"\n WHERE s.uhits > 0 ORDER BY s.uhits DESC LIMIT 10");
-		return count($biblestudy_db->loadObjectList()) > 0 ? $biblestudy_db->loadObjectList() : array();
-	}
-*/
-	/**
-	 * CB top profiles
-	 * @return array
-	 */
-/*	 function get_top_cbprofiles() {
-	 	$biblestudy_db = &JFactory::getDBO();
- 		$biblestudy_db->setQuery("SELECT u.username AS user, p.hits FROM #__users AS u"
-			. "\n LEFT JOIN #__comprofiler AS p ON p.user_id = u.id"
-			. "\n WHERE p.hits > 0 ORDER BY p.hits DESC LIMIT 10");
-		return count($biblestudy_db->loadObjectList()) > 0 ? $biblestudy_db->loadObjectList() : array();
-	 }*/
+
 }
 
 ?>

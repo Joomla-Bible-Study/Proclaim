@@ -216,7 +216,7 @@ class fx_Upgrade {
 		$upgrade=null;
 
 		// Legacy enabler
-		// Versions prior to 1.0.5 did not came with a version table inside the database
+		// Versions prior to 6.2.0 did not came with a version table inside the database
 		// this would make the installer believe this is a fresh install. We need to perform
 		// a 'manual' check if this is going to be an upgrade and if so create that table
 		// and write a dummy version entry to force an upgrade.
@@ -423,8 +423,8 @@ class fx_Upgrade {
 						$this->_error = "<font color=\"red\">File not found!</font>";
 					}
 					if (!$fileCheck || $this->_error) {
-						//$img = "publish_x.png";
-						$img = "tick.png";
+						$img = "publish_x.png";
+						//$img = "tick.png";
 						$this->_return = false;
 					}
 					

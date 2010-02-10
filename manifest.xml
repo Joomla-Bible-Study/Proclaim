@@ -86,6 +86,7 @@
 			<folder>controllers</folder>
 			<folder>lib</folder>
 			<folder>install</folder>
+			<folder>images</folder>
 		</files>
 			<languages folder="admin/languages">
 			<language tag="en-GB">en-GB.com_biblestudy.ini</language>

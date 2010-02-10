@@ -45,7 +45,7 @@ if ($maxMem) {
 }
 ignore_user_abort(true);
 
-// Kunena wide defines
+// Bible Study wide defines
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 
 include_once(BIBLESTUDY_PATH_ADMIN_LIB .DS. 'fx.upgrade.class.php');
