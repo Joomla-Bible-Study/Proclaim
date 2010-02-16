@@ -1,7 +1,20 @@
 <?php defined('_JEXEC') or die('Restricted access'); 
 
 ?>
+<script language="javascript" type="text/javascript">
+function submitbutton(pressbutton)
+{
+	var form = document.adminForm;
+	if (pressbutton == 'cancel') {
+		submitform( pressbutton );
+		return;
+	
 
+	} else {
+		submitform( pressbutton );
+	}
+}
+</script>
 <script type="text/javascript">
 
 function openConverter1() 
@@ -31,7 +44,12 @@ function openConverter1()
     <table class="admintable">
    <!-- <tr><td><input type="submit" value="submit" /> <input type="button" value="cancel"> </td></tr>-->
     <tr>
-    <td align="left"><?php echo $this->toolbar;?></td></tr>
+    <td align="left">	<button type="button" onclick="submitbutton('save')">
+		<?php echo JText::_('Save');  ?>
+	</button>
+	<button type="button" onclick="submitbutton('cancel')">
+		<?php echo JText::_('Cancel') ?>
+	</button><?php //echo $this->toolbar;?></td></tr>
 <tr><td class="key"><?php echo JText::_('Parameters');?></td><td width="75">
 <?php
 jimport('joomla.html.pane');

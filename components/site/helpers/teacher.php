@@ -1,7 +1,7 @@
 <?php
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php')
 function getTeacher($params, $id, $admin_params)
 {
 	
@@ -42,22 +42,23 @@ function getTeacher($params, $id, $admin_params)
 			$i_path = null;
 			//dump ($tresult, 'tresult: ');
 			//Check to see if there is a teacher image, if not, skip this step
-			
-			if ($tresult->teacher_thumbnail == '- Select Image -' || !$tresult->teacher_thumbnail) 
-				{ 
-					$image->path = $tresult->thumb; $image->height = $tresult->thumbh; $image->width = $tresult->thumbw;
-				}
-			else
-			{
-				if ($tresult->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) 
-					{ 
-						$i_path = 'images/stories/'.$tresult->teacher_thumbnail; 
-					}
-				if ($tresult->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) 
-					{
-						$i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$tresult->teacher_thumbnail;
-					}
-			$image = getImage($i_path);
+			$images = new jbsImages();
+			$image = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+		//	if ($tresult->teacher_thumbnail == '- Select Image -' || !$tresult->teacher_thumbnail) 
+		//		{ 
+		//			$image->path = $tresult->thumb; $image->height = $tresult->thumbh; $image->width = $tresult->thumbw;
+		//		}
+		//	else
+		//	{
+		//		if ($tresult->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) 
+		//			{ 
+		//				$i_path = 'images/stories/'.$tresult->teacher_thumbnail; 
+		//			}
+		//		if ($tresult->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) 
+		//			{
+		//				$i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$tresult->teacher_thumbnail;
+		//			}
+		//	$image = getImage($i_path);
 				if (!$image) 
 					{
 						$image->path = ''; $image->width=0; $image->height=0;
@@ -172,21 +173,23 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
+	$images = new jbsImages();
+	$imagelarge = getTeacherThumbnail($row->teacher_image, $row->image);
+//	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
+//	else
+//	{
+//		if ($row->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_image; }
+//		if ($row->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
+//		$imagelarge = getImage($i_path);
+//	}
 	
-	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
-	else
-	{
-		if ($row->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_image; }
-		if ($row->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
-		$imagelarge = getImage($i_path);
-	}
-	
-	if (!$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw; }
-	else
-	{
-		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_thumbnail; }
-		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
-		$imagesmall = getImage($i_path);
+//	if (!$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw; }
+//	else
+//	{
+//		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_thumbnail; }
+//		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
+		$imagesmall = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+//		$imagesmall = getImage($i_path);
 	}
 	
 	$label = $params->get('teacher_templatecode');
@@ -213,22 +216,23 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params)
 	//dump ($row);
     
     //Get the image folders and images
-    
-    	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
-	else
-	{
-		if ($row->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_image; }
-		if ($row->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
-		$imagelarge = getImage($i_path);
-	}
-	
-	if (!$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw; }
-	else
-	{
-		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_thumbnail; }
-		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
-		$imagesmall = getImage($i_path);
-	}
+    $images = new jbsImages();
+	$imagelarge = getTeacherThumbnail($row->teacher_image, $row->image);
+   //	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
+//	else
+//	{
+//		if ($row->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_image; }
+//		if ($row->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
+//		$imagelarge = getImage($i_path);
+//	}
+	$imagesmall = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+//	if (!$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw; }
+//	else
+//	{
+//		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_thumbnail; }
+//		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
+//		$imagesmall = getImage($i_path);
+//	}
 	
     $label = $params->get('teacher_detailtemplate');
     $label = str_replace('{{teacher}}', $row->teachername, $label);

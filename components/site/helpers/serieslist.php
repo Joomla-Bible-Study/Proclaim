@@ -1,4 +1,5 @@
 <?php defined('_JEXEC') or die('Restriced Access');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 { //dump ($row->series_thumbnail, 'series: ');
 	//dump ($row);
@@ -122,17 +123,21 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			$element = '<td class="'.$r.' title">'.$element.'</td>';
 			break;
 		case 2:
-			if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-			if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
-			$image = getImage($i_path);
+			$images = new jbsImages(); 
+			$image = $images->getSeriesThumbnail($row->series_thumbnail);
+	//		if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
+	//		if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
+	//		$image = getImage($i_path);
 			$element = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
 			if ($islink > 0 && $view == 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' thumbnail image">'.$element.'</td>';
 			break;
 		case 3: //dump ($admin_params->get('series_imagefolder'), 'imagefolder: ');
-			if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-			if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
-			$image = getImage($i_path); //dump ($image, 'image: ');
+		//	if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
+		//	if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
+		//	$image = getImage($i_path); //dump ($image, 'image: ');
+			$images = new jbsImages(); 
+			$image = $images->getSeriesThumbnail($row->series_thumbnail);
 			$element1 = '<td class="'.$r.' thumbnail"> <table id="seriestable" cellspacing="0"><tr class="noborder"><td>';
 			$element2 = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
 			$element3 = '</td></tr>';
@@ -148,23 +153,27 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			$element = '<td class="'.$r.' teacher">'.$element.'</td>';
 			break;
 		case 5:
-			if ($row->teacher_thumbnail == '- Select Image -' || !$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw;}
-			if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$row->teacher_thumbnail; }
-			if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$row->teacher_thumbnail;}
-			$image = getImage($i_path);
+			$images = new jbsImages();
+			$image = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+	//		if ($row->teacher_thumbnail == '- Select Image -' || !$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw;}
+	//		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$row->teacher_thumbnail; }
+	//		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$row->teacher_thumbnail;}
+	//		$image = getImage($i_path);
 			$element = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->teachername.'">';
 			if ($islink > 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' teacher image">'.$element.'</td>';
 			break;
 		case 6:
 			$element1 = '<table id="seriestable" cellspacing="0"><tr class="noborder"><td class="'.$r.' teacher">';
-			if ($row->teacher_thumbnail == '- Select Image -' || !$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw;}
-			else 
-			{
-				if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$row->teacher_thumbnail; }
-				if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$row->teacher_thumbnail;}
-				$image = getImage($i_path);
-			}
+			$images = new jbsImages();
+			$image = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+	//	if ($row->teacher_thumbnail == '- Select Image -' || !$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw;}
+	//		else 
+	//		{
+	//			if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$row->teacher_thumbnail; }
+	//			if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$row->teacher_thumbnail;}
+	//			$image = getImage($i_path);
+	//		}
 			$element2 = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->teachername.'">';
 			$element3 = '</td></tr><tr class="noborder"><td class="'.$r.' teacher">';
 			$element4 = $row->teachertitle.' - '.$row->teachername;
@@ -409,12 +418,13 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 	include_once($path1.'image.php');
 	//dump ($templatemenuid, "Template");
 	//dump ($row, "Row - SeriesList.php");
-
-if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
-	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 
-	{ $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
-$image = getImage($i_path);
+	$images = new jbsImages();
+	$image = getSeriesThumbnail($row->series_thumbnail);
+//if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
+//	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
+//if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 
+//	{ $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
+//$image = getImage($i_path);
 			
 	$label = $params->get('series_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -444,12 +454,13 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
         include_once($path1.'comments.php');
         include_once($path1.'date.php');
         include_once($path1.'image.php');    
-        
-if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
-	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 
-	{ $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
-$image = getImage($i_path);
+        $images = new jbsImages();
+		$image = getSeriesThumbnail($row->series_thumbnail);
+//if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
+//	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
+//if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 
+//	{ $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
+//$image = getImage($i_path);
 
         $label = $params->get('series_detailcode');
         $label = str_replace('{{teacher}}', $row->teachername, $label);

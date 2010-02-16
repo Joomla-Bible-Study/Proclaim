@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 class biblestudyViewstudieslist extends JView {
 	
 	/**
@@ -113,13 +113,21 @@ class biblestudyViewstudieslist extends JView {
 		$item =& $menu->getActive();
 //dump ($admin[0]->main, 'main: ');
 		//Get the main study list image
+		/*
 		if ($admin[0]->main == '- Default Image -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}
 		else 
 		{
 				if ($admin[0]->main && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$admin[0]->main; }
 				if ($admin[0]->main && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$admin[0]->main;}
+				
+		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+		$image = ($admin->main == '- Default Image -' ? 'openbible.png' : $admin->main );
+		$i_path = BIBLESTUDY_PATH_LIST_MAIN_IMAGE .DS. $image; //dump ($i_path, 'i_path: ');
 		$main = getImage($i_path);
-		}
+		*/
+		$images = new jbsImages();
+		
+		$main = $images->mainStudyImage(); // dump ($main, 'main: ');
 		
 	  	$this->assignRef('main', $main);
 	  	

@@ -1,5 +1,6 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 //Helper file - master list creater for study lists
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule)
 {
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -520,10 +521,12 @@ function getListingExp($row, $params, $admin_params, $template)
 	include_once($path1.'image.php');
     //dump ($row, 'row: ');
     //dump ($admin_params, 'admin_params: ');
-   	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
-	$i_image = $row->thumbnailm;
-	$i_path = $i_path.'/'.$i_image;
-	$image = getImage($i_path);
+    $images = new jbsImages(); 
+	$image = $images->getStudyThumbnail($row->thumbnailm);
+  // 	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
+//	$i_image = $row->thumbnailm;
+//	$i_path = $i_path.'/'.$i_image;
+//	$image = getImage($i_path);
     $label = $params->get('templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->studytitle, $label);
@@ -576,10 +579,12 @@ function getStudyExp($row, $params, $admin_params, $template)
     include_once($path1.'date.php');
     include_once($path1.'duration.php');
     include_once($path1.'image.php');
-   	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
-	$i_image = $row->thumbnailm;
-	$i_path = $i_path.'/'.$i_image;
-	$image = getImage($i_path);
+    $images = new jbsImages(); 
+    $image = $images->getStudyThumbnail($row->thumbnailm);
+  // 	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
+//	$i_image = $row->thumbnailm;
+//	$i_path = $i_path.'/'.$i_image;
+//	$image = getImage($i_path);
         //dump ($row, 'row: ');
     $label = $params->get('study_detailtemplate');
     $label = str_replace('{{teacher}}', $row->teachername, $label);

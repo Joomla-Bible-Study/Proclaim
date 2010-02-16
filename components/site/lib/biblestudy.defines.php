@@ -7,7 +7,7 @@
 * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
 * @link http://www.JoomlaBibleStudy.org
 **/
-
+defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
 define ('BIBLESTUDY_VERSION', '6.2.0');
 define ('BIBLESTUDY_VERSION_DATE', '2010-02-23');
@@ -30,7 +30,7 @@ define('BIBLESTUDY_COMPONENT_RELPATH', 'components' .DS. BIBLESTUDY_COMPONENT_NA
 define('BIBLESTUDY_ROOT_PATH', JPATH_ROOT);
 define('BIBLESTUDY_ROOT_PATH_ADMIN', JPATH_ADMINISTRATOR);
 
-define('BIBLESTUDY_PATH', BIBLESTUDY_ROOT_PATH .DS. BIBLESTUDY_COMPONENT_RELPATH);
+define('BIBLESTUDY_PATH', JPATH_SITE .DS. BIBLESTUDY_COMPONENT_RELPATH);
 define('BIBLESTUDY_PATH_LIB', BIBLESTUDY_PATH .DS. 'lib');
 define('BIBLESTUDY_PATH_TEMPLATE', BIBLESTUDY_PATH .DS. 'template');
 define('BIBLESTUDY_PATH_TEMPLATE_DEFAULT', BIBLESTUDY_PATH_TEMPLATE .DS. BIBLESTUDY_TEMPLATE_DEFAULT);
@@ -41,12 +41,25 @@ define('BIBLESTUDY_PATH_ADMIN_LANGUAGE', BIBLESTUDY_PATH_ADMIN .DS. 'language');
 define('BIBLESTUDY_PATH_ADMIN_INSTALL', BIBLESTUDY_PATH_ADMIN .DS. 'install');
 define('BIBLESTUDY_PATH_ADMIN_IMAGES', BIBLESTUDY_PATH_ADMIN .DS. 'images');
 
-// Kunena uploaded files directory
-define('BIBLESTUDY_PATH_UPLOADED', BIBLESTUDY_ROOT_PATH . '/images');
-
-// Files
-define('BIBLESTUDY_FILE_LANGUAGE_DEFAULT', BIBLESTUDY_PATH_ADMIN_LANGUAGE .DS. 'biblestudy.' . BIBLESTUDY_LANGUAGE_DEFAULT . '.php');
-define('BIBLESTUDY_FILE_LANGUAGE', BIBLESTUDY_PATH_ADMIN_LANGUAGE .DS. 'biblestudy.' . BIBLESTUDY_LANGUAGE . '.php');
+// Image folder paths
+// Main Study Listing Page image folder path
+/*
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+include_once($path1.'helper.php');
+$admin_params = getAdminsettings();
+$db	= & JFactory::getDBO();
+$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
+$db->query();
+$admin = $db->loadObject();
+	if ($admin->main == '- Default Image -' || ($admin->main && !$admin_params->get('media_imagefolder')))
+		{
+			define('BIBLESTUDY_PATH_LIST_MAIN_IMAGE', BIBLESTUDY_COMPONENT_RELPATH.DS.'images');
+		}
+	if ($admin->main && $admin_params->get('media_imagefolder'))
+		{
+			define('BIBLESTUDY_PATH_LIST_MAIN_IMAGE', BIBLESTUDY_PATH .DS. $admin_params->get('media_imagefolder'));
+		}
+	*/
 define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN .DS. 'manifest.xml');
 
 // URLs

@@ -15,6 +15,7 @@ class biblestudyControlleradmin extends JController {
 
 		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
+		$this->registerTask( 'apply',    'save');
 	}
 
 	/**
@@ -44,8 +45,25 @@ class biblestudyControlleradmin extends JController {
 			$msg = JText::_( 'Error Saving' );
 		}
 
+		switch ($this->_task) {
+			case 'apply':
+				$msg = JText::_( 'Changes to Admin Settings Updated! (by Apply)' );
+				$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
+				$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
+				break;
+
+			case 'save':
+			default:
+				$msg = JText::_( 'Data Saved!' );
+				//$link = 'index.php?option=com_driver';
+
+				// Check the table in so it can be edited.... we are done with it anyway
+				$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
+				break;
+		}
+		
 		// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
+	//	$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
 		$this->setRedirect($link, $msg);
 	}
 

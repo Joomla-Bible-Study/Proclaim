@@ -5,6 +5,20 @@
 
 	
 ?>
+<script language="javascript" type="text/javascript">
+function submitbutton(pressbutton)
+{
+	var form = document.adminForm;
+	if (pressbutton == 'cancel') {
+		submitform( pressbutton );
+		return;
+	
+
+	} else {
+		submitform( pressbutton );
+	}
+}
+</script>
 <style>
   li {list-style-type:none;}
   
@@ -25,7 +39,12 @@ $user =& JFactory::getUser();
 
 <tr>
 
-<tr>    <td ><?php echo $this->toolbar;?>
+<tr>    <td >	<button type="button" onclick="submitbutton('save')">
+		<?php echo JText::_('Save');  ?>
+	</button>
+	<button type="button" onclick="submitbutton('cancel')">
+		<?php echo JText::_('Cancel') ?>
+	</button><?php //echo $this->toolbar;?>
 </td></tr>
 
 <!--<tr><td class="key"><?php echo JText::_('Parameters');?></td>

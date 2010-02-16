@@ -19,6 +19,7 @@ class biblestudyViewadmin extends JView
 	//	$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Administration' ));
 		JToolBarHelper::save();
+		JToolBarHelper::apply();
 		$paramsdata = $admin->params;
 		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'admin.xml';
 		$params = new JParameter($paramsdata, $paramsdefs);

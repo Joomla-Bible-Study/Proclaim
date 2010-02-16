@@ -2,7 +2,9 @@
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.debug.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
-//dump ($this->admin, 'admin: ');?>
+//dump ($this->admin, 'admin: ');
+
+?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
@@ -66,7 +68,8 @@ if ($sh404exists)
 ?>
       <tr> <td class="key"><?php echo JText::_('Version');?></td>
       	<td> 
-		<?php echo CBiblestudyVersion::versionHTML();?>
+		<?php $version = CBiblestudyVersion::versionArray(); 
+		echo 'Version: <strong>'.$version->version.'</strong> Date: '.$version->versiondate.' Build: '.$version->build.' Version Name: '.$version->versionname; ?>
        <br />
 		<?php echo JText::_('Current Version:').' '.$this->versioncheck; ?></strong><br />
         <a href="http://www.JoomlaBibleStudy.org" target="_blank"><?php echo JText::_('Get Latest Version');?></a></td>

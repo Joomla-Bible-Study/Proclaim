@@ -120,8 +120,8 @@ function publish()
 	include_once($path1.'writexml.php');
 	include_once($path1.'helper.php');
 	$model = $this->getModel('podcastedit');
-	//$admin_params = getAdminsettings();
-	$admin_params = null;
+	$admin_params = getAdminsettings();
+	//$admin_params = null;
 	//$admin = $this->get('Admin');
 	//$admin_params = new JParameter($admin[0]->params);
 	//$model =& $this->getModel();

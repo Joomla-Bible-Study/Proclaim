@@ -56,16 +56,21 @@
 function getAdminsettings()
 	{
 			$db =& JFactory::getDBO();
-			$query = 'SELECT *'
-			. ' FROM #__bsms_admin'
-			. ' WHERE id = 1';
-			$adminsettings = $db->loadAssoc();
-			$admin_params = null;
-			$admin_params = new JParameter($adminsettings['params']); 
+		//	$query = 'SELECT *'
+		//	. ' FROM #__bsms_admin'
+		//	. ' WHERE id = 1';
+		//	$adminsettings = $db->loadAssoc();
+		//	$admin_params = null;
+		//	$admin_params = new JParameter($adminsettings['params']); 
 		
 	//	ToDo: A better way to access parameters. maybe use the model/table from admin?
 	//	jimport( 'joomla.application.component.view' );
 	//	jimport( 'joomla.application.component.model' );
+	
+		$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
+		$db->query();
+		$compat = $db->loadObject();
+		$admin_params = new JParameter($compat->params);
 					
 		return $admin_params;
 	}

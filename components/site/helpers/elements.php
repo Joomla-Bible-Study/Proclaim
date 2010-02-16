@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restriced Access');
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 function getElementid($rowid, $row, $params, $admin_params, $template)
 	{
 	$elementid = null;
@@ -147,12 +147,15 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 25:
 			$elementid->id = 'thumbnail';
 			$elementid->headertext = JText::_('Thumbnail');
-			$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
+			
+			//$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
 			if ($row->thumbnailm) 
 			{
-				$i_image = $row->thumbnailm;
-				$i_path = $i_path.'/'.$i_image;
-				$image = getImage($i_path);
+				$images = new jbsImages(); 
+				$image = $images->getStudyThumbnail($row->thumbnailm);
+			//	$i_image = $row->thumbnailm;
+			//	$i_path = $i_path.'/'.$i_image;
+			//	$image = getImage($i_path);
     			$elementid->element = '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->studytitle.'">';
 			}
 			else {$elementid->element = '';}
@@ -160,12 +163,14 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 26:
 			$elementid->id = 'series_thumbnail';
 			$elementid->headertext = JText::_('Thumbnail');
-			$i_path = ($admin_params->get('series_imagefolder') ? 'images/'.$admin_params->get('series_imagefolder') : 'images/stories');
+		//	$i_path = ($admin_params->get('series_imagefolder') ? 'images/'.$admin_params->get('series_imagefolder') : 'images/stories');
 			if ($row->series_thumbnail) 
 			{
-				$i_image = $row->series_thumbnail;
-				$i_path = $i_path.'/'.$i_image;
-				$image = getImage($i_path);
+				$images = new jbsImages(); 
+				$image = $images->getSeriesThumbnail($row->series_thumbnail); // dump ($image, 'image: ');
+			//	$i_image = $row->series_thumbnail;
+			//	$i_path = $i_path.'/'.$i_image;
+			//	$image = getImage($i_path);
     			$elementid->element = '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->series_text.'">';
 			}
 			else {$elementid->element = '';}

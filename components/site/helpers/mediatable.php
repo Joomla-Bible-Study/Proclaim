@@ -1,6 +1,6 @@
 <?php
 defined('_JEXEC') or die();
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 function getMediatable($params, $row, $admin_params)
 {
 jimport ('joomla.application.component.helper');
@@ -18,10 +18,13 @@ if (!$row->id) {return FALSE;}
 	$database->query();
 	$admin = $database->loadObjectList();
  
-	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
+//	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
 	$d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');
-	$d_path = $d_path1.$d_image;
-	$download_tmp = getImage($d_path);
+	
+	$images = new jbsImages();
+ 	$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);
+//	$d_path = $d_path1.$d_image;
+//	$download_tmp = getImage($d_path);
     $download_image = $download_tmp->path;
 	$query_media1 = 'SELECT #__bsms_mediafiles.*,'
     . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
@@ -52,10 +55,12 @@ if (!$row->id) {return FALSE;}
 	//Load the parameters
 	$itemparams = new JParameter ($media->params);
 	$Itemid = $params->get('detailstemplateid', 1);
-	if (!$media->path2) { $i_path = $media->impath; }
-	if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-	if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$media->path2;}
-	$image = getImage($i_path);
+	$images = new jbsImages();
+ 	$image = $images->getMediaImage($media->path2, $media->impath);
+//	if (!$media->path2) { $i_path = $media->impath; }
+//	if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
+//	if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$media->path2;}
+//	$image = getImage($i_path);
 	
 	$mediatable .= '<td>';
 	
