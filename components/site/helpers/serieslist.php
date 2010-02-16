@@ -154,7 +154,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			break;
 		case 5:
 			$images = new jbsImages();
-			$image = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+			$image = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 	//		if ($row->teacher_thumbnail == '- Select Image -' || !$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw;}
 	//		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$row->teacher_thumbnail; }
 	//		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$row->teacher_thumbnail;}
@@ -166,7 +166,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 		case 6:
 			$element1 = '<table id="seriestable" cellspacing="0"><tr class="noborder"><td class="'.$r.' teacher">';
 			$images = new jbsImages();
-			$image = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+			$image = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 	//	if ($row->teacher_thumbnail == '- Select Image -' || !$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw;}
 	//		else 
 	//		{
@@ -419,7 +419,7 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 	//dump ($templatemenuid, "Template");
 	//dump ($row, "Row - SeriesList.php");
 	$images = new jbsImages();
-	$image = getSeriesThumbnail($row->series_thumbnail);
+	$image = $images->getSeriesThumbnail($row->series_thumbnail);
 //if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
 //	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
 //if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 
@@ -455,7 +455,7 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
         include_once($path1.'date.php');
         include_once($path1.'image.php');    
         $images = new jbsImages();
-		$image = getSeriesThumbnail($row->series_thumbnail);
+		$image = $images->getSeriesThumbnail($row->series_thumbnail);
 //if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
 //	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
 //if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 

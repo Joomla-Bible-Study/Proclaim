@@ -156,7 +156,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			//	$i_image = $row->thumbnailm;
 			//	$i_path = $i_path.'/'.$i_image;
 			//	$image = getImage($i_path);
-    			$elementid->element = '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->studytitle.'">';
+    			$elementid->element = '<img src="'.JURI::base().$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->studytitle.'">';
 			}
 			else {$elementid->element = '';}
 			break;
@@ -171,7 +171,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			//	$i_image = $row->series_thumbnail;
 			//	$i_path = $i_path.'/'.$i_image;
 			//	$image = getImage($i_path);
-    			$elementid->element = '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->series_text.'">';
+    			$elementid->element = '<img src="'.JURI::base().$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->series_text.'">';
 			}
 			else {$elementid->element = '';}
 			break;

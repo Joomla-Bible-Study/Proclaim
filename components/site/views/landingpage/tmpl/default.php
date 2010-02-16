@@ -1,5 +1,5 @@
 <?php
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die(); ?>
 
@@ -72,10 +72,12 @@ for ($i=1;$i<=7;$i++) {
 <?php
 if ($params->get('landing'.$showIt.'limit')) 
 {
-	$d_image = ($this->admin[0]->showhide ? DS.$this->admin[0]->showhide : '/showhide.gif');
-	$d_path = $d_path1.$d_image;
-	$showhide_tmp = getImage($d_path);
-    $showhide_image = $showhide_tmp->path;
+	$images = new jbsImages();
+	$showhide_tmp = $images->getShowHide($this->admin[0]->showhide); //dump ($this->admin[0]->showhide, 'showhideimage: ');
+//	$d_image = ($this->admin[0]->showhide ? DS.$this->admin[0]->showhide : '/showhide.gif');
+//	$d_path = $d_path1.$d_image;
+//	$showhide_tmp = $images->getImagePath($d_path);
+    $showhide_image = $showhide_tmp->path; //dump ($showhide_tmp, 'showhide_tmp');
 	
 	$showhideall = "<a class='showhideheading' ";
 	$showhideall .=  'href="';

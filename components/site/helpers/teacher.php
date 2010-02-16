@@ -1,7 +1,7 @@
 <?php
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php')
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 function getTeacher($params, $id, $admin_params)
 {
 	
@@ -43,7 +43,7 @@ function getTeacher($params, $id, $admin_params)
 			//dump ($tresult, 'tresult: ');
 			//Check to see if there is a teacher image, if not, skip this step
 			$images = new jbsImages();
-			$image = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+			$image = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 		//	if ($tresult->teacher_thumbnail == '- Select Image -' || !$tresult->teacher_thumbnail) 
 		//		{ 
 		//			$image->path = $tresult->thumb; $image->height = $tresult->thumbh; $image->width = $tresult->thumbw;
@@ -63,7 +63,7 @@ function getTeacher($params, $id, $admin_params)
 					{
 						$image->path = ''; $image->width=0; $image->height=0;
 					}
-			}
+		//	}
 				$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$image->path.'" border="1" width="'.$image->width.'" height="'.$image->height.'" ></td></tr>';
 			
 		$teacher .= '<tr><td>';
@@ -174,7 +174,7 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
 	$images = new jbsImages();
-	$imagelarge = getTeacherThumbnail($row->teacher_image, $row->image);
+	$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
 //	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
 //	else
 //	{
@@ -188,9 +188,9 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 //	{
 //		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_thumbnail; }
 //		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
-		$imagesmall = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 //		$imagesmall = getImage($i_path);
-	}
+//	}
 	
 	$label = $params->get('teacher_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -217,7 +217,7 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params)
     
     //Get the image folders and images
     $images = new jbsImages();
-	$imagelarge = getTeacherThumbnail($row->teacher_image, $row->image);
+	$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
    //	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
 //	else
 //	{
@@ -225,7 +225,7 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params)
 //		if ($row->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
 //		$imagelarge = getImage($i_path);
 //	}
-	$imagesmall = getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+	$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 //	if (!$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw; }
 //	else
 //	{

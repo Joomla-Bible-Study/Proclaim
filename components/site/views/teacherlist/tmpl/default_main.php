@@ -1,5 +1,6 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 <?php //$params = &JComponentHelper::getParams($option);  
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 $user =& JFactory::getUser();
 global $mainframe, $option;
 $params = $this->params;
@@ -40,13 +41,15 @@ $class1 = 'bsodd';
 	} else {
 	$oddeven = $class1;
 	}
-if (!$item->teacher_thumbnail) { $image->path = $item->thumb; $image->height = $item->thumbh; $image->width = $item->thumbw; }
-	else
-	{
-		if ($item->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$item->teacher_thumbnail; }
-		if ($item->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$item->teacher_thumbnail;}
-		$image = getImage($i_path);
-	}
+	$images = new jbsImages();
+	$image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+//if (!$item->teacher_thumbnail) { $image->path = $item->thumb; $image->height = $item->thumbh; $image->width = $item->thumbw; }
+//	else
+//	{
+//		if ($item->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$item->teacher_thumbnail; }
+//		if ($item->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$item->teacher_thumbnail;}
+//		$image = getImage($i_path);
+//	}
 ?>
 
     

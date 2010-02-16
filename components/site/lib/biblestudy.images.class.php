@@ -81,7 +81,7 @@ class jbsImages
 		$admin_params = $this->adminSettings();
 			if ($admin_params->get('media_imagefolder') == '- Use Default -' || !$admin_params->get('media_imagefolder'))
 		{
-			$mediaimagefolder = 'images/stories';
+			$mediaimagefolder = 'components/com_biblestudy/images';
 		}
 		else
 		{
@@ -157,6 +157,7 @@ class jbsImages
 	
 	function getTeacherThumbnail($image1=NULL, $image2=NULL)
 	{
+		$imagepath = array();
 		//$image1 is teacher->thumbnail, $image2 is teacher->thumb
 		if ($image1 == '- No Image - ' || !$image1)
 		{
@@ -164,7 +165,6 @@ class jbsImages
 		}
 		else
 		{
-			$imagepath = array();
 			$folder = $this->getTeacherImageFolder();
 			$path = $folder .DS. $image1;
 		}
@@ -195,7 +195,7 @@ class jbsImages
 		if ($media1)
 		{
 			$folder = $this->getMediaImageFolder();
-			$path = $folder .DS. $image;
+			$path = $folder .DS. $media1;
 
 		}
 		else
@@ -205,6 +205,24 @@ class jbsImages
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
 		return $imagepath;
 	}
+	
+	function getShowHide($image)
+	{
+		if ($image == '- Default Image -' || !$image)
+		{
+			$image = 'showhide.gif'; $folder = 'components/com_biblestudy/images';
+		}
+		else
+		{
+			$folder = $this->getMediaImageFolder();
+		}
+		
+		$path = $folder .DS. $image;
+		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		return $imagepath;
+	}
+	
+	
 } // End of class
 	
 ?>

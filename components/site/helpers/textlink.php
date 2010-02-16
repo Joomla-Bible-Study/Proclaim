@@ -1,6 +1,6 @@
 <?php
 defined('_JEXEC') or die();
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 function getTextlink($params, $row, $textorpdf, $admin_params, $template)
 {//dump ($template, 'template: ');
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -19,15 +19,16 @@ $templatemenuid = $params->get('detailstemplateid',1);
 $object_vars = get_object_vars( $template ) ;
 //dump ($object_vars, 'myobject: ');
 if (!$object_vars) {
+	$images = new jbsImages();
 if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 
 	if ($textorpdf == 'text') {
-		if ($template[0]->text == '- Use Default -') { $i_path = 'components/com_biblestudy/images/textfile24.png'; $textimage = getImage($i_path); }
+		if ($template[0]->text == '- Use Default -') { $i_path = 'components/com_biblestudy/images/textfile24.png'; $textimage = getImagePath($i_path); }
 	else 
 	{
  	 if ($template[0]->text && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->text; }
 	  	
-		$textimage = getImage($i_path);
+		$textimage = $images->getImagePath($i_path);
 	}
 	   $src = JURI::base().$textimage->path;
 		$height = $textimage->height;
@@ -39,12 +40,12 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	}
 	if ($textorpdf == 'pdf') 
 	{
-		if ($template[0]->pdf == '- Use Default -') { $i_path = 'components/com_biblestudy/images/pdf24.png'; $pdfimage = getImage($i_path); }
+		if ($template[0]->pdf == '- Use Default -') { $i_path = 'components/com_biblestudy/images/pdf24.png'; $pdfimage = getImagePath($i_path); }
 	else 
 	{
 	  	if ($template[0]->pdf && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->pdf; }
 	  	if ($template[0]->pdf && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$template[0]->pdf;}
-		$pdfimage = getImage($i_path);
+		$pdfimage = $images->getImagePath($i_path);
 	}
 		$src = JURI::base().$pdfimage->path;
 		$height = $pdfimage->height;
@@ -61,7 +62,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	
     
 	$linktext .= '
-	<a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" />';
+	<a href="'.$link.'"><img src="'.JURI::base().$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" />';
 	
 	if ($params->get('tooltip') >0) {$linktext .= '</span>';}
 	$linktext .= '</a></span>';

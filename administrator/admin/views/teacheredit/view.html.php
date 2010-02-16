@@ -3,7 +3,7 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 jimport( 'joomla.application.component.view' );
 
 
@@ -34,7 +34,10 @@ class biblestudyViewteacheredit extends JView
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.teachers', true );
 		
-		$teacherImagePath = JPATH_SITE.'/images/'.$admin_params->get('teachers_imagefolder', 'stories');
+		$images = new jbsImages();
+		$directory = $images->getTeacherImageFolder(); //dump ($directory, 'directory: ');
+		$teacherImagePath = JPATH_SITE .DS. $directory;
+	//	$teacherImagePath = JPATH_SITE.'/images/'.$admin_params->get('teachers_imagefolder', 'stories');
 		$teacherImageList = JFolder::files($teacherImagePath, null, null, null, array('index.html'));
 
 		array_unshift($teacherImageList, '- '.JText::_('No Image').' -');
@@ -62,6 +65,7 @@ class biblestudyViewteacheredit extends JView
 		$this->assignRef('teacheredit',		$teacheredit);
 		$this->assignRef('lists', $lists);
 		$this->assignRef('admin_params', $admin_params);
+		$this->assignRef('directory', $directory);
 		parent::display($tpl);
 	}
 }
