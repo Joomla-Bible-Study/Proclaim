@@ -17,9 +17,10 @@ class biblestudyViewcommentslist extends JView
 	function display($tpl = null)
 	{
 		global $mainframe, $option;
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$lists = array();
 		$params = &JComponentHelper::getParams($option);
-		JToolBarHelper::title(   JText::_( 'Comments Manager' ), 'generic.png' );
+		JToolBarHelper::title(   JText::_( 'Comments Manager' ), 'comments.png' );
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		//Checks to see if the admin allows rows to be deleted

@@ -16,14 +16,14 @@ class biblestudyViewteacheredit extends JView
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
-		
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$teacheredit		=& $this->get('Data');
 		$admin=& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
 		$isNew		= ($teacheredit->id < 1);
 		$editor =& JFactory::getEditor();
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Teacher Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Teacher Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'teachers.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

@@ -21,7 +21,8 @@ class biblestudyViewpodcastlist extends JView
 		//$document =& JFactory::getDocument();
 		//$document->addStyleSheet('http://www.calvarychapelnewberg.net/j15/administrator/components/com_biblestudy/css/general.css');
  		$params = &JComponentHelper::getParams($option);
-		JToolBarHelper::title(   JText::_( 'Podcast Manager' ), 'generic.png' );
+ 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
+		JToolBarHelper::title(   JText::_( 'Podcast Manager' ), 'podcast.png' );
 		//Checks to see if the admin allows rows to be deleted
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();

@@ -86,7 +86,8 @@ function setSelect($string){
 		*/
 		
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
-			  . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
+			  . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, '
+			  . ' #__bsms_message_type.id AS mid,'
 			  . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
 			  . ' #__bsms_locations.id AS lid, #__bsms_locations.location_text,'
 			  . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'

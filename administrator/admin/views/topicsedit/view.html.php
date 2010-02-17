@@ -15,9 +15,9 @@ class biblestudyViewtopicsedit extends JView
 		
 		$topicsedit		=& $this->get('Data');
 		$isNew		= ($topicsedit->id < 1);
-
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Topic Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Topic Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'topics.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

@@ -22,10 +22,10 @@ class biblestudyController extends JController
 	 */
 	function display()
 	{
-				$type = JRequest::getVar('view');
+				$type = JRequest::getWord('view');
 				if (!$type){
-				JRequest::setVar( 'view'  , 'studieslist');
-				$model = $this->getModel('studieslist');
+				JRequest::setVar( 'view'  , 'cpanel');
+			//	$model = $this->getModel('studieslist');
 				}
 		
 		if(JRequest::getCmd('view') == 'studydetails')

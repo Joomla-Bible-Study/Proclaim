@@ -17,11 +17,11 @@ class biblestudyViewlocationslist extends JView
 	function display($tpl = null)
 	{
 		global $mainframe, $option;
-		
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		//$document =& JFactory::getDocument();
 		//$document->addStyleSheet('http://www.calvarychapelnewberg.net/j15/administrator/components/com_biblestudy/css/general.css');
  		$params = &JComponentHelper::getParams($option);
-		JToolBarHelper::title(   JText::_( 'Locations Manager' ), 'generic.png' );
+		JToolBarHelper::title(   JText::_( 'Locations Manager' ), 'locations.png' );
 		//Checks to see if the admin allows rows to be deleted
 		
 		JToolBarHelper::deleteList();

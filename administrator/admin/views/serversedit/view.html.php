@@ -15,9 +15,9 @@ class biblestudyViewserversedit extends JView
 		
 		$serversedit		=& $this->get('Data');
 		$isNew		= ($serversedit->id < 1);
-
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Servers Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Servers Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'servers.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

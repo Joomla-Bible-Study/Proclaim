@@ -12,8 +12,8 @@ class biblestudyViewbooksedit extends JView {
 
 		$titleCaption = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		$cancelCaption = $isNew ? JText::_('Cancel') : JText::_('Close');
-		
-		JToolBarHelper::title(   JText::_( 'Books Edit' ).': <small><small>[ ' . $titleCaption.' ]</small></small>' );
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
+		JToolBarHelper::title(   JText::_( 'Books Edit' ).': <small><small>[ ' . $titleCaption.' ]</small></small>', 'biblebooks' );
 		JToolBarHelper::save();
 		JToolBarHelper::cancel('cancel', $cancelCaption);	
 		JToolBarHelper::help( 'biblestudy.books', true );

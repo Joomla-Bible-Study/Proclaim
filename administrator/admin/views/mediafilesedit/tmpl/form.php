@@ -48,6 +48,8 @@ echo $this->params->render ('params');
 echo $pane->endPanel();
 echo $pane->endPane();
 ?>
+
+
 	
     <table class="admintable">
       <tr> 
@@ -55,6 +57,7 @@ echo $pane->endPane();
         <td > <?php echo $this->lists['published'];
 		?>
           </td>
+  	
       </tr>
       <tr>
        <td class="key" align="left"><?php echo JText::_( 'Create Date YYYY-MM-DD H:M:S' ); ?></td>
@@ -207,6 +210,19 @@ echo $pane->endPane();
               <?php echo JText::_('- Target for link (ie: _self, _blank): ')?> <input class="text_area" type="text" name="special" id="special" size="15" maxlength="15" value="<?php echo $this->mediafilesedit->special;?>" /></td>
             </tr>
             <tr>
+            	<td class="key"><?php echo JText::_('Choose a Podcast: ');?> </td><td>
+					<?php 
+$pane =& JPane::getInstance( 'sliders' );
+//jimport('joomla.html.pane'); 
+echo $pane->startPane( 'content-pane' );
+echo $pane->startPanel( JText::_( 'Podcasts' ), 'PODCAST' );
+echo $this->params->render( 'params','PODCAST' );
+echo $pane->endPanel();
+echo $pane->endPane();
+					?>
+				</td>
+            </tr>
+            <tr>
             	<td class="key"><?php echo JText::_('Choose a Podcast: ');?> </td><td><?php echo $this->lists['podcast'];?></td>
                 </tr>
                 <tr><td class="key"><?php echo JText::_('Choose a Mime Type: ');?></td><td> <?php echo $this->lists['mime_type'];?>
@@ -229,3 +245,4 @@ echo $pane->endPane();
 <input type="hidden" name="controller" value="mediafilesedit" />
 
 </form>
+

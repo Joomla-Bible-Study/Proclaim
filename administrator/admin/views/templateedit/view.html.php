@@ -7,10 +7,11 @@ class biblestudyViewtemplateedit extends JView {
 		//Get template if editing
 		$template = $this->get('template');
 //dump ($template, 'template: ');
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		if(empty($template->id)) {
-			JToolbarHelper::title(JText::_('Create Template'), 'generic.png');
+			JToolbarHelper::title(JText::_('Create Template'), 'templates.png');
 		}else{
-			JToolbarHelper::title(JText::_('Edit Template'), 'generic.png');
+			JToolbarHelper::title(JText::_('Edit Template'), 'templates.png');
 		}
 		//JToolbarHelper::preview();
 		JToolbarHelper::save();

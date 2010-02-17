@@ -16,8 +16,9 @@ class biblestudyViewlocationsedit extends JView
 		$locationsedit		=& $this->get('Data');
 		$isNew		= ($locationsedit->id < 1);
 		$lists = array();
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Locations Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Locations Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'locations.png' );
 		JToolBarHelper::save();
 		
 		if ($isNew)  {

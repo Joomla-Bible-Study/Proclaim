@@ -5,7 +5,8 @@ jimport('joomla.application.component.view');
 class biblestudyViewtemplateslist extends JView {
 
 	function display() {
-		JToolBarHelper::title(JText::_('Templates'), 'generic.png');
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
+		JToolBarHelper::title(JText::_('Templates'), 'templates.png');
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::editList();

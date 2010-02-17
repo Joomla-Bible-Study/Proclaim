@@ -20,9 +20,10 @@ class biblestudyViewcssedit extends JView
 		//fclose($csscontents);
 		//$seriesedit		=& $this->get('Data');
 		//$isNew		= ($seriesedit->id < 1);
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 	$lists		=& $this->get('Data');
 		$text = JText::_( 'Edit CSS' );
-		JToolBarHelper::title(   JText::_( 'CSS Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'CSS Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'css.png' );
 		JToolBarHelper::save();
 		//JToolBarHelper::apply();
 		JToolBarHelper::custom( 'resetcss', 'save', 'Reset CSS', 'Reset CSS', false, false );

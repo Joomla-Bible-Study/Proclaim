@@ -11,14 +11,14 @@ class biblestudyViewcommentsedit extends JView
 	
 	function display($tpl = null)
 	{
-		
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$commentsedit		=& $this->get('Data');
 		$isNew		= ($commentsedit->id < 1);
 		//$editor =& JFactory::getEditor();
 		//this->assignRef( 'editor', $editor );
 		$lists = array();
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Edit Comment' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Edit Comment' ).': <small><small>[ ' . $text.' ]</small></small>', 'comments.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

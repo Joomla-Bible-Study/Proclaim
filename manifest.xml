@@ -59,7 +59,6 @@
 			<menu link="option=com_biblestudy&amp;view=locationslist">Locations</menu>
 			<menu link="option=com_biblestudy&amp;view=topicslist">Topics</menu>
 			<menu link="option=com_biblestudy&amp;view=podcastlist">Podcasts</menu>
-			<menu link="option=com_biblestudy&amp;view=episodelist">Podcast Episodes</menu>
 			<menu link="option=com_biblestudy&amp;view=mimetypelist">Mime Types</menu>
 			<menu link="option=com_biblestudy&amp;view=commentslist">Study Comments</menu>
 			<menu link="option=com_biblestudy&amp;view=sharelist">Social Network Links</menu>

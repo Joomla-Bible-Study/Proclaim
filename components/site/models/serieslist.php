@@ -211,8 +211,39 @@ function getTemplate() {
 
 		$where2 = array();
 		$continue = 0;
-		
-		if ($params->get('mult_series')) 
+		if ($params->get('series_id')&& !$filter_series) 
+			{ 
+				
+					$filters = $params->get('series_id'); //dump ($filters, 'filters: ');
+					switch ($filters)
+					{
+						case is_array($filters) :
+							foreach ($filters AS $filter)
+								{
+									if ($filter == -1)
+										{
+											//$continue = 0;
+											break;
+										}
+									{
+										$continue = 1;
+										$where2[] = 'se.id = '.(int)$filter; //dump ($where2, 'where2: ');
+									}
+								}
+							break;
+							
+						case -1:
+							//$continue = 0;
+						break;
+						
+						default:
+							$continue = 1;
+							$where2[] = 'se.id = '.(int)$filters;
+							break;
+					}
+				}
+
+/*		if ($params->get('mult_series')) 
 			{ 
 				if (!$filter_series)
 				{
@@ -229,7 +260,7 @@ function getTemplate() {
 				}
 			}
 			
-			
+*/			
 		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
 
 		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}

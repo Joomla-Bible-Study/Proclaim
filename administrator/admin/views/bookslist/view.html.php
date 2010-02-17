@@ -11,8 +11,8 @@ class biblestudyViewbookslist extends JView {
 		
 		$uri =& JFactory::getURI();
 		$params =& JComponentHelper::getParams($option);
-		
-		JToolBarHelper::title(JText::_('Books Manager'), 'generic.png');
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
+		JToolBarHelper::title(JText::_('Books Manager'), 'biblebooks.png');
 
 		//Checks to see if the admin allows rows to be deleted
 		

@@ -23,7 +23,8 @@ class biblestudyViewmediaedit extends JView
 		//$query = "INSERT INTO #__bsms_media (media_text, media_image_name, media_image_path, path2, media_alttext, published) VALUES ('Download','Download', '', 'download.png', 'Download', '1');";
 		
 		//$database->setQuery = ("INSERT INTO #__bsms_media VALUES ('".$numrows."','Download','Download', '', 'download.png', 'Download', '1');");
-		//$database->query();										 
+		//$database->query();
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');										 
 		$mediaedit		=& $this->get('Data');
 		$isNew		= ($mediaedit->id < 1);
 		$lists = array();
@@ -39,7 +40,7 @@ class biblestudyViewmediaedit extends JView
 		$lists['media']	= JHTML::_('list.images',  'path2', $mediaedit->path2, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
 		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $mediaedit->published);
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Edit Media' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Edit Media' ).': <small><small>[ ' . $text.' ]</small></small>', 'mediaimages.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

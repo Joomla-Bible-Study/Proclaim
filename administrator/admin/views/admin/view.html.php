@@ -12,12 +12,12 @@ class biblestudyViewadmin extends JView
 	
 	function display($tpl = null)
 	{
-		
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$admin		=& $this->get('Data');
 		$this->assignRef('admin', $admin);
 	//	$isNew		= ($admin->id < 1);
 	//	$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Administration' ));
+		JToolBarHelper::title(   JText::_( 'Administration' ), 'administration');
 		JToolBarHelper::save();
 		JToolBarHelper::apply();
 		$paramsdata = $admin->params;

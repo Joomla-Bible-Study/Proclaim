@@ -15,9 +15,9 @@ class biblestudyViewmessagetypeedit extends JView
 		
 		$messagetypeedit		=& $this->get('Data');
 		$isNew		= ($messagetypeedit->id < 1);
-
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Message Type Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Message Type Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'messagetype.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

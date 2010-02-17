@@ -17,7 +17,8 @@ class biblestudyViewserieslist extends JView
 	{
 		global $mainframe, $option; 
 		$params = &JComponentHelper::getParams($option);
-		JToolBarHelper::title(   JText::_( 'Series Manager' ), 'generic.png' );
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
+		JToolBarHelper::title(   JText::_( 'Series Manager' ), 'series.png' );
 		//Checks to see if the admin allows rows to be deleted
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();

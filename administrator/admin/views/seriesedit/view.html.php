@@ -16,7 +16,7 @@ class biblestudyViewseriesedit extends JView
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
-		
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$seriesedit		=& $this->get('Data');
 		$admin=& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
@@ -41,7 +41,7 @@ class biblestudyViewseriesedit extends JView
 		$lists['series_thumbnail'] = JHTML::_('select.genericlist',  $seriesImageOptions, 'series_thumbnail', 'class="imgChoose" size="1"', 'value', 'text',  $seriesedit->series_thumbnail);
 
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Series Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Series Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'series.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

@@ -15,7 +15,7 @@ class biblestudyViewmediafilesedit extends JView {
 		}
 
 		//Check to see if Docman and/or VirtueMart installed
-		
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
 		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
 		$this->assignRef('vmenabled', $vmenabled);
@@ -115,7 +115,7 @@ class biblestudyViewmediafilesedit extends JView {
 		//this->assignRef( 'editor', $editor );
 		$lists = array();
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Edit Media' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Edit Media' ).': <small><small>[ ' . $text.' ]</small></small>', 'mp3.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();
@@ -183,7 +183,9 @@ class biblestudyViewmediafilesedit extends JView {
 		//$podcast = $database->loadObjectList();
 		$podcast[] = JHTML::_('select.option', '0', '- '. JText::_('Select a Podcast').' -');
 		$podcast = array_merge($podcast, $database->loadObjectList());
-		$lists['podcast'] 	= JHTML::_('select.genericlist',	$podcast, 'podcast_id', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->podcast_id);
+		$lists['podcast'] 	= JHTML::_('select.genericlist',	$podcast, 'podcast_id', 'class="inputbox" size="5" multiple', 'value', 'text', $mediafilesedit->podcast_id);
+		
+		
 		$query7 = 'SELECT id AS value, media_image_name AS text, published'
 		. ' FROM #__bsms_media'
 		. ' WHERE published = 1'

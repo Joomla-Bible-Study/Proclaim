@@ -10,6 +10,7 @@ class biblestudyViewstudiesedit extends JView {
 
 		$document =& JFactory::getDocument();
 		//$document->addStyleSheet(JURI::base().'components/com_biblestudy/css/general.css');
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
@@ -49,7 +50,7 @@ class biblestudyViewstudiesedit extends JView {
 		$this->assignRef( 'editor', $editor );
 		$lists = array();
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Edit Studies' ).': <small><small>[ ' . $text.' ]</small></small>' );
+		JToolBarHelper::title(   JText::_( 'Edit Studies' ).': <small><small>[ ' . $text.' ]</small></small>', 'studies.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

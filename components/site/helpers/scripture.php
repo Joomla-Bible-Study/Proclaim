@@ -45,6 +45,13 @@ function getScripture($params, $row, $esv, $scripturerow) {
 			$ch_e = '';
 			$b2a = '';
 		}
+		if ($ch_e == $ch_b && $v_b == $v_e) 
+		{ 
+		    $b3 = ''; 
+		    $ch_e = ''; 
+		    $b2a = ''; 
+		    $v_e = ''; 
+		} 
 		if ($v_b == 0){
 			$v_b = '';
 			$v_e = '';

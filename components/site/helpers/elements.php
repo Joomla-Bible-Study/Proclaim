@@ -178,7 +178,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 27:
 			$elementid->id = 'series_description';
 			$elementid->headertext = JText::_('Description');
-			$elementid->element = $row->sdescription;
+			$elementid->element = $row->sdescription; //dump ($row->sdescription, 'sdescription: ');
 			//dump ($element->element, 'element: ');
 			break;
 		case 100:
