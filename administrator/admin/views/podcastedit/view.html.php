@@ -53,6 +53,7 @@ class biblestudyViewpodcastedit extends JView
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
+		
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.podcasts', true );
 		

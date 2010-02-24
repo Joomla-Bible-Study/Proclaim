@@ -4,6 +4,7 @@ class Dump_File{
   var $pathname = NULL;
   var $filename = NULL;
 	var $filesieze = NULL;
+	
   function Dump_File($id){
   
   }
@@ -11,6 +12,8 @@ class Dump_File{
   function download($inline = false, $server, $path, $filename, $size, $mime_type, $id){
  	
   	$id = JRequest::getVar('id', 0, 'GET', 'INT');
+  	$hits = $this->hitDownloads($id);
+		
 	//dump ($id, 'id= ');
 	$db	= & JFactory::getDBO();
 	$query = 'SELECT #__bsms_mediafiles.*,'
@@ -123,49 +126,17 @@ function normal_download($url,$out_file_name){
 	
 	fclose($out);
 }	
-/*if(ini_get('allow_url_fopen') != 1) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL,$download_file);
-    curl_setopt($ch, CURLOPT_FAILONERROR, 1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-    $contents = curl_exec($ch);
-    curl_close($ch);
-  } else {
-  $this->readfile_chunked($download_file);
-    //$contents = file_get_contents($download_file);
-  }
 
- }
-
-
-
-  function readfile_chunked($download_file, $retbytes=true){
-    $chunksize = 1*(1024*1024); // how many bytes per chunk
-    $buffer = '';
-    $cnt =0;
-	
-    $handle = fopen($download_file, 'rb');
-    if ($handle === false){
-        return false;
-    }
-    while (!feof($handle)){
-          $buffer = fread($handle, $chunksize);
-          echo $buffer;
-		  //added from Docman
-		  @ob_flush();
-			flush();
-		//end added from Docman
-          if ($retbytes){
-             $cnt += strlen($buffer);
-          }
-    }
-    $status = fclose($handle);
-    if ($retbytes && $status) {
-       return $cnt; // return num. bytes delivered like readfile() does.
-    }
-	
-} //end of function readfile	*/
+	//Here we increment the hit counter
+ 	function hitDownloads($id)
+	{
+	//	$id = JRequest::getVar('id', 0, 'GET', 'INT'); //dump ($id, 'id: ');
+		$db =& JFactory::getDBO();
+		$db->setQuery('UPDATE '.$db->nameQuote('#__bsms_mediafiles').'SET '.$db->nameQuote('downloads').' = '.$db->nameQuote('downloads').' + 1 '.' WHERE id = '.$id);
+		$db->query();
+		return true;
+//		return false;
+	}
 } //end of class
 
 

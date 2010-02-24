@@ -1,8 +1,11 @@
 <?php
 defined('_JEXEC') or die();
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+
 function getMediatable($params, $row, $admin_params)
 {
+	$getMedia = new jbsMedia();
 jimport ('joomla.application.component.helper');
 //dump ($admin_params, 'admin_params: ');
 if (!$row->id) {return FALSE;}
@@ -138,15 +141,18 @@ if (!$row->id) {return FALSE;}
       switch ($playertype)
       {
       	case 0:
-      	$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
+   	 //  	$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
+      	$media1_link = $getMedia->getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);
 		break;
 		
 		case 1:
-		$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+		//	$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+		$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
 		break;
 		
 		case 2:
-		$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
+	//	$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
+		$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
 		break;
       }
 

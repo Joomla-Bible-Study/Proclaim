@@ -27,6 +27,7 @@ class biblestudyViewcssedit extends JView
 		JToolBarHelper::save();
 		//JToolBarHelper::apply();
 		JToolBarHelper::custom( 'resetcss', 'save', 'Reset CSS', 'Reset CSS', false, false );
+		
 		//$alt = "Save CSS";
 		//$bar=& JToolBar::getInstance( 'toolbar' );
 

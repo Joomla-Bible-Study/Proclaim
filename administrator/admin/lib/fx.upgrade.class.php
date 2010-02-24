@@ -422,7 +422,8 @@ class fx_Upgrade {
 					else {
 						$this->_error = "<font color=\"red\">File not found!</font>";
 					}
-					if (!$fileCheck || $this->_error) {
+				//	if (!$fileCheck || $this->_error) {
+					if ($this->_error) {
 						$img = "publish_x.png";
 						//$img = "tick.png";
 						$this->_return = false;

@@ -20,6 +20,8 @@ class biblestudyViewadmin extends JView
 		JToolBarHelper::title(   JText::_( 'Administration' ), 'administration');
 		JToolBarHelper::save();
 		JToolBarHelper::apply();
+		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset All Hits', 'Reset All Hits', false, false );
+		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset All Download Hits', 'Reset All Download Hits', false, false );
 		$paramsdata = $admin->params;
 		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'admin.xml';
 		$params = new JParameter($paramsdata, $paramsdefs);

@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<params>
+	<params >
 		<param name="player" default="0" type="list" label="Player for this Media" description="Choose which media player to use, overrides global settings.">
 			<option value="0">Direct Link to file</option>
 			<option value="1">Use internal MP3 Player</option>
 			<option value="2">Use All Videos Reloaded</option>
+		</param>
+		</params>
+		<params group="PODCAST" addpath="/components/com_biblestudy/elements">
+		<param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="Select one or more podcasts" description="Use Ctrl-click to select more than one item.">
+		<option value="-1">None</option>
 		</param>
 	</params>
 </root>

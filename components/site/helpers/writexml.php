@@ -6,7 +6,7 @@ defined('_JEXEC') or die('Restricted access');
  */
  function writeXML()
 	{ //dump($plugin, 'plugin: ');
-		
+		$files = array();
 		$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
 		include_once($path1.'custom.php');
 		include_once($path1.'helper.php');
@@ -89,6 +89,47 @@ defined('_JEXEC') or die('Restricted access');
 			else {
 				$limit = '';
 			}
+			
+			//here's where we look at each mediafile to see if they are connected to this podcast
+			$query = "SELECT id, params, published FROM `#__bsms_mediafiles` WHERE params LIKE '%podcasts%' and published = '1'";
+$db->setQuery($query);
+$results = $db->loadObjectList();
+$where = array();
+foreach ($results as $result)
+{
+	$params = new JParameter($result->params);
+	//dump ($params, 'params: ');
+	$podcasts = $params->get('podcasts');
+	
+	switch ($podcasts)
+	{
+		case is_array($podcasts) :
+			foreach ($podcasts as $podcast)
+			{
+				if ($podids->id == $podcast)
+				{
+					$where[] = 'mf.id = '.$result->id;
+				}
+			}
+			break;
+		case -1 :
+			break;
+		case 0 :
+			break;
+		
+		default :
+			if ($podcasts == $podids->id)
+			{
+				$where[] = 'mf.id = '.$result->id; 
+				break;
+			}
+	}
+}
+$where 		= ( count( $where ) ? ' '. implode( ' OR ', $where ) : '' );
+if ($where)
+{$where = ' WHERE '.$where.' AND ';}
+else {return $msg= ' No media files were associated with a podcast. ';}
+//dump ($where, 'where: ');
 		$query = 'SELECT p.id AS pid, p.podcastlimit,'
 			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate, mf.params,'
    			. ' mf.docMan_id, mf.article_id,'
@@ -107,7 +148,8 @@ defined('_JEXEC') or die('Restricted access');
 			. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
 			. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
 			. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
-			. ' WHERE mf.podcast_id = '.$podids->id.' AND s.published = 1 AND mf.published = 1 ORDER BY createdate DESC '.$limit;
+			. $where.'s.published = 1 AND mf.published = 1 ORDER BY createdate DESC '.$limit;
+		//	. ' WHERE mf.podcast_id = '.$podids->id.' AND s.published = 1 AND mf.published = 1 ORDER BY createdate DESC '.$limit;
 		$db->setQuery( $query );
 		$episodes = $db->loadObjectList();
 		$episodedetail = '';
@@ -202,8 +244,8 @@ defined('_JEXEC') or die('Restricted access');
 		$client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
 		//$file = $client->path.DS.'templates'.DS.$template.DS.'index.php';
 		$file = $client->path.'/'.$podinfo->filename;
-
-
+$files[] = $file;
+//dump ($file, 'file: ');
 		// Try to make the template file writeable
 		if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755')) {
 			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file writable');
@@ -219,13 +261,15 @@ defined('_JEXEC') or die('Restricted access');
 		
 	} // end of foreach $podid
 			
-		$output = $Body.'<br><br> At: ' . strftime('%A  %d  %B  %Y    - %T  ') . ' <br>';
-		return array('output'=>$output);
+	//	$output = $Body.'<br><br> At: ' . strftime('%A  %d  %B  %Y    - %T  ') . ' <br>';
+	//	return array('output'=>$output);
+	$output = implode(' - ',$files);
+	return $output;
 	} // end of if $nrows > 0
-	else { $output = 'No podcasts were set as published on the site, so no files were written.';
-		return array('output'=>$output);
+	else { $return = 'No podcasts were set as published on the site, so no files were written.';
+		return $return;
 		}
-		$return = true;
+	//	$return = $output;
 	} // end of function
 
 

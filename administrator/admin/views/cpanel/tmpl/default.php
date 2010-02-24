@@ -316,8 +316,17 @@ table.fbstat .col2 {
       	<td><?php echo JText::_('Total Media Files'); ?></td><td><strong><?php echo jbStats::total_mediafiles() ; ?></strong></td>
   	 	<td><?php echo JText::_('Top 5 Studies Last 90 Days'); ?></td>
         <td><strong><?php echo jbStats::get_topthirtydays() ;?></strong></td>
-        </tr>
-    
+     </tr>
+    <tr>
+      	<td><?php echo JText::_('Total Downloads'); ?></td><td><strong><?php echo jbStats::total_downloads() ; ?></strong></td>
+  	 	<td><?php echo JText::_('Top 5 Downloads'); ?></td>
+        <td><strong><?php echo jbStats::get_top_downloads() ;?></strong></td>
+     </tr>
+      <tr>
+      	<td><?php echo JText::_('Top Downloads Last 90 Days'); ?></td><td><strong><?php echo jbStats::get_downloads_ninety() ; ?></strong></td>
+  	 	<td></td>
+        <td><strong></strong></td>
+     </tr>
       
 		<?php 
 	?>

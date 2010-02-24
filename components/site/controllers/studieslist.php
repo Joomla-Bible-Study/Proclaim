@@ -24,6 +24,7 @@ class biblestudyControllerstudieslist extends JController
 		{
 			$downloader = new Dump_File();
 			$downloader->download();
+			
 		 die;
 		}
 	}

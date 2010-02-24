@@ -144,6 +144,44 @@ function publish()
 			}
 			
 		}
-
+		
+	function resetHits()
+	{
+		$msg = null;
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_studies SET hits='0'");
+		$reset = $db->query();
+		if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+					$msg = 'An error occured while resetting the hits: '.$error;
+					$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+				}
+		else
+			{
+				$updated = $db->getAffectedRows();
+				$msg = JText::_('Reset successful. No error messages generated. '.$updated.' row(s) reset.');
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+			}
+	}
+function resetDownloads()
+	{
+		$msg = null;
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0'");
+		$reset = $db->query();
+		if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+					$msg = 'An error occured while resetting the downloads: '.$error;
+					$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+				}
+		else
+			{
+				$updated = $db->getAffectedRows();
+				$msg = JText::_('Reset successful. No error messages generated. '.$updated.' row(s) reset.');
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+			}
+	}
 }
 ?>

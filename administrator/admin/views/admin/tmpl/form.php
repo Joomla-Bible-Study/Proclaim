@@ -4,25 +4,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
 //dump ($this->admin, 'admin: ');
 
-$db =& JFactory::getDBO();
-$query = "SELECT * FROM `#__bsms_mediafiles` WHERE params LIKE '%podcasts%'";
-$db->setQuery($query);
-$results = $db->loadObjectList();
-foreach ($results as $result)
-{
-	$params = new JParameter($result->params);
-	//dump ($params, 'params: ');
-	$podcasts = $params->get('podcasts');
-	switch ($podcasts)
-	{
-		case is_array($podcasts) :
-			foreach ($podcasts as $podcast)
-			{
-				echo $podcast.' id: '.$result->id.'<br>';
-			}
-	}
-}
-//dump ($results, 'results: '); 
 ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
@@ -34,7 +15,6 @@ foreach ($results as $result)
     <table class="admintable">
     <tr><td class="key"><?php echo JText::_('Administrative Settings');?></td><td>
     <?php
-   
 
 	jimport('joomla.html.pane');
 	$pane =& JPane::getInstance( 'sliders' );

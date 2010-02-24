@@ -47,6 +47,7 @@ echo $pane->endPane(); */
 		<td><input class="text_area" type="text" name="user_name"
 			id="user_name" size="25" maxlength="25"
 			value="<?php echo $user_name;?>" /></td>
+			
 	</tr>
 	<tr>
 		<td class="key"><?php echo JText::_( 'Published' ); ?>:</td>

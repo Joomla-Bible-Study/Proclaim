@@ -16,10 +16,9 @@ class biblestudyViewmediafilesedit extends JView {
 
 		//Check to see if Docman and/or VirtueMart installed
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
-		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
-		$this->assignRef('vmenabled', $vmenabled);
-		$this->assignRef('dmenabled', $dmenabled);
+//		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
+//		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
+	
 		//dump ($vmenabled->enabled, 'vm');
 		//dump ($dmenabled->enabled, 'dm');
 		
@@ -47,17 +46,36 @@ class biblestudyViewmediafilesedit extends JView {
 		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/views/mediafilesedit.js');
 		
-		
+		//Here we check to see if docMan or VirtueMart are there by looking at their data tables so we don't error out
+		$vmenabled = 0;
+		$dmenabled = 0;
+		$db = JFactory::getDBO();
+		$db->setQuery('SELECT name, enabled FROM #__components where enabled = 1');
+		$db->query();
+		$components = $db->loadObjectList();
+		//dump ($tables, 'tables: ');
+		foreach ($components as $component)
+		{
+			if ($component == 'VirtueMart')
+			{
+				$vmenabled = 1;
+			}
+			if ($component == 'DOCMan')
+			{
+				$dmenabled = 1;
+			}
+		} 
 		//Get Data
 		$mediafilesedit	=& $this->get('Data');
-		$docManCategories =& $this->get('docManCategories');
+		
 		$articlesSections =& $this->get('ArticlesSections');
-		$virtueMartCategories =& $this->get('virtueMartCategories');
+		
 
 		//Manipulate Data
 		//Run only if Docman is enabled
-		if ($dmenabled)
+		if ($dmenabled > 0)
 		{
+			$docManCategories =& $this->get('docManCategories');
 			if ($docManCategories)
 				{
 					array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
@@ -68,8 +86,9 @@ class biblestudyViewmediafilesedit extends JView {
 		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
 		
 		//Run only if Virtuemart enabled
-		if ($vmenabled)
+		if ($vmenabled > 0)
 		{
+			$virtueMartCategories =& $this->get('virtueMartCategories');
 			if ($virtueMartCategories)
 			{
 				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
@@ -119,12 +138,14 @@ class biblestudyViewmediafilesedit extends JView {
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();
+		
 			// initialise new record
 			//$studiesedit->teacher_id 	= JRequest::getVar( 'teacher_id', 0, 'post', 'int' );
 
 		} else {
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
+		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset Download Hits', 'Reset Download Hits', false, false );
 		}
 		//JToolBarHelper::media_manager( '/' );
 		// Add an upload button and view a popup screen width 550 and height 400
@@ -214,7 +235,8 @@ class biblestudyViewmediafilesedit extends JView {
 
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('mediafilesedit',		$mediafilesedit);
-		
+		$this->assignRef('vmenabled', $vmenabled);
+		$this->assignRef('dmenabled', $dmenabled);
 		$this->assignRef('articlesSections', $articlesSections);
 		
 		parent::display($tpl);

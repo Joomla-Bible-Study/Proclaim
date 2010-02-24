@@ -166,7 +166,54 @@ class jbStats {
 		$biblestudy_db->setQuery('SELECT COUNT(*) FROM #__bsms_mediafiles WHERE published = 1');
 		return intval($biblestudy_db->loadResult());
 	}
-
+function get_top_downloads() {
+		$biblestudy_db = &JFactory::getDBO();
+		$biblestudy_db->setQuery('SELECT #__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished, #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate FROM #__bsms_mediafiles LEFT JOIN #__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id) WHERE #__bsms_mediafiles.published = 1 ' .
+				'AND downloads > 0  ORDER BY downloads DESC LIMIT 5');
+		$results=$biblestudy_db->loadObjectList();
+		        check_dberror("Unable to load messages.");
+  		$top_studies = null;
+		foreach ($results as $result)
+		{
+			$top_studies .= $result->downloads.' downloads - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->sid.'">'.$result->stitle.'</a> - '.date('Y-m-d', strtotime($result->sdate)).'<br>';
+		}
+		//return count($results) > 0 ? $results : array();
+		return  $top_studies;
+	}
+	
+	function get_downloads_ninety() {
+		$month = mktime(0, 0, 0, date("m")-3 , date("d"), date("Y")); 
+		$lastmonth = date("Y-m-d 00:00:01",$month); //echo $lastmonth;
+		$biblestudy_db = &JFactory::getDBO();
+		$query = 'SELECT #__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished, #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate FROM #__bsms_mediafiles LEFT JOIN #__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id) WHERE #__bsms_mediafiles.published = "1" AND downloads >0 AND UNIX_TIMESTAMP(createdate) > UNIX_TIMESTAMP( "'.$lastmonth.'" )ORDER BY downloads DESC LIMIT 5 '; //echo $query;
+			//$query = 'SELECT * FROM #__bsms_studies WHERE UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "2009-02-10 00:00:00" )ORDER BY hits DESC LIMIT 5 ';
+	
+		$biblestudy_db->setQuery($query);
+		$results = $biblestudy_db->loadObjectList(); //dump ($results, 'results: ');
+		$top_studies = null;
+		if (!$results)
+		{
+			$top_studies = 'No information available';
+		}
+		else
+		{
+			foreach ($results as $result)
+			{
+				$top_studies .= $result->downloads.' hits - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->sid.'">'.$result->stitle.'</a> - '.date('Y-m-d', strtotime($result->sdate)).'<br>';
+			}
+		}
+		//return count($results) > 0 ? $results : array(); 
+		//dump ($results, 'results: ');
+		return  $top_studies;
+		//return intval($biblestudy_db->loadResult());
+	}
+	
+function total_downloads()
+	{
+		$biblestudy_db = &JFactory::getDBO();
+		$biblestudy_db->setQuery('SELECT COUNT(downloads) FROM #__bsms_mediafiles WHERE published = 1 AND downloads > 0');
+		return intval($biblestudy_db->loadResult());
+	}
 }
 
 ?>

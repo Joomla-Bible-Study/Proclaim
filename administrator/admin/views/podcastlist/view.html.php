@@ -27,6 +27,7 @@ class biblestudyViewpodcastlist extends JView
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
+		JToolBarHelper::custom( 'writeXMLFile', 'xml.png', 'Write XML Files', 'Write XML Files', false, false );
 		//JToolBarHelper::custom('task', 'icon', '', 'Alt', false);
 		//JToolBarHelper::customX('writeXML','save.png','writeXML','Write XML');
 		//JToolBarHelper::preferences('com_biblestudy', '550');

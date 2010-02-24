@@ -36,6 +36,7 @@ $class1 = 'bsodd';
 	
     
 <?php foreach ($this->items as $item) {
+	if ($item->title) {$teacherdisplay = $item->teachername.' - '.$item->title;}else {$teacherdisplay = $item->teachername;}
 	if($oddeven == $class1){ //Alternate the color background
 	$oddeven = $class2;
 	} else {
@@ -62,8 +63,7 @@ if ($entry_access <= $entry_user){ ?>
         	<img src="<?php echo $image->path;?>" border="1" title="<?php echo $item->teachername;?>" alt="<?php echo $item->teachername;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" /><?php } ?>
         </td>
         <td class="bsm_teachername">
-            <a href="index.php?option=com_biblestudy&view=teacherdisplay&id=<?php echo $item->id.'&templatemenuid='.$templatemenuid;?>"><?php echo $item->teachername;?></a><?php echo JText::_(' - ');?>
-            <?php echo $item->title;?>
+            <a href="index.php?option=com_biblestudy&view=teacherdisplay&id=<?php echo $item->id.'&templatemenuid='.$templatemenuid;?>"><?php echo $teacherdisplay;?></a>
         </td>
         
         <td align="left" class="bsm_short">

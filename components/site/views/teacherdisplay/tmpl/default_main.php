@@ -41,8 +41,9 @@ $image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thu
 //	}
 
 //if ($teacher->image || $teacher->teacher_image) 
-//		{ ?>
-        <img src="<?php echo JURI::base().$image->path;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" border="1" alt="<?php echo $teacher->teachername.' - '.$teacher->title;?>" />
+//		{ 
+	if ($teacher->title) {$teacherdisplay = $teacher->teachername.' - '.$teacher->title;}else {$teacherdisplay = $teacher->teachername;}?>
+        <img src="<?php echo JURI::base().$image->path;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" border="1" alt="<?php echo $teacherdisplay;?>" />
         <?php 
 //		}?>
      
@@ -50,8 +51,8 @@ $image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thu
 <td class="bsm_teachername">
 <table id="bsm_teachertable" cellspacing="0">
 <tr><td class="bms_teachername">
-<?php echo $teacher->teachername;?>
-     <?php echo ' - '.$teacher->title;?></td></tr>
+<?php echo $teacherdisplay;?>
+     </td></tr>
      <tr> <td class="bsm_teacherphone">
 <?php echo $teacher->phone;?></td></tr>
 <tr><td class="bsm_teacheremail">

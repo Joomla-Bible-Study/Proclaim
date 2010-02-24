@@ -52,6 +52,10 @@ echo $pane->endPane();
 
 	
     <table class="admintable">
+    <?php if ($this->mediafilesedit->id)
+	{
+    	?><tr><td class="key"><?php echo JText::_('Downloads'); ?></td><td><?php echo $this->mediafilesedit->downloads; ?></td></tr><?php	
+    } ?>
       <tr> 
         <td class="key"><?php echo JText::_( 'Published' ); ?></td>
         <td > <?php echo $this->lists['published'];
@@ -222,9 +226,7 @@ echo $pane->endPane();
 					?>
 				</td>
             </tr>
-            <tr>
-            	<td class="key"><?php echo JText::_('Choose a Podcast: ');?> </td><td><?php echo $this->lists['podcast'];?></td>
-                </tr>
+           
                 <tr><td class="key"><?php echo JText::_('Choose a Mime Type: ');?></td><td> <?php echo $this->lists['mime_type'];?>
 				</td>
             </tr>

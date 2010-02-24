@@ -224,9 +224,19 @@ echo $pane->endPane();
 			  <td class="key"><?php echo JText::_('Target');?></td><td><?php echo JText::_('Use file name as entire path if you wish. Just don\'t select a server or path.(Don\'t use this option if uploading)');?>
               <?php echo JText::_('- Target for link (ie: _self, _blank): ')?> <input class="text_area" type="text" name="special" id="special" size="15" maxlength="15" value="<?php echo $this->mediafilesedit->special;?>" /></td>
             </tr>
-            <tr>
-            	<td class="key"><?php echo JText::_('Choose a Podcast: ');?> </td><td><?php echo $this->lists['podcast'];?></td>
-                </tr>
+             <tr>
+            	<td class="key"><?php echo JText::_('Choose a Podcast: ');?> </td><td>
+					<?php 
+$pane =& JPane::getInstance( 'sliders' );
+//jimport('joomla.html.pane'); 
+echo $pane->startPane( 'content-pane' );
+echo $pane->startPanel( JText::_( 'Podcasts' ), 'PODCAST' );
+echo $this->params->render( 'params','PODCAST' );
+echo $pane->endPanel();
+echo $pane->endPane();
+					?>
+				</td>
+            </tr>
                 <tr><td class="key"><?php echo JText::_('Choose a Mime Type: ');?></td><td> <?php echo $this->lists['mime_type'];?>
 				</td>
             </tr>

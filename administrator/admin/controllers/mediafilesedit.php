@@ -333,5 +333,26 @@ class biblestudyControllermediafilesedit extends JController {
 			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );	
 		}
 	}
+	
+	function resetDownloads()
+	{
+		$msg = null;
+		$id 	= JRequest::getInt( 'id', 0, 'post'); //dump ($cid, 'cid: ');
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = ".$id); 
+		$reset = $db->query();
+		if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+					$msg = 'An error occured while resetting the downloads: '.$error;
+					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]='.$id, $msg );
+				}
+		else
+			{
+				$updated = $db->getAffectedRows();
+				$msg = JText::_('No error messages generated. '.$updated.' row(s) reset.');
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
+			}
+	}
 }
 ?>

@@ -61,8 +61,10 @@ class biblestudyViewstudiesedit extends JView {
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
+		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset Hits', 'Reset Hits', false, false );
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy.studiesedit', true );
+		
 		// build the html select list for ordering
 
 		//Build the select list for the study image
