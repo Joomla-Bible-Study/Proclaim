@@ -91,7 +91,7 @@ echo $pane->endPane();
 				<?php echo $this->lists['ordering']; ?>
 			</td>
 		</tr>
-     <?php if ($this->dmenabled->enabled)
+     <?php if ($this->dmenabled > 0)
 	 { ?>
       <tr>
       	<td class="key">
@@ -148,7 +148,7 @@ echo $pane->endPane();
       	</td>
       </tr>  
       
-       <?php if ($this->vmenabled->enabled)
+       <?php if ($this->vmenabled > 0)
 	   { ?>
       <tr>
       	<td class="key">
@@ -230,7 +230,15 @@ echo $pane->endPane();
                 <tr><td class="key"><?php echo JText::_('Choose a Mime Type: ');?></td><td> <?php echo $this->lists['mime_type'];?>
 				</td>
             </tr>
-            <tr><td class="key"><?php echo JText::_('Show Download Icon');?></td><td><?php echo $this->lists['link_type'];?></td></tr>
+            
+            <tr><td class="key"><?php echo JText::_('Show Download Icon');?></td><td>
+			
+			<select id="link_type" name="link_type"><?php echo $this->mediafilesedit->link_type;?>
+				<option value="0" <?php if ($this->mediafilesedit->link_type == 0){echo ' selected ';}?> > <?php echo JText::_('No Download icon');?></option>
+				<option value="1" <?php if ($this->mediafilesedit->link_type == 1){echo ' selected ';}?> > <?php echo JText::_('Show Download icon');?></option>
+				<option value="2" <?php if ($this->mediafilesedit->link_type == 2){echo ' selected ';}?> > <?php echo JText::_('Show Only Download icon');?></option>
+			</select>
+			</td></tr>
 			<tr><td class="key"><?php echo JText::_('Comment');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="150" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('Appears under file or in Tooltip - set in Template parameters');?></td>
             </tr>
             

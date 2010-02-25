@@ -47,8 +47,8 @@ class biblestudyViewmediafilesedit extends JView {
 		$document->addScript(JURI::base().'components/com_biblestudy/js/views/mediafilesedit.js');
 		
 		//Here we check to see if docMan or VirtueMart are there by looking at their data tables so we don't error out
-		$vmenabled = 0;
-		$dmenabled = 0;
+		$vmenabled = NULL;
+		$dmenabled = NULL;
 		$db = JFactory::getDBO();
 		$db->setQuery('SELECT name, enabled FROM #__components where enabled = 1');
 		$db->query();
