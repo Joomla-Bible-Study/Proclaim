@@ -50,7 +50,7 @@ if (!$row->id) {return FALSE;}
 	if ($rows2 < 1) { $mediatable = null; return $mediatable; }
 	
 	
-	$mediatable = '<table class="mediatable"><tbody><tr>';
+	$mediatable = '<div><table class="mediatable"><tbody><tr>';
 	$row_count = 0;
 	foreach ($media1 as $media) {
 		
@@ -66,6 +66,7 @@ if (!$row->id) {return FALSE;}
 //	$image = getImage($i_path);
 	
 	$mediatable .= '<td>';
+	
 	
 	//todo - not sure how much of this is needed
 	 $idfield = '#__bsms_mediafiles.id';

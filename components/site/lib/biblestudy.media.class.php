@@ -24,13 +24,13 @@ function hitPlay($id)
 
 function getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1)
 		{
-			$play = $this->hitPlay($media->id);
+		//	$play = $this->hitPlay($media->id);
    			$player_width = $params->get('player_width', 290);
 			$media1_link =
 			 '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
 		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="'.$params->get('player_width', 290).'">
 		<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
-		<param name="FlashVars" value="playerID='.$row_count.'&amp;soundFile='.$path1.'">
+		<param name="FlashVars" value="playerID='.$row_count.'&amp;soundFile='.$path1.'>
 		<param name="quality" value="high">
 		<param name="menu" value="false">
 		<param name="wmode" value="transparent">
@@ -41,9 +41,9 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 
 function getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize)
 	{
-       $play = $this->hitPlay($media->id); //dump ($play, 'play: ');
+      // $play = $this->hitPlay($media->id); //dump ($play, 'play: ');
 	   $media1_link = '<a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
-       .$filesize.'" target="'.$media->special.'"><img src="'.$src
+       .$filesize.'" target="'.$media->special.'" onclick="playHit('.$media->id.')"><img src="'.$src
        .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';
 	   
@@ -52,7 +52,7 @@ function getDirectLink($media, $width, $height, $duration, $src, $path1, $filesi
 	
 function getAVRLink($media, $width, $height, $src, $params, $image, $Itemid)
 	{
-		$play = $this->hitPlay($media->id);
+	//	$play = $this->hitPlay($media->id);
        JPluginHelper::importPlugin('system', 'avreloaded');
 	   
        $studyfile = $media->spath.$media->fpath.$media->filename;
@@ -113,7 +113,7 @@ function getAVRLink($media, $width, $height, $src, $params, $image, $Itemid)
        
 	  
 		   $media1_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
-       .'"}<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext. ' - '.$media->comment
+       .'" }<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext. ' - '.$media->comment
        .' '.$duration.' '.$filesize.'" width="'.$image->width
        .'" height="'.$image->height.'" border="0" title="'
        .$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" />{/avrpopup}';	

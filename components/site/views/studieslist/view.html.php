@@ -29,6 +29,7 @@ class biblestudyViewstudieslist extends JView {
 		//dump ($template, 'template: ');
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/hitplay.js');
 		//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 		
