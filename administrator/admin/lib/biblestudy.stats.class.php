@@ -175,7 +175,7 @@ function get_top_downloads() {
   		$top_studies = null;
 		foreach ($results as $result)
 		{
-			$top_studies .= $result->downloads.' downloads - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->sid.'">'.$result->stitle.'</a> - '.date('Y-m-d', strtotime($result->sdate)).'<br>';
+			$top_studies .= $result->downloads.' - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->sid.'">'.$result->stitle.'</a> - '.date('Y-m-d', strtotime($result->sdate)).'<br>';
 		}
 		//return count($results) > 0 ? $results : array();
 		return  $top_studies;
@@ -211,9 +211,79 @@ function get_top_downloads() {
 function total_downloads()
 	{
 		$biblestudy_db = &JFactory::getDBO();
-		$biblestudy_db->setQuery('SELECT COUNT(downloads) FROM #__bsms_mediafiles WHERE published = 1 AND downloads > 0');
+		$biblestudy_db->setQuery('SELECT SUM(downloads) FROM #__bsms_mediafiles WHERE published = 1 AND downloads > 0');
 		return intval($biblestudy_db->loadResult());
 	}
+	
+function top_score()
+	{
+ 	$final = array();
+    $final2 = array();
+	$db = &JFactory::getDBO();
+	$db->setQuery('SELECT study_id, sum(downloads + plays) as added FROM #__bsms_mediafiles where published = 1 GROUP BY study_id');
+	$db->query();
+	$results = $db->loadObjectList();
+	foreach ($results as $result)
+		{
+			$db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id) WHERE #__bsms_mediafiles.study_id = '.$result->study_id);
+			$db->query();
+			$hits = $db->loadObject();
+			$total = $result->added + $hits->hits;
+			$link =' <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$hits->id.'">'.$hits->studytitle.'</a> '.date('Y-m-d', strtotime($hits->studydate)).'<br>';
+			$final2 = array('total'=> $total, 'link'=> $link);
+			$final[] = $final2;
+		}
+	rsort($final);
+	array_splice($final,10);
+	$topscoretable = '<table cellspacing="0" cellpadding="0">';
+	foreach ($final as $key=>$value)
+		{
+		//	$topscoretable .= '<tr><td>';
+			foreach ($value as $scores)
+			{
+				$topscoretable .= $scores;
+			}
+		//	$topscoretable .= '</td></tr>';
+		} 
+	$topscoretable .= '</table>';
+	return $topscoretable;
+}
+
+function top_score_site()
+	{
+		$top = '<select>';
+ 	$final = array();
+    $final2 = array();
+	$db = &JFactory::getDBO();
+	$db->setQuery('SELECT study_id, sum(downloads + plays) as added FROM #__bsms_mediafiles where published = 1 GROUP BY study_id');
+	$db->query();
+	$results = $db->loadObjectList();
+	foreach ($results as $result)
+		{
+			$db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id) WHERE #__bsms_mediafiles.study_id = '.$result->study_id);
+			$db->query();
+			$hits = $db->loadObject();
+			$total = $result->added + $hits->hits;
+			$link =' <a href="index.php?option=com_biblestudy&view=studydetails&id='.$hits->id.'">'.$hits->studytitle.'</a> '.date('Y-m-d', strtotime($hits->studydate)).'<br>';
+			$final2 = array('total'=> $total, 'link'=> $link);
+			$final[] = $final2;
+		}
+	rsort($final);
+	array_splice($final,10);
+	$top .= '<option>';
+	foreach ($final as $key=>$value)
+		{
+		//	$topscoretable .= '<tr><td>';
+			foreach ($value as $scores)
+			{
+				$top .= $scores;
+			}
+		//	$topscoretable .= '</td></tr>';
+		} 
+	$top .= '</option>';
+	return $top;
+}
+
 }
 
 ?>

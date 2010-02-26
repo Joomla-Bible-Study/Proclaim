@@ -189,13 +189,14 @@ if (!$row->id) {return FALSE;}
 	
 	 //Here we test to see if docMan or article is used
 	 
-	
-	
+	$link_type = $media->link_type;
+	if ($link_type < 2)
+	{
 	$mediatable .= $media1_link; 
 		//Download icon
+	}	
 		
-		$link_type = $media->link_type;
-		if ($link_type > 0){ //$src = JURI::base().$download_image;
+		if ($link_type > 1){ //$src = JURI::base().$download_image;
 	   $width=$download_tmp->width;
 	   $height=$download_tmp->height;
 	   

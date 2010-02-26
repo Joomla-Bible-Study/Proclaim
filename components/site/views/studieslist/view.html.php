@@ -2,6 +2,7 @@
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DS. 'administrator' .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.stats.class.php');
 class biblestudyViewstudieslist extends JView {
 	
 	/**
@@ -132,6 +133,10 @@ class biblestudyViewstudieslist extends JView {
 		
 	  	$this->assignRef('main', $main);
 	  	
+	  	//Get the Popular stats
+	  	$stats = new jbStats();
+	  	$popular = $stats->top_score_site();
+	  	echo $popular;
 		//Build Teachers
 		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );
