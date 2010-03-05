@@ -10,7 +10,7 @@ defined('_JEXEC') or die('Restricted access');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 class jbsMedia 
 { 
-//jimport ('joomla.application.component.helper');	
+	
 	
 function hitPlay($id)
 	{
@@ -21,60 +21,38 @@ function hitPlay($id)
 		$db->query();
 		return true;
 	}
-/*
+
 function getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1)
 		{
-			if (JRequest::getInt('start',0,'get')== 1 && JRequest::getInt('player',0,'get')== 2 && JRequest::getInt('mediaid',1,'get')== $media->id)
+			jimport ('joomla.application.component.helper');
+			$itemparams = new JParameter ($media->params);
+			$hitPlay = $this->hitPlay($media->id);
+			$width = $itemparams->get('playerwidth','400');
+			$height = $itemparams->get('playerheight','300');
+			$extraparams = $itemparams->get('playervars');
+			$flashvars = "s1.addParam('flashvars','file=".$path1."&autostart=true');";
+			if ($itemparams->get('altflashvars'))
 			{
-				$hitPlay = $this->hitPlay($media->id);
-				$autoplay = '&autostart=yes';
+				$flashvars = $itemparams->get('altflashvars');
 			}
-			
-   			$player_width = $params->get('player_width', 290);
-			$media1_link =
-			 '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="'.$params->get('player_width', 290).'">
-		<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
-		<param name="FlashVars" value="playerID='.$row_count.$autoplay.'&soundFile='.$path1.'">
-		<param name="quality" value="high">
-		<param name="menu" value="false">
-		<param name="wmode" value="transparent">
-		</object> ';
-			
-		return $media1_link;
-		} */
-function getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1)
-		{
-			if (JRequest::getInt('start',0,'get')== 1 && JRequest::getInt('player',0,'get')== 2 && JRequest::getInt('mediaid',1,'get')== $media->id)
-			{
-				$hitPlay = $this->hitPlay($media->id);
-			//	$autoplay = '&autostart=yes';
-			}
-			
    			$player_width = $params->get('player_width', 290);
 			$media1_link =
 			"<p id='preview'>The player will show in this paragraph</p>
-<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
-<script type='text/javascript'>
-var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','400','300','9');
-s1.addParam('allowfullscreen','true');
-s1.addParam('allowscriptaccess','always');
-so.useExpressInstall('expressinstall.swf');
-s1.addParam('flashvars','file=".$path1."&autostart=true');
-s1.addParam('play','true');
-s1.write('preview');
-</script> ";
-/*			 '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="'.$params->get('player_width', 290).'">
-		<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
-		<param name="FlashVars" value="playerID='.$row_count.$autoplay.'&soundFile='.$path1.'">
-		<param name="quality" value="high">
-		<param name="menu" value="false">
-		<param name="wmode" value="transparent">
-		</object> '; */
+			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
+			<script type='text/javascript'>
+			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$width."','".$height."','9');
+			s1.addParam('allowfullscreen','true');
+			s1.addParam('allowscriptaccess','always');
+			s1.useExpressInstall('expressinstall.swf');
+			".$flashvars."
+			s1.addParam('play','true');
+			".$extraparams."
+			s1.write('preview');
+			</script> ";
 			
 		return $media1_link;
 		}
+
 function getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize)
 	{
       // $play = $this->hitPlay($media->id); //dump ($play, 'play: ');
@@ -189,7 +167,17 @@ function getMediaRows($id)
 	return $media;
 }		
 
-
+	function fileRedirect()
+	{
+		$mediaid = JRequest::getInt('mediaid',1,'get');
+		$medialink = $this->getMediaLink($mediaid);
+		$play = $this->hitPlay($mediaid); //dump ($medialink, 'media: ');
+	//	echo "<script>";
+	//	echo " self.location='http://".$medialink."';";
+	//	echo "</script>";
+	return $medialink;
+//	dump ($medialink, 'medialink: '); 
+	}
 
 
 }

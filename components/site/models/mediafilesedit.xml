@@ -3,9 +3,13 @@
 	<params >
 		<param name="player" default="0" type="list" label="Player for this Media" description="Choose which media player to use, overrides global settings.">
 			<option value="0">Direct Link to file</option>
-			<option value="1">Use internal MP3 Player</option>
+			<option value="1">Use internal Player</option>
 			<option value="2">Use All Videos Reloaded</option>
 		</param>
+		<param name="playerwidth" default="300" type="text" label="Custom width for internal player" description="Set a width for the player. 300 assumed if nothing added. Affects only this file" />
+		<param name="playerheight" default="400" type="text" label="Custom height for internal player" description="Set a height attribute for the internal player. 400 assumed. Only affects this mediafile" />
+		<param name="playervars" default="" type="textarea" rows="3" cols="100" label="Params for the JWPlayer" description="Params should follow this syntax: s1.addParam('paramname','paramvalue');"></param>
+		<param name="altflashvars" type="textarea" rows="2" cols="100" default="" label="Custom Flash Vars line" description="You must put a filename and path or will break. Use syntax: s1.addParam('flashvars','file=yourfullpath&amp;othervars=true');"></param>
 		</params>
 		<params group="PODCAST" addpath="/components/com_biblestudy/elements">
 		<param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="Select one or more podcasts" description="Use Ctrl-click to select more than one item.">

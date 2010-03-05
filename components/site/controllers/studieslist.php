@@ -11,9 +11,10 @@ class biblestudyControllerstudieslist extends JController
 	 *@desc Method to display the view
 	 *@access public
 	 */
-	 $this->registerTask( 'play' );
+	 
 	function display()
 	{
+		$this->registerTask( 'play' );
 		parent::display();
 	}
 
@@ -56,7 +57,7 @@ class biblestudyControllerstudieslist extends JController
 	{
 		$player = null;
 		$media = null;
-		$t = null
+		$t = null;
 		$view = null;
 		$start = null;
 		$player = JRequest::getInt('player',2,'get');
@@ -64,7 +65,6 @@ class biblestudyControllerstudieslist extends JController
 		$t = JRequest::getInt('templatemenuid',1,'get');
 		$view = JRequest::getWord('view','studieslist','get');
 		$start = JRequest::getInt('start',0,'get');
-		$player - JRequest::getInt('player',2,'get');
 		$task = JRequest::getVar('task');
 		
 	//	dump ($start, 'start: ');
@@ -86,12 +86,13 @@ class biblestudyControllerstudieslist extends JController
 			require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
 			$mediaget = new jbsMedia();
 			$medialink = $mediaget->getMediaLink($mediaid);
-			$play = $mediaget->hitPlay($media); dump ($medialink, 'media: ');
+			$play = $mediaget->hitPlay($media); //dump ($medialink, 'media: ');
+	//		$this->setRedirect('http://'.$medialink);
 			echo "<script>";
 			echo " self.location='http://".$medialink."';";
 			echo "</script>"; 
 		}
-		die;
+		return;
 	}		
 }
 

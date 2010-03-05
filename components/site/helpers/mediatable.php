@@ -81,73 +81,33 @@ if (!$row->id) {return FALSE;}
       $ispath = 0;
 	  $mime = '';
 	  $path1 = getFilepath($media->id, $idfield, $mime);
-	  //dump ($media->id);
-      //Get the type of player to use
-      
-      //Players: 0 = getDirect, 1 = getAVR, 2 = getInternal
-      $playertype = 0;
-      $continue = 0;
-     //$avrtest = $itemparams->get('player'); dump($avrtest, 'avrtest: ');
-     if ($media->internal_viewer == 1) //dump ($media->internal_viewer, 'internal_viewer: ');
-      {
-      	if (($params->get('useavr') == 1 || !$params->get('useavr')) || $itemparams->get('player') == 2)
-      		{
-      			$playertype = 1;
-   				$continue = 1;
-				$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
-				if ($textfiles > 0)
-				{
-					$playertype = 0;
-					$continue = 1; 
-				}
-				 	
-     		}
-      } 	 //dump ($continue, 'continue - after oldavr: ');
-      //Check to see if we have set the media player from above, if so, we skip the next step
-      if ($continue == 0)
-      {
-	      	if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
-	      	{
-	      		$fileextension = substr($media->filename, -3,3);
-		  		$textfiles = preg_match("/pdf|txt|doc/", $fileextension); 
-				if ($textfiles > 0)
-				{
-					$playertype = 0;
-					$continue = 1;
-				}
-				else
-				{
-					$playertype = 1;
-	      			$continue = 1;
-	      		}
-	      	}
-      } //dump ($textfiles, 'continue: ');
-      if ($continue == 0)
-      {
-      		if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
-      		{
-      			$ismp3 = substr($media->filename,-3,3);
-      			if ($ismp3 == 'mp3')
-      			{
-      				$playertype = 2;
-      				$continue = 1;
-      			}
-      		}
-      }
-      if ($continue == 0)
-     	{
-      		$playertype = 2;      	
-      	}
+	  
       //dump ($playertype, 'playertype: ');
+      $playertype = 0;
+      if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
+      {
+      	$playertype = 1;
+      }
+      if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
+	  {
+	  	$playertype = 2;
+	  } 
+	 
       	$view = JRequest::getWord('view', 'studieslist','get');
 		$t = JRequest::getInt('templatemenuid',1,'get');
 		$start = JRequest::getInt('start',0,'get');
 		$player = JRequest::getInt('player',2,'get');
 		$mediaid = JRequest::getInt('mediaid',1,'get');
+	//	dump ($playertype, 'playertype: ');
       switch ($playertype)
       {
       	case 0:
+      	
       	$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=0&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$src.'" alt="'.$src.'"></a>';
+      	if ($mediaid == $media->id && $start == 1 && $player==0)
+      	{
+      		$media1_link = $getMedia->fileRedirect(); dump ($media1_link, 'media: ');
+      	}
       //	$medialink = $getMedia->getMediaLink($media->id);
      // 	$media1_link = '<form action="'.JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'redirect.php" method="post"><input type="hidden" name="mediaid" id="mediaid" value="'$media->id.'"><input type="image" src="'$src.'" value="submit"></form>';
       	
@@ -155,7 +115,7 @@ if (!$row->id) {return FALSE;}
     // 	$media1_link = $getMedia->getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);
 		break;
 		
-		case 1:
+		case 2:
 	//	$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
 		
 	//	if ($start == 1 && $player == 1 && $mediaid == $media->id )
@@ -170,7 +130,7 @@ if (!$row->id) {return FALSE;}
 		
 		break;
 		
-		case 2:
+		case 1:
 	//	$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
 	
 //		if ($start < 1 && $player == 2)
