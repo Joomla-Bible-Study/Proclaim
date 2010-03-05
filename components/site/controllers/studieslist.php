@@ -11,6 +11,7 @@ class biblestudyControllerstudieslist extends JController
 	 *@desc Method to display the view
 	 *@access public
 	 */
+	 $this->registerTask( 'play' );
 	function display()
 	{
 		parent::display();
@@ -50,7 +51,48 @@ class biblestudyControllerstudieslist extends JController
 		//echo $this->mediaCode;
 		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
 	}
+
+	function play()
+	{
+		$player = null;
+		$media = null;
+		$t = null
+		$view = null;
+		$start = null;
+		$player = JRequest::getInt('player',2,'get');
+		$media = JRequest::getInt('mediaid',1,'get');
+		$t = JRequest::getInt('templatemenuid',1,'get');
+		$view = JRequest::getWord('view','studieslist','get');
+		$start = JRequest::getInt('start',0,'get');
+		$player - JRequest::getInt('player',2,'get');
+		$task = JRequest::getVar('task');
 		
+	//	dump ($start, 'start: ');
+	
+		if ($start == 1 && $player == 2)
+		{
+			JRequest::setVar('start',1,'get');
+		//	dump ($start, 'start: ');
+			echo "<script> window.history.go(-1); </script>\n";
+		}
+//		if ($start == 1 && $player == 1)
+//		{
+//			JRequest::setVar('start',1,'get');
+//			echo "<script> tryStartPlayer(".$media.")</script>\n
+//			<script>window.history.go(-1); </script>\n";
+//		}
+		if ($start == 1 && $player == 0)
+		{
+			require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+			$mediaget = new jbsMedia();
+			$medialink = $mediaget->getMediaLink($mediaid);
+			$play = $mediaget->hitPlay($media); dump ($medialink, 'media: ');
+			echo "<script>";
+			echo " self.location='http://".$medialink."';";
+			echo "</script>"; 
+		}
+		die;
+	}		
 }
 
 ?>

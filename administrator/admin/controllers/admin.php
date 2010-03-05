@@ -183,5 +183,26 @@ function resetDownloads()
 				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 			}
 	}
+	
+function resetPlays()
+	{
+		$msg = null;
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0'");
+		$reset = $db->query();
+		if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+					$msg = 'An error occured while resetting the plays: '.$error;
+					$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+				}
+		else
+			{
+				$updated = $db->getAffectedRows();
+				$msg = JText::_('Reset successful. No error messages generated. '.$updated.' row(s) reset.');
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+			}
+	}
+	
 }
 ?>

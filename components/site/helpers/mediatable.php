@@ -136,24 +136,56 @@ if (!$row->id) {return FALSE;}
       }
       if ($continue == 0)
      	{
-      		$playertype = 0;      	
+      		$playertype = 2;      	
       	}
       //dump ($playertype, 'playertype: ');
+      	$view = JRequest::getWord('view', 'studieslist','get');
+		$t = JRequest::getInt('templatemenuid',1,'get');
+		$start = JRequest::getInt('start',0,'get');
+		$player = JRequest::getInt('player',2,'get');
+		$mediaid = JRequest::getInt('mediaid',1,'get');
       switch ($playertype)
       {
       	case 0:
+      	$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=0&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$src.'" alt="'.$src.'"></a>';
+      //	$medialink = $getMedia->getMediaLink($media->id);
+     // 	$media1_link = '<form action="'.JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'redirect.php" method="post"><input type="hidden" name="mediaid" id="mediaid" value="'$media->id.'"><input type="image" src="'$src.'" value="submit"></form>';
+      	
    	 //  	$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
-      	$media1_link = $getMedia->getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);
+    // 	$media1_link = $getMedia->getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);
 		break;
 		
 		case 1:
-		//	$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
-		$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
+	//	$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
+		
+	//	if ($start == 1 && $player == 1 && $mediaid == $media->id )
+	//	{
+	//		$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
+	//	}
+	//	else 
+	//	{
+	//		$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=1&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$src.'" alt="'.$src.'"></a>'; 
+			$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
+	//	}
+		
 		break;
 		
 		case 2:
 	//	$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
-		$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+	
+//		if ($start < 1 && $player == 2)
+//		{
+			
+//		}
+		if ($start == 1 && $player == 2 && $mediaid == $media->id)
+		{
+			$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+		}
+		else 
+		{
+		//	$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=2&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$src.'" alt="'.$src.'"></a>';
+		}
 		break;
       }
 
@@ -190,30 +222,43 @@ if (!$row->id) {return FALSE;}
 	 //Here we test to see if docMan or article is used
 	 
 	$link_type = $media->link_type;
-	if ($link_type < 2)
-	{
-	$mediatable .= $media1_link; 
-		//Download icon
-	}	
+	
+//		if ($link_type == 0)
+//		{
+//		$mediatable .= $media1_link; 
+			//Download icon
+//		}	
 		
-		if ($link_type > 1){ //$src = JURI::base().$download_image;
-	   $width=$download_tmp->width;
-	   $height=$download_tmp->height;
-	   
-	  // dump ($compat_mode, 'compat_mode: ');
-      if($compat_mode == 0) {
-       $mediatable .='<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
-	   
-      }else{
-       $mediatable .='<a href="http://joomlabiblestudy.org/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
-	   
-      }
-     
-	$mediatable .= '<img src="'.$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
+		if ($link_type > 0)
+		{ 
+	   		$width=$download_tmp->width;
+	   		$height=$download_tmp->height;
+	   		  
+	      if($compat_mode == 0) 
+		  {
+	      		$downloadlink ='<a href="index.php?option=com_biblestudy&id='.$media->id.'&view=studieslist&controller=studieslist&task=download">';
+		  }
+		  else
+		  {
+	      		$downloadlink ='<a href="http://joomlabiblestudy.org/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
+		  }
+	     $downloadlink .= '<img src="'.$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
   
-	  }
-	
-	
+	  	}
+	  	switch ($link_type)
+	  	{
+ 			case 0:
+ 			$mediatable .= $media1_link;
+ 			break;
+ 			
+			case 1:
+	  		$mediatable .= $media1_link.$downloadlink;
+	  		break;
+	  		
+	  		case 2:
+	  		$mediatable = '<div><table class="mediatable"><tbody><tr><td>'.$downloadlink;
+	  		break;
+	  	}
 	$mediatable .= '</td>';
 	
 	} //end of foreach of media results

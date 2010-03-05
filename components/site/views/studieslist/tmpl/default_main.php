@@ -1,3 +1,4 @@
+
 <?php
 
 // Check to ensure this file is included in Joomla!
@@ -88,6 +89,7 @@ if (($this->params->get('show_type_search') > 0 && !($messagetype_menu)) || $thi
 if ($this->params->get('show_year_search') > 0) { echo $this->lists['studyyear'];  }   
 if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
 if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->params->get('show_topic_search') > 1) {  echo $this->lists['topics'];}
+if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
 
 ?>
 

@@ -239,13 +239,13 @@ table.fbstat .col2 {
             <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=teacherlist" style = "text-decoration:none;" title = "<?php echo JText::_('Teachers');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-teachers.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('Teachers');?> </a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=bookslist" target = "_blank" style = "text-decoration:none;" title = "<?php echo JText::_('Bible Books');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-biblebooks.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('Bible Books'); ?> </span></a> </div>
+            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=bookslist" style = "text-decoration:none;" title = "<?php echo JText::_('Bible Books');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-biblebooks.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('Bible Books'); ?> </span></a> </div>
           </div>
           <div style = "float:left;">
             <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=medialist" style = "text-decoration:none;" title = "<?php echo JText::_('Media Images');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-mediaimages.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('Media Images');?> </a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index3.php?option=com_biblestudy&amp;view=serverslist" style = "text-decoration:none;" title = "<?php echo JText::_('Servers');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-servers.png" align = "middle" border = "0"/> <span> <?php echo JText::_('Servers'); ?> </a> </div>
+            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=serverslist" style = "text-decoration:none;" title = "<?php echo JText::_('Servers');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-servers.png" align = "middle" border = "0"/> <span> <?php echo JText::_('Servers'); ?> </a> </div>
           </div>
           <div style = "float:left;">
             <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=folderslist" style = "text-decoration:none;" title = "<?php echo JText::_('Server Folders');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-folder.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('Server Folders'); ?> </a> </div>

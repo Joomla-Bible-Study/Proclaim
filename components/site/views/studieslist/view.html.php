@@ -30,7 +30,6 @@ class biblestudyViewstudieslist extends JView {
 		//dump ($template, 'template: ');
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/hitplay.js');
 		//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 		
@@ -136,7 +135,7 @@ class biblestudyViewstudieslist extends JView {
 	  	//Get the Popular stats
 	  	$stats = new jbStats();
 	  	$popular = $stats->top_score_site();
-	  	echo $popular;
+	  	$this->assignRef('popular',$popular);
 		//Build Teachers
 		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );

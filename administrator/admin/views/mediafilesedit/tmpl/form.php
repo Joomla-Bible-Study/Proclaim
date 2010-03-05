@@ -54,7 +54,8 @@ echo $pane->endPane();
     <table class="admintable">
     <?php if ($this->mediafilesedit->id)
 	{
-    	?><tr><td class="key"><?php echo JText::_('Downloads'); ?></td><td><?php echo $this->mediafilesedit->downloads; ?></td></tr><?php	
+    	?><tr><td class="key"><?php echo JText::_('Downloads'); ?></td><td><?php echo $this->mediafilesedit->downloads; ?></td><tr>
+		<tr><td class="key"><?php echo JText::_('Plays'); ?></td><td><?php echo $this->mediafilesedit->plays; ?></td></tr><?php	
     } ?>
       <tr> 
         <td class="key"><?php echo JText::_( 'Published' ); ?></td>

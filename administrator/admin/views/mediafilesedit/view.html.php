@@ -146,6 +146,7 @@ class biblestudyViewmediafilesedit extends JView {
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset Download Hits', 'Reset Download Hits', false, false );
+		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset Plays', 'Reset Plays', false, false );
 		}
 		//JToolBarHelper::media_manager( '/' );
 		// Add an upload button and view a popup screen width 550 and height 400

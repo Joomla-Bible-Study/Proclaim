@@ -44,7 +44,10 @@ class AvReloadedViewPopup extends JView
         }
         else
         {
-        	$itemid = JRequest::getInt('Itemid'); dump ($itemid, 'itemid from get: ');
+        	require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+        	$media = new jbsMedia();
+        	$play = $media->hitPlay();
+			$itemid = JRequest::getInt('Itemid'); dump ($itemid, 'itemid from get: ');
 	        if (!$itemid)
 	        {
 	        	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -52,7 +55,7 @@ class AvReloadedViewPopup extends JView
 				$admin_params = getAdminsettings();
 				$itemid = getItemidLink();
 				//$itemid = substr($itemid, -1);
-				dump ($itemid, 'itemid: ');
+				
 	        }
         }
        //End of JoomlaBibleStudy entry

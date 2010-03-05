@@ -43,7 +43,7 @@ function getTeacher($params, $id, $admin_params)
 			//dump ($tresult, 'tresult: ');
 			//Check to see if there is a teacher image, if not, skip this step
 			$images = new jbsImages();
-			$image = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+			$image = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
 		//	if ($tresult->teacher_thumbnail == '- Select Image -' || !$tresult->teacher_thumbnail) 
 		//		{ 
 		//			$image->path = $tresult->thumb; $image->height = $tresult->thumbh; $image->width = $tresult->thumbw;

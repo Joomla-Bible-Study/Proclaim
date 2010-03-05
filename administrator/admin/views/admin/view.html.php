@@ -22,6 +22,7 @@ class biblestudyViewadmin extends JView
 		JToolBarHelper::apply();
 		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset All Hits', 'Reset All Hits', false, false );
 		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset All Download Hits', 'Reset All Download Hits', false, false );
+		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset All Plays', 'Reset All Plays', false, false );
 		$paramsdata = $admin->params;
 		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'admin.xml';
 		$params = new JParameter($paramsdata, $paramsdefs);

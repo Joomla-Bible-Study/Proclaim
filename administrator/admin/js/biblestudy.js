@@ -120,3 +120,60 @@ $j(document).ready( function() {
 		alert ('this is the teacher list setup');
 	}
 });
+function goTo() {
+var sE = null, url;
+if(document.getElementById) {
+sE = document.getElementById('urlList');
+} else if(document.all) {
+sE = document.all['urlList'];
+}
+if(sE && (url = sE.options[sE.selectedIndex].value)) {
+location.href = url;
+}
+}
+
+
+// <[CDATA[
+function tryStartPlayer(pid) {
+   try {
+       new allvideos.API(pid).play();
+       // Old v1.1 version AvrPlay(pid);
+   } catch (e) {
+       // Starting the player may fail, if the page is not yet
+       // fully loaded and it does not exist yet.
+       // So we retry it a little bit later.
+       window.setTimeout('tryStartPlayer("'+pid+'")', 500);
+   }
+}
+
+function startPlayerOnce(id) {
+   // Search for the cookie
+   var nameEQ = 'pseen_'+id+'=';
+   var ca = document.cookie.split(';');
+   // Loop over all cookie vars
+   for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+          c = c.substring(1, c.length);
+      }
+      if (c.indexOf(nameEQ) == 0) {
+         // If we arrive here, We found the
+         // cookie and therefore simply return
+         return;
+      }
+   }
+   // If we arrive here, cookie wasn't found, so
+   // let's create it and start the player.
+   // The new cookie expires after one year.
+   var now = new Date();
+   now.setTime(now.getTime() + (365 * 24 * 60 * 60 * 1000));
+   var expires = ' expires='+now.toGMTString()+';';
+   // If you want the cookie last for only a session lifetime
+   // (next visit, the video plays once again) then uncomment
+   // the following line:
+   //expires = '';
+   document.cookie = nameEQ + '1;'+expires+' path=/';
+   tryStartPlayer('p_'+id);
+}
+// ]]>
+

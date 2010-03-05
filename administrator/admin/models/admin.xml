@@ -18,6 +18,7 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+		<param name="popular_limit" type="text" size="3" label="Limit number of popular study links" description="Set a limit for the number of popular studies to show on the drop down in the studieslist page. Set to show in template" />
 		<param name="character_filter" type="list" default="1" label="Filter characters in filename" description="Set to Filter if you want characters that are not acceptable in a web filename filtered. Set to No to turn off this function">
 					<option value="0">No Filter</option>
 					<option value="1">Filter</option>

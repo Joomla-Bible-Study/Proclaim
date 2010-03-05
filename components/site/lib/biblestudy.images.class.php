@@ -68,10 +68,10 @@ class jbsImages
 			}
 		if ($admin->main && $admin_params->get('media_imagefolder'))
 			{
-				$path = 'images' .DS. $admin_params->get('media_imagefolder');
+				$path = 'images/'. $admin_params->get('media_imagefolder');
 			}
 		$image = ($admin->main == '- Default Image -' ? 'openbible.png' : $admin->main );
-		$i_path = $path .DS. $image; //dump ($i_path, 'i_path: ');
+		$i_path = $path .'/'. $image; //dump ($i_path, 'i_path: ');
 		$mainimage = $this->getImagePath($i_path);	//dump ($mainimage, 'mainimage: ');
 		return $mainimage;	
 	}	
@@ -85,7 +85,7 @@ class jbsImages
 		}
 		else
 		{
-			$mediaimagefolder = 'images' .DS. $admin_params->get('media_imagefolder');
+			$mediaimagefolder = 'images/'. $admin_params->get('media_imagefolder');
 		}
 //		$mediaimagefolder = ($admin_params->get('media_imagefolder') ? 'images' .DS. $admin_params->get('media_imagefolder') : 'components/com_biblestudy/images' );
 		return $mediaimagefolder;
@@ -100,7 +100,7 @@ class jbsImages
 		}
 		else
 		{
-			$seriesimagefolder = 'images' .DS. $admin_params->get('series_imagefolder');
+			$seriesimagefolder = 'images/'. $admin_params->get('series_imagefolder');
 		}
 	//	$seriesimagefolder = ($admin_params->get('series_imagefolder') ? 'images' .DS. $admin_params->get('series_imagefolder') : 'images/stories' );
 		return $seriesimagefolder;
@@ -115,7 +115,7 @@ class jbsImages
 		}
 		else
 		{
-			$studiesimagefolder = 'images' .DS. $admin_params->get('study_images');
+			$studiesimagefolder = 'images/'. $admin_params->get('study_images');
 		}
 	//	$studiesimagefolder = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
 		//$studiesimagefolder = ($admin_params->get('study_images') ? 'images/stories' : 'images' .DS. $admin_params->get('study_images'));
@@ -131,7 +131,7 @@ class jbsImages
 		}
 		else
 		{
-			$teacherimagefolder = 'images' .DS. $admin_params->get('teacher_imagefolder');
+			$teacherimagefolder = 'images/'. $admin_params->get('teacher_imagefolder');
 		}
 //		$teacherimagefolder = ($admin_params->get('teacher_imagefolder') ? 'images' .DS. $admin_params->get('teacher_imagefolder') : 'images/stories');
 		return $teacherimagefolder;
@@ -141,7 +141,7 @@ class jbsImages
 	{
 		$imagepath = array();
 		$folder = $this->getStudiesImageFolder();
-		$path = $folder .DS. $image;
+		$path = $folder .'/'. $image;
 		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
@@ -150,7 +150,7 @@ class jbsImages
 	{
 		$imagepath = array();
 		$folder = $this->getSeriesImageFolder();
-		$path = $folder .DS. $image;
+		$path = $folder .'/'. $image;
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
 		return $imagepath;
 	}
@@ -166,7 +166,7 @@ class jbsImages
 		else
 		{
 			$folder = $this->getTeacherImageFolder();
-			$path = $folder .DS. $image1;
+			$path = $folder .'/'. $image1;
 		}
 		
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
@@ -183,7 +183,7 @@ class jbsImages
 		{
 			$imagepath = array();
 			$folder = $this->getTeacherImageFolder();
-			$path = $folder .DS. $image1;
+			$path = $folder .'/'. $image1;
 		}
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
 		return $imagepath;
@@ -195,7 +195,7 @@ class jbsImages
 		if ($media1)
 		{
 			$folder = $this->getMediaImageFolder();
-			$path = $folder .DS. $media1;
+			$path = $folder .'/'. $media1;
 
 		}
 		else
@@ -217,7 +217,7 @@ class jbsImages
 			$folder = $this->getMediaImageFolder();
 		}
 		
-		$path = $folder .DS. $image;
+		$path = $folder .'/'. $image;
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
 		return $imagepath;
 	}

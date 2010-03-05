@@ -26,6 +26,8 @@ defined( '_JEXEC' ) or die('Restricted access');
 * Bible Study stats support class
 * @package com_biblestudy
 */
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+include_once ($path1.'helper.php');
 class jbStats {
 
 	/**
@@ -251,7 +253,10 @@ function top_score()
 
 function top_score_site()
 	{
-		$top = '<select>';
+	$t = JRequest::getInt('templatemenuid',1,'get');
+	$admin_params = getAdminsettings();
+	$limit = $admin_params->get('popular_limit','25');
+	$top = '<select onchange="goTo()" id="urlList"><option value="">- '.JText::_('Select A Popular Study').' -</option>';
  	$final = array();
     $final2 = array();
 	$db = &JFactory::getDBO();
@@ -263,25 +268,25 @@ function top_score_site()
 			$db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id) WHERE #__bsms_mediafiles.study_id = '.$result->study_id);
 			$db->query();
 			$hits = $db->loadObject();
+			if (!$hits->studytitle){$name = $hits->id;}else{$name = $hits->studytitle;}
 			$total = $result->added + $hits->hits;
-			$link =' <a href="index.php?option=com_biblestudy&view=studydetails&id='.$hits->id.'">'.$hits->studytitle.'</a> '.date('Y-m-d', strtotime($hits->studydate)).'<br>';
-			$final2 = array('total'=> $total, 'link'=> $link);
+			$selectvalue = JRoute::_(JURI::base().'index.php?option=com_biblestudy&view=studydetails&id='.$hits->id.'&templatemenuid='.$t);
+			$selectdisplay = '<strong>'.$name.'</strong> - '.JText::_('Score').': '.$total;
+			$final2 = array('score'=>$total,'select'=> $selectvalue, 'display'=> $selectdisplay);
 			$final[] = $final2;
 		}
 	rsort($final);
-	array_splice($final,10);
-	$top .= '<option>';
-	foreach ($final as $key=>$value)
-		{
-		//	$topscoretable .= '<tr><td>';
-			foreach ($value as $scores)
-			{
-				$top .= $scores;
-			}
-		//	$topscoretable .= '</td></tr>';
-		} 
-	$top .= '</option>';
+	array_splice($final,$limit);
+
+	foreach ($final as $topscore)
+	{
+		
+		$top .= '<option value="'.$topscore['select'].'">'.$topscore['display'].'</option>';
+	
+	}
+$top .= '</select>';
 	return $top;
+
 }
 
 }
