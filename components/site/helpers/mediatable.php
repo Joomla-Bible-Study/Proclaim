@@ -103,48 +103,31 @@ if (!$row->id) {return FALSE;}
       {
       	case 0:
       	
-      	$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=0&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$src.'" alt="'.$src.'"></a>';
+      	$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=0&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>';
       	if ($mediaid == $media->id && $start == 1 && $player==0)
       	{
-      		$media1_link = $getMedia->fileRedirect(); dump ($media1_link, 'media: ');
+      		$play = $getMedia->hitPlay($media->id);
+ 			echo "<script>";
+			echo "window.open('".$path1."','newwindow', config='height=".$itemparams->get('playerheight','300').",width=".$itemparams->get('playerwidth',400).",toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, directories=no, status=no')";
+			echo "</script>";
       	}
-      //	$medialink = $getMedia->getMediaLink($media->id);
-     // 	$media1_link = '<form action="'.JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'redirect.php" method="post"><input type="hidden" name="mediaid" id="mediaid" value="'$media->id.'"><input type="image" src="'$src.'" value="submit"></form>';
-      	
-   	 //  	$media1_link = getDirect($media, $width, $height, $duration, $src, $path1, $filesize);
-    // 	$media1_link = $getMedia->getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);
+      
 		break;
 		
 		case 2:
-	//	$media1_link = getAVR($media, $width, $height, $src, $params, $image, $Itemid);
-		
-	//	if ($start == 1 && $player == 1 && $mediaid == $media->id )
-	//	{
-	//		$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
-	//	}
-	//	else 
-	//	{
-	//		$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=1&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$src.'" alt="'.$src.'"></a>'; 
+	
 			$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
-	//	}
-		
 		break;
 		
 		case 1:
-	//	$media1_link = getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1);
 	
-//		if ($start < 1 && $player == 2)
-//		{
-			
-//		}
 		if ($start == 1 && $player == 2 && $mediaid == $media->id)
 		{
 			$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
 		}
 		else 
 		{
-		//	$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
-			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=2&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$src.'" alt="'.$src.'"></a>';
+			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=2&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>';
 		}
 		break;
       }

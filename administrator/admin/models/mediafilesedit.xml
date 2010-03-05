@@ -6,8 +6,8 @@
 			<option value="1">Use internal Player</option>
 			<option value="2">Use All Videos Reloaded</option>
 		</param>
-		<param name="playerwidth" default="300" type="text" label="Custom width for internal player" description="Set a width for the player. 300 assumed if nothing added. Affects only this file" />
-		<param name="playerheight" default="400" type="text" label="Custom height for internal player" description="Set a height attribute for the internal player. 400 assumed. Only affects this mediafile" />
+		<param name="playerwidth" default="300" type="text" label="Custom width for internal player or window" description="Set a width for the player or direct link that will play in a new window. 300 assumed if nothing added. Affects only this file" />
+		<param name="playerheight" default="400" type="text" label="Custom height for internal player or window" description="Set a height attribute for the internal player or direct link that will play in a new window. 400 assumed. Only affects this mediafile" />
 		<param name="playervars" default="" type="textarea" rows="3" cols="100" label="Params for the JWPlayer" description="Params should follow this syntax: s1.addParam('paramname','paramvalue');"></param>
 		<param name="altflashvars" type="textarea" rows="2" cols="100" default="" label="Custom Flash Vars line" description="You must put a filename and path or will break. Use syntax: s1.addParam('flashvars','file=yourfullpath&amp;othervars=true');"></param>
 		</params>
