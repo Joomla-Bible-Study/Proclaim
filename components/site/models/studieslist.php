@@ -347,7 +347,7 @@ function getTemplate() {
 			$che = JRequest::getInt('maxChpt','','post');
 			if ($chb && $che)
 			{
-				$where[] = ' (#__bsms_studies.booknumber = '.(int) $filter_book.'AND (#__bsms_studies.chapter_begin >='.$chb.' AND #__bsms_studies.chapter_end <=.'$che.'))';
+				$where[] = ' (#__bsms_studies.booknumber = '.(int) $filter_book.' AND (#__bsms_studies.chapter_begin >='.$chb.' AND #__bsms_studies.chapter_end <='.$che.'))';
 			}
 			else
 			{
