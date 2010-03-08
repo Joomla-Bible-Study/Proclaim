@@ -868,11 +868,9 @@
 	font-weight:bold;
 }
 /* Landing Page Items */
-#landinglist
-{
+#landinglist {
 	
 }
-
 #landing_label {
 	
 }
@@ -880,8 +878,20 @@
 	
 }
 #landing_title {
+font-family:arial;
+font-size:16px;
+font-weight:bold;
 	
 }
 #biblestudy_landing {
 	
+}
+#showhide{
+font-family:arial;
+font-size:12px;
+font-weight:bold;
+text-decoration:none;
+}
+#landing_table {
+padding-bottom:25px;
 }

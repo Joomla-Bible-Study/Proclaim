@@ -14,7 +14,7 @@ class biblestudyController extends JController
 	function display()
 	{
 	
-	
+		
 		parent::display();
 	}
 	

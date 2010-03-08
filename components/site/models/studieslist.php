@@ -343,7 +343,16 @@ function getTemplate() {
 			$where[] = ' #__bsms_studies.location_id = '.(int) $filter_location;
 		}
 		if ($filter_book > 0) {
-			$where[] = ' #__bsms_studies.booknumber = '.(int) $filter_book;
+			$chb = JRequest::getInt('minChpt','','post');
+			$che = JRequest::getInt('maxChpt','','post');
+			if ($chb && $che)
+			{
+				$where[] = ' (#__bsms_studies.booknumber = '.(int) $filter_book.'AND (#__bsms_studies.chapter_begin >='.$chb.' AND #__bsms_studies.chapter_end <=.'$che.'))';
+			}
+			else
+			{
+				$where[] = ' #__bsms_studies.booknumber = '.(int) $filter_book;
+			}
 		}
 		if ($filter_chapter > 0) {
 			$where[] = ' #__bsms_studies.chapter_begin = '.(int) $filter_chapter;

@@ -53,7 +53,7 @@ class biblestudyControllerstudieslist extends JController
 		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
 	}
 
-	function play()
+function play()
 	{
 		$player = null;
 		$media = null;
@@ -94,6 +94,7 @@ class biblestudyControllerstudieslist extends JController
 		}
 		return;
 	}		
+
 }
 
 ?>

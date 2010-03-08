@@ -3,7 +3,9 @@
 * @version		$Id: view.html.php 1027 2008-07-06 22:46:07Z Fritz Elfert $
 * @copyright	Copyright (C) 2008 Fritz Elfert. All rights reserved.
 * @license		GNU/GPLv2
-* @uses			This file was edited by Tom Fuller from JoomlaBibleStudy to accomodate problems AVR was having with com_biblestudy. Version 1
+* @uses			This file was edited by Tom Fuller from JoomlaBibleStudy to accomodate problems AVR was having with com_biblestudy. Version 2
+* @desc			Version 1 added a method to create an Itemid when one was not passed to AVR
+* 				Version 2 pulls the id of the media file being played from the $divid variable then increments the hit counter for plays
  */
 
 // Check to ensure this file is included in Joomla!
@@ -34,20 +36,18 @@ class AvReloadedViewPopup extends JView
         $ret = '';
         $code = '';
          
-        //JoomlaBibleStudy added this to handle problems with not finding itemid
+        //JoomlaBibleStudy added this to handle problems with not finding itemid JoomlaBibleStudy 6.1.0
         jimport('joomla.filesystem.file');
         $bsms = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'biblestudy.php';
-        $biblestudyinstalled = JFile::getName($bsms); dump ($biblestudyinstalled, 'installed: ');
+        $biblestudyinstalled = JFile::getName($bsms); 
         if (!$biblestudyinstalled)
         {
         	$itemid = JRequest::getInt('Itemid', -1);
         }
         else
         {
-        	require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
-        	$media = new jbsMedia();
-        	$play = $media->hitPlay();
-			$itemid = JRequest::getInt('Itemid'); dump ($itemid, 'itemid from get: ');
+        	
+			$itemid = JRequest::getInt('Itemid'); 
 	        if (!$itemid)
 	        {
 	        	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -58,9 +58,16 @@ class AvReloadedViewPopup extends JView
 				
 	        }
         }
-       //End of JoomlaBibleStudy entry
+       //End of JoomlaBibleStudy entry 6.1.0
        
-        $divid = JRequest::getString('divid', null);
+        $divid = JRequest::getString('divid', null); 
+        
+        //code added JoomlaBibleStudy 6.2.0
+        	require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+        	$media = new jbsMedia();
+        	$play = $media->hitPlay($divid);
+       	//end code added JoomlaBibleStudy 6.2.0
+       	
         if (($itemid >= 0) && ($divid != null)) {
             $db =& JFactory::getDBO();
             $query = "SELECT code FROM #__avr_popup WHERE id = ".

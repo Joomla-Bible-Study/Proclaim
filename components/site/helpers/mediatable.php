@@ -21,13 +21,12 @@ if (!$row->id) {return FALSE;}
 	$database->query();
 	$admin = $database->loadObjectList();
  
-//	$d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
+
 	$d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');
 	
 	$images = new jbsImages();
  	$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);
-//	$d_path = $d_path1.$d_image;
-//	$download_tmp = getImage($d_path);
+
     $download_image = $download_tmp->path;
 	$query_media1 = 'SELECT #__bsms_mediafiles.*,'
     . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
@@ -60,10 +59,7 @@ if (!$row->id) {return FALSE;}
 	$Itemid = $params->get('detailstemplateid', 1);
 	$images = new jbsImages();
  	$image = $images->getMediaImage($media->path2, $media->impath);
-//	if (!$media->path2) { $i_path = $media->impath; }
-//	if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-//	if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$media->path2;}
-//	$image = getImage($i_path);
+
 	
 	$mediatable .= '<td>';
 	
@@ -103,7 +99,7 @@ if (!$row->id) {return FALSE;}
       {
       	case 0:
       	
-      	$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=0&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>';
+      	$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&controller='.$view.'&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=0&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>';
       	if ($mediaid == $media->id && $start == 1 && $player==0)
       	{
       		$play = $getMedia->hitPlay($media->id);
@@ -127,7 +123,7 @@ if (!$row->id) {return FALSE;}
 		}
 		else 
 		{
-			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&contoller='.$view.'&task=play&mediaid='.$media->id.'&templatemenuid='.$t.'&player=2&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>';
+			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&contoller='.$view.'&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=2&start=1').'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>';
 		}
 		break;
       }
@@ -166,11 +162,6 @@ if (!$row->id) {return FALSE;}
 	 
 	$link_type = $media->link_type;
 	
-//		if ($link_type == 0)
-//		{
-//		$mediatable .= $media1_link; 
-			//Download icon
-//		}	
 		
 		if ($link_type > 0)
 		{ 
@@ -265,103 +256,7 @@ function getVirtuemart($media, $width, $height, $src, $params)
 	return $vm;
 	}
 	
-function getAVR($media, $width, $height, $src, $params, $image, $Itemid)
-	{
-		//dump ($media);
-       JPluginHelper::importPlugin('system', 'avreloaded');
-	   
-       $studyfile = $media->spath.$media->fpath.$media->filename;
-       $mediacode = $media->mediacode;
-       
-       $isrealfile = substr($media->filename, -4, 1);
-       $fileextension = substr($media->filename,-3,3);
-       if ($mediacode == '')
-	   	{
-			$mediacode = '{'.$fileextension.'remote}-{/'.$fileextension.'remote}';
-       	}
-       $mediacode = str_replace("'",'"',$mediacode);
-       $ispop = substr_count($mediacode, 'popup');
-       if ($ispop < 1) 
-	   	{
-        	$bracketpos = strpos($mediacode,'}');
-        	$mediacode = substr_replace($mediacode,' popup="true" ',$bracketpos,0);
-		}
-       
-	   $isdivid = substr_count($mediacode, 'divid');
-       if ($isdivid < 1) 
-	   	{
-        	$dividid = ' divid="'.$media->id.'"';
-        	$bracketpos = strpos($mediacode, '}');
-        	$dividid = $dividid.' Itemid="2"';
-        	$mediacode = substr_replace($mediacode, $dividid,$bracketpos,0);
-       	}
-       $isonlydash = substr_count($mediacode, '}-{');
-       if ($isonlydash == 1)
-	   	{
-        	$ishttp = substr_count($studyfile, 'http://');
-        	if ($ishttp < 1) 
-				{
-         		$isrealfile = substr($media->filename, -4, 1);
-         			if ($isrealfile == '.') 
-						{
-          					$isslash = substr_count($studyfile,'//');
-          						if (!$isslash) 
-									{
-           								$studyfile = substr_replace($studyfile,'http://',0,0);
-          							}
-         				}
-        		}
-		
-		
-			if ($isrealfile != '.')
-				{
-				 $studyfile = $media->filename;
-				}
-			$mediacode = str_replace('-',$studyfile,$mediacode);
-       }
-       
-	   $popuptype = 'window';
-       if($params->get('popuptype') != 'window') 
-	   	{
-        	$popuptype = 'lightbox';
-       	}
-       
-	  
-		   $media1_link = $mediacode.'{avrpopup type="'.$popuptype.'" id="'.$media->id
-       .'"}<img src="'.JURI::base().$image->path.'" alt="'.$media->malttext. ' - '.$media->comment
-       .' '.$duration.' '.$filesize.'" width="'.$image->width
-       .'" height="'.$image->height.'" border="0" title="'
-       .$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" />{/avrpopup}';	
-     return $media1_link;	
-	}
-	
-	function getInternal($media, $width, $height, $src, $params, $image, $row_count, $path1)
-		{
-			
-			   $player_width = $params->get('player_width', 290);
-			   $media1_link =
-			 '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$row_count.'" height="24" width="'.$params->get('player_width', 290).'">
-		<param name="movie" value="'.JURI::base().'components/com_biblestudy/player.swf">
-		<param name="FlashVars" value="playerID='.$row_count.'&amp;soundFile='.$path1.'">
-		<param name="quality" value="high">
-		<param name="menu" value="false">
-		<param name="wmode" value="transparent">
-		</object> ';
-			
-		return $media1_link;
-		}
 
-function getDirect($media, $width, $height, $duration, $src, $path1, $filesize)
-	{
-       $media1_link = '<a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
-       .$filesize.'" target="'.$media->special.'"><img src="'.$src
-       .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
-       .'" height="'.$height.'" border="0" /></a>';
-	   
-	   return $media1_link;
-	}
-	
 	function getMediaRows($study_id) {
     $query = 'SELECT #_bsms_mediafiles.*,'
        . ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'

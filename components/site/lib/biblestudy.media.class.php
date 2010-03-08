@@ -37,7 +37,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 			}
    			$player_width = $params->get('player_width', 290);
 			$media1_link =
-			"<p id='preview'>The player will show in this paragraph</p>
+			"<p id='preview'>The player should show in this paragraph</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
 			<script type='text/javascript'>
 			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$width."','".$height."','9');

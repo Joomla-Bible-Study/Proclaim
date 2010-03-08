@@ -63,10 +63,22 @@ $landingexists = 1;
 	
 }
 #landing_title {
+font-family:arial;
+font-size:16px;
+font-weight:bold;
 	
 }
 #biblestudy_landing {
 	
+}
+#showhide{
+font-family:arial;
+font-size:12px;
+font-weight:bold;
+text-decoration:none;
+}
+#landing_table {
+padding-bottom:20px;
 }';
 $landingwrite = $landingread.$landing;
 			$errcss = '';
@@ -79,6 +91,29 @@ $landingwrite = $landingread.$landing;
 				$result_table .= '<tr><td>Landing Page CSS written to file.</td></tr>';
 			}
 }
+//Now we check to see if the avr special files exists, if not we put it there, and then check to see if our 6.2.0 code (for registering hits) is there, if not, we replace the file with the new version
+$src = JPATH_SITE.DS.'components/com_biblestudy/assets/avr/view.html.php';
+$dest = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view.html.php';
+$avrbackup = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view2.html.php';
+$avrexists = JFile::exists($dest);
+if ($avrexists)
+	{
+		$avrread = JFile::read($dest);
+		$isbsms = substr_count($avrread,'JoomlaBibleStudy'); 
+		if (!$isbsms)
+		{
+			JFile::copy($dest, $avrbackup);
+			JFile::copy($src, $dest);
+			$result_table .= '<tr><td>AVR Edited File for JBS 6.2.x installed</td></tr>';
+		}
+		$is62 = substr_count($avrread,'6.2.0'); 
+		if ($is62)
+		{
+			JFile::copy($dest, $avrbackup);
+			JFile::copy($src, $dest);
+			$result_table .= '<tr><td>AVR Edited File for JBS 6.2.x installed</td></tr>';
+		}
+	}
 	$result_table .= '</table>';
 	echo $result_table;
 ?>

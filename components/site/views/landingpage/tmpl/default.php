@@ -79,7 +79,7 @@ if ($params->get('landing'.$showIt.'limit'))
 //	$showhide_tmp = $images->getImagePath($d_path);
     $showhide_image = $showhide_tmp->path; //dump ($showhide_tmp, 'showhide_tmp');
 	
-	$showhideall = "<a class='showhideheading' ";
+	$showhideall = "<div id='showhide'><a class='showhideheading' ";
 	$showhideall .=  'href="';
 	$showhideall .= "javascript:ReverseDisplay(";
 	$showhideall .= "'showhide".$showIt."'";
@@ -100,7 +100,7 @@ if ($params->get('landing'.$showIt.'limit'))
 		break;
 	} 
 	
-	$showhideall .= '</a>';
+	$showhideall .= '</a></div>';
 	echo $showhideall;
 }
 ?><!--</h2>--></div><div id="landinglist"><?php

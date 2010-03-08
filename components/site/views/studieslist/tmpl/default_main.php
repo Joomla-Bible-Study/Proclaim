@@ -82,7 +82,7 @@ if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 <?php 
 
 if (($this->params->get('show_locations_search') > 0 && !($location_menu)) || $this->params->get('show_locations_search') > 1) { echo $this->lists['locations'];}
-if (($this->params->get('show_book_search') > 0 && !($book_menu)) || $this->params->get('show_book_search') > 1) { echo $this->lists['books'];  }
+if (($this->params->get('show_book_search') > 0 && !($book_menu)) || $this->params->get('show_book_search') > 1) {  echo JText::_('Begin Chapter: ').' <input type="text" id="minChapt" name="minChapt" size="3"> - '.JText::_('End Chapter: ').' <input type="text" id=maxChapt" name="maxChapt" size="3"> '.$this->lists['books']; }
 if (($this->params->get('show_teacher_search') > 0 && !($teacher_menu)) || $this->params->get('show_teacher_search') > 1) { echo $this->lists['teacher_id'];  }   
 if (($this->params->get('show_series_search') > 0 && !($series_menu)) || $this->params->get('show_series_search') > 1) { echo $this->lists['seriesid'];  }   
 if (($this->params->get('show_type_search') > 0 && !($messagetype_menu)) || $this->params->get('show_type_search') > 1) { echo $this->lists['messagetypeid'];  }   
