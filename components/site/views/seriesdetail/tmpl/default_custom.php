@@ -26,11 +26,10 @@ $listingcall = JView::loadHelper('serieslist');
     
     //dump ($this->items);
     echo getSeriesDetailsExp($this->items, $this->params, $this->admin_params, $this->template);
-    
+   ?> <table id="bslisttable" cellspacing="0"> <?php
     $studies = getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);	echo $listing;
     echo $studies;
- 
- ?>
+ 	?></table>
         
   </div><!--end of bspagecontainer div-->
   <input name="option" value="com_biblestudy" type="hidden">

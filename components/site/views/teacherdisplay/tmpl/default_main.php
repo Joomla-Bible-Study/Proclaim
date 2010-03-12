@@ -2,6 +2,10 @@
 <?php global $mainframe;
 
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
+$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+include_once($path1.'teacher.php');
+include_once($path1.'listing.php');
+
 $pathway =& $mainframe->getPathWay();
 $uri 		=& JFactory::getURI();
 $database	= & JFactory::getDBO();
@@ -83,11 +87,12 @@ $image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thu
 <?php } // end of if for teacher->information?>
 </table>
 <?php 
-if ($this->params->get('show_teacher_studies') > 0) {
-$result = count($this->studies); 
-if ($result < 1 ){ }
-else { ?>
-<table  id="bsm_teachertable" cellspacing="0">
+
+?> <table id="bslisttable" cellspacing="0"><tr><td> <?php
+switch ($this->params->get('show_teacher_studies'))
+{
+	case 1:
+?>    <table  id="bsm_teachertable" cellspacing="0">
 <tr class="titlerow"><td class="title" colspan="3"><?php echo $this->params->get('label_teacher');?></td></tr>
 
 <tr class="bsm_studiestitlerow">
@@ -102,9 +107,43 @@ else { ?>
   <td class="bsm_date"> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC') , '$offset'); echo $date;?></td>
  </tr>
 <?php } // end of foreach ?>
-<?php	} // end of if show_teacher_studies ?>
-<?php } // end of else testing if $result 
+
+
+</table><?php
+    break;
+    
+    case 2:
+    ?></table><table id="bsm_teachertable" cellspacing="0">
+<tr class="titlerow"><td class="title" colspan="3"><?php echo $this->params->get('label_teacher');?></td></tr></table><table id="bslisttable" cellspacing="0"><tr><td><?php
+	$headerCall = JView::loadHelper('header');
+     $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule=0);
+	 echo $header;
+	$class1 = 'bsodd';
+ 	$class2 = 'bseven';
+ 	$oddeven = $class1;
+	 foreach ($this->studies as $row) { //Run through each row of the data result from the model
+		if($oddeven == $class1){ //Alternate the color background
+		$oddeven = $class2;
+		} else {
+		$oddeven = $class1;
+		}
+	  $studies = getListing($row, $this->params, $oddeven, $admin_params, $this->template, $ismodule=0);
+	  echo $studies;
+	}
+    ?></td></tr></table><?php
+	break;
+	
+	case 3:
+	$studies = getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);
+	echo $studies;
+	break;
+}
+
+
+
+?> </td></tr></table>
+<?php
 //if ($this->menuid){$link = '&Itemid='.$this->menuid;}?>
-<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&templatemenuid='.$templatemenuid;?>"><?php echo '<--'.JText::_('Return to Teacher List');?></a>
-</table>
+<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&templatemenuid='.$templatemenuid;?>"><?php echo '<--'.JText::_('Return to Teacher List');?></a> <?php echo ' | <a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.(int)$teacher->id.'&templatemenuid='.$templatemenuid.'">'.JText::_('More From This Teacher').' --></a>';
+?></table>
 </div>

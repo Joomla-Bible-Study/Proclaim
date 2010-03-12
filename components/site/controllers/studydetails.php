@@ -30,6 +30,8 @@ class biblestudyControllerstudydetails extends JController
 	 * display the edit form
 	 * @return void
 	 */
+	 
+	 
 	function view()
 	{
 		

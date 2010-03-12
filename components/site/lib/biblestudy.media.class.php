@@ -27,8 +27,10 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 			jimport ('joomla.application.component.helper');
 			$itemparams = new JParameter ($media->params);
 			$hitPlay = $this->hitPlay($media->id);
-			$width = $itemparams->get('playerwidth','400');
-			$height = $itemparams->get('playerheight','300');
+            $playerwidth = $params->get('player_width');
+            $playerheight = $params->get('player_height');
+            if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
+            if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
 			$extraparams = $itemparams->get('playervars');
 			$flashvars = "s1.addParam('flashvars','file=".$path1."&autostart=true');";
 			if ($itemparams->get('altflashvars'))
@@ -40,7 +42,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 			"<p id='preview'>The player should show in this paragraph</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
 			<script type='text/javascript'>
-			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$width."','".$height."','9');
+			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$playerwidth."','".$playerheight."','9');
 			s1.addParam('allowfullscreen','true');
 			s1.addParam('allowscriptaccess','always');
 			s1.useExpressInstall('expressinstall.swf');

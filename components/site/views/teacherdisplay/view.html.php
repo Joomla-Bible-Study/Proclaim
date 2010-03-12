@@ -55,15 +55,32 @@ class biblestudyViewteacherdisplay extends JView
 				}
 		$database	= & JFactory::getDBO();
 		
-		$query = 'SELECT s.id as sid, s.studytitle, s.chapter_begin, s.studydate, s.teacher_id, s.booknumber,'
+/*		$query = 'SELECT s.id as sid, s.studytitle, s.chapter_begin, s.studydate, s.teacher_id, s.booknumber,'
 		. ' t.id AS tid, b.id AS bid, b.booknumber AS bnumber, b.bookname'
 		. ' FROM #__bsms_studies AS s'
 		. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
 		. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
 		. ' WHERE s.teacher_id = '.$teacher->id.' ORDER BY s.studydate DESC'.$limit;
+*/		
+		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,
+ #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription,
+ #__bsms_message_type.id AS mid,
+ #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,
+ #__bsms_locations.id AS lid, #__bsms_locations.location_text,
+ group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text
+ FROM #__bsms_studies
+ left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)
+ LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)
+ LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)
+ LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)
+ LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)
+ LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)
+ LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)
+ WHERE #__bsms_studies.teacher_id = '.$teacher->id.' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
+'.$limit;
 		$database->setQuery( $query );
 		$studies = $database->loadObjectList();
-		
+	//	dump ($studies, 'studies: ');
 		if($this->getLayout() == 'pagebreak') {
 			$this->_displayPagebreak($tpl);
 			return;
@@ -75,6 +92,7 @@ class biblestudyViewteacherdisplay extends JView
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
 		$this->assignRef('admin_params', $admin_params);
+		$this->assignRef('template', $template);
 		
 		parent::display($tpl);
 	}

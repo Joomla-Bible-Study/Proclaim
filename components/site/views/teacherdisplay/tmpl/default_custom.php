@@ -90,6 +90,7 @@ if ($teacher->image || $teacher->teacher_image)
 // end of if for teacher->information?>
 </table>
 -->
+<table id="bslisttable" cellspacing="0">
 <?php
 
   $listing = getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
