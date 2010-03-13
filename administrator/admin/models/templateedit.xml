@@ -1068,11 +1068,7 @@
 				<option value="7">Description {description}</option>
 				<option value="8">Custom</option>
 			</param>
-            <param name="seriesorder" type="list" default="0" label="Series Studies order" description="Set Ascending or Descending for studies linked to series detail">
-            <option value="0">Descending</option>
-            <option value="1">Ascending</option>
-            </param>
-			<param name="seriesislink1" type="list" default="1" label="Link To" description="Select what type of link">
+            <param name="seriesislink1" type="list" default="1" label="Link To" description="Select what type of link">
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>
 				<option value="3">Link to Teacher details</option>
