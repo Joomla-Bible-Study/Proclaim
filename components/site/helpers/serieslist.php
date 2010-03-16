@@ -435,6 +435,7 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 	//$label = str_replace('{{thumbh}}', $row->thumbh, $label);
 	//$label = str_replace('{{thumbw}}', $row->thumbw, $label);
 	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$templatemenuid.'&id='.$row->id, $label);
+    
 	return $label;
 }
 
@@ -468,6 +469,8 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
         $label = str_replace('{{description}}', $row->description, $label);
 	    $label = str_replace('{{title}}', $row->series_text, $label);
 	    $label = str_replace('{{thumbnail}}', '<img src="'. $image->path .'" width="' .$image->width .'" height="' . $image->height . '" />', $label);
+        $label = str_replace('{{plays}}', $row->totalplays, $label);
+        $label = str_replace('{{downloads}}', $row->totaldownloads, $label);
 	    
 	    return $label;
 	

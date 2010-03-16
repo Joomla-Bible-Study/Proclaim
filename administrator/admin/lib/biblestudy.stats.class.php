@@ -30,8 +30,23 @@ $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once ($path1.'helper.php');
 class jbStats {
 
-	/**
-	 * Total messages in Bible Study
+    /**
+     * Total plays of media files per study
+     * 
+	*/
+    function totalplays($id)
+    {
+        $db = JFactory::getDBO();
+        $query = 'SELECT sum(m.plays), m.study_id, m.published, s.id FROM #__bsms_mediafiles AS m'
+        .' LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id)'
+        .' WHERE m.study_id = '.$id;
+        $db->setQuery($query);
+        $db->query();
+        $plays = $db->loadResult();
+        return (int)$plays;
+    }
+    
+	 /** Total messages in Bible Study
 	 * @param  string date start
 	 * @param string date end
 	 * @return int

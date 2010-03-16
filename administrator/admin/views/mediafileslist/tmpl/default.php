@@ -23,7 +23,10 @@
 			</th>
 			<th><?php echo JHTML::_('grid.sort',  'Create Date', 'createdate', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
-
+            	<th><?php echo JHTML::_('grid.sort',  'Plays', 'plays', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+			</th>
+            	<th><?php echo JHTML::_('grid.sort',  'Downloads', 'downloads', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+			</th>
 		</tr>
 	</thead>
 	<?php
@@ -58,6 +61,8 @@
 		<td><?php echo $row->studytitle; ?></td>
 		<td><?php echo $row->media_image_name; ?></td>
 		<td><?php echo $row->createdate; ?></td>
+        <td><?php echo $row->plays; ?></td>
+        <td><?php echo $row->downloads; ?></td>
 
 	</tr>
 	<?php

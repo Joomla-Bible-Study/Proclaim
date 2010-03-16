@@ -91,7 +91,7 @@ if (!$row->id) {return FALSE;}
 	  	$playertype = 2;
 	  } 
 	 
-      	$view = JRequest::getWord('view', 'studieslist','get');
+      	$view = JRequest::getWord('view', 'studieslist','get'); 
       	switch ($view)
 		{
 			case 'studieslist':
@@ -108,8 +108,12 @@ if (!$row->id) {return FALSE;}
 			//	$cid = JRequest::getInt('id','','get');
 				$cid = $row->teacher_id;
 				$mediaid = JRequest::getInt('mediaid','','get');
-			//	dump ($cid, 'row: ');
-				
+		//    	dump ($row->teacher_id, 'row: ');
+			case 'studydetails':
+                $cid = $row->id;
+                $mediaid = JRequest::getInt('mediaid','','get');
+                break;
+                	
 			default:
 		//		$cid = $row->id;
 				break;	
@@ -157,7 +161,7 @@ if (!$row->id) {return FALSE;}
     		}
     		else 
     		{
-    			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=1&start=1&id='.$cid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>';
+    			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=1&start=1&id='.$cid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>'; 
     		}
     		break;
 

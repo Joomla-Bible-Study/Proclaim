@@ -545,6 +545,8 @@ function getListingExp($row, $params, $admin_params, $template)
     $label = str_replace('{{topics}}', $row->topic_text, $label);
     $label = str_replace('{{hits}}',$row->hits, $label);
     $label = str_replace('{{location}}',$row->location_text, $label);
+    $label = str_replace('{{plays}}', $row->totalplays, $label);
+    $label = str_replace('{{downloads}}', $row->totaldownloads, $label);
     //    		$social = getShare($this->detailslink, $row, $params, $this->admin_params);
 //		echo $social;
     /*$media = getMedia($row->id);
@@ -609,6 +611,8 @@ function getStudyExp($row, $params, $admin_params, $template)
     $link .= $response;
     $link .= '</div>';
     $label = str_replace('{{scripturelink}}', $link, $label);
+    $label = str_replace('{{plays}}', $row->totalplays, $label);
+    $label = str_replace('{{downloads}}', $row->totaldownloads, $label);
     
     //Media
     //$media = getMedia($row->id);

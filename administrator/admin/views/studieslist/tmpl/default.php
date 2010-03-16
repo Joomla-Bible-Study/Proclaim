@@ -1,7 +1,9 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php defined('_JEXEC') or die('Restricted access'); 
 
-<?php 
+ 
 	jimport('joomla.filesystem.file')
+    
+    
 ?>
 <form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
 <table>
@@ -85,6 +87,9 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
           <th><?php echo JHTML::_( 'grid.sort', 'Series', 'series_id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 		  <th><?php echo JHTML::_( 'grid.sort','Topic','topics_id', $this->lists['order_Dir'], $this->lists['order'] );?></th>
 		  <th align="center"><?php echo JHTML::_( 'grid.sort', 'Hits', 'hits', $this->lists['order_Dir'], $this->lists['order']); ?></th>
+          <th align="center"><?php echo JHTML::_( 'grid.sort', 'Plays', 'totalplays', $this->lists['order_Dir'], $this->lists['order']); ?></th>
+          <th align="center"><?php echo JHTML::_( 'grid.sort', 'Downloads', 'totaldownloads', $this->lists['order_Dir'], $this->lists['order']); ?></th>
+          
         </tr>
       </thead>
       <?php 
@@ -117,7 +122,6 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 	
 	{
 		$row = &$this->rows[$i];
-		
 		$checked 	= JHTML::_('grid.id',   $i, $row->id );
 		$link 		= JRoute::_( 'index.php?option=' . $option . '&controller=studiesedit&task=edit&cid[]='. $row->id );
 		$published 	= JHTML::_('grid.published', $row, $i );
@@ -135,6 +139,8 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
         <td><?php echo $row->series_text; ?></td>
 		<td><?php echo $row->topic_text; ?></td>
 		<td align="center"><?php echo $row->hits; ?></td>
+        <td align="center"><?php echo $row->totalplays; ?></td>
+        <td align="center"><?php echo $row->totaldownloads; ?></td>
       </tr>
       <?php
 		$k = 1 - $k;

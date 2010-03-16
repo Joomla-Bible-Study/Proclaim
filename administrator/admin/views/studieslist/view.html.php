@@ -6,6 +6,8 @@ jimport( 'joomla.application.component.view' );
 class biblestudyViewstudieslist extends JView {
 
 	function display($tpl = null) {
+	   
+       
 		global $mainframe, $option;
 		jimport( 'joomla.i18n.help' );
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
@@ -52,6 +54,7 @@ class biblestudyViewstudieslist extends JView {
 		$total		= & $this->get( 'Total');
 		$pagination = & $this->get( 'Pagination' );
 		$mediaFiles		= & $this->get( 'Files');
+        
 		//Build Teacher List for drop down menu
 
 

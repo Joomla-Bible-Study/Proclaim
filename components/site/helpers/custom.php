@@ -104,6 +104,12 @@ function getElementnumber ($rowid)
 			case 'series_description':
 				$rowid = 27;
 				break;
+            case 'plays':
+                $rowid = 28;
+                break;
+            case 'downloads':
+                $rowid = 29;
+                break;
 		}
 		
 	return $rowid;	

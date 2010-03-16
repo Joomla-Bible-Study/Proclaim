@@ -116,7 +116,7 @@ switch ($this->params->get('show_teacher_studies'))
     ?></table><table id="bsm_teachertable" cellspacing="0">
 <tr class="titlerow"><td class="title" colspan="3"><?php echo $this->params->get('label_teacher');?></td></tr></table><table id="bslisttable" cellspacing="0"><tr><td><?php
 	$headerCall = JView::loadHelper('header');
-     $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule=0);
+     $header = getHeader($this->studies, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule=0);
 	 echo $header;
 	$class1 = 'bsodd';
  	$class2 = 'bseven';

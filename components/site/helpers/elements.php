@@ -181,6 +181,16 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			$elementid->element = $row->sdescription; //dump ($row->sdescription, 'sdescription: ');
 			//dump ($element->element, 'element: ');
 			break;
+        case 28:
+            $elementid->id = 'plays';
+            $elementid->headertext = JText::_('Plays');
+            $elementid->element = $row->totalplays;
+            break;
+        case 29:
+            $elementid->id = 'downloads';
+            $elementid->headertext = JText::_('Downloads');
+            $elementid->element = $row->totaldownloads;
+            break;
 		case 100:
 			$elementid->id = '';
 			$elementid->headertext = '';

@@ -67,7 +67,7 @@ class biblestudyViewteacherdisplay extends JView
  #__bsms_message_type.id AS mid,
  #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,
  #__bsms_locations.id AS lid, #__bsms_locations.location_text,
- group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text
+ group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id 
  FROM #__bsms_studies
  left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)
  LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)
@@ -75,7 +75,8 @@ class biblestudyViewteacherdisplay extends JView
  LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)
  LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)
  LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)
- LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)
+ LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id) 
+ LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)
  WHERE #__bsms_studies.teacher_id = '.$teacher->id.' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
 '.$limit;
 		$database->setQuery( $query );

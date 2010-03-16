@@ -65,14 +65,15 @@ function __construct()
 	    $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			  . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 			  . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-			  . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
-			  . ' FROM #__bsms_studies'
+			  . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
+              . ' FROM #__bsms_studies'
 			  . ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
 			  . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
 			  . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
 			  . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
 			  . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
 			  . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+              . ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
 			  . $where
 			  . ' GROUP BY #__bsms_studies.id'
 			  . $orderby
@@ -207,7 +208,7 @@ function _buildContentOrderBy()
 	{
 		global $mainframe, $option;
 		
-		$orders = array('id','published','studydate','messagetype','teacher_id','studytitle','series_id','topics_id','hits');
+		$orders = array('id','published','studydate','messagetype','teacher_id','studytitle','series_id','topics_id','hits', 'totalplays', 'totaldownloads');
 		$filter_order = $mainframe->getUserStateFromRequest($option.'filter_order','filter_order','ordering','cmd' );
 		$filter_order_Dir = strtoupper($mainframe->getUserStateFromRequest($option.'filter_order_Dir','filter_order_Dir','ASC'));
 		//$filter_orders = $mainframe->getUserStateFromRequest($option.'filter_orders','filter_orders','DESC','word');

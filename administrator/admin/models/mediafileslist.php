@@ -40,8 +40,8 @@ function _buildQuery()
 	{
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
-		$query = ' SELECT m.*, s.id AS sid, s.studytitle, md.media_image_name, md.id AS mid '
-			. ' FROM #__bsms_mediafiles AS m'
+		$query = ' SELECT m.*, s.id AS sid, s.studytitle, md.media_image_name, md.id AS mid'
+        . ' FROM #__bsms_mediafiles AS m'
 		. ' LEFT JOIN #__bsms_studies AS s ON (s.id = m.study_id)'
 		. ' LEFT JOIN #__bsms_media AS md ON (md.id = m.media_image)'
 		. $where
