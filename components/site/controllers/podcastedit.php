@@ -46,7 +46,7 @@ class biblestudyControllerpodcastedit extends JController
   }
 
   // Check the table in so it can be edited.... we are done with it anyway
-  $link = 'index.php?option=com_biblestudy&view=podcastlist';
+  $link = 'index.php?option=com_biblestudy&view=studieslist';
   $this->setRedirect($link, $msg);
  }
 
@@ -63,7 +63,7 @@ class biblestudyControllerpodcastedit extends JController
    $msg = JText::_( 'Podcast(s) Deleted' );
   }
 
-  $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
+  $this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
  }
 function publish()
  {
@@ -80,7 +80,7 @@ function publish()
    echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
   }
 
-  $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist' );
+  $this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist' );
  }
 
 
@@ -99,7 +99,7 @@ function publish()
    echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
   }
 
-  $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist' );
+  $this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist' );
  }
  /**
  * cancel editing a record
@@ -108,7 +108,7 @@ function publish()
  function cancel()
  {
   $msg = JText::_( 'Operation Cancelled' );
-  $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
+  $this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
  }
  
  
@@ -129,24 +129,13 @@ function publish()
 		//$admin_params = new JParameter($admin[0]->params);
 	//$adminsettings = getAdminsettings(); //dump ($adminsettings, 'adminsettings: ');
 	//$admin_params = new JParameter($adminsettings->params);	
- $result= writeXML();
+ $result= writeXML(); //dump ($result, 'result: ');
   if ($result)
   {
-   $task = JRequest::getCmd('task');
-   switch($task)
-   {
-    case 'apply_source':
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_($podinfo->filename.' saved'));
-     break;
-
-    case 'save_source':
-    default:
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_($podinfo->filename.' saved'));
-     break;
-   }
+    $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_($result.' saved'));
   }
   else {
-   $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing.'));
+   $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing.'));
   }
   
  }

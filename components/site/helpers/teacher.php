@@ -21,7 +21,7 @@ function getTeacher($params, $id, $admin_params)
 				$teacherids = explode(",", $params->get('listteachers'));
 			}
 		if ($viewtype == 'studydetails')
-			{$teacherids[] = $id;}
+			{$teacherids->id = $id;}
 	//if ($teacherid > 0) {$teacherids['id'] = $teacherid;}
 	//if ($params->get('mult_teachers')) { $teacherids = explode(",", $params->get('mult_teachers'));}
 	//if ($params->get('listteachers') && $teacherid) {$teacherids = explode(",", $params->get('mult_teachers')); $teacherids[] = $teacherid;}

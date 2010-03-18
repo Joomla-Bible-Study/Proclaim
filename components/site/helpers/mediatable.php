@@ -95,23 +95,23 @@ if (!$row->id) {return FALSE;}
       	switch ($view)
 		{
 			case 'studieslist':
-				$cid = $row->id;
+				$cid = $row->study_id;
 				break;
 			
 			case 'seriesdetail':
 				$cid = JRequest::getInt('id','1','get');
-				JRequest::setVar('mediaid',$media->id,'get',true);
-				$mediaid = JRequest::getInt('mediaid','','get');
+			//	JRequest::setVar('mediaid',$media->id,'get',true);
+			//	$mediaid = JRequest::getInt('mediaid','','get');
 				break;
 			
 			case 'teacherdisplay':
 			//	$cid = JRequest::getInt('id','','get');
 				$cid = $row->teacher_id;
-				$mediaid = JRequest::getInt('mediaid','','get');
+			//	$mediaid = JRequest::getInt('mediaid','','get');
 		//    	dump ($row->teacher_id, 'row: ');
 			case 'studydetails':
-                $cid = $row->id;
-                $mediaid = JRequest::getInt('mediaid','','get');
+                $cid = $row->study_id;
+        //      $mediaid = JRequest::getInt('mediaid','','get');
                 break;
                 	
 			default:
@@ -140,7 +140,7 @@ if (!$row->id) {return FALSE;}
       	case 0:
       	
           //	$media1_link = '<form action="index.php" method="post"><input type="hidden" id="view" name="view" value="'.$view.'"><input type="hidden" name="controller" id="controller" value="'.$view.'"><input type="hidden" name="task" id="task" value="play"><input type="hidden" name="start" id="start" value="1"><input type="hidden" id="player" name="player" value="0"><input type="hidden" name="templatemenuid" id="templatemenuid" value="'.$t.'"><input type="hidden" id="mediaid" name="mediaid" value="'.$media->id.'"><input type="image" src="'.$src.'" height="'.$height.'" width="'.$width.'" title=" Click to submit. '.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'" value="submit"></form>';
-    		  $media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=0&start=1&id='.$cid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>';
+    		  $media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=0&start=1&id='.$cid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>'; 
     		  
           	if ($mediaid == $media->id && $start == 1 && $player==0)
           	{

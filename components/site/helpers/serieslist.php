@@ -311,16 +311,12 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 	$studies .= '</tr>
 	<tr><td>';
-		if ($params->get('series_detail_show_link') > 0 && $nolimit != 1 && $rows > $params->get('series_detail_limit')) 
-			{
-				$studies .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&id='.$id.'&nolimit=1&templatemenuid='.$templatemenuid).'">'.JText::_('Show All').' '.$rows.' '.JText::_('Studies From This Series').' >></a>';
-			}
-		$studies .= '</td></tr>
-		';
+	
+		$studies .= '</td></tr>';
 	if ($params->get('series_list_return') > 0) 
 		{
 			
-			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'">'.' << '.JText::_('Return To Series List').'</a></td></tr>';
+			$studies .= getSeriesFooter($templatementid, $id).'</table>';
 		}
 return $studies;
 }
@@ -569,20 +565,20 @@ switch ($params->get('series_wrapcode')) {
   echo $params->get('series_headercode');
 
 
-if ($params->get('series_detail_show_link') > 0 && $nolimit != 1 && $rows > $params->get('series_detail_limit')) 
-			{
-				$studies .= '<table id="bsms_seriestable" width="100%"><tr><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=seriesdetail&id='.$id.'&nolimit=1&templatemenuid='.$templatemenuid).'">'.JText::_('Show All').' '.$rows.' '.JText::_('Studies From This Series').' >></a>';
-			}
-		$studies .= '</td></tr>
-		';
-	
+
 			
-	if ($params->get('series_list_return') > 0) 
-		{		
-			$studies .= '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'">'.' << '.JText::_('Return To Series List').'</a></td></tr></table>';
-		}
+//	if ($params->get('series_list_return') > 0) 
+//		{		
+//			$studies .= getSeriesFooter($templatementid, $id).'</table>';
+//		}
 		
 	
 return $studies;
+
+    function getSeriesFooter($templatemenuid, $id)
+    {
+        $seriesfooter = '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_series='.$id.'&templatemenuid='.$templatemenuid).'">'.JText::_('Show All').' '.JText::_('Studies From This Series').' >></a></td></tr>';
+        return $seriesfooter;
+    }
 }
 

@@ -29,7 +29,7 @@ class biblestudyController extends JController
         $Itemid = '';
         $item = JRequest::getInt('Itemid','','get');
         if ($itemid) {$Itemid = '&Itemid='.$item;}
-        
+     //   dump ($id, 'id: ');
         if ($start == 1)
         {
             $mainframe->redirect('index.php?option=com_biblestudy&view='.$view.'&id='.$id.'&templatemenuid='.$t.$Itemid.'&player='.$player.'&start=1&mediaid='.$mediaid);
