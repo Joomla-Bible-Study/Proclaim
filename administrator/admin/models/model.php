@@ -12,6 +12,7 @@ class BSMModel extends JModel{
 	var $data = null;
 	var $id = false;
 	var $name;
+	var $prefix = 'bsms_';
 	var $table;
 	var $total;
 
@@ -27,14 +28,14 @@ class BSMModel extends JModel{
 		$this->id = $cid[0];
 	}
 
-	function getData($fields = array('*'), $conditions = array(), $order = null, $prefix = 'bsms_') {
+	function getData($fields = array('*'), $conditions = array(), $order = null) {
 		global $mainframe, $option;
 		
 		$SELECT = array();
 		$JOIN = '';
 		$WHERE = array();
 		
-		//Include the ID in the fields, if its not already
+		//Include the ID in the fields if its not already
 		if(!in_array('id', $fields) && !in_array('*', $fields))
 			array_unshift($fields, 'id');
 			
@@ -71,7 +72,7 @@ class BSMModel extends JModel{
 		$ORDER = 'ORDER BY '.$mainframe->getUserStateFromRequest($option.'filter_order', 'filter_order', $this->order, 'cmd');
 		$ORDER .= ' '.strtoupper($mainframe->getUserStateFromRequest($option.'filter_order_Dir', 'filter_order_Dir', 'ASC'));
 		
-		$query = 'SELECT '.implode($SELECT, ', ').' FROM #__'.$prefix.$this->table.' AS '.$this->table.$JOIN;
+		$query = 'SELECT '.implode($SELECT, ', ').' FROM #__'.$this->prefix.$this->table.' AS '.$this->table.$JOIN;
 		
 		if (count($WHERE) > 0)
 			$query .= ' WHERE '.implode($WHERE, ' AND ');
@@ -101,6 +102,12 @@ class BSMModel extends JModel{
 		return $this->data;
 	}
 
+	function getFilter($fields = array(), $order) {
+		$query = 'SELECT DISTINCT '.$fields['value'].' AS value, '.$fields['text'].' AS text FROM #__'.$this->prefix.$this->table.' ORDER BY value '.$order;
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
+	
 	function save($data = null) {
 
 	}
