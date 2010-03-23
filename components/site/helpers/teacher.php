@@ -35,7 +35,7 @@ function getTeacher($params, $id, $admin_params)
 		{
 			$database	= & JFactory::getDBO();
 			$query = 'SELECT * FROM #__bsms_teachers'.
-					'  WHERE id = '.$teachers['id'];
+					'  WHERE id = '.$teachers;
 			//dump ($teachers, 'teachers: ');		
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
