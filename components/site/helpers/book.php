@@ -16,9 +16,9 @@ function getBooks($params, $id, $admin_params)
 	if (!$limit) {$limit = 10000;}
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 
-		$book = '<table id="landing_table" width=100%><tr>';
+		$book = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
-		$query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber';
+		$query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber order by a.booknumber';
 		
 		$db->setQuery($query);
 		
@@ -26,25 +26,39 @@ function getBooks($params, $id, $admin_params)
         $t = 0;
         $i = 0;
         
-        $book .= '
-		<tr>';
+        $book .= "\n\t" . '<tr>';
 		$showdiv = 0;
         foreach ($tresult as &$b) {
             
-            $book .= '<td id="landing_td">';
             if ($t >= $limit)
 		{
 			if ($showdiv < 1)
 			{
+				if ($i == 1) {
+    	      		$book .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+    	      		$book .= "\n\t" . '</tr>';
+    	    	};
+    	    	if ($i == 2) {
+    	        	$book .= "\n\t\t" . '<td  id="landing_td"></td>';
+    	      		$book .= "\n\t" . '</tr>';
+	        	};
+
+
+			$book .= "\n" .'</table>';
+			$book .= "\n\t" . '<div id="showhidebook" style="display:none;">';
+			$book .= "\n" . '<table width = "100%" id="landing_table">';
 			
-			$book .= "</td></tr></table>";
-			$book .= '<div id="showhidebook" style="display:none;">';
-			$book .= '<table width = "100%" id="landing_table"><tr><td id="landing_td">';
-		
+			$i = 0;
 			$showdiv = 1;
 			}
 		}   
+		
+            if ($i == 0) {
+                $book .= "\n\t" . '<tr>';
+            }
+            $book .= "\n\t\t" . '<td id="landing_td">';
 		    $book .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_book='.$b->booknumber.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
+		    ##$book .= '<a href="dummy">'; ## can uncomment this line and use instead of above line when bug-fixing for simpler code
 		    
 		    $book .= $numRows;
 		    $book .= $b->bookname;
@@ -55,24 +69,26 @@ function getBooks($params, $id, $admin_params)
             $i++;
             $t++; //dump ($t, 't: ');
             if ($i == 3) {
-                $book .= '</tr><tr>';
+                $book .= "\n\t" . '</tr>';
                 $i = 0;
             }
         }
         if ($i == 1) {
-            $book .= '<td  id="landing_td"></td><td id="landing_td"></td>';
+            $book .= "\n\t\t" . '<td  id="landing_td"></td> . "\n\t\t" . <td id="landing_td"></td>';
         };
         if ($i == 2) {
-            $book .= '<td  id="landing_td"></td>';
+            $book .= "\n\t\t" . '<td  id="landing_td"></td>';
         };
+
+		$book .= "\n". '</table>' ."\n";
+
         if ($showdiv == 1)
 			{	
-        	$book .= '</td></tr></table>';
-			$book .= '</div>';
+
+			$book .= "\n\t". '</div> <!-- close show/hide div-->';
 			$showdiv = 2;
 			}
-        $book .= '</tr>';
-		$book .= '</table>';
+
         
 	return $book;
 }
