@@ -157,7 +157,8 @@ if (!$row->id) {return FALSE;}
 //    dump ($media->id, 'media->id: ');
     		if ($player == 1 && $start == 1 && $mediaid == $media->id)
     		{
-    			$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+    			$play = $getMedia->hitPlay($media->id);
+                $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
     		}
     		else 
     		{
@@ -166,7 +167,8 @@ if (!$row->id) {return FALSE;}
     		break;
 
 		case 2:
-	
+       // if ($player == 2 && $start == 1 && $mediaid == $media->id)
+    	//	{$play = $getMedia->hitPlay($media->id);}
 			$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
 		break;
 		

@@ -14,7 +14,9 @@ class jbsMedia
 	
 function hitPlay($id)
 	{
-		$db =& JFactory::getDBO();
+	//	$test = "hit it";
+    //    dump ($test, 'test: ');
+        $db =& JFactory::getDBO();
 		$query = 'UPDATE #__bsms_mediafiles SET plays = plays + 1 WHERE id = '.$id; //dump ($query, 'query: ');
 	//	$db->setQuery('UPDATE #__bsms_mediafiles SET plays = plays + 1 WHERE id = '.$id);
 		$db->setQuery('UPDATE '.$db->nameQuote('#__bsms_mediafiles').'SET '.$db->nameQuote('plays').' = '.$db->nameQuote('plays').' + 1 '.' 	WHERE id = '.$id);
@@ -26,7 +28,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 		{
 			jimport ('joomla.application.component.helper');
 			$itemparams = new JParameter ($media->params);
-			$hitPlay = $this->hitPlay($media->id);
+		//	$hitPlay = $this->hitPlay($media->id);
             $playerwidth = $params->get('player_width');
             $playerheight = $params->get('player_height');
             if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
@@ -68,7 +70,7 @@ function getDirectLink($media, $width, $height, $duration, $src, $path1, $filesi
 	
 function getAVRLink($media, $width, $height, $src, $params, $image, $Itemid)
 	{
-		$play = $this->hitPlay($media->id);
+	//	$play = $this->hitPlay($media->id);
 		//dump ($media);
        JPluginHelper::importPlugin('system', 'avreloaded');
 	   
