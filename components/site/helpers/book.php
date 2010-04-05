@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 
-function getBooks($params, $id, $admin_params)
+function getBooksLandingPage($params, $id, $admin_params)
 {
 	global $mainframe, $option;
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -45,7 +45,7 @@ function getBooks($params, $id, $admin_params)
 
 
 			$book .= "\n" .'</table>';
-			$book .= "\n\t" . '<div id="showhidebook" style="display:none;">';
+			$book .= "\n\t" . '<div id="showhidebook" style="display:none;"> <!-- start show/hide book div-->';
 			$book .= "\n" . '<table width = "100%" id="landing_table">';
 			
 			$i = 0;
@@ -74,7 +74,7 @@ function getBooks($params, $id, $admin_params)
             }
         }
         if ($i == 1) {
-            $book .= "\n\t\t" . '<td  id="landing_td"></td> . "\n\t\t" . <td id="landing_td"></td>';
+            $book .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
         };
         if ($i == 2) {
             $book .= "\n\t\t" . '<td  id="landing_td"></td>';
@@ -85,10 +85,10 @@ function getBooks($params, $id, $admin_params)
         if ($showdiv == 1)
 			{	
 
-			$book .= "\n\t". '</div> <!-- close show/hide div-->';
+			$book .= "\n\t". '</div> <!-- close show/hide books div-->';
 			$showdiv = 2;
 			}
-
+  $book .= '<div id="landing_separator"></div>';
         
 	return $book;
 }

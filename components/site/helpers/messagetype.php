@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 
-function getMessageTypes($params, $id, $admin_params)
+function getMessageTypesLandingPage($params, $id, $admin_params)
 {
 	global $mainframe, $option;
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -12,34 +12,52 @@ function getMessageTypes($params, $id, $admin_params)
 	$teacherid = null;
 	$templatemenuid = $params->get('templatemenuid');
 	//$templatemenuid = $params->get('teachertemplateid');
-	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 	$limit = $params->get('landingmessagetypelimit');
 	if (!$limit) {$limit = 10000;}
-		$messagetype = '<table id="landing_table" width="100%"><tr>';
+	
+	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+
+		$messagetype = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype';
 		
 		$db->setQuery($query);
-		$t = 0;
-		$i = 0;
+
         $tresult = $db->loadObjectList();
-        $messagetype .= '<tr>';
+         $t = 0;
+         $i = 0;
+         
+        $messagetype .= "\n\t" . '<tr>';
         $showdiv = 0;
         foreach ($tresult as &$b) {
             
-            $messagetype .= '<td id="landing_td">';
             if ($t >= $limit)
 		{
 			if ($showdiv < 1)
 			{
+				if ($i == 1) {
+    	      		$messagetype .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+    	      		$messagetype .= "\n\t" . '</tr>';
+    	    	};
+    	    	if ($i == 2) {
+    	        	$messagetype .= "\n\t\t" . '<td  id="landing_td"></td>';
+    	      		$messagetype .= "\n\t" . '</tr>';
+	        	};
 			
-			$messagetype .= "</td></tr></table>";
-			$messagetype .= '<div id="showhidemessagetype" style="display:none;">';
-			$messagetype .= '<table width = "100%" id="landing_table"><tr><td>';
+			$messagetype .= "\n" .'</table>';
+			$messagetype .= "\n\t" . '<div id="showhidemessagetype" style="display:none;"> <!-- start show/hide messagetype div-->';
+			$messagetype .= "\n" .'<table width = "100%" id="landing_table">';
 		
+            $i = 0;
 			$showdiv = 1;
 			}
 		}   
+		
+            if ($i == 0) {
+                $messagetype .= "\n\t" . '<tr>';
+            }
+            $messagetype .= "\n\t\t" . '<td id="landing_td">';
+
 		    $messagetype .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_messagetype='.$b->id.'&filter_book=0&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&templatemenuid='.$templatemenuid.$addItemid.'">';
 		    
 		    $messagetype .= $b->message_type;
@@ -51,24 +69,26 @@ function getMessageTypes($params, $id, $admin_params)
             $i++;
             $t++; //dump ($t, 't: ');
             if ($i == 3) {
-                $messagetype .= '</tr><tr>';
+                $messagetype .= "\n\t" . '</tr>';
                 $i = 0;
             }
         }
         if ($i == 1) {
-            $messagetype .= '<td id="landing_td"></td><td id="landing_td"></td>';
+            $messagetype .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
         };
         if ($i == 2) {
-            $messagetype .= '<td id="landing_td"></td>';
+            $messagetype .= "\n\t\t" . '<td  id="landing_td"></td>';
         };
+        
+        $messagetype .= "\n". '</table>' ."\n";
+
         if ($showdiv == 1)
 			{	
-        	$messagetype .= '</td></tr></table>';
-			$messagetype .= '</div>';
+
+			$messagetype .= "\n\t". '</div> <!-- close show/hide messagetype div-->';
 			$showdiv = 2;
 			}
-        $messagetype .= '</tr>';
-		$messagetype .= '</table>';
+  $messagetype .= '<div id="landing_separator"></div>';
         
 	return $messagetype;
 }

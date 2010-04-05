@@ -323,7 +323,6 @@ return $studies;
 
 function getSeriesLandingPage($params, $id, $admin_params)
 {
-	
 	global $mainframe, $option;
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
@@ -338,7 +337,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 	$limit = $params->get('landingserieslimit');
 	if (!$limit) {$limit = 10000;}
 	
-		$series = '<table id="landing_table" width="100%"><tr>';
+		$series = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_series a inner join #__bsms_studies b on a.id = b.series_id';
 		
@@ -346,24 +345,39 @@ function getSeriesLandingPage($params, $id, $admin_params)
 		
         $tresult = $db->loadObjectList();
         $t = 0;
-        $series .= '
-		<tr>'; 
-		$showdiv = 0;       
+        $i = 0;
+        
+        $series .= "\n\t" . '<tr>';
+		$showdiv = 0;
         foreach ($tresult as &$b) {
             
-            $series .= '<td id="landing_td">';
             if ($t >= $limit)
 		{
 			if ($showdiv < 1)
 			{
+						if ($i == 1) {
+    	      		$series .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+    	      		$series .= "\n\t" . '</tr>';
+    	    	};
+    	    	if ($i == 2) {
+    	        	$series .= "\n\t\t" . '<td  id="landing_td"></td>';
+    	      		$series .= "\n\t" . '</tr>';
+	        	};
 			
-			$series .= "</td></tr></table>";
-			$series .= '<div id="showhideseries" style="display:none;">';
-			$series .= '<table width = "100%" id="landing_table"><tr><td>';
-		
+			$series .= "\n" .'</table>';
+			$series .= "\n\t" . '<div id="showhideseries" style="display:none;"> <!-- start show/hide series div-->';
+			$series .= "\n" . '<table width = "100%" id="landing_table">';
+
+			$i = 0;
 			$showdiv = 1;
 			}
 		}   
+		
+            if ($i == 0) {
+                $series .= "\n\t" . '<tr>';
+            }
+            $series .= "\n\t\t" . '<td id="landing_td">';
+		
             if ($params->get('series_linkto') == '0') {
                 $series .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_series='.$b->id.'&filter_book=0&filter_teacher=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
             } else {
@@ -380,24 +394,26 @@ function getSeriesLandingPage($params, $id, $admin_params)
             $i++;
             $t++;
             if ($i == 3) {
-                $series .= '</tr><tr>';
+                $series .= "\n\t" . '</tr>';
                 $i = 0;
             }
         }
         if ($i == 1) {
-            $series .= '<td id="landing_td"></td><td id="landing_td"></td>';
+            $series .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
         };
         if ($i == 2) {
-            $series .= '<td id="landing_td"></td>';
+            $series .= "\n\t\t" . '<td  id="landing_td"></td>';
         };
-         if ($showdiv == 1)
+        
+        $series .= "\n". '</table>' ."\n";
+
+        if ($showdiv == 1)
 			{	
-        	$series .= '</td></tr></table>';
-			$series .= '</div>';
+
+			$series .= "\n\t". '</div> <!-- close show/hide series div-->';
 			$showdiv = 2;
 			}
-        $series .= '</tr>';
-		$series .= '</table>';
+  $series .= '<div id="landing_separator"></div>';
         
 	return $series;
 }

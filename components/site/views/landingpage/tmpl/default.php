@@ -14,7 +14,8 @@ $document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 $showhide = getShowhide(); //dump ($showhide, 'showhide: ');
 $document->addScriptDeclaration($showhide);
 //$document->addStyleSheet(JURI::base().'components/com_biblestudy'.DS.'tooltip.css');
-$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
+$stylesheet = JURI::base().'components/com_biblestudy/assets/css/biblestudy.css';
+$document->addStyleSheet($stylesheet);
 $params = $this->params;
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'image.php');
@@ -63,9 +64,9 @@ for ($i=1;$i<=7;$i++) {
     	
   
     ?>
+    <tr><td>
     <div id="landing_item">
     <div id="landing_title">
-    <tr><td>
 <!--<h2>-->
   <?php echo $params->get($showIt.'label'); ?>
 	
@@ -112,7 +113,7 @@ if ($params->get('landing'.$showIt.'limit'))
       
       $heading_call = JView::loadHelper('teacher');  
       $heading = getTeacherLandingPage($params, $id=null, $this->admin_params);
-      //echo "</div>";
+        //echo "</div>";
       break;
       
       case 'series':
@@ -123,31 +124,31 @@ if ($params->get('landing'.$showIt.'limit'))
       
       case 'locations':
        	$heading_call = JView::loadHelper('location');
-      	$heading = getLocations($params, $id=null, $this->admin_params);
+      	$heading = getLocationsLandingPage($params, $id=null, $this->admin_params);
       	//echo "</div>";
         break;
       
       case 'messagetype':
        	$heading_call = JView::loadHelper('messagetype');
-      	$heading = getMessageTypes($params, $id=null, $this->admin_params);
+      	$heading = getMessageTypesLandingPage($params, $id=null, $this->admin_params);
       	//echo "</div>";
         break;
       
       case 'topics':
          	$heading_call = JView::loadHelper('topics');
-        	$heading = getTopics($params, $id=null, $this->admin_params);
+        	$heading = getTopicsLandingPage($params, $id=null, $this->admin_params);
         //	echo "</div>";
       break;
       
       case 'book':
        	$heading_call = JView::loadHelper('book');
-	      $heading = getBooks($params, $id=null, $this->admin_params);
+	      $heading = getBooksLandingPage($params, $id=null, $this->admin_params);
 	      //echo "</div>";
         break;
          
       case 'years':
        	$heading_call = JView::loadHelper('year');
-	      $heading = getYears($params, $id=null, $this->admin_params);
+	      $heading = getYearsLandingPage($params, $id=null, $this->admin_params);
 	      //echo "</div>";
         break;
      

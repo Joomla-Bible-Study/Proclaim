@@ -44,7 +44,8 @@ class biblestudyViewLandingpage extends JView {
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
 		//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
-		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+        $stylesheet = JURI::base().'components/com_biblestudy/assets/css/biblestudy.css';
+        $document->addStyleSheet($stylesheet);
 		
 		//Import Scripts
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
