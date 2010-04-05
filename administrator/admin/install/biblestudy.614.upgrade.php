@@ -52,33 +52,41 @@ $landingexists = 1;
 	if ($landingexists < 1)
 	{
 		$landing = '
-/* Landing Page Items */
-#landinglist {
-	
+/* Landing Page Items */ 
+#landinglist { 
+	 
+} 
+#landing_label { 
+	 
+} 
+#landing_item { 
+	 
+} 
+#landing_title { 
+font-family:arial; 
+font-size:16px; 
+font-weight:bold; 
+	 
+} 
+#biblestudy_landing { 
+	 
+} 
+#showhide { 
+font-family:arial; 
+font-size:12px; 
+font-weight:bold; 
+text-decoration:none; 
+} 
+#landing_table { 
+
 }
-#landing_label {
-	
+
+#landing_td {
+width: 33%;
 }
-#landing_item {
-	
-}
-#landing_title {
-font-family:arial;
-font-size:16px;
-font-weight:bold;
-	
-}
-#biblestudy_landing {
-	
-}
-#showhide{
-font-family:arial;
-font-size:12px;
-font-weight:bold;
-text-decoration:none;
-}
-#landing_table {
-padding-bottom:20px;
+
+#landing_separator {
+height:15px;
 }';
 $landingwrite = $landingread.$landing;
 			$errcss = '';
