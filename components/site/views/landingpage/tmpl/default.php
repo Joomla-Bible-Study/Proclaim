@@ -80,28 +80,38 @@ if ($params->get('landing'.$showIt.'limit'))
 //	$showhide_tmp = $images->getImagePath($d_path);
     $showhide_image = $showhide_tmp->path; //dump ($showhide_tmp, 'showhide_tmp');
 	
-	$showhideall = "<div id='showhide'><a class='showhideheading' ";
-	$showhideall .=  'href="';
-	$showhideall .= "javascript:ReverseDisplay(";
-	$showhideall .= "'showhide".$showIt."'";
-	$showhideall .= ')">';
+	$showhideall = "<div id='showhide'>";
+	
+	$buttonlink = "\n\t".'<a class="showhideheadingbutton" href="javascript:ReverseDisplay('."'showhide".$showIt."'".')">';
+	$labellink = "\n\t".'<a class="showhideheadinglabel" href="javascript:ReverseDisplay('."'showhide".$showIt."'".')">';
 	
 	switch ($params->get('landing_hide', 0))
 	{
-		case 0:
-		$showhideall .= ' <img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('Show/Hide All '.$showIt).'" title="'.JText::_('Show/Hide All '.$showIt).'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
+		case 0:         // image only
+		$showhideall .= $buttonlink;
+		$showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('Show/Hide All '.$showIt).'" title="'.JText::_('Show/Hide All '.$showIt).'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
+		$showhideall .= ' '; // spacer
+		$showhideall .= "\n\t".'</a>';
 		break;
 		
-		case 1:
-		$showhideall .= ' <img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('Show/Hide All '.$showIt).'" title="'.JText::_('Show/Hide All '.$showIt).'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'"> '.'<span id="landing_label">'.$params->get('landing_hidelabel').'</span>';
+		case 1:         // image and label
+		$showhideall .= $buttonlink;
+		$showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('Show/Hide All '.$showIt).'" title="'.JText::_('Show/Hide All '.$showIt).'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
+		$showhideall .= ' '; // spacer
+		$showhideall .= "\n\t".'</a>';
+		$showhideall .= $labellink;
+		$showhideall .= "\n\t\t".'<span id="landing_label">'.$params->get('landing_hidelabel').'</span>';
+		$showhideall .= "\n\t".'</a>';
 		break;
 		
-		case 2:
-		$showhideall .= '<span id="landing_label" >'.$params->get('landing_hidelabel').'</span>';
+		case 2:         // label only
+		$showhideall .= $labellink;
+		$showhideall .= "\n\t\t".'<span id="landing_label">'.$params->get('landing_hidelabel').'</span>';
+		$showhideall .= "\n\t".'</a>';
 		break;
 	} 
 	
-	$showhideall .= '</a></div>';
+	$showhideall .= "\n".'</div>'."\n";
 	echo $showhideall;
 }
 ?><!--</h2>--></div><div id="landinglist"><?php
