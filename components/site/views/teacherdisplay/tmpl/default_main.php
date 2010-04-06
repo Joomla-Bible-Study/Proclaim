@@ -54,7 +54,7 @@ $image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thu
 </td>
 <td class="bsm_teachername">
 <table id="bsm_teachertable" cellspacing="0">
-<tr><td class="bms_teachername">
+<tr><td class="bsm_teachername">
 <?php echo $teacherdisplay;?>
      </td></tr>
      <tr> <td class="bsm_teacherphone">
