@@ -28,7 +28,7 @@ class JElementstudydetails extends JElement
 	{
 		$db = &JFactory::getDBO();
 
-		$query = "SELECT #__bsms_studies.id, #__bsms_books.id AS bid, #__bsms_studies.booknumber AS bnumber, #__bsms_books.bookname, CONCAT(#__bsms_books.bookname,':',#__bsms_studies.chapter_begin,' - ',#__bsms_studies.studydate) AS text"
+		$query = "SELECT #__bsms_studies.id, #__bsms_books.id AS bid, #__bsms_studies.booknumber AS bnumber, #__bsms_books.bookname, CONCAT(#__bsms_books.bookname,':',#__bsms_studies.chapter_begin,' - ',DATE_FORMAT(#__bsms_studies.studydate,'%Y-%m-%d')) AS text"
 		. "\n FROM #__bsms_studies"
 		. "\n LEFT JOIN #__bsms_books ON (#__bsms_books.booknumber = #__bsms_studies.booknumber)"
 		. "\n WHERE #__bsms_studies.published = 1"
