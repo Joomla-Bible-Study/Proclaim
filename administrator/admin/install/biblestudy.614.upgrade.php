@@ -77,6 +77,11 @@ font-size:12px;
 font-weight:bold; 
 text-decoration:none; 
 } 
+
+#showhide .showhideheadingbutton img {
+vertical-align:bottom;
+}
+
 #landing_table { 
 
 }
