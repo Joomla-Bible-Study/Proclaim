@@ -273,14 +273,14 @@ function getTemplate() {
 	function _buildContentOrderBy()
 	{
 		global $mainframe, $option;
-
-		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'ASC',	'word' );
-
-		if ($filter_orders == 'ASC'){
-			$orderby 	= ' ORDER BY series_text ASC ';
-		} else {
-			$orderby 	= ' ORDER BY series_text DESC ';
-		}
+        $template = $this->getTemplate();
+		$params = new JParameter($template[0]->params);
+	//	$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'ASC',	'word' );
+        $filter_orders		= $params->get('series_list_order','ASC');
+        $filter_orders_field = $params->get('series_order_field','series_text');
+		
+		$orderby 	= ' ORDER BY '.$filter_orders_field.' '.$filter_orders.' ';
+	
 
 		return $orderby;
 	}

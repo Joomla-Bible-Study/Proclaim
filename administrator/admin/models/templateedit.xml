@@ -1089,7 +1089,16 @@
 				<option value="1">Show Series</option>
 			</param>
 			<param name="series_limit" type="text" default="5" label="Series Per Page" description="Put in the number of series to show per page of results" />
-			<param name="serieselement1" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
+            <param name="series_list_order" type="list" default="ASC" label="Set Ascending or Descending for Series list" description="Set ascending or descending by Series title for the list">
+            <option value="ASC">Ascending</option>
+			<option value="DESC">Descending</option>
+			</param>
+            <param name="series_order_field" type="list" default="series_text" label="Series List Sort Field" description="Choose the field to sort the series list by">
+            <option value="series_text">Series Title</option>
+            <option value="id">ID</option>
+            <option value="t.teachername">Teacher Name</option>
+            </param>
+            <param name="serieselement1" type="list" default="1" label="Series List Element 1" description="Please pick an element from the list">
 				<option value="0">Nothing</option>
 				<option value="1">Series Title {title}</option>
 				<option value="2">Thumbnail {thumbnail}</option>
