@@ -22,7 +22,7 @@ class biblestudyModelseriesdetail extends JModel
 		parent::__construct();
 		global $mainframe;
 		
-				$id = JRequest::getVar('id', 0,'GET','INT');
+				$id = JRequest::getVar('id','GET','INT');
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$this->setId((int)$array[0]);
@@ -42,6 +42,7 @@ class biblestudyModelseriesdetail extends JModel
 	function setId($id)
 	{
 		// Set id and wipe data
+        if (!$id ){$id = JRequest::getInt('returnid','get');} //dump ($id, 'id: ');
 		$this->_id		= $id;
 		$this->_data	= null;
 	}

@@ -41,6 +41,8 @@ class biblestudyViewteacherdisplay extends JView
 		//$params = &JComponentHelper::getParams($option);
 		//end TF added
 		$teacher		=& $this->get('Data');
+        $id = JRequest::getInt('id', 'get');
+        if ($id) {$teacher->id=$id;}
 		$this->assignRef('teacher',		$teacher);
 		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
 		$show_media = $contentConfig->get('show_media_view');

@@ -24,15 +24,15 @@ class biblestudyController extends JController
         $t = JRequest::getInt('templatemenuid',1,'get');
 		$player = JRequest::getInt('player','','get');
         $view = JRequest::getWord('view', 'studieslist','get');
-        $id = JRequest::getInt('id','','get');
+        $returnid = JRequest::getInt('returnid','','get');
         $mediaid = JRequest::getInt('mediaid','','get');
         $Itemid = '';
         $item = JRequest::getInt('Itemid','','get');
         if ($itemid) {$Itemid = '&Itemid='.$item;}
-     //   dump ($id, 'id: ');
+        //dump ($returnid, 'returnid: ');
         if ($start == 1)
         {
-            $mainframe->redirect('index.php?option=com_biblestudy&view='.$view.'&id='.$id.'&templatemenuid='.$t.$Itemid.'&player='.$player.'&start=1&mediaid='.$mediaid);
+            $mainframe->redirect('index.php?option=com_biblestudy&view='.$view.'&returnid='.$returnid.'&templatemenuid='.$t.$Itemid.'&player='.$player.'&start=1&mediaid='.$mediaid);
             
         }
 		//dump ($start, 'start: ');

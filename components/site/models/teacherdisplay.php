@@ -31,8 +31,10 @@ class biblestudyModelteacherdisplay extends JModel
 		}
 		else
 			{
-				$id = JRequest::getVar('id', 0,'GET','INT');
+				$id = JRequest::getVar('id','GET','INT'); //dump($id, 'id: ');
+                
 			}
+            
 		$this->_id = $id;
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
@@ -51,6 +53,7 @@ class biblestudyModelteacherdisplay extends JModel
 	function setId($id)
 	{
 		// Set id and wipe data
+        if (!$id ){$id = JRequest::getInt('returnid','get');}
 		$this->_id		= $id;
 		$this->_data	= null;
 	}

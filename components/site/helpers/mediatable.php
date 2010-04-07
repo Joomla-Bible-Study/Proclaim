@@ -92,37 +92,42 @@ if (!$row->id) {return FALSE;}
 	  } 
 	 
       	$view = JRequest::getWord('view', 'studieslist','get'); 
-      	switch ($view)
-		{
-			case 'studieslist':
-				$cid = $row->study_id;
-				break;
-			
-			case 'seriesdetail':
-				$cid = JRequest::getInt('id','1','get');
-			//	JRequest::setVar('mediaid',$media->id,'get',true);
-			//	$mediaid = JRequest::getInt('mediaid','','get');
-				break;
-			
-			case 'teacherdisplay':
-			//	$cid = JRequest::getInt('id','','get');
-				$cid = $row->teacher_id;
-			//	$mediaid = JRequest::getInt('mediaid','','get');
-		//    	dump ($row->teacher_id, 'row: ');
-			case 'studydetails':
-                $cid = $row->study_id;
-        //      $mediaid = JRequest::getInt('mediaid','','get');
-                break;
-                	
-			default:
-		//		$cid = $row->id;
-				break;	
-			
-		}
-		$t = JRequest::getInt('templatemenuid',1,'get');
-		$start = JRequest::getInt('start',0,'get');
+        $t = JRequest::getInt('templatemenuid',1,'get');
+		$start = JRequest::getInt('start',0,'get'); dump ($start, 'start: ');
 		$player = JRequest::getInt('player','','get');
-	   $mediaid = JRequest::getInt('mediaid','','get');
+	    $mediaid = JRequest::getInt('mediaid','','get');
+        
+          	switch ($view)
+    		{
+    			case 'studieslist':
+    				$returnid = $row->study_id;
+    				break;
+    			
+    			case 'seriesdetail':
+    				$returnid = JRequest::getInt('id','1','get');
+    			//	JRequest::setVar('mediaid',$media->id,'get',true);
+    			//	$mediaid = JRequest::getInt('mediaid','','get');
+    				break;
+    			
+    			case 'teacherdisplay':
+    			//	$cid = JRequest::getInt('id','','get');
+    				$returnid = $row->teacher_id;
+                //    dump ($returnid, 'returnid: ');
+    			//	$mediaid = JRequest::getInt('mediaid','','get');
+    		//    	dump ($row->teacher_id, 'row: ');
+                    break;
+    			case 'studydetails':
+                  $returnid = $row->study_id;
+                  $mediaid = JRequest::getInt('mediaid','','get');
+                  break;
+                    	
+    			default:
+    		//		$cid = $row->id;
+    				break;	
+    			
+    		}
+      
+		
        $playerwidth = $params->get('player_width');
        $playerheight = $params->get('player_height');
        if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
@@ -133,6 +138,7 @@ if (!$row->id) {return FALSE;}
 	//	dump ($start, 'start: ');
 	//	dump ($mediaid, 'mediaid: ');
 	//	dump ($_GET, 'get: ');
+    dump ($returnid, 'returnid: '); dump ($view, 'view: ');
 		
 		//	dump ($playertype, 'playertype: ');
       switch ($playertype)
@@ -140,7 +146,7 @@ if (!$row->id) {return FALSE;}
       	case 0:
       	
           //	$media1_link = '<form action="index.php" method="post"><input type="hidden" id="view" name="view" value="'.$view.'"><input type="hidden" name="controller" id="controller" value="'.$view.'"><input type="hidden" name="task" id="task" value="play"><input type="hidden" name="start" id="start" value="1"><input type="hidden" id="player" name="player" value="0"><input type="hidden" name="templatemenuid" id="templatemenuid" value="'.$t.'"><input type="hidden" id="mediaid" name="mediaid" value="'.$media->id.'"><input type="image" src="'.$src.'" height="'.$height.'" width="'.$width.'" title=" Click to submit. '.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'" value="submit"></form>';
-    		  $media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=0&start=1&id='.$cid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>'; 
+    		  $media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=0&start=1&returnid='.$returnid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>'; 
     		  
           	if ($mediaid == $media->id && $start == 1 && $player==0)
           	{
@@ -162,7 +168,7 @@ if (!$row->id) {return FALSE;}
     		}
     		else 
     		{
-    			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=1&start=1&id='.$cid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>'; 
+    			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=1&start=1&returnid='.$returnid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>'; 
     		}
     		break;
 
