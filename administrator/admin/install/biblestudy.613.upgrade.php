@@ -8,8 +8,8 @@ defined( '_JEXEC' ) or die('Restricted access');
 $result_table = '<table><tr><td>This routine updaters the database to reflect changes to the way the media player is accessed. If no mediafile records are indicated, then no changes were needed. CSS is also added to support the Landing Page view.</td></tr>';
 //Read current css file, add share information if not already there, write and close
 jimport('joomla.filesystem.file');
-$src = JPATH_SITE.DS.'components/com_biblestudy/assets/css/biblestudy.css.dist';
-$dest = JPATH_SITE.DS.'components/com_biblestudy/assets/css/biblestudy.css';
+$src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
+$dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
 
 
 
@@ -36,9 +36,9 @@ $database->setQuery("UPDATE #__bsms_mediafiles SET params = 'player=2', internal
 		
 	}
 //All Videos Reloaded has a problem with Bible Study. If there is no Itemid (like from the module) then AVR will break with Popup Database Error. We created a special file for the popup view.html.php file and we copy it over, backing up the old one. It will be reinstated on a full uninstall of Bible Study
-$src = JPATH_SITE.DS.'components/com_biblestudy/assets/avr/view.html.php';
-$dest = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view.html.php';
-$avrbackup = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view2.html.php';
+$src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'avr'.DS.'view.html.php';
+$dest = JPATH_SITE.DS.'components'.DS.'com_avreloaded'.DS.'views'.DS.'popup'.DS.'view.html.php';
+$avrbackup = JPATH_SITE.DS.'components'.DS.'com_avreloaded'.DS.'views'.DS.'popup'.DS.'view2.html.php';
 $avrexists = JFile::exists($dest);
 if ($avrexists)
 	{
@@ -55,8 +55,12 @@ if ($avrexists)
 //Now we look inside the css to see if there are share items, if not, we'll add them
 
 
-	$dest = JPATH_SITE.DS.'components/com_biblestudy/assets/css/biblestudy.css';
+	$dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
+    $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
+    $cssexists = JFile::exists($dest);
+    if (!$cssexists) {JFile::copy($src, $dest);}
 	$shareread = JFile::read($dest);
+    
 	$shareexists = 1;
 	$shareexists = substr_count($shareread,'#bsmsshare'); 
 	if ($shareexists < 1)

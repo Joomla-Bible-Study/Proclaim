@@ -5,6 +5,8 @@
  * @copyright 2010
  */
 defined('_JEXEC') or die();
+$src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
+$dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
 $db = &JFactory::getDBO();
 $result_table = '<table><tr><td>This routine updates the mediafiles table. If 0 results then no records needed updating</td></tr>';
 $db->setQuery("UPDATE #__bsms_mediafiles SET params = 'player=2', internal_viewer = '0' WHERE internal_viewer = '1' AND params IS NULL");

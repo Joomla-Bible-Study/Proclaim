@@ -419,7 +419,7 @@ $Itemid = JRequest::getVar('Itemid');
 						switch ($islink)
 						{
 							case 0:
-								$cell .= '</a>';
+							//	$cell .= '</a>';
 							break;
 							
 							case 1:
