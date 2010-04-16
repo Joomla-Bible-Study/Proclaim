@@ -60,7 +60,7 @@ class biblestudyModelseriesdetail extends JModel
 		// Load the data
 		if (empty( $this->_data )) {
 			$id = JRequest::getVar('id', 0,'GET','INT');
-		
+		 if (!$id ){$id = JRequest::getInt('returnid','get');} //dump ($id, 'id: ');
 		$query = 'SELECT se.*, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
 		. ' FROM #__bsms_series AS se'
 		. ' LEFT JOIN #__bsms_teachers AS t ON (se.teacher = t.id)'

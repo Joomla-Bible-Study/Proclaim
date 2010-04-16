@@ -93,7 +93,7 @@ if (!$row->id) {return FALSE;}
 	 
       	$view = JRequest::getWord('view', 'studieslist','get'); 
         $t = JRequest::getInt('templatemenuid',1,'get');
-		$start = JRequest::getInt('start',0,'get'); dump ($start, 'start: ');
+		$start = JRequest::getInt('start',0,'get'); //dump ($start, 'start: ');
 		$player = JRequest::getInt('player','','get');
 	    $mediaid = JRequest::getInt('mediaid','','get');
         
@@ -104,7 +104,8 @@ if (!$row->id) {return FALSE;}
     				break;
     			
     			case 'seriesdetail':
-    				$returnid = JRequest::getInt('id','1','get');
+                //    $returnid = $row->id;
+    				$returnid = JRequest::getInt('returnid','get');
     			//	JRequest::setVar('mediaid',$media->id,'get',true);
     			//	$mediaid = JRequest::getInt('mediaid','','get');
     				break;
@@ -117,8 +118,10 @@ if (!$row->id) {return FALSE;}
     		//    	dump ($row->teacher_id, 'row: ');
                     break;
     			case 'studydetails':
-                  $returnid = $row->study_id;
+                    $studyid = '&id='.$row->study_id;
+                  $returnid = $row->study_id.$studyid;
                   $mediaid = JRequest::getInt('mediaid','','get');
+                  
                   break;
                     	
     			default:
@@ -138,7 +141,7 @@ if (!$row->id) {return FALSE;}
 	//	dump ($start, 'start: ');
 	//	dump ($mediaid, 'mediaid: ');
 	//	dump ($_GET, 'get: ');
-    dump ($returnid, 'returnid: '); dump ($view, 'view: ');
+   // dump ($returnid, 'returnid: '); dump ($view, 'view: ');
 		
 		//	dump ($playertype, 'playertype: ');
       switch ($playertype)

@@ -28,11 +28,13 @@ class biblestudyController extends JController
         $mediaid = JRequest::getInt('mediaid','','get');
         $Itemid = '';
         $item = JRequest::getInt('Itemid','','get');
+        $id = JRequest::getInt('id','get');
+        
         if ($itemid) {$Itemid = '&Itemid='.$item;}
         //dump ($returnid, 'returnid: ');
         if ($start == 1)
         {
-            $mainframe->redirect('index.php?option=com_biblestudy&view='.$view.'&returnid='.$returnid.'&templatemenuid='.$t.$Itemid.'&player='.$player.'&start=1&mediaid='.$mediaid);
+            $mainframe->redirect('index.php?option=com_biblestudy&view='.$view.'&returnid='.$returnid.'&templatemenuid='.$t.$Itemid.'&player='.$player.'&start=1&mediaid='.$mediaid.'&id='.$id);
             
         }
 		//dump ($start, 'start: ');
