@@ -330,8 +330,8 @@ function getTemplate() {
 		$messagetype_menu = $params->get('messagetype', 1);
 		$location_menu = $params->get('locations', 1);
 		$chapter_menu = $params->get('chapter', 1);
-		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',				'word' );
-
+	//	$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',				'word' );
+   //     $filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',	'word' );
 		$where = array();
 		$rightnow = date('Y-m-d H:i:s');
 		$where[] = ' #__bsms_studies.published = 1';
@@ -587,27 +587,25 @@ function getTemplate() {
 	{
 		global $mainframe, $option;
 		$params = &JComponentHelper::getParams($option);
-		
-		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'word' );
+		$filter_orders = '';
 
-		if ($filter_orders)
-			{
-				if ($filter_orders == 'ASC'){
-					$orderby 	= ' ORDER BY studydate ASC ';
-				} else {
-					$orderby 	= ' ORDER BY studydate DESC ';
-				}
-			}
-		if (!$filter_orders)
-		{	
-			if ($params->get('default_order'))
-				{
-					$orderby 	= ' ORDER BY studydate ASC ';
-				} else {
-					$orderby 	= ' ORDER BY studydate DESC ';
-				}
-		}
-		return $orderby;
+      if (!empty($_POST))
+        {
+            $filter_orders = $_POST['filter_orders'];
+            if ($filter_orders)
+            {
+                $orderby 	= ' ORDER BY studydate '.$filter_orders.' '; 
+            }
+            else
+            {
+                $orderby = ' ORDER BY studydate '.$params->get('default_order').' ';
+            }
+        }
+      else
+          {
+            $orderby = ' ORDER BY studydate '.$params->get('default_order').' ';
+          }
+	return $orderby;
 	}
 }
 ?>
