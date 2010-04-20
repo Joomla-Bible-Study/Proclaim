@@ -39,9 +39,25 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 			{
 				$flashvars = $itemparams->get('altflashvars');
 			}
-   			$player_width = $params->get('player_width', 290);
-			$media1_link =
-			"<p id='preview'>The player should show in this paragraph</p>
+   			//$player_width = $params->get('player_width', 290);
+            $internal_popup = $params->get('internal_popup',0);
+            $backcolor = $params->get('backcolor','0x287585');
+            $frontcolor = $params->get('frontcolor','0xFFFFFF');
+            $lightcolor = $params->get('lightcolor','0x000000');
+            if ($internal_popup == 1 || $itemparams->get('internal_popup') == 1)
+            {
+                $media1_link = 
+                "<script type='text/javascript'>
+                window.open('components/com_biblestudy/assets/player/player.swf?file=".$path1."&amp;allowfullscreen=true&amp;height=".$playerheight."&amp;width=".$playerwidth."&amp;&amp;id=veneers&amp;searchbar=false&amp;showicons=false&amp;autostart=true&amp;overstretch=fit&amp;backcolor=".$backcolor."&amp;frontcolor=".$frontcolor."&amp;lightcolor=".$lightcolor."', 'newwindow', config='height=".$playerheight.",width=".$playerwidth.",toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no, directories=no, status=no')
+                </script>";
+    		
+            
+            }
+            else
+            {
+            $media1_link =
+            //TF added for window
+           "<p id='preview'>The player should show in this paragraph</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
 			<script type='text/javascript'>
 			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$playerwidth."','".$playerheight."','9');
@@ -53,7 +69,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 			".$extraparams."
 			s1.write('preview');
 			</script> ";
-			
+			}
 		return $media1_link;
 		}
 

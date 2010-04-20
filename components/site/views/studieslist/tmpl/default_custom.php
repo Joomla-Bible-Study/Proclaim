@@ -84,7 +84,7 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     <?php if ($params->get('intro_show') > 0) { echo $params->get('list_intro');}?>
     </div>
     <div id="bsdropdownmenu">
-
+ <input type="submit" value="<?php JText::_('Go'); ?>" />
 <?php 
 
 if (($this->params->get('show_locations_search') > 0 && !($location_menu)) || $this->params->get('show_locations_search') > 1) { echo $this->lists['locations'];}

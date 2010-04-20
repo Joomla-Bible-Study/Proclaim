@@ -6,6 +6,11 @@
 			<option value="1">Use internal Player</option>
 			<option value="2">Use All Videos Reloaded</option>
 		</param>
+        <param name="internal_popup" type="list" default="3" label="Display Internal player as popup" description="Choose whether the internal viewer should be a popup or inline. Affects this file only">
+                <option value="0">Inline</option>
+				<option value="1">Popup</option>
+                <option value="3">Use Global Setting</option>
+				</param>
 		<param name="playerwidth" default="300" type="text" label="Custom width for internal player or window" description="Set a width for the player or direct link that will play in a new window. 300 assumed if nothing added. Affects only this file" />
 		<param name="playerheight" default="400" type="text" label="Custom height for internal player or window" description="Set a height attribute for the internal player or direct link that will play in a new window. 400 assumed. Only affects this mediafile" />
 		<param name="playervars" default="" type="textarea" rows="3" cols="100" label="Params for the JWPlayer" description="Params should follow this syntax: s1.addParam('paramname','paramvalue');"></param>

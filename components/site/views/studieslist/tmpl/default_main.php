@@ -78,6 +78,7 @@ if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
     <?php if ($params->get('intro_show') == 1) { echo $params->get('list_intro');}?>
    </p></td></tr></table> </div>
     <div id="bsdropdownmenu">
+    <input type="submit" value="<?php JText::_('Go'); ?>" />
 
 <?php 
 
