@@ -85,7 +85,20 @@ if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 
 
 if (($this->params->get('show_locations_search') > 0 && !($location_menu)) || $this->params->get('show_locations_search') > 1) { echo $this->lists['locations'];}
-if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1) {  echo JText::_('Begin Chapter: ').' <input type="text" id="minChapt" name="minChapt" size="3"> - '.JText::_('End Chapter: ').' <input type="text" id=maxChapt" name="maxChapt" size="3"> '.$this->lists['books']; }
+if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1)
+    {
+        echo JText::_('Begin Chapter: ').' <input type="text" id="minChapt" name="minChapt" size="3"';
+        if (JRequest::getInt('minChapt','','post')) {
+            echo 'value="'.JRequest::getInt('minChapt','','post').'"';
+        }
+        echo '> ';
+        echo JText::_('End Chapter: ').' <input type="text" id=maxChapt" name="maxChapt" size="3"';
+        if (JRequest::getInt('maxChapt','','post')) {
+            echo 'value="'.JRequest::getInt('maxChapt','','post').'"';
+        }
+        echo '> ';
+        echo $this->lists['books'];
+    }
 if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1) { echo $this->lists['teacher_id'];  }   
 if (($this->params->get('show_series_search') > 0 && ($series_menu == -1)) || $this->params->get('show_series_search') > 1) { echo $this->lists['seriesid'];  }   
 if (($this->params->get('show_type_search') > 0 && ($messagetype_menu == -1)) || $this->params->get('show_type_search') > 1) { echo $this->lists['messagetypeid'];  }   
