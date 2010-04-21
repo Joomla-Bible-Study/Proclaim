@@ -78,9 +78,11 @@ if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
     <?php if ($params->get('intro_show') == 1) { echo $params->get('list_intro');}?>
    </p></td></tr></table> </div>
     <div id="bsdropdownmenu">
-    <span id="gobutton"><input type="submit" value="<?php echo JText::_('Go'); ?>" /></span>
+    <?php if ($this->params->get('use_go_button') > 0)
+        {
+            ?><span id="gobutton"><input type="submit" value="<?php echo JText::_('Go'); ?>" /></span>
+    <?php }
 
-<?php 
 
 if (($this->params->get('show_locations_search') > 0 && !($location_menu)) || $this->params->get('show_locations_search') > 1) { echo $this->lists['locations'];}
 if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1) {  echo JText::_('Begin Chapter: ').' <input type="text" id="minChapt" name="minChapt" size="3"> - '.JText::_('End Chapter: ').' <input type="text" id=maxChapt" name="maxChapt" size="3"> '.$this->lists['books']; }

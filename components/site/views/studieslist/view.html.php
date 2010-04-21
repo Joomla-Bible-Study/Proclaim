@@ -112,20 +112,7 @@ class biblestudyViewstudieslist extends JView {
 		$this->assignRef('topic', $topics);
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
-//dump ($admin[0]->main, 'main: ');
-		//Get the main study list image
-		/*
-		if ($admin[0]->main == '- Default Image -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}
-		else 
-		{
-				if ($admin[0]->main && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$admin[0]->main; }
-				if ($admin[0]->main && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$admin[0]->main;}
-				
-		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-		$image = ($admin->main == '- Default Image -' ? 'openbible.png' : $admin->main );
-		$i_path = BIBLESTUDY_PATH_LIST_MAIN_IMAGE .DS. $image; //dump ($i_path, 'i_path: ');
-		$main = getImage($i_path);
-		*/
+
 		$images = new jbsImages();
 		
 		$main = $images->mainStudyImage(); // dump ($main, 'main: ');
@@ -136,48 +123,52 @@ class biblestudyViewstudieslist extends JView {
 	  	$stats = new jbStats();
 	  	$popular = $stats->top_score_site();
 	  	$this->assignRef('popular',$popular);
-		//Build Teachers
+        //Get whether "Go" Button is used then turn off onchange if it is
+        if ($params->get('use_go_button',0) == 0)
+    		{
+                $go = 'onchange="this.form.submit()"';
+            }
 		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );
-		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_teacher" );
+		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_teacher" );
 		
 		//Build Series List for drop down menu
 		$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Series' ) .' -' );
 		$types3 			= array_merge( $types3, $series );
-		$lists['seriesid']	= JHTML::_('select.genericlist',   $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series" );
+		$lists['seriesid']	= JHTML::_('select.genericlist',   $types3, 'filter_series', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_series" );
 
 		//Build message types
 		$types4[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Message Type' ) .' -' );
 		$types4 			= array_merge( $types4, $messageTypes );
-		$lists['messagetypeid']	= JHTML::_('select.genericlist',   $types4, 'filter_messagetype', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_messagetype" );
+		$lists['messagetypeid']	= JHTML::_('select.genericlist',   $types4, 'filter_messagetype', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_messagetype" );
 
 		//buld study years
 		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Year' ) .' -' );
 		$years 			= array_merge( $years, $studyYears );
-		$lists['studyyear']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_year" );
+		$lists['studyyear']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_year" );
 		
 		//build orders
 		$ord[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
 		$orders 			= array_merge( $ord, $orders );
-		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders" );
+		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_orders" );
 
 
 		$loc[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Location' ) .' -' );
 		$loc 			= array_merge( $loc, $locations );
-		$lists['locations']	= JHTML::_('select.genericlist',   $loc, 'filter_location', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_location" );
+		$lists['locations']	= JHTML::_('select.genericlist',   $loc, 'filter_location', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_location" );
 
 
 		//Build Topics
 
 		$top[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Topic' ) .' -' );
 		$top 			= array_merge( $top, $topics );
-		$lists['topics']	= JHTML::_('select.genericlist',   $top, 'filter_topic', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_topic" );
+		$lists['topics']	= JHTML::_('select.genericlist',   $top, 'filter_topic', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_topic" );
 
 
 		//Build Books
 		$boo[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select a Book') . ' -');
 		$boo		= array_merge($boo, $book);
-		$lists['books'] 	= JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_book");
+		$lists['books'] 	= JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_book");
 
         //Build Chapters
 		$chap[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select a Chapter') . ' -');
@@ -385,12 +376,12 @@ class biblestudyViewstudieslist extends JView {
 		    $chap[]     = JHTML::_('select.option', $c, $c);
 		    }
 		//$chap		= array_merge($chap, $chapter);
-		$lists['chapters'] 	= JHTML::_('select.genericlist', $chap, 'filter_chapter', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_chapter");
+		$lists['chapters'] 	= JHTML::_('select.genericlist', $chap, 'filter_chapter', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_chapter");
 
 		//Build order
 		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select an Order') . ' -');
 		$ord		= array_merge($ord, $orders);
-		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders");
+		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_orders");
 		
 		$lists['search']= $search;
 		
