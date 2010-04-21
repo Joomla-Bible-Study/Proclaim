@@ -8,12 +8,12 @@ defined('_JEXEC') or die(); ?>
 global $mainframe, $option;
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
-$teacher_menu = $this->params->get('teacher_id', 1);
-$topic_menu = $this->params->get('topic_id', 1);
-$book_menu = $this->params->get('booknumber', 101);
-$location_menu = $this->params->get('locations', 1);
-$series_menu = $this->params->get('series_id', 1);
-$messagetype_menu = $this->params->get('messagetype', 1);
+$teacher_menu = $this->params->get('teacher_id');
+$topic_menu = $this->params->get('topic_id');
+$book_menu = $this->params->get('booknumber'); 
+$location_menu = $this->params->get('locations');
+$series_menu = $this->params->get('series_id');
+$messagetype_menu = $this->params->get('messagetype');
 //$params = $mainframe->getPageParameters();
 $document =& JFactory::getDocument();
 //$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
@@ -78,18 +78,18 @@ if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
     <?php if ($params->get('intro_show') == 1) { echo $params->get('list_intro');}?>
    </p></td></tr></table> </div>
     <div id="bsdropdownmenu">
-    <span id="gobutton"><input type="submit" value="<?php JText::_('Go'); ?>" /></span>
+    <span id="gobutton"><input type="submit" value="<?php echo JText::_('Go'); ?>" /></span>
 
 <?php 
 
 if (($this->params->get('show_locations_search') > 0 && !($location_menu)) || $this->params->get('show_locations_search') > 1) { echo $this->lists['locations'];}
-if (($this->params->get('show_book_search') > 0 && !($book_menu)) || $this->params->get('show_book_search') > 1) {  echo JText::_('Begin Chapter: ').' <input type="text" id="minChapt" name="minChapt" size="3"> - '.JText::_('End Chapter: ').' <input type="text" id=maxChapt" name="maxChapt" size="3"> '.$this->lists['books']; }
-if (($this->params->get('show_teacher_search') > 0 && !($teacher_menu)) || $this->params->get('show_teacher_search') > 1) { echo $this->lists['teacher_id'];  }   
-if (($this->params->get('show_series_search') > 0 && !($series_menu)) || $this->params->get('show_series_search') > 1) { echo $this->lists['seriesid'];  }   
-if (($this->params->get('show_type_search') > 0 && !($messagetype_menu)) || $this->params->get('show_type_search') > 1) { echo $this->lists['messagetypeid'];  }   
+if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1) {  echo JText::_('Begin Chapter: ').' <input type="text" id="minChapt" name="minChapt" size="3"> - '.JText::_('End Chapter: ').' <input type="text" id=maxChapt" name="maxChapt" size="3"> '.$this->lists['books']; }
+if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1) { echo $this->lists['teacher_id'];  }   
+if (($this->params->get('show_series_search') > 0 && ($series_menu == -1)) || $this->params->get('show_series_search') > 1) { echo $this->lists['seriesid'];  }   
+if (($this->params->get('show_type_search') > 0 && ($messagetype_menu == -1)) || $this->params->get('show_type_search') > 1) { echo $this->lists['messagetypeid'];  }   
 if ($this->params->get('show_year_search') > 0) { echo $this->lists['studyyear'];  }   
 if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
-if (($this->params->get('show_topic_search') > 0 && !($topic_menu)) || $this->params->get('show_topic_search') > 1) {  echo $this->lists['topics'];}
+if (($this->params->get('show_topic_search') > 0 && ($topic_menu == -1)) || $this->params->get('show_topic_search') > 1) {  echo $this->lists['topics'];}
 if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
 
 ?>
