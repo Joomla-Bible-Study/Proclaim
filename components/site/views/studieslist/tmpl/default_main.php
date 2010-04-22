@@ -88,12 +88,12 @@ if (($this->params->get('show_locations_search') > 0 && !($location_menu)) || $t
 if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1)
     {
         echo $this->lists['books'] .' ';
-        echo JText::_('Begin Chapter: ').' <input type="text" id="minChapt" name="minChapt" size="3"';
+        echo JText::_('From chapter: ').' <input type="text" id="minChapt" name="minChapt" size="3"';
         if (JRequest::getInt('minChapt','','post')) {
             echo 'value="'.JRequest::getInt('minChapt','','post').'"';
         }
         echo '> ';
-        echo JText::_('End Chapter: ').' <input type="text" id=maxChapt" name="maxChapt" size="3"';
+        echo JText::_('To chapter: ').' <input type="text" id=maxChapt" name="maxChapt" size="3"';
         if (JRequest::getInt('maxChapt','','post')) {
             echo 'value="'.JRequest::getInt('maxChapt','','post').'"';
         }
