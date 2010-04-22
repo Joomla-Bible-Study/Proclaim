@@ -244,10 +244,10 @@ function getseriesElementnumber($subcustom)
 function getSeriesstudies($id, $params, $admin_params, $template)
 {
 	$studies = '';
-	$limit = '';
-	$nolimit = JRequest::getVar('nolimit', 'int', 0);
-	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
-	if ($nolimit == 1) {$limit = '';}
+//	$limit = '';
+//	$nolimit = JRequest::getVar('nolimit', 'int', 0);
+//	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
+//	if ($nolimit == 1) {$limit = '';}
 	$db	= & JFactory::getDBO();
 	$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = '.$id;
 	$db->setQuery($query);
@@ -266,7 +266,7 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	. ' LEFT JOIN #__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)'
 	. '	LEFT JOIN #__bsms_topics ON (s.topics_id = #__bsms_topics.id)'
 	. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)'
-	.' WHERE s.series_id = '.$id.' AND s.published = 1 ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC').$limit;
+	.' WHERE s.series_id = '.$id.' AND s.published = 1 ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC');
 	$db->setQuery($query);
 	$result = $db->loadObjectList();
 	$numrows = $db->getAffectedRows();
@@ -309,15 +309,13 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	//$studies .= '<td class="studies">';
 	$templatemenuid = $params->get('serieslisttemplateid');
 					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
-	$studies .= '</tr>
-	<tr><td>';
-	
-		$studies .= '</td></tr>';
-	if ($params->get('series_list_return') > 0) 
-		{
-			
-			$studies .= getSeriesFooter($templatementid, $id).'</table>';
-		}
+	$studies .= '</tr></table>';
+//	if ($params->get('series_list_return') > 0) 
+//		{
+//			
+//			$studies .= getSeriesFooter($templatementid, $id).'</table>';
+//		}
+        
 return $studies;
 }
 

@@ -51,7 +51,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 
 	case 0:
 		?></tbody></table><table id="seriesstudytable" cellspacing="0"><tbody>
-		<?php
+		<?php 
 		$studies = getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
 		echo $studies;
 		?>  </td></tr></tbody></table>

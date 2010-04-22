@@ -111,11 +111,6 @@ class biblestudyViewseriesdetail extends JView
 		//$this->assignRef('scripture', $scripture);
 		parent::display($tpl);
 	}
-	function _displayPagebreak($tpl)
-	{
-		$document =& JFactory::getDocument();
-		$document->setTitle(JText::_('PGB ARTICLE PAGEBRK'));
-		parent::display($tpl);
-	}
+
 }
 ?>
