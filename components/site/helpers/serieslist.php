@@ -309,7 +309,7 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	//$studies .= '<td class="studies">';
 	$templatemenuid = $params->get('serieslisttemplateid');
 					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
-	$studies .= '</tr></table>';
+	$studies .= '</tr>';
 //	if ($params->get('series_list_return') > 0) 
 //		{
 //			

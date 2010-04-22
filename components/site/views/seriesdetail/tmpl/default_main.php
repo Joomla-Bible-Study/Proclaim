@@ -54,7 +54,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 		<?php 
 		$studies = getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
 		echo $studies;
-		?>  </td></tr></tbody></table>
+		?>  </tbody></table>
 		<?php
 		break;
 		
