@@ -113,7 +113,7 @@ switch ($this->params->get('show_teacher_studies'))
     break;
     
     case 2:
-    ?></table><table id="bsm_teachertable" cellspacing="0">
+    ?>    <table id="bsm_teachertable" cellspacing="0">
 <tr class="titlerow"><td class="title" colspan="3"><?php echo $this->params->get('label_teacher');?></td></tr></table><table id="bslisttable" cellspacing="0"><tr><td><?php
 	$headerCall = JView::loadHelper('header');
      $header = getHeader($this->studies, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule=0);
@@ -141,7 +141,7 @@ switch ($this->params->get('show_teacher_studies'))
 
 
 
-?> </td></tr></table>
+?> </td></tr>
 <?php
 //if ($this->menuid){$link = '&Itemid='.$this->menuid;}?>
 <tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&templatemenuid='.$templatemenuid;?>"><?php echo '<--'.JText::_('Return to Teacher List');?></a> <?php echo ' | <a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.(int)$teacher->id.'&templatemenuid='.$templatemenuid.'">'.JText::_('More From This Teacher').' --></a>';
