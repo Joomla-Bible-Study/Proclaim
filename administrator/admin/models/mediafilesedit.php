@@ -1,41 +1,23 @@
 <?php
 defined('_JEXEC') or die();
 
-require_once(JPATH_COMPONENT.DS.'models'.DS.'model.php');
+jimport('joomla.application.component.model');
 
-class biblestudyModelmediafilesedit extends BSMModel {
-
-	var $name = 'MediaFile';
-	var $association = array(
-		array(
-			'table' => 'studies',
-			'alias' => 'Study',
-			'foreign_key' => 'study_id',
-			'fields' => array('studytitle')
-		),
-		array(
-			'table' => 'media',
-			'alias' => 'Media',
-			'foreign_key' => 'media_image',
-			'fields' => array('media_image_name')
-		),
-		array(
-			'table' => 'content',
-			'alias' => 'Content',
-			'prefix' => null,
-			'foreign_key' => 'article_id',
-			'fields' => array('id', 'title')
-		)
-	);
-	var $table = 'mediafiles';
-	
+class biblestudyModelmediafilesedit extends JModel {
+	/**
+	 * Constructor that retrieves the ID from the request
+	 *
+	 * @access	public
+	 * @return	void
+	 */
 	var $_admin;
-	
 	function __construct()
 	{
 		parent::__construct();
 		$admin = $this->getAdmin();
 		$this->_admin_params = new JParameter($admin[0]->params);
+		$array = JRequest::getVar('cid',  0, '', 'array');
+		$this->setId((int)$array[0]);
 	}
 
 
@@ -47,10 +29,10 @@ class biblestudyModelmediafilesedit extends BSMModel {
 	}
 
 
-	function &getData() {
-		return parent::getData(array('published', 'createdate', 'ordering', 'mediacode', 'size', 'filename', 'special', 'link_type', 'comment'));
+	function &getData()
+	{
 		// Load the data
-		/*if (empty( $this->_data )) {
+		if (empty( $this->_data )) {
 			$query = ' SELECT * FROM #__bsms_mediafiles '.
 					'  WHERE id = '.$this->_id;
 			$this->_db->setQuery( $query );
@@ -84,7 +66,7 @@ class biblestudyModelmediafilesedit extends BSMModel {
 			$this->_data->params = null;
 				
 				}
-		return $this->_data;*/
+		return $this->_data;
 	}
 
 	/**
