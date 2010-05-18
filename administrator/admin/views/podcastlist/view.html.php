@@ -26,7 +26,8 @@ class biblestudyViewpodcastlist extends JView
 		//Checks to see if the admin allows rows to be deleted
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();
-		JToolBarHelper::addNewX();
+	//	JToolBarHelper::addNewX();
+        JToolBarHelper::addNew();
 		JToolBarHelper::custom( 'writeXMLFile', 'xml.png', 'Write XML Files', 'Write XML Files', false, false );
 		//JToolBarHelper::custom('task', 'icon', '', 'Alt', false);
 		//JToolBarHelper::customX('writeXML','save.png','writeXML','Write XML');

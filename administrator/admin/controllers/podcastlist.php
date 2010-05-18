@@ -19,10 +19,17 @@ class biblestudyControllerpodcastlist extends JController
   parent::__construct();
 
   // Register Extra tasks
-  	$this->registerTask('WriteXMLFile' );
- 
-   	
- }
+  	$this->registerTask('add', 'edit' );
+  }
+  function edit()
+ {
+  JRequest::setVar( 'view', 'podcastedit' );
+  JRequest::setVar( 'layout', 'form' );
+  JRequest::setVar('hidemainmenu', 1);
+
+  parent::display();
+ }  	
+
  function writeXMLFile()
  {
 

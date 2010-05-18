@@ -70,9 +70,9 @@ class biblestudyViewstudiesedit extends JView
 		array_unshift($books, JHTML::_('select.option', '0', JText::_('- Select a Book -')));
 		*/
 		
-		require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );
-		$toolbar = biblestudyHelperToolbar::getToolbar();
-		$this->assignRef('toolbar', $toolbar);
+	//	require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );
+	//	$toolbar = biblestudyHelperToolbar::getToolbar();
+	//	$this->assignRef('toolbar', $toolbar);
 		
 		$javascript			= 'onchange="changeDisplayImage();"';
 		$directory = DS.'images/'.$admin_params->get('study_images', 'stories');
