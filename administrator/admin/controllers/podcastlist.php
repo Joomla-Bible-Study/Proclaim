@@ -30,6 +30,22 @@ class biblestudyControllerpodcastlist extends JController
   parent::display();
  }  	
 
+/**
+ * remove record(s)
+ * @return void
+ */
+ function remove()
+ {
+  $model = $this->getModel('podcastedit');
+  if(!$model->delete()) {
+   $msg = JText::_( 'Error: One or More podcast Could not be Deleted' );
+  } else {
+   $msg = JText::_( 'Podcast(s) Deleted' );
+  }
+
+  $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
+ }
+ 
  function writeXMLFile()
  {
 
