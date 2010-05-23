@@ -53,6 +53,9 @@ function getElementnumber ($rowid)
 			case 'teacher-title-name' :
 				$rowid = 8;
 				break;
+			case 'teacher-image':
+				$rowid = 30;
+				break;
 			case 'series_text' :
 				$rowid = 9;
 				break;

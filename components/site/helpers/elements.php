@@ -191,6 +191,14 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
             $elementid->headertext = JText::_('Downloads');
             $elementid->element = $row->totaldownloads;
             break;
+        case 30:
+        	$elemntid->id = 'teacher-image';
+        	$elemtnid->headetext = JText::_('Teacher Image');
+        	$query = "SELECT thumb FROM #__bsms_teachers WHERE id = $row->id";
+        	$db->setQuery($query);
+   			$thumb = $db->loadObject();
+        	$elementid->element = '<img src="'.$thumb->thumb.'"/>';
+        	break;
 		case 100:
 			$elementid->id = '';
 			$elementid->headertext = '';
