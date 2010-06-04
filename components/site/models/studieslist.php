@@ -42,7 +42,7 @@ class biblestudyModelstudieslist extends JModel
 		
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
-		
+		$this->_params = $params;
 		//dump ($params, 'params: ');
 		$config = JFactory::getConfig();
 		// Get the pagination request variables
@@ -230,10 +230,23 @@ function setSelect($string){
 
 function getBooks() {
 		if (empty($this->_Books)) {
-			$query = 'SELECT id, booknumber AS value, bookname AS text, published'
-  . ' FROM #__bsms_books'
-  . ' WHERE published = 1'
-  . ' ORDER BY booknumber';
+		  //get parameters
+          $booklist = $this->_params->get('booklist'); 
+          if ($booklist == 1)
+          {
+            $query = 'SELECT DISTINCT s.booknumber AS value, s.published AS spublished, b.id, b.booknumber AS bbooknumber, b.bookname AS text FROM #__bsms_studies AS s
+LEFT JOIN #__bsms_books AS b ON ( b.booknumber = s.booknumber )
+WHERE s.published =1 AND b.id IS NOT NULL
+ORDER BY bbooknumber';
+          }
+        else
+        {
+      		$query = 'SELECT id, booknumber AS value, bookname AS text, published'
+            . ' FROM #__bsms_books'
+            . ' WHERE published = 1'
+            . ' ORDER BY booknumber';
+        }	
+  
 			$this->_Books = $this->_getList($query);
 		}
 		return $this->_Books;
