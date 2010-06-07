@@ -207,7 +207,7 @@ class fx_Upgrade {
 			<?php
 		}
 
-		$componentBaseDir = BIBLESTUDY_ROOT_PATH_ADMIN .DS. 'components/';
+		$componentBaseDir = BIBLESTUDY_ROOT_PATH_ADMIN .DS. 'components' .DS;
 		
 		$this->_upgradeDir = $componentBaseDir . $this->component .DS . $this->subdir;
 

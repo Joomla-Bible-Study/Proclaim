@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <comupgrade version="1.0">
-	<install version="6.2.0_beta1" versiondate="2010-04-20" build="614" versionname="Deuteronomy">
+	<install version="6.2.0_beta2" versiondate="2010-06-06" build="614" versionname="Deuteronomy">
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `id` int(11) NOT NULL,
 					  `podcast` text,
@@ -397,7 +397,7 @@
 			<query mode="silenterror">ALTER TABLE #__bsms_mediafiles ADD COLUMN params TEXT NULL AFTER virtueMart_id</query>
 			<phpfile name="biblestudy.613.upgrade.php" />	
 		</version>
-		<version version="6.2.0_beta1" versiondate="2010-04-20" build="614" versionname="Deuteronomy">
+		<version version="6.2.0_beta2" versiondate="2010-06-07" build="614" versionname="Deuteronomy">
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 				  `id` int(3) NOT NULL AUTO_INCREMENT,
 				  `study_id` int(3) NOT NULL DEFAULT '0',

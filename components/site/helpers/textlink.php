@@ -62,7 +62,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	
     
 	$linktext .= '
-	<a href="'.$link.'"><img src="'.JURI::base().$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" />';
+	<a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" />';
 	
 	if ($params->get('tooltip') >0) {$linktext .= '</span>';}
 	$linktext .= '</a></span>';
