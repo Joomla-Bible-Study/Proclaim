@@ -10,6 +10,7 @@ defined('_JEXEC') or die('Restricted access');
 		$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
 		include_once($path1.'custom.php');
 		include_once($path1.'helper.php');
+        include_once($path1.'scripture.php');
 		$admin_params = getAdminsettings();
 		$config =& JFactory::getConfig();
 		$lb_abspath    = JPATH_SITE;
@@ -162,24 +163,29 @@ else {return $msg= ' No media files were associated with a podcast. ';}
 		else { $hours = '00'; }
 		if (!$episode->media_seconds) {$episode->media_seconds = 1;}
 		//$podcast_title = 1;
+        $params->set('show_verses', '1');
+        $esv = 0;
+		$scripturerow = 1;
+        $episode->id = $episode->study_id;
+        $scripture = getScripture($params, $episode, $esv, $scripturerow); 
 		$pod_title = $podinfo->episodetitle;
 
 		switch ($pod_title)
 		{
 			case 0:
-				$title = $episode->bookname.' '.$episode->chapter_begin.' - '.$episode->studytitle;
+				$title = $scripture.' - '.$episode->studytitle;
 				break;
 			case 1:
 				$title = $episode->studytitle;
 				break;
 			case 2:
-				$title = $episode->bookname.' '.$episode->chapter_begin;
+				$title = $scripture;
 				break;
 			case 3:
-				$title = $episode->studytitle.' - '.$episode->bookname.' '.$episode->chapter_begin;
+				$title = $episode->studytitle.' - '.$scripture;
 				break;
 			case 4:
-				$title = $episodedate.' - '.$episode->bookname.' '.$episode->chapter_begin.' - '.$episode->studytitle;
+				$title = $episodedate.' - '.$scripture.' - '.$episode->studytitle;
 				break;
 			case 5:
 				$element = getCustom($rowid='row1col1', $podinfo->custom, $episode, $params);
