@@ -66,6 +66,9 @@ class AvReloadedViewPopup extends JView
         	require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
         	$media = new jbsMedia();
         	$play = $media->hitPlay($divid);
+            //code to determine user browser and add code to force IE8 into IE7 mode
+            if (strpos($_SERVER['HTTP_USER_AGENT'],"MSIE 8")) {header("X-UA-Compatible: IE=7");}
+            if (strpos($_SERVER['HTTP_USER_AGENT'],"MSIE 8")) {header("X-UA-Compatible: IE=EmulateIE7");}
        	//end code added JoomlaBibleStudy 6.2.0
        	
         if (($itemid >= 0) && ($divid != null)) {
@@ -74,7 +77,7 @@ class AvReloadedViewPopup extends JView
                 $itemid." AND divid ='".$divid."'";
             $db->setQuery($query);
             $db->query();
-            $data =& $db->loadObject();
+            $data =& $db->loadObject();  
             // Cleanup record older than 1 day
             // TODO: Investigate caching problem
             // $db->setQuery('DELETE FROM #__avr_popup WHERE wtime < SUBDATE(NOW(), 1)');
