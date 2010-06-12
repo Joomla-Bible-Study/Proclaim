@@ -30,7 +30,7 @@ class biblestudyController extends JController
         $item = JRequest::getInt('Itemid','','get');
         $id = JRequest::getInt('id','get');
         
-        if ($itemid) {$Itemid = '&Itemid='.$item;}
+        if ($item) {$Itemid = '&Itemid='.$item;}
         //dump ($returnid, 'returnid: ');
         if ($start == 1)
         {
