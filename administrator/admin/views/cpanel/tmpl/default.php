@@ -276,7 +276,8 @@ table.fbstat .col2 {
 <div class="fbstatscover">
   <?php 
    
-   include_once (JPATH_COMPONENT_ADMINISTRATOR .'/lib/biblestudy.stats.class.php');
+//   include_once (JPATH_COMPONENT_ADMINISTRATOR .'/lib/biblestudy.stats.class.php');
+   include_once (JPATH_COMPONENT .'/lib/biblestudy.stats.class.php');
     ?>
   <table cellspacing="1"  border="0" width="100%" class="fbstat">
     <caption>

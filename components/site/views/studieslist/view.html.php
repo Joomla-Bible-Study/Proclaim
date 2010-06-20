@@ -2,7 +2,7 @@
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
-require_once (JPATH_ROOT  .DS. 'administrator' .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.stats.class.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.stats.class.php');
 class biblestudyViewstudieslist extends JView {
 	
 	/**
@@ -34,12 +34,12 @@ class biblestudyViewstudieslist extends JView {
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 		
 		//Import Scripts
-		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
-		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/jquery.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/biblestudy.js');
 		//$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 		//Styles from tooltip.css moved to assets/css/biblestudy.css
 		//Import Stylesheets
-		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/css/general.css');
 		
 		$url = $params->get('stylesheet');
 		if ($url) {$document->addStyleSheet($url);}

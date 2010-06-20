@@ -46,12 +46,57 @@ echo $this->params->render( 'params' , 'ALLVIDEOSRELOADED');
 echo $pane->endPanel(); 
 
 echo $pane->endPane();?>
-<tr><td class="key"><?php echo JText::_('Default Study List Image');?></td><td><?php echo $this->lists['main']; echo JText::_(' Default for Study List Page Image. Media images folder used (set above).');?></td></tr>
-<tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php echo $this->lists['study']; echo JText::_(' Default for study thumbnail. Set Folder above.');?></td></tr>
-<tr><td class="key"><?php echo JText::_('Default Series Image');?></td><td><?php echo $this->lists['series']; echo JText::_(' Default for series thumbnail. Set Folder above.');?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Study List Image');?></td><td><?php 
+if ($this->lists['main'])
+{
+    echo $this->lists['main']; echo JText::_(' Default for Study List Page Image. Media images folder used (set above).');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder');
+}
+?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php 
+if ($this->lists['study'])
+{
+    echo $this->lists['study']; echo JText::_(' Default for study thumbnail. Set Folder above.');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder');
+}
+?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Series Image');?></td><td><?php 
+if ($this->lists['series'])
+{
+    echo $this->lists['series']; echo JText::_(' Default for series thumbnail. Set Folder above.');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder');
+}
+?></td></tr>
 
-<tr><td class="key"><?php echo JText::_('Default Teacher Image');?></td><td><?php echo $this->lists['teacher']; echo JText::_(' Default for teacher thumbnail. Set Folder above.');?></td></tr>
-<tr><td class="key"><?php echo JText::_('Download Image');?></td><td><?php echo $this->lists['download']; echo JText::_(' Default for download image. Must be called download.png. Media images folder used (set above).');?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Teacher Image');?></td><td><?php 
+if ($this->lists['teacher'])
+{
+    echo $this->lists['teacher']; echo JText::_(' Default for teacher thumbnail. Set Folder above.');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder');
+}
+?></td></tr>
+<tr><td class="key"><?php echo JText::_('Download Image');?></td><td><?php 
+if ($this->lists['download'])
+{
+    echo $this->lists['download']; echo JText::_(' Default for download image. Must be called download.png. Media images folder used (set above).');
+}
+else
+{
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder');
+}
+?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Show/Hide Image for Landing Page');?></td><td><?php echo $this->lists['showhide']; echo JText::_(' Default for Show/Hide Image on Landing Page. Media images folder used (set above).');?></td></tr>
 
 <?php //test for sh404SEF

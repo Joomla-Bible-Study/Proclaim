@@ -45,7 +45,7 @@ $db = JFactory::getDBO();
 
 // This adds some css for the Landing Page
 
-$dest = JPATH_SITE.DS.'components/com_biblestudy/assets/css/biblestudy.css';
+$dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
 $landingread = JFile::read($dest);
 $landingexists = 1;
 	$landingexists = substr_count($landingread,'#landinglist');

@@ -28,10 +28,11 @@ class JElementstudydetails extends JElement
 	{
 		$db = &JFactory::getDBO();
 
-		$query = "SELECT #__bsms_studies.id, #__bsms_books.id AS bid, #__bsms_studies.booknumber AS bnumber, #__bsms_books.bookname, CONCAT(#__bsms_studies.id,' - ', #__bsms_books.bookname,':',#__bsms_studies.chapter_begin,' - ',DATE_FORMAT(#__bsms_studies.studydate,'%Y-%m-%d')) AS text"
+	//	$query = "SELECT #__bsms_studies.id, #__bsms_books.id AS bid, #__bsms_studies.booknumber AS bnumber, #__bsms_books.bookname, CONCAT(#__bsms_studies.id,' - ', #__bsms_books.bookname,':',#__bsms_studies.chapter_begin,' - ',DATE_FORMAT(#__bsms_studies.studydate,'%Y-%m-%d')) AS text"
+ 	$query = "SELECT #__bsms_studies.id, #__bsms_studies.studytitle, #__bsms_books.id AS bid, #__bsms_studies.booknumber AS bnumber, #__bsms_books.bookname, CONCAT(#__bsms_studies.id,' - ', #__bsms_studies.studytitle,' - ',DATE_FORMAT(#__bsms_studies.studydate,'%Y-%m-%d')) AS text"
 		. "\n FROM #__bsms_studies"
 		. "\n LEFT JOIN #__bsms_books ON (#__bsms_books.booknumber = #__bsms_studies.booknumber)"
-		. "\n WHERE #__bsms_studies.published = 1"
+		. "\n WHERE #__bsms_studies.published = 1 AND #__bsms_studies.id IS NOT NULL"
 		. "\n ORDER BY #__bsms_studies.studydate DESC"
 		;
 		$db->setQuery( $query );
