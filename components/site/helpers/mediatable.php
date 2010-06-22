@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @author Tom Fuller
+ * @copyright 2010
+ */
+
 defined('_JEXEC') or die();
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
@@ -80,108 +86,26 @@ if (!$row->id) {return FALSE;}
 	  $mime = '';
 	  $path1 = getFilepath($media->id, $idfield, $mime);
 	  
-      //dump ($playertype, 'playertype: ');
-      $playertype = 0;
-      if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
-      {
-      	$playertype = 1;
-      }
-      if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
-	  {
-	  	$playertype = 2;
-	  } 
-	 
-      	$view = JRequest::getWord('view', 'studieslist','get'); 
-        $t = JRequest::getInt('templatemenuid',1,'get');
-		$start = JRequest::getInt('start',0,'get'); //dump ($start, 'start: ');
-		$player = JRequest::getInt('player','','get');
-	    $mediaid = JRequest::getInt('mediaid','','get');
-        
-          	switch ($view)
-    		{
-    			case 'studieslist':
-    				$returnid = $row->study_id;
-    				break;
-    			
-    			case 'seriesdetail':
-                //    $returnid = $row->id;
-    				$returnid = JRequest::getInt('returnid','get');
-    			//	JRequest::setVar('mediaid',$media->id,'get',true);
-    			//	$mediaid = JRequest::getInt('mediaid','','get');
-    				break;
-    			
-    			case 'teacherdisplay':
-    			//	$cid = JRequest::getInt('id','','get');
-    				$returnid = $row->teacher_id;
-                //    dump ($returnid, 'returnid: ');
-    			//	$mediaid = JRequest::getInt('mediaid','','get');
-    		//    	dump ($row->teacher_id, 'row: ');
-                    break;
-    			case 'studydetails':
-                    $studyid = '&id='.$row->study_id;
-                  $returnid = $row->study_id.$studyid;
-                  $mediaid = JRequest::getInt('mediaid','','get');
-                  
-                  break;
-                    	
-    			default:
-    		//		$cid = $row->id;
-    				break;	
-    			
-    		}
-      
-		
        $playerwidth = $params->get('player_width');
        $playerheight = $params->get('player_height');
        if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
        if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
-    //   dump ($playerwidth, 'width: ');
-    //   dump ($playerheight, 'height: ');
-	//	dump ($player, 'player: ');
-	//	dump ($start, 'start: ');
-	//	dump ($mediaid, 'mediaid: ');
-	//	dump ($_GET, 'get: ');
-   // dump ($returnid, 'returnid: '); dump ($view, 'view: ');
-		
-		//	dump ($playertype, 'playertype: ');
+    
       switch ($playertype)
       {
       	case 0:
-      	
-          //	$media1_link = '<form action="index.php" method="post"><input type="hidden" id="view" name="view" value="'.$view.'"><input type="hidden" name="controller" id="controller" value="'.$view.'"><input type="hidden" name="task" id="task" value="play"><input type="hidden" name="start" id="start" value="1"><input type="hidden" id="player" name="player" value="0"><input type="hidden" name="templatemenuid" id="templatemenuid" value="'.$t.'"><input type="hidden" id="mediaid" name="mediaid" value="'.$media->id.'"><input type="image" src="'.$src.'" height="'.$height.'" width="'.$width.'" title=" Click to submit. '.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'" value="submit"></form>';
-    		  $media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=0&start=1&returnid='.$returnid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>'; 
-    		  
-          	if ($mediaid == $media->id && $start == 1 && $player==0)
-          	{
-          		$play = $getMedia->hitPlay($media->id);
-                echo "<script>";
-    			echo "window.open('".$path1."','newwindow', config='height=".$playerheight.",width=".$playerwidth.",toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no, directories=no, status=no')";
-    			echo "</script>";
-          	}
-          
-    		break;
-		
+      	   	$play = $getMedia->hitPlay($media->id);
+            $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+        break;
+
         case 1:
-//	dump ($mediaid, 'mediaid: ');
-//    dump ($media->id, 'media->id: ');
-    		if ($player == 1 && $start == 1 && $mediaid == $media->id)
-    		{
-    			$play = $getMedia->hitPlay($media->id);
-                $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
-    		}
-    		else 
-    		{
-    			$media1_link = '<a href="'.JRoute::_(JURI::base().'index.php?option=com_biblestudy&view='.$view.'&mediaid='.$media->id.'&templatemenuid='.$t.'&task=play&player=1&start=1&returnid='.$returnid).'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" title="'.$mimetype.' '.$duration.' '.$filesize.'" alt="'.$src.'"></a>'; 
-    		}
-    		break;
+    		$play = $getMedia->hitPlay($media->id);
+            $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+    	break;
 
 		case 2:
-       // if ($player == 2 && $start == 1 && $mediaid == $media->id)
-    	//	{$play = $getMedia->hitPlay($media->id);}
-			$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
+       		$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
 		break;
-		
-		
       }
 
 	  if ($media->docMan_id > 0)
@@ -333,3 +257,5 @@ function getVirtuemart($media, $width, $height, $src, $params)
     $mediaRows = $database->loadObjectList();
     return $mediaRows;
     }
+
+?>
