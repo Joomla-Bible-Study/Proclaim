@@ -90,7 +90,16 @@ if (!$row->id) {return FALSE;}
        $playerheight = $params->get('player_height');
        if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
        if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
-    
+     $playertype = 0;
+      if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
+      {
+      	$playertype = 1;
+      }
+      if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
+	  {
+	  	$playertype = 2;
+	  } 
+
       switch ($playertype)
       {
       	case 0:
