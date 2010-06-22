@@ -48,7 +48,7 @@
 		<param name="show_verses" type="list" default="0" label="Chapters/Verses" description="Choose whether just chapter(s) of Bible study book shown or verses too">
 				<option value="0">Show only chapters</option>
 				<option value="1">Show verses and chapters</option>
-		</param>			
+		</param>
 		<param name="stylesheet" type="text" size="50" default="" label="Path to Your Stylesheet" description="Path from Joomla root to an alternate stylesheet (for advanced users only). Overrides page styles" />
 			<param name="date_format" type="list"  default="2" label="Date format" description="Set the date display format">
 					<option value="0">Sep 1, 2007</option>
@@ -66,12 +66,12 @@
 			<option value="1">Hours/min/sec</option>
 			<option value="2">H:M:S</option>
 		</param>
-</params>	
-<params group="MEDIA">	
+</params>
+<params group="MEDIA">
 			<param name="compat_mode" type="list" default="0" label="Compatibility Mode" description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
 				<option value="0">No</option>
 				<option value="1">Yes</option>
-		</param>		
+		</param>
 			<param name="useavr" type="list" default="0" label="Use AllVideosReloaded for all media" description="If installed, use AllVideosReloaded 1.2.3 or higher player for all video and audio (overrides local settings)">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
@@ -170,7 +170,7 @@
 				</param>
 			<param name="show_year_search" type="list" default="1" label="Show/Hide Year search" description="Shows or hides the year drop down box">
 					<option value="0">Hide</option>
-					<option value="1">Show </option>
+                                        <option value="1">Show</option>
 				</param>
 			<param name="show_order_search" type="list" default="1" label="Show/Hide Ascending/Descending" description="Shows or hides the drop down for ordering the year display">
 					<option value="0">Hide</option>
@@ -205,7 +205,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -255,7 +255,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -304,7 +304,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -352,7 +352,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -396,7 +396,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -446,7 +446,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -495,7 +495,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -543,7 +543,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -593,7 +593,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -643,7 +643,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -692,7 +692,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -740,7 +740,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -784,7 +784,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -834,7 +834,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -883,7 +883,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -931,7 +931,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1017,7 +1017,7 @@
 			<param name="show_scripture_link" type="list" default="0" label="Use Content Plugins" description="Choose whether to apply content plugins on study text. You can use the Scripturelinks plugin for all references in study text, for example.">
                 <option value="0">No Plugins</option>
 				<option value="1">Use All Plugins</option>
-				<option value="2"> Use Only Scripture Links</option>
+                                <option value="2">Use Only Scripture Links</option>
 				</param>
 				<param name="show_comments" type="list" default="1" label="Access level for showing comments" description="Sets access level for viewing comments.">
 				<option value="0">Everyone</option>
@@ -1324,7 +1324,7 @@
 	<option value="1">Use This as view</option>
 			</param>
 			<param name="series_detailcode" type="textarea" rows="10" cols="100" label="Series Detail Template Code" description="Use HTML to create your repeatable template.  Any HTML will do. &lt;BR&gt;&lt;BR&gt;&lt;B&gt;&lt;U&gt;TEMPLATE CODES&lt;/U&gt;&lt;/B&gt;&lt;BR&gt; {{title}} - Series Title &lt;BR&gt; {{teacher}} - Teacher &lt;BR&gt; {{teachertitle}} - Teacher Title &lt;BR&gt; {{description}} - Series Description" />
-</params>	
+</params>
 <params group="TOOLTIP">
 				<param name="tip_title" type="text" default="Sermon Information" size="100" label="ToolTip Title" description="Type in a title for the ToolTip" />
 				<param name="tip_item1_title" type="text" default="Title" label="ToolTip Label 1" description="Type in a label for this ToolTip item" size="100" />
@@ -1442,7 +1442,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1490,7 +1490,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1537,7 +1537,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1583,7 +1583,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1625,7 +1625,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1673,7 +1673,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1720,7 +1720,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1766,7 +1766,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1814,7 +1814,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1862,7 +1862,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1909,7 +1909,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1955,7 +1955,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -1997,7 +1997,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -2045,7 +2045,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -2092,7 +2092,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
@@ -2138,7 +2138,7 @@
 				<option value="7">Teacher {teachername}</option>
 				<option value="8">Title + Teacher {teacher-title-name}</option>
 				<option value="9">Series {series_text}</option>
-				<option value="26">Series Thumbail {series_thumbnail}</option>
+                                <option value="26">Series Thumbnail {series_thumbnail}</option>
 				<option value="27">Series Description {series_description}</option>
 				<option value="10">Date {date}</option>
 				<option value="11">Submitted By {submitted}</option>
