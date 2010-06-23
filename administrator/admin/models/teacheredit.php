@@ -67,7 +67,7 @@ class biblestudyModelteacheredit extends JModel
 			$this->_data->short = null;
 			$this->_data->ordering = null;
 			$this->_data->catid = null;
-			$this->_data->list_show = null;
+			$this->_data->list_show = 1;
 			$this->_data->teacher_thumbnail = ($admin[0]->teacher ? $admin[0]->teacher : null);
 			$this->_data->teacher_image = null;
 			//TF added this

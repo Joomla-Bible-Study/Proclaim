@@ -19,15 +19,9 @@ $templatemenuid = $this->params->get('teachertemplateid');
 	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 $studieslisttemplateid = $this->params->get('studieslisttemplateid');
 	$images = new jbsImages();
-//	$image = $images->getTeacherThumbnail($teacher->teacher_image, $teacher->image);
+
 	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('templatemenuid',1,'get','int');}
-//	if (!$teacher->teacher_image) { $image->path = $teacher->image; $image->height = $teacher->imageh; $image->width = $teacher->imagew; }
-//	else
-//	{
-//		if ($teacher->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$teacher->teacher_image; }
-//		if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$teacher->teacher_image;}
-//		$image = getImage($i_path);
-//	}
+
 ?>
 <div id="biblestudy" class="noRefTagger">
 <table id="bsm_teachertable" cellspacing="0">
@@ -36,16 +30,7 @@ $studieslisttemplateid = $this->params->get('studieslisttemplateid');
 <td class="bsm_teacherthumbnail">
 <?php 
 $image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thumb);
-//if (!$teacher->teacher_image) { $image->path = $teacher->image; $image->height = $teacher->imageh; $image->width = $teacher->imagew; }/
-//	else
-//	{
-//		if ($teacher->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$teacher->teacher_image; }
-//		if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$teacher->teacher_image;}
-//		$image = getImage($i_path);
-//	}
-
-//if ($teacher->image || $teacher->teacher_image) 
-//		{ 
+	{ 
 	if ($teacher->title) {$teacherdisplay = $teacher->teachername.' - '.$teacher->title;}else {$teacherdisplay = $teacher->teachername;}?>
         <img src="<?php echo JURI::base().$image->path;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" border="1" alt="<?php echo $teacherdisplay;?>" />
         <?php 

@@ -1059,7 +1059,7 @@
 				<option value="2">Show Study Display with Studieslist set up</option>
 				<option value="3">Show Study Display with Custom Studieslist set up</option>
 			</param>
-			<param name="studies" type="text" default="5" label="Number of Studies in Teacher's view" description="Type in the number of studies to show for each teacher in the teacher's view. Leave blank for all" />
+			<param name="studies" type="text" default="" label="Number of Studies in Teacher's view" description="Type in the number of studies to show for each teacher in the teacher's view. Leave blank for all" />
 			<param name="label_teacher" type="text" default="Latest Messages" label="Text for Latest Studies Line" description="Enter some text to show when displaying teacher latest studies" />
 			<param type="spacer" label=""></param>
 <param name="useexpert_teacherlist" type="list" label="Use custom Teacher List view" default="0" description="Choose whether or not to use this as the view">

@@ -296,6 +296,8 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
 		. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
 		. ' where #__bsms_teachers.id = ' .$id;
 	*/
+    $userinfo =& JFactory::getUser();
+	$user = $userinfo->get('gid');
 	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 	  . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 	  . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
@@ -307,7 +309,7 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
 	  . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
 	  . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
 	  . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-	  . ' where #__bsms_teachers.id = ' .$id
+	  . ' where #__bsms_teachers.id = ' .$id.' AND #__bsms_studies.published = 1 AND '.$user.' >= #__bsms_studies.show_level'
 	  . ' GROUP BY #__bsms_studies.id'
 	  . ' order by studydate desc'
 	  . $limit;

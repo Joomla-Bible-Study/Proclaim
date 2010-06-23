@@ -15,7 +15,10 @@ class biblestudyViewteacherdisplay extends JView
 	{
 		//TF added
 		global $mainframe, $option;
-		
+		// get the user information
+        $userinfo =& JFactory::getUser();
+		$user = $userinfo->get('gid');
+        
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 		
@@ -79,7 +82,7 @@ class biblestudyViewteacherdisplay extends JView
  LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)
  LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id) 
  LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)
- WHERE #__bsms_studies.teacher_id = '.$teacher->id.' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
+ WHERE #__bsms_studies.teacher_id = '.$teacher->id.' AND #__bsms_studies.published = 1 AND '.$user.' >= #__bsms_studies.show_level GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
 '.$limit;
 		$database->setQuery( $query );
 		$studies = $database->loadObjectList();
@@ -96,7 +99,7 @@ class biblestudyViewteacherdisplay extends JView
 		$this->assignRef('params' , $params);	
 		$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('template', $template);
-		
+	//	$this->assignRef('user', $user);
 		parent::display($tpl);
 	}
 	function _displayPagebreak($tpl)

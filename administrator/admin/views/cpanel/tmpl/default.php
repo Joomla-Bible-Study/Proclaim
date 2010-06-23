@@ -204,7 +204,7 @@ table.fbstat .col2 {
  </td><td>
 <div class="fbwelcome">
  
-  <h3><?php echo JText::_( 'Joomla Bible Study' );?></h3>
+  <h3><?php echo 'Joomla Bible Study';?></h3>
   <p><?php echo JText::_( 'From here you can access all of the different views and tasks for creating and maintaining your sermons, messages, and studies. You can also find statistics about your studies located in one convenient place.' );?></p>
 </div>
 <div style="border:1px solid #ddd; background:#FBFBFB;">
