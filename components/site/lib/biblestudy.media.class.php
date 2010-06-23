@@ -28,7 +28,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 		{
 			jimport ('joomla.application.component.helper');
 			$itemparams = new JParameter ($media->params);
-		//	$hitPlay = $this->hitPlay($media->id);
+			$hitPlay = $this->hitPlay($media->id);
             $playerwidth = $params->get('player_width');
             $playerheight = $params->get('player_height');
             if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}

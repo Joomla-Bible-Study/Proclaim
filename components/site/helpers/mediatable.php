@@ -103,12 +103,21 @@ if (!$row->id) {return FALSE;}
       switch ($playertype)
       {
       	case 0:
-      	   	$play = $getMedia->hitPlay($media->id);
+        
+        if ($params->get('direct_internal', 0) == 1)
+        {
             $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+        }
+      	 else
+         {
+            $media1_link = $getMedia->getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);
+         }
+            // 	$play = $getMedia->hitPlay($media->id);
+            
         break;
 
         case 1:
-    		$play = $getMedia->hitPlay($media->id);
+    	//	$play = $getMedia->hitPlay($media->id);
             $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
     	break;
 

@@ -84,6 +84,10 @@
 					<option value="0">No</option>
 					<option value="1">Yes</option>
 				</param>
+                <param name="direct_internal" type="list" default="0" label="Play media files set as direct in internal player" description="If you have set media files to be a direct link you can have them play using the JWPlayer instead.">
+                 <option value="0">No</option>
+				<option value="1">Yes</option>
+				</param>
                 <param name="internal_popup" type="list" default="0" label="Display Internal player as popup" description="Choose whether the internal viewer should be a popup or inline">
                 <option value="0">Inline</option>
 				<option value="1">Popup</option>
