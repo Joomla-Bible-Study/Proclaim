@@ -30,7 +30,7 @@ class biblestudyViewcommentslist extends JView
 		JToolBarHelper::addNewX();
 		//JToolBarHelper::preferences('com_biblestudy', '550');
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.commentslist', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$db=& JFactory::getDBO();
 		$uri	=& JFactory::getURI();
 	$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'published' );

@@ -205,7 +205,7 @@ table.fbstat .col2 {
 <div class="fbwelcome">
  
   <h3><?php echo 'Joomla Bible Study';?></h3>
-  <p><?php echo JText::_( 'From here you can access all of the different views and tasks for creating and maintaining your sermons, messages, and studies. You can also find statistics about your studies located in one convenient place.' );?></p>
+  <p><?php echo JText::_( 'From here you can access all of the different views and tasks for creating and maintaining your sermons, messages, and studies. You can also find statistics about your studies located in one convenient place.' ).'</p><p> <a href="http://www.joomlabiblestudy.org/jbsdocs" target="_blank">'.JText::_('Online Documentation').'</a></p><p><a href="http://www.joomlabiblestudy.org/forums.html" target="_blank">'.JText::_('Visit our Forum with questions');?></p>
 </div>
 <div style="border:1px solid #ddd; background:#FBFBFB;">
   <table class = "thisform">

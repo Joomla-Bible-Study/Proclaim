@@ -63,7 +63,7 @@ class biblestudyViewstudiesedit extends JView {
 		}
 		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset Hits', 'Reset Hits', false, false );
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.studiesedit', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		
 		// build the html select list for ordering
 

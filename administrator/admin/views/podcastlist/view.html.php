@@ -33,7 +33,7 @@ class biblestudyViewpodcastlist extends JView
 		//JToolBarHelper::customX('writeXML','save.png','writeXML','Write XML');
 		//JToolBarHelper::preferences('com_biblestudy', '550');
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.podcasts', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$db=& JFactory::getDBO();
 		$uri	=& JFactory::getURI();
 		

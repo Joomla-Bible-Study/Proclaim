@@ -26,7 +26,7 @@ class biblestudyViewtopicsedit extends JView
 			JToolBarHelper::cancel( 'Cancel', 'Close' );
 		}
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.topics', true );
+		JToolBarHelper::help( 'biblestudy', true );
 
 		$this->assignRef('topicsedit',		$topicsedit);
 

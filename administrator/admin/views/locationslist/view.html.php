@@ -31,7 +31,7 @@ class biblestudyViewlocationslist extends JView
 		JToolBarHelper::addNewX();
 		//JToolBarHelper::preferences('com_biblestudy', '550');
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.locations', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$db=& JFactory::getDBO();
 		$uri	=& JFactory::getURI();
 		

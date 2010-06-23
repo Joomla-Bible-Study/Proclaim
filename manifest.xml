@@ -2,9 +2,9 @@
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install type="component" version="1.5.0" method="upgrade">
 	<name>Bible Study</name>
-	<version>6.2.0_beta2</version>
+	<version>6.2.0_RC1</version>
 	<versionname>Deuteronomy</versionname>
-	<creationDate>2010-06-06</creationDate>
+	<creationDate>2010-06-23</creationDate>
 	<build>614</build>
 	<author>Tom Fuller, Eugen Istok, Kyle Holder, Richard Hunt - JoomlaBibleStudy Team</author>
 	<authorEmail>tomfuller2@gmail.com</authorEmail>
@@ -15,8 +15,6 @@
 	<files>manifest.xml</files>
 	<files folder="site">
 		<filename>index.html</filename>
-		<filename>player.swf</filename>
-		<filename>audio-player.js</filename>
 		<filename>metadata.xml</filename>
 		<filename>biblestudy.php</filename>
 		<filename>controller.php</filename>

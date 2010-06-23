@@ -28,7 +28,7 @@ class biblestudyViewlocationsedit extends JView
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.locations', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $locationsedit->published);
 		$this->assignRef('lists', $lists);
 		$this->assignRef('locationsedit',		$locationsedit);

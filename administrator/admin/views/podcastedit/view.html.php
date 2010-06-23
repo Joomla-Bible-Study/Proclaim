@@ -55,7 +55,7 @@ class biblestudyViewpodcastedit extends JView
 		}
 		
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.podcasts', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		
 		
 		$template = $this->get('Template');

@@ -16,7 +16,7 @@ class biblestudyViewbooksedit extends JView {
 		JToolBarHelper::title(   JText::_( 'Books Edit' ).': <small><small>[ ' . $titleCaption.' ]</small></small>', 'biblebooks' );
 		JToolBarHelper::save();
 		JToolBarHelper::cancel('cancel', $cancelCaption);	
-		JToolBarHelper::help( 'biblestudy.books', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		
 		$this->assignRef('booksedit', $booksedit);
 

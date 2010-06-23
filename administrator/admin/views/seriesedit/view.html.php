@@ -50,7 +50,7 @@ class biblestudyViewseriesedit extends JView
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.series', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('lists', $lists);
 		$this->assignRef('seriesedit',		$seriesedit);

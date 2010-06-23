@@ -24,7 +24,7 @@ class biblestudyViewbookslist extends JView {
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNewX();
 		//JToolBarHelper::preferences('com_biblestudy', '550');
-		JToolBarHelper::help('biblestudy.books', true);
+		JToolBarHelper::help('biblestudy', true);
 
 
 		$db=& JFactory::getDBO();

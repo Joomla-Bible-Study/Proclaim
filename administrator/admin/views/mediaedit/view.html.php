@@ -53,7 +53,7 @@ class biblestudyViewmediaedit extends JView
 		$bar=& JToolBar::getInstance( 'toolbar' );
 		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=", 650, 400 );
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.media', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$this->assignRef('directory', $directory);
 		$this->assignRef('mediaedit',		$mediaedit);
 		$this->assignRef('lists', $lists);

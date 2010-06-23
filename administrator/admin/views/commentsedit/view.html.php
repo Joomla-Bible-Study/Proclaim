@@ -30,7 +30,7 @@ class biblestudyViewcommentsedit extends JView
 			JToolBarHelper::cancel( 'Cancel', 'Close' );
 		}
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.commentsedit', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		// build the html select list for ordering
 		
 		$database	= & JFactory::getDBO();

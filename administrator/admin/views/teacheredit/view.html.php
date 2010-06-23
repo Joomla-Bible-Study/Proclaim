@@ -32,7 +32,7 @@ class biblestudyViewteacheredit extends JView
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.teachers', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		
 		$images = new jbsImages();
 		$directory = $images->getTeacherImageFolder(); //dump ($directory, 'directory: ');

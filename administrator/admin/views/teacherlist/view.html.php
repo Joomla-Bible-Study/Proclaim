@@ -34,7 +34,7 @@ class biblestudyViewteacherlist extends JView
 		JToolBarHelper::addNewX();
 		//JToolBarHelper::preferences('com_biblestudy', '550');
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.teachers', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$uri	=& JFactory::getURI();
 		$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'ordering',	'cmd' );
 		$filter_order_Dir	= strtoupper($mainframe->getUserStateFromRequest( $option.'filter_order_Dir',	'filter_order_Dir',	'ASC' ));

@@ -32,7 +32,7 @@ class biblestudyViewmimetypelist extends JView
 		JToolBarHelper::addNewX();
 		//JToolBarHelper::preferences('com_biblestudy', '550');
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.mimetype', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$uri	=& JFactory::getURI();
 		$total		= & $this->get( 'Total');
 		$pagination = & $this->get( 'Pagination' );

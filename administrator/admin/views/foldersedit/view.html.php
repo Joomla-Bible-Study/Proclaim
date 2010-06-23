@@ -26,7 +26,7 @@ class biblestudyViewfoldersedit extends JView
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.folders', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$this->assignRef('foldersedit',		$foldersedit);
 
 		parent::display($tpl);

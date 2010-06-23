@@ -26,7 +26,7 @@ class biblestudyViewserversedit extends JView
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.servers', true );
+		JToolBarHelper::help( 'biblestudy', true );
 
 		$this->assignRef('serversedit',		$serversedit);
 

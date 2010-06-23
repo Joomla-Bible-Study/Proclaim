@@ -12,7 +12,12 @@ class biblestudyViewadmin extends JView
 	
 	function display($tpl = null)
 	{
-		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
+		//Check for existance of css file
+        $csscall = JView::loadHelper('csscheck');
+        $iscss = check_css();
+        if ($isscss) {echo JText::_('CSS File Not Found. File Copied or error. Check /assets/css/biblestudy.css');}
+        
+        JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$admin		=& $this->get('Data');
 		$this->assignRef('admin', $admin);
 	//	$isNew		= ($admin->id < 1);
@@ -23,6 +28,7 @@ class biblestudyViewadmin extends JView
 		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset All Hits', 'Reset All Hits', false, false );
 		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset All Download Hits', 'Reset All Download Hits', false, false );
 		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset All Plays', 'Reset All Plays', false, false );
+        JToolBarHelper::help('biblestudy', true );
 		$paramsdata = $admin->params;
 		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'admin.xml';
 		$params = new JParameter($paramsdata, $paramsdefs);

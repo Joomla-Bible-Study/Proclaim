@@ -17,7 +17,7 @@ class biblestudyViewtemplateedit extends JView {
 		JToolbarHelper::save();
 		JToolbarHelper::apply();
 		JToolbarHelper::cancel();
-		
+		JToolBarHelper::help('biblestudy', true );
 		//Initialize templating class
 		$tmplEngine = $this->loadHelper('templates.helper');
 		$tmplEngine =& bibleStudyTemplate::getInstance();

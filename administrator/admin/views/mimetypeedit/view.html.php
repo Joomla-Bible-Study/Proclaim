@@ -26,7 +26,7 @@ class biblestudyViewmimetypeedit extends JView
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.mimetype', true );
+		JToolBarHelper::help( 'biblestudy', true );
 
 		$this->assignRef('mimetypeedit',		$mimetypeedit);
 

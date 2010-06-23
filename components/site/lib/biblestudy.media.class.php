@@ -44,32 +44,38 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
             $backcolor = $params->get('backcolor','0x287585');
             $frontcolor = $params->get('frontcolor','0xFFFFFF');
             $lightcolor = $params->get('lightcolor','0x000000');
-     //       if ($internal_popup == 1 || $itemparams->get('internal_popup') == 1)
-      //      {
+            if ($internal_popup == 1 || $itemparams->get('internal_popup') == 1)
+           {
                 $media1_link = 
              //   "<script type='text/javascript'>
               "<a href=\"#\" onclick=\"window.open('components/com_biblestudy/assets/player/player.swf?file=".$path1."&amp;allowfullscreen=true&amp;height=".$playerheight."&amp;width=".$playerwidth."&amp;&amp;id=veneers&amp;searchbar=false&amp;showicons=false&amp;autostart=true&amp;overstretch=fit&amp;backcolor=".$backcolor."&amp;frontcolor=".$frontcolor."&amp;lightcolor=".$lightcolor."', 'newwindow', config='height=".$playerheight.",width=".$playerwidth.",toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no, directories=no, status=no'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
             //   </script>";
     		
             
-       //     }
-       //     else
-       //     {
-    /*        $media1_link =
+          }
+          else
+          {
+            $media1_link = 
+       //     "<a href='components/com_biblestudy/assets/player/player.swf?file=".$path1."&amp;allowfullscreen=true&amp;height=".$playerheight."&amp;width=".$playerwidth."&amp;&amp;id=veneers&amp;searchbar=false&amp;showicons=false&amp;autostart=true&amp;overstretch=fit&amp;backcolor=".$backcolor."&amp;frontcolor=".$frontcolor."&amp;lightcolor=".$lightcolor."'><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
+        
+            $media1_link =
             //TF added for window
            "<p id='preview'>The player should show in this paragraph</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
 			<script type='text/javascript'>
 			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$playerwidth."','".$playerheight."','9');
-			s1.addParam('allowfullscreen','true');
-			s1.addParam('allowscriptaccess','always');
+			s1.addVariable('allowfullscreen','true');
+			s1.addVariable('allowscriptaccess','always');
 			s1.useExpressInstall('expressinstall.swf');
-			".$flashvars."
-			s1.addParam('play','true');
-			".$extraparams."
+			s1.addVariable('play','true');
+            ".$extraparams."
+            s1.addVariable('autostart','false');
+            ".$flashvars."
 			s1.write('preview');
 			</script> ";
-		//	} */
+			
+        
+        } 
 		return $media1_link;
 		}
 

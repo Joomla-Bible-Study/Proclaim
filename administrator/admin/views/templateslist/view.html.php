@@ -13,7 +13,7 @@ class biblestudyViewtemplateslist extends JView {
 		JToolBarHelper::deleteList();
 		JToolBarHelper::custom('copy', 'copy.png', 'copy_f2.png', 'Copy', true);
 		JToolBarHelper::addNew();
-
+        JToolBarHelper::help('biblestudy', true );
 		//Initialize templating class
 		$tmplEngine = $this->loadHelper('templates.helper');
 		$tmplEngine =& bibleStudyTemplate::getInstance();

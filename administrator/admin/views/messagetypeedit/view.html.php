@@ -26,7 +26,7 @@ class biblestudyViewmessagetypeedit extends JView
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.messagetype', true );
+		JToolBarHelper::help( 'biblestudy', true );
 
 		$this->assignRef('messagetypeedit',		$messagetypeedit);
 
