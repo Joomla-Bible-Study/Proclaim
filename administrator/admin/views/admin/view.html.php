@@ -12,11 +12,7 @@ class biblestudyViewadmin extends JView
 	
 	function display($tpl = null)
 	{
-		//Check for existance of css file
-        $csscall = JView::loadHelper('csscheck');
-        $iscss = check_css();
-        if ($isscss) {echo JText::_('CSS File Not Found. File Copied or error. Check /assets/css/biblestudy.css');}
-        
+		       
         JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$admin		=& $this->get('Data');
 		$this->assignRef('admin', $admin);

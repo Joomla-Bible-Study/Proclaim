@@ -75,10 +75,37 @@ function com_install()
 
 		// Start Installation/Upgrade
 		$bsmsupgrade->doUpgrade();
-
+     
+  //Check for presence of css or backup
+    jimport('joomla.filesystem.file');
+    $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
+    $dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
+    $backup = JPATH_SITE.DS.'images'.DS.'biblestudy.css';
+    $cssexists = JFile::exists($dest);  
+    $backupexists = JFile::exists($backup);
+    if (!$cssexists)
+    {
+        echo '<br /><font color="red"><strong>CSS File not found.</strong> </font>';
+        if ($backupexists)
+        {
+            echo '<br />Backup CSS file found at /images/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=copycss">Click here to copy from backup.</a>';
+        }
+    else
+    {
+        $copysuccess = JFile::copy($src, $dest);
+        if ($copysuccess)
+        {
+            echo '<br />CSS File copied from distribution source';
+        }
+        else
+        {
+            echo '<br />Problem writing file. Manually copy /components/com_biblestudy/assets/css/biblestudy.css.dist to biblestudy.css';
+        }
+    }    
+    }
 
 	?>
-
+<br />
 <style>
 .fbscs {
 	margin: 0;
@@ -187,11 +214,15 @@ function com_install()
 		<strong>php version: <font color="<?php echo version_compare(phpversion(), BIBLESTUDY_MIN_PHP, '>=')?'green':'red'; ?>"><?php echo phpversion(); ?></font> (Required &gt;= <?php echo BIBLESTUDY_MIN_PHP; ?>)</strong>
 		<br />
 		<strong>mysql version: <font color="<?php echo version_compare($mysqlversion, BIBLESTUDY_MIN_MYSQL, '>')?'green':'red'; ?>"><?php echo $mysqlversion; ?></font> (Required &gt; <?php echo BIBLESTUDY_MIN_MYSQL; ?>)</strong>
-		</div>
+  	</div>
 
 		<?php
 	}
+    
 
+
+    
+  
 	// Rest of footer
 	?>
 		<div

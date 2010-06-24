@@ -26,7 +26,18 @@ function hitPlay($id)
 
 function getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1)
 		{
-			jimport ('joomla.application.component.helper');
+			$db = JFactory::getDBO();
+            $query = 'SELECT s.studytitle, s.studydate, s.teacher_id, t.teachername, t.id as tid, s.id as sid, s.studyintro, 
+            m.id as mid, m.study_id
+             FROM #__bsms_studies AS s
+            LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)
+            LEFT JOIN #__bsms_mediafiles AS m ON (s.id = m.study_id)
+            WHERE m.id = '.$media->id.' LIMIT 1';
+            $db->setQuery($query);
+            $db->query();
+            $study = $db->loadObject();
+            //dump ($study->teachername, 'study: ');
+            jimport ('joomla.application.component.helper');
 			$itemparams = new JParameter ($media->params);
 			$hitPlay = $this->hitPlay($media->id);
             $playerwidth = $params->get('player_width');
@@ -34,44 +45,51 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
             if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
             if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
 			$extraparams = $itemparams->get('playervars');
-			$flashvars = "s1.addParam('flashvars','file=".$path1."&autostart=true');";
 			if ($itemparams->get('altflashvars'))
 			{
 				$flashvars = $itemparams->get('altflashvars');
 			}
    			//$player_width = $params->get('player_width', 290);
+            $item = $itemparams->get('internal_popup');
             $internal_popup = $params->get('internal_popup',0);
+            //dump ($internal_popup, 'params: '); dump ($item, 'item: ');
             $backcolor = $params->get('backcolor','0x287585');
             $frontcolor = $params->get('frontcolor','0xFFFFFF');
             $lightcolor = $params->get('lightcolor','0x000000');
-            if ($internal_popup == 1 || $itemparams->get('internal_popup') == 1)
+            $type = $internal_popup;
+            if ($item == 0){$type = 0;}
+            if ($type == 1)
            {
                 $media1_link = 
              //   "<script type='text/javascript'>
-              "<a href=\"#\" onclick=\"window.open('components/com_biblestudy/assets/player/player.swf?file=".$path1."&amp;allowfullscreen=true&amp;height=".$playerheight."&amp;width=".$playerwidth."&amp;&amp;id=veneers&amp;searchbar=false&amp;showicons=false&amp;autostart=true&amp;overstretch=fit&amp;backcolor=".$backcolor."&amp;frontcolor=".$frontcolor."&amp;lightcolor=".$lightcolor."', 'newwindow', config='height=".$playerheight.",width=".$playerwidth.",toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no, directories=no, status=no'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
-            //   </script>";
-    		
-            
+              "<a href=\"#\" onclick=\"window.open('components/com_biblestudy/assets/player/player.swf?file=".$path1."&amp;allowfullscreen=true&amp;height=".$playerheight."&amp;width=".$playerwidth."&amp;&amp;id=veneers&amp;searchbar=false&amp;showicons=false&amp;autostart=true&amp;overstretch=fit&amp;backcolor=".$backcolor."&amp;frontcolor=".$frontcolor."&amp;lightcolor=".$lightcolor."&amp;title=".$study->studytitle."&amp;author=".$study->teachername."&amp;date=".$study->studydate."&amp;description=".$study->studyintro."', 'newwindow', config='height=".$playerheight.",width=".$playerwidth.",toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no, directories=no, status=no'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
           }
           else
           {
-            $media1_link = 
-       //     "<a href='components/com_biblestudy/assets/player/player.swf?file=".$path1."&amp;allowfullscreen=true&amp;height=".$playerheight."&amp;width=".$playerwidth."&amp;&amp;id=veneers&amp;searchbar=false&amp;showicons=false&amp;autostart=true&amp;overstretch=fit&amp;backcolor=".$backcolor."&amp;frontcolor=".$frontcolor."&amp;lightcolor=".$lightcolor."'><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
-        
             $media1_link =
-            //TF added for window
-           "<p id='preview'>The player should show in this paragraph</p>
+            //This is the inline player
+           "<p id='preview'>There is a problem with the player. We apologize for the inconvenience</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
 			<script type='text/javascript'>
 			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$playerwidth."','".$playerheight."','9');
+            s1.addVariable('file','".$path1."');
+            s1.addVariable('title','".$study->studytitle."');
+            s1.addVariable('lightcolor','".$lightcolor."');
+            s1.addVariable('frontcolor','".$frontcolor."');
+            s1.addVariable('backcolor','".$backcolor."');
+            s1.addVariable('author','".$study->teachername."');
+            s1.addVariable('date','".$study->studydate."');
+            s1.addVariable('description','".$study->studyintro."');
+            s1.addVariable('overstretch','fit');
+            s1.addVariable('searchbar','false');
+            s1.addVariable('showicons','false');
 			s1.addVariable('allowfullscreen','true');
 			s1.addVariable('allowscriptaccess','always');
 			s1.useExpressInstall('expressinstall.swf');
 			s1.addVariable('play','true');
-            ".$extraparams."
             s1.addVariable('autostart','false');
-            ".$flashvars."
-			s1.write('preview');
+            ".$extraparams."
+            s1.write('preview');
 			</script> ";
 			
         

@@ -103,23 +103,61 @@ if ($return)
 
 		if ($return)
 		{
-			/*$task = JRequest::getCmd('task');
-			switch($task)
-			{
-				case 'apply':
-					$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Saved'));
-					break;
-
-				case 'save':
-				default:
-					$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('File Saved'));
-					break;
-			}*/
+		
 		$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Saved'));
 		}
 		else {
 			$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::sprintf('Failed to open file for writing.', $file));
 		}
 	}
+    function backup()
+    {
+        	global $mainframe;
+            // Set FTP credentials, if given
+    		jimport('joomla.client.helper');
+    		JClientHelper::setCredentialsFromRequest('ftp');
+    		$ftp = JClientHelper::getCredentials('ftp');
+            $filename		= 'biblestudy.css';
+    		$src = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
+            $dest = JPATH_ROOT.DS.'images'.DS.'biblestudy.css';
+            
+    		// Try to make the css file writeable
+    
+    		jimport('joomla.filesystem.file');
+            $return = JFile::copy($src, $dest);
+    		if ($return)
+    		{
+    		
+    		$mainframe->redirect('index.php?option=com_biblestudy&view=cssedit',  JText::_('Backup Saved to /images folder'));
+    		}
+    		else {
+    			$mainframe->redirect('index.php?option=com_biblestudy&view=cssedit', JText::_('Operation Failed').': '.JText::sprintf('Failed to open file for writing.', $file));
+    		}
+    }
+    
+    function copycss()
+    {
+        global $mainframe;
+            // Set FTP credentials, if given
+    		jimport('joomla.client.helper');
+    		JClientHelper::setCredentialsFromRequest('ftp');
+    		$ftp = JClientHelper::getCredentials('ftp');
+            $filename		= 'biblestudy.css';
+    		$dest = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
+            $src = JPATH_ROOT.DS.'images'.DS.'biblestudy.css';
+            
+    		// Try to make the css file writeable
+    
+    		jimport('joomla.filesystem.file');
+            $return = JFile::copy($src, $dest);
+    		if ($return)
+    		{
+    		
+    		$mainframe->redirect('index.php?option=com_biblestudy&view=cssedit',  JText::_('Backup restored from /images folder'));
+    		}
+    		else {
+    			$mainframe->redirect('index.php?option=com_biblestudy&view=cssedit', JText::_('Operation Failed').': '.JText::sprintf('Failed to open file for writing.', $file));
+    		}
+    }
 }
 ?>

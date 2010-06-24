@@ -99,7 +99,7 @@ if (!$row->id) {return FALSE;}
 	  {
 	  	$playertype = 2;
 	  } 
-
+//dump ($playertype, 'playertype: ');
       switch ($playertype)
       {
       	case 0:
