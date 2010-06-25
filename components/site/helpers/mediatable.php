@@ -86,12 +86,20 @@ if (!$row->id) {return FALSE;}
 	  $width = $image->width;
       $ispath = 0;
 	  $mime = '';
-	  $path1 = getFilepath($media->id, $idfield, $mime);
-	  
+//	  $path1 = getFilepath($media->id, $idfield, $mime);
+      $path1 = $media->spath.$media->fpath.$media->filename;
+ if(!eregi('http://', $path1)) 
+				{
+					$path1 = 'http://'.$path1;
+				}
+	//  dump ($itemparams, 'items: ');
        $playerwidth = $params->get('player_width');
        $playerheight = $params->get('player_height');
        if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
        if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
+       $playerwidth = $playerwidth + 20;
+       $playerheight = $playerheight + $params->get('popupmargin','50');
+     //dump ($playerwidth, 'width: '); dump ($playerheight, 'height: ');
      $playertype = 0;
       if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
       {
@@ -110,7 +118,7 @@ if (!$row->id) {return FALSE;}
         {
             //$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
             	$media1_link =  
-            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&Itemid=".$Itemid."&template=".$template."&mediaid=".$media->id."', 'newwindow','width=500,height=500'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";  
+            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&Itemid=".$Itemid."&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$playerwidth.",height=".$playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";  
         }
       	 else
          {
@@ -122,7 +130,9 @@ if (!$row->id) {return FALSE;}
 
         case 1:
     	//	$play = $getMedia->hitPlay($media->id);
-            $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+        //    $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+        $media1_link =  
+            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&Itemid=".$Itemid."&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$playerwidth.",height=".$playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";  
     	break;
 
 		case 2:

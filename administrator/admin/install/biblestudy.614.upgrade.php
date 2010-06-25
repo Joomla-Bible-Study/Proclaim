@@ -92,7 +92,28 @@ width: 33%;
 
 #landing_separator {
 height:15px;
-}';
+}
+/* Popup Window Items */
+.popupwindow
+{
+margin: 5px;
+text-align:center; 
+}
+p.popuptitle {
+font-weight: bold;
+color: black;
+}
+
+.popupfooter
+{
+margin: 5px;
+text-align:center;
+}
+p.popupfooter {
+font-weight: bold;
+color: grey;
+}'
+;
 $landingwrite = $landingread.$landing;
 			$errcss = '';
 			if (!JFile::write($dest, $landingwrite))
