@@ -103,7 +103,7 @@ class biblestudyViewstudieslist extends JView {
 		//dump ($topics, 'topics: ');
 		$topics = getTranslated($topics);
 
-		//$orders = getTranslated($orders);
+        $orders = getTranslated($orders);
 		$book = getTranslated($books);
 		//$this->assignRef('books', $books);
 		$this->assignRef('template', $template);
