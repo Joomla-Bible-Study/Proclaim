@@ -24,7 +24,7 @@
             $template = JRequest::getInt('template','1','get');
             
 			// I am sure there is a better way to get this information
-			$path = JRequest::getVar('path');
+/*			$path = JRequest::getVar('path');
 			
 			
 			$query = 'SELECT filename'
@@ -32,6 +32,7 @@
 					. ' WHERE id like "'. $mediaid .'"';
 					$db->setQuery( $query );
 					$mediafilename  = $db->loadResult();
+*/
 		//echo $mediaid. "<BR><BR>";
 		//	echo $mediafilename. "<BR><BR>";	
 			

@@ -64,7 +64,9 @@ if (!$row->id) {return FALSE;}
 	$row_count = $row_count + 1;
 	//Load the parameters
 	$itemparams = new JParameter ($media->params);
-	$Itemid = $params->get('detailstemplateid', 1);
+	//$Itemid = $params->get('detailstemplateid', 1);
+    $Itemid = JRequest::getInt('Itemid','1','get');
+    $template = JRequest::getInt('templatemenuid','1','get');
 	$images = new jbsImages();
  	$image = $images->getMediaImage($media->path2, $media->impath);
 
@@ -106,7 +108,9 @@ if (!$row->id) {return FALSE;}
         
         if ($params->get('direct_internal', 0) == 1)
         {
-            $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+            //$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
+            	$media1_link =  
+            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&Itemid=".$Itemid."&template=".$template."&mediaid=".$media->id."', 'newwindow','width=500,height=500'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";  
         }
       	 else
          {
