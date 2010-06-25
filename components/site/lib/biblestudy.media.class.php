@@ -73,7 +73,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
           {
             $media1_link =
             //This is the inline player
-           "<p id='preview'>There is a problem with the player. We apologize for the inconvenience</p>
+           "<p id='preview".$media->id."'>There is a problem with the player. We apologize for the inconvenience</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
 			<script type='text/javascript'>
 			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$playerwidth."','".$playerheight."','9');
@@ -94,7 +94,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 			s1.addVariable('play','true');
             s1.addVariable('autostart','false');
             ".$extraparams."
-            s1.write('preview');
+            s1.write('preview".$media->id."');
 			</script> ";
 			
         
