@@ -26,7 +26,8 @@ function hitPlay($id)
 
 function getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1)
 		{
-			$db = JFactory::getDBO();
+			$hitPlay = $this->hitPlay($media->id);
+            $db = JFactory::getDBO();
             $query = 'SELECT s.studytitle, s.studydate, s.teacher_id, t.teachername, t.id as tid, s.id as sid, s.studyintro, 
             m.id as mid, m.study_id
              FROM #__bsms_studies AS s
@@ -39,8 +40,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
             //dump ($study->teachername, 'study: ');
             jimport ('joomla.application.component.helper');
 			$itemparams = new JParameter ($media->params);
-			$hitPlay = $this->hitPlay($media->id);
-            $playerwidth = $params->get('player_width');
+		    $playerwidth = $params->get('player_width');
             $playerheight = $params->get('player_height');
             if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
             if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
@@ -56,13 +56,18 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
             $backcolor = $params->get('backcolor','0x287585');
             $frontcolor = $params->get('frontcolor','0xFFFFFF');
             $lightcolor = $params->get('lightcolor','0x000000');
+            $template = JRequest::getInt('templatemenuid','1','get');
             $type = $internal_popup;
             if ($item == 0){$type = 0;}
             if ($type == 1)
            {
                 $media1_link = 
              //   "<script type='text/javascript'>
-              "<a href=\"#\" onclick=\"window.open('components/com_biblestudy/assets/player/player.swf?file=".$path1."&amp;allowfullscreen=true&amp;height=".$playerheight."&amp;width=".$playerwidth."&amp;&amp;id=veneers&amp;searchbar=false&amp;showicons=false&amp;autostart=true&amp;overstretch=fit&amp;backcolor=".$backcolor."&amp;frontcolor=".$frontcolor."&amp;lightcolor=".$lightcolor."&amp;title=".$study->studytitle."&amp;author=".$study->teachername."&amp;date=".$study->studydate."&amp;description=".$study->studyintro."', 'newwindow', config='height=".$playerheight.",width=".$playerwidth.",toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no, directories=no, status=no'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
+           //   "<a href=\"#\" onclick=\"window.open('components/com_biblestudy/assets/player/player.swf?file=".$path1."&amp;allowfullscreen=true&amp;height=".$playerheight."&amp;width=".$playerwidth."&amp;&amp;id=veneers&amp;searchbar=false&amp;showicons=false&amp;autostart=true&amp;overstretch=fit&amp;backcolor=".$backcolor."&amp;frontcolor=".$frontcolor."&amp;lightcolor=".$lightcolor."&amp;title=".$study->studytitle."&amp;author=".$study->teachername."&amp;date=".$study->studydate."&amp;description=".$study->studyintro."', 'newwindow', config='height=".$playerheight.",width=".$playerwidth.",toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no, directories=no, status=no'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
+              
+              	// Nick's Code links to view/popup.php	
+			$media1_link =  
+            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&Itemid=7&template=".$template."&mediaid=".$media->id."&path=".$path1."', 'newwindow','width=500,height=500'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";  
           }
           else
           {
@@ -96,6 +101,36 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
         } 
 		return $media1_link;
 		}
+
+function getMediaLink($id)
+{
+	$media = $this->getMediaRows($id);
+	$medialink = $media->spath.$media->fpath.$media->filename;
+	return $medialink;
+}
+
+function getMediaRows($id)
+{
+	$db = JFactory::getDBO();
+	$query = 'SELECT #__bsms_mediafiles.*,'
+    . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
+    . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
+    . ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.teacher_id, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
+    . ' #__bsms_media.media_alttext AS malttext,'
+    . ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
+    . ' FROM #__bsms_mediafiles'
+    . ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
+    . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
+    . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
+    . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
+    . ' LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)'
+    . ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
+    . ' WHERE #__bsms_mediafiles.id = '.$id.' AND #__bsms_mediafiles.published = 1';
+    $db->setQuery($query);
+    $db->query();
+    $media = $db->loadObject(); 
+	return $media;
+}		
 
 function getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize)
 	{
@@ -183,33 +218,6 @@ function getAVRLink($media, $width, $height, $src, $params, $image, $Itemid)
      return $media1_link;	
 	}
 	
-function getMediaLink($id)
-{
-	$media = $this->getMediaRows($id);
-	$medialink = $media->spath.$media->fpath.$media->filename;
-	return $medialink;
-}
-
-function getMediaRows($id)
-{
-	$db = JFactory::getDBO();
-	$query = 'SELECT #__bsms_mediafiles.*,'
-    . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
-    . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
-    . ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
-    . ' #__bsms_media.media_alttext AS malttext,'
-    . ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext'
-    . ' FROM #__bsms_mediafiles'
-    . ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
-    . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
-    . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-    . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-    . ' WHERE #__bsms_mediafiles.id = '.$id.' AND #__bsms_mediafiles.published = 1';
-    $db->setQuery($query);
-    $db->query();
-    $media = $db->loadResult();
-	return $media;
-}		
 
 	function fileRedirect()
 	{
