@@ -4,7 +4,7 @@ jimport( 'joomla.application.component.view' );
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.stats.class.php');
 class biblestudyViewstudieslist extends JView {
-	
+
 	/**
 	 * studieslist view display method
 	 * @return void
@@ -32,7 +32,7 @@ class biblestudyViewstudieslist extends JView {
 		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 		//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-		
+
 		//Import Scripts
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/biblestudy.js');
@@ -40,25 +40,25 @@ class biblestudyViewstudieslist extends JView {
 		//Styles from tooltip.css moved to assets/css/biblestudy.css
 		//Import Stylesheets
 		$document->addStylesheet(JURI::base().'components/com_biblestudy/css/general.css');
-		
+
 		$url = $params->get('stylesheet');
 		if ($url) {$document->addStyleSheet($url);}
 		//Initialize templating class
 		//$tmplEninge = $this->loadHelper('templates.helper');
 		//$tmplEngine =& bibleStudyTemplate::getInstance();
 
-		
+
 		//$params->merge($template[0]->params);
 		//$templateparams = $template[0]->params;
 		//$params->merge($templateparams);
 		//dump ($templateparams, 'templateparams: ');
 		//
-		
+
 		//dump ($params, 'params: ');
 		$uri				=& JFactory::getURI();
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
-		
+
 		if ($filter_book != 0) {
 		    $filter_chapter		= $mainframe->getUserStateFromRequest( $option.'filter_chapter', 'filter_chapter',0,'int' );
 		}
@@ -83,7 +83,7 @@ class biblestudyViewstudieslist extends JView {
 */		//dump ($template, 'template: ');
 		$items = $this->get('Data');
 		$total = $this->get('Total');
-		
+
 		$pagination = $this->get('Pagination');
 		$teachers = $this->get('Teachers');
 		$series = $this->get('Series');
@@ -94,7 +94,7 @@ class biblestudyViewstudieslist extends JView {
 		$orders = $this->get('Orders');
 		$books = $this->get('Books');
 		//$chapters = $this->get('Chapters');
-		
+
 		//dump ($topics);
         //This is the helper for scripture formatting
         $scripture_call = Jview::loadHelper('scripture');
@@ -102,7 +102,7 @@ class biblestudyViewstudieslist extends JView {
 		$translated_call = JView::loadHelper('translated');
 		//dump ($topics, 'topics: ');
 		$topics = getTranslated($topics);
-		
+
 		//$orders = getTranslated($orders);
 		$book = getTranslated($books);
 		//$this->assignRef('books', $books);
@@ -114,11 +114,11 @@ class biblestudyViewstudieslist extends JView {
 		$item =& $menu->getActive();
 
 		$images = new jbsImages();
-		
+
 		$main = $images->mainStudyImage(); // dump ($main, 'main: ');
-		
+
 	  	$this->assignRef('main', $main);
-	  	
+
 	  	//Get the Popular stats
 	  	$stats = new jbStats();
 	  	$popular = $stats->top_score_site();
@@ -128,39 +128,32 @@ class biblestudyViewstudieslist extends JView {
     		{
                 $go = 'onchange="this.form.submit()"';
             }
-		$types[]		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
+        $types[]        = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );
 		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_teacher" );
-		
+
 		//Build Series List for drop down menu
-		$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Series' ) .' -' );
+        $types3[]       = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Series' ) .' -' );
 		$types3 			= array_merge( $types3, $series );
 		$lists['seriesid']	= JHTML::_('select.genericlist',   $types3, 'filter_series', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_series" );
 
 		//Build message types
-		$types4[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Message Type' ) .' -' );
+        $types4[]       = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Message Type' ) .' -' );
 		$types4 			= array_merge( $types4, $messageTypes );
 		$lists['messagetypeid']	= JHTML::_('select.genericlist',   $types4, 'filter_messagetype', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_messagetype" );
 
-		//buld study years
-		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Year' ) .' -' );
+        //build study years
+        $years[]        = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Year' ) .' -' );
 		$years 			= array_merge( $years, $studyYears );
 		$lists['studyyear']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_year" );
-		
-		//build orders
-		$ord[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
-		$orders 			= array_merge( $ord, $orders );
-		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_orders" );
 
-
-		$loc[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Location' ) .' -' );
+        //build locations
+        $loc[]      = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Location' ) .' -' );
 		$loc 			= array_merge( $loc, $locations );
 		$lists['locations']	= JHTML::_('select.genericlist',   $loc, 'filter_location', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_location" );
 
-
 		//Build Topics
-
-		$top[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Topic' ) .' -' );
+        $top[]      = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Topic' ) .' -' );
 		$top 			= array_merge( $top, $topics );
 		$lists['topics']	= JHTML::_('select.genericlist',   $top, 'filter_topic', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_topic" );
 
@@ -382,9 +375,9 @@ class biblestudyViewstudieslist extends JView {
 		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select an Order') . ' -');
 		$ord		= array_merge($ord, $orders);
 		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_orders");
-		
+
 		$lists['search']= $search;
-		
+
 		$this->assignRef('lists',		$lists);
 		$this->assignRef('items',		$items);
 
