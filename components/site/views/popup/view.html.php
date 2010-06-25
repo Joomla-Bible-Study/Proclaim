@@ -107,12 +107,12 @@ echo '</p>';
         }
 function titles($text, $media)
 {
-    $text = str_replace('{{teacher}}', $media->teachername.' ', $text);
-    $text = str_replace('{{studydate}}', $media->studydate.' ', $text);
-    $text = str_replace('{{filename}}', $media->filename.' ', $text);
-    $text = str_replace('{{description}}', $media->description.' ', $text);
-    $text = str_replace('{{length}}', $media->length.' ', $text);
-    $text = str_replace('{{title}}', $media->studytitle.' ', $text);
+    $text = str_replace('{{teacher}}', $media->teachername, $text);
+    $text = str_replace('{{studydate}}', $media->studydate, $text);
+    $text = str_replace('{{filename}}', $media->filename, $text);
+    $text = str_replace('{{description}}', $media->description, $text);
+    $text = str_replace('{{length}}', $media->length, $text);
+    $text = str_replace('{{title}}', $media->studytitle, $text);
    
     return $text;
 }
