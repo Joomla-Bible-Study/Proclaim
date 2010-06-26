@@ -133,8 +133,8 @@ if (!$row->id) {return FALSE;}
              }
                 // 	$play = $getMedia->hitPlay($media->id);
          }   
-                
-         $media1_link = getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);
+         else       
+         {$media1_link = getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);}
             
           
         break;
