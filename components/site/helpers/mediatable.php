@@ -113,8 +113,9 @@ if (!$row->id) {return FALSE;}
 //$type = 1 is popup
         $item = $itemparams->get('internal_popup');
         $internal_popup = $params->get('internal_popup',0);
-        $type = $internal_popup;
-        if ($item == 1){$type = 1;}
+        
+        if ($item < 3){$type = $internal_popup;}
+        else {$type = $item;}
         //if ($type == 1)
       switch ($playertype)
       {
