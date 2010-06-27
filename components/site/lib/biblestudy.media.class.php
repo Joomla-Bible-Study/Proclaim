@@ -26,8 +26,8 @@ function hitPlay($id)
 
 function getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1)
 		{
-			$hitPlay = $this->hitPlay($media->id);
-            $db = JFactory::getDBO();
+		//	$hitPlay = $this->hitPlay($media->id);
+         /*   $db = JFactory::getDBO();
             $query = 'SELECT s.studytitle, s.studydate, s.teacher_id, t.teachername, t.id as tid, s.id as sid, s.studyintro, 
             m.id as mid, m.study_id
              FROM #__bsms_studies AS s
@@ -37,6 +37,13 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
             $db->setQuery($query);
             $db->query();
             $study = $db->loadObject();
+         */
+            $study = $this->getMediaRows($media->id);
+            //We need to escape any " and ' in the text fields
+            $study->studyintro = str_replace('"', '\"', $study->studyintro);
+            $study->studyintro = str_replace("'", "\'", $study->studyintro);
+            $study->studytitle = str_replace("'", "\'", $study->studytitle);
+             $study->studytitle = str_replace('"', '\"', $study->studytitle);
             //dump ($study->teachername, 'study: ');
             jimport ('joomla.application.component.helper');
 			$itemparams = new JParameter ($media->params);
@@ -59,7 +66,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
             $template = JRequest::getInt('templatemenuid','1','get');
             $type = $internal_popup;
             if ($item == 0){$type = 0;}
-            if ($type == 1)
+      /*      if ($type == 1)
            {
                 $media1_link = 
              //   "<script type='text/javascript'>
@@ -71,9 +78,10 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
           }
           else
           {
+            */
             $media1_link =
             //This is the inline player
-           "<p id='preview".$media->id."'>There is a problem with the player. We apologize for the inconvenience</p>
+           "<p id='preview".$media->id."'>There is a problem with the player.</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
 			<script type='text/javascript'>
 			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$playerwidth."','".$playerheight."','9');
@@ -98,7 +106,7 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
 			</script> ";
 			
         
-        } 
+      //  } 
 		return $media1_link;
 		}
 

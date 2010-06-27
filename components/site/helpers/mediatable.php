@@ -114,7 +114,7 @@ if (!$row->id) {return FALSE;}
         $item = $itemparams->get('internal_popup');
         $internal_popup = $params->get('internal_popup',0);
         $type = $internal_popup;
-        if ($item == 0){$type = 0;}
+        if ($item == 1){$type = 1;}
         //if ($type == 1)
       switch ($playertype)
       {
@@ -134,7 +134,12 @@ if (!$row->id) {return FALSE;}
                 // 	$play = $getMedia->hitPlay($media->id);
          }   
          else       
-         {$media1_link = getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);}
+         {
+            $media1_link = '<a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
+       .$filesize.'" target="'.$media->special.'"><img src="'.$src
+       .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
+       .'" height="'.$height.'" border="0" /></a>';}
+           // $media1_link = getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);}
             
           
         break;
