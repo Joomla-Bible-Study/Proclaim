@@ -32,10 +32,14 @@
 			$play = $getMedia->hitPlay($mediaid);
 			
 			// All Videos plugin running youtube video in popup
-			//echo JHTML::_('content.prepare', '{youtube}cyheJ480LYA{/youtube}');
+		//	echo JHTML::_('content.prepare', '{vimeo}11810181{/vimeo}');
 
              //This is the inline player
-             $media = $getMedia->getMediaRows($mediaid);
+            $media = $getMedia->getMediaRows($mediaid);
+            $media->studyintro = str_replace('"', '\"', $study->studyintro);
+            $media->studyintro = str_replace("'", "\'", $study->studyintro);
+            $media->studytitle = str_replace("'", "\'", $study->studytitle);
+            $media->studytitle = str_replace('"', '\"', $study->studytitle);
              $itemparams = new JParameter($media->params); 
             // dump ($media, 'media: ');
              $path1 = $media->spath.$media->fpath.$media->filename;
@@ -64,7 +68,10 @@ $footertext = '';
 $headertext = $this->titles($params->get('popuptitle'), $media);
 $footertext = $this->titles($params->get('popupfooter'), $media);
 echo '<p class="popuptitle">'.$headertext.'</p>';
-//echo "<BR>";          
+//Here is where we choose whether to use the Internal Viewer or All Videos
+if ($itemparams->get('player') == 3) {echo JHTML::_('content.prepare', $media->mediacode);}  
+else
+{        
 echo         "<p id='preview' style='text-align:center; vertical-align:middle';>There is a problem with the player. We apologize for the inconvenience</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
 			<script type='text/javascript'>
@@ -88,6 +95,7 @@ echo         "<p id='preview' style='text-align:center; vertical-align:middle';>
             ".$extraparams."
             s1.write('preview');
 			</script> ";
+}
 ?>
 
 <?PHP
