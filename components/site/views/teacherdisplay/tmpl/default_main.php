@@ -30,7 +30,7 @@ $studieslisttemplateid = $this->params->get('studieslisttemplateid');
 <td class="bsm_teacherthumbnail">
 <?php 
 $image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thumb);
-	{ 
+	//{ 
 	if ($teacher->title) {$teacherdisplay = $teacher->teachername.' - '.$teacher->title;}else {$teacherdisplay = $teacher->teachername;}?>
         <img src="<?php echo JURI::base().$image->path;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" border="1" alt="<?php echo $teacherdisplay;?>" />
         <?php 
