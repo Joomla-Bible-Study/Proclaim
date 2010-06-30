@@ -72,7 +72,7 @@ function submitbutton(pressbutton)
       <td><input class="text_area" type="text" name="user_email" id="user_email" size="70" maxlength="100" value="<?php echo $this->commentsedit->user_email;?>" /></td>
     </tr>
     <tr>
-      <td><?php echo JText::_( 'Comment' );?></td>
+      <td><?php echo JText::_( 'Comment' ).':';?></td>
       <td><textarea class="text_area" name="comment_text" cols="53" rows="4" id="comment_text" ><?php echo $this->commentsedit->comment_text;?></textarea></td>
     </tr>
 
