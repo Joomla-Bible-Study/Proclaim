@@ -1,9 +1,9 @@
-<?php 
-	defined('_JEXEC') or die('Restricted access'); 
+<?php
+	defined('_JEXEC') or die('Restricted access');
 	jimport('joomla.pane.html');
 //dump ($this->store[0]->admin_store, 'store: ');
 
-	
+
 ?>
 <script language="javascript" type="text/javascript">
 function submitbutton(pressbutton)
@@ -12,7 +12,7 @@ function submitbutton(pressbutton)
 	if (pressbutton == 'cancel') {
 		submitform( pressbutton );
 		return;
-	
+
 
 	} else {
 		submitform( pressbutton );
@@ -21,7 +21,7 @@ function submitbutton(pressbutton)
 </script>
 <style>
   li {list-style-type:none;}
-  
+
 </style>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
@@ -74,10 +74,10 @@ echo $pane->endPane();
 			<td class="key"><?php echo JText::_( 'Published' ); ?>:</td>
 			<td><?php echo $this->lists['published'];?></td>
 			</tr>
-     <?php } ?>    
+     <?php } ?>
 	<tr>
 		<td class="key" align="left"><?php echo JText::_( 'Study Date' ); ?>:</td>
-		<td><?php 
+		<td><?php
 		if (!$this->studiesedit->id)
 		{
 			echo JHTML::_('calendar', date('Y-m-d H:i:s'), 'studydate', 'studydate');
@@ -116,7 +116,7 @@ echo $pane->endPane();
 				<td width="8"><?php echo JText::_( 'Vs End' );?></td>
 			</tr>
 			<tr>
-				<td><?php //echo $this->lists['booknumber']; 
+				<td><?php //echo $this->lists['booknumber'];
 		$database =& JFactory::getDBO();
 		$query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		. ' FROM #__bsms_books'
@@ -166,7 +166,7 @@ echo $pane->endPane();
 				<td width="8"><?php echo JText::_( 'Vs End 2' );?></td>
 			</tr>
 			<tr>
-				<td><?php //echo $this->lists['booknumber2']; 
+				<td><?php //echo $this->lists['booknumber2'];
 		echo '<select name="booknumber2" id="booknumber2" class="inputbox" size="1" ><option value="0"';
 		echo '>- '.JText::_('Select a Book').' -'.'</option>';
 		foreach ($bookid as $bookid2) {
@@ -283,18 +283,18 @@ echo $pane->endPane();
 			<?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
 		</select></td>
 	</tr>
-    <tr><td class="key" alsign="left"><label for="thumbnailm"><?php echo JText::_('Thumbnail: ');?></label></td><td><?php echo $this->lists['thumbnailm'];//echo $this->studiesedit->thumbnailm;?></td></tr>
+    <tr><td class="key" alsign="left"><label for="thumbnailm"><?php echo JText::_('Thumbnail:');?></label></td><td><?php echo $this->lists['thumbnailm'];//echo $this->studiesedit->thumbnailm;?></td></tr>
     <tr><td valign="top" class="key">
 							<?php echo JText::_( 'Study Image' ); ?>:
 						</td>
     <td> <?php  ?>
     <img src="<?php echo '../images/'.$this->admin_params->get('study_images', 'stories/').$this->studiesedit->thumbnailm;?>" name="imagelib">
-    <?php 
+    <?php
 	?>
     </td>
-    
+
     </tr>
-            
+
 	<?php if($this->admin_params->get('admin_store') == 0) {?>
 	<tr>
 		<td class="key" align="left"><?php echo JText::_('Store');?></td>
@@ -330,7 +330,7 @@ echo $pane->endPane();
 
 	<tr>
 		<td class="key"><?php echo JText::_( 'Study Text' );?></td>
-	
+
 		<td><?php echo $editor->display('studytext', $this->studiesedit->studytext, '100%', '400', '70', '15'); ?></td>
 	</tr>
 </table>
@@ -354,7 +354,7 @@ echo $pane->endPane();
 	<?php
 
 	//$episodes = $this->episodes;
-	
+
 	$k = 0;
 	for ($i=0, $n=count( $this->mediafiles ); $i < $n; $i++)
 	{

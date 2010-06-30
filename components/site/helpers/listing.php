@@ -7,91 +7,91 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'helper.php');
-	
+
 	//Here we test to see if this is a studydetails or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.
 	$view = JRequest::getVar('view', 'get');
 	if ($view == 'studydetails' && $ismodule < 1)
 		{
-			
+
 		$params->set('row1col1', $params->get('drow1col1'));
 		$params->set('r1c1custom', $params->get('dr1c1custom'));
 		$params->set('r1c1span', $params->get('dr1c1span'));
 		$params->set('linkr1c1', $params->get('dlinkr1c1'));
-		
+
 		$params->set('row1col2', $params->get('drow1col2'));
 		$params->set('r1c2custom', $params->get('dr1c2custom'));
 		$params->set('r1c2span', $params->get('dr1c2span'));
 		$params->set('linkr1c2', $params->get('dlinkr1c2'));
-		
+
 		$params->set('row1col3', $params->get('drow1col3'));
 		$params->set('r1c3custom', $params->get('dr1c3custom'));
 		$params->set('r1c3span', $params->get('dr1c3span'));
 		$params->set('linkr1c3', $params->get('dlinkr1c3'));
-		
+
 		$params->set('row1col4', $params->get('drow1col4'));
 		$params->set('r1c4custom', $params->get('dr1c4custom'));
 		$params->set('linkr1c4', $params->get('dlinkr1c4'));
-		
-		
+
+
 		$params->set('row2col1', $params->get('drow2col1'));
 		$params->set('r2c1custom', $params->get('dr2c1custom'));
 		$params->set('r2c1span', $params->get('dr2c1span'));
 		$params->set('linkr2c1', $params->get('dlinkr2c1'));
-		
+
 		$params->set('row2col2', $params->get('drow2col2'));
 		$params->set('r2c2custom', $params->get('dr2c2custom'));
 		$params->set('r2c2span', $params->get('dr2c2span'));
 		$params->set('linkr2c2', $params->get('dlinkr2c2'));
-		
+
 		$params->set('row2col3', $params->get('drow2col3'));
 		$params->set('r2c3custom', $params->get('dr2c3custom'));
 		$params->set('r2c3span', $params->get('dr2c3span'));
 		$params->set('linkr2c3', $params->get('dlinkr2c3'));
-		
+
 		$params->set('row2col4', $params->get('drow2col4'));
 		$params->set('r2c4custom', $params->get('dr2c4custom'));
 		$params->set('linkr2c4', $params->get('dlinkr2c4'));
-		
-		
+
+
 		$params->set('row3col1', $params->get('drow3col1'));
 		$params->set('r3c1custom', $params->get('dr3c1custom'));
 		$params->set('r3c1span', $params->get('dr3c1span'));
 		$params->set('linkr3c1', $params->get('dlinkr3c1'));
-		
+
 		$params->set('row3col2', $params->get('drow3col2'));
 		$params->set('r3c2custom', $params->get('dr3c2custom'));
 		$params->set('r3c2span', $params->get('dr3c2span'));
 		$params->set('linkr3c2', $params->get('dlinkr3c2'));
-		
+
 		$params->set('row3col3', $params->get('drow3col3'));
 		$params->set('r3c3custom', $params->get('dr3c3custom'));
 		$params->set('r3c3span', $params->get('dr3c3span'));
 		$params->set('linkr3c3', $params->get('dlinkr3c3'));
-		
+
 		$params->set('row3col4', $params->get('drow3col4'));
 		$params->set('r3c4custom', $params->get('dr3c4custom'));
 		$params->set('linkr3c4', $params->get('dlinkr3c4'));
-		
-	
+
+
 		$params->set('row4col1', $params->get('drow4col1'));
 		$params->set('r4c1custom', $params->get('dr4c1custom'));
 		$params->set('r4c1span', $params->get('dr4c1span'));
 		$params->set('linkr4c1', $params->get('dlinkr4c1'));
-		
+
 		$params->set('row4col2', $params->get('drow4col2'));
 		$params->set('r4c2custom', $params->get('dr4c2custom'));
 		$params->set('r4c2span', $params->get('dr4c2span'));
 		$params->set('linkr4c2', $params->get('dlinkr4c2'));
-		
+
 		$params->set('row4col3', $params->get('drow4col3'));
 		$params->set('r4c3custom', $params->get('dr4c3custom'));
 		$params->set('r4c3span', $params->get('dr4c3span'));
 		$params->set('linkr4c3', $params->get('dlinkr4c3'));
-		
+
 		$params->set('row4col4', $params->get('drow4col4'));
 		$params->set('r4c4custom', $params->get('dr4c4custom'));
 		$params->set('linkr4c4', $params->get('dlinkr4c4'));
-		
+
 		}
 	//Need to know if last column and last row
 	$columns = 1;
@@ -112,12 +112,12 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	//This is the beginning of row 1
 	$lastrow = 0;
  	if ($rows == 1) {$lastrow = 1;}
-	
+
 	$listing = '<tr class="'.$oddeven; //This begins the row of the display data
 	if ($lastrow == 1) {$listing .= ' lastrow';}
 	$listing .= '">
-	'; 
-	
+	';
+
 		$rowcolid = 'row1col1';
 		if ($params->get('row1col1') < 1) {$params->set('row1col1', 100);}
 		if ($params->get('row1col1') == 24) {$elementid = getCustom($params->get('row1col1'), $params->get('r1c1custom'), $row, $params, $admin_params, $template);}
@@ -139,13 +139,13 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
  		$colspan = $params->get('r1c2span');
  		$rowspan = $params->get('rowspanr1c2');
  		$lastcol = 0;
- 		if ($columns == 2 || $colspan > 2) {$lastcol = 1;} 
+ 		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
  		if (isset($elementid)) {
 		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		}
 	}
-	
-	if ($columns > 2  && ( $params->get('r1c1span') < 3 && $params->get('r1c2span') < 2)) 
+
+	if ($columns > 2  && ( $params->get('r1c1span') < 3 && $params->get('r1c2span') < 2))
 	{
 		 $rowcolid = 'row1col3';
 		 if ($params->get('row1col3') < 1) {$params->set('row1col3', 100);}
@@ -154,12 +154,12 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 		 $colspan = $params->get('r1c3span');
 		 $rowspan = $params->get('rowspanr1c3');
 		 $lastcol = 0;
-		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;} 
+		 if ($columns == 3 || $colspan > 1) {$lastcol = 1;}
 		 if (isset($elementid)) {
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr1c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		 }
 	}
-	
+
 	if ($columns > 3 && ( $params->get('r1c1span') < 4 && $params->get('r1c2span') < 3 && $params->get('r1c3span') < 2))
 	{
 		 $rowcolid = 'row1col4';
@@ -176,19 +176,19 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	}
 	$listing .= '
 	</tr>
-	'; //This ends the row of the data to be displayed				 
+	'; //This ends the row of the data to be displayed
 	//This is the end of row 1
-	
+
 	//This is the beginning of row 2
-	
+
 	$lastrow = 0;
  	if ($rows == 2) {$lastrow = 1;}
 	$listing .= '<tr class="'.$oddeven; //This begins the row of the display data
 	if ($lastrow == 1) {$listing .= ' lastrow';}
-	
+
 	$listing .= '">
-	'; 
-	
+	';
+
 		 $rowcolid = 'row2col1';
 		 if ($params->get('row2col1') < 1) {$params->set('row2col1', 100);}
 		 if ($params->get('row2col1') == 24) {$elementid = getCustom($params->get('row2col1'), $params->get('r2c1custom'), $row, $params, $admin_params, $template);}
@@ -204,19 +204,19 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	if ($columns > 1  && $params->get('r2c1span') < 2)
 	{
  		$rowcolid = 'row2col2';
-		if ($params->get('row2col2') < 1) {$params->set('row2col2', 100);} 
+		if ($params->get('row2col2') < 1) {$params->set('row2col2', 100);}
 		if ($params->get('row2col2') == 24) {$elementid = getCustom($params->get('row2col2'), $params->get('r2c2custom'), $row, $params, $admin_params, $template);}
 		else {$elementid = getElementid($params->get('row2col2'), $row, $params, $admin_params, $template);}
  		$colspan = $params->get('r2c2span');
  		$rowspan = $params->get('rowspanr2c2');
  		$lastcol = 0;
- 		if ($columns == 2 || $colspan > 2) {$lastcol = 1;} 
+ 		if ($columns == 2 || $colspan > 2) {$lastcol = 1;}
 		if (isset($elementid)) {
  		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		}
 	}
-	
-	if ($columns > 2   && ( $params->get('r2c1span') < 3 && $params->get('r2c2span') < 2)) 
+
+	if ($columns > 2   && ( $params->get('r2c1span') < 3 && $params->get('r2c2span') < 2))
 	{
 		 $rowcolid = 'row2col3';
 		 if ($params->get('row2col3') < 1) {$params->set('row2col3', 100);}
@@ -231,7 +231,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		 }
 	}
-	
+
 	if ($columns > 3  && (  $params->get('r2c1span') < 4 && $params->get('r2c2span') < 3 && $params->get('r2c3span') < 2))
 	{
 		 $rowcolid = 'row2col4';
@@ -248,7 +248,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	}
 	$listing .= '
 	</tr>
-	'; //This ends the row of the data to be displayed		
+	'; //This ends the row of the data to be displayed
 //End of row 2
 
 //Beginning of row 3
@@ -257,9 +257,9 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
  	if ($rows == 3) {$lastrow = 1;}
 	$listing .= '<tr class="'.$oddeven; //This begins the row of the display data
 	if ($lastrow == 1) {$listing .= ' lastrow';}
-	
-	$listing .= '">'; 
-	
+
+	$listing .= '">';
+
 		 $rowcolid = 'row3col1';
 		 if ($params->get('row3col1') < 1) {$params->set('row3col1', 100);}
 		 if ($params->get('row3col1') == 24) {$elementid = getCustom($params->get('row3col1'), $params->get('r3c1custom'), $row, $params, $admin_params, $template);}
@@ -285,7 +285,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
  		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		}
 	}
-	
+
 	if ($columns > 2   && ( $params->get('r3c1span') < 3 && $params->get('r3c2span') < 2) )
 	{
 		 $rowcolid = 'row3col3';
@@ -300,7 +300,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr3c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		 }
 	}
-	
+
 	if ($columns > 3 && (  $params->get('r3c1span') < 4 && $params->get('r3c2span') < 3 && $params->get('r3c3span') < 2))
 	{
 		 $rowcolid = 'row3col4';
@@ -317,9 +317,9 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	}
 	$listing .= '
 	</tr>
-	'; //This ends the row of the data to be displayed		
+	'; //This ends the row of the data to be displayed
 	//end of row 3
-	
+
 	//beginning of row 4
 //	$row4colspan = $params->get('r4c1span') + $params->get('r4c2span') + $params->get('r4c3span') + $params->get('r4c4span');
 	$lastrow = 0;
@@ -327,10 +327,10 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	$listing .= '
 	<tr class="'.$oddeven; //This begins the row of the display data
 	if ($lastrow == 1) {$listing .= ' lastrow';}
-	
+
 	$listing .= '">
-	'; 
-	
+	';
+
 		 $rowcolid = 'row4col1';
 		 if ($params->get('row4col1') < 1) {$params->set('row4col1', 100);}
 		 if ($params->get('row4col1') == 24) {$elementid = getCustom($params->get('row4col1'), $params->get('r4c1custom'), $row, $params, $admin_params, $template);}
@@ -342,7 +342,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 		 if (isset($elementid)) {
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c1'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		 }
- 	
+
 	if ($columns > 1  && $params->get('r4c1span') < 2)
 	{
  		$rowcolid = 'row4col2';
@@ -357,7 +357,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
  		$listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c2'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		}
 	}
-	
+
 	if ($columns > 2   && ( $params->get('r4c1span') < 3 && $params->get('r4c2span') < 2) )
 	{
 		 $rowcolid = 'row4col3';
@@ -372,7 +372,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr4c3'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		 }
 	}
-	
+
 	if ($columns > 3 && ( $params->get('r4c1span') < 4 && $params->get('r4c2span') < 3 && $params->get('r4c3span') < 2))
 	{
 		 $rowcolid = 'row4col4';
@@ -389,14 +389,14 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	}
 	$listing .= '
 	</tr>
-	'; //This ends the row of the data to be displayed		
-	
+	'; //This ends the row of the data to be displayed
+
 return $listing;
 }
 
 	function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, $islink, $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template)
 		{
-$entry_user = 0;			
+$entry_user = 0;
 if (($allow_entry > 0) && ($rowcolid == 'row1col1')){
 $user =& JFactory::getUser();
 $entry_user = $user->get('gid');
@@ -404,7 +404,7 @@ if (!$entry_user) { $entry_user = 0;}
 if (!$entry_access) {$entry_access = 23;}
 $Itemid = JRequest::getVar('Itemid');
 }
-		
+
 			$cell = '
 						<td class="'.$rowcolid.' '.$elementid;
 						if ($lastcol == 1) {$cell .= ' lastcol';}
@@ -413,7 +413,7 @@ $Itemid = JRequest::getVar('Itemid');
 						//if ($rowspan > 1){$cell .='rowspan="'.$rowspan.'"';}
 						$cell .= '>';
 						if (($rowcolid == 'row1col1') && ($entry_user >= $entry_access) && ($allow_entry > 0)){
-							$cell .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id3.'&item='.$Itemid.'">'.JText::_(' [Edit] ').'</a>';}
+              $cell .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id3.'&item='.$Itemid.'"> ['.JText::_('Edit').'] </a>';}
 						if ($islink > 0){$cell .= getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);}
 						$cell .= $element;
 						switch ($islink)
@@ -421,29 +421,29 @@ $Itemid = JRequest::getVar('Itemid');
 							case 0:
 							//	$cell .= '</a>';
 							break;
-							
+
 							case 1:
 								$cell .= '</a>';
 							break;
-							
+
 							case 3:
 								$cell .= '</a>';
 							break;
-							
+
 							case 4:
 								$cell .= '</a></span>';
 							break;
-							
+
 							case 5:
 								$cell .= '</a></span>';
 							break;
-						
+
 						}
 						//if ($islink > 0){$cell .= '</a>';}
 						$cell .='</td>';
 			return $cell;
 		}
-	
+
 	function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
 		{
 			$Itemid = JRequest::getVar('Itemid');
@@ -452,17 +452,17 @@ $Itemid = JRequest::getVar('Itemid');
 			//$Itemid = '';
 			$itemlink = $params->get('itemidlinktype');
 			//dump ($islink,  'islink: ');
-			switch ($islink) { 
-		
-			case 1 : 
+			switch ($islink) {
+
+			case 1 :
 				$addItemid = getItemidLink($isplugin=0, $admin_params);
 				if (!$Itemid)
 					{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')); 
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
 				 	}
-				 else 
+				 else
 				 	{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')); 
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
 		 		}
 				$column = '<a href="'.$link.'">';
 			 break;
@@ -484,28 +484,28 @@ $Itemid = JRequest::getVar('Itemid');
 				//$addItemid = getItemidLink($isplugin=0, $admin_params);
 				if (!$Itemid)
 					{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));//.$addItemid; 
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));//.$addItemid;
 				 	}
-				 else 
+				 else
 				 	{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid')); 
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
 		 		}
-				$column = getTooltip($row->id, $row, $params, $admin_params, $template); 
+				$column = getTooltip($row->id, $row, $params, $admin_params, $template);
 		   		$column .= '<a href="'.$link.'">';
-		   	
+
   			break;
-  			
+
   			case 5 :
   				//Case 5 is a file link with Tooltip
  				$filepath = getFilepath($id3, 'study_id',$mime);
 				$link = JRoute::_($filepath);
 				//$column .= '<a href="'.$link.'">';
-				$column = getTooltip($row->id, $row, $params, $admin_params, $template); 
+				$column = getTooltip($row->id, $row, $params, $admin_params, $template);
 			   	$column .= '<a href="'.$link.'">';
-			   	
+
   			break;
 		   }
-		   
+
 		   return $column;
 		}
 function getListingExp($row, $params, $admin_params, $template)
@@ -521,7 +521,7 @@ function getListingExp($row, $params, $admin_params, $template)
 	include_once($path1.'image.php');
     //dump ($row, 'row: ');
     //dump ($admin_params, 'admin_params: ');
-    $images = new jbsImages(); 
+    $images = new jbsImages();
 	$image = $images->getStudyThumbnail($row->thumbnailm);
   // 	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
 //	$i_image = $row->thumbnailm;
@@ -562,7 +562,7 @@ function getListingExp($row, $params, $admin_params, $template)
     $mediaTable = getMediatable($params, $row, $admin_params); //dump ($mediaTable, 'mediatable: ');
     $label = str_replace('{{media}}', $mediaTable, $label);
     //Need to add template items for media...
-    
+
 	return $label;
 }
 
@@ -581,7 +581,7 @@ function getStudyExp($row, $params, $admin_params, $template)
     include_once($path1.'date.php');
     include_once($path1.'duration.php');
     include_once($path1.'image.php');
-    $images = new jbsImages(); 
+    $images = new jbsImages();
     $image = $images->getStudyThumbnail($row->thumbnailm);
   // 	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
 //	$i_image = $row->thumbnailm;
@@ -613,12 +613,12 @@ function getStudyExp($row, $params, $admin_params, $template)
     $label = str_replace('{{scripturelink}}', $link, $label);
     $label = str_replace('{{plays}}', $row->totalplays, $label);
     $label = str_replace('{{downloads}}', $row->totaldownloads, $label);
-    
+
     //Media
     //$media = getMedia($row->id);
-    
+
     /*$mediaTable = "<table class='bsms_mediatable'>";
-    //File Type - Download - Player 
+    //File Type - Download - Player
     foreach ($media as $item) {
         $mediaTable .= "<TR>";
         $mediaTable .= "<TD>" . getTypeIcon($item, $params, $admin_params) . "</TD>";
@@ -633,7 +633,7 @@ function getStudyExp($row, $params, $admin_params, $template)
     $mediaTable .= "</table>";*/
     $mediaTable = getMediatable($params, $row, $admin_params);
     $label = str_replace('{{media}}', $mediaTable, $label);
-    
+
     //Share
     //Prepares a link string for use in social networking
 	$u =& JURI::getInstance();
@@ -648,9 +648,9 @@ function getStudyExp($row, $params, $admin_params, $template)
     //PrintableView
     $printview = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'Print' ) );
     $printview = '<a href="#&tmpl=component" onclick="window.print();return false;">'.$printview.'</a>';
-	
+
 	$label = str_replace('{{printview}}', $printview, $label);
-	
+
 	//PDF View
 	$url = 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id.'&format=pdf';
     $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
@@ -659,9 +659,9 @@ function getStudyExp($row, $params, $admin_params, $template)
     $attribs['onclick'] = "window.open(this.href,'win2','".$status."'); return false;";
     $attribs['rel']     = 'nofollow';
     $link = JHTML::_('link', JRoute::_($url), $text, $attribs);
-    
+
     $label = str_replace('{{pdfview}}', $link, $label);
-    
+
     //Comments
     $comments = getComments($params, $row, $row->id);
 	$label = str_replace('{{comments}}', $comments, $label);

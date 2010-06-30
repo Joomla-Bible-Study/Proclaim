@@ -6,13 +6,13 @@
 		<legend><?php echo JText::_( 'Details' ); ?></legend>
 
 		<table class="admintable">
-        <tr> 
+        <tr>
         <td width="100" class="key"><label for="published"><?php echo JText::_( 'Published' ); ?></label></td>
         <td > <?php echo $this->lists['published'];
 		?>
           </td>
       </tr>
-      <tr> 
+      <tr>
         <td width="100" class="key"><label for="list_show"><?php echo JText::_( 'Show on List View' ); ?></label></td>
         <td > <?php echo $this->lists['list_show'];
 		?>
@@ -21,7 +21,7 @@
       <tr>
         <td width="100" align="right" class="key">
 				<label for="ordering">
-					<?php echo JText::_( 'Ordering' ); ?>:
+                               <?php echo JText::_( 'Ordering' ); ?>
 				</label>
 				</td>
                 <td>
@@ -31,7 +31,7 @@
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="teacher">
-					<?php echo JText::_( 'Teacher' ); ?>:
+                              <?php echo JText::_( 'Teacher' ); ?>
 				</label>
 			</td>
 			<td>
@@ -41,41 +41,41 @@
         <tr>
         <td width="100" align="right" class="key">
 				<label for="title">
-					<?php echo JText::_( 'Title' ); ?>:
+                                <?php echo JText::_( 'Title' ); ?>
 				</label>
 			</td>
             <td>
             	<input class="text_area" type="text" name="title" id="title" size="50" maxlength="50" value="<?php echo $this->teacheredit->title;?>" />
             </td>
         </tr>
-        <tr><td class="key"><?php echo JText::_('Choose a Large Image');?></td><td><?php echo $this->lists['teacher_image']; echo '  '.JText::_('Current folder: ').$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('Set default folder here').'</a>';?><br /><?php echo JText::_('This field will be used instead of below if image selected');?></td>
+        <tr><td class="key"><?php echo JText::_('Choose a Large Image');?></td><td><?php echo $this->lists['teacher_image']; echo '  '.JText::_('Current folder').': '.$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('Set default folder here').'</a>';?><br /><?php echo JText::_('This field will be used instead of below if image selected');?></td>
       </tr>
        <tr><td valign="top" class="key">
-							<?php echo JText::_( 'Teacher Image' ); ?>:
-						</td>
+                              <?php echo JText::_( 'Teacher Image' ); ?>
+           </td>
     <td> <?php  ?>
     <img <?php if(empty($this->teacheredit->teacher_image)){echo ('style="display: none;"');}?> id="imgteacher_image" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_image;?>" name="teacherImage">
-    <?php 
+    <?php
 	?>
     </td>
-    
+
     </tr>
-        <tr><td class="key"><?php echo JText::_('Choose a Thumbnail');?></td><td><?php echo $this->lists['teacher_thumbnail']; echo '  '.JText::_('Current folder: ').$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('Set default folder here').'</a>';?><br /><?php echo JText::_('This field will be used instead of below if image selected');?></td>
+        <tr><td class="key"><?php echo JText::_('Choose a Thumbnail');?></td><td><?php echo $this->lists['teacher_thumbnail']; echo '  '.JText::_('Current folder').': '.$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('Set default folder here').'</a>';?><br /><?php echo JText::_('This field will be used instead of below if image selected');?></td>
       </tr>
        <tr><td valign="top" class="key">
-							<?php echo JText::_( 'Teacher Thumbnail' ); ?>:
-						</td>
+                              <?php echo JText::_( 'Teacher Thumbnail' ); ?>
+           </td>
     <td> <?php  ?>
     <img <?php if(empty($this->teacheredit->teacher_thumbnail)){echo ('style="display: none;"');}?> id="imgteacher_thumbnail" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_thumbnail;?>" name="teacherThumb">
-    <?php 
+    <?php
 	?>
     </td>
-    
+
     </tr>
         <tr>
         <td width="100" align="right" class="key">
 				<label for="image">
-					<?php echo JText::_( 'Large Image full URL' ); ?>:
+                               <?php echo JText::_( 'Large Image full URL' ); ?>
 				</label>
 			</td>
             <td>
@@ -85,7 +85,7 @@
         <tr>
         <td width="100" align="right" class="key">
 				<label for="imageh">
-					<?php echo JText::_( 'Image Height' ); ?>:
+                               <?php echo JText::_( 'Image Height' ); ?>
 				</label>
 			</td>
             <td>
@@ -95,7 +95,7 @@
         <tr>
         <td width="100" align="right" class="key">
 				<label for="imagew">
-					<?php echo JText::_( 'Image Width' ); ?>:
+                               <?php echo JText::_( 'Image Width' ); ?>
 				</label>
 			</td>
             <td>
@@ -105,7 +105,7 @@
         <tr>
         <td width="100" align="right" class="key">
 				<label for="phone">
-					<?php echo JText::_( 'Phone' ); ?>:
+                              <?php echo JText::_( 'Phone' ); ?>
 				</label>
 			</td>
         	<td>
@@ -115,7 +115,7 @@
          <tr>
          <td width="100" align="right" class="key">
 				<label for="email">
-					<?php echo JText::_( 'Email or Link to Contact Page' ); ?>:
+                               <?php echo JText::_( 'Email or Link to Contact Page' ); ?>
 				</label>
 			</td>
         	<td>
@@ -125,7 +125,7 @@
          <tr>
          <td width="100" align="right" class="key">
 				<label for="website">
-					<?php echo JText::_( 'Website' ); ?>:
+                              <?php echo JText::_( 'Website' ); ?>
 				</label>
 			</td>
         	<td>
@@ -135,7 +135,7 @@
          <tr>
          <td width="100" align="right" class="key">
 				<label for="short">
-					<?php echo JText::_( 'Short Description for List Page' ); ?>:
+                              <?php echo JText::_( 'Short Description for List Page' ); ?>
 				</label>
 			</td>
         	<td><textarea class="text_area" name="short" cols="150" rows="4" id="short" ><?php echo $this->teacheredit->short;?></textarea>
@@ -144,7 +144,7 @@
         <tr>
          <td width="100" align="right" class="key">
 				<label for="thumb">
-					<?php echo JText::_( 'Thumbnail full URL' ); ?>:
+                               <?php echo JText::_( 'Thumbnail full URL' ); ?>
 				</label>
 			</td>
         	<td>
@@ -154,7 +154,7 @@
         <tr>
          <td width="100" align="right" class="key">
 				<label for="thumbh">
-					<?php echo JText::_( 'Thumbnail Height' ); ?>:
+                               <?php echo JText::_( 'Thumbnail Height' ); ?>
 				</label>
 			</td>
         	<td>
@@ -164,7 +164,7 @@
         <tr>
          <td width="100" align="right" class="key">
 				<label for="thumbw">
-					<?php echo JText::_( 'Thumbnail Width' ); ?>:
+                               <?php echo JText::_( 'Thumbnail Width' ); ?>
 				</label>
 			</td>
         	<td>
@@ -174,13 +174,13 @@
 		 <tr>
          <td width="100" align="right" class="key">
 				<label for="information">
-					<?php echo JText::_( 'Other Information' ); ?>:
+                              <?php echo JText::_( 'Other Information' ); ?>
 				</label>
 			</td>
         	<td>
             	<?php echo $this->editor->display('information', $this->teacheredit->information, '100%', '400', '70', '15'); ?>
             </td>
-        </tr>       
+        </tr>
 	</table>
 	</fieldset>
 </div>

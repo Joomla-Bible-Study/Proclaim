@@ -7,7 +7,7 @@ $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'scripture.php');
 include_once($path1.'image.php');
 include_once($path1.'helper.php');
-$scripturerow = 1;	
+$scripturerow = 1;
 $scripture1 = getScripture($params, $row, $esv=null, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
 $templatemenuid = $params->get('detailstemplateid',1);
@@ -24,10 +24,10 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 
 	if ($textorpdf == 'text') {
 		if ($template[0]->text == '- Use Default -') { $i_path = 'components/com_biblestudy/images/textfile24.png'; $textimage = getImagePath($i_path); }
-	else 
+	else
 	{
  	 if ($template[0]->text && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->text; }
-	  	
+
 		$textimage = $images->getImagePath($i_path);
 	}
 	   $src = JURI::base().$textimage->path;
@@ -38,10 +38,10 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
        $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&templatemenuid='.$templatemenuid ).JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 	}
-	if ($textorpdf == 'pdf') 
+	if ($textorpdf == 'pdf')
 	{
 		if ($template[0]->pdf == '- Use Default -') { $i_path = 'components/com_biblestudy/images/pdf24.png'; $pdfimage = getImagePath($i_path); }
-	else 
+	else
 	{
 	  	if ($template[0]->pdf && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->pdf; }
 	  	if ($template[0]->pdf && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$template[0]->pdf;}
@@ -52,18 +52,18 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 		$width = $pdfimage->width;
 	    $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf' );
 		//$link = 'index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf';
-		$details_text = $params->get('details_text').JText::_(' - PDF Version');
+        $details_text = $params->get('details_text').' - '.JText::_('PDF Version');
 	}
 	//dump ($i_path, 'text: ');
-	if ($params->get('tooltip') >0) 
+	if ($params->get('tooltip') >0)
 		{
 			$linktext = getTooltip($row->id, $row, $params, $admin_params, $template);
        	} //end of is show tooltip
-	
-    
+
+
 	$linktext .= '
 	<a href="'.$link.'"><img src="'.$src.'" alt="'.$details_text.'" width="'.$width.'" height="'.$height.'" border="0" />';
-	
+
 	if ($params->get('tooltip') >0) {$linktext .= '</span>';}
 	$linktext .= '</a></span>';
 

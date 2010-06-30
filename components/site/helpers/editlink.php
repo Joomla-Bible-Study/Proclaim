@@ -2,7 +2,7 @@
 defined('_JEXEC') or die();
 
 function getEditlink($id, $params) {
-	
+
 	$user =& JFactory::getUser();
 	$entry_user = $user->get('gid');
 	if (!$entry_user) { $entry_user = 0;}
@@ -14,10 +14,10 @@ function getEditlink($id, $params) {
 	if ($allow_entry > 0) {
 
 if ($entry_user >= $entry_access){
-				$editlink .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id.'">'.JText::_('[Edit]').'</a>';
+                $editlink .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id.'">['.JText::_('Edit').']</a>';
 }
 	}
-else {$editlink = null;}                    
+else {$editlink = null;}
    return $editlink;
 
 }

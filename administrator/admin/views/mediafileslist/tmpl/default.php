@@ -16,7 +16,7 @@
 			</th>
 			<th width="8%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  'Order', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			<?php echo JHTML::_('grid.order',  $this->items ); ?></th>
-			<th align="left"><?php echo JHTML::_('grid.sort',  'File Name', 'filename', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+                        <th align="left"><?php echo JHTML::_('grid.sort',  'Filename', 'filename', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th><?php  echo JHTML::_('grid.sort',  'Study Title', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 			<th><?php echo JHTML::_('grid.sort',  'Media Type', 'media_image_name', $this->lists['order_Dir'], $this->lists['order'] ); ?>
@@ -52,7 +52,7 @@
 		<input
 			type="text" name="order[]" size="5"
 			value="<?php echo $row->ordering;?>" <?php echo $disabled ?>
-			class="text_area" style="text-align: center" 
+			class="text_area" style="text-align: center"
 		/>
 		</td>
 
@@ -80,7 +80,7 @@
 
 </div>
 <!--<table>    <tr><td>Pagination: <?php //print_r($this->pagination);?></td></tr></table>-->
-	<input type="hidden" name="option" value="com_biblestudy" /> 
+	<input type="hidden" name="option" value="com_biblestudy" />
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="controller" value="mediafilesedit" />

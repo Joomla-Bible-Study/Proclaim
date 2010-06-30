@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<?php 
+<?php
 $user =& JFactory::getUser();
 		global $mainframe, $option;
 		$params =& $mainframe->getPageParameters();
@@ -32,7 +32,7 @@ function submitbutton(pressbutton)
 	<fieldset class="adminform">
 		<legend><?php echo JText::_( 'Comments Details' ); ?></legend>
 <?php $editor =& JFactory::getEditor();?>
-		
+
     <table class="admintable">
     <tr>
       <td colspan="0">
@@ -44,31 +44,31 @@ function submitbutton(pressbutton)
 	    </button>
       </td>
     </tr>
-    <tr> 
+    <tr>
       <td class="key"><?php echo JText::_( 'Published' ); ?></td>
       <td > <?php echo $this->lists['published'];?></td>
     </tr>
-    <tr> 
+    <tr>
       <td class="key" align="left"><?php echo JText::_( 'Create Date<br />YYYY-MM-DD' ); ?></td>
       <td>
-        <?php if (!$this->commentsedit->id) 
+        <?php if (!$this->commentsedit->id)
 		{
-			echo JHTML::_('calendar', $this->commentsedit->comment_date, 'comment_date', 'comment_date'); 
+			echo JHTML::_('calendar', $this->commentsedit->comment_date, 'comment_date', 'comment_date');
 		}
 		else {
-			echo JHTML::_('calendar', date('Y-m-d', strtotime($this->commentsedit->comment_date)), 'comment_date', 'comment_date'); 
+			echo JHTML::_('calendar', date('Y-m-d', strtotime($this->commentsedit->comment_date)), 'comment_date', 'comment_date');
         }?></td>
     </tr>
     <tr>
-      <td><?php echo JText::_( 'Study: ');?></td>
+      <td><?php echo JText::_( 'Study:');?></td>
 	  <td><?php echo $this->lists['studies'];?></td>
     </tr>
     <tr>
-      <td><?php echo JText::_('Full Name: ');?></td>
+      <td><?php echo JText::_('Full Name:');?></td>
       <td><input class="text_area" type="text" name="full_name" id="full_name" size="70" maxlength="50" value="<?php echo $this->commentsedit->full_name;?>" /></td>
     </tr>
     <tr>
-      <td><?php echo JText::_('Email: ')?></td>
+      <td><?php echo JText::_('Email:')?></td>
       <td><input class="text_area" type="text" name="user_email" id="user_email" size="70" maxlength="100" value="<?php echo $this->commentsedit->user_email;?>" /></td>
     </tr>
     <tr>

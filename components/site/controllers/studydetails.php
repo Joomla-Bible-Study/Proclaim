@@ -1,8 +1,8 @@
 <?php
 /**
  * studies Edit Controller for Bible Study Component
- * 
- 
+ *
+
  */
 
 // Check to ensure this file is included in Joomla!
@@ -30,11 +30,11 @@ class biblestudyControllerstudydetails extends JController
 	 * display the edit form
 	 * @return void
 	 */
-	 
-	 
+
+
 	function view()
 	{
-		
+
 		//Get the params so we can set the proper view
 		$model = $this->getModel('studydetails');
 		$menu =& JSite::getMenu();
@@ -54,7 +54,7 @@ class biblestudyControllerstudydetails extends JController
 			JRequest::setVar( 'layout', 'default'  );
 		}
 		JRequest::setVar( 'view', 'studydetails' );
-		
+
 		//JRequest::setVar('hidemainmenu', 1);
 		//update the hit count for the study
 		//if(JRequest::getCmd('view') == 'studydetails')
@@ -63,15 +63,15 @@ class biblestudyControllerstudydetails extends JController
 		//$table =& $this->getTable('studydetails');
 			$model->hit();
 		//}
-		
+
 		parent::display();
 	}
-	
+
 	function displayimg()
-        {	
+        {
            if (JPluginHelper::importPlugin('system', 'captcha'))
-			{ 
-				global $mainframe;    
+			{
+				global $mainframe;
 				// By default, just display an image
 				$document = &JFactory::getDocument();
 				$doc = &JDocument::getInstance('raw');
@@ -80,10 +80,10 @@ class biblestudyControllerstudydetails extends JController
 				$mainframe->triggerEvent('onCaptcha_display', array());
 			}
 	}
-	
+
 	function comment()
 	{
-	
+
 	global $option, $mainframe;
 /*	$menuitemid = JRequest::getInt( 'Itemid' );
   if ($menuitemid)
@@ -91,7 +91,7 @@ class biblestudyControllerstudydetails extends JController
     $menu = JSite::getMenu();
     $menuparams = $menu->getParams( $menuitemid );
   }
-  
+
 	$params =& $mainframe->getPageParameters();
 	$returnmenu = JRequest::getVar('Itemid', '0', 'POST', 'INT');
 	*/
@@ -106,12 +106,12 @@ class biblestudyControllerstudydetails extends JController
 		$params = new JParameter($model->_template[0]->params);
 		//dump ($params);
 	$cap = 1;
-	
-	if ($params->get('use_captcha') > 0) 
+
+	if ($params->get('use_captcha') > 0)
 	{
 	//Begin Captcha with plugin
 		if (JPluginHelper::importPlugin('system', 'captcha'))
-		{ 
+		{
 				$return = false;
 				$word = JRequest::getVar('word', false, '', 'CMD');
 				$mainframe->triggerEvent('onCaptcha_confirm', array($word, &$return));
@@ -123,21 +123,21 @@ class biblestudyControllerstudydetails extends JController
 							die();
 							$cap = 0;
 				}
-		}	
+		}
 	}
-		
+
 	if ($cap == 1) {
 		if ($model->storecomment()) {
 			$msg = JText::_( 'Comment Submitted!' );
 		} else {
 			$msg = JText::_( 'Error Submitting Comment' );
 		}
-		
+
 		if ($params->get('email_comments') > 0){
 		$EmailResult=$this->commentsEmail($params);
 		}
 		$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
-		
+
 		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&Itemid='.$returnmenu.'&templatemenuid='.$templatemenuid.'&msg='.$msg, 'Comment Added');
 	} // End of $cap
 	}
@@ -154,14 +154,14 @@ class biblestudyControllerstudydetails extends JController
 	//$results = $dispatcher->trigger( 'onPrepareContent', array( &$article, &$slparams, 0));
 	}
 	//End of scripture links plugin function
-	
+
 	/**
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
 	function save()
 	{
-		
+
 		$model = $this->getModel('studydetails');
 
 		if ($model->store($post)) {
@@ -169,7 +169,7 @@ class biblestudyControllerstudydetails extends JController
 		} else {
 			$msg = JText::_( 'Error Saving studies' );
 		}
-		
+
 		// Check the table in so it can be edited.... we are done with it anyway
 		$link = 'index.php?option=com_biblestudy&view=studieslist';
 		$this->setRedirect($link, $msg);
@@ -280,9 +280,9 @@ function commentsEmail($params) {
 		$Subject       = $params->get( 'subject', 'Comments' );
 		$FromName       = $params->get( 'fromname', $comment_fromname );
 		if (empty($ToEmail) ) $ToEmail=$comment_mailfrom;
-		$Body = $comment_author.JText::_(' has entered a comment for the study entitled: ').$comment_title.' - '.$comment_study_date.JText::_(' on: ').$comment_date;
-		if ($comment_published > 0){$Body = $Body.JText::_(' This comment has been published.');}else{$Body=$Body.JText::_(' This comment has not been published.');}
-		$Body = $Body.JText::_(' You may review the comments by logging in to the site: ').$comment_livesite;
+                $Body = $comment_author.' '.JText::_('has entered a comment for the study entitled').': '.$comment_title.' - '.$comment_study_date.' '.JText::_('on').': '.$comment_date;
+                if ($comment_published > 0){$Body = $Body.' '.JText::_('This comment has been published.');}else{$Body=$Body.' '.JText::_('This comment has not been published.');}
+                $Body = $Body.' '.JText::_('You may review the comments by logging in to the site').': '.$comment_livesite;
 		$mail->addRecipient($ToEmail);
 		$mail->setSubject($Subject.' '.$comment_livesite);
 		$mail->setBody($Body);
