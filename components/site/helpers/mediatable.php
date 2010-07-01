@@ -141,12 +141,8 @@ if (!$row->id) {return FALSE;}
        .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';}
           //  $media1_link = getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);
-          $media1_link = '<script type="text/javascript">function callhit(mediaid)
-{
-window.open(\'index.php?option=com_biblestudy&view=popup&close=1&mediaid='.$media->id.'\',\'newwindow\',\'width='.$width.', height='.$height.',menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
-}</script>';
-dump ($media->id, 'mediaid from mediatable: ');
-	   $media1_link .= '<a href="'.$path1.'" Onclick=\'callhit('.$media->id.')\' title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" target="'.$media->special.'"><img src="'.$src.'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';  
+         
+	   $media1_link .= '<a href="'.$path1.'" onclick="window.open(\'index.php?option=com_biblestudy&view=popup&close=1&mediaid='.$media->id.'\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return false;" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" target="'.$media->special.'"><img src="'.$src.'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';  
           
         break;
 
