@@ -143,10 +143,13 @@ function getMediaRows($id)
 function getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize)
 	{
       // $play = $this->hitPlay($media->id); //dump ($play, 'play: ');
-	   $media1_link = '<a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
-       .$filesize.'" target="'.$media->special.'"><img src="'.$src
-       .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
-       .'" height="'.$height.'" border="0" /></a>';
+      //Added to open a small popup, register a hit, then close
+      $media1_link = '<script type="text/javascript">function callhit('.$media->id.')
+{
+window.open(\'index.php?option=com_biblestudy&view=popup&close=1\',newwindow,\'width='.$width.', height='.$height.',menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
+}</script>';
+
+	   $media1_link .= '<a href="'.$path1.'"Onclick=\'callhit('.$media->id.')\' title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" target="'.$media->special.'"><img src="'.$src.'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
 	   
 	   return $media1_link;
 	}
@@ -227,6 +230,18 @@ function getAVRLink($media, $width, $height, $src, $params, $image, $Itemid)
 	}
 	
 
+    function getAVmediacode($mediacode)
+    {
+        $bracketpos = strpos($mediacode,'}');
+        $dashposition = $bracketpos + 1;
+        $isonlydash = substr_count($mediacode, '}-{');
+        if ($isonlydash)
+        {
+            $mediacode = substr_replace($mediacode,$media->filename,$dashposition,0);
+        }
+        return $mediacode;
+    }
+    
 	function fileRedirect()
 	{
 		$mediaid = JRequest::getInt('mediaid',1,'get');

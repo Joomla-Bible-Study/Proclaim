@@ -11,16 +11,30 @@
         {
 			require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
 			$getMedia = new jbsMedia();
+            JRequest::setVar('tmpl', 'component');
+            $mediaid  = JRequest::getInt('mediaid','','get');
+			$Itemid = JRequest::getInt('Itemid','1','get');
+            $templateid = JRequest::getInt('template','1','get');
+            $close = JRequest::getInt('close','0','get');
+           
+            if ($close == 1)
+            {
+                $play = $getMedia->hitPlay($mediaid); //dump ($mediaid, 'play: ');
+                echo JHTML::_('content.prepare','<script language=javascript>window.close();</script>');
+                
+            }
+            else
+            {
+            require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+			$getMedia = new jbsMedia();
 			$document =& JFactory::getDocument();
             $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 
 			//Use only component template not the full site template
-			JRequest::setVar('tmpl', 'component');
+			
             jimport ('joomla.application.component.helper');
 			$db	= & JFactory::getDBO();
-			$mediaid  = JRequest::getInt('mediaid','','get');
-			$Itemid = JRequest::getInt('Itemid','1','get');
-            $templateid = JRequest::getInt('template','1','get');
+			
             $query = 'SELECT * FROM #__bsms_templates WHERE id = '.$templateid;
             $db->setQuery($query);
             $db->query();
@@ -36,10 +50,11 @@
 
              //This is the inline player
             $media = $getMedia->getMediaRows($mediaid);
-            $media->studyintro = str_replace('"', '\"', $study->studyintro);
-            $media->studyintro = str_replace("'", "\'", $study->studyintro);
-            $media->studytitle = str_replace("'", "\'", $study->studytitle);
-            $media->studytitle = str_replace('"', '\"', $study->studytitle);
+            $studyintro = str_replace('"', '\"', $media->studyintro);
+            $studyintro = str_replace("'", "\'", $media->studyintro);
+            $studytitle = str_replace("'", "\'", $media->studytitle);
+            $studytitle = str_replace('"', '\"', $media->studytitle);
+            
              $itemparams = new JParameter($media->params); 
             // dump ($media, 'media: ');
              $path1 = $media->spath.$media->fpath.$media->filename;
@@ -61,15 +76,21 @@
             $frontcolor = $params->get('frontcolor','0xFFFFFF');
             $lightcolor = $params->get('lightcolor','0x000000');
   //Here is where we start the display
-  
-echo '<div class="popupwindow">';
+ ?> 
+<div class="popupwindow">
+<?php
 $headertext = '';
-$footertext = '';
+$footertext = ''; 
+//$testit = $this->titles($itemparams->get('itempopuptitle'), $media); dump ($testit, 'testit: ');
 $headertext = $this->titles($params->get('popuptitle'), $media);
+if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media);}
 $footertext = $this->titles($params->get('popupfooter'), $media);
+if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media);}
 echo '<p class="popuptitle">'.$headertext.'</p>';
 //Here is where we choose whether to use the Internal Viewer or All Videos
-if ($itemparams->get('player') == 3) {echo JHTML::_('content.prepare', $media->mediacode);}  
+if ($itemparams->get('player') == 3) {
+    $mediacode = $getMedia->getAVmediacode($media->mediacode);
+    echo JHTML::_('content.prepare', $mediacode);}  
 else
 {        
 echo         "<p id='preview' style='text-align:center; vertical-align:middle';>There is a problem with the player. We apologize for the inconvenience</p>
@@ -77,13 +98,13 @@ echo         "<p id='preview' style='text-align:center; vertical-align:middle';>
 			<script type='text/javascript'>
 			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$playerwidth."','".$playerheight."','9');
             s1.addVariable('file','".$path1."');
-            s1.addVariable('title','".$media->studytitle."');
+            s1.addVariable('title','".$studytitle."');
             s1.addVariable('lightcolor','".$lightcolor."');
             s1.addVariable('frontcolor','".$frontcolor."');
             s1.addVariable('backcolor','".$backcolor."');
             s1.addVariable('author','".$media->teachername."');
             s1.addVariable('date','".$media->studydate."');
-            s1.addVariable('description','".$media->studyintro."');
+            s1.addVariable('description','".$studyintro."');
             s1.addVariable('overstretch','fit');
             s1.addVariable('searchbar','false');
             s1.addVariable('showicons','false');
@@ -101,36 +122,34 @@ echo         "<p id='preview' style='text-align:center; vertical-align:middle';>
 <?PHP
 
 // Footer
-echo '</div><div class="popupfooter"><p class="popupfooter">';
+?>
+</div><div class="popupfooter"><p class="popupfooter">
+<?php
 echo $footertext;
-echo '</p>';
+?>
+</p></div>
+<?php
+	} //end of else for $close
+        } //end of display function
 
-
-
-
-
-							
-							
-							
-        }
 function titles($text, $media)
 {
+   // dump ($text, 'text1: ');
     $text = str_replace('{{teacher}}', $media->teachername, $text);
     $text = str_replace('{{studydate}}', $media->studydate, $text);
     $text = str_replace('{{filename}}', $media->filename, $text);
     $text = str_replace('{{description}}', $media->description, $text);
     $text = str_replace('{{length}}', $media->length, $text);
     $text = str_replace('{{title}}', $media->studytitle, $text);
-   
+ //  dump ($text, 'text2: ');
     return $text;
 }
 
-    }
+    
+    } //end of class 
+    
+    
+            
     ?>
-</div>
 
-<!-- Close popup window
 
-<BODY onLoad="setTimeout(window.close, 1)">
-
- -->

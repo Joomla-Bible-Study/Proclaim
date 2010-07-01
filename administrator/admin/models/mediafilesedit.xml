@@ -15,6 +15,9 @@
 		<param name="playerwidth" default="300" type="text" label="Custom width for internal player or window" description="Set a width for the player or direct link that will play in a new window. 300 assumed if nothing added. Affects only this file" />
 		<param name="playerheight" default="400" type="text" label="Custom height for internal player or window" description="Set a height attribute for the internal player or direct link that will play in a new window. 400 assumed. Only affects this mediafile" />
 		<param name="playervars" default="" type="textarea" rows="3" cols="100" label="Params for the JWPlayer" description="Params should follow this syntax: s1.addParam('paramname','paramvalue');"></param>
+         <param name="itempopuptitle" type="text" size="150" default="" label="Popup Title Elements" description="Overrides global settings. Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
+            <param name="itempopupfooter" type="text" size="150" default="" label="Popup Footer Elements" description="Overrides global settings. Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
+            <param name="popupmargin" type="text" default="50" label="Height Margin for Popup" description="Set space above and below popup for header and footer." />
 		</params>
 		<params group="PODCAST" addpath="/components/com_biblestudy/elements">
 		<param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="Select one or more podcasts" description="Use Ctrl-click to select more than one item.">
