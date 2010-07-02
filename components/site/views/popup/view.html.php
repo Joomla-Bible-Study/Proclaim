@@ -91,7 +91,7 @@ echo '<p class="popuptitle">'.$headertext.'</p>';
 if ($itemparams->get('player') == 3) {
     $mediacode = $getMedia->getAVmediacode($media->mediacode);
     echo JHTML::_('content.prepare', $mediacode);}  
-else
+if ($itemparams->get('player')== 2)
 {        
 echo         "<p id='preview' style='text-align:center; vertical-align:middle';>There is a problem with the player. We apologize for the inconvenience</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
@@ -116,6 +116,10 @@ echo         "<p id='preview' style='text-align:center; vertical-align:middle';>
             ".$extraparams."
             s1.write('preview');
 			</script> ";
+}
+if ($itemparams->get('player') == 0)
+{
+    echo $path1;
 }
 ?>
 
