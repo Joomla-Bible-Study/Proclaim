@@ -2248,7 +2248,7 @@
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
-    <param name ="landingteacherlimit" type="text" label="# Teachers before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
+    <param name ="landingteacherlimit" type="text" label="NUM Teachers before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="teacherlabel" type="text" label="Teachers Label" default="Speakers" size="45"></param>
     <param name="linkto" type="radio" label="Link To View" default="1">
       <option value="0">Studies List</option>
@@ -2259,7 +2259,7 @@
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
-    <param name ="landingserieslimit" type="text" label="# Series before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
+    <param name ="landingserieslimit" type="text" label="NUM Series before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="serieslabel" type="text" label="Series Label" default="Series" size="45"></param>
     <param name="series_linkto" type="radio" label="Link To View" default="0">
       <option value="0">Studies List</option>
@@ -2270,35 +2270,35 @@
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
-    <param name ="landingbooklimit" type="text" label="# Books before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
+    <param name ="landingbooklimit" type="text" label="NUM Books before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="booklabel" type="text" label="Books Label" default="Books" size="45"></param>
     <param type="spacer"></param>
     <param name="showtopics" type="radio" label="Show Topics" default="1">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
-    <param name ="landingtopicslimit" type="text" label="# Topics before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
+    <param name ="landingtopicslimit" type="text" label="NUM Topics before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="topicslabel" type="text" label="Topics Label" default="Topics" size="45"></param>
     <param type="spacer"></param>
     <param name="showlocations" type="radio" label="Show Locations" default="1">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
-    <param name ="landinglocationslimit" type="text" label="# Locations before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
+    <param name ="landinglocationslimit" type="text" label="NUM Locations before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="locationslabel" type="text" label="Locations Label" default="Locations" size="45"></param>
     <param type="spacer"></param>
     <param name="showmessagetype" type="radio" label="Show Message Types" default="1">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
-    <param name ="landingmessagetypelimit" type="text" label="# Messagetypes before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
+    <param name ="landingmessagetypelimit" type="text" label="NUM Messagetypes before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="messagetypelabel" type="text" label="Message Types Label" default="Message Types" size="45"></param>
     <param type="spacer"></param>
     <param name="showyears" type="radio" label="Show Years" default="1">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
-    <param name ="landingyearslimit" type="text" label="# Years before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
+    <param name ="landingyearslimit" type="text" label="NUM Years before break" description="Number of items to show before a Show/Hide All link. Leave blank for all" size="5" />
     <param name="yearslabel" type="text" label="Years Label" default="Years" size="45"></param>
   </params>
 </root>
