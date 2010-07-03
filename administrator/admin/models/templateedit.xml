@@ -88,8 +88,8 @@
                  <option value="0">No</option>
 				<option value="1">Yes</option>
 				</param>
-                <param name="internal_popup" type="list" default="0" label="Display Internal player as popup" description="Choose whether the internal viewer should be a popup or inline">
-                <option value="0">Inline</option>
+                <param name="internal_popup" type="list" default="0" label="Display Internal player or Direct as popup" description="Choose whether the internal viewer or the direct link to a file should be a popup or inline (internal player) or new window (direct)">
+                <option value="0">Inline/New Window</option>
 				<option value="1">Popup</option>
 				</param>
 			<param name="player_width" type="text" default="400" label="Width for media Player" description="Width in pixels of internal audo/video player" />

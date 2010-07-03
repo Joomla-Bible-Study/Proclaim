@@ -17,14 +17,8 @@
             $templateid = JRequest::getInt('template','1','get');
             $close = JRequest::getInt('close','0','get');
            
-            if ($close == 1)
-            {
-                $play = $getMedia->hitPlay($mediaid); //dump ($mediaid, 'play: ');
-                echo JHTML::_('content.prepare','<script language=javascript>window.close();</script>');
-                
-            }
-            else
-            {
+           
+           
             require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
 			$getMedia = new jbsMedia();
 			$document =& JFactory::getDocument();
@@ -76,6 +70,12 @@
             $frontcolor = $params->get('frontcolor','0xFFFFFF');
             $lightcolor = $params->get('lightcolor','0x000000');
   //Here is where we start the display
+   if ($close == 1)
+            {
+                $play = $getMedia->hitPlay($mediaid); //dump ($mediaid, 'play: ');
+                echo JHTML::_('content.prepare','<script language=javascript>window.close();</script>');
+                
+            }
  ?> 
 <div class="popupwindow">
 <?php
@@ -117,9 +117,10 @@ echo         "<p id='preview' style='text-align:center; vertical-align:middle';>
             s1.write('preview');
 			</script> ";
 }
+//TODO:Need to get difference between direct popup and not so can have popup use this script
 if ($itemparams->get('player') == 0)
 {
-    echo $path1;
+    echo '<script type=text/javascript> window.location.href=\''.$path1.'\'</script>';
 }
 ?>
 
@@ -133,7 +134,7 @@ echo $footertext;
 ?>
 </p></div>
 <?php
-	} //end of else for $close
+
         } //end of display function
 
 function titles($text, $media)

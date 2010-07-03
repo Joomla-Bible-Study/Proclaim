@@ -111,6 +111,7 @@ if (!$row->id) {return FALSE;}
 	  } 
 //dump ($playertype, 'playertype: ');
 //$type = 1 is popup
+//$item comes from the individual media file 0 = inline, 1 = popup, 3 = use global settings
         $item = $itemparams->get('internal_popup');
         $internal_popup = $params->get('internal_popup',0);
         
