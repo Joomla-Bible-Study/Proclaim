@@ -3,14 +3,15 @@
 <div id="editcell">
 	<table class="adminlist">
       <thead>
-        <tr> 
+        <tr>
           <th width="5"> <?php echo JText::_( 'Row' ); ?> </th>
-          <th width="20"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" /> 
+          <th width="20"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" />
           </th>
-          <th width="20" align="center"> <?php echo JText::_( 'Published' ); ?> 
+          <th width="20" align="center"> <?php echo JText::_( 'Published' ); ?>
           </th>
           <th> <?php echo JText::_( 'Location' ); ?> </th>
-          <th><?php echo JText::_( 'ID' ); ?></th>
+//          <th><?php echo JText::_( 'ID' ); ?></th>
+          <th><?php echo count($this->items); ?></th>
         </tr>
       </thead>
       <?php
@@ -23,11 +24,11 @@
 		$published 	= JHTML::_('grid.published', $row, $i );
 
 		?>
-      <tr class="<?php echo "row$k"; ?>"> 
+      <tr class="<?php echo "row$k"; ?>">
         <td width="5"> <?php echo $this->pagination->getRowOffset( $i ); ?> </td>
         <td width="20"> <?php echo $checked; ?> </td>
         <td width="20" align="center"> <?php echo $published; ?> </td>
-        <td> <a href="<?php echo $link; ?>"><?php echo $row->location_text; ?></a> 
+        <td> <a href="<?php echo $link; ?>"><?php echo $row->location_text; ?></a>
         </td>
         <td width="20"><?php echo $row->id; ?>
 		</td>

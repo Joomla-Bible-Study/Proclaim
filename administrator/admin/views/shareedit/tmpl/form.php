@@ -1,4 +1,4 @@
-<?php defined('_JEXEC') or die('Restricted access'); 
+<?php defined('_JEXEC') or die('Restricted access');
 global $mainframe;
 ?>
 
@@ -8,17 +8,17 @@ global $mainframe;
 		<legend><?php echo JText::_( 'Details' ); ?></legend>
 
 		<table class="admintable">
-        <tr> 
+        <tr>
         <td width="100" class="key"><label for="published"><?php echo JText::_( 'Published' ); ?></label></td>
         <td > <?php echo $this->lists['published'];
 		?>
           </td>
       </tr>
-     
+
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="name">
-					<?php echo JText::_( 'Name' ); ?>:
+                                        <?php echo JText::_( 'Name' ); ?>
 				</label>
 			</td>
 			<td>
@@ -29,10 +29,10 @@ global $mainframe;
 
         <tr><td class="key">
         <label for="image">
-        <?php echo JText::_('Image: ');?>
+        <?php echo JText::_('Image');?>
         </td><td>
-        
-        <?php 
+
+        <?php
 		$isweb = stristr($this->params->get('shareimage'), 'http');
 		if ($isweb) { echo '<img src="'.$this->params->get('shareimage').'">';}
 		else {echo '<img src="'.$mainframe->getCfg('live_site').DS.$this->params->get('shareimage').'">';}
@@ -43,16 +43,16 @@ global $mainframe;
     <tr><td class="key">
 		<label for="parameters">
 		<?php echo JText::_('Parameters');?>
-		</label>   
+		</label>
 		</td>
-		
+
 		<td>
 		<?php
 		jimport('joomla.html.pane');
 	$pane =& JPane::getInstance( 'sliders' );
- 
+
 echo $pane->startPane( 'content-pane' );
- 
+
 echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
 echo $this->params->render( 'params' );
 echo $pane->endPanel();

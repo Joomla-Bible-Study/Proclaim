@@ -9,7 +9,7 @@
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="messagetype">
-					<?php echo JText::_( 'Message Type' ); ?>:
+                                        <?php echo JText::_( 'Message Type' ); ?>
 				</label>
 			</td>
 			<td>

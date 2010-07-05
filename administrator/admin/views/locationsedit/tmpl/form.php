@@ -5,21 +5,21 @@
 	<fieldset class="adminform">
 		<legend><?php echo JText::_( 'Details' ); ?></legend>
 
-		
+
     <table class="admintable">
-    <tr> 
+    <tr>
         <td class="key"><?php echo JText::_( 'Published' ); ?></td>
         <td > <?php echo $this->lists['published'];
 		?>
           </td>
       </tr>
-      <tr> 
-        <td width="100" align="right" class="key"> <label for="location_text"> <?php echo JText::_( 'Location Name' ); ?>: 
+      <tr>
+        <td width="100" align="right" class="key"> <label for="location_text"> <?php echo JText::_( 'Location Name' ); ?>
           </label> </td>
-        <td> <input class="text_area" type="text" name="location_text" id="location_text" size="100" maxlength="250" value="<?php echo $this->locationsedit->location_text;?>" /> 
+        <td> <input class="text_area" type="text" name="location_text" id="location_text" size="100" maxlength="250" value="<?php echo $this->locationsedit->location_text;?>" />
         </td>
       </tr>
-      
+
     </table>
 	</fieldset>
 </div>

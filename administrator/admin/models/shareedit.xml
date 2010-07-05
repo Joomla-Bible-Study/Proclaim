@@ -2,7 +2,7 @@
 <root>
 	<params>
 		<param name="mainlink" type="text" size="200" default="" label="Main link to site and file" description="Enter a site and the main file used for social network sharing. Enter a complete url" />
-		<param name="item1prefix" type="text" size="50" default="" label="Prefix for Item 1" description="Enter a prefix to be used before the first item like u=" />
+                <param name="item1prefix" type="text" size="50" default="" label="Prefix for Item 1" description="Enter a prefix to be used before the first item like u" />
 		<param name="item1" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
 			<option value="0">Nothing</option>
 			<option value="200">Link to study</option>
@@ -25,8 +25,8 @@
 			<option value="16">Messagetype {message_type}</option>
 			<option value="24">Custom</option>
 		</param>
-		<param name="item1custom" size="100" type="text" default="" label="Custom for Item 1" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />	
-		<param name="item2prefix" size="50" type="text" default="" label="Prefix for Item 2" description="Enter a prefix to be used before the second item like u=" />
+		<param name="item1custom" size="100" type="text" default="" label="Custom for Item 1" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
+                <param name="item2prefix" size="50" type="text" default="" label="Prefix for Item 2" description="Enter a prefix to be used before the second item like u" />
 		<param name="item2" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
 			<option value="0">Nothing</option>
 			<option value="200">Link to study</option>
@@ -49,8 +49,8 @@
 			<option value="16">Messagetype {message_type}</option>
 			<option value="24">Custom</option>
 		</param>
-		<param name="item2custom" size="100" type="text" default="" label="Custom for Item 2" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />	
-		<param name="item3prefix" size="50" type="text" default="" label="Prefix for Item 3" description="Enter a prefix to be used before the third item like u=" />
+		<param name="item2custom" size="100" type="text" default="" label="Custom for Item 2" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
+                <param name="item3prefix" size="50" type="text" default="" label="Prefix for Item 3" description="Enter a prefix to be used before the third item like u" />
 		<param name="item3" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
 			<option value="0">Nothing</option>
 			<option value="200">Link to study</option>
@@ -73,8 +73,8 @@
 			<option value="16">Messagetype {message_type}</option>
 			<option value="24">Custom</option>
 		</param>
-		<param name="item3custom" size="100" type="text" default="" label="Custom for Item 3" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />	
-		<param name="item4prefix" size="50" type="text" default="" label="Prefix for Item 4" description="Enter a prefix to be used before the fourth item like u=" />
+		<param name="item3custom" size="100" type="text" default="" label="Custom for Item 3" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
+                <param name="item4prefix" size="50" type="text" default="" label="Prefix for Item 4" description="Enter a prefix to be used before the fourth item like u" />
 		<param name="item4" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
 			<option value="0">Nothing</option>
 			<option value="200">Link to study</option>
@@ -97,7 +97,7 @@
 			<option value="16">Messagetype {message_type}</option>
 			<option value="24">Custom</option>
 		</param>
-		<param name="item4custom" size="100" type="text" default="" label="Custom for Item 4" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />	
+		<param name="item4custom" size="100" type="text" default="" label="Custom for Item 4" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
 		<param name="use_bitly" type="list" default="0" label="Use link shortener bit.ly" description="Shortens the link. Helps mainly for services like Twitter that only take a certain number of characters">
 			<option value="0">Do Not Use</option>
 			<option value="1">Use bit.ly</option>

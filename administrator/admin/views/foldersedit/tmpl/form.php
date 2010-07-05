@@ -5,18 +5,18 @@
 	<fieldset class="adminform">
 		<legend><?php echo JText::_( 'Details' ); ?></legend>
 
-		
+
     <table class="admintable">
-      <tr> 
-        <td width="100" align="right" class="key"> <label for="folders"> <?php echo JText::_( 'Folder Name' ); ?>: 
+      <tr>
+        <td width="100" align="right" class="key"> <label for="folders"> <?php echo JText::_( 'Folder Name' ); ?>
           </label> </td>
-        <td> <input class="text_area" type="text" name="foldername" id="foldername" size="100" maxlength="250" value="<?php echo $this->foldersedit->foldername;?>" /> 
+        <td> <input class="text_area" type="text" name="foldername" id="foldername" size="100" maxlength="250" value="<?php echo $this->foldersedit->foldername;?>" />
         </td>
       </tr>
       <tr>
-        <td align="right" class="key"> <label for="folderpath"><?php echo JText::_( 'Folder Path - use leading and trailing "/"' ); ?>:</label>
+        <td align="right" class="key"> <label for="folderpath"><?php echo JText::_( 'Folder Path - use leading and trailing "/"' ); ?></label>
 		</td>
-        <td> <input class="text_area" type="text" name="folderpath" id="folderpath" size="100" maxlength="250" value="<?php echo $this->foldersedit->folderpath;?>" /> 
+        <td> <input class="text_area" type="text" name="folderpath" id="folderpath" size="100" maxlength="250" value="<?php echo $this->foldersedit->folderpath;?>" />
 		</td>
       </tr>
     </table>

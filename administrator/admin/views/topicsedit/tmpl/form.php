@@ -9,7 +9,7 @@
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="topic">
-					<?php echo JText::_( 'Topic' ); ?>:
+                                        <?php echo JText::_( 'Topic' ); ?>
 				</label>
 			</td>
 			<td>

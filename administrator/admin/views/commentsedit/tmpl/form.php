@@ -26,13 +26,13 @@
    <td>
     <table width="100%" border="0" cellspacing="1" cellpadding="1">
      <tr>
-      <td><?php echo JText::_( 'Study:'); echo $this->lists['studies'];?></td>
+      <td><?php echo JText::_( 'Study'); echo $this->lists['studies'];?></td>
      </tr>
      <tr>
-      <td><?php echo JText::_('Full Name:');?><input class="text_area" type="text" name="full_name" id="full_name" size="50" maxlength="50" value="<?php echo $this->commentsedit->full_name;?>" /></td>
+      <td><?php echo JText::_('Full Name');?><input class="text_area" type="text" name="full_name" id="full_name" size="50" maxlength="50" value="<?php echo $this->commentsedit->full_name;?>" /></td>
      </tr>
      <tr>
-      <td><?php echo JText::_('Email:')?> <input class="text_area" type="text" name="user_email" id="user_email" size="70" maxlength="100" value="<?php echo $this->commentsedit->user_email;?>" /></td>
+      <td><?php echo JText::_('Email')?> <input class="text_area" type="text" name="user_email" id="user_email" size="70" maxlength="100" value="<?php echo $this->commentsedit->user_email;?>" /></td>
      </tr>
      <tr>
       <td><textarea class="text_area" name="comment_text" cols="53" rows="4" id="comment_text" ><?php echo $this->commentsedit->comment_text;?></textarea></td>

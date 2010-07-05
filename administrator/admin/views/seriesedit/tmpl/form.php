@@ -1,4 +1,4 @@
-<?php defined('_JEXEC') or die('Restricted access'); 
+<?php defined('_JEXEC') or die('Restricted access');
 $editor =& JFactory::getEditor();
 ?>
 
@@ -11,7 +11,7 @@ $editor =& JFactory::getEditor();
 		<tr>
 			<td align="right" class="key">
 				<label for="series">
-					<?php echo JText::_( 'Series Name' ); ?>:
+                                        <?php echo JText::_( 'Series Name' ); ?>
 				</label>
 			</td>
 			<td>
@@ -33,7 +33,7 @@ $editor =& JFactory::getEditor();
 				<td> <?php echo $editor->display('description', $this->seriesedit->description, '100%', '400', '70', '15'); ?></td>
             <td>
             </tr>
-            
+
 	</table>
 	</fieldset>
 </div>

@@ -54,7 +54,7 @@ echo $pane->endPane(); */
 		<td><?php echo $this->lists['published'];?></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Study Date' ); ?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Study Date' ); ?></td>
 		<td><?php
 		if (!$this->studiesedit->id)
 		{
@@ -66,24 +66,24 @@ echo $pane->endPane(); */
 		</td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Study Number' ); ?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Study Number' ); ?></td>
 		<td><input class="text_area" type="text" name="studynumber"
 			id="studynumber" size="25" maxlength="25"
 			value="<?php echo $this->studiesedit->studynumber;?>" /></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Title' ); ?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Title' ); ?></td>
 		<td><input class="text_area" type="text" name="studytitle"
 			id="studytitle" size="100" maxlength="250"
 			value="<?php echo $this->studiesedit->studytitle;?>" /></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Description' ); ?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Description' ); ?></td>
 		<td><textarea name="studyintro" cols="100" class="text_area"
 			id="studyintro"><?php echo $this->studiesedit->studyintro;?></textarea></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Scripture' ); ?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Scripture' ); ?></td>
 		<td>
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
@@ -133,7 +133,7 @@ echo $pane->endPane(); */
 		</td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Scripture 2' ); ?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Scripture 2' ); ?></td>
 		<td>
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
@@ -176,31 +176,31 @@ echo $pane->endPane(); */
 		</td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Secondary References' );?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Secondary References' );?></td>
 		<td><input class="text_area" type="text" name="secondary_reference"
 			id="secondary_reference" size="150" maxlength="150"
 			value="<?php echo $this->studiesedit->secondary_reference;?>" /></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Teacher' ); ?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Teacher' ); ?></td>
 		<td><?php echo $this->lists['teacher_id']; ?></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Location' ); ?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Location' ); ?></td>
 		<td><?php echo $this->lists['location_id']; ?></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Series' ); ?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Series' ); ?></td>
 		<td><?php echo $this->lists['series_id']; ?></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Topic' );?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Topic' );?></td>
 		<td><?php echo $this->lists['topics_id'];?></td>
 	</tr>
 
   <tr>
     <td class="key" align="left">
-      <?php echo JText::_( 'Topic' );?>:
+      <?php echo JText::_( 'Topic' );?>
     </td>
     <td>
       <input type="text" id="topic_tags" name="topic_tags"></input>
@@ -208,11 +208,11 @@ echo $pane->endPane(); */
   </tr>
 
   <tr>
-        <td class="key" align="left"><?php echo JText::_( 'Message Type' );?>:</td>
+        <td class="key" align="left"><?php echo JText::_( 'Message Type' );?></td>
 		<td><?php echo $this->lists['messagetype']; ?></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_('Duration');?>:</td>
+        <td class="key" align="left"><?php echo JText::_('Duration');?></td>
 		<td>
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
@@ -239,7 +239,7 @@ echo $pane->endPane(); */
 		<td><?php echo $this->lists['comments'];?></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_('User Level to show');?>:</td>
+        <td class="key" align="left"><?php echo JText::_('User Level to show');?></td>
 		<td><select name="show_level" id="show_level" class="inputbox"
 			size="1">
 			<?php
@@ -265,7 +265,7 @@ echo $pane->endPane(); */
     <tr>
     	<td class="key" alsign="left">
     		<label for="thumbnailm">
-                       <?php echo JText::_('Thumbnail');?>:
+                       <?php echo JText::_('Thumbnail');?>
     		</label>
     	</td>
     	<td>
@@ -273,7 +273,7 @@ echo $pane->endPane(); */
     	</td>
     </tr>
     <tr><td valign="top" class="key">
-                   <?php echo JText::_( 'Study Image' ); ?>:
+                   <?php echo JText::_( 'Study Image' ); ?>
         </td>
     <td> <?php  ?>
     <img <?php if(empty($this->studiesedit->thumbnailm)){echo ('style="display: none;"');}?> id="imgthumbnailm" src="<?php echo '../images/'.$this->admin_params->get('study_images', 'stories').'/'.$this->studiesedit->thumbnailm;?>">

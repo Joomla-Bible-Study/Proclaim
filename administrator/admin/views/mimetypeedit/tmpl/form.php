@@ -9,7 +9,7 @@
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="mimetype">
-					<?php echo JText::_( 'Mime Type' ); ?>:
+                <?php echo JText::_( 'Mime Type' ); ?>
 				</label>
 			</td>
 			<td>
@@ -17,8 +17,9 @@
 			</td>
 		</tr>
         <tr>
-        <td width="100" align="right" class="key"><label for="mimetype">
-        	<?php echo JText::_( 'Mime Type Code' ); ?>:
+        <td width="100" align="right" class="key">
+            <label for="mimetype">
+            <?php echo JText::_( 'Mime Type Code' ); ?>
             </label>
         </td>
         <td>
