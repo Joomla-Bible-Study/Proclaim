@@ -35,7 +35,7 @@ if (!$row->id) {return FALSE;}
  	$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);
 
     $download_image = $download_tmp->path;
-	$query_media1 = 'SELECT #__bsms_mediafiles.*,'
+	$query = 'SELECT #__bsms_mediafiles.*,'
     . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
     . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
     . ' #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2,'
@@ -47,7 +47,7 @@ if (!$row->id) {return FALSE;}
     . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
     . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
     . ' WHERE #__bsms_mediafiles.study_id = '.$row->id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
-    $database->setQuery( $query_media1 );
+    $database->setQuery( $query);
     $media1 = $database->loadObjectList('id');
 	$rows2 = count($media1);
 	
@@ -100,6 +100,19 @@ if (!$row->id) {return FALSE;}
        $playerwidth = $playerwidth + 20;
        $playerheight = $playerheight + $params->get('popupmargin','50');
      //dump ($playerwidth, 'width: '); dump ($playerheight, 'height: ');
+     
+     // Players - from Template: 
+     // media_player = internal player for all files
+     // useravr = use avr for all files
+     // useav = use All Videos plugin for all files
+     // popuptype = whether AVR should be window or lightbox (handled in avr code)
+     // media_player = use internal player for all files
+     // internal_popup = whether direct or internal player should be popup or inline/new window
+     
+     // From media file:
+     // player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
+     // internal_popup 0 = inline 1 = popup, 2 = global settings
+    
      $playertype = 0;
       if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
       {
@@ -108,6 +121,10 @@ if (!$row->id) {return FALSE;}
       if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
 	  {
 	  	$playertype = 2;
+	  } 
+      if ($params->get('useav') == 1 || $itemparams->get('player') == 3)
+	  {
+	  	$playertype = 3;
 	  } 
 //dump ($playertype, 'playertype: ');
 //$type = 1 is popup
@@ -166,8 +183,13 @@ if (!$row->id) {return FALSE;}
 		case 2:
        		$media1_link = $getMedia->getAVRLink($media, $width, $height, $src, $params, $image, $Itemid);
 		break;
+        
+        case 3:
+            echo '<div>'.JHTML::_('content.prepare', $media->mediacode).'</div>'; 
+        break;
       }
 
+        
 	  if ($media->docMan_id > 0)
 	 	{
 			$media1_link = getDocman($media, $width, $height, $src, $duration, $filesize);

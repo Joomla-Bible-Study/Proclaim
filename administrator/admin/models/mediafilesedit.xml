@@ -7,7 +7,7 @@
 			<option value="2">Use All Videos Reloaded</option>
             <option value="3">Use All Videos</option>
 		</param>
-        <param name="internal_popup" type="list" default="3" label="Display Internal player as popup" description="Choose whether the internal viewer should be a popup or inline. Affects this file only">
+        <param name="internal_popup" type="list" default="3" label="Display as popup/New Window" description="Choose whether the internal viewer should be a popup or inline. If direct then plays in new window. Affects this file only. Overrides global settings">
                 <option value="0">Inline</option>
 				<option value="1">Popup</option>
                 <option value="3">Use Global Setting</option>

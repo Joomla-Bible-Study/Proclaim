@@ -40,7 +40,7 @@
 			$play = $getMedia->hitPlay($mediaid);
 			
 			// All Videos plugin running youtube video in popup
-		//	echo JHTML::_('content.prepare', '{vimeo}11810181{/vimeo}');
+		
 
              //This is the inline player
             $media = $getMedia->getMediaRows($mediaid);
@@ -87,10 +87,12 @@ if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams
 $footertext = $this->titles($params->get('popupfooter'), $media);
 if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media);}
 echo '<p class="popuptitle">'.$headertext.'</p>';
+
 //Here is where we choose whether to use the Internal Viewer or All Videos
 if ($itemparams->get('player') == 3) {
     $mediacode = $getMedia->getAVmediacode($media->mediacode);
     echo JHTML::_('content.prepare', $mediacode);}  
+    
 if ($itemparams->get('player')== 2)
 {        
 echo         "<p id='preview' style='text-align:center; vertical-align:middle';>There is a problem with the player. We apologize for the inconvenience</p>

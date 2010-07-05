@@ -72,7 +72,11 @@
 				<option value="0">No</option>
 				<option value="1">Yes</option>
 		</param>
-			<param name="useavr" type="list" default="0" label="Use AllVideosReloaded for all media" description="If installed, use AllVideosReloaded 1.2.3 or higher player for all video and audio (overrides local settings)">
+        <param name="useav" type="list" default="0" label="Use AllVideos for all media" description="If installed, use AllVideos plugin for all video and audio. You cannot use both All Videos and All Videos Reloaded at the same time.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+			<param name="useavr" type="list" default="0" label="Use AllVideosReloaded for all media" description="If installed, use AllVideosReloaded 1.2.3 or higher player for all video and audio (overrides local settings). You cannot use both All Videos and All Videos Reloaded at the same time.">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
 				</param>
@@ -83,10 +87,6 @@
 				<param name="media_player" type="list" default="0" label="Internal Media Player for all files" description="Use built-in media player for all files and can be set for an individual study.">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
-				</param>
-                <param name="direct_internal" type="list" default="0" label="Play media files set as direct in internal player" description="If you have set media files to be a direct link you can have them play using the JWPlayer instead.">
-                 <option value="0">No</option>
-				<option value="1">Yes</option>
 				</param>
                 <param name="internal_popup" type="list" default="0" label="Display Internal player or Direct as popup" description="Choose whether the internal viewer or the direct link to a file should be a popup or inline (internal player) or new window (direct)">
                 <option value="0">Inline/New Window</option>
