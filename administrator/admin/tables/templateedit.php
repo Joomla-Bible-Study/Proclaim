@@ -12,7 +12,7 @@ class Tabletemplateedit extends JTable {
 	var $text = null;
 	var $pdf = null;
 	
-	function Tabletemplateedit(&$db) {
+	function Tabletemplateedit(&$db) { //dump ($array, 'array: ');
 		parent::__construct('#__bsms_templates', 'id', $db);
 	}
 //Not sure if this function belongs here, but is designed to save the params to their row in the database

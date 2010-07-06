@@ -35,8 +35,8 @@ class biblestudyControllertemplateedit extends JController {
 		$this->setRedirect('index.php?option=com_biblestudy&view=templateslist', $msg);
 	}
 
-	function save() {
-		$model = $this->getModel('templateedit');
+	function save() { 
+		$model = $this->getModel('templateedit'); //dump ($model, 'task: ');
 		$data = JRequest::get('post');
 		if ($model->store($post)) {
 			$msg = JText::_( 'Template Saved!' );
@@ -124,7 +124,7 @@ class biblestudyControllertemplateedit extends JController {
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=templateslist', $msg );
 	}
 
-	function cancel(){
+	function cancel(){ 
 		$msg = JText::_( 'Operation Cancelled' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=templateslist', $msg );
 	}

@@ -49,13 +49,13 @@ class biblestudyModeltemplateedit extends JModel {
 	}
 
 	function store($data = null, $tmpl = null){
-		$row =& $this->getTable();
+		$row =& $this->getTable(); //dump ($row, 'row: ');
 		//@todo Clean this up
 		if(!isset($data)) {
 			$data = JRequest::get('post');
 		}
 		$data['tmpl'] = JRequest::getVar( 'tmpl', '', 'post', 'string', JREQUEST_ALLOWRAW );
-
+//dump ($data, 'data: ');
 		// Bind the form fields to the hello table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());

@@ -7,7 +7,7 @@ class biblestudyViewtemplateedit extends JView {
 		//Get template if editing
 		$template = $this->get('template');
 //dump ($template, 'template: ');
-		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
+	//	JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		if(empty($template->id)) {
 			JToolbarHelper::title(JText::_('Create Template'), 'templates.png');
 		}else{
@@ -19,8 +19,8 @@ class biblestudyViewtemplateedit extends JView {
 		JToolbarHelper::cancel();
 		JToolBarHelper::help('biblestudy', true );
 		//Initialize templating class
-		$tmplEngine = $this->loadHelper('templates.helper');
-		$tmplEngine =& bibleStudyTemplate::getInstance();
+		//$tmplEngine = $this->loadHelper('templates.helper');
+		//$tmplEngine =& bibleStudyTemplate::getInstance();
 		$lists = array();
 		//Load the template params from its row and assign to $this
 		$paramsdata = $template->params;
@@ -29,7 +29,7 @@ class biblestudyViewtemplateedit extends JView {
 		$this->assignRef('params', $params);
 		//dump ($template, 'template: ');
 		$data['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $template->published);
-		$data['tmplTypes'] = $tmplEngine->loadTmplTypesOption($template->type); 
+	//	$data['tmplTypes'] = $tmplEngine->loadTmplTypesOption($template->type); 
 
 		$this->assignRef('template', $template);
 		$this->assignRef('data', $data);
@@ -44,19 +44,21 @@ class biblestudyViewtemplateedit extends JView {
 		
 		//Include the Jquery Library and Plugins
 		$document =& JFactory::getDocument();
-		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.contextmenu.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
+        $document->addStyleSheet(JURI::base().'components/com_biblestudy/css/icons.css');
+        // Tom removed - don't seem neccesary
+	//	$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
+//		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
+//		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.contextmenu.js');
+//		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 			
 		//BibleStudy Core
-		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
+//		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
 		
 		//Biblestudy User Interface
-		$document->addScript(JURI::base().'components/com_biblestudy/js/ui/jquery-ui.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy-ui.js');
-		$document->addStyleSheet(JURI::base().'components/com_biblestudy/js/ui/theme/ui.all.css');
-		$document->addStyleSheet(JURI::base().'components/com_biblestudy/js/ui/theme/biblestudy.generic.css');
+	//	$document->addScript(JURI::base().'components/com_biblestudy/js/ui/jquery-ui.js');
+	//	$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy-ui.js');
+//		$document->addStyleSheet(JURI::base().'components/com_biblestudy/js/ui/theme/ui.all.css');
+//		$document->addStyleSheet(JURI::base().'components/com_biblestudy/js/ui/theme/biblestudy.generic.css');
 		
 /*		$document->addScript(JURI::base().'components/com_biblestudy/js/edit_area/edit_area_full.js');
 		$document->addScriptDeclaration('
