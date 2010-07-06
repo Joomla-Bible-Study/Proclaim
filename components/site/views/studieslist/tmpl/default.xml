@@ -3,7 +3,7 @@
 <metadata>
 	<layout title="Studies List Layout">
 		<message>
-			<![CDATA[Create a link to the main Bible Studies List Page]]>
+                        <![CDATA[Create a link to the main Studies List Page]]>
 		</message>
 	</layout>
 	<state>

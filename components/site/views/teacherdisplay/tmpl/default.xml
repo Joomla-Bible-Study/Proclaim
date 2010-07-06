@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: default.xml tf 12-11-2007 $ -->
 <metadata>
-	<layout title="Single Teacher View Layout">
+        <layout title="Single Teacher Layout">
 		<message>
 			<![CDATA[Create a link to a single teacher]]>
 		</message>
@@ -15,6 +15,6 @@
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="studydetails" />
 			<param name="templatemenuid" type="templatemenuid" default="" label="Template for this item" description="Choose a template defined in admin/templates tab for this item" />
-		</params>	
+		</params>
 	</state>
 </metadata>
