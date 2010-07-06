@@ -1,94 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
-<install type="component" version="1.5.0" method="upgrade">
-	<name>Bible Study</name>
-	<version>6.2.0_RC1</version>
-	<versionname>Deuteronomy</versionname>
-	<creationDate>2010-06-23</creationDate>
-	<build>614</build>
-	<author>Tom Fuller, Eugen Istok, Kyle Holder, Richard Hunt - JoomlaBibleStudy Team</author>
-	<authorEmail>tomfuller2@gmail.com</authorEmail>
-	<authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
-	<copyright>Joomla Bible Study</copyright>
-	<license>GNU/GPL</license>
-	<description>Joomla Bible Study Message Management System</description>
-	<files>manifest.xml</files>
-	<files folder="site">
-		<filename>index.html</filename>
-		<filename>metadata.xml</filename>
-		<filename>biblestudy.php</filename>
-		<filename>controller.php</filename>
-		<filename>tooltip.js</filename>
-		<filename>convert1.htm</filename>
-		<filename>class.biblestudydownload.php</filename>
-		<folder>sef_ext</folder>
-		<folder>assets</folder>
-		<folder>views</folder>
-		<folder>models</folder>
-		<folder>tables</folder>
-		<folder>controllers</folder>
-		<folder>images</folder>
-		<folder>elements</folder>
-		<folder>helpers</folder>
-		<folder>install</folder>
-		<folder>lib</folder>
-	</files>
-	<installfile>biblestudy.install.php</installfile>
-	<uninstallfile>uninstall.biblestudy.php</uninstallfile>
-		<languages folder="site/languages">
-		<language tag="en-GB">en-GB.com_biblestudy.ini</language>
-	</languages>
-	<administration>
-		<!-- Administration Menu Section -->
-		<menu>Bible Study</menu>
-		<submenu>
-			<!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-			<menu link="option=com_biblestudy&amp;view=cpanel">Control Panel</menu>
-			<menu link="option=com_biblestudy&amp;view=studieslist">Studies</menu>
-			<menu link="option=com_biblestudy&amp;view=mediafileslist">Media Files</menu>
-			<menu link="option=com_biblestudy&amp;view=templateslist">Template Display Settings</menu>
-			<menu link="option=com_biblestudy&amp;view=teacherlist">Teachers</menu>
-			<menu link="option=com_biblestudy&amp;view=bookslist">Bible Books</menu>
-			<menu link="option=com_biblestudy&amp;view=medialist">Media Images</menu>
-			<menu link="option=com_biblestudy&amp;view=serieslist">Series</menu>
-			<menu link="option=com_biblestudy&amp;view=serverslist">Servers</menu>
-			<menu link="option=com_biblestudy&amp;view=folderslist">Server Folders</menu>
-			<menu link="option=com_biblestudy&amp;view=messagetypelist">Message Types</menu>
-			<menu link="option=com_biblestudy&amp;view=locationslist">Locations</menu>
-			<menu link="option=com_biblestudy&amp;view=topicslist">Topics</menu>
-			<menu link="option=com_biblestudy&amp;view=podcastlist">Podcasts</menu>
-			<menu link="option=com_biblestudy&amp;view=mimetypelist">Mime Types</menu>
-			<menu link="option=com_biblestudy&amp;view=commentslist">Study Comments</menu>
-			<menu link="option=com_biblestudy&amp;view=sharelist">Social Network Links</menu>
-			<menu link="option=com_biblestudy&amp;view=admin&amp;layout=form">Administration</menu>
-			<menu link="option=com_biblestudy&amp;view=cssedit">CSS Edit</menu>
-			<!-- Instead of link you can specify individual link attributes -->
-		</submenu>
-		<!-- Administration Main File Copy Section -->
-		<files folder="admin">
-			<filename>index.html</filename>
-			<filename>admin.biblestudy.php</filename>
-			<filename>controller.php</filename>
-			<filename>Snoopy.class.php</filename>
-			<filename>convert1.htm</filename>
-			<filename>config.xml</filename>
-			<folder>js</folder>
-			<folder>css</folder>
-			<folder>help</folder>
-			<folder>tables</folder>
-			<folder>views</folder>
-			<folder>models</folder>
-			<folder>helpers</folder>
-			<folder>elements</folder>
-			<folder>controllers</folder>
-			<folder>lib</folder>
-			<folder>install</folder>
-			<folder>images</folder>
-		</files>
-			<languages folder="admin/languages">
-			<language tag="en-GB">en-GB.com_biblestudy.ini</language>
-			<language tag="en-GB">en-GB.com_biblestudy.menu.ini</language>
-		</languages>
-	</administration>
-	<params />
+<install type="component"
+         version="1.5.0"
+         method="upgrade">
+  <name>Bible Study</name>
+  <version>6.2.0_RC1</version>
+  <versionname>Deuteronomy</versionname>
+  <creationDate>2010-06-23</creationDate>
+  <build>614</build>
+  <author>Tom Fuller, Eugen Istok, Kyle Holder, Richard Hunt - JoomlaBibleStudy Team</author>
+  <authorEmail>tomfuller2@gmail.com</authorEmail>
+  <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
+  <copyright>Joomla Bible Study</copyright>
+  <license>GNU/GPL</license>
+  <description>Joomla Bible Study Message Management System</description>
+  <files>manifest.xml</files>
+  <files folder="site">
+    <filename>index.html</filename>
+    <filename>metadata.xml</filename>
+    <filename>biblestudy.php</filename>
+    <filename>controller.php</filename>
+    <filename>tooltip.js</filename>
+    <filename>convert1.htm</filename>
+    <filename>class.biblestudydownload.php</filename>
+    <folder>sef_ext</folder>
+    <folder>assets</folder>
+    <folder>views</folder>
+    <folder>models</folder>
+    <folder>tables</folder>
+    <folder>controllers</folder>
+    <folder>images</folder>
+    <folder>elements</folder>
+    <folder>helpers</folder>
+    <folder>install</folder>
+    <folder>lib</folder>
+  </files>
+  <installfile>biblestudy.install.php</installfile>
+  <uninstallfile>uninstall.biblestudy.php</uninstallfile>
+  <languages folder="site/languages">
+    <language tag="en-GB">en-GB.com_biblestudy.ini</language>
+    <language tag="cs-CS">cs-CS.com_biblestudy.ini</language>
+    <language tag="de-DE">de-DE.com_biblestudy.ini</language>
+    <language tag="es-ES">es-ES.com_biblestudy.ini</language>
+    <language tag="hu-HU">hu-HU.com_biblestudy.ini</language>
+    <language tag="nl-NL">nl-NL.com_biblestudy.ini</language>
+    <language tag="no-NO">no-NO.com_biblestudy.ini</language>
+  </languages>
+  <administration>
+    <!-- Administration Menu Section -->
+    <menu>Bible Study</menu>
+    <submenu>
+      <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
+      <menu link="option=com_biblestudy&amp;view=cpanel">Control Panel</menu>
+      <menu link="option=com_biblestudy&amp;view=studieslist">Studies</menu>
+      <menu link="option=com_biblestudy&amp;view=mediafileslist">Media Files</menu>
+      <menu link="option=com_biblestudy&amp;view=templateslist">Template Display Settings</menu>
+      <menu link="option=com_biblestudy&amp;view=teacherlist">Teachers</menu>
+      <menu link="option=com_biblestudy&amp;view=bookslist">Bible Books</menu>
+      <menu link="option=com_biblestudy&amp;view=medialist">Media Images</menu>
+      <menu link="option=com_biblestudy&amp;view=serieslist">Series</menu>
+      <menu link="option=com_biblestudy&amp;view=serverslist">Servers</menu>
+      <menu link="option=com_biblestudy&amp;view=folderslist">Server Folders</menu>
+      <menu link="option=com_biblestudy&amp;view=messagetypelist">Message Types</menu>
+      <menu link="option=com_biblestudy&amp;view=locationslist">Locations</menu>
+      <menu link="option=com_biblestudy&amp;view=topicslist">Topics</menu>
+      <menu link="option=com_biblestudy&amp;view=podcastlist">Podcasts</menu>
+      <menu link="option=com_biblestudy&amp;view=mimetypelist">Mime Types</menu>
+      <menu link="option=com_biblestudy&amp;view=commentslist">Study Comments</menu>
+      <menu link="option=com_biblestudy&amp;view=sharelist">Social Network Links</menu>
+      <menu link="option=com_biblestudy&amp;view=admin&amp;layout=form">Administration</menu>
+      <menu link="option=com_biblestudy&amp;view=cssedit">CSS Edit</menu>
+      <!-- Instead of link you can specify individual link attributes -->
+    </submenu>
+    <!-- Administration Main File Copy Section -->
+    <files folder="admin">
+      <filename>index.html</filename>
+      <filename>admin.biblestudy.php</filename>
+      <filename>controller.php</filename>
+      <filename>Snoopy.class.php</filename>
+      <filename>convert1.htm</filename>
+      <filename>config.xml</filename>
+      <folder>js</folder>
+      <folder>css</folder>
+      <folder>help</folder>
+      <folder>tables</folder>
+      <folder>views</folder>
+      <folder>models</folder>
+      <folder>helpers</folder>
+      <folder>elements</folder>
+      <folder>controllers</folder>
+      <folder>lib</folder>
+      <folder>install</folder>
+      <folder>images</folder>
+    </files>
+    <languages folder="admin/languages">
+      <language tag="en-GB">en-GB.com_biblestudy.ini</language>
+      <language tag="en-GB">en-GB.com_biblestudy.menu.ini</language>
+      <language tag="cs-CZ">cs-CZ.com_biblestudy.ini</language>
+      <language tag="cs-CZ">cs-CZ.com_biblestudy.menu.ini</language>
+      <language tag="de-DE">de-DE.com_biblestudy.ini</language>
+      <language tag="de-DE">de-DE.com_biblestudy.menu.ini</language>
+      <language tag="es-ES">es-ES.com_biblestudy.ini</language>
+      <language tag="es-ES">es-ES.com_biblestudy.menu.ini</language>
+      <language tag="hu_HU">hu-HU.com_biblestudy.menu.ini</language>
+      <language tag="nl-NL">nl-NL.com_biblestudy.ini</language>
+      <language tag="no-NO">no-NO.com_biblestudy.ini</language>
+      <language tag="no-NO">no-NO.com_biblestudy.menu.ini</language>
+    </languages>
+  </administration>
+  <params />
 </install>
