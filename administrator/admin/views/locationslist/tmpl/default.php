@@ -10,8 +10,7 @@
           <th width="20" align="center"> <?php echo JText::_( 'Published' ); ?>
           </th>
           <th> <?php echo JText::_( 'Location' ); ?> </th>
-//          <th><?php echo JText::_( 'ID' ); ?></th>
-          <th><?php echo count($this->items); ?></th>
+          <th><?php echo JText::_( 'ID' ); ?></th>
         </tr>
       </thead>
       <?php
