@@ -32,7 +32,9 @@ class biblestudyViewstudieslist extends JView {
 		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 		//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-
+        $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+        //Errors when using local swfobject.js file.  IE 6 doesn't work
+        //$document->addScript(JURI::base().'components/com_biblestudy/assets/player/swfobject.js');
 		//Import Scripts
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/biblestudy.js');

@@ -23,8 +23,11 @@
 			$getMedia = new jbsMedia();
 			$document =& JFactory::getDocument();
             $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-
-			//Use only component template not the full site template
+            $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+        //Errors when using local swfobject.js file.  IE 6 doesn't work
+        //$document->addScript(JURI::base().'components/com_biblestudy/assets/player/swfobject.js');
+		
+        	//Use only component template not the full site template
 			
             jimport ('joomla.application.component.helper');
 			$db	= & JFactory::getDBO();
@@ -92,13 +95,24 @@ echo '<p class="popuptitle">'.$headertext.'</p>';
 if ($itemparams->get('player') == 3) {
     $mediacode = $getMedia->getAVmediacode($media->mediacode);
     echo JHTML::_('content.prepare', $mediacode);}  
-    
+/*
+echo    "<script type='text/javascript'>
+swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '320', '196', '9.0.0', false,{file:'".$path1."',autostart:'false'}, {allowfullscreen:'true', allowscriptaccess:'always'}, {id:'".$media->id."', name:'".$media->id."'});
+</script>
+<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</div>";
+*/        
+            
 if ($itemparams->get('player')== 2)
-{        
-echo         "<p id='preview' style='text-align:center; vertical-align:middle';>There is a problem with the player. We apologize for the inconvenience</p>
+{ 
+    echo    "<script type='text/javascript'>
+swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '320', '196', '9.0.0', false,{file:'".$path1."',autostart:'false'}, {allowfullscreen:'true', allowscriptaccess:'always'}, {id:'".$media->id."', name:'".$media->id."'});
+</script>
+<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</div>";
+/*
+echo         "<p id='preview' style='text-align:center; vertical-align:middle';><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</p>
 			<script type='text/javascript' src='".JURI::base()."components/com_biblestudy/assets/player/swfobject.js'></script>
 			<script type='text/javascript'>
-			var s1 = new SWFObject('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$playerwidth."','".$playerheight."','9');
+			var s1 = swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf','player','".$playerwidth."','".$playerheight."','9');
             s1.addVariable('file','".$path1."');
             s1.addVariable('title','".$studytitle."');
             s1.addVariable('lightcolor','".$lightcolor."');
@@ -117,7 +131,7 @@ echo         "<p id='preview' style='text-align:center; vertical-align:middle';>
             s1.addVariable('autostart','false');
             ".$extraparams."
             s1.write('preview');
-			</script> ";
+			</script> "; */
 }
 //TODO:Need to get difference between direct popup and not so can have popup use this script
 if ($itemparams->get('player') == 0)

@@ -78,6 +78,14 @@ function getInternalLink($media, $width, $height, $src, $params, $image, $row_co
           }
           else
           {
+            
+New code by Nick:
+            $media1_link =
+        "<script type='text/javascript'>
+swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder".$media->id."', '320', '196', '9.0.0', false,{file:'".$path1."',autostart:'false'}, {allowfullscreen:'true', allowscriptaccess:'always'}, {id:'".$media->id."', name:'".$media->id."'});
+</script>
+<div id='placeholder".$media->id."'><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</div>";
+
             */
             $media1_link =
             //This is the inline player
