@@ -92,7 +92,7 @@ if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparam
 echo '<p class="popuptitle">'.$headertext.'</p>';
 
 //Here is where we choose whether to use the Internal Viewer or All Videos
-if ($itemparams->get('player') == 3) {
+if ($itemparams->get('player') == 3 | JRequest::getInt('player','','get')== 3) {
     $mediacode = $getMedia->getAVmediacode($media->mediacode);
     echo JHTML::_('content.prepare', $mediacode);}  
 /*
@@ -134,7 +134,7 @@ echo         "<p id='preview' style='text-align:center; vertical-align:middle';>
 			</script> "; */
 }
 //TODO:Need to get difference between direct popup and not so can have popup use this script
-if ($itemparams->get('player') == 0)
+if (JRequest::getInt('player','','get') == 0)
 {
     echo '<script type=text/javascript> window.location.href=\''.$path1.'\'</script>';
 }
