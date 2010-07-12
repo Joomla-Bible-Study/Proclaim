@@ -1,5 +1,6 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
 function getElementid($rowid, $row, $params, $admin_params, $template)
 	{
 	$elementid = null;
@@ -125,9 +126,14 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			$elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $template);
 			break;
 		case 20:
+            $mediaclass = new jbsMedia(); 
 			$elementid->id = 'media';
 			$elementid->headertext = JText::_('Media');
-			$elementid->element = getMediatable($params, $row, $admin_params);
+		//	$elementid->element = getMediatable($params, $row, $admin_params);
+            $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
+        //    $elementid->element = $mediaclass->getMediaid($row->id);
+            dump ($elementid->element, 'elementid: ');
+        
 			break;
 		case 22:
 			$elementid->id = 'store';
