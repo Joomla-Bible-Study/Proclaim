@@ -1,6 +1,7 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 //Helper file - master list creater for study lists
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
 function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule)
 {
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -510,7 +511,8 @@ $Itemid = JRequest::getVar('Itemid');
 		}
 function getListingExp($row, $params, $admin_params, $template)
 {
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$Media = new jbsMedia();
+    $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
@@ -559,7 +561,7 @@ function getListingExp($row, $params, $admin_params, $template)
     $mediaTable .= "<td>".getPdf($row, $params, $admin_params)."</td>";
     $mediaTable .= "</TR></table>";*/
     //For now we need to use the existing mediatable function to get all the media
-    $mediaTable = getMediatable($params, $row, $admin_params); //dump ($mediaTable, 'mediatable: ');
+    $mediaTable = $Media->getMediaTable($row, $params, $admin_params); //dump ($mediaTable, 'mediatable: ');
     $label = str_replace('{{media}}', $mediaTable, $label);
     //Need to add template items for media...
 
@@ -568,6 +570,7 @@ function getListingExp($row, $params, $admin_params, $template)
 
 function getStudyExp($row, $params, $admin_params, $template)
 {
+    $Media = new jbsMedia();
     $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	include_once($path1.'scripture.php');
@@ -631,7 +634,8 @@ function getStudyExp($row, $params, $admin_params, $template)
         $mediaTable .= "</TR>";
     }
     $mediaTable .= "</table>";*/
-    $mediaTable = getMediatable($params, $row, $admin_params);
+  //  $mediaTable = getMediatable($params, $row, $admin_params);
+    $mediaTable = $Media->getMediaTable($row, $params, $admin_params);
     $label = str_replace('{{media}}', $mediaTable, $label);
 
     //Share

@@ -7,6 +7,7 @@
 * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
 * @link http://www.JoomlaBibleStudy.org
 **/
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
 define ('BIBLESTUDY_VERSION', '6.2.0');
@@ -41,25 +42,7 @@ define('BIBLESTUDY_PATH_ADMIN_LANGUAGE', BIBLESTUDY_PATH_ADMIN .DS. 'language');
 define('BIBLESTUDY_PATH_ADMIN_INSTALL', BIBLESTUDY_PATH_ADMIN .DS. 'install');
 define('BIBLESTUDY_PATH_ADMIN_IMAGES', BIBLESTUDY_PATH_ADMIN .DS. 'images');
 
-// Image folder paths
-// Main Study Listing Page image folder path
-/*
-$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
-include_once($path1.'helper.php');
-$admin_params = getAdminsettings();
-$db	= & JFactory::getDBO();
-$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
-$db->query();
-$admin = $db->loadObject();
-	if ($admin->main == '- Default Image -' || ($admin->main && !$admin_params->get('media_imagefolder')))
-		{
-			define('BIBLESTUDY_PATH_LIST_MAIN_IMAGE', BIBLESTUDY_COMPONENT_RELPATH.DS.'images');
-		}
-	if ($admin->main && $admin_params->get('media_imagefolder'))
-		{
-			define('BIBLESTUDY_PATH_LIST_MAIN_IMAGE', BIBLESTUDY_PATH .DS. $admin_params->get('media_imagefolder'));
-		}
-	*/
+
 define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN .DS. 'manifest.xml');
 
 // URLs
@@ -77,5 +60,11 @@ define ('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 
 // Database defines
 define ('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
+
+//define the player in use whether All Videos (av) or All Videos Reloaded (avr)
+$admin = new JBSAdmin();
+$player = $admin->getMediaPlayer();
+define ('BIBLESTUDY_PLAYER',$player);
+
 
 ?>

@@ -27,7 +27,7 @@
         //Errors when using local swfobject.js file.  IE 6 doesn't work
         //$document->addScript(JURI::base().'components/com_biblestudy/assets/player/swfobject.js');
 		
-        	//Use only component template not the full site template
+        	
 			
             jimport ('joomla.application.component.helper');
 			$db	= & JFactory::getDBO();
@@ -46,7 +46,7 @@
 		
 
              //This is the inline player
-            $media = $getMedia->getMediaRows($mediaid);
+            $media = $getMedia->getMediaRows2($mediaid); //dump ($media, 'media: ');
             $studyintro = str_replace('"', '\"', $media->studyintro);
             $studyintro = str_replace("'", "\'", $media->studyintro);
             $studytitle = str_replace("'", "\'", $media->studytitle);

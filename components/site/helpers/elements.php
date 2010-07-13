@@ -129,12 +129,8 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
             $mediaclass = new jbsMedia(); 
 			$elementid->id = 'media';
 			$elementid->headertext = JText::_('Media');
-		//	$elementid->element = getMediatable($params, $row, $admin_params);
-            $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
-        //    $elementid->element = $mediaclass->getMediaid($row->id);
-            dump ($elementid->element, 'elementid: ');
-        
-			break;
+		    $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
+            break;
 		case 22:
 			$elementid->id = 'store';
 			$elementid->headertext = JText::_('Store');
