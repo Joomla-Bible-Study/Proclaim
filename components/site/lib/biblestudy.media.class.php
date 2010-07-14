@@ -12,11 +12,11 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 
 class jbsMedia
 {
-    
+
     function getMediaTable($row, $params, $admin_params)
     {
         //First we get some items from GET and instantiate the images class
-        //$table = 'the table'; 
+        //$table = 'the table';
         $admin = new JBSAdmin();
         $mediaPlayer = $admin->getMediaPlayer(); //dump ($mediaPlayer, 'mediaPlayer: ');
 
@@ -25,16 +25,16 @@ class jbsMedia
 	    $images = new jbsImages();
         $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
         include_once ($path1.'helper.php');
-        
+
         //Here we get the administration row from the comnponent, and determine the download image to use
-        $admin = $this->getAdmin(); 
+        $admin = $this->getAdmin();
         $d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');
 		$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);
         $download_image = $download_tmp->path;
         $compat_mode = $admin_params->get('compat_mode');
-        
+
         //Here we get a list of the media ids associated with the study we got from $row
-        //$mediaids = $this->getMediaid($row->id); 
+        //$mediaids = $this->getMediaid($row->id);
         $mediaids = $this->getMediaRows($row->id);
         $rowcount = count($mediaids); // echo $rowcount; return true;
         if ($rowcount < 1) {$table = null; return $table;}
@@ -42,7 +42,7 @@ class jbsMedia
       //  dump ($table, 'table: ');
         //Here is where we begin to build the table
         $table = '<div><table class="mediatable"><tbody><tr>';
-        
+
         //Now we look at each mediaid, and get the rest of the media information
         foreach ($mediaids AS $media)
         {
@@ -51,25 +51,25 @@ class jbsMedia
             $image = $images->getMediaImage($media->path2, $media->impath);
           //  dump ($media, 'media: ');
             $itemparams = new JParameter ($media->params);
-             
+
              //Get the attributes for the player used in this item
              $player = $this->getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer);
              $playercode = $this->getPlayerCode($params, $itemparams, $player, $image, $media);
-                        
+
             //Now we build the column for each media file
             $table .= '<td>';
           //  $table .= $playercode;
-            
+
              //Check to see if a download link is needed
-            
+
             	$link_type = $media->link_type;
-	        		
+
         		if ($link_type > 0)
-        		{ 
+        		{
         	   		$width=$download_tmp->width;
         	   		$height=$download_tmp->height;
-        	   		  
-        	      if($compat_mode == 0) 
+
+        	      if($compat_mode == 0)
         		  {
         	      		$downloadlink ='<a href="index.php?option=com_biblestudy&id='.
                           $media->id.'&view=studieslist&controller=studieslist&task=download">';
@@ -80,34 +80,34 @@ class jbsMedia
                           $media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
         		  }
         	     $downloadlink .= '<img src="'.$download_image.'" alt="'.JText::_('Download').'" height="'.
-                 $height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
-          
+                 $height.'" width="'.$width.'" title="'.JText::_('Download').'" /></a>');
+
         	  	}
         	  	switch ($link_type)
         	  	{
          			case 0:
          			$table .= $playercode;
          			break;
-         			
+
         			case 1:
         	  		$table .= $playercode.$downloadlink;
         	  		break;
-        	  		
+
         	  		case 2:
         	  		$table .= '<div><table class="mediatable"><tbody><tr><td>'.$downloadlink;
         	  		break;
         	  	}
             //End of the column holding the media image
             $table .= '</td>';
-            
-           
-           } // end of foreach mediaids  
-         
+
+
+           } // end of foreach mediaids
+
          //End of row holding media image/link
          $table .= '</tr>';
-         
+
             // This is the last part of the table where we see if we need to display the filesize
-  if ($params->get('show_filesize') > 0 ) 
+  if ($params->get('show_filesize') > 0 )
 	{
 		$table .= '<tr>';
 		foreach ($mediaids as $media) {
@@ -123,19 +123,19 @@ class jbsMedia
 						if ($media->comment ? $filesize = $media->comment : $filesize = getFilesize($media->size));
 					break;
 				}
-			
+
 				$table .= '<td><span class="bsfilesize">'.$filesize.'</span></td>';
-				 
+
 		} //end second foreach
 		$table .= '</tr>';
 	} // end of if show_filesize
-            
-    
+
+
      	$table .='</table>';
-    
+
         return $table;
     }
-    
+
     function getMediaid($id)
     {
         $db = JFactory::getDBO();
@@ -143,10 +143,10 @@ class jbsMedia
          LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id) WHERE s.id = '.$id;
         $db->setQuery($query);
         $db->query();
-        $mediaids = $db->loadObjectList(); 
+        $mediaids = $db->loadObjectList();
         return $mediaids;
     }
-    
+
     function getMediaRows($id)
 {
 	//$media = 'returned media'; return $media;
@@ -154,13 +154,13 @@ class jbsMedia
 	$query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.teacher_id, t.teachername, t.id as tid, s.id as sid, s.studyintro,  #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext FROM #__bsms_mediafiles LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image) LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server) LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path) LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type) LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id) LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id) WHERE #__bsms_mediafiles.study_id = '.$id.' AND #__bsms_mediafiles.published = 1';
     $db->setQuery($query);
     $db->query();
-    if ($media = $db->loadObjectList()){ 
+    if ($media = $db->loadObjectList()){
 			return $media;}
-    
+
     else {$error = $db->getErrorMsg();
     return false;}
-    
-}		
+
+}
 
 function getMediaRows2($id)
 {
@@ -169,12 +169,12 @@ function getMediaRows2($id)
 	$query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.teacher_id, t.teachername, t.id as tid, s.id as sid, s.studyintro,  #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext FROM #__bsms_mediafiles LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image) LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server) LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path) LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type) LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id) LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id) WHERE #__bsms_mediafiles.id = '.$id.' AND #__bsms_mediafiles.published = 1';
     $db->setQuery($query);
     $db->query();
-    if ($media = $db->loadObjectList()){ 
+    if ($media = $db->loadObjectList()){
 			return $media;}
-    
+
     else {$error = $db->getErrorMsg();
     return false;}
-}		
+}
 
 function getAdmin()
 {
@@ -193,8 +193,8 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer)
     if ($itemparams->get('playerwidth')) {$player->playerwidth = $itemparams->get('playerwidth');}
     $player->playerwidth = $player->playerwidth + 20;
     $player->playerheight = $player->playerheight + $params->get('popupmargin','50');
-    
-     // Players - from Template: 
+
+     // Players - from Template:
      // media_player = internal player for all files
      // useravr = use avr for all files
      // useav = use All Videos plugin for all files

@@ -15,7 +15,7 @@ class biblestudyControllerpodcastedit extends JController
 
   // Register Extra tasks
   	$this->registerTask( 'add' , 'edit', 'WriteXMLFile' );
-  
+
  }
 
  /**
@@ -110,8 +110,8 @@ function publish()
   $msg = JText::_( 'Operation Cancelled' );
   $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
  }
- 
- 
+
+
  function writeXMLFile()
  {
 
@@ -128,7 +128,7 @@ function publish()
 		//$admin=& $model->getAdmin();
 		//$admin_params = new JParameter($admin[0]->params);
 	//$adminsettings = getAdminsettings(); //dump ($adminsettings, 'adminsettings: ');
-	//$admin_params = new JParameter($adminsettings->params);	
+	//$admin_params = new JParameter($adminsettings->params);
  $result= writeXML();
   if ($result)
   {
@@ -136,19 +136,19 @@ function publish()
    switch($task)
    {
     case 'apply_source':
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_($podinfo->filename.' saved'));
+     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', $podinfo->filename.' '.JText::_('saved'));
      break;
 
     case 'save_source':
     default:
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_($podinfo->filename.' saved'));
+     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', $podinfo->filename.' '.JText::_('saved'));
      break;
    }
   }
   else {
-   $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing.'));
+   $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').'.');
   }
-  
+
  }
 
 }

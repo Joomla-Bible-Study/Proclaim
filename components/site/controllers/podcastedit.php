@@ -15,7 +15,7 @@ class biblestudyControllerpodcastedit extends JController
 
   // Register Extra tasks
   	$this->registerTask( 'add' , 'edit', 'WriteXMLFile' );
-  
+
  }
 
  /**
@@ -110,8 +110,8 @@ function publish()
   $msg = JText::_( 'Operation Cancelled' );
   $this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
  }
- 
- 
+
+
  function writeXMLFile()
  {
 
@@ -128,16 +128,16 @@ function publish()
 		//$admin=& $model->getAdmin();
 		//$admin_params = new JParameter($admin[0]->params);
 	//$adminsettings = getAdminsettings(); //dump ($adminsettings, 'adminsettings: ');
-	//$admin_params = new JParameter($adminsettings->params);	
+	//$admin_params = new JParameter($adminsettings->params);
  $result= writeXML(); //dump ($result, 'result: ');
   if ($result)
   {
-    $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_($result.' saved'));
+    $mainframe->redirect('index.php?option='.$option.'&view=studieslist', $result.' '.JText::_('saved'));
   }
   else {
    $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing.'));
   }
-  
+
  }
 
 }

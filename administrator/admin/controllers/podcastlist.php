@@ -28,7 +28,7 @@ class biblestudyControllerpodcastlist extends JController
   JRequest::setVar('hidemainmenu', 1);
 
   parent::display();
- }  	
+ }
 
 /**
  * remove record(s)
@@ -45,7 +45,7 @@ class biblestudyControllerpodcastlist extends JController
 
   $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
  }
- 
+
  function writeXMLFile()
  {
 
@@ -53,18 +53,18 @@ class biblestudyControllerpodcastlist extends JController
 	$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
 	include_once($path1.'writexml.php');
 
-	
- $result= writeXML(); 
+
+ $result= writeXML();
   if ($result)
   {
-   
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('File(s) written: '.$result));
-    
+
+     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('File(s) written').': '.$result));
+
   }
   else {
-   $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing.'));
+   $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').'.');
   }
-  
+
  }
 }
 ?>

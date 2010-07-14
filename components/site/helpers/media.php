@@ -3,7 +3,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
     function getMedia ($id)
         {
             $database = & JFactory::getDBO();
-            
+
             $query_media = 'SELECT #__bsms_mediafiles.*,'
             . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
             . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
@@ -16,20 +16,20 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
             . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
             . ' WHERE #__bsms_mediafiles.study_id = '.$id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
-            
+
             $database->setQuery( $query_media );
             //$media = $database->loadObjectList('id');
             $media = $database->loadObjectList('id');
-	        
+
 	        return $media;
-        	
+
         }
 
     //
-   	       
+
 	function getInternalPlayer($media, $params, $admin_params)
 		{
-		
+
             include_once($path1.'filesize.php');
             include_once($path1.'filepath.php');
             include_once($path1.'duration.php');
@@ -54,7 +54,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             $ispath = 0;
             $mime = '';
             $path1 = getFilepath($media->id, $idfield, $mime);
-			
+
             $player_width = $params->get('player_width', 290);
             $media1_link =
 			'<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
@@ -64,12 +64,12 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 		    <param name="quality" value="high">
 		    <param name="menu" value="false">
 		    <param name="wmode" value="transparent">
-		    </object> ';			
-			
+		    </object> ';
+
 		return $media1_link;
-		
+
 		}
-		
+
 	function getDownloadLink ($media, $params, $admin_params)
 	    {
 	        $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -77,7 +77,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'filepath.php');
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
-            
+
     	    $itemparams = new JParameter ($media->params);
     	    $Itemid = $params->get('detailstemplateid', 1);
     	    $images = new jbsImages();
@@ -86,13 +86,13 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 	   //     if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
 	   //     if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
 	   //     $image = getImage($i_path);
-	        
+
 	        $database = & JFactory::getDBO();
-	        
+
             $database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
 	        $database->query();
 	        $admin = $database->loadObjectList();
-            
+
          //   $d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
             //$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
 	        $d_image = ($admin[0]->download);
@@ -112,7 +112,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             $ispath = 0;
             $mime = '';
             $path1 = getFilepath($media->id, $idfield, $mime);
-	    
+
             $link_type = $media->link_type;
             if ($link_type > 0){ //$src = JURI::base().$download_image;
             $width=$download_tmp->width;
@@ -127,16 +127,16 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 
             }
 
-            $out .= '<img src="'.$d_path.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" />'.JText::_('</a>'); 
-            
+            $out .= '<img src="'.$d_path.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" /></a>');
+
             return $out;
-            
+
           }
 	    }
-	          
+
     function getMediaFile ($media, $params, $admin_params)
         {
-    
+
             $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
             include_once($path1.'filesize.php');
             include_once($path1.'filepath.php');
@@ -150,13 +150,13 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 	 //       if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
 	 //       if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$media->path2;}
 	 //       $image = getImage($i_path);
-	        
+
 	        $database = & JFactory::getDBO();
-	        
+
             $database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
 	        $database->query();
 	        $admin = $database->loadObjectList();
-            
+
           //  $d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
             //$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
 	        $d_image = ($admin[0]->download);
@@ -176,25 +176,25 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             $ispath = 0;
             $mime = '';
             $path1 = getFilepath($media->id, $idfield, $mime);
-            
+
             $media_link = '<div class="bsms_mediafile"><a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
             .$filesize.'" target="'.$media->special.'"><img src="'.$d_path //.$src
             .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
             .'" height="'.$height.'" border="0" /></a></div>';
-           
+
             return $media_link;
 
         }
-        
+
     function getTypeIcon ($media, $params, $admin_params)
         {
-    
+
             $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
             include_once($path1.'filesize.php');
             include_once($path1.'filepath.php');
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
-            
+
     	    $itemparams = new JParameter ($media->params);
     	    $Itemid = $params->get('detailstemplateid', 1);
     	    $images = new jbsImages();
