@@ -21,7 +21,7 @@ class biblestudyViewteacherdisplay extends JView
         
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-		
+		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$pathway	   =& $mainframe->getPathWay();
 		$contentConfig = &JComponentHelper::getParams( 'com_biblestudy' );
 		// Get the menu item object

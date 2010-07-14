@@ -18,6 +18,7 @@ class biblestudyViewstudydetails extends JView
 		global $mainframe, $option;
 		//$dispatcher	   =& JDispatcher::getInstance();
 		$document =& JFactory::getDocument();
+        $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		$pathway	   =& $mainframe->getPathWay();
 		$contentConfig = &JComponentHelper::getParams( 'com_biblestudy' );
 		$dispatcher	=& JDispatcher::getInstance();

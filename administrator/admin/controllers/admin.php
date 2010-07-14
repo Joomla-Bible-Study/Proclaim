@@ -203,6 +203,38 @@ function resetPlays()
 				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 			}
 	}
-	
+
+function changePlayers()
+{
+    
+    $msg = null;
+    $from = JRequest::getInt('from','','get');
+    $to = JRequest::getInt('to','','get');
+    $db = JFactory::getDBO();
+    $query = 'SELECT id, params FROM #__bsms_mediafiles';
+    $db->setQuery($query);
+    $db->query();
+    $results = $db->loadObjectList($query);
+    foreach ($results AS $result)
+    {
+        $param = $result->params;
+        $isplayer = substr_count($param, 'player=');
+        if ($isplayer)
+        {
+            $equalpos = strpos($param,'player=');
+            $playerposition = $equalpos + 8;
+            $playerreplace = $equalpos + 7;
+            $isfrom = substr_count($param,$from,$playerposition);
+            if ($isfrom)
+            {
+               // $msg = 'Before: '.$param;
+                substr_replace($param,$to,$playerreplace,1);
+              //  $msg = $msg.' After: '.$param;
+              $msg = 'playerposition: '.$equalposition.' playerreplace: '.$playerreplace;
+                $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+            }
+        }
+    }
+}	
 }
 ?>

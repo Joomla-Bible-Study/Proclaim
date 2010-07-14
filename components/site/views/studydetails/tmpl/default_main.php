@@ -108,9 +108,12 @@ if ($params->get('use_headers_view') > 0 || $params->get('list_items_view')< 1)
 if ($params->get('list_items_view') == 1)
 		{
 			echo '<tr class="bseven"><td class="media">';
-			$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
-			include_once($path1.'mediatable.php');
-			$listing = getMediatable($params, $row, $this->admin_params);
+		//	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		//	include_once($path1.'mediatable.php');
+            require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+            $media = new jbsMedia();
+            $listing = $media->getMediaTable($row, $params, $this->admin_params);
+		//	$listing = getMediatable($params, $row, $this->admin_params);
 			echo $listing;
 			echo '</td></tr>';
 			
