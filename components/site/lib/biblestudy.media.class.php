@@ -241,12 +241,12 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer)
       if ($params->get('internal_popup') == 1) {$type = 1;}
       
     //Get the popup or inline
-        $item = $itemparams->get('internal_popup');
+        $item = $itemparams->get('internal_popup','0');
         $internal_popup = $params->get('internal_popup',0);
         
         if ($item > 1){$player->type = $internal_popup;}
         else {$player->type = $item;}
-        
+      //  dump ($player->type, 'item: ');
     return $player;
 }
 
@@ -340,7 +340,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
         case 1: //Internal
             switch ($player->type)
             {
-                case 0:
+                case 0: //Inline
                     $playercode =
                     "<script type='text/javascript'>
                     swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder".$media->id.
@@ -352,16 +352,12 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                     "'><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</div>";
                 break;
                 
-                case 1:
+                case 1: //popup
                     $playercode = 
-                    "<script type='text/javascript'>
-                    swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder".
-                    $media->id."', '".$player->playerwidth."', '".$player->playerheight."', '9.0.0', false,{file:'".$path.
-                    "',autostart:'false'}, {allowfullscreen:'true', allowscriptaccess:'always'}, {id:'".$media->id.
-                    "', name:'".$media->id."'});
-                    </script>
-                    <div id='placeholder".$media->id.
-                    "'><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</div>";
+                    "<a href=\"Play\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&Itemid=".$Itemid.
+                    "&template=".$template."&mediaid=".$media->study_id."', 'newwindow','width=".$player->playerwidth.",height=".
+                    $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width.
+                    "' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
                 break;
             }
         break;
@@ -374,7 +370,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
         
             switch ($player->type)
             {
-                case 0: //This goes to the popup view
+                case 1: //This goes to the popup view
                	$playercode =  
                 "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=3&template=".$template.
                 "&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".$player->playerheight."'); return false\"\">
@@ -382,7 +378,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                 "' alt='".$src."'></a>";
                 break;
                 
-                case 1: // This plays the video inline
+                case 0: // This plays the video inline
                 $mediacode = $this->getAVmediacode($media->mediacode);
                 $playercode = JHTML::_('content.prepare', $mediacode);  
                 break;

@@ -16,10 +16,10 @@
 			$Itemid = JRequest::getInt('Itemid','1','get');
             $templateid = JRequest::getInt('template','1','get');
             $close = JRequest::getInt('close','0','get');
+            $player = JRequest::getInt('player','1','get');
            
            
-           
-            require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+            
 			$getMedia = new jbsMedia();
 			$document =& JFactory::getDocument();
             $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
@@ -46,6 +46,8 @@
 		
 
              //This is the inline player
+    if ($player == '3')
+    {
             $media = $getMedia->getMediaRows2($mediaid); //dump ($media, 'media: ');
             $studyintro = str_replace('"', '\"', $media->studyintro);
             $studyintro = str_replace("'", "\'", $media->studyintro);
@@ -72,6 +74,7 @@
             $backcolor = $params->get('backcolor','0x287585');
             $frontcolor = $params->get('frontcolor','0xFFFFFF');
             $lightcolor = $params->get('lightcolor','0x000000');
+   }
   //Here is where we start the display
    if ($close == 1)
             {
@@ -85,14 +88,14 @@
 $headertext = '';
 $footertext = ''; 
 //$testit = $this->titles($itemparams->get('itempopuptitle'), $media); dump ($testit, 'testit: ');
-$headertext = $this->titles($params->get('popuptitle'), $media);
-if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media);}
-$footertext = $this->titles($params->get('popupfooter'), $media);
-if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media);}
+//$headertext = $this->titles($params->get('popuptitle'), $media);
+//if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media);}
+//$footertext = $this->titles($params->get('popupfooter'), $media);
+//if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media);}
 echo '<p class="popuptitle">'.$headertext.'</p>';
 
 //Here is where we choose whether to use the Internal Viewer or All Videos
-if ($itemparams->get('player') == 3 | JRequest::getInt('player','','get')== 3) {
+if ($itemparams->get('player') == 3 || $player == 3) {
     $mediacode = $getMedia->getAVmediacode($media->mediacode);
     echo JHTML::_('content.prepare', $mediacode);}  
 /*
