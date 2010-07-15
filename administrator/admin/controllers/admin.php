@@ -206,35 +206,90 @@ function resetPlays()
 
 function changePlayers()
 {
-    
-    $msg = null;
-    $from = JRequest::getInt('from','','get');
-    $to = JRequest::getInt('to','','get');
     $db = JFactory::getDBO();
-    $query = 'SELECT id, params FROM #__bsms_mediafiles';
-    $db->setQuery($query);
-    $db->query();
-    $results = $db->loadObjectList($query);
-    foreach ($results AS $result)
+    $msg = null;
+    $from = JRequest::getInt('from','','post');
+    $to = JRequest::getInt('to','','post');
+    if ($from == '100')
     {
-        $param = $result->params;
-        $isplayer = substr_count($param, 'player=');
-        if ($isplayer)
+        $from = '';
+        $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."' WHERE `params` IS NULL";
+        $db->setQuery($query);
+        $db->query();
+        $addnull = $db->getAffectedRows(); 
+        $query = 'SELECT id, params FROM #__bsms_mediafiles';
+        $db->setQuery($query);
+        $results = $db->loadObjectList();
+        foreach ($results AS $result)
         {
-            $equalpos = strpos($param,'player=');
-            $playerposition = $equalpos + 8;
-            $playerreplace = $equalpos + 7;
-            $isfrom = substr_count($param,$from,$playerposition);
-            if ($isfrom)
+            $param = $results->params;
+            $noplayer = substr_count($param,'player=');
+            if (!$noplayer)
             {
-               // $msg = 'Before: '.$param;
-                substr_replace($param,$to,$playerreplace,1);
-              //  $msg = $msg.' After: '.$param;
-              $msg = 'playerposition: '.$equalposition.' playerreplace: '.$playerreplace;
-                $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+              $param = $param.'player='.$to.'\n';
+              $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
+    	  	  $db->setQuery($query);
+    	  	  $db->query();
+              $updated = 0;
+              $updated = $db->getAffectedRows();
+    	   	  if ($db->getErrorNum() > 0)
+    				{
+    					$error = $db->getErrorMsg();
+    					$errortext .= 'An error occured while updating mediafile '.$result->id.': '.$error.'<br />';
+    				}
+              else
+    			{
+    				$updated = 0;
+    				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+    				$add = $add + $updated;
+                    
+    			}              
             }
         }
     }
+    else
+    {
+        
+        $playerfrom = 'player='.$from;
+        $playerto = 'player='.$to;
+        $errortext = '';
+        $query = 'SELECT id, params FROM #__bsms_mediafiles';
+        $db->setQuery($query);
+        $db->query();
+        $results = $db->loadObjectList();
+        $add = 0;
+      //  dump ($results, 'results: ');
+        foreach ($results AS $result)
+        {
+            $param = $result->params;
+            $isfrom = substr_count($param,$playerfrom);
+            if ($isfrom)
+            {
+              $param = str_replace($playerfrom,$playerto,$param,$count);
+              $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
+    	  	  $db->setQuery($query);
+    	  	  $db->query();
+              $updated = 0;
+              $updated = $db->getAffectedRows();
+    	   	  if ($db->getErrorNum() > 0)
+    				{
+    					$error = $db->getErrorMsg();
+    					$errortext .= 'An error occured while updating mediafile '.$result->id.': '.$error.'<br />';
+    				}
+              else
+    			{
+    				$updated = 0;
+    				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+    				$add = $add + $updated;
+                    
+    			}              
+              
+            }
+        }
+    }
+    if ($from == '100') {$add = $add + $addnull;}
+    $msg = $add.' Rows of Media Files updated. Error messages follow if any<br />'.$errortext;
+    $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 }	
 }
 ?>

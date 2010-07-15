@@ -6,6 +6,7 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
 
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.stats.class.php');
 
 class biblestudyViewadmin extends JView
 {
@@ -30,6 +31,10 @@ class biblestudyViewadmin extends JView
 		$params = new JParameter($paramsdata, $paramsdefs);
 		$this->assignRef('params', $params);
 
+        $stats = new jbStats();
+        $playerstats = $stats->players(); 
+        $this->assignRef('playerstats',$playerstats);
+        
 		$studypath = JPATH_SITE.'/images/'.$params->get('study_images', 'stories');
 		$javascript			= 'onchange="changeDisplayImage();"';
 		$fileList 	= JFolder::files($studypath);

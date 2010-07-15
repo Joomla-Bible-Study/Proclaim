@@ -111,42 +111,41 @@ if ($sh404exists)
 }
 ?>
 
-      <tr> <td class="key"><?php echo JText::_('Version');?></td>
-      	<td> 
-		<?php $version = CBiblestudyVersion::versionArray(); 
-		echo 'Version: <strong>'.$version->version.'</strong> Date: '.$version->versiondate.' Build: '.$version->build.' Version Name: '.$version->versionname; ?>
-       <br />
-		<?php echo JText::_('Current Version:').' '.$this->versioncheck; ?></strong><br />
-        <a href="http://www.JoomlaBibleStudy.org" target="_blank"><?php echo JText::_('Get Latest Version');?></a></td>
-      </tr>
-
+     
     </table>
 	</fieldset>
 </div>
 <div class="clr"></div>
-
+<div class="col100">
+	<fieldset class="adminform">
+		<legend><?php echo JText::_( 'Media Files' ); ?></legend>
 <input type="hidden" name="option" value="com_biblestudy" />
 <input type="hidden" name="id" value="1" />
 <input type="hidden" name="controller" value="admin" />
 <input type="hidden" name="task" value="save" />
 </form>
-<table>
+<table class="admintable">
+<tr><td class="key"><?php echo JText::_('Media Players Statistics: ');?></td><td><?php echo $this->playerstats;?></td> </tr>
 <tr>
 <td class="key"><?php echo JText::_('Change Players'); ?></td>
 <td> <form action="index.php" method="post" name="adminForm" id="adminForm">
 <select name="from" id="from">
-<option value="0">Direct</option>
-<option value="1">Internal Player</option>
-<option value="2">All Videos Reloaded</option>
-<option value="3">All Videos Plugin</option>
+<option value="x"><?php echo JText::_('Select an Existing Player');?></option>
+<option value="0"><?php echo JText::_('Direct');?></option>
+<option value="1"><?php echo JText::_('Internal Player');?></option>
+<option value="2"><?php echo JText::_('All Videos Reloaded');?></option>
+<option value="3"><?php echo JText::_('All Videos Plugin');?></option>
+<option value="100"><?php echo JText::_('No Player Listed');?></option>
 </select>
 </td>
 <td>
 <select name="to" id="to">
-<option value="0">Direct</option>
-<option value="1">Internal Player</option>
-<option value="2">All Videos Reloaded</option>
-<option value="3">All Videos Plugin</option>
+<option value="x"><?php echo JText::_('Select a New Player');?></option>
+<option value="0"><?php echo JText::_('Direct');?></option>
+<option value="1"><?php echo JText::_('Internal Player');?></option>
+<option value="2"><?php echo JText::_('All Videos Reloaded');?></option>
+<option value="3"><?php echo JText::_('All Videos Plugin');?></option>
+
 </select>
 <input type="hidden" name="option" value="com_biblestudy" />
 <input type="hidden" name="task" value="changePlayers" />
@@ -156,3 +155,4 @@ if ($sh404exists)
 </form>
 </tr> 
 </table>
+</fieldset>

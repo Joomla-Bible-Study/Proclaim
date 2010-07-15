@@ -304,6 +304,44 @@ $top .= '</select>';
 
 }
 
+function players()
+{
+    $db = &JFactory::getDBO();
+    $query = 'SELECT id, params FROM #__bsms_mediafiles';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results = $db->loadObjectList();
+    $direct = 'player=0';
+    $internal = 'player=1';
+    $avr = 'player=2';
+    $av = 'player=3';
+    $add = 0;
+    $directcount = 0;
+    $internalcount = 0;
+    $avrcount = 0;
+    $avcount = 0;
+    foreach ($results AS $result)
+    {
+        $param = $result->params;
+        $isdirect = substr_count($param,$direct);
+        $directcount = $directcount + $isdirect;
+        $isinternal = substr_count($param,$internal);
+        $internalcount = $internalcount + $isinternal;
+        $isavr = substr_count($param,$avr);
+        $avrcount = $avrcount + $isavr;
+        $isav = substr_count($param,$av);
+        $avcount = $avcount + $isav;
+        $total = $directcount + $internalcount + $avrcount + $avcount;
+        $noplayer = $num_rows - $total;
+    }
+    $mediaplayers = '<strong>'.JText::_('Direct Link:').' </strong>'.$directcount.
+    '<br /><strong>'.JText::_('Internal Player:').' </strong>'.$internalcount.
+    '<br /><strong>'.JText::_('All Videos Reloaded:').' </strong>'.$avrcount.
+    '<br /><strong>'.JText::_('All Videos Plugin:').' </strong>'.$avcount.
+    '<br /><strong>'.JText::_('No Player - treated as direct:').'</strong> '.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
+    return $mediaplayers;
+}
 }
 
 ?>
