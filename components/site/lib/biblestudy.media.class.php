@@ -169,7 +169,7 @@ function getMediaRows2($id)
 	$query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.teacher_id, t.teachername, t.id as tid, s.id as sid, s.studyintro,  #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext FROM #__bsms_mediafiles LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image) LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server) LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path) LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type) LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id) LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id) WHERE #__bsms_mediafiles.id = '.$id.' AND #__bsms_mediafiles.published = 1';
     $db->setQuery($query);
     $db->query();
-    if ($media = $db->loadObjectList()){ 
+    if ($media = $db->loadObject()){ 
 			return $media;}
     
     else {$error = $db->getErrorMsg();
@@ -192,14 +192,10 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer)
     if ($itemparams->get('playerheight')) {$player->playerheight = $itemparams->get('playerheight');}
     if ($itemparams->get('playerwidth')) {$player->playerwidth = $itemparams->get('playerwidth');}
     $player->playerwidth = $player->playerwidth + 20;
-    $player->playerheight = $player->playerheight + $params->get('popupmargin','50');
+    $player->playerheight = $player->playerheight + $params->get('popupmargin','50'); 
 /**
  * @desc Players - from Template:
- * media_player = internal player for all files
- * useravr = use avr for all files
- * useav = use All Videos plugin for all files
  * popuptype = whether AVR should be window or lightbox (handled in avr code)
- * media_player = use internal player for all files
  * internal_popup = whether direct or internal player should be popup or inline/new window
  * From media file:
  * player 0 = direct, 1 = internal, 2 = AVR, 3 = AVinternal_popup 0 = inline, 1 = popup, 2 = global settings
@@ -208,11 +204,11 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer)
  * $player->type 0 = inline/new window, 1 = popup
 */    
      $player->player = 0;
-    if ($params->get('media_player') == 1 || $itemparams->get('player') == 1)
+    if ($itemparams->get('player') == 1)
         {
             $player->player = 1;
         }
-    if ($params->get('useavr') == 1 || $itemparams->get('player') == 2)
+    if ($itemparams->get('player') == 2)
         {
             $player->player = 2;
             if ($mediaPlayer == 'av')
@@ -220,7 +216,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer)
                 $player->player = 3;
             }
         } 
-    if ($params->get('useav') == 1 || $itemparams->get('player') == 3)
+    if ($itemparams->get('player') == 3)
         {
             $player->player = 3;
         } 
@@ -301,7 +297,11 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
     $src = JURI::base().$image->path;
     $height = $image->height;
     $width = $image->width;
-    
+    $backcolor = $params->get('backcolor','0x287585');
+    $frontcolor = $params->get('frontcolor','0xFFFFFF');
+    $lightcolor = $params->get('lightcolor','0x000000');
+    $screencolor = $params->get('screencolor','0xFFFFFF');
+    $template = JRequest::getInt('templatemenuid','1','get');
     //Here we get more information about the particular media file
     $filesize = getFilesize($media->size);
     $duration = getDuration($params, $row); //This one IS needed
@@ -321,16 +321,16 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                     $playercode = 
                     '<a href="'.$path.'" onclick="window.open(\'index.php?option=com_biblestudy&view=popup&close=1&mediaid='.
                     $media->id.'\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
-                     return false;" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" target="'.
+                     return true;" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" target="'.
                     $media->special.'"><img src="'.$src.'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.
-                    ' '.$filesize.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
+                    ' '.$filesize.'" width="'.$width.'" height="'.$height.'" border="0" /></a>'; 
                 break;
                 
                 case 1: //Popup window
                 
                     $playercode = 
                     "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=0&view=popup&Itemid=".$Itemid.
-                    "&template=".$template."&mediaid=".$media->study_id."', 'newwindow','width=".$player->playerwidth.",height=".
+                    "&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
                     $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width.
                     "' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
                 break;
@@ -345,17 +345,17 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                     "<script type='text/javascript'>
                     swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder".$media->id.
                     "', '".$player->playerwidth."', '".$player->playerheight."', '9.0.0', false,{file:'".$path.
-                    "',autostart:'false'}, {allowfullscreen:'true', allowscriptaccess:'always'}, {id:'".$media->id.
-                    "', name:'".$media->id."'});
+                    "',autostart:'false'}, {allowfullscreen:'true', allowscriptaccess:'always', backcolor:'".$backcolor."', frontcolor:'".$frontcolor."', lightcolor:'".$lightcolor."',screencolor:'".$screencolor."'}, {id:'".$media->id."', name:'".$media->id."'});
                     </script>
                     <div id='placeholder".$media->id.
                     "'><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</div>";
                 break;
                 
                 case 1: //popup
+                  //  dump ($template, 'template from mediaclass: ');
                     $playercode = 
-                    "<a href=\"Play\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&Itemid=".$Itemid.
-                    "&template=".$template."&mediaid=".$media->study_id."', 'newwindow','width=".$player->playerwidth.",height=".
+                    "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&Itemid=".$Itemid.
+                    "&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
                     $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width.
                     "' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
                 break;

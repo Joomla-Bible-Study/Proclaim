@@ -153,7 +153,7 @@ if ($params->get('list_items_view') == 0)
 
 <?php if ($this->params->get('show_passage_view') > 0) { ?>
 		
-          <strong><a class="heading" href="javascript:ReverseDisplay('scripture')">>><?php echo JText::_('Show/Hide Scipture Passage');?><<</a>
+          <strong><a class="heading" href="javascript:ReverseDisplay('scripture')">>><?php echo JText::_('Show/Hide Scripture Passage');?><<</a>
 
         <div id="scripture" style="display:none;"></strong>
           <?php 
