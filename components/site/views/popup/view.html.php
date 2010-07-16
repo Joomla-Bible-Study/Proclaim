@@ -27,7 +27,7 @@
         // If this is a direct new window then all we need to do is perform hitPlay and close this window
 		if ($close == 1)
             {
-                $play = $getMedia->hitPlay($mediaid); //dump ($mediaid, 'play: ');
+              //  $play = $getMedia->hitPlay($mediaid); //dump ($mediaid, 'play: ');
                 echo JHTML::_('content.prepare','<script language=javascript>window.close();</script>');
                 
             }
