@@ -123,11 +123,6 @@
 				  `detailstemplateid` int(11) DEFAULT NULL,
 				  PRIMARY KEY (`id`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1</query>
-		<query>CREATE TABLE IF NOT EXISTS `#__bsms_schemaVersion` (
-				  `id` int(3) NOT NULL AUTO_INCREMENT,
-				  `schemaVersion` int(10) DEFAULT NULL,
-				  PRIMARY KEY (`id`)
-				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1</query>
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_search` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `value` varchar(15) DEFAULT '',

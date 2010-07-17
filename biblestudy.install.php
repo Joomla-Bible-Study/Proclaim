@@ -103,7 +103,14 @@ function com_install()
         }
     }    
     }
+//Drop the old schema table if it still exists. 
 
+$query = 'DROP TABLE IF EXISTS #__bsms_schemaversion';
+$biblestudy_db->setQuery($query);
+$biblestudy_db->query();
+$query = 'DROP TABLE IF EXISTS #__bsms_schemaVersion';
+$biblestudy_db->setQuery($query);
+$biblestudy_db->query();
 	?>
 <br />
 <style>

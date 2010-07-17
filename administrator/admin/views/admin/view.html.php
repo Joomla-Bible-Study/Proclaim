@@ -174,7 +174,7 @@ class biblestudyViewadmin extends JView
 
 
 		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy.admin', true );
+		JToolBarHelper::help( 'biblestudy', true );
 		$this->assignRef('lists', $lists);
 
 		//Version check
