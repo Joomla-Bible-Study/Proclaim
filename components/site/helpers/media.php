@@ -127,7 +127,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 
             }
 
-            $out .= '<img src="'.$d_path.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" /></a>');
+            $out .= '<img src="'.$d_path.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" /></a>';
 
             return $out;
 

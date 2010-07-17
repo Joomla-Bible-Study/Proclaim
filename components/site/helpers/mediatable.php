@@ -238,7 +238,7 @@ if (!$row->id) {return FALSE;}
 		  {
 	      		$downloadlink ='<a href="http://joomlabiblestudy.org/router.php?file='.$media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
 		  }
-             $downloadlink .= '<img src="'.$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" /></a>');
+             $downloadlink .= '<img src="'.$download_image.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" /></a>';
 
 	  	}
 	  	switch ($link_type)
