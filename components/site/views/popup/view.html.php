@@ -100,7 +100,7 @@ if ($itemparams->get('player')== 1 || $player == 1)
     echo    "<script type='text/javascript'>
 swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',autostart:'true'}, {allowfullscreen:'true', allowscriptaccess:'always'}, {id:'".$media->id."', name:'".$media->id."'},{title:'".$studytitle."',lightcolor:'".$lightcolor."'},{frontcolor:'".$frontcolor."'},{backcolor:'".$backcolor."',screencolor:'".$screencolor."'},{author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."'});
 </script>
-<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</div>";
+<div id='placeholder'><a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\">".JTEXT::_('Get flash')."</a> ".JTEXT::_('to see this player')."</div>";
 }
 
 //TODO:Need to get difference between direct popup and not so can have popup use this script
