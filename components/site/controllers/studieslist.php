@@ -6,21 +6,21 @@ jimport('joomla.application.component.controller');
 class biblestudyControllerstudieslist extends JController
 {
 	var $mediaCode;
-	
+
 	/**
 	 *@desc Method to display the view
 	 *@access public
 	 */
-	 	function __construct()
+	function __construct()
 	{
 		parent::__construct();
 
 		// Register Extra tasks
-		
+
 	}
 	function display()
 	{
-	//	$this->registerTask( 'play' );
+		//	$this->registerTask( 'play' );
 		parent::display();
 	}
 
@@ -32,7 +32,7 @@ class biblestudyControllerstudieslist extends JController
 		{
 			$downloader = new Dump_File();
 			$downloader->download();
-			
+
 		 die;
 		}
 	}
@@ -48,7 +48,13 @@ class biblestudyControllerstudieslist extends JController
 			return;
 		}
 	}
-	
+
+	function playHit() {
+		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+		$getMedia = new jbsMedia();
+		$getMedia->hitPlay(JRequest::getInt('id'));
+	}
+
 	/**
 	 * @desc: This function is supposed to generate the Media Player that is requested via AJAX
 	 * from the studiesList view "default.php". It has not been implemented yet, so its not used.
