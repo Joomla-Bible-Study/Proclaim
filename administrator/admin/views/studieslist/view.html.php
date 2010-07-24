@@ -55,6 +55,11 @@ class biblestudyViewstudieslist extends JView {
 		$pagination = & $this->get( 'Pagination' );
 		$mediaFiles		= & $this->get( 'Files');
         
+		//Loop through the rows to retrieve plays and downloads
+		foreach($rows as $row) {
+			$row->totalplays = $this->getModel()->getPlays($row->id);
+			$row->totaldownloads = $this->getModel()->getDownloads($row->id);
+		}
 		//Build Teacher List for drop down menu
 
 
