@@ -91,11 +91,11 @@ $headertext = '';
 $footertext = ''; 
 
 // Need to add in template
-echo "<body bgcolor='".$params->get('popupbackground', 'white').">";
+echo "<body bgcolor='".$params->get('popupbackground', 'white')."'>";
 
-$headertext = $this->titles($params->get('popuptitle'), $media);
+$headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date);
 if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media);}
-$footertext = $this->titles($params->get('popupfooter'), $media);
+$footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date);
 if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media);}
 echo '<p class="popuptitle">'.$headertext.'</p>';
 
@@ -109,9 +109,9 @@ if ($itemparams->get('player')== 1 || $player == 1)
 {  
   
 	echo    "<script type='text/javascript'>
-swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
+swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',link:'".JURI::base()."index.php?option=com_biblestudy&view=studieslist&templatemenuid=".$templateid."',image:'".$params->get('popupimage', 'components/com_biblestudy/images/speaker24.png')."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
 </script>
-<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</div>";
+<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>".JText::_('Get flash')."</a> ".JText::_('to see this player')."</div>";
 //  Flashvar - Colors, Autostart, Title, Author, Date, Description, Link, Image
 //    Params - Allowfullscreen, Allowscriptaccess
 //    Attributes - ID, Name
@@ -119,11 +119,14 @@ swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/play
 // Did not include ,link:'http://www.newhorizoncf.org',image:'/images/mp3player.jpg' in the Flashvar until adding options
 // use this: JURI::base()."index.php?option=com_biblestudy&view=studieslist&templatemenuid=".$templateid
 }
-
+/**
+ * @desc This is already possible by adding text in the Header and Footer in the Media drop down in the template so i've removed. Added Scripture
+echo "<BR>Date: ". $date;
+if ($scripture) {echo " - Scripture: " . $scripture;}
 echo "<BR>Title: ". $studytitle;
 echo "<BR>Teacher: ". $media->teachername;
-echo "<BR>Date: ". $date;
-echo "<BR>Scripture: " . $scripture; //Need to get Scripture 
+*/
+
 
 //TODO:Need to get difference between direct popup and not so can have popup use this script
 if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
@@ -131,7 +134,7 @@ if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
   //  echo '<div id=\'direct\'><script type=text/javascript> window.location.href=\''.$path1.'\'</script></div>';
   
   
-    echo '<div class=\'direct\'><iframe src ="'.$path1.'" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>Your browser does not support iframes.</p>
+    echo '<div class=\'direct\'><iframe src ="'.$path1.'" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>'.JText::_('Your browser does not support iframes').'</p>
 </iframe></div>';
 }
 ?>
@@ -149,15 +152,16 @@ echo $footertext;
 
         } //end of display function
 
-function titles($text, $media)
+function titles($text, $media, $scripture, $date)
 {
    // dump ($text, 'text1: ');
     $text = str_replace('{{teacher}}', $media->teachername, $text);
-    $text = str_replace('{{studydate}}', $media->studydate, $text);
+    $text = str_replace('{{studydate}}', $date, $text);
     $text = str_replace('{{filename}}', $media->filename, $text);
     $text = str_replace('{{description}}', $media->description, $text);
     $text = str_replace('{{length}}', $media->length, $text);
     $text = str_replace('{{title}}', $media->studytitle, $text);
+    $text = str_replace('{{scripture}}', $scripture, $text);
  //  dump ($text, 'text2: ');
     return $text;
 }

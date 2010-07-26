@@ -86,10 +86,11 @@
             <param name="frontcolor" type="text" default="0xFFFFFF" label="Front Color" description="Use HEX something like 0xFFFFFF" />
             <param name="lightcolor" type="text" default="0x000000" label="Light Color" description="Use HEX something like 0x000000" />
             <param name="screencolor" type="text" default="0x000000" label="Screen Color" description="Use HEX something like 0x000000" />
-            <param name="popuptitle" type="text" size="150" default="{{title}}" label="Popup Title Elements" description="Use text and/or Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
-            <param name="popupfooter" type="text" size="150" default="{{filename}}" label="Popup Footer Elements" description="Use text and/or Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
+            <param name="popuptitle" type="text" size="150" default="{{title}}" label="Popup Title Elements" description="Use text and/or Display Codes: {{scripture}}, {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
+            <param name="popupfooter" type="text" size="150" default="{{filename}}" label="Popup Footer Elements" description="Use text and/or Display Codes: {{scripture}}, {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
             <param name="popupmargin" type="text" default="50" label="Height Margin for Popup" description="Set space above and below popup for header and footer." />
             <param name="popupbackground" type="text" default="black" label="Background color for popup window" description="Set a background color for the popup window." />
+            <param name="popupimage" type="text" size="150" default="components/com_biblestudy/images/speaker24.png" label="Path to image for popup" description="Add a path to an image in audio popup" />
 			<param name="show_filesize" type="list" default="1" label="Media Label" description="Choose a label for under the media file">
 					<option value="0">Hide</option>
 					<option value="1">Show Filesize only</option>
