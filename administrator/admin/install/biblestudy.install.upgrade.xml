@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <comupgrade version="1.0">
-	<install version="6.2.0_RC1" versiondate="2010-06-24" build="614" versionname="Deuteronomy">
+	<install version="6.2.0_Beta3" versiondate="2010-07-26" build="614" versionname="Deuteronomy">
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `id` int(11) NOT NULL,
 					  `podcast` text,

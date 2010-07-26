@@ -10,6 +10,9 @@
         function display()
         {
 			require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+            $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+            include_once($path1.'scripture.php');
+            include_once($path1.'date.php');
 			$getMedia = new jbsMedia();
             JRequest::setVar('tmpl', 'component');
             $mediaid  = JRequest::getInt('mediaid','','get');
@@ -44,7 +47,11 @@
             $template = $db->loadObject();
             $params = new JParameter($template->params); // dump ($params, 'params: ');
             $itemparams = new JParameter($media->params); // dump ($media, 'params; ');
-			
+            $saveid = $media->id;
+            $media->id = $media->study_id;
+			$scripture = getScripture($params, $media, $esv='0', $scripturerow='1'); //dump ($media->study_id, 'scripture: ');
+            $media->id = $saveid;
+            $date = getstudyDate($params, $media->studydate);
 			// The popup window call the counter function
 			$play = $getMedia->hitPlay($mediaid);
 			
@@ -84,7 +91,7 @@ $headertext = '';
 $footertext = ''; 
 
 // Need to add in template
-echo "<body bgcolor='red'>";
+echo "<body bgcolor='".$params->get('popupbackground', 'white').">";
 
 $headertext = $this->titles($params->get('popuptitle'), $media);
 if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media);}
@@ -100,11 +107,7 @@ if ($itemparams->get('player') == 3 || $player == 3) {
             
 if ($itemparams->get('player')== 1 || $player == 1)
 {  
-  /*  echo    "<script type='text/javascript'>
-swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',autostart:'true'}, {allowfullscreen:'true', allowscriptaccess:'always'}, {id:'".$media->id."', name:'".$media->id."'},{title:'".$studytitle."',lightcolor:'".$lightcolor."'},{frontcolor:'".$frontcolor."'},{backcolor:'".$backcolor."',screencolor:'".$screencolor."'},{author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."'});
-</script>
-<div id='placeholder'><a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\">".JTEXT::_('Get flash')."</a> ".JTEXT::_('to see this player')."</div>";*/
-
+  
 	echo    "<script type='text/javascript'>
 swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
 </script>
@@ -114,13 +117,13 @@ swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/play
 //    Attributes - ID, Name
 
 // Did not include ,link:'http://www.newhorizoncf.org',image:'/images/mp3player.jpg' in the Flashvar until adding options
-
+// use this: JURI::base()."index.php?option=com_biblestudy&view=studieslist&templatemenuid=".$templateid
 }
 
-echo "<BR>Title ". $studytitle;
-echo "<BR>Teacher ". $media->teachername;
-echo "<BR>Date ". $media->studydate;
-echo "<BR>Scripture " ; //Need to get Scripture
+echo "<BR>Title: ". $studytitle;
+echo "<BR>Teacher: ". $media->teachername;
+echo "<BR>Date: ". $date;
+echo "<BR>Scripture: " . $scripture; //Need to get Scripture 
 
 //TODO:Need to get difference between direct popup and not so can have popup use this script
 if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
