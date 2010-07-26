@@ -83,6 +83,9 @@
 $headertext = '';
 $footertext = ''; 
 
+// Need to add in template
+echo "<body bgcolor='red'>";
+
 $headertext = $this->titles($params->get('popuptitle'), $media);
 if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media);}
 $footertext = $this->titles($params->get('popupfooter'), $media);
@@ -97,11 +100,27 @@ if ($itemparams->get('player') == 3 || $player == 3) {
             
 if ($itemparams->get('player')== 1 || $player == 1)
 {  
-    echo    "<script type='text/javascript'>
+  /*  echo    "<script type='text/javascript'>
 swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',autostart:'true'}, {allowfullscreen:'true', allowscriptaccess:'always'}, {id:'".$media->id."', name:'".$media->id."'},{title:'".$studytitle."',lightcolor:'".$lightcolor."'},{frontcolor:'".$frontcolor."'},{backcolor:'".$backcolor."',screencolor:'".$screencolor."'},{author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."'});
 </script>
-<div id='placeholder'><a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\">".JTEXT::_('Get flash')."</a> ".JTEXT::_('to see this player')."</div>";
+<div id='placeholder'><a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\">".JTEXT::_('Get flash')."</a> ".JTEXT::_('to see this player')."</div>";*/
+
+	echo    "<script type='text/javascript'>
+swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
+</script>
+<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>Get flash</a> to see this player</div>";
+//  Flashvar - Colors, Autostart, Title, Author, Date, Description, Link, Image
+//    Params - Allowfullscreen, Allowscriptaccess
+//    Attributes - ID, Name
+
+// Did not include ,link:'http://www.newhorizoncf.org',image:'/images/mp3player.jpg' in the Flashvar until adding options
+
 }
+
+echo "<BR>Title ". $studytitle;
+echo "<BR>Teacher ". $media->teachername;
+echo "<BR>Date ". $media->studydate;
+echo "<BR>Scripture " ; //Need to get Scripture
 
 //TODO:Need to get difference between direct popup and not so can have popup use this script
 if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
