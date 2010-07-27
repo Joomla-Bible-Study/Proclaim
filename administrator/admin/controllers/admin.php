@@ -7,11 +7,11 @@ class biblestudyControlleradmin extends JController {
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
-	
+
 	function __construct()
 	{
 		parent::__construct();
-	
+
 
 		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
@@ -61,7 +61,7 @@ class biblestudyControlleradmin extends JController {
 				$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
 				break;
 		}
-		
+
 		// Check the table in so it can be edited.... we are done with it anyway
 	//	$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
 		$this->setRedirect($link, $msg);
@@ -135,16 +135,16 @@ function publish()
 			$update = updateSEF();
 			if ($update)
 			{
-				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $update );	
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $update );
 			}
 			else
 			{
 				$msg = JText::_('Update successful. No error messages generated.');
 				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 			}
-			
+
 		}
-		
+
 	function resetHits()
 	{
 		$msg = null;
@@ -154,14 +154,14 @@ function publish()
 		if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-					$msg = 'An error occured while resetting the hits: '.$error;
-					$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                    $msg = JText::_('An error occured while resetting the hits:').' '.$error;
+                    $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-				$msg = JText::_('Reset successful. No error messages generated. '.$updated.' row(s) reset.');
-				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 			}
 	}
 function resetDownloads()
@@ -173,17 +173,17 @@ function resetDownloads()
 		if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-					$msg = 'An error occured while resetting the downloads: '.$error;
-					$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                    $msg = JText::_('An error occured while resetting the downloads:').' '.$error;
+                    $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-				$msg = JText::_('Reset successful. No error messages generated. '.$updated.' row(s) reset.');
-				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 			}
 	}
-	
+
 function resetPlays()
 	{
 		$msg = null;
@@ -193,14 +193,14 @@ function resetPlays()
 		if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-					$msg = 'An error occured while resetting the plays: '.$error;
-					$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                    $msg = JText::_('An error occured while resetting the plays:').' '.$error;
+                    $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-				$msg = JText::_('Reset successful. No error messages generated. '.$updated.' row(s) reset.');
-				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 			}
 	}
 
@@ -216,7 +216,7 @@ function changePlayers()
         $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."' WHERE `params` IS NULL";
         $db->setQuery($query);
         $db->query();
-        $addnull = $db->getAffectedRows(); 
+        $addnull = $db->getAffectedRows();
         $query = 'SELECT id, params FROM #__bsms_mediafiles';
         $db->setQuery($query);
         $results = $db->loadObjectList();
@@ -235,21 +235,21 @@ function changePlayers()
     	   	  if ($db->getErrorNum() > 0)
     				{
     					$error = $db->getErrorMsg();
-    					$errortext .= 'An error occured while updating mediafile '.$result->id.': '.$error.'<br />';
+                        $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
     				}
               else
     			{
     				$updated = 0;
     				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
     				$add = $add + $updated;
-                    
-    			}              
+
+    			}
             }
         }
     }
     else
     {
-        
+
         $playerfrom = 'player='.$from;
         $playerto = 'player='.$to;
         $errortext = '';
@@ -274,22 +274,22 @@ function changePlayers()
     	   	  if ($db->getErrorNum() > 0)
     				{
     					$error = $db->getErrorMsg();
-    					$errortext .= 'An error occured while updating mediafile '.$result->id.': '.$error.'<br />';
-    				}
+                        $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
+                    }
               else
     			{
     				$updated = 0;
     				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
     				$add = $add + $updated;
-                    
-    			}              
-              
+
+    			}
+
             }
         }
     }
     if ($from == '100') {$add = $add + $addnull;}
-    $msg = $add.' Rows of Media Files updated. Error messages follow if any<br />'.$errortext;
+    $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
     $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
-}	
+}
 }
 ?>

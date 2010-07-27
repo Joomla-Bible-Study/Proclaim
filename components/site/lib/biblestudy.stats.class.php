@@ -32,7 +32,7 @@ class jbStats {
 
     /**
      * Total plays of media files per study
-     * 
+     *
 	*/
     function totalplays($id)
     {
@@ -45,7 +45,7 @@ class jbStats {
         $plays = $db->loadResult();
         return (int)$plays;
     }
-    
+
 	 /** Total messages in Bible Study
 	 * @param  string date start
 	 * @param string date end
@@ -121,10 +121,10 @@ class jbStats {
 		$biblestudy_db = &JFactory::getDBO();
 		//$biblestudy_db->setQuery('SELECT booknumber, COUNT(hits) as totalmsg FROM #__bsms_studies' .
 		//		' GROUP BY id ORDER BY booknumber LIMIT 5');
-				
-				$biblestudy_db->setQuery('SELECT booknumber, COUNT( hits ) AS totalmsg FROM jos_bsms_studies GROUP BY booknumber ORDER BY totalmsg DESC LIMIT 5'); 
-		$results=$biblestudy_db->loadObjectList(); 
-		$results=$biblestudy_db->query(); 
+
+				$biblestudy_db->setQuery('SELECT booknumber, COUNT( hits ) AS totalmsg FROM jos_bsms_studies GROUP BY booknumber ORDER BY totalmsg DESC LIMIT 5');
+		$results=$biblestudy_db->loadObjectList();
+		$results=$biblestudy_db->query();
 		        check_dberror("Unable to load books.");
 
 		if (count($results)>0) {
@@ -135,13 +135,13 @@ class jbStats {
 				foreach ($results as $result)
 					{$result->bookname=$names[$i++];}
 		}
-		else 
+		else
 		{$results=array();}
-			
+
 		return $results;
 	}
 	/**
-	 * Total comments 
+	 * Total comments
 	 * @return int
 	 */
 	function get_total_comments() {
@@ -150,14 +150,14 @@ class jbStats {
 		return intval($biblestudy_db->loadResult());
 	}
 
-	
+
 	function get_topthirtydays() {
-		$month = mktime(0, 0, 0, date("m")-3 , date("d"), date("Y")); 
+		$month = mktime(0, 0, 0, date("m")-3 , date("d"), date("Y"));
 		$lastmonth = date("Y-m-d 00:00:01",$month); //echo $lastmonth;
 		$biblestudy_db = &JFactory::getDBO();
 		$query = 'SELECT * FROM #__bsms_studies WHERE published = "1" AND hits >0 AND UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "'.$lastmonth.'" )ORDER BY hits DESC LIMIT 5 '; //echo $query;
 			//$query = 'SELECT * FROM #__bsms_studies WHERE UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "2009-02-10 00:00:00" )ORDER BY hits DESC LIMIT 5 ';
-	
+
 		$biblestudy_db->setQuery($query);
 		$results = $biblestudy_db->loadObjectList(); //dump ($results, 'results: ');
 		$top_studies = null;
@@ -172,7 +172,7 @@ class jbStats {
 				$top_studies .= $result->hits.' hits - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->id.'">'.$result->studytitle.'</a> - '.date('Y-m-d', strtotime($result->studydate)).'<br>';
 			}
 		}
-		//return count($results) > 0 ? $results : array(); 
+		//return count($results) > 0 ? $results : array();
 		//dump ($results, 'results: ');
 		return  $top_studies;
 		//return intval($biblestudy_db->loadResult());
@@ -197,14 +197,14 @@ function get_top_downloads() {
 		//return count($results) > 0 ? $results : array();
 		return  $top_studies;
 	}
-	
+
 	function get_downloads_ninety() {
-		$month = mktime(0, 0, 0, date("m")-3 , date("d"), date("Y")); 
+		$month = mktime(0, 0, 0, date("m")-3 , date("d"), date("Y"));
 		$lastmonth = date("Y-m-d 00:00:01",$month); //echo $lastmonth;
 		$biblestudy_db = &JFactory::getDBO();
 		$query = 'SELECT #__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished, #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate FROM #__bsms_mediafiles LEFT JOIN #__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id) WHERE #__bsms_mediafiles.published = "1" AND downloads >0 AND UNIX_TIMESTAMP(createdate) > UNIX_TIMESTAMP( "'.$lastmonth.'" )ORDER BY downloads DESC LIMIT 5 '; //echo $query;
 			//$query = 'SELECT * FROM #__bsms_studies WHERE UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "2009-02-10 00:00:00" )ORDER BY hits DESC LIMIT 5 ';
-	
+
 		$biblestudy_db->setQuery($query);
 		$results = $biblestudy_db->loadObjectList(); //dump ($results, 'results: ');
 		$top_studies = null;
@@ -219,19 +219,19 @@ function get_top_downloads() {
 				$top_studies .= $result->downloads.' hits - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->sid.'">'.$result->stitle.'</a> - '.date('Y-m-d', strtotime($result->sdate)).'<br>';
 			}
 		}
-		//return count($results) > 0 ? $results : array(); 
+		//return count($results) > 0 ? $results : array();
 		//dump ($results, 'results: ');
 		return  $top_studies;
 		//return intval($biblestudy_db->loadResult());
 	}
-	
+
 function total_downloads()
 	{
 		$biblestudy_db = &JFactory::getDBO();
 		$biblestudy_db->setQuery('SELECT SUM(downloads) FROM #__bsms_mediafiles WHERE published = 1 AND downloads > 0');
 		return intval($biblestudy_db->loadResult());
 	}
-	
+
 function top_score()
 	{
  	$final = array();
@@ -261,7 +261,7 @@ function top_score()
 				$topscoretable .= $scores;
 			}
 		//	$topscoretable .= '</td></tr>';
-		} 
+		}
 	$topscoretable .= '</table>';
 	return $topscoretable;
 }
@@ -295,9 +295,9 @@ function top_score_site()
 
 	foreach ($final as $topscore)
 	{
-		
+
 		$top .= '<option value="'.$topscore['select'].'">'.$topscore['display'].'</option>';
-	
+
 	}
 $top .= '</select>';
 	return $top;
@@ -335,11 +335,11 @@ function players()
         $total = $directcount + $internalcount + $avrcount + $avcount;
         $noplayer = $num_rows - $total;
     }
-    $mediaplayers = '<strong>'.JText::_('Direct Link:').' </strong>'.$directcount.
-    '<br /><strong>'.JText::_('Internal Player:').' </strong>'.$internalcount.
-    '<br /><strong>'.JText::_('All Videos Reloaded:').' </strong>'.$avrcount.
-    '<br /><strong>'.JText::_('All Videos Plugin:').' </strong>'.$avcount.
-    '<br /><strong>'.JText::_('No Player - treated as direct:').'</strong> '.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
+    $mediaplayers = '<strong>'.JText::_('Direct Link').': </strong>'.$directcount.
+    '<br /><strong>'.JText::_('Internal Player').': </strong>'.$internalcount.
+    '<br /><strong>'.JText::_('All Videos Reloaded').': </strong>'.$avrcount.
+    '<br /><strong>'.JText::_('All Videos Plugin').': </strong>'.$avcount.
+    '<br /><strong>'.JText::_('No Player - treated as direct').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
     return $mediaplayers;
 }
 }

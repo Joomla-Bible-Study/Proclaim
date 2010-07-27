@@ -113,14 +113,14 @@ class biblestudyControllermediafilesedit extends JController {
 	 */
 	function save()
 	{
-		
+
 		$model = $this->getModel('mediafilesedit');
 		//dump ($post, 'post: ');
 		$file = JRequest::getVar('file', null, 'files', 'array' );
 		$setDocman = JRequest::getVar('docManItem', null, 'post');
 		$setFile = $file['name'];
 		$setArticle = JRequest::getVar('articleTitle', null, 'post');
-		
+
 		/*if ($setFile && ($setDocman || $setArticle))
 		{
 			echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
@@ -133,13 +133,13 @@ class biblestudyControllermediafilesedit extends JController {
 		{
 		echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
 		}*/
-		
+
 		if ($model->store($post)) {
 			$msg = JText::_( 'Media Saved!' );
 		} else {
 			$msg = JText::_( 'Error Saving Media' );
 		}
-		
+
 		$filename_upload = strtolower($file['name']);
 		if (isset($filename_upload)){
 			$uploadFile=$this->upload();}
@@ -185,7 +185,7 @@ class biblestudyControllermediafilesedit extends JController {
 	{
 		$cid	= JRequest::getVar( 'cid', array(), 'post', 'array' );
 		JArrayHelper::toInteger($cid);
-		
+
 		if (isset($cid[0]) && $cid[0]) {
 			$id = $cid[0];
 		} else {
@@ -202,7 +202,7 @@ class biblestudyControllermediafilesedit extends JController {
 		}
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
 	}
-	
+
 	function orderdown()
 	{
 		$cid	= JRequest::getVar( 'cid', array(), 'post', 'array' );
@@ -224,7 +224,7 @@ class biblestudyControllermediafilesedit extends JController {
 		}
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
 	}
-	
+
 	function saveorder()
 	{
 		$cid	= JRequest::getVar( 'cid', array(), 'post', 'array' );
@@ -237,7 +237,7 @@ class biblestudyControllermediafilesedit extends JController {
 		}
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
 	}
-	
+
 	function unpublish()
 	{
 		global $mainframe;
@@ -275,21 +275,21 @@ class biblestudyControllermediafilesedit extends JController {
 		$items =& $model->getdocManCategoryItems($catId);
 		echo $items;
 	}
-	
+
 	function articlesSectionCategories() {
 		error_reporting(0);
 		$secId = JRequest::getVar('secId');
-		
+
 		$model =& $this->getModel('mediafilesedit');
 		$items =& $model->getArticlesSectionCategories($secId);
 		echo $items;
-		
+
 	}
-	
+
 	function articlesCategoryItems() {
 		error_reporting(0);
 		$catId = JRequest::getVar('catId');
-		
+
 		$model =& $this->getModel('mediafilesedit');
 		$items =& $model->getCategoryItems($catId);
 		echo $items;
@@ -297,10 +297,10 @@ class biblestudyControllermediafilesedit extends JController {
 	function virtueMartItems(){
 		error_reporting(0);
 		$catId = JRequest::getVar('catId');
-		
+
 		$model =& $this->getModel('mediafilesedit');
 		$items =& $model->getVirtueMartItems($catId);
-		echo $items;		
+		echo $items;
 	}
 	function fixAVR()
 	{
@@ -311,12 +311,12 @@ class biblestudyControllermediafilesedit extends JController {
 		$avrexists = JFile::exists($dest);
 		if ($avrexists)
 			{
-				if (!JFile::copy($dest, $avrbackup)) 
+				if (!JFile::copy($dest, $avrbackup))
 				{
 					echo "<script> alert('Copy Operation 1 Failed'); window.history.go(-1); </script>\n";
 					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist' );
 				}
-				
+
 				if (!JFile::copy($src, $dest))
 				{
 					echo "<script> alert('Copy Operation 2 Failed'); window.history.go(-1); </script>\n";
@@ -330,49 +330,49 @@ class biblestudyControllermediafilesedit extends JController {
 		if ($isbsms)
 		{
 			$msg = JText::_( 'Operation Successful. All Videos Reloaded Bible Study File Copied' );
-			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );	
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
 		}
 	}
-	
+
 	function resetDownloads()
 	{
 		$msg = null;
 		$id 	= JRequest::getInt( 'id', 0, 'post'); //dump ($cid, 'cid: ');
 		$db = JFactory::getDBO();
-		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = ".$id); 
+		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = ".$id);
 		$reset = $db->query();
-		if ($db->getErrorNum() > 0)
+        if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-					$msg = 'An error occured while resetting the downloads: '.$error;
+                    $msg = JText::_('An error occured while resetting the downloads:').' '.$error;
 					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]='.$id, $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-				$msg = JText::_('No error messages generated. '.$updated.' row(s) reset.');
+                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
 				$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
 			}
 	}
-	
+
 function resetPlays()
 	{
 		$msg = null;
 		$id 	= JRequest::getInt( 'id', 0, 'post'); //dump ($cid, 'cid: ');
 		$db = JFactory::getDBO();
-		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = ".$id); 
+		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = ".$id);
 		$reset = $db->query();
-		if ($db->getErrorNum() > 0)
+        if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-					$msg = 'An error occured while resetting the plays: '.$error;
+                    $msg = JText::_('An error occured while resetting the plays:').' '.$error;
 					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]='.$id, $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-				$msg = JText::_('No error messages generated. '.$updated.' row(s) reset.');
-				$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
+                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
 			}
 	}
 }

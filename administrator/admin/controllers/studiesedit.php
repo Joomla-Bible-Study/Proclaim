@@ -118,24 +118,24 @@ class biblestudyControllerstudiesedit extends JController
 		$msg = JText::_( 'Operation Cancelled' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
 	}
-	
+
 	function resetHits()
 	{
 		$msg = null;
 		$id 	= JRequest::getInt( 'id', 0, 'post'); //dump ($cid, 'cid: ');
 		$db = JFactory::getDBO();
-		$db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = ".$id); 
+		$db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = ".$id);
 		$reset = $db->query();
 		if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-					$msg = 'An error occured while resetting the hits: '.$error;
-					$this->setRedirect( 'index.php?option=com_biblestudy&view=studiesedit&controller=admin&layout=form&cid[]='.$id, $msg );
+                    $msg = JText::_('An error occured while resetting the hits:').' '.$error;
+                    $this->setRedirect( 'index.php?option=com_biblestudy&view=studiesedit&controller=admin&layout=form&cid[]='.$id, $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-				$msg = JText::_('No error messages generated. '.$updated.' row reset.');
+                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
 				$this->setRedirect( 'index.php?option=com_biblestudy&view=studiesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
 			}
 	}
