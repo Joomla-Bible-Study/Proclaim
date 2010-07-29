@@ -529,7 +529,7 @@ function getListingExp($row, $params, $admin_params, $template)
 //	$i_image = $row->thumbnailm;
 //	$i_path = $i_path.'/'.$i_image;
 //	$image = getImage($i_path);
-    $label = $params->get('templatecode');
+    $label = $params->get('templatecode'); //dump ($label, 'label: ');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->studytitle, $label);
 	$label = str_replace('{{date}}', getStudydate($params, $row->studydate), $label);
