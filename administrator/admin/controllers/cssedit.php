@@ -65,7 +65,7 @@ if ($return)
 		{
 
 
-                        $mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$filename));
+                        $mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$filename);
 		}
  // mosRedirect( "index2.php?option=$option&task=manage_css", "CSS has been reset to default settings." );
 }
@@ -107,7 +107,7 @@ if ($return)
 		$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Saved'));
 		}
 		else {
-                        $mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file));
+                        $mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
 		}
 	}
     function backup()
@@ -131,7 +131,7 @@ if ($return)
     		$mainframe->redirect('index.php?option=com_biblestudy&view=cssedit',  JText::_('Backup Saved to /images folder'));
     		}
     		else {
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file));
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
     		}
     }
 
@@ -156,7 +156,7 @@ if ($return)
     		$mainframe->redirect('index.php?option=com_biblestudy&view=cssedit',  JText::_('Backup restored from /images folder'));
     		}
     		else {
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file));
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
     		}
     }
 }
