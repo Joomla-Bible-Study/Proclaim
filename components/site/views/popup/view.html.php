@@ -13,7 +13,8 @@
             $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
             include_once($path1.'scripture.php');
             include_once($path1.'date.php');
-			$getMedia = new jbsMedia();
+            include_once($path1.'duration.php');
+		//	$getMedia = new jbsMedia();
             JRequest::setVar('tmpl', 'component');
             $mediaid  = JRequest::getInt('mediaid','','get');
 			$Itemid = JRequest::getInt('Itemid','1','get');
@@ -54,7 +55,7 @@
             $date = getstudyDate($params, $media->studydate);
 			// The popup window call the counter function
 			$play = $getMedia->hitPlay($mediaid);
-			
+			$length = getDuration($params, $media);
             $studyintro = str_replace('"', '\"', $media->studyintro);
             $studyintro = str_replace("'", "\'", $media->studyintro);
             $studytitle = str_replace("'", "\'", $media->studytitle);
@@ -93,10 +94,10 @@ $footertext = '';
 // Need to add in template
 echo "<body bgcolor='".$params->get('popupbackground', 'white')."'>";
 
-$headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date);
-if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media);}
-$footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date);
-if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media);}
+$headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
+if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media, $scripture, $date, $length);}
+$footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
+if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);}
 echo '<p class="popuptitle">'.$headertext.'</p>';
 
 //Here is where we choose whether to use the Internal Viewer or All Videos
@@ -152,16 +153,16 @@ echo $footertext;
 
         } //end of display function
 
-function titles($text, $media, $scripture, $date)
+function titles($text, $media, $scripture, $date, $length)
 {
    // dump ($text, 'text1: ');
-    $text = str_replace('{{teacher}}', $media->teachername, $text);
-    $text = str_replace('{{studydate}}', $date, $text);
-    $text = str_replace('{{filename}}', $media->filename, $text);
-    $text = str_replace('{{description}}', $media->description, $text);
-    $text = str_replace('{{length}}', $media->length, $text);
-    $text = str_replace('{{title}}', $media->studytitle, $text);
-    $text = str_replace('{{scripture}}', $scripture, $text);
+   if (isset($media->teachername)){ $text = str_replace('{{teacher}}', $media->teachername, $text);}
+   if (isset($date)){ $text = str_replace('{{studydate}}', $date, $text);}
+   if (isset($media->filename)) {$text = str_replace('{{filename}}', $media->filename, $text);}
+   if (isset($media->studyintro)){ $text = str_replace('{{description}}', $media->studyintro, $text);}
+   if (isset($length)){ $text = str_replace('{{length}}', $length, $text);}
+   if (isset($media->studytitle)){ $text = str_replace('{{title}}', $media->studytitle, $text);}
+   if (isset($scripture)){ $text = str_replace('{{scripture}}', $scripture, $text);}
  //  dump ($text, 'text2: ');
     return $text;
 }

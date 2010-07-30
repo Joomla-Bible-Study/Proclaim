@@ -115,20 +115,24 @@ if ($sh404exists)
     </table>
 	</fieldset>
 </div>
-<div class="clr"></div>
-<div class="col100">
-	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Media Files' ); ?></legend>
+
 <input type="hidden" name="option" value="com_biblestudy" />
 <input type="hidden" name="id" value="1" />
 <input type="hidden" name="controller" value="admin" />
 <input type="hidden" name="task" value="save" />
 </form>
+<div class="clr"></div>
+
+<form action="index.php" method="post" name="adminForm2" id="adminForm2">
+    <div class="col100">
+        <fieldset class="adminform">	
+		  <legend><?php echo JText::_( 'Media Files' ); ?></legend>
 <table class="admintable">
 <tr><td class="key"><?php echo JText::_('Media Players Statistics:');?> </td><td><?php echo $this->playerstats;?></td> </tr>
 <tr>
 <td class="key"><?php echo JText::_('Change Players'); ?></td>
-<td> <form action="index.php" method="post" name="adminForm" id="adminForm">
+<td> 
+
 <select name="from" id="from">
 <option value="x"><?php echo JText::_('Select an Existing Player');?></option>
 <option value="0"><?php echo JText::_('Direct');?></option>
