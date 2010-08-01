@@ -251,7 +251,7 @@ function top_score()
 			$final[] = $final2;
 		}
 	rsort($final);
-	array_splice($final,10);
+	array_splice($final,5);
 	$topscoretable = '<table cellspacing="0" cellpadding="0">';
 	foreach ($final as $key=>$value)
 		{

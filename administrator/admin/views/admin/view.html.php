@@ -21,7 +21,8 @@ class biblestudyViewadmin extends JView
 	//	$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Administration' ), 'administration');
 		JToolBarHelper::save();
-        JToolBarHelper::apply();
+        JToolBarHelper::cancel();
+      //  JToolBarHelper::apply();
 		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset All Hits', 'Reset All Hits', false, false );
 		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset All Download Hits', 'Reset All Download Hits', false, false );
 		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset All Plays', 'Reset All Plays', false, false );

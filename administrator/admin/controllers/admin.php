@@ -49,7 +49,7 @@ class biblestudyControlleradmin extends JController {
 			case 'apply':
 				$msg = JText::_( 'Changes to Admin Settings Updated! (by Apply)' );
 				$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
-				$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
+				$link = 'index.php?option=com_biblestudy&view=cpanel';
 				break;
 
 			case 'save':
@@ -58,7 +58,7 @@ class biblestudyControlleradmin extends JController {
 				//$link = 'index.php?option=com_driver';
 
 				// Check the table in so it can be edited.... we are done with it anyway
-				$link = 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form';
+				$link = 'index.php?option=com_biblestudy&view=cpanel';
 				break;
 		}
 
@@ -67,65 +67,11 @@ class biblestudyControlleradmin extends JController {
 		$this->setRedirect($link, $msg);
 	}
 
-	/**
-	 * remove record(s)
-	 * @return void
-	 */
-	function remove()
-	{
-		$model = $this->getModel('booksedit');
-		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Books Could not be Deleted' );
-		} else {
-			$msg = JText::_( 'Book(s) Deleted' );
-		}
-
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=bookslist', $msg );
-	}
-function publish()
-	{
-		global $mainframe;
-
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
-
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
-		}
-
-		$model = $this->getModel('booksedit');
-		if(!$model->publish($cid, 1)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
-
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=bookslist' );
-	}
-
-
-	function unpublish()
-	{
-		global $mainframe;
-
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
-
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
-		}
-
-		$model = $this->getModel('booksedit');
-		if(!$model->publish($cid, 0)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
-
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=bookslist' );
-	}
-	/**
-	 * cancel editing a record
-	 * @return void
-	 */
+	
 	function cancel()
 	{
 		$msg = JText::_( 'Operation Cancelled' );
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 	}
 
 	function updatesef()
@@ -135,12 +81,12 @@ function publish()
 			$update = updateSEF();
 			if ($update)
 			{
-				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $update );
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $update );
 			}
 			else
 			{
 				$msg = JText::_('Update successful. No error messages generated.');
-				$this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 			}
 
 		}
@@ -155,13 +101,13 @@ function publish()
 				{
 					$error = $db->getErrorMsg();
                     $msg = JText::_('An error occured while resetting the hits:').' '.$error;
-                    $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                    $this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
                 $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
-                $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                $this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 			}
 	}
 function resetDownloads()
@@ -194,13 +140,13 @@ function resetPlays()
 				{
 					$error = $db->getErrorMsg();
                     $msg = JText::_('An error occured while resetting the plays:').' '.$error;
-                    $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                    $this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
                 $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
-                $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+                $this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 			}
 	}
 
