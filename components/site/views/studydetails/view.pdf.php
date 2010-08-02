@@ -1,4 +1,4 @@
-,<?php
+<?php
 
 
 // Check to ensure this file is included in Joomla!
@@ -107,7 +107,7 @@ else {$text .= $scripture1.' - '.$scripture2;}
 			if ($params->get('show_teacher_view')) 
 			{
 				$text .= "\n";
-				$text .= JText::_('By').' '. ($studydetails->tname);
+				$text .= JText::_('By').' '. ($studydetails->teachername);
 			}
 
 		
