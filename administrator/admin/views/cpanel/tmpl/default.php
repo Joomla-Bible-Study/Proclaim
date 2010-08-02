@@ -311,10 +311,12 @@ table.fbstat .col2 {
       <tr>
         <td><?php echo JText::_('Total Topics'); ?></td>
         <td><strong><?php echo jbStats::get_total_topics() ;?></strong></td>
-        <td><?php echo JText::_('Top 5 Studies Hits'); ?></td>
-        <td><strong><?php echo jbStats::get_top_studies() ; ?></strong></td></tr>
+        <td><?php echo JText::_('Total Media Files'); ?></td>
+        <td><strong><?php echo jbStats::total_mediafiles() ; ?></strong></td>
+        </tr>
       <tr>
-      	<td><?php echo JText::_('Total Media Files'); ?></td><td><strong><?php echo jbStats::total_mediafiles() ; ?></strong></td>
+      	<td><?php echo JText::_('Top 5 Studies Hits'); ?></td>
+        <td><strong><?php echo jbStats::get_top_studies() ; ?></strong></td>
   	 	<td><?php echo JText::_('Top 5 Studies Hits 90 Days'); ?></td>
         <td><strong><?php echo jbStats::get_topthirtydays() ;?></strong></td>
      </tr>

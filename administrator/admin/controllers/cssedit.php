@@ -26,6 +26,11 @@ class biblestudyControllercssedit extends JController
 		//$this->registerTask( 'save'  , 	'apply' );
 	}
 
+function cancel()
+	{
+		$msg = JText::_( 'Operation Cancelled' );
+		$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
+	}
 	/**
 	 * display the edit form
 	 * @return void
@@ -65,7 +70,7 @@ if ($return)
 		{
 
 
-                        $mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$filename);
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$filename);
 		}
  // mosRedirect( "index2.php?option=$option&task=manage_css", "CSS has been reset to default settings." );
 }
@@ -86,7 +91,7 @@ if ($return)
 		$filecontent	= JRequest::getVar('filecontent', '', 'post', 'string', JREQUEST_ALLOWRAW);
 
 		if (!$filecontent) {
-			$mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::_('Content empty.'));
+			$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Content empty.'));
 		}
 
 		// Set FTP credentials, if given
@@ -107,7 +112,7 @@ if ($return)
 		$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Saved'));
 		}
 		else {
-                        $mainframe->redirect('index.php?option='.$option.'&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
 		}
 	}
     function backup()
@@ -128,10 +133,10 @@ if ($return)
     		if ($return)
     		{
 
-    		$mainframe->redirect('index.php?option=com_biblestudy&view=cssedit',  JText::_('Backup Saved to /images folder'));
+    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('Backup Saved to /images folder'));
     		}
     		else {
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
     		}
     }
 
@@ -153,10 +158,10 @@ if ($return)
     		if ($return)
     		{
 
-    		$mainframe->redirect('index.php?option=com_biblestudy&view=cssedit',  JText::_('Backup restored from /images folder'));
+    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('Backup restored from /images folder'));
     		}
     		else {
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cssedit', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
     		}
     }
 }

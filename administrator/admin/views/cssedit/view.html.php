@@ -19,6 +19,7 @@ class biblestudyViewcssedit extends JView
 		$text = JText::_( 'Edit CSS' );
 		JToolBarHelper::title(   JText::_( 'CSS Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'css.png' );
 		JToolBarHelper::save();
+        JToolBarHelper::cancel();
 		JToolBarHelper::custom('backup','archive','Backup CSS', 'Backup CSS',false, false);
 		JToolBarHelper::custom( 'resetcss', 'save', 'Reset CSS', 'Reset CSS', false, false );
 		JToolBarHelper::help('biblestudy', true );
