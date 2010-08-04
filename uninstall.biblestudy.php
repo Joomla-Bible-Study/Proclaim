@@ -148,6 +148,12 @@ $drop_tables = $admin_params->get('drop_tables');
 					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
 					
 				}
+    $database->setQuery ("DROP TABLE IF EXISTS #__bsms_timeset");
+		$database->query();
+		if ($database->getErrorNum()) {
+					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+					
+				}
 global $mainframe; ?>
 
 <tr><td><table><tr><td><img src = "<?php echo $mainframe->getCfg("live_site"); ?>/components/com_biblestudy/images/openbible.png" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" /></td><td><h2>Joomla Bible Study Uninstalled</h2></td></tr></table></td>

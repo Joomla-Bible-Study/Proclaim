@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <comupgrade version="1.0">
-	<install version="6.2.0_Beta3" versiondate="2010-07-26" build="614" versionname="Deuteronomy">
+	<install version="6.2.0_RC1" versiondate="2010-08-05" build="614" versionname="Deuteronomy">
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `id` int(11) NOT NULL,
 					  `podcast` text,
@@ -247,6 +247,10 @@
 				`topic_text` TEXT NULL,
 				`published` TINYINT(1) NOT NULL DEFAULT '1',
 				PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`;</query>
+        <query>CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
+                `timeset` VARCHAR(14) ,
+                KEY `timeset` (`timeset`)
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8;</query>
 		<query>INSERT INTO `#__bsms_studies` SET `studydate`='2010-03-13 00:10:00', `teacher_id`=1, `studynumber`='2010-001', `booknumber`='101', `chapter_begin`='01', `verse_begin`='01', `chapter_end`='01', `verse_end`='31', `studytitle`='Sample Study Title', `studyintro`='Sample text you can use as an introduction to your study', `studytext`='This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com'</query>
 		<query>INSERT INTO `#__bsms_servers` SET `id`='1', `server_name`='Your Server Name', `server_path`='www.mywebsite.com', `published`='1'</query>
 		<query>INSERT INTO `#__bsms_series` SET `id`=NULL, `series_text`='Worship Series', `published`='1'</query>
@@ -392,7 +396,7 @@
 			<query mode="silenterror">ALTER TABLE #__bsms_mediafiles ADD COLUMN params TEXT NULL AFTER virtueMart_id</query>
 			<phpfile name="biblestudy.613.upgrade.php" />	
 		</version>
-		<version version="6.2.0_RC1" versiondate="2010-06-24" build="614" versionname="Deuteronomy">
+		<version version="6.2.0_RC1" versiondate="2010-08-05" build="614" versionname="Deuteronomy">
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 				  `id` int(3) NOT NULL AUTO_INCREMENT,
 				  `study_id` int(3) NOT NULL DEFAULT '0',
@@ -401,6 +405,10 @@
 				  UNIQUE KEY `id` (`id`),
 				  KEY `id_2` (`id`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1</query>
+        <query>CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
+                `timeset` VARCHAR(14) ,
+                KEY `timeset` (`timeset`)
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8;</query>
 			<query mode="silenterror">ALTER TABLE #__bsms_teachers MODIFY `title` varchar(250)</query>
 			<query mode="silenterror">ALTER TABLE #__bsms_admin ADD COLUMN showhide char(255) DEFAULT NULL</query>
 			<query mode="silenterror">ALTER TABLE #__bsms_mediafiles ADD COLUMN downloads int(10) DEFAULT 0</query>
