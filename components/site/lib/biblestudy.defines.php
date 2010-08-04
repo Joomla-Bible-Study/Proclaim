@@ -11,7 +11,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
 define ('BIBLESTUDY_VERSION', '6.2.0');
-define ('BIBLESTUDY_VERSION_DATE', '2010-02-23');
+define ('BIBLESTUDY_VERSION_DATE', '2010-08-04');
 define ('BIBLESTUDY_VERSION_NAME', 'Deuteronomy');
 define ('BIBLESTUDY_VERSION_BUILD', '614');
 

@@ -277,7 +277,9 @@ table.fbstat .col2 {
   <?php 
    
 //   include_once (JPATH_COMPONENT_ADMINISTRATOR .'/lib/biblestudy.stats.class.php');
-   include_once (JPATH_COMPONENT .'/lib/biblestudy.stats.class.php');
+   include_once ('..'.DS.'components'.DS.'com_biblestudy'.DS.'lib'.DS.'biblestudy.stats.class.php');
+//   include_once (JURI::base().DS.'lib' .DS. 'biblestudy.stats.class.php');
+//   include_once ('..');
     ?>
   <table cellspacing="1"  border="0" width="100%" class="fbstat">
     <caption>
