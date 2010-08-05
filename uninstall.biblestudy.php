@@ -70,7 +70,7 @@ $drop_tables = $admin_params->get('drop_tables');
 					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_schemaVersion");
+		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_schemaversion");
 		$database->query();
 		if ($database->getErrorNum()) {
 					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';

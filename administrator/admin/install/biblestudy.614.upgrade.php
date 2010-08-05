@@ -46,85 +46,101 @@ $db = JFactory::getDBO();
 // This adds some css for the Landing Page
 
 $dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
-$landingread = JFile::read($dest);
-$landingexists = 1;
-	$landingexists = substr_count($landingread,'#landinglist');
-	if ($landingexists < 1)
+$cssexists = JFile::exists($dest);
+if ($cssexists)
+{
+    $landingread = JFile::read($dest);
+    $landingexists = 1;
+    	$landingexists = substr_count($landingread,'#landinglist');
+    	if ($landingexists < 1)
+    	{
+    		$landing = '
+    /* Landing Page Items */ 
+    #landinglist { 
+    	 
+    } 
+    #landing_label { 
+    	 
+    } 
+    #landing_item { 
+    	 
+    } 
+    #landing_title { 
+    font-family:arial; 
+    font-size:16px; 
+    font-weight:bold; 
+    	 
+    } 
+    #biblestudy_landing { 
+    	 
+    } 
+    #showhide { 
+    font-family:arial; 
+    font-size:12px; 
+    font-weight:bold; 
+    text-decoration:none; 
+    } 
+    
+    #showhide .showhideheadingbutton img {
+    vertical-align:bottom;
+    }
+    
+    #landing_table { 
+    
+    }
+    
+    #landing_td {
+    width: 33%;
+    }
+    
+    #landing_separator {
+    height:15px;
+    }
+    /* Popup Window Items */
+    .popupwindow
+    {
+    margin: 5px;
+    text-align:center; 
+    }
+    p.popuptitle {
+    font-weight: bold;
+    color: black;
+    }
+    
+    .popupfooter
+    {
+    margin: 5px;
+    text-align:center;
+    }
+    p.popupfooter {
+    font-weight: bold;
+    color: grey;
+    }'
+    ;
+    $landingwrite = $landingread.$landing;
+    			$errcss = '';
+    			if (!JFile::write($dest, $landingwrite))
+    			{
+    				$result_table .= '<tr><td>There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org</td></tr>';
+    			}
+    			else
+    			{
+    				$result_table .= '<tr><td>Landing Page CSS written to file.</td></tr>';
+    			}
+    }
+}
+$src = JPATH_SITE.DS.'components/com_biblestudy/assets/css/biblestudy.css.dist';
+$dest = JPATH_SITE.DS.'components/com_biblestudy/assets/css/biblestudy.css';
+$cssexists = JFile::exists($dest);
+if (!$cssexists)
 	{
-		$landing = '
-/* Landing Page Items */ 
-#landinglist { 
-	 
-} 
-#landing_label { 
-	 
-} 
-#landing_item { 
-	 
-} 
-#landing_title { 
-font-family:arial; 
-font-size:16px; 
-font-weight:bold; 
-	 
-} 
-#biblestudy_landing { 
-	 
-} 
-#showhide { 
-font-family:arial; 
-font-size:12px; 
-font-weight:bold; 
-text-decoration:none; 
-} 
-
-#showhide .showhideheadingbutton img {
-vertical-align:bottom;
-}
-
-#landing_table { 
-
-}
-
-#landing_td {
-width: 33%;
-}
-
-#landing_separator {
-height:15px;
-}
-/* Popup Window Items */
-.popupwindow
-{
-margin: 5px;
-text-align:center; 
-}
-p.popuptitle {
-font-weight: bold;
-color: black;
-}
-
-.popupfooter
-{
-margin: 5px;
-text-align:center;
-}
-p.popupfooter {
-font-weight: bold;
-color: grey;
-}'
-;
-$landingwrite = $landingread.$landing;
-			$errcss = '';
-			if (!JFile::write($dest, $landingwrite))
-			{
-				$result_table .= '<tr><td>There was a problem writing to the css file. Please contact customer support on JoomlaBibleStudy.org</td></tr>';
-			}
-			else
-			{
-				$result_table .= '<tr><td>Landing Page CSS written to file.</td></tr>';
-			}
-}
+		if (!JFile::copy($src, $dest))
+		{
+			$result_table .= '<tr><td>There was a problem copying the css data. Please manually copy /assets/css/biblestudy.css.dist to biblestudy.css</td></tr>';
+		}
+		else
+		{$result_table .= '<tr><td>CSS data installed</td></tr>';}
+	}
 //Now we check to see if the avr special files exists, if not we put it there, and then check to see if our 6.2.0 code (for registering hits) is there, if not, we replace the file with the new version
 $src = JPATH_SITE.DS.'components/com_biblestudy/assets/avr/view.html.php';
 $dest = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view.html.php';
