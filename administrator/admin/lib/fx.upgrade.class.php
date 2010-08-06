@@ -108,6 +108,11 @@ class fx_Upgrade {
 		$biblestudy_db =& JFactory::getDBO();
 		$biblestudy_db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaVersion");
 		$schema = $biblestudy_db->loadResult(); //dump ($schema, 'schema: ');
+        if (!schema)
+        {
+            $biblestudy_db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaversion");
+            $schema = $biblestudy_db->loadResult(); //dump ($schema, 'schema: ');
+        }
 		if ($schema)
 		{
 			switch ($schema)
