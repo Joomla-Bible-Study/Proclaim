@@ -1,16 +1,33 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<script type="text/javascript">
-function submitbutton(pressbutton)
-{
-	var form = document.adminForm;
-	if (pressbutton == 'cancel') {
-		submitform( pressbutton );
-		return;
-	} else {
-		submitform( pressbutton );
-	}
-}
-</script>
+	<script language="javascript" type="text/javascript">
+		<!--
+		function submitbutton(pressbutton)
+		{
+			var form = document.adminForm;
+			if (pressbutton == 'cancel')
+			{
+				submitform( pressbutton );
+				return;
+			}
+			// do field validation
+			if (form.title.value == "")
+			{
+				alert( "<?php echo JText::_( 'Please fill in the Podcast Title.', true ); ?>" );
+			}
+			else if (form.website.value == "")
+			{
+				alert( "<?php echo JText::_( 'Please fill in the Website.', true ); ?>" );
+			}
+			else if (form.filename.value == "")
+			{
+				alert( "<?php echo JText::_( 'Please fill in the XML Filename.', true ); ?>" );
+			}
+			else
+			{
+				submitform( pressbutton );
+			}
+		}
+        </script>
 <?php $user =& JFactory::getUser();
 global $mainframe, $option;
 $params =& $mainframe->getPageParameters();

@@ -6,7 +6,7 @@
   <name>Bible Study</name>
   <version>6.2.0_RC1</version>
   <versionname>Deuteronomy</versionname>
-  <creationDate>2010-08-04</creationDate>
+  <creationDate>2010-08-09</creationDate>
   <build>614</build>
   <author>Tom Fuller, Eugen Istok, Kyle Holder, Richard Hunt, Nick Fossen - JoomlaBibleStudy Team</author>
   <authorEmail>tomfuller2@gmail.com</authorEmail>
@@ -65,10 +65,8 @@
       <menu link="option=com_biblestudy&amp;view=locationslist">Locations</menu>
       <menu link="option=com_biblestudy&amp;view=topicslist">Topics</menu>
       <menu link="option=com_biblestudy&amp;view=podcastlist">Podcasts</menu>
-      <menu link="option=com_biblestudy&amp;view=mimetypelist">Mime Types</menu>
       <menu link="option=com_biblestudy&amp;view=commentslist">Study Comments</menu>
-      <menu link="option=com_biblestudy&amp;view=sharelist">Social Network Links</menu>
-     <!-- Instead of link you can specify individual link attributes -->
+    <!-- Instead of link you can specify individual link attributes -->
     </submenu>
     <!-- Administration Main File Copy Section -->
     <files folder="admin">

@@ -5,20 +5,27 @@
 
 
 ?>
-<script language="javascript" type="text/javascript">
-function submitbutton(pressbutton)
-{
-	var form = document.adminForm;
-	if (pressbutton == 'cancel') {
-		submitform( pressbutton );
-		return;
-
-
-	} else {
-		submitform( pressbutton );
-	}
-}
-</script>
+	<script language="javascript" type="text/javascript">
+		<!--
+		function submitbutton(pressbutton)
+		{
+			var form = document.adminForm;
+			if (pressbutton == 'cancel')
+			{
+				submitform( pressbutton );
+				return;
+			}
+			// do field validation
+			if (form.studytitle.value == "")
+			{
+				alert( "<?php echo JText::_( 'Please fill in a title.', true ); ?>" );
+			}
+			else
+			{
+				submitform( pressbutton );
+			}
+		}
+        </script>
 <style>
   li {list-style-type:none;}
 

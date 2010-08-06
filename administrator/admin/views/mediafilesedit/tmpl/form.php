@@ -18,6 +18,31 @@ function openConverter1()
 		}
 
 </script>
+	<script language="javascript" type="text/javascript">
+		<!--
+		function submitbutton(pressbutton)
+		{
+			var form = document.adminForm;
+			if (pressbutton == 'cancel')
+			{
+				submitform( pressbutton );
+				return;
+			}
+			// do field validation
+			if (form.study_id.value == "0")
+			{
+				alert( "<?php echo JText::_( 'Please choose a study to link this file to.', true ); ?>" );
+			}
+			else if (form.media_image.value == "0")
+			{
+				alert( "<?php echo JText::_( 'Please choose a media image.', true ); ?>" );
+			}
+			else
+			{
+				submitform( pressbutton );
+			}
+		}
+        </script>
 <form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 
 
