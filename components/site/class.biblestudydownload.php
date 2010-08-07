@@ -5,16 +5,11 @@ class Dump_File{
   var $filename = NULL;
 	var $filesieze = NULL;
 	
-  function Dump_File($id){
-  
-  }
-	
-  function download($inline = false, $server, $path, $filename, $size, $mime_type, $id){
+  function download(){
  	
   	$id = JRequest::getVar('id', 0, 'GET', 'INT');
   	$hits = $this->hitDownloads($id);
 		
-	//dump ($id, 'id= ');
 	$db	= & JFactory::getDBO();
 	$query = 'SELECT #__bsms_mediafiles.*,'
 		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
@@ -27,7 +22,9 @@ class Dump_File{
 		. ' WHERE #__bsms_mediafiles.id = '.$id.' LIMIT 1';
 		$db->setQuery( $query );
 		//echo $id; 
+		
 	$media = $db->LoadObject();
+	
 	$server = $media->spath;
 	$path = $media->fpath;
 	$filename = $media->filename;
