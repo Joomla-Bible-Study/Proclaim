@@ -4,7 +4,7 @@
  * Author : Nick Fossen
  * Contact : nfossen@gmail
  * Home URL : http://www.newhorizoncf.org
- * {shSourceVersionTag: Version 1.1 - 2010-01-12}
+ * {shSourceVersionTag: Version 6.2 - 2010-07-06}
  *    
  */
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
@@ -72,6 +72,22 @@ switch ($view) {
 		$database->setQuery($query_name);
 		$teacher = $database->loadResult();
 		$title[] = $teacher;
+		shRemoveFromGETVarsList('view');
+		shRemoveFromGETVarsList('Itemid');
+		shRemoveFromGETVarsList('id');
+	break;
+	case 'landingpage':
+		$title[] = $view;
+	
+		shRemoveFromGETVarsList('view');
+		shRemoveFromGETVarsList('Itemid');
+		shRemoveFromGETVarsList('id');
+	break;
+	case 'popup':
+		$title[] = $view;
+		
+		shRemoveFromGETVarsList('player');
+		shRemoveFromGETVarsList('template');
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		shRemoveFromGETVarsList('id');
