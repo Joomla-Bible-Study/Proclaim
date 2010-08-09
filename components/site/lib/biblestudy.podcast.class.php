@@ -15,7 +15,7 @@ class JBSPodcast
         return $podcast;
     }
 
-    function getEpisodes($id)
+    function getEpisodes($id, $limit)
     {
         //here's where we look at each mediafile to see if they are connected to this podcast
         $db = JFactory::getDBO();
@@ -34,7 +34,7 @@ class JBSPodcast
         		case is_array($podcasts) :
         			foreach ($podcasts as $podcast)
         			{
-        				if ($podids->id == $podcast)
+        				if ($id == $podcast)
         				{
         					$where[] = 'mf.id = '.$result->id;
         				}
@@ -46,14 +46,14 @@ class JBSPodcast
         			break;
         		
         		default :
-        			if ($podcasts == $podids->id)
+        			if ($podcasts == $id)
         			{
         				$where[] = 'mf.id = '.$result->id; 
         				break;
         			}
         	}
         }
-        $where 		= ( count( $where ) ? ' '. implode( ' OR ', $where ) : '' );
+        $where 		= ( count( $where ) ? ' '. implode( ' OR ', $where ) : '' ); 
         if ($where)
         {$where = ' WHERE '.$where.' AND ';}
         else {return $msg= ' No media files were associated with a podcast. ';}
@@ -76,16 +76,14 @@ class JBSPodcast
         			. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
         			. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
         			. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
-        			. $where.'s.published = 1 AND mf.published = 1 AND p.id = '.$id.' ORDER BY createdate DESC '.$limit;
+        			. $where.'s.published = 1 AND mf.published = 1 ORDER BY createdate DESC '.$limit;
         		
         		$db->setQuery( $query );
         		$episodes = $db->loadObjectList();
-        		$episodedetail = '';
-        		foreach ($episodes as $episode) 
-                {
-                   // dump ($episode, 'episode: ');
-                }
-     //   return $episode;
+        		//dump ($episodes, 'episode: ');
+                
+        		
+        return $episodes;
     }
 
 }

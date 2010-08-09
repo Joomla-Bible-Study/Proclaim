@@ -3,7 +3,7 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.podcast.class.php');
 jimport( 'joomla.application.component.view' );
 
 
@@ -16,28 +16,16 @@ class biblestudyViewpodcastedit extends JView
 		$podcastedit		=& $this->get('Data');
 		$isNew		= ($podcastedit->id < 1);
 		
-		$db	= & JFactory::getDBO();
-		$query = 'SELECT p.id AS pid,'
-			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate,'
-			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin, s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-			. ' s.media_hours, s.media_minutes, s.media_seconds,'
-			. ' sr.id AS srid, sr.server_path,'
-			. ' f.id AS fid, f.folderpath,'
-			. ' t.id AS tid, t.teachername,'
-			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-			. ' mt.id AS mtid, mt.mimetype'
-			. ' FROM #__bsms_mediafiles AS mf'
-			. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
-			. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
-			. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
-			. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
-			. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
-			. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
-			. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
-			. ' WHERE mf.podcast_id = '.$podcastedit->id.' ORDER BY mf.createdate DESC';
-			$db->setQuery( $query );
-			$episodes = $db->loadObjectList();
-			
+	
+		$limit = $podcastedit->podcastlimit;
+			if ($limit > 0) {
+				$limit = 'LIMIT '.$limit;
+			}
+			else {
+				$limit = '';
+			}
+        $podcasts = new JBSPodcast();
+        $episodes = $podcasts->getEpisodes($podcastedit->id, $limit);	
 		/*
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Podcast Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
