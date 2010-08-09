@@ -20,8 +20,8 @@ $db = JFactory::getDBO();
 		$results = $db->loadObjectList();
 	   foreach ($results as $result)
 	   {
-	   	
-	   	$podcast = 'podcasts='.$result->podcast_id;
+	   	//added the \n 
+	   	$podcast = 'podcasts='.$result->podcast_id.'\n';
 	   	$params = $result->params;
 	   	$update = $podcast.' '.$params;
 	   	$query = "UPDATE #__bsms_mediafiles SET `params` = '".$update."', `podcast_id`='0' WHERE `id` = ".$result->id;
