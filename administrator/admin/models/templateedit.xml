@@ -61,7 +61,8 @@
 					<option value="7">1/9/2007</option>
 					<option value="8">Use Global System Date Format</option>
 					<option value="9">2009/10/13</option>
-				</param>
+     </param>
+            <param name="custom_date_format" type="text" size="25" default="" label="Set Custom PHP String To Time" description="Use standard PHP stringtotime to form date" />
 			<param name="duration_type" type="list" default="2" label="Choose : or hours/min/sec" description="Choose a seperator for the duration, either : or hours/mins/secs">
 			<option value="1">Hours/min/sec</option>
 			<option value="2">H:M:S</option>
