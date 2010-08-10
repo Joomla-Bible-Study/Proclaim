@@ -4,22 +4,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
 //dump ($this->admin, 'admin: ');
 
-$db = JFactory::getDBO();
-        $query = "SELECT id, params, published FROM `#__bsms_mediafiles` WHERE params LIKE '%podcasts%' and published = '1'";
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-        foreach ($results as $result)
-        {
-            $params = new JParameter($result->params);
-            $podcast = $params->get('podcasts');
-            $change = $params->get('podcasts').'\n';
-            if (is_array($podcast)){$podcast2 = explode('|',$podcast);
-            echo $podcast2;}
-//            echo $params->get('podcasts').'<br />';
-//            $pod = strpos($result->params,'podcasts=');
-//            $space = strpos($result->params,' ',$pod);
-//            echo $result->params.' - '.$pod.' - '.$space.'<br />';   
-        }
 ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
