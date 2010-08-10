@@ -2,6 +2,7 @@
 //Helper file - master list creater for study lists
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.listing.class.php');
 function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule)
 {
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -438,6 +439,18 @@ $Itemid = JRequest::getVar('Itemid');
 							case 5:
 								$cell .= '</a></span>';
 							break;
+                            
+                            case 6:
+                                $cell .= '</a>';
+                            break;
+                            
+                            case 7:
+                                $cell .= '</a>';
+                            break;
+                            
+                            case 8:
+                                $cell .= '</a>';
+                            break;
 
 						}
 						//if ($islink > 0){$cell .= '</a>';}
@@ -447,7 +460,8 @@ $Itemid = JRequest::getVar('Itemid');
 
 	function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template)
 		{
-			$Itemid = JRequest::getVar('Itemid');
+			$filelinks = new JBSListing();
+            $Itemid = JRequest::getVar('Itemid');
 			$column = '';
 			$mime = ' AND #__bsms_mediafiles.mime_type = 1';
 			//$Itemid = '';
@@ -505,8 +519,22 @@ $Itemid = JRequest::getVar('Itemid');
 			   	$column .= '<a href="'.$link.'">';
 
   			break;
-		   }
-
+            
+            case 6 :
+                //Case 6 is for a link to the 1st article in the media file records
+                $column .= '<a href="'.$filelinks->getOtherlinks($id3, $islink, $params).'">';
+                break;
+                
+            case 7 :
+                //case 7 is for Virtuemart
+                $column .= '<a href="'.$filelinks->getOtherlinks($id3, $islink, $params).'">';
+                break;
+            
+            case 8 :
+                //case 8 is for Docman
+                $column .= '<a href="'.$filelinks->getOtherlinks($id3, $islink, $params).'">';
+                break;
+            }    
 		   return $column;
 		}
 function getListingExp($row, $params, $admin_params, $template)
@@ -617,24 +645,7 @@ function getStudyExp($row, $params, $admin_params, $template)
     $label = str_replace('{{plays}}', $row->totalplays, $label);
     $label = str_replace('{{downloads}}', $row->totaldownloads, $label);
 
-    //Media
-    //$media = getMedia($row->id);
-
-    /*$mediaTable = "<table class='bsms_mediatable'>";
-    //File Type - Download - Player
-    foreach ($media as $item) {
-        $mediaTable .= "<TR>";
-        $mediaTable .= "<TD>" . getTypeIcon($item, $params, $admin_params) . "</TD>";
-        $mediaTable .= "<TD>" . getDownloadLink($item, $params, $admin_params) . "</TD>";
-        if (strpos($item->imname, "mp3") !== false) {
-            $mediaTable .= "<TD>" . getInternalPlayer($item, $params, $admin_params) . "</TD>";
-        } else {
-            $mediaTable .= "<TD></TD>";
-        }
-        $mediaTable .= "</TR>";
-    }
-    $mediaTable .= "</table>";*/
-  //  $mediaTable = getMediatable($params, $row, $admin_params);
+   
     $mediaTable = $Media->getMediaTable($row, $params, $admin_params);
     $label = str_replace('{{media}}', $mediaTable, $label);
 

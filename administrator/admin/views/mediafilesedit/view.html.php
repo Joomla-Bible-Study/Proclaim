@@ -52,15 +52,16 @@ class biblestudyViewmediafilesedit extends JView {
 		$db = JFactory::getDBO();
 		$db->setQuery('SELECT name, enabled FROM #__components where enabled = 1');
 		$db->query();
-		$components = $db->loadObjectList();
-		//dump ($tables, 'tables: ');
+		$components = $db->loadObjectList(); 
+		
 		foreach ($components as $component)
 		{
-			if ($component == 'VirtueMart')
+		  
+			if ($component->name == 'VirtueMart')
 			{
 				$vmenabled = 1;
 			}
-			if ($component == 'DOCMan')
+			if ($component->name == 'DOCman')
 			{
 				$dmenabled = 1;
 			}

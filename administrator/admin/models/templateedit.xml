@@ -238,6 +238,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -287,6 +290,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -335,6 +341,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -379,6 +388,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 </params>
 <params group="ROW2">
@@ -429,6 +441,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -478,6 +493,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -526,6 +544,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -576,6 +597,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 </params>
 <params group="ROW3">
@@ -626,6 +650,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -675,6 +702,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -723,6 +753,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -767,6 +800,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 </params>
 <params group="ROW4">
@@ -817,6 +853,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -866,6 +905,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -914,6 +956,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -958,6 +1003,9 @@
 					<option value="2">Link to 1st Media File</option>
 					<option value="5">Link to 1st Media File with ToolTip</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 </params>
 <params group="DETAILS">
@@ -1123,6 +1171,7 @@
 				<option value="0">Not Linked</option>
 				<option value="1">Link to Series Details</option>
 				<option value="3">Link to Teacher details</option>
+                
 			</param>
 			<param name="serieselement2" type="list" default="6" label="Series List Element 2" description="Please pick an element from the list">
 				<option value="0">Nothing</option>
@@ -1473,6 +1522,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -1520,6 +1572,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -1566,6 +1621,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -1608,6 +1666,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 </params>
 <params group="DETAILSROW2">
@@ -1656,6 +1717,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -1703,6 +1767,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -1749,6 +1816,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -1797,6 +1867,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 </params>
 <params group="DETAILSROW3">
@@ -1845,6 +1918,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -1892,6 +1968,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -1938,6 +2017,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -1980,6 +2062,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 		</params>
 		<params group="DETAILSROW4">
@@ -2028,6 +2113,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -2075,6 +2163,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -2121,6 +2212,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 			<param name="@spacer" type="spacer" default="" label="" description="">
 				</param>
@@ -2163,6 +2257,9 @@
 					<option value="1">Link to Details</option>
 					<option value="2">Link to 1st Media File</option>
 					<option value="3">Link to Teacher's Profile</option>
+                    <option value="6">Link to 1st Article Entry</option>
+                    <option value="7">Link to 1st VirtueMart Entry</option>
+                    <option value="8">Link to 1st DocMan Entry</option>
 				</param>
 </params>
 <params group="LANDINGPAGE" addpath="/components/com_biblestudy/elements">

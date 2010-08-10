@@ -4,7 +4,7 @@ function getFilepath($id3, $idfield, $mime)
 {
 
 	global $mainframe;
-	//dump ($id3, 'id3: ');
+	
 	$database	= & JFactory::getDBO();
 	$query = 'SELECT #__bsms_mediafiles.*,'
 	  . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
@@ -14,10 +14,8 @@ function getFilepath($id3, $idfield, $mime)
 	  . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
 	  . ' WHERE '.$idfield.' = '.$id3.' AND #__bsms_mediafiles.published = 1 '.$mime;
 	  $database->setQuery( $query ); 
-	  $filepathresults = $database->loadObject(); //dump ($filepathresults);
-	  //dump ($filepathresults, "FPR");
-	  //$number_rows = $database->getAffectedRows($query); dump ($number_rows);
-	  //if ($database->getNumRows() > 0) 
+	  $filepathresults = $database->loadObject(); 
+	  
 	  if ($filepathresults)
 		  {
 			$filepath = $filepathresults->spath.$filepathresults->fpath.$filepathresults->filename;
@@ -29,6 +27,10 @@ function getFilepath($id3, $idfield, $mime)
 				}
 		  }
 		  else { $filepath = ''; }
+          
+          $filepath = '<a href="index.php?option=com_docman&task=doc_download&gid='.$filepathresults->docMan_id.'"';
   
+  $filepathresults->virtueMart_id;
+  $filepathresults->article_id;
   return $filepath;
 }
