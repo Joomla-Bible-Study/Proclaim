@@ -53,9 +53,9 @@ class jbsMedia
             $itemparams = new JParameter ($media->params);
 
              //Get the attributes for the player used in this item
-             $player = $this->getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer);
+             $player = $this->getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, $media); 
              $playercode = $this->getPlayerCode($params, $itemparams, $player, $image, $media);
-
+//dump ($playercode, 'player: ');
             //Now we build the column for each media file
             $table .= '<td>';
 
@@ -185,7 +185,7 @@ function getAdmin()
     return $admin;
 }
 
-function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer)
+function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, $media)
 {
     $player->playerwidth = $params->get('player_width');
     $player->playerheight = $params->get('player_height');
@@ -193,6 +193,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer)
     if ($itemparams->get('playerwidth')) {$player->playerwidth = $itemparams->get('playerwidth');}
     $player->playerwidth = $player->playerwidth + 20;
     $player->playerheight = $player->playerheight + $params->get('popupmargin','50');
+    
 /**
  * @desc Players - from Template:
  * popuptype = whether AVR should be window or lightbox (handled in avr code)
@@ -246,7 +247,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer)
     return $player;
 }
 
-function getDocman($media)
+function getDocman($media, $image)
 	{
 		$src = JURI::base().$image->path;
         $height = $image->height;
@@ -265,9 +266,10 @@ function getDocman($media)
 	return $docman;
 	}
 
-function getArticle($media)
+function getArticle($media, $image)
 	{
-		$src = JURI::base().$image->path;
+		
+        $src = JURI::base().$image->path;
         $height = $image->height;
         $width = $image->width;
         $article = '<a href="index.php?option=com_content&view=article&id='.$media->article_id.'"
@@ -277,7 +279,7 @@ function getArticle($media)
 	return $article;
 	}
 
-function getVirtuemart($media, $params)
+function getVirtuemart($media, $params, $image)
 	{
 		$src = JURI::base().$image->path;
         $height = $image->height;
@@ -386,15 +388,15 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
         break;
 
         case 4: //Docman
-            $playercode = $this->getDocman($media);
+            $playercode = $this->getDocman($media, $image);
         break;
 
         case 5: //article
-            $playercode = $this->getArticle($media);
+            $playercode = $this->getArticle($media, $image); //dump ($playercode, 'playercode: ');
         break;
 
         case 6: //Virtuemart
-            $playercode = $this->getVirtuemart($media, $params);
+            $playercode = $this->getVirtuemart($media, $params, $image);
         break;
     }
      //  dump ($playercode, 'playercode: ');
