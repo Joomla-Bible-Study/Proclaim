@@ -49,55 +49,56 @@ echo $pane->endPane();?>
 <tr><td class="key"><?php echo JText::_('Default Study List Image');?></td><td><?php
 if ($this->lists['main'])
 {
-    echo $this->lists['main']; echo ' '; echo JText::_('Default for Study List Page Image. Media images folder used (set above).');
+    echo $this->lists['main']; echo ' '.JText::_('Default for Study List Page Image. Media images folder used (set above).');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder').JText::_(' Also ensure images exist in that folder');
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
 }
 ?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php
 if (isset($this->lists['study']))
 {
-    echo $this->lists['study']; echo ' '; echo JText::_('Default for study thumbnail. Set Folder above.');
+    echo $this->lists['study']; echo ' '.JText::_('Default for study thumbnail. Set Folder above.');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder').JText::_(' Also ensure images exist in that folder');
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
 }
 ?></td></tr>
 <tr><td class="key"><?php echo JText::_('Default Series Image');?></td><td><?php
 if (isset($this->lists['series']))
 {
-    echo $this->lists['series']; echo ' '; echo JText::_('Default for series thumbnail. Set Folder above.');
+    echo $this->lists['series']; echo ' '.JText::_('Default for series thumbnail. Set Folder above.');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder').JText::_(' Also ensure images exist in that folder');
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
 }
 ?></td></tr>
 
 <tr><td class="key"><?php echo JText::_('Default Teacher Image');?></td><td><?php
 if (isset($this->lists['teacher']))
 {
-    echo $this->lists['teacher']; echo ' '; echo JText::_('Default for teacher thumbnail. Set Folder above.');
+    echo $this->lists['teacher']; echo ' '.JText::_('Default for teacher thumbnail. Set Folder above.');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder').JText::_(' Also ensure images exist in that folder');
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
 }
 ?></td></tr>
 <tr><td class="key"><?php echo JText::_('Download Image');?></td><td><?php
 if (isset($this->lists['download']))
 {
-    echo $this->lists['download']; echo ' '; echo JText::_('Default for download image. Must be called download.png. Media images folder used (set above).');
+    echo $this->lists['download']; echo ' '.JText::_('Default for download image. Must be called download.png. Media images folder used (set above).');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder').JText::_(' Also ensure images exist in that folder');
+    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
 }
 ?></td></tr>
-<tr><td class="key"><?php echo JText::_('Default Show/Hide Image for Landing Page');?></td><td><?php echo $this->lists['showhide']; echo ' '; echo JText::_('Default for Show/Hide Image on Landing Page. Media images folder used (set above).');?></td></tr>
+<tr><td class="key"><?php echo JText::_('Default Show/Hide Image for Landing Page');?></td><td>
+<?php echo $this->lists['showhide']; echo ' '.JText::_('Default for Show/Hide Image on Landing Page. Media images folder used (set above).');?></td></tr>
 
 <?php //test for sh404SEF
 jimport('joomla.filesystem.file');
@@ -111,7 +112,7 @@ if ($sh404exists)
 }
 ?>
 
-     
+
     </table>
 	</fieldset>
 </div>
@@ -125,13 +126,13 @@ if ($sh404exists)
 
 <form action="index.php" method="post" name="adminForm2" id="adminForm2">
     <div class="col100">
-        <fieldset class="adminform">	
+        <fieldset class="adminform">
 		  <legend><?php echo JText::_( 'Media Files' ); ?></legend>
 <table class="admintable">
 <tr><td class="key"><?php echo JText::_('Media Players Statistics:');?> </td><td><?php echo $this->playerstats;?></td> </tr>
 <tr>
 <td class="key"><?php echo JText::_('Change Players'); ?></td>
-<td> 
+<td>
 
 <select name="from" id="from">
 <option value="x"><?php echo JText::_('Select an Existing Player');?></option>
@@ -157,6 +158,6 @@ if ($sh404exists)
 <input type="submit" value="Submit" />
 </td>
 </form>
-</tr> 
+</tr>
 </table>
 </fieldset>

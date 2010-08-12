@@ -173,7 +173,7 @@
            size="25"
            default=""
            label="Set Custom PHP String To Time"
-           description="Use standard PHP strtotime to form date" />
+           description="Use standard PHP date() code to form date. Overrides setting above." />
     <param name="duration_type"
            type="list"
            default="2"
@@ -303,7 +303,19 @@
            rows="10"
            cols="100"
            label="Display Code"
-           default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;  &lt;tbody&gt;  &lt;tr&gt;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;  &lt;/tr&gt;  &lt;tr&gt;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;  &lt;/tr&gt;  &lt;/tbody&gt;&lt;/table&gt;"
+           default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;
+  &lt;tbody&gt;
+  &lt;tr&gt;
+    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
+    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;
+    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;
+    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;"
            description="Use HTML to create your repeatable template. Any HTML will do. TEMPLATE CODES Message Type"></param>
     <param name="wrapcode"
            type="radio"
@@ -1886,7 +1898,19 @@
            rows="10"
            cols="100"
            label="Display Code"
-           default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;  &lt;tbody&gt;  &lt;tr&gt;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;  &lt;/tr&gt;  &lt;tr&gt;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{short}}&lt;/td&gt;    &lt;td valign=&quot;top&quot;&gt;{{information}}&lt;/td&gt;  &lt;/tr&gt;  &lt;/tbody&gt;&lt;/table&gt;"
+           default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;
+  &lt;tbody&gt;
+  &lt;tr&gt;
+    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
+    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;
+    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{short}}&lt;/td&gt;
+    &lt;td valign=&quot;top&quot;&gt;{{information}}&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;"
            description="Use HTML to create your repeatable template. Any HTML will do. Short Description"></param>
     <param name="teacher_wrapcode"
            type="radio"
@@ -1911,7 +1935,19 @@
            rows="10"
            cols="100"
            label="Teacher Detail Display Code"
-           default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;  &lt;tbody&gt;  &lt;tr&gt;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;  &lt;/tr&gt;  &lt;tr&gt;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{short}}&lt;/td&gt;    &lt;td valign=&quot;top&quot;&gt;{{information}}&lt;/td&gt;  &lt;/tr&gt;  &lt;/tbody&gt;&lt;/table&gt;"
+           default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;
+  &lt;tbody&gt;
+  &lt;tr&gt;
+    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
+    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;
+    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{short}}&lt;/td&gt;
+    &lt;td valign=&quot;top&quot;&gt;{{information}}&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;"
            description="Use HTML to create your repeatable template. Any HTML will do. Short Description"></param>
   </params>
   <params group="SERIES"
