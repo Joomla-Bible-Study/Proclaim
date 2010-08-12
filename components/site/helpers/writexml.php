@@ -6,6 +6,7 @@ defined('_JEXEC') or die('Restricted access');
  */
  function writeXML()
 	{ //dump($plugin, 'plugin: ');
+        $return = array();
 		$files = array();
 		$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
 		include_once($path1.'custom.php');
@@ -249,7 +250,7 @@ else {return $msg= ' No media files were associated with a podcast. ';}
 		$ftp = JClientHelper::getCredentials('ftp');
 		$client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
 		//$file = $client->path.DS.'templates'.DS.$template.DS.'index.php';
-		$file = $client->path.'/'.$podinfo->filename;
+		$file = $client->path.DS.$podinfo->filename;
 $files[] = $file;
 //dump ($file, 'file: ');
 		// Try to make the template file writeable
@@ -257,7 +258,7 @@ $files[] = $file;
 			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file writable');
 		}
 
-		$return = JFile::write($file, $filecontent);
+		$return[] = JFile::write($file, $filecontent);
 
 		// Try to make the template file unwriteable
 		if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')) {
@@ -269,13 +270,14 @@ $files[] = $file;
 			
 	//	$output = $Body.'<br><br> At: ' . strftime('%A  %d  %B  %Y    - %T  ') . ' <br>';
 	//	return array('output'=>$output);
-	$output = implode(' - ',$files);
-	return $output;
-	} // end of if $nrows > 0
-	else { $return = 'No podcasts were set as published on the site, so no files were written.';
-		return $return;
+//	$output = implode(' - ',$files);
+//	return $output;
+//	} // end of if $nrows > 0
+//	else { $return = 'No podcasts were set as published on the site, so no files were written.';
+  //  return $return;
 		}
 	//	$return = $output;
+    return $return;
 	} // end of function
 
 
