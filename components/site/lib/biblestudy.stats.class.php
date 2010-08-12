@@ -252,7 +252,8 @@ function top_score()
 		}
 	rsort($final);
 	array_splice($final,5);
-	$topscoretable = '<table cellspacing="0" cellpadding="0">';
+	//$topscoretable = '<table cellspacing="0" cellpadding="0">';
+    $topscoretable = '';
 	foreach ($final as $key=>$value)
 		{
 		//	$topscoretable .= '<tr><td>';
@@ -262,7 +263,7 @@ function top_score()
 			}
 		//	$topscoretable .= '</td></tr>';
 		}
-	$topscoretable .= '</table>';
+//	$topscoretable .= '</table>';
 	return $topscoretable;
 }
 
