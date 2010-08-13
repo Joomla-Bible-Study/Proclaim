@@ -144,7 +144,7 @@ $params = &JComponentHelper::getParams($option);?>
 	$k = 0;
 	for ($i=0, $n=count( $this->episodes ); $i < $n; $i++)
 	{
-	$episode = &$this->episodes[$i];
+	$episode = $this->episodes[$i];
 	//$row = $episodes[$i];
 	//foreach ($episodes as $episode) {
 	$link2 = JRoute::_( 'index.php?option=com_biblestudy&controller=mediafilesedit&task=edit&cid[]='. $episode->mfid );
