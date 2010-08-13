@@ -6,7 +6,8 @@ defined('_JEXEC') or die('Restricted access');
  */
  function writeXML()
 	{ //dump($plugin, 'plugin: ');
-        $return = array();
+        $return = '';
+        $podcastresults = array();
 		$files = array();
 		$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
 		include_once($path1.'custom.php');
@@ -33,6 +34,7 @@ defined('_JEXEC') or die('Restricted access');
 		$podid = $db->loadObjectList();
 		//$nrows = $db->getNumRows($query);
 		if (count($podid)) {
+		  $podcastresult = array();
 		foreach ($podid as $podids2) {
 		$Body = $Body.'<br> '.$podids2->title;}
 		foreach ($podid as $podids){
@@ -258,8 +260,9 @@ $files[] = $file;
 			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file writable');
 		}
 
-		$return[] = JFile::write($file, $filecontent);
-
+		$fileit = JFile::write($file, $filecontent);
+        if ($fileit){$podcastresults[] = TRUE;}
+//dump ($return, 'return: ');
 		// Try to make the template file unwriteable
 		if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')) {
 			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
@@ -277,6 +280,13 @@ $files[] = $file;
   //  return $return;
 		}
 	//	$return = $output;
+    
+    foreach ($podcastresults AS $podcastresult)
+    {
+        if (!$podcastresult){$return = FALSE;}
+        
+        
+    } 
     return $return;
 	} // end of function
 

@@ -55,15 +55,17 @@ class biblestudyControllerpodcastlist extends JController
 
 
  $result= writeXML();
-  if ($result)
+  if (!$result)
   {
 
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('File(s) written').': '.$result);
+    // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('File(s) written').': '.$result);
+     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('No Errors Reported'));
 
   }
   else {
-   $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').'.');
-  }
+  // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').'.');
+
+$mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Errors Reported. Please check files').'.');  }
 
  }
 }
