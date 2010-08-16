@@ -1,25 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<script language="javascript" type="text/javascript">
-		<!--
-		function submitbutton(pressbutton)
-		{
-			var form = document.adminForm;
-			if (pressbutton == 'cancel')
-			{
-				submitform( pressbutton );
-				return;
-			}
-			// do field validation
-			if (form.teachername.value == "")
-			{
-				alert( "<?php echo JText::_( 'Please fill in a teacher name.', true ); ?>" );
-			}
-			else
-			{
-				submitform( pressbutton );
-			}
-		}
-        </script>
+
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
