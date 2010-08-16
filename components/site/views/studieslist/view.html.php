@@ -38,7 +38,7 @@ class biblestudyViewstudieslist extends JView {
         //$document->addScript(JURI::base().'components/com_biblestudy/assets/player/swfobject.js');
 		//Import Scripts
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/jquery.js');
-		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/biblestudy.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/views/studieslist.js');
 		
