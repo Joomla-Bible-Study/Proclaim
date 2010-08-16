@@ -38,7 +38,8 @@ class biblestudyViewseriesdetail extends JView
 		
 		//Get studies from this series
         $seriesorder = $params->get('series_detail_order','DESC');
-        
+       	$user =& JFactory::getUser();
+		$level_user = $user->get('gid');
 		$limit = ' LIMIT '.$params->get('series_detail_limit',10);
 	//$limit = ' LIMIT 10';
 		$db = JFactory::getDBO();
@@ -56,8 +57,10 @@ class biblestudyViewseriesdetail extends JView
 		 LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)
 		 LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)
 		 LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)
-		 WHERE #__bsms_studies.series_id = '.$items->id.' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate '.$seriesorder
+		 WHERE #__bsms_studies.series_id = '.$items->id.' AND #__bsms_studies.show_level <= '.$level_user.' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate '.$seriesorder
 		.$limit;
+        
+        
 		$db->setQuery( $query );
 		$studies = $db->loadObjectList();
         JRequest::setVar('returnid',$items->id,'get',true);

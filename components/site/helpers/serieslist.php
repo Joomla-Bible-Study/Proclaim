@@ -505,6 +505,8 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	$db->setQuery($query);
 	$allrows = $db->loadObjectList();
 	$rows = $db->getAffectedRows();
+    $user =& JFactory::getUser();
+	$level_user = $user->get('gid');
 	/*
 	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
 		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, #__bsms_series.series_thumbnail, #__bsms_message_type.id AS mid,'
@@ -531,7 +533,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
         . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
         . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
         . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-        . ' where #__bsms_series.id = ' .$id
+        . ' where #__bsms_series.id = ' .$id.' AND #__bsms_studies.show_level <= '.$level_user
         . ' GROUP BY #__bsms_studies.id'
         . ' order by studydate desc'
         . $limit;	

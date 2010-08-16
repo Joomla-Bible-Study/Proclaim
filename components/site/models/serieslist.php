@@ -208,13 +208,7 @@ function getTemplate() {
 		//	$where[]= ' se.id = '.$params->get('series_id');
 		//}
         
-        //Added for user level control
-		$user =& JFactory::getUser();
-		$level_user = $user->get('gid');
-		//$level_user = $user->usertype;
-		//dump ($level_user, 'Level_user: ');
-		$where[] = ' #__bsms_studies.show_level <= '.$level_user;
-		//End for user level control
+        
         	
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 
