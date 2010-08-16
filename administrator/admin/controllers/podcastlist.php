@@ -55,7 +55,7 @@ class biblestudyControllerpodcastlist extends JController
 
 
  $result= writeXML();
-  if (!$result)
+  if ($result)
   {
 
     // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('File(s) written').': '.$result);

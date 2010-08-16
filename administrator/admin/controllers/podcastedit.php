@@ -132,7 +132,9 @@ function publish()
  $result= writeXML();
   if ($result)
   {
-   $task = JRequest::getCmd('task');
+    $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('No errors reported'));
+  
+/*   $task = JRequest::getCmd('task');
    switch($task)
    {
     case 'apply_source':
@@ -143,7 +145,7 @@ function publish()
     default:
      $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', $podinfo->filename.' '.JText::_('saved'));
      break;
-   }
+   } */
   }
   else {
    $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').'.');

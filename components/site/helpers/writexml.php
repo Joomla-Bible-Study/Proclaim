@@ -6,7 +6,7 @@ defined('_JEXEC') or die('Restricted access');
  */
  function writeXML()
 	{ //dump($plugin, 'plugin: ');
-        $return = '';
+        $return = TRUE;
         $podcastresults = array();
 		$files = array();
 		$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';

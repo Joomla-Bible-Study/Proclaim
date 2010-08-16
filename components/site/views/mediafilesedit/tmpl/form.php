@@ -4,14 +4,18 @@
 </script>
 	<script language="javascript" type="text/javascript">
 		<!--
-		function submitbutton(pressbutton)
-		{
-			var form = document.adminForm;
-			if (pressbutton == 'cancel')
-			{
-				submitform( pressbutton );
-				return;
-			}
+        function submitbutton(pressbutton) {
+	var form = document.adminForm;
+	if (pressbutton == 'cancel') {
+		submitform( pressbutton );
+		return;
+	}
+	try {
+		form.onsubmit();
+	} catch(e) {
+		alert(e);
+	}
+
 			// do field validation
 			if (form.study_id.value == "0")
 			{
@@ -27,6 +31,11 @@
 			}
 		}
         </script>
+  
+
+
+
+
 <script type="text/javascript">
 
 function openConverter1()
@@ -43,7 +52,7 @@ function openConverter1()
 		}
 
 </script>
-<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" >
 
 <div class="col100">
 	<fieldset class="adminform">
@@ -54,7 +63,7 @@ function openConverter1()
 ?>
 
     <table class="admintable">
-   <!-- <tr><td><input type="submit" value="submit" /> <input type="button" value="cancel"> </td></tr>-->
+   <!-- <tr><td><input type="submit" value="submit" onclick="validate_form()"/> <input type="button" value="cancel"> </td></tr>-->
     <tr>
     <td align="left">	<button type="button" onclick="submitbutton('save')">
 		<?php echo JText::_('Save');  ?>
