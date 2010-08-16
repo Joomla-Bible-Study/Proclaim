@@ -15,6 +15,11 @@
 				submitform( pressbutton );
 				return;
 			}
+            try {
+		form.onsubmit();
+	} catch(e) {
+		alert(e);
+	}
 			// do field validation
 			if (form.studytitle.value == "")
 			{
