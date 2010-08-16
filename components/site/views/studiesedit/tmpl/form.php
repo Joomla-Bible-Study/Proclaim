@@ -15,21 +15,7 @@
 				submitform( pressbutton );
 				return;
 			}
-            try {
-		form.onsubmit();
-	} catch(e) {
-		alert(e);
-	}
-			// do field validation
-			if (form.studytitle.value == "")
-			{
-				alert( "<?php echo JText::_( 'Please fill in a title.', true ); ?>" );
-			}
-			else
-			{
-				submitform( pressbutton );
-			}
-		}
+            
         </script>
 <style>
   li {list-style-type:none;}
@@ -38,9 +24,9 @@
 <form action="index.php" method="post" name="adminForm" id="adminForm">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
 
-  <script type="text/javascript" src="administrator/components/com_biblestudy/js/plugins/jquery.tokeninput.js"></script>
+  <script type="text/javascript" src="components/com_biblestudy/assets/js/plugins/jquery.tokeninput.js"></script>
 
-  <link rel="stylesheet" href="administrator/components/com_biblestudy/css/token-input-facebook.css" type="text/css" />
+  <link rel="stylesheet" href="components/com_biblestudy/assets/css/token-input-facebook.css" type="text/css" />
 
   <div class="col100">
 <fieldset class="adminform"><legend><?php echo JText::_( 'Bible Study Details' ); ?></legend>

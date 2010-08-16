@@ -10,26 +10,7 @@
 		submitform( pressbutton );
 		return;
 	}
-	try {
-		form.onsubmit();
-	} catch(e) {
-		alert(e);
-	}
-
-			// do field validation
-			if (form.study_id.value == "0")
-			{
-				alert( "<?php echo JText::_( 'Please choose a study to link this file to.', true ); ?>" );
-			}
-			else if (form.media_image.value == "0")
-			{
-				alert( "<?php echo JText::_( 'Please choose a media image.', true ); ?>" );
-			}
-			else
-			{
-				submitform( pressbutton );
-			}
-		}
+	
         </script>
   
 

@@ -18,32 +18,7 @@ $document =& JFactory::getDocument();
 <script type="text/javascript" src="components/com_biblestudy/js/plugins/jquery.tokeninput.js"></script>
 
 <link rel="stylesheet" href="components/com_biblestudy/css/token-input-facebook.css" type="text/css" />
-<script language="javascript" type="text/javascript">
-		<!--
-		function submitbutton(pressbutton)
-		{
-			var form = document.adminForm;
-			if (pressbutton == 'cancel')
-			{
-				submitform( pressbutton );
-				return;
-			}
-            try {
-		form.onsubmit();
-	} catch(e) {
-		alert(e);
-	}
-			// do field validation
-			if (form.studytitle.value == "")
-			{
-				alert( "<?php echo JText::_( 'Please fill in a title.', true ); ?>" );
-			}
-			else
-			{
-				submitform( pressbutton );
-			}
-		}
-        </script>
+
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 <fieldset class="adminform"><legend><?php echo JText::_( 'Bible Study Details' ); ?></legend>
