@@ -82,11 +82,11 @@ class biblestudyViewteacherdisplay extends JView
  LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)
  LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id) 
  LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)
- WHERE #__bsms_studies.teacher_id = '.$teacher->id.' AND #__bsms_studies.published = 1 AND '.$user.' >= #__bsms_studies.show_level GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
+ WHERE #__bsms_studies.teacher_id = '.$teacher->id.' AND #__bsms_studies.published = 1 AND #__bsms_studies.show_level <= '.$user.' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
 '.$limit;
 		$database->setQuery( $query );
 		$studies = $database->loadObjectList();
-	//	dump ($studies, 'studies: ');
+		//dump ($studies, 'studies: ');
 		if($this->getLayout() == 'pagebreak') {
 			$this->_displayPagebreak($tpl);
 			return;

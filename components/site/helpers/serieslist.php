@@ -253,7 +253,8 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	$db->setQuery($query);
 	$allrows = $db->loadObjectList();
 	$rows = $db->getAffectedRows();
-	
+	$user =& JFactory::getUser();
+	$level_user = $user->get('gid');
 	$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
 	. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
 	. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
@@ -266,7 +267,7 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	. ' LEFT JOIN #__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)'
 	. '	LEFT JOIN #__bsms_topics ON (s.topics_id = #__bsms_topics.id)'
 	. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)'
-	.' WHERE s.series_id = '.$id.' AND s.published = 1 ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC');
+	.' WHERE s.series_id = '.$id.' AND s.show_level <= '.$level_user.' AND s.published = 1 ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC');
 	$db->setQuery($query);
 	$result = $db->loadObjectList();
 	$numrows = $db->getAffectedRows();

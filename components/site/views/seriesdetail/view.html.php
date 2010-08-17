@@ -57,13 +57,14 @@ class biblestudyViewseriesdetail extends JView
 		 LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)
 		 LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)
 		 LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)
-		 WHERE #__bsms_studies.series_id = '.$items->id.' AND #__bsms_studies.show_level >= '.$level_user.' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate '.$seriesorder
+		 WHERE #__bsms_studies.series_id = '.$items->id.' AND #__bsms_studies.show_level <= '.$level_user.' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate '.$seriesorder
 		.$limit;
-        echo $level_user;
-        echo $query;
+       // echo $level_user;
+       // echo $query;
+       
 		$db->setQuery( $query );
 		$studies = $db->loadObjectList();
-        //dump ($studies,'studies: ');
+        
         JRequest::setVar('returnid',$items->id,'get',true);
 		//dump ($items->id, 'studies: ');
 		//Passage link to BibleGateway

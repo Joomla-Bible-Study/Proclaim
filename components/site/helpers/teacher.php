@@ -309,7 +309,7 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
 	  . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
 	  . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
 	  . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-	  . ' where #__bsms_teachers.id = ' .$id.' AND #__bsms_studies.published = 1 AND '.$user.' >= #__bsms_studies.show_level'
+	  . ' where #__bsms_teachers.id = ' .$id.' AND #__bsms_studies.published = 1 AND #__bsms_studies.show_level <= '.$user
 	  . ' GROUP BY #__bsms_studies.id'
 	  . ' order by studydate desc'
 	  . $limit;

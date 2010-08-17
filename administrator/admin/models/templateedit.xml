@@ -1879,6 +1879,10 @@
            description="Enter some text to show when displaying teacher latest studies" />
     <param type="spacer"
            label=""></param>
+    <param name="teacherlink" type="list" label="Show Link to more studies" description="Choose whether to show a link to more studies" default="1">
+        <option value="0">Don't Show Link</option>
+        <option value="1">Show Link</option>
+    </param>
     <param name="useexpert_teacherlist"
            type="list"
            label="Use custom Teacher List view"

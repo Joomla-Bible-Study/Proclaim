@@ -87,7 +87,7 @@ switch ($this->params->get('show_teacher_studies'))
 </tr>
 <?php foreach ($this->studies as $study) { ?>
  <tr>
-  <td class="bsm_studylink"> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->sid.'&templatemenuid='.$studieslisttemplateid;?>"><?php echo $study->studytitle; ?></a></td>
+  <td class="bsm_studylink"> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->id.'&templatemenuid='.$studieslisttemplateid;?>"><?php echo $study->studytitle; ?></a></td>
   <td class="bsm_scripture"> <?php if ($study->bookname) {echo $study->bookname.' '.$study->chapter_begin;}?></td>
   <td class="bsm_date"> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC') , '$offset'); echo $date;?></td>
  </tr>
@@ -128,7 +128,7 @@ switch ($this->params->get('show_teacher_studies'))
 
 ?> </td></tr>
 <?php
-//if ($this->menuid){$link = '&Itemid='.$this->menuid;}?>
-<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&templatemenuid='.$templatemenuid;?>"><?php echo '<--'.JText::_('Return to Teacher List');?></a> <?php echo ' | <a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.(int)$teacher->id.'&templatemenuid='.$templatemenuid.'">'.JText::_('More From This Teacher').' --></a>';
-?></table>
+?>
+<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist&templatemenuid=<?php echo $templatemenuid;?>"><?php echo '<-- '.JText::_('Return to Teacher List');?></a> <?php if ($this->params->get('teacherlink', '1') > 0) { echo ' | <a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.(int)$teacher->id.'&templatemenuid='.$templatemenuid.'">'.JText::_('More From This Teacher').' --></a>';}
+?></td></tr></table>
 </div>
