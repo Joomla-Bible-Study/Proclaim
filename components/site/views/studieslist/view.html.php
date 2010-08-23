@@ -31,7 +31,7 @@ class biblestudyViewstudieslist extends JView {
 		$document =& JFactory::getDocument();
 		JHTML::_('behavior.mootools');
 		//$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
-		$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
+	//	$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
@@ -45,7 +45,7 @@ class biblestudyViewstudieslist extends JView {
 		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 		//Styles from tooltip.css moved to assets/css/biblestudy.css
 		//Import Stylesheets
-		$document->addStylesheet(JURI::base().'components/com_biblestudy/css/general.css');
+		$document->addStylesheet(JURI::base().'components/com_biblestudy/assets/css/general.css');
 
 		$url = $params->get('stylesheet');
 		if ($url) {$document->addStyleSheet($url);}
