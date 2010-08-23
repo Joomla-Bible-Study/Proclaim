@@ -116,7 +116,8 @@ function getShare($link, $row, $params, $admin_params)
 	}
 	
 	$sharelink = $element1->element.' '.$share_params->get('item2prefix').$element2->element.' '.$share_params->get('item3prefix').$element3->element.' '.$share_params->get('item4prefix').$element4->element; 
-	
+	//Added to see if would make Facebook sharer work
+    $sharelink = urlencode($sharelink);
 	if ($share_params->get('totalcharacters'))
 	{
 	$sharelength = strlen($sharelink); 	
