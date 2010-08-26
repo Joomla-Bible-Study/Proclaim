@@ -6,7 +6,7 @@
  * @desc Updates the media files table to reflect new way of associating podcasts and adds Landing Page CSS
  */
 defined( '_JEXEC' ) or die('Restricted access');
- $result_table = '<table><tr><td>This routine adds some items to the css file for the Landing Page view and updates the mediafiles table';
+ $result_table = '<table><tr><td>This routine adds some items to the css file for the Landing Page view and updates the mediafiles table</td></tr>';
 //This updates the mediafiles table to reflect the new way of associating files to podcasts
 $db = JFactory::getDBO();
    $query = 'SELECT id, params, podcast_id FROM #__bsms_mediafiles WHERE podcast_id > 0';
