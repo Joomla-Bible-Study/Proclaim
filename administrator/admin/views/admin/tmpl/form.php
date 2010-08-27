@@ -4,6 +4,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
 //dump ($this->admin, 'admin: ');
 
+
 ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
