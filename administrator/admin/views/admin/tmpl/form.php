@@ -162,3 +162,41 @@ if ($sh404exists)
 </tr>
 </table>
 </fieldset>
+<div class="clr"></div>
+
+<form action="index.php" method="post" name="adminForm3" id="adminForm3">
+    <div class="col100">
+        <fieldset class="adminform">
+		  <legend><?php echo JText::_( 'Pop Up Options' ); ?></legend>
+<table class="admintable">
+<tr><td class="key"><?php echo JText::_('Media Players Popup Statistics:');?> </td><td><?php echo $this->popups;?></td> </tr>
+<tr>
+<td class="key"><?php echo JText::_('Change Popup'); ?></td>
+<td>
+
+<select name="pfrom" id="pfrom">
+<option value="x"><?php echo JText::_('Select an Existing Option');?></option>
+<option value="0"><?php echo JText::_('Inline');?></option>
+<option value="1"><?php echo JText::_('Popup/New Window');?></option>
+<option value="3"><?php echo JText::_('Use Global Settings');?></option>
+<option value="100"><?php echo JText::_('No Option Listed');?></option>
+</select>
+</td>
+<td>
+<select name="pto" id="pto">
+<option value="x"><?php echo JText::_('Select a New Option');?></option>
+<option value="0"><?php echo JText::_('Inline');?></option>
+<option value="1"><?php echo JText::_('Popup/New Window');?></option>
+<option value="3"><?php echo JText::_('Use Global Settings');?></option>
+
+
+</select>
+<input type="hidden" name="option" value="com_biblestudy" />
+<input type="hidden" name="task" value="changePopup" />
+<input type="hidden" name="controller" value="admin" />
+<input type="submit" value="Submit" />
+</td>
+</form>
+</tr>
+</table>
+</fieldset>

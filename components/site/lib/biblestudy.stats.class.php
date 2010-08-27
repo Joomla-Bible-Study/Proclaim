@@ -343,6 +343,50 @@ function players()
     '<br /><strong>'.JText::_('No Player - treated as direct').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
     return $mediaplayers;
 }
+
+function popups()
+{
+    $db = &JFactory::getDBO();
+    $query = 'SELECT id, params FROM #__bsms_mediafiles';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results = $db->loadObjectList();
+    $inline = 'internal_popup=0';
+    $pop = 'internal_popup=1';
+    $global = 'internal_popup=3';
+ //   $avr = 'player=2';
+//    $av = 'player=3';
+    $add = 0;
+//    $directcount = 0;
+//    $internalcount = 0;
+    $inlinecount = 0;
+    $popcount = 0;
+    $globalcount = 0;
+  //  $avrcount = 0;
+ //   $avcount = 0;
+    foreach ($results AS $result)
+    {
+        $param = $result->params;
+        $isinline = substr_count($param,$inline);
+        $inlinecount = $inlinecount + $isinline;
+        $ispop = substr_count($param,$pop);
+        $popcount = $popcount + $ispop;
+        $isglobal =substr_count($param,$global);
+        $globalcount = $globalcount + $isglobal;
+     //   $isavr = substr_count($param,$avr);
+     //   $avrcount = $avrcount + $isavr;
+     //   $isav = substr_count($param,$av);
+     //   $avcount = $avcount + $isav;
+        $total = $inlinecount + $popcount + $globalcount;
+        $noplayer = $num_rows - $total;
+    }
+    $popups = '<strong>'.JText::_('Inline').': </strong>'.$inlinecount.
+    '<br /><strong>'.JText::_('Popup').': </strong>'.$popcount.
+    '<br /><strong>'.JText::_('Global Settings').': </strong>'.$globalcount.
+    '<br /><strong>'.JText::_('No Option Set - treated as global').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
+    return $popups;
+}
 }
 
 ?>

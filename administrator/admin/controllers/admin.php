@@ -151,91 +151,181 @@ function resetPlays()
 	}
 
 function changePlayers()
-{
-    $db = JFactory::getDBO();
-    $msg = null;
-    $from = JRequest::getInt('from','','post');
-    $to = JRequest::getInt('to','','post');
-    if ($from == '100')
     {
-        $from = '';
-        $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."' WHERE `params` IS NULL";
-        $db->setQuery($query);
-        $db->query();
-        $addnull = $db->getAffectedRows();
-        $query = 'SELECT id, params FROM #__bsms_mediafiles';
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-        foreach ($results AS $result)
+        $db = JFactory::getDBO();
+        $msg = null;
+        $from = JRequest::getInt('from','','post');
+        $to = JRequest::getInt('to','','post');
+        if ($from == '100')
         {
-            $param = $results->params;
-            $noplayer = substr_count($param,'player=');
-            if (!$noplayer)
+            $from = '';
+            $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."' WHERE `params` IS NULL";
+            $db->setQuery($query);
+            $db->query();
+            $addnull = $db->getAffectedRows();
+            $query = 'SELECT id, params FROM #__bsms_mediafiles';
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+            foreach ($results AS $result)
             {
-              $param = $param.'player='.$to.'\n';
-              $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
-    	  	  $db->setQuery($query);
-    	  	  $db->query();
-              $updated = 0;
-              $updated = $db->getAffectedRows();
-    	   	  if ($db->getErrorNum() > 0)
-    				{
-    					$error = $db->getErrorMsg();
-                        $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
-    				}
-              else
-    			{
-    				$updated = 0;
-    				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-    				$add = $add + $updated;
-
-    			}
+                $param = $results->params;
+                $noplayer = substr_count($param,'player=');
+                if (!$noplayer)
+                {
+                  $param = $param.'player='.$to.'\n';
+                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
+        	  	  $db->setQuery($query);
+        	  	  $db->query();
+                  $updated = 0;
+                  $updated = $db->getAffectedRows();
+        	   	  if ($db->getErrorNum() > 0)
+        				{
+        					$error = $db->getErrorMsg();
+                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
+        				}
+                  else
+        			{
+        				$updated = 0;
+        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+        				$add = $add + $updated;
+    
+        			}
+                }
             }
         }
-    }
-    else
-    {
-
-        $playerfrom = 'player='.$from;
-        $playerto = 'player='.$to;
-        $errortext = '';
-        $query = 'SELECT id, params FROM #__bsms_mediafiles';
-        $db->setQuery($query);
-        $db->query();
-        $results = $db->loadObjectList();
-        $add = 0;
-      //  dump ($results, 'results: ');
-        foreach ($results AS $result)
+        else
         {
-            $param = $result->params;
-            $isfrom = substr_count($param,$playerfrom);
-            if ($isfrom)
+    
+            $playerfrom = 'player='.$from;
+            $playerto = 'player='.$to;
+            $errortext = '';
+            $query = 'SELECT id, params FROM #__bsms_mediafiles';
+            $db->setQuery($query);
+            $db->query();
+            $results = $db->loadObjectList();
+            $add = 0;
+          //  dump ($results, 'results: ');
+            foreach ($results AS $result)
             {
-              $param = str_replace($playerfrom,$playerto,$param,$count);
-              $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
-    	  	  $db->setQuery($query);
-    	  	  $db->query();
-              $updated = 0;
-              $updated = $db->getAffectedRows();
-    	   	  if ($db->getErrorNum() > 0)
-    				{
-    					$error = $db->getErrorMsg();
-                        $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
-                    }
-              else
-    			{
-    				$updated = 0;
-    				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-    				$add = $add + $updated;
-
-    			}
-
+                $param = $result->params;
+                $isfrom = substr_count($param,$playerfrom);
+                if ($isfrom)
+                {
+                  $param = str_replace($playerfrom,$playerto,$param,$count);
+                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
+        	  	  $db->setQuery($query);
+        	  	  $db->query();
+                  $updated = 0;
+                  $updated = $db->getAffectedRows();
+        	   	  if ($db->getErrorNum() > 0)
+        				{
+        					$error = $db->getErrorMsg();
+                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
+                        }
+                  else
+        			{
+        				$updated = 0;
+        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+        				$add = $add + $updated;
+    
+        			}
+    
+                }
             }
         }
+        if ($from == '100') {$add = $add + $addnull;}
+        $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
+        $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
     }
-    if ($from == '100') {$add = $add + $addnull;}
-    $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
-    $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
-}
+    
+    function changePopup()
+    {
+        
+        $db = JFactory::getDBO();
+        $msg = null;
+        $from = JRequest::getInt('pfrom','','post');
+        $to = JRequest::getInt('pto','','post');
+        if ($from == '100')
+        {
+            $from = '';
+            $query = "UPDATE #__bsms_mediafiles SET `params` = 'internal_popup=".$to."' WHERE `params` IS NULL";
+            $db->setQuery($query);
+            $db->query();
+            $addnull = $db->getAffectedRows();
+            $query = 'SELECT id, params FROM #__bsms_mediafiles';
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+            foreach ($results AS $result)
+            {
+                $param = $results->params;
+                $noplayer = substr_count($param,'internal_popup=');
+                if (!$noplayer)
+                {
+                  $param = $param.'internal_popup='.$to.'\n';
+                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
+        	  	  $db->setQuery($query);
+        	  	  $db->query();
+                  $updated = 0;
+                  $updated = $db->getAffectedRows();
+        	   	  if ($db->getErrorNum() > 0)
+        				{
+        					$error = $db->getErrorMsg();
+                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
+        				}
+                  else
+        			{
+        				$updated = 0;
+        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+        				$add = $add + $updated;
+    
+        			}
+                }
+            }
+        }
+        else
+        {
+    
+            $playerfrom = 'internal_popup='.$from;
+            $playerto = 'internal_popup='.$to;
+            $errortext = '';
+            $query = 'SELECT id, params FROM #__bsms_mediafiles';
+            $db->setQuery($query);
+            $db->query();
+            $results = $db->loadObjectList();
+            $add = 0;
+          //  dump ($results, 'results: ');
+            foreach ($results AS $result)
+            {
+                $param = $result->params;
+                $isfrom = substr_count($param,$playerfrom);
+                if ($isfrom)
+                {
+                  $param = str_replace($playerfrom,$playerto,$param,$count);
+                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
+        	  	  $db->setQuery($query);
+        	  	  $db->query();
+                  $updated = 0;
+                  $updated = $db->getAffectedRows();
+        	   	  if ($db->getErrorNum() > 0)
+        				{
+        					$error = $db->getErrorMsg();
+                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
+                        }
+                  else
+        			{
+        				$updated = 0;
+        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+        				$add = $add + $updated;
+    
+        			}
+    
+                }
+            }
+        }
+        if ($from == '100') {$add = $add + $addnull;}
+        $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
+        $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+        
+    }
 }
 ?>

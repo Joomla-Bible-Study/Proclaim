@@ -36,6 +36,9 @@ class biblestudyViewadmin extends JView
         $playerstats = $stats->players(); 
         $this->assignRef('playerstats',$playerstats);
         
+        $popups = $stats->popups();
+        $this->assignRef('popups', $popups);
+        
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('study_images', 'stories');
 		$javascript			= 'onchange="changeDisplayImage();"';
 		$fileList 	= JFolder::files($studypath);
