@@ -46,7 +46,8 @@ echo $pane->endPane(); */
         <td class="key"><?php echo JText::_( 'Submitted by');?></td>
 		<td><input class="text_area" type="text" name="user_name"
 			id="user_name" size="25" maxlength="25"
-			value="<?php echo $user_name;?>" /></td>
+			value="<?php echo $user_name;?>" />
+        <?php echo '  <strong>'.JText::_('Hits').': </strong>'.$this->studiesedit->hits;?></td>
 
 	</tr>
 	<tr>
@@ -367,9 +368,10 @@ echo $pane->endPane(); */
 	if ($user_name == ''){$user_name = $user->name;}
 	?> <input type="hidden" name="option" value="com_biblestudy" /> <input
 	type="hidden" name="id" value="<?php echo $this->studiesedit->id; ?>" />
-<input type="hidden" name="task" value="" /> <input type="hidden"
-	name="controller" value="studiesedit" /> <input type="hidden"
-	name="user_id" value="<?php echo $user->get('id');?>" /></form>
+<input type="hidden" name="task" value="" /> 
+<input type="hidden" name="controller" value="studiesedit" /> 
+<input type="hidden" name="user_id" value="<?php echo $user->get('id');?>" />
+<input type="hidden" name="hits" value="<?php echo $this->studiesedit->hits;?>" /></form>
 
 <script>
 

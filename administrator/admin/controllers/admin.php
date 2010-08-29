@@ -159,7 +159,7 @@ function changePlayers()
         if ($from == '100')
         {
             $from = '';
-            $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."' WHERE `params` IS NULL";
+            $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."\n internal_popup=3\n' WHERE `params` IS NULL";
             $db->setQuery($query);
             $db->query();
             $addnull = $db->getAffectedRows();
@@ -248,7 +248,7 @@ function changePlayers()
         if ($from == '100')
         {
             $from = '';
-            $query = "UPDATE #__bsms_mediafiles SET `params` = 'internal_popup=".$to."' WHERE `params` IS NULL";
+            $query = "UPDATE #__bsms_mediafiles SET `params` = 'internal_popup=".$to."\n, `player`=0\n' WHERE `params` IS NULL";
             $db->setQuery($query);
             $db->query();
             $addnull = $db->getAffectedRows();
