@@ -4,7 +4,22 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
 //dump ($this->admin, 'admin: ');
 
-
+$db = JFactory::getDBO();
+$query = 'SELECT id, params FROM #__bsms_mediafiles';
+$db->setQuery($query);
+$db->query();
+$results = $db->loadObjectList();
+foreach ($results AS $result)
+{
+    $params = new JParameter($result->params);
+    $player = $params->get('player');
+    $popup = $params->get('internal_popup');
+    
+    echo $player.' - '.$popup;
+    $params->set('internal_popup', '3');
+    
+   // echo ' - new: '.$params->get('internal_popup').'<br />';
+}
 ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
@@ -194,6 +209,7 @@ if ($sh404exists)
 <input type="hidden" name="option" value="com_biblestudy" />
 <input type="hidden" name="task" value="changePopup" />
 <input type="hidden" name="controller" value="admin" />
+
 <input type="submit" value="Submit" />
 </td>
 </form>

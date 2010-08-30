@@ -152,13 +152,23 @@ function resetPlays()
 
 function changePlayers()
     {
+        
+        $model = $this->getModel('admin');
+JRequest::set($post, 'post', TRUE);
+	/*	if ($model->store($post)) {
+			$msg = JText::_( 'Saved!' );
+		} else {
+			$msg = JText::_( 'Error Saving' );
+		}
+*/
+
         $db = JFactory::getDBO();
         $msg = null;
         $from = JRequest::getInt('from','','post');
         $to = JRequest::getInt('to','','post');
-        if ($from == '100')
-        {
-            $from = '';
+    //    if ($from == '100')
+    //    {
+      /*      $from = '';
             $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."\n internal_popup=3\n' WHERE `params` IS NULL";
             $db->setQuery($query);
             $db->query();
@@ -192,10 +202,10 @@ function changePlayers()
         			}
                 }
             }
-        }
-        else
-        {
-    
+   //     }
+    //    else
+    //    {
+    */
             $playerfrom = 'player='.$from;
             $playerto = 'player='.$to;
             $errortext = '';
@@ -232,7 +242,7 @@ function changePlayers()
     
                 }
             }
-        }
+    //    }
         if ($from == '100') {$add = $add + $addnull;}
         $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
         $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
@@ -245,9 +255,9 @@ function changePlayers()
         $msg = null;
         $from = JRequest::getInt('pfrom','','post');
         $to = JRequest::getInt('pto','','post');
-        if ($from == '100')
-        {
-            $from = '';
+     //   if ($from == '100')
+     //   {
+     /*       $from = '';
             $query = "UPDATE #__bsms_mediafiles SET `params` = 'internal_popup=".$to."\n, `player`=0\n' WHERE `params` IS NULL";
             $db->setQuery($query);
             $db->query();
@@ -281,10 +291,10 @@ function changePlayers()
         			}
                 }
             }
-        }
-        else
-        {
-    
+   //     }
+   //     else
+    //    {
+    */
             $playerfrom = 'internal_popup='.$from;
             $playerto = 'internal_popup='.$to;
             $errortext = '';
@@ -321,7 +331,7 @@ function changePlayers()
     
                 }
             }
-        }
+      //  }
         if ($from == '100') {$add = $add + $addnull;}
         $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
         $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
