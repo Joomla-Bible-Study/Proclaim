@@ -67,7 +67,7 @@ class biblestudyViewstudiesedit extends JView
 			$scriptureBlocks[$scripture]['bookId'] =  $split[0];
 			$scriptureBlocks[$scripture]['text'] = $split[1];
 		}
-		array_unshift($books, JHTML::_('select.option', '0', JText::_('- Select a Book -')));
+		array_unshift($books, JHTML::_('select.option', '0', '- '.JText::_('Select a Book').' -'));
 		*/
 		
 	//	require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );

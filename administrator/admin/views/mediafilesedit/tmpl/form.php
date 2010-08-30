@@ -157,13 +157,13 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
       	<?php
       	echo JText::_('Category');
       	?>
-      	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected">- Select a category -</option></select>
+      	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected"><?php echo '- '.JTEXT::_('Select a Category').' -'; ?></option></select>
       	</div>
       	<div id="articlesItemsContainer" class="selectContainer">
       	<?php
         echo JText::_('Item');
       	?>
-      	<select id="categoryItems" name="categoryItem"><option selected="selected">- Select an Article -</option></select>
+      	<select id="categoryItems" name="categoryItem"><option selected="selected"><?php echo '- '.JTEXT::_('Select an Article').' -'; ?></option></select>
       	</div>
       	</td>
       </tr>
@@ -209,7 +209,7 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
             <td>
             <input class="text_area" type="text" name="size" id="size" size="20" maxlength="20" onChange="decOnly(this);" onKeyUp="decOnly(this);" onKeyPress="decOnly(this);" value="<?php echo $this->mediafilesedit->size;?>"/>
             <a href="javascript:openConverter1();">
-            <?php echo JText::_('- Filesize Converter');?>
+            <?php echo '- '.JText::_('Filesize Converter');?>
             </a>
             </td>
             </tr>

@@ -79,12 +79,12 @@ class biblestudyViewmediafilesedit extends JView {
 			$docManCategories =& $this->get('docManCategories');
 			if ($docManCategories)
 				{
-					array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
+					array_unshift($docManCategories, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Category').' -', 'id', 'title'));
 				}
 		}
 		
 		//articles
-		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
+		array_unshift($articlesSections, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Section').' -', 'id', 'title'));
 		
 		//Run only if Virtuemart enabled
 		if ($vmenabled > 0)
@@ -92,7 +92,7 @@ class biblestudyViewmediafilesedit extends JView {
 			$virtueMartCategories =& $this->get('virtueMartCategories');
 			if ($virtueMartCategories)
 			{
-				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
+				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Category').' -', 'id', 'title'));
 			}
 		}
 		$isNew		= ($mediafilesedit->id < 1);

@@ -70,18 +70,18 @@ class biblestudyViewmediafilesedit extends JView {
 		{
 			if ($docManCategories)
 				{
-					array_unshift($docManCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
+					array_unshift($docManCategories, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Category').' -', 'id', 'title'));
 				}
 		}
 		
-		array_unshift($articlesSections, JHTML::_('select.option', null, '- Select a Section -', 'id', 'title'));
+		array_unshift($articlesSections, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Section').' -', 'id', 'title'));
 		
 		//Run only if Virtuemart enabled
 		if ($vmenabled)
 		{
 			if ($virtueMartCategories)
 			{
-				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- Select a Category -', 'id', 'title'));
+				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Category').' -', 'id', 'title'));
 			}
 		}
 		$isNew		= ($mediafilesedit->id < 1);
