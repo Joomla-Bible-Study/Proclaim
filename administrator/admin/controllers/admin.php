@@ -150,193 +150,141 @@ function resetPlays()
 			}
 	}
 
-function changePlayers2()
-    {
-        
-        $model = $this->getModel('admin');
-JRequest::set($post, 'post', TRUE);
-	/*	if ($model->store($post)) {
-			$msg = JText::_( 'Saved!' );
-		} else {
-			$msg = JText::_( 'Error Saving' );
-		}
-*/
 
-        $db = JFactory::getDBO();
-        $msg = null;
-        $from = JRequest::getInt('from','','post');
-        $to = JRequest::getInt('to','','post');
-    //    if ($from == '100')
-    //    {
-      /*      $from = '';
-            $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."\n internal_popup=3\n' WHERE `params` IS NULL";
-            $db->setQuery($query);
-            $db->query();
-            $addnull = $db->getAffectedRows();
-            $query = 'SELECT id, params FROM #__bsms_mediafiles';
-            $db->setQuery($query);
-            $results = $db->loadObjectList();
-            foreach ($results AS $result)
-            {
-                $param = $results->params;
-                $noplayer = substr_count($param,'player=');
-                if (!$noplayer)
-                {
-                  $param = $param.'player='.$to.'\n';
-                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
-        	  	  $db->setQuery($query);
-        	  	  $db->query();
-                  $updated = 0;
-                  $updated = $db->getAffectedRows();
-        	   	  if ($db->getErrorNum() > 0)
-        				{
-        					$error = $db->getErrorMsg();
-                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
-        				}
-                  else
-        			{
-        				$updated = 0;
-        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-        				$add = $add + $updated;
-    
-        			}
-                }
-            }
-   //     }
-    //    else
-    //    {
-    */
-            $playerfrom = 'player='.$from;
-            $playerto = 'player='.$to;
-            $errortext = '';
-            $query = 'SELECT id, params FROM #__bsms_mediafiles';
-            $db->setQuery($query);
-            $db->query();
-            $results = $db->loadObjectList();
-            $add = 0;
-          //  dump ($results, 'results: ');
-            foreach ($results AS $result)
-            {
-                $param = $result->params;
-                $isfrom = substr_count($param,$playerfrom);
-                if ($isfrom)
-                {
-                  $param = str_replace($playerfrom,$playerto,$param,$count);
-                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
-        	  	  $db->setQuery($query);
-        	  	  $db->query();
-                  $updated = 0;
-                  $updated = $db->getAffectedRows();
-        	   	  if ($db->getErrorNum() > 0)
-        				{
-        					$error = $db->getErrorMsg();
-                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
-                        }
-                  else
-        			{
-        				$updated = 0;
-        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-        				$add = $add + $updated;
-    
-        			}
-    
-                }
-            }
-    //    }
-        if ($from == '100') {$add = $add + $addnull;}
-        $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
-        $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
-    }
    function changePlayers()
     {
-        
-       
-
-        $db = JFactory::getDBO();
-        $msg = null;
-        $from = JRequest::getInt('from','','post');
-        $to = JRequest::getInt('to','','post');
-    //    if ($from == '100')
-    //    {
-      /*      $from = '';
-            $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."\n internal_popup=3\n' WHERE `params` IS NULL";
-            $db->setQuery($query);
-            $db->query();
-            $addnull = $db->getAffectedRows();
-            $query = 'SELECT id, params FROM #__bsms_mediafiles';
-            $db->setQuery($query);
-            $results = $db->loadObjectList();
-            foreach ($results AS $result)
-            {
-                $param = $results->params;
-                $noplayer = substr_count($param,'player=');
-                if (!$noplayer)
-                {
-                  $param = $param.'player='.$to.'\n';
-                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
-        	  	  $db->setQuery($query);
-        	  	  $db->query();
-                  $updated = 0;
-                  $updated = $db->getAffectedRows();
-        	   	  if ($db->getErrorNum() > 0)
-        				{
-        					$error = $db->getErrorMsg();
-                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
-        				}
-                  else
-        			{
-        				$updated = 0;
-        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-        				$add = $add + $updated;
-    
-        			}
-                }
-            }
-   //     }
-    //    else
-    //    {
-    */
-            $playerfrom = 'player='.$from;
-            $playerto = 'player='.$to;
+ 
+            $db = JFactory::getDBO();
+            $msg = null;
+            $from = JRequest::getInt('from','','post');
+            $to = JRequest::getInt('to','','post');
+            
             $errortext = '';
             $query = 'SELECT * FROM #__bsms_mediafiles';
             $db->setQuery($query);
             $db->query();
             $results = $db->loadObjectList();
             $add = 0;
+          //  $model = $this->getModel('mediafilesedit');
+            JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'tables');
+            
+
           //  dump ($results, 'results: ');
             foreach ($results AS $result)
             {
-             //   $param = $result->params;
-            //    $isfrom = substr_count($param,$playerfrom);
-            //    if ($isfrom)
-             //   {
-                  $param = new JParameter($result->params);
-                  $player = $param->get('player');
+             
+                  
+                  $params = new JParameter($result->params);
+                  $player = $params->get('player');
                   //This should be if there is no player set, option 100 from form
-                  if (!$player) {$param->set('player', $to);}
-                  //This should be if there is a player set and it matches the $from in the post
-                  if($player == $from){$param->set('player', $to);}
-                  $id = $result->id;
-                   $model = $this->getModel('mediafilesedit');
-                    JRequest::set($params, 'post', TRUE);
-                    JRequest::set($id,'post',TRUE);
-                    		if ($model->store($post)) {
+                  if (!$player && $from == '100') 
+                  {
+                    $params->set('player', $to);
+                    $player = $params->get('player') ;// dump ($params, 'player: ');
+                    
+                 //   JRequest::set($params, 'post', TRUE);
+                 //   JRequest::set($id,'post',TRUE); 
+                    $_POST['params'] = $params;
+                    $_POST['id'] = $result->id; 
+                /*    $_POST['study_id'] = $result->study_id;
+                	$_POST['media_image'] = $result->media_image;
+                	$_POST['server'] = $result->server;
+                	$_POST['path'] = $result->path;
+                	$_POST['published'] = $result->published;
+                	$_POST['special'] = $result->special;
+                	$_POST['filename'] = $result->filename;
+                	$_POST['size'] = $result->size;
+                	$_POST['mime_type'] = $result->mime_type;
+                	$_POST['podcast_id'] = $result->podcast_id;
+                	$_POST['internal_viewer'] = $result->internal_viewer;
+                	$_POST['ordering'] = $result->ordering;
+                	$_POST['mediacode'] = $result->mediacode;
+                	$_POST['createdate'] = $result->createdate;
+                	$_POST['link_type'] = $result->link_type;
+                	$_POST['hits'] = $result->hits;
+                	$_POST['docMan'] = $result->docMan_id;
+                	$_POST['article_id'] = $result->article_id;
+                	$_POST['virtueMart_id'] = $result->virtueMart_id;
+                	$_POST['comment'] = $result->comment; 
+                    */
+                  //  dump ($_POST, '_POST: ');
+                   /* 		if ($model->store($_POST)) {
                     			$msg = JText::_( 'Saved!' );
                     		} else {
                     			$msg = JText::_( 'Error Saving' );
-                    		}
-                    
-        			
-        			//	$updated = 0;
-        			//	$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-        			//	$add = $add + $updated;
-    
-        			
-    
-               // }
+                    		} */
+                 $row =& JTable::getInstance('mediafilesedit', 'Table');
+                 if (!$row->bind( JRequest::get( 'post' ) )) 
+                 {
+                   $msg = JText::_( 'Error!' );
+                    		} else {
+                    			$msg = JText::_( 'Saved!' );
+                    		} 
+                if (!$row->store()) 
+                {
+                    $msg = JText::_( 'Error!' );
+                    		} else {
+                    			$msg = JText::_( 'Saved!' );
+                    		} 
+
+
+                  }
+                  //This should be if there is a player set and it matches the $from in the post
+                  
+                  if($player == $from)
+                  {
+                    $params->set('player', $to); 
+                    $player = $params->get('player'); // dump ($player, 'player: ');
+                   
+                 //   JRequest::set($params, 'post', TRUE);
+                 //   JRequest::set($id,'post',TRUE);
+                    $_POST['params'] = $params;
+                    $_POST['id'] = $result->id; 
+                 /*   $_POST['study_id'] = $result->study_id;
+                	$_POST['media_image'] = $result->media_image;
+                	$_POST['server'] = $result->server;
+                	$_POST['path'] = $result->path;
+                	$_POST['published'] = $result->published;
+                	$_POST['special'] = $result->special;
+                	$_POST['filename'] = $result->filename;
+                	$_POST['size'] = $result->size;
+                	$_POST['mime_type'] = $result->mime_type;
+                	$_POST['podcast_id'] = $result->podcast_id;
+                	$_POST['internal_viewer'] = $result->internal_viewer;
+                	$_POST['ordering'] = $result->ordering;
+                	$_POST['mediacode'] = $result->mediacode;
+                	$_POST['createdate'] = $result->createdate;
+                	$_POST['link_type'] = $result->link_type;
+                	$_POST['hits'] = $result->hits;
+                	$_POST['docMan'] = $result->docMan_id;
+                	$_POST['article_id'] = $result->article_id;
+                	$_POST['virtueMart_id'] = $result->virtueMart_id;
+                	$_POST['comment'] = $result->comment;
+                    */
+                   //  dump ($_POST, 'post: ');
+                   $row =& JTable::getInstance('mediafilesedit', 'Table');
+                    if (!$row->bind( JRequest::get( 'post' ) )) 
+                 {
+                   $msg = JText::_( 'Error!' );
+                    		} else {
+                    			$msg = JText::_( 'Saved!' );
+                    		} 
+                if (!$row->store()) 
+                {
+                    $msg = JText::_( 'Error!' );
+                    		} else {
+                    			$msg = JText::_( 'Saved!' );
+                    		} 
+        	//dump ($row, 'row: ');
+            /*	if ($model->store($_POST)) {
+        			$msg = JText::_( 'Saved!' );
+        		} else {
+        			$msg = JText::_( 'Error Saving' );
+        		} */
+                  }
+            
             }
-    //    }
+    
         if ($from == '100') {$add = $add + $addnull;}
       //  $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
         $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
@@ -349,50 +297,9 @@ JRequest::set($post, 'post', TRUE);
         $msg = null;
         $from = JRequest::getInt('pfrom','','post');
         $to = JRequest::getInt('pto','','post');
-     //   if ($from == '100')
-     //   {
-     /*       $from = '';
-            $query = "UPDATE #__bsms_mediafiles SET `params` = 'internal_popup=".$to."\n, `player`=0\n' WHERE `params` IS NULL";
-            $db->setQuery($query);
-            $db->query();
-            $addnull = $db->getAffectedRows();
-            $query = 'SELECT id, params FROM #__bsms_mediafiles';
-            $db->setQuery($query);
-            $results = $db->loadObjectList();
-            foreach ($results AS $result)
-            {
-                $param = $results->params;
-                $noplayer = substr_count($param,'internal_popup=');
-                if (!$noplayer)
-                {
-                  $param = $param.'internal_popup='.$to.'\n';
-                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
-        	  	  $db->setQuery($query);
-        	  	  $db->query();
-                  $updated = 0;
-                  $updated = $db->getAffectedRows();
-        	   	  if ($db->getErrorNum() > 0)
-        				{
-        					$error = $db->getErrorMsg();
-                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
-        				}
-                  else
-        			{
-        				$updated = 0;
-        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-        				$add = $add + $updated;
-    
-        			}
-                }
-            }
-   //     }
-   //     else
-    //    {
-    */
-            $playerfrom = 'internal_popup='.$from;
-            $playerto = 'internal_popup='.$to;
+        JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'tables');
             $errortext = '';
-            $query = 'SELECT id, params FROM #__bsms_mediafiles';
+            $query = 'SELECT * FROM #__bsms_mediafiles';
             $db->setQuery($query);
             $db->query();
             $results = $db->loadObjectList();
@@ -400,36 +307,120 @@ JRequest::set($post, 'post', TRUE);
           //  dump ($results, 'results: ');
             foreach ($results AS $result)
             {
-                $param = $result->params;
-                $isfrom = substr_count($param,$playerfrom);
-                if ($isfrom)
+              
+              $params = new JParameter($result->params);
+              $popup = $params->get('internal_popup');
+              if (!$popup && $from == '100') 
+                  {
+                    $params->set('internal_popup', $to);
+                    $popup = $params->get('internal_popup') ;// dump ($params, 'player: ');
+                    
+                 //   JRequest::set($params, 'post', TRUE);
+                 //   JRequest::set($id,'post',TRUE); 
+                    $_POST['params'] = $params;
+                    $_POST['id'] = $result->id; 
+                /*    $_POST['study_id'] = $result->study_id;
+                	$_POST['media_image'] = $result->media_image;
+                	$_POST['server'] = $result->server;
+                	$_POST['path'] = $result->path;
+                	$_POST['published'] = $result->published;
+                	$_POST['special'] = $result->special;
+                	$_POST['filename'] = $result->filename;
+                	$_POST['size'] = $result->size;
+                	$_POST['mime_type'] = $result->mime_type;
+                	$_POST['podcast_id'] = $result->podcast_id;
+                	$_POST['internal_viewer'] = $result->internal_viewer;
+                	$_POST['ordering'] = $result->ordering;
+                	$_POST['mediacode'] = $result->mediacode;
+                	$_POST['createdate'] = $result->createdate;
+                	$_POST['link_type'] = $result->link_type;
+                	$_POST['hits'] = $result->hits;
+                	$_POST['docMan'] = $result->docMan_id;
+                	$_POST['article_id'] = $result->article_id;
+                	$_POST['virtueMart_id'] = $result->virtueMart_id;
+                	$_POST['comment'] = $result->comment; 
+                    */
+                  //  dump ($_POST, '_POST: ');
+                   /* 		if ($model->store($_POST)) {
+                    			$msg = JText::_( 'Saved!' );
+                    		} else {
+                    			$msg = JText::_( 'Error Saving' );
+                    		} */
+                 $row =& JTable::getInstance('mediafilesedit', 'Table');
+                 if (!$row->bind( JRequest::get( 'post' ) )) 
+                 {
+                   $msg = JText::_( 'Error!' );
+                    		} else {
+                    			$msg = JText::_( 'Saved!' );
+                    		} 
+                if (!$row->store()) 
                 {
-                  $param = str_replace($playerfrom,$playerto,$param,$count);
-                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
-        	  	  $db->setQuery($query);
-        	  	  $db->query();
-                  $updated = 0;
-                  $updated = $db->getAffectedRows();
-        	   	  if ($db->getErrorNum() > 0)
-        				{
-        					$error = $db->getErrorMsg();
-                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
-                        }
-                  else
-        			{
-        				$updated = 0;
-        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-        				$add = $add + $updated;
-    
-        			}
-    
-                }
+                    $msg = JText::_( 'Error!' );
+                    		} else {
+                    			$msg = JText::_( 'Saved!' );
+                    		} 
+
+
+                  }
+                  //This should be if there is a player set and it matches the $from in the post
+                  
+                  if($popup == $from)
+                  {
+                    $params->set('internal_popup', $to); 
+                  //  $popup = $params->get('internal_popup'); // dump ($player, 'player: ');
+                   
+                 //   JRequest::set($params, 'post', TRUE);
+                 //   JRequest::set($id,'post',TRUE);
+                    $_POST['params'] = $params;
+                    $_POST['id'] = $result->id; 
+                 /*   $_POST['study_id'] = $result->study_id;
+                	$_POST['media_image'] = $result->media_image;
+                	$_POST['server'] = $result->server;
+                	$_POST['path'] = $result->path;
+                	$_POST['published'] = $result->published;
+                	$_POST['special'] = $result->special;
+                	$_POST['filename'] = $result->filename;
+                	$_POST['size'] = $result->size;
+                	$_POST['mime_type'] = $result->mime_type;
+                	$_POST['podcast_id'] = $result->podcast_id;
+                	$_POST['internal_viewer'] = $result->internal_viewer;
+                	$_POST['ordering'] = $result->ordering;
+                	$_POST['mediacode'] = $result->mediacode;
+                	$_POST['createdate'] = $result->createdate;
+                	$_POST['link_type'] = $result->link_type;
+                	$_POST['hits'] = $result->hits;
+                	$_POST['docMan'] = $result->docMan_id;
+                	$_POST['article_id'] = $result->article_id;
+                	$_POST['virtueMart_id'] = $result->virtueMart_id;
+                	$_POST['comment'] = $result->comment;
+                    */
+                   //  dump ($_POST, 'post: ');
+                   $row =& JTable::getInstance('mediafilesedit', 'Table');
+                    if (!$row->bind( JRequest::get( 'post' ) )) 
+                 {
+                   $msg = JText::_( 'Error!' );
+                    		} else {
+                    			$msg = JText::_( 'Saved!' );
+                    		} 
+                if (!$row->store()) 
+                {
+                    $msg = JText::_( 'Error!' );
+                    		} else {
+                    			$msg = JText::_( 'Saved!' );
+                    		} 
+        	//dump ($row, 'row: ');
+            /*	if ($model->store($_POST)) {
+        			$msg = JText::_( 'Saved!' );
+        		} else {
+        			$msg = JText::_( 'Error Saving' );
+        		} */
+                  }
+            
             }
-      //  }
+    
         if ($from == '100') {$add = $add + $addnull;}
-        $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
+      //  $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
         $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
-        
     }
 }
 ?>
