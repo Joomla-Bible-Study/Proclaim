@@ -35,6 +35,26 @@ if (!$row->id) {return FALSE;}
  	$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);
 
     $download_image = $download_tmp->path;
+    $sortmedia = $params->get('sortmedia','0');
+    switch ($sortmedia)
+    {
+        case 0:
+        $sort = 'ordering '.$sortmedia.'#__bsms_mediafiles.mimetype '.$sortmedia;
+        break;
+        
+        case 1:
+        $sort = '#__bsms_mediafiles.mimetype '.$sortmedia;
+        break;
+        
+        case 2:
+        $sort = '#__bsms_mediafiles.media_image '.$sortmedia;
+        break;
+        
+        default:
+        $sort = 'ordering '.$sortmedia.'#__bsms_mediafiles.mimetype '.$sortmedia;
+        break;
+    }
+    $sortorder = $params->get('sortorder','ASC');
 	$query = 'SELECT #__bsms_mediafiles.*,'
     . ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
     . ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
@@ -46,7 +66,7 @@ if (!$row->id) {return FALSE;}
     . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
     . ' LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
     . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
-    . ' WHERE #__bsms_mediafiles.study_id = '.$row->id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
+    . ' WHERE #__bsms_mediafiles.study_id = '.$row->id.' AND #__bsms_mediafiles.published = 1 ORDER BY '.$sort;
     $database->setQuery( $query);
     $media1 = $database->loadObjectList('id');
 	$rows2 = count($media1);
