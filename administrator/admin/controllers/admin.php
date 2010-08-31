@@ -150,7 +150,7 @@ function resetPlays()
 			}
 	}
 
-function changePlayers()
+function changePlayers2()
     {
         
         $model = $this->getModel('admin');
@@ -247,7 +247,101 @@ JRequest::set($post, 'post', TRUE);
         $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
         $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
     }
+   function changePlayers()
+    {
+        
+       
+
+        $db = JFactory::getDBO();
+        $msg = null;
+        $from = JRequest::getInt('from','','post');
+        $to = JRequest::getInt('to','','post');
+    //    if ($from == '100')
+    //    {
+      /*      $from = '';
+            $query = "UPDATE #__bsms_mediafiles SET `params` = 'player=".$to."\n internal_popup=3\n' WHERE `params` IS NULL";
+            $db->setQuery($query);
+            $db->query();
+            $addnull = $db->getAffectedRows();
+            $query = 'SELECT id, params FROM #__bsms_mediafiles';
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+            foreach ($results AS $result)
+            {
+                $param = $results->params;
+                $noplayer = substr_count($param,'player=');
+                if (!$noplayer)
+                {
+                  $param = $param.'player='.$to.'\n';
+                  $query = "UPDATE #__bsms_mediafiles SET `params` = '".$param."' WHERE `id` = ".$result->id;
+        	  	  $db->setQuery($query);
+        	  	  $db->query();
+                  $updated = 0;
+                  $updated = $db->getAffectedRows();
+        	   	  if ($db->getErrorNum() > 0)
+        				{
+        					$error = $db->getErrorMsg();
+                            $errortext .= JText::_('An error occured while updating mediafile').' '.$result->id.': '.$error.'<br />';
+        				}
+                  else
+        			{
+        				$updated = 0;
+        				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+        				$add = $add + $updated;
     
+        			}
+                }
+            }
+   //     }
+    //    else
+    //    {
+    */
+            $playerfrom = 'player='.$from;
+            $playerto = 'player='.$to;
+            $errortext = '';
+            $query = 'SELECT * FROM #__bsms_mediafiles';
+            $db->setQuery($query);
+            $db->query();
+            $results = $db->loadObjectList();
+            $add = 0;
+          //  dump ($results, 'results: ');
+            foreach ($results AS $result)
+            {
+             //   $param = $result->params;
+            //    $isfrom = substr_count($param,$playerfrom);
+            //    if ($isfrom)
+             //   {
+                  $param = new JParameter($result->params);
+                  $player = $param->get('player');
+                  //This should be if there is no player set, option 100 from form
+                  if (!$player) {$param->set('player', $to);}
+                  //This should be if there is a player set and it matches the $from in the post
+                  if($player == $from){$param->set('player', $to);}
+                  $id = $result->id;
+                   $model = $this->getModel('mediafilesedit');
+                    JRequest::set($params, 'post', TRUE);
+                    JRequest::set($id,'post',TRUE);
+                    		if ($model->store($post)) {
+                    			$msg = JText::_( 'Saved!' );
+                    		} else {
+                    			$msg = JText::_( 'Error Saving' );
+                    		}
+                    
+        			
+        			//	$updated = 0;
+        			//	$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+        			//	$add = $add + $updated;
+    
+        			
+    
+               // }
+            }
+    //    }
+        if ($from == '100') {$add = $add + $addnull;}
+      //  $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
+        $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
+    }
+     
     function changePopup()
     {
         

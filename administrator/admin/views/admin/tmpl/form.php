@@ -15,7 +15,7 @@ foreach ($results AS $result)
     $player = $params->get('player');
     $popup = $params->get('internal_popup');
     
-   // echo $player.' - '.$popup;
+  //  echo $player.' - '.$popup;
     $params->set('internal_popup', '3');
     
    // echo ' - new: '.$params->get('internal_popup').'<br />';
