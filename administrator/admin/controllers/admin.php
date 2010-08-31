@@ -182,37 +182,10 @@ function resetPlays()
                     $params->set('player', $to);
                     $player = $params->get('player') ;// dump ($params, 'player: ');
                     
-                 //   JRequest::set($params, 'post', TRUE);
-                 //   JRequest::set($id,'post',TRUE); 
+                 
                     $_POST['params'] = $params;
                     $_POST['id'] = $result->id; 
-                /*    $_POST['study_id'] = $result->study_id;
-                	$_POST['media_image'] = $result->media_image;
-                	$_POST['server'] = $result->server;
-                	$_POST['path'] = $result->path;
-                	$_POST['published'] = $result->published;
-                	$_POST['special'] = $result->special;
-                	$_POST['filename'] = $result->filename;
-                	$_POST['size'] = $result->size;
-                	$_POST['mime_type'] = $result->mime_type;
-                	$_POST['podcast_id'] = $result->podcast_id;
-                	$_POST['internal_viewer'] = $result->internal_viewer;
-                	$_POST['ordering'] = $result->ordering;
-                	$_POST['mediacode'] = $result->mediacode;
-                	$_POST['createdate'] = $result->createdate;
-                	$_POST['link_type'] = $result->link_type;
-                	$_POST['hits'] = $result->hits;
-                	$_POST['docMan'] = $result->docMan_id;
-                	$_POST['article_id'] = $result->article_id;
-                	$_POST['virtueMart_id'] = $result->virtueMart_id;
-                	$_POST['comment'] = $result->comment; 
-                    */
-                  //  dump ($_POST, '_POST: ');
-                   /* 		if ($model->store($_POST)) {
-                    			$msg = JText::_( 'Saved!' );
-                    		} else {
-                    			$msg = JText::_( 'Error Saving' );
-                    		} */
+               
                  $row =& JTable::getInstance('mediafilesedit', 'Table');
                  if (!$row->bind( JRequest::get( 'post' ) )) 
                  {
@@ -236,32 +209,10 @@ function resetPlays()
                     $params->set('player', $to); 
                     $player = $params->get('player'); // dump ($player, 'player: ');
                    
-                 //   JRequest::set($params, 'post', TRUE);
-                 //   JRequest::set($id,'post',TRUE);
+                 
                     $_POST['params'] = $params;
                     $_POST['id'] = $result->id; 
-                 /*   $_POST['study_id'] = $result->study_id;
-                	$_POST['media_image'] = $result->media_image;
-                	$_POST['server'] = $result->server;
-                	$_POST['path'] = $result->path;
-                	$_POST['published'] = $result->published;
-                	$_POST['special'] = $result->special;
-                	$_POST['filename'] = $result->filename;
-                	$_POST['size'] = $result->size;
-                	$_POST['mime_type'] = $result->mime_type;
-                	$_POST['podcast_id'] = $result->podcast_id;
-                	$_POST['internal_viewer'] = $result->internal_viewer;
-                	$_POST['ordering'] = $result->ordering;
-                	$_POST['mediacode'] = $result->mediacode;
-                	$_POST['createdate'] = $result->createdate;
-                	$_POST['link_type'] = $result->link_type;
-                	$_POST['hits'] = $result->hits;
-                	$_POST['docMan'] = $result->docMan_id;
-                	$_POST['article_id'] = $result->article_id;
-                	$_POST['virtueMart_id'] = $result->virtueMart_id;
-                	$_POST['comment'] = $result->comment;
-                    */
-                   //  dump ($_POST, 'post: ');
+                 
                    $row =& JTable::getInstance('mediafilesedit', 'Table');
                     if (!$row->bind( JRequest::get( 'post' ) )) 
                  {
@@ -275,12 +226,7 @@ function resetPlays()
                     		} else {
                     			$msg = JText::_( 'Saved!' );
                     		} 
-        	//dump ($row, 'row: ');
-            /*	if ($model->store($_POST)) {
-        			$msg = JText::_( 'Saved!' );
-        		} else {
-        			$msg = JText::_( 'Error Saving' );
-        		} */
+        	
                   }
             
             }
@@ -315,37 +261,11 @@ function resetPlays()
                     $params->set('internal_popup', $to);
                     $popup = $params->get('internal_popup') ;// dump ($params, 'player: ');
                     
-                 //   JRequest::set($params, 'post', TRUE);
-                 //   JRequest::set($id,'post',TRUE); 
+                 
                     $_POST['params'] = $params;
                     $_POST['id'] = $result->id; 
-                /*    $_POST['study_id'] = $result->study_id;
-                	$_POST['media_image'] = $result->media_image;
-                	$_POST['server'] = $result->server;
-                	$_POST['path'] = $result->path;
-                	$_POST['published'] = $result->published;
-                	$_POST['special'] = $result->special;
-                	$_POST['filename'] = $result->filename;
-                	$_POST['size'] = $result->size;
-                	$_POST['mime_type'] = $result->mime_type;
-                	$_POST['podcast_id'] = $result->podcast_id;
-                	$_POST['internal_viewer'] = $result->internal_viewer;
-                	$_POST['ordering'] = $result->ordering;
-                	$_POST['mediacode'] = $result->mediacode;
-                	$_POST['createdate'] = $result->createdate;
-                	$_POST['link_type'] = $result->link_type;
-                	$_POST['hits'] = $result->hits;
-                	$_POST['docMan'] = $result->docMan_id;
-                	$_POST['article_id'] = $result->article_id;
-                	$_POST['virtueMart_id'] = $result->virtueMart_id;
-                	$_POST['comment'] = $result->comment; 
-                    */
-                  //  dump ($_POST, '_POST: ');
-                   /* 		if ($model->store($_POST)) {
-                    			$msg = JText::_( 'Saved!' );
-                    		} else {
-                    			$msg = JText::_( 'Error Saving' );
-                    		} */
+               
+                  
                  $row =& JTable::getInstance('mediafilesedit', 'Table');
                  if (!$row->bind( JRequest::get( 'post' ) )) 
                  {
@@ -367,33 +287,10 @@ function resetPlays()
                   if($popup == $from)
                   {
                     $params->set('internal_popup', $to); 
-                  //  $popup = $params->get('internal_popup'); // dump ($player, 'player: ');
-                   
-                 //   JRequest::set($params, 'post', TRUE);
-                 //   JRequest::set($id,'post',TRUE);
+                  
                     $_POST['params'] = $params;
                     $_POST['id'] = $result->id; 
-                 /*   $_POST['study_id'] = $result->study_id;
-                	$_POST['media_image'] = $result->media_image;
-                	$_POST['server'] = $result->server;
-                	$_POST['path'] = $result->path;
-                	$_POST['published'] = $result->published;
-                	$_POST['special'] = $result->special;
-                	$_POST['filename'] = $result->filename;
-                	$_POST['size'] = $result->size;
-                	$_POST['mime_type'] = $result->mime_type;
-                	$_POST['podcast_id'] = $result->podcast_id;
-                	$_POST['internal_viewer'] = $result->internal_viewer;
-                	$_POST['ordering'] = $result->ordering;
-                	$_POST['mediacode'] = $result->mediacode;
-                	$_POST['createdate'] = $result->createdate;
-                	$_POST['link_type'] = $result->link_type;
-                	$_POST['hits'] = $result->hits;
-                	$_POST['docMan'] = $result->docMan_id;
-                	$_POST['article_id'] = $result->article_id;
-                	$_POST['virtueMart_id'] = $result->virtueMart_id;
-                	$_POST['comment'] = $result->comment;
-                    */
+                
                    //  dump ($_POST, 'post: ');
                    $row =& JTable::getInstance('mediafilesedit', 'Table');
                     if (!$row->bind( JRequest::get( 'post' ) )) 
@@ -408,12 +305,7 @@ function resetPlays()
                     		} else {
                     			$msg = JText::_( 'Saved!' );
                     		} 
-        	//dump ($row, 'row: ');
-            /*	if ($model->store($_POST)) {
-        			$msg = JText::_( 'Saved!' );
-        		} else {
-        			$msg = JText::_( 'Error Saving' );
-        		} */
+        	
                   }
             
             }

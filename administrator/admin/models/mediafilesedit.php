@@ -82,7 +82,7 @@ class biblestudyModelmediafilesedit extends JModel {
 	{
 		$row =& $this->getTable(); 
 
-		$data = JRequest::get( 'post' ); 
+		$data = JRequest::get( 'post' ); //dump ($data, 'data: ');
 		//This checks to see if the user has uploaded a file instead of just entered one in the box. It replaces the filename with the name of the uploaded file
 		$file = JRequest::getVar('file', null, 'files', 'array' );
 	//	$filename_upload = strtolower($file['name']);
