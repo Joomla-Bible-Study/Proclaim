@@ -165,73 +165,64 @@ function resetPlays()
             $db->query();
             $results = $db->loadObjectList();
             $add = 0;
-          //  $model = $this->getModel('mediafilesedit');
-            JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'tables');
-            
-
-          //  dump ($results, 'results: ');
+         
             foreach ($results AS $result)
             {
              
                   
-                  $params = new JParameter($result->params);
-                  $player = $params->get('player');
+                  $param = new JParameter($result->params);
+                  $params = $result->params;
+                  $player = $param->get('player');
                   //This should be if there is no player set, option 100 from form
                   if (!$player && $from == '100') 
                   {
-                    $params->set('player', $to);
-                    $player = $params->get('player') ;// dump ($params, 'player: ');
-                    
-                 
-                    $_POST['params'] = $params;
-                    $_POST['id'] = $result->id; 
-               
-                 $row =& JTable::getInstance('mediafilesedit', 'Table');
-                 if (!$row->bind( JRequest::get( 'post' ) )) 
-                 {
-                   $msg = JText::_( 'Error!' );
-                    		} else {
-                    			$msg = JText::_( 'Saved!' );
-                    		} 
-                if (!$row->store()) 
-                {
-                    $msg = JText::_( 'Error!' );
-                    		} else {
-                    			$msg = JText::_( 'Saved!' );
-                    		} 
-
-
+                   
+                    //First let's see if there is anything in the params
+                    if (!$result->params)
+                    {
+                        $query = 'UPDATE #__bsms_mediafiles SET `params` = "player='.$to.'\ninternal_popup=\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=50\npodcasts=-1\n" WHERE `id` = '.$result->id;
+                        $db->seQuery($query);
+                        $db->query();
+                    }
+                    //Maybe there are other params but not the player
+                    if ($result->params)
+                    {
+                        //Check to see if there a substring for player=
+                        $isplayer = substr_count($params,'player=');
+                        if ($isplayer)
+                        {
+                            $newparams = str_replace('player=\n','player='.$to.'\n',$params);
+                        }
+                        else
+                        {
+                            $newparams = 'player='.$to.'\n'.$params;
+                        }
+                        
+                        $query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$newparams.'" WHERE `id` = '.$result->id;
+                        $db->setQuery($query);
+                        $db->query();
+                    }
                   }
                   //This should be if there is a player set and it matches the $from in the post
                   
                   if($player == $from)
                   {
-                    $params->set('player', $to); 
-                    $player = $params->get('player'); // dump ($player, 'player: ');
+                                      
+                    $playerposition = strpos($params,'player=');
+                    $toposition = $playerposition + 7;
+                    $params = substr_replace($params,$to,$toposition, 1);
+                 
+                    $query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
                    
-                 
-                    $_POST['params'] = $params;
-                    $_POST['id'] = $result->id; 
-                 
-                   $row =& JTable::getInstance('mediafilesedit', 'Table');
-                    if (!$row->bind( JRequest::get( 'post' ) )) 
-                 {
-                   $msg = JText::_( 'Error!' );
-                    		} else {
-                    			$msg = JText::_( 'Saved!' );
-                    		} 
-                if (!$row->store()) 
-                {
-                    $msg = JText::_( 'Error!' );
-                    		} else {
-                    			$msg = JText::_( 'Saved!' );
-                    		} 
-        	
+                   
+                    $db->setQuery($query);
+                    $db->query();
+                    
                   }
             
             }
     
-        if ($from == '100') {$add = $add + $addnull;}
+       
       //  $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
         $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
     }
@@ -243,74 +234,63 @@ function resetPlays()
         $msg = null;
         $from = JRequest::getInt('pfrom','','post');
         $to = JRequest::getInt('pto','','post');
-        JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'tables');
-            $errortext = '';
-            $query = 'SELECT * FROM #__bsms_mediafiles';
+        
+            
+            $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
             $db->setQuery($query);
             $db->query();
             $results = $db->loadObjectList();
-            $add = 0;
-          //  dump ($results, 'results: ');
+            
             foreach ($results AS $result)
             {
-              
-              $params = new JParameter($result->params);
-              $popup = $params->get('internal_popup');
+              $params = $result->params;
+              $param = new JParameter($result->params);
+              $popup = $param->get('internal_popup');
               if (!$popup && $from == '100') 
                   {
-                    $params->set('internal_popup', $to);
-                    $popup = $params->get('internal_popup') ;// dump ($params, 'player: ');
-                    
-                 
-                    $_POST['params'] = $params;
-                    $_POST['id'] = $result->id; 
-               
-                  
-                 $row =& JTable::getInstance('mediafilesedit', 'Table');
-                 if (!$row->bind( JRequest::get( 'post' ) )) 
-                 {
-                   $msg = JText::_( 'Error!' );
-                    		} else {
-                    			$msg = JText::_( 'Saved!' );
-                    		} 
-                if (!$row->store()) 
-                {
-                    $msg = JText::_( 'Error!' );
-                    		} else {
-                    			$msg = JText::_( 'Saved!' );
-                    		} 
-
-
+                   
+                   //If the params field is empty we fill it with blank params plus the internal popup 
+                   if (!$result->params)
+                       {
+                            $query = 'UPDATE #__bsms_mediafiles SET `params` = "player=\ninternal_popup='.$to.'\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=50\npodcasts=-1\n" WHERE `id` = '.$result->id;
+                            $db->setQuery($query);
+                            $db->query();
+                       }
+                    //If the param field is not empty we check to see what it has in it.
+                   if ($result->params)
+                       {
+                            //This checks to see if the string internal_popup= exists. If so, we replce it. If not, we put it at the begining of the param
+                            $ispopup = substr_count($params,'internal_popup=');
+                            if ($ispopop)
+                            {
+                                $params = str_replace('internal_popup=\n','internal_popup='.$to.'\n',$params);
+                            }
+                            else
+                            {
+                                $params = 'internal_popup='.$to.'\n'.$params;
+                            }
+                        $query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
+                        $db->setQuery($query);
+                        $db->query();    
+                            
+                       } 
                   }
                   //This should be if there is a player set and it matches the $from in the post
                   
                   if($popup == $from)
                   {
-                    $params->set('internal_popup', $to); 
-                  
-                    $_POST['params'] = $params;
-                    $_POST['id'] = $result->id; 
-                
-                   //  dump ($_POST, 'post: ');
-                   $row =& JTable::getInstance('mediafilesedit', 'Table');
-                    if (!$row->bind( JRequest::get( 'post' ) )) 
-                 {
-                   $msg = JText::_( 'Error!' );
-                    		} else {
-                    			$msg = JText::_( 'Saved!' );
-                    		} 
-                if (!$row->store()) 
-                {
-                    $msg = JText::_( 'Error!' );
-                    		} else {
-                    			$msg = JText::_( 'Saved!' );
-                    		} 
-        	
+                    //In this case we know that the string internal_popup exists in param so we replace only the player
+        	           $popupposition = strpos($params,'internal_popup=');
+                       $p = $popupposition + 16;
+                       $params = substr_replace($params,$to,$p,1);
+                       $query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
+                       $db->setQuery($query);
+                       $db->query(); 
                   }
             
             }
     
-        if ($from == '100') {$add = $add + $addnull;}
+        
       //  $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
         $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
     }

@@ -200,23 +200,6 @@
       <option value="window">Window</option>
       <option value="lightbox">Lightbox</option>
     </param>
-    <param name="sortmedia" 
-            type="list"
-            default="0"
-            label="Sorting of Media items in list"
-            description="Set how you want to sort the media files in your listing">
-    <option value="0">Default (ordering or mime_type</option>
-    <option value="1">mime_type</option>
-    <option value="2">media image</option>
-    </param>
-    <param name="sortorder"
-            type="list"
-            default="ASC"
-            label="Ascending or Descending Media"
-            description="Set whether ordering above should be ascending or descending">
-    <option value="ASC">Ascending</option>
-    <option value="DESC">Descending</option>
-    </param>
     <param name="internal_popup"
            type="list"
            default="0"
