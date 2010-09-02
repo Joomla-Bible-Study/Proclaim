@@ -211,6 +211,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
 {
     $player->playerwidth = $params->get('player_width');
     $player->playerheight = $params->get('player_height');
+    
     if ($itemparams->get('playerheight')) {$player->playerheight = $itemparams->get('playerheight');}
     if ($itemparams->get('playerwidth')) {$player->playerwidth = $itemparams->get('playerwidth');}
     $player->playerwidth = $player->playerwidth + 20;
@@ -218,6 +219,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
     
 /**
  * @desc Players - from Template:
+ * First we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
  * popuptype = whether AVR should be window or lightbox (handled in avr code)
  * internal_popup = whether direct or internal player should be popup or inline/new window
  * From media file:
@@ -227,6 +229,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
  * $player->type 0 = inline/new window, 1 = popup
 */
      $player->player = 0;
+     if ($params->get('media_player') == 1){$player->player = 1;}
     if ($itemparams->get('player') == 1)
         {
             $player->player = 1;
@@ -265,7 +268,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
 
         if ($item > 1){$player->type = $internal_popup;}
         else {$player->type = $item;}
-      //  dump ($player->type, 'item: ');
+        dump ($player, 'item: ');
     return $player;
 }
 

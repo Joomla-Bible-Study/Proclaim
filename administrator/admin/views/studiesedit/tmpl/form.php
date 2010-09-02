@@ -204,7 +204,7 @@ echo $pane->endPane(); */
       <?php echo JText::_( 'Topic' );?>
     </td>
     <td>
-      <input type="text" id="topic_tags" name="topic_tags"></input>
+      <input type="text" id="topic_tags" name="topic_tags" /><!--</input>-->
     </td>
   </tr>
 

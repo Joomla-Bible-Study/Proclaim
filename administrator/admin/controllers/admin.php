@@ -177,31 +177,46 @@ function resetPlays()
                   if (!$player && $from == '100') 
                   {
                    
-                    //First let's see if there is anything in the params
-                    if (!$result->params)
-                    {
-                        $query = 'UPDATE #__bsms_mediafiles SET `params` = "player='.$to.'\ninternal_popup=\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=50\npodcasts=-1\n" WHERE `id` = '.$result->id;
-                        $db->seQuery($query);
-                        $db->query();
-                    }
-                    //Maybe there are other params but not the player
-                    if ($result->params)
-                    {
-                        //Check to see if there a substring for player=
-                        $isplayer = substr_count($params,'player=');
-                        if ($isplayer)
-                        {
-                            $newparams = str_replace('player=\n','player='.$to.'\n',$params);
-                        }
+                   //If the params field is empty we fill it with blank params plus the internal popup 
+                   if (!$result->params)
+                       {
+                            $query = 'UPDATE #__bsms_mediafiles SET `params` = "player='.$to.'\ninternal_popup=\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=50\npodcasts=-1\n" WHERE `id` = '.$result->id;
+                            $db->setQuery($query);
+                            $db->query();
+                            if ($db->getErrorNum() > 0)
+        				{
+        					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+        				}
                         else
                         {
-                            $newparams = 'player='.$to.'\n'.$params;
+                            $msg = JText::_('Operation Successful. No Errors Reported.');
                         }
-                        
-                        $query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$newparams.'" WHERE `id` = '.$result->id;
+                       }
+                    //If the param field is not empty we check to see what it has in it.
+                   if ($result->params)
+                       {
+                            //This checks to see if the string internal_popup= exists. If so, we replce it. If not, we put it at the begining of the param
+                            $ispopup = substr_count($params,'player=');
+                            if ($ispopop)
+                            {
+                                $params = str_replace('player=\n','player='.$to.'\n',$params);
+                            }
+                            else
+                            {
+                                $params = 'player='.$to.'\n'.$params;
+                            }
+                        $query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
                         $db->setQuery($query);
-                        $db->query();
-                    }
+                        $db->query();  
+                        if ($db->getErrorNum() > 0)
+            				{
+            					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+            				}
+                        else
+                            {
+                                $msg = JText::_('Operation Successful. No Errors Reported.');
+                            }  
+                       } 
                   }
                   //This should be if there is a player set and it matches the $from in the post
                   
@@ -213,10 +228,16 @@ function resetPlays()
                     $params = substr_replace($params,$to,$toposition, 1);
                  
                     $query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
-                   
-                   
                     $db->setQuery($query);
                     $db->query();
+                    if ($db->getErrorNum() > 0)
+        				{
+        					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+        				}
+                        else
+                        {
+                            $msg = JText::_('Operation Successful. No Errors Reported.');
+                        }
                     
                   }
             
@@ -245,7 +266,7 @@ function resetPlays()
             {
               $params = $result->params;
               $param = new JParameter($result->params);
-              $popup = $param->get('internal_popup');
+              $popup = $param->get('internal_popup'); //dump ($popup, 'popup: ');
               if (!$popup && $from == '100') 
                   {
                    
@@ -255,6 +276,14 @@ function resetPlays()
                             $query = 'UPDATE #__bsms_mediafiles SET `params` = "player=\ninternal_popup='.$to.'\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=50\npodcasts=-1\n" WHERE `id` = '.$result->id;
                             $db->setQuery($query);
                             $db->query();
+                            if ($db->getErrorNum() > 0)
+        				{
+        					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+        				}
+                        else
+                        {
+                            $msg = JText::_('Operation Successful. No Errors Reported.');
+                        }
                        }
                     //If the param field is not empty we check to see what it has in it.
                    if ($result->params)
@@ -271,21 +300,36 @@ function resetPlays()
                             }
                         $query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
                         $db->setQuery($query);
-                        $db->query();    
-                            
+                        $db->query();  
+                        if ($db->getErrorNum() > 0)
+            				{
+            					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+            				}
+                        else
+                            {
+                                $msg = JText::_('Operation Successful. No Errors Reported.');
+                            }  
                        } 
                   }
                   //This should be if there is a player set and it matches the $from in the post
-                  
+                //  dump ($popup, 'popup: '); dump ($from, 'from: ');
                   if($popup == $from)
                   {
                     //In this case we know that the string internal_popup exists in param so we replace only the player
         	           $popupposition = strpos($params,'internal_popup=');
-                       $p = $popupposition + 16;
-                       $params = substr_replace($params,$to,$p,1);
+                       $p = $popupposition + 15;
+                       $params = substr_replace($params,$to,$p,1); //dump ($params, 'params: ');
                        $query = 'UPDATE #__bsms_mediafiles SET `params` = "'.$params.'" WHERE `id` = '.$result->id;
                        $db->setQuery($query);
                        $db->query(); 
+                       if ($db->getErrorNum() > 0)
+        				{
+        					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+        				}
+                        else
+                        {
+                            $msg = JText::_('Operation Successful. No Errors Reported.');
+                        }
                   }
             
             }
