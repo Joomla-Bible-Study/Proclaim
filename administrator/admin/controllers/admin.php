@@ -180,7 +180,7 @@ function resetPlays()
                    //If the params field is empty we fill it with blank params plus the internal popup 
                    if (!$result->params)
                        {
-                            $query = 'UPDATE #__bsms_mediafiles SET `params` = "player='.$to.'\ninternal_popup=\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=50\npodcasts=-1\n" WHERE `id` = '.$result->id;
+                            $query = 'UPDATE #__bsms_mediafiles SET `params` = "player='.$to.'\ninternal_popup=\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=\npodcasts=-1\n" WHERE `id` = '.$result->id;
                             $db->setQuery($query);
                             $db->query();
                             if ($db->getErrorNum() > 0)
@@ -273,7 +273,7 @@ function resetPlays()
                    //If the params field is empty we fill it with blank params plus the internal popup 
                    if (!$result->params)
                        {
-                            $query = 'UPDATE #__bsms_mediafiles SET `params` = "player=\ninternal_popup='.$to.'\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=50\npodcasts=-1\n" WHERE `id` = '.$result->id;
+                            $query = 'UPDATE #__bsms_mediafiles SET `params` = "player=\ninternal_popup='.$to.'\nplayerwidth=\nplayerheight=\nitempopuptitle=\nitempopupfooter=\npopupmargin=\npodcasts=-1\n" WHERE `id` = '.$result->id;
                             $db->setQuery($query);
                             $db->query();
                             if ($db->getErrorNum() > 0)

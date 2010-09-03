@@ -229,7 +229,8 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
  * $player->type 0 = inline/new window, 1 = popup
 */
      $player->player = 0;
-     if ($params->get('media_player') == 1){$player->player = 1;}
+    if ($params->get('media_player') > 0) {$player->player = $params->get('media_player');}
+//     if ($params->get('media_player') == 1){$player->player = 1;}
     if ($itemparams->get('player') == 1)
         {
             $player->player = 1;
@@ -268,7 +269,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
 
         if ($item > 1){$player->type = $internal_popup;}
         else {$player->type = $item;}
-        dump ($player, 'item: ');
+      //  dump ($player, 'item: ');
     return $player;
 }
 
@@ -376,6 +377,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                     </script>
                     <div id='placeholder".$media->id.
                     "'><a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\">".JTEXT::_('Get flash')."</a> ".JTEXT::_('to see this player')."</div>";
+                
                 break;
 
                 case 1: //popup

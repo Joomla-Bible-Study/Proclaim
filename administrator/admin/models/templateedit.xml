@@ -195,10 +195,12 @@
     <param name="media_player" 
             type="list" 
             default="0" 
-            label="Internal Player for all media" 
-            description="Use built-in media player for all files. This can be overridden in an individual media file record.">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
+            label="Default Player for all media" 
+            description="Choose media player for all files. This can be overridden in an individual media file record.">
+					<option value="0">Direct (None)</option>
+					<option value="1">Internal Player</option>
+                    <option value="2">All Videos Reloaded</option>
+                    <option value="3">All Videos Plugin</option>
     </param>
     <param name="popuptype"
            type="list"
