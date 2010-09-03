@@ -221,12 +221,12 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
  * @desc Players - from Template:
  * First we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
  * popuptype = whether AVR should be window or lightbox (handled in avr code)
- * internal_popup = whether direct or internal player should be popup or inline/new window
+ * internal_popup = whether direct or internal player should be popup/new window or inline
  * From media file:
  * player 0 = direct, 1 = internal, 2 = AVR, 3 = AVinternal_popup 0 = inline, 1 = popup, 2 = global settings
  *
  * Get the $player->player: 0 = direct, 1 = internal, 2 = AVR, 3 = AV, 4 = Docman, 5 = article, 6 = Virtuemart
- * $player->type 0 = inline/new window, 1 = popup
+ * $player->type 0 = inline, 1 = popup/new window
 */
      $player->player = 0;
     if ($params->get('media_player') > 0) {$player->player = $params->get('media_player');}

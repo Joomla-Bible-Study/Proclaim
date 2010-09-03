@@ -109,9 +109,8 @@ if (!$row->id) {return FALSE;}
      // useav = use All Videos plugin for all files
      // popuptype = whether AVR should be window or lightbox (handled in avr code)
      // media_player = use internal player for all files
-     // internal_popup = whether direct or internal player should be popup or inline/new window
-
-     // From media file:
+     // internal_popup = whether direct or internal player should be popup or inline     
+	 // From media file:
      // player 0 = direct, 1 = internal, 2 = AVR, 3 = AV
      // internal_popup 0 = inline 1 = popup, 2 = global settings
 
