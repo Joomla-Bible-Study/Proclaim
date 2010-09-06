@@ -214,8 +214,6 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
     
     if ($itemparams->get('playerheight')) {$player->playerheight = $itemparams->get('playerheight');}
     if ($itemparams->get('playerwidth')) {$player->playerwidth = $itemparams->get('playerwidth');}
-    $player->playerwidth = $player->playerwidth + 20;
-    $player->playerheight = $player->playerheight + $params->get('popupmargin','50');
     
 /**
  * @desc Players - from Template:
@@ -382,6 +380,10 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
 
                 case 1: //popup
                   //  dump ($template, 'template from mediaclass: ');
+				  // Add space for popup window
+				    $player->playerwidth = $player->playerwidth + 20;
+					$player->playerheight = $player->playerheight + $params->get('popupmargin','50');
+
                     $playercode =
                     "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&Itemid=".$Itemid.
                     "&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".

@@ -227,7 +227,7 @@
            type="text"
            default="300"
            label="Height for media player"
-           description="Set the height in pixels. Can be overridden in media file. Hint: 26 is good height for just audio" />
+           description="Set the height in pixels. Can be overridden in media file. Hint: 23 is good height for just audio" />
     <param name="backcolor"
            type="text"
            default="0x287585"
