@@ -21,13 +21,13 @@
 #bslisttable .row2col1, 
 #bslisttable .row3col1, 
 #bslisttable .row4col1 { 
-  border-left: gray 2px solid; 
+  border-left: grey 2px solid; 
 } 
 #bslisttable .lastcol { 
-  border-right: gray 2px solid; 
+  border-right: grey 2px solid; 
 } 
 #bslisttable .lastrow td { 
-  border-bottom:2px solid gray; 
+  border-bottom:2px solid grey; 
   padding-bottom:7px; 
 } 
 #bslisttable th { 
@@ -40,14 +40,14 @@
 #bslisttable th.row1col2, 
 #bslisttable th.row1col3, 
 #bslisttable th.row1col4 { 
-  border-top: gray 2px solid; 
+  border-top: grey 2px solid; 
   padding-top:3px; 
 } 
 #bslisttable th.firstrow { 
-	border-bottom: gray 2px solid; 
+	border-bottom: grey 2px solid; 
 } 
 #bslisttable tr.lastrow th { 
-  border-bottom:2px solid gray; 
+  border-bottom:2px solid grey; 
   padding-bottom:3px; 
 } 
  
@@ -61,7 +61,7 @@
 #bslisttable .date { 
   white-space:nowrap; 
   font-size:1.2em; 
-  color:gray; 
+  color:grey; 
   font-weight:bold; 
 } 
 #bslisttable .scripture1 { 
@@ -81,7 +81,7 @@
 } 
 #bslisttable .series_text { 
   white-space:nowrap; 
-  color:gray; 
+  color:grey; 
 } 
 #bslisttable .duration { 
   white-space:nowrap; 
@@ -173,13 +173,13 @@
 #bsmsdetailstable .row2col1, 
 #bsmsdetailstable .row3col1, 
 #bsmsdetailstable .row4col1 { 
-  border-left: gray 2px solid; 
+  border-left: grey 2px solid; 
 } 
 #bsmsdetailstable .lastcol { 
-  border-right: gray 2px solid; 
+  border-right: grey 2px solid; 
 } 
 #bsmsdetailstable .lastrow td { 
-  border-bottom:2px solid gray; 
+  border-bottom:2px solid grey; 
   padding-bottom:7px; 
 } 
 #bsmsdetailstable th { 
@@ -192,15 +192,15 @@
 #bsmsdetailstable th.row1col2, 
 #bsmsdetailstable th.row1col3, 
 #bsmsdetailstable th.row1col4 { 
-  border-top: gray 2px solid; 
+  border-top: grey 2px solid; 
   padding-top:3px; 
 } 
 #bsmsdetailstable tr.lastrow th { 
-  border-bottom:2px solid gray; 
+  border-bottom:2px solid grey; 
   padding-bottom:3px; 
 } 
 #bsmsdetailstable th.firstrow { 
-	border-bottom: gray 2px solid; 
+	border-bottom: grey 2px solid; 
 } 
 #bsmsdetailstable tr.bsodd td { 
   background-color:#FFFFFF; 
@@ -350,13 +350,13 @@
 #bsmsmoduletable .row2col1, 
 #bsmsmoduletable .row3col1, 
 #bsmsmoduletable .row4col1 { 
-  border-left: gray 2px solid; 
+  border-left: grey 2px solid; 
 } 
 #bsmsmoduletable .lastcol { 
-  border-right: gray 2px solid; 
+  border-right: grey 2px solid; 
 } 
 #bsmsmoduletable .lastrow td { 
-  border-bottom:2px solid gray; 
+  border-bottom:2px solid grey; 
   padding-bottom:7px; 
 } 
 #bsmsmoduletable th { 
@@ -369,14 +369,14 @@
 #bsmsmoduletable th.row1col2, 
 #bsmsmoduletable th.row1col3, 
 #bsmsmoduletable th.row1col4 { 
-  border-top: gray 2px solid; 
+  border-top: grey 2px solid; 
   padding-top:3px; 
 } 
 #bsmsmoduletable th.firstrow { 
-	border-bottom: gray 2px solid; 
+	border-bottom: grey 2px solid; 
 } 
 #bsmsmoduletable tr.lastrow th { 
-  border-bottom:2px solid gray; 
+  border-bottom:2px solid grey; 
   padding-bottom:3px; 
 } 
  
@@ -497,18 +497,18 @@
   border:none; 
 } 
 #seriestable .firstrow td { 
-	border-top: gray 2px solid; 
+	border-top: grey 2px solid; 
 } 
 #seriestable .firstcol { 
-  border-left: gray 2px solid; 
+  border-left: grey 2px solid; 
 } 
 #seriestable .lastcol { 
-  border-right: gray 2px solid; 
+  border-right: grey 2px solid; 
 } 
 #seriestable .lastrow td { 
-  border-bottom:2px solid gray; 
-  border-left: 2px solid gray; 
-  border-right: 2px solid gray; 
+  border-bottom:2px solid grey; 
+  border-left: 2px solid grey; 
+  border-right: 2px solid grey; 
   padding-bottom:3px; 
 } 
 #seriesttable tr.bsodd td { 
@@ -518,14 +518,14 @@
   background-color:#FFFFF0; 
 } 
 #seriestable tr.onlyrow td { 
-	border-bottom: 2px solid gray; 
-	border-top:  gray 2px solid; 
+	border-bottom: 2px solid grey; 
+	border-top:  grey 2px solid; 
 } 
 #seriestable .thumbnail img { 
-	border: 1px solid gray; 
+	border: 1px solid grey; 
 } 
 #seriestable .teacher img { 
-	border: 1px solid gray; 
+	border: 1px solid grey; 
 } 
 #seriestable .title { 
 	font-weight: bold; 
@@ -554,13 +554,13 @@
 #seriesstudytable .row2col1, 
 #seriesstudytable .row3col1, 
 #seriesstudytable .row4col1 { 
-  border-left: gray 2px solid; 
+  border-left: grey 2px solid; 
 } 
 #seriesstudytable .lastcol { 
-  border-right: gray 2px solid; 
+  border-right: grey 2px solid; 
 } 
 #seriesstudytable .lastrow td { 
-  border-bottom:2px solid gray; 
+  border-bottom:2px solid grey; 
   padding-bottom:7px; 
 } 
 #seriesstudytable th { 
@@ -573,14 +573,14 @@
 #seriesstudytable th.row1col2, 
 #seriesstudytable th.row1col3, 
 #seriesstudytable th.row1col4 { 
-  border-top: gray 2px solid; 
+  border-top: grey 2px solid; 
   padding-top:3px; 
 } 
 #seriesstudytable th.firstrow { 
-	border-bottom: gray 2px solid; 
+	border-bottom: grey 2px solid; 
 } 
 #seriesstudytable tr.lastrow th { 
-  border-bottom:2px solid gray; 
+  border-bottom:2px solid grey; 
   padding-bottom:3px; 
 } 
  
@@ -594,7 +594,7 @@
 #seriesstudytable .date { 
   white-space:nowrap; 
   font-size:1.2em; 
-  color:gray; 
+  color:grey; 
   font-weight:bold; 
 } 
 #seriesstudytable .scripture1 { 
@@ -615,7 +615,7 @@
 } 
 #seriesstudytable .series_text { 
   white-space:nowrap; 
-  color:gray; 
+  color:grey; 
 } 
 #seriesstudytable .duration { 
   white-space:nowrap; 
@@ -829,7 +829,7 @@
 } 
  
 #bsm_teachertable .lastrow td { 
-  border-bottom:1px solid gray; 
+  border-bottom:1px solid grey; 
   padding-bottom:7px; 
   padding-top:7px; 
 } 
