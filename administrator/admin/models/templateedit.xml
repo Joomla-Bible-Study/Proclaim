@@ -228,6 +228,14 @@
            default="300"
            label="Height for media player"
            description="Set the height in pixels. Can be overridden in media file. Hint: 23 is good height for just audio" />
+    <param name="embedshare" 
+            default="1" 
+            type="list" 
+            label="Choose to allow Share Options in Media Player"
+            description="If set to Show a menu is presented in the internal media player that allows sharing and embedding options">
+            <option value="0">No Share Menu</option>
+            <option value="1">Show Share Menu</option>
+    </param> 
     <param name="backcolor"
            type="text"
            default="0x287585"

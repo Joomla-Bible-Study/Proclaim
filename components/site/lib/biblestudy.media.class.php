@@ -367,7 +367,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
             switch ($player->type)
             {
                 case 0: //Inline
-				$embedshare = 'false'; // Used for Embed Share replace with param
+				$embedshare = $params->get('embedshare',0); // Used for Embed Share replace with param
                     $playercode =
                     "<script type='text/javascript'>
                     swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder".$media->id.
