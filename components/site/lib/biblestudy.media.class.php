@@ -367,11 +367,12 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
             switch ($player->type)
             {
                 case 0: //Inline
+				$embedshare = 'false'; // Used for Embed Share replace with param
                     $playercode =
                     "<script type='text/javascript'>
                     swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder".$media->id.
                     "', '".$player->playerwidth."', '".$player->playerheight."', '9.0.0', false,{file:'".$path.
-                    "',autostart:'false'}, {allowfullscreen:'true', allowscriptaccess:'always', backcolor:'".$backcolor."', frontcolor:'".$frontcolor."', lightcolor:'".$lightcolor."',screencolor:'".$screencolor."'}, {id:'".$media->id."', name:'".$media->id."'});
+                    "',autostart:'false',plugins:'viral-2','viral.onpause':'".$embedshare."','viral.oncomplete':'".$embedshare."','viral.allowmenu':'".$embedshare."'}, {allowfullscreen:'true', allowscriptaccess:'always', backcolor:'".$backcolor."', frontcolor:'".$frontcolor."', lightcolor:'".$lightcolor."',screencolor:'".$screencolor."'}, {id:'".$media->id."', name:'".$media->id."'});
                     </script>
                     <div id='placeholder".$media->id.
                     "'><a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\">".JTEXT::_('Get flash')."</a> ".JTEXT::_('to see this player')."</div>";

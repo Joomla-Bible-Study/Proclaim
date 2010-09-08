@@ -108,9 +108,9 @@ if ($itemparams->get('player') == 3 || $player == 3) {
             
 if ($itemparams->get('player')== 1 || $player == 1)
 {  
-  
+  $embedshare = 'false'; // Used for Embed Share replace with param
 	echo    "<script type='text/javascript'>
-swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',link:'".JURI::base()."index.php?option=com_biblestudy&view=studieslist&templatemenuid=".$templateid."',image:'".$params->get('popupimage', 'components/com_biblestudy/images/speaker24.png')."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
+swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',link:'".JURI::base()."index.php?option=com_biblestudy&view=studieslist&templatemenuid=".$templateid."',image:'".$params->get('popupimage', 'components/com_biblestudy/images/speaker24.png')."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300',plugins:'viral-2','viral.onpause':'".$embedshare."','viral.oncomplete':'".$embedshare."','viral.allowmenu':'".$embedshare."'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
 </script>
 <div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>".JText::_('Get flash')."</a> ".JText::_('to see this player')."</div>";
 //  Flashvar - Colors, Autostart, Title, Author, Date, Description, Link, Image
