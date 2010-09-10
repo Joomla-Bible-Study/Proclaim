@@ -36,7 +36,7 @@ class biblestudyViewserieslist extends JView {
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/biblestudy.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
-		
+		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
 		//Import Stylesheets
 		$document->addStylesheet(JURI::base().'administrator/components/com_biblestudy/css/general.css');
 		
