@@ -258,15 +258,15 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
 			$player->player = 6;
 		}
 
-      $type = 0;
-      if ($params->get('internal_popup') == 1) {$type = 1;}
-
+      $player->type = 0;
+      if ($params->get('internal_popup') == 1) {$player->type = 1;}
+      if ($itemparams->get('internal_popup') == 1){$player->type = 1;}
     //Get the popup or inline
-        $item = $itemparams->get('internal_popup','0');
-        $internal_popup = $params->get('internal_popup',0);
+    //    $item = $itemparams->get('internal_popup','0');
+    //    $internal_popup = $params->get('internal_popup',0);
 
-        if ($item > 1){$player->type = $internal_popup;}
-        else {$player->type = $item;}
+    //    if ($item > 1){$player->type = $internal_popup;}
+    //    else {$player->type = $item;}
       //  dump ($player, 'item: ');
     return $player;
 }
