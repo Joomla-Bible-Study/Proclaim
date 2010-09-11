@@ -56,11 +56,13 @@
 			// The popup window call the counter function
 			$play = $getMedia->hitPlay($mediaid);
 			$length = getDuration($params, $media);
-            $studyintro = str_replace('"', '\"', $media->studyintro);
-            $studyintro = str_replace("'", "\'", $media->studyintro);
-            $studytitle = str_replace("'", "\'", $media->studytitle);
-            $studytitle = str_replace('"', '\"', $media->studytitle);
-            
+          //  $studyintro = str_replace('"', '\"', $media->studyintro);
+          //  $studyintro = str_replace("'", "\'", $media->studyintro);
+          //  $studytitle = str_replace("'", "\'", $media->studytitle);
+          //  $studytitle = str_replace('"', '\"', $media->studytitle);
+            $badchars = array("'", '"');
+            $studytitle = str_replace($badchars, ' ', $media->studytitle);
+            $studyintro = str_replace($badchars, ' ', $media->studyintro);
             
             // dump ($media, 'media: ');
              $path1 = $media->spath.$media->fpath.$media->filename;
