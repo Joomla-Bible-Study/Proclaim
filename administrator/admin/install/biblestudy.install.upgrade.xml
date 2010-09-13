@@ -98,7 +98,7 @@
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_order` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `value` varchar(15) DEFAULT '',
-				  `text` varchar(5) DEFAULT '',
+				  `text` varchar(15) DEFAULT '',
 				  PRIMARY KEY (`id`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1</query>
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
