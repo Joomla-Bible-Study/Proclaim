@@ -275,13 +275,17 @@ function top_score_site()
 	$top = '<select onchange="goTo()" id="urlList"><option value="">- '.JText::_('Select A Popular Study').' -</option>';
  	$final = array();
     $final2 = array();
+    $user =& JFactory::getUser();
+	$level_user = $user->get('gid');
 	$db = &JFactory::getDBO();
 	$db->setQuery('SELECT study_id, sum(downloads + plays) as added FROM #__bsms_mediafiles where published = 1 GROUP BY study_id');
+
+	
 	$db->query();
 	$results = $db->loadObjectList();
 	foreach ($results as $result)
 		{
-			$db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id) WHERE #__bsms_mediafiles.study_id = '.$result->study_id);
+			$db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id) WHERE #__bsms_studies.show_level <= '.$level_user.' AND #__bsms_mediafiles.study_id = '.$result->study_id);
 			$db->query();
 			$hits = $db->loadObject();
 			if (!$hits->studytitle){$name = $hits->id;}else{$name = $hits->studytitle;}

@@ -34,6 +34,7 @@ class biblestudyViewstudydetails extends JView
 		$params = new JParameter($template[0]->params);
 		//dump ($params);
 		$studydetails		=& $this->get('Data');
+        if (!$studydetails->id){echo '<H1>'.JText::_('No results or not allowed. You may need to login.').'</H1>';}
 		//dump ($studydetails, "SD");
 		$admin =& $this->get('Admin');
 		
