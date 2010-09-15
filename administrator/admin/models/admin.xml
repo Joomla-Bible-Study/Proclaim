@@ -27,6 +27,10 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+        <param name="sharetype" type="list" default="1" label="Type of Social Media" description="Choose whether to use internal Share or addthis.com social media sharing. If using addthis, no configuration needed.">
+			<option value="0">JBS Sharing</option>
+			<option value="1">AddThis Sharing</option>
+		</param>
 	</params>
 	<params group="FILLIN-STUDY" addpath="/components/com_biblestudy/elements">
 		<param name="location_id" type="locations" label="Choose a Location" description="Choose a default location to display in the form." />
