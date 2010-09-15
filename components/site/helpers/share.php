@@ -12,6 +12,23 @@ function getShare($link, $row, $params, $admin_params)
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
+    $shareit = '<div id="bsms_share"><table id="bsmsshare"><thead>
+	<tr class="bsmssharetitlerow">
+	<th id="bsmssharetitle" colspan='.$sharerows.'>'.$sharetitle.'</th></tr></thead>
+	<tbody><tr class="bsmsshareiconrow">';
+    $sharetype = $admin_params->get('sharetype', 1);
+   
+    if ($sharetype == 1)
+    {
+        $shareit .= '<td id="bsmsshareicons"><!-- AddThis Button BEGIN -->
+<a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=tomfuller2"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a>
+<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username="></script>
+<!-- AddThis Button END --></td>';
+
+    }
+    else
+    {
 	$sharetitle = 'Share This'; //this will come from $admin_params
 	//Get the information from the database on what social networking sites to use
 	$db = JFactory::getDBO();
@@ -23,10 +40,7 @@ function getShare($link, $row, $params, $admin_params)
 	if ($sharerows < 1) { $share = null; return $share; }
 	
 	//Begin to form the table
-	$shareit = '<div id="bsms_share"><table id="bsmsshare"><thead>
-	<tr class="bsmssharetitlerow">
-	<th id="bsmssharetitle" colspan='.$sharerows.'>'.$sharetitle.'</th></tr></thead>
-	<tbody><tr class="bsmsshareiconrow">';
+	
 	foreach ($rows as $sharerow)
 	{
 		$share_params = new JParameter($sharerow->params);
@@ -142,6 +156,7 @@ function getShare($link, $row, $params, $admin_params)
 	</td>';
 	
 } //end of foreach
+} //end of else $sharetype
 $shareit .=
 '</tr></tbody>
 </table></div>';
