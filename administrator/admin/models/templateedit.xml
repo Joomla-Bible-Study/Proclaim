@@ -112,7 +112,7 @@
     </param>
     <param name="default_order"
            type="list"
-           default="1"
+           default="DESC"
            label="Default Date Ascending/Descending"
            description="Choose whether the default listing of studies should be in date ascending or descending order">
       <option value="DESC">Descending</option>
@@ -192,6 +192,12 @@
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param>
+    <param name="protocol" 
+            type="text" 
+            size="10" 
+            default="http://"
+            label="Web protocol"
+            description="http:// assumed. Type in a different protocol to override such as ftp:// sftp:// https://. Will prepend each media file path" /> 
     <param name="media_player" 
             type="list" 
             default="0" 

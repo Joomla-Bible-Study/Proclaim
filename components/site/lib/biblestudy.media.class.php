@@ -333,9 +333,14 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
     $duration = getDuration($params, $row); //This one IS needed
     $mimetype = $media->mimetext;
     $path = $media->spath.$media->fpath.$media->filename;
-     if(!eregi('http://', $path))
+  /*   if(!eregi('http://', $path))
     				{
     					$path = 'http://'.$path;
+    				} */
+      if(!eregi('://', $path))
+    				{
+    					$protocol = $params->get('protocol','http://');
+                        $path = $protocol.$path;
     				}
     switch ($player->player)  //$player->type 0 = inline/new window, 1 = popup
     {
