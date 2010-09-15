@@ -102,7 +102,7 @@
 #bslisttable .message_type { 
 	white-space:nowrap; 
 } 
-#bslisttable .media { 
+#bslisttable .jbsmedia { 
 	white-space:nowrap; 
 } 
 #bslisttable .store { 
@@ -253,7 +253,7 @@
 #bsmsdetailstable .message_type { 
 	white-space:nowrap; 
 } 
-#bsmsdetailstable .media { 
+#bsmsdetailstable .jbsmedia { 
 	white-space:nowrap; 
 } 
 #bsmsdetailstable .store { 
@@ -431,7 +431,7 @@
 #bsmsmoduletable .message_type { 
 	white-space:nowrap; 
 } 
-#bsmsmoduletable .media { 
+#bsmsmoduletable .jbsmedia { 
 	white-space:nowrap; 
 } 
 #bsmsmoduletable .store { 
@@ -636,7 +636,7 @@
 #seriesstudytable .message_type { 
 	white-space:nowrap; 
 } 
-#seriesstudytable .media { 
+#seriesstudytable .jbsmedia { 
 	white-space:nowrap; 
 } 
 #seriesstudytable .store { 

@@ -333,11 +333,8 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
     $duration = getDuration($params, $row); //This one IS needed
     $mimetype = $media->mimetext;
     $path = $media->spath.$media->fpath.$media->filename;
-  /*   if(!eregi('http://', $path))
-    				{
-    					$path = 'http://'.$path;
-    				} */
-      if(!eregi('://', $path))
+  
+     if(!substr_count($path,'://')) 
     				{
     					$protocol = $params->get('protocol','http://');
                         $path = $protocol.$path;
