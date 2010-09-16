@@ -4,12 +4,12 @@
          version="1.5.0"
          method="upgrade">
   <name>Bible Study</name>
-  <version>6.2.0</version>
-  <versionname>Deuteronomy</versionname>
-  <creationDate>2010-09-06</creationDate>
-  <build>614</build>
+  <version>6.2.1</version>
+  <versionname>Joshua</versionname>
+  <creationDate>2010-09-27</creationDate>
+  <build>615</build>
   <author>Tom Fuller, Eugen Istok, Kyle Holder, Richard Hunt, Nick Fossen - JoomlaBibleStudy Team</author>
-  <authorEmail>tomfuller2@gmail.com</authorEmail>
+  <authorEmail>info@joomlabiblestudy.org</authorEmail>
   <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
   <copyright>Joomla Bible Study</copyright>
   <license>GNU/GPL</license>

@@ -181,11 +181,7 @@ class biblestudyViewadmin extends JView
 	//	JToolBarHelper::help( 'biblestudy', true );
 		$this->assignRef('lists', $lists);
 
-		//Version check
-		include_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/version.php');
-		$versioncheck = latestVersion();
-		//dump ($versioncheck);
-		$this->assignRef('versioncheck', $versioncheck);
+		
 		parent::display($tpl);
 	}
 }

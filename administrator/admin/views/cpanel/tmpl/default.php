@@ -198,6 +198,7 @@ table.fbstat .col2 {
 <?php require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');?>
 <div class="fbmainmenu"><?php echo CBiblestudyVersion::version(); ?></div>
 </td></tr>
+<tr><td><div class="fbmainmenu"><?php echo $this->versioncheck;?></div></td></tr>
 </table> 
  </div>
  </td><td>

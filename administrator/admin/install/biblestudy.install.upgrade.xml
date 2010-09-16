@@ -417,5 +417,8 @@
             <query>INSERT INTO `#__bsms_timeset` SET `timeset`='1281646339'</query>
 			<phpfile name="biblestudy.614.upgrade.php" />
 		</version>
+        <version version="6.2.1" versiondate="2010-09-27" build="615" versionname="Joshua">
+            <phpfile name="biblestudy.615.upgrade.php" />
+        </version>
 	</upgrade>
 </comupgrade>
