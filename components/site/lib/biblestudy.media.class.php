@@ -16,7 +16,6 @@ class jbsMedia
     function getMediaTable($row, $params, $admin_params)
     {
         //First we get some items from GET and instantiate the images class
-        //$table = 'the table';
         $admin = new JBSAdmin();
         $mediaPlayer = $admin->getMediaPlayer(); //dump ($mediaPlayer, 'mediaPlayer: ');
 
@@ -34,12 +33,10 @@ class jbsMedia
         $compat_mode = $admin_params->get('compat_mode');
 
         //Here we get a list of the media ids associated with the study we got from $row
-        //$mediaids = $this->getMediaid($row->id);
         $mediaids = $this->getMediaRows($row->id);
         $rowcount = count($mediaids); // echo $rowcount; return true;
         if ($rowcount < 1) {$table = null; return $table;}
-       // $table = $mediaids;
-      //  dump ($table, 'table: ');
+
         //Here is where we begin to build the table
         $table = '<div><table class="mediatable"><tbody><tr>';
 
@@ -55,7 +52,7 @@ class jbsMedia
              //Get the attributes for the player used in this item
              $player = $this->getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, $media); 
              $playercode = $this->getPlayerCode($params, $itemparams, $player, $image, $media);
-//dump ($playercode, 'player: ');
+
             //Now we build the column for each media file
             $table .= '<td>';
 
@@ -94,7 +91,7 @@ class jbsMedia
         	  		break;
 
         	  		case 2:
-        	  		$table .= '<div><table class="mediatable"><tbody><tr><td>'.$downloadlink;
+        	  		$table .= $downloadlink;
         	  		break;
         	  	}
             //End of the column holding the media image
@@ -228,7 +225,6 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
 */
      $player->player = 0;
     if ($params->get('media_player') > 0) {$player->player = $params->get('media_player');}
-//     if ($params->get('media_player') == 1){$player->player = 1;}
     if ($itemparams->get('player') == 1)
         {
             $player->player = 1;
@@ -262,12 +258,6 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
       if ($params->get('internal_popup') == 1) {$player->type = 1;}
       if ($itemparams->get('internal_popup') == 1){$player->type = 1;}
     //Get the popup or inline
-    //    $item = $itemparams->get('internal_popup','0');
-    //    $internal_popup = $params->get('internal_popup',0);
-
-    //    if ($item > 1){$player->type = $internal_popup;}
-    //    else {$player->type = $item;}
-      //  dump ($player, 'item: ');
     return $player;
 }
 
@@ -339,13 +329,12 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
     					$protocol = $params->get('protocol','http://');
                         $path = $protocol.$path;
     				}
-    switch ($player->player)  //$player->type 0 = inline/new window, 1 = popup
+    switch ($player->player)
     {
         case 0: //Direct
             switch ($player->type)
             {
                 case 0: //new window
-               // dump ($path, 'path: ');
                     $playercode =
                     '<a href="'.$path.'" onclick="window.open(\'index.php?option=com_biblestudy&view=popup&close=1&mediaid='.
                     $media->id.'\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
@@ -382,7 +371,6 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                 break;
 
                 case 1: //popup
-                  //  dump ($template, 'template from mediaclass: ');
 				  // Add space for popup window
 				    $player->playerwidth = $player->playerwidth + 20;
 					$player->playerheight = $player->playerheight + $params->get('popupmargin','50');
@@ -447,8 +435,6 @@ function hitPlay($id)
 function getAVRLink($media, $params, $image)
 	{
 
-	//	$play = $this->hitPlay($media->id);
-		//dump ($media);
         $Itemid = JRequest::getInt('Itemid','1','get');
         $src = JURI::base().$image->path;
         $height = $image->height;
