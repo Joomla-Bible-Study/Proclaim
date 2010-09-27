@@ -9,8 +9,15 @@ class Dump_File{
  	
   	$id = JRequest::getVar('id', 0, 'GET', 'INT');
   	$hits = $this->hitDownloads($id);
-		
+	$template = JRequest::getInt('templatemenuid','1','get');	
 	$db	= & JFactory::getDBO();
+    //Get the template so we can find a protocol
+    $query = 'SELECT id, params FROM #__bsms_templates WHERE `id` = '.$template;
+    $db->setQuery($query);
+    $db->query();
+    $template = $db->loadObject();
+    $params = new JParameter($template->params); 
+    $protocol = $params->get('protocol','http://');
 	$query = 'SELECT #__bsms_mediafiles.*,'
 		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'
 		. ' #__bsms_folders.id AS fid, #__bsms_folders.folderpath AS fpath,'
@@ -29,7 +36,9 @@ class Dump_File{
 	$path = $media->fpath;
 	$filename = $media->filename;
 	$size = $media->size;
-	$download_file = 'http://'.$server.$path.$filename;
+   // dump ($protocol, 'protocol: ');
+	$download_file = $protocol.$server.$path.$filename;
+    
 	//if ($size < 1) { $size = filesize($download_file); }
 	$mime_type = $media->mimetext;
     $user_agent = (isset($_SERVER["HTTP_USER_AGENT"]) ) ? $_SERVER["HTTP_USER_AGENT"] : $HTTP_USER_AGENT;
