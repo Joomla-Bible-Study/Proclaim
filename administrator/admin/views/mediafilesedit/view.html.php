@@ -50,6 +50,8 @@ class biblestudyViewmediafilesedit extends JView {
 		$vmenabled = NULL;
 		$dmenabled = NULL;
 		$db = JFactory::getDBO();
+        
+       
 		$db->setQuery('SELECT name, enabled FROM #__components where enabled = 1');
 		$db->query();
 		$components = $db->loadObjectList(); 
@@ -68,7 +70,27 @@ class biblestudyViewmediafilesedit extends JView {
 		} 
 		//Get Data
 		$mediafilesedit	=& $this->get('Data');
-		
+	//This is for getting the path of the file for determining the file size	
+    $query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,
+    #__bsms_folders.id AS fid, 
+    #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, 
+    #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes, 
+    s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, 
+    s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,  #__bsms_media.media_alttext AS malttext, 
+    #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext FROM #__bsms_mediafiles 
+    LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image) 
+    LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server) 
+    LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path) 
+    LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type) 
+    LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id) 
+    LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id) 
+    WHERE #__bsms_mediafiles.id = '.$mediafilesedit->id;
+$db->setQuery( $query );
+$db->query();
+$thefile = $db->loadObject();
+$filepath = $thefile->server_path.$thefile->fpath.$thefile->filename;
+$this->assignRef('filepath', $filepath);
+
 		$articlesSections =& $this->get('ArticlesSections');
 		
 
