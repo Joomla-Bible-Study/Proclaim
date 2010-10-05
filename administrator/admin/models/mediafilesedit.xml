@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 	<params >
-		<param name="player" default="0" type="list" label="Player for this Media" description="Choose which media player to use, overrides global settings.">
+		<param name="player" default="100" type="list" label="Player for this Media" description="Choose which media player to use, overrides global settings.">
+            <option value="100">Use Global Settings</option>
 			<option value="0">Direct Link to file</option>
 			<option value="1">Use internal Player</option>
 			<option value="2">Use All Videos Reloaded</option>

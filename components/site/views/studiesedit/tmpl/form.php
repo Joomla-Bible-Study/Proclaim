@@ -15,7 +15,8 @@
 				submitform( pressbutton );
 				return;
 			}
-            
+        }
+        //-->  
         </script>
 <style>
   li {list-style-type:none;}

@@ -10,7 +10,8 @@
 		submitform( pressbutton );
 		return;
 	}
-	
+	}
+    //-->
         </script>
   
 
