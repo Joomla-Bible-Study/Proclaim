@@ -88,7 +88,7 @@ class biblestudyViewmediafilesedit extends JView {
 $db->setQuery( $query );
 $db->query();
 $thefile = $db->loadObject();
-$filepath = $thefile->server_path.$thefile->fpath.$thefile->filename;
+$filepath = $thefile->spath.$thefile->fpath.$thefile->filename;
 $this->assignRef('filepath', $filepath);
 
 		$articlesSections =& $this->get('ArticlesSections');
