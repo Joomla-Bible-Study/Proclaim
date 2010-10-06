@@ -1,6 +1,15 @@
 <?php defined('_JEXEC') or die('Restricted access');
 
 ?>
+<script language="javascript" type="text/javascript">
+
+function sizebutton(remotefilesize)
+{
+    
+    var objTB = document.getElementById("size");
+    objTB.value = remotefilesize;
+}
+</script>
 
 <script type="text/javascript">
 
@@ -207,7 +216,10 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
             <td class="key">
             <?php echo JText::_( 'Filesize');?></td>
             <td>
-			<?php $file_jbs_media = $this->filepath;	echo "<b>Server Lookup:</b> ".getSizeFile("$file_jbs_media")."<br />"; ?>
+			<?php $file_jbs_media = $this->filepath; $remotefilesize=getSizeFile("$file_jbs_media");
+            if (!$remotefilesize){}else{
+            	echo '<b>'.JText::_('Server Lookup').': </b>'.$remotefilesize.
+            '<button type="button" onClick="sizebutton('.$remotefilesize.')"> '.JText::_('Add Size').'</button><br />'; }?>
             <input class="text_area" type="text" name="size" id="size" size="20" maxlength="20" onChange="decOnly(this);" onKeyUp="decOnly(this);" onKeyPress="decOnly(this);" value="<?php echo $this->mediafilesedit->size;?>"/>
             <a href="javascript:openConverter1();">
             <?php echo '- '.JText::_('Filesize Converter');?>

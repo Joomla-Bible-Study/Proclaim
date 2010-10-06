@@ -10,6 +10,10 @@
 		submitform( pressbutton );
 		return;
 	}
+    else {
+		submitform( pressbutton );
+	}
+
 	}
     //-->
         </script>
