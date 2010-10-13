@@ -35,6 +35,7 @@ class biblestudyModelstudieslist extends JModel
 		global $mainframe, $option;
 		//$params =& $mainframe->getPageParameters();
 		$params 			=& $mainframe->getPageParameters();
+        
 		$templatemenuid = $params->get('templatemenuid');
 		if (!$templatemenuid){$templatemenuid = 1;}
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
@@ -68,22 +69,7 @@ function setSelect($string){
 	{
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
-		/*
-		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
-		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, #__bsms_series.series_thumbnail, #__bsms_message_type.id AS mid,'
-		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-		. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_locations.id AS lid, #__bsms_locations.location_text'
-		. ' FROM #__bsms_studies'
-		. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-		. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-		. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-		. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-		. '	LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
-		. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
-		. $where
-		. $orderby
-		;
-		*/
+		
 		
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 			  . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, '
@@ -326,7 +312,7 @@ function getTemplate() {
 	function _buildContentWhere()
 	{
 		global $mainframe, $option;
-		$params = &JComponentHelper::getParams($option);
+		$params = &JComponentHelper::getParams($option); //dump ($params, 'params: ');
 		$default_order = $params->get('default_order');
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic',		'filter_topic',		0,		'int' );
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book',		'filter_book',		0,		'int' );
@@ -400,13 +386,23 @@ function getTemplate() {
 		//End for user level control
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
+        
+        //These params are the filters set by the menu item, not in the JBS template
+        $menuitemid = JRequest::getInt( 'Itemid' );
+          if ($menuitemid)
+          {
+            $menu = JSite::getMenu();
+            $menuparams = $menu->getParams( $menuitemid );
+           // $params->merge( $menuparams );
+          }
 
-		$where2 = array();
+        
+        $where2 = array();
 		$continue = 0;
-		if ($params->get('teacher_id')&& !$filter_teacher) 
+		if (($params->get('teacher_id') || $menuparams->get('mteacher_id')) && !$filter_teacher) 
 			{ 
-				
-					$filters = $params->get('teacher_id'); //dump ($filters, 'filters: ');
+				if ($menuparams->get('mteacher_id')) {$filters = $menuparams->get('mteacher_id');}
+					else {$filters = $params->get('teacher_id');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -434,10 +430,10 @@ function getTemplate() {
 							break;
 					}
 				}
-		if ($params->get('locations')&& !$filter_location) 
+		if (($params->get('locations') || $menuparams->get('mlocations'))&& !$filter_location) 
 			{ 
-				
-					$filters = $params->get('locations'); //dump ($filters, 'filters: ');
+				if ($menuparams->get('mlocations')){$filters = $menuparams->get('mlocations');}
+					else {$filters = $params->get('locations');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -465,10 +461,10 @@ function getTemplate() {
 							break;
 					}
 				} 	
-		if ($params->get('booknumber')&& !$filter_book) 
+		if (($params->get('booknumber') || $menuparams->get('mbooknumber')) && !$filter_book) 
 			{ 
-				
-					$filters = $params->get('booknumber'); //dump ($filters, 'filters: ');
+				if ($menuparams->get('mbooknumber')){$filters = $menuparams->get('mbooknumber');}
+					else {$filters = $params->get('booknumber');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -496,10 +492,10 @@ function getTemplate() {
 							break;
 					}
 				}
-		if ($params->get('series_id')&& !$filter_series) 
+		if (($params->get('series_id') || $menuparams->get('mseries_id')) && !$filter_series) 
 			{ 
-				
-					$filters = $params->get('series_id'); //dump ($filters, 'filters: ');
+				if ($menuparams->get('mseries_id')) {$filters = $menuparams->get('mseries_id');}
+					else {$filters = $params->get('series_id');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -527,10 +523,10 @@ function getTemplate() {
 							break;
 					}
 				}
-		if ($params->get('topic_id')&& !$filter_topic) 
+		if (($params->get('topic_id') || $menuparams->get('mtopic_id')) && !$filter_topic) 
 			{ 
-				
-					$filters = $params->get('topic_id'); //dump ($filters, 'filters: ');
+				if ($menuparams->get('mtopic_id')) {$filters = $menuparams->get('mtopic_id');}
+					else {$filters = $params->get('topic_id');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -560,10 +556,10 @@ function getTemplate() {
 							break;
 					}
 				}
-		if ($params->get('messagetype')&& !$filter_messagetype) 
+		if (($params->get('messagetype') || $menuparams->get('mmessagetype')) && !$filter_messagetype) 
 			{ 
-				
-					$filters = $params->get('messagetype'); //dump ($filters, 'filters: ');
+				if ($menuparams->get('mmessagetype')){$filters = $menuparams->get('mmessagetype');}
+					else {$filters = $params->get('messagetype');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
 						case is_array($filters) :
