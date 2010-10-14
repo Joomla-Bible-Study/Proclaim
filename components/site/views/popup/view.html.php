@@ -140,6 +140,18 @@ if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
     echo '<div class=\'direct\'><iframe src ="'.$path1.'" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>'.JText::_('Your browser does not support iframes').'</p>
 </iframe></div>';
 }
+//Legacy Player (since JBS 6.2.2)
+if ($player == 7)
+{
+    echo '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
+		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$playerwidth.'">
+		<param name="movie" value="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf">
+		<param name="FlashVars" value="playerID='.$media->id.'&amp;soundFile='.$path1.'">
+		<param name="quality" value="high">
+		<param name="menu" value="false">
+		<param name="wmode" value="transparent">
+		</object> ';
+}
 ?>
 
 <?PHP

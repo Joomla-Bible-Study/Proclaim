@@ -218,9 +218,10 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
  * popuptype = whether AVR should be window or lightbox (handled in avr code)
  * internal_popup = whether direct or internal player should be popup/new window or inline
  * From media file:
- * player 0 = direct, 1 = internal, 2 = AVR, 3 = AVinternal_popup 0 = inline, 1 = popup, 2 = global settings
+ * player 0 = direct, 1 = internal, 2 = AVR, 3 = AV 7 = legacy internal player (from JBS 6.2.2)
+ * internal_popup 0 = inline, 1 = popup, 2 = global settings
  *
- * Get the $player->player: 0 = direct, 1 = internal, 2 = AVR, 3 = AV, 4 = Docman, 5 = article, 6 = Virtuemart
+ * Get the $player->player: 0 = direct, 1 = internal, 2 = AVR, 3 = AV, 4 = Docman, 5 = article, 6 = Virtuemart, 7 = legacy player
  * $player->type 0 = inline, 1 = popup/new window
 */
      $player->player = 0;
@@ -253,7 +254,8 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
 		{
 			$player->player = 6;
 		}
-
+    if ($itemparams->get('player')== 7) {$player->player = 7;}
+    
       $player->type = 0;
       if ($params->get('internal_popup') == 1) {$player->type = 1;}
       if ($itemparams->get('internal_popup') == 1){$player->type = 1;}
@@ -417,6 +419,30 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
 
         case 6: //Virtuemart
             $playercode = $this->getVirtuemart($media, $params, $image);
+        break;
+        
+        case 7: //Legacy internal player
+            switch ($playertype)
+            {
+                case 0:
+                $playercode = '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
+		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$width.'">
+		<param name="movie" value="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf">
+		<param name="FlashVars" value="playerID='.$media->id.'&amp;soundFile='.$path.'">
+		<param name="quality" value="high">
+		<param name="menu" value="false">
+		<param name="wmode" value="transparent">
+		</object> ';
+            break;
+            }
+            
+                case 1:
+                $playercode =
+                "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=7&template=".$template.
+                "&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".$player->playerheight."'); return false\"\">
+                <img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize.
+                "' alt='".$src."'></a>";
+                break;
         break;
     }
      //  dump ($playercode, 'playercode: ');

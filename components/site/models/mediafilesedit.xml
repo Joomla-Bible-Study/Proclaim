@@ -6,6 +6,7 @@
 			<option value="1">Use internal Player</option>
 			<option value="2">Use All Videos Reloaded</option>
             <option value="3">Use All Videos</option>
+            <option value="7">Use Legacy Audio Player</option>
 		</param>
         <param name="internal_popup" type="list" default="3" label="Display as popup/New Window" description="Choose whether the internal viewer should be a popup or inline. If direct then plays in new window. Affects this file only. Overrides global settings">
                 <option value="0">Inline</option>

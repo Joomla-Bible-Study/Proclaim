@@ -207,6 +207,7 @@
 					<option value="1">Internal Player</option>
                     <option value="2">All Videos Reloaded</option>
                     <option value="3">All Videos Plugin</option>
+                    <option value="7">Use Legacy Audio Player</option>
     </param>
     <param name="popuptype"
            type="list"
