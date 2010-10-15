@@ -256,10 +256,11 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
 		}
     if ($itemparams->get('player')== 7) {$player->player = 7;}
     
-      $player->type = 0;
-      if ($params->get('internal_popup') == 1) {$player->type = 1;}
-      if ($itemparams->get('internal_popup') == 1){$player->type = 1;}
-    //Get the popup or inline
+      $player->type = 0; //dump ($player->type, 'type: ');
+      if ($params->get('internal_popup') > 0) {$player->type = $params->get('internal_popup');}
+      if ($itemparams->get('internal_popup') < 3){$player->type = $itemparams->get('internal_popup');}
+    //Get the popup or inline;
+   
     return $player;
 }
 
@@ -308,7 +309,7 @@ function getVirtuemart($media, $params, $image)
 	}
 
 function getPlayerCode($params, $itemparams, $player, $image, $media)
-{
+{ //dump ($player, 'player: ');
     $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
     include_once($path1.'filesize.php');
 	include_once($path1.'duration.php');
@@ -422,19 +423,21 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
         break;
         
         case 7: //Legacy internal player
-            switch ($playertype)
+            switch ($player->type)
             {
                 case 0:
-                $playercode = '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$width.'">
+                $playercode = '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
+		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$player->playerwidth.'">
 		<param name="movie" value="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf">
 		<param name="FlashVars" value="playerID='.$media->id.'&amp;soundFile='.$path.'">
 		<param name="quality" value="high">
 		<param name="menu" value="false">
 		<param name="wmode" value="transparent">
-		</object> ';
-            break;
-            }
+		</object>
+        ';
+                
+                break;
+            
             
                 case 1:
                 $playercode =
@@ -443,7 +446,9 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                 <img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize.
                 "' alt='".$src."'></a>";
                 break;
+            }
         break;
+        
     }
      //  dump ($playercode, 'playercode: ');
     return $playercode;

@@ -143,8 +143,8 @@ if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
 //Legacy Player (since JBS 6.2.2)
 if ($player == 7)
 {
-    echo '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/audio-player.js"></script>
-		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$playerwidth.'">
+    echo '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
+		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$playerwidth.'">
 		<param name="movie" value="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf">
 		<param name="FlashVars" value="playerID='.$media->id.'&amp;soundFile='.$path1.'">
 		<param name="quality" value="high">
