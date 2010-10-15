@@ -67,7 +67,7 @@ class biblestudyControllerpodcastedit extends JController
  }
 function publish()
  {
-  global $mainframe;
+  $mainframe =& JFactory::getApplication();
 
   $cid = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -86,7 +86,7 @@ function publish()
 
  function unpublish()
  {
-  global $mainframe;
+  $mainframe =& JFactory::getApplication();
 
   $cid = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -115,7 +115,7 @@ function publish()
  function writeXMLFile()
  {
 
-	global $mainframe, $option;
+	$mainframe =& JFactory::getApplication();, $option;
 	$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
 	include_once($path1.'writexml.php');
 	include_once($path1.'helper.php');

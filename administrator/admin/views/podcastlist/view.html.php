@@ -16,7 +16,7 @@ class biblestudyViewpodcastlist extends JView
 	
 	function display($tpl = null)
 	{
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		//$user =& JFactory::getUser();
 		//$document =& JFactory::getDocument();
 		//$document->addStyleSheet('http://www.calvarychapelnewberg.net/j15/administrator/components/com_biblestudy/css/general.css');

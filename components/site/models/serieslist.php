@@ -1,6 +1,6 @@
 <?php
 defined('_JEXEC') or die();
-global $mainframe, $option;
+$mainframe =& JFactory::getApplication();, $option;
 jimport( 'joomla.application.component.model' );
 
 $params = &JComponentHelper::getParams($option);
@@ -32,7 +32,7 @@ class biblestudyModelserieslist extends JModel
 	function __construct()
 	{
 		parent::__construct();
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$params 			=& $mainframe->getPageParameters();
 		//dump ($params);
 		$templatemenuid = $params->get('templatemenuid');
@@ -134,7 +134,7 @@ function getTemplate() {
 		
 	function getData()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		//$params =& $mainframe->getPageParameters();
 		//dump($data, 'Data from Model');
 		// Lets load the data if it doesn't already exist
@@ -189,7 +189,7 @@ function getTemplate() {
 	}
 	function _buildContentWhere()
 	{
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$params = &JComponentHelper::getParams($option);
 		$default_order = $params->get('default_order');
 		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',		'filter_series',		0,				'int' );
@@ -276,7 +276,7 @@ function getTemplate() {
 	
 	function _buildContentOrderBy()
 	{
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
         $template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
 	//	$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'ASC',	'word' );

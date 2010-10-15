@@ -10,7 +10,7 @@ class biblestudyViewstudieslist extends JView {
 	 * @return void
 	 **/
 	function display($tpl = null) {
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		include_once($path1.'image.php');
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');

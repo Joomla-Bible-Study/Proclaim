@@ -71,7 +71,7 @@ class biblestudyControllerstudydetails extends JController
         {
            if (JPluginHelper::importPlugin('system', 'captcha'))
 			{
-				global $mainframe;
+				$mainframe =& JFactory::getApplication();
 				// By default, just display an image
 				$document = &JFactory::getDocument();
 				$doc = &JDocument::getInstance('raw');
@@ -192,7 +192,7 @@ class biblestudyControllerstudydetails extends JController
 	}
 function publish()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -211,7 +211,7 @@ function publish()
 
 	function unpublish()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -248,7 +248,7 @@ function publish()
   		}
 	}
 function commentsEmail($params) {
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		$menuitemid = JRequest::getInt( 'Itemid' );
   if ($menuitemid)
   {

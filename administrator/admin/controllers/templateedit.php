@@ -64,7 +64,7 @@ class biblestudyControllertemplateedit extends JController {
 	}
 
 	function publish(){
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
@@ -80,7 +80,7 @@ class biblestudyControllertemplateedit extends JController {
 	}
 
 	function unpublish(){
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		if ($cid[0] == 1) {$msg = JText::_( 'Error: You cannot unpublish the default template' );}
 		else
@@ -98,7 +98,7 @@ class biblestudyControllertemplateedit extends JController {
 	}
 
 	function makeDefault() {
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {

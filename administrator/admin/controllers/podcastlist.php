@@ -49,7 +49,7 @@ class biblestudyControllerpodcastlist extends JController
  function writeXMLFile()
  {
 
-	global $mainframe, $option;
+	$mainframe =& JFactory::getApplication();, $option;
 	$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
 	include_once($path1.'writexml.php');
 

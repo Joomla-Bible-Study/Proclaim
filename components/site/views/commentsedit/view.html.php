@@ -11,7 +11,7 @@ class biblestudyViewcommentsedit extends JView
 	
 	function display($tpl = null)
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		$params =& $mainframe->getPageParameters();
 		$this->assignRef('params', $params);
 		$commentsedit		=& $this->get('Data');

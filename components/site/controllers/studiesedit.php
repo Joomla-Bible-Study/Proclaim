@@ -5,7 +5,7 @@ class biblestudyControllerstudiesedit extends JController
 {
 	function __construct() {
 		$user =& JFactory::getUser();
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$params =& $mainframe->getPageParameters();
 		
 		//$model = $this->getModel('studiesedit');
@@ -45,7 +45,7 @@ class biblestudyControllerstudiesedit extends JController
 	function save()
 	{
 		
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		//$params =& $mainframe->getPageParameters();
 		$model = $this->getModel('studiesedit');
 		$admin=& $this->get('Admin');
@@ -76,7 +76,7 @@ class biblestudyControllerstudiesedit extends JController
 	 */
 	function remove()
 	{
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$model = $this->getModel('studiesedit');
 		if(!$model->delete()) {
 			$msg = JText::_( 'Error: One or More studies Items Could not be Deleted' );
@@ -93,7 +93,7 @@ class biblestudyControllerstudiesedit extends JController
 	}
 	function publish()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -115,7 +115,7 @@ class biblestudyControllerstudiesedit extends JController
 
 	function unpublish()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -140,7 +140,7 @@ class biblestudyControllerstudiesedit extends JController
 	 */
 	function cancel()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		$msg = JText::_( 'Operation Cancelled' );
 
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');

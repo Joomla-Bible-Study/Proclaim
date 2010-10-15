@@ -16,7 +16,7 @@ class biblestudyViewcommentslist extends JView
 	
 	function display($tpl = null)
 	{
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$lists = array();
 		//$params = &JComponentHelper::getParams($option);
 		$params = &$mainframe->getPageParameters();

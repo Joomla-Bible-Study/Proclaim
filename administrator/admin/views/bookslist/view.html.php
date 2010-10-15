@@ -7,7 +7,7 @@ jimport('joomla.i18n.help');
 class biblestudyViewbookslist extends JView {
 
 	function display($tpl = null) {
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		
 		$uri =& JFactory::getURI();
 		$params =& JComponentHelper::getParams($option);

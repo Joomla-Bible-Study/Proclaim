@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') or die();
 
 function getScripture($params, $row, $esv, $scripturerow) {
-	global $mainframe, $option;
+	$mainframe =& JFactory::getApplication();, $option;
 	if (!isset($row->id)) {return;}
 	if ($scripturerow == 2) {
 		$booknumber = $row->booknumber2;

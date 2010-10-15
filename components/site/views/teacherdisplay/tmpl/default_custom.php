@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<?php global $mainframe;
+<?php $mainframe =& JFactory::getApplication();
 
 $pathway =& $mainframe->getPathWay();
 $uri 		=& JFactory::getURI();

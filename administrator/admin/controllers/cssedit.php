@@ -53,7 +53,7 @@ function cancel()
 
 
 function resetcss() {
-	global $mainframe, $option;
+	$mainframe =& JFactory::getApplication();, $option;
 		$savfilename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.sav';
 		$savcssfilein=fopen($savfilename,"r") or die("Can't open file $savfilename");
 		$savfilecontent=fread($savcssfilein,filesize($savfilename));
@@ -81,7 +81,7 @@ if ($return)
 
 	function save()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 
 		// Initialize some variables
@@ -117,7 +117,7 @@ if ($return)
 	}
     function backup()
     {
-        	global $mainframe;
+        	$mainframe =& JFactory::getApplication();
             // Set FTP credentials, if given
     		jimport('joomla.client.helper');
     		JClientHelper::setCredentialsFromRequest('ftp');
@@ -142,7 +142,7 @@ if ($return)
 
     function copycss()
     {
-        global $mainframe;
+        $mainframe =& JFactory::getApplication();
             // Set FTP credentials, if given
     		jimport('joomla.client.helper');
     		JClientHelper::setCredentialsFromRequest('ftp');

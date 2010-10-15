@@ -8,7 +8,7 @@ class biblestudyViewstudieslist extends JView {
 	function display($tpl = null) {
 	   
        
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		jimport( 'joomla.i18n.help' );
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		JToolBarHelper::title(JText::_('Studies Manager'), 'studies.png' );

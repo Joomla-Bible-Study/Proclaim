@@ -5,7 +5,7 @@
 defined('_JEXEC') or die(); ?>
 
 <?php
-global $mainframe, $option;
+$mainframe =& JFactory::getApplication();, $option;
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
 $teacher_menu = $this->params->get('teacher_id');
@@ -154,4 +154,3 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
   <input name="boxchecked" value="0" type="hidden">
   <input name="controller" value="studieslist" type="hidden">
 </form>
-

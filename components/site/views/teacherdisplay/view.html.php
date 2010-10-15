@@ -14,7 +14,7 @@ class biblestudyViewteacherdisplay extends JView
 	function display($tpl = null)
 	{
 		//TF added
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		// get the user information
         $userinfo =& JFactory::getUser();
 		$user = $userinfo->get('gid');

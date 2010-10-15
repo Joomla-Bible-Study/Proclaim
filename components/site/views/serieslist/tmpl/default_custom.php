@@ -4,7 +4,7 @@
 defined('_JEXEC') or die(); ?>
 
 <?php 
-global $mainframe, $option;
+$mainframe =& JFactory::getApplication();, $option;
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 $document =& JFactory::getDocument();
@@ -105,4 +105,3 @@ if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }
   <input name="controller" value="serieslist" type="hidden">
   </div>
 </form>
-

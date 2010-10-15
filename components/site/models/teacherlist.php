@@ -27,7 +27,7 @@ function __construct()
 	{
 		parent::__construct();
 		//$admin = $this->_getAdmin;
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$params 			=& $mainframe->getPageParameters();
 		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		$template = $this->getTemplate();

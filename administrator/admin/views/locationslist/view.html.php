@@ -16,7 +16,7 @@ class biblestudyViewlocationslist extends JView
 	
 	function display($tpl = null)
 	{
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		//$document =& JFactory::getDocument();
 		//$document->addStyleSheet('http://www.calvarychapelnewberg.net/j15/administrator/components/com_biblestudy/css/general.css');

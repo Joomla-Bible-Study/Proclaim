@@ -20,7 +20,7 @@ class biblestudyModelstudydetails extends JModel
 	function __construct()
 	{
 		parent::__construct();
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		//added for single study view off of menu
 		//$menu	=& JSite::getMenu();
 		//$item    = $menu->getActive();
@@ -75,7 +75,7 @@ class biblestudyModelstudydetails extends JModel
 	 */
 	function hit()
 	{
-		/*global $mainframe;
+		/*$mainframe =& JFactory::getApplication();
 		if ($this->_id)
 		{
 			$study = $this->getTable();

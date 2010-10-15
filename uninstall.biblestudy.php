@@ -4,7 +4,7 @@
 ?>
 
 <?php 
-global $mainframe, $option;
+$mainframe =& JFactory::getApplication();, $option;
 $params = &JComponentHelper::getParams('com_biblestudy');
 $database	= & JFactory::getDBO();
 $database->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
@@ -154,7 +154,7 @@ $drop_tables = $admin_params->get('drop_tables');
 					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
 					
 				}
-global $mainframe; ?>
+$mainframe =& JFactory::getApplication(); ?>
 
 <tr><td><table><tr><td><img src = "<?php echo $mainframe->getCfg("live_site"); ?>/components/com_biblestudy/images/openbible.png" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" /></td><td><h2>Joomla Bible Study Uninstalled</h2></td></tr></table></td>
 <?php

@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 <?php //$params = &JComponentHelper::getParams($option);  
 $user =& JFactory::getUser();
-global $mainframe, $option;
+$mainframe =& JFactory::getApplication();, $option;
 $params = $this->params;
 $entry_user = $user->get('gid');
 $user_submit_name = $user->name;

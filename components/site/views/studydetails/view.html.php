@@ -15,7 +15,7 @@ class biblestudyViewstudydetails extends JView
 	function display($tpl = null)
 	{
 		//TF added
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		//$dispatcher	   =& JDispatcher::getInstance();
 		$document =& JFactory::getDocument();
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');

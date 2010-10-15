@@ -3,7 +3,7 @@
 function getFilepath($id3, $idfield, $mime) 
 {
 
-	global $mainframe;
+	$mainframe =& JFactory::getApplication();
 	
 	$database	= & JFactory::getDBO();
 	$query = 'SELECT #__bsms_mediafiles.*,'

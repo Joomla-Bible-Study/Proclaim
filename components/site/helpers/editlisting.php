@@ -3,7 +3,7 @@ defined('_JEXEC') or die();
 
 function getEditlisting($admin_params, $params) {
 	
-	global $mainframe, $option;
+	$mainframe =& JFactory::getApplication();, $option;
 	$database	= & JFactory::getDBO();
 	$editlisting = null; 
 	$message = JRequest::getVar('msg');

@@ -19,7 +19,7 @@ class biblestudyControllermediafilesedit extends JController {
 	}
 	function upload()
 	{
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.path');
 		$db=& JFactory::getDBO();
@@ -165,7 +165,7 @@ class biblestudyControllermediafilesedit extends JController {
 	}
 	function publish()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -240,7 +240,7 @@ class biblestudyControllermediafilesedit extends JController {
 
 	function unpublish()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 

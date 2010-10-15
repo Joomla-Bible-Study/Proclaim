@@ -20,7 +20,7 @@ class biblestudyModelseriesdetail extends JModel
 	function __construct()
 	{
 		parent::__construct();
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		
 				$id = JRequest::getVar('id','GET','INT');
 		//end added from single view off of menu

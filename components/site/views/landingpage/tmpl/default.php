@@ -4,7 +4,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 defined('_JEXEC') or die(); ?>
 
 <?php
-global $mainframe, $option;
+$mainframe =& JFactory::getApplication();, $option;
 JHTML::_('behavior.tooltip');
 $database = & JFactory::getDBO();
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -182,4 +182,3 @@ for ($i=1;$i<=7;$i++) {
   <input name="boxchecked" value="0" type="hidden">
   <input name="controller" value="studieslist" type="hidden">
 </form>
-

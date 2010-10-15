@@ -66,10 +66,10 @@ class biblestudyControllercommentslist extends JController
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		$msg = JText::_( 'Operation Cancelled' );
 
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$db=& JFactory::getDBO();
 		$query = "SELECT id"
 		. "\nFROM #__menu"
@@ -107,7 +107,7 @@ class biblestudyControllercommentslist extends JController
 	}
 function publish()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -126,7 +126,7 @@ function publish()
 
 	function unpublish()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -148,10 +148,10 @@ function publish()
 	 */
 	function cancel()
 	{
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		$msg = JText::_( 'Operation Cancelled' );
 
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$db=& JFactory::getDBO();
 		$query = "SELECT id"
 		. "\nFROM #__menu"

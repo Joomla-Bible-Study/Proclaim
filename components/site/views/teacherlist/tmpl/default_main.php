@@ -2,7 +2,7 @@
 <?php //$params = &JComponentHelper::getParams($option);  
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 $user =& JFactory::getUser();
-global $mainframe, $option;
+$mainframe =& JFactory::getApplication();, $option;
 $params = $this->params;
 $entry_user = $user->get('gid');
 $user_submit_name = $user->name;

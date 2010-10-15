@@ -26,7 +26,7 @@ class biblestudyModelteacherlist extends JModel
 	{
 		parent::__construct();
 
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 
 		// Get the pagination request variables
 		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
@@ -101,7 +101,7 @@ function getTotal()
 	}
 function _buildContentWhere()
 	{
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$where = array();
 	$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 		
@@ -109,7 +109,7 @@ function _buildContentWhere()
 	}
 function _buildContentOrderBy()
 	{
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$orders = array('t.catid','ordering');
 		$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'ordering',	'cmd' );
 		$filter_order_Dir	= strtoupper($mainframe->getUserStateFromRequest( $option.'filter_order_Dir',	'filter_order_Dir',	'ASC' ));

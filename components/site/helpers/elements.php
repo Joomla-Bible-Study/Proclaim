@@ -16,7 +16,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
-	global $mainframe;
+	$mainframe =& JFactory::getApplication();
 	$db	= & JFactory::getDBO();
 		switch ($rowid)
 			{

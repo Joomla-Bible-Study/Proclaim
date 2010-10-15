@@ -4,7 +4,7 @@
 defined('_JEXEC') or die(); ?>
 
 <?php 
-global $mainframe, $option;
+$mainframe =& JFactory::getApplication();, $option;
 //JHTML::_('behavior.tooltip');
 
 $document =& JFactory::getDocument();
@@ -104,4 +104,3 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
   <input name="controller" value="seriesdetail" type="hidden">
   
 </form>
-

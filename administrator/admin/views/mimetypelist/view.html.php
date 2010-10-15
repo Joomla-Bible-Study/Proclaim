@@ -22,7 +22,7 @@ class biblestudyViewmimetypelist extends JView
 	 **/
 	function display($tpl = null)
 	{
-		global $mainframe, $option; 
+		$mainframe =& JFactory::getApplication();, $option; 
 		$params = &JComponentHelper::getParams($option);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		JToolBarHelper::title(   JText::_( 'Mime Type Manager' ), 'mimetype.png' );

@@ -38,7 +38,7 @@ class biblestudyModelteacherdisplay extends JModel
 		$this->_id = $id;
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$params 			=& $mainframe->getPageParameters();
 		$templatemenuid = $params->get('templatemenuid');
 		if (!$templatemenuid){$templatemenuid = 1;}

@@ -20,7 +20,7 @@ else { document.getElementById(d).style.display = "none"; }
 
 
 <?php
-global $mainframe, $option;
+$mainframe =& JFactory::getApplication();, $option;
 JHTML::_('behavior.tooltip');
 //$params = $mainframe->getPageParameters();
 $params = $this->params;
@@ -84,6 +84,5 @@ $listingcall = JView::loadHelper('listing');
     </div><!--end of footer div-->
 
 </div><!--End of page container div-->
-
 
 

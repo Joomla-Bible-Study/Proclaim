@@ -19,7 +19,7 @@ class BSMModel extends JModel{
 	function __construct() {
 		parent::__construct();
 
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 		
 		$this->setState('limitstart', $mainframe->getUserStateFromRequest('com_biblestudy&view='.$this->name.'.limitstart', 'limitstart', 0, 'int'));
 		$this->setState('limit', $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int'));
@@ -29,7 +29,7 @@ class BSMModel extends JModel{
 	}
 
 	function getData($fields = array('*'), $conditions = array(), $order = null) {
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		
 		$SELECT = array();
 		$JOIN = '';

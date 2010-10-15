@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access');
-global $mainframe;
+$mainframe =& JFactory::getApplication();
 ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">

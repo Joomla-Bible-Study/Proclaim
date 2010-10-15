@@ -14,7 +14,7 @@ class biblestudyViewstudiesedit extends JView
 	function display($tpl = null)
 	{
 		
-		global $mainframe, $option;
+		$mainframe =& JFactory::getApplication();, $option;
 		$studiesedit		=& $this->get('Data');
 		$isNew		= ($studiesedit->id < 1);
 		$editor =& JFactory::getEditor();

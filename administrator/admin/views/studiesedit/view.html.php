@@ -6,7 +6,7 @@ jimport( 'joomla.application.component.view' );
 class biblestudyViewstudiesedit extends JView {
 	
 	function display($tpl = null) {
-		global $mainframe;
+		$mainframe =& JFactory::getApplication();
 
 		$document =& JFactory::getDocument();
 		//$document->addStyleSheet(JURI::base().'components/com_biblestudy/css/general.css');

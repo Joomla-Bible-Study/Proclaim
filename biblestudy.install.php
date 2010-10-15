@@ -296,7 +296,7 @@ $biblestudy_db->query();
 			style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
 		<strong>Thank you for using Joomla Bible Study!</strong> <br />
 <?php 
-global $mainframe; ?>
+$mainframe =& JFactory::getApplication(); ?>
 
 <img src = "<?php echo $mainframe->getCfg("live_site"); ?>/components/com_biblestudy/images/openbible.png" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" /> Congratulations, Bible Study Message Manager has been installed successfully. </div>
 <p>
