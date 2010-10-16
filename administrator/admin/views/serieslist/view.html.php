@@ -15,7 +15,7 @@ class biblestudyViewserieslist extends JView
 	 **/
 	function display($tpl = null)
 	{
-		$mainframe =& JFactory::getApplication();, $option; 
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');; 
 		$params = &JComponentHelper::getParams($option);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		JToolBarHelper::title(   JText::_( 'Series Manager' ), 'series.png' );

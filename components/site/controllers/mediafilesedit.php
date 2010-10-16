@@ -6,7 +6,7 @@ jimport('joomla.application.component.controller');
 class biblestudyControllermediafilesedit extends JController {
 
 	function __construct() {
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 		
 		$user =& JFactory::getUser();
 		$params =& $mainframe->getPageParameters();
@@ -45,7 +45,7 @@ class biblestudyControllermediafilesedit extends JController {
 	 * @return void
 	 */
 	function save() {
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 
 		$model = $this->getModel('mediafilesedit');
 		$file = JRequest::getVar('file', null, 'files', 'array' );
@@ -102,7 +102,7 @@ class biblestudyControllermediafilesedit extends JController {
 		}
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
 		if (!$templatmenuid) {$templatemenuid = 1;}
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
@@ -151,7 +151,7 @@ class biblestudyControllermediafilesedit extends JController {
 
 	function upload()
 	{
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 		//get admin params
 		$db=& JFactory::getDBO();
 		$query = 'SELECT params'

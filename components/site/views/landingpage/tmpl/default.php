@@ -4,7 +4,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 defined('_JEXEC') or die(); ?>
 
 <?php
-$mainframe =& JFactory::getApplication();, $option;
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 JHTML::_('behavior.tooltip');
 $database = & JFactory::getDBO();
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;

@@ -2,7 +2,7 @@
 
 function getPassage($params, $row)
 {
-//$mainframe =& JFactory::getApplication();, $option;
+//$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 $esv = 1;
 $scripturerow = 1;
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;

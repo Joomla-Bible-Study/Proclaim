@@ -29,7 +29,7 @@
 		}
         </script>
 <?php $user =& JFactory::getUser();
-$mainframe =& JFactory::getApplication();, $option;
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 $params =& $mainframe->getPageParameters();
 $entry_user = $user->get('gid');
 $podcast_access = ($params->get('podcast_access')) - 1;

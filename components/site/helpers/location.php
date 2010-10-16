@@ -2,7 +2,7 @@
 
 function getLocationsLandingPage($params, $id, $admin_params)
 {
-	$mainframe =& JFactory::getApplication();, $option;
+	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');

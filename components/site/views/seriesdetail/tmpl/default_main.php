@@ -4,7 +4,7 @@
 defined('_JEXEC') or die(); ?>
 
 <?php 
-$mainframe =& JFactory::getApplication();, $option;
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 //JHTML::_('behavior.tooltip');
 
 $document =& JFactory::getDocument();

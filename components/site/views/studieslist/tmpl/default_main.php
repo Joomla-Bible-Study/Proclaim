@@ -5,7 +5,7 @@
 defined('_JEXEC') or die(); ?>
 
 <?php
-$mainframe =& JFactory::getApplication();, $option;
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
 $teacher_menu = $this->params->get('teacher_id');

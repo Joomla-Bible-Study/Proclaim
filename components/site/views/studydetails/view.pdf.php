@@ -12,7 +12,7 @@ class biblestudyViewstudydetails extends JView
 {
 	function display($tpl = null)
 	{
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 
 		$dispatcher	=& JDispatcher::getInstance();
 

@@ -26,7 +26,7 @@ class biblestudyModelsharelist extends JModel
 	{
 		parent::__construct();
 
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 
 		// Get the pagination request variables
 		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
@@ -99,7 +99,7 @@ function getTotal()
 	}
 function _buildContentWhere()
 	{
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 		$where = array();
 	$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 		

@@ -16,7 +16,7 @@ function getMediatable($params, $row, $admin_params)
 jimport ('joomla.application.component.helper');
 //dump ($admin_params, 'admin_params: ');
 if (!$row->id) {return FALSE;}
-    $mainframe =& JFactory::getApplication();, $option;
+    $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 	$database = & JFactory::getDBO();
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		include_once($path1.'filesize.php');

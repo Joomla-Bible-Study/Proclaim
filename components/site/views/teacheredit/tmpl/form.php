@@ -14,7 +14,7 @@ function submitbutton(pressbutton)
 </script>
 <?php 
 $user =& JFactory::getUser();
-$mainframe =& JFactory::getApplication();, $option;
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 $params =& $mainframe->getPageParameters();
 $entry_user = $user->get('gid');
 $entry_access = ($params->get('entry_access')) - 1;

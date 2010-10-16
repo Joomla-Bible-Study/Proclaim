@@ -4,7 +4,7 @@
 ?>
 
 <?php 
-$mainframe =& JFactory::getApplication();, $option;
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 $params = &JComponentHelper::getParams('com_biblestudy');
 $database	= & JFactory::getDBO();
 $database->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");

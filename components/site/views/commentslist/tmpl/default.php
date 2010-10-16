@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 <?php 
 $user =& JFactory::getUser();
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 		$params =& $mainframe->getPageParameters();
 		$entry_user = $user->get('gid');
 		$entry_access = ($params->get('entry_access')) ;

@@ -25,7 +25,7 @@ function __construct()
 	{
 		parent::__construct();
 
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 
 		// Get the pagination request variables
 		$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
@@ -178,7 +178,7 @@ function __construct()
 	}
 function _buildContentWhere()
 	{
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic',		'filter_topic',		0,				'int' );
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book',		'filter_book',		0,				'int' );
@@ -220,7 +220,7 @@ function _buildContentWhere()
 	}
 function _buildContentOrderBy()
 	{
-		$mainframe =& JFactory::getApplication();, $option;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
 		
 		$orders = array('id','published','studydate','messagetype','teacher_id','studytitle','series_id','topics_id','hits', 'totalplays', 'totaldownloads');
 		$filter_order = $mainframe->getUserStateFromRequest($option.'filter_order','filter_order','ordering','cmd' );
