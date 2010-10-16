@@ -18,7 +18,7 @@ function __construct()
 	{
 		parent::__construct();
 
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 		// Get the pagination request variables
 		$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 0);

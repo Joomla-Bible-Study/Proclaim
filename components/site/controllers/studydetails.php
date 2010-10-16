@@ -84,7 +84,7 @@ class biblestudyControllerstudydetails extends JController
 	function comment()
 	{
 
-	global $option, $mainframe;
+	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 /*	$menuitemid = JRequest::getInt( 'Itemid' );
   if ($menuitemid)
   {

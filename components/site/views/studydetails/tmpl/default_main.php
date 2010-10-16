@@ -14,7 +14,7 @@ else { document.getElementById(d).style.display = "none"; }
 
 
 <?php
-$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 //$params = $mainframe->getPageParameters();
 $params = $this->params;

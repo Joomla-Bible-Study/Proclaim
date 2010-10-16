@@ -19,7 +19,7 @@ class biblestudyControllermediafilesedit extends JController {
 	}
 	function upload()
 	{
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.path');
 		$db=& JFactory::getDBO();

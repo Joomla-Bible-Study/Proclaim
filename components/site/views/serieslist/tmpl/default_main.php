@@ -4,7 +4,7 @@
 defined('_JEXEC') or die(); ?>
 
 <?php 
-$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 $document =& JFactory::getDocument();

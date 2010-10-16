@@ -115,7 +115,7 @@ function publish()
  function writeXMLFile()
  {
 
-	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 	$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
 	include_once($path1.'writexml.php');
 	include_once($path1.'helper.php');

@@ -53,7 +53,7 @@ function cancel()
 
 
 function resetcss() {
-	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$savfilename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.sav';
 		$savcssfilein=fopen($savfilename,"r") or die("Can't open file $savfilename");
 		$savfilecontent=fread($savcssfilein,filesize($savfilename));

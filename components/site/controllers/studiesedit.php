@@ -5,7 +5,7 @@ class biblestudyControllerstudiesedit extends JController
 {
 	function __construct() {
 		$user =& JFactory::getUser();
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params =& $mainframe->getPageParameters();
 		
 		//$model = $this->getModel('studiesedit');
@@ -45,7 +45,7 @@ class biblestudyControllerstudiesedit extends JController
 	function save()
 	{
 		
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		//$params =& $mainframe->getPageParameters();
 		$model = $this->getModel('studiesedit');
 		$admin=& $this->get('Admin');
@@ -76,7 +76,7 @@ class biblestudyControllerstudiesedit extends JController
 	 */
 	function remove()
 	{
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$model = $this->getModel('studiesedit');
 		if(!$model->delete()) {
 			$msg = JText::_( 'Error: One or More studies Items Could not be Deleted' );

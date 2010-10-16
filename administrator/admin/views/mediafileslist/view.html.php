@@ -10,7 +10,7 @@ jimport('joomla.i18n.help');
 class biblestudyViewmediafileslist extends JView {
 
 	function display($tpl = null) {
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 		//Handle References
 		$params = &JComponentHelper::getParams($option);

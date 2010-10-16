@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') or die('Restriced Access');
 
     function getServer($serverid) {
-        $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+        $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
         
         //$book = null;
         
@@ -23,7 +23,7 @@
     }
     
     function getFolder($folderId) {
-        $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+        $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
         
         $db	=& JFactory::getDBO();
         $query = 'select distinct * from #__bsms_folders where id = ' . $folderId;

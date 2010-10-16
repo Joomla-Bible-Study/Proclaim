@@ -29,7 +29,7 @@ class BSMModel extends JModel{
 	}
 
 	function getData($fields = array('*'), $conditions = array(), $order = null) {
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		
 		$SELECT = array();
 		$JOIN = '';

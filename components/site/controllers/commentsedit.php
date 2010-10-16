@@ -120,7 +120,7 @@ function publish()
 		$mainframe =& JFactory::getApplication();
 		$msg = JText::_( 'Operation Cancelled' );
 
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$db=& JFactory::getDBO();
 		$query = "SELECT id"
 		. "\nFROM #__menu"

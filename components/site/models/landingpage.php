@@ -1,6 +1,6 @@
 <?php
 defined('_JEXEC') or die();
-$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 jimport( 'joomla.application.component.model' );
 
 $params = &JComponentHelper::getParams($option);
@@ -32,7 +32,7 @@ class biblestudyModellandingpage extends JModel
 	function __construct()
 	{
 		parent::__construct();
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		//$params =& $mainframe->getPageParameters();
 		$params 			=& $mainframe->getPageParameters();
 		$templatemenuid = $params->get('templatemenuid');
@@ -278,7 +278,7 @@ function getTemplate() {
 	}
 	function _buildContentWhere()
 	{
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params = &JComponentHelper::getParams($option);
 		$default_order = $params->get('default_order');
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic',		'filter_topic',		0,				'int' );
@@ -439,7 +439,7 @@ function getTemplate() {
 	
 	function _buildContentOrderBy()
 	{
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',	'word' );
 

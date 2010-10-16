@@ -19,7 +19,7 @@ class biblestudyModelepisodelist extends JModel
 	{
 		parent::__construct();
 
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 		// Get the pagination request variables
 		$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 0);
@@ -110,7 +110,7 @@ $testview 	= JRequest::getVar( 'view' );
 	}
 function _buildContentWhere()
 	{
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 		$filter_podcast		= $mainframe->getUserStateFromRequest( $option.'filter_podcast',		'filter_podcast',		0,				'int' );
 		$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'DESC',				'word' );
@@ -139,7 +139,7 @@ function _buildContentWhere()
 	}
 function _buildContentOrderBy()
 	{
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 		$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'DESC',	'word' );
 		if (!$filter_order){

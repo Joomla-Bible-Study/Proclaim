@@ -15,7 +15,7 @@ class biblestudyViewteacherlist extends JView
 	 **/
 	function display($tpl = null)
 	{
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');;
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		//$params = &JComponentHelper::getParams($option);
 		$params =& $mainframe->getPageParameters();
 		//$model	  = &$this->getModel();
