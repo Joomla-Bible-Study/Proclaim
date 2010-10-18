@@ -13,28 +13,28 @@
     <param name="studieslisttemplateid"
            type="studieslisttemplateid"
            default=""
-           label="Template for Studies List View"
-           description="Choose a template from the admin/templates for display of studies list view linked from here" />
+           label="JBS_TPL_TEMPLATE_STUDIES_LIST"
+           description="JBS_TPL_TEMPLATE_STUDIES_LIST_TT" />
     <param name="detailstemplateid"
            type="detailstemplateid"
            default=""
-           label="Template for Study Details"
-           description="Choose a template from the admin/templates for display of study details view linked from here" />
+           label="JBS_TPL_TEMPLATE_STUDY_DETAIL"
+           description="JBS_TPL_TEMPLATE_STUDY_DETAIL_TT" />
     <param name="teachertemplateid"
            type="teachertemplateid"
            default=""
-           label="Template for Teacher View"
-           description="Choose a template from the admin/templates for display of teacher details view linked from here" />
+           label="JBS_TPL_TEMPLATE_TEACHER"
+           description="JBS_TPL_TEMPLATE_TEACHER_TT" />
     <param name="serieslisttemplateid"
            type="serieslisttemplateid"
            default=""
-           label="Template for Series List View"
-           description="Choose a template from the admin/templates for display of the series list" />
+           label="JBS_TPL_TEMPLATE_SERIES_LIST"
+           description="JBS_TPL_TEMPLATE_SERIES_LIST_TT" />
     <param name="seriesdetailtemplateid"
            type="seriesdetailtemplateid"
            default=""
-           label="Template for Series Detail View"
-           description="Choose a template from the admin/templates for display of the series detail" />
+           label="JBS_TPL_TEMPLATE_SERIES_DETAIL"
+           description="JBS_TPL_TEMPLATE_SERIES_DETAIL_TT" />
   </params>
   <params group="FILTERS"
           addpath="/components/com_biblestudy/elements">
@@ -46,8 +46,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="Select one or more teachers"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all teachers">
+           label="JBS_TPL_FILTERS_TEACHER"
+           description="JBS_TPL_FILTERS_TEACHER_TT">
       <option value="-1">Show All</option>
     </param>
     <param name="series_id"
@@ -58,7 +58,7 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="Select one or more series"
+           label="JBS_TPL_FILTERS_SERIES"
            description="Use Ctrl-click to select more than one item. Select Show All to show all series">
       <option value="-1">Show All</option>
     </param>
@@ -70,8 +70,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="Select one or more books"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all books">
+           label="JBS_TPL_FILTERS_BOOKS"
+           description="JBS_TPL_FILTERS_BOOKS_TT">
       <option value="-1">Show All</option>
     </param>
     <param name="topic_id"
@@ -82,8 +82,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="Select one or more topics"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all topics">
+           label="JBS_TPL_FILTERS_TOPICS"
+           description="JBS_TPL_FILTERS_TOPICS_TT">
       <option value="-1">Show All</option>
     </param>
     <param name="messagetype"
@@ -94,8 +94,8 @@
            default="-1"
            multiple="multiple"
            size="5"
-           label="Select one or more message types"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all message types">
+           label="JBS_TPL_FILTERS_MESSAGETYPES"
+           description="JBS_TPL_FILTERS_MESSAGETYPES_TT">
       <option value="-1">Show All</option>
     </param>
     <param name="locations"
@@ -106,15 +106,15 @@
            default="-1"
            multiple="multiple"
            size="5"
-           label="Select one or more locations"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all locations">
+           label="JBS_TPL_FILTERS_LOCATIONS"
+           description="JBS_TPL_FILTERS_LOCATIONS_TT">
       <option value="-1">Show All</option>
     </param>
     <param name="default_order"
            type="list"
            default="DESC"
-           label="Default Date Ascending/Descending"
-           description="Choose whether the default listing of studies should be in date ascending or descending order">
+           label="JBS_TPL_FILTERS_DEFAULTORDER"
+           description="JBS_TPL_FILTERS_DEFAULTORDER_TT">
       <option value="DESC">Descending</option>
       <option value="ASC">Ascending</option>
     </param>
@@ -123,16 +123,16 @@
     <param name="show_page_image"
            type="list"
            default="1"
-           label="Show/Hide Front Page Image"
-           description="Shows or hides the image on the top of the component site front page">
+           label="JBS_TPL_FP_SHOW_PAGE_IMAGE"
+           description="JBS_TPL_FP_SHOW_PAGE_IMAGE_TT">
       <option value="0">Hide</option>
       <option value="1">Show</option>
     </param>
     <param name="tooltip"
            type="list"
            default="1"
-           label="Show/Hide Tooltip"
-           description="Shows or hides a tooltip with details of your studies over the study details link">
+           label="JBS_TPL_FP_IMAGES_TOOLTIP"
+           description="JBS_TPL_FP_IMAGES_TOOLTIP_TT">
       <option value="0">Hide</option>
       <option value="1">Show</option>
     </param>
@@ -141,8 +141,8 @@
     <param name="show_verses"
            type="list"
            default="0"
-           label="Chapters/Verses"
-           description="Choose whether just chapter(s) of Bible study book shown or verses too">
+           label="JBS_TPL_VERSES_SHOW_VERSES"
+           description="JBS_TPL_VERSES_SHOW_VERSES_TT">
       <option value="0">Show only chapters</option>
       <option value="1">Show verses and chapters</option>
     </param>
@@ -150,13 +150,13 @@
            type="text"
            size="50"
            default=""
-           label="Path to Your Stylesheet"
-           description="Path from Joomla root to an alternate stylesheet (for advanced users only). Overrides page styles" />
+           label="JBS_TPL_VERSES_STYLESHEET"
+           description="JBS_TPL_VERSES_STYLESHEET_TT" />
     <param name="date_format"
            type="list"
            default="2"
-           label="Date format"
-           description="Set the date display format">
+           label="JBS_TPL_VERSES_DATE_FORMAT"
+           description="JBS_TPL_VERSES_DATE_FORMAT_TT">
       <option value="0">Sep 1, 2007</option>
       <option value="1">Sep 1</option>
       <option value="2">9/1/2007</option>
@@ -165,20 +165,20 @@
       <option value="5">September 1, 2007</option>
       <option value="6">1 September 2007</option>
       <option value="7">1/9/2007</option>
-      <option value="8">Use Global System Date Format</option>
+      <option value="8">Use Global System JBS_TPL_VERSES_DATE_FORMAT</option>
       <option value="9">2009/10/13</option>
     </param>
     <param name="custom_date_format"
            type="text"
            size="25"
            default=""
-           label="Set Custom PHP String To Time"
-           description="Use standard PHP date() code to form date. Overrides setting above." />
+           label="JBS_TPL_VERSES_CUSTOM_DATE_FORMAT"
+           description="JBS_TPL_VERSES_CUSTOM_DATE_FORMAT_TT" />
     <param name="duration_type"
            type="list"
            default="2"
-           label="Choose : or hours/min/sec"
-           description="Choose a seperator for the duration, either : or hours/mins/secs">
+           label="JBS_TPL_VERSES_DURATION_TYPE"
+           description="JBS_TPL_VERSES_DURATION_TYPE_TT">
       <option value="1">Hours/min/sec</option>
       <option value="2">H:M:S</option>
     </param>
@@ -515,7 +515,8 @@
            type="spacer"
            default="Row 1 Column 1"
            label="Row 1 Column 1"
-           description="Row 1 Column 1"></param>
+           description="Row 1 Column 1">
+    </param>
     <param name="row1col1"
            type="list"
            default=""
