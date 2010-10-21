@@ -48,7 +48,7 @@
            size="10"
            label="JBS_TPL_FILTERS_TEACHER"
            description="JBS_TPL_FILTERS_TEACHER_TT">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="series_id"
            type="sqlmultilistx"
@@ -59,8 +59,8 @@
            multiple="multiple"
            size="10"
            label="JBS_TPL_FILTERS_SERIES"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all series">
-      <option value="-1">Show All</option>
+           description="JBS_TPL_FILTERS_SERIES_TT">
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="booknumber"
            type="sqlmultilistx"
@@ -72,7 +72,7 @@
            size="10"
            label="JBS_TPL_FILTERS_BOOKS"
            description="JBS_TPL_FILTERS_BOOKS_TT">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="topic_id"
            type="sqlmultilistx"
@@ -84,7 +84,7 @@
            size="10"
            label="JBS_TPL_FILTERS_TOPICS"
            description="JBS_TPL_FILTERS_TOPICS_TT">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="messagetype"
            type="sqlmultilistx"
@@ -96,7 +96,7 @@
            size="5"
            label="JBS_TPL_FILTERS_MESSAGETYPES"
            description="JBS_TPL_FILTERS_MESSAGETYPES_TT">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="locations"
            type="sqlmultilistx"
@@ -108,15 +108,15 @@
            size="5"
            label="JBS_TPL_FILTERS_LOCATIONS"
            description="JBS_TPL_FILTERS_LOCATIONS_TT">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="default_order"
            type="list"
            default="DESC"
            label="JBS_TPL_FILTERS_DEFAULTORDER"
            description="JBS_TPL_FILTERS_DEFAULTORDER_TT">
-      <option value="DESC">Descending</option>
-      <option value="ASC">Ascending</option>
+      <option value="DESC">JBS_CMN_DESCENDING</option>
+      <option value="ASC">JBS_CMN_ASCENDING</option>
     </param>
   </params>
   <params group="FP_IMAGES">
@@ -125,16 +125,16 @@
            default="1"
            label="JBS_TPL_FP_SHOW_PAGE_IMAGE"
            description="JBS_TPL_FP_SHOW_PAGE_IMAGE_TT">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="tooltip"
            type="list"
            default="1"
            label="JBS_TPL_FP_IMAGES_TOOLTIP"
            description="JBS_TPL_FP_IMAGES_TOOLTIP_TT">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
   </params>
   <params group="VERSES">
@@ -143,8 +143,8 @@
            default="0"
            label="JBS_TPL_VERSES_SHOW_VERSES"
            description="JBS_TPL_VERSES_SHOW_VERSES_TT">
-      <option value="0">Show only chapters</option>
-      <option value="1">Show verses and chapters</option>
+      <option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
+      <option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
     </param>
     <param name="stylesheet"
            type="text"
@@ -157,16 +157,16 @@
            default="2"
            label="JBS_TPL_VERSES_DATE_FORMAT"
            description="JBS_TPL_VERSES_DATE_FORMAT_TT">
-      <option value="0">Sep 1, 2007</option>
-      <option value="1">Sep 1</option>
-      <option value="2">9/1/2007</option>
-      <option value="3">9/1</option>
-      <option value="4">Saturday, September 1, 2007</option>
-      <option value="5">September 1, 2007</option>
-      <option value="6">1 September 2007</option>
-      <option value="7">1/9/2007</option>
-      <option value="8">Use Global System JBS_TPL_VERSES_DATE_FORMAT</option>
-      <option value="9">2009/10/13</option>
+      <option value="0">JBS_TPL_DATE_FORMAT_MMM_D_YYYY</option>
+      <option value="1">JBS_TPL_DATE_FORMAT_MMM_D</option>
+      <option value="2">JBS_TPL_DATE_FORMAT_M_D_YYYY</option>
+      <option value="3">JBS_TPL_DATE_FORMAT_M_D</option>
+      <option value="4">JBS_TPL_DATE_FORMAT_WD_MMMM_D_YYYY</option>
+      <option value="5">JBS_TPL_DATE_FORMAT_MMMM_D_YYYY</option>
+      <option value="6">JBS_TPL_DATE_FORMAT_D_MMMM_YYYY</option>
+      <option value="7">JBS_TPL_DATE_FORMAT_D_M_YYYY</option>
+      <option value="8">JBS_TPL_DATE_FORMAT_USE_GLOBAL</option>
+      <option value="9">JBS_TPL_DATE_FORMAT_YYYY_MM_DD</option>
     </param>
     <param name="custom_date_format"
            type="text"
@@ -179,35 +179,35 @@
            default="2"
            label="JBS_TPL_VERSES_DURATION_TYPE"
            description="JBS_TPL_VERSES_DURATION_TYPE_TT">
-      <option value="1">Hours/min/sec</option>
-      <option value="2">H:M:S</option>
+      <option value="1">JBS_TPL_HOURS_MIN_SEC_SLASH</option>
+      <option value="2">JBS_TPL_HOURS_MIN_SEC_COLON</option>
     </param>
   </params>
   <params group="MEDIA">
     <param name="compat_mode"
            type="list"
            default="0"
-           label="Compatibility Mode"
-           description="Use the JoomlaOregon website to route media file downloads. Enable this only if you are experiencing download problems.">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
+           label="JBS_TPL_MEDIA_COMPAT_MODE"
+           description="JBS_TPL_MEDIA_COMPAT_MODE_TT">
+      <option value="0">JBS_CMN_NO</option>
+      <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="protocol" 
             type="text" 
             size="10" 
             default="http://"
-            label="Web protocol"
-            description="http:// assumed. Type in a different protocol to override such as ftp:// sftp:// https://. Will prepend each media file path" /> 
+            label="JBS_TPL_MEDIA_PROTOCOL"
+            description="JBS_TPL_MEDIA_PROTOCOL_TT" /> 
     <param name="media_player" 
             type="list" 
             default="0" 
-            label="Default Player for all media" 
-            description="Choose media player for all files. This can be overridden in an individual media file record.">
-					<option value="0">Direct (None)</option>
-					<option value="1">Internal Player</option>
-                    <option value="2">All Videos Reloaded</option>
-                    <option value="3">All Videos Plugin</option>
-                    <option value="7">Use Legacy Audio Player</option>
+            label="JBS_TPL_MEDIA_MEDIA_PLAYER" 
+            description="JBS_TPL_MEDIA_MEDIA_PLAYER_TT">
+			<option value="0">JBS_TPL_DIRECT</option>
+			<option value="1">JBS_TPL_INTERNAL_PLAYER</option>
+      <option value="2">JBS_TPL_AVR</option>
+      <option value="3">JBS_TPL_AV</option>
+      <option value="7">JBS_TPL_LEGACY_PLAYER</option>
     </param>
     <param name="popuptype"
            type="list"
@@ -296,7 +296,7 @@
            default="1"
            label="Media Label"
            description="Choose a label for under the media file">
-      <option value="0">Hide</option>
+      <option value="0">JBS_CMN_HIDE</option>
       <option value="1">Show Filesize only</option>
       <option value="2">Show Comment only</option>
       <option value="3">Show Comment (if comment present) or Filesize (if no comment)</option>
@@ -346,7 +346,7 @@
            type="radio"
            label="Wrap Code in TABLE or DIV tags?"
            default="0">
-      <option value="0">No</option>
+      <option value="0">JBS_CMN_NO</option>
       <option value="T">TABLE</option>
       <option value="D">DIV</option>
     </param>
@@ -357,8 +357,8 @@
            default="1"
            label="Show/Hide Listing Page Title"
            description="Choose whether to show or hide the listing page title">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="page_title"
            type="text"
@@ -384,7 +384,7 @@
            default="1"
            label="Show/Hide Intro"
            description="Choose whether to hide or show the listing introduction text">
-      <option value="0">Hide</option>
+      <option value="0">JBS_CMN_HIDE</option>
       <option value="1">Show Below Teacher(s)</option>
       <option value="2">Show Beside Teacher(s)</option>
     </param>
@@ -393,8 +393,8 @@
            default="1"
            label="Show/Hide Teachers"
            description="Choose whether to hide or show the teachers identified below on the studieslist page">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="listteachers"
            type="text"
@@ -406,8 +406,8 @@
            default="1"
            label="Show link to teacher details page"
            description="Creates a link out of the teacher name to their details page">
-      <option value="0">No Link</option>
-      <option value="1">Show Link</option>
+      <option value="0">JBL_TPL_HIDE_LINK</option>
+      <option value="1">JBL_TPL_SHOW_LINK</option>
     </param>
     <param name="details_text"
            type="text"
@@ -420,7 +420,7 @@
            default="1"
            label="Show/Hide book search"
            description="Shows or hides the drop down box for books">
-      <option value="0">Hide</option>
+      <option value="0">JBS_CMN_HIDE</option>
       <option value="1">Show unless filtered</option>
       <option value="2">Show Always</option>
     </param>
@@ -445,7 +445,7 @@
            default="1"
            label="Show/Hide Teacher search"
            description="Shows or hides the drop down box for teachers">
-      <option value="0">Hide</option>
+      <option value="0">JBS_CMN_HIDE</option>
       <option value="1">Show unless filtered</option>
       <option value="2">Show Always</option>
     </param>
@@ -454,7 +454,7 @@
            default="1"
            label="Show/Hide Series search"
            description="Shows or hides the drop down box for series">
-      <option value="0">Hide</option>
+      <option value="0">JBS_CMN_HIDE</option>
       <option value="1">Show unless filtered</option>
       <option value="2">Show Always</option>
     </param>
@@ -463,7 +463,7 @@
            default="1"
            label="Show/Hide Message Type search"
            description="Shows or hides the drop down box for message types">
-      <option value="0">Hide</option>
+      <option value="0">JBS_CMN_HIDE</option>
       <option value="1">Show unless filtered</option>
       <option value="2">Show Always</option>
     </param>
@@ -472,23 +472,23 @@
            default="1"
            label="Show/Hide Year search"
            description="Shows or hides the year drop down box">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="show_order_search"
            type="list"
            default="1"
            label="Show/Hide Ascending/Descending"
            description="Shows or hides the drop down for ordering the year display">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="show_topic_search"
            type="list"
            default="1"
            label="Show/Hide Topic search"
            description="Shows or hides the drop down topical list">
-      <option value="0">Hide</option>
+      <option value="0">JBS_CMN_HIDE</option>
       <option value="1">Show unless filtered</option>
       <option value="2">Show Always</option>
     </param>
@@ -497,7 +497,7 @@
            default="1"
            label="Show/Hide Locations search"
            description="Shows or hides the drop down locations list">
-      <option value="0">Hide</option>
+      <option value="0">JBS_CMN_HIDE</option>
       <option value="1">Show unless filtered</option>
       <option value="2">Show Always</option>
     </param>
@@ -506,8 +506,8 @@
            default="1"
            label="Show/Hide Popular Studies Links"
            description="Shows or hides the drop down popular studies list. Set limit in Administration tab">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
   </params>
   <params group="ROW1">
@@ -1691,32 +1691,32 @@
            default="1"
            label="Show/Hide Print Button"
            description="Shows or hides the print button">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="show_pdf_view"
            type="list"
            default="1"
            label="Show/Hide PDF Button"
            description="Shows or hides the PDF button">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="show_teacher_view"
            type="list"
            default="0"
            label="Show/Hide Teacher"
            description="Shows or hides the Teacher">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="show_passage_view"
            type="list"
            default="1"
            label="Show/Hide Passage in Study View footer"
            description="Shows the passage referenced in the Scripture of your study. Right now only ESV available">
-      <option value="0">Hide</option>
-      <option value="1">Show</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="use_headers_view"
            type="list"
@@ -1780,8 +1780,8 @@
            default="1"
            label="Show link to studies list"
            description="Choose whether to have a link back to the studies list">
-      <option value="0">No link</option>
-      <option value="1">Link</option>
+      <option value="0">JBL_TPL_HIDE_LINK</option>
+      <option value="1">JBL_TPL_SHOW_LINK</option>
     </param>
     <param name="link_text"
            type="text"
@@ -1805,7 +1805,7 @@
            description="Sets access level for viewing comments.">
       <option value="0">Everyone</option>
       <option value="1">Registered</option>
-      <option value="2">Hide</option>
+      <option value="2">JBS_CMN_HIDE</option>
     </param>
     <param name="comment_access"
            type="list"
@@ -1906,8 +1906,8 @@
     <param type="spacer"
            label=""></param>
     <param name="teacherlink" type="list" label="Show Link to more studies" description="Choose whether to show a link to more studies" default="1">
-        <option value="0">Don't Show Link</option>
-        <option value="1">Show Link</option>
+        <option value="0">JBL_TPL_HIDE_LINK</option>
+        <option value="1">JBL_TPL_SHOW_LINK</option>
     </param>
     <param name="useexpert_teacherlist"
            type="list"
@@ -1946,7 +1946,7 @@
            type="radio"
            label="Wrap Code in TABLE or DIV tags?"
            default="0">
-      <option value="0">No</option>
+      <option value="0">JBS_CMN_NO</option>
       <option value="T">TABLE</option>
       <option value="D">DIV</option>
     </param>
@@ -1992,24 +1992,24 @@
            type="list"
            label="Show/Hide Series List Page Title"
            description="Show or hide the text for the top of the series list page.">
-      <option value="0">Hide Page Title</option>
-      <option value="1">Show Page Title</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="show_page_image_series"
            default="1"
            type="list"
            label="Show/Hide Series Page Image"
            description="Show or hide the image for the top of the series list page. Same image as used for studies list page">
-      <option value="0">Hide Page Image</option>
-      <option value="1">Show Page Image</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="series_show_description"
            default="1"
            type="list"
            label="Show/Hide Description along bottom"
            description="Choose to have a row spanning 4 columns showing the description of the series">
-      <option value="0">Hide Bottom Description</option>
-      <option value="1">Show Bottom Description</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="series_characters"
            type="text"
@@ -2021,8 +2021,8 @@
            type="list"
            label="Show/Hide Series Drop Down"
            description="Show or hide the drop down menu with all published series as a filter">
-      <option value="0">Hide Series</option>
-      <option value="1">Show Series</option>
+      <option value="0">JBS_CMN_HIDE</option>
+      <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="series_limit"
            type="text"
@@ -2034,8 +2034,8 @@
            default="ASC"
            label="Set Ascending or Descending for Series list"
            description="Set ascending or descending by Series title for the list">
-      <option value="ASC">Ascending</option>
-      <option value="DESC">Descending</option>
+      <option value="ASC">JBS_CMN_ASCENDING</option>
+      <option value="DESC">JBS_CMN_DESCENDING</option>
     </param>
     <param name="series_order_field"
            type="list"
@@ -2163,7 +2163,7 @@
            type="radio"
            label="Wrap Code in TABLE or DIV tags?"
            default="0">
-      <option value="0">No</option>
+      <option value="0">JBS_CMN_NO</option>
       <option value="T">TABLE</option>
       <option value="D">DIV</option>
     </param>
@@ -2185,8 +2185,8 @@
            default="DESC"
            label="Sort Order"
            description="Choose ascending or descending for the order of studies">
-      <option value="DESC">Descending</option>
-      <option value="ASC">Ascending</option>
+      <option value="DESC">JBS_CMN_DESCENDING</option>
+      <option value="ASC">JBS_CMN_ASCENDING</option>
     </param>
     <param name="series_detail_limit"
            type="text"
@@ -2198,8 +2198,8 @@
            default="1"
            label="Show Link to all studies and Back to Series List"
            description="Show/Hide a link to studiesview with all studies in series and a back to all Series at page bottom">
-      <option value="0">Hide Link</option>
-      <option value="1">Show Link</option>
+      <option value="0">JBL_TPL_HIDE_LINK</option>
+      <option value="1">JBL_TPL_SHOW_LINK</option>
     </param>
     <param name="series_detail_listtype"
            type="list"
@@ -2244,7 +2244,7 @@
            default="1"
            label="Link to Study Details"
            description="Choose whether this is a link to the study details">
-      <option value="0">No Link</option>
+      <option value="0">JBL_TPL_HIDE_LINK</option>
       <option value="1">Link to Study Details</option>
     </param>
     <param name="series_detail_2"
@@ -2281,7 +2281,7 @@
            default="0"
            label="Link to Study Details"
            description="Choose whether this is a link to the study details">
-      <option value="0">No Link</option>
+      <option value="0">JBL_TPL_HIDE_LINK</option>
       <option value="1">Link to Study Details</option>
     </param>
     <param name="series_detail_3"
@@ -2318,7 +2318,7 @@
            default="0"
            label="Link to Study Details"
            description="Choose whether this is a link to the study details">
-      <option value="0">No Link</option>
+      <option value="0">JBL_TPL_HIDE_LINK</option>
       <option value="1">Link to Study Details</option>
     </param>
     <param name="series_detail_4"
@@ -2355,7 +2355,7 @@
            default="0"
            label="Link to Study Details"
            description="Choose whether this is a link to the study details">
-      <option value="0">No Link</option>
+      <option value="0">JBL_TPL_HIDE_LINK</option>
       <option value="1">Link to Study Details</option>
     </param>
     <param name="useexpert_seriesdetail"
@@ -3780,8 +3780,8 @@
            type="radio"
            label="Show Teachers"
            default="1">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
+      <option value="0">JBS_CMN_NO</option>
+      <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingteacherslimit"
            type="text"
@@ -3805,8 +3805,8 @@
            type="radio"
            label="Show Series"
            default="1">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
+      <option value="0">JBS_CMN_NO</option>
+      <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingserieslimit"
            type="text"
@@ -3830,8 +3830,8 @@
            type="radio"
            label="Show Books"
            default="1">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
+      <option value="0">JBS_CMN_NO</option>
+      <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingbookslimit"
            type="text"
@@ -3848,8 +3848,8 @@
            type="radio"
            label="Show Topics"
            default="1">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
+      <option value="0">JBS_CMN_NO</option>
+      <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingtopicslimit"
            type="text"
@@ -3866,8 +3866,8 @@
            type="radio"
            label="Show Locations"
            default="1">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
+      <option value="0">JBS_CMN_NO</option>
+      <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landinglocationslimit"
            type="text"
@@ -3884,8 +3884,8 @@
            type="radio"
            label="Show Message Types"
            default="1">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
+      <option value="0">JBS_CMN_NO</option>
+      <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingmessagetypeslimit"
            type="text"
@@ -3902,8 +3902,8 @@
            type="radio"
            label="Show Years"
            default="1">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
+      <option value="0">JBS_CMN_NO</option>
+      <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingyearslimit"
            type="text"
