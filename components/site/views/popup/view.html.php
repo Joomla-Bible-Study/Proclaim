@@ -70,11 +70,14 @@
             				{
             					$path1 = 'http://'.$path1;
             				}
-                            	$itemparams = new JParameter ($media->params);
+          // 	$itemparams = new JParameter ($media->params);
+          //  dump ($media->params, 'itemparams: ');
 		    $playerwidth = $params->get('player_width');
             $playerheight = $params->get('player_height');
             if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
             if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
+          //  dump ($playerwidth, 'width: ');
+          //  dump ($playerheight, 'height: ');
             $extraparams = '';
         	if ($itemparams->get('playervars')){$extraparams = $itemparams->get('playervars');}
 			if ($itemparams->get('altflashvars'))
@@ -94,14 +97,14 @@ $headertext = '';
 $footertext = ''; 
 
 // Need to add in template
-echo "<body bgcolor='".$params->get('popupbackground', 'white')."'>";
+echo "<body bgcolor='".$params->get('popupbackground', 'black')."'>";
 
 $headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
 if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media, $scripture, $date, $length);}
 $footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
 if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);}
-echo '<p class="popuptitle">'.$headertext.'</p>';
-
+echo '<div class="popuptitle"><p class="popuptitle">'.$headertext.'</p></div>';
+//dump ($headertext, 'header: ');
 //Here is where we choose whether to use the Internal Viewer or All Videos
 if ($itemparams->get('player') == 3 || $player == 3) {
     $mediacode = $getMedia->getAVmediacode($media->mediacode);
