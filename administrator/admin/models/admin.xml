@@ -23,6 +23,10 @@
 					<option value="0">No Filter</option>
 					<option value="1">Filter</option>
 		</param>
+        <param name="format_popular" default="0" type="list" label="Set Items to include in score" description="Decide what items will determine the score of a popular study">
+            <option value="0">Hits + Plays + Downloads</option>
+            <option value="1">Plays + Downloads</option>
+        </param>
 		<param name="socialnetworking" type="list" default="1" label="Use Social Networking Links" description="Show or Hide links for users to post studydetails link on social networking sites (configure on Social Networks tab)">
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
