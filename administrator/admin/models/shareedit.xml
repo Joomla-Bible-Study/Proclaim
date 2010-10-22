@@ -99,7 +99,7 @@
 		</param>
 		<param name="item4custom" size="100" type="text" default="" label="Custom for Item 4" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
 		<param name="use_bitly" type="list" default="0" label="Use link shortener bit.ly" description="Shortens the link. Helps mainly for services like Twitter that only take a certain number of characters">
-			<option value="0">Do Not Use</option>
+			<option value="0">JBS_CMN_DONT_USE</option>
 			<option value="1">Use bit.ly</option>
 		</param>
 		<param name="username" type="text" size="100" default="" label="Enter your bit.ly username if you have one" description="This is not required. If left blank you will use JoomlaBibleStudy's user name" />

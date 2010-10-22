@@ -212,122 +212,122 @@
     <param name="popuptype"
            type="list"
            default="window"
-           label="Window or light box (inline) for AVR player"
-           description="If installed, use AllVideosReloaded as a separate window or as a light box effect">
-      <option value="window">Window</option>
-      <option value="lightbox">Lightbox</option>
+           label="JBS_TPL_MEDIA_POPUPTYPE"
+           description="JBS_TPL_MEDIA_POPUPTYPE_TT">
+      <option value="window">JBS_TPL_WINDOW</option>
+      <option value="lightbox">JBS_TPL_LIGHTBOX</option>
     </param>
     <param name="internal_popup"
            type="list"
            default="0"
-           label="Display Internal player or Direct as popup"
-           description="Choose whether the internal viewer or the direct link to a file should be a popup or inline (internal player) or new window (direct)">
-      <option value="0">Inline</option>
-      <option value="1">Popup/New Window</option>
+           label="JBS_TPL_MEDIA_INTERNAL_POPUP"
+           description="JBS_TPL_MEDIA_INTERNAL_POPUP_TT">
+      <option value="0">JBS_TPL_INLINE</option>
+      <option value="1">JBS_TPL_POPUP_NEW_WINDOW</option>
     </param>
     <param name="player_width"
            type="text"
            default="400"
-           label="Width for media Player"
-           description="Width in pixels of internal audo/video player" />
+           label="JBS_TPL_MEDIA_PLAYER_WIDTH"
+           description="JBS_TPL_MEDIA_PLAYER_WIDTH_TT" />
     <param name="player_height"
            type="text"
            default="300"
-           label="Height for media player"
-           description="Set the height in pixels. Can be overridden in media file. Hint: 23 is good height for just audio" />
+           label="JBS_TPL_MEDIA_PLAYER_HEIGHT"
+           description="JBS_TPL_MEDIA_PLAYER_HEIGHT_TT" />
     <param name="embedshare" 
             default="TRUE" 
             type="list" 
-            label="Choose to allow Share Options in Media Player"
+            label="JBS_TPL_MEDIA_EMBEDSHARE"
             description="If set to Show a menu is presented in the internal media player that allows sharing and embedding options">
-            <option value="FALSE">No Share Menu</option>
-            <option value="TRUE">Show Share Menu</option>
+            <option value="FALSE">JBS_TPL_NO_SHARE</option>
+            <option value="TRUE">JBS_TPL_SHOW_SHARE</option>
     </param> 
     <param name="backcolor"
            type="text"
            default="0x287585"
-           label="Back Color"
-           description="Use HEX something like 0x287585" />
+           label="JBS_TPL_MEDIA_BACKCOLOR"
+           description="JBS_TPL_MEDIA_BACKCOLOR_TT" />
     <param name="frontcolor"
            type="text"
            default="0xFFFFFF"
-           label="Front Color"
-           description="Use HEX something like 0xFFFFFF" />
+           label="JBS_TPL_MEDIA_FRONTCOLOR"
+           description="JBS_TPL_MEDIA_FRONTCOLOR_TT" />
     <param name="lightcolor"
            type="text"
            default="0x000000"
-           label="Light Color"
-           description="Use HEX something like 0x000000" />
+           label="JBS_TPL_MEDIA_LIGHTCOLOR"
+           description="JBS_TPL_MEDIA_LIGHTCOLOR_TT" />
     <param name="screencolor"
            type="text"
            default="0x000000"
-           label="Screen Color"
-           description="Use HEX something like 0x000000" />
+           label="JBS_TPL_MEDIA_SCREENCOLOR"
+           description="JBS_TPL_MEDIA_SCREENCOLOR_TT" />
     <param name="popuptitle"
            type="text"
            size="150"
            default="{{title}}"
-           label="Popup Title Elements"
-           description="Use text and/or Display Codes: {{scripture}}, {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
+           label="JBS_TPL_MEDIA_POPUPTITLE"
+           description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_TT" />
     <param name="popupfooter"
            type="text"
            size="150"
            default="{{filename}}"
-           label="Popup Footer Elements"
-           description="Use text and/or Display Codes: {{scripture}}, {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
+           label="JBS_TPL_MEDIA_POPUPFOOTER"
+           description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_TT" />
     <param name="popupmargin"
            type="text"
            default="50"
-           label="Height Margin for Popup"
-           description="Set space above and below popup for header and footer." />
+           label="JBS_TPL_MEDIA_POPUPMARGIN"
+           description="JBS_TPL_MEDIA_POPUPMARGIN_TT" />
     <param name="popupbackground"
            type="text"
            default="black"
-           label="Background color for popup window"
-           description="Set a background color for the popup window." />
+           label="JBS_TPL_MEDIA_POPUPBACKGROUND"
+           description="JBS_TPL_MEDIA_POPUPBACKGROUND_TT" />
     <param name="popupimage"
            type="text"
            size="150"
            default="components/com_biblestudy/images/speaker24.png"
-           label="Path to image for popup"
-           description="Add a path to an image in audio popup" />
+           label="JBS_TPL_MEDIA_POPUPIMAGE"
+           description="JBS_TPL_MEDIA_POPUPIMAGE_TT" />
     <param name="show_filesize"
            type="list"
            default="1"
-           label="Media Label"
-           description="Choose a label for under the media file">
+           label="JBS_TPL_MEDIA_SHOW_FILESIZE"
+           description="JBS_TPL_MEDIA_SHOW_FILESIZE_TT">
       <option value="0">JBS_CMN_HIDE</option>
-      <option value="1">Show Filesize only</option>
-      <option value="2">Show Comment only</option>
-      <option value="3">Show Comment (if comment present) or Filesize (if no comment)</option>
+      <option value="1">JBS_TPL_SHOW_FILESIZE</option>
+      <option value="2">JBS_TPL_SHOW_COMMENT</option>
+      <option value="3">JBS_TPL_SHOW_COMMENT_OR_FILESIZE</option>
     </param>
     <param name="store_page"
            type="text"
            default="flypage.tpl"
-           label="Virtuemart Display Page"
-           description="If using Virtuemart item, setting for display page in url to store item."
+           label="JBS_TPL_MEDIA_STORE_PAGE"
+           description="JBS_TPL_MEDIA_STORE_PAGE_TT"
            size="60" />
   </params>
   <params group="STUDIESVIEW"
           addpath="/components/com_biblestudy/elements">
     <param name="useexpert_list"
            type="list"
-           label="Use custom view"
            default="0"
-           description="Choose whether or not to use this as the view">
-      <option value="0">Don&#39;t Use</option>
-      <option value="1">Use This as view</option>
+           label="JBS_TPL_CUSTOM_VIEW"
+           description="JBS_TPL_CUSTOM_VIEW_TT">
+      <option value="0">JBS_CMN_DONT_USE</option>
+      <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
     <param name="headercode"
            type="textarea"
            rows="10"
            cols="100"
-           label="Header Code"></param>
+           label="JBS_TPL_HEADERCODE">
+    </param>
     <param name="templatecode"
            type="textarea"
            rows="10"
            cols="100"
-           label="Display Code"
            default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;
   &lt;tbody&gt;
   &lt;tr&gt;
@@ -341,11 +341,13 @@
   &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;"
-           description="Use HTML to create your repeatable template. Any HTML will do. TEMPLATE CODES Message Type"></param>
+           label="JBS_TPL_TEMPLATECODE"
+           description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_TT">
+    </param>
     <param name="wrapcode"
            type="radio"
-           label="Wrap Code in TABLE or DIV tags?"
-           default="0">
+           default="0"
+           label="Wrap Code in TABLE or DIV tags?">
       <option value="0">JBS_CMN_NO</option>
       <option value="T">TABLE</option>
       <option value="D">DIV</option>
@@ -429,7 +431,7 @@
            default="1"
            label="Use Go Button"
            description="Choose whether to use the Go Button on the list. This turns off the javascript submit form">
-      <option value="0">Don&#39;t Use Go Button</option>
+      <option value="0">JBS_CMN_DONT_USE</option>
       <option value="1">Use Go Button</option>
     </param>
     <param name="booklist"
@@ -1864,18 +1866,18 @@
            description=""></param>
     <param name="useexpert_details"
            type="list"
-           label="Use custom view"
            default="0"
-           description="Choose whether or not to use this as the view">
-      <option value="0">Don&#39;t Use</option>
-      <option value="1">Use This as View</option>
+           label="JBS_TPL_CUSTOM_VIEW"
+           description="JBS_TPL_CUSTOM_VIEW_TT">
+      <option value="0">JBS_CMN_DONT_USE</option>
+      <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
     <param name="study_detailtemplate"
            type="textarea"
            rows="10"
            cols="100"
            label="Detail Template Code"
-           description="Use HTML to create your repeatable template. Any HTML will do. Codes Message Type" />
+           description="JBS_TPL_DETAILS_TEMPLATECODE_TT" />
   </params>
   <params group="TEACHER">
     <param name="teacher_title"
@@ -1905,29 +1907,32 @@
            description="Enter some text to show when displaying teacher latest studies" />
     <param type="spacer"
            label=""></param>
-    <param name="teacherlink" type="list" label="Show Link to more studies" description="Choose whether to show a link to more studies" default="1">
+    <param name="teacherlink"
+    	     type="list"
+    	     default="1"
+    	     label="Show Link to more studies"
+    	     description="Choose whether to show a link to more studies"> 
         <option value="0">JBL_TPL_HIDE_LINK</option>
         <option value="1">JBL_TPL_SHOW_LINK</option>
     </param>
     <param name="useexpert_teacherlist"
            type="list"
-           label="Use custom Teacher List view"
            default="0"
-           description="Choose whether or not to use this as the view">
-      <option value="0">Don&#39;t Use</option>
-      <option value="1">Use This as view</option>
+           label="JBS_TPL_CUSTOM_VIEW_TEACHERLIST"
+           description="JBS_TPL_CUSTOM_VIEW_TT">
+      <option value="0">JBS_CMN_DONT_USE</option>
+      <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
     <param name="teacher_headercode"
            type="textarea"
            rows="10"
            cols="100"
-           label="Header Code"
+           label="JBS_TPL_HEADERCODE"
            description="Put any HTML in here you want for the header"></param>
     <param name="teacher_templatecode"
            type="textarea"
            rows="10"
            cols="100"
-           label="Display Code"
            default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;
   &lt;tbody&gt;
   &lt;tr&gt;
@@ -1941,7 +1946,8 @@
   &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;"
-           description="Use HTML to create your repeatable template. Any HTML will do. Short Description"></param>
+           label="JBS_TPL_TEACHERLIST_TEMPLATECODE"
+           description="JBS_TPL_TEACHER_TEMPLATECODE_TT"></param>
     <param name="teacher_wrapcode"
            type="radio"
            label="Wrap Code in TABLE or DIV tags?"
@@ -1954,17 +1960,16 @@
            label=""></param>
     <param name="useexpert_teacherdetail"
            type="list"
-           label="Use custom Teacher Detail view"
            default="0"
-           description="Choose whether or not to use this as the view">
-      <option value="0">Don&#39;t Use</option>
-      <option value="1">Use This as view</option>
+           label="JBS_TPL_CUSTOM_VIEW_TEACHERDETAIL"
+           description="JBS_TPL_CUSTOM_VIEW_TT">
+      <option value="0">JBS_CMN_DONT_USE</option>
+      <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
     <param name="teacher_detailtemplate"
            type="textarea"
            rows="10"
            cols="100"
-           label="Teacher Detail Display Code"
            default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;
   &lt;tbody&gt;
   &lt;tr&gt;
@@ -1978,7 +1983,8 @@
   &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;"
-           description="Use HTML to create your repeatable template. Any HTML will do. Short Description"></param>
+           label="JBS_TPL_TEACHERDETAIL_TEMPLATECODE"
+           description="JBS_TPL_TEACHER_TEMPLATECODE_TT"></param>
   </params>
   <params group="SERIES"
           addpath="/components/com_biblestudy/elements">
@@ -2141,24 +2147,24 @@
     </param>
     <param name="useexpert_serieslist"
            type="list"
-           label="Use custom view"
+           label="JBS_TPL_CUSTOM_VIEW"
            default="0"
-           description="Choose whether or not to use this as the view">
-      <option value="0">Don&#39;t Use</option>
-      <option value="1">Use This as view</option>
+           description="JBS_TPL_CUSTOM_VIEW_TT">
+      <option value="0">JBS_CMN_DONT_USE</option>
+      <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
     <param name="series_headercode"
            type="textarea"
            rows="10"
            cols="100"
-           label="Header Code"></param>
+           label="JBS_TPL_HEADERCODE"></param>
     <param name="series_templatecode"
            type="textarea"
            rows="10"
            cols="100"
-           label="Display Code"
+           label="JBS_TPL_TEMPLATECODE"
            default=""
-           description="Use HTML to create your repeatable template. Any HTML will do. Link to Series Details and Studies"></param>
+           description="JBS_TPL_SERIES_TEMPLATECODE_TT"></param>
     <param name="series_wrapcode"
            type="radio"
            label="Wrap Code in TABLE or DIV tags?"
@@ -2360,17 +2366,17 @@
     </param>
     <param name="useexpert_seriesdetail"
            type="list"
-           label="Use Expert Template"
-           description="Choose whether to use the custom template you define below">
-      <option value="0">Don&#39;t Use</option>
-      <option value="1">Use This as view</option>
+           label="JBS_TPL_CUSTOM_VIEW"
+           description="JBS_TPL_CUSTOM_VIEW_TT">
+      <option value="0">JBS_CMN_DONT_USE</option>
+      <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
     <param name="series_detailcode"
            type="textarea"
            rows="10"
            cols="100"
            label="Series Detail Template Code"
-           description="Use HTML to create your repeatable template. Any HTML will do. Series Description" />
+           description="JBS_TPL_SERIESDETAIL_TEMPLATECODE_TT" />
   </params>
   <params group="TOOLTIP">
     <param name="tip_title"
