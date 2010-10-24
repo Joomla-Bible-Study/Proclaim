@@ -347,67 +347,67 @@
     <param name="wrapcode"
            type="radio"
            default="0"
-           label="Wrap Code in TABLE or DIV tags?">
+           label="JBS_TPL_TABLE_OR_DIV">
       <option value="0">JBS_CMN_NO</option>
-      <option value="T">TABLE</option>
-      <option value="D">DIV</option>
+      <option value="T">JBS_TPL_TABLE</option>
+      <option value="D">JBS_TPL_DIV</option>
     </param>
   </params>
   <params group="LISTITEMS">
     <param name="show_page_title"
            type="list"
            default="1"
-           label="Show/Hide Listing Page Title"
-           description="Choose whether to show or hide the listing page title">
+           label="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE"
+           description="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE_TT">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="page_title"
            type="text"
            default="Bible Studies"
-           label="Title for Listing Page"
-           description="Text to use as title for listing page" />
+           label="JBS_TPL_LISTITEMS_PAGE_TITLE"
+           description="JBS_TPL_LISTITEMS_PAGE_TITLE_TT" />
     <param name="use_headers_list"
            type="list"
            default="1"
-           label="Header Row on Study List"
-           description="Choose whether a header row will appear at the top of the studies list">
-      <option value="0">No Header Row</option>
-      <option value="1">Use Header Row</option>
+           label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST"
+           description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_TT">
+      <option value="0">JBS_TPL_NO_HEADER_ROW</option>
+      <option value="1">JBS_TPL_USE_HEADER_ROW</option>
     </param>
     <param name="list_intro"
            type="textarea"
            rows="10"
            cols="100"
-           label="List Introduction"
-           description="Enter some text to use as an introduction to your list page" />
+           label="JBS_TPL_LISTITEMS_LIST_INTRO"
+           description="JBS_TPL_LISTITEMS_LIST_INTRO_TT" />
     <param name="intro_show"
            type="list"
            default="1"
-           label="Show/Hide Intro"
-           description="Choose whether to hide or show the listing introduction text">
+           label="JBS_TPL_LISTITEMS_INTRO_SHOW"
+           description="JBS_TPL_LISTITEMS_INTRO_SHOW_TT">
       <option value="0">JBS_CMN_HIDE</option>
-      <option value="1">Show Below Teacher(s)</option>
-      <option value="2">Show Beside Teacher(s)</option>
+      <option value="1">JBS_TPL_LISTITEMS_SHOW_BELOW_TEACHERS</option>
+      <option value="2">JBS_TPL_LISTITEMS_SHOW_BESIDE_TEACHERS</option>
     </param>
     <param name="list_teacher_show"
            type="list"
            default="1"
-           label="Show/Hide Teachers"
-           description="Choose whether to hide or show the teachers identified below on the studieslist page">
+           label="JBS_TPL_LISTITEMS_LIST_TEACHER_SHOW"
+           description="JBS_TPL_LISTITEMS_LIST_TEACHER_SHOW_TT">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="listteachers"
            type="text"
            default=""
-           label="Ids of teachers on list page"
-           description="Enter a comma separated list of teacher ids to show on the list page" />
+           label="JBS_TPL_LISTITEMS_LISTTEACHERS"
+           description="JBS_TPL_LISTITEMS_LISTTEACHERS_TT" />
     <param name="teacherlink"
            type="list"
            default="1"
-           label="Show link to teacher details page"
-           description="Creates a link out of the teacher name to their details page">
+           label="JBS_TPL_LISTITEMS_TEACHERLINK"
+           description="JBS_TPL_LISTITEMS_TEACHERLINK_TT">
       <option value="0">JBL_TPL_HIDE_LINK</option>
       <option value="1">JBL_TPL_SHOW_LINK</option>
     </param>
@@ -415,99 +415,99 @@
            type="text"
            default="Study Details"
            size="50"
-           label="Alt tag for details"
-           description="Text to show on mouse over of details image link other than if you choose a tooltip" />
+           label="JBS_TPL_LISTITEMS_DETAILS_TEXT"
+           description="JBS_TPL_LISTITEMS_DETAILS_TEXT_TT" />
     <param name="show_book_search"
            type="list"
            default="1"
-           label="Show/Hide book search"
-           description="Shows or hides the drop down box for books">
+           label="JBS_TPL_LISTITEMS_SHOW_BOOK_SEARCH"
+           description="JBS_TPL_LISTITEMS_SHOW_BOOK_SEARCH_TT">
       <option value="0">JBS_CMN_HIDE</option>
-      <option value="1">Show unless filtered</option>
-      <option value="2">Show Always</option>
+      <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
+      <option value="2">JBS_TPL_SHOW_ALWAYS</option>
     </param>
     <param name="use_go_button"
            type="list"
            default="1"
-           label="Use Go Button"
-           description="Choose whether to use the Go Button on the list. This turns off the javascript submit form">
+           label="JBS_TPL_LISTITEMS_USE_GO_BUTTON"
+           description="JBS_TPL_LISTITEMS_USE_GO_BUTTON_TT">
       <option value="0">JBS_CMN_DONT_USE</option>
-      <option value="1">Use Go Button</option>
+      <option value="1">JBS_TPL_LISTITEMS_USE_GO_BUTTON</option>
     </param>
     <param name="booklist"
            type="list"
            default="0"
-           label="Books to Show"
-           description="Choose whether you want to show all Bible books in the drop down or only those that have studies associated with them">
-      <option value="0">Show All Books</option>
-      <option value="1">Show Only Books with Studies</option>
+           label="JBS_TPL_LISTITEMS_BOOKLIST"
+           description="JBS_TPL_LISTITEMS_BOOKLIST_TT">
+      <option value="0">JBS_TPL_SHOW_ALL_BOOKS</option>
+      <option value="1">JBS_TPL_SHOW_BOOKS_W_STUDIES</option>
     </param>
     <param name="show_teacher_search"
            type="list"
            default="1"
-           label="Show/Hide Teacher search"
-           description="Shows or hides the drop down box for teachers">
+           label="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH"
+           description="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH_TT">
       <option value="0">JBS_CMN_HIDE</option>
-      <option value="1">Show unless filtered</option>
-      <option value="2">Show Always</option>
+      <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
+      <option value="2">JBS_TPL_SHOW_ALWAYS</option>
     </param>
     <param name="show_series_search"
            type="list"
            default="1"
-           label="Show/Hide Series search"
-           description="Shows or hides the drop down box for series">
+           label="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH"
+           description="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH_TT">
       <option value="0">JBS_CMN_HIDE</option>
-      <option value="1">Show unless filtered</option>
-      <option value="2">Show Always</option>
+      <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
+      <option value="2">JBS_TPL_SHOW_ALWAYS</option>
     </param>
     <param name="show_type_search"
            type="list"
            default="1"
-           label="Show/Hide Message Type search"
-           description="Shows or hides the drop down box for message types">
+           label="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH"
+           description="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH_TT">
       <option value="0">JBS_CMN_HIDE</option>
-      <option value="1">Show unless filtered</option>
-      <option value="2">Show Always</option>
+      <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
+      <option value="2">JBS_TPL_SHOW_ALWAYS</option>
     </param>
     <param name="show_year_search"
            type="list"
            default="1"
-           label="Show/Hide Year search"
-           description="Shows or hides the year drop down box">
+           label="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH"
+           description="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH_TT">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="show_order_search"
            type="list"
            default="1"
-           label="Show/Hide Ascending/Descending"
-           description="Shows or hides the drop down for ordering the year display">
+           label="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH"
+           description="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH_TT">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
     <param name="show_topic_search"
            type="list"
            default="1"
-           label="Show/Hide Topic search"
-           description="Shows or hides the drop down topical list">
+           label="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH"
+           description="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH_TT">
       <option value="0">JBS_CMN_HIDE</option>
-      <option value="1">Show unless filtered</option>
-      <option value="2">Show Always</option>
+      <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
+      <option value="2">JBS_TPL_SHOW_ALWAYS</option>
     </param>
     <param name="show_locations_search"
            type="list"
            default="1"
-           label="Show/Hide Locations search"
-           description="Shows or hides the drop down locations list">
+           label="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH"
+           description="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH_TT">
       <option value="0">JBS_CMN_HIDE</option>
-      <option value="1">Show unless filtered</option>
-      <option value="2">Show Always</option>
+      <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
+      <option value="2">JBS_TPL_SHOW_ALWAYS</option>
     </param>
     <param name="show_popular"
            type="list"
            default="1"
-           label="Show/Hide Popular Studies Links"
-           description="Shows or hides the drop down popular studies list. Set limit in Administration tab">
+           label="JBS_TPL_LISTITEMS_SHOW_POPULAR"
+           description="JBS_TPL_LISTITEMS_SHOW_POPULAR_TT">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -1725,8 +1725,8 @@
            default="1"
            label="Header Row on Study Detail"
            description="Choose whether a header row will appear at the top of the study detail">
-      <option value="0">No Header Row</option>
-      <option value="1">Use Header Row</option>
+      <option value="0">JBS_TPL_NO_HEADER_ROW</option>
+      <option value="1">JBS_TPL_USE_HEADER_ROW</option>
     </param>
     <param name="list_items_view"
            type="list"
@@ -1950,11 +1950,11 @@
            description="JBS_TPL_TEACHER_TEMPLATECODE_TT"></param>
     <param name="teacher_wrapcode"
            type="radio"
-           label="Wrap Code in TABLE or DIV tags?"
+           label="JBS_TPL_TABLE_OR_DIV"
            default="0">
       <option value="0">JBS_CMN_NO</option>
-      <option value="T">TABLE</option>
-      <option value="D">DIV</option>
+      <option value="T">JBS_TPL_TABLE</option>
+      <option value="D">JBS_TPL_DIV</option>
     </param>
     <param type="spacer"
            label=""></param>
@@ -2167,11 +2167,11 @@
            description="JBS_TPL_SERIES_TEMPLATECODE_TT"></param>
     <param name="series_wrapcode"
            type="radio"
-           label="Wrap Code in TABLE or DIV tags?"
+           label="JBS_TPL_TABLE_OR_DIV"
            default="0">
       <option value="0">JBS_CMN_NO</option>
-      <option value="T">TABLE</option>
-      <option value="D">DIV</option>
+      <option value="T">JBS_TPL_TABLE</option>
+      <option value="D">JBS_TPL_DIV</option>
     </param>
   </params>
   <params group="SERIESDETAIL"
