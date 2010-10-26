@@ -325,11 +325,13 @@ function players()
     $internal = 'player=1';
     $avr = 'player=2';
     $av = 'player=3';
+    $legacy = 'player=7';
     $add = 0;
     $directcount = 0;
     $internalcount = 0;
     $avrcount = 0;
     $avcount = 0;
+    $legacycount = 0;
     foreach ($results AS $result)
     {
         $param = $result->params;
@@ -341,6 +343,8 @@ function players()
         $avrcount = $avrcount + $isavr;
         $isav = substr_count($param,$av);
         $avcount = $avcount + $isav;
+        $islegacy = substr_count($param, $legacy);
+        $legacycount = $legacycount + $islegacy;
         $total = $directcount + $internalcount + $avrcount + $avcount;
         $noplayer = $num_rows - $total;
     }
@@ -348,6 +352,7 @@ function players()
     '<br /><strong>'.JText::_('Internal Player').': </strong>'.$internalcount.
     '<br /><strong>'.JText::_('All Videos Reloaded').': </strong>'.$avrcount.
     '<br /><strong>'.JText::_('All Videos Plugin').': </strong>'.$avcount.
+    '<br /><strong>'.JText::_('Legacy MP3 Player').': </strong>'.$legacycount.
     '<br /><strong>'.JText::_('No Player - treated as direct').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
     return $mediaplayers;
 }

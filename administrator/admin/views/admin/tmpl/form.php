@@ -156,6 +156,7 @@ if ($sh404exists)
 <option value="1"><?php echo JText::_('Internal Player');?></option>
 <option value="2"><?php echo JText::_('All Videos Reloaded');?></option>
 <option value="3"><?php echo JText::_('All Videos Plugin');?></option>
+<option value="7"><?php echo JText::_('Legacy MP3 Player');?></option>
 <option value="100"><?php echo JText::_('No Player Listed');?></option>
 </select>
 </td>
@@ -166,6 +167,7 @@ if ($sh404exists)
 <option value="1"><?php echo JText::_('Internal Player');?></option>
 <option value="2"><?php echo JText::_('All Videos Reloaded');?></option>
 <option value="3"><?php echo JText::_('All Videos Plugin');?></option>
+<option value="7"><?php echo JText::_('Legacy MP3 Player');?></option>
 
 </select>
 <input type="hidden" name="option" value="com_biblestudy" />

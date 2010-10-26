@@ -48,8 +48,20 @@ function getComments($params, $row, $Itemid)
 		$pageclass_sfx = $params->get('pageclass_sfx');
 		$Itemid = JRequest::getVar('Itemid');
 		$commentjava = "javascript:ReverseDisplay('comments')";
-		$comments = '<strong><a class="heading'.$pageclass_sfx.'" href="'.$commentjava.'">>>'.JText::_('Show/Hide Comments').'<<</a></strong>
-		<div id="comments" style="display:none;"><br />';
+        
+        switch ($params->get('link_comments',0))
+        {
+            case 0:
+            $comments = '<strong><a class="heading'.$pageclass_sfx.'" href="'.$commentjava.'">>>'
+            .JText::_('Show/Hide Comments').'<<</a></strong>
+            <div id="comments" style="display:none;"><br />';
+            break;
+            
+            case 1:
+            echo $comments = '<div id="comments">';
+            break;
+        }
+		
 if (count($commentsresult)) {
 
 $comments .= '

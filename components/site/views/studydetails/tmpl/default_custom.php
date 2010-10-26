@@ -56,17 +56,34 @@ $listingcall = JView::loadHelper('listing');
 	
 		</div>
 <?php } //end of if comments param?>
-<?php if ($this->params->get('show_passage_view') > 0) { ?>
-		
-          <strong><a class="heading" href="javascript:ReverseDisplay('scripture')">>><?php echo JText::_('Show/Hide Scripture Passage');?><<</a>
-
-        <div id="scripture" style="display:none;"></strong>
-          <?php 
-		  $passage_call = JView::loadHelper('passage');
-          $response = getPassage($params, $row);
-          echo $response;?>
-        </div>
-<?php } //end of if passage?>
+<?php
+switch ($this->params->get('show_passage_view', '0'))
+        {
+            case 0:
+                break;
+            
+            case 1:
+                ?>
+                <strong><a class="heading" href="javascript:ReverseDisplay('scripture')">>>
+                <?php echo JText::_('Show/Hide Scripture Passage');?><<</a>
+                <div id="scripture" style="display:none;"></strong>
+                <?php 
+                
+                $passage_call = JView::loadHelper('passage');
+                $response = getPassage($params, $row);
+                echo $response;
+                echo '</div>';
+                break;
+        
+            case 2:
+                echo '<div id="scripture">';
+                $passage_call = JView::loadHelper('passage');
+                $response = getPassage($params, $row);
+                echo $response;
+                echo '</div>';
+                break;
+        }
+?>
 	<div class="listingfooter"><br />
     <?php $link_text = $this->params->get('link_text');
 			if (!$link_text) {
