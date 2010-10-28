@@ -225,12 +225,14 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
  * $player->type 0 = inline, 1 = popup/new window
 */
      $player->player = 0;
-    if ($params->get('media_player') > 0) {$player->player = $params->get('media_player');}
-    if ($itemparams->get('player') == 1)
+     $params_mediaplayer = $params->get('media_player');
+     $item_mediaplayer = $itemparams->get('player');
+    if ($params_mediaplayer > 0) {$player->player = $params_mediaplayer;}
+    if ($item_mediaplayer == 1)
         {
             $player->player = 1;
         }
-    if ($itemparams->get('player') == 2)
+    if ($item_mediaplayer == 2)
         {
             $player->player = 2;
             if ($mediaPlayer == 'av')
@@ -238,7 +240,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
                 $player->player = 3;
             }
         }
-    if ($itemparams->get('player') == 3)
+    if ($item_mediaplayer == 3)
         {
             $player->player = 3;
         }
@@ -254,16 +256,36 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
 		{
 			$player->player = 6;
 		}
-    if ($itemparams->get('player')== 7) {$player->player = 7;}
+    if ($item_mediaplayer == 7) {$player->player = 7;}
     
-      $player->type = 0; //dump ($player->type, 'type: ');
-      $param_player = $params->get('internal_popup');
-      $item_player = $itemparams->get('internal_popup');
-      $player->type = $param_player;
-      if ($item_player){$player->type = $itemparams->get('internal_popup');}
-   //   if ($params->get('internal_popup') > 0) {$player->type = $params->get('internal_popup');}
-  //    if ($itemparams->get('internal_popup') < 3){$player->type = $itemparams->get('internal_popup');}
     //Get the popup or inline;
+    
+      $player->type = 1; //dump ($player->type, 'type: ');
+      //This is the global parameter set in Template Display settings
+      $param_playertype = $params->get('internal_popup');
+      //This is the media item specific parameter
+      $item_playertype = $itemparams->get('internal_popup');
+      
+      if ($param_playertype)
+      {
+        $player->type = $param_playertype;
+      }
+      
+      switch ($item_playertype)
+        {
+            case 3:
+            break;
+            
+            case 0:
+            $player->type = 0;
+            break;
+            
+            case 1:
+            $player->type = 1;
+            break;
+        }
+
+    
    
     return $player;
 }
