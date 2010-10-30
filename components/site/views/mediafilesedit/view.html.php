@@ -34,9 +34,41 @@ class biblestudyViewmediafilesedit extends JView {
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/noconflict.js');
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 		$document->addScript(JURI::base().'administrator/components/com_biblestudy/js/views/mediafilesedit.js');
+			//Here we check to see if docMan or VirtueMart are there by looking at their data tables so we don't error out
+		$vmenabled = NULL;
+		$dmenabled = NULL;
+		$db = JFactory::getDBO();
+        
+       //First we check for the Joomla version and branch according to whether 1.5 or 1.6 because components are held in different tables
+       
+       $version = JVERSION;
+      // echo $version.'<br>';
+       $is15 = substr_count($version,'1.5');
+       if ($is15)
+       {
+            $db->setQuery('SELECT name, enabled FROM #__components where enabled = 1');
+       }
+	   else
+       {
+            $db->setQuery('SELECT name, enabled FROM #__extensions where enabled = 1');
+       }	
+		$db->query();
+		$components = $db->loadObjectList(); 
 		
-		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
-		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
+		foreach ($components as $component)
+		{
+		  
+			if ($component->name == 'VirtueMart')
+			{
+				$vmenabled = 1;
+			}
+			if ($component->name == 'DOCman')
+			{
+				$dmenabled = 1;
+			}
+		} 
+//		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
+//		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
 		$this->assignRef('vmenabled', $vmenabled);
 		$this->assignRef('dmenabled', $dmenabled);
 		

@@ -51,8 +51,19 @@ class biblestudyViewmediafilesedit extends JView {
 		$dmenabled = NULL;
 		$db = JFactory::getDBO();
         
+       //First we check for the Joomla version and branch according to whether 1.5 or 1.6 because components are held in different tables
        
-		$db->setQuery('SELECT name, enabled FROM #__components where enabled = 1');
+       $version = JVERSION;
+      // echo $version.'<br>';
+       $is15 = substr_count($version,'1.5');
+       if ($is15)
+       {
+            $db->setQuery('SELECT name, enabled FROM #__components where enabled = 1');
+       }
+	   else
+       {
+            $db->setQuery('SELECT name, enabled FROM #__extensions where enabled = 1');
+       }	
 		$db->query();
 		$components = $db->loadObjectList(); 
 		
