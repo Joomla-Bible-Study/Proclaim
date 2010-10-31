@@ -118,7 +118,7 @@ class biblestudyViewstudieslist extends JView {
 		$this->assignRef('topic', $topics);
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
-
+//dump ($item,'item: ');
 		$images = new jbsImages();
 
 		$main = $images->mainStudyImage(); // dump ($main, 'main: ');
@@ -127,7 +127,7 @@ class biblestudyViewstudieslist extends JView {
 
 	  	//Get the Popular stats
 	  	$stats = new jbStats();
-	  	$popular = $stats->top_score_site();
+	  	$popular = $stats->top_score_site($item->id);
 	  	$this->assignRef('popular',$popular);
         //Get whether "Go" Button is used then turn off onchange if it is
         if ($params->get('use_go_button',0) == 0)

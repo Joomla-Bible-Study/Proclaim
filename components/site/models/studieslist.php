@@ -391,17 +391,30 @@ function getTemplate() {
         $menuitemid = JRequest::getInt( 'Itemid' );
           if ($menuitemid)
           {
+            $menubooks = null;
+            $menuteacher = null;
+            $menulocations = null;
+            $menubooks = null;
+            $menumessagetype = null;
+            $menutopics = null;
+            $menuseries = null;
             $menu = JSite::getMenu();
             $menuparams = $menu->getParams( $menuitemid );
+            $menuteacher = $menuparams->get('mteacher_id');
+            $menulocations = $menuparams->get('mlocations');
+            $menubooks = $menuparams->get('mbooknumber');
+            $menuseries = $menuparams->get('mseries_id');
+            $menutopics = $menuparams->get('mtopic_id');
+            $menumessagetype = $menuparams->get('mmessagetype');
            // $params->merge( $menuparams );
           }
 
         
         $where2 = array();
 		$continue = 0;
-		if (($params->get('teacher_id') || $menuparams->get('mteacher_id')) && !$filter_teacher) 
+		if (($params->get('teacher_id') || $menuteacher ) && !$filter_teacher) 
 			{ 
-				if ($menuparams->get('mteacher_id')) {$filters = $menuparams->get('mteacher_id');}
+				if ($menuteacher) {$filters = $menuteacher;}
 					else {$filters = $params->get('teacher_id');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
@@ -430,9 +443,9 @@ function getTemplate() {
 							break;
 					}
 				}
-		if (($params->get('locations') || $menuparams->get('mlocations'))&& !$filter_location) 
+		if (($params->get('locations') || $menulocations)&& !$filter_location) 
 			{ 
-				if ($menuparams->get('mlocations')){$filters = $menuparams->get('mlocations');}
+				if ($menulocations){$filters = $menulocations;}
 					else {$filters = $params->get('locations');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
@@ -461,9 +474,9 @@ function getTemplate() {
 							break;
 					}
 				} 	
-		if (($params->get('booknumber') || $menuparams->get('mbooknumber')) && !$filter_book) 
+		if (($params->get('booknumber') || $menubooks) && !$filter_book) 
 			{ 
-				if ($menuparams->get('mbooknumber')){$filters = $menuparams->get('mbooknumber');}
+				if ($menubooks){$filters = $menubooks;}
 					else {$filters = $params->get('booknumber');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
@@ -492,9 +505,9 @@ function getTemplate() {
 							break;
 					}
 				}
-		if (($params->get('series_id') || $menuparams->get('mseries_id')) && !$filter_series) 
+		if (($params->get('series_id') || $menuseries) && !$filter_series) 
 			{ 
-				if ($menuparams->get('mseries_id')) {$filters = $menuparams->get('mseries_id');}
+				if ($menuseries) {$filters = $menuseries;}
 					else {$filters = $params->get('series_id');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
@@ -523,9 +536,9 @@ function getTemplate() {
 							break;
 					}
 				}
-		if (($params->get('topic_id') || $menuparams->get('mtopic_id')) && !$filter_topic) 
+		if (($params->get('topic_id') || $menutopics) && !$filter_topic) 
 			{ 
-				if ($menuparams->get('mtopic_id')) {$filters = $menuparams->get('mtopic_id');}
+				if ($menutopics) {$filters = $menutopics;}
 					else {$filters = $params->get('topic_id');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{
@@ -556,9 +569,9 @@ function getTemplate() {
 							break;
 					}
 				}
-		if (($params->get('messagetype') || $menuparams->get('mmessagetype')) && !$filter_messagetype) 
+		if (($params->get('messagetype') || $menumessagetype) && !$filter_messagetype) 
 			{ 
-				if ($menuparams->get('mmessagetype')){$filters = $menuparams->get('mmessagetype');}
+				if ($menumessagetype){$filters = $menumessagetype;}
 					else {$filters = $params->get('messagetype');} //dump ($filters, 'filters: ');
 					switch ($filters)
 					{

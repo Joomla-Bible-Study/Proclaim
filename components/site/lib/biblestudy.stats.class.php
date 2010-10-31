@@ -270,9 +270,10 @@ function top_score()
 	return $topscoretable;
 }
 
-function top_score_site()
+function top_score_site($item)
 	{
 	$t = JRequest::getInt('templatemenuid',1,'get');
+   // $Itemid = JRequet::getInt('Itemid','get');
 	$admin_params = getAdminsettings();
 	$limit = $admin_params->get('popular_limit','25');
 	$top = '<select onchange="goTo()" id="urlList"><option value="">- '.JText::_('Select A Popular Study').' -</option>';
@@ -294,7 +295,7 @@ function top_score_site()
 			if (!$hits->studytitle){$name = $hits->id;}else{$name = $hits->studytitle;}
 			if ($format < 1){$total = $result->added + $hits->hits;}
             else $total = $result->added;
-			$selectvalue = JRoute::_(JURI::base().'index.php?option=com_biblestudy&view=studydetails&id='.$hits->id.'&templatemenuid='.$t);
+			$selectvalue = JRoute::_(JURI::base().'index.php?option=com_biblestudy&view=studydetails&id='.$hits->id.'&templatemenuid='.$t.'&Itemid='.$item);
 			$selectdisplay = '<strong>'.$name.'</strong> - '.JText::_('Score').': '.$total;
 			$final2 = array('score'=>$total,'select'=> $selectvalue, 'display'=> $selectdisplay);
 			$final[] = $final2;
