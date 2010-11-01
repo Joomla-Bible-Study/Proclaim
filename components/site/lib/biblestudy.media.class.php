@@ -263,9 +263,10 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
       $player->type = 1; //dump ($player->type, 'type: ');
       //This is the global parameter set in Template Display settings
       $param_playertype = $params->get('internal_popup');
+  //    dump ($param_playertype, 'param: ');
       //This is the media item specific parameter
       $item_playertype = $itemparams->get('internal_popup');
-      
+   //   dump ($item_playertype, 'item: ');
       if ($param_playertype)
       {
         $player->type = $param_playertype;
@@ -274,6 +275,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
       switch ($item_playertype)
         {
             case 3:
+            $player->type = $param_playertype;
             break;
             
             case 0:
@@ -284,9 +286,10 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
             $player->type = 1;
             break;
         }
-
+      
     
-   
+  // dump ($player->type, 'player: ');
+ //  if ($itemparams->get('internal_popup')== '') {$player->type = $params_playertype;}
     return $player;
 }
 
