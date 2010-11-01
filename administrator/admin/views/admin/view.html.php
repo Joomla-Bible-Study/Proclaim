@@ -14,6 +14,7 @@ class biblestudyViewadmin extends JView
 	function display($tpl = null)
 	{
 
+
         JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$admin		=& $this->get('Data');
 		$this->assignRef('admin', $admin);

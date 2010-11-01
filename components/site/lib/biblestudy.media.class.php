@@ -222,7 +222,8 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
  * internal_popup 0 = inline, 1 = popup, 2 = global settings
  *
  * Get the $player->player: 0 = direct, 1 = internal, 2 = AVR, 3 = AV, 4 = Docman, 5 = article, 6 = Virtuemart, 7 = legacy player
- * $player->type 0 = inline, 1 = popup/new window
+ * $player->type 0 = inline, 1 = popup/new window 3 = Use Global Settings (from params)
+ * In 6.2.3 we changed inline = 2
 */
      $player->player = 0;
      $params_mediaplayer = $params->get('media_player');
@@ -258,11 +259,12 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
 		}
     if ($item_mediaplayer == 7) {$player->player = 7;}
     
-    //Get the popup or inline;
+    //Get the popup or inline - 1 = popup, 2 = inline
     
       $player->type = 1; //dump ($player->type, 'type: ');
       //This is the global parameter set in Template Display settings
       $param_playertype = $params->get('internal_popup');
+      if (!$param_playertype){$param_playertype = 1;}
   //    dump ($param_playertype, 'param: ');
       //This is the media item specific parameter
       $item_playertype = $itemparams->get('internal_popup');
@@ -278,8 +280,8 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
             $player->type = $param_playertype;
             break;
             
-            case 0:
-            $player->type = 0;
+            case 2:
+            $player->type = 2;
             break;
             
             case 1:
@@ -389,7 +391,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
         case 1: //Internal
             switch ($player->type)
             {
-                case 0: //Inline
+                case 2: //Inline
 				$embedshare = $params->get('embedshare','FALSE'); // Used for Embed Share replace with param
                     $playercode =
                     "<script type='text/javascript'>
@@ -432,7 +434,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                 "' alt='".$src."'></a>";
                 break;
 
-                case 0: // This plays the video inline
+                case 2: // This plays the video inline
                 $mediacode = $this->getAVmediacode($media->mediacode);
                 $playercode = JHTML::_('content.prepare', $mediacode);
                 break;
@@ -454,7 +456,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
         case 7: //Legacy internal player
             switch ($player->type)
             {
-                case 0:
+                case 2:
                 $playercode = '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
 		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$player->playerwidth.'">
 		<param name="movie" value="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf">

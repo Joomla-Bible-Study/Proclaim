@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <comupgrade version="1.0">
-	<install version="6.2.0" versiondate="2010-09-06" build="614" versionname="Deuteronomy">
+	<install version="6.2.3" versiondate="2010-11-05" build="623" versionname="1Samuel">
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `id` int(11) NOT NULL,
 					  `podcast` text,
@@ -419,6 +419,12 @@
 		</version>
         <version version="6.2.1" versiondate="2010-09-27" build="615" versionname="Joshua">
             <phpfile name="biblestudy.615.upgrade.php" />
+        </version>
+        <version version="6.2.2" versiondate="2010-10-25" build="622" versionname="Judges">
+            <phpfile name="biblestudy.622.upgrade.php" />
+        </version>
+        <version version="6.2.3" versiondate="2010-11-03" build="623" versionname="1Samuel">
+            <phpfile name="biblestudy.623.upgrade.php" />
         </version>
 	</upgrade>
 </comupgrade>

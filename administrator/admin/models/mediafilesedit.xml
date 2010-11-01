@@ -10,8 +10,8 @@
             <option value="7">Use Legacy Audio Player</option>
 		</param>
         <param name="internal_popup" type="list" default="3" label="Display as popup/New Window" description="Choose whether the internal viewer should be a popup or inline. If direct then plays in new window. Affects this file only. Overrides global settings">
-                <option value="0">Inline</option>
-				<option value="1">Popup</option>
+                <option value="1">Popup</option>
+                <option value="2">Inline</option>
                 <option value="3">Use Global Setting</option>
 				</param>
 		<param name="playerwidth" default="" type="text" label="Custom width for internal player or window" description="Set a width for the player or direct link that will play in a new window. 300 assumed if nothing added. Affects only this file" />
