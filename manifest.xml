@@ -4,10 +4,10 @@
          version="1.5.0"
          method="upgrade">
   <name>Bible Study</name>
-  <version>6.2.1</version>
+  <version>6.2.3</version>
   <versionname>Joshua</versionname>
-  <creationDate>2010-09-27</creationDate>
-  <build>615</build>
+  <creationDate>2010-11-02</creationDate>
+  <build>623</build>
   <author>Tom Fuller, Eugen Istok, Kyle Holder, Richard Hunt, Nick Fossen - JoomlaBibleStudy Team</author>
   <authorEmail>info@joomlabiblestudy.org</authorEmail>
   <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>

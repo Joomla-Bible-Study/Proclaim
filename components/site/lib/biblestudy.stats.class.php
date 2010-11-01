@@ -366,7 +366,7 @@ function popups()
     $db->query();
     $num_rows = $db->getNumRows();
     $results = $db->loadObjectList();
-    $inline = 'internal_popup=0';
+    $inline = 'internal_popup=2';
     $pop = 'internal_popup=1';
     $global = 'internal_popup=3';
  //   $avr = 'player=2';

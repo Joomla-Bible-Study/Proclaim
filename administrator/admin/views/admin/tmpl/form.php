@@ -193,7 +193,7 @@ if ($sh404exists)
 
 <select name="pfrom" id="pfrom">
 <option value="x"><?php echo JText::_('Select an Existing Option');?></option>
-<option value="0"><?php echo JText::_('Inline');?></option>
+<option value="2"><?php echo JText::_('Inline');?></option>
 <option value="1"><?php echo JText::_('Popup/New Window');?></option>
 <option value="3"><?php echo JText::_('Use Global Settings');?></option>
 <option value="100"><?php echo JText::_('No Option Listed');?></option>
@@ -202,7 +202,7 @@ if ($sh404exists)
 <td>
 <select name="pto" id="pto">
 <option value="x"><?php echo JText::_('Select a New Option');?></option>
-<option value="0"><?php echo JText::_('Inline');?></option>
+<option value="2"><?php echo JText::_('Inline');?></option>
 <option value="1"><?php echo JText::_('Popup/New Window');?></option>
 <option value="3"><?php echo JText::_('Use Global Settings');?></option>
 
