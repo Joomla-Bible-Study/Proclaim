@@ -191,7 +191,7 @@ else {return $msg= ' No media files were associated with a podcast. ';}
 				$title = $episodedate.' - '.$scripture.' - '.$episode->studytitle;
 				break;
 			case 5:
-				$element = getCustom($rowid='row1col1', $podinfo->custom, $episode, $params);
+				$element = getCustom($rowid='row1col1', $podinfo->custom, $episode, $params, $admin_params, $detailstemplateid);
 				//dump ($episode->custom, 'custom: ');
 				$title = $element->element;
 				break;
