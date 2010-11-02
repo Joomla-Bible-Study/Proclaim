@@ -388,16 +388,17 @@ function getTemplate() {
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
         
         //These params are the filters set by the menu item, not in the JBS template
+        $menubooks = null;
+        $menuteacher = null;
+        $menulocations = null;
+        $menubooks = null;
+        $menumessagetype = null;
+        $menutopics = null;
+        $menuseries = null;
         $menuitemid = JRequest::getInt( 'Itemid' );
           if ($menuitemid)
           {
-            $menubooks = null;
-            $menuteacher = null;
-            $menulocations = null;
-            $menubooks = null;
-            $menumessagetype = null;
-            $menutopics = null;
-            $menuseries = null;
+            
             $menu = JSite::getMenu();
             $menuparams = $menu->getParams( $menuitemid );
             $menuteacher = $menuparams->get('mteacher_id');
