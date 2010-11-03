@@ -5,8 +5,8 @@
            type="text"
            size="2"
            default="5"
-           label="Number of studies to display"
-           description="Enter a number of studies to display in each listing page" />
+           label="JBS_TPL_ITEMSLIMIT"
+           description="JBS_TPL_ITEMSLIMIT_TT" />
   </params>
   <params group="TEMPLATES"
           addpath="/components/com_biblestudy/elements">
@@ -2047,7 +2047,7 @@
            description="JBS_TPL_SERIES_SERIES_ORDER_FIELD_TT">
       <option value="series_text">JBS_TPL_SERIES_TITLE_TEXT</option>
       <option value="id">JBS_TPL_ID</option>
-      <option value="t.teachername">JBS_TPL_TEACHER_NAME</option>
+      <option value="t.teachername">JBS_CMN_TEACHER_NAME</option>
     </param>
     <param name="serieselement1"
            type="list"
@@ -2222,7 +2222,7 @@
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
-      <option value="7">JBS_TPL_TEACHER_NAME</option>
+      <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_TPL_SCRIPTURE1</option>
       <option value="2">JBS_TPL_SCRIPTURE2</option>
@@ -2232,9 +2232,9 @@
       <option value="6">JBS_TPL_INTRODUCTION</option>
       <option value="12">JBS_TPL_HITS</option>
       <option value="13">JBS_TPL_STUDYNUMBER</option>
-      <option value="14">JBS_TPL_TOPIC</option>
-      <option value="15">JBS_TPL_LOCATION</option>
-      <option value="16">JBS_TPL_MESSAGE_TYPE</option>
+      <option value="14">JBS_CMN_TOPIC</option>
+      <option value="15">JBS_CMN_LOCATION</option>
+      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
@@ -2259,7 +2259,7 @@
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
-      <option value="7">JBS_TPL_TEACHER_NAME</option>
+      <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_TPL_SCRIPTURE1</option>
       <option value="2">JBS_TPL_SCRIPTURE2</option>
@@ -2269,9 +2269,9 @@
       <option value="6">JBS_TPL_INTRODUCTION</option>
       <option value="12">JBS_TPL_HITS</option>
       <option value="13">JBS_TPL_STUDYNUMBER</option>
-      <option value="14">JBS_TPL_TOPIC</option>
-      <option value="15">JBS_TPL_LOCATION</option>
-      <option value="16">JBS_TPL_MESSAGE_TYPE</option>
+      <option value="14">JBS_CMN_TOPIC</option>
+      <option value="15">JBS_CMN_LOCATION</option>
+      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
@@ -2296,7 +2296,7 @@
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
-      <option value="7">JBS_TPL_TEACHER_NAME</option>
+      <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_TPL_SCRIPTURE1</option>
       <option value="2">JBS_TPL_SCRIPTURE2</option>
@@ -2306,9 +2306,9 @@
       <option value="6">JBS_TPL_INTRODUCTION</option>
       <option value="12">JBS_TPL_HITS</option>
       <option value="13">JBS_TPL_STUDYNUMBER</option>
-      <option value="14">JBS_TPL_TOPIC</option>
-      <option value="15">JBS_TPL_LOCATION</option>
-      <option value="16">JBS_TPL_MESSAGE_TYPE</option>
+      <option value="14">JBS_CMN_TOPIC</option>
+      <option value="15">JBS_CMN_LOCATION</option>
+      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
@@ -2333,7 +2333,7 @@
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
-      <option value="7">JBS_TPL_TEACHER_NAME</option>
+      <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_TPL_SCRIPTURE1</option>
       <option value="2">JBS_TPL_SCRIPTURE2</option>
@@ -2343,9 +2343,9 @@
       <option value="6">JBS_TPL_INTRODUCTION</option>
       <option value="12">JBS_TPL_HITS</option>
       <option value="13">JBS_TPL_STUDYNUMBER</option>
-      <option value="14">JBS_TPL_TOPIC</option>
-      <option value="15">JBS_TPL_LOCATION</option>
-      <option value="16">JBS_TPL_MESSAGE_TYPE</option>
+      <option value="14">JBS_CMN_TOPIC</option>
+      <option value="15">JBS_CMN_LOCATION</option>
+      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
@@ -2397,7 +2397,7 @@
            description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
-      <option value="7">JBS_TPL_TEACHER_NAME</option>
+      <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_TPL_SCRIPTURE1</option>
       <option value="2">JBS_TPL_SCRIPTURE2</option>
@@ -2406,9 +2406,9 @@
       <option value="6">JBS_TPL_INTRODUCTION</option>
       <option value="12">JBS_TPL_HITS</option>
       <option value="13">JBS_TPL_STUDYNUMBER</option>
-      <option value="14">JBS_TPL_TOPIC</option>
-      <option value="15">JBS_TPL_LOCATION</option>
-      <option value="16">JBS_TPL_MESSAGE_TYPE</option>
+      <option value="14">JBS_CMN_TOPIC</option>
+      <option value="15">JBS_CMN_LOCATION</option>
+      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -2426,7 +2426,7 @@
            description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
-      <option value="7">JBS_TPL_TEACHER_NAME</option>
+      <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_TPL_SCRIPTURE1</option>
       <option value="2">JBS_TPL_SCRIPTURE2</option>
@@ -2435,9 +2435,9 @@
       <option value="6">JBS_TPL_INTRODUCTION</option>
       <option value="12">JBS_TPL_HITS</option>
       <option value="13">JBS_TPL_STUDYNUMBER</option>
-      <option value="14">JBS_TPL_TOPIC</option>
-      <option value="15">JBS_TPL_LOCATION</option>
-      <option value="16">JBS_TPL_MESSAGE_TYPE</option>
+      <option value="14">JBS_CMN_TOPIC</option>
+      <option value="15">JBS_CMN_LOCATION</option>
+      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -2455,7 +2455,7 @@
            description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
-      <option value="7">JBS_TPL_TEACHER_NAME</option>
+      <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_TPL_SCRIPTURE1</option>
       <option value="2">JBS_TPL_SCRIPTURE2</option>
@@ -2464,9 +2464,9 @@
       <option value="6">JBS_TPL_INTRODUCTION</option>
       <option value="12">JBS_TPL_HITS</option>
       <option value="13">JBS_TPL_STUDYNUMBER</option>
-      <option value="14">JBS_TPL_TOPIC</option>
-      <option value="15">JBS_TPL_LOCATION</option>
-      <option value="16">JBS_TPL_MESSAGE_TYPE</option>
+      <option value="14">JBS_CMN_TOPIC</option>
+      <option value="15">JBS_CMN_LOCATION</option>
+      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -2484,7 +2484,7 @@
            description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
-      <option value="7">JBS_TPL_TEACHER_NAME</option>
+      <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_TPL_SCRIPTURE1</option>
       <option value="2">JBS_TPL_SCRIPTURE2</option>
@@ -2493,9 +2493,9 @@
       <option value="6">JBS_TPL_INTRODUCTION</option>
       <option value="12">JBS_TPL_HITS</option>
       <option value="13">JBS_TPL_STUDYNUMBER</option>
-      <option value="14">JBS_TPL_TOPIC</option>
-      <option value="15">JBS_TPL_LOCATION</option>
-      <option value="16">JBS_TPL_MESSAGE_TYPE</option>
+      <option value="14">JBS_CMN_TOPIC</option>
+      <option value="15">JBS_CMN_LOCATION</option>
+      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -2513,7 +2513,7 @@
            description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
-      <option value="7">JBS_TPL_TEACHER_NAME</option>
+      <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_TPL_SCRIPTURE1</option>
       <option value="2">JBS_TPL_SCRIPTURE2</option>
@@ -2522,9 +2522,9 @@
       <option value="6">JBS_TPL_INTRODUCTION</option>
       <option value="12">JBS_TPL_HITS</option>
       <option value="13">JBS_TPL_STUDYNUMBER</option>
-      <option value="14">JBS_TPL_TOPIC</option>
-      <option value="15">JBS_TPL_LOCATION</option>
-      <option value="16">JBS_TPL_MESSAGE_TYPE</option>
+      <option value="14">JBS_CMN_TOPIC</option>
+      <option value="15">JBS_CMN_LOCATION</option>
+      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -3689,7 +3689,7 @@
       <option value="books">JBL_CMN_BOOKS</option>
       <option value="topics">JBL_CMN_TOPICS</option>
       <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
       <option value="years">JBL_CMN_YEARS</option>
     </param>
     <param type="list"
@@ -3702,7 +3702,7 @@
       <option value="books">JBL_CMN_BOOKS</option>
       <option value="topics">JBL_CMN_TOPICS</option>
       <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
       <option value="years">JBL_CMN_YEARS</option>
     </param>
     <param type="list"
@@ -3715,7 +3715,7 @@
       <option value="books">JBL_CMN_BOOKS</option>
       <option value="topics">JBL_CMN_TOPICS</option>
       <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
       <option value="years">JBL_CMN_YEARS</option>
     </param>
     <param type="list"
@@ -3728,7 +3728,7 @@
       <option value="books">JBL_CMN_BOOKS</option>
       <option value="topics">JBL_CMN_TOPICS</option>
       <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
       <option value="years">JBL_CMN_YEARS</option>
     </param>
     <param type="list"
@@ -3741,7 +3741,7 @@
       <option value="books">JBL_CMN_BOOKS</option>
       <option value="topics">JBL_CMN_TOPICS</option>
       <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
       <option value="years">JBL_CMN_YEARS</option>
     </param>
     <param type="list"
@@ -3754,7 +3754,7 @@
       <option value="books">JBL_CMN_BOOKS</option>
       <option value="topics">JBL_CMN_TOPICS</option>
       <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
       <option value="years">JBL_CMN_YEARS</option>
     </param>
     <param type="list"
@@ -3767,7 +3767,7 @@
       <option value="books">JBL_CMN_BOOKS</option>
       <option value="topics">JBL_CMN_TOPICS</option>
       <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
       <option value="years">JBL_CMN_YEARS</option>
     </param>
     <param type="spacer"></param>
