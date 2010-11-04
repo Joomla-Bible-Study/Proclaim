@@ -184,14 +184,6 @@
     </param>
   </params>
   <params group="MEDIA">
-    <param name="compat_mode"
-           type="list"
-           default="0"
-           label="JBS_TPL_MEDIA_COMPAT_MODE"
-           description="JBS_TPL_MEDIA_COMPAT_MODE_TT">
-      <option value="0">JBS_CMN_NO</option>
-      <option value="1">JBS_CMN_YES</option>
-    </param>
     <param name="protocol" 
             type="text" 
             size="10" 
