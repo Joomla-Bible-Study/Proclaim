@@ -45,60 +45,60 @@
 		<param name="messagetype" type="messagetype" default="" label="JBL_CMN_MESSAGE_TYPE" description="JBS_ADM_FILLIN_STUDY_MESSAGETYPE_TT" />
 	</params>
 	<params group="FILLIN-IMAGES">
-		<param name="series_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Series Thumbnail Folder" description="Path from images folder to series images like /images/series. If left blank then /images/stories is assumed." />
-		<param name="media_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Media Image Folder" description="Path from images folder to media images like /images/media. If left blank then /components/com_biblestudy/images is assumed." />
-		<param name="teachers_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="Teacher Image Folder" description="Path from images folder to teacher images like /images/teachers. If left blank then /images/stories is assumed." />
-		<param name="study_images" type="folderlist" hide_none="-1" directory="/images" size="150" label="Study Thumbnails Image Folder" description="Path from images folder to study thumbnail images like /images/thumbnails. If left blank then /images/stories is assumed." />
+		<param name="series_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="JBL_ADM_FILLIN_IMAGES_SERIES_IMAGEFOLDER" description="JBL_ADM_FILLIN_IMAGES_SERIES_IMAGEFOLDER_TT" />
+		<param name="media_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="JBL_ADM_FILLIN_IMAGES_MEDIA_IMAGEFOLDER" description="JBL_ADM_FILLIN_IMAGES_MEDIA_IMAGEFOLDER_TT" />
+		<param name="teachers_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="JBL_ADM_FILLIN_IMAGES_TEACHERS_IMAGEFOLDER" description="JBL_ADM_FILLIN_IMAGES_TEACHERS_IMAGEFOLDER_TT" />
+		<param name="study_images" type="folderlist" hide_none="-1" directory="/images" size="150" label="JBL_ADM_FILLIN_IMAGES_STUDY_IMAGES" description="JBL_ADM_FILLIN_IMAGES_STUDY_IMAGES_TT" />
 	</params>
 	<params group="FILLIN-MEDIAFILE" addpath="/administrator/components/com_biblestudy/elements">
-		<param name="download" type="list" default="0" label="Default Show Download Button" description="Set to Yes if you wish all mediafile records to automatically have the Show Download button selected.">
+		<param name="download" type="list" default="0" label="JBL_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBL_ADM_FILLIN_MEDIAFILE_DOWNLOAD_TT">
 			<option value="0">JBS_CMN_NO</option>
 			<option value="1">JBS_CMN_YES</option>
 		</param>
-		<param name="target" type="list" default="0" label="Default target type" description="Set to a particular target type as default.">
-			<option value="0">No default</option>
-			<option value="_blank">New Window</option>
-			<option value="_self">Same Window</option>
-			<option value="_parent">Parent Window</option>
-			<option value="_top">Full Body of the Window</option>
+		<param name="target" type="list" default="0" label="JBL_ADM_FILLIN_MEDIAFILE_TARGET" description="JBL_ADM_FILLIN_MEDIAFILE_TARGET_TT">
+			<option value="0">JBL_NO_DEFAULT</option>
+			<option value="_blank">JBL_NEW_WINDOW</option>
+			<option value="_self">JBL_SAME_WINDOW</option>
+			<option value="_parent">JBL_PARENT_WINDOW</option>
+			<option value="_top">JBL_FULL_WINDOW</option>
 		</param>
-		<param name="server" type="server" label="Default Server" description="Choose a default server from your list." default="" />
-		<param name="path" type="path" label="Default Folder" description="Choose a default folder from your list." default="" />
-		<param name="podcast" type="podcast" label="Default Podcast" description="Choose a default podcast from your list." default="" />
-		<param name="mime" type="mime" label="Default Mime Type" description="Choose a default mime type from your list." default="" />
+		<param name="server" type="server" label="JBL_ADM_FILLIN_MEDIAFILE_SERVER" description="JBL_ADM_FILLIN_MEDIAFILE_SERVER_TT" default="" />
+		<param name="path" type="path" label="JBL_ADM_FILLIN_MEDIAFILE_PATH" description="JBL_ADM_FILLIN_MEDIAFILE_PATH_TT" default="" />
+		<param name="podcast" type="podcast" label="JBL_ADM_FILLIN_MEDIAFILE_PODCAST" description="JBL_ADM_FILLIN_MEDIAFILE_PODCAST_TT" default="" />
+		<param name="mime" type="mime" label="JBL_ADM_FILLIN_MEDIAFILE_MIME" description="JBL_ADM_FILLIN_MEDIAFILE_MIME_TT" default="" />
 	</params>
 	<params group="SUBMISSION">	
-			<param name="allow_entry_study" type="list" default="0" label="Allow Front End Submission" description="Allow certain users to enter studes and mediafiles from the front end">
-				<option value="0">No Frontend access</option>
-				<option value="1">Allow Frontend access</option>
+			<param name="allow_entry_study" type="list" default="0" label="JBL_ADM_SUBMISSION_ALLOW_ENTRY_STUDY" description="JBL_ADM_SUBMISSION_ALLOW_ENTRY_STUDY_TT">
+				<option value="0">JBL_NO_FRONTEND_ACCESS</option>
+				<option value="1">JBL_ALLOW_FRONTEND_ACCESS</option>
 			</param>
-			<param name="entry_access" type="list" default="23" label="Access Front End Submission" description="Enter the level of access required for users to enter study information on the front end">
-				<option value="18">Registered Users</option>
-				<option value="19">Authors</option>
-				<option value="20">Editors</option>
-				<option value="21">Publishers</option>
-				<option value="23">Managers</option>
-				<option value="24">Administrators or superadmin</option>
+			<param name="entry_access" type="list" default="23" label="JBL_ADM_SUBMISSION_ENTRY_ACCESS" description="JBL_ADM_SUBMISSION_ENTRY_ACCESS_TT">
+				<option value="18">JBL_CMN_REGISTERED_USER</option>
+				<option value="19">JBL_CMN_AUTHORS</option>
+				<option value="20">JBL_CMN_EDITORS</option>
+				<option value="21">JBL_CMN_PUBLISHERS</option>
+				<option value="23">JBL_CMN_MANAGERS</option>
+				<option value="24">JBL_CMN_ADMIN_SUPERADMIN</option>
 			</param>
-			<param name="study_publish" type="list" default="0" label="Auto Publish front end submissions" description="Choose whether studies entered on the front end are automatically published or must be manually published by an admin on the backend">
-				<option value="0">No Auto Publish</option>
-				<option value="1">Auto Publish Studies</option>
+			<param name="study_publish" type="list" default="0" label="JBL_ADM_SUBMISSION_STUDY_PUBLISH" description="JBL_ADM_SUBMISSION_STUDY_PUBLISH_TT">
+				<option value="0">JBL_NO_AUTO_PUBLISH</option>
+				<option value="1">JBL_AUTO_PUBLISH</option>
 			</param>
 		</params>
 		<params group="ALLVIDEOSRELOADED">
-			<param name="itemidlinktype" type="list" default="0" label="AVR Itemid" description="If you experience problems with AVR, try using one of these settings">
-				<option value="0">Don't add an Itemid</option>
-				<option value="1">Try to find an Itemid from the menu</option>
-				<option value="2">Use the Itemid from below</option>
+			<param name="itemidlinktype" type="list" default="0" label="JBL_ADM_ALLVIDEOSRELOADED_ITEMIDLINKTYPE" description="JBL_ADM_ALLVIDEOSRELOADED_ITEMIDLINKTYPE_TT">
+				<option value="0">JBL_DONT_ADD_ITEMID</option>
+				<option value="1">JBL_FIND_ITEMID_MENUE</option>
+				<option value="2">JBL_ITEMID_BELOW</option>
 			</param>
-		<param name="itemidlinkview" type="list" default="studieslist" label="Choose type of view for Itemid" description="Pick the type of view to search for an Itemid in the menu">
-			<option value="studieslist">studieslist</option>
-			<option value="studydetails">studydetails</option>
-			<option value="teacherlist">teacherlist</option>
-			<option value="teacherdisplay">teacherdisplay</option>
-			<option value="serieslist">serieslist</option>
-			<option value="seriesdetail">seriesdetail</option>
+		<param name="itemidlinkview" type="list" default="studieslist" label="JBL_ADM_ALLVIDEOSRELOADED_ITEMIDLINKVIEW" description="JBL_ADM_ALLVIDEOSRELOADED_ITEMIDLINKVIEW_TT">
+			<option value="studieslist">JBS_CMN_STUDIES_LIST_VIEW</option>
+			<option value="studydetails">JBS_CMN_STUDY_DETAILS_VIEW</option>
+			<option value="teacherlist">JBS_CMN_TEACHERS_LIST_VIEW</option>
+			<option value="teacherdisplay">JBS_CMN_TEACHER_VIEW</option>
+			<option value="serieslist">JBS_CMN_SERIES_LIST_VIEW</option>
+			<option value="seriesdetail">JBS_CMN_SERIES_DETAIL_VIEW</option>
 		</param>
-			<param name="itemidlinknumber" type="text" default="" label="Itemid to use (set above)" length="4" description="Put in an Itemid for AVR to use and set the choice above" />
+			<param name="itemidlinknumber" type="text" default="" label="JBL_ADM_ALLVIDEOSRELOADED_ITEMIDLINKNUMBER" length="4" description="JBL_ADM_ALLVIDEOSRELOADED_ITEMIDLINKNUMBER_TT" />
 	</params>
 </root>

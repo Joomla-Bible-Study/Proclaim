@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 	<params >
-		<param name="player" default="100" type="list" label="Player for this Media" description="Choose which media player to use, overrides global settings.">
-            <option value="100">Use Global Settings</option>
-			<option value="0">Direct Link to file</option>
-			<option value="1">Use internal Player</option>
-			<option value="2">Use All Videos Reloaded</option>
-            <option value="3">Use All Videos</option>
-            <option value="7">Use Legacy Audio Player</option>
+		<param name="player" default="100" type="list" label="JBL_MFE_PLAYER" description="JBL_MFE_PLAYER_TT">
+            <option value="100">JBL_CMN_USE_GLOBAL</option>
+			<option value="0">JBL_DIRECT_LINK</option>
+			<option value="1">JBL_USE_INTERNAL_PLAYER</option>
+			<option value="2">JBL_USE_AVR</option>
+            <option value="3">JBL_USE_AV</option>
+            <option value="7">JBL_USE_LEGACY_PLAYER</option>
 		</param>
         <param name="internal_popup" type="list" default="3" label="Display as popup/New Window" description="Choose whether the internal viewer should be a popup or inline. If direct then plays in new window. Affects this file only. Overrides global settings">
                 <option value="1">Popup</option>
                 <option value="2">Inline</option>
-                <option value="3">Use Global Setting</option>
+                <option value="3">JBL_CMN_USE_GLOBAL</option>
 				</param>
 		<param name="playerwidth" default="" type="text" label="Custom width for internal player or window" description="Set a width for the player or direct link that will play in a new window. 300 assumed if nothing added. Affects only this file" />
 		<param name="playerheight" default="" type="text" label="Custom height for internal player or window" description="Set a height attribute for the internal player or direct link that will play in a new window. 400 assumed. Only affects this mediafile" />

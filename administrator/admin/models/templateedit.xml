@@ -203,11 +203,11 @@
             default="0" 
             label="JBS_TPL_MEDIA_MEDIA_PLAYER" 
             description="JBS_TPL_MEDIA_MEDIA_PLAYER_TT">
-			<option value="0">JBS_TPL_DIRECT</option>
-			<option value="1">JBS_TPL_INTERNAL_PLAYER</option>
-      <option value="2">JBS_TPL_AVR</option>
-      <option value="3">JBS_TPL_AV</option>
-      <option value="7">JBS_TPL_LEGACY_PLAYER</option>
+			<option value="0">JBL_DIRECT_LINK</option>
+			<option value="1">JBL_USE_INTERNAL_PLAYER</option>
+      <option value="2">JBL_USE_AVR</option>
+      <option value="3">JBL_USE_AV</option>
+      <option value="7">JBL_USE_LEGACY_PLAYER</option>
     </param>
     <param name="popuptype"
            type="list"
