@@ -62,12 +62,7 @@ function com_install()
 	if (version_compare(phpversion(), BIBLESTUDY_MIN_PHP, ">=") && version_compare($mysqlversion, BIBLESTUDY_MIN_MYSQL, ">"))
 	{
 				
-		//Change the admin menu icon
-		$biblestudy_db->setQuery("SELECT id FROM #__components WHERE admin_menu_link = 'option=com_biblestudy'");
-		$id = $biblestudy_db->loadResult(); 
-		//add new admin menu images
-		$biblestudy_db->setQuery("UPDATE #__components SET admin_menu_img  = '../components/com_biblestudy/images/biblemenu.png', admin_menu_link = 'option=com_biblestudy' WHERE id='".$id."'");
-		$biblestudy_db->query();
+		
 
 //Before we upgrade, we need to fix something between versions 6.2.0_RC1 and RC2
 $db = JFactory::getDBO();
