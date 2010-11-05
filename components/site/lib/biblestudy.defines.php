@@ -21,9 +21,9 @@ define('BIBLESTUDY_LANGUAGE_DEFAULT', 'english');
 define('BIBLESTUDY_TEMPLATE_DEFAULT', 'default');
 
 $language =& JFactory::getLanguage();
-$lang = $language->getBackwardLang();
+//$lang = $language->getBackwardLang();
 
-define('BIBLESTUDY_LANGUAGE', $lang);
+//define('BIBLESTUDY_LANGUAGE', $lang);
 
 // File system paths
 define('BIBLESTUDY_COMPONENT_RELPATH', 'components' .DS. BIBLESTUDY_COMPONENT_NAME);
