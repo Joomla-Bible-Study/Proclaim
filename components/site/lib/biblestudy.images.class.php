@@ -125,13 +125,13 @@ class jbsImages
 	function getTeacherImageFolder()
 	{
 		$admin_params = $this->adminSettings();
-			if ($admin_params->get('teacher_imagefolder') == '- Select Image -' || !$admin_params->get('teacher_imagefolder'))
+			if ($admin_params->get('teachers_imagefolder') == '- Use Default -' || !$admin_params->get('teachers_imagefolder'))
 		{
 			$teacherimagefolder = 'images/stories';
 		}
 		else
 		{
-			$teacherimagefolder = 'images/'. $admin_params->get('teacher_imagefolder');
+			$teacherimagefolder = 'images/'. $admin_params->get('teachers_imagefolder');
 		}
 //		$teacherimagefolder = ($admin_params->get('teacher_imagefolder') ? 'images' .DS. $admin_params->get('teacher_imagefolder') : 'images/stories');
 		return $teacherimagefolder;
