@@ -180,7 +180,7 @@ class fx_Upgrade {
 	 * Main upgrade function. Processes XML file
 	 */
 	function doUpgrade() {
-		require_once( BIBLESTUDY_ROOT_PATH .DS. 'includes/domit/xml_domit_lite_include.php' );
+	//	require_once( BIBLESTUDY_ROOT_PATH .DS. 'includes/domit/xml_domit_lite_include.php' );
 		if(!$this->silent) {
 			?>
 			<script language=JavaScript>
@@ -300,7 +300,10 @@ class fx_Upgrade {
 		}
 
 		//initiate XML doc
+	//	$xmlDoc = new DOMIT_Lite_Document();
+        jimport('domit.xml_domit_lite_include');
 		$xmlDoc = new DOMIT_Lite_Document();
+  //  $xmlDoc = &JFactory::getXMLParser(); 
 		//dump ($this->_upgradeDir, 'upgrade dir: '); dump($this->xmlFileName, 'xml file: ');
 		$xmlDoc->loadXML( $this->_upgradeDir .DS. $this->xmlFileName, false, true );
 
