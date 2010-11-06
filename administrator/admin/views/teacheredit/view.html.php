@@ -26,8 +26,10 @@ class biblestudyViewteacheredit extends JView
 		JToolBarHelper::title(   JText::_( 'Teacher Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'teachers.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
+			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
+			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
@@ -35,9 +37,8 @@ class biblestudyViewteacheredit extends JView
 		JToolBarHelper::help( 'biblestudy', true );
 		
 		$images = new jbsImages();
-		$directory = $images->getTeacherImageFolder(); //dump ($directory, 'directory: ');
+		$directory = $images->getTeacherImageFolder();
 		$teacherImagePath = JPATH_SITE .DS. $directory;
-	//	$teacherImagePath = JPATH_SITE.'/images/'.$admin_params->get('teachers_imagefolder', 'stories');
 		$teacherImageList = JFolder::files($teacherImagePath, null, null, null, array('index.html'));
 
 		array_unshift($teacherImageList, '- '.JText::_('No Image').' -');
@@ -49,11 +50,7 @@ class biblestudyViewteacheredit extends JView
 		
 		$lists['teacher_thumbnail'] = JHTML::_('select.genericlist',  $teacherImageOptions, 'teacher_thumbnail', 'class="imgChoose" size="1"', 'value', 'text',  $teacheredit->teacher_thumbnail);
 		$lists['teacher_image'] = JHTML::_('select.genericlist',  $teacherImageOptions, 'teacher_image', 'class="imgChoose" size="1"', 'value', 'text', $teacheredit->teacher_image);
-		
-		//$directory = DS.'images'.DS.$admin_params->get('teachers_imagefolder', 'stories');
-		//$lists['teacher_thumbnail']	= JHTML::_('list.images',  'teacher_thumbnail', $teacheredit->teacher_thumbnail, ' ', $directory, "bmp|gif|jpg|png|swf"  );
-		//$lists['teacher_image']	= JHTML::_('list.images',  'teacher_image', $teacheredit->teacher_image, 'something=somethi ', $directory, "bmp|gif|jpg|png|swf"  );
-// build the html select list for ordering
+
 	$query = 'SELECT ordering AS value, ordering AS text'
 	. ' FROM #__bsms_teachers'
 	. ' WHERE catid = '. (int) $teacheredit->catid	. ' ORDER BY ordering'

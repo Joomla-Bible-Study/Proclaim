@@ -38,13 +38,8 @@ class biblestudyControllermediafilesedit extends JController {
 		$db->setQuery($query);
 		$folder = $db->loadObject();
 		$folderpath = $folder->folderpath;
-//dump ($folderpath, 'folderpath: ');
 		//This is where we check the make the extension is of a filetype that is okay to upload
-		//$file_extension = JFile::getExt($file);
-		//$fname_reject = 'index.htm|index.html|index.php';
-		//$ext_reject = 'asp|php';
 		$filename = $file['name'];
-		//dump ($file['name'], 'filename1: ');
 		if ($filename == 'index.htm'){
 			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
 			return;
@@ -69,13 +64,10 @@ class biblestudyControllermediafilesedit extends JController {
 		$file['name'] = str_replace('&', '_and_', $file['name']);
 		$filename = str_replace($badchars, '_', $file['name']);
 		$filename = str_replace('&', '_and_', $file['name']);
-		//dump ($file['name'], 'filename2: ');
 		if(isset($file) && is_array($file) && $file['name'] != '')
 		{
 			$fullfilename = JPATH_SITE.$folderpath. strtolower($file['name']);
-			//dump ($file['tmp_name'], 'tmp_name: ');
 			$filename = strtolower($file['name']);
-			//jimport('joomla.filesystem.file');
 
 
 			if (JFile::exists($fullfilename)) {
@@ -121,19 +113,6 @@ class biblestudyControllermediafilesedit extends JController {
 		$setFile = $file['name'];
 		$setArticle = JRequest::getVar('articleTitle', null, 'post');
 
-		/*if ($setFile && ($setDocman || $setArticle))
-		{
-			echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
-		}
-		if ($setDocman && ($setArticle || $setFile))
-		{
-			echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
-		}
-		if ($setArticle && ($setDocman || $setFile))
-		{
-		echo "<script> alert(JText::_('Use only File, Docman, or Article')); window.history.go(-1); </script>\n";
-		}*/
-
 		if ($model->store($post)) {
 			$msg = JText::_( 'Media Saved!' );
 		} else {
@@ -145,6 +124,34 @@ class biblestudyControllermediafilesedit extends JController {
 			$uploadFile=$this->upload();}
 			// Check the table in so it can be edited.... we are done with it anyway
 			$link = 'index.php?option=com_biblestudy&view=mediafileslist';
+			$this->setRedirect($link, $msg);
+	}
+	
+	/**
+	* apply rcord
+	* @return Void
+	*/
+	function apply()
+	{
+
+		$model = $this->getModel('mediafilesedit');
+		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
+		$file = JRequest::getVar('file', null, 'files', 'array' );
+		$setDocman = JRequest::getVar('docManItem', null, 'post');
+		$setFile = $file['name'];
+		$setArticle = JRequest::getVar('articleTitle', null, 'post');
+
+		if ($model->store($post)) {
+			$msg = JText::_( 'Media Saved!' );
+		} else {
+			$msg = JText::_( 'Error Saving Media' );
+		}
+
+		$filename_upload = strtolower($file['name']);
+		if (isset($filename_upload)){
+			$uploadFile=$this->upload();}
+			// Check the table in so it can be edited.... we are done with it anyway
+			$link = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=edit&cid[]='.$cid.'';
 			$this->setRedirect($link, $msg);
 	}
 

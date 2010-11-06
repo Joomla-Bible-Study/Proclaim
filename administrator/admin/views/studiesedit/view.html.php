@@ -9,7 +9,6 @@ class biblestudyViewstudiesedit extends JView {
 		$mainframe =& JFactory::getApplication();
 
 		$document =& JFactory::getDocument();
-		//$document->addStyleSheet(JURI::base().'components/com_biblestudy/css/general.css');
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
@@ -20,31 +19,9 @@ class biblestudyViewstudiesedit extends JView {
 		$admin=& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
 		
-		//dump ($admin_params, 'admin_params: ');
-		//$enableStore = $store->admin_store;
-		//dump ($store, 'store: ');
 		//Get Data
 		$studiesedit =& $this->get('Data');
 		$books =& $this->get('books');
-		//dump ($studiesedit);
-		//Add the params from the model
-		/*
-		$paramsdata = $studiesedit->params;
-		$paramsdefs = JPATH_COMPONENT_ADMINISTRATOR.DS.'models'.DS.'studiesedit.xml';
-		$params = new JParameter($paramsdata, $paramsdefs);
-		$this->assignRef('params', $params);
-		*/
-		//Manipulate Data
-	/*	$scriptures = explode(';', $studiesedit->scripture);
-		foreach($scriptures as $scripture){
-			$split = explode(' ', $scripture);
-			$scriptureBlocks[$scripture]['bookId'] =  $split[0];
-			$scriptureBlocks[$scripture]['text'] = $split[1];
-		}
-		array_unshift($books, JHTML::_('select.option', '0', '- '.JText::_('Select a Book').' -'));
-*/
-		
-		//dump ($lists['thumb'], 'lists: ');
 		$isNew		= ($studiesedit->id < 1);
 		$editor =& JFactory::getEditor();
 		$this->assignRef( 'editor', $editor );
@@ -53,11 +30,11 @@ class biblestudyViewstudiesedit extends JView {
 		JToolBarHelper::title(   JText::_( 'Edit Studies' ).': <small><small>[ ' . $text.' ]</small></small>', 'studies.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
+			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
-			// initialise new record
-			//$studiesedit->teacher_id 	= JRequest::getVar( 'teacher_id', 0, 'post', 'int' );
 
 		} else {
+			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
@@ -68,7 +45,6 @@ class biblestudyViewstudiesedit extends JView {
 		// build the html select list for ordering
 
 		//Build the select list for the study image
-		//$directory = DS.'images'.DS.$admin_params->get('study_images', 'stories');
 		$imagesPath = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images', 'stories');
 		$imageList 	= JFolder::files($imagesPath, null, null, null, array('index.html'));
 
@@ -79,10 +55,7 @@ class biblestudyViewstudiesedit extends JView {
 		}
 		$imageOptions[0]->value = 0; //Set the value of the "- No Image -" to 0. Makes it easier for jquery
 
-		//array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
 		$lists['thumbnailm'] = JHTML::_('select.genericlist',  $imageOptions, 'thumbnailm', 'class="imgChoose" size="1"', 'value', 'text', $studiesedit->thumbnailm );
-
-		//$lists['thumbnailm']	= JHTML::_('list.images',  'thumbnailm', $studiesedit->thumbnailm, ' ', $directory, "bmp|gif|jpg|png|swf"  );
 
 		$database	= & JFactory::getDBO();
 		$query = 'SELECT id AS value, teachername AS text, published'

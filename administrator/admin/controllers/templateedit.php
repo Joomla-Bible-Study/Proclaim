@@ -36,7 +36,7 @@ class biblestudyControllertemplateedit extends JController {
 	}
 
 	function save() {
-		$model = $this->getModel('templateedit'); //dump ($model, 'task: ');
+		$model = $this->getModel('templateedit');
 		$data = JRequest::get('post');
 		if ($model->store($post)) {
 			$msg = JText::_( 'Template Saved!' );
@@ -53,9 +53,7 @@ class biblestudyControllertemplateedit extends JController {
 
 			case 'save':
 			default:
-				//$msg = JText::_( 'Data Saved!' );
-				//$link = 'index.php?option=com_driver';
-
+			
 				// Check the table in so it can be edited.... we are done with it anyway
 				$link = 'index.php?option=com_biblestudy&view=templateslist';
 				break;

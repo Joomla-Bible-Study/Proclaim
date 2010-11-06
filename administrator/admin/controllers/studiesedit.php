@@ -45,7 +45,6 @@ class biblestudyControllerstudiesedit extends JController
 	 */
 	function save() {
 		$model = $this->getModel('studiesedit');
-//dump ($model);
 		if ($model->store($post)) {
 			$msg = JText::_( 'Study Saved!' );
 		} else {
@@ -54,6 +53,24 @@ class biblestudyControllerstudiesedit extends JController
 
 		// Check the table in so it can be edited.... we are done with it anyway
 		$link = 'index.php?option=com_biblestudy&view=studieslist';
+		$this->setRedirect($link, $msg);
+	}
+	
+	/**
+	 * apply a record
+	 * @return void
+	 */
+	function save() {
+		$model = $this->getModel('studiesedit');
+		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
+		if ($model->store($post)) {
+			$msg = JText::_( 'Study Saved!' );
+		} else {
+			$msg = JText::_( 'Error Saving Study' );
+		}
+
+		// Check the table in so it can be edited.... we are done with it anyway
+		$link = 'index.php?option=com_biblestudy&controller=studiesedit&task=edit&cid[]='.$cid.'';
 		$this->setRedirect($link, $msg);
 	}
 

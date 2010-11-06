@@ -18,12 +18,10 @@ class biblestudyViewadmin extends JView
         JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$admin		=& $this->get('Data');
 		$this->assignRef('admin', $admin);
-	//	$isNew		= ($admin->id < 1);
-	//	$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Administration' ), 'administration');
 		JToolBarHelper::save();
+		JToolBarHelper::apply();
         JToolBarHelper::cancel();
-      //  JToolBarHelper::apply();
 		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset All Hits', 'Reset All Hits', false, false );
 		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset All Download Hits', 'Reset All Download Hits', false, false );
 		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset All Plays', 'Reset All Plays', false, false );
@@ -179,7 +177,6 @@ class biblestudyViewadmin extends JView
 
 
 		jimport( 'joomla.i18n.help' );
-	//	JToolBarHelper::help( 'biblestudy', true );
 		$this->assignRef('lists', $lists);
 
 		

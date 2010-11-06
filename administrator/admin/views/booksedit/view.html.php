@@ -15,6 +15,7 @@ class biblestudyViewbooksedit extends JView {
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		JToolBarHelper::title(   JText::_( 'Books Edit' ).': <small><small>[ ' . $titleCaption.' ]</small></small>', 'biblebooks' );
 		JToolBarHelper::save();
+		JToolBarHelper::apply();
 		JToolBarHelper::cancel('cancel', $cancelCaption);	
 		JToolBarHelper::help( 'biblestudy', true );
 		

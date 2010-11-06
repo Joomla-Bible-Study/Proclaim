@@ -52,6 +52,25 @@ class biblestudyControllerlocationsedit extends JController
 	}
 
 	/**
+	 * apply a record 
+	 * @return void
+	 */
+	function apply()
+	{
+		$model = $this->getModel('locationsedit');
+		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
+		if ($model->store($post)) {
+			$msg = JText::_( 'Saved!' );
+		} else {
+			$msg = JText::_( 'Error Saving' );
+		}
+
+		// Check the table in so it can be edited.... we are done with it anyway
+		$link = 'index.php?option=com_biblestudy&controller=locationsedit&task=edit&cid[]='.$cid.'';
+		$this->setRedirect($link, $msg);
+	}
+	
+	/**
 	 * remove record(s)
 	 * @return void
 	 */

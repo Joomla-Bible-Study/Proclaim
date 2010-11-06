@@ -20,8 +20,10 @@ class biblestudyViewfoldersedit extends JView
 		JToolBarHelper::title(   JText::_( 'Folders Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'folder.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
+			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
+			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}

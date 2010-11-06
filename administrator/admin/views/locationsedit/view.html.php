@@ -22,8 +22,10 @@ class biblestudyViewlocationsedit extends JView
 		JToolBarHelper::save();
 		
 		if ($isNew)  {
+			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
+			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}

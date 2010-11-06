@@ -35,10 +35,11 @@ class biblestudyViewpodcastedit extends JView
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		JToolBarHelper::title(   JText::_( 'Podcast Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'podcast.png' );
 		JToolBarHelper::save();
-		//JToolBarHelper::custom('writeXML','save.png','writeXML','Write XML', false, false);
 		if ($isNew)  {
+			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
+			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}

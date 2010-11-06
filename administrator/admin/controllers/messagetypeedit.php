@@ -50,6 +50,25 @@ class biblestudyControllermessagetypeedit extends JController
 		$link = 'index.php?option=com_biblestudy&view=messagetypelist';
 		$this->setRedirect($link, $msg);
 	}
+	
+	/**
+	 * apply a record
+	 * @return void
+	 */
+	function apply()
+	{
+		$model = $this->getModel('messagetypeedit');
+		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
+		if ($model->store($post)) {
+			$msg = JText::_( 'Message Type Saved!' );
+		} else {
+			$msg = JText::_( 'Error Saving Message Type' );
+		}
+
+		// Check the table in so it can be edited.... we are done with it anyway
+		$link = 'index.php?option=com_biblestudy&controller=messagetypeedit&task=edit&cid[]='.$cid.'';
+		$this->setRedirect($link, $msg);
+	}
 
 	/**
 	 * remove record(s)

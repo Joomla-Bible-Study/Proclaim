@@ -23,7 +23,6 @@ class biblestudyViewseriesedit extends JView
 		$isNew		= ($seriesedit->id < 1);
 		$lists = array();
 		$teachers =& $this->get('Teacher');
-		//dump ($teachers, 'Teachers: ');
 		$types[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
 		$types 			= array_merge( $types, $teachers );
 		$lists['teacher'] = JHTML::_('select.genericlist', $types, 'teacher', 'class="inputbox" size="1" ', 'value', 'text',  $seriesedit->teacher );
@@ -44,8 +43,10 @@ class biblestudyViewseriesedit extends JView
 		JToolBarHelper::title(   JText::_( 'Series Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'series.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
+			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
+			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}

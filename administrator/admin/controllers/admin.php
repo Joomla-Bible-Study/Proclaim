@@ -49,7 +49,7 @@ class biblestudyControlleradmin extends JController {
 			case 'apply':
 				$msg = JText::_( 'Changes to Admin Settings Updated! (by Apply)' );
 				$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
-				$link = 'index.php?option=com_biblestudy&view=cpanel';
+				$link = 'index.php?option=com_biblestudy&view=admin&layout=form';
 				break;
 
 			case 'save':

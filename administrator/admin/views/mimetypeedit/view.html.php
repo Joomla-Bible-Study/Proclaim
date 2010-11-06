@@ -20,8 +20,10 @@ class biblestudyViewmimetypeedit extends JView
 		JToolBarHelper::title(   JText::_( 'Mime Type Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'mimetype.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
+			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
+			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}

@@ -20,8 +20,10 @@ class biblestudyViewmessagetypeedit extends JView
 		JToolBarHelper::title(   JText::_( 'Message Type Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'messagetype.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
+			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
+			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}

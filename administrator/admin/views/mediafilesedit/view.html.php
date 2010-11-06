@@ -16,11 +16,6 @@ class biblestudyViewmediafilesedit extends JView {
 
 		//Check to see if Docman and/or VirtueMart installed
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-//		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
-//		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
-	
-		//dump ($vmenabled->enabled, 'vm');
-		//dump ($dmenabled->enabled, 'dm');
 		
 		//Get Admin params
 		$admin=& $this->get('Admin');
@@ -144,54 +139,43 @@ if (substr($thefile->spath,0,4)=='http')
 else {$filepath = $protocol.$thefile->spath.$thefile->fpath.$thefile->filename;}
 
 $this->assignRef('filepath', $filepath);	
-		//dump($mediafilesedit);
-		
-		//if ($dmenabled)
-		//{
+
 			if($mediafilesedit->docMan_id != 0 && !$isNew) {
 				$this->assignRef('docManItem', $model->getDocManItem($mediafilesedit->docMan_id));
 				$this->assign('docManStyle', 'display: none');
 			}
 			$this->assignRef('docManCategories', $docManCategories);
-		//}
 		
 		if($mediafilesedit->article_id != 0 && !$isNew){
 			$this->assignRef('articleItem', $model->getArticleItem($mediafilesedit->article_id));
 			$this->assign('articleStyle', 'display: none');
 		}
-		
-		//if ($vmenabled)
-		//{
+
 			if($mediafilesedit->virtueMart_id != 0 && !$isNew){
 				$this->assignRef('virtueMartItem', $model->getVirtueMartItem($mediafilesedit->virtueMart_id));
 				$this->assign('virtueMartStyle', 'display: none');
 			}
 			$this->assignRef('virtueMartCategories', $virtueMartCategories);
-		//}
-		
-		//$editor =& JFactory::getEditor();
-		//this->assignRef( 'editor', $editor );
+
 		$lists = array();
 		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
 		JToolBarHelper::title(   JText::_( 'Edit Media' ).': <small><small>[ ' . $text.' ]</small></small>', 'mp3.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
+			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
-		
-			// initialise new record
-			//$studiesedit->teacher_id 	= JRequest::getVar( 'teacher_id', 0, 'post', 'int' );
 
 		} else {
+			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset Download Hits', 'Reset Download Hits', false, false );
 		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset Plays', 'Reset Plays', false, false );
 		}
-		//JToolBarHelper::media_manager( '/' );
+		
 		// Add an upload button and view a popup screen width 550 and height 400
 		$alt = "Upload";
 		$bar=& JToolBar::getInstance( 'toolbar' );
-		//$bar->appendButton( 'Popup', 'upload', $alt, 'index.php', 650, 500 );
 		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=", 650, 400 );
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy', true );
@@ -214,7 +198,6 @@ $this->assignRef('filepath', $filepath);
 				$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
 			}
 		$database->setQuery($query);
-		//$studies = $database->loadObjectList();
 		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );
 		$studies = array_merge($studies,$database->loadObjectList() );
 		$lists['studies'] = JHTML::_('select.genericlist', $studies, 'study_id', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->study_id);
@@ -224,7 +207,6 @@ $this->assignRef('filepath', $filepath);
 		. ' WHERE published = 1'
 		. ' ORDER BY server_path';
 		$database->setQuery( $query5 );
-		//$servers = $database->loadObjectList();
 		$types5[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Server' ) .' -' );
 		$types5 			= array_merge( $types5, $database->loadObjectList() );
 		$lists['server'] = JHTML::_('select.genericlist', $types5, 'server', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->server );
@@ -234,14 +216,12 @@ $this->assignRef('filepath', $filepath);
 		. ' WHERE published = 1'
 		. ' ORDER BY folderpath';
 		$database->setQuery( $query6 );
-		//$folders = $database->loadObjectList();
 		$types6[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Server Folder' ) .' -' );
 		$types6 			= array_merge( $types6, $database->loadObjectList() );
 		$lists['path'] = JHTML::_('select.genericlist', $types6, 'path', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->path );
 
 		$query = 'SELECT id AS value, title AS text FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC';
 		$database->setQuery($query);
-		//$podcast = $database->loadObjectList();
 		$podcast[] = JHTML::_('select.option', '0', '- '. JText::_('Select a Podcast').' -');
 		$podcast = array_merge($podcast, $database->loadObjectList());
 		$lists['podcast'] 	= JHTML::_('select.genericlist',	$podcast, 'podcast_id', 'class="inputbox" size="5" multiple', 'value', 'text', $mediafilesedit->podcast_id);
@@ -252,7 +232,6 @@ $this->assignRef('filepath', $filepath);
 		. ' WHERE published = 1'
 		. ' ORDER BY media_image_name';
 		$database->setQuery( $query7 );
-		//$extensions = $database->loadObjectList();
 		$types7[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Media Type' ) .' -' );
 		$types7 			= array_merge( $types7, $database->loadObjectList() );
 		$lists['image'] = JHTML::_('select.genericlist', $types7, 'media_image', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->media_image );
