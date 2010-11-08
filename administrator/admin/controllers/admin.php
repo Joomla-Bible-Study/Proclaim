@@ -40,21 +40,21 @@ class biblestudyControlleradmin extends JController {
 		$model = $this->getModel('admin');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Saved!' );
+			$msg = JText::_( 'JBS_CMN_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving' );
+			$msg = JText::_( 'JBS_CMN_ERROR_SAVING' );
 		}
 
 		switch ($this->_task) {
 			case 'apply':
-				$msg = JText::_( 'Changes to Admin Settings Updated! (by Apply)' );
+				$msg = JText::_( 'JBS_ADM_CHANGES_UPDATED' );
 				$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 				$link = 'index.php?option=com_biblestudy&view=admin&layout=form';
 				break;
 
 			case 'save':
 			default:
-				$msg = JText::_( 'Data Saved!' );
+				$msg = JText::_( 'JBS_CMN_DATA_SAVED' );
 				//$link = 'index.php?option=com_driver';
 
 				// Check the table in so it can be edited.... we are done with it anyway
@@ -70,7 +70,7 @@ class biblestudyControlleradmin extends JController {
 	
 	function cancel()
 	{
-		$msg = JText::_( 'Operation Cancelled' );
+		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 	}
 
@@ -85,7 +85,7 @@ class biblestudyControlleradmin extends JController {
 			}
 			else
 			{
-				$msg = JText::_('Update successful. No error messages generated.');
+				$msg = JText::_('JBS_ADM_UPDATE_SUCCESSFUL');
 				$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 			}
 
@@ -100,13 +100,13 @@ class biblestudyControlleradmin extends JController {
 		if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-                    $msg = JText::_('An error occured while resetting the hits:').' '.$error;
+                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS').' '.$error;
                     $this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
                 $this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 			}
 	}
@@ -119,13 +119,13 @@ function resetDownloads()
 		if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-                    $msg = JText::_('An error occured while resetting the downloads:').' '.$error;
+                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS').' '.$error;
                     $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
                 $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
 			}
 	}
@@ -139,13 +139,13 @@ function resetPlays()
 		if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-                    $msg = JText::_('An error occured while resetting the plays:').' '.$error;
+                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS').' '.$error;
                     $this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
                 $this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 			}
 	}
@@ -185,11 +185,11 @@ function resetPlays()
                             $db->query();
                             if ($db->getErrorNum() > 0)
         				{
-        					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+        					$msg = JText::_('JBS_ADM_ERROR_OCCURED').' '.$db->getErrorMsg();
         				}
                         else
                         {
-                            $msg = JText::_('Operation Successful. No Errors Reported.');
+                            $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL');
                         }
                        }
                     //If the param field is not empty we check to see what it has in it.
@@ -210,11 +210,11 @@ function resetPlays()
                         $db->query();  
                         if ($db->getErrorNum() > 0)
             				{
-            					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+            					$msg = JText::_('JBS_ADM_ERROR_OCCURED').' '.$db->getErrorMsg();
             				}
                         else
                             {
-                                $msg = JText::_('Operation Successful. No Errors Reported.');
+                                $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL');
                             }  
                        } 
                   }
@@ -232,11 +232,11 @@ function resetPlays()
                     $db->query();
                     if ($db->getErrorNum() > 0)
         				{
-        					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+        					$msg = JText::_('JBS_ADM_ERROR_OCCURED').' '.$db->getErrorMsg();
         				}
                         else
                         {
-                            $msg = JText::_('Operation Successful. No Errors Reported.');
+                            $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL');
                         }
                     
                   }
@@ -244,7 +244,7 @@ function resetPlays()
             }
     
        
-      //  $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
+      //  $msg = $add.' '.JTEXT::_('JBS_ADM_MEDIAFILES_UPDATED').'<br />'.$errortext;
         $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
     }
      
@@ -278,11 +278,11 @@ function resetPlays()
                             $db->query();
                             if ($db->getErrorNum() > 0)
         				{
-        					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+        					$msg = JText::_('JBS_ADM_ERROR_OCCURED').' '.$db->getErrorMsg();
         				}
                         else
                         {
-                            $msg = JText::_('Operation Successful. No Errors Reported.');
+                            $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL');
                         }
                        }
                     //If the param field is not empty we check to see what it has in it.
@@ -303,11 +303,11 @@ function resetPlays()
                         $db->query();  
                         if ($db->getErrorNum() > 0)
             				{
-            					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+            					$msg = JText::_('JBS_ADM_ERROR_OCCURED').' '.$db->getErrorMsg();
             				}
                         else
                             {
-                                $msg = JText::_('Operation Successful. No Errors Reported.');
+                                $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL');
                             }  
                        } 
                   }
@@ -324,18 +324,18 @@ function resetPlays()
                        $db->query(); 
                        if ($db->getErrorNum() > 0)
         				{
-        					$msg = JText::_('The following error occured').': '.$db->getErrorMsg();
+        					$msg = JText::_('JBS_ADM_ERROR_OCCURED').' '.$db->getErrorMsg();
         				}
                         else
                         {
-                            $msg = JText::_('Operation Successful. No Errors Reported.');
+                            $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL');
                         }
                   }
             
             }
     
         
-      //  $msg = $add.' '.JTEXT::_('Rows of Media Files updated. Error messages follow if any.').'<br />'.$errortext;
+      //  $msg = $add.' '.JTEXT::_('JBS_ADM_MEDIAFILES_UPDATED').'<br />'.$errortext;
         $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );
     }
 }

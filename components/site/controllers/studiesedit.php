@@ -98,7 +98,7 @@ class biblestudyControllerstudiesedit extends JController
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_PUBLISH' ) );
 		}
 
 		$model = $this->getModel('studiesedit');
@@ -120,7 +120,7 @@ class biblestudyControllerstudiesedit extends JController
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_UNPUBLISH' ) );
 		}
 
 		$model = $this->getModel('studiesedit');
@@ -141,7 +141,7 @@ class biblestudyControllerstudiesedit extends JController
 	function cancel()
 	{
 		$mainframe =& JFactory::getApplication();
-		$msg = JText::_( 'Operation Cancelled' );
+		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
 		if (!$templatmenuid) {$templatemenuid = 1;}

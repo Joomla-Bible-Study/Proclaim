@@ -177,7 +177,7 @@ class biblestudyControllermediafilesedit extends JController {
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_PUBLISH' ) );
 		}
 
 		$model = $this->getModel('mediafilesedit');
@@ -252,7 +252,7 @@ class biblestudyControllermediafilesedit extends JController {
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_UNPUBLISH' ) );
 		}
 
 		$model = $this->getModel('mediafilesedit');
@@ -269,7 +269,7 @@ class biblestudyControllermediafilesedit extends JController {
 	 */
 	function cancel()
 	{
-		$msg = JText::_( 'Operation Cancelled' );
+		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
 	}
 
@@ -351,13 +351,13 @@ class biblestudyControllermediafilesedit extends JController {
         if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-                    $msg = JText::_('An error occured while resetting the downloads:').' '.$error;
+                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS').' '.$error;
 					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]='.$id, $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
 				$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
 			}
 	}
@@ -372,13 +372,13 @@ function resetPlays()
         if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-                    $msg = JText::_('An error occured while resetting the plays:').' '.$error;
+                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS').' '.$error;
 					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]='.$id, $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
                 $this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
 			}
 	}

@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<params >
-		<param name="player" default="0" type="list" label="Player for this Media" description="Choose which media player to use, overrides global settings.">
-			<option value="0">Direct Link to file</option>
-			<option value="1">Use internal Player</option>
-			<option value="2">Use All Videos Reloaded</option>
-            <option value="3">Use All Videos</option>
-            <option value="7">Use Legacy Audio Player</option>
-		</param>
-        <param name="internal_popup" type="list" default="3" label="Display as popup/New Window" description="Choose whether the internal viewer should be a popup or inline. If direct then plays in new window. Affects this file only. Overrides global settings">
-                <option value="1">Popup</option>
-                <option value="2">Inline</option>
-                <option value="3">Use Global Setting</option>
-				</param>
-		<param name="playerwidth" default="" type="text" label="Custom width for internal player or window" description="Set a width for the player or direct link that will play in a new window. 300 assumed if nothing added. Affects only this file" />
-		<param name="playerheight" default="" type="text" label="Custom height for internal player or window" description="Set a height attribute for the internal player or direct link that will play in a new window. 400 assumed. Only affects this mediafile" />
-		<param name="itempopuptitle" type="text" size="150" default="" label="Popup Title Elements" description="Overrides global settings. Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
-            <param name="itempopupfooter" type="text" size="150" default="" label="Popup Footer Elements" description="Overrides global settings. Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
-            <param name="popupmargin" type="text" default="50" label="Height Margin for Popup" description="Set space above and below popup for header and footer." />
-		</params>
-		<params group="PODCAST" addpath="/components/com_biblestudy/elements">
-		<param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="Select one or more podcasts" description="Use Ctrl-click to select more than one item.">
-		<option value="-1">None</option>
-		</param>
-	</params>
+  <params >
+    <param name="player" default="100" type="list" label="JBS_MFE_PLAYER" description="JBS_MFE_PLAYER_TT">
+      <option value="100">JBS_CMN_USE_GLOBAL</option>
+      <option value="0">JBS_DIRECT_LINK</option>
+      <option value="1">JBS_USE_INTERNAL_PLAYER</option>
+      <option value="2">JBS_USE_AVR</option>
+      <option value="3">JBS_USE_AV</option>
+      <option value="7">JBS_USE_LEGACY_PLAYER</option>
+    </param>
+    <param name="internal_popup" type="list" default="3" label="JBS_MFE_INTERNAL_POPUP" description="JBS_MFE_INTERNAL_POPUP_TT">
+      <option value="1">JBS_CMN_POPUP</option>
+      <option value="2">JBS_CMN_INLINE</option>
+      <option value="3">JBS_CMN_USE_GLOBAL</option>
+    </param>
+    <param name="playerwidth" default="" type="text" label="JBS_MFE_PLAYERWIDTH" description="JBS_MFE_PLAYERWIDTH_TT" />
+    <param name="playerheight" default="" type="text" label="JBS_MFE_PLAYERHIGHT" description="JBS_MFE_PLAYERHIGHT_TT" />
+    <param name="itempopuptitle" type="text" size="150" default="" label="JBS_MFE_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
+    <param name="itempopupfooter" type="text" size="150" default="" label="JBS_MFE_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
+    <param name="popupmargin" type="text" default="50" label="JBS_MFE_MEDIA_POPUPMARGIN" description="JBS_MFE_MEDIA_POPUPMARGIN_TT" />
+  </params>
+  <params group="PODCAST" addpath="/components/com_biblestudy/elements">
+    <param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="JBS_MFE_SELECT_PODCASTS" description="JBS_MFE_SELECT_PODCASTS_TT">
+    <option value="-1">JBS_CMN_NONE</option>
+    </param>
+  </params>
 </root>

@@ -66,7 +66,7 @@ class biblestudyControllertemplateedit extends JController {
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_PUBLISH' ) );
 		}
 
 		$model = $this->getModel('templateedit');
@@ -84,7 +84,7 @@ class biblestudyControllertemplateedit extends JController {
 		else
 		{
 			if (!is_array( $cid ) || count( $cid ) < 1) {
-				JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+				JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_UNPUBLISH' ) );
 			}
 
 			$model = $this->getModel('templateedit');
@@ -100,7 +100,7 @@ class biblestudyControllertemplateedit extends JController {
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_UNPUBLISH' ) );
 		}
 
 		$model = $this->getModel('templateedit');
@@ -123,7 +123,7 @@ class biblestudyControllertemplateedit extends JController {
 	}
 
 	function cancel(){
-		$msg = JText::_( 'Operation Cancelled' );
+		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=templateslist', $msg );
 	}
 }

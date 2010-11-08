@@ -28,7 +28,7 @@ class biblestudyControllercssedit extends JController
 
 function cancel()
 	{
-		$msg = JText::_( 'Operation Cancelled' );
+		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 	}
 	/**

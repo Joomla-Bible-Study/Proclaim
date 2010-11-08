@@ -60,14 +60,14 @@ class biblestudyControllercommentslist extends JController
 		$model = $this->getModel('commentsedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Saved!' );
+			$msg = JText::_( 'JBS_CMN_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving' );
+			$msg = JText::_( 'JBS_CMN_ERROR_SAVING' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe =& JFactory::getApplication();
-		$msg = JText::_( 'Operation Cancelled' );
+		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$db=& JFactory::getDBO();
@@ -112,7 +112,7 @@ function publish()
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_PUBLISH' ) );
 		}
 
 		$model = $this->getModel('commentsedit');
@@ -131,7 +131,7 @@ function publish()
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_UNPUBLISH' ) );
 		}
 
 		$model = $this->getModel('commentsedit');
@@ -149,7 +149,7 @@ function publish()
 	function cancel()
 	{
 		$mainframe =& JFactory::getApplication();
-		$msg = JText::_( 'Operation Cancelled' );
+		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$db=& JFactory::getDBO();

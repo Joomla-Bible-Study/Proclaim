@@ -1,112 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<params>
-		<param name="mainlink" type="text" size="200" default="" label="JBS_SHE_MAINLINK" description="JBS_SHE_MAINLINK_TT" />
-                <param name="item1prefix" type="text" size="50" default="" label="JBS_SHE_ITEM1PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
-		<param name="item1" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
-			<option value="0">JBS_CMN_NOTHING</option>
-			<option value="200">JBS_LINK_STUDY</option>
-			<option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
-			<option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
-			<option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
-			<option value="4">JBS_TPL_DURATION_BRACE</option>
-			<option value="5">JBS_TPL_TITLE_BRACE</option>
-			<option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
-			<option value="7">JBS_TPL_TEACHER_BRACE</option>
-			<option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
-			<option value="9">JBS_TPL_SERIES_BRACE</option>
-			<option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
-			<option value="10">JBS_TPL_DATE_BRACE</option>
-			<option value="11">JBS_TPL_SUBMITTED_BRACE</option>
-			<option value="12">JBS_TPL_HITS_BRACE</option>
-			<option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
-			<option value="14">JBS_TPL_TOPIC_BRACE</option>
-			<option value="15">JBS_TPL_LOCATION_BRACE</option>
-			<option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
-			<option value="24">JBS_CMN_CUSTOM</option>
-		</param>
-		<param name="item1custom" size="100" type="text" default="" label="Custom for Item 1" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
-                <param name="item2prefix" size="50" type="text" default="" label="JBS_SHE_ITEM2PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
-		<param name="item2" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
-			<option value="0">JBS_CMN_NOTHING</option>
-			<option value="200">JBS_LINK_STUDY</option>
-			<option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
-			<option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
-			<option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
-			<option value="4">JBS_TPL_DURATION_BRACE</option>
-			<option value="5">JBS_TPL_TITLE_BRACE</option>
-			<option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
-			<option value="7">JBS_TPL_TEACHER_BRACE</option>
-			<option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
-			<option value="9">JBS_TPL_SERIES_BRACE</option>
-			<option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
-			<option value="10">JBS_TPL_DATE_BRACE</option>
-			<option value="11">JBS_TPL_SUBMITTED_BRACE</option>
-			<option value="12">JBS_TPL_HITS_BRACE</option>
-			<option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
-			<option value="14">JBS_TPL_TOPIC_BRACE</option>
-			<option value="15">JBS_TPL_LOCATION_BRACE</option>
-			<option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
-			<option value="24">JBS_CMN_CUSTOM</option>
-		</param>
-		<param name="item2custom" size="100" type="text" default="" label="Custom for Item 2" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
-                <param name="item3prefix" size="50" type="text" default="" label="JBS_SHE_ITEM3PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
-		<param name="item3" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
-			<option value="0">JBS_CMN_NOTHING</option>
-			<option value="200">JBS_LINK_STUDY</option>
-			<option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
-			<option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
-			<option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
-			<option value="4">JBS_TPL_DURATION_BRACE</option>
-			<option value="5">JBS_TPL_TITLE_BRACE</option>
-			<option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
-			<option value="7">JBS_TPL_TEACHER_BRACE</option>
-			<option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
-			<option value="9">JBS_TPL_SERIES_BRACE</option>
-			<option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
-			<option value="10">JBS_TPL_DATE_BRACE</option>
-			<option value="11">JBS_TPL_SUBMITTED_BRACE</option>
-			<option value="12">JBS_TPL_HITS_BRACE</option>
-			<option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
-			<option value="14">JBS_TPL_TOPIC_BRACE</option>
-			<option value="15">JBS_TPL_LOCATION_BRACE</option>
-			<option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
-			<option value="24">JBS_CMN_CUSTOM</option>
-		</param>
-		<param name="item3custom" size="100" type="text" default="" label="Custom for Item 3" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
-                <param name="item4prefix" size="50" type="text" default="" label="JBS_SHE_ITEM4PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
-		<param name="item4" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
-			<option value="0">JBS_CMN_NOTHING</option>
-			<option value="200">JBS_LINK_STUDY</option>
-			<option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
-			<option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
-			<option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
-			<option value="4">JBS_TPL_DURATION_BRACE</option>
-			<option value="5">JBS_TPL_TITLE_BRACE</option>
-			<option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
-			<option value="7">JBS_TPL_TEACHER_BRACE</option>
-			<option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
-			<option value="9">JBS_TPL_SERIES_BRACE</option>
-			<option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
-			<option value="10">JBS_TPL_DATE_BRACE</option>
-			<option value="11">JBS_TPL_SUBMITTED_BRACE</option>
-			<option value="12">JBS_TPL_HITS_BRACE</option>
-			<option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
-			<option value="14">JBS_TPL_TOPIC_BRACE</option>
-			<option value="15">JBS_TPL_LOCATION_BRACE</option>
-			<option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
-			<option value="24">JBS_CMN_CUSTOM</option>
-		</param>
-		<param name="item4custom" size="100" type="text" default="" label="Custom for Item 4" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
-		<param name="use_bitly" type="list" default="0" label="Use link shortener bit.ly" description="Shortens the link. Helps mainly for services like Twitter that only take a certain number of characters">
-			<option value="0">JBS_CMN_DONT_USE</option>
-			<option value="1">Use bit.ly</option>
-		</param>
-		<param name="username" type="text" size="100" default="" label="Enter your bit.ly username if you have one" description="This is not required. If left blank you will use JoomlaBibleStudy's user name" />
-		<param name="api" size="200" type="text" default="" label="bit.ly appkey" description="Not required. If using your own bit.ly user, enter your api key here." />
-		<param name="shareimage" type="text" size="200" default="" label="Enter path to share image to show" description="Path can be full url or relative to Joomla root with no forward slash at beginning." />
-		<param name="shareimageh" type="text" size="5" default="" label="Height of image" description="Can be number or number with px." />
-		<param name="shareimagew" type="text" size="5" default="" label="Width of image" description="Can be number or number with px." />
-		<param name="totalcharacters" type="text" default="" label="Total Characters" description="Total characters for string not including the path to the site." />
-		<param name="alttext" type="text" default="" label="Alt Text" description="Enter Title for site as alttext or hover text." />		</params>
+  <params>
+    <param name="mainlink" type="text" size="200" default="" label="JBS_SHE_MAINLINK" description="JBS_SHE_MAINLINK_TT" />
+    <param name="item1prefix" type="text" size="50" default="" label="JBS_SHE_ITEM1PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
+    <param name="item1" type="list" default="" label="JBS_SHE_ITEM" description="JBS_SHE_ITEM_TT">
+      <option value="0">JBS_CMN_NOTHING</option>
+      <option value="200">JBS_LINK_STUDY</option>
+      <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
+      <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
+      <option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
+      <option value="4">JBS_TPL_DURATION_BRACE</option>
+      <option value="5">JBS_TPL_TITLE_BRACE</option>
+      <option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
+      <option value="7">JBS_TPL_TEACHER_BRACE</option>
+      <option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
+      <option value="9">JBS_TPL_SERIES_BRACE</option>
+      <option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
+      <option value="10">JBS_TPL_DATE_BRACE</option>
+      <option value="11">JBS_TPL_SUBMITTED_BRACE</option>
+      <option value="12">JBS_TPL_HITS_BRACE</option>
+      <option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
+      <option value="14">JBS_TPL_TOPIC_BRACE</option>
+      <option value="15">JBS_TPL_LOCATION_BRACE</option>
+      <option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
+    </param>
+    <param name="item1custom" size="100" type="text" default="" label="JBS_SHE_ITEM1CUSTOM" description="JBS_SHE_ITEMCUSTOM_TT" />
+    <param name="item2prefix" size="50" type="text" default="" label="JBS_SHE_ITEM2PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
+    <param name="item2" type="list" default="" label="JBS_SHE_ITEM" description="JBS_SHE_ITEM_TT">
+      <option value="0">JBS_CMN_NOTHING</option>
+      <option value="200">JBS_LINK_STUDY</option>
+      <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
+      <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
+      <option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
+      <option value="4">JBS_TPL_DURATION_BRACE</option>
+      <option value="5">JBS_TPL_TITLE_BRACE</option>
+      <option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
+      <option value="7">JBS_TPL_TEACHER_BRACE</option>
+      <option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
+      <option value="9">JBS_TPL_SERIES_BRACE</option>
+      <option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
+      <option value="10">JBS_TPL_DATE_BRACE</option>
+      <option value="11">JBS_TPL_SUBMITTED_BRACE</option>
+      <option value="12">JBS_TPL_HITS_BRACE</option>
+      <option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
+      <option value="14">JBS_TPL_TOPIC_BRACE</option>
+      <option value="15">JBS_TPL_LOCATION_BRACE</option>
+      <option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
+    </param>
+    <param name="item2custom" size="100" type="text" default="" label="JBS_SHE_ITEM2CUSTOM" description="JBS_SHE_ITEMCUSTOM_TT" />
+    <param name="item3prefix" size="50" type="text" default="" label="JBS_SHE_ITEM3PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
+    <param name="item3" type="list" default="" label="JBS_SHE_ITEM" description="JBS_SHE_ITEM_TT">
+      <option value="0">JBS_CMN_NOTHING</option>
+      <option value="200">JBS_LINK_STUDY</option>
+      <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
+      <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
+      <option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
+      <option value="4">JBS_TPL_DURATION_BRACE</option>
+      <option value="5">JBS_TPL_TITLE_BRACE</option>
+      <option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
+      <option value="7">JBS_TPL_TEACHER_BRACE</option>
+      <option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
+      <option value="9">JBS_TPL_SERIES_BRACE</option>
+      <option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
+      <option value="10">JBS_TPL_DATE_BRACE</option>
+      <option value="11">JBS_TPL_SUBMITTED_BRACE</option>
+      <option value="12">JBS_TPL_HITS_BRACE</option>
+      <option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
+      <option value="14">JBS_TPL_TOPIC_BRACE</option>
+      <option value="15">JBS_TPL_LOCATION_BRACE</option>
+      <option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
+    </param>
+    <param name="item3custom" size="100" type="text" default="" label="JBS_SHE_ITEM3CUSTOM" description="JBS_SHE_ITEMCUSTOM_TT" />
+    <param name="item4prefix" size="50" type="text" default="" label="JBS_SHE_ITEM4PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
+    <param name="item4" type="list" default="" label="JBS_SHE_ITEM" description="JBS_SHE_ITEM_TT">
+      <option value="0">JBS_CMN_NOTHING</option>
+      <option value="200">JBS_LINK_STUDY</option>
+      <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
+      <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
+      <option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
+      <option value="4">JBS_TPL_DURATION_BRACE</option>
+      <option value="5">JBS_TPL_TITLE_BRACE</option>
+      <option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
+      <option value="7">JBS_TPL_TEACHER_BRACE</option>
+      <option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
+      <option value="9">JBS_TPL_SERIES_BRACE</option>
+      <option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
+      <option value="10">JBS_TPL_DATE_BRACE</option>
+      <option value="11">JBS_TPL_SUBMITTED_BRACE</option>
+      <option value="12">JBS_TPL_HITS_BRACE</option>
+      <option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
+      <option value="14">JBS_TPL_TOPIC_BRACE</option>
+      <option value="15">JBS_TPL_LOCATION_BRACE</option>
+      <option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
+    </param>
+    <param name="item4custom" size="100" type="text" default="" label="JBS_SHE_ITEM4CUSTOM" description="JBS_SHE_ITEMCUSTOM_TT" />
+    <param name="use_bitly" type="list" default="0" label="JBS_SHE_USE_BITLY" description="JBS_SHE_USE_BITLY_TT">
+      <option value="0">JBS_CMN_DONT_USE</option>
+      <option value="1">JBS_USE_BITLY</option>
+    </param>
+    <param name="username" type="text" size="100" default="" label="JBS_SHE_USERNAME" description="JBS_SHE_USERNAME_TT" />
+    <param name="api" size="200" type="text" default="" label="JBS_SHE_API" description="JBS_SHE_API_TT" />
+    <param name="shareimage" type="text" size="200" default="" label="JBS_SHE_SHAREIMAGE" description="JBS_SHE_SHAREIMAGE_TT" />
+    <param name="shareimageh" type="text" size="5" default="" label="JBS_SHE_SHAREIMAGEH" description="JBS_SHE_SHAREIMAGEHW_TT" />
+    <param name="shareimagew" type="text" size="5" default="" label="JBS_SHE_SHAREIMAGEW" description="JBS_SHE_SHAREIMAGEHW_TT" />
+    <param name="totalcharacters" type="text" default="" label="JBS_SHE_TOTALCHARACTERS" description="JBS_SHE_TOTALCHARACTERS_TT" />
+    <param name="alttext" type="text" default="" label="JBS_SHE_ALTTEXT" description="JBS_SHE_ALTTEXT_TT" />
+  </params>
 </root>

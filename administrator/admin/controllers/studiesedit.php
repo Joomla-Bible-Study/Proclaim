@@ -96,7 +96,7 @@ class biblestudyControllerstudiesedit extends JController
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_PUBLISH' ) );
 		}
 
 		$model = $this->getModel('studiesedit');
@@ -115,7 +115,7 @@ class biblestudyControllerstudiesedit extends JController
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_UNPUBLISH' ) );
 		}
 
 		$model = $this->getModel('studiesedit');
@@ -132,7 +132,7 @@ class biblestudyControllerstudiesedit extends JController
 	 */
 	function cancel()
 	{
-		$msg = JText::_( 'Operation Cancelled' );
+		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
 	}
 
@@ -146,13 +146,13 @@ class biblestudyControllerstudiesedit extends JController
 		if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-                    $msg = JText::_('An error occured while resetting the hits:').' '.$error;
+                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS').' '.$error;
                     $this->setRedirect( 'index.php?option=com_biblestudy&view=studiesedit&controller=admin&layout=form&cid[]='.$id, $msg );
 				}
 		else
 			{
 				$updated = $db->getAffectedRows();
-                $msg = JText::_('Reset successful. No error messages generated.').' '.$updated.' '.JText::_('row(s) reset.');
+                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
 				$this->setRedirect( 'index.php?option=com_biblestudy&view=studiesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
 			}
 	}

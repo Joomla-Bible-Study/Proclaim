@@ -37,9 +37,9 @@ class biblestudyControllerbooksedit extends JController {
 		$model = $this->getModel('booksedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Book Saved!' );
+			$msg = JText::_( 'JBS_BKE_BOOK_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Book' );
+			$msg = JText::_( 'JBS_BKE_ERROR_SAVING_BOOK' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -57,9 +57,9 @@ class biblestudyControllerbooksedit extends JController {
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Book Saved!' );
+			$msg = JText::_( 'JBS_BKE_BOOK_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Book' );
+			$msg = JText::_( 'JBS_BKE_ERROR_SAVING_BOOK' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -75,9 +75,9 @@ class biblestudyControllerbooksedit extends JController {
 	{
 		$model = $this->getModel('booksedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Books Could not be Deleted' );
+			$msg = JText::_( 'JBS_BKE_ERROR_DELETING_BOOK' );
 		} else {
-			$msg = JText::_( 'Book(s) Deleted' );
+			$msg = JText::_( 'JBS_BKE_BOOKS_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=bookslist', $msg );
@@ -89,7 +89,7 @@ function publish()
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_PUBLISH' ) );
 		}
 
 		$model = $this->getModel('booksedit');
@@ -108,7 +108,7 @@ function publish()
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
 		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_UNPUBLISH' ) );
 		}
 
 		$model = $this->getModel('booksedit');
@@ -124,7 +124,7 @@ function publish()
 	 */
 	function cancel()
 	{
-		$msg = JText::_( 'Operation Cancelled' );
+		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=bookslist', $msg );
 	}
 }
