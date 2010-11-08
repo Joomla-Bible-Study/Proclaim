@@ -6,41 +6,22 @@
 	if the interface doesn't support it properly -->
 	<!-- Generic Metadata -->
 	<name>com_biblestudy</name>
-	<author>Tom Fuller, Eugen Istok, Kyle Holder, Richard Hunt - JoomlaBibleStudy Team</author>
+	<author>Tom Fuller, Eugen Istok, Kyle Holder, Richard Hunt, Nick Fossen - JoomlaBibleStudy Team</author>
 	<authorEmail>tomfuller2@gmail.com</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
 	<copyright>(C) 2010 Copyright Joomla Bible Study</copyright>
 	<license>GNU/GPL</license>
-	<version>6.3</version>
-	<creationDate>July 2010</creationDate>
-	<description>Joomla Bible Study Message Management System</description>
+	<version>7.0</version>
+	<creationDate>November 2010</creationDate>
+	<description>Joomla Bible Study</description>
 
-	<!-- Installer Hooks -->
-<!--	<installfile>biblestudy.install.php</installfile> --> <!-- Deprecated in 1.6 -->
-<!--	<uninstallfile>uninstall.biblestudy.php</uninstallfile>-->  <!-- Deprecated in 1.6 -->
-	<scriptfile>file.script.php</scriptfile>  <!-- New in 1.6 -->
-
-	<!-- SQL Files -->
-	<!-- Note: The Joomla! 1.0 query method is not supported in 1.6 -->
-	<install> <!-- Runs on install -->
-		<sql>
-		<!--	<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file> -->
-		</sql>
-	</install>
-	<uninstall> <!-- Runs on uninstall -->
-		<sql>
-		<!--	<file driver="mysql" charset="utf8" folder="sql">sql/uninstall.mysql.utf8.sql</file> -->
-		</sql>
-	</uninstall>
-	<update> <!-- Runs on update; New in 1.6 -->
-		<schemas>
-		<!--	<schemapath type="mysql">sql/updates/mysql</schemapath> -->
-		<!--	<schemapath type="sqlsrv">sql/updates/sqlsrv</schemapath> -->
-		</schemas>
-	</update>
-
+	<installfile>biblestudy.install.php</installfile> <!-- Deprecated in 1.6 -->
+	<uninstallfile>uninstall.biblestudy.php</uninstallfile> <!-- Deprecated in 1.6 -->
+    
 	<!-- Front end file, media and language specification -->
-	 <files>biblestudy.xml</files>
+	 <filename>biblestudy.xml</filename>
+     <filename>biblestudy.install.php</filename>
+     <filename>uninstall.biblestudy.php</filename>
   <files folder="site">
     <filename>index.html</filename>
     <filename>metadata.xml</filename>
@@ -75,15 +56,13 @@
     <language tag="no-NO">no-NO.com_biblestudy.ini</language>
   </languages>
   
-	<media destination="com_biblestudy">
-	<!--	<filename>com_alpha.jpg</filename> -->
-	</media>
 
  <administration>
     <!-- Administration Menu Section -->
-    <menu>Bible Study</menu>
+    <menu>Joomla Bible Study</menu>
     <submenu>
       <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
+      <menu img="components/com_biblestudy/images/biblemenu.png">Joomla Bible Study</menu>
       <menu link="option=com_biblestudy&amp;view=cpanel">Control Panel</menu>
       <menu link="option=com_biblestudy&amp;view=studieslist">Studies</menu>
       <menu link="option=com_biblestudy&amp;view=mediafileslist">Media Files</menu>
