@@ -195,11 +195,11 @@
             default="0" 
             label="JBS_TPL_MEDIA_MEDIA_PLAYER" 
             description="JBS_TPL_MEDIA_MEDIA_PLAYER_TT">
-			<option value="0">JBL_DIRECT_LINK</option>
-			<option value="1">JBL_USE_INTERNAL_PLAYER</option>
-      <option value="2">JBL_USE_AVR</option>
-      <option value="3">JBL_USE_AV</option>
-      <option value="7">JBL_USE_LEGACY_PLAYER</option>
+			<option value="0">JBS_DIRECT_LINK</option>
+			<option value="1">JBS_USE_INTERNAL_PLAYER</option>
+      <option value="2">JBS_USE_AVR</option>
+      <option value="3">JBS_USE_AV</option>
+      <option value="7">JBS_USE_LEGACY_PLAYER</option>
     </param>
     <param name="popuptype"
            type="list"
@@ -259,18 +259,18 @@
            type="text"
            size="150"
            default="{{title}}"
-           label="JBS_TPL_MEDIA_POPUPTITLE"
+           label="JBS_MFE_MEDIA_POPUPTITLE"
            description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_TT" />
     <param name="popupfooter"
            type="text"
            size="150"
            default="{{filename}}"
-           label="JBS_TPL_MEDIA_POPUPFOOTER"
+           label="JBS_MFE_MEDIA_POPUPFOOTER"
            description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_TT" />
     <param name="popupmargin"
            type="text"
            default="50"
-           label="JBS_TPL_MEDIA_POPUPMARGIN"
+           label="JBS_MFE_MEDIA_POPUPMARGIN"
            description="JBS_TPL_MEDIA_POPUPMARGIN_TT" />
     <param name="popupbackground"
            type="text"
@@ -401,8 +401,8 @@
            default="1"
            label="JBS_TPL_LISTITEMS_TEACHERLINK"
            description="JBS_TPL_LISTITEMS_TEACHERLINK_TT">
-      <option value="0">JBL_TPL_HIDE_LINK</option>
-      <option value="1">JBL_TPL_SHOW_LINK</option>
+      <option value="0">JBS_TPL_HIDE_LINK</option>
+      <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
     <param name="details_text"
            type="text"
@@ -543,7 +543,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -620,7 +620,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -696,7 +696,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -771,7 +771,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -834,7 +834,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -911,7 +911,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -987,7 +987,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1062,7 +1062,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1125,7 +1125,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1202,7 +1202,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1278,7 +1278,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1353,7 +1353,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1416,7 +1416,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1493,7 +1493,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1569,7 +1569,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1644,7 +1644,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -1733,7 +1733,7 @@
       <option value="4">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="5">JBS_TPL_SERIES_BRACE</option>
       <option value="6">JBS_TPL_TOPIC_BRACE</option>
-      <option value="7">JBS_TPL_CUSTOM</option>
+      <option value="7">JBS_CMN_CUSTOM</option>
     </param>
     <param name="customtitle1"
            type="text"
@@ -1753,7 +1753,7 @@
       <option value="4">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="5">JBS_TPL_SERIES_BRACE</option>
       <option value="6">JBS_TPL_TOPIC_BRACE</option>
-      <option value="7">JBS_TPL_CUSTOM</option>
+      <option value="7">JBS_CMN_CUSTOM</option>
     </param>
     <param name="customtitle2"
            type="text"
@@ -1766,8 +1766,8 @@
            default="1"
            label="JBS_TPL_DETAILS_VIEW_LINK"
            description="JBS_TPL_DETAILS_VIEW_LINK_TT">
-      <option value="0">JBL_TPL_HIDE_LINK</option>
-      <option value="1">JBL_TPL_SHOW_LINK</option>
+      <option value="0">JBS_TPL_HIDE_LINK</option>
+      <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
     <param name="link_text"
            type="text"
@@ -1901,8 +1901,8 @@
     	     default="1"
     	     label="JBS_TPL_TEACHER_TEACHERLINK"
     	     description="JBS_TPL_TEACHER_TEACHERLINK_TT"> 
-        <option value="0">JBL_TPL_HIDE_LINK</option>
-        <option value="1">JBL_TPL_SHOW_LINK</option>
+        <option value="0">JBS_TPL_HIDE_LINK</option>
+        <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
     <param name="useexpert_teacherlist"
            type="list"
@@ -2054,7 +2054,7 @@
       <option value="5">JBS_TPL_TEACHERIMAGE_BRACE</option>
       <option value="6">JBS_TPL_TEACHERIMAGE_TITLE_BRACE</option>
       <option value="7">JBS_TPL_DESCRIPTION_BRACE</option>
-      <option value="8">JBS_TPL_CUSTOM</option>
+      <option value="8">JBS_CMN_CUSTOM</option>
     </param>
     <param name="seriesislink1"
            type="list"
@@ -2195,8 +2195,8 @@
            default="1"
            label="JBS_TPL_SERIESDETAIL_SERIES_LIST_RETURN"
            description="JBS_TPL_SERIESDETAIL_SERIES_LIST_RETURN_TT">
-      <option value="0">JBL_TPL_HIDE_LINK</option>
-      <option value="1">JBL_TPL_SHOW_LINK</option>
+      <option value="0">JBS_TPL_HIDE_LINK</option>
+      <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
     <param name="series_detail_listtype"
            type="list"
@@ -2226,7 +2226,7 @@
       <option value="13">JBS_TPL_STUDYNUMBER</option>
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
-      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="16">JBS_CMN_MESSAGE_TYPE</option>
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
@@ -2241,8 +2241,8 @@
            default="1"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_TT">
-      <option value="0">JBL_TPL_HIDE_LINK</option>
-      <option value="1">JBL_TPL_SHOW_LINK</option>
+      <option value="0">JBS_TPL_HIDE_LINK</option>
+      <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
     <param name="series_detail_2"
            type="list"
@@ -2263,7 +2263,7 @@
       <option value="13">JBS_TPL_STUDYNUMBER</option>
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
-      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="16">JBS_CMN_MESSAGE_TYPE</option>
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
@@ -2278,8 +2278,8 @@
            default="0"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_TT">
-      <option value="0">JBL_TPL_HIDE_LINK</option>
-      <option value="1">JBL_TPL_SHOW_LINK</option>
+      <option value="0">JBS_TPL_HIDE_LINK</option>
+      <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
     <param name="series_detail_3"
            type="list"
@@ -2300,7 +2300,7 @@
       <option value="13">JBS_TPL_STUDYNUMBER</option>
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
-      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="16">JBS_CMN_MESSAGE_TYPE</option>
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
@@ -2315,8 +2315,8 @@
            default="0"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_TT">
-      <option value="0">JBL_TPL_HIDE_LINK</option>
-      <option value="1">JBL_TPL_SHOW_LINK</option>
+      <option value="0">JBS_TPL_HIDE_LINK</option>
+      <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
     <param name="series_detail_4"
            type="list"
@@ -2337,7 +2337,7 @@
       <option value="13">JBS_TPL_STUDYNUMBER</option>
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
-      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="16">JBS_CMN_MESSAGE_TYPE</option>
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
@@ -2352,8 +2352,8 @@
            default="0"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_TT">
-      <option value="0">JBL_TPL_HIDE_LINK</option>
-      <option value="1">JBL_TPL_SHOW_LINK</option>
+      <option value="0">JBS_TPL_HIDE_LINK</option>
+      <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
     <param name="useexpert_seriesdetail"
            type="list"
@@ -2366,7 +2366,7 @@
            type="textarea"
            rows="10"
            cols="100"
-           label="JBL_TPL_SERIESDETAIL_TEMPLATECODE"
+           label="JBS_TPL_SERIESDETAIL_TEMPLATECODE"
            description="JBS_TPL_SERIESDETAIL_TEMPLATECODE_TT" />
   </params>
   <params group="TOOLTIP">
@@ -2374,19 +2374,19 @@
            type="text"
            default="Sermon Information"
            size="100"
-           label="JBL_TPL_TOOLTIP_TIP_TITLE"
-           description="JBL_TPL_TOOLTIP_TIP_TITLE_TT" />
+           label="JBS_TPL_TOOLTIP_TIP_TITLE"
+           description="JBS_TPL_TOOLTIP_TIP_TITLE_TT" />
     <param name="tip_item1_title"
            type="text"
            default="Title"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM1_TITLE"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           label="JBS_TPL_TOOLTIP_TIP_ITEM1_TITLE"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
            size="100" />
     <param name="tip_item1"
            type="list"
            default="5"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM1"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
+           label="JBS_TPL_TOOLTIP_TIP_ITEM1"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2400,7 +2400,7 @@
       <option value="13">JBS_TPL_STUDYNUMBER</option>
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
-      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="16">JBS_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -2408,14 +2408,14 @@
     <param name="tip_item2_title"
            type="text"
            default="Details"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM2_TITLE"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           label="JBS_TPL_TOOLTIP_TIP_ITEM2_TITLE"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
            size="100" />
     <param name="tip_item2"
            type="list"
            default="6"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM2"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
+           label="JBS_TPL_TOOLTIP_TIP_ITEM2"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2429,7 +2429,7 @@
       <option value="13">JBS_TPL_STUDYNUMBER</option>
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
-      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="16">JBS_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -2437,14 +2437,14 @@
     <param name="tip_item3_title"
            type="text"
            default="Teacher"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM3_TITLE"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           label="JBS_TPL_TOOLTIP_TIP_ITEM3_TITLE"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
            size="100" />
     <param name="tip_item3"
            type="list"
            default="7"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM3"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
+           label="JBS_TPL_TOOLTIP_TIP_ITEM3"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2458,7 +2458,7 @@
       <option value="13">JBS_TPL_STUDYNUMBER</option>
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
-      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="16">JBS_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -2466,14 +2466,14 @@
     <param name="tip_item4_title"
            type="text"
            default="Reference"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM4_TITLE"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           label="JBS_TPL_TOOLTIP_TIP_ITEM4_TITLE"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
            size="100" />
     <param name="tip_item4"
            type="list"
            default="1"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM4"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
+           label="JBS_TPL_TOOLTIP_TIP_ITEM4"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2487,7 +2487,7 @@
       <option value="13">JBS_TPL_STUDYNUMBER</option>
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
-      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="16">JBS_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -2495,14 +2495,14 @@
     <param name="tip_item5_title"
            type="text"
            default="Date"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM5_TITLE"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           label="JBS_TPL_TOOLTIP_TIP_ITEM5_TITLE"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
            size="100" />
     <param name="tip_item5"
            type="list"
            default="10"
-           label="JBL_TPL_TOOLTIP_TIP_ITEM5"
-           description="JBL_TPL_TOOLTIP_TIP_ITEM_TT">
+           label="JBS_TPL_TOOLTIP_TIP_ITEM5"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
       <option value="5">JBS_TPL_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2516,7 +2516,7 @@
       <option value="13">JBS_TPL_STUDYNUMBER</option>
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
-      <option value="16">JBL_CMN_MESSAGE_TYPE</option>
+      <option value="16">JBS_CMN_MESSAGE_TYPE</option>
       <option value="23">JBS_TPL_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
@@ -2559,7 +2559,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2634,7 +2634,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2708,7 +2708,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2781,7 +2781,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2842,7 +2842,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2917,7 +2917,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2991,7 +2991,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3064,7 +3064,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3125,7 +3125,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3200,7 +3200,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3274,7 +3274,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3347,7 +3347,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3408,7 +3408,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3483,7 +3483,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3557,7 +3557,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3630,7 +3630,7 @@
       <option value="22">JBS_TPL_STORE_BRACE</option>
       <option value="23">JBS_TPL_FILESIZE_BRACE</option>
       <option value="25">JBS_TPL_THUMBNAIL_BRACE</option>
-      <option value="24">JBS_TPL_CUSTOM</option>
+      <option value="24">JBS_CMN_CUSTOM</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -3659,247 +3659,247 @@
     <param type="list"
            name="landing_hide"
            default="0"
-           label="JBL_TPL_LANDINGPAGE_LANDING_HIDE"
-           description="JBL_TPL_LANDINGPAGE_LANDING_HIDE_TT">
-      <option value="0">JBL_TPL_BUTTON_ONLY</option>
-      <option value="1">JBL_TPL_BUTTON_LABEL</option>
-      <option value="2">JBL_TPL_LABEL_ONLY</option>
+           label="JBS_TPL_LANDINGPAGE_LANDING_HIDE"
+           description="JBS_TPL_LANDINGPAGE_LANDING_HIDE_TT">
+      <option value="0">JBS_TPL_BUTTON_ONLY</option>
+      <option value="1">JBS_TPL_BUTTON_LABEL</option>
+      <option value="2">JBS_TPL_LABEL_ONLY</option>
     </param>
     <param type="text"
            name="landing_hidelabel"
            size="100"
            default="Show/Hide All"
-           label="JBL_TPL_LANDINGPAGE_LANDING_HIDELABEL"
-           description="JBL_TPL_LANDINGPAGE_LANDING_HIDELABEL_TT" />
+           label="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL"
+           description="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL_TT" />
     <param type="list"
            name="headingorder_1"
            default="teachers"
-           label="JBL_TPL_LANDINGPAGE_HEADINGORDER_1"
-           description="JBL_TPL_LANDINGPAGE_HEADINGORDER_TT">
-      <option value="teachers">JBL_CMN_TEACHERS</option>
-      <option value="series">JBL_CMN_SERIES</option>
-      <option value="books">JBL_CMN_BOOKS</option>
-      <option value="topics">JBL_CMN_TOPICS</option>
-      <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
-      <option value="years">JBL_CMN_YEARS</option>
+           label="JBS_TPL_LANDINGPAGE_HEADINGORDER_1"
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+      <option value="teachers">JBS_CMN_TEACHERS</option>
+      <option value="series">JBS_CMN_SERIES</option>
+      <option value="books">JBS_CMN_BOOKS</option>
+      <option value="topics">JBS_CMN_TOPICS</option>
+      <option value="locations">JBS_CMN_LOCATIONS</option>
+      <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+      <option value="years">JBS_CMN_YEARS</option>
     </param>
     <param type="list"
            name="headingorder_2"
            default="series"
-           label="JBL_TPL_LANDINGPAGE_HEADINGORDER_2"
-           description="JBL_TPL_LANDINGPAGE_HEADINGORDER_TT">
-      <option value="teachers">JBL_CMN_TEACHERS</option>
-      <option value="series">JBL_CMN_SERIES</option>
-      <option value="books">JBL_CMN_BOOKS</option>
-      <option value="topics">JBL_CMN_TOPICS</option>
-      <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
-      <option value="years">JBL_CMN_YEARS</option>
+           label="JBS_TPL_LANDINGPAGE_HEADINGORDER_2"
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+      <option value="teachers">JBS_CMN_TEACHERS</option>
+      <option value="series">JBS_CMN_SERIES</option>
+      <option value="books">JBS_CMN_BOOKS</option>
+      <option value="topics">JBS_CMN_TOPICS</option>
+      <option value="locations">JBS_CMN_LOCATIONS</option>
+      <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+      <option value="years">JBS_CMN_YEARS</option>
     </param>
     <param type="list"
            name="headingorder_3"
            default="books"
-           label="JBL_TPL_LANDINGPAGE_HEADINGORDER_3"
-           description="JBL_TPL_LANDINGPAGE_HEADINGORDER_TT">
-      <option value="teachers">JBL_CMN_TEACHERS</option>
-      <option value="series">JBL_CMN_SERIES</option>
-      <option value="books">JBL_CMN_BOOKS</option>
-      <option value="topics">JBL_CMN_TOPICS</option>
-      <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
-      <option value="years">JBL_CMN_YEARS</option>
+           label="JBS_TPL_LANDINGPAGE_HEADINGORDER_3"
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+      <option value="teachers">JBS_CMN_TEACHERS</option>
+      <option value="series">JBS_CMN_SERIES</option>
+      <option value="books">JBS_CMN_BOOKS</option>
+      <option value="topics">JBS_CMN_TOPICS</option>
+      <option value="locations">JBS_CMN_LOCATIONS</option>
+      <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+      <option value="years">JBS_CMN_YEARS</option>
     </param>
     <param type="list"
            name="headingorder_4"
            default="topics"
-           label="JBL_TPL_LANDINGPAGE_HEADINGORDER_4"
-           description="JBL_TPL_LANDINGPAGE_HEADINGORDER_TT">
-      <option value="teachers">JBL_CMN_TEACHERS</option>
-      <option value="series">JBL_CMN_SERIES</option>
-      <option value="books">JBL_CMN_BOOKS</option>
-      <option value="topics">JBL_CMN_TOPICS</option>
-      <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
-      <option value="years">JBL_CMN_YEARS</option>
+           label="JBS_TPL_LANDINGPAGE_HEADINGORDER_4"
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+      <option value="teachers">JBS_CMN_TEACHERS</option>
+      <option value="series">JBS_CMN_SERIES</option>
+      <option value="books">JBS_CMN_BOOKS</option>
+      <option value="topics">JBS_CMN_TOPICS</option>
+      <option value="locations">JBS_CMN_LOCATIONS</option>
+      <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+      <option value="years">JBS_CMN_YEARS</option>
     </param>
     <param type="list"
            name="headingorder_5"
            default="locations"
-           label="JBL_TPL_LANDINGPAGE_HEADINGORDER_5"
-           description="JBL_TPL_LANDINGPAGE_HEADINGORDER_TT">
-      <option value="teachers">JBL_CMN_TEACHERS</option>
-      <option value="series">JBL_CMN_SERIES</option>
-      <option value="books">JBL_CMN_BOOKS</option>
-      <option value="topics">JBL_CMN_TOPICS</option>
-      <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
-      <option value="years">JBL_CMN_YEARS</option>
+           label="JBS_TPL_LANDINGPAGE_HEADINGORDER_5"
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+      <option value="teachers">JBS_CMN_TEACHERS</option>
+      <option value="series">JBS_CMN_SERIES</option>
+      <option value="books">JBS_CMN_BOOKS</option>
+      <option value="topics">JBS_CMN_TOPICS</option>
+      <option value="locations">JBS_CMN_LOCATIONS</option>
+      <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+      <option value="years">JBS_CMN_YEARS</option>
     </param>
     <param type="list"
            name="headingorder_6"
            default="messagetypes"
-           label="JBL_TPL_LANDINGPAGE_HEADINGORDER_6"
-           description="JBL_TPL_LANDINGPAGE_HEADINGORDER_TT">
-      <option value="teachers">JBL_CMN_TEACHERS</option>
-      <option value="series">JBL_CMN_SERIES</option>
-      <option value="books">JBL_CMN_BOOKS</option>
-      <option value="topics">JBL_CMN_TOPICS</option>
-      <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
-      <option value="years">JBL_CMN_YEARS</option>
+           label="JBS_TPL_LANDINGPAGE_HEADINGORDER_6"
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+      <option value="teachers">JBS_CMN_TEACHERS</option>
+      <option value="series">JBS_CMN_SERIES</option>
+      <option value="books">JBS_CMN_BOOKS</option>
+      <option value="topics">JBS_CMN_TOPICS</option>
+      <option value="locations">JBS_CMN_LOCATIONS</option>
+      <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+      <option value="years">JBS_CMN_YEARS</option>
     </param>
     <param type="list"
            name="headingorder_7"
            default="years"
-           label="JBL_TPL_LANDINGPAGE_HEADINGORDER_7"
-           description="JBL_TPL_LANDINGPAGE_HEADINGORDER_TT">
-      <option value="teachers">JBL_CMN_TEACHERS</option>
-      <option value="series">JBL_CMN_SERIES</option>
-      <option value="books">JBL_CMN_BOOKS</option>
-      <option value="topics">JBL_CMN_TOPICS</option>
-      <option value="locations">JBL_CMN_LOCATIONS</option>
-      <option value="messagetypes">JBL_CMN_MESSAGE_TYPES</option>
-      <option value="years">JBL_CMN_YEARS</option>
+           label="JBS_TPL_LANDINGPAGE_HEADINGORDER_7"
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+      <option value="teachers">JBS_CMN_TEACHERS</option>
+      <option value="series">JBS_CMN_SERIES</option>
+      <option value="books">JBS_CMN_BOOKS</option>
+      <option value="topics">JBS_CMN_TOPICS</option>
+      <option value="locations">JBS_CMN_LOCATIONS</option>
+      <option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
+      <option value="years">JBS_CMN_YEARS</option>
     </param>
     <param type="spacer"></param>
     <param name="showteachers"
            type="radio"
-           label="JBL_TPL_LANDINGPAGE_SHOWTEACHERS"
+           label="JBS_TPL_LANDINGPAGE_SHOWTEACHERS"
            default="1">
       <option value="0">JBS_CMN_NO</option>
       <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingteacherslimit"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_LANDINGTEACHERSLIMIT"
-           description="JBL_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           label="JBS_TPL_LANDINGPAGE_LANDINGTEACHERSLIMIT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
            size="5" />
     <param name="teacherslabel"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_TEACHERSLABEL"
+           label="JBS_TPL_LANDINGPAGE_TEACHERSLABEL"
            default="Speakers"
            size="45"></param>
     <param name="linkto"
            type="radio"
-           label="JBL_TPL_LANDINGPAGE_LINKTO"
+           label="JBS_TPL_LANDINGPAGE_LINKTO"
            default="1">
-      <option value="0">JBL_TPL_LINK_STUDIES_LIST</option>
-      <option value="1">JBL_TPL_LINK_TEACHER_DISPLAY</option>
+      <option value="0">JBS_TPL_LINK_STUDIES_LIST</option>
+      <option value="1">JBS_TPL_LINK_TEACHER_DISPLAY</option>
     </param>
     <param type="spacer"></param>
     <param name="showseries"
            type="radio"
-           label="JBL_TPL_LANDINGPAGE_SHOWSERIES"
+           label="JBS_TPL_LANDINGPAGE_SHOWSERIES"
            default="1">
       <option value="0">JBS_CMN_NO</option>
       <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingserieslimit"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_LANDINGSERIESLIMIT"
-           description="JBL_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           label="JBS_TPL_LANDINGPAGE_LANDINGSERIESLIMIT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
            size="5" />
     <param name="serieslabel"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_SERIESLABEL"
+           label="JBS_TPL_LANDINGPAGE_SERIESLABEL"
            default="Series"
            size="45"></param>
     <param name="series_linkto"
            type="radio"
-           label="JBL_TPL_LANDINGPAGE_LINKTO"
+           label="JBS_TPL_LANDINGPAGE_LINKTO"
            default="0">
-      <option value="0">JBL_TPL_LINK_STUDIES_LIST</option>
+      <option value="0">JBS_TPL_LINK_STUDIES_LIST</option>
       <option value="1">JBS_TPL_LINK_SERIES_DETAILS</option>
     </param>
     <param type="spacer"></param>
     <param name="showbooks"
            type="radio"
-           label="JBL_TPL_LANDINGPAGE_SHOWBOOKS"
+           label="JBS_TPL_LANDINGPAGE_SHOWBOOKS"
            default="1">
       <option value="0">JBS_CMN_NO</option>
       <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingbookslimit"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT"
-           description="JBL_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           label="JBS_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
            size="5" />
     <param name="bookslabel"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_BOOKSLABEL"
+           label="JBS_TPL_LANDINGPAGE_BOOKSLABEL"
            default="Books"
            size="45"></param>
     <param type="spacer"></param>
     <param name="showtopics"
            type="radio"
-           label="JBL_TPL_LANDINGPAGE_SHOWTOPICS"
+           label="JBS_TPL_LANDINGPAGE_SHOWTOPICS"
            default="1">
       <option value="0">JBS_CMN_NO</option>
       <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingtopicslimit"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT"
-           description="JBL_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           label="JBS_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
            size="5" />
     <param name="topicslabel"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_TOPICSLABEL"
+           label="JBS_TPL_LANDINGPAGE_TOPICSLABEL"
            default="Topics"
            size="45"></param>
     <param type="spacer"></param>
     <param name="showlocations"
            type="radio"
-           label="JBL_TPL_LANDINGPAGE_SHOWLOCATIONS"
+           label="JBS_TPL_LANDINGPAGE_SHOWLOCATIONS"
            default="1">
       <option value="0">JBS_CMN_NO</option>
       <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landinglocationslimit"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_LANDINGLOCATIONSLIMIT"
-           description="JBL_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           label="JBS_TPL_LANDINGPAGE_LANDINGLOCATIONSLIMIT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
            size="5" />
     <param name="locationslabel"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_LOCATIONSLABEL"
+           label="JBS_TPL_LANDINGPAGE_LOCATIONSLABEL"
            default="Locations"
            size="45"></param>
     <param type="spacer"></param>
     <param name="showmessagetypes"
            type="radio"
-           label="JBL_TPL_LANDINGPAGE_SHOWMESSAGETYPES"
+           label="JBS_TPL_LANDINGPAGE_SHOWMESSAGETYPES"
            default="1">
       <option value="0">JBS_CMN_NO</option>
       <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingmessagetypeslimit"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_LANDINGMESSAGETYPESLIMIT"
-           description="JBL_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           label="JBS_TPL_LANDINGPAGE_LANDINGMESSAGETYPESLIMIT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
            size="5" />
     <param name="messagetypeslabel"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_MESSAGETYPESLABEL"
+           label="JBS_TPL_LANDINGPAGE_MESSAGETYPESLABEL"
            default="Message Types"
            size="45"></param>
     <param type="spacer"></param>
     <param name="showyears"
            type="radio"
-           label="JBL_TPL_LANDINGPAGE_SHOWYEARS"
+           label="JBS_TPL_LANDINGPAGE_SHOWYEARS"
            default="1">
       <option value="0">JBS_CMN_NO</option>
       <option value="1">JBS_CMN_YES</option>
     </param>
     <param name="landingyearslimit"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_LANDINGYEARSLIMIT"
-           description="JBL_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
            size="5" />
     <param name="yearslabel"
            type="text"
-           label="JBL_TPL_LANDINGPAGE_YEARSLABEL"
+           label="JBS_TPL_LANDINGPAGE_YEARSLABEL"
            default="Years"
            size="45"></param>
   </params>

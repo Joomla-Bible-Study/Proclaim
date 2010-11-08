@@ -1,101 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 	<params>
-		<param name="mainlink" type="text" size="200" default="" label="Main link to site and file" description="Enter a site and the main file used for social network sharing. Enter a complete url" />
-                <param name="item1prefix" type="text" size="50" default="" label="Prefix for Item 1" description="Enter a prefix to be used before the first item like u" />
+		<param name="mainlink" type="text" size="200" default="" label="JBS_SHE_MAINLINK" description="JBS_SHE_MAINLINK_TT" />
+                <param name="item1prefix" type="text" size="50" default="" label="JBS_SHE_ITEM1PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
 		<param name="item1" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
-			<option value="0">Nothing</option>
-			<option value="200">Link to study</option>
-			<option value="1">Scripture {scripture1}</option>
-			<option value="2">Scripture2 {scripture2}</option>
-			<option value="3">Secondary Reference {secondary_reference}</option>
-			<option value="4">Duration {duration}</option>
-			<option value="5">Title {studytitle}</option>
-			<option value="6">Introduction {studyintro}</option>
-			<option value="7">Teacher {teachername}</option>
-			<option value="8">Title + Teacher {teacher-title-name}</option>
-			<option value="9">Series {series_text}</option>
-			<option value="27">Series Description {series_description}</option>
-			<option value="10">Date {date}</option>
-			<option value="11">Submitted By {submitted}</option>
-			<option value="12">Hits {hits}</option>
-			<option value="13">Studynumber {studynumber}</option>
-			<option value="14">Topic {topic_text}</option>
-			<option value="15">Location {location_text}</option>
-			<option value="16">Messagetype {message_type}</option>
-			<option value="24">Custom</option>
+			<option value="0">JBS_CMN_NOTHING</option>
+			<option value="200">JBS_LINK_STUDY</option>
+			<option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
+			<option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
+			<option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
+			<option value="4">JBS_TPL_DURATION_BRACE</option>
+			<option value="5">JBS_TPL_TITLE_BRACE</option>
+			<option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
+			<option value="7">JBS_TPL_TEACHER_BRACE</option>
+			<option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
+			<option value="9">JBS_TPL_SERIES_BRACE</option>
+			<option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
+			<option value="10">JBS_TPL_DATE_BRACE</option>
+			<option value="11">JBS_TPL_SUBMITTED_BRACE</option>
+			<option value="12">JBS_TPL_HITS_BRACE</option>
+			<option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
+			<option value="14">JBS_TPL_TOPIC_BRACE</option>
+			<option value="15">JBS_TPL_LOCATION_BRACE</option>
+			<option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
+			<option value="24">JBS_CMN_CUSTOM</option>
 		</param>
 		<param name="item1custom" size="100" type="text" default="" label="Custom for Item 1" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
-                <param name="item2prefix" size="50" type="text" default="" label="Prefix for Item 2" description="Enter a prefix to be used before the second item like u" />
+                <param name="item2prefix" size="50" type="text" default="" label="JBS_SHE_ITEM2PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
 		<param name="item2" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
-			<option value="0">Nothing</option>
-			<option value="200">Link to study</option>
-			<option value="1">Scripture {scripture1}</option>
-			<option value="2">Scripture2 {scripture2}</option>
-			<option value="3">Secondary Reference {secondary_reference}</option>
-			<option value="4">Duration {duration}</option>
-			<option value="5">Title {studytitle}</option>
-			<option value="6">Introduction {studyintro}</option>
-			<option value="7">Teacher {teachername}</option>
-			<option value="8">Title + Teacher {teacher-title-name}</option>
-			<option value="9">Series {series_text}</option>
-			<option value="27">Series Description {series_description}</option>
-			<option value="10">Date {date}</option>
-			<option value="11">Submitted By {submitted}</option>
-			<option value="12">Hits {hits}</option>
-			<option value="13">Studynumber {studynumber}</option>
-			<option value="14">Topic {topic_text}</option>
-			<option value="15">Location {location_text}</option>
-			<option value="16">Messagetype {message_type}</option>
-			<option value="24">Custom</option>
+			<option value="0">JBS_CMN_NOTHING</option>
+			<option value="200">JBS_LINK_STUDY</option>
+			<option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
+			<option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
+			<option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
+			<option value="4">JBS_TPL_DURATION_BRACE</option>
+			<option value="5">JBS_TPL_TITLE_BRACE</option>
+			<option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
+			<option value="7">JBS_TPL_TEACHER_BRACE</option>
+			<option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
+			<option value="9">JBS_TPL_SERIES_BRACE</option>
+			<option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
+			<option value="10">JBS_TPL_DATE_BRACE</option>
+			<option value="11">JBS_TPL_SUBMITTED_BRACE</option>
+			<option value="12">JBS_TPL_HITS_BRACE</option>
+			<option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
+			<option value="14">JBS_TPL_TOPIC_BRACE</option>
+			<option value="15">JBS_TPL_LOCATION_BRACE</option>
+			<option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
+			<option value="24">JBS_CMN_CUSTOM</option>
 		</param>
 		<param name="item2custom" size="100" type="text" default="" label="Custom for Item 2" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
-                <param name="item3prefix" size="50" type="text" default="" label="Prefix for Item 3" description="Enter a prefix to be used before the third item like u" />
+                <param name="item3prefix" size="50" type="text" default="" label="JBS_SHE_ITEM3PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
 		<param name="item3" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
-			<option value="0">Nothing</option>
-			<option value="200">Link to study</option>
-			<option value="1">Scripture {scripture1}</option>
-			<option value="2">Scripture2 {scripture2}</option>
-			<option value="3">Secondary Reference {secondary_reference}</option>
-			<option value="4">Duration {duration}</option>
-			<option value="5">Title {studytitle}</option>
-			<option value="6">Introduction {studyintro}</option>
-			<option value="7">Teacher {teachername}</option>
-			<option value="8">Title + Teacher {teacher-title-name}</option>
-			<option value="9">Series {series_text}</option>
-			<option value="27">Series Description {series_description}</option>
-			<option value="10">Date {date}</option>
-			<option value="11">Submitted By {submitted}</option>
-			<option value="12">Hits {hits}</option>
-			<option value="13">Studynumber {studynumber}</option>
-			<option value="14">Topic {topic_text}</option>
-			<option value="15">Location {location_text}</option>
-			<option value="16">Messagetype {message_type}</option>
-			<option value="24">Custom</option>
+			<option value="0">JBS_CMN_NOTHING</option>
+			<option value="200">JBS_LINK_STUDY</option>
+			<option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
+			<option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
+			<option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
+			<option value="4">JBS_TPL_DURATION_BRACE</option>
+			<option value="5">JBS_TPL_TITLE_BRACE</option>
+			<option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
+			<option value="7">JBS_TPL_TEACHER_BRACE</option>
+			<option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
+			<option value="9">JBS_TPL_SERIES_BRACE</option>
+			<option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
+			<option value="10">JBS_TPL_DATE_BRACE</option>
+			<option value="11">JBS_TPL_SUBMITTED_BRACE</option>
+			<option value="12">JBS_TPL_HITS_BRACE</option>
+			<option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
+			<option value="14">JBS_TPL_TOPIC_BRACE</option>
+			<option value="15">JBS_TPL_LOCATION_BRACE</option>
+			<option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
+			<option value="24">JBS_CMN_CUSTOM</option>
 		</param>
 		<param name="item3custom" size="100" type="text" default="" label="Custom for Item 3" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
-                <param name="item4prefix" size="50" type="text" default="" label="Prefix for Item 4" description="Enter a prefix to be used before the fourth item like u" />
+                <param name="item4prefix" size="50" type="text" default="" label="JBS_SHE_ITEM4PREFIX" description="JBS_SHE_ITEMPREFIX_TT" />
 		<param name="item4" type="list" default="" label="Select an item to display" description="Select an item from the drop down list to display here">
-			<option value="0">Nothing</option>
-			<option value="200">Link to study</option>
-			<option value="1">Scripture {scripture1}</option>
-			<option value="2">Scripture2 {scripture2}</option>
-			<option value="3">Secondary Reference {secondary_reference}</option>
-			<option value="4">Duration {duration}</option>
-			<option value="5">Title {studytitle}</option>
-			<option value="6">Introduction {studyintro}</option>
-			<option value="7">Teacher {teachername}</option>
-			<option value="8">Title + Teacher {teacher-title-name}</option>
-			<option value="9">Series {series_text}</option>
-			<option value="27">Series Description {series_description}</option>
-			<option value="10">Date {date}</option>
-			<option value="11">Submitted By {submitted}</option>
-			<option value="12">Hits {hits}</option>
-			<option value="13">Studynumber {studynumber}</option>
-			<option value="14">Topic {topic_text}</option>
-			<option value="15">Location {location_text}</option>
-			<option value="16">Messagetype {message_type}</option>
-			<option value="24">Custom</option>
+			<option value="0">JBS_CMN_NOTHING</option>
+			<option value="200">JBS_LINK_STUDY</option>
+			<option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
+			<option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
+			<option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
+			<option value="4">JBS_TPL_DURATION_BRACE</option>
+			<option value="5">JBS_TPL_TITLE_BRACE</option>
+			<option value="6">JBS_TPL_INTRODUCTION_BRACE</option>
+			<option value="7">JBS_TPL_TEACHER_BRACE</option>
+			<option value="8">JBS_TPL_TITLE_TEACHER_BRACE</option>
+			<option value="9">JBS_TPL_SERIES_BRACE</option>
+			<option value="27">JBS_TPL_SERIES_DESCRIPTION_BRACE</option>
+			<option value="10">JBS_TPL_DATE_BRACE</option>
+			<option value="11">JBS_TPL_SUBMITTED_BRACE</option>
+			<option value="12">JBS_TPL_HITS_BRACE</option>
+			<option value="13">JBS_TPL_STUDYNUMBER_BRACE</option>
+			<option value="14">JBS_TPL_TOPIC_BRACE</option>
+			<option value="15">JBS_TPL_LOCATION_BRACE</option>
+			<option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
+			<option value="24">JBS_CMN_CUSTOM</option>
 		</param>
 		<param name="item4custom" size="100" type="text" default="" label="Custom for Item 4" description="Enter a custom string including text and multiple items in brackets - see labels on drop down lists" />
 		<param name="use_bitly" type="list" default="0" label="Use link shortener bit.ly" description="Shortens the link. Helps mainly for services like Twitter that only take a certain number of characters">
