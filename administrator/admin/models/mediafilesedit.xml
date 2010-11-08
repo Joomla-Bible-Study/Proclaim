@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<params >
-		<param name="player" default="100" type="list" label="JBL_MFE_PLAYER" description="JBL_MFE_PLAYER_TT">
-            <option value="100">JBL_CMN_USE_GLOBAL</option>
-			<option value="0">JBL_DIRECT_LINK</option>
-			<option value="1">JBL_USE_INTERNAL_PLAYER</option>
-			<option value="2">JBL_USE_AVR</option>
-            <option value="3">JBL_USE_AV</option>
-            <option value="7">JBL_USE_LEGACY_PLAYER</option>
-		</param>
-        <param name="internal_popup" type="list" default="3" label="Display as popup/New Window" description="Choose whether the internal viewer should be a popup or inline. If direct then plays in new window. Affects this file only. Overrides global settings">
-                <option value="1">Popup</option>
-                <option value="2">Inline</option>
-                <option value="3">JBL_CMN_USE_GLOBAL</option>
-				</param>
-		<param name="playerwidth" default="" type="text" label="Custom width for internal player or window" description="Set a width for the player or direct link that will play in a new window. 300 assumed if nothing added. Affects only this file" />
-		<param name="playerheight" default="" type="text" label="Custom height for internal player or window" description="Set a height attribute for the internal player or direct link that will play in a new window. 400 assumed. Only affects this mediafile" />
-		<param name="itempopuptitle" type="text" size="150" default="" label="Popup Title Elements" description="Overrides global settings. Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
-            <param name="itempopupfooter" type="text" size="150" default="" label="Popup Footer Elements" description="Overrides global settings. Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
-            <param name="popupmargin" type="text" default="50" label="Height Margin for Popup" description="Set space above and below popup for header and footer." />
-		</params>
-		<params group="PODCAST" addpath="/components/com_biblestudy/elements">
-		<param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="Select one or more podcasts" description="Use Ctrl-click to select more than one item.">
-		<option value="-1">None</option>
-		</param>
-	</params>
+  <params >
+    <param name="player" default="100" type="list" label="JBL_MFE_PLAYER" description="JBL_MFE_PLAYER_TT">
+      <option value="100">JBL_CMN_USE_GLOBAL</option>
+      <option value="0">JBL_DIRECT_LINK</option>
+      <option value="1">JBL_USE_INTERNAL_PLAYER</option>
+      <option value="2">JBL_USE_AVR</option>
+      <option value="3">JBL_USE_AV</option>
+      <option value="7">JBL_USE_LEGACY_PLAYER</option>
+    </param>
+    <param name="internal_popup" type="list" default="3" label="JBL_MFE_INTERNAL_POPUP" description="JBL_MFE_INTERNAL_POPUP_TT">
+      <option value="1">JBS_CMN_POPUP</option>
+      <option value="2">JBS_CMN_INLINE</option>
+      <option value="3">JBL_CMN_USE_GLOBAL</option>
+    </param>
+    <param name="playerwidth" default="" type="text" label="Custom width for internal player or window" description="Set a width for the player or direct link that will play in a new window. 300 assumed if nothing added. Affects only this file" />
+    <param name="playerheight" default="" type="text" label="Custom height for internal player or window" description="Set a height attribute for the internal player or direct link that will play in a new window. 400 assumed. Only affects this mediafile" />
+    <param name="itempopuptitle" type="text" size="150" default="" label="Popup Title Elements" description="Overrides global settings. Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
+    <param name="itempopupfooter" type="text" size="150" default="" label="Popup Footer Elements" description="Overrides global settings. Display Codes: {{title}}, {{studydate}}, {{teacher}}, {{filename}}, {{description}}, {{length}}" />
+    <param name="popupmargin" type="text" default="50" label="Height Margin for Popup" description="Set space above and below popup for header and footer." />
+  </params>
+  <params group="PODCAST" addpath="/components/com_biblestudy/elements">
+    <param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="Select one or more podcasts" description="Use Ctrl-click to select more than one item.">
+    <option value="-1">None</option>
+    </param>
+  </params>
 </root>

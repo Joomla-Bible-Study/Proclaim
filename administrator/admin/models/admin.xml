@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 	<params>
-		<param name="compat_mode" type="list" default="0" label="JBS_TPL_MEDIA_COMPAT_MODE" description="JBS_TPL_MEDIA_COMPAT_MODE_TT">
+		<param name="compat_mode" type="list" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE" description="JBS_ADM_MEDIA_COMPAT_MODE_TT">
 			<option value="0">JBS_CMN_NO</option>
 			<option value="1">JBS_CMN_YES</option>
 		</param>
