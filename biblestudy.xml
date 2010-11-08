@@ -6,8 +6,8 @@
 	if the interface doesn't support it properly -->
 	<!-- Generic Metadata -->
 	<name>com_biblestudy</name>
-	<author>Tom Fuller, Eugen Istok, Kyle Holder, Richard Hunt, Nick Fossen - JoomlaBibleStudy Team</author>
-	<authorEmail>tomfuller2@gmail.com</authorEmail>
+	<author>JoomlaBibleStudy Team</author>
+	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
 	<copyright>(C) 2010 Copyright Joomla Bible Study</copyright>
 	<license>GNU/GPL</license>
@@ -17,7 +17,11 @@
 
 	<installfile>biblestudy.install.php</installfile> <!-- Deprecated in 1.6 -->
 	<uninstallfile>uninstall.biblestudy.php</uninstallfile> <!-- Deprecated in 1.6 -->
-    
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8">install/sql/jbs7.0.0.sql</file>
+        </sql>
+    </install>
 	<!-- Front end file, media and language specification -->
 	 <filename>biblestudy.xml</filename>
      <filename>biblestudy.install.php</filename>

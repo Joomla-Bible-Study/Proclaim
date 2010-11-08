@@ -64,72 +64,13 @@ function com_install()
 				
 		
 
-//Before we upgrade, we need to fix something between versions 6.2.0_RC1 and RC2
-$db = JFactory::getDBO();
-$query = "SELECT id, version FROM #__bsms_version WHERE version LIKE '%6.2.0_RC1%'";
-$db->setQuery($query);
-$db->query();
-$version = $db->loadObject();
-if ($version->version == '6.2.0_RC1')
-{
-        $query = "SELECT id, params, published FROM `#__bsms_mediafiles` WHERE params LIKE '%podcasts%' and published = '1'";
-        $db->setQuery($query);
-        $db->query();
-        $num_rows = $db->getNumRows();
-       
-   if ($num_rows > 0)
-   {
-        $add = 0;
-        $array = 0;
-	  	$result_table = '<table><tr><td>You have version 6.2.0_RC1 installed. Special update needed to RC2<br />'.$num_rows.' parameters from Media Files Records in need of updating from 6.2.0_RC1 to RC2.</td></tr>';
-        $results = $db->loadObjectList();
-        foreach ($results as $result)
-        {
-            $params = new JParameter($result->params);
-            $podcast = $params->get('podcasts');
-            $change = $params->get('podcasts').'\n';
-            if (is_array($podcast)){$array = $array + 1;}
-            else
-            {
-                $pod = strpos($result->params,'podcasts=');
-                $space = strpos($result->params,' ',$pod);
-                $length = $space - $pod - 1;
-                if (!$space) {$length = 10;}
-                $podstring = substr($result->params,$pod,$length);
-                $newpodstring = substr($result->params,$pod,$length).'\n';
-                $newparams = str_replace($podstring,$newpodstring,$result->params);
-                $query = "UPDATE #__bsms_mediafiles SET `params` = '".$newparams."' WHERE `id` = ".$result->id;
-        	  	$db->setQuery($query);
-        	  	$db->query();
-        	   	if ($db->getErrorNum() > 0)
-        				{
-        					$error = $db->getErrorMsg();
-        					$result_table .= '<tr><td>An error occured while updating mediafile row '.$result->id.'. Error: '.$error.'</td></tr>';
-				        }
-    			else
-    			{
-    				$updated = 0;
-    				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-    				$add = $add + $updated;
-    			} 
-               // echo $result->params.' - '.$newparams.'<br />';  
-            }
-            
-//            echo $params->get('podcasts').'<br />';
-//            $pod = strpos($result->params,'podcasts=');
-//            $space = strpos($result->params,' ',$pod);
-//            echo $result->params.' - '.$pod.' - '.$space.'<br />';   
-        }
-        $result_table .= '<tr><td>'.$add.' Rows in Media Files Records table updated. '.$array.' not modified (multiple podcasts selected by user so no need to update).</td></tr></table>';
-    } 
-}
-echo $result_table;
+
 
 		//install & upgrade class
-		$bsmsupgrade = new fx_Upgrade("com_biblestudy", "biblestudy.install.upgrade.xml", "bsms_", "install", false);
+	//	$bsmsupgrade = new fx_Upgrade("com_biblestudy", "biblestudy.install.upgrade.xml", "bsms_", "install", false);
 
 		// Start Installation/Upgrade
-		$bsmsupgrade->doUpgrade();
+	//	$bsmsupgrade->doUpgrade();
      
   //Check for presence of css or backup
     jimport('joomla.filesystem.file');
