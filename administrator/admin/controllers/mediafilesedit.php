@@ -114,9 +114,9 @@ class biblestudyControllermediafilesedit extends JController {
 		$setArticle = JRequest::getVar('articleTitle', null, 'post');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Media Saved!' );
+			$msg = JText::_( 'JBS_MDE_MEDIA_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Media' );
+			$msg = JText::_( 'JBS_MDE_ERROR_SAVING_MEDIA' );
 		}
 
 		$filename_upload = strtolower($file['name']);
@@ -142,9 +142,9 @@ class biblestudyControllermediafilesedit extends JController {
 		$setArticle = JRequest::getVar('articleTitle', null, 'post');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Media Saved!' );
+			$msg = JText::_( 'JBS_MDE_MEDIA_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Media' );
+			$msg = JText::_( 'JBS_MDE_ERROR_SAVING_MEDIA' );
 		}
 
 		$filename_upload = strtolower($file['name']);
@@ -163,9 +163,9 @@ class biblestudyControllermediafilesedit extends JController {
 	{
 		$model = $this->getModel('mediafilesedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Media Items Could not be Deleted' );
+			$msg = JText::_( 'JBS_MDE_ERROR_DELETING_MEDIA' );
 		} else {
-			$msg = JText::_( 'Media Item(s) Deleted' );
+			$msg = JText::_( 'JBS_MDE_MEDIA_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
@@ -196,14 +196,14 @@ class biblestudyControllermediafilesedit extends JController {
 		if (isset($cid[0]) && $cid[0]) {
 			$id = $cid[0];
 		} else {
-			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', JText::_('No Items Selected') );
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', JText::_('JBS_CMN_NO_ITEMS_SELECTED') );
 			return false;
 		}
 
 		$model =& $this->getModel('mediafilesedit');
 		$model->setid($id);
 		if ($model->move(-1)) {
-			$msg = JText::_( 'Media file Moved Up' );
+			$msg = JText::_( 'JBS_MDE_MEDIA_MOVED_UP' );
 		} else {
 			$msg = $model->getError();
 		}
@@ -218,14 +218,14 @@ class biblestudyControllermediafilesedit extends JController {
 		if (isset($cid[0]) && $cid[0]) {
 			$id = $cid[0];
 		} else {
-			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', JText::_('No Items Selected') );
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', JText::_('JBS_CMN_NO_ITEMS_SELECTED') );
 			return false;
 		}
 
 		$model =& $this->getModel('mediafilesedit');
 		$model->setid($id);
 		if ($model->move(1)) {
-			$msg = JText::_('Media file Moved Down');
+			$msg = JText::_('JBS_MDE_MEDIA_MOVED_DOWN');
 		} else {
 			$msg = $model->getError();
 		}
@@ -238,7 +238,7 @@ class biblestudyControllermediafilesedit extends JController {
 
 		$model =& $this->getModel('mediafilesedit');
 		if ($model->saveorder($cid, null)) {
-			$msg = JText::_( 'New ordering saved' );
+			$msg = JText::_( 'JBS_CMN_ORDERING_SAVED' );
 		} else {
 			$msg = $model->getError();
 		}
@@ -336,7 +336,7 @@ class biblestudyControllermediafilesedit extends JController {
 		$isbsms = substr_count($avrread,'JoomlaBibleStudy');
 		if ($isbsms)
 		{
-			$msg = JText::_( 'Operation Successful. All Videos Reloaded Bible Study File Copied' );
+			$msg = JText::_( 'JBS_MDE_OPERATION_SUCCESS_AVR_FILE_COPIED' );
 			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
 		}
 	}

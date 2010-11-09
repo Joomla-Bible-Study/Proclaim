@@ -40,9 +40,9 @@ class biblestudyControllerpodcastedit extends JController
   $model = $this->getModel('podcastedit');
 
   if ($model->store($post)) {
-   $msg = JText::_( 'Podcast Saved!' );
+   $msg = JText::_( 'JBS_PCE_PODCAST_SAVED' );
   } else {
-   $msg = JText::_( 'Error Saving Podcast' );
+   $msg = JText::_( 'JBS_PCE_ERROR_SAVING_PODCAST' );
   }
 
   // Check the table in so it can be edited.... we are done with it anyway
@@ -59,9 +59,9 @@ class biblestudyControllerpodcastedit extends JController
 		$model = $this->getModel('podcastedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'Podcast Saved!' );
+			$msg = JText::_( 'JBS_PCE_PODCAST_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Padcast' );
+			$msg = JText::_( 'JBS_PCE_ERROR_SAVING_PODCAST' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -77,9 +77,9 @@ class biblestudyControllerpodcastedit extends JController
  {
   $model = $this->getModel('podcastedit');
   if(!$model->delete()) {
-   $msg = JText::_( 'Error: One or More podcast Could not be Deleted' );
+   $msg = JText::_( 'JBS_PCE_ERROR_DELETING_PODCAST' );
   } else {
-   $msg = JText::_( 'Podcast(s) Deleted' );
+   $msg = JText::_( 'JBS_PCE_PODCAST_DELETED' );
   }
 
   $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
@@ -151,23 +151,23 @@ function publish()
  $result= writeXML();
   if ($result)
   {
-    $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('No errors reported'));
+    $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PCE_NO_ERROR_REPORTED'));
   
 /*   $task = JRequest::getCmd('task');
    switch($task)
    {
     case 'apply_source':
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', $podinfo->filename.' '.JText::_('saved'));
+     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', $podinfo->filename.' '.JText::_('JBS_CMN_SAVED'));
      break;
 
     case 'save_source':
     default:
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', $podinfo->filename.' '.JText::_('saved'));
+     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', $podinfo->filename.' '.JText::_('JBS_CMN_SAVED'));
      break;
    } */
   }
   else {
-   $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').'.');
+   $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').'.');
   }
 
  }

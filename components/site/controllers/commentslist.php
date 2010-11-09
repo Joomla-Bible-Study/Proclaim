@@ -98,9 +98,9 @@ class biblestudyControllercommentslist extends JController
 	{
 		$model = $this->getModel('commentsedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Items Could not be Deleted' );
+			$msg = JText::_( 'JBS_CMT_ERROR_DELETING_ITEM' );
 		} else {
-			$msg = JText::_( 'Item(s) Deleted' );
+			$msg = JText::_( 'JBS_CMT_ITEMS_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist', $msg );
@@ -207,7 +207,7 @@ function publish()
 		$model = $this->getModel('commentsedit');
 		$model->saveorder($cid, $order);
 
-		$msg = 'New ordering saved';
+		$msg = JText::_( 'JBS_CMN_ORDERING_SAVED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist', $msg );
 	}
 }

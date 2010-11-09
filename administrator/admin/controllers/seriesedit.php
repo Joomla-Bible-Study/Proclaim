@@ -48,9 +48,9 @@ class biblestudyControllerseriesedit extends JController
 		$model = $this->getModel('seriesedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Series Saved!' );
+			$msg = JText::_( 'JBS_SRE_SERIES_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Series' );
+			$msg = JText::_( 'JBS_SRE_ERROR_SAVING_SERIES' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -67,9 +67,9 @@ class biblestudyControllerseriesedit extends JController
 		$model = $this->getModel('seriesedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'Series Saved!' );
+			$msg = JText::_( 'JBS_SRE_SERIES_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Series' );
+			$msg = JText::_( 'JBS_SRE_ERROR_SAVING_SERIES' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -85,9 +85,9 @@ class biblestudyControllerseriesedit extends JController
 	{
 		$model = $this->getModel('seriesedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Series Items Could not be Deleted' );
+			$msg = JText::_( 'JBS_SRE_ERROR_DELETING_SERIES' );
 		} else {
-			$msg = JText::_( 'Series Item(s) Deleted' );
+			$msg = JText::_( 'JBS_SRE_SERIES_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=serieslist', $msg );

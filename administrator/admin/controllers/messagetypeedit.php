@@ -41,9 +41,9 @@ class biblestudyControllermessagetypeedit extends JController
 		$model = $this->getModel('messagetypeedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Message Type Saved!' );
+			$msg = JText::_( 'JBS_MTE_MESSAGETYPE_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Message Type' );
+			$msg = JText::_( 'JBS_MTE_ERROR_SAVING_MESSAGETYPE' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -60,9 +60,9 @@ class biblestudyControllermessagetypeedit extends JController
 		$model = $this->getModel('messagetypeedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'Message Type Saved!' );
+			$msg = JText::_( 'JBS_MTE_MESSAGETYPE_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Message Type' );
+			$msg = JText::_( 'JBS_MTE_ERROR_SAVING_MESSAGETYPE' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -78,9 +78,9 @@ class biblestudyControllermessagetypeedit extends JController
 	{
 		$model = $this->getModel('messagetypeedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Message Type Could not be Deleted' );
+			$msg = JText::_( 'JBS_MTE_ERROR_DELETING_MESSAGETYPE' );
 		} else {
-			$msg = JText::_( 'Message Type(s) Deleted' );
+			$msg = JText::_( 'JBS_MTE_MESSAGETYPE_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=messagetypelist', $msg );

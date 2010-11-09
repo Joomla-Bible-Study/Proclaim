@@ -56,9 +56,9 @@ class biblestudyControllermediafilesedit extends JController {
 			$this->upload();
 		}
 		if ($model->store($data)) {
-			$msg = JText::_('Media Saved!');
+			$msg = JText::_('JBS_MDE_MEDIA_SAVED');
 		} else {
-			$msg = JText::_('Error Saving Media');
+			$msg = JText::_('JBS_MDE_ERROR_SAVING_MEDIA');
 		}
 
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
@@ -76,9 +76,9 @@ class biblestudyControllermediafilesedit extends JController {
 	{
 		$model = $this->getModel('mediafilesedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Media Items Could not be Deleted' );
+			$msg = JText::_( 'JBS_MDE_ERROR_DELETING_MEDIA' );
 		} else {
-			$msg = JText::_( 'Media Item(s) Deleted' );
+			$msg = JText::_( 'JBS_MDE_MEDIA_DELETED' );
 		}
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
 		if (!$templatmenuid) {$templatemenuid = 1;}

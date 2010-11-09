@@ -48,9 +48,9 @@ class biblestudyControllercommentsedit extends JController
 		$model = $this->getModel('commentsedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Comment Saved!' );
+			$msg = JText::_( 'JBS_CMT_COMMENT_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Comment' );
+			$msg = JText::_( 'JBS_CMT_ERROR_SAVING_COMMENT' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -66,9 +66,9 @@ class biblestudyControllercommentsedit extends JController
 	{
 		$model = $this->getModel('commentsedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Items Could not be Deleted' );
+			$msg = JText::_( 'JBS_CMT_ERROR_DELETING_ITEM' );
 		} else {
-			$msg = JText::_( 'Item(s) Deleted' );
+			$msg = JText::_( 'JBS_CMT_ITEMS_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist', $msg );

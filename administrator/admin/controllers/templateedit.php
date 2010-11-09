@@ -28,7 +28,7 @@ class biblestudyControllertemplateedit extends JController {
 		$model	=& $this->getModel('templateedit');
 
 		if ($model->copy($cid)) {
-                        $msg = JText::_('Template(s) have been copied');
+                        $msg = JText::_('JBS_TPE_TEMPLATE_COPIED');
 		} else {
 			$msg = $model->getError();
 		}
@@ -39,14 +39,14 @@ class biblestudyControllertemplateedit extends JController {
 		$model = $this->getModel('templateedit');
 		$data = JRequest::get('post');
 		if ($model->store($post)) {
-			$msg = JText::_( 'Template Saved!' );
+			$msg = JText::_( 'JBS_TPE_TEMPLATE_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Template' );
+			$msg = JText::_( 'JBS_TPE_ERROR_SAVING_TEMPLATE' );
 		}
 
 		switch ($this->_task) {
 			case 'apply':
-				$msg = JText::_( 'Changes to Template Updated! (by Apply)' );
+				$msg = JText::_( 'JBS_TPE_TEMPLATE_CHANGES_UPDATED' );
 				$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 				$link = 'index.php?option=com_biblestudy&view=templateedit&layout=form&task=edit&cid[]='. $cid;
 				break;
@@ -80,7 +80,7 @@ class biblestudyControllertemplateedit extends JController {
 	function unpublish(){
 		$mainframe =& JFactory::getApplication();
 		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
-		if ($cid[0] == 1) {$msg = JText::_( 'Error: You cannot unpublish the default template' );}
+		if ($cid[0] == 1) {$msg = JText::_( 'JBS_TPE_ERROR_NO_UNPUBLISH_DEFAULT_TEMPLATE' );}
 		else
 		{
 			if (!is_array( $cid ) || count( $cid ) < 1) {
@@ -114,10 +114,10 @@ class biblestudyControllertemplateedit extends JController {
 		$model = $this->getModel('templateedit');
 		if(!$model->delete()) {
 			$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
-			if ($cid[0] == 1) {$msg = JText::_( 'Error: You cannot delete the default template' );}
-			else {$msg = JText::_( 'Error: One or More Templates Could not be Deleted (You cannot delete the default template)' );}
+			if ($cid[0] == 1) {$msg = JText::_( 'JBS_TPE_ERROR_NO_DELETE_DEFAULT_TEMPLATE' );}
+			else {$msg = JText::_( 'JBS_TPE_ERROR_DELETING_TEMPLATE' );}
 		} else {
-			$msg = JText::_( 'Template(s) Deleted' );
+			$msg = JText::_( 'JBS_TPE_TEMPLATE_DELETED' );
 		}
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=templateslist', $msg );
 	}

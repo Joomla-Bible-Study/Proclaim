@@ -40,9 +40,9 @@ class biblestudyControllerpodcastedit extends JController
   $model = $this->getModel('podcastedit');
 
   if ($model->store($post)) {
-   $msg = JText::_( 'Podcast Saved!' );
+   $msg = JText::_( 'JBS_PCE_PODCAST_SAVED' );
   } else {
-   $msg = JText::_( 'Error Saving Podcast' );
+   $msg = JText::_( 'JBS_PCE_ERROR_SAVING_PODCAST' );
   }
 
   // Check the table in so it can be edited.... we are done with it anyway
@@ -58,9 +58,9 @@ class biblestudyControllerpodcastedit extends JController
  {
   $model = $this->getModel('podcastedit');
   if(!$model->delete()) {
-   $msg = JText::_( 'Error: One or More podcast Could not be Deleted' );
+   $msg = JText::_( 'JBS_PCE_ERROR_DELETING_PODCAST' );
   } else {
-   $msg = JText::_( 'Podcast(s) Deleted' );
+   $msg = JText::_( 'JBS_PCE_PODCAST_DELETED' );
   }
 
   $this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
@@ -135,7 +135,7 @@ function publish()
     $mainframe->redirect('index.php?option='.$option.'&view=studieslist', $result.' '.JText::_('saved'));
   }
   else {
-   $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing.'));
+   $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE.'));
   }
 
  }

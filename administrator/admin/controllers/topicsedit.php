@@ -48,9 +48,9 @@ class biblestudyControllertopicsedit extends JController
 		$model = $this->getModel('topicsedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'Topic Saved!' );
+			$msg = JText::_( 'JBS_TCE_TOPIC_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Topic' );
+			$msg = JText::_( 'JBS_TCE_ERROR_SAVING_TOPIC' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -67,9 +67,9 @@ class biblestudyControllertopicsedit extends JController
 		$model = $this->getModel('topicsedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'Topic Saved!' );
+			$msg = JText::_( 'JBS_TCE_TOPIC_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving Topic' );
+			$msg = JText::_( 'JBS_TCE_ERROR_SAVING_TOPIC' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -85,9 +85,9 @@ class biblestudyControllertopicsedit extends JController
 	{
 		$model = $this->getModel('topicsedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Topics Items Could not be Deleted' );
+			$msg = JText::_( 'JBS_TCE_ERROR_DELETING_TOPIC' );
 		} else {
-			$msg = JText::_( 'Topics Item(s) Deleted' );
+			$msg = JText::_( 'JBS_TCE_TOPIC_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=topicslist', $msg );

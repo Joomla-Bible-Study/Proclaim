@@ -38,9 +38,9 @@ class biblestudyControllerpodcastlist extends JController
  {
   $model = $this->getModel('podcastedit');
   if(!$model->delete()) {
-   $msg = JText::_( 'Error: One or More podcast Could not be Deleted' );
+   $msg = JText::_( 'JBS_PCE_ERROR_DELETING_PODCAST' );
   } else {
-   $msg = JText::_( 'Podcast(s) Deleted' );
+   $msg = JText::_( 'JBS_PCE_PODCAST_DELETED' );
   }
 
   $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
@@ -58,14 +58,14 @@ class biblestudyControllerpodcastlist extends JController
   if ($result)
   {
 
-    // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('File(s) written').': '.$result);
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('No Errors Reported'));
+    // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PCE_FILES_WRITTEN').': '.$result);
+     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PCE_NO_ERROR_REPORTED'));
 
   }
   else {
-  // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').'.');
+  // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').'.');
 
-$mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('Operation Failed').': '.JText::_('Errors Reported. Please check files').'.');  }
+$mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_PCE_ERRORS_REPORTED'));  }
 
  }
 }
