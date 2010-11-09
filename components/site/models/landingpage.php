@@ -39,7 +39,8 @@ class biblestudyModellandingpage extends JModel
 		if (!$templatemenuid){$templatemenuid = 1;}
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
-		require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+	//	require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+        jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
 		
@@ -327,6 +328,7 @@ function getTemplate() {
 		//Added for user level control
 		$user =& JFactory::getUser();
 		$level_user = $user->get('gid');
+        if (!$level_user){$level_user = '23';}
 		//$level_user = $user->usertype;
 		//dump ($level_user, 'Level_user: ');
 		$where[] = ' #__bsms_studies.show_level <= '.$level_user;

@@ -20,6 +20,8 @@ class biblestudyViewcpanel extends JView
 		$versioncheck = latestVersion();
 		//dump ($versioncheck);
 		$this->assignRef('versioncheck', $versioncheck);
+        
+        
         parent::display($tpl);
 	}
 }

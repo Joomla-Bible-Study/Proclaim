@@ -78,7 +78,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$mediafilesedit	=& $this->get('Data');
 	
 
-		$articlesSections =& $this->get('ArticlesSections');
+	//	$articlesSections =& $this->get('ArticlesSections');
 		
 
 		//Manipulate Data
@@ -93,7 +93,7 @@ class biblestudyViewmediafilesedit extends JView {
 		}
 		
 		//articles
-		array_unshift($articlesSections, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Section').' -', 'id', 'title'));
+	//	array_unshift($articlesSections, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Section').' -', 'id', 'title'));
 		
 		//Run only if Virtuemart enabled
 		if ($vmenabled > 0)
@@ -146,10 +146,10 @@ $this->assignRef('filepath', $filepath);
 			}
 			$this->assignRef('docManCategories', $docManCategories);
 		
-		if($mediafilesedit->article_id != 0 && !$isNew){
-			$this->assignRef('articleItem', $model->getArticleItem($mediafilesedit->article_id));
-			$this->assign('articleStyle', 'display: none');
-		}
+//		if($mediafilesedit->article_id != 0 && !$isNew){
+//			$this->assignRef('articleItem', $model->getArticleItem($mediafilesedit->article_id));
+//			$this->assign('articleStyle', 'display: none');
+//		}
 
 			if($mediafilesedit->virtueMart_id != 0 && !$isNew){
 				$this->assignRef('virtueMartItem', $model->getVirtueMartItem($mediafilesedit->virtueMart_id));
@@ -256,7 +256,7 @@ $this->assignRef('filepath', $filepath);
 		$this->assignRef('mediafilesedit',		$mediafilesedit);
 		$this->assignRef('vmenabled', $vmenabled);
 		$this->assignRef('dmenabled', $dmenabled);
-		$this->assignRef('articlesSections', $articlesSections);
+	//	$this->assignRef('articlesSections', $articlesSections);
 		
 		parent::display($tpl);
 	}

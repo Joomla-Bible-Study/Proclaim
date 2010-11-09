@@ -8,7 +8,8 @@ defined('_JEXEC') or die();
 //Share Helper file
 function getShare($link, $row, $params, $admin_params)
 {
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	jimport('joomla.html.parameter');
+    $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');

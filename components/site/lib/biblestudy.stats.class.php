@@ -281,6 +281,8 @@ function top_score_site($item)
     $final2 = array();
     $user =& JFactory::getUser();
 	$level_user = $user->get('gid');
+    //temporary
+    if (!$level_user){$level_user = '23';}
 	$db = &JFactory::getDBO();
 	$db->setQuery('SELECT study_id, sum(downloads + plays) as added FROM #__bsms_mediafiles where published = 1 GROUP BY study_id');
 	$format = $admin_params->get('format_popular','0');

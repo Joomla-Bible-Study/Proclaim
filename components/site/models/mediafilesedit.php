@@ -2,7 +2,7 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
-
+jimport('joomla.html.parameter');
 class biblestudyModelmediafilesedit extends JModel {
 	/**
 	 * Constructor that retrieves the ID from the request

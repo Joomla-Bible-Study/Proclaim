@@ -159,7 +159,7 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
       	<div id="articlesSectionsContainer" class="selectContainer" style="<?php echo $this->articleStyle; ?>">
       	<?php
                 echo JText::_('Section');
-      		echo JHTML::_('select.genericlist', $this->articlesSections, 'articlesSections', null, 'id', 'title', null, 'articlesSections');
+      //		echo JHTML::_('select.genericlist', $this->articlesSections, 'articlesSections', null, 'id', 'title', null, 'articlesSections');
       	?>
       	</div>
       	<div id="articlesCategoriesContainer" class="selectContainer">

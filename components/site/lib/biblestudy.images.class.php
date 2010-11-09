@@ -7,7 +7,8 @@
  */
 
 defined('_JEXEC') or die('Restricted access');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+//require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+jimport('joomla.html.parameter');
 class jbsImages 
 {
 	

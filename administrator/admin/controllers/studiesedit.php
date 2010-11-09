@@ -43,7 +43,7 @@ class biblestudyControllerstudiesedit extends JController
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save() {
+/*	function save() {
 		$model = $this->getModel('studiesedit');
 		if ($model->store($post)) {
 			$msg = JText::_( 'JBS_STE_STUDY_SAVED' );
@@ -55,7 +55,7 @@ class biblestudyControllerstudiesedit extends JController
 		$link = 'index.php?option=com_biblestudy&view=studieslist';
 		$this->setRedirect($link, $msg);
 	}
-	
+*/	
 	/**
 	 * apply a record
 	 * @return void

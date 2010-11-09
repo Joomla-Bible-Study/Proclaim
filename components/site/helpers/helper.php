@@ -1,4 +1,5 @@
 <?php defined('_JEXEC') or die('Restriced Access');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 /**
  * @author Joomla Bible Study
  * @copyright 2009
@@ -17,12 +18,23 @@
   
   //Get the correct componentid from #__menu
   $db	= & JFactory::getDBO();
-  $query = "SELECT id, componentid, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
-  $db->setQuery($query);
-  $db->query();
-  $component = $db->loadObject();
-    
-  $items  = $menus->getItems('componentid', $component->componentid);
+  
+  $jversion = JOOMLA_VERSION;
+    if ($jversion == '5') 
+        {
+                $query = "SELECT id, componentid, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
+                $db->setQuery($query);
+                $db->query();
+                $component = $db->loadObject();
+                $items  = $menus->getItems('componentid', $component->componentid);
+        }
+        else {
+                $query = "SELECT id, component_id, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
+                $db->setQuery($query);
+                $db->query();
+                $component = $db->loadObject();
+                $items  = $menus->getItems('component_id', $component->componentid);
+            }
   
    foreach ($items as $menu) {
     if (@$menu->query['view'] == $itemidlinkview) {

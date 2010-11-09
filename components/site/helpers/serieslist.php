@@ -255,6 +255,8 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	$rows = $db->getAffectedRows();
 	$user =& JFactory::getUser();
 	$level_user = $user->get('gid');
+    //temporary
+    if (!$level_user){$level_user = '23';}
 	$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
 	. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
 	. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
@@ -508,6 +510,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	$rows = $db->getAffectedRows();
     $user =& JFactory::getUser();
 	$level_user = $user->get('gid');
+    if (!$level_user){$level_user = '23';}
 	/*
 	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
 		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, #__bsms_series.series_thumbnail, #__bsms_message_type.id AS mid,'

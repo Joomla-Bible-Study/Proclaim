@@ -12,6 +12,7 @@
 <td>	<?php //echo $this->lists['bookid'];?>
 <?php $database	= & JFactory::getDBO();
 $mainframe = JFactory::getApplication('com_biblestudy');
+$option = JRequest::getCmd('option');
 $query2 = 'SELECT booknumber AS value, bookname AS text, published'
                         . ' FROM #__bsms_books'
                         . ' WHERE published = 1'
@@ -127,7 +128,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 		$link 		= JRoute::_( 'index.php?option=' . $option . '&controller=studiesedit&task=edit&cid[]='. $row->id );
 		$published 	= JHTML::_('grid.published', $row, $i );
 	//	$date	= JHTML::_('date',  $row->studydate, JText::_('DATE_FORMAT_LC3'),'$offset' );
-        $date	= JHTML::_('date',  $row->studydate, '',$offset );
+        $date	= JHTML::_('date',  $row->studydate );
 		?>
       <tr class="<?php echo "row$k"; ?>"> 
         <td> <?php echo $this->pagination->getRowOffset( $i ); ?> </td>

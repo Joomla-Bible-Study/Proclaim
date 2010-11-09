@@ -41,6 +41,7 @@ class biblestudyViewseriesdetail extends JView
         $seriesorder = $params->get('series_detail_order','DESC');
        	$user =& JFactory::getUser();
 		$level_user = $user->get('gid');
+        if (!$level_user){$level_user = '23';}
 		$limit = ' LIMIT '.$params->get('series_detail_limit',10);
 	//$limit = ' LIMIT 10';
 		$db = JFactory::getDBO();

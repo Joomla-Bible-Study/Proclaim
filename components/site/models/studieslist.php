@@ -33,7 +33,8 @@ class biblestudyModelstudieslist extends JModel
 	{
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-        require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+      //  require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+        jimport('joomla.html.parameter');
 		//$params =& $mainframe->getPageParameters();
 		$params 			=& $mainframe->getPageParameters();
         
@@ -43,6 +44,7 @@ class biblestudyModelstudieslist extends JModel
 		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		
 		$template = $this->getTemplate();
+        jimport('joomla.html.parameter');
 		$params = new JParameter($template[0]->params);
 		$this->_params = $params;
 		//dump ($params, 'params: ');
@@ -221,10 +223,7 @@ function getBooks() {
           $booklist = $this->_params->get('booklist'); 
           if ($booklist == 1)
           {
-            $query = 'SELECT DISTINCT s.booknumber AS value, s.published AS spublished, b.id, b.booknumber AS bbooknumber, b.bookname AS text FROM #__bsms_studies AS s
-LEFT JOIN #__bsms_books AS b ON ( b.booknumber = s.booknumber )
-WHERE s.published =1 AND b.id IS NOT NULL
-ORDER BY bbooknumber';
+            $query = 'SELECT DISTINCT s.booknumber AS value, s.published AS spublished, b.id, b.booknumber AS bbooknumber, b.bookname AS text FROM #__bsms_studies AS s LEFT JOIN #__bsms_books AS b ON ( b.booknumber = s.booknumber ) WHERE s.published =1 AND b.id IS NOT NULL ORDER BY bbooknumber';
           }
         else
         {
@@ -380,6 +379,7 @@ function getTemplate() {
 		//Added for user level control
 		$user =& JFactory::getUser();
 		$level_user = $user->get('gid');
+        if (!$level_user){$level_user = '23';}
 		//$level_user = $user->usertype;
 		//dump ($level_user, 'Level_user: ');
 		$where[] = ' #__bsms_studies.show_level <= '.$level_user;

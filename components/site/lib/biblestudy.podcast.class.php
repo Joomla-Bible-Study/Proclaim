@@ -6,6 +6,7 @@
  * @copyright 2010
  */
 defined('_JEXEC') or die();
+jimport('joomla.html.parameter');
 class JBSPodcast
 {
     

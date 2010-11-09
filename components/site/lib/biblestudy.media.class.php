@@ -8,6 +8,7 @@
 defined('_JEXEC') or die();
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+jimport('joomla.html.parameter');
 
 
 class jbsMedia
@@ -17,7 +18,7 @@ class jbsMedia
     {
         //First we get some items from GET and instantiate the images class
         $admin = new JBSAdmin();
-        $mediaPlayer = $admin->getMediaPlayer(); //dump ($mediaPlayer, 'mediaPlayer: ');
+     //   $mediaPlayer = $admin->getMediaPlayer(); //dump ($mediaPlayer, 'mediaPlayer: ');
 
         $Itemid = JRequest::getInt('Itemid','1','get');
         $template = JRequest::getInt('templatemenuid','1','get');
@@ -50,7 +51,7 @@ class jbsMedia
             $itemparams = new JParameter ($media->params);
 
              //Get the attributes for the player used in this item
-             $player = $this->getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, $media); 
+             $player = $this->getPlayerAttributes($admin_params, $params, $itemparams, $media); 
              $playercode = $this->getPlayerCode($params, $itemparams, $player, $image, $media);
 
             //Now we build the column for each media file
@@ -204,7 +205,7 @@ function getAdmin()
     return $admin;
 }
 
-function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, $media)
+function getPlayerAttributes($admin_params, $params, $itemparams, $media)
 {
     $player->playerwidth = $params->get('player_width');
     $player->playerheight = $params->get('player_height');
@@ -236,10 +237,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $mediaPlayer, 
     if ($item_mediaplayer == 2)
         {
             $player->player = 2;
-            if ($mediaPlayer == 'av')
-            {
-                $player->player = 3;
-            }
+            
         }
     if ($item_mediaplayer == 3)
         {

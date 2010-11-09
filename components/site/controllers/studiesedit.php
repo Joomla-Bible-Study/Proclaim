@@ -12,6 +12,7 @@ class biblestudyControllerstudiesedit extends JController
 		//$templatemenuid = $params->get('templatemenuid');
 		
 		$entry_user = $user->get('gid');
+        if (!$entry_user) { $entry_user = 0; }
 		$entry_access = ($params->get('entry_access')) ;
 		$allow_entry = $params->get('allow_entry_study');
 		if (!$allow_entry) {$allow_entry = 0;}

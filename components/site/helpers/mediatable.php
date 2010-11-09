@@ -11,6 +11,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 
 function getMediatable($params, $row, $admin_params)
 {
+      jimport('joomla.html.parameter');
 //dump ($row, 'row: ');
 	$getMedia = new jbsMedia();
 jimport ('joomla.application.component.helper');

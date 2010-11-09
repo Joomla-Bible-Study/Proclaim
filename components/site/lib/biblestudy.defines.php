@@ -10,17 +10,29 @@
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
-define ('BIBLESTUDY_VERSION', '6.2.0');
+define ('BIBLESTUDY_VERSION', '7.0.0');
 define ('BIBLESTUDY_VERSION_DATE', '2010-08-04');
-define ('BIBLESTUDY_VERSION_NAME', 'Deuteronomy');
-define ('BIBLESTUDY_VERSION_BUILD', '614');
+define ('BIBLESTUDY_VERSION_NAME', '2Samuel');
+define ('BIBLESTUDY_VERSION_BUILD', '700');
 
 // Default values
 define('BIBLESTUDY_COMPONENT_NAME', 'com_biblestudy');
 define('BIBLESTUDY_LANGUAGE_DEFAULT', 'english');
 define('BIBLESTUDY_TEMPLATE_DEFAULT', 'default');
 
-$language =& JFactory::getLanguage();
+//Joomla Version
+$joomlaversion = JVERSION;
+$j16 = '1.6';
+$is16 = substr_count(JVERSION,'1.6');
+if (!$is16)
+{
+    define('JOOMLA_VERSION','5');
+}
+else
+{
+    define('JOOMLA_VERSION','6');
+}
+//$language =& JFactory::getLanguage();
 //$lang = $language->getBackwardLang();
 
 //define('BIBLESTUDY_LANGUAGE', $lang);
@@ -62,9 +74,10 @@ define ('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 define ('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
 
 //define the player in use whether All Videos (av) or All Videos Reloaded (avr)
-$admin = new JBSAdmin();
-$player = $admin->getMediaPlayer();
-define ('BIBLESTUDY_PLAYER',$player);
+//We don't need this anymore as AVR has been removed from the component support
+//$admin = new JBSAdmin();
+//$player = $admin->getMediaPlayer();
+//define ('BIBLESTUDY_PLAYER',$player);
 
 
 ?>

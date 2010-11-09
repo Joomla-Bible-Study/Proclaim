@@ -39,7 +39,8 @@ class biblestudyModelteacherdisplay extends JModel
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-        require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+      //  require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+        jimport('joomla.html.parameter');
 		$params 			=& $mainframe->getPageParameters();
 		$templatemenuid = $params->get('templatemenuid');
 		if (!$templatemenuid){$templatemenuid = 1;}

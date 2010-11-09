@@ -50,7 +50,8 @@ class biblestudyModelstudydetails extends JModel
 		
 		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		//JRequest::setVar('id', $params->get('id'), 'get');
-        require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+        //require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+        jimport('joomla.html.parameter');
 		$this->_id = $id;
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
@@ -95,6 +96,7 @@ class biblestudyModelstudydetails extends JModel
 		if (empty( $this->_data )) {
 		  	$user =& JFactory::getUser();
         $level_user = $user->get('gid');
+        if (!$level_user){$level_user = '23';}
 			$id = JRequest::getVar('id', 0,'GET','INT');
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS teachername, '
 			. ' #__bsms_teachers.title AS teachertitle, '
