@@ -39,7 +39,7 @@ class biblestudyModellandingpage extends JModel
 		if (!$templatemenuid){$templatemenuid = 1;}
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
-		
+		require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
 		

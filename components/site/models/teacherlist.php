@@ -28,6 +28,7 @@ function __construct()
 		parent::__construct();
 		//$admin = $this->_getAdmin;
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
+        require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
 		$params 			=& $mainframe->getPageParameters();
 		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		$template = $this->getTemplate();

@@ -33,6 +33,7 @@ class biblestudyModelstudieslist extends JModel
 	{
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
+        require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
 		//$params =& $mainframe->getPageParameters();
 		$params 			=& $mainframe->getPageParameters();
         

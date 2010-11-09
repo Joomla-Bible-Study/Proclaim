@@ -34,6 +34,7 @@ class biblestudyModelseriesdetail extends JModel
 		if (!$templatemenuid){$templatemenuid = 1;}
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		$this->_id = $id;
+        require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
 		

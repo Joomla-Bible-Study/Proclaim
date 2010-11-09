@@ -50,6 +50,7 @@ class biblestudyModelstudydetails extends JModel
 		
 		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
 		//JRequest::setVar('id', $params->get('id'), 'get');
+        require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
 		$this->_id = $id;
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
