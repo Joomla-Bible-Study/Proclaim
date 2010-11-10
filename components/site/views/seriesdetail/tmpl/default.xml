@@ -10,7 +10,7 @@
 		<name>Single Series Layout</name>
 		<description>Choose a single series to link to</description>
 		<url addpath="/administrator/components/com_biblestudy/elements">
-			<param name="id" type="series" default="" label="Select a Series" description="The series to link to" />
+			<param name="id" type="series" default="" label="JBS_CMN_SELECT_SERIE" description="The series to link to" />
 		</url>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="" />

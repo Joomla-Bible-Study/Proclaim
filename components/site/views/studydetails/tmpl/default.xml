@@ -10,7 +10,7 @@
 		<name>Single Study Layout</name>
 		<description>Choose a single study to link to</description>
 		<url addpath="/administrator/components/com_biblestudy/elements">
-			<param name="id" type="studydetails" default="" label="Select a Study" description="The study to link to" />
+			<param name="id" type="studydetails" default="" label="JBS_CMN_SELECT_STUDY" description="The study to link to" />
 		</url>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="studydetails" />

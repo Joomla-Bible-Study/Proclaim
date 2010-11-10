@@ -161,7 +161,7 @@ class biblestudyViewmediafilesedit extends JView {
 			//@todo Bad practice to embed html here
 			$this->assign('studies', '<strong>'.$study->studytitle.' - '.$study->studydate.'</strong>');
 		}else {
-			$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );
+			$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'JBS_CMN_SELECT_STUDY' ) .' -' );
 			$studies = array_merge($studies, $studiesList);
 			$studies = JHTML::_('select.genericlist', $studies, 'study_id', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->study_id);
 			$this->assignRef('studies', $studies);
@@ -171,7 +171,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$lists['link_type'] = JHTML::_('select.booleanlist','link_type', 'class="inputbox"', $mediafilesedit->link_type);
 		$lists['internal_viewer'] = JHTML::_('select.booleanlist', 'internal_viewer', 'class="inputbox"', $mediafilesedit->internal_viewer);
 
-		$types5[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Server' ) .' -' );
+		$types5[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_SERVER' ) .' -' );
 		$types5 			= array_merge( $types5, $serversList);
 		$lists['server'] = JHTML::_('select.genericlist', $types5, 'server', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->server );
 
@@ -182,7 +182,7 @@ class biblestudyViewmediafilesedit extends JView {
 
 
 
-		$podcast[] = JHTML::_('select.option', '0', '- '. JText::_('Select a Podcast').' -');
+		$podcast[] = JHTML::_('select.option', '0', '- '. JText::_('JBS_CMN_SELECT_PODCAST').' -');
 		$podcast = array_merge($podcast, $podcastsList);
 		$lists['podcast'] 	= JHTML::_('select.genericlist',	$podcast, 'podcast_id', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->podcast_id);
 
@@ -191,7 +191,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$types7 			= array_merge( $types7, $mediaImages);
 		$lists['image'] = JHTML::_('select.genericlist', $types7, 'media_image', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->media_image );
 
-		$mimeselect[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Mime Type' ) .' -' );
+		$mimeselect[] = JHTML::_('select.option', '0', '- '. JText::_( 'JBS_CMN_SELECT_MIMETYPE' ) .' -' );
 		$mime = array_merge($mimeselect, $mimeTypes);
 		$lists['mime_type'] = JHTML::_('select.genericlist', $mime, 'mime_type', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->mime_type);
 
@@ -202,7 +202,7 @@ class biblestudyViewmediafilesedit extends JView {
 		//$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
 		//$database->setQuery($query);
 		//$studies = $database->loadObjectList();
-		//$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );
+		//$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'JBS_CMN_SELECT_STUDY' ) .' -' );
 		//$studies = array_merge($studies,$database->loadObjectList() );
 		//$lists['studies'] = JHTML::_('select.genericlist', $studies, 'study_id', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->study_id);
 		

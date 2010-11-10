@@ -139,7 +139,7 @@ class biblestudyViewstudieslist extends JView {
 		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_teacher" );
 
 		//Build Series List for drop down menu
-        $types3[]       = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Series' ) .' -' );
+        $types3[]       = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'JBS_CMN_SELECT_SERIE' ) .' -' );
 		$types3 			= array_merge( $types3, $series );
 		$lists['seriesid']	= JHTML::_('select.genericlist',   $types3, 'filter_series', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_series" );
 

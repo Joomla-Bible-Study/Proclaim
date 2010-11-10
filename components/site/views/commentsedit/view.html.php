@@ -45,7 +45,7 @@ class biblestudyViewcommentsedit extends JView
 		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
 		$database->setQuery($query);
 		//$studies = $database->loadObjectList();
-		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );
+		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'JBS_CMN_SELECT_STUDY' ) .' -' );
 		$studies = array_merge($studies,$database->loadObjectList() );
 		$lists['studies'] = JHTML::_('select.genericlist', $studies, 'study_id', 'class="inputbox" size="1" ', 'value', 'text', $commentsedit->study_id);
 		

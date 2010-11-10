@@ -198,7 +198,7 @@ $this->assignRef('filepath', $filepath);
 				$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
 			}
 		$database->setQuery($query);
-		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Study' ) .' -' );
+		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'JBS_CMN_SELECT_STUDY' ) .' -' );
 		$studies = array_merge($studies,$database->loadObjectList() );
 		$lists['studies'] = JHTML::_('select.genericlist', $studies, 'study_id', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->study_id);
 
@@ -207,7 +207,7 @@ $this->assignRef('filepath', $filepath);
 		. ' WHERE published = 1'
 		. ' ORDER BY server_path';
 		$database->setQuery( $query5 );
-		$types5[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Server' ) .' -' );
+		$types5[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_SERVER' ) .' -' );
 		$types5 			= array_merge( $types5, $database->loadObjectList() );
 		$lists['server'] = JHTML::_('select.genericlist', $types5, 'server', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->server );
 
@@ -222,7 +222,7 @@ $this->assignRef('filepath', $filepath);
 
 		$query = 'SELECT id AS value, title AS text FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC';
 		$database->setQuery($query);
-		$podcast[] = JHTML::_('select.option', '0', '- '. JText::_('Select a Podcast').' -');
+		$podcast[] = JHTML::_('select.option', '0', '- '. JText::_('JBS_CMN_SELECT_PODCAST').' -');
 		$podcast = array_merge($podcast, $database->loadObjectList());
 		$lists['podcast'] 	= JHTML::_('select.genericlist',	$podcast, 'podcast_id', 'class="inputbox" size="5" multiple', 'value', 'text', $mediafilesedit->podcast_id);
 		
@@ -239,7 +239,7 @@ $this->assignRef('filepath', $filepath);
 
 		$query = 'SELECT id AS value, mimetext AS text, published FROM #__bsms_mimetype WHERE published = 1 ORDER BY id ASC';
 		$database->setQuery($query);
-		$mimeselect[] = JHTML::_('select.option', '0', '- '. JText::_( 'Select a Mime Type' ) .' -' );
+		$mimeselect[] = JHTML::_('select.option', '0', '- '. JText::_( 'JBS_CMN_SELECT_MIMETYPE' ) .' -' );
 		$mime = array_merge($mimeselect, $database->loadObjectList() );
 		$lists['mime_type'] = JHTML::_('select.genericlist', $mime, 'mime_type', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->mime_type);
 
