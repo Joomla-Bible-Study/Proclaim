@@ -30,12 +30,12 @@ class biblestudyViewseriesedit extends JView
 		
 		$seriesImagePath = JPATH_SITE.'/images/'.$admin_params->get('series_imagefolder', 'stories');
 		$seriesImageList = JFolder::files($seriesImagePath, null, null, null, array('index.html'));
-		array_unshift($seriesImageList, '- '.JText::_('No Image').' -');
+		array_unshift($seriesImageList, '- '.JText::_('JBS_CMN_NO_IMAGE').' -');
 		
 		foreach($seriesImageList as $key=>$value) {
 			$seriesImageOptions[] = JHTML::_('select.option', $value, $value);
 		}
-		$seriesImageOptions[0]->value = 0; //Set the value of the "- No Image -" to 0. Makes it easier for jquery
+		$seriesImageOptions[0]->value = 0; //Set the value of the "- JBS_CMN_NO_IMAGE -" to 0. Makes it easier for jquery   // 2010-11-12 santon: need to be changed
 		
 		$lists['series_thumbnail'] = JHTML::_('select.genericlist',  $seriesImageOptions, 'series_thumbnail', 'class="imgChoose" size="1"', 'value', 'text',  $seriesedit->series_thumbnail);
 

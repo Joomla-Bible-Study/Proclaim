@@ -216,7 +216,7 @@ table.fbstat .col2 {
     <tr class = "thisform">
       <td width = "100%" valign = "top" class = "thisform"><div id = "cpanel">
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" style = "text-decoration:none;" title = "<?php echo JText::_('Administration');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-administration.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('Administration'); ?> </span></a> </div>
+            <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_ADMINISTRATION');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-administration.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_ADMINISTRATION'); ?> </span></a> </div>
           </div>
           <div style = "float:left;">
             <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=studieslist" style = "text-decoration:none;" title = "<?php echo JText::_('Studies/Sermons');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-studies.png" align = "middle" border = "0"/> <span> <?php echo JText::_('Studies/Sermons'); ?> </span></a> </div>

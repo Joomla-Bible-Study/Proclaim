@@ -48,12 +48,12 @@ class biblestudyViewstudiesedit extends JView {
 		$imagesPath = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images', 'stories');
 		$imageList 	= JFolder::files($imagesPath, null, null, null, array('index.html'));
 
-		array_unshift($imageList, '- '.JText::_('No Image').' -');
+		array_unshift($imageList, '- '.JText::_('JBS_CMN_NO_IMAGE').' -');
 		
 		foreach($imageList as $key=>$value) {
 			$imageOptions[] = JHTML::_('select.option', $value, $value);
 		}
-		$imageOptions[0]->value = 0; //Set the value of the "- No Image -" to 0. Makes it easier for jquery
+		$imageOptions[0]->value = 0; //Set the value of the "- JBS_CMN_NO_IMAGE -" to 0. Makes it easier for jquery   // 2010-11-12 santon: need to be changed
 
 		$lists['thumbnailm'] = JHTML::_('select.genericlist',  $imageOptions, 'thumbnailm', 'class="imgChoose" size="1"', 'value', 'text', $studiesedit->thumbnailm );
 

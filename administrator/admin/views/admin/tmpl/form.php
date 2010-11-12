@@ -25,11 +25,11 @@ foreach ($results AS $result)
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Administration' ); //dump ($this->admin, 'admin: ');?></legend>
+		<legend><?php echo JText::_( 'JBS_CMN_ADMINISTRATION' ); //dump ($this->admin, 'admin: ');?></legend>
 
 
     <table class="admintable">
-    <tr><td class="key"><?php echo JText::_('Administrative Settings');?></td><td>
+    <tr><td class="key"><?php echo JText::_('JBS_ADM_ADMINISTRATIVE_SETTINGS');?></td><td>
     <?php
 
 	jimport('joomla.html.pane');
@@ -37,84 +37,84 @@ foreach ($results AS $result)
 
 echo $pane->startPane( 'content-pane' );
 
-echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
+echo $pane->startPanel( JText::_( 'JBS_CMN_GENERAL' ), 'GENERAL' );
 echo $this->params->render( 'params' );
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_( 'Images Folders' ), 'FILLIN-IMAGES' );
+echo $pane->startPanel( JText::_( 'JBS_ADM_IMAGE_FOLDERS' ), 'FILLIN-IMAGES' );
 echo $this->params->render( 'params' , 'FILLIN-IMAGES');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_( 'Auto Fill Study Record' ), 'FILLIN-STUDY' );
+echo $pane->startPanel( JText::_( 'JBS_ADM_AUTO_FILL_STUDY_REC' ), 'FILLIN-STUDY' );
 echo $this->params->render( 'params' , 'FILLIN-STUDY');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_( 'Auto Fill Media File Record' ), 'FILLIN-MEDIAFILE' );
+echo $pane->startPanel( JText::_( 'JBS_ADM_AUTO_FILL_MEDIA_REC' ), 'FILLIN-MEDIAFILE' );
 echo $this->params->render( 'params' , 'FILLIN-MEDIAFILE');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_( 'Front End Submission' ), 'SUBMISSION' );
+echo $pane->startPanel( JText::_( 'JBS_ADM_FRONTEND_SUBMISSION' ), 'SUBMISSION' );
 echo $this->params->render( 'params' , 'SUBMISSION');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_( 'All Videos Reloaded Compatability' ), 'ALLVIDEOSRELOADED' );
+echo $pane->startPanel( JText::_( 'JBS_ADM_AVR_COMPATIBILITY' ), 'ALLVIDEOSRELOADED' );
 echo $this->params->render( 'params' , 'ALLVIDEOSRELOADED');
 echo $pane->endPanel();
 
 echo $pane->endPane();?>
-<tr><td class="key"><?php echo JText::_('Default Study List Image');?></td><td><?php
+<tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE');?></td><td><?php
 if ($this->lists['main'])
 {
-    echo $this->lists['main']; echo ' '.JText::_('Default for Study List Page Image. Media images folder used (set above).');
+    echo $this->lists['main']; echo ' '.JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE_TT');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+    echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
 }
 ?></td></tr>
-<tr><td class="key"><?php echo JText::_('Default Study Image');?></td><td><?php
+<tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE');?></td><td><?php
 if (isset($this->lists['study']))
 {
-    echo $this->lists['study']; echo ' '.JText::_('Default for study thumbnail. Set Folder above.');
+    echo $this->lists['study']; echo ' '.JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE_TT');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+    echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
 }
 ?></td></tr>
-<tr><td class="key"><?php echo JText::_('Default Series Image');?></td><td><?php
+<tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_SERIES_IMAGE');?></td><td><?php
 if (isset($this->lists['series']))
 {
-    echo $this->lists['series']; echo ' '.JText::_('Default for series thumbnail. Set Folder above.');
+    echo $this->lists['series']; echo ' '.JText::_('JBS_ADM_DEFAULT_SERIES_IMAGE_TT');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+    echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
 }
 ?></td></tr>
 
-<tr><td class="key"><?php echo JText::_('Default Teacher Image');?></td><td><?php
+<tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_TEACHER_IMAGE');?></td><td><?php
 if (isset($this->lists['teacher']))
 {
-    echo $this->lists['teacher']; echo ' '.JText::_('Default for teacher thumbnail. Set Folder above.');
+    echo $this->lists['teacher']; echo ' '.JText::_('JBS_ADM_DEFAULT_TEACHER_IMAGE_TT');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+    echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
 }
 ?></td></tr>
-<tr><td class="key"><?php echo JText::_('Download Image');?></td><td><?php
+<tr><td class="key"><?php echo JText::_('JBS_ADM_DOWNLOAD_IMAGE');?></td><td><?php
 if (isset($this->lists['download']))
 {
-    echo $this->lists['download']; echo ' '.JText::_('Default for download image. Must be called download.png. Media images folder used (set above).');
+    echo $this->lists['download']; echo ' '.JText::_('JBS_ADM_DOWNLOAD_IMAGE_TT');
 }
 else
 {
-    echo JText::_('There was a problem finding the list. Ensure that at minimum there is an images/stories folder. Also ensure images exist in that folder.');
+    echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
 }
 ?></td></tr>
-<tr><td class="key"><?php echo JText::_('Default Show/Hide Image for Landing Page');?></td><td>
-<?php echo $this->lists['showhide']; echo ' '.JText::_('Default for Show/Hide Image on Landing Page. Media images folder used (set above).');?></td></tr>
+<tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE');?></td><td>
+<?php echo $this->lists['showhide']; echo ' '.JText::_('JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_TT');?></td></tr>
 
 <?php //test for sh404SEF
 jimport('joomla.filesystem.file');
@@ -123,7 +123,7 @@ $sh404exists = JFile::exists($dest);
 if ($sh404exists)
 {
 	?>
-	<tr><td class="key"><?php echo JText::_('sh404SEF maintenance'); ?></td><td><a href="index.php?option=com_biblestudy&view=admin&controller=admin&task=updatesef">Update sh404SEF links for com_biblestudy</a></td></tr>
+	<tr><td class="key"><?php echo JText::_('JBS_ADM_SH404SEF_MAINTENANCE'); ?></td><td><a href="index.php?option=com_biblestudy&view=admin&controller=admin&task=updatesef"><?php echo JText::_('JBS_ADM_SH404SEF_MAINTENANCE_LINK'); ?></a></td></tr>
 	<?php
 }
 ?>
@@ -143,18 +143,18 @@ if ($sh404exists)
 <form action="index.php" method="post" name="adminForm2" id="adminForm2">
     <div class="col100">
         <fieldset class="adminform">
-		  <legend><?php echo JText::_( 'Media Files' ); ?></legend>
+		  <legend><?php echo JText::_( 'JBS_CMN_MEDIA_FILES' ); ?></legend>
 <table class="admintable">
-<tr><td class="key"><?php echo JText::_('Media Players Statistics:');?> </td><td><?php echo $this->playerstats;?></td> </tr>
+<tr><td class="key"><?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT');?> </td><td><?php echo $this->playerstats;?></td> </tr>
 <tr>
-<td class="key"><?php echo JText::_('Change Players'); ?></td>
+<td class="key"><?php echo JText::_('JBS_ADM_CHANGE_PLAYERS'); ?></td>
 <td>
 
 <select name="from" id="from">
-<option value="x"><?php echo JText::_('Select an Existing Player');?></option>
-<option value="0"><?php echo JText::_('Direct');?></option>
-<option value="1"><?php echo JText::_('Internal Player');?></option>
-<option value="2"><?php echo JText::_('All Videos Reloaded');?></option>
+<option value="x"><?php echo JText::_('JBS_ADM_SELECT_EXISTING_PLAYER');?></option>
+<option value="0"><?php echo JText::_('JBS_DIRECT_LINK');?></option>
+<option value="1"><?php echo JText::_('JBS_INTERNAL_PLAYER');?></option>
+<option value="2"><?php echo JText::_('JBS_AVR');?></option>
 <option value="3"><?php echo JText::_('All Videos Plugin');?></option>
 <option value="7"><?php echo JText::_('Legacy MP3 Player');?></option>
 <option value="100"><?php echo JText::_('No Player Listed');?></option>
@@ -162,10 +162,10 @@ if ($sh404exists)
 </td>
 <td>
 <select name="to" id="to">
-<option value="x"><?php echo JText::_('Select a New Player');?></option>
-<option value="0"><?php echo JText::_('Direct');?></option>
-<option value="1"><?php echo JText::_('Internal Player');?></option>
-<option value="2"><?php echo JText::_('All Videos Reloaded');?></option>
+<option value="x"><?php echo JText::_('JBS_ADM_SELECT_NEW_PLAYER');?></option>
+<option value="0"><?php echo JText::_('JBS_DIRECT_LINK');?></option>
+<option value="1"><?php echo JText::_('JBS_INTERNAL_PLAYER');?></option>
+<option value="2"><?php echo JText::_('JBS_AVR');?></option>
 <option value="3"><?php echo JText::_('All Videos Plugin');?></option>
 <option value="7"><?php echo JText::_('Legacy MP3 Player');?></option>
 

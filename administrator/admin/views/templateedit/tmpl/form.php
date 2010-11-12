@@ -38,7 +38,7 @@ echo $pane->startPane( 'content-pane' );
  
 // First slider panel
 // Create a slider panel with a title of SLIDER_PANEL_1_TITLE and a title id attribute of SLIDER_PANEL_1_NAME
-echo $pane->startPanel( JText::_( 'General' ), 'GENERAL' );
+echo $pane->startPanel( JText::_( 'JBS_CMN_GENERAL' ), 'GENERAL' );
 // Display the parameters defined in the <params> group with no 'group' attribute
 echo $this->params->render( 'params');
 echo $pane->endPanel();

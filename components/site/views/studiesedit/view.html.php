@@ -85,7 +85,7 @@ class biblestudyViewstudiesedit extends JView
 			$folderfinal1->id = $key;
 			$folderfinal2[] = $folderfinal1;
 		}
-		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('No Image').' -', 'value', 'value'));
+		array_unshift($folderfinal2, JHTML::_('select.option', '0', '- '.JText::_('JBS_CMN_NO_IMAGE').' -', 'value', 'value'));
 		//$lists['thumb'] = JHTML::_('select.genericlist',  $folderfinal2, 'thumbnailm', 'class="inputbox" size="1"', 'value', 'value', $studiesedit->thumbnailm );
 		
 		$lists['thumbnailm']	= JHTML::_('list.images',  'thumbnailm', $studiesedit->thumbnailm, $javascript, $directory, "bmp|gif|jpg|png|swf"  );

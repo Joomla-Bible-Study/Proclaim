@@ -63,7 +63,7 @@ class jbsImages
 		$database->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
 		$admin = $database->loadObject(); //print_r($admin);
 		$admin_params = new JParameter($admin->params);
-		if ($admin->main == '- Default Image -' || ($admin->main && !$admin_params->get('media_imagefolder')))
+		if ($admin->main == '- JBS_CMN_DEFAULT_IMAGE -' || ($admin->main && !$admin_params->get('media_imagefolder')))   // 2010-11-12 santon: need to be changed
 			{
 				$path = 'components/com_biblestudy/images'; //dump ($path, 'path: ');
 			}
@@ -71,7 +71,7 @@ class jbsImages
 			{
 				$path = 'images/'. $admin_params->get('media_imagefolder');
 			}
-		$image = ($admin->main == '- Default Image -' ? 'openbible.png' : $admin->main );
+		$image = ($admin->main == '- JBS_CMN_DEFAULT_IMAGE -' ? 'openbible.png' : $admin->main );  // 2010-11-12 santon: need to be changed
 		$i_path = $path .'/'. $image; //dump ($i_path, 'i_path: ');
 		$mainimage = $this->getImagePath($i_path);	//dump ($mainimage, 'mainimage: ');
 		return $mainimage;	
@@ -160,7 +160,7 @@ class jbsImages
 	{
 		$imagepath = array();
 		//$image1 is teacher->thumbnail, $image2 is teacher->thumb
-		if ($image1 == '- No Image - ' || !$image1)
+		if ($image1 == '- JBS_CMN_NO_IMAGE - ' || !$image1)     // 2010-11-12 santon: need to be changed
 		{
 			$path = $image2;
 		}
@@ -209,7 +209,7 @@ class jbsImages
 	
 	function getShowHide($image)
 	{
-		if ($image == '- Default Image -' || !$image)
+		if ($image == '- JBS_CMN_DEFAULT_IMAGE -' || !$image)     // 2010-11-12 santon: need to be changed
 		{
 			$image = 'showhide.gif'; $folder = 'components/com_biblestudy/images';
 		}

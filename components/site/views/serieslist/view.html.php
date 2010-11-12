@@ -85,14 +85,14 @@ class biblestudyViewserieslist extends JView {
 		//Get the main study list image
 		$images = new jbsImages();
 		$main = $images->mainStudyImage();
-//		if ($admin[0]->main == '- Default Image -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}
+//		if ($admin[0]->main == '- JBS_CMN_DEFAULT_IMAGE -'){$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);}  // 2010-11-12 santon: need to be changed
 //		else 
 //		{
 //				if ($admin[0]->main && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$admin[0]->main; }
 //				if ($admin[0]->main && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$admin[0]->main;}
 //		$main = getImage($i_path);
 //		}
-//		if ($admin[0]->main == '- Default Image -' && $admin_params->get('media_imagefolder')) 
+//		if ($admin[0]->main == '- JBS_CMN_DEFAULT_IMAGE -' && $admin_params->get('media_imagefolder'))   // 2010-11-12 santon: need to be changed
 //		{
 //			$i_path = 'components/com_biblestudy/images/openbible.png'; $main = getImage($i_path);
 //		}

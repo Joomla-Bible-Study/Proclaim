@@ -351,9 +351,9 @@ function players()
         $total = $directcount + $internalcount + $avrcount + $avcount;
         $noplayer = $num_rows - $total;
     }
-    $mediaplayers = '<strong>'.JText::_('Direct Link').': </strong>'.$directcount.
-    '<br /><strong>'.JText::_('Internal Player').': </strong>'.$internalcount.
-    '<br /><strong>'.JText::_('All Videos Reloaded').': </strong>'.$avrcount.
+    $mediaplayers = '<strong>'.JText::_('JBS_DIRECT_LINK').': </strong>'.$directcount.
+    '<br /><strong>'.JText::_('JBS_INTERNAL_PLAYER').': </strong>'.$internalcount.
+    '<br /><strong>'.JText::_('JBS_AVR').': </strong>'.$avrcount.
     '<br /><strong>'.JText::_('All Videos Plugin').': </strong>'.$avcount.
     '<br /><strong>'.JText::_('Legacy MP3 Player').': </strong>'.$legacycount.
     '<br /><strong>'.JText::_('No Player - treated as direct').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');

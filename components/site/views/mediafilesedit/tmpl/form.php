@@ -194,7 +194,7 @@ echo $pane->endPane();
 		</td>
 	</tr>
     <?php   } ?>
-            <tr><td class="key"><?php echo JText::_('All Videos Reloaded');?></td><td><?php echo JText::_('AVRELOADED');?></td></tr>
+            <tr><td class="key"><?php echo JText::_('JBS_AVR');?></td><td><?php echo JText::_('AVRELOADED');?></td></tr>
             <tr><td class="key"></td><td><input class="text_area" name="mediacode" id="mediacode" size="100" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php
 			if (JPluginHelper::importPlugin('system', 'avreloaded'))
 					{echo $this->mbutton;}?></td></tr>
