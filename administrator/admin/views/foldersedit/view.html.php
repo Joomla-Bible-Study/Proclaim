@@ -16,7 +16,7 @@ class biblestudyViewfoldersedit extends JView
 		$foldersedit		=& $this->get('Data');
 		$isNew		= ($foldersedit->id < 1);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
 		JToolBarHelper::title(   JText::_( 'Folders Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'folder.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {

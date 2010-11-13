@@ -55,7 +55,7 @@ function openConverter1()
 		<?php echo JText::_('Save');  ?>
 	</button>
 	<button type="button" onclick="submitbutton('cancel')">
-		<?php echo JText::_('Cancel') ?>
+		<?php echo JText::_('JBS_CMN_CANCEL') ?>
 	</button><?php //echo $this->toolbar;?></td></tr>
 <tr><td class="key"><?php echo JText::_('Parameters');?></td><td width="75">
 <?php
@@ -70,13 +70,13 @@ echo $pane->endPane();
 ?>
 </td></tr>
       <tr>
-        <td class="key"><?php echo JText::_( 'Published' ); ?></td>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?></td>
         <td > <?php echo $this->lists['published'];
 		?>
           </td>
       </tr>
       <tr>
-       <td class="key" align="left"><?php echo JText::_( 'Create Date YYYY-MM-DD H:M:S' ); ?></td>
+       <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_CREATE_DATE_YMD_HMS' ); ?></td>
         <td>
         <?php if (!$this->mediafilesedit->id)
 		{
@@ -90,7 +90,7 @@ echo $pane->endPane();
         </td>
 		</tr>
         <tr>
-        <td class="key"><?php echo JText::_( 'Study' );?>:</td>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_STUDY' );?>:</td>
         <td >
 
         <?php echo $this->studies;
@@ -194,7 +194,7 @@ echo $pane->endPane();
 		</td>
 	</tr>
     <?php   } ?>
-            <tr><td class="key"><?php echo JText::_('JBS_AVR');?></td><td><?php echo JText::_('AVRELOADED');?></td></tr>
+            <tr><td class="key"><?php echo JText::_('JBS_CMN_AVR');?></td><td><?php echo JText::_('AVRELOADED');?></td></tr>
             <tr><td class="key"></td><td><input class="text_area" name="mediacode" id="mediacode" size="100" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php
 			if (JPluginHelper::importPlugin('system', 'avreloaded'))
 					{echo $this->mbutton;}?></td></tr>
@@ -248,7 +248,7 @@ echo $pane->endPane();
 				</td>
             </tr>
             <tr><td class="key"><?php echo JText::_('Show Download Icon');?>:</td><td><?php echo $this->lists['link_type'];?></td></tr>
-			<tr><td class="key"><?php echo JText::_('Comment');?>:</td><td><input class="text_area" type="text" name="comment" id="comment" size="75" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('Appears under file or in Tooltip - set in Template parameters');?></td>
+			<tr><td class="key"><?php echo JText::_('JBS_CMN_COMMENT');?>:</td><td><input class="text_area" type="text" name="comment" id="comment" size="75" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('Appears under file or in Tooltip - set in Template parameters');?></td>
             </tr>
 
 

@@ -33,7 +33,7 @@
 
       </tr>
       <tr>
-        <td class="key"><?php echo JText::_( 'Published');?></td>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_PUBLISHED');?></td>
         <td>
 		<?php echo $this->lists['published'];?>
 

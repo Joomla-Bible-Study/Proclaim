@@ -37,9 +37,9 @@ class biblestudyControllerbooksedit extends JController {
 		$model = $this->getModel('booksedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_BKE_BOOK_SAVED' );
+			$msg = JText::_( 'JBS_BOK_BOOK_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_BKE_ERROR_SAVING_BOOK' );
+			$msg = JText::_( 'JBS_BOK_ERROR_SAVING_BOOK' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -57,9 +57,9 @@ class biblestudyControllerbooksedit extends JController {
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_BKE_BOOK_SAVED' );
+			$msg = JText::_( 'JBS_BOK_BOOK_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_BKE_ERROR_SAVING_BOOK' );
+			$msg = JText::_( 'JBS_BOK_ERROR_SAVING_BOOK' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -75,9 +75,9 @@ class biblestudyControllerbooksedit extends JController {
 	{
 		$model = $this->getModel('booksedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_BKE_ERROR_DELETING_BOOK' );
+			$msg = JText::_( 'JBS_BOK_ERROR_DELETING_BOOK' );
 		} else {
-			$msg = JText::_( 'JBS_BKE_BOOKS_DELETED' );
+			$msg = JText::_( 'JBS_BOK_BOOKS_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=bookslist', $msg );

@@ -57,7 +57,7 @@ $class1 = 'bsodd';
     <tr class="<?php echo $oddeven; ?> lastrow">
     <?php if ($allow_entry > 0) {
 if ($entry_access <= $entry_user){ ?>
-  <td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form&controller=teacheredit&cid[]=<?php echo $item->id?>"><?php echo '['.JText::_('Edit').']';?></a></td>
+  <td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form&controller=teacheredit&cid[]=<?php echo $item->id?>"><?php echo '['.JText::_('JBS_CMN_NEW').']';?></a></td>
   <?php } }?>
         <td class="bsm_teacherthumbnail" ><?php if ($item->thumb || $item->teacher_thumbnail){?>
         	<img src="<?php echo $image->path;?>" border="1" title="<?php echo $item->teachername;?>" alt="<?php echo $item->teachername;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" /><?php } ?>

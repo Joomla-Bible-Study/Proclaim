@@ -27,7 +27,7 @@ class biblestudyViewpodcastedit extends JView
         $podcasts = new JBSPodcast();
         $episodes = $podcasts->getEpisodes($podcastedit->id, $limit);	
 		/*
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_NEW' );
 		JToolBarHelper::title(   JText::_( 'Podcast Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
 		JToolBarHelper::save();
 		//JToolBarHelper::custom('writeXML','save.png','writeXML','Write XML', false, false);

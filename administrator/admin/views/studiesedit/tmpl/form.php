@@ -52,7 +52,7 @@ echo $pane->endPane(); */
 
 	</tr>
 	<tr>
-        <td class="key"><?php echo JText::_( 'Published' ); ?></td>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?></td>
 		<td><?php echo $this->lists['published'];?></td>
 	</tr>
 	<tr>
@@ -89,7 +89,7 @@ echo $pane->endPane(); */
 		<td>
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
-				<td width="20"><?php echo JText::_( 'Book' );?></td>
+				<td width="20"><?php echo JText::_( 'JBS_CMN_BOOK' );?></td>
 				<td width="8"><?php echo JText::_( 'Ch Begin' );?></td>
 				<td width="8"><?php echo JText::_( 'Vs Begin' );?></td>
 				<td width="8"><?php echo JText::_( 'Ch End' ); ?></td>

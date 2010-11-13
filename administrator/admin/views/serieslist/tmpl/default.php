@@ -5,13 +5,13 @@
 	<thead>
 		<tr>
 			<th width="5">
-				<?php echo JText::_( 'ID' ); ?>
+				<?php echo JText::_( 'JBS_CMN_ID' ); ?>
 			</th>
 			<th width="20">
 				<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" />
 			</th>
 			<th width="20" align="center">
-				<?php echo JText::_( 'Published' ); ?>
+				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>			
 			<th>
 				<?php echo JText::_( 'Series' ); ?>

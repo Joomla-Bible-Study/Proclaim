@@ -17,8 +17,8 @@ class biblestudyViewcommentsedit extends JView
 		//$editor =& JFactory::getEditor();
 		//this->assignRef( 'editor', $editor );
 		$lists = array();
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		JToolBarHelper::title(   JText::_( 'Edit Comment' ).': <small><small>[ ' . $text.' ]</small></small>', 'comments.png' );
+		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
+		JToolBarHelper::title(   JText::_( 'JBS_CMT_EDIT_COMMENT' ).': <small><small>[ ' . $text.' ]</small></small>', 'comments.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::cancel();

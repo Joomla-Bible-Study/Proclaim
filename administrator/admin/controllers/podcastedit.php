@@ -40,9 +40,9 @@ class biblestudyControllerpodcastedit extends JController
   $model = $this->getModel('podcastedit');
 
   if ($model->store($post)) {
-   $msg = JText::_( 'JBS_PCE_PODCAST_SAVED' );
+   $msg = JText::_( 'JBS_PDC_PODCAST_SAVED' );
   } else {
-   $msg = JText::_( 'JBS_PCE_ERROR_SAVING_PODCAST' );
+   $msg = JText::_( 'JBS_PDC_ERROR_SAVING_PODCAST' );
   }
 
   // Check the table in so it can be edited.... we are done with it anyway
@@ -59,9 +59,9 @@ class biblestudyControllerpodcastedit extends JController
 		$model = $this->getModel('podcastedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_PCE_PODCAST_SAVED' );
+			$msg = JText::_( 'JBS_PDC_PODCAST_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_PCE_ERROR_SAVING_PODCAST' );
+			$msg = JText::_( 'JBS_PDC_ERROR_SAVING_PODCAST' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -77,9 +77,9 @@ class biblestudyControllerpodcastedit extends JController
  {
   $model = $this->getModel('podcastedit');
   if(!$model->delete()) {
-   $msg = JText::_( 'JBS_PCE_ERROR_DELETING_PODCAST' );
+   $msg = JText::_( 'JBS_PDC_ERROR_DELETING_PODCAST' );
   } else {
-   $msg = JText::_( 'JBS_PCE_PODCAST_DELETED' );
+   $msg = JText::_( 'JBS_PDC_PODCAST_DELETED' );
   }
 
   $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
@@ -151,7 +151,7 @@ function publish()
  $result= writeXML();
   if ($result)
   {
-    $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PCE_NO_ERROR_REPORTED'));
+    $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PDC_NO_ERROR_REPORTED'));
   
 /*   $task = JRequest::getCmd('task');
    switch($task)

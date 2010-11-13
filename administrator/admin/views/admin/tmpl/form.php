@@ -152,22 +152,22 @@ if ($sh404exists)
 
 <select name="from" id="from">
 <option value="x"><?php echo JText::_('JBS_ADM_SELECT_EXISTING_PLAYER');?></option>
-<option value="0"><?php echo JText::_('JBS_DIRECT_LINK');?></option>
-<option value="1"><?php echo JText::_('JBS_INTERNAL_PLAYER');?></option>
-<option value="2"><?php echo JText::_('JBS_AVR');?></option>
-<option value="3"><?php echo JText::_('All Videos Plugin');?></option>
-<option value="7"><?php echo JText::_('Legacy MP3 Player');?></option>
-<option value="100"><?php echo JText::_('No Player Listed');?></option>
+<option value="0"><?php echo JText::_('JBS_CMN_DIRECT_LINK');?></option>
+<option value="1"><?php echo JText::_('JBS_CMN_INTERNAL_PLAYER');?></option>
+<option value="2"><?php echo JText::_('JBS_CMN_AVR');?></option>
+<option value="3"><?php echo JText::_('JBS_CMN_AVPLUGIN');?></option>
+<option value="7"><?php echo JText::_('JBS_CMN_LEGACY_PLAYER');?></option>
+<option value="100"><?php echo JText::_('JBS_NO_PLAYER_LISTED');?></option>
 </select>
 </td>
 <td>
 <select name="to" id="to">
 <option value="x"><?php echo JText::_('JBS_ADM_SELECT_NEW_PLAYER');?></option>
-<option value="0"><?php echo JText::_('JBS_DIRECT_LINK');?></option>
-<option value="1"><?php echo JText::_('JBS_INTERNAL_PLAYER');?></option>
-<option value="2"><?php echo JText::_('JBS_AVR');?></option>
-<option value="3"><?php echo JText::_('All Videos Plugin');?></option>
-<option value="7"><?php echo JText::_('Legacy MP3 Player');?></option>
+<option value="0"><?php echo JText::_('JBS_CMN_DIRECT_LINK');?></option>
+<option value="1"><?php echo JText::_('JBS_CMN_INTERNAL_PLAYER');?></option>
+<option value="2"><?php echo JText::_('JBS_CMN_AVR');?></option>
+<option value="3"><?php echo JText::_('JBS_CMN_AVPLUGIN');?></option>
+<option value="7"><?php echo JText::_('JBS_CMN_LEGACY_PLAYER');?></option>
 
 </select>
 <input type="hidden" name="option" value="com_biblestudy" />
@@ -184,27 +184,27 @@ if ($sh404exists)
 <form action="index.php" method="post" name="adminForm3" id="adminForm3">
     <div class="col100">
         <fieldset class="adminform">
-		  <legend><?php echo JText::_( 'Pop Up Options' ); ?></legend>
+		  <legend><?php echo JText::_( 'JBS_ADM_POPUP_OPTIONS' ); ?></legend>
 <table class="admintable">
-<tr><td class="key"><?php echo JText::_('Media Players Popup Statistics:');?> </td><td><?php echo $this->popups;?></td> </tr>
+<tr><td class="key"><?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT');?> </td><td><?php echo $this->popups;?></td> </tr>
 <tr>
-<td class="key"><?php echo JText::_('Change Popup'); ?></td>
+<td class="key"><?php echo JText::_('JBS_ADM_CHANGE_POPUP'); ?></td>
 <td>
 
 <select name="pfrom" id="pfrom">
-<option value="x"><?php echo JText::_('Select an Existing Option');?></option>
-<option value="2"><?php echo JText::_('Inline');?></option>
-<option value="1"><?php echo JText::_('Popup/New Window');?></option>
-<option value="3"><?php echo JText::_('Use Global Settings');?></option>
-<option value="100"><?php echo JText::_('No Option Listed');?></option>
+<option value="x"><?php echo JText::_('JBS_ADM_SELECT_EXISTING_OPTION');?></option>
+<option value="2"><?php echo JText::_('JBS_CMN_INLINE');?></option>
+<option value="1"><?php echo JText::_('JBS_CMN_POPUP_NEW_WINDOW');?></option>
+<option value="3"><?php echo JText::_('JBS_CMN_USE_GLOBAL');?></option>
+<option value="100"><?php echo JText::_('JBS_ADM_NO_OPTION_LISTED');?></option>
 </select>
 </td>
 <td>
 <select name="pto" id="pto">
-<option value="x"><?php echo JText::_('Select a New Option');?></option>
-<option value="2"><?php echo JText::_('Inline');?></option>
-<option value="1"><?php echo JText::_('Popup/New Window');?></option>
-<option value="3"><?php echo JText::_('Use Global Settings');?></option>
+<option value="x"><?php echo JText::_('JBS_ADM_SELECT_NEW_OPTION');?></option>
+<option value="2"><?php echo JText::_('JBS_CMN_INLINE');?></option>
+<option value="1"><?php echo JText::_('JBS_CMN_POPUP_NEW_WINDOW');?></option>
+<option value="3"><?php echo JText::_('JBS_CMN_USE_GLOBAL');?></option>
 
 
 </select>

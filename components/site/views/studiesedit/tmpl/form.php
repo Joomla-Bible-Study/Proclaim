@@ -46,7 +46,7 @@ $user =& JFactory::getUser();
 		<?php echo JText::_('Save');  ?>
 	</button>
 	<button type="button" onclick="submitbutton('cancel')">
-		<?php echo JText::_('Cancel') ?>
+		<?php echo JText::_('JBS_CMN_CANCEL') ?>
 	</button><?php //echo $this->toolbar;?>
 </td></tr>
 
@@ -74,7 +74,7 @@ echo $pane->endPane();
     <?php if ($this->admin_params->get('study_publish') > 0)
 		{ ?>
 			<tr>
-			<td class="key"><?php echo JText::_( 'Published' ); ?>:</td>
+			<td class="key"><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>:</td>
 			<td><?php echo $this->lists['published'];?></td>
 			</tr>
      <?php } ?>
@@ -112,7 +112,7 @@ echo $pane->endPane();
 		<td>
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
-				<td width="20"><?php echo JText::_( 'Book' );?></td>
+				<td width="20"><?php echo JText::_( 'JBS_CMN_BOOK' );?></td>
 				<td width="8"><?php echo JText::_( 'Ch Begin' );?></td>
 				<td width="8"><?php echo JText::_( 'Vs Begin' );?></td>
 				<td width="8"><?php echo JText::_( 'Ch End' ); ?></td>

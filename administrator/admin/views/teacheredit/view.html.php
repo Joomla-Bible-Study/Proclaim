@@ -22,7 +22,7 @@ class biblestudyViewteacheredit extends JView
 		$admin_params = new JParameter($admin[0]->params);
 		$isNew		= ($teacheredit->id < 1);
 		$editor =& JFactory::getEditor();
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
 		JToolBarHelper::title(   JText::_( 'Teacher Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'teachers.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {

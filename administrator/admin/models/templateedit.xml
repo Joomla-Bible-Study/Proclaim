@@ -195,11 +195,11 @@
             default="0" 
             label="JBS_TPL_MEDIA_MEDIA_PLAYER" 
             description="JBS_TPL_MEDIA_MEDIA_PLAYER_TT">
-			<option value="0">JBS_DIRECT_LINK</option>
-			<option value="1">JBS_USE_INTERNAL_PLAYER</option>
-      <option value="2">JBS_USE_AVR</option>
-      <option value="3">JBS_USE_AV</option>
-      <option value="7">JBS_USE_LEGACY_PLAYER</option>
+			<option value="0">JBS_CMN_DIRECT_LINK</option>
+			<option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
+      <option value="2">JBS_CMN_USE_AVR</option>
+      <option value="3">JBS_CMN_USE_AV</option>
+      <option value="7">JBS_CMN_USE_LEGACY_PLAYER</option>
     </param>
     <param name="popuptype"
            type="list"
@@ -214,7 +214,7 @@
            default="1"
            label="JBS_TPL_MEDIA_INTERNAL_POPUP"
            description="JBS_TPL_MEDIA_INTERNAL_POPUP_TT">
-      <option value="1">JBS_TPL_POPUP_NEW_WINDOW</option>
+      <option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
       <option value="2">JBS_CMN_INLINE</option>
     </param>
     <param name="player_width"
@@ -259,18 +259,18 @@
            type="text"
            size="150"
            default="{{title}}"
-           label="JBS_MFE_MEDIA_POPUPTITLE"
+           label="JBS_MED_MEDIA_POPUPTITLE"
            description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_TT" />
     <param name="popupfooter"
            type="text"
            size="150"
            default="{{filename}}"
-           label="JBS_MFE_MEDIA_POPUPFOOTER"
+           label="JBS_MED_MEDIA_POPUPFOOTER"
            description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_TT" />
     <param name="popupmargin"
            type="text"
            default="50"
-           label="JBS_MFE_MEDIA_POPUPMARGIN"
+           label="JBS_MED_MEDIA_POPUPMARGIN"
            description="JBS_TPL_MEDIA_POPUPMARGIN_TT" />
     <param name="popupbackground"
            type="text"
@@ -2038,7 +2038,7 @@
            label="JBS_TPL_SERIES_SERIES_ORDER_FIELD"
            description="JBS_TPL_SERIES_SERIES_ORDER_FIELD_TT">
       <option value="series_text">JBS_TPL_SERIES_TITLE_TEXT</option>
-      <option value="id">JBS_TPL_ID</option>
+      <option value="id">JBS_CMN_ID</option>
       <option value="t.teachername">JBS_CMN_TEACHER_NAME</option>
     </param>
     <param name="serieselement1"

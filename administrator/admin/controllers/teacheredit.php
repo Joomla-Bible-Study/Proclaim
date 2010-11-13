@@ -41,9 +41,9 @@ class biblestudyControllerteacheredit extends JController
 		$model = $this->getModel('teacheredit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_TCE_TEACHER_SAVED' );
+			$msg = JText::_( 'JBS_TCH_TEACHER_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_TCE_ERROR_SAVING_TEACHER' );
+			$msg = JText::_( 'JBS_TCH_ERROR_SAVING_TEACHER' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -60,9 +60,9 @@ class biblestudyControllerteacheredit extends JController
 		$model = $this->getModel('teacheredit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_TCE_TEACHER_SAVED' );
+			$msg = JText::_( 'JBS_TCH_TEACHER_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_TCE_ERROR_SAVING_TEACHER' );
+			$msg = JText::_( 'JBS_TCH_ERROR_SAVING_TEACHER' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -78,9 +78,9 @@ class biblestudyControllerteacheredit extends JController
 	{
 		$model = $this->getModel('teacheredit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_TCE_ERROR_DELETING_TEACHER' );
+			$msg = JText::_( 'JBS_TCH_ERROR_DELETING_TEACHER' );
 		} else {
-			$msg = JText::_( 'JBS_TCE_TEACHER_DELETED' );
+			$msg = JText::_( 'JBS_TCH_TEACHER_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=teacherlist', $msg );

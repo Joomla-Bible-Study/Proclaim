@@ -41,7 +41,7 @@ class biblestudyControllermediafilesedit extends JController {
 		//This is where we check the make the extension is of a filetype that is okay to upload
 		$filename = $file['name'];
 		if ($filename == 'index.htm'){
-			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
+			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");   // santon review
 			return;
 		}
 		if ($filename == 'index.html'){
@@ -114,9 +114,9 @@ class biblestudyControllermediafilesedit extends JController {
 		$setArticle = JRequest::getVar('articleTitle', null, 'post');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_MDE_MEDIA_SAVED' );
+			$msg = JText::_( 'JBS_MED_MEDIA_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_MDE_ERROR_SAVING_MEDIA' );
+			$msg = JText::_( 'JBS_MED_ERROR_SAVING_MEDIA' );
 		}
 
 		$filename_upload = strtolower($file['name']);
@@ -142,9 +142,9 @@ class biblestudyControllermediafilesedit extends JController {
 		$setArticle = JRequest::getVar('articleTitle', null, 'post');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_MDE_MEDIA_SAVED' );
+			$msg = JText::_( 'JBS_MED_MEDIA_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_MDE_ERROR_SAVING_MEDIA' );
+			$msg = JText::_( 'JBS_MED_ERROR_SAVING_MEDIA' );
 		}
 
 		$filename_upload = strtolower($file['name']);
@@ -163,9 +163,9 @@ class biblestudyControllermediafilesedit extends JController {
 	{
 		$model = $this->getModel('mediafilesedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_MDE_ERROR_DELETING_MEDIA' );
+			$msg = JText::_( 'JBS_MED_ERROR_DELETING_MEDIA' );
 		} else {
-			$msg = JText::_( 'JBS_MDE_MEDIA_DELETED' );
+			$msg = JText::_( 'JBS_MED_MEDIA_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
@@ -203,7 +203,7 @@ class biblestudyControllermediafilesedit extends JController {
 		$model =& $this->getModel('mediafilesedit');
 		$model->setid($id);
 		if ($model->move(-1)) {
-			$msg = JText::_( 'JBS_MDE_MEDIA_MOVED_UP' );
+			$msg = JText::_( 'JBS_MED_MEDIA_MOVED_UP' );
 		} else {
 			$msg = $model->getError();
 		}
@@ -225,7 +225,7 @@ class biblestudyControllermediafilesedit extends JController {
 		$model =& $this->getModel('mediafilesedit');
 		$model->setid($id);
 		if ($model->move(1)) {
-			$msg = JText::_('JBS_MDE_MEDIA_MOVED_DOWN');
+			$msg = JText::_('JBS_MED_MEDIA_MOVED_DOWN');
 		} else {
 			$msg = $model->getError();
 		}
@@ -336,7 +336,7 @@ class biblestudyControllermediafilesedit extends JController {
 		$isbsms = substr_count($avrread,'JoomlaBibleStudy');
 		if ($isbsms)
 		{
-			$msg = JText::_( 'JBS_MDE_OPERATION_SUCCESS_AVR_FILE_COPIED' );
+			$msg = JText::_( 'JBS_MED_OPERATION_SUCCESS_AVR_FILE_COPIED' );
 			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
 		}
 	}

@@ -158,7 +158,7 @@ $this->assignRef('filepath', $filepath);
 			$this->assignRef('virtueMartCategories', $virtueMartCategories);
 
 		$lists = array();
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
 		JToolBarHelper::title(   JText::_( 'Edit Media' ).': <small><small>[ ' . $text.' ]</small></small>', 'mp3.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {

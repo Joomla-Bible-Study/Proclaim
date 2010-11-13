@@ -53,9 +53,9 @@ class biblestudyControllerstudiesedit extends JController
 		$admin_params = new JParameter($admin[0]->params);
 		$model->_data = JRequest::get('post');
 		if ($model->store()) {
-			$msg = JText::_( 'JBS_STE_STUDY_SAVED' );
+			$msg = JText::_( 'JBS_STY_STUDY_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_STE_ERROR_SAVING_STUDY' );
+			$msg = JText::_( 'JBS_STY_ERROR_SAVING_STUDY' );
 		}
 		//$params =& $mainframe->getPageParameters();
 		$new = JRequest::getVar('new', '0', 'post', 'int' );
@@ -80,9 +80,9 @@ class biblestudyControllerstudiesedit extends JController
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$model = $this->getModel('studiesedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_STE_ERROR_DELETING_STUDY' );
+			$msg = JText::_( 'JBS_STY_ERROR_DELETING_STUDY' );
 		} else {
-			$msg = JText::_( 'JBS_STE_STUDY_DELETED' );
+			$msg = JText::_( 'JBS_STY_STUDY_DELETED' );
 		}
 		//$params =& $mainframe->getPageParameters();
 		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');

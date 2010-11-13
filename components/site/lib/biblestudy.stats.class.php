@@ -351,11 +351,11 @@ function players()
         $total = $directcount + $internalcount + $avrcount + $avcount;
         $noplayer = $num_rows - $total;
     }
-    $mediaplayers = '<strong>'.JText::_('JBS_DIRECT_LINK').': </strong>'.$directcount.
-    '<br /><strong>'.JText::_('JBS_INTERNAL_PLAYER').': </strong>'.$internalcount.
-    '<br /><strong>'.JText::_('JBS_AVR').': </strong>'.$avrcount.
-    '<br /><strong>'.JText::_('All Videos Plugin').': </strong>'.$avcount.
-    '<br /><strong>'.JText::_('Legacy MP3 Player').': </strong>'.$legacycount.
+    $mediaplayers = '<strong>'.JText::_('JBS_CMN_DIRECT_LINK').': </strong>'.$directcount.
+    '<br /><strong>'.JText::_('JBS_CMN_INTERNAL_PLAYER').': </strong>'.$internalcount.
+    '<br /><strong>'.JText::_('JBS_CMN_AVR').': </strong>'.$avrcount.
+    '<br /><strong>'.JText::_('JBS_CMN_AVPLUGIN').': </strong>'.$avcount.
+    '<br /><strong>'.JText::_('JBS_CMN_LEGACY_PLAYER').': </strong>'.$legacycount.
     '<br /><strong>'.JText::_('No Player - treated as direct').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
     return $mediaplayers;
 }
@@ -397,7 +397,7 @@ function popups()
         $total = $inlinecount + $popcount + $globalcount;
         $noplayer = $num_rows - $total;
     }
-    $popups = '<strong>'.JText::_('Inline').': </strong>'.$inlinecount.
+    $popups = '<strong>'.JText::_('JBS_CMN_INLINE').': </strong>'.$inlinecount.
     '<br /><strong>'.JText::_('Popup').': </strong>'.$popcount.
     '<br /><strong>'.JText::_('Global Settings').': </strong>'.$globalcount.
     '<br /><strong>'.JText::_('No Option Set - treated as global').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');

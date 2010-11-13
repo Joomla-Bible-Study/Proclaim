@@ -48,9 +48,9 @@ class biblestudyControllermediaedit extends JController
 		$model = $this->getModel('mediaedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_MDE_MEDIA_SAVED' );
+			$msg = JText::_( 'JBS_MED_MEDIA_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_MDE_ERROR_SAVING_MEDIA' );
+			$msg = JText::_( 'JBS_MED_ERROR_SAVING_MEDIA' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -67,9 +67,9 @@ class biblestudyControllermediaedit extends JController
 		$model = $this->getModel('mediaedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_MDE_MEDIA_SAVED' );
+			$msg = JText::_( 'JBS_MED_MEDIA_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_MDE_ERROR_SAVING_MEDIA' );
+			$msg = JText::_( 'JBS_MED_ERROR_SAVING_MEDIA' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -85,9 +85,9 @@ class biblestudyControllermediaedit extends JController
 	{
 		$model = $this->getModel('mediaedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_MDE_ERROR_DELETING_MEDIA' );
+			$msg = JText::_( 'JBS_MED_ERROR_DELETING_MEDIA' );
 		} else {
-			$msg = JText::_( 'JBS_MDE_MEDIA_DELETED' );
+			$msg = JText::_( 'JBS_MED_MEDIA_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=medialist', $msg );

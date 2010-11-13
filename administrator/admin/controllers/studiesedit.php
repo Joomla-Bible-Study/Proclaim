@@ -46,9 +46,9 @@ class biblestudyControllerstudiesedit extends JController
 /*	function save() {
 		$model = $this->getModel('studiesedit');
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_STE_STUDY_SAVED' );
+			$msg = JText::_( 'JBS_STY_STUDY_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_STE_ERROR_SAVING_STUDY' );
+			$msg = JText::_( 'JBS_STY_ERROR_SAVING_STUDY' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -64,9 +64,9 @@ class biblestudyControllerstudiesedit extends JController
 		$model = $this->getModel('studiesedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_STE_STUDY_SAVED' );
+			$msg = JText::_( 'JBS_STY_STUDY_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_STE_ERROR_SAVING_STUDY' );
+			$msg = JText::_( 'JBS_STY_ERROR_SAVING_STUDY' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -82,9 +82,9 @@ class biblestudyControllerstudiesedit extends JController
 	{
 		$model = $this->getModel('studiesedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_STE_ERROR_DELETING_STUDY' );
+			$msg = JText::_( 'JBS_STY_ERROR_DELETING_STUDY' );
 		} else {
-			$msg = JText::_( 'JBS_STE_STUDY_DELETED' );
+			$msg = JText::_( 'JBS_STY_STUDY_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );

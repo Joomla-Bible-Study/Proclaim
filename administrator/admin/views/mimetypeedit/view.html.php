@@ -16,7 +16,7 @@ class biblestudyViewmimetypeedit extends JView
 		$mimetypeedit		=& $this->get('Data');
 		$isNew		= ($mimetypeedit->id < 1);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
 		JToolBarHelper::title(   JText::_( 'Mime Type Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'mimetype.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {

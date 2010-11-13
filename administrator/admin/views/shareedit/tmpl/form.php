@@ -9,7 +9,7 @@ $mainframe =& JFactory::getApplication();
 
 		<table class="admintable">
         <tr>
-        <td width="100" class="key"><label for="published"><?php echo JText::_( 'Published' ); ?></label></td>
+        <td width="100" class="key"><label for="published"><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?></label></td>
         <td > <?php echo $this->lists['published'];
 		?>
           </td>

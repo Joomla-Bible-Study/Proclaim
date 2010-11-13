@@ -41,9 +41,9 @@ class biblestudyControllerserversedit extends JController
 		$model = $this->getModel('serversedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_SVE_SERVER_SAVED' );
+			$msg = JText::_( 'JBS_SVR_SERVER_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_SVE_ERROR_SAVING_SERVER' );
+			$msg = JText::_( 'JBS_SVR_ERROR_SAVING_SERVER' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -61,9 +61,9 @@ class biblestudyControllerserversedit extends JController
 		$model = $this->getModel('serveredit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_SVE_SERVER_SAVED' );
+			$msg = JText::_( 'JBS_SVR_SERVER_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_SVE_ERROR_SAVING_SERVER' );
+			$msg = JText::_( 'JBS_SVR_ERROR_SAVING_SERVER' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -79,9 +79,9 @@ class biblestudyControllerserversedit extends JController
 	{
 		$model = $this->getModel('serversedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_SVE_ERROR_DELETING_SERVER' );
+			$msg = JText::_( 'JBS_SVR_ERROR_DELETING_SERVER' );
 		} else {
-			$msg = JText::_( 'JBS_SVE_SERVER_DELETED' );
+			$msg = JText::_( 'JBS_SVR_SERVER_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=serverslist', $msg );

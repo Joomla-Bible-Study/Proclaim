@@ -14,7 +14,7 @@
 	          	<?php //echo JText::_('Variable Summary'); ?>
 	          </th>
 	          <th width="5" align="center">
-	          	<?php echo JText::_('Published'); ?> 
+	          	<?php echo JText::_('JBS_CMN_PUBLISHED'); ?> 
 	          </th>
 	        </tr>
 	      </thead>

@@ -72,7 +72,7 @@ $comments .= '
 
 		$comment_date_display = JHTML::_('date',  $comment->comment_date, JText::_('DATE_FORMAT_LC3') , '$offset' );
 		$comments .= '<tbody>';
-		$comments .= '<tr><td><strong>'.$comment->full_name.'</strong> <i> - '.$comment_date_display.'</i></td></tr><tr><td>'.JText::_('Comment: ').$comment->comment_text.'</td></tr><tr><td><hr /></td></tr>';
+		$comments .= '<tr><td><strong>'.$comment->full_name.'</strong> <i> - '.$comment_date_display.'</i></td></tr><tr><td>'.JText::_('JBS_CMN_COMMENT').': '.$comment->comment_text.'</td></tr><tr><td><hr /></td></tr>';
 		}//end of foreach
 
 		$comments .= '</td></tr></tbody></table>';
@@ -97,7 +97,7 @@ $comments .= '
                 <tr><td>'.JText::_('First & Last Name:').
 		'</td><td><input class="text_area" size="50" type="text" name="full_name" id="full_name" value="'.$full_name.'" /></td></tr>
                 <tr><td>'.JText::_('Email (Not displayed):').'</td><td><input class="text_area" type="text" size="50" name="user_email" id="user_email" value="'.$user->email.'" /></td></tr>
-                <tr><td>'.JText::_('Comment:').'</td>';
+                <tr><td>'.JText::_('JBS_CMN_COMMENT').':</td>';
 		//$comments .= $editor->display('comment_text', 'comment_text', '100%', '400', '70', '15').'</td></tr></table>';
 		$comments .= '<td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr>';
 //dump ($params->get('use_captcha'), 'captch: ');

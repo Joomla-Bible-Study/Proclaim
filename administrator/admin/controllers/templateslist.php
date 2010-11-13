@@ -23,9 +23,9 @@ class biblestudyControllertemplateedit extends JController {
 		$model = $this->getModel('templateedit');
 		$data = JRequest::get('post');
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_TPE_TEMPLATE_SAVED' );
+			$msg = JText::_( 'JBS_TPL_TEMPLATE_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_TPE_ERROR_SAVING_TEMPLATE' );
+			$msg = JText::_( 'JBS_TPL_ERROR_SAVING_TEMPLATE' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway

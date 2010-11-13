@@ -50,7 +50,7 @@ if ($podcast_access >$entry_user){ echo JText::_('You are not authorized');} els
 		<?php echo JText::_('Save') ?>
 		</button>
 		<button type="button" onclick="submitbutton('cancel')">
-		<?php echo JText::_('Cancel') ?>
+		<?php echo JText::_('JBS_CMN_CANCEL') ?>
 		</button>
 		</td>
 	</tr>
@@ -63,7 +63,7 @@ if ($podcast_access >$entry_user){ echo JText::_('You are not authorized');} els
 	</tr>
 	<?php } ?>
 	<tr>
-		<td class="key"><b><?php echo JText::_( 'Published' ); ?>:</b></td>
+		<td class="key"><b><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>:</b></td>
 		<td><?php echo $this->lists['published'];?></td>
 	</tr>
 	<tr>

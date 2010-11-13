@@ -14,7 +14,7 @@ function getEditlink($id, $params) {
 	if ($allow_entry > 0) {
 
 if ($entry_user >= $entry_access){
-                $editlink .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id.'">['.JText::_('Edit').']</a>';
+                $editlink .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id.'">['.JText::_('JBS_CMN_NEW').']</a>';
 }
 	}
 else {$editlink = null;}

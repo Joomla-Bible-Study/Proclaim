@@ -4,13 +4,13 @@
 	<table class="adminlist">
       <thead>
         <tr>
-          <th width="5"> <?php echo JText::_( 'Row' ); ?> </th>
+          <th width="5"> <?php echo JText::_( 'JBS_CMN_ROW' ); ?> </th>
           <th width="20"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" />
           </th>
-          <th width="20" align="center"> <?php echo JText::_( 'Published' ); ?>
+          <th width="20" align="center"> <?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
           </th>
           <th> <?php echo JText::_( 'Location' ); ?> </th>
-          <th><?php echo JText::_( 'ID' ); ?></th>
+          <th><?php echo JText::_( 'JBS_CMN_ID' ); ?></th>
         </tr>
       </thead>
       <?php

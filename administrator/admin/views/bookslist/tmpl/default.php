@@ -7,13 +7,13 @@ defined('_JEXEC') or die('Restricted access');
 		<table class="adminlist">
 	      <thead>
 	        <tr> 
-	          <th width="5"> <?php echo JText::_( 'Row' ); ?> </th>
+	          <th width="5"> <?php echo JText::_( 'JBS_CMN_ROW' ); ?> </th>
 	          <th width="20"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" /> 
 	          </th>
-	          <th width="20" align="center"> <?php echo JText::_( 'Published' ); ?> 
+	          <th width="20" align="center"> <?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?> 
 	          </th>
-	          <th> <?php echo JText::_( 'Book' ); ?> </th>
-	          <th><?php echo JText::_( 'ID' ); ?></th>
+	          <th> <?php echo JText::_( 'JBS_CMN_BOOK' ); ?> </th>
+	          <th><?php echo JText::_( 'JBS_CMN_ID' ); ?></th>
 	        </tr>
 	      </thead>
 	      <?php
@@ -21,7 +21,7 @@ defined('_JEXEC') or die('Restricted access');
 		for ($i=0, $n=count( $this->items ); $i < $n; $i++)
 		{
 			$row = &$this->items[$i];
-			$checked 	= JHTML::_('grid.id',   $i, $row->id );
+			$checked 	= JHTML::_('grid.id', $i, $row->id );
 			$link 		= JRoute::_( 'index.php?option=com_biblestudy&controller=booksedit&task=edit&cid[]='. $row->id );
 			$published 	= JHTML::_('grid.published', $row, $i );
 	

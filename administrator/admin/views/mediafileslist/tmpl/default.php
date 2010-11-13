@@ -6,13 +6,13 @@
 <table class="adminlist">
 	<thead>
 		<tr>
-			<th width="5"><?php echo JText::_( 'Row' ); ?></th>
+			<th width="5"><?php echo JText::_( 'JBS_CMN_ROW' ); ?></th>
 			<th width="20"><input type="checkbox" name="toggle" value=""
 				onclick="checkAll(<?php echo count( $this->items ); ?>);" /></th>
 
 			<th width="20" align="center"><?php echo JHTML::_('grid.sort',  'Published', 'published', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
-			<th width="20"><?php echo JHTML::_('grid.sort',  'I.D.', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+			<th width="20"><?php echo JHTML::_('grid.sort',  'JBS_CMN_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th width="8%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  'Order', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			<?php echo JHTML::_('grid.order',  $this->items ); ?></th>

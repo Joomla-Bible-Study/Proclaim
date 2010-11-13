@@ -30,7 +30,7 @@ function submitbutton(pressbutton)
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Comments Details' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_CMT_COMMENTS_DETAILS' ); ?></legend>
 <?php $editor =& JFactory::getEditor();?>
 
     <table class="admintable">
@@ -40,12 +40,12 @@ function submitbutton(pressbutton)
 		  <?php echo JText::_('Save') ?>
 	    </button>
 	    <button type="button" onclick="submitbutton('cancel')">
-		  <?php echo JText::_('Cancel') ?>
+		  <?php echo JText::_('JBS_CMN_CANCEL') ?>
 	    </button>
       </td>
     </tr>
     <tr>
-      <td class="key"><?php echo JText::_( 'Published' ); ?></td>
+      <td class="key"><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?></td>
       <td > <?php echo $this->lists['published'];?></td>
     </tr>
     <tr>
@@ -60,11 +60,11 @@ function submitbutton(pressbutton)
         }?></td>
     </tr>
     <tr>
-      <td><?php echo JText::_( 'Study:');?></td>
+      <td><?php echo JText::_( 'Study');?>:</td>
 	  <td><?php echo $this->lists['studies'];?></td>
     </tr>
     <tr>
-      <td><?php echo JText::_('Full Name:');?></td>
+      <td><?php echo JText::_('JBS_CMT_FULL_NAME');?>:</td>
       <td><input class="text_area" type="text" name="full_name" id="full_name" size="70" maxlength="50" value="<?php echo $this->commentsedit->full_name;?>" /></td>
     </tr>
     <tr>
@@ -72,7 +72,7 @@ function submitbutton(pressbutton)
       <td><input class="text_area" type="text" name="user_email" id="user_email" size="70" maxlength="100" value="<?php echo $this->commentsedit->user_email;?>" /></td>
     </tr>
     <tr>
-      <td><?php echo JText::_( 'Comment' ).':';?></td>
+      <td><?php echo JText::_( 'JBS_CMN_COMMENT' ).':';?></td>
       <td><textarea class="text_area" name="comment_text" cols="53" rows="4" id="comment_text" ><?php echo $this->commentsedit->comment_text;?></textarea></td>
     </tr>
 

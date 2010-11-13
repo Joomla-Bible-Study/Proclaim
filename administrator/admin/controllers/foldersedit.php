@@ -48,9 +48,9 @@ class biblestudyControllerfoldersedit extends JController
 		$model = $this->getModel('foldersedit');
 		
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_FDE_FOLDER_SAVED' );
+			$msg = JText::_( 'JBS_FLD_FOLDER_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_FDE_ERROR_SAVING_FOLDER' );
+			$msg = JText::_( 'JBS_FLD_ERROR_SAVING_FOLDER' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -67,9 +67,9 @@ class biblestudyControllerfoldersedit extends JController
 		$model = $this->getModel('foldersedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );		
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_FDE_FOLDER_SAVED' );
+			$msg = JText::_( 'JBS_FLD_FOLDER_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_FDE_ERROR_SAVING_FOLDER' );
+			$msg = JText::_( 'JBS_FLD_ERROR_SAVING_FOLDER' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -85,9 +85,9 @@ class biblestudyControllerfoldersedit extends JController
 	{
 		$model = $this->getModel('foldersedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_FDE_ERROR_DELETING_FOLDER' );
+			$msg = JText::_( 'JBS_FLD_ERROR_DELETING_FOLDER' );
 		} else {
-			$msg = JText::_( 'JBS_FDE_FOLDERS_DELETED' );
+			$msg = JText::_( 'JBS_FLD_FOLDERS_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=folderslist', $msg );

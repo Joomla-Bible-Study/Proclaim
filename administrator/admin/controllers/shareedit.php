@@ -79,9 +79,9 @@ class biblestudyControllershareedit extends JController
 	{
 		$model = $this->getModel('shareedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_SHE_ERROR_DELETING_SOCIAL' );
+			$msg = JText::_( 'JBS_SHR_ERROR_DELETING_SOCIAL' );
 		} else {
-			$msg = JText::_( 'JBS_SHE_SOCIAL_DELETED' );
+			$msg = JText::_( 'JBS_SHR_SOCIAL_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=sharelist', $msg );

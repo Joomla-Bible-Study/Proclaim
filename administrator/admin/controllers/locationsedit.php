@@ -78,9 +78,9 @@ class biblestudyControllerlocationsedit extends JController
 	{
 		$model = $this->getModel('locationsedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_LCE_ERROR_DELETING_LOCATIONS' );
+			$msg = JText::_( 'JBS_LOC_ERROR_DELETING_LOCATIONS' );
 		} else {
-			$msg = JText::_( 'JBS_LCE_LOCATIONS_DELETED' );
+			$msg = JText::_( 'JBS_LOC_LOCATIONS_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=locationslist', $msg );

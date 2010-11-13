@@ -91,7 +91,7 @@ if ($return)
 		$filecontent	= JRequest::getVar('filecontent', '', 'post', 'string', JREQUEST_ALLOWRAW);
 
 		if (!$filecontent) {
-			$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CSE_CONTENT_EMPTY'));
+			$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CSS_CONTENT_EMPTY'));
 		}
 
 		// Set FTP credentials, if given
@@ -109,7 +109,7 @@ if ($return)
 		if ($return)
 		{
 
-		$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('JBS_CSE_FILE_SAVED'));
+		$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('JBS_CSS_FILE_SAVED'));
 		}
 		else {
                         $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
@@ -133,7 +133,7 @@ if ($return)
     		if ($return)
     		{
 
-    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSE_BACKUP_SAVED'));
+    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSS_BACKUP_SAVED'));
     		}
     		else {
                         $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
@@ -158,7 +158,7 @@ if ($return)
     		if ($return)
     		{
 
-    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSE_BACKUP_RESTORED'));
+    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSS_BACKUP_RESTORED'));
     		}
     		else {
                         $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);

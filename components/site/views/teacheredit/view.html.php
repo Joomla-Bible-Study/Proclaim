@@ -16,7 +16,7 @@ class biblestudyViewteacheredit extends JView
 		$teacheredit		=& $this->get('Data');
 		$isNew		= ($teacheredit->id < 1);
 		$editor =& JFactory::getEditor();
-		/*$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		/*$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_NEW' );
 		JToolBarHelper::title(   JText::_( 'Teacher Edit' ).': <small><small>[ ' . $text.' ]</small></small>' );
 		JToolBarHelper::save();
 		if ($isNew)  {

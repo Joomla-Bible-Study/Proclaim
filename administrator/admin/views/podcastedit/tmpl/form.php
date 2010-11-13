@@ -40,7 +40,7 @@
 
 	<?php } ?>
 	<tr>
-        <td class="key"><b><?php echo JText::_( 'Published' ); ?></b></td>
+        <td class="key"><b><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?></b></td>
 		<td><?php echo $this->lists['published'];?></td>
 	</tr>
 	<tr>

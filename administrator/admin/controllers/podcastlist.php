@@ -38,9 +38,9 @@ class biblestudyControllerpodcastlist extends JController
  {
   $model = $this->getModel('podcastedit');
   if(!$model->delete()) {
-   $msg = JText::_( 'JBS_PCE_ERROR_DELETING_PODCAST' );
+   $msg = JText::_( 'JBS_PDC_ERROR_DELETING_PODCAST' );
   } else {
-   $msg = JText::_( 'JBS_PCE_PODCAST_DELETED' );
+   $msg = JText::_( 'JBS_PDC_PODCAST_DELETED' );
   }
 
   $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
@@ -58,14 +58,14 @@ class biblestudyControllerpodcastlist extends JController
   if ($result)
   {
 
-    // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PCE_FILES_WRITTEN').': '.$result);
-     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PCE_NO_ERROR_REPORTED'));
+    // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PDC_FILES_WRITTEN').': '.$result);
+     $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PDC_NO_ERROR_REPORTED'));
 
   }
   else {
   // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').'.');
 
-$mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_PCE_ERRORS_REPORTED'));  }
+$mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_PDC_ERRORS_REPORTED'));  }
 
  }
 }

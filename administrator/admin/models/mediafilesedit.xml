@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <params >
-    <param name="player" default="100" type="list" label="JBS_MFE_PLAYER" description="JBS_MFE_PLAYER_TT">
+    <param name="player" default="100" type="list" label="JBS_MED_PLAYER" description="JBS_MED_PLAYER_TT">
       <option value="100">JBS_CMN_USE_GLOBAL</option>
-      <option value="0">JBS_DIRECT_LINK</option>
-      <option value="1">JBS_USE_INTERNAL_PLAYER</option>
-      <option value="2">JBS_USE_AVR</option>
-      <option value="3">JBS_USE_AV</option>
-      <option value="7">JBS_USE_LEGACY_PLAYER</option>
+      <option value="0">JBS_CMN_DIRECT_LINK</option>
+      <option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
+      <option value="2">JBS_CMN_USE_AVR</option>
+      <option value="3">JBS_CMN_USE_AV</option>
+      <option value="7">JBS_CMN_USE_LEGACY_PLAYER</option>
     </param>
-    <param name="internal_popup" type="list" default="3" label="JBS_MFE_INTERNAL_POPUP" description="JBS_MFE_INTERNAL_POPUP_TT">
+    <param name="internal_popup" type="list" default="3" label="JBS_MED_INTERNAL_POPUP" description="JBS_MED_INTERNAL_POPUP_TT">
       <option value="1">JBS_CMN_POPUP</option>
       <option value="2">JBS_CMN_INLINE</option>
       <option value="3">JBS_CMN_USE_GLOBAL</option>
     </param>
-    <param name="playerwidth" default="" type="text" label="JBS_MFE_PLAYERWIDTH" description="JBS_MFE_PLAYERWIDTH_TT" />
-    <param name="playerheight" default="" type="text" label="JBS_MFE_PLAYERHIGHT" description="JBS_MFE_PLAYERHIGHT_TT" />
-    <param name="itempopuptitle" type="text" size="150" default="" label="JBS_MFE_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
-    <param name="itempopupfooter" type="text" size="150" default="" label="JBS_MFE_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
-    <param name="popupmargin" type="text" default="50" label="JBS_MFE_MEDIA_POPUPMARGIN" description="JBS_MFE_MEDIA_POPUPMARGIN_TT" />
+    <param name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH" description="JBS_MED_PLAYERWIDTH_TT" />
+    <param name="playerheight" default="" type="text" label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_TT" />
+    <param name="itempopuptitle" type="text" size="150" default="" label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
+    <param name="itempopupfooter" type="text" size="150" default="" label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
+    <param name="popupmargin" type="text" default="50" label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_TT" />
   </params>
   <params group="PODCAST" addpath="/components/com_biblestudy/elements">
-    <param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="JBS_MFE_SELECT_PODCASTS" description="JBS_MFE_SELECT_PODCASTS_TT">
+    <param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="JBS_MED_SELECT_PODCASTS" description="JBS_MED_SELECT_PODCASTS_TT">
     <option value="-1">JBS_CMN_NONE</option>
     </param>
   </params>

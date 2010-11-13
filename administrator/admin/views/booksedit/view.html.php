@@ -10,10 +10,10 @@ class biblestudyViewbooksedit extends JView {
 		$booksedit =& $this->get('Data');
 		$isNew = $booksedit->id < 1;
 
-		$titleCaption = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
-		$cancelCaption = $isNew ? JText::_('Cancel') : JText::_('Close');
+		$titleCaption = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
+		$cancelCaption = $isNew ? JText::_('JBS_CMN_CANCEL') : JText::_('JBS_CMN_CLOSE');
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(   JText::_( 'Books Edit' ).': <small><small>[ ' . $titleCaption.' ]</small></small>', 'biblebooks' );
+		JToolBarHelper::title(   JText::_( 'JBS_BOK_BOOKS_EDIT' ).': <small><small>[ ' . $titleCaption.' ]</small></small>', 'biblebooks' );
 		JToolBarHelper::save();
 		JToolBarHelper::apply();
 		JToolBarHelper::cancel('cancel', $cancelCaption);	

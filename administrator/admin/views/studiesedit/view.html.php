@@ -26,7 +26,7 @@ class biblestudyViewstudiesedit extends JView {
 		$editor =& JFactory::getEditor();
 		$this->assignRef( 'editor', $editor );
 		$lists = array();
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
 		JToolBarHelper::title(   JText::_( 'Edit Studies' ).': <small><small>[ ' . $text.' ]</small></small>', 'studies.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {

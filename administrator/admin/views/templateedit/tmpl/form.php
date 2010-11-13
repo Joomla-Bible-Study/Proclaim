@@ -7,7 +7,7 @@ JHTML::_('behavior.tooltip');
   <div id="tmplDesignSide">
 	<table class="admintable" width="100%">
 		<tr>
-			<td width="100" class="key"><?php echo JText::_('Published'); ?> </td>
+			<td width="100" class="key"><?php echo JText::_('JBS_CMN_PUBLISHED'); ?> </td>
 			<td><?php echo $this->data['published']; ?></td>
 		</tr>
 		<!--<tr>

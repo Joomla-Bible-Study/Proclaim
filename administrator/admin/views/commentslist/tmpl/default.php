@@ -8,13 +8,13 @@
       <thead>
         <tr> 
        
-          <th width="5"> <?php echo JText::_( 'Row' ); ?> </th>
+          <th width="5"> <?php echo JText::_( 'JBS_CMN_ROW' ); ?> </th>
           <th width="20"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" /> </th>
           <th width="20" align="center"> <?php echo JHTML::_('grid.sort',  'Published', 'published', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
-          <th width = "20"> <?php echo JHTML::_('grid.sort',  'I.D.', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
+          <th width = "20"> <?php echo JHTML::_('grid.sort',  'JBS_CMN_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
 
           <th width="200"> <?php  echo JHTML::_('grid.sort',  'Study Title', 's.studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-          <th width = "100"><?php echo JText::_('Full Name'); ?></th>
+          <th width = "100"><?php echo JText::_('JBS_CMT_FULL_NAME'); ?></th>
           <th width = "100">  <?php echo JHTML::_('grid.sort',  'Comment Date', 'c.comment_date', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
           
         </tr>

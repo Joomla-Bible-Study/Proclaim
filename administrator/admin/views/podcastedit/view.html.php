@@ -31,7 +31,7 @@ class biblestudyViewpodcastedit extends JView
 		$admin_params = new JParameter($admin[0]->params);
 		$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('admin', $admin);	
-		$text = $isNew ? JText::_( 'New' ) : JText::_( 'Edit' );
+		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		JToolBarHelper::title(   JText::_( 'Podcast Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'podcast.png' );
 		JToolBarHelper::save();
