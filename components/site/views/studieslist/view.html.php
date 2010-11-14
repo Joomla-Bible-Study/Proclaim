@@ -149,7 +149,7 @@ class biblestudyViewstudieslist extends JView {
 		$lists['messagetypeid']	= JHTML::_('select.genericlist',   $types4, 'filter_messagetype', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_messagetype" );
 
         //build study years
-        $years[]        = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Year' ) .' -' );
+        $years[]        = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'JBS_CMN_SELECT_YEAR' ) .' -' );
 		$years 			= array_merge( $years, $studyYears );
 		$lists['studyyear']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_year" );
 
@@ -378,7 +378,7 @@ class biblestudyViewstudieslist extends JView {
 		$lists['chapters'] 	= JHTML::_('select.genericlist', $chap, 'filter_chapter', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_chapter");
 
 		//Build order
-		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select an Order') . ' -');
+		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('JBS_CMN_SELECT_ORDER') . ' -');
 		$ord		= array_merge($ord, $orders);
 		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_orders");
 

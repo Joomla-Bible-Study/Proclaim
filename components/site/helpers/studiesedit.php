@@ -28,7 +28,7 @@ $studiesedit = '<table><tr>
 				$podcasts = $database->loadAssocList();
 				
 	$studiesedit .= '<tr>
-		<td><strong>'.JText::_('Podcasts').'</td></tr></strong>
+		<td><strong>'.JText::_('JBS_CMN_PODCASTS').'</td></tr></strong>
 		<tr>
 		<td>
 		<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form'.'">'.JText::_('Add A Podcast').'</a></td>

@@ -104,7 +104,7 @@ table.fbstat .col2 {
 }
 </style>
 <div class="fbwelcome">
-  <h3><?php echo 'Joomla Bible Study'?></h3>
+  <h3><?php echo JText::_( 'JBS_CMN_JOOMLA_BIBLE_STUDY');?></h3>
   <p><?php echo 'From here you can access all of the different views and tasks for creating and maintaining your sermons, messages, and studies. You can also find statistics about your studies located in one convenient place.';?></p>
 </div>
 <div style="border:1px solid #ddd; background:#FBFBFB;">
@@ -124,39 +124,39 @@ table.fbstat .col2 {
             <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=templateslist" style = "text-decoration:none;" title = "<?php echo JText::_('Template Display Settings');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Template Display Settings'); ?> </span> </a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=cssedit" style = "text-decoration:none;" title = "<?php echo JText::_('Edit CSS');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Edit CSS'); ?> </span></a> </div>
+            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=cssedit" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_EDIT_CSS');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_EDIT_CSS'); ?> </span></a> </div>
           </div>
           <div style = "float:left;">
             <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=podcastlist" style = "text-decoration:none;" title = "<?php echo JText::_('Podcasts');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Podcasts'); ?> </span></a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=serieslist" style = "text-decoration:none;" title = "<?php echo JText::_('Series');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Series'); ?> </a> </div>
+            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=serieslist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_SERIES');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_SERIES'); ?> </a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=teacherlist" style = "text-decoration:none;" title = "<?php echo JText::_('Teachers');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Teachers');?> </a> </div>
+            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=teacherlist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_TEACHERS');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_TEACHERS');?> </a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=bookslist" target = "_blank" style = "text-decoration:none;" title = "<?php echoJText::_('Bible Books');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echoJText::_('Bible Books'); ?> </span></a> </div>
+            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=bookslist" target = "_blank" style = "text-decoration:none;" title = "<?php echoJText::_('JBS_CMN_BIBLEBOOKS');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echoJText::_('JBS_CMN_BIBLEBOOKS'); ?> </span></a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=medialist" style = "text-decoration:none;" title = "<?php echo JText::_('Media Images');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Media Images');?> </a> </div>
+            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=medialist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_MEDIAIMAGES');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_MEDIAIMAGES');?> </a> </div>
           </div>
           <div style = "float:left;">
             <div class = "icon"> <a href = "index3.php?option=com_biblestudy&amp;view=serverslist" style = "text-decoration:none;" title = "<?php echo JText::_('Servers');?>"> <img src = "components/com_biblestudy/images/openbible.gif" align = "middle" border = "0"/> <span> <?php echo JText::_('Servers'); ?> </a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=folderslist" style = "text-decoration:none;" title = "<?php echo JText::_('Server Folders');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Server Folders'); ?> </a> </div>
+            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=folderslist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_SERVER_FOLDERS');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_SERVER_FOLDERS'); ?> </a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=messagetypelist" style = "text-decoration:none;" title = "<?php echo JText::_('Message Types');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Message Types'); ?> </a> </div>
+            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=messagetypelist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_MESSAGE_TYPES');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_MESSAGE_TYPES'); ?> </a> </div>
           </div>
-           <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=locationslist" style = "text-decoration:none;" title = "<?php echo JText::_('Locations');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Locations'); ?> </a> </div>
+           <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=locationslist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_LOCATIONS');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_LOCATIONS'); ?> </a> </div>
           </div>
-           <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=topicslist" style = "text-decoration:none;" title = "<?php echo JText::_('Topics');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Topics'); ?> </a> </div>
+           <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=topicslist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_TOPICS');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_TOPICS'); ?> </a> </div>
           </div>
-           <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=mimetypelist" style = "text-decoration:none;" title = "<?php echo JText::_('Mime Types');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Mime Types'); ?> </a> </div>
+           <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=mimetypelist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_MIME_TYPES');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_MIME_TYPES'); ?> </a> </div>
           </div>
-          <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=commentslist" style = "text-decoration:none;" title = "<?php echo JText::_('Comments');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Comments'); ?> </a> </div>
+          <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=commentslist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_COMMENTS');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_COMMENTS'); ?> </a> </div>
           </div>
            <div class = "icon"> <a href = "index2.php?option=com_biblestudy&amp;view=sharelist" style = "text-decoration:none;" title = "<?php echo JText::_('Social Networking Links');?>"> <img src = "components/com_biblestudy/images/openbible.gif"  align = "middle" border = "0"/> <span> <?php echo JText::_('Social Networking Links'); ?> </a> </div>
           </div>

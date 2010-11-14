@@ -116,7 +116,7 @@ class biblestudyViewstudieslist extends JView {
 		. ' ORDER BY value DESC';
 		$database->setQuery( $query5 );
 		$studyyear = $database->loadObjectList();
-		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Year' ) .' -' );
+		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_YEAR' ) .' -' );
 		$years 			= array_merge( $years, $database->loadObjectList() );
 		$lists['studyyear']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_year" );
 
@@ -124,7 +124,7 @@ class biblestudyViewstudieslist extends JView {
 		 . ' ORDER BY id ';
 		 $database->setQuery( $query6 );
 		 $sortorder = $database->loadObjectList();
-		 $orders[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
+		 $orders[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_ORDER' ) .' -' );
 		 $orders 			= array_merge( $orders, $database->loadObjectList() );
 		 $lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders" );
 

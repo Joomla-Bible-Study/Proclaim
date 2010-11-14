@@ -151,12 +151,12 @@ class biblestudyViewLandingpage extends JView {
 		$lists['messagetypeid']	= JHTML::_('select.genericlist',   $types4, 'filter_messagetype', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_messagetype" );
 
 		//buld study years
-		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Year' ) .' -' );
+		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_YEAR' ) .' -' );
 		$years 			= array_merge( $years, $studyYears );
 		$lists['studyyear']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_year" );
 		
 		//build orders
-		$ord[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
+		$ord[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_ORDER' ) .' -' );
 		$orders 			= array_merge( $ord, $orders );
 		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders" );
 
@@ -179,7 +179,7 @@ class biblestudyViewLandingpage extends JView {
 		$lists['books'] 	= JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_book");
 
 		//Build order
-		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select an Order') . ' -');
+		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('JBS_CMN_SELECT_ORDER') . ' -');
 		$ord		= array_merge($ord, $orders);
 		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders");
 		

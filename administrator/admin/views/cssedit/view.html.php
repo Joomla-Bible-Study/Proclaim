@@ -16,7 +16,7 @@ class biblestudyViewcssedit extends JView
 		
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 	$lists		=& $this->get('Data');
-		$text = JText::_( 'Edit CSS' );
+		$text = JText::_( 'JBS_CMN_EDIT_CSS' );
 		JToolBarHelper::title(   JText::_( 'CSS Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'css.png' );
 		JToolBarHelper::save();
         JToolBarHelper::cancel();

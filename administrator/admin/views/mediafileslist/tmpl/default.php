@@ -18,7 +18,7 @@
 			<?php echo JHTML::_('grid.order',  $this->items ); ?></th>
                         <th align="left"><?php echo JHTML::_('grid.sort',  'Filename', 'filename', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
-			<th><?php  echo JHTML::_('grid.sort',  'Study Title', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+			<th><?php  echo JHTML::_('grid.sort',  'JBS_CMN_STUDY_TITLE', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 			<th><?php echo JHTML::_('grid.sort',  'Media Type', 'media_image_name', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th><?php echo JHTML::_('grid.sort',  'Create Date', 'createdate', $this->lists['order_Dir'], $this->lists['order'] ); ?>

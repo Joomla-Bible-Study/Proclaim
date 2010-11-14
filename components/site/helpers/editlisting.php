@@ -44,7 +44,7 @@ $editlisting .= '</div>';
 				$database->setQuery( $query );
 				$podcasts = $database->loadAssocList();
 				
-		$editlisting .= '<div id="studyheader">'.JText::_('Podcasts').'</div>';
+		$editlisting .= '<div id="studyheader">'.JText::_('JBS_CMN_PODCASTS').'</div>';
 		$editlisting .= '<br /><div class="podcastlist">'.'<br />';
 		$editlisting .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form">'.JText::_('Add A Podcast').'</a>';
 		

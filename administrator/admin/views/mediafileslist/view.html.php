@@ -44,14 +44,14 @@ class biblestudyViewmediafileslist extends JView {
 		. ' ORDER BY value DESC';
 		$db->setQuery( $query5 );
 		$studyyear = $db->loadObjectList();
-		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Year' ) .' -' );
+		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_YEAR' ) .' -' );
 		$years 			= array_merge( $years, $db->loadObjectList() );
 		$lists['years']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_year" );
 
 		$query6 = ' SELECT * FROM #__bsms_order '
 		. ' ORDER BY id ';
 		$db->setQuery( $query6 );
-		$orders[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
+		$orders[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_ORDER' ) .' -' );
 		$orders 			= array_merge( $orders, $db->loadObjectList() );
 		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_order', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_order" );
 

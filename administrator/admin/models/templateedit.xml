@@ -2173,7 +2173,7 @@
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_SORT"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_SORT_TT">
       <option value="studydate">JBS_TPL_STUDY_DATE</option>
-      <option value="studytitle">JBS_TPL_STUDY_TITLE</option>
+      <option value="studytitle">JBS_CMN_STUDY_TITLE</option>
       <option value="booknumber">JBS_CMN_BOOK</option>
       <option value="teacher_id">JBS_CMN_TEACHER</option>
     </param>
@@ -2212,7 +2212,7 @@
            default="5"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_1"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
-      <option value="5">JBS_TPL_STUDY_TITLE</option>
+      <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
@@ -2249,7 +2249,7 @@
            default="7"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_2"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
-      <option value="5">JBS_TPL_STUDY_TITLE</option>
+      <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
@@ -2286,7 +2286,7 @@
            default="10"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_3"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
-      <option value="5">JBS_TPL_STUDY_TITLE</option>
+      <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
@@ -2323,7 +2323,7 @@
            default="20"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_4"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
-      <option value="5">JBS_TPL_STUDY_TITLE</option>
+      <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
@@ -2387,7 +2387,7 @@
            default="5"
            label="JBS_TPL_TOOLTIP_TIP_ITEM1"
            description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
-      <option value="5">JBS_TPL_STUDY_TITLE</option>
+      <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
@@ -2416,7 +2416,7 @@
            default="6"
            label="JBS_TPL_TOOLTIP_TIP_ITEM2"
            description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
-      <option value="5">JBS_TPL_STUDY_TITLE</option>
+      <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
@@ -2445,7 +2445,7 @@
            default="7"
            label="JBS_TPL_TOOLTIP_TIP_ITEM3"
            description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
-      <option value="5">JBS_TPL_STUDY_TITLE</option>
+      <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
@@ -2474,7 +2474,7 @@
            default="1"
            label="JBS_TPL_TOOLTIP_TIP_ITEM4"
            description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
-      <option value="5">JBS_TPL_STUDY_TITLE</option>
+      <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
@@ -2503,7 +2503,7 @@
            default="10"
            label="JBS_TPL_TOOLTIP_TIP_ITEM5"
            description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
-      <option value="5">JBS_TPL_STUDY_TITLE</option>
+      <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_TPL_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
       <option value="8">JBS_TPL_TEACHER_TITLE</option>

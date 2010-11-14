@@ -237,7 +237,7 @@ echo $pane->endPane();
 $pane =& JPane::getInstance( 'sliders' );
 //jimport('joomla.html.pane');
 echo $pane->startPane( 'content-pane' );
-echo $pane->startPanel( JText::_( 'Podcasts' ), 'PODCAST' );
+echo $pane->startPanel( JText::_( 'JBS_CMN_PODCASTS' ), 'PODCAST' );
 echo $this->params->render( 'params','PODCAST' );
 echo $pane->endPanel();
 echo $pane->endPane();

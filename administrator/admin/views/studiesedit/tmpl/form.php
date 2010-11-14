@@ -192,7 +192,7 @@ echo $pane->endPane(); */
 		<td><?php echo $this->lists['location_id']; ?></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Series' ); ?></td>
+        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_SERIES' ); ?></td>
 		<td><?php echo $this->lists['series_id']; ?></td>
 	</tr>
 	<tr>

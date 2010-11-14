@@ -6,7 +6,7 @@ class biblestudyViewtemplateslist extends JView {
 
 	function display() {
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(JText::_('Templates'), 'templates.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'templates.png');
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::editList();

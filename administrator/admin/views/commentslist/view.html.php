@@ -20,7 +20,7 @@ class biblestudyViewcommentslist extends JView
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$lists = array();
 		$params = &JComponentHelper::getParams($option);
-		JToolBarHelper::title(   JText::_( 'Comments Manager' ), 'comments.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_CMT_COMMENTS_MANAGER' ), 'comments.png' );
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		//Checks to see if the admin allows rows to be deleted
@@ -46,14 +46,14 @@ class biblestudyViewcommentslist extends JView
 			. ' ORDER BY value DESC';
 		$db->setQuery( $query5 );
 		$studyyear = $db->loadObjectList();
-		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Year' ) .' -' );
+		$years[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_YEAR' ) .' -' );
 		$years 			= array_merge( $years, $db->loadObjectList() );
 		$lists['years']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_year" );
 */
 	$query6 = ' SELECT * FROM #__bsms_order '
 		. ' ORDER BY id ';
 		$db->setQuery( $query6 );
-		$orders[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select an Order' ) .' -' );
+		$orders[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_ORDER' ) .' -' );
 		$orders 			= array_merge( $orders, $db->loadObjectList() );
 		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_order', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_order" );
 

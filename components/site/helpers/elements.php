@@ -66,7 +66,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 9:
 			$elementid->id = 'series';
-			$elementid->headertext = JText::_('Series');
+			$elementid->headertext = JText::_('JBS_CMN_SERIES');
 			$elementid->element = $row->series_text;
 			break;
 		case 10:

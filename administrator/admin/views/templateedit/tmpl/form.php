@@ -43,7 +43,7 @@ echo $pane->startPanel( JText::_( 'JBS_CMN_GENERAL' ), 'GENERAL' );
 echo $this->params->render( 'params');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_( 'Templates' ), 'TEMPLATES' );
+echo $pane->startPanel( JText::_( 'JBS_CMN_TEMPLATES' ), 'TEMPLATES' );
 // Display the parameters defined in the <params> group with the 'group' attribute of 'GROUP_NAME'
 echo $this->params->render( 'params', 'TEMPLATES' );
 echo $pane->endPanel();

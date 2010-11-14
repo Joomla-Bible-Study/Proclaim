@@ -66,7 +66,7 @@ if (count($commentsresult)) {
 
 $comments .= '
 		<table id="bslisttable" cellspacing="0"><thead><tr class="lastrow"><th id="commentshead" class="row1col1">
-		'.JText::_('Comments').'</th></tr></thead>';
+		'.JText::_('JBS_CMN_COMMENTS').'</th></tr></thead>';
 
 		foreach ($commentsresult as $comment){
 

@@ -34,7 +34,7 @@ $user =& JFactory::getUser();
     
 	</td>
 	</tr></table>
-    <table><tr><td align="center"><h2><?php echo JText::_('Comments');?></h2></td></tr>
+    <table><tr><td align="center"><h2><?php echo JText::_('JBS_CMN_COMMENTS');?></h2></td></tr>
     </table>
 <?php //echo $this->lists['studyid']; ?>
 <div id="editcell">
@@ -48,9 +48,9 @@ $user =& JFactory::getUser();
           <th width="20" align="center"> <?php echo JHTML::_('grid.sort',  'Published', 'published', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
           <th width = "20"> <?php echo JHTML::_('grid.sort',  'JBS_CMN_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
 
-          <th width="200"> <?php  echo JHTML::_('grid.sort',  'Edit Comment For This Study', 's.studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+          <th width="200"> <?php  echo JHTML::_('grid.sort',  'JBS_CMT_EDIT_COMMENT_THIS_STUDY', 's.studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
           <th width = "100"><?php echo JText::_('JBS_CMT_FULL_NAME'); ?></th>
-          <th width = "100">  <?php echo JHTML::_('grid.sort',  'Comment Date', 'c.comment_date', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
+          <th width = "100">  <?php echo JHTML::_('grid.sort',  'JBS_CMT_COMMENT_DATE', 'c.comment_date', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
           
         </tr>
       </thead>
