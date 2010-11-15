@@ -18,7 +18,7 @@ class biblestudyViewfolderslist extends JView
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option'); 
 		$params = &JComponentHelper::getParams($option);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(   JText::_( 'Server Folder Manager' ), 'folder.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_FLD_FOLDERS_MANAGER' ), 'folder.png' );
 		//Checks to see if the admin allows rows to be deleted
 		
 		JToolBarHelper::deleteList();

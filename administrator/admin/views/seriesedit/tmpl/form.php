@@ -5,7 +5,7 @@ $editor =& JFactory::getEditor();
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Details' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
 
 		<table class="admintable" width="100%">
 		<tr>

@@ -24,7 +24,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Details' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
 
 		<table width = 100% class="admintable">
         <tr><td>
@@ -52,7 +52,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
       <tr>
         <td width="100" align="right" class="key">
 				<label for="ordering">
-					<?php echo JText::_( 'Ordering' ); ?>:
+					<?php echo JText::_( 'JBS_CMN_ORDERING' ); ?>:
 				</label>
 				</td>
                 <td>

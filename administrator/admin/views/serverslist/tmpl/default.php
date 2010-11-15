@@ -14,7 +14,7 @@
 				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>			
 			<th>
-				<?php echo JText::_( 'Server' ); ?>
+				<?php echo JText::_( 'JBS_CMN_SERVER' ); ?>
 			</th>
 		</tr>			
 	</thead>

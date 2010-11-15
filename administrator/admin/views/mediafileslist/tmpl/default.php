@@ -16,16 +16,16 @@
 			</th>
 			<th width="8%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  'Order', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			<?php echo JHTML::_('grid.order',  $this->items ); ?></th>
-                        <th align="left"><?php echo JHTML::_('grid.sort',  'Filename', 'filename', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+                        <th align="left"><?php echo JHTML::_('grid.sort',  'JBS_MED_FILENAME', 'filename', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th><?php  echo JHTML::_('grid.sort',  'JBS_CMN_STUDY_TITLE', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 			<th><?php echo JHTML::_('grid.sort',  'Media Type', 'media_image_name', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th><?php echo JHTML::_('grid.sort',  'Create Date', 'createdate', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
-            	<th><?php echo JHTML::_('grid.sort',  'Plays', 'plays', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+            	<th><?php echo JHTML::_('grid.sort',  'JBS_CMN_PLAYS', 'plays', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
-            	<th><?php echo JHTML::_('grid.sort',  'Downloads', 'downloads', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+            	<th><?php echo JHTML::_('grid.sort',  'JBS_CMN_DOWNLOADS', 'downloads', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 		</tr>
 	</thead>

@@ -18,7 +18,7 @@ class biblestudyViewlocationsedit extends JView
 		$lists = array();
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
-		JToolBarHelper::title(   JText::_( 'Locations Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'locations.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_LOC_LOCATION_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'locations.png' );
 		JToolBarHelper::save();
 		
 		if ($isNew)  {

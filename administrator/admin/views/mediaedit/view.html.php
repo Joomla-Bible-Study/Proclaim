@@ -14,7 +14,7 @@ class biblestudyViewmediaedit extends JView
 	{
 		
 		$database = & JFactory::getDBO();
-		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');										 
+		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$mediaedit		=& $this->get('Data');
 		$isNew		= ($mediaedit->id < 1);
 		$lists = array();
@@ -25,7 +25,7 @@ class biblestudyViewmediaedit extends JView
 		$lists['media']	= JHTML::_('list.images',  'path2', $mediaedit->path2, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
 		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $mediaedit->published);
 		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
-		JToolBarHelper::title(   JText::_( 'Edit Media' ).': <small><small>[ ' . $text.' ]</small></small>', 'mediaimages.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_MED_EDIT_MEDIA' ).': <small><small>[ ' . $text.' ]</small></small>', 'mediaimages.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::apply();

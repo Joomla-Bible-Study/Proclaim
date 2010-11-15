@@ -96,7 +96,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 15:
 			$elementid->id = 'location';
-			$elementid->headertext = JText::_('Location');
+			$elementid->headertext = JText::_('JBS_CMN_LOCATION');
 			$elementid->element = $row->location_text;
 			break;
 		case 16:
@@ -106,13 +106,13 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 17:
 			$elementid->id = 'details';
-			$elementid->headertext = JText::_('Details');
+			$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 			$textorpdf = 'text';
 			$elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $template);
 			break;
 		case 18:
 			$elementid->id = 'details';
-			$elementid->headertext = JText::_('Details');
+			$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 			$textorpdf = 'text';
 			$elementid->element = '<table class="detailstable"><tbody><tr><td>';
 			$elementid->element .= getTextlink($params, $row, $textorpdf, $admin_params, $template).'</td><td>';
@@ -121,7 +121,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 19:
 			$elementid->id = 'details';
-			$elementid->headertext = JText::_('Details');
+			$elementid->headertext = JText::_('JBS_CMN_DETAILS');
 			$textorpdf = 'pdf';
 			$elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $template);
 			break;
@@ -138,7 +138,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 23:
 			$elementid->id = 'filesize';
-			$elementid->headertext = JText::_('Filesize');
+			$elementid->headertext = JText::_('JBS_CMN_FILESIZE');
 			$query_media1 = 'SELECT #__bsms_mediafiles.id AS mid, #__bsms_mediafiles.size, #__bsms_mediafiles.published, #__mediafiles.mime_type, #__bsms_studies.id AS sid, #__bsms_studies.study_id'
 			. ' FROM #__bsms_mediafiles'
 			. ' WHERE #__bsms_mediafiles.study_id = '.$row->id.' AND #__bsms_mediafiles.published = 1, AND #__bsms_mediafiles.mime_type = 1';
@@ -185,12 +185,12 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
         case 28:
             $elementid->id = 'plays';
-            $elementid->headertext = JText::_('Plays');
+            $elementid->headertext = JText::_('JBS_CMN_PLAYS');
             $elementid->element = $row->totalplays;
             break;
         case 29:
             $elementid->id = 'downloads';
-            $elementid->headertext = JText::_('Downloads');
+            $elementid->headertext = JText::_('JBS_CMN_DOWNLOADS');
             $elementid->element = $row->totaldownloads;
             break;
         case 30:

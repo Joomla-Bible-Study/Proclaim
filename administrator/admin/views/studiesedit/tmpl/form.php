@@ -31,7 +31,7 @@ $user =& JFactory::getUser();
 
 
 if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_name = $this->studiesedit->user_name;}?>
-<!--<tr><td class="key"><?php echo JText::_('Parameters');?></td>
+<!--<tr><td class="key"><?php echo JText::_('JBS_CMN_PARAMETERS');?></td>
 <td>
 <?php
 /*$pane =& JPane::getInstance ('sliders');
@@ -64,7 +64,7 @@ echo $pane->endPane(); */
 		} else {
 			echo JHTML::_('calendar', date('Y-m-d H:i:s', strtotime($this->studiesedit->studydate)), 'studydate', 'studydate');
 		} ?><br />
-		<span style="font-family: serif; color: gray;">(<?php echo JText::_( 'YYYY-MM-DD HH:MM:SS' ); ?>)</span>
+		<span style="font-family: serif; color: gray;">(<?php echo JText::_( 'JBS_CMN_YMD_HMS' ); ?>)</span>
 		</td>
 	</tr>
 	<tr>
@@ -188,7 +188,7 @@ echo $pane->endPane(); */
 		<td><?php echo $this->lists['teacher_id']; ?></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Location' ); ?></td>
+        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_LOCATION' ); ?></td>
 		<td><?php echo $this->lists['location_id']; ?></td>
 	</tr>
 	<tr>

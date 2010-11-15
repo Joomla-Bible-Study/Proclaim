@@ -40,11 +40,11 @@ function openConverter1()
 			// do field validation
 			if (form.study_id.value == "0")
 			{
-				alert( "<?php echo JText::_( 'Please choose a study to link this file to.', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_MED_CHOOSE_STUDY_TO_LINK', true ); ?>" );
 			}
 			else if (form.media_image.value == "0")
 			{
-				alert( "<?php echo JText::_( 'Please choose a media image.', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_MED_CHOOSE_IMAGE', true ); ?>" );
 			}
 			else
 			{
@@ -57,7 +57,7 @@ function openConverter1()
 
   <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Media File Details' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_MED_MEDIA_FILES_DETAILS' ); ?></legend>
 		      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>"/>
 <?php $editor =& JFactory::getEditor();
 
@@ -69,7 +69,7 @@ if ($avrexists)
 {
 $avrread = JFile::read($dest);
 $isbsms = substr_count($avrread,'JoomlaBibleStudy');
-if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set parameters in Administration tab.</strong>';} else {echo '<strong>All Videos Reloaded NOT Bible Study ready. <br><a href="'.JURI::base().'index.php?option=com_biblestudy&controller=mediafilesedit&task=fixAVR">Click HERE to attempt a fix</a> or go to: <a href="http://www.JoomlaBibleStudy.org" target="_blank"> JoomlaBibleStudy.org </a> and look for All Videos Reloaded Fix file in the Downloads area, then install.</strong>';}
+if ($isbsms){echo '<strong>'.JText::_('JBS_MED_AVR_IS_BS_READY').'</strong>';} else {echo '<strong>'.JText::_('JBS_MED_AVR_IS_NOT_BS_READY').'<br><a href="'.JURI::base().'index.php?option=com_biblestudy&controller=mediafilesedit&task=fixAVR">'.JText::_('JBS_MED_AVR_TRY_FIX').' <a href="http://www.JoomlaBibleStudy.org" target="_blank"> JoomlaBibleStudy.org </a> '.JText::_('JBS_MED_AVR_LOOK_FOR_FIX_DOWNLOAD').'</strong>';}
 }
 //End AVR test
 
@@ -82,8 +82,8 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
     <table class="admintable">
     <?php if ($this->mediafilesedit->id)
 	{
-    	?><tr><td class="key"><?php echo JText::_('Downloads'); ?></td><td><?php echo $this->mediafilesedit->downloads; ?></td><tr>
-		<tr><td class="key"><?php echo JText::_('Plays'); ?></td><td><?php echo $this->mediafilesedit->plays; ?></td></tr><?php
+    	?><tr><td class="key"><?php echo JText::_('JBS_CMN_DOWNLOADS'); ?></td><td><?php echo $this->mediafilesedit->downloads; ?></td><tr>
+		<tr><td class="key"><?php echo JText::_('JBS_CMN_PLAYS'); ?></td><td><?php echo $this->mediafilesedit->plays; ?></td></tr><?php
     } ?>
       <tr>
         <td class="key"><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?></td>
@@ -105,7 +105,7 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
 
 		//echo JHTML::_('calendar', date('D M j Y', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); ?>
         <br />
-		<span style="font-family: serif; color: gray;">(<?php echo JText::_( 'YYYY-MM-DD HH:MM:SS' ); ?>)</span>
+		<span style="font-family: serif; color: gray;">(<?php echo JText::_( 'JBS_CMN_YMD_HMS' ); ?>)</span>
         </td>
 		</tr>
         <tr>
@@ -114,7 +114,7 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
 
         <?php echo $this->lists['studies'];?></td></tr>
         <tr>
-        <td class="key"><?php echo JText::_( 'Ordering' );?></td>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_ORDERING' );?></td>
 			<td >
 
 				<?php echo $this->lists['ordering']; ?>
@@ -124,22 +124,22 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
 	 { ?>
       <tr>
       	<td class="key">
-                <?php echo JText::_('Use DocMan')?></td>
+                <?php echo JText::_('JBS_MED_USE_DOCMAN')?></td>
       	<td>
       	<?php
       	if(isset($this->docManItem)){
       		echo '<span id="activeDocMan">'.$this->docManItem.'</span>';
-      		echo ' <a href="#" id="docmanChange">'.JText::_('Change').'</a>';
+      		echo ' <a href="#" id="docmanChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
       	}
       	?>
       	<div id="docMainCategoriesContainer" class="selectContainer" style="<?php echo $this->docManStyle; ?>">
       	<?php
-                echo JText::_('Category');
+                echo JText::_('JBS_MED_CATEGORY');
       		echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategory', null, 'id', 'title', null, 'docManCategories');
       	?>
       	</div>
       	<div id="docManItemsContainer" class="selectContainer">
-                <?php echo JText::_('Item'); ?><select id="docManItems" name="docManItem"></select>
+                <?php echo JText::_('JBS_CMN_ITEM'); ?><select id="docManItems" name="docManItem"></select>
       	</div>
       	</td>
       </tr>
@@ -148,31 +148,31 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
       <tr>
 
       	<td class="key">
-                <?php echo JText::_('Use Article');?></td>
+                <?php echo JText::_('JBS_MED_USE_ARTICLE');?></td>
       	<td>
       	<?php
       	if(isset($this->articleItem)){
       		echo '<span id="activeArticle">'.$this->articleItem.'</span>';
-      		echo ' <a href="#" id="articleChange">'.JText::_('Change').'</a>';
+      		echo ' <a href="#" id="articleChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
       	}
       	?>
       	<div id="articlesSectionsContainer" class="selectContainer" style="<?php echo $this->articleStyle; ?>">
       	<?php
-                echo JText::_('Section');
+                echo JText::_('JBS_MED_SECTION');
       //		echo JHTML::_('select.genericlist', $this->articlesSections, 'articlesSections', null, 'id', 'title', null, 'articlesSections');
       	?>
       	</div>
       	<div id="articlesCategoriesContainer" class="selectContainer">
       	<?php
-      	echo JText::_('Category');
+      	echo JText::_('JBS_MED_CATEGORY');
       	?>
-      	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected"><?php echo '- '.JTEXT::_('Select a Category').' -'; ?></option></select>
+      	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -'; ?></option></select>
       	</div>
       	<div id="articlesItemsContainer" class="selectContainer">
       	<?php
-        echo JText::_('Item');
+        echo JText::_('JBS_CMN_ITEM');
       	?>
-      	<select id="categoryItems" name="categoryItem"><option selected="selected"><?php echo '- '.JTEXT::_('Select an Article').' -'; ?></option></select>
+      	<select id="categoryItems" name="categoryItem"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_ARTICLE').' -'; ?></option></select>
       	</div>
       	</td>
       </tr>
@@ -181,22 +181,22 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
 	   { ?>
       <tr>
       	<td class="key">
-                <?php echo JText::_('Use VirtueMart');?></td>
+                <?php echo JText::_('JBS_MED_USE_VIRTUEMART');?></td>
       	<td>
       	<?php
       	if(isset($this->virtueMartItem)){
       		echo '<span id="activeVirtueMart">'.$this->virtueMartItem.'</span>';
-      		echo ' <a href="#" id="virtueMartChange">'.JText::_('Change').'</a>';
+      		echo ' <a href="#" id="virtueMartChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
       	}
       	?>
       	<div id="virtueMartCategoriesContainer" class="selectContainer" style="<?php echo $this->virtueMartStyle; ?>">
       	<?php
-                echo JText::_('Category');
+                echo JText::_('JBS_MED_CATEGORY');
       		echo JHTML::_('select.genericlist', $this->virtueMartCategories, 'virtueMartCategory', null, 'id', 'title', null, 'virtueMartCategories');
       	?>
       	</div>
       	<div id="virtueMartItemsContainer" class="selectContainer">
-                <?php echo JText::_('Item'); ?><select id="virtueMartItems" name="virtueMartItem"></select>
+                <?php echo JText::_('JBS_CMN_ITEM'); ?><select id="virtueMartItems" name="virtueMartItem"></select>
       	</div>
       	</td>
       </tr>
@@ -209,55 +209,55 @@ if ($isbsms){echo '<strong>All Videos Reloaded is Bible Study Ready. Set paramet
 					{echo $this->mbutton;}?></td></tr>
             <tr>
              <?php //<tr>?>
-             <td class="key"> <?php echo JText::_('Image');?>
+             <td class="key"> <?php echo JText::_('JBS_CMN_IMAGE');?>
               </td><td>  <?php echo $this->lists['image'];?></td>
             </tr>
             <tr>
             <td class="key">
-            <?php echo JText::_( 'Filesize');?></td>
+            <?php echo JText::_( 'JBS_CMN_FILESIZE');?></td>
             <td>
 			<?php $file_jbs_media = $this->filepath; $remotefilesize=getSizeFile("$file_jbs_media");
             if (!$remotefilesize){}else{
-            	echo '<b>'.JText::_('Server Lookup').': </b>'.$remotefilesize.
-            '<button type="button" onClick="sizebutton('.$remotefilesize.')"> '.JText::_('Add Size').'</button><br />'; }?>
+            	echo '<b>'.JText::_('JBS_MED_SERVER_LOOKUP').': </b>'.$remotefilesize.
+            '<button type="button" onClick="sizebutton('.$remotefilesize.')"> '.JText::_('JBS_MED_ADD_SIZE').'</button><br />'; }?>
             <input class="text_area" type="text" name="size" id="size" size="20" maxlength="20" onChange="decOnly(this);" onKeyUp="decOnly(this);" onKeyPress="decOnly(this);" value="<?php echo $this->mediafilesedit->size;?>"/>
             <a href="javascript:openConverter1();">
-            <?php echo '- '.JText::_('Filesize Converter');?>
+            <?php echo '- '.JText::_('JBS_MED_FILESIZE_CONVERTER');?>
             </a>
             </td>
             </tr>
 
             <tr>
-              <td class="key"><?php echo JText::_('Server');?></td><td> <?php echo $this->lists['server'];?></td>
+              <td class="key"><?php echo JText::_('JBS_CMN_SERVER');?></td><td> <?php echo $this->lists['server'];?></td>
             </tr>
             <tr>
-              <td class="key" ><?php echo JText::_('Path or Folder');?></td><td><?php echo $this->lists['path'];?></td>
+              <td class="key" ><?php echo JText::_('JBS_MED_PATH_OR_FOLDER');?></td><td><?php echo $this->lists['path'];?></td>
             </tr>
            <tr>
-              <td class="key" ><?php echo JText::_('Filename');?></td><td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->filename;?>"  /></td></tr>
+              <td class="key" ><?php echo JText::_('JBS_MED_FILENAME');?></td><td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->filename;?>"  /></td></tr>
 
 
-      <tr><td class="key"><?php echo JText::_( 'Or Upload File' ); ?></td><td><input type="file" id="file" name="file" size="75"/><?php echo JText::_('Try also using the Upload button at the top. You will still have to enter the server/folder/filename information.');?></td>
+      <tr><td class="key"><?php echo JText::_( 'JBS_MED_UPLOAD_FILE' ); ?></td><td><input type="file" id="file" name="file" size="75"/><?php echo JText::_('JBS_MED_TRY_USING_UPLOAD_BUTTON');?></td>
             </tr>
             <tr>
-              <td class="key"></td><td><?php echo JText::_('Maximum upload allowed in your php.ini file using post_max_size is').': '.ini_get('upload_max_filesize');?></td>
+              <td class="key"></td><td><?php echo JText::_('JBS_MED_MAX_UPLOAD_PHP').': '.ini_get('upload_max_filesize');?></td>
             </tr>
 			<tr>
-              <td class="key"><?php echo JText::_('Target');?></td><td><?php echo JText::_('Use file name as entire path if you wish. Just don\'t select a server or path.(Don\'t use this option if uploading)');?>
-              <?php echo JText::_('Target for link (ie: _self, _blank)')?> <input class="text_area" type="text" name="special" id="special" size="15" maxlength="15" value="<?php echo $this->mediafilesedit->special;?>" /></td>
+              <td class="key"><?php echo JText::_('JBS_MED_TARGET');?></td><td><?php echo JText::_('JBS_MED_USE_FILENAME_AS_PATH');?>
+              <?php echo JText::_('JBS_MED_TARGET_FOR_LINK')?> <input class="text_area" type="text" name="special" id="special" size="15" maxlength="15" value="<?php echo $this->mediafilesedit->special;?>" /></td>
             </tr>
-     <tr><td class="key"><?php echo JText::_('Parameters');?></td><td>
+     <tr><td class="key"><?php echo JText::_('JBS_CMN_PARAMETERS');?></td><td>
      <?php jimport('joomla.html.pane');
 $pane =& JPane::getInstance( 'sliders');
 echo $pane->startPane ('content-pane');
-echo $pane->startPanel(JText::_('Media File Parameters'), 'MEDIAFILE_1');
+echo $pane->startPanel(JText::_('JBS_MED_MEDIA_FILE_PARAMETERS'), 'MEDIAFILE_1');
 echo $this->params->render ('params');
 echo $pane->endPanel();
 echo $pane->endPane();
 ?>
 </td></tr>
   <tr>
-<td class="key"><?php echo JText::_('Choose a Podcast');?></td><td>
+<td class="key"><?php echo JText::_('JBS_MED_CHOOSE_PODCAST');?></td><td>
 					<?php
 
 //jimport('joomla.html.pane');
@@ -271,19 +271,19 @@ echo $pane->endPane();
 				</td>
             </tr>
 
-                <tr><td class="key"><?php echo JText::_('Choose a Mime Type');?></td><td> <?php echo $this->lists['mime_type'];?>
+                <tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_MIME_TYPE');?></td><td> <?php echo $this->lists['mime_type'];?>
 				</td>
             </tr>
 
-            <tr><td class="key"><?php echo JText::_('Show Download Icon');?></td><td>
+            <tr><td class="key"><?php echo JText::_('JBS_MED_SHOW_DOWNLOAD_ICON');?></td><td>
 
 			<select id="link_type" name="link_type"><?php echo $this->mediafilesedit->link_type;?>
-				<option value="0" <?php if ($this->mediafilesedit->link_type == 0){echo ' selected ';}?> > <?php echo JText::_('No Download icon');?></option>
-				<option value="1" <?php if ($this->mediafilesedit->link_type == 1){echo ' selected ';}?> > <?php echo JText::_('Show Download icon');?></option>
-				<option value="2" <?php if ($this->mediafilesedit->link_type == 2){echo ' selected ';}?> > <?php echo JText::_('Show Only Download icon');?></option>
+				<option value="0" <?php if ($this->mediafilesedit->link_type == 0){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_NO_DOWNLOAD_ICON');?></option>
+				<option value="1" <?php if ($this->mediafilesedit->link_type == 1){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_SHOW_DOWNLOAD_ICON');?></option>
+				<option value="2" <?php if ($this->mediafilesedit->link_type == 2){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_SHOW_ONLY_DOWNLOAD_ICON');?></option>
 			</select>
 			</td></tr>
-            <tr><td class="key"><?php echo JText::_('JBS_CMN_COMMENT');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="150" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('Appears under file or in Tooltip - set in Template parameters');?></td>
+            <tr><td class="key"><?php echo JText::_('JBS_CMN_COMMENT');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="150" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP');?></td>
             </tr>
 
 

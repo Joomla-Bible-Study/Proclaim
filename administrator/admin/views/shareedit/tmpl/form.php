@@ -5,7 +5,7 @@ $mainframe =& JFactory::getApplication();
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Details' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
 
 		<table class="admintable">
         <tr>
@@ -42,7 +42,7 @@ $mainframe =& JFactory::getApplication();
 
     <tr><td class="key">
 		<label for="parameters">
-		<?php echo JText::_('Parameters');?>
+		<?php echo JText::_('JBS_CMN_PARAMETERS');?>
 		</label>
 		</td>
 

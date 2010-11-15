@@ -3,7 +3,7 @@
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Details' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
 
 
     <table class="admintable">
@@ -14,7 +14,7 @@
           </td>
       </tr>
       <tr>
-        <td width="100" align="right" class="key"> <label for="location_text"> <?php echo JText::_( 'Location Name' ); ?>
+        <td width="100" align="right" class="key"> <label for="location_text"> <?php echo JText::_( 'JBS_LOC_LOCATION_NAME' ); ?>
           </label> </td>
         <td> <input class="text_area" type="text" name="location_text" id="location_text" size="100" maxlength="250" value="<?php echo $this->locationsedit->location_text;?>" />
         </td>

@@ -89,8 +89,8 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
           <th><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_SERIES', 'series_id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 		  <th><?php echo JHTML::_( 'grid.sort','Topic','topics_id', $this->lists['order_Dir'], $this->lists['order'] );?></th>
 		  <th align="center"><?php echo JHTML::_( 'grid.sort', 'Hits', 'hits', $this->lists['order_Dir'], $this->lists['order']); ?></th>
-          <th align="center"><?php echo JHTML::_( 'grid.sort', 'Plays', 'totalplays', $this->lists['order_Dir'], $this->lists['order']); ?></th>
-          <th align="center"><?php echo JHTML::_( 'grid.sort', 'Downloads', 'totaldownloads', $this->lists['order_Dir'], $this->lists['order']); ?></th>
+          <th align="center"><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_PLAYS', 'totalplays', $this->lists['order_Dir'], $this->lists['order']); ?></th>
+          <th align="center"><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_DOWNLOADS', 'totaldownloads', $this->lists['order_Dir'], $this->lists['order']); ?></th>
           
         </tr>
       </thead>

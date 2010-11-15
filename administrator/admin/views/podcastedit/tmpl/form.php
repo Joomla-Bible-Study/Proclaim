@@ -12,15 +12,15 @@
 			// do field validation
 			if (form.title.value == "")
 			{
-				alert( "<?php echo JText::_( 'Please fill in the Podcast Title.', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_PDC_ENTER_PODCAST_TITLE', true ); ?>" );
 			}
 			else if (form.website.value == "")
 			{
-				alert( "<?php echo JText::_( 'Please fill in the Website.', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_PDC_ENTER_WEBSITE', true ); ?>" );
 			}
 			else if (form.filename.value == "")
 			{
-				alert( "<?php echo JText::_( 'Please fill in the XML Filename.', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_PDC_ENTER_XML_FILENAME', true ); ?>" );
 			}
 			else
 			{

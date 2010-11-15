@@ -13,7 +13,7 @@
 			<th width="20" align="center">
 				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>
-            <th><?php echo JText::_('Image');?></th>		
+            <th><?php echo JText::_('JBS_CMN_IMAGE');?></th>		
 			<th>
 				<?php echo JText::_( 'Social Network' ); ?>
 			</th>

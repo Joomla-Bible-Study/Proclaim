@@ -2232,7 +2232,7 @@
       <option value="19">JBS_TPL_DETAILS_PDF</option>
       <option value="20">JBS_TPL_MEDIA</option>
       <option value="22">JBS_TPL_STORE</option>
-      <option value="23">JBS_TPL_FILESIZE</option>
+      <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2269,7 +2269,7 @@
       <option value="19">JBS_TPL_DETAILS_PDF</option>
       <option value="20">JBS_TPL_MEDIA</option>
       <option value="22">JBS_TPL_STORE</option>
-      <option value="23">JBS_TPL_FILESIZE</option>
+      <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2306,7 +2306,7 @@
       <option value="19">JBS_TPL_DETAILS_PDF</option>
       <option value="20">JBS_TPL_MEDIA</option>
       <option value="22">JBS_TPL_STORE</option>
-      <option value="23">JBS_TPL_FILESIZE</option>
+      <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2343,7 +2343,7 @@
       <option value="19">JBS_TPL_DETAILS_PDF</option>
       <option value="20">JBS_TPL_MEDIA</option>
       <option value="22">JBS_TPL_STORE</option>
-      <option value="23">JBS_TPL_FILESIZE</option>
+      <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2401,7 +2401,7 @@
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
       <option value="16">JBS_CMN_MESSAGE_TYPE</option>
-      <option value="23">JBS_TPL_FILESIZE</option>
+      <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2430,7 +2430,7 @@
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
       <option value="16">JBS_CMN_MESSAGE_TYPE</option>
-      <option value="23">JBS_TPL_FILESIZE</option>
+      <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2459,7 +2459,7 @@
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
       <option value="16">JBS_CMN_MESSAGE_TYPE</option>
-      <option value="23">JBS_TPL_FILESIZE</option>
+      <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2488,7 +2488,7 @@
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
       <option value="16">JBS_CMN_MESSAGE_TYPE</option>
-      <option value="23">JBS_TPL_FILESIZE</option>
+      <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>
@@ -2517,7 +2517,7 @@
       <option value="14">JBS_CMN_TOPIC</option>
       <option value="15">JBS_CMN_LOCATION</option>
       <option value="16">JBS_CMN_MESSAGE_TYPE</option>
-      <option value="23">JBS_TPL_FILESIZE</option>
+      <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
       <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
     </param>

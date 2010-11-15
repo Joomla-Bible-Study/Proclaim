@@ -20,7 +20,7 @@ class biblestudyViewmediafilesedit extends JView {
 		
 		if (JPluginHelper::importPlugin('system', 'avreloaded')) {
 			require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_avreloaded'.DS.'elements'.DS.'insertbutton.php');
-			$mbutton = JElementInsertButton::fetchElementImplicit('mediacode',JText::_('AVR Media'));
+			$mbutton = JElementInsertButton::fetchElementImplicit('mediacode',JText::_('JBS_MED_AVR_MEDIA'));
 			$this->assignRef('mbutton', $mbutton);
 		}
 		
@@ -102,18 +102,18 @@ class biblestudyViewmediafilesedit extends JView {
 		{
 			if ($docManCategories)
 				{
-					array_unshift($docManCategories, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Category').' -', 'id', 'title'));
+					array_unshift($docManCategories, JHTML::_('select.option', null, '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -', 'id', 'title'));
 				}
 		}
 		
-		array_unshift($articlesSections, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Section').' -', 'id', 'title'));
+		array_unshift($articlesSections, JHTML::_('select.option', null, '- '.JTEXT::_('JBS_MED_SELECT_SECTION').' -', 'id', 'title'));
 		
 		//Run only if Virtuemart enabled
 		if ($vmenabled)
 		{
 			if ($virtueMartCategories)
 			{
-				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Category').' -', 'id', 'title'));
+				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -', 'id', 'title'));
 			}
 		}
 		$isNew		= ($mediafilesedit->id < 1);
@@ -176,7 +176,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$lists['server'] = JHTML::_('select.genericlist', $types5, 'server', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->server );
 
 
-		$types6[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Server Folder' ) .' -' );
+		$types6[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_MED_SELECT_SERVER_FOLDER' ) .' -' );
 		$types6 			= array_merge( $types6, $foldersList);
 		$lists['path'] = JHTML::_('select.genericlist', $types6, 'path', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->path );
 
@@ -187,7 +187,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$lists['podcast'] 	= JHTML::_('select.genericlist',	$podcast, 'podcast_id', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->podcast_id);
 
 		;
-		$types7[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Media Type' ) .' -' );
+		$types7[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_MED_SELECT_MEDIA_TYPE' ) .' -' );
 		$types7 			= array_merge( $types7, $mediaImages);
 		$lists['image'] = JHTML::_('select.genericlist', $types7, 'media_image', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->media_image );
 

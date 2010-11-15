@@ -10,7 +10,7 @@ class biblestudyViewmediafilesedit extends JView {
 		
 		if (JPluginHelper::importPlugin('system', 'avreloaded')) {
 			require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_avreloaded'.DS.'elements'.DS.'insertbutton.php');
-			$mbutton = JElementInsertButton::fetchElementImplicit('mediacode',JText::_('AVR Media'));
+			$mbutton = JElementInsertButton::fetchElementImplicit('mediacode',JText::_('JBS_MED_AVR_MEDIA'));
 			$this->assignRef('mbutton', $mbutton);
 		}
 
@@ -88,12 +88,12 @@ class biblestudyViewmediafilesedit extends JView {
 			$docManCategories =& $this->get('docManCategories');
 			if ($docManCategories)
 				{
-					array_unshift($docManCategories, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Category').' -', 'id', 'title'));
+					array_unshift($docManCategories, JHTML::_('select.option', null, '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -', 'id', 'title'));
 				}
 		}
 		
 		//articles
-	//	array_unshift($articlesSections, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Section').' -', 'id', 'title'));
+	//	array_unshift($articlesSections, JHTML::_('select.option', null, '- '.JTEXT::_('JBS_MED_SELECT_SECTION').' -', 'id', 'title'));
 		
 		//Run only if Virtuemart enabled
 		if ($vmenabled > 0)
@@ -101,7 +101,7 @@ class biblestudyViewmediafilesedit extends JView {
 			$virtueMartCategories =& $this->get('virtueMartCategories');
 			if ($virtueMartCategories)
 			{
-				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- '.JTEXT::_('Select a Category').' -', 'id', 'title'));
+				array_unshift($virtueMartCategories, JHTML::_('select.option', null, '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -', 'id', 'title'));
 			}
 		}
 		$isNew		= ($mediafilesedit->id < 1);
@@ -159,7 +159,7 @@ $this->assignRef('filepath', $filepath);
 
 		$lists = array();
 		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
-		JToolBarHelper::title(   JText::_( 'Edit Media' ).': <small><small>[ ' . $text.' ]</small></small>', 'mp3.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_MED_EDIT_MEDIA' ).': <small><small>[ ' . $text.' ]</small></small>', 'mp3.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::apply();
@@ -169,8 +169,8 @@ $this->assignRef('filepath', $filepath);
 			JToolBarHelper::apply();
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
-		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset Download Hits', 'Reset Download Hits', false, false );
-		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset Plays', 'Reset Plays', false, false );
+		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset Download Hits', 'JBS_MED_RESET_DOWNLOAD_HITS', false, false );
+		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset Plays', 'JBS_MED_RESET_PLAYS', false, false );
 		}
 		
 		// Add an upload button and view a popup screen width 550 and height 400
@@ -216,7 +216,7 @@ $this->assignRef('filepath', $filepath);
 		. ' WHERE published = 1'
 		. ' ORDER BY folderpath';
 		$database->setQuery( $query6 );
-		$types6[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Server Folder' ) .' -' );
+		$types6[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_MED_SELECT_SERVER_FOLDER' ) .' -' );
 		$types6 			= array_merge( $types6, $database->loadObjectList() );
 		$lists['path'] = JHTML::_('select.genericlist', $types6, 'path', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->path );
 
@@ -232,7 +232,7 @@ $this->assignRef('filepath', $filepath);
 		. ' WHERE published = 1'
 		. ' ORDER BY media_image_name';
 		$database->setQuery( $query7 );
-		$types7[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Media Type' ) .' -' );
+		$types7[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_MED_SELECT_MEDIA_TYPE' ) .' -' );
 		$types7 			= array_merge( $types7, $database->loadObjectList() );
 		$lists['image'] = JHTML::_('select.genericlist', $types7, 'media_image', 'class="inputbox" size="1" ', 'value', 'text',  $mediafilesedit->media_image );
 

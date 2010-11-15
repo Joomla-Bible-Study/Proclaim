@@ -175,7 +175,7 @@ class biblestudyViewstudiesedit extends JView
 			. ' ORDER BY id';
 		$database->setQuery( $query4 );
 		//$location_id = $database->loadObjectList();
-		$types10[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Location' ) .' -' );
+		$types10[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_LOCATION' ) .' -' );
 		$types10 			= array_merge( $types10, $database->loadObjectList() );
 		$lists['location_id'] = JHTML::_('select.genericlist', $types10, 'location_id', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->location_id );
 		

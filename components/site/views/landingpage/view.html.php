@@ -161,7 +161,7 @@ class biblestudyViewLandingpage extends JView {
 		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders" );
 
 
-		$loc[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Location' ) .' -' );
+		$loc[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_LOCATION' ) .' -' );
 		$loc 			= array_merge( $loc, $locations );
 		$lists['locations']	= JHTML::_('select.genericlist',   $loc, 'filter_location', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_location" );
 

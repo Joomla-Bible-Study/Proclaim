@@ -14,7 +14,7 @@
 				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>			
 			<th>
-				<?php echo JText::_( 'Folders' ); ?>
+				<?php echo JText::_( 'JBS_FLD_FOLDERS' ); ?>
 			</th>
 		</tr>			
 	</thead>

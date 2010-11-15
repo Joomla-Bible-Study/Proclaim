@@ -154,7 +154,7 @@ class biblestudyViewstudieslist extends JView {
 		$lists['studyyear']	= JHTML::_('select.genericlist',   $years, 'filter_year', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_year" );
 
         //build locations
-        $loc[]      = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Location' ) .' -' );
+        $loc[]      = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'JBS_CMN_SELECT_LOCATION' ) .' -' );
 		$loc 			= array_merge( $loc, $locations );
 		$lists['locations']	= JHTML::_('select.genericlist',   $loc, 'filter_location', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_location" );
 

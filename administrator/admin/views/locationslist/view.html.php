@@ -21,7 +21,7 @@ class biblestudyViewlocationslist extends JView
 		//$document =& JFactory::getDocument();
 		//$document->addStyleSheet('http://www.calvarychapelnewberg.net/j15/administrator/components/com_biblestudy/css/general.css');
  		$params = &JComponentHelper::getParams($option);
-		JToolBarHelper::title(   JText::_( 'Locations Manager' ), 'locations.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_LOC_LOCATIONS_MANAGER' ), 'locations.png' );
 		//Checks to see if the admin allows rows to be deleted
 		
 		JToolBarHelper::deleteList();
