@@ -2230,7 +2230,7 @@
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
-      <option value="20">JBS_TPL_MEDIA</option>
+      <option value="20">JBS_CMN_MEDIA</option>
       <option value="22">JBS_TPL_STORE</option>
       <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
@@ -2267,7 +2267,7 @@
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
-      <option value="20">JBS_TPL_MEDIA</option>
+      <option value="20">JBS_CMN_MEDIA</option>
       <option value="22">JBS_TPL_STORE</option>
       <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
@@ -2304,7 +2304,7 @@
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
-      <option value="20">JBS_TPL_MEDIA</option>
+      <option value="20">JBS_CMN_MEDIA</option>
       <option value="22">JBS_TPL_STORE</option>
       <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>
@@ -2341,7 +2341,7 @@
       <option value="17">JBS_TPL_DETAILS_TEXT</option>
       <option value="18">JBS_TPL_DETAILS_TEXT_PDF</option>
       <option value="19">JBS_TPL_DETAILS_PDF</option>
-      <option value="20">JBS_TPL_MEDIA</option>
+      <option value="20">JBS_CMN_MEDIA</option>
       <option value="22">JBS_TPL_STORE</option>
       <option value="23">JBS_CMN_FILESIZE</option>
       <option value="28">JBS_TPL_MEDIA_PLAYS</option>

@@ -101,7 +101,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 16:
 			$elementid->id = 'messagetype';
-			$elementid->headertext = JText::_('Message Type');
+			$elementid->headertext = JText::_('JBS_CMN_MESSAGE_TYPE');
 			$elementid->element = $row->message_type;
 			break;
 		case 17:
@@ -128,7 +128,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 20:
             $mediaclass = new jbsMedia(); 
 			$elementid->id = 'jbsmedia';
-			$elementid->headertext = JText::_('Media');
+			$elementid->headertext = JText::_('JBS_CMN_MEDIA');
 		    $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
             break;
 		case 22:

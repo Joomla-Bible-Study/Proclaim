@@ -10,18 +10,18 @@
 			<th width="20"><input type="checkbox" name="toggle" value=""
 				onclick="checkAll(<?php echo count( $this->items ); ?>);" /></th>
 
-			<th width="20" align="center"><?php echo JHTML::_('grid.sort',  'Published', 'published', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+			<th width="20" align="center"><?php echo JHTML::_('grid.sort',  'JBS_CMN_PUBLISHED', 'published', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th width="20"><?php echo JHTML::_('grid.sort',  'JBS_CMN_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
-			<th width="8%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  'Order', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+			<th width="8%" nowrap="nowrap"><?php echo JHTML::_('grid.sort',  'JBS_CMN_ORDER', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			<?php echo JHTML::_('grid.order',  $this->items ); ?></th>
                         <th align="left"><?php echo JHTML::_('grid.sort',  'JBS_MED_FILENAME', 'filename', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th><?php  echo JHTML::_('grid.sort',  'JBS_CMN_STUDY_TITLE', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-			<th><?php echo JHTML::_('grid.sort',  'Media Type', 'media_image_name', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+			<th><?php echo JHTML::_('grid.sort',  'JBS_MED_MEDIA_TYPE', 'media_image_name', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
-			<th><?php echo JHTML::_('grid.sort',  'Create Date', 'createdate', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+			<th><?php echo JHTML::_('grid.sort',  'JBS_CMN_MEDIA_CREATE_DATE', 'createdate', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
             	<th><?php echo JHTML::_('grid.sort',  'JBS_CMN_PLAYS', 'plays', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>

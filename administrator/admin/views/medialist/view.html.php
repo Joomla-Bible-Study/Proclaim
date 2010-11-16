@@ -18,7 +18,7 @@ class biblestudyViewmedialist extends JView
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option'); 
 		$params = &JComponentHelper::getParams($option);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(   JText::_( 'Media Manager' ), 'mediaimages.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_MED_MEDIA_MANAGER' ), 'mediaimages.png' );
 		//This checks the Preferences file to see if the admin is allowing rows to be deleted 
 		
 		JToolBarHelper::deleteList();

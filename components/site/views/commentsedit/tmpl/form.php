@@ -49,7 +49,7 @@ function submitbutton(pressbutton)
       <td > <?php echo $this->lists['published'];?></td>
     </tr>
     <tr>
-      <td class="key" align="left"><?php echo JText::_( 'Create Date<br />YYYY-MM-DD' ); ?></td>
+      <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_CREATE_DATE' ).'<br />'.JText::_( 'YYYY-MM-DD' ); ?></td>
       <td>
         <?php if (!$this->commentsedit->id)
 		{

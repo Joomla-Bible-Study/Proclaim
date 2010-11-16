@@ -12,7 +12,7 @@
 			// do field validation
 			if (form.mimetype.value == "")
 			{
-				alert( "<?php echo JText::_( 'Please fill in Mimetype code.', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_MMT_ENTER_MIME_TYPE_CODE', true ); ?>" );
 			}
 			else
 			{
@@ -23,13 +23,13 @@
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Mime Type Details' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_MMT_MIME_TYPE_DETAILS' ); ?></legend>
 
 		<table class="admintable">
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="mimetype">
-                <?php echo JText::_( 'Mime Type' ); ?>
+                <?php echo JText::_( 'JBS_MMT_MIME_TYPE' ); ?>
 				</label>
 			</td>
 			<td>
@@ -39,7 +39,7 @@
         <tr>
         <td width="100" align="right" class="key">
             <label for="mimetype">
-            <?php echo JText::_( 'Mime Type Code' ); ?>
+            <?php echo JText::_( 'JBS_MMT_MIME_TYPE_CODE' ); ?>
             </label>
         </td>
         <td>

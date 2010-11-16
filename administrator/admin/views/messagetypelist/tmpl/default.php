@@ -14,7 +14,7 @@
 				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>			
 			<th>
-				<?php echo JText::_( 'Message Type' ); ?>
+				<?php echo JText::_( 'JBS_CMN_MESSAGE_TYPE' ); ?>
 			</th>
 		</tr>			
 	</thead>

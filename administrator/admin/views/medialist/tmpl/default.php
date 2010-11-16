@@ -19,7 +19,7 @@ include_once($path1.'image.php');?>
             	<?php echo JText::_('JBS_CMN_IMAGE');?>
              </th>
              <th align="left">
-				<?php echo JText::_( 'Media' ); ?>
+				<?php echo JText::_( 'JBS_CMN_MEDIA' ); ?>
 			</th>	
 		</tr>			
 	</thead>

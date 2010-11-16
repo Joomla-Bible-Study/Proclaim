@@ -25,7 +25,7 @@ class biblestudyViewmimetypelist extends JView
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option'); 
 		$params = &JComponentHelper::getParams($option);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(   JText::_( 'Mime Type Manager' ), 'mimetype.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_MMT_MIME_TYPE_MANAGER' ), 'mimetype.png' );
 		//Checks to see if the admin allows rows to be deleted
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();

@@ -62,7 +62,7 @@ echo $pane->startPanel( JText::_('Verses, Dates, CSS'), 'VERSES');
 echo $this->params->render( 'params', 'VERSES');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Media'), 'MEDIA');
+echo $pane->startPanel( JText::_('JBS_CMN_MEDIA'), 'MEDIA');
 echo $this->params->render( 'params', 'MEDIA');
 echo $pane->endPanel();
 

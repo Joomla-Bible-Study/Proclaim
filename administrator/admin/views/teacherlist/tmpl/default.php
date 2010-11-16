@@ -14,7 +14,7 @@
 				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>
             <th width="8%" nowrap="nowrap">
-				<?php echo JHTML::_('grid.sort',  'Order', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+				<?php echo JHTML::_('grid.sort',  'JBS_CMN_ORDER', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php echo JHTML::_('grid.order',  $this->items ); ?>
 			</th>			
 			<th>

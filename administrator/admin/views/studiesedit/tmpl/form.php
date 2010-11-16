@@ -210,7 +210,7 @@ echo $pane->endPane(); */
   </tr>
 
   <tr>
-        <td class="key" align="left"><?php echo JText::_( 'Message Type' );?></td>
+        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_MESSAGE_TYPE' );?></td>
 		<td><?php echo $this->lists['messagetype']; ?></td>
 	</tr>
 	<tr>
@@ -333,7 +333,7 @@ echo $pane->endPane(); */
 	<thead>
 		<tr>
 			<th><?php echo JText::_('Edit Media File');?></th>
-			<th><?php echo JText::_('Media Create Date');?></th>
+			<th><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE');?></th>
 			<th><?php echo JText::_('Scripture');?></th>
 			<th><?php echo JText::_('Teacher');?></th>
 		</tr>

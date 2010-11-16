@@ -107,7 +107,7 @@ class biblestudyViewstudieslist extends JView {
 		. ' ORDER BY message_type';
 		$database->setQuery( $query4 );
 		$messagetypeid = $database->loadObjectList();
-		$types4[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Message Type' ) .' -' );
+		$types4[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_MESSAGE_TYPE' ) .' -' );
 		$types4 			= array_merge( $types4, $database->loadObjectList() );
 		$lists['messagetypeid']	= JHTML::_('select.genericlist',   $types4, 'filter_messagetype', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_messagetype" );
 

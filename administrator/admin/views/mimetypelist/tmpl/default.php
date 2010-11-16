@@ -14,7 +14,7 @@
 				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>			
 			<th>
-				<?php echo JText::_( 'Mime Type' ); ?>
+				<?php echo JText::_( 'JBS_MMT_MIME_TYPE' ); ?>
 			</th>
 		</tr>			
 	</thead>

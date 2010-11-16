@@ -85,7 +85,7 @@
         <tr>
         <td width="100" align="right" class="key">
 				<label for="imageh">
-                               <?php echo JText::_( 'Image Height' ); ?>
+                               <?php echo JText::_( 'JBS_CMN_IMAGE_HEIGHT_PIXELS' ); ?>
 				</label>
 			</td>
             <td>
@@ -95,7 +95,7 @@
         <tr>
         <td width="100" align="right" class="key">
 				<label for="imagew">
-                               <?php echo JText::_( 'Image Width' ); ?>
+                               <?php echo JText::_( 'JBS_CMN_IMAGE_WIDTH_PIXELS' ); ?>
 				</label>
 			</td>
             <td>

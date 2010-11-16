@@ -18,7 +18,7 @@ class biblestudyViewmediafileslist extends JView {
 		$uri =& JFactory::getURI();
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		//Handle Toolbar
-		JToolBarHelper::title(   JText::_( 'Media Files Manager' ), 'mp3.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_MED_MEDIA_FILES_MANAGER' ), 'mp3.png' );
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		//Checks to see if the admin allows rows to be deleted
