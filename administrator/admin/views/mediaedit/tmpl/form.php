@@ -45,7 +45,7 @@
         </td>
       </tr>
        <tr>
-        <td class="key"><?php echo JText::_( 'Description');?></td>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_DESCRIPTION');?></td>
         <td> <input class="text_area" type="text" name="media_text" id="media_text" size="100" maxlength="250" value="<?php echo $this->mediaedit->media_text;?>" />
         </td>
       </tr>

@@ -134,7 +134,7 @@ class biblestudyViewstudieslist extends JView {
     		{
                 $go = 'onchange="this.form.submit()"';
             }
-        $types[]        = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Teacher' ) .' -' );
+        $types[]        = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'JBS_CMN_SELECT_TEACHER' ) .' -' );
 		$types 			= array_merge( $types, $teachers );
 		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_teacher" );
 

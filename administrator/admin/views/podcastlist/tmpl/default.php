@@ -9,7 +9,7 @@
           </th>
           <th width="20" align="center"> <?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?> 
           </th>
-          <th> <?php echo JText::_( 'Podcast' ); ?> </th>
+          <th> <?php echo JText::_( 'JBS_PDC_PODCAST' ); ?> </th>
           <th><?php echo JText::_( 'JBS_CMN_ID' ); ?></th>
         </tr>
       </thead>

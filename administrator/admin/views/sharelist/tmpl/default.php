@@ -15,7 +15,7 @@
 			</th>
             <th><?php echo JText::_('JBS_CMN_IMAGE');?></th>		
 			<th>
-				<?php echo JText::_( 'Social Network' ); ?>
+				<?php echo JText::_( 'JBS_SHR_SOCIAL_NETWORK' ); ?>
 			</th>
 		</tr>			
 	</thead>

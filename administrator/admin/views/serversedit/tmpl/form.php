@@ -28,13 +28,13 @@
 
     <table class="admintable">
       <tr>
-        <td width="100" align="right" class="key"> <label for="servername"> <?php echo JText::_( 'Server Name' ); ?>:
+        <td width="100" align="right" class="key"> <label for="servername"> <?php echo JText::_( 'JBS_SVR_SERVER_NAME' ); ?>:
           </label> </td>
         <td> <input class="text_area" type="text" name="server_name" id="server_name" size="100" maxlength="250" value="<?php echo $this->serversedit->server_name;?>" />
         </td>
       </tr>
       <tr>
-        <td align="right" class="key"><label for="serverpath"> <?php echo JText::_( 'Server Path (start with www - no trailing /)' ); ?>
+        <td align="right" class="key"><label for="serverpath"> <?php echo JText::_( 'JBS_SVR_SERVER_PATH' ); ?>
           </label></td>
         <td><input class="text_area" type="text" name="server_path" id="server_path" size="100" maxlength="250" value="<?php echo $this->serversedit->server_path;?>" /> </td>
       </tr>

@@ -18,7 +18,7 @@
 				<?php echo JHTML::_('grid.order',  $this->items ); ?>
 			</th>			
 			<th>
-				<?php echo JText::_( 'Teacher' ); ?>
+				<?php echo JText::_( 'JBS_CMN_TEACHER' ); ?>
 			</th>
 		</tr>			
 	</thead>

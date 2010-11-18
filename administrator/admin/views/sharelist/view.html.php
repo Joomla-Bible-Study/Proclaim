@@ -25,7 +25,7 @@ class biblestudyViewsharelist extends JView
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option'); 
 		//$params = &JComponentHelper::getParams($option);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(   JText::_( 'Social Network Manager' ), 'social.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_SHR_SOCIAL_NETWORK_MANAGER' ), 'social.png' );
 		//Checks to see if the admin allows rows to be deleted
 		JToolBarHelper::deleteList();
 		JToolBarHelper::publishList();

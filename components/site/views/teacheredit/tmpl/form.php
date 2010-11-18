@@ -62,7 +62,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="teacher">
-					<?php echo JText::_( 'Teacher' ); ?>:
+					<?php echo JText::_( 'JBS_CMN_TEACHER' ); ?>:
 				</label>
 			</td>
 			<td>
@@ -72,7 +72,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
         <tr>
         <td width="100" align="right" class="key">
 				<label for="title">
-					<?php echo JText::_( 'Title' ); ?>:
+					<?php echo JText::_( 'JBS_CMN_TITLE' ); ?>:
 				</label>
 			</td>
             <td>

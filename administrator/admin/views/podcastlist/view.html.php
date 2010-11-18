@@ -22,13 +22,13 @@ class biblestudyViewpodcastlist extends JView
 		//$document->addStyleSheet('http://www.calvarychapelnewberg.net/j15/administrator/components/com_biblestudy/css/general.css');
  		$params = &JComponentHelper::getParams($option);
  		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(   JText::_( 'Podcast Manager' ), 'podcast.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_PDC_PODCAST_MANAGER' ), 'podcast.png' );
 		//Checks to see if the admin allows rows to be deleted
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();
 	//	JToolBarHelper::addNewX();
         JToolBarHelper::addNew();
-		JToolBarHelper::custom( 'writeXMLFile', 'xml.png', 'Write XML Files', 'Write XML Files', false, false );
+		JToolBarHelper::custom( 'writeXMLFile', 'xml.png', 'Write XML Files', 'JBS_PDC_WRITE_XML_FILES', false, false );
 		//JToolBarHelper::custom('task', 'icon', '', 'Alt', false);
 		//JToolBarHelper::customX('writeXML','save.png','writeXML','Write XML');
 		//JToolBarHelper::preferences('com_biblestudy', '550');

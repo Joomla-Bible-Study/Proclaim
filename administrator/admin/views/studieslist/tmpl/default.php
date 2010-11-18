@@ -83,12 +83,12 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
           <th width="20" align="center"><?php echo JHTML::_('grid.sort','Published','published',$this->lists['order_Dir'],$this->lists['order']); ?></th>
 		  <th><?php echo JHTML::_('grid.sort','Date','studydate',$this->lists['order_Dir'],$this->lists['order']); ?></th>
           <th><?php echo JHTML::_('grid.sort', 'Type', 'messagetype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-          <th><?php echo JHTML::_( 'grid.sort','Scripture', 'booknumber', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-          <th><?php echo JHTML::_( 'grid.sort','Teacher' , 'teacher_id', $this->lists['order_Dir'], $this->lists['order']); ?></th>
-		  <th><?php echo JHTML::_( 'grid.sort', 'Title', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+          <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_SCIPTURE', 'booknumber', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+          <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_TEACHER' , 'teacher_id', $this->lists['order_Dir'], $this->lists['order']); ?></th>
+		  <th><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_TITLE', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
           <th><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_SERIES', 'series_id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 		  <th><?php echo JHTML::_( 'grid.sort','Topic','topics_id', $this->lists['order_Dir'], $this->lists['order'] );?></th>
-		  <th align="center"><?php echo JHTML::_( 'grid.sort', 'Hits', 'hits', $this->lists['order_Dir'], $this->lists['order']); ?></th>
+		  <th align="center"><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_HITS', 'hits', $this->lists['order_Dir'], $this->lists['order']); ?></th>
           <th align="center"><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_PLAYS', 'totalplays', $this->lists['order_Dir'], $this->lists['order']); ?></th>
           <th align="center"><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_DOWNLOADS', 'totaldownloads', $this->lists['order_Dir'], $this->lists['order']); ?></th>
           

@@ -22,21 +22,21 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			{
 		 case 1:
 			$elementid->id = 'scripture1';
-			$elementid->headertext = JText::_('Scripture');
+			$elementid->headertext = JText::_('JBS_CMN_SCIPTURE');
 			$esv = 0;
 			$scripturerow = 1;
 			$elementid->element = getScripture($params, $row, $esv, $scripturerow);
 			break;
 		case 2:
 			$elementid->id = 'scripture2';
-			$elementid->headertext = JText::_('Scripture');
+			$elementid->headertext = JText::_('JBS_CMN_SCIPTURE');
 			$esv = 0;
 			$scripturerow = 2;
 			$elementid->element = getScripture($params, $row, $esv, $scripturerow);
 			break;
 		case 3:
 			$elementid->id = 'secondary';
-			$elementid->headertext = JText::_('Scripture');
+			$elementid->headertext = JText::_('JBS_CMN_SCIPTURE');
 			$elementid->element = $row->secondary_reference;
 			break;
 		case 4:
@@ -46,7 +46,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 5:
 			$elementid->id = 'title';
-			$elementid->headertext = JText::_('Title');
+			$elementid->headertext = JText::_('JBS_CMN_TITLE');
 			$elementid->element = $row->studytitle; 
 			break;
 		case 6:
@@ -56,12 +56,12 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 7:
 			$elementid->id = 'teacher';
-			$elementid->headertext = JText::_('Teacher');
+			$elementid->headertext = JText::_('JBS_CMN_TEACHER');
 			$elementid->element = $row->teachername;
 			break;
 		case 8:
 			$elementid->id = 'teacher';
-			$elementid->headertext = JText::_('Teacher');
+			$elementid->headertext = JText::_('JBS_CMN_TEACHER');
 			$elementid->element = $row->teachertitle.' '.$row->teachername;
 			break;
 		case 9:
@@ -76,7 +76,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 11:
 			$elementid->id = 'submitted';
-			$elementid->headertext = JText::_('Submitted By');
+			$elementid->headertext = JText::_('JBS_CMN_SUBMITTED_BY');
 			$elementid->element = $row->submitted;
 			break;
 		case 12:
@@ -148,7 +148,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 25:
 			$elementid->id = 'thumbnail';
-			$elementid->headertext = JText::_('Thumbnail');
+			$elementid->headertext = JText::_('JBS_CMN_THUMBNAIL');
 			
 			//$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
 			if ($row->thumbnailm) 
@@ -164,7 +164,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 26:
 			$elementid->id = 'series_thumbnail';
-			$elementid->headertext = JText::_('Thumbnail');
+			$elementid->headertext = JText::_('JBS_CMN_THUMBNAIL');
 		//	$i_path = ($admin_params->get('series_imagefolder') ? 'images/'.$admin_params->get('series_imagefolder') : 'images/stories');
 			if ($row->series_thumbnail) 
 			{
@@ -179,7 +179,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 27:
 			$elementid->id = 'series_description';
-			$elementid->headertext = JText::_('Description');
+			$elementid->headertext = JText::_('JBS_CMN_DESCRIPTION');
 			$elementid->element = $row->sdescription; //dump ($row->sdescription, 'sdescription: ');
 			//dump ($element->element, 'element: ');
 			break;

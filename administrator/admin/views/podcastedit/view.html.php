@@ -33,7 +33,7 @@ class biblestudyViewpodcastedit extends JView
 		$this->assignRef('admin', $admin);	
 		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(   JText::_( 'Podcast Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'podcast.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_PDC_PODCAST_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'podcast.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::apply();
@@ -49,7 +49,7 @@ class biblestudyViewpodcastedit extends JView
 		
 		
 		$template = $this->get('Template');
-		$tem[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Template' ) .' -' );
+		$tem[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_TEMPLATE' ) .' -' );
 		$tem 			= array_merge( $tem, $template );
 		$lists['templates']	= JHTML::_('select.genericlist',   $tem, 'detailstemplateid', 'class="inputbox" size="1" ', 'value', 'text', $podcastedit->detailstemplateid );
 		

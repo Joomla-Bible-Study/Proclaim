@@ -64,7 +64,7 @@ class biblestudyViewstudiesedit extends JView {
 		. ' ORDER BY teachername';
 		$database->setQuery( $query );
 		$teachers = $database->loadObjectList();
-		$types[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
+		$types[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_TEACHER' ) .' -' );
 		$types 			= array_merge( $types, $database->loadObjectList() );
 		$lists['teacher_id'] = JHTML::_('select.genericlist', $types, 'teacher_id', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->teacher_id );
 		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $studiesedit->published);

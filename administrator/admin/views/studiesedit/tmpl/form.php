@@ -22,7 +22,7 @@ $document =& JFactory::getDocument();
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
-<fieldset class="adminform"><legend><?php echo JText::_( 'Bible Study Details' ); ?></legend>
+<fieldset class="adminform"><legend><?php echo JText::_( 'JBS_STY_DETAILS' ); ?></legend>
 <?php $editor =& JFactory::getEditor();
 $user =& JFactory::getUser();
 ?>
@@ -37,18 +37,18 @@ if ($this->studiesedit->user_name == ''){$user_name = $user->name;}else{$user_na
 /*$pane =& JPane::getInstance ('sliders');
 
 echo $pane->startPane ('content-pane');
-echo $pane->startPanel(JText::_('Study Parameters'), 'STUDY_1');
+echo $pane->startPanel(JText::_('JBS_STY_STUDY_PARAMETERS'), 'STUDY_1');
 echo $this->params->render ('params');
 echo $pane->endPanel();
 echo $pane->endPane(); */
 ?>
 </td></tr>-->
 	<tr>
-        <td class="key"><?php echo JText::_( 'Submitted by');?></td>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_SUBMITTED_BY');?></td>
 		<td><input class="text_area" type="text" name="user_name"
 			id="user_name" size="25" maxlength="25"
 			value="<?php echo $user_name;?>" />
-        <?php echo '  <strong>'.JText::_('Hits').': </strong>'.$this->studiesedit->hits;?></td>
+        <?php echo '  <strong>'.JText::_('JBS_CMN_HITS').': </strong>'.$this->studiesedit->hits;?></td>
 
 	</tr>
 	<tr>
@@ -56,7 +56,7 @@ echo $pane->endPane(); */
 		<td><?php echo $this->lists['published'];?></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Study Date' ); ?></td>
+        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_STUDY_DATE' ); ?></td>
 		<td><?php
 		if (!$this->studiesedit->id)
 		{
@@ -74,18 +74,18 @@ echo $pane->endPane(); */
 			value="<?php echo $this->studiesedit->studynumber;?>" /></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Title' ); ?></td>
+        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_TITLE' ); ?></td>
 		<td><input class="text_area" type="text" name="studytitle"
 			id="studytitle" size="100" maxlength="250"
 			value="<?php echo $this->studiesedit->studytitle;?>" /></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Description' ); ?></td>
+        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_DESCRIPTION' ); ?></td>
 		<td><textarea name="studyintro" cols="100" class="text_area"
 			id="studyintro"><?php echo $this->studiesedit->studyintro;?></textarea></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Scripture' ); ?></td>
+        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_SCIPTURE' ); ?></td>
 		<td>
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
@@ -184,7 +184,7 @@ echo $pane->endPane(); */
 			value="<?php echo $this->studiesedit->secondary_reference;?>" /></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'Teacher' ); ?></td>
+        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_TEACHER' ); ?></td>
 		<td><?php echo $this->lists['teacher_id']; ?></td>
 	</tr>
 	<tr>
@@ -267,7 +267,7 @@ echo $pane->endPane(); */
     <tr>
     	<td class="key" alsign="left">
     		<label for="thumbnailm">
-                       <?php echo JText::_('Thumbnail');?>
+                       <?php echo JText::_('JBS_CMN_THUMBNAIL');?>
     		</label>
     	</td>
     	<td>
@@ -332,10 +332,10 @@ echo $pane->endPane(); */
 	<tr></tr>
 	<thead>
 		<tr>
-			<th><?php echo JText::_('Edit Media File');?></th>
+			<th><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE');?></th>
 			<th><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE');?></th>
-			<th><?php echo JText::_('Scripture');?></th>
-			<th><?php echo JText::_('Teacher');?></th>
+			<th><?php echo JText::_('JBS_CMN_SCIPTURE');?></th>
+			<th><?php echo JText::_('JBS_CMN_TEACHER');?></th>
 		</tr>
 	</thead>
 

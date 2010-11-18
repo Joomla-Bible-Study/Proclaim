@@ -36,7 +36,7 @@ class JElementteacher extends JElement
 				' ORDER BY #__bsms_teachers.teachername ASC';
 		$db->setQuery($query);
 		$options = $db->loadObjectList();
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a Teacher').' -', 'teacher_id', 'teachername'));
+		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('JBS_CMN_SELECT_TEACHER').' -', 'teacher_id', 'teachername'));
 
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'teacher_id', 'teachername', $value, $control_name.$name );
 	}

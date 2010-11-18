@@ -18,7 +18,7 @@ $mainframe =& JFactory::getApplication();
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="name">
-                                        <?php echo JText::_( 'Name' ); ?>
+                                        <?php echo JText::_( 'JBS_SHR_NAME' ); ?>
 				</label>
 			</td>
 			<td>
@@ -29,7 +29,7 @@ $mainframe =& JFactory::getApplication();
 
         <tr><td class="key">
         <label for="image">
-        <?php echo JText::_('Image');?>
+        <?php echo JText::_('JBS_CMN_IMAGE');?>
         </td><td>
 
         <?php

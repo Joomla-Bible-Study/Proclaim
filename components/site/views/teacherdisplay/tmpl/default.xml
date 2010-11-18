@@ -10,7 +10,7 @@
 		<name>Single Teacher Layout</name>
 		<description>Choose a single teacher to link to</description>
 		<url addpath="/administrator/components/com_biblestudy/elements">
-			<param name="id" type="teacher" default="" label="Select a Teacher" description="The teacher to link to" />
+			<param name="id" type="teacher" default="" label="JBS_CMN_SELECT_TEACHER" description="The teacher to link to" />
 		</url>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="studydetails" />

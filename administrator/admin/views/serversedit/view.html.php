@@ -17,7 +17,7 @@ class biblestudyViewserversedit extends JView
 		$isNew		= ($serversedit->id < 1);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
-		JToolBarHelper::title(   JText::_( 'Servers Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'servers.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_SVR_SERVER_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'servers.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::apply();

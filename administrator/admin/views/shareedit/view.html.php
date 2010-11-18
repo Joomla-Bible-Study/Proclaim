@@ -25,7 +25,7 @@ class biblestudyViewshareedit extends JView
 		$isNew		= ($shareedit->id < 1);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
-		JToolBarHelper::title(   JText::_( 'Social Network Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'social.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_SHR_SOCIAL_NETWORK_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'social.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::apply();

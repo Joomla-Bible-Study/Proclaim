@@ -70,7 +70,7 @@ class biblestudyViewstudieslist extends JView {
 		. ' ORDER BY id';
 		$database->setQuery( $query1 );
 		$teacher_id = $database->loadObjectList();
-		$types[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
+		$types[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_TEACHER' ) .' -' );
 		$types 			= array_merge( $types, $database->loadObjectList() );
 		$lists['teacher_id']	= JHTML::_('select.genericlist',   $types, 'filter_teacher', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_teacher" );
 

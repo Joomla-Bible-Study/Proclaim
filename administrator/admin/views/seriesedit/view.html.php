@@ -23,7 +23,7 @@ class biblestudyViewseriesedit extends JView
 		$isNew		= ($seriesedit->id < 1);
 		$lists = array();
 		$teachers =& $this->get('Teacher');
-		$types[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Teacher' ) .' -' );
+		$types[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_TEACHER' ) .' -' );
 		$types 			= array_merge( $types, $teachers );
 		$lists['teacher'] = JHTML::_('select.genericlist', $types, 'teacher', 'class="inputbox" size="1" ', 'value', 'text',  $seriesedit->teacher );
 		
@@ -40,7 +40,7 @@ class biblestudyViewseriesedit extends JView
 		$lists['series_thumbnail'] = JHTML::_('select.genericlist',  $seriesImageOptions, 'series_thumbnail', 'class="imgChoose" size="1"', 'value', 'text',  $seriesedit->series_thumbnail);
 
 		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
-		JToolBarHelper::title(   JText::_( 'Series Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'series.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_SER_SERIES_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'series.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::apply();

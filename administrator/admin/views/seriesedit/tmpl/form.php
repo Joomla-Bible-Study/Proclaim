@@ -11,25 +11,25 @@ $editor =& JFactory::getEditor();
 		<tr>
 			<td align="right" class="key">
 				<label for="series">
-                                        <?php echo JText::_( 'Series Name' ); ?>
+                                        <?php echo JText::_( 'JBS_SER_SERIES_NAME' ); ?>
 				</label>
 			</td>
 			<td>
 				<input class="text_area" type="text" name="series_text" id="series_text" size="100" maxlength="250" value="<?php echo $this->seriesedit->series_text;?>" />
 			</td>
 			</tr>
-			<tr><td class="key"><?php echo JText::_('Teacher');?></td>
+			<tr><td class="key"><?php echo JText::_('JBS_CMN_TEACHER');?></td>
             <td><?php echo $this->lists['teacher'];?></td>
             </tr>
-            <tr><td class="key"><?php echo JText::_('Thumbnail');?></td>
+            <tr><td class="key"><?php echo JText::_('JBS_CMN_THUMBNAIL');?></td>
             <td>
 				<?php echo $this->lists['series_thumbnail'];?>
 			</td>
 		</tr>
-		<tr><td class="key"><?php echo JText::_('Series Thumbnail Image');?></td>
+		<tr><td class="key"><?php echo JText::_('JBS_SER_SERIES_THUMBNAIL_IMAGE');?></td>
             <td><img <?php if(empty($this->seriesedit->series_thumbnail)){echo ('style="display: none;"');}?> id="imgseries_thumbnail" src="<?php echo '../images/'.$this->admin_params->get('series_imagefolder', 'stories').'/'.$this->seriesedit->series_thumbnail;?>" /></td></tr>
         <tr>
-				<td class="key"><?php echo JText::_('Description');?></td>
+				<td class="key"><?php echo JText::_('JBS_CMN_DESCRIPTION');?></td>
 				<td> <?php echo $editor->display('description', $this->seriesedit->description, '100%', '400', '70', '15'); ?></td>
             <td>
             </tr>
