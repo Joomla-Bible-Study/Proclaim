@@ -159,13 +159,13 @@ class biblestudyViewstudieslist extends JView {
 		$lists['locations']	= JHTML::_('select.genericlist',   $loc, 'filter_location', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_location" );
 
 		//Build Topics
-        $top[]      = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'Select a Topic' ) .' -' );
+        $top[]      = JHTML::_('select.option',  '0', '- '. JTEXT::_( 'JBS_CMN_SELECT_TOPIC' ) .' -' );
 		$top 			= array_merge( $top, $topics );
 		$lists['topics']	= JHTML::_('select.genericlist',   $top, 'filter_topic', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_topic" );
 
 
 		//Build Books
-		$boo[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select a Book') . ' -');
+		$boo[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('JBS_CMN_SELECT_BOOK') . ' -');
 		$boo		= array_merge($boo, $book);
 		$lists['books'] 	= JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_book");
 

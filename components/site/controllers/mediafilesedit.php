@@ -18,10 +18,10 @@ class biblestudyControllermediafilesedit extends JController {
 		$entry_access = ($params->get('entry_access')) ;
 		$allow_entry = $params->get('allow_entry_study');
 		if (!$allow_entry) {$allow_entry = 0;}
-		//if ($allow_entry < 1) {return JError::raiseError('403', JText::_('Access Forbidden')); }
+		//if ($allow_entry < 1) {return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
 		if (!$entry_user) { $entry_user = 0; }
 		if ($allow_entry > 0) {
-			if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('Access Forbidden')); }
+			if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
 		}
 		parent::__construct();
 

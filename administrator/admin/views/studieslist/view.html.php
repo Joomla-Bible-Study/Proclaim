@@ -11,7 +11,7 @@ class biblestudyViewstudieslist extends JView {
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		jimport( 'joomla.i18n.help' );
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(JText::_('Studies Manager'), 'studies.png' );
+		JToolBarHelper::title(JText::_('JBS_STY_STUDIES_MANAGER'), 'studies.png' );
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::deleteList();
@@ -83,7 +83,7 @@ class biblestudyViewstudieslist extends JView {
 			. ' ORDER BY booknumber';
 			$database->setQuery( $query2 );
 			$bookid = $database->loadObjectList();
-			$types2[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Book' ) .' -' );
+			$types2[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_BOOK' ) .' -' );
 			$types2 			= array_merge( $types2, $database->loadObjectList() );
 			$lists['bookid']	= JHTML::_('select.genericlist',   $types2, 'filter_book', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_book" );
 			*/
@@ -131,7 +131,7 @@ class biblestudyViewstudieslist extends JView {
 		 $query7 = ' SELECT * FROM #__bsms_search ';
 		 $database->setQuery( $query7 );
 		 $searchbyquery = $database->loadObjectList();
-		 $searchby[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Search Field' ) .' -' );
+		 $searchby[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_STY_SELECT_SEARCH_FIELD' ) .' -' );
 		 $searchby 			= array_merge( $searchby, $database->loadObjectList() );
 		 //$lists['searchby'] = JHTML::_('select.genericlist',  $searchby, 'filter_searchby', 'class="inputbox" size="1"', 'value', 'text', "$filter_searchby");
 
@@ -143,7 +143,7 @@ class biblestudyViewstudieslist extends JView {
 			. ' ORDER BY id';
 			$database->setQuery( $query8 );
 			$topicsid = $database->loadObjectList();
-			$topics[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Topic' ) .' -' );
+			$topics[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_TOPIC' ) .' -' );
 			$topics 			= array_merge( $topics, $database->loadObjectList() );
 			$lists['topics']	= JHTML::_('select.genericlist',   $topics, 'filter_topic', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_topic" );
 			*/

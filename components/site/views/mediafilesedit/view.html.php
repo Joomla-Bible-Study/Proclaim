@@ -14,9 +14,9 @@ class biblestudyViewmediafilesedit extends JView {
 		$entry_user = $user->get('gid');
 		$entry_access = $admin_params->get('entry_access', 24) ;
 		$allow_entry = $admin_params->get('allow_entry_study', 0);
-		if ($allow_entry < 1) {return JError::raiseError('403', JText::_('Access Forbidden')); }
+		if ($allow_entry < 1) {return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
 		if (!$entry_user) { $entry_user = 0; }
-		if ($entry_user < $entry_access ){return JError::raiseError('403', JText::_('Access Forbidden'));}
+		if ($entry_user < $entry_access ){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}
 		
 		if (JPluginHelper::importPlugin('system', 'avreloaded')) {
 			require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_avreloaded'.DS.'elements'.DS.'insertbutton.php');

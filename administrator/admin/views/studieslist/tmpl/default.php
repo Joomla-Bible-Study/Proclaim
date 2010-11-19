@@ -24,7 +24,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 						echo '<select name="filter_book" id="filter_book" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
 						if (!$filter_book ) {
 						echo 'selected="selected"';}
-						echo '>- '.JText::_('Select a Book').' -'.'</option>';
+						echo '>- '.JText::_('JBS_CMN_SELECT_BOOK').' -'.'</option>';
                         foreach ($bookid as $bookid2) {
 	                        $format = $bookid2['text'];
 	                        $output = JText::sprintf($format);
@@ -54,7 +54,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 						echo '<select name="filter_topic" id="filter_topic" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
 						if (!$filter_topic ) {
 						echo 'selected="selected"';}
-						echo '>- '.JText::_('Select a Topic').' -'.'</option>';
+						echo '>- '.JText::_('JBS_CMN_SELECT_TOPIC').' -'.'</option>';
                         foreach ($topicsid as $topicsid2) {
 	                        $format = $topicsid2['text'];
 	                        $output = JText::sprintf($format);
@@ -76,18 +76,18 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 	<table class="adminlist">
       <thead>
         <tr> 
-          <th width="5"> <?php echo JHTML::_( 'grid.sort','ID','id', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
+          <th width="5"> <?php echo JHTML::_( 'grid.sort','JBS_CMN_ID','id', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
           <th width="20"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->rows ); ?>);" /> 
 		  <!-- changed $this->items to rows in above -->
           </th>
-          <th width="20" align="center"><?php echo JHTML::_('grid.sort','Published','published',$this->lists['order_Dir'],$this->lists['order']); ?></th>
-		  <th><?php echo JHTML::_('grid.sort','Date','studydate',$this->lists['order_Dir'],$this->lists['order']); ?></th>
-          <th><?php echo JHTML::_('grid.sort', 'Type', 'messagetype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+          <th width="20" align="center"><?php echo JHTML::_('grid.sort','JBS_CMN_PUBLISHED','published',$this->lists['order_Dir'],$this->lists['order']); ?></th>
+		  <th><?php echo JHTML::_('grid.sort','JBS_CMN_STUDY_DATE','studydate',$this->lists['order_Dir'],$this->lists['order']); ?></th>
+          <th><?php echo JHTML::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messagetype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
           <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_SCIPTURE', 'booknumber', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
           <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_TEACHER' , 'teacher_id', $this->lists['order_Dir'], $this->lists['order']); ?></th>
 		  <th><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_TITLE', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
           <th><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_SERIES', 'series_id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-		  <th><?php echo JHTML::_( 'grid.sort','Topic','topics_id', $this->lists['order_Dir'], $this->lists['order'] );?></th>
+		  <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_TOPIC','topics_id', $this->lists['order_Dir'], $this->lists['order'] );?></th>
 		  <th align="center"><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_HITS', 'hits', $this->lists['order_Dir'], $this->lists['order']); ?></th>
           <th align="center"><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_PLAYS', 'totalplays', $this->lists['order_Dir'], $this->lists['order']); ?></th>
           <th align="center"><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_DOWNLOADS', 'totaldownloads', $this->lists['order_Dir'], $this->lists['order']); ?></th>

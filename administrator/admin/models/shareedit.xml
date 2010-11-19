@@ -5,7 +5,7 @@
     <param name="item1prefix" type="text" size="50" default="" label="JBS_SHR_ITEM1PREFIX" description="JBS_SHR_ITEMPREFIX_TT" />
     <param name="item1" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_TT">
       <option value="0">JBS_CMN_NOTHING</option>
-      <option value="200">JBS_LINK_STUDY</option>
+      <option value="200">JBS_SHR_LINK_STUDY</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
       <option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
@@ -29,7 +29,7 @@
     <param name="item2prefix" size="50" type="text" default="" label="JBS_SHR_ITEM2PREFIX" description="JBS_SHR_ITEMPREFIX_TT" />
     <param name="item2" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_TT">
       <option value="0">JBS_CMN_NOTHING</option>
-      <option value="200">JBS_LINK_STUDY</option>
+      <option value="200">JBS_SHR_LINK_STUDY</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
       <option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
@@ -53,7 +53,7 @@
     <param name="item3prefix" size="50" type="text" default="" label="JBS_SHR_ITEM3PREFIX" description="JBS_SHR_ITEMPREFIX_TT" />
     <param name="item3" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_TT">
       <option value="0">JBS_CMN_NOTHING</option>
-      <option value="200">JBS_LINK_STUDY</option>
+      <option value="200">JBS_SHR_LINK_STUDY</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
       <option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>
@@ -77,7 +77,7 @@
     <param name="item4prefix" size="50" type="text" default="" label="JBS_SHR_ITEM4PREFIX" description="JBS_SHR_ITEMPREFIX_TT" />
     <param name="item4" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_TT">
       <option value="0">JBS_CMN_NOTHING</option>
-      <option value="200">JBS_LINK_STUDY</option>
+      <option value="200">JBS_SHR_LINK_STUDY</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
       <option value="3">JBS_TPL_SECONDARY_REFERENCES_BRACE</option>

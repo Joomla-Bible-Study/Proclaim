@@ -5,10 +5,10 @@
 	          <th width="5"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->templates); ?>);" />
 	          </th>
 	          <th width="5">
-	          	<?php echo JText::_('Template ID'); ?>
+	          	<?php echo JText::_('JBS_TPL_TEMPLATE_ID'); ?>
 	          </th>
 	          <!--<th width="10">
-	          	<?php //echo JText::_('Template Type'); ?>
+	          	<?php //echo JText::_('JBS_TPL_TEMPLATE_TYPE'); ?>
 	          </th>-->
 	          <th width="40">
 	          	<?php //echo JText::_('Variable Summary'); ?>

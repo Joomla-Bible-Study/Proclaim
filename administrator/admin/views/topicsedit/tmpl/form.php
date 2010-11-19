@@ -3,13 +3,13 @@
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'Topics Details' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_TPC_TOPICS_DETAIL' ); ?></legend>
 
 		<table class="admintable">
 		<tr>
 			<td width="100" align="right" class="key">
 				<label for="topic">
-                                        <?php echo JText::_( 'Topic' ); ?>
+                                        <?php echo JText::_( 'JBS_CMN_TOPIC' ); ?>
 				</label>
 			</td>
 			<td>

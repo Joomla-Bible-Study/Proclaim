@@ -36,7 +36,7 @@ $podcast_access = ($params->get('podcast_access')) - 1;
 $allow_podcast = $params->get('allow_podcast');
 //echo 'allow_podcast = '.$allow_podcast.' access: '.$podcast_access;
 
-if ($podcast_access >$entry_user){ echo JText::_('You are not authorized');} else {?>
+if ($podcast_access >$entry_user){ echo JText::_('JBS_CMN_NOT_AUTHORIZED');} else {?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
@@ -47,7 +47,7 @@ if ($podcast_access >$entry_user){ echo JText::_('You are not authorized');} els
 	<tr>
 		<td colspan="2">
 		<button type="button" onclick="submitbutton('save')">
-		<?php echo JText::_('Save') ?>
+		<?php echo JText::_('JBS_CMN_SAVE') ?>
 		</button>
 		<button type="button" onclick="submitbutton('cancel')">
 		<?php echo JText::_('JBS_CMN_CANCEL') ?>

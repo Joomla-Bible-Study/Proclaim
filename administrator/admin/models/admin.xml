@@ -6,8 +6,8 @@
 			<option value="1">JBS_CMN_YES</option>
 		</param>
 		<param name="drop_tables" type="list" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_TT">
-			<option value="0">JBS_DONT_DROP_TABLES</option>
-			<option value="1">JBS_DROP_TABLES</option>
+			<option value="0">JBS_ADM_DONT_DROP_TABLES</option>
+			<option value="1">JBS_ADM_DROP_TABLES</option>
 		</param>
 		<param name="admin_store" type="list" default="0" label="JBS_ADM_ADMIN_STORE" description="JBS_ADM_ADMIN_STORE_TT">
 			<option value="0">JBS_CMN_SHOW</option>
@@ -56,11 +56,11 @@
 			<option value="1">JBS_CMN_YES</option>
 		</param>
 		<param name="target" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_TT">
-			<option value="0">JBS_NO_DEFAULT</option>
+			<option value="0">JBS_ADM_NO_DEFAULT</option>
 			<option value="_blank">JBS_NEW_WINDOW</option>
 			<option value="_self">JBS_SAME_WINDOW</option>
-			<option value="_parent">JBS_PARENT_WINDOW</option>
-			<option value="_top">JBS_FULL_WINDOW</option>
+			<option value="_parent">JBS_ADM_PARENT_WINDOW</option>
+			<option value="_top">JBS_ADM_FULL_WINDOW</option>
 		</param>
 		<param name="server" type="server" label="JBS_ADM_FILLIN_MEDIAFILE_SERVER" description="JBS_ADM_FILLIN_MEDIAFILE_SERVER_TT" default="" />
 		<param name="path" type="path" label="JBS_ADM_FILLIN_MEDIAFILE_PATH" description="JBS_ADM_FILLIN_MEDIAFILE_PATH_TT" default="" />
@@ -69,8 +69,8 @@
 	</params>
 	<params group="SUBMISSION">	
 			<param name="allow_entry_study" type="list" default="0" label="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY" description="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY_TT">
-				<option value="0">JBS_NO_FRONTEND_ACCESS</option>
-				<option value="1">JBS_ALLOW_FRONTEND_ACCESS</option>
+				<option value="0">JBS_ADM_NO_FRONTEND_ACCESS</option>
+				<option value="1">JBS_ADM_ALLOW_FRONTEND_ACCESS</option>
 			</param>
 			<param name="entry_access" type="list" default="23" label="JBS_ADM_SUBMISSION_ENTRY_ACCESS" description="JBS_ADM_SUBMISSION_ENTRY_ACCESS_TT">
 				<option value="18">JBS_CMN_REGISTERED_USER</option>
@@ -81,13 +81,13 @@
 				<option value="24">JBS_CMN_ADMIN_SUPERADMIN</option>
 			</param>
 			<param name="study_publish" type="list" default="0" label="JBS_ADM_SUBMISSION_STUDY_PUBLISH" description="JBS_ADM_SUBMISSION_STUDY_PUBLISH_TT">
-				<option value="0">JBS_NO_AUTO_PUBLISH</option>
-				<option value="1">JBS_AUTO_PUBLISH</option>
+				<option value="0">JBS_ADM_NO_AUTO_PUBLISH</option>
+				<option value="1">JBS_ADM_AUTO_PUBLISH</option>
 			</param>
 		</params>
 		<params group="ALLVIDEOSRELOADED">
 			<param name="itemidlinktype" type="list" default="0" label="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKTYPE" description="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKTYPE_TT">
-				<option value="0">JBS_DONT_ADD_ITEMID</option>
+				<option value="0">JBS_ADM_DONT_ADD_ITEMID</option>
 				<option value="1">JBS_FIND_ITEMID_MENUE</option>
 				<option value="2">JBS_ITEMID_BELOW</option>
 			</param>

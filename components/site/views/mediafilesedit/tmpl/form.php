@@ -52,7 +52,7 @@ function openConverter1()
    <!-- <tr><td><input type="submit" value="submit" onclick="validate_form()"/> <input type="button" value="cancel"> </td></tr>-->
     <tr>
     <td align="left">	<button type="button" onclick="submitbutton('save')">
-		<?php echo JText::_('Save');  ?>
+		<?php echo JText::_('JBS_CMN_SAVE');  ?>
 	</button>
 	<button type="button" onclick="submitbutton('cancel')">
 		<?php echo JText::_('JBS_CMN_CANCEL') ?>

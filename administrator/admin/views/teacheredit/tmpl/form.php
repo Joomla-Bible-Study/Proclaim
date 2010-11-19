@@ -13,7 +13,7 @@
           </td>
       </tr>
       <tr>
-        <td width="100" class="key"><label for="list_show"><?php echo JText::_( 'Show on List View' ); ?></label></td>
+        <td width="100" class="key"><label for="list_show"><?php echo JText::_( 'JBS_TCH_SHOW_LIST_VIEW' ); ?></label></td>
         <td > <?php echo $this->lists['list_show'];
 		?>
           </td>
@@ -48,10 +48,10 @@
             	<input class="text_area" type="text" name="title" id="title" size="50" maxlength="50" value="<?php echo $this->teacheredit->title;?>" />
             </td>
         </tr>
-        <tr><td class="key"><?php echo JText::_('Choose a Large Image');?></td><td><?php echo $this->lists['teacher_image']; echo '  '.JText::_('Current folder').': '.$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('Set default folder here').'</a>';?><br /><?php echo JText::_('This field will be used instead of below if image selected');?></td>
+        <tr><td class="key"><?php echo JText::_('JBS_TCH_CHOOSE_LARGE_IMAGE');?></td><td><?php echo $this->lists['teacher_image']; echo '  '.JText::_('JBS_CMN_CURRENT_FOLDER').': '.$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('JBS_CMN_SET_DEFAULT_FOLDER').'</a>';?><br /><?php echo JText::_('JBS_CMN_THIS_FIELD_IS_USED_INSTEAD_BELOW');?></td>
       </tr>
        <tr><td valign="top" class="key">
-                              <?php echo JText::_( 'Teacher Image' ); ?>
+                              <?php echo JText::_( 'JBS_TCH_TEACHER_IMAGE' ); ?>
            </td>
     <td> <?php  ?>
     <img <?php if(empty($this->teacheredit->teacher_image)){echo ('style="display: none;"');}?> id="imgteacher_image" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_image;?>" name="teacherImage">
@@ -60,10 +60,10 @@
     </td>
 
     </tr>
-        <tr><td class="key"><?php echo JText::_('Choose a Thumbnail');?></td><td><?php echo $this->lists['teacher_thumbnail']; echo '  '.JText::_('Current folder').': '.$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('Set default folder here').'</a>';?><br /><?php echo JText::_('This field will be used instead of below if image selected');?></td>
+        <tr><td class="key"><?php echo JText::_('JBS_TCH_CHOOSE_THUMBNAIL');?></td><td><?php echo $this->lists['teacher_thumbnail']; echo '  '.JText::_('JBS_CMN_CURRENT_FOLDER').': '.$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('JBS_CMN_SET_DEFAULT_FOLDER').'</a>';?><br /><?php echo JText::_('JBS_CMN_THIS_FIELD_IS_USED_INSTEAD_BELOW');?></td>
       </tr>
        <tr><td valign="top" class="key">
-                              <?php echo JText::_( 'Teacher Thumbnail' ); ?>
+                              <?php echo JText::_( 'JBS_TCH_TEACHER_THUMBNAIL' ); ?>
            </td>
     <td> <?php  ?>
     <img <?php if(empty($this->teacheredit->teacher_thumbnail)){echo ('style="display: none;"');}?> id="imgteacher_thumbnail" src="<?php echo '../images/'.$this->admin_params->get('teachers_imagefolder', 'stories').'/'.$this->teacheredit->teacher_thumbnail;?>" name="teacherThumb">
@@ -75,7 +75,7 @@
         <tr>
         <td width="100" align="right" class="key">
 				<label for="image">
-                               <?php echo JText::_( 'Large Image full URL' ); ?>
+                               <?php echo JText::_( 'JBS_TCH_LARGE_IMAGE_URL' ); ?>
 				</label>
 			</td>
             <td>
@@ -105,7 +105,7 @@
         <tr>
         <td width="100" align="right" class="key">
 				<label for="phone">
-                              <?php echo JText::_( 'Phone' ); ?>
+                              <?php echo JText::_( 'JBS_TCH_PHONE' ); ?>
 				</label>
 			</td>
         	<td>
@@ -115,7 +115,7 @@
          <tr>
          <td width="100" align="right" class="key">
 				<label for="email">
-                               <?php echo JText::_( 'Email or Link to Contact Page' ); ?>
+                               <?php echo JText::_( 'JBS_TCH_EMAIL_CONTACT' ); ?>
 				</label>
 			</td>
         	<td>
@@ -125,7 +125,7 @@
          <tr>
          <td width="100" align="right" class="key">
 				<label for="website">
-                              <?php echo JText::_( 'Website' ); ?>
+                              <?php echo JText::_( 'JBS_TCH_WEBSITE' ); ?>
 				</label>
 			</td>
         	<td>
@@ -135,7 +135,7 @@
          <tr>
          <td width="100" align="right" class="key">
 				<label for="short">
-                              <?php echo JText::_( 'Short Description for List Page' ); ?>
+                              <?php echo JText::_( 'JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE' ); ?>
 				</label>
 			</td>
         	<td><textarea class="text_area" name="short" cols="150" rows="4" id="short" ><?php echo $this->teacheredit->short;?></textarea>
@@ -144,7 +144,7 @@
         <tr>
          <td width="100" align="right" class="key">
 				<label for="thumb">
-                               <?php echo JText::_( 'Thumbnail full URL' ); ?>
+                               <?php echo JText::_( 'JBS_TCH_THUMBNAIL_URL' ); ?>
 				</label>
 			</td>
         	<td>
@@ -154,7 +154,7 @@
         <tr>
          <td width="100" align="right" class="key">
 				<label for="thumbh">
-                               <?php echo JText::_( 'Thumbnail Height' ); ?>
+                               <?php echo JText::_( 'JBS_TCH_THUMBNAIL_HEIGHT' ); ?>
 				</label>
 			</td>
         	<td>
@@ -164,7 +164,7 @@
         <tr>
          <td width="100" align="right" class="key">
 				<label for="thumbw">
-                               <?php echo JText::_( 'Thumbnail Width' ); ?>
+                               <?php echo JText::_( 'JBS_TCH_THUMBNAIL_WIDTH' ); ?>
 				</label>
 			</td>
         	<td>
@@ -174,7 +174,7 @@
 		 <tr>
          <td width="100" align="right" class="key">
 				<label for="information">
-                              <?php echo JText::_( 'Other Information' ); ?>
+                              <?php echo JText::_( 'JBS_TCH_OTHER_INFORMATION' ); ?>
 				</label>
 			</td>
         	<td>

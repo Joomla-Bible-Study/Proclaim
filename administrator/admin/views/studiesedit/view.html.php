@@ -27,7 +27,7 @@ class biblestudyViewstudiesedit extends JView {
 		$this->assignRef( 'editor', $editor );
 		$lists = array();
 		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
-		JToolBarHelper::title(   JText::_( 'Edit Studies' ).': <small><small>[ ' . $text.' ]</small></small>', 'studies.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_STY_EDIT_STUDY' ).': <small><small>[ ' . $text.' ]</small></small>', 'studies.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
 			JToolBarHelper::apply();
@@ -38,7 +38,7 @@ class biblestudyViewstudiesedit extends JView {
 			// for existing items the button is renamed `close`
 			JToolBarHelper::cancel( 'cancel', 'Close' );
 		}
-		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset Hits', 'Reset Hits', false, false );
+		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false );
 		jimport( 'joomla.i18n.help' );
 		JToolBarHelper::help( 'biblestudy', true );
 		
@@ -106,7 +106,7 @@ class biblestudyViewstudiesedit extends JView {
 		. ' ORDER BY topic_text';
 		$database->setQuery( $query8 );
 		$topics = $database->loadObjectList();
-		$topics_id[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a Topic' ) .' -' );
+		$topics_id[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_TOPIC' ) .' -' );
 		$topics_id 			= array_merge( $topics_id, $database->loadObjectList() );
 		$lists['topics_id'] = JHTML::_('select.genericlist', $topics_id, 'topics_id', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->topics_id );
 
@@ -134,7 +134,7 @@ class biblestudyViewstudiesedit extends JView {
 		. ' WHERE published = 1'
 		. ' ORDER BY media_image_name';
 		$database->setQuery( $query7 );
-		$types7[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a CD Image' ) .' -' );
+		$types7[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_STY_SELECT_CD_IMAGE' ) .' -' );
 		$types7 			= array_merge( $types7, $database->loadObjectList() );
 		$lists['image_cd'] = JHTML::_('select.genericlist', $types7, 'image_cd', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->image_cd );
 
@@ -143,7 +143,7 @@ class biblestudyViewstudiesedit extends JView {
 		. ' WHERE published = 1'
 		. ' ORDER BY media_image_name';
 		$database->setQuery( $query7 );
-		$types8[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a DVD Image' ) .' -' );
+		$types8[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_STY_SELECT_DVD_IMAGE' ) .' -' );
 		$types8 			= array_merge( $types8, $database->loadObjectList() );
 		$lists['image_dvd'] = JHTML::_('select.genericlist', $types8, 'image_dvd', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->image_dvd );
 
@@ -152,7 +152,7 @@ class biblestudyViewstudiesedit extends JView {
 		. ' WHERE published = 1'
 		. ' ORDER BY server_path';
 		$database->setQuery( $query5 );
-		$types5[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select DVD Store' ) .' -' );
+		$types5[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_STY_SELECT_DVD_STORE' ) .' -' );
 		$types5 			= array_merge( $types5, $database->loadObjectList() );
 		$lists['server_dvd'] = JHTML::_('select.genericlist', $types5, 'server_dvd', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->server_dvd );
 
@@ -161,7 +161,7 @@ class biblestudyViewstudiesedit extends JView {
 		. ' WHERE published = 1'
 		. ' ORDER BY server_path';
 		$database->setQuery( $query5 );
-		$types6[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'Select a CD Store' ) .' -' );
+		$types6[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_STY_SELECT_CD_STORE' ) .' -' );
 		$types6 			= array_merge( $types6, $database->loadObjectList() );
 		$lists['server_cd'] = JHTML::_('select.genericlist', $types6, 'server_cd', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->server_cd );
 

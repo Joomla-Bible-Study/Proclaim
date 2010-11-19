@@ -41,7 +41,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 4:
 			$elementid->id = 'duration';
-			$elementid->headertext = JText::_('Duration');
+			$elementid->headertext = JText::_('JBS_CMN_DURATION');
 			$elementid->element = getDuration($params, $row);
 			break;
 		case 5:
@@ -71,7 +71,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 10:
 			$elementid->id = 'date';
-			$elementid->headertext = JText::_('Date');
+			$elementid->headertext = JText::_('JBS_CMN_STUDY_DATE');
 			$elementid->element = getstudyDate($params, $row->studydate);
 			break;
 		case 11:
@@ -91,7 +91,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 14:
 			$elementid->id = 'topic';
-			$elementid->headertext = JText::_('Topic');
+			$elementid->headertext = JText::_('JBS_CMN_TOPIC');
 			$elementid->element = $row->topic_text;
 			break;
 		case 15:
@@ -133,7 +133,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
             break;
 		case 22:
 			$elementid->id = 'store';
-			$elementid->headertext = JText::_('Store');
+			$elementid->headertext = JText::_('JBS_CMN_STORE');
 			$elementid->element = getStore($params, $row);
 			break;
 		case 23:

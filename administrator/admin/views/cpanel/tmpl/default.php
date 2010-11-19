@@ -189,7 +189,7 @@ table.fbstat .col2 {
     <td width="170" valign="top">
     <!-- Begin: AdminLeft -->
         <div id="fbheader">
- <a href = "index.php?option=com_biblestudy&view=cpanel"><img src = "components/com_biblestudy/images/logo.png"  border="0" alt = "<?php echo JText::_( 'Joomla Bible Study'); ?>"/></a>
+ <a href = "index.php?option=com_biblestudy&view=cpanel"><img src = "components/com_biblestudy/images/logo.png"  border="0" alt = "<?php echo JText::_( 'JBS_CMN_JOOMLA_BIBLE_STUDY'); ?>"/></a>
  <!-- Here is where the version information will go -->
  </div>
  <div id="fbmenu">

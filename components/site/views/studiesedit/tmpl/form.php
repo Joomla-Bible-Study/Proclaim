@@ -43,7 +43,7 @@ $user =& JFactory::getUser();
 <tr>
 
 <tr>    <td >	<button type="button" onclick="submitbutton('save')">
-		<?php echo JText::_('Save');  ?>
+		<?php echo JText::_('JBS_CMN_SAVE');  ?>
 	</button>
 	<button type="button" onclick="submitbutton('cancel')">
 		<?php echo JText::_('JBS_CMN_CANCEL') ?>
@@ -113,10 +113,10 @@ echo $pane->endPane();
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
 				<td width="20"><?php echo JText::_( 'JBS_CMN_BOOK' );?></td>
-				<td width="8"><?php echo JText::_( 'Ch Begin' );?></td>
-				<td width="8"><?php echo JText::_( 'Vs Begin' );?></td>
-				<td width="8"><?php echo JText::_( 'Ch End' ); ?></td>
-				<td width="8"><?php echo JText::_( 'Vs End' );?></td>
+				<td width="8"><?php echo JText::_( 'JBS_STY_CHAPTER_BEGIN' );?></td>
+				<td width="8"><?php echo JText::_( 'JBS_STY_VERSE_BEGIN' );?></td>
+				<td width="8"><?php echo JText::_( 'JBS_STY_CHAPTER_END' ); ?></td>
+				<td width="8"><?php echo JText::_( 'JBS_STY_VERSE_END' );?></td>
 			</tr>
 			<tr>
 				<td><?php //echo $this->lists['booknumber'];
@@ -128,7 +128,7 @@ echo $pane->endPane();
 		$database->setQuery( $query2 );
 		$bookid = $database->loadAssocList();
 		echo '<select name="booknumber" id="booknumber" class="inputbox" size="1" ><option value="0"';
-		echo '>- '.JText::_('Select a Book').' -'.'</option>';
+		echo '>- '.JText::_('JBS_CMN_SELECT_BOOK').' -'.'</option>';
 		foreach ($bookid as $bookid2) {
 			$format = $bookid2['text'];
 			$output = JText::sprintf($format);
@@ -158,20 +158,20 @@ echo $pane->endPane();
 		</td>
 	</tr>
 	<tr>
-		<td class="key" align="left"><?php echo JText::_( 'Scripture 2' ); ?>:</td>
+		<td class="key" align="left"><?php echo JText::_( 'JBS_CMN_SCRIPTURE2' ); ?>:</td>
 		<td>
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
-				<td width="20"><?php echo JText::_( 'Book 2' );?></td>
-				<td width="8"><?php echo JText::_( 'Ch Begin 2' );?></td>
-				<td width="8"><?php echo JText::_( 'Vs Begin 2' );?></td>
-				<td width="8"><?php echo JText::_( 'Ch End 2' ); ?></td>
-				<td width="8"><?php echo JText::_( 'Vs End 2' );?></td>
+				<td width="20"><?php echo JText::_( 'JBS_STY_BOOK2' );?></td>
+				<td width="8"><?php echo JText::_( 'JBS_STY_CHAPTER_BEGIN2' );?></td>
+				<td width="8"><?php echo JText::_( 'JBS_STY_VERSE_BEGIN2' );?></td>
+				<td width="8"><?php echo JText::_( 'JBS_STY_CHAPTER_END2' ); ?></td>
+				<td width="8"><?php echo JText::_( 'JBS_STY_VERSE_END2' );?></td>
 			</tr>
 			<tr>
 				<td><?php //echo $this->lists['booknumber2'];
 		echo '<select name="booknumber2" id="booknumber2" class="inputbox" size="1" ><option value="0"';
-		echo '>- '.JText::_('Select a Book').' -'.'</option>';
+		echo '>- '.JText::_('JBS_CMN_SELECT_BOOK').' -'.'</option>';
 		foreach ($bookid as $bookid2) {
 			$format = $bookid2['text'];
 			$output = JText::sprintf($format);
@@ -201,7 +201,7 @@ echo $pane->endPane();
 		</td>
 	</tr>
 	<tr>
-		<td class="key" align="left"><?php echo JText::_( 'Secondary References' );?>:</td>
+		<td class="key" align="left"><?php echo JText::_( 'JBS_CMN_SECONDARY_REFERENCES' );?>:</td>
 		<td><input class="text_area" type="text" name="secondary_reference"
 			id="secondary_reference" size="150" maxlength="150"
 			value="<?php echo $this->studiesedit->secondary_reference;?>" /></td>
@@ -219,12 +219,12 @@ echo $pane->endPane();
 		<td><?php echo $this->lists['series_id']; ?></td>
 	</tr>
 	<tr>
-		<td class="key" align="left"><?php echo JText::_( 'Topic' );?>:</td>
+		<td class="key" align="left"><?php echo JText::_( 'JBS_CMN_TOPIC' );?>:</td>
 		<td><?php echo $this->lists['topics_id'];?></td>
 	</tr>
   <tr>
     <td class="key" align="left">
-      <?php echo JText::_( 'Topic' );?>:
+      <?php echo JText::_( 'JBS_CMN_TOPIC' );?>:
     </td>
     <td>
       <input type="text" id="topic_tags" name="topic_tags"></input>
@@ -236,13 +236,13 @@ echo $pane->endPane();
 		<td><?php echo $this->lists['messagetype']; ?></td>
 	</tr>
 	<tr>
-		<td class="key" align="left"><?php echo JText::_('Duration');?>:</td>
+		<td class="key" align="left"><?php echo JText::_('JBS_CMN_DURATION');?>:</td>
 		<td>
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
-				<td width="7"><?php echo JText::_( 'Hours');?></td>
-				<td width="7"><?php echo JText::_( 'Minutes');?></td>
-				<td width="7"><?php echo JText::_( 'Seconds');?></td>
+				<td width="7"><?php echo JText::_( 'JBS_CMN_HOURS');?></td>
+				<td width="7"><?php echo JText::_( 'JBS_CMN_MINUTES');?></td>
+				<td width="7"><?php echo JText::_( 'JBS_CMN_SECONDS');?></td>
 			</tr>
 			<tr>
 				<td><input class="text_area" type="text" name="media_hours"
@@ -259,11 +259,11 @@ echo $pane->endPane();
 		</td>
 	</tr>
 	<tr>
-		<td class="key" align="left"><?php echo JText::_('Allow comments for this study? -No- overrides global setting for this study only');?></td>
+		<td class="key" align="left"><?php echo JText::_('JBS_STY_ALLOW_COMMENTS_FOR_THIS_STUDY');?></td>
 		<td><?php echo $this->lists['comments'];?></td>
 	</tr>
 	<tr>
-		<td class="key" align="left"><?php echo JText::_('User Level to show');?>:</td>
+		<td class="key" align="left"><?php echo JText::_('JBS_STY_USER_LEVEL_TO_SHOW');?>:</td>
 		<td><select name="show_level" id="show_level" class="inputbox"
 			size="1">
 			<?php
@@ -271,24 +271,24 @@ echo $pane->endPane();
 			$selected2 = '';
 			?>
 			<option value="0"
-			<?php if ($show == '0') {echo 'selected="selected"';}?>><?php echo JText::_('Everyone');?></option>
+			<?php if ($show == '0') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_EVERYONE');?></option>
 			<option value="18"
-			<?php if ($show == '18') {echo 'selected="selected"';}?>><?php echo JText::_('Registered Users');?></option>
+			<?php if ($show == '18') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_REGISTERED');?></option>
 			<option value="19"
-			<?php if ($show == '19') {echo 'selected="selected"';}?>><?php echo JText::_('Authors');?></option>
+			<?php if ($show == '19') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_AUTHORS');?></option>
 			<option value="20"
-			<?php if ($show == '20') {echo 'selected="selected"';}?>><?php echo JText::_('Editors');?></option>
+			<?php if ($show == '20') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_EDITORS');?></option>
 			<option value="21"
-			<?php if ($show == '21') {echo 'selected="selected"';}?>><?php echo JText::_('Publishers');?></option>
+			<?php if ($show == '21') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_PUBLISHERS');?></option>
 			<option value="23"
-			<?php if ($show == '23') {echo 'selected="selected"';}?>><?php echo JText::_('Managers');?></option>
+			<?php if ($show == '23') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_MANAGERS');?></option>
 			<option value="24"
-			<?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('Administrators or Superadmin');?></option>
+			<?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_ADMIN_SUPERADMIN');?></option>
 		</select></td>
 	</tr>
-    <tr><td class="key" alsign="left"><label for="thumbnailm"><?php echo JText::_('Thumbnail:');?></label></td><td><?php echo $this->lists['thumbnailm'];//echo $this->studiesedit->thumbnailm;?></td></tr>
+    <tr><td class="key" alsign="left"><label for="thumbnailm"><?php echo JText::_('JBS_CMN_THUMBNAIL');?></label></td><td><?php echo $this->lists['thumbnailm'];//echo $this->studiesedit->thumbnailm;?></td></tr>
     <tr><td valign="top" class="key">
-							<?php echo JText::_( 'Study Image' ); ?>:
+							<?php echo JText::_( 'JBS_STY_STUDY_IMAGE' ); ?>:
 						</td>
     <td> <?php  ?>
     <img src="<?php echo '../images/'.$this->admin_params->get('study_images', 'stories/').$this->studiesedit->thumbnailm;?>" name="imagelib">
@@ -300,28 +300,28 @@ echo $pane->endPane();
 
 	<?php if($this->admin_params->get('admin_store') == 0) {?>
 	<tr>
-		<td class="key" align="left"><?php echo JText::_('Store');?></td>
+		<td class="key" align="left"><?php echo JText::_('JBS_CMN_STORE');?></td>
 		<td>
 		<table>
 			<tr>
-				<td><?php echo JText::_('Image for CD');?>:<?php echo $this->lists['image_cd'];?></td>
+				<td><?php echo JText::_('JBS_STY_IMAGE_CD');?>:<?php echo $this->lists['image_cd'];?></td>
 			</tr>
 			<tr>
-				<td><?php echo JText::_('Store URL for CD');?>:<?php echo $this->lists['server_cd'];?></td>
+				<td><?php echo JText::_('JBS_STY_STORE_URL_CD');?>:<?php echo $this->lists['server_cd'];?></td>
 			</tr>
 			<tr>
-				<td><?php echo JText::_('Product ID for CD');?>:<input
+				<td><?php echo JText::_('JBS_STY_PRODUCT_ID_CD');?>:<input
 					class="text_area" type="text" name="prod_cd" id="prod_cd" size="50"
 					maxlength="50" value="<?php echo $this->studiesedit->prod_cd;?>" /></td>
 			</tr>
 			<tr>
-				<td><?php echo JText::_('Image for DVD');?>:<?php echo $this->lists['image_dvd'];?></td>
+				<td><?php echo JText::_('JBS_STY_IMAGE_DVD');?>:<?php echo $this->lists['image_dvd'];?></td>
 			</tr>
 			<tr>
-				<td><?php echo JText::_('Store URL for DVD');?>:<?php echo $this->lists['server_dvd'];?></td>
+				<td><?php echo JText::_('JBS_STY_STORE_URL_DVD');?>:<?php echo $this->lists['server_dvd'];?></td>
 			</tr>
 			<tr>
-				<td><?php echo JText::_('Product ID for DVD');?>:<input
+				<td><?php echo JText::_('JBS_STY_PRODUCT_ID_DVD');?>:<input
 					class="text_area" type="text" name="prod_dvd" id="prod_dvd"
 					size="50" maxlength="50"
 					value="<?php echo $this->studiesedit->prod_dvd;?>" /></td>
@@ -332,7 +332,7 @@ echo $pane->endPane();
 	<?php }?>
 
 	<tr>
-		<td class="key"><?php echo JText::_( 'Study Text' );?></td>
+		<td class="key"><?php echo JText::_( 'JBS_STY_STUDY_TEXT' );?></td>
 
 		<td><?php echo $editor->display('studytext', $this->studiesedit->studytext, '100%', '400', '70', '15'); ?></td>
 	</tr>
@@ -342,7 +342,7 @@ echo $pane->endPane();
 <?php if ($this->studiesedit->id > 1)
 	{ ?>
 <div class="editcell">
-<fieldset class="adminlist"><legend><?php echo JText::_( 'Media Files for this Study' ); ?></legend>
+<fieldset class="adminlist"><legend><?php echo JText::_( 'JBS_STY_MEDIA_THIS_STUDY' ); ?></legend>
 <table class="admintable" width=100%>
 	<tr></tr>
 	<thead>

@@ -18,7 +18,7 @@ class biblestudyViewtopicslist extends JView
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option'); 
 		$params = &JComponentHelper::getParams($option);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(   JText::_( 'Topics Manager' ), 'topics.png' );
+		JToolBarHelper::title(   JText::_( 'JBS_TPC_TOPICS_MANAGER' ), 'topics.png' );
 		//Checks to see if the admin allows rows to be deleted
 		JToolBarHelper::deleteList();
 		JToolBarHelper::editListX();

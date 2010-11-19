@@ -20,7 +20,7 @@ $entry_user = $user->get('gid');
 $entry_access = ($params->get('entry_access')) - 1;
 $allow_entry = $params->get('allow_entry_study');
 if ($allow_entry > 0) {
-if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else{ ?>
+if ($entry_access >= $entry_user){ echo JText::_('JBS_CMN_NOT_AUTHORIZED');}else{ ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
@@ -29,7 +29,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
 		<table width = 100% class="admintable">
         <tr><td>
 	<button type="button" onclick="submitbutton('save')">
-		<?php echo JText::_('Save') ?>
+		<?php echo JText::_('JBS_CMN_SAVE') ?>
 	</button>
 	<button type="button" onclick="submitbutton('cancel')">
 		<?php echo JText::_('JBS_CMN_CANCEL') ?>
@@ -44,7 +44,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
       </tr>
 <?php } //End of check to see if auto publish?>
       <tr> 
-        <td width="100" class="key"><label for="list_show"><?php echo JText::_( 'Show on List View' ); ?></label></td>
+        <td width="100" class="key"><label for="list_show"><?php echo JText::_( 'JBS_TCH_SHOW_LIST_VIEW' ); ?></label></td>
         <td > <?php echo $this->lists['list_show'];
 		?>
           </td>
@@ -82,7 +82,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
         <tr>
         <td width="100" align="right" class="key">
 				<label for="image">
-					<?php echo JText::_( 'Large Image full URL' ); ?>:
+					<?php echo JText::_( 'JBS_TCH_LARGE_IMAGE_URL' ); ?>:
 				</label>
 			</td>
             <td>
@@ -112,7 +112,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
         <tr>
         <td width="100" align="right" class="key">
 				<label for="phone">
-					<?php echo JText::_( 'Phone' ); ?>:
+					<?php echo JText::_( 'JBS_TCH_PHONE' ); ?>:
 				</label>
 			</td>
         	<td>
@@ -122,7 +122,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
          <tr>
          <td width="100" align="right" class="key">
 				<label for="email">
-					<?php echo JText::_( 'Email or Link to Contact Page' ); ?>:
+					<?php echo JText::_( 'JBS_TCH_EMAIL_CONTACT' ); ?>:
 				</label>
 			</td>
         	<td>
@@ -132,7 +132,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
          <tr>
          <td width="100" align="right" class="key">
 				<label for="website">
-					<?php echo JText::_( 'Website' ); ?>:
+					<?php echo JText::_( 'JBS_TCH_WEBSITE' ); ?>:
 				</label>
 			</td>
         	<td>
@@ -142,7 +142,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
          <tr>
          <td width="100" align="right" class="key">
 				<label for="short">
-					<?php echo JText::_( 'Short Description for List Page' ); ?>:
+					<?php echo JText::_( 'JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE' ); ?>:
 				</label>
 			</td>
         	<td><textarea class="text_area" name="short" cols="75" rows="4" id="short" ><?php echo $this->teacheredit->short;?></textarea>
@@ -151,7 +151,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
         <tr>
          <td width="100" align="right" class="key">
 				<label for="thumb">
-					<?php echo JText::_( 'Thumbnail full URL' ); ?>:
+					<?php echo JText::_( 'JBS_TCH_THUMBNAIL_URL' ); ?>:
 				</label>
 			</td>
         	<td>
@@ -161,7 +161,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
         <tr>
          <td width="100" align="right" class="key">
 				<label for="thumbh">
-					<?php echo JText::_( 'Thumbnail Height' ); ?>:
+					<?php echo JText::_( 'JBS_TCH_THUMBNAIL_HEIGHT' ); ?>:
 				</label>
 			</td>
         	<td>
@@ -171,7 +171,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
         <tr>
          <td width="100" align="right" class="key">
 				<label for="thumbw">
-					<?php echo JText::_( 'Thumbnail Width' ); ?>:
+					<?php echo JText::_( 'JBS_TCH_THUMBNAIL_WIDTH' ); ?>:
 				</label>
 			</td>
         	<td>
@@ -181,7 +181,7 @@ if ($entry_access >= $entry_user){ echo JText::_('You are not authorized');}else
 		 <tr>
          <td width="100" align="right" class="key">
 				<label for="information">
-					<?php echo JText::_( 'Other Information' ); ?>:
+					<?php echo JText::_( 'JBS_TCH_OTHER_INFORMATION' ); ?>:
 				</label>
 			</td>
         	<td>

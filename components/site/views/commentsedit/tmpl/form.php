@@ -7,10 +7,10 @@ $user =& JFactory::getUser();
 		$entry_access = ($params->get('entry_access')) ;
 		$allow_entry = $params->get('allow_entry_study');
 		if (!$allow_entry) {$allow_entry = 0;}
-		//if ($allow_entry < 1) {return JError::raiseError('403', JText::_('Access Forbidden')); }
+		//if ($allow_entry < 1) {return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
 		if (!$entry_user) { $entry_user = 0; }
 		if ($allow_entry > 0) {
-			if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('Access Forbidden')); }
+			if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
 		}
 ?>
 <script language="javascript" type="text/javascript">
@@ -37,7 +37,7 @@ function submitbutton(pressbutton)
     <tr>
       <td colspan="0">
 	    <button type="button" onclick="submitbutton('save')">
-		  <?php echo JText::_('Save') ?>
+		  <?php echo JText::_('JBS_CMN_SAVE') ?>
 	    </button>
 	    <button type="button" onclick="submitbutton('cancel')">
 		  <?php echo JText::_('JBS_CMN_CANCEL') ?>

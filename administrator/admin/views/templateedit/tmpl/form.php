@@ -15,7 +15,7 @@ JHTML::_('behavior.tooltip');
 			<td><?php //echo $this->data['tmplTypes']; ?></td>
 		</tr>-->
 		<tr>
-			<td width="100" class="key"><?php echo JText::_('Template Name'); ?> </td>
+			<td width="100" class="key"><?php echo JText::_('JBS_TPL_TEMPLATE_NAME'); ?> </td>
 			<td colspan="2"><input type="text" name="title" id="title" length="100" value="<?php echo $this->template->title; ?>" />
 				<!--<div id="tmplCanvas">
 					<ul id="tmplTagCanvas">
@@ -24,9 +24,9 @@ JHTML::_('behavior.tooltip');
 				</div>-->
 			</td>
 		</tr>
-        <tr><td class="key"><strong><?php echo JText::_('Details Link Image');?></strong></td>
-<td><?php echo $this->lists['text']; echo '  '.JText::_('Uses Media folder'); ?><a href="index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" target="_blank"><?php echo '  '.JText::_('Set Here');?></a></td></tr>
-<tr><td class="key"><?php echo JText::_('PDF Image');?></td><td><?php echo $this->lists['pdf']; echo '  '.JText::_('Uses Media folder'); ?><a href="index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" target="_blank"><?php echo '  '.JText::_('Set Here');?></a></td></tr>
+        <tr><td class="key"><strong><?php echo JText::_('JBS_TPL_DETAILS_LINK_IMAGE');?></strong></td>
+<td><?php echo $this->lists['text']; echo '  '.JText::_('JBS_TPL_USES_MEDIA_FOLDER'); ?><a href="index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" target="_blank"><?php echo '  '.JText::_('JBS_TPL_SET_HERE');?></a></td></tr>
+<tr><td class="key"><?php echo JText::_('JBS_TPL_PDF_IMAGE');?></td><td><?php echo $this->lists['pdf']; echo '  '.JText::_('JBS_TPL_USES_MEDIA_FOLDER'); ?><a href="index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" target="_blank"><?php echo '  '.JText::_('JBS_TPL_SET_HERE');?></a></td></tr>
 	</table>
 
 <table><tr><td>
@@ -48,17 +48,17 @@ echo $pane->startPanel( JText::_( 'JBS_CMN_TEMPLATES' ), 'TEMPLATES' );
 echo $this->params->render( 'params', 'TEMPLATES' );
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_( 'Filters' ), 'FILTERS' );
+echo $pane->startPanel( JText::_( 'JBS_TPL_FILTERS' ), 'FILTERS' );
 // Display the parameters defined in the <params> group with the 'group' attribute of 'GROUP_NAME'
 echo $this->params->render( 'params', 'FILTERS' );
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Front Page Images'), 'FP_IMAGES');
+echo $pane->startPanel( JText::_('JBS_TPL_FRONT_PAGE_IMAGES'), 'FP_IMAGES');
 echo $this->params->render( 'params', 'FP_IMAGES');
 echo $pane->endPanel();
 // Repeat for each additional slider panel required
 
-echo $pane->startPanel( JText::_('Verses, Dates, CSS'), 'VERSES');
+echo $pane->startPanel( JText::_('JBS_TPL_VERSES_DATES_CSS'), 'VERSES');
 echo $this->params->render( 'params', 'VERSES');
 echo $pane->endPanel();
 
@@ -66,67 +66,67 @@ echo $pane->startPanel( JText::_('JBS_CMN_MEDIA'), 'MEDIA');
 echo $this->params->render( 'params', 'MEDIA');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('List Items'), 'LISTITEMS');
+echo $pane->startPanel( JText::_('JBS_TPL_LIST_ITEMS'), 'LISTITEMS');
 echo $this->params->render( 'params', 'LISTITEMS');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('ToolTip Items'), 'TOOLTIP');
+echo $pane->startPanel( JText::_('JBS_TPL_TOOLTIP_ITEMS'), 'TOOLTIP');
 echo $this->params->render( 'params', 'TOOLTIP');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Study List Row 1'), 'ROW1');
+echo $pane->startPanel( JText::_('JBS_TPL_STUDY_LIST_ROW1'), 'ROW1');
 echo $this->params->render( 'params', 'ROW1');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Study List Row 2'), 'ROW2');
+echo $pane->startPanel( JText::_('JBS_TPL_STUDY_LIST_ROW2'), 'ROW2');
 echo $this->params->render( 'params', 'ROW2');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Study List Row 3'), 'ROW3');
+echo $pane->startPanel( JText::_('JBS_TPL_STUDY_LIST_ROW3'), 'ROW3');
 echo $this->params->render( 'params', 'ROW3');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Study List Row 4'), 'ROW4');
+echo $pane->startPanel( JText::_('JBS_TPL_STUDY_LIST_ROW4'), 'ROW4');
 echo $this->params->render( 'params', 'ROW4');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Studies List Custom View'), 'STUDIESVIEW');
+echo $pane->startPanel( JText::_('JBS_TPL_STUDY_LIST_CUSTOM'), 'STUDIESVIEW');
 echo $this->params->render( 'params', 'STUDIESVIEW');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Details View'), 'DETAILS');
+echo $pane->startPanel( JText::_('JBS_TPL_DETAILS_VIEW'), 'DETAILS');
 echo $this->params->render( 'params', 'DETAILS');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Details List Row 1'), 'DETAILSROW1');
+echo $pane->startPanel( JText::_('JBS_TPL_DETAILS_LIST_ROW1'), 'DETAILSROW1');
 echo $this->params->render('params', 'DETAILSROW1');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Details List Row 2'), 'DETAILSROW2');
+echo $pane->startPanel( JText::_('JBS_TPL_DETAILS_LIST_ROW2'), 'DETAILSROW2');
 echo $this->params->render('params', 'DETAILSROW2');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Details List Row 3'), 'DETAILSROW3');
+echo $pane->startPanel( JText::_('JBS_TPL_DETAILS_LIST_ROW3'), 'DETAILSROW3');
 echo $this->params->render('params', 'DETAILSROW3');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Details List Row 4'), 'DETAILSROW4');
+echo $pane->startPanel( JText::_('JBS_TPL_DETAILS_LIST_ROW4'), 'DETAILSROW4');
 echo $this->params->render('params', 'DETAILSROW4');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Teacher View'), 'TEACHER');
+echo $pane->startPanel( JText::_('JBS_TPL_TEACHER_VIEW'), 'TEACHER');
 echo $this->params->render( 'params', 'TEACHER');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Series List'), 'SERIES');
+echo $pane->startPanel( JText::_('JBS_CMN_SERIES_LIST_VIEW'), 'SERIES');
 echo $this->params->render( 'params', 'SERIES');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Series Detail'), 'SERIESDETAIL');
+echo $pane->startPanel( JText::_('JBS_CMN_SERIES_DETAIL_VIEW'), 'SERIESDETAIL');
 echo $this->params->render( 'params', 'SERIESDETAIL');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_('Landing Page'), 'LANDINGPAGE');
+echo $pane->startPanel( JText::_('JBS_TPL_LANDING_PAGE'), 'LANDINGPAGE');
 echo $this->params->render( 'params', 'LANDINGPAGE');
 echo $pane->endPanel();
 
