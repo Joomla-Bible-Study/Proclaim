@@ -431,7 +431,7 @@ function getSizeFile ($url){
 		} 
 	// echo "</div>";
 	if(intval($size) > 0) {
-		$return=intval($size);
+		$return=strval($size);
 	} else {
 		$return=$status;
 	}
