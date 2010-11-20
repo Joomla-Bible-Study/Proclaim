@@ -107,7 +107,7 @@ else {$text .= $scripture1.' - '.$scripture2;}
 			if ($params->get('show_teacher_view')) 
 			{
 				$text .= "\n";
-				$text .= JText::_('By').' '. ($studydetails->teachername);
+				$text .= JText::_('JBS_CMN_BY').' '. ($studydetails->teachername);
 			}
 
 		

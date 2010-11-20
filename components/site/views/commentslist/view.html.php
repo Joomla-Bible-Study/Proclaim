@@ -21,7 +21,7 @@ class biblestudyViewcommentslist extends JView
 		//$params = &JComponentHelper::getParams($option);
 		$params = &$mainframe->getPageParameters();
 		$this->assignRef('params', $params);
-		/*JToolBarHelper::title(   JText::_( 'Comments Manager' ), 'generic.png' );
+		/*JToolBarHelper::title(   JText::_( 'JBS_CMT_COMMENTS_MANAGER' ), 'generic.png' );
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		//Checks to see if the admin allows rows to be deleted

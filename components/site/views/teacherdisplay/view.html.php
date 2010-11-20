@@ -105,7 +105,7 @@ class biblestudyViewteacherdisplay extends JView
 	function _displayPagebreak($tpl)
 	{
 		$document =& JFactory::getDocument();
-		$document->setTitle(JText::_('PGB ARTICLE PAGEBRK'));
+		$document->setTitle(JText::_('JBS_CMN_READ_MORE'));
 		parent::display($tpl);
 	}
 }

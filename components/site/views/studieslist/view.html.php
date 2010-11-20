@@ -170,7 +170,7 @@ class biblestudyViewstudieslist extends JView {
 		$lists['books'] 	= JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" '.$go, 'value', 'text', "$filter_book");
 
         //Build Chapters
-		$chap[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('Select a Chapter') . ' -');
+		$chap[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('JBS_STY_SELECT_CHAPTER') . ' -');
 		switch (JRequest::getInt('filter_book')) {
 		    case 101:
 		        $maxBooks = 50;

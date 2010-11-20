@@ -47,16 +47,16 @@ $image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thu
 <tr><td class="bsm_teacheremail">
 <?php if ($teacher->email) {
 		if (!stristr($teacher->email,'@') ) { ?>
-		<a href="<?php echo $teacher->email;?>"><?php echo JText::_('Contact');?></a>
+		<a href="<?php echo $teacher->email;?>"><?php echo JText::_('JBS_TCH_EMAIL_CONTACT');?></a>
     <?php }
     else { ?>
-    	<a href=mailto:"<?php echo $teacher->email;?>"><?php echo JText::_('Contact ');?></a>
+    	<a href=mailto:"<?php echo $teacher->email;?>"><?php echo JText::_('JBS_TCH_EMAIL_CONTACT');?></a>
         <?php } 
 	} //end if $teacher->email?>
     </td></tr>
     <tr><td class="bsm_teacherwebsite">
 <?php if ($teacher->website) { ?>
-	<a href="<?php echo $teacher->website;?>"><?php echo JText::_('Site');?></a>
+	<a href="<?php echo $teacher->website;?>"><?php echo JText::_('JBS_TCH_WEBSITE');?></a>
     <?php } ?>
     </td></tr></table>
 	</td>
@@ -129,6 +129,6 @@ switch ($this->params->get('show_teacher_studies'))
 ?> </td></tr>
 <?php
 ?>
-<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist&templatemenuid=<?php echo $templatemenuid;?>"><?php echo '<-- '.JText::_('Return to Teacher List');?></a> <?php if ($this->params->get('teacherlink', '1') > 0) { echo ' | <a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.(int)$teacher->id.'&templatemenuid='.$templatemenuid.'">'.JText::_('More From This Teacher').' --></a>';}
+<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist&templatemenuid=<?php echo $templatemenuid;?>"><?php echo '<-- '.JText::_('JBS_TCH_RETURN_TEACHER_LIST');?></a> <?php if ($this->params->get('teacherlink', '1') > 0) { echo ' | <a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.(int)$teacher->id.'&templatemenuid='.$templatemenuid.'">'.JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER').' --></a>';}
 ?></td></tr></table>
 </div>

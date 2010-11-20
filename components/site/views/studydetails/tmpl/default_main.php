@@ -161,7 +161,7 @@ if ($params->get('list_items_view') == 0)
             case 1:
                 ?>
                 <strong><a class="heading" href="javascript:ReverseDisplay('scripture')">>>
-                <?php echo JText::_('Show/Hide Scripture Passage');?><<</a>
+                <?php echo JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE');?><<</a>
                 <div id="scripture" style="display:none;"></strong>
                 <?php 
                 
@@ -184,7 +184,7 @@ if ($params->get('list_items_view') == 0)
 	<div class="listingfooter"><br />
     <?php $link_text = $this->params->get('link_text');
 			if (!$link_text) {
-				$link_text = JText::_('Return to Studies List');
+				$link_text = JText::_('JBS_CMN_RETURN_STUDIES_LIST');
 			}
 			if ($this->params->get('view_link') > 0){
 					//$returnmenu = $params->get('templatemenuid');

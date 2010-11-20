@@ -62,16 +62,16 @@ if ($teacher->image || $teacher->teacher_image)
 <tr><td class="bsm_teacheremail">
 <?php if ($teacher->email) {
 		if (!stristr($teacher->email,'@') ) { ?>
-		<a href="<?php echo $teacher->email;?>"><?php echo JText::_('Contact');?></a>
+		<a href="<?php echo $teacher->email;?>"><?php echo JText::_('JBS_TCH_EMAIL_CONTACT');?></a>
     <?php }
     else { ?>
-    	<a href=mailto:"<?php echo $teacher->email;?>"><?php echo JText::_('Contact ');?></a>
+    	<a href=mailto:"<?php echo $teacher->email;?>"><?php echo JText::_('JBS_TCH_EMAIL_CONTACT');?></a>
         <?php } 
 	} //end if $teacher->email?>
     </td></tr>
     <tr><td class="bsm_teacherwebsite">
 <?php if ($teacher->website) { ?>
-	<a href="<?php echo $teacher->website;?>"><?php echo JText::_('Site');?></a>
+	<a href="<?php echo $teacher->website;?>"><?php echo JText::_('JBS_TCH_WEBSITE');?></a>
     <?php } ?>
     </td></tr></table>
 	</td>
@@ -100,10 +100,10 @@ if ($this->params->get('show_teacher_studies') > 0) {
   echo $studies;
 }
 
-echo '<table><tr><td id="bsmsteacherstudyfooter"><a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$teacher->id).'">'.JText::_('See more from this teacher').' --></a></td><tr></table>';
+echo '<table><tr><td id="bsmsteacherstudyfooter"><a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$teacher->id).'">'.JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER').' --></a></td><tr></table>';
 	 // end of if show_teacher_studies ?>
 <?php 
 //if ($this->menuid){$link = '&Itemid='.$this->menuid;}?>
-<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&templatemenuid='.$templatemenuid;?>"><?php echo '<--'.JText::_('Return to Teacher List');?></a>
+<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&templatemenuid='.$templatemenuid;?>"><?php echo '<--'.JText::_('JBS_TCH_RETURN_TEACHER_LIST');?></a>
 </table>
 </div>

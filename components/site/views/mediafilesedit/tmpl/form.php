@@ -187,14 +187,14 @@ echo $pane->endPane();
      <?php if (isset($this->mediafilesedit->internal_viewer) )
 	{ ?>
      <tr>
-        <td class="key"><?php echo ('<a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">'.JText::_('AVReloaded Viewer').'</a>')?>
+        <td class="key"><?php echo ('<a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">'.JText::_('JBS_CMN_AVR').'</a>')?>
         </td>
         <td>
-	<?php	echo JText::_('Use of AVR now set from parameters above. This media will continue to use AVR unless you change the parameter above'); ?>
+	<?php	echo JText::_('JBS_MED_USE_AVR_AS_SET_ABOVE'); ?>
 		</td>
 	</tr>
     <?php   } ?>
-            <tr><td class="key"><?php echo JText::_('JBS_CMN_AVR');?></td><td><?php echo JText::_('AVRELOADED');?></td></tr>
+            <tr><td class="key"><?php echo JText::_('JBS_CMN_AVR');?></td><td><?php echo JText::_('JBS_MED_AVRELOADED_TT');?></td></tr>
             <tr><td class="key"></td><td><input class="text_area" name="mediacode" id="mediacode" size="100" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php
 			if (JPluginHelper::importPlugin('system', 'avreloaded'))
 					{echo $this->mbutton;}?></td></tr>

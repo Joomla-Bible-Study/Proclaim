@@ -49,7 +49,7 @@ function submitbutton(pressbutton)
       <td > <?php echo $this->lists['published'];?></td>
     </tr>
     <tr>
-      <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_CREATE_DATE' ).'<br />'.JText::_( 'YYYY-MM-DD' ); ?></td>
+      <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_CREATE_DATE_YMD_HMS' ); ?></td>
       <td>
         <?php if (!$this->commentsedit->id)
 		{
@@ -60,15 +60,15 @@ function submitbutton(pressbutton)
         }?></td>
     </tr>
     <tr>
-      <td><?php echo JText::_( 'Study');?>:</td>
+      <td><?php echo JText::_( 'JBS_CMN_STUDY');?></td>
 	  <td><?php echo $this->lists['studies'];?></td>
     </tr>
     <tr>
-      <td><?php echo JText::_('JBS_CMT_FULL_NAME');?>:</td>
+      <td><?php echo JText::_('JBS_CMT_FULL_NAME');?></td>
       <td><input class="text_area" type="text" name="full_name" id="full_name" size="70" maxlength="50" value="<?php echo $this->commentsedit->full_name;?>" /></td>
     </tr>
     <tr>
-      <td><?php echo JText::_('Email:')?></td>
+      <td><?php echo JText::_('JBS_CMT_EMAIL')?></td>
       <td><input class="text_area" type="text" name="user_email" id="user_email" size="70" maxlength="100" value="<?php echo $this->commentsedit->user_email;?>" /></td>
     </tr>
     <tr>

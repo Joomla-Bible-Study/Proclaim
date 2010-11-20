@@ -21,7 +21,7 @@ $user =& JFactory::getUser();
 	//$params =& $mainframe->getPageParameters(); 
     $link_text = $this->params->get('link_text');
 	if (!$link_text) {
-		$link_text = JText::_('Return to Studies List');
+		$link_text = JText::_('JBS_CMN_RETURN_STUDIES_LIST');
 		}
 	if ($this->params->get('view_link') == 0){}else{
 	if ($this->params->get('view_link') == 1){

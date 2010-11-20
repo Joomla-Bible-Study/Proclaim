@@ -20,11 +20,11 @@ include_once($path1.'image.php');
 <div id="biblestudy" class="noRefTagger">
 <table id="bsm_teachertable" cellspacing="0">
 <tbody>
-    <tr class="titlerow"><td align="center" colspan="3" class="title" ><?php echo $this->params->get('teacher_title', JText::_('Our Teachers'));?></td></tr>
+    <tr class="titlerow"><td align="center" colspan="3" class="title" ><?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS'));?></td></tr>
    
 <?php if ($allow_entry > 0) {
 if ($entry_access <= $entry_user){ ?>
-<tr><td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form"><strong><?php echo JText::_('Add a Teacher');?></strong></a></td></tr><?php } }?>
+<tr><td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form"><strong><?php echo JText::_('JBS_TCH_ADD_TEACHER');?></strong></a></td></tr><?php } }?>
 
 <tr><td>
 <?php 

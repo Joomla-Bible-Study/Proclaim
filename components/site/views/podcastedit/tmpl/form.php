@@ -12,15 +12,15 @@
 			// do field validation
 			if (form.title.value == "")
 			{
-				alert( "<?php echo JText::_( 'Please fill in the Podcast Title.', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_PDC_ENTER_PODCAST_TITLE', true ); ?>" );
 			}
 			else if (form.website.value == "")
 			{
-				alert( "<?php echo JText::_( 'Please fill in the Website.', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_PDC_ENTER_WEBSITE', true ); ?>" );
 			}
 			else if (form.filename.value == "")
 			{
-				alert( "<?php echo JText::_( 'Please fill in the XML Filename.', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_PDC_ENTER_XML_FILENAME', true ); ?>" );
 			}
 			else
 			{
@@ -57,9 +57,9 @@ if ($podcast_access >$entry_user){ echo JText::_('JBS_CMN_NOT_AUTHORIZED');} els
 	<?php if ($this->podcastedit->id) {?>
 	<?php $link = JRoute::_( 'index.php?option=com_biblestudy&view=podcastedit&layout=form&controller=podcastedit&task=writeXMLFile&cid='. $this->podcastedit->id );?>
 	<tr>
-		<td class="key"><b><?php echo JText::_('XML File');?>:</b></td>
+		<td class="key"><b><?php echo JText::_('JBS_PDC_XML_FILE');?>:</b></td>
 		<td><a href="<?php echo $link;?>"><img src="<?php echo JURI::base()?>administrator/images/backup.png" height="48" width="48" border="0"></a><br />
-		<a href="<?php echo $link;?>"><b><?php echo JText::_('Write XML File')?></b></a><br /><?php echo JText::_('Be sure to save changes first.')?></td>
+		<a href="<?php echo $link;?>"><b><?php echo JText::_('JBS_PDC_WRITE_XML_FILE')?></b></a><br /><?php echo JText::_('JBS_PDC_SAVE_CHANGES_FIRST')?></td>
 	</tr>
 	<?php } ?>
 	<tr>
@@ -142,7 +142,7 @@ if ($podcast_access >$entry_user){ echo JText::_('JBS_CMN_NOT_AUTHORIZED');} els
         </td>
     </tr>
     <tr>
-    	<td class="key"><b><?php echo JText::_('Custom');?></b></td>
+    	<td class="key"><b><?php echo JText::_('JBS_CMN_CUSTOM');?></b></td>
         <td><input class="text_area" type="text" name="custom" id="custom" size="200" value="<?php echo $this->podcastedit->custom;?>" /></td>
     </tr>
 	</table>

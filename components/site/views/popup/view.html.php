@@ -117,7 +117,7 @@ if ($itemparams->get('player')== 1 || $player == 1)
 	echo    "<script type='text/javascript'>
 swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',link:'".JURI::base()."index.php?option=com_biblestudy&view=studieslist&templatemenuid=".$templateid."',image:'".$params->get('popupimage', 'components/com_biblestudy/images/speaker24.png')."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300',plugins:'viral-2','viral.onpause':'".$embedshare."','viral.oncomplete':'".$embedshare."','viral.allowmenu':'".$embedshare."'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
 </script>
-<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>".JText::_('Get flash')."</a> ".JText::_('to see this player')."</div>";
+<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>".JText::_('JBS_MED_GET_FLASH')."</a> ".JText::_('JBS_MED_TO_SEE_PLAYER')."</div>";
 //  Flashvar - Colors, Autostart, Title, Author, Date, Description, Link, Image
 //    Params - Allowfullscreen, Allowscriptaccess
 //    Attributes - ID, Name
@@ -140,7 +140,7 @@ if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
   //  echo '<div id=\'direct\'><script type=text/javascript> window.location.href=\''.$path1.'\'</script></div>';
   
   
-    echo '<div class=\'direct\'><iframe src ="'.$path1.'" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>'.JText::_('Your browser does not support iframes').'</p>
+    echo '<div class=\'direct\'><iframe src ="'.$path1.'" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>'.JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES').'</p>
 </iframe></div>';
 }
 //Legacy Player (since JBS 6.2.2)

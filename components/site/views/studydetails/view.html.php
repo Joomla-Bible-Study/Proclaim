@@ -34,7 +34,7 @@ class biblestudyViewstudydetails extends JView
 		$params = new JParameter($template[0]->params);
 		//dump ($params);
 		$studydetails		=& $this->get('Data');
-        if (!$studydetails->id){echo '<H1>'.JText::_('No results or not allowed. You may need to login.').'</H1>';}
+        if (!$studydetails->id){echo '<H1>'.JText::_('JBS_STY_NO_RESULTS_NOT_ALLOWED_PLEASE_LOGIN').'</H1>';}
 		//dump ($studydetails, "SD");
 		$admin =& $this->get('Admin');
 		
@@ -120,7 +120,7 @@ class biblestudyViewstudydetails extends JView
 	function _displayPagebreak($tpl)
 	{
 		$document =& JFactory::getDocument();
-		$document->setTitle(JText::_('PGB ARTICLE PAGEBRK'));
+		$document->setTitle(JText::_('JBS_CMN_READ_MORE'));
 		parent::display($tpl);
 		
 	}
