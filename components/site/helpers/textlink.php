@@ -52,7 +52,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 		$width = $pdfimage->width;
 	    $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf' );
 		//$link = 'index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf';
-        $details_text = $params->get('details_text').' - '.JText::_('PDF Version');
+        $details_text = $params->get('details_text').' - '.JText::_('JBS_CMN_PDF_VERSION');
 	}
 	//dump ($i_path, 'text: ');
 	if ($params->get('tooltip') >0)

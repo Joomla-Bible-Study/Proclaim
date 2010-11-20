@@ -79,7 +79,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 			$listing .= '<td colspan="4" class="description">';
 			if ($params->get('series_characters') && $view == 0) {
 				$listing .= substr($row->description,0,$params->get('series_characters'));
-				$listing .= ' - '.'<a href="index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$params->get('seriesdetailtemplateid', 1).'&id='.$row->id.'">'.JText::_('Read More').'</a>';
+				$listing .= ' - '.'<a href="index.php?option=com_biblestudy&view=seriesdetail&templatemenuid='.$params->get('seriesdetailtemplateid', 1).'&id='.$row->id.'">'.JText::_('JBS_CMN_READ_MORE').'</a>';
 			}
 			else {$listing .= $row->description;}
 			//elseif ($view == 1) {$listing .= getSeriesstudies($row, $params, $admin_params);}
@@ -597,7 +597,7 @@ return $studies;
 
     function getSeriesFooter($templatemenuid, $id)
     {
-        $seriesfooter = '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_series='.$id.'&templatemenuid='.$templatemenuid).'">'.JText::_('Show All').' '.JText::_('Studies From This Series').' >></a></td></tr>';
+        $seriesfooter = '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_series='.$id.'&templatemenuid='.$templatemenuid).'">'.JText::_('JBS_CMN_SHOW_ALL').' '.JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES').' >></a></td></tr>';
         return $seriesfooter;
     }
 }

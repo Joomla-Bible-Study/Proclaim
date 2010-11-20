@@ -127,7 +127,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 
             }
 
-            $out .= '<img src="'.$d_path.'" alt="'.JText::_('Download').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('Download').'" /></a>';
+            $out .= '<img src="'.$d_path.'" alt="'.JText::_('JBS_MED_DOWNLOAD').'" height="'.$height.'" width="'.$width.'" title="'.JText::_('JBS_MED_DOWNLOAD').'" /></a>';
 
             return $out;
 
@@ -228,8 +228,8 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             //PDF View
 	        $url = 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id.'&format=pdf';
             $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
-            $text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('PDF'), 'border=0');
-            $attribs['title']	= JText::_( 'PDF' );
+            $text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('JBS_MED_PDF'), 'border=0');
+            $attribs['title']	= JText::_( 'JBS_MED_PDF' );
             $attribs['onclick'] = "window.open(this.href,'win2','".$status."'); return false;";
             $attribs['rel']     = 'nofollow';
             $link = JHTML::_('link', JRoute::_($url), $text, $attribs);

@@ -157,7 +157,7 @@ function getShare($link, $row, $params, $admin_params)
 	$shareit .= '
 	
 	<td id="bsmsshareicons">
-	<a href="'.$mainlink.$share_params->get('item1prefix').$sharelink.'" target="_blank"><img src="'.JURI::base().$image.'" alt="'.JText::_($share_params->get('alttext')).'" title="'.JText::_($share_params->get('alttext')).'" width="'.$width.'" height="'.$height.'" border="0"></a>
+	<a href="'.$mainlink.$share_params->get('item1prefix').$sharelink.'" target="_blank"><img src="'.JURI::base().$image.'" alt="'.$share_params->get('alttext').'" title="'.$share_params->get('alttext').'" width="'.$width.'" height="'.$height.'" border="0"></a>
 	</td>';
 	
 } //end of foreach

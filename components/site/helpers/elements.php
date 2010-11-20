@@ -51,7 +51,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 6:
 			$elementid->id = 'studyintro';
-			$elementid->headertext = JText::_('Introduction');
+			$elementid->headertext = JText::_('JBS_CMN_INTRODUCTION');
 			$elementid->element = $row->studyintro;
 			break;
 		case 7:
@@ -81,12 +81,12 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 12:
 			$elementid->id = 'hits';
-			$elementid->headertext = JText::_('Views');
-			$elementid->element = JText::_('Hits: ').$row->hits;
+			$elementid->headertext = JText::_('JBS_CMN_VIEWS');
+			$elementid->element = JText::_('JBS_CMN_HITS').' '.$row->hits;
 			break;
 		case 13:
 			$elementid->id = 'studynumber';
-			$elementid->headertext = JText::_('StudyNumber');
+			$elementid->headertext = JText::_('JBS_CMN_STUDYNUMBER');
 			$elementid->element = $row->studynumber;
 			break;
 		case 14:
@@ -195,7 +195,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
             break;
         case 30:
         	$elemntid->id = 'teacher-image';
-        	$elemtnid->headetext = JText::_('Teacher Image');
+        	$elemtnid->headetext = JText::_('JBS_CMN_TEACHER_IMAGE');
         	$query = "SELECT thumb FROM #__bsms_teachers WHERE id = $row->id";
         	$db->setQuery($query);
    			$thumb = $db->loadObject();

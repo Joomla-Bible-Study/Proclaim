@@ -116,7 +116,7 @@ class biblestudyControllerstudydetails extends JController
 				$word = JRequest::getVar('word', false, '', 'CMD');
 				$mainframe->triggerEvent('onCaptcha_confirm', array($word, &$return));
 				if ($return) { $cap = 1; } else {
-				$mess = JText::_('Incorrect Key');
+				$mess = JText::_('JBS_STY_INCORRECT_KEY');
 							echo "<script language='javascript' type='text/javascript'>alert('" . $mess . "')</script>";
 							echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
 							return;
@@ -128,9 +128,9 @@ class biblestudyControllerstudydetails extends JController
 
 	if ($cap == 1) {
 		if ($model->storecomment()) {
-			$msg = JText::_( 'Comment Submitted!' );
+			$msg = JText::_( 'JBS_STY_COMMENT_SUBMITTED' );
 		} else {
-			$msg = JText::_( 'Error Submitting Comment' );
+			$msg = JText::_( 'JBS_STY_ERROR_SUBMITTING_COMMENT' );
 		}
 
 		if ($params->get('email_comments') > 0){
@@ -165,9 +165,9 @@ class biblestudyControllerstudydetails extends JController
 		$model = $this->getModel('studydetails');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'studies Saved!' );
+			$msg = JText::_( 'JBS_STY_STUDIES_SAVED' );
 		} else {
-			$msg = JText::_( 'Error Saving studies' );
+			$msg = JText::_( 'JBS_STY_ERROR_SAVING_STUDIES' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -183,9 +183,9 @@ class biblestudyControllerstudydetails extends JController
 	{
 		$model = $this->getModel('studydetails');
 		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More studies Items Could not be Deleted' );
+			$msg = JText::_( 'JBS_STY_ERROR_DELETING_STUDY' );
 		} else {
-			$msg = JText::_( 'studies Item(s) Deleted' );
+			$msg = JText::_( 'JBS_STY_STUDY_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
@@ -280,9 +280,9 @@ function commentsEmail($params) {
 		$Subject       = $params->get( 'subject', 'Comments' );
 		$FromName       = $params->get( 'fromname', $comment_fromname );
 		if (empty($ToEmail) ) $ToEmail=$comment_mailfrom;
-                $Body = $comment_author.' '.JText::_('has entered a comment for the study entitled').': '.$comment_title.' - '.$comment_study_date.' '.JText::_('on').': '.$comment_date;
-                if ($comment_published > 0){$Body = $Body.' '.JText::_('This comment has been published.');}else{$Body=$Body.' '.JText::_('This comment has not been published.');}
-                $Body = $Body.' '.JText::_('You may review the comments by logging in to the site').': '.$comment_livesite;
+                $Body = $comment_author.' '.JText::_('JBS_STY_HAS_ENTERED_COMMENT').': '.$comment_title.' - '.$comment_study_date.' '.JText::_('JBS_STY_ON').': '.$comment_date;
+                if ($comment_published > 0){$Body = $Body.' '.JText::_('JBS_STY_COMMENT_PUBLISHED');}else{$Body=$Body.' '.JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');}
+                $Body = $Body.' '.JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN').': '.$comment_livesite;
 		$mail->addRecipient($ToEmail);
 		$mail->setSubject($Subject.' '.$comment_livesite);
 		$mail->setBody($Body);

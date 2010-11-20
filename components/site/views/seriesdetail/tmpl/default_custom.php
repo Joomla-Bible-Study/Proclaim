@@ -34,7 +34,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
  	?></table>
 <?php	if ($this->params->get('series_list_return') > 0) 
 		{
-            echo '<table><tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'"><< '.JText::_('Return to Series List').'</a> | <a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_series='.$this->items->id.'&templatemenuid='.$templatemenuid).'">'.JText::_('Show All').' '.JText::_('Studies From This Series').' >></a></td></tr></table>';
+            echo '<table><tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'"><< '.JText::_('Return to Series List').'</a> | <a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_series='.$this->items->id.'&templatemenuid='.$templatemenuid).'">'.JText::_('JBS_CMN_SHOW_ALL').' '.JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES').' >></a></td></tr></table>';
         }
 ?>        
   </div><!--end of bspagecontainer div-->

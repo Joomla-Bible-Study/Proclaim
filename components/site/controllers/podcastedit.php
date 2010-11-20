@@ -132,10 +132,10 @@ function publish()
  $result= writeXML(); //dump ($result, 'result: ');
   if ($result)
   {
-    $mainframe->redirect('index.php?option='.$option.'&view=studieslist', $result.' '.JText::_('saved'));
+    $mainframe->redirect('index.php?option='.$option.'&view=studieslist', $result.' '.JText::_('JBS_CMN_SAVED'));
   }
   else {
-   $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE.'));
+   $mainframe->redirect('index.php?option='.$option.'&view=studieslist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE'));
   }
 
  }

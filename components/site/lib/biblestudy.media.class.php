@@ -77,8 +77,8 @@ class jbsMedia
         	      		$downloadlink ='<a href="http://joomlabiblestudy.org/router.php?file='.
                           $media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
         		  }
-        	     $downloadlink .= '<img src="'.$download_image.'" alt="'.JText::_('Download').'" height="'.
-                 $height.'" width="'.$width.'" title="'.JText::_('Download').'" /></a>';
+        	     $downloadlink .= '<img src="'.$download_image.'" alt="'.JText::_('JBS_MED_DOWNLOAD').'" height="'.
+                 $height.'" width="'.$width.'" title="'.JText::_('JBS_MED_DOWNLOAD').'" /></a>';
 
         	  	}
         	  	switch ($link_type)
@@ -398,7 +398,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                     "',autostart:'false',plugins:'viral-2','viral.onpause':'".$embedshare."','viral.oncomplete':'".$embedshare."','viral.allowmenu':'".$embedshare."'}, {allowfullscreen:'true', allowscriptaccess:'always', backcolor:'".$backcolor."', frontcolor:'".$frontcolor."', lightcolor:'".$lightcolor."',screencolor:'".$screencolor."'}, {id:'".$media->id."', name:'".$media->id."'});
                     </script>
                     <div id='placeholder".$media->id.
-                    "'><a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\">".JTEXT::_('Get flash')."</a> ".JTEXT::_('to see this player')."</div>";
+                    "'><a href=\"http://www.adobe.com/go/getflashplayer\" target=\"_blank\">".JTEXT::_('JBS_MED_GET_FLASH')."</a> ".JTEXT::_('JBS_MED_TO_SEE_PLAYER')."</div>";
                 
                 break;
 

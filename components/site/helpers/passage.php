@@ -26,7 +26,7 @@ if ($scripture)
 	  } // End if ($p)
 	}
 else
-	{ $response = JText::_('No Passage included in this study'); }
+	{ $response = JText::_('JBS_STY_NO_PASSAGE_INCLUDED'); }
   
 return $response;
 }

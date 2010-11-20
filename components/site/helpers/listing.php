@@ -636,7 +636,7 @@ function getStudyExp($row, $params, $admin_params, $template)
     $label = str_replace('{{hits}}',$row->hits, $label);
     $label = str_replace('{{location}}',$row->location_text, $label);
     //Passage
-    $link = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">>>'. JText::_('Show/Hide Scipture Passage').'<<</a>';
+    $link = '<strong><a class="heading" href="javascript:ReverseDisplay(\'bsms_scripture\')">>>'. JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE').'<<</a>';
     $link .= '<div id="bsms_scripture" style="display:none;"></strong>';
     $response = getPassage($params, $row);
     $link .= $response;
@@ -661,7 +661,7 @@ function getStudyExp($row, $params, $admin_params, $template)
     $label = str_replace('{{share}}', $share, $label);
 
     //PrintableView
-    $printview = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'Print' ) );
+    $printview = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'JBS_CMN_PRINT' ) );
     $printview = '<a href="#&tmpl=component" onclick="window.print();return false;">'.$printview.'</a>';
 
 	$label = str_replace('{{printview}}', $printview, $label);
@@ -669,8 +669,8 @@ function getStudyExp($row, $params, $admin_params, $template)
 	//PDF View
 	$url = 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id.'&format=pdf';
     $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
-    $text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('PDF'), JText::_('PDF'));
-    $attribs['title']	= JText::_( 'PDF' );
+    $text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('JBS_MED_PDF'), JText::_('JBS_MED_PDF'));
+    $attribs['title']	= JText::_( 'JBS_MED_PDF' );
     $attribs['onclick'] = "window.open(this.href,'win2','".$status."'); return false;";
     $attribs['rel']     = 'nofollow';
     $link = JHTML::_('link', JRoute::_($url), $text, $attribs);

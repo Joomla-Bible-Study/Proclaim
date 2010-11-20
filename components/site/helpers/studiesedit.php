@@ -3,19 +3,19 @@
 function getStudiesedit($row, $params) {
 
 $studiesedit = '<table><tr>
-		<td><strong>'.JText::_('Studies').'</strong></td>
+		<td><strong>'.JText::_('JBS_CMN_STUDIES').'</strong></td>
 	</tr>
 	<tr>
 		<td><a
-			href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">'.JText::_('Add a New Study').'</a></td>
+			href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">'.JText::_('JBS_CMN_ADD_STUDY').'</a></td>
 	</tr>
 	<tr>
 		<td><a
-			href="'.JURI::base().'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">'.JText::_('Add a New Media File Record').'</a></td>
+			href="'.JURI::base().'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">'.JText::_('JBS_CMN_ADD_MEDIA').'</a></td>
 	</tr>';
 	
 		$studiesedit .= '<tr><td>
-		<a href="'.JURI::base().'index.php?option=com_biblestudy&view=commentslist">'.JText::_('Manage Comments').'</a></td>
+		<a href="'.JURI::base().'index.php?option=com_biblestudy&view=commentslist">'.JText::_('JBS_CMN_MANAGE_COMMENTS').'</a></td>
 	</tr>';
 	
 
@@ -31,7 +31,7 @@ $studiesedit = '<table><tr>
 		<td><strong>'.JText::_('JBS_CMN_PODCASTS').'</td></tr></strong>
 		<tr>
 		<td>
-		<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form'.'">'.JText::_('Add A Podcast').'</a></td>
+		<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form'.'">'.JText::_('JBS_CMN_ADD_PODCAST').'</a></td>
 	</tr>
 	<tr>
 		<td>';

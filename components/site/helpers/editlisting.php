@@ -23,12 +23,12 @@ function getEditlisting($admin_params, $params) {
 		$editlisting .= '<div class="message'.$params->get('pageclass_sfx').'"><h2>'.$message.'</h2></div>';
 	 } //End of if $message
 	
-	$editlisting .=  '<div id="studyheader">'.JText::_('Studies').'</div>';
+	$editlisting .=  '<div id="studyheader">'.JText::_('JBS_CMN_STUDIES').'</div>';
 	$editlisting .= '<div class="studyedit">';
-	$editlisting .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">'.JText::_('Add a New Study').'</a><br />';
-	$editlisting .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">'.JText::_('Add a New Media File Record').'</a><br />';
+	$editlisting .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&layout=form">'.JText::_('JBS_CMN_ADD_STUDY').'</a><br />';
+	$editlisting .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=mediafilesedit&view=mediafilesedit&layout=form">'.JText::_('JBS_CMN_ADD_MEDIA').'</a><br />';
 	 if ($params->get('show_comments') > 0){
-		$editlisting .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&view=commentslist">'.JText::_('Manage Comments').'</a><br /><br />';
+		$editlisting .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&view=commentslist">'.JText::_('JBS_CMN_MANAGE_COMMENTS').'</a><br /><br />';
 $editlisting .= '</div>';
 	 } //end if show_comments
 		} //End of testing for if user is authorized
@@ -46,7 +46,7 @@ $editlisting .= '</div>';
 				
 		$editlisting .= '<div id="studyheader">'.JText::_('JBS_CMN_PODCASTS').'</div>';
 		$editlisting .= '<br /><div class="podcastlist">'.'<br />';
-		$editlisting .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form">'.JText::_('Add A Podcast').'</a>';
+		$editlisting .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form">'.JText::_('JBS_CMN_ADD_PODCAST').'</a>';
 		
 		foreach ($podcasts as $podcast) { $pod = $podcast['id']; $podtitle = $podcast['title'];
 		$editlisting .= '<br /><a href="'.JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod.'">'.$podtitle.'</a>';

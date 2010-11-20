@@ -21,7 +21,7 @@
            size="10"
            label="Select one or more teachers"
            description="Use Ctrl-click to select more than one item. Select Show All to show all teachers">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mseries_id"
            type="sqlmultilistx"
@@ -33,7 +33,7 @@
            size="10"
            label="Select one or more series"
            description="Use Ctrl-click to select more than one item. Select Show All to show all series">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mbooknumber"
            type="sqlmultilistx"
@@ -45,7 +45,7 @@
            size="10"
            label="Select one or more books"
            description="Use Ctrl-click to select more than one item. Select Show All to show all books">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mtopic_id"
            type="sqlmultilistx"
@@ -57,7 +57,7 @@
            size="10"
            label="Select one or more topics"
            description="Use Ctrl-click to select more than one item. Select Show All to show all topics">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mmessagetype"
            type="sqlmultilistx"
@@ -69,7 +69,7 @@
            size="5"
            label="Select one or more message types"
            description="Use Ctrl-click to select more than one item. Select Show All to show all message types">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mlocations"
            type="sqlmultilistx"
@@ -81,7 +81,7 @@
            size="5"
            label="Select one or more locations"
            description="Use Ctrl-click to select more than one item. Select Show All to show all locations">
-      <option value="-1">Show All</option>
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     </params>
 	</state>

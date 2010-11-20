@@ -276,7 +276,7 @@ function top_score_site($item)
    // $Itemid = JRequet::getInt('Itemid','get');
 	$admin_params = getAdminsettings();
 	$limit = $admin_params->get('popular_limit','25');
-	$top = '<select onchange="goTo()" id="urlList"><option value="">- '.JText::_('Select A Popular Study').' -</option>';
+	$top = '<select onchange="goTo()" id="urlList"><option value="">- '.JText::_('JBS_CMN_SELECT_POPULAR_STUDY').' -</option>';
  	$final = array();
     $final2 = array();
     $user =& JFactory::getUser();
@@ -298,7 +298,7 @@ function top_score_site($item)
 			if ($format < 1){$total = $result->added + $hits->hits;}
             else $total = $result->added;
 			$selectvalue = JRoute::_(JURI::base().'index.php?option=com_biblestudy&view=studydetails&id='.$hits->id.'&templatemenuid='.$t.'&Itemid='.$item);
-			$selectdisplay = '<strong>'.$name.'</strong> - '.JText::_('Score').': '.$total;
+			$selectdisplay = '<strong>'.$name.'</strong> - '.JText::_('JBS_CMN_SCORE').': '.$total;
 			$final2 = array('score'=>$total,'select'=> $selectvalue, 'display'=> $selectdisplay);
 			$final[] = $final2;
 		}
@@ -356,7 +356,7 @@ function players()
     '<br /><strong>'.JText::_('JBS_CMN_AVR').': </strong>'.$avrcount.
     '<br /><strong>'.JText::_('JBS_CMN_AVPLUGIN').': </strong>'.$avcount.
     '<br /><strong>'.JText::_('JBS_CMN_LEGACY_PLAYER').': </strong>'.$legacycount.
-    '<br /><strong>'.JText::_('No Player - treated as direct').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
+    '<br /><strong>'.JText::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
     return $mediaplayers;
 }
 
@@ -398,9 +398,9 @@ function popups()
         $noplayer = $num_rows - $total;
     }
     $popups = '<strong>'.JText::_('JBS_CMN_INLINE').': </strong>'.$inlinecount.
-    '<br /><strong>'.JText::_('Popup').': </strong>'.$popcount.
-    '<br /><strong>'.JText::_('Global Settings').': </strong>'.$globalcount.
-    '<br /><strong>'.JText::_('No Option Set - treated as global').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
+    '<br /><strong>'.JText::_('JBS_CMN_POPUP').': </strong>'.$popcount.
+    '<br /><strong>'.JText::_('JBS_CMN_GLOBAL_SETTINGS').': </strong>'.$globalcount.
+    '<br /><strong>'.JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
     return $popups;
 }
 }
