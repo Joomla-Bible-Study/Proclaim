@@ -57,8 +57,8 @@
 		</param>
 		<param name="target" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_TT">
 			<option value="0">JBS_ADM_NO_DEFAULT</option>
-			<option value="_blank">JBS_NEW_WINDOW</option>
-			<option value="_self">JBS_SAME_WINDOW</option>
+			<option value="_blank">JBS_ADM_NEW_WINDOW</option>
+			<option value="_self">JBS_ADM_SAME_WINDOW</option>
 			<option value="_parent">JBS_ADM_PARENT_WINDOW</option>
 			<option value="_top">JBS_ADM_FULL_WINDOW</option>
 		</param>
@@ -88,8 +88,8 @@
 		<params group="ALLVIDEOSRELOADED">
 			<param name="itemidlinktype" type="list" default="0" label="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKTYPE" description="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKTYPE_TT">
 				<option value="0">JBS_ADM_DONT_ADD_ITEMID</option>
-				<option value="1">JBS_FIND_ITEMID_MENUE</option>
-				<option value="2">JBS_ITEMID_BELOW</option>
+				<option value="1">JBS_ADM_FIND_ITEMID_MENUE</option>
+				<option value="2">JBS_ADM_ITEMID_BELOW</option>
 			</param>
 		<param name="itemidlinkview" type="list" default="studieslist" label="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKVIEW" description="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKVIEW_TT">
 			<option value="studieslist">JBS_CMN_STUDIES_LIST_VIEW</option>
