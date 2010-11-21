@@ -129,7 +129,7 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
 	$lastcol = 0;
 	if ($columns == 1 || $colspan > 3) {$lastcol = 1;}
 	if ($params->get('row1col1') < 1) {$params->set('row1col1', 100);}
- 	$listing .= getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $nh, $admin_params, $template);
+ 	$listing .= getHeadercell($params->get('row1col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	
  	
  	if ($columns > 1  && $params->get('r1c1span') < 2)
