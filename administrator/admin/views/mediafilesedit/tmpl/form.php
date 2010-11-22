@@ -217,7 +217,10 @@ if ($isbsms){echo '<strong>'.JText::_('JBS_MED_AVR_IS_BS_READY').'</strong>';} e
             <?php echo JText::_( 'JBS_CMN_FILESIZE');?></td>
             <td>
 			<?php $file_jbs_media = $this->filepath; $remotefilesize=getSizeFile("$file_jbs_media");
-            if (!$remotefilesize){}else{
+            if (!$remotefilesize){}
+			elseif ($remotefilesize == 404){echo 'File not found. Check your link<br />';}
+			elseif ($remotefilesize == -1){}
+			else{
             	echo '<b>'.JText::_('JBS_MED_SERVER_LOOKUP').': </b>'.$remotefilesize.
             '<button type="button" onClick="sizebutton('.$remotefilesize.')"> '.JText::_('JBS_MED_ADD_SIZE').'</button><br />'; }?>
             <input class="text_area" type="text" name="size" id="size" size="20" maxlength="20" onChange="decOnly(this);" onKeyUp="decOnly(this);" onKeyPress="decOnly(this);" value="<?php echo $this->mediafilesedit->size;?>"/>
