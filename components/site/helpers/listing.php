@@ -415,7 +415,7 @@ $Itemid = JRequest::getVar('Itemid');
 						//if ($rowspan > 1){$cell .='rowspan="'.$rowspan.'"';}
 						$cell .= '>';
 						if (($rowcolid == 'row1col1') && ($entry_user >= $entry_access) && ($allow_entry > 0)){
-              $cell .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id3.'&item='.$Itemid.'"> ['.JText::_('JBS_CMN_NEW').'] </a>';}
+              $cell .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id3.'&item='.$Itemid.'"> ['.JText::_('JBS_CMN_EDIT').'] </a>';}
 						if ($islink > 0){$cell .= getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);}
 						$cell .= $element;
 						switch ($islink)

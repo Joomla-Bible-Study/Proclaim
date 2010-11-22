@@ -142,7 +142,7 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
   if (($allow_entry > 0) && ($entry_access <= $entry_user)) {
 
     $listing .= "<tr><td style='background-color:#FAF1EB;' align=center>";
-    $listing .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$row->id.'"> ['.JText::_('JBS_CMN_NEW').'] </a>';
+    $listing .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$row->id.'"> ['.JText::_('JBS_CMN_EDIT').'] </a>';
     $listing .= "</td>";
     $listing .= "<td><table>";
   }
