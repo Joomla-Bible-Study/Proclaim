@@ -386,7 +386,7 @@ function resetPlays()
 //New File Size System Should work on all server now.
 function getSizeFile ($url){ 
 	$head = ""; 
-	$url_p = parse_url($url); 
+	$url_p = @parse_url($url); 
 	$host = $url_p["host"]; 
 	if(!preg_match("/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/",$host)){
 		// a domain name was given, not an IP
