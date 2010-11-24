@@ -5,8 +5,8 @@
  * @copyright 2010
  */
 defined('_JEXEC') or die();
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.debug.php');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.debug.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 ?>
 <style>
 #fbadmin {
@@ -195,7 +195,7 @@ table.fbstat .col2 {
  <div id="fbmenu">
 <table><tr><td><strong>Version Information: </strong></td></tr>
 <tr><td>
-<?php require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');?>
+<?php require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.version.php');?>
 <div class="fbmainmenu"><?php echo CBiblestudyVersion::version(); ?></div>
 </td></tr>
 <tr><td><div><?php echo JText::_('JBS_CPL_CURRENT_VERSION').': '.$this->versioncheck;?></td></tr>
@@ -278,7 +278,7 @@ table.fbstat .col2 {
   <?php 
    
 //   include_once (JPATH_COMPONENT_ADMINISTRATOR .'/lib/biblestudy.stats.class.php');
-   include_once ('..'.DS.'components'.DS.'com_biblestudy'.DS.'lib'.DS.'biblestudy.stats.class.php');
+   include_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.stats.class.php');
 //   include_once (JURI::base().DS.'lib' .DS. 'biblestudy.stats.class.php');
 //   include_once ('..');
     ?>
