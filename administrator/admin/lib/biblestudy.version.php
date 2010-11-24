@@ -15,8 +15,8 @@
 // no direct access
 defined( '_JEXEC' ) or die('Restricted access');
 
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-require_once (BIBLESTUDY_PATH_LIB . DS . 'biblestudy.debug.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (BIBLESTUDY_PATH_ADMIN_LIB . DS . 'biblestudy.debug.php');
 
 // use default translations if none are available
 if (!defined('_BIBLESTUDY_INSTALLED_VERSION')) DEFINE('_BIBLESTUDY_INSTALLED_VERSION', 'Installed version');
@@ -78,7 +78,7 @@ class CBiblestudyVersion {
 	function version()
 	{
 		$version = CBiblestudyVersion::versionArray();
-		return '<table><tr><td>Biblestudy '.$version->version.'</td></tr><tr><td>'.$version->versiondate.'</td></tr><tr><td>'.$version->build.'</td></tr><tr><td>'.$version->versionname.'</td></tr></table>';
+		return '<table><tr><td><strong><?php echo '.JText::_( 'JBS_CMN_JOOMLA_BIBLE_STUDY').'?></strong></td></tr><tr><td>Version: '.$version->version.'</td></tr><tr><td> Date: '.$version->versiondate.'</td></tr><tr><td>Build: '.$version->build.'</td></tr><tr><td> Version Name: '.$version->versionname.'</td></tr></table>';  // santon review phrases; convert to JText
 	}
 
 	/** 
@@ -89,7 +89,7 @@ class CBiblestudyVersion {
 	function versionHTML()
 	{
 		$version = CBiblestudyVersion::version();
-		return  _BIBLESTUDY_INSTALLED_VERSION.': '.$version.' | '._BIBLESTUDY_COPYRIGHT.': &copy; 2007-2010 <a href = "http://www.JoomlaBibleStudy.org" target = "_blank"><?php echo JText::_( 'JBS_CMN_JOOMLA_BIBLE_STUDY');?></a>  | '._BIBLESTUDY_LICENSE.': <a href = "http://www.gnu.org/copyleft/gpl.html" target = "_blank">GNU GPL</a>';  // santon review phrases; convert to JText
+		return  _BIBLESTUDY_INSTALLED_VERSION.': '.$version.' | '._BIBLESTUDY_COPYRIGHT.': &copy; 2007-2010 <a href = "http://www.JoomlaBibleStudy.org" target = "_blank"><?php echo '.JText::_( 'JBS_CMN_JOOMLA_BIBLE_STUDY').'?></a>  | '._BIBLESTUDY_LICENSE.': <a href = "http://www.gnu.org/copyleft/gpl.html" target = "_blank">GNU GPL</a>';  // santon review phrases; convert to JText
 	}
 
 	/** 
