@@ -63,13 +63,12 @@
 
  <administration>
     <!-- Administration Menu Section -->
-    <menu>Joomla Bible Study</menu>
+    <menu>Joomla_Bible_Study</menu>
   
-    <submenu>
+    <submenu> 
       <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
       
-      <menu img="../components/com_biblestudy/images/biblemenu.png" >Joomla Bible Study</menu>
-      <menu link="option=com_biblestudy&amp;view=cpanel">Control Panel</menu>
+      <menu img="../components/com_biblestudy/images/biblemenu.png" link="option=com_biblestudy&amp;view=cpanel">Joomla Bible Study Control Panel</menu>
       <menu link="option=com_biblestudy&amp;view=studieslist">Studies</menu>
       <menu link="option=com_biblestudy&amp;view=mediafileslist">Media Files</menu>
       <menu link="option=com_biblestudy&amp;view=templateslist">Template Display Settings</menu>
@@ -87,9 +86,9 @@
       <menu link="option=com_biblestudy&amp;view=commentslist">Study Comments</menu>
       <menu link="option=com_biblestudy&amp;view=sharelist">Social Network Links</menu>
       <menu link="option=com_biblestudy&amp;view=admin&amp;layout=form">Administration</menu>
-      <menu link="option=com_biblestudy&amp;view=cssedit">CSS Edit</menu>
+      <menu link="option=com_biblestudy&amp;view=cssedit">CSS Edit</menu> 
       <!-- Instead of link you can specify individual link attributes -->
-    </submenu>
+    </submenu> 
     <!-- Administration Main File Copy Section -->
     <files folder="admin">
       <filename>index.html</filename>
