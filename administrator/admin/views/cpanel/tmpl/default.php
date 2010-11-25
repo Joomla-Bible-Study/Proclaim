@@ -193,12 +193,12 @@ table.fbstat .col2 {
  <!-- Here is where the version information will go -->
  </div>
  <div id="fbmenu">
-<table><tr><td><strong>Version Information: </strong></td></tr>
+<table><tr><td><strong><?php echo JText::_('JBS_CPL_VERSION_INFORMATION'); ?></strong></td></tr>
 <tr><td>
 <?php require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.version.php');?>
 <div class="fbmainmenu"><?php echo CBiblestudyVersion::version(); ?></div>
 </td></tr>
-<tr><td><div><?php echo JText::_('JBS_CPL_CURRENT_VERSION').': '.$this->versioncheck;?></td></tr>
+<tr><td><div><?php echo JText::_('JBS_CPL_LATEST_VERSION').': '.$this->versioncheck;?></td></tr>
 <tr><td><?php echo '<a href="http://www.JoomlaBibleStudy.org">'.JText::_('JBS_CPL_GET_LATEST_VERSION').'</a>';?></div></td></tr>
 </table> 
  </div>

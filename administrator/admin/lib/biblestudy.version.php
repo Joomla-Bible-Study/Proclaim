@@ -55,15 +55,15 @@ class CBiblestudyVersion {
 			if(!$biblestudyversion) {
 				$biblestudyversion = new StdClass();
 				$biblestudyversion->version = CBiblestudyVersion::versionXML();
-				$biblestudyversion->versiondate = 'UNKNOWN';
+				$biblestudyversion->versiondate = JText::_('JBS_CMN_UNKNOWN');
 				$biblestudyversion->installdate = '0000-00-00';
 				$biblestudyversion->build = '0000';
-				$biblestudyversion->versionname = 'NOT INSTALLED';
+				$biblestudyversion->versionname = JText::_('JBS_CMN_NOT_INSTALLED');
 			}
 			$xmlversion = CBiblestudyVersion::versionXML();
 			if($biblestudyversion->version != $xmlversion) {
 				$biblestudyversion->version = CBiblestudyVersion::versionXML();
-				$biblestudyversion->versionname = 'NOT UPGRADED';
+				$biblestudyversion->versionname = JText::_('JBS_CMN_NOT_UPGRADED');
 			}
 			$biblestudyversion->version = strtoupper($biblestudyversion->version);
 		}
@@ -78,7 +78,7 @@ class CBiblestudyVersion {
 	function version()
 	{
 		$version = CBiblestudyVersion::versionArray();
-		return '<table><tr><td><strong><?php echo '.JText::_( 'JBS_CMN_JOOMLA_BIBLE_STUDY').'?></strong></td></tr><tr><td>Version: '.$version->version.'</td></tr><tr><td> Date: '.$version->versiondate.'</td></tr><tr><td>Build: '.$version->build.'</td></tr><tr><td> Version Name: '.$version->versionname.'</td></tr></table>';  // santon review phrases; convert to JText
+		return '<table><tr><td><strong>'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</strong></td></tr><tr><td>'.JText::_('JBS_CPL_CURRENT_VERSION').': '.$version->version.'</td></tr><tr><td> Date: '.$version->versiondate.'</td></tr><tr><td>Build: '.$version->build.'</td></tr><tr><td> Version Name: '.$version->versionname.'</td></tr></table>';  // santon review phrases; convert to JText
 	}
 
 	/** 
@@ -89,7 +89,7 @@ class CBiblestudyVersion {
 	function versionHTML()
 	{
 		$version = CBiblestudyVersion::version();
-		return  _BIBLESTUDY_INSTALLED_VERSION.': '.$version.' | '._BIBLESTUDY_COPYRIGHT.': &copy; 2007-2010 <a href = "http://www.JoomlaBibleStudy.org" target = "_blank"><?php echo '.JText::_( 'JBS_CMN_JOOMLA_BIBLE_STUDY').'?></a>  | '._BIBLESTUDY_LICENSE.': <a href = "http://www.gnu.org/copyleft/gpl.html" target = "_blank">GNU GPL</a>';  // santon review phrases; convert to JText
+		return  _BIBLESTUDY_INSTALLED_VERSION.': '.$version.' | '._BIBLESTUDY_COPYRIGHT.': &copy; 2007-2010 <a href = "http://www.JoomlaBibleStudy.org" target = "_blank">'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</a>  | '._BIBLESTUDY_LICENSE.': <a href = "http://www.gnu.org/copyleft/gpl.html" target = "_blank">GNU GPL</a>';  // santon review phrases; convert to JText
 	}
 
 	/** 
