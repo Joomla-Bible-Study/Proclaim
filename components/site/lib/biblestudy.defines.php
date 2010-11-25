@@ -11,7 +11,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
 define ('BIBLESTUDY_VERSION', '7.0.0');
-define ('BIBLESTUDY_VERSION_DATE', '2010-08-04');
+define ('BIBLESTUDY_VERSION_DATE', '2010-12-22');
 define ('BIBLESTUDY_VERSION_NAME', '2Samuel');
 define ('BIBLESTUDY_VERSION_BUILD', '700');
 
@@ -73,11 +73,7 @@ define ('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 // Database defines
 define ('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
 
-//define the player in use whether All Videos (av) or All Videos Reloaded (avr)
-//We don't need this anymore as AVR has been removed from the component support
-//$admin = new JBSAdmin();
-//$player = $admin->getMediaPlayer();
-//define ('BIBLESTUDY_PLAYER',$player);
+
 
 
 ?>

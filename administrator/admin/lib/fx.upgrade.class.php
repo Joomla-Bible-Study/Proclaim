@@ -301,19 +301,22 @@ class fx_Upgrade {
 
 		//initiate XML doc
 	//	$xmlDoc = new DOMIT_Lite_Document();
-        jimport('domit.xml_domit_lite_include');
-		$xmlDoc = new DOMIT_Lite_Document();
-  //  $xmlDoc = &JFactory::getXMLParser(); 
+   //     jimport('domit.xml_domit_lite_include');
+	//	$xmlDoc = new DOMIT_Lite_Document();
+    $xmlDoc = &JFactory::getXMLParser('Simple'); 
 		//dump ($this->_upgradeDir, 'upgrade dir: '); dump($this->xmlFileName, 'xml file: ');
-		$xmlDoc->loadXML( $this->_upgradeDir .DS. $this->xmlFileName, false, true );
+        
+		$xmlDoc->loadFile( $this->_upgradeDir .DS. $this->xmlFileName);
 
 		//load root element and check XML version (for future use)
-		$root = &$xmlDoc->documentElement;
-		$comUpgradeVersion = $root->getAttribute( "version" );
+	//	$root = &$xmlDoc->documentElement;
+        $root =& $xmlDoc->document;
+	//	$comUpgradeVersion = $root->getAttribute( "version" );
 
 		//here comes the real stuff
 		if($upgrade == 0) {
-			$installElement =& $root->firstChild;
+			//$installElement =& $root->firstChild;
+            $installElement =& $root->attributes();
 			$version = $installElement->getAttribute( "version" );
 			$versiondate = $installElement->getAttribute( "versiondate" );
 			$build = $installElement->getAttribute( "build" );
@@ -357,7 +360,8 @@ class fx_Upgrade {
 				<?php
 			}
 			//upgrade mode
-			$upgradeElement = $root->getElementsByPath('upgrade', 1);
+		//	$upgradeElement = $root->getElementsByPath('upgrade', 1);
+            $upgradeElement = $root->getElementByPath('upgrade');
 
 			if (!is_null($upgradeElement)) {
 				//walk through the versions

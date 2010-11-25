@@ -39,6 +39,8 @@ class biblestudyViewadmin extends JView
         $this->assignRef('popups', $popups);
         
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('study_images', 'stories');
+        $checkstories = JFolder::folders($studypath,'.');
+        if (!$checkstories){$studypath = JPATH_SITE.DS.'images';}
 		$javascript			= 'onchange="changeDisplayImage();"';
 		$fileList 	= JFolder::files($studypath);
 		if ($fileList)
@@ -57,6 +59,8 @@ class biblestudyViewadmin extends JView
 
 
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('series_imagefolder'); 
+        $checkstories = JFolder::folders($studypath,'.');
+        if (!$checkstories){$studypath = JPATH_SITE.DS.'images';}
 		$fileList 	= JFolder::files($studypath); 
         if ($fileList)
         {
@@ -74,6 +78,7 @@ class biblestudyViewadmin extends JView
 
 
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('media_imagefolder', '../components/com_biblestudy/images');
+        
 		$fileList 	= JFolder::files($studypath);
         if ($fileList)
         {
@@ -108,6 +113,8 @@ class biblestudyViewadmin extends JView
 
 
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('teachers_imagefolder', 'stories');
+        $checkstories = JFolder::folders($studypath,'.');
+        if (!$checkstories){$studypath = JPATH_SITE.DS.'images';}
 		$fileList 	= JFolder::files($studypath);
         if ($fileList)
         {
@@ -125,6 +132,8 @@ class biblestudyViewadmin extends JView
         }
 
 		$studypath = JPATH_SITE.DS.'images'.DS.$params->get('podcast_imagefolder', 'stories');
+        $checkstories = JFolder::folders($studypath,'.');
+        if (!$checkstories){$studypath = JPATH_SITE.DS.'images';}
 		$fileList 	= JFolder::files($studypath);
         if ($fileList)
         {

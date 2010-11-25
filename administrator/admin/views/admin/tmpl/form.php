@@ -4,6 +4,26 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
 //dump ($this->admin, 'admin: ');
 
+$parser =& JFactory::getXMLParser('Simple');
+$parser->loadFile(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
+$document =& $parser->document;
+$version = $document->attributes();
+//print_r($version);
+//echo '<br />';
+$installation =& $document->getElementByPath('install');
+//print_r($installation);
+foreach ($installation->children() AS $install)
+{
+    echo $install->data();
+    echo '<br />';
+}
+$upgrade =& $document->getElementByPath('upgrade');
+//print_r($upgrade);
+foreach ($upgrade->children() AS $up)
+{
+    echo $up->data();
+    echo '<br /><br />';
+}
 $db = JFactory::getDBO();
 $query = 'SELECT id, params FROM #__bsms_mediafiles';
 $db->setQuery($query);
