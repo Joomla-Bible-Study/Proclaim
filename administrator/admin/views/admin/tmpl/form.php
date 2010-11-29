@@ -2,11 +2,56 @@
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.debug.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
-//dump ($this->admin, 'admin: ');
 
 $parser =& JFactory::getXMLParser('Simple');
 $parser->loadFile(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
+
 $document =& $parser->document;
+$comupgrade = $document->attributes('version'); //echo $comupgrade;
+$install =& $document->install;
+$version =& $document->install->getElementByPath('version');
+//echo $version;
+for ($i = 0, $c = count($install); $i < $c; $i ++)
+{
+    $inst =& $install[$i];
+    $version = $inst->getElementByPath('version');
+    $versiondate = $inst->getElementByPath('versiondate');
+    $build = $inst->getElementByPath('build');
+    $versionname = $inst->getElementByPath('versionname');
+  //  echo $version->data().' '.$versiondate->data().' '.$build->data().' '.$versionname->data();
+}
+
+
+//print_r($install);
+$upgrade = $document->upgrade;
+for ($i = 0, $c = count($upgrade); $i < $c; $i ++)
+{
+    $up =& $upgrade[$i];
+    $version = $up->getElementByPath('version');
+    $versiondate = $up->getElementByPath('versiondate');
+    $build = $up->getElementByPath('build');
+    $versionname = $up->getElementByPath('versionname');
+  //  echo $version->data().' '.$versiondate->data().' '.$build->data().' '.$versionname->data();
+}
+//foreach ($upgrade AS $up)
+//{
+ //   $attributes = $up->attributes();
+    //print $attributes['version'];
+    //print_r($attributes);
+   // print '<br />';
+//}
+$attributes = $document->install[0]->attributes();
+$attributes = $document->upgrade[0]->attributes();
+//print $attributes['version'];
+//print $document->children();
+
+//foreach ($upgrade->children() AS $child)
+//{
+ //   print $child->data();
+ //   print '<br />';
+//}
+//$attributes = $xml->comupgrade->install[1]->attributes();
+//print $arrtributes['version'];
 $version = $document->attributes();
 //print_r($version);
 //echo '<br />';
@@ -14,16 +59,17 @@ $installation =& $document->getElementByPath('install');
 //print_r($installation);
 foreach ($installation->children() AS $install)
 {
-    echo $install->data();
-    echo '<br />';
+   // echo $install->data();
+   // echo '<br />';
 }
 $upgrade =& $document->getElementByPath('upgrade');
 //print_r($upgrade);
 foreach ($upgrade->children() AS $up)
 {
-    echo $up->data();
-    echo '<br /><br />';
+   // echo $up->data();
+   // echo '<br /><br />';
 }
+
 $db = JFactory::getDBO();
 $query = 'SELECT id, params FROM #__bsms_mediafiles';
 $db->setQuery($query);
