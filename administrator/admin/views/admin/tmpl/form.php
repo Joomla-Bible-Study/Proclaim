@@ -8,6 +8,17 @@ $parser->loadFile(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade
 $document =& $parser->document;
 $install =& $document->install;
 //print_r($install);
+for ($i = 0, $c = count($install); $i < $c; $i ++)
+{
+    $inst =& $install[$i];
+    if ($phpfile =& $inst->getElementByPath('phpfile'))
+    {
+        $thefile =& $phpfile->attributes('name');
+        //print_r($thefile);
+        //This works above to retrieve the php file
+    }
+}
+
 $installversion = $install[0]->attributes('version'); 
 $installbuild = $install[0]->attributes('build');
 $installdate = $install[0]->attributes('versiondate');
@@ -19,9 +30,11 @@ $ichild=$install[0]->children();
 for ($i = 0, $c = count($ichild); $i < $c; $i ++)
 {
     $query = $ichild[$i]->data();
-   // echo $query;
+   // print_r( $query);
    // echo '<br /> <br />';
-  //This works - gets queries only
+  //This works above - gets queries only - no phpfile
+  
+  
     if ($ichild[$i]->name() == 'phpfile')
     {
         $phpfile = $ichild[$i]->attributes();
@@ -31,7 +44,9 @@ for ($i = 0, $c = count($ichild); $i < $c; $i ++)
 }
 $upgrade = $document->upgrade;
 //print_r($upgrade);
+
 $uchildren = $upgrade[0]->children();
+
 //print_r($uchildren);
 
 for ($i = 0, $c = count($uchildren); $i < $c; $i ++)
@@ -55,6 +70,7 @@ for ($i = 0, $c = count($uchildren); $i < $c; $i ++)
         }
 }
 $albums = $document->upgrade;
+//print_r($albums);
 for ($i = 0, $c = count($albums); $i < $c; $i ++)
 {
     $album =& $albums[$i];
