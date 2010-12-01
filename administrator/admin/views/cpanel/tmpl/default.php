@@ -5,8 +5,8 @@
  * @copyright 2010
  */
 defined('_JEXEC') or die();
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.debug.php');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.debug.php');
 ?>
 <style>
 #fbadmin {

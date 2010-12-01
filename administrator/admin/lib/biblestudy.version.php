@@ -78,7 +78,7 @@ class CBiblestudyVersion {
 	function version()
 	{
 		$version = CBiblestudyVersion::versionArray();
-		return '<table><tr><td><strong>'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</strong></td></tr><tr><td>'.JText::_('JBS_CPL_CURRENT_VERSION').': '.$version->version.'</td></tr><tr><td> Date: '.$version->versiondate.'</td></tr><tr><td>Build: '.$version->build.'</td></tr><tr><td> Version Name: '.$version->versionname.'</td></tr></table>';  // santon review phrases; convert to JText
+		return '<table><tr><td><strong>'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</strong></td></tr><tr><td>'.JText::_('JBS_CPL_CURRENT_VERSION').': '.$version->version.'</td></tr><tr><td>'.JText::_('JBS_CPL_DATE').': '.$version->versiondate.'</td></tr><tr><td>'.JText::_('JBS_CPL_BUILD').': '.$version->build.'</td></tr><tr><td>'.JText::_('JBS_CPL_VERSION_NAME').': '.$version->versionname.'</td></tr></table>';
 	}
 
 	/** 
@@ -86,11 +86,13 @@ class CBiblestudyVersion {
 	*
 	* @return string "Installed version: Kunena X.Y.Z | YYYY-MM-DD | BUILDNUMBER [versionname] | © Copyright: Kunena | License: GNU GPL"
 	*/
+	/* unused AS 2010-12-01
 	function versionHTML()
 	{
 		$version = CBiblestudyVersion::version();
-		return  _BIBLESTUDY_INSTALLED_VERSION.': '.$version.' | '._BIBLESTUDY_COPYRIGHT.': &copy; 2007-2010 <a href = "http://www.JoomlaBibleStudy.org" target = "_blank">'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</a>  | '._BIBLESTUDY_LICENSE.': <a href = "http://www.gnu.org/copyleft/gpl.html" target = "_blank">GNU GPL</a>';  // santon review phrases; convert to JText
+		return  _BIBLESTUDY_INSTALLED_VERSION.': '.$version.' | '._BIBLESTUDY_COPYRIGHT.': &copy; 2007-2010 <a href = "http://www.JoomlaBibleStudy.org" target = "_blank">'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</a>  | '._BIBLESTUDY_LICENSE.': <a href = "http://www.gnu.org/copyleft/gpl.html" target = "_blank">GNU GPL</a>';
 	}
+    */
 
 	/** 
 	* Retrieve MySQL Server version.

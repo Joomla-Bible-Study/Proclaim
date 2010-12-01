@@ -7,7 +7,7 @@
 * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
 * @link http://www.JoomlaBibleStudy.org
 **/
-//require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');  AS 2010-11-24 no more needed
+//require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');  santon 2010-11-24 no more needed
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
 define ('BIBLESTUDY_VERSION', '7.0.0');
@@ -50,6 +50,7 @@ define('BIBLESTUDY_PATH_TEMPLATE_DEFAULT', BIBLESTUDY_PATH_TEMPLATE .DS. BIBLEST
 
 define('BIBLESTUDY_PATH_ADMIN', BIBLESTUDY_ROOT_PATH_ADMIN .DS. BIBLESTUDY_COMPONENT_RELPATH);
 define('BIBLESTUDY_PATH_ADMIN_LIB', BIBLESTUDY_PATH_ADMIN .DS. 'lib');
+define('BIBLESTUDY_PATH_ADMIN_HELPERS', BIBLESTUDY_PATH_ADMIN .DS. 'helpers');
 define('BIBLESTUDY_PATH_ADMIN_LANGUAGE', BIBLESTUDY_PATH_ADMIN .DS. 'language');
 define('BIBLESTUDY_PATH_ADMIN_INSTALL', BIBLESTUDY_PATH_ADMIN .DS. 'install');
 define('BIBLESTUDY_PATH_ADMIN_IMAGES', BIBLESTUDY_PATH_ADMIN .DS. 'images');

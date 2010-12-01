@@ -6,7 +6,8 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
 
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.stats.class.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.stats.class.php');
 
 class biblestudyViewadmin extends JView
 {

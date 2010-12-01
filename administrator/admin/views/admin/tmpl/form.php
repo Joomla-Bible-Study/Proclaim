@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') or die('Restricted access');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.debug.php');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-require_once (BIBLESTUDY_PATH_LIB .DS. 'biblestudy.version.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+//require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.debug.php');
+//require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.version.php');
 
 $parser =& JFactory::getXMLParser('Simple');
 $parser->loadFile(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');

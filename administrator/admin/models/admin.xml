@@ -73,7 +73,7 @@
 				<option value="1">JBS_ADM_ALLOW_FRONTEND_ACCESS</option>
 			</param>
 			<param name="entry_access" type="list" default="23" label="JBS_ADM_SUBMISSION_ENTRY_ACCESS" description="JBS_ADM_SUBMISSION_ENTRY_ACCESS_TT">
-				<option value="18">JBS_CMN_REGISTERED_USER</option>
+				<option value="18">JBS_CMN_REGISTERED</option>
 				<option value="19">JBS_CMN_AUTHORS</option>
 				<option value="20">JBS_CMN_EDITORS</option>
 				<option value="21">JBS_CMN_PUBLISHERS</option>

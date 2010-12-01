@@ -26,8 +26,8 @@ defined( '_JEXEC' ) or die('Restricted access');
 * Bible Study stats support class
 * @package com_biblestudy
 */
-$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
-include_once ($path1.'helper.php');
+require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (BIBLESTUDY_PATH_ADMIN_HELPERS .DS. 'helper.php');
 class jbStats {
 
     /**
@@ -98,7 +98,7 @@ class jbStats {
   		$top_studies = null;
 		foreach ($results as $result)
 		{
-			$top_studies .= $result->hits.' hits - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->id.'">'.$result->studytitle.'</a> - '.date('Y-m-d', strtotime($result->studydate)).'<br>';
+			$top_studies .= $result->hits.' '.JText::_('JBS_CMN_HITS').' - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->id.'">'.$result->studytitle.'</a> - '.date('Y-m-d', strtotime($result->studydate)).'<br>';
 		}
 		//return count($results) > 0 ? $results : array();
 		return  $top_studies;
@@ -163,13 +163,13 @@ class jbStats {
 		$top_studies = null;
 		if (!$results)
 		{
-			$top_studies = 'No information available';
+			$top_studies = JText::_('JBS_CPL_NO_INFORMATION');
 		}
 		else
 		{
 			foreach ($results as $result)
 			{
-				$top_studies .= $result->hits.' hits - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->id.'">'.$result->studytitle.'</a> - '.date('Y-m-d', strtotime($result->studydate)).'<br>';
+				$top_studies .= $result->hits.' '.JText::_('JBS_CMN_HITS').' - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->id.'">'.$result->studytitle.'</a> - '.date('Y-m-d', strtotime($result->studydate)).'<br>';
 			}
 		}
 		//return count($results) > 0 ? $results : array();
@@ -210,13 +210,13 @@ function get_top_downloads() {
 		$top_studies = null;
 		if (!$results)
 		{
-			$top_studies = 'No information available';
+			$top_studies = JText::_('JBS_CPL_NO_INFORMATION');
 		}
 		else
 		{
 			foreach ($results as $result)
 			{
-				$top_studies .= $result->downloads.' hits - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->sid.'">'.$result->stitle.'</a> - '.date('Y-m-d', strtotime($result->sdate)).'<br>';
+				$top_studies .= $result->downloads.' '.JText::_('JBS_CMN_HITS').' - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->sid.'">'.$result->stitle.'</a> - '.date('Y-m-d', strtotime($result->sdate)).'<br>';
 			}
 		}
 		//return count($results) > 0 ? $results : array();
