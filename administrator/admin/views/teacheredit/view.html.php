@@ -26,7 +26,6 @@ class biblestudyViewteacheredit extends JView
 		JToolBarHelper::title(   JText::_( 'JBS_TCH_TEACHER_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'teachers.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
 			JToolBarHelper::apply();

@@ -28,7 +28,6 @@ class biblestudyViewshareedit extends JView
 		JToolBarHelper::title(   JText::_( 'JBS_SHR_SOCIAL_NETWORK_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'social.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
 			JToolBarHelper::apply();

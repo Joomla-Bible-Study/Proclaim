@@ -43,7 +43,6 @@ class biblestudyViewseriesedit extends JView
 		JToolBarHelper::title(   JText::_( 'JBS_SER_SERIES_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'series.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
 			JToolBarHelper::apply();

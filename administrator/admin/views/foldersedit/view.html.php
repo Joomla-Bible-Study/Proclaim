@@ -20,7 +20,6 @@ class biblestudyViewfoldersedit extends JView
 		JToolBarHelper::title(   JText::_( 'JBS_FLD_FOLDERS_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'folder.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
 			JToolBarHelper::apply();

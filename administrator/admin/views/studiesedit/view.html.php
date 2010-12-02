@@ -30,7 +30,6 @@ class biblestudyViewstudiesedit extends JView {
 		JToolBarHelper::title(   JText::_( 'JBS_STY_EDIT_STUDY' ).': <small><small>[ ' . $text.' ]</small></small>', 'studies.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 
 		} else {

@@ -20,7 +20,6 @@ class biblestudyViewserversedit extends JView
 		JToolBarHelper::title(   JText::_( 'JBS_SVR_SERVER_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'servers.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
 			JToolBarHelper::apply();

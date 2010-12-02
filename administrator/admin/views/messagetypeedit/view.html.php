@@ -20,7 +20,6 @@ class biblestudyViewmessagetypeedit extends JView
 		JToolBarHelper::title(   JText::_( 'JBS_MST_MESSAGE_TYPE_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'messagetype.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
 			JToolBarHelper::apply();

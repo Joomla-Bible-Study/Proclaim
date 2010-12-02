@@ -28,7 +28,6 @@ class biblestudyViewmediaedit extends JView
 		JToolBarHelper::title(   JText::_( 'JBS_MED_EDIT_MEDIA' ).': <small><small>[ ' . $text.' ]</small></small>', 'mediaimages.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
 			JToolBarHelper::apply();

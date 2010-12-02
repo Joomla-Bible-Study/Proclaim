@@ -20,7 +20,6 @@ class biblestudyViewtopicsedit extends JView
 		JToolBarHelper::title(   JText::_( 'JBS_TPC_TOPIC_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'topics.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
 			JToolBarHelper::apply();

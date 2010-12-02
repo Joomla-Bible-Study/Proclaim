@@ -162,7 +162,6 @@ $this->assignRef('filepath', $filepath);
 		JToolBarHelper::title(   JText::_( 'JBS_MED_EDIT_MEDIA' ).': <small><small>[ ' . $text.' ]</small></small>', 'mp3.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 
 		} else {

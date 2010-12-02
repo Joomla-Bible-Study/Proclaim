@@ -20,7 +20,6 @@ class biblestudyViewmimetypeedit extends JView
 		JToolBarHelper::title(   JText::_( 'JBS_MMT_MIME_TYPE_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'mimetype.png' );
 		JToolBarHelper::save();
 		if ($isNew)  {
-			JToolBarHelper::apply();
 			JToolBarHelper::cancel();
 		} else {
 			JToolBarHelper::apply();
