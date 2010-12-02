@@ -6,86 +6,22 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 $parser =& JFactory::getXMLParser('Simple');
 $parser->loadFile(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
 $document =& $parser->document;
-$install =& $document->install;
-//print_r($install);
-for ($i = 0, $c = count($install); $i < $c; $i ++)
+$upgrades = $document->upgrade;
+//$count = count($upgrades); echo $count;
+for ($i = 0, $c = count($upgrades); $i < $c; $i ++)
 {
-    $inst =& $install[$i];
-    if ($phpfile =& $inst->getElementByPath('phpfile'))
+    $upgrade =& $upgrades[$i];
+    //$count = count($upgrade); echo $count;
+    if ($up =& $upgrade->getElementByPath('version'))
     {
-        $thefile =& $phpfile->attributes('name');
-        //print_r($thefile);
-        //This works above to retrieve the php file
-    }
-}
-
-$installversion = $install[0]->attributes('version'); 
-$installbuild = $install[0]->attributes('build');
-$installdate = $install[0]->attributes('versiondate');
-$installversionname = $install[0]->attributes('versionname');
-//echo $installversion.' '.$installbuild.' '.$installdate.' '.$installversionname; // This works
-
-$ichild=$install[0]->children();
-//print_r($ichild);
-for ($i = 0, $c = count($ichild); $i < $c; $i ++)
-{
-    $query = $ichild[$i]->data();
-   // print_r( $query);
-   // echo '<br /> <br />';
-  //This works above - gets queries only - no phpfile
-  
-  
-    if ($ichild[$i]->name() == 'phpfile')
-    {
-        $phpfile = $ichild[$i]->attributes();
-        $file = $phpfile['name'];
-       // echo $file; This works! Gets the name of the php file
-    }
-}
-$upgrade = $document->upgrade;
-//print_r($upgrade);
-
-$uchildren = $upgrade[0]->children();
-
-//print_r($uchildren);
-
-for ($i = 0, $c = count($uchildren); $i < $c; $i ++)
-{
-    $upgradeversion = $uchildren[$i]->attributes('version');
-    $upgradebuild = $uchildren[$i]->attributes('build');
-    $upgradeversiondate = $uchildren[$i]->attributes('versiondate');
-    $upgradeversionname = $uchildren[$i]->attributes('versionname');
-    //echo $upgradeversion.$upgradebuild.$upgradeversiondate.$upgradeversionname.'<br /><br />'; This works
-//$file = $uchildren[$i]->data('phpfile'); echo $file;
-
-    $uchild = $uchildren[$i]->children();
-  //  print_r($uchild);
-    for ($i = 0, $c = count($uchild); $i < $c; $i ++)
+        $queries =& $up->query;
+        for ($ti = 0, $tc = count($queries); $ti < $tc; $ti ++)
         {
-            //This gives us an array of JSimleXMLElement objects. First let's get the mode
-            $mode = $uchild[$i]->attributes('mode'); //This tells us if it is silent or not
-            $query = $uchild[$i]->data('query');
-            //echo $query; This works
-            
-        }
-}
-$albums = $document->upgrade;
-//print_r($albums);
-for ($i = 0, $c = count($albums); $i < $c; $i ++)
-{
-    $album =& $albums[$i];
-    if ($tracks =& $album->getElementByPath('version'))
-    {
-        $listing =& $tracks->version;
-        for ($ti = 0, $tc = count($listing); $ti < $tc; $ti ++)
-        {
-            $track =& $listing[$ti];
-            echo $track->attributes('phpfile');
+            $query = $queries[$ti];
+            echo $query->data().'<br /><br />';
         }
     }
 }
-//print_r($install);
-
 
 $db = JFactory::getDBO();
 $query = 'SELECT id, params FROM #__bsms_mediafiles';
