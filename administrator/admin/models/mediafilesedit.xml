@@ -20,7 +20,7 @@
     <param name="itempopupfooter" type="text" size="150" default="" label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
     <param name="popupmargin" type="text" default="50" label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_TT" />
   </params>
-  <params group="PODCAST" addpath="/components/com_biblestudy/elements">
+  <params group="PODCAST" addpath="/administrator/components/com_biblestudy/elements">
     <param name="podcasts" type="sqlmultilistx" sql="SELECT * FROM #__bsms_podcast WHERE published = '1'" key_field="id" value_field="title" default="-1" multiple="multiple" size="5" label="JBS_MED_SELECT_PODCASTS" description="JBS_MED_SELECT_PODCASTS_TT">
     <option value="-1">JBS_CMN_NONE</option>
     </param>

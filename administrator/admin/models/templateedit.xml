@@ -9,7 +9,7 @@
            description="JBS_TPL_ITEMSLIMIT_TT" />
   </params>
   <params group="TEMPLATES"
-          addpath="/components/com_biblestudy/elements">
+          addpath="/administrator/components/com_biblestudy/elements">
     <param name="studieslisttemplateid"
            type="studieslisttemplateid"
            default=""
@@ -37,7 +37,7 @@
            description="JBS_TPL_TEMPLATE_SERIES_DETAIL_TT" />
   </params>
   <params group="FILTERS"
-          addpath="/components/com_biblestudy/elements">
+          addpath="/administrator/components/com_biblestudy/elements">
     <param name="teacher_id"
            type="sqlmultilistx"
            sql="SELECT * FROM #__bsms_teachers WHERE published = &#39;1&#39;"
@@ -301,7 +301,7 @@
            size="60" />
   </params>
   <params group="STUDIESVIEW"
-          addpath="/components/com_biblestudy/elements">
+          addpath="/administrator/components/com_biblestudy/elements">
     <param name="useexpert_list"
            type="list"
            default="0"
@@ -1976,7 +1976,7 @@
            description="JBS_TPL_TEACHER_TEMPLATECODE_TT"></param>
   </params>
   <params group="SERIES"
-          addpath="/components/com_biblestudy/elements">
+          addpath="/administrator/components/com_biblestudy/elements">
     <param name="series_title"
            default="Our Series"
            type="text"
@@ -2166,7 +2166,7 @@
     </param>
   </params>
   <params group="SERIESDETAIL"
-          addpath="/components/com_biblestudy/elements">
+          addpath="/administrator/components/com_biblestudy/elements">
     <param name="series_detail_sort"
            default="1"
            type="list"
@@ -3655,7 +3655,7 @@
     </param>
   </params>
   <params group="LANDINGPAGE"
-          addpath="/components/com_biblestudy/elements">
+          addpath="/administrator/components/com_biblestudy/elements">
     <param type="list"
            name="landing_hide"
            default="0"

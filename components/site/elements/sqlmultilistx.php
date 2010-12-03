@@ -53,7 +53,7 @@ class JElementSQLMultiListX extends JElement
                 $options = array ();
                 foreach ($node->children() as $option)
                 {
-                        $options[]= array($key=> $option->attributes('value'),$val => $option->data());
+                        $options[]= array( $key => $option->attributes('value'), $val => JText::sprintf($option->data()) );
                 }
  
                 $rows = $db->loadAssocList(); //dump ($node, 'rows: ');

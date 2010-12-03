@@ -36,7 +36,7 @@
 			<option value="1">JBS_ADM_ADDTHIS_SHARE</option>
 		</param>
 	</params>
-	<params group="FILLIN-STUDY" addpath="/components/com_biblestudy/elements">
+	<params group="FILLIN-STUDY" addpath="/administrator/components/com_biblestudy/elements">
 		<param name="location_id" type="locations" label="JBS_CMN_LOCATION" description="JBS_ADM_FILLIN_STUDY_LOCATION_ID_TT" />
 		<param name="teacher_id" type="teacher" default="" label="JBS_CMN_TEACHER_NAME" description="JBS_ADM_FILLIN_STUDY_TEACHER_ID_TT" />
 		<param name="series_id" type="series" default="" label="JBS_CMN_SERIES" description="JBS_ADM_FILLIN_STUDY_SERIES_ID_TT" />
