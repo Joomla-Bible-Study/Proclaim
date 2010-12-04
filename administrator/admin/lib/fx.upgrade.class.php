@@ -180,7 +180,7 @@ class fx_Upgrade {
 	 * Main upgrade function. Processes XML file
 	 */
 	function doUpgrade() {
-	//	require_once( BIBLESTUDY_ROOT_PATH .DS. 'includes/domit/xml_domit_lite_include.php' );
+	//	require_once( BIBLESTUDY_ROOT_PATH .DS. 'includes/domit/xml_domit_lite_include.php' ); //domit not included in Joomla 1.6 use php's simplexml instead
 		if(!$this->silent) {
 			?>
 			<script language=JavaScript>
@@ -303,25 +303,30 @@ class fx_Upgrade {
 	//	$xmlDoc = new DOMIT_Lite_Document();
    //     jimport('domit.xml_domit_lite_include');
 	//	$xmlDoc = new DOMIT_Lite_Document();
-    $xmlDoc = &JFactory::getXMLParser('Simple'); 
+    
 		//dump ($this->_upgradeDir, 'upgrade dir: '); dump($this->xmlFileName, 'xml file: ');
         
-		$xmlDoc->loadFile( $this->_upgradeDir .DS. $this->xmlFileName);
+		$xmlDoc = simplexml_load_file(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
 
 		//load root element and check XML version (for future use)
 	//	$root = &$xmlDoc->documentElement;
-        $root =& $xmlDoc->document;
+     //   $root =& $xmlDoc->document;
 	//	$comUpgradeVersion = $root->getAttribute( "version" );
 
 		//here comes the real stuff
 		if($upgrade == 0) {
-			//$installElement =& $root->firstChild;
+			/*
+            $installElement =& $root->firstChild;
             $installElement =& $root->attributes();
 			$version = $installElement->getAttribute( "version" );
 			$versiondate = $installElement->getAttribute( "versiondate" );
 			$build = $installElement->getAttribute( "build" );
 			$versionname = $installElement->getAttribute( "versionname" );
-
+            */
+            $version = $xmlDoc->install[0]["version"];
+			$versiondate = $xmlDoc->install[0][ "versiondate" ];
+			$build = $xmlDoc->install[0][ "build" ];
+			$versionname = $xmlDoc->install[0][ "versionname" ];
 			if(!$this->silent)
 			{
 				?>
@@ -335,7 +340,8 @@ class fx_Upgrade {
 			}
 
 			//install mode, run install queries
-			$installElement = $root->getElementsByPath('install', 1);
+		//	$installElement = $root->getElementsByPath('install', 1);
+            $installElement = $xmlDoc->install;
 			if (!is_null($installElement)) {
 				$this->processNode($installElement,1);
 			}
@@ -361,12 +367,21 @@ class fx_Upgrade {
 			}
 			//upgrade mode
 		//	$upgradeElement = $root->getElementsByPath('upgrade', 1);
-            $upgradeElement = $root->getElementByPath('upgrade');
+          //  $upgradeElement = $root->getElementByPath('upgrade');
+            $upgradeElement = $xmlDoc->upgrade;
 
 			if (!is_null($upgradeElement)) {
 				//walk through the versions
-				$numChildrenMain =& $upgradeElement->childCount;
-				$childNodesMain =& $upgradeElement->childNodes;
+			//	$numChildrenMain =& $upgradeElement->childCount;
+                $numChildrenMain = count($upgradeElement);
+			//	$childNodesMain =& $upgradeElement->childNodes;
+                foreach ($upgradeElement->version AS $version)
+                {
+                    $version = $xmlDoc->install[0]["version"];
+        			$versiondate = $xmlDoc->install[0][ "versiondate" ];
+        			$build = $xmlDoc->install[0][ "build" ];
+        			$versionname = $xmlDoc->install[0][ "versionname" ];
+                }
 				for($k = 0; $k < $numChildrenMain; $k++) {
 					$versionElement =& $childNodesMain[$k];
 					$version = $versionElement->getAttribute( "version" );
@@ -410,7 +425,8 @@ class fx_Upgrade {
 	 * Processes "phpfile", "query" and "phpcode" child-nodes of the node provided
 	 */
 	function processNode(&$startNode,$batch = 0) {
-		$numChildren =& $startNode->childCount; //dump ($numChildren, 'numChildren: ');
+		$numChildren =& $startNode->childCount; 
+        $numChildren =& count($startNode);
 		$childNodes =& $startNode->childNodes;
 
 		for($i = 0; $i < $numChildren; $i++) {
