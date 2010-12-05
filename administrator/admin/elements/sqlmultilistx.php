@@ -58,7 +58,12 @@ class JElementSQLMultiListX extends JElement
  
                 $rows = $db->loadAssocList(); //dump ($node, 'rows: ');
                 foreach ($rows as $row){
-                        $options[]=array($key=>$row[$key],$val=>$row[$val]);
+                        // Special handling: translate book names
+                        if($node->attributes( 'value_field' ) == "bookname" ) {
+                                $options[]=array($key=>$row[$key],$val=> JText::sprintf($row[$val]));
+                        } else {
+                                $options[]=array($key=>$row[$key],$val=>$row[$val]);
+                        }
                 }
                 if($options){
                         return JHTML::_('select.genericlist',$options, $ctrl, $attribs, $key, $val, $value, $control_name.$name);

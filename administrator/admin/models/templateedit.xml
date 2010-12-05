@@ -508,7 +508,7 @@
   <params group="ROW1">
     <param name="@spacer"
            type="spacer"
-           default="Row 1 Column 1"
+           default="JBS_TPL_ROW1COLUMN1"
            label="JBS_TPL_ROW1COLUMN1"
            description="JBS_TPL_ROW1COLUMN1">
     </param>
@@ -586,7 +586,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 1 Column 2"
+           default="JBS_TPL_ROW1COLUMN2"
            label="JBS_TPL_ROW1COLUMN2"
            description="JBS_TPL_ROW1COLUMN2"></param>
     <param name="row1col2"
@@ -662,7 +662,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 1 Column 3"
+           default="JBS_TPL_ROW1COLUMN3"
            label="JBS_TPL_ROW1COLUMN3"
            description="JBS_TPL_ROW1COLUMN3"></param>
     <param name="row1col3"
@@ -737,7 +737,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 1 Column 4"
+           default="JBS_TPL_ROW1COLUMN4"
            label="JBS_TPL_ROW1COLUMN4"
            description="JBS_TPL_ROW1COLUMN4"></param>
     <param name="row1col4"
@@ -800,7 +800,7 @@
   <params group="ROW2">
     <param name="@spacer"
            type="spacer"
-           default="Row 2 Column 1"
+           default="JBS_TPL_ROW2COLUMN1"
            label="JBS_TPL_ROW2COLUMN1"
            description="JBS_TPL_ROW2COLUMN1"></param>
     <param name="row2col1"
@@ -877,7 +877,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 2 Column 2"
+           default="JBS_TPL_ROW2COLUMN2"
            label="JBS_TPL_ROW2COLUMN2"
            description="JBS_TPL_ROW2COLUMN2"></param>
     <param name="row2col2"
@@ -953,7 +953,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 2 Column 3"
+           default="JBS_TPL_ROW2COLUMN3"
            label="JBS_TPL_ROW2COLUMN3"
            description="JBS_TPL_ROW2COLUMN3"></param>
     <param name="row2col3"
@@ -1028,7 +1028,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 2 Column 4"
+           default="JBS_TPL_ROW2COLUMN4"
            label="JBS_TPL_ROW2COLUMN4"
            description="JBS_TPL_ROW2COLUMN4"></param>
     <param name="row2col4"
@@ -1091,7 +1091,7 @@
   <params group="ROW3">
     <param name="@spacer"
            type="spacer"
-           default="Row 3 Column 1"
+           default="JBS_TPL_ROW3COLUMN1"
            label="JBS_TPL_ROW3COLUMN1"
            description="JBS_TPL_ROW3COLUMN1"></param>
     <param name="row3col1"
@@ -1168,7 +1168,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 3 Column 2"
+           default="JBS_TPL_ROW3COLUMN2"
            label="JBS_TPL_ROW3COLUMN2"
            description="JBS_TPL_ROW3COLUMN2"></param>
     <param name="row3col2"
@@ -1244,7 +1244,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 3 Column 3"
+           default="JBS_TPL_ROW3COLUMN3"
            label="JBS_TPL_ROW3COLUMN3"
            description="JBS_TPL_ROW3COLUMN3"></param>
     <param name="row3col3"
@@ -1319,7 +1319,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 3 Column 4"
+           default="JBS_TPL_ROW3COLUMN4"
            label="JBS_TPL_ROW3COLUMN4"
            description="JBS_TPL_ROW3COLUMN4"></param>
     <param name="row3col4"
@@ -1382,7 +1382,7 @@
   <params group="ROW4">
     <param name="@spacer"
            type="spacer"
-           default="Row 4 Column 1"
+           default="JBS_TPL_ROW4COLUMN1"
            label="JBS_TPL_ROW4COLUMN1"
            description="JBS_TPL_ROW4COLUMN1"></param>
     <param name="row4col1"
@@ -1459,7 +1459,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 4 Column 2"
+           default="JBS_TPL_ROW4COLUMN2"
            label="JBS_TPL_ROW4COLUMN2"
            description="JBS_TPL_ROW4COLUMN2"></param>
     <param name="row4col2"
@@ -1535,7 +1535,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 4 Column 3"
+           default="JBS_TPL_ROW4COLUMN3"
            label="JBS_TPL_ROW4COLUMN3"
            description="JBS_TPL_ROW4COLUMN3"></param>
     <param name="row4col3"
@@ -1610,7 +1610,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 4 Column 4"
+           default="JBS_TPL_ROW4COLUMN4"
            label="JBS_TPL_ROW4COLUMN4"
            description="JBS_TPL_ROW4COLUMN4"></param>
     <param name="row4col4"
@@ -2525,7 +2525,7 @@
   <params group="DETAILSROW1">
     <param name="@spacer"
            type="spacer"
-           default="Row 1 Column 1"
+           default="JBS_TPL_ROW1COLUMN1"
            label="JBS_TPL_ROW1COLUMN1"
            description="JBS_TPL_ROW1COLUMN1"></param>
     <param name="drow1col1"
@@ -2600,7 +2600,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 1 Column 2"
+           default="JBS_TPL_ROW1COLUMN2"
            label="JBS_TPL_ROW1COLUMN2"
            description="JBS_TPL_ROW1COLUMN2"></param>
     <param name="drow1col2"
@@ -2674,7 +2674,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 1 Column 3"
+           default="JBS_TPL_ROW1COLUMN3"
            label="JBS_TPL_ROW1COLUMN3"
            description="JBS_TPL_ROW1COLUMN3"></param>
     <param name="drow1col3"
@@ -2747,7 +2747,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 1 Column 4"
+           default="JBS_TPL_ROW1COLUMN4"
            label="JBS_TPL_ROW1COLUMN4"
            description="JBS_TPL_ROW1COLUMN4"></param>
     <param name="drow1col4"
@@ -2808,7 +2808,7 @@
   <params group="DETAILSROW2">
     <param name="@spacer"
            type="spacer"
-           default="Row 2 Column 1"
+           default="JBS_TPL_ROW2COLUMN1"
            label="JBS_TPL_ROW2COLUMN1"
            description="JBS_TPL_ROW2COLUMN1"></param>
     <param name="drow2col1"
@@ -2883,7 +2883,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 2 Column 2"
+           default="JBS_TPL_ROW2COLUMN2"
            label="JBS_TPL_ROW2COLUMN2"
            description="JBS_TPL_ROW2COLUMN2"></param>
     <param name="drow2col2"
@@ -2957,7 +2957,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 2 Column 3"
+           default="JBS_TPL_ROW2COLUMN3"
            label="JBS_TPL_ROW2COLUMN3"
            description="JBS_TPL_ROW2COLUMN3"></param>
     <param name="drow2col3"
@@ -3030,7 +3030,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 2 Column 4"
+           default="JBS_TPL_ROW2COLUMN4"
            label="JBS_TPL_ROW2COLUMN4"
            description="JBS_TPL_ROW2COLUMN4"></param>
     <param name="drow2col4"
@@ -3091,7 +3091,7 @@
   <params group="DETAILSROW3">
     <param name="@spacer"
            type="spacer"
-           default="Row 3 Column 1"
+           default="JBS_TPL_ROW3COLUMN1"
            label="JBS_TPL_ROW3COLUMN1"
            description="JBS_TPL_ROW3COLUMN1"></param>
     <param name="drow3col1"
@@ -3166,7 +3166,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 3 Column 2"
+           default="JBS_TPL_ROW3COLUMN2"
            label="JBS_TPL_ROW3COLUMN2"
            description="JBS_TPL_ROW3COLUMN2"></param>
     <param name="drow3col2"
@@ -3240,7 +3240,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 3 Column 3"
+           default="JBS_TPL_ROW3COLUMN3"
            label="JBS_TPL_ROW3COLUMN3"
            description="JBS_TPL_ROW3COLUMN3"></param>
     <param name="drow3col3"
@@ -3313,7 +3313,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 3 Column 4"
+           default="JBS_TPL_ROW3COLUMN4"
            label="JBS_TPL_ROW3COLUMN4"
            description="JBS_TPL_ROW3COLUMN4"></param>
     <param name="drow3col4"
@@ -3374,7 +3374,7 @@
   <params group="DETAILSROW4">
     <param name="@spacer"
            type="spacer"
-           default="Row 4 Column 1"
+           default="JBS_TPL_ROW4COLUMN1"
            label="JBS_TPL_ROW4COLUMN1"
            description="JBS_TPL_ROW4COLUMN1"></param>
     <param name="drow4col1"
@@ -3449,7 +3449,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 4 Column 2"
+           default="JBS_TPL_ROW4COLUMN2"
            label="JBS_TPL_ROW4COLUMN2"
            description="JBS_TPL_ROW4COLUMN2"></param>
     <param name="drow4col2"
@@ -3523,7 +3523,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 4 Column 3"
+           default="JBS_TPL_ROW4COLUMN3"
            label="JBS_TPL_ROW4COLUMN3"
            description="JBS_TPL_ROW4COLUMN3"></param>
     <param name="drow4col3"
@@ -3596,7 +3596,7 @@
            description=""></param>
     <param name="@spacer"
            type="spacer"
-           default="Row 4 Column 4"
+           default="JBS_TPL_ROW4COLUMN4"
            label="JBS_TPL_ROW4COLUMN4"
            description="JBS_TPL_ROW4COLUMN4"></param>
     <param name="drow4col4"
@@ -3785,7 +3785,7 @@
            label="JBS_TPL_LANDINGPAGE_LINKTO"
            default="1">
       <option value="0">JBS_TPL_LINK_STUDIES_LIST</option>
-      <option value="1">JBS_TPL_LINK_TEACHER_DISPLAY</option>
+      <option value="1">JBS_TPL_LINK_TEACHER_DETAILS</option>
     </param>
     <param type="spacer"></param>
     <param name="showseries"

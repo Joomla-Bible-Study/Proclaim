@@ -141,26 +141,37 @@ $params = &JComponentHelper::getParams($option);?>
 	<?php
 
 	//$episodes = $this->episodes;
-	$k = 0;
-	for ($i=0, $n=count( $this->episodes ); $i < $n; $i++)
-	{
-	$episode = $this->episodes[$i];
-	//$row = $episodes[$i];
-	//foreach ($episodes as $episode) {
-	$link2 = JRoute::_( 'index.php?option=com_biblestudy&controller=mediafilesedit&task=edit&cid[]='. $episode->mfid );
-	$scripture = $episode->bookname.' '.$episode->chapter_begin;
-	$study = JRoute::_('index.php?option=com_biblestudy&controller=studiesedit&task=edit&cid[]='. $episode->study_id);?>
-	<tr class="<?php echo "row$k"; ?>">
-		<td><a href="<?php echo $link2; ?>"><?php echo $episode->filename;?></a></td>
-		<td><?php echo $episode->createdate;?></td>
-		<td><?php echo $scripture;?></td>
-		<td><a href="<?php echo $study;?>"><?php echo $episode->studytitle;?></a></td>
-		<td><?php echo $episode->teachername;?></td>
-	</tr>
-	<?php
-		$k = 1 - $k;
+	if (!$this->episodes) { ?>
+		<tr>
+			<td><?php echo JText::_( 'JBS_PDC_NO_MEDIA_IN_PODCAST' ); ?></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<?php
+	} else {
+		$k = 0;
+		for ($i=0, $n=count( $this->episodes ); $i < $n; $i++)
+		{
+		$episode = $this->episodes[$i];
+		//$row = $episodes[$i];
+		//foreach ($episodes as $episode) {
+		$link2 = JRoute::_( 'index.php?option=com_biblestudy&controller=mediafilesedit&task=edit&cid[]='. $episode->mfid );
+		$scripture = JText::sprintf($episode->bookname).' '.$episode->chapter_begin;  // santon 2010-12-05 No book->no phrase; no chapter->no number
+		$study = JRoute::_('index.php?option=com_biblestudy&controller=studiesedit&task=edit&cid[]='. $episode->study_id);?>
+		<tr class="<?php echo "row$k"; ?>">
+			<td><a href="<?php echo $link2; ?>"><?php echo $episode->filename;?></a></td>
+			<td><?php echo $episode->createdate;?></td>
+			<td><?php echo $scripture;?></td>
+			<td><a href="<?php echo $study;?>"><?php echo $episode->studytitle;?></a></td>
+			<td><?php echo $episode->teachername;?></td>
+		</tr>
+		<?php
+			$k = 1 - $k;
+		}
 	}
-	//} ?>
+	?>
  </table>
 	<?php } ?>
  </fieldset>

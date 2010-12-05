@@ -4,8 +4,10 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.podcast.class.php');
 jimport( 'joomla.application.component.view' );
+
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.podcast.class.php');
 
 
 class biblestudyViewpodcastedit extends JView
