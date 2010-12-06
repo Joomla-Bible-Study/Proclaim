@@ -68,25 +68,25 @@
     <submenu> 
       <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
       
-      <menu img="../components/com_biblestudy/images/biblemenu.png" link="option=com_biblestudy&amp;view=cpanel">Joomla Bible Study Control Panel</menu>
+      <menu img="../components/com_biblestudy/images/biblemenu.png" link="option=com_biblestudy&amp;view=cpanel">ControlPanel</menu>
       <menu link="option=com_biblestudy&amp;view=studieslist">Studies</menu>
-      <menu link="option=com_biblestudy&amp;view=mediafileslist">Media Files</menu>
-      <menu link="option=com_biblestudy&amp;view=templateslist">Template Display Settings</menu>
+      <menu link="option=com_biblestudy&amp;view=mediafileslist">MediaFiles</menu>
+      <menu link="option=com_biblestudy&amp;view=templateslist">TemplateDisplaySettings</menu>
       <menu link="option=com_biblestudy&amp;view=teacherlist">Teachers</menu>
-      <menu link="option=com_biblestudy&amp;view=bookslist">Bible Books</menu>
-      <menu link="option=com_biblestudy&amp;view=medialist">Media Images</menu>
+      <menu link="option=com_biblestudy&amp;view=bookslist">BibleBooks</menu>
+      <menu link="option=com_biblestudy&amp;view=medialist">MediaImages</menu>
       <menu link="option=com_biblestudy&amp;view=serieslist">Series</menu>
       <menu link="option=com_biblestudy&amp;view=serverslist">Servers</menu>
-      <menu link="option=com_biblestudy&amp;view=folderslist">Server Folders</menu>
-      <menu link="option=com_biblestudy&amp;view=messagetypelist">Message Types</menu>
+      <menu link="option=com_biblestudy&amp;view=folderslist">ServerFolders</menu>
+      <menu link="option=com_biblestudy&amp;view=messagetypelist">MessageTypes</menu>
       <menu link="option=com_biblestudy&amp;view=locationslist">Locations</menu>
       <menu link="option=com_biblestudy&amp;view=topicslist">Topics</menu>
       <menu link="option=com_biblestudy&amp;view=podcastlist">Podcasts</menu>
-      <menu link="option=com_biblestudy&amp;view=mimetypelist">Mime Types</menu>
-      <menu link="option=com_biblestudy&amp;view=commentslist">Study Comments</menu>
-      <menu link="option=com_biblestudy&amp;view=sharelist">Social Network Links</menu>
+      <menu link="option=com_biblestudy&amp;view=mimetypelist">MimeTypes</menu>
+      <menu link="option=com_biblestudy&amp;view=commentslist">StudyComments</menu>
+      <menu link="option=com_biblestudy&amp;view=sharelist">SocialNetworkLinks</menu>
       <menu link="option=com_biblestudy&amp;view=admin&amp;layout=form">Administration</menu>
-      <menu link="option=com_biblestudy&amp;view=cssedit">CSS Edit</menu> 
+      <menu link="option=com_biblestudy&amp;view=cssedit">CSSEdit</menu> 
       <!-- Instead of link you can specify individual link attributes -->
     </submenu> 
     <!-- Administration Main File Copy Section -->

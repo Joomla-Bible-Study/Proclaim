@@ -546,4 +546,4 @@ class fx_Upgrade {
 	}
 }
 
-?>
+}?>
