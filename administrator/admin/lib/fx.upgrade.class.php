@@ -375,20 +375,23 @@ class fx_Upgrade {
 			//	$numChildrenMain =& $upgradeElement->childCount;
                 $numChildrenMain = count($upgradeElement);
 			//	$childNodesMain =& $upgradeElement->childNodes;
-                foreach ($upgradeElement->version AS $version)
+                $count = count($upgradeElement); //echo $count;
+   for($k = 0; $k < $numChildrenMain; $k++) {
                 {
-                    $version = $xmlDoc->install[0]["version"];
-        			$versiondate = $xmlDoc->install[0][ "versiondate" ];
-        			$build = $xmlDoc->install[0][ "build" ];
-        			$versionname = $xmlDoc->install[0][ "versionname" ];
-                }
-				for($k = 0; $k < $numChildrenMain; $k++) {
+                    $versionElement = $upgradeElement[$k];
+                    $version = $upgradeElement[0]["version"];
+        			$versiondate = $upgradeElement[0][ "versiondate" ];
+        			$build = $upgradeElement[0][ "build" ];
+        			$versionname = $upgradeElement[0][ "versionname" ];
+                
+			/*
+            	for($k = 0; $k < $numChildrenMain; $k++) {
 					$versionElement =& $childNodesMain[$k];
 					$version = $versionElement->getAttribute( "version" );
 					$versiondate = $versionElement->getAttribute( "versiondate" );
 					$build = $versionElement->getAttribute( "build" );
 					$versionname = $versionElement->getAttribute( "versionname" );
-
+            */
 					//when legacy version exists, just compare version, if date exists as well, compare date
 					if(($currentVersion->versiondate && $versiondate > $currentVersion->versiondate) OR (version_compare($version, $currentVersion->version, '>')) OR (version_compare($version, $currentVersion->version, '==') && $build > $currentVersion->build)) {
 						//these instructions are for a newer version than the currently installed version
@@ -425,9 +428,10 @@ class fx_Upgrade {
 	 * Processes "phpfile", "query" and "phpcode" child-nodes of the node provided
 	 */
 	function processNode(&$startNode,$batch = 0) {
-		$numChildren =& $startNode->childCount; 
+	//	$numChildren =& $startNode->childCount; 
         $numChildren =& count($startNode);
-		$childNodes =& $startNode->childNodes;
+      //  $childNodes =& $startNode->childNodes;
+        $childNodes =& $startNode->version;
 
 		for($i = 0; $i < $numChildren; $i++) {
 			$currentNode =& $childNodes[$i];
@@ -540,6 +544,6 @@ class fx_Upgrade {
 			} //end switch()
 		} //end children loop
 	}
-};
+}
 
 ?>
