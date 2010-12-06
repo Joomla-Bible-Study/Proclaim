@@ -1,6 +1,8 @@
 <?php defined('_JEXEC') or die('Restricted access'); 
-$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+$path1 = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'image.php');?>
+
+
 <form action="index.php" method="post" name="adminForm">
 <div id="editcell">
 	<table class="adminlist">
@@ -16,7 +18,7 @@ include_once($path1.'image.php');?>
 				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>	
             <th width="50" align="left">
-            	<?php echo JText::_('JBS_CMN_IMAGE');?>
+            	<?php echo JText::_( 'JBS_CMN_IMAGE' );?>
              </th>
              <th align="left">
 				<?php echo JText::_( 'JBS_CMN_MEDIA' ); ?>

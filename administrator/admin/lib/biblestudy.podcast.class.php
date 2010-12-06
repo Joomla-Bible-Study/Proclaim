@@ -57,7 +57,7 @@ class JBSPodcast
         $where 		= ( count( $where ) ? ' '. implode( ' OR ', $where ) : '' ); 
         if ($where)
         {$where = ' WHERE '.$where.' AND ';}
-        else {return $msg= '';}
+        else {return $msg= '';}  // no (published) studies
         //dump ($where, 'where: ');
         		$query = 'SELECT p.id AS pid, p.podcastlimit,'
         			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate, mf.params,'

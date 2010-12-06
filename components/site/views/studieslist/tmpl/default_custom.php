@@ -62,7 +62,7 @@ $menuitemid = JRequest::getInt( 'Itemid' );
      if ($this->params->get( 'show_page_image' ) >0) {
 
      ?>
-      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" />
+      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" alt="Bible Study" />
     <?php //End of column for logo
     }
     ?>
@@ -77,7 +77,9 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 	$teacher_call = JView::loadHelper('teacher');
 	$teacher = getTeacher($params, $id=null, $this->admin_params);
 	//if ($teacher) {echo $teacher;}
-	}?>
+	}
+
+	?>
     </div><!--header-->
 
     <div id="listintro">
@@ -177,7 +179,9 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
 
       echo $this->pagination->getPagesLinks();
       echo $this->pagination->getPagesCounter();
-      //echo $this->pagination->getListFooter(); ?>
+      //echo $this->pagination->getListFooter();
+
+	  ?>
 </div> <!--end of bsfooter div-->
   </div><!--end of bspagecontainer div-->
   <input name="option" value="com_biblestudy" type="hidden">

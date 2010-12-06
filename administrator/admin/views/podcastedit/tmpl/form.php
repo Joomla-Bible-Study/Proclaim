@@ -158,7 +158,14 @@ $params = &JComponentHelper::getParams($option);?>
 		//$row = $episodes[$i];
 		//foreach ($episodes as $episode) {
 		$link2 = JRoute::_( 'index.php?option=com_biblestudy&controller=mediafilesedit&task=edit&cid[]='. $episode->mfid );
-		$scripture = JText::sprintf($episode->bookname).' '.$episode->chapter_begin;  // santon 2010-12-05 No book->no phrase; no chapter->no number
+		if ($episode->bookname) {
+			$scripture = JText::sprintf($episode->bookname);
+			if ($episode->chapter_begin) {
+				$scripture .= ' '.$episode->chapter_begin;
+			}
+		} else {
+			$scripture = '';
+		}
 		$study = JRoute::_('index.php?option=com_biblestudy&controller=studiesedit&task=edit&cid[]='. $episode->study_id);?>
 		<tr class="<?php echo "row$k"; ?>">
 			<td><a href="<?php echo $link2; ?>"><?php echo $episode->filename;?></a></td>

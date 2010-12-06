@@ -65,10 +65,68 @@ for ($i=1;$i<=7;$i++) {
 ?>
 
     <div id="landing_item">
-      <div id="landing_title">
-      <?php echo $params->get($showIt.'label'); echo "\n"; ?>
-      </div> <!-- end div id="landing_title" -->
+    <div id="landing_title">
+    <?php echo $params->get($showIt.'label'); echo "\n"; ?>
+    </div> <!-- end div id="landing_title" -->
 <?php
+
+    $heading_call = null;
+    $heading = null;
+    $showIt_phrase = null;
+    switch ($showIt) {
+
+      case 'teachers':
+        $heading_call = JView::loadHelper('teacher');
+        $heading = getTeacherLandingPage($params, $id=null, $this->admin_params);
+        $showIt_phrase = JText::_( 'JBS_CMN_TEACHERS' );
+        //echo "</div>";
+        break;
+
+      case 'series':
+        $heading_call = JView::loadHelper('serieslist');
+        $heading = getSeriesLandingPage($params, $id=null, $this->admin_params);
+        $showIt_phrase = JText::_( 'JBS_CMN_SERIES' );
+        //echo "</div>";
+        break;
+
+      case 'locations':
+        $heading_call = JView::loadHelper('location');
+        $heading = getLocationsLandingPage($params, $id=null, $this->admin_params);
+        $showIt_phrase = JText::_( 'JBS_CMN_LOCATIONS' );
+        //echo "</div>";
+        break;
+
+      case 'messagetypes':
+        $heading_call = JView::loadHelper('messagetype');
+        $heading = getMessageTypesLandingPage($params, $id=null, $this->admin_params);
+        $showIt_phrase = JText::_( 'JBS_CMN_MESSAGE_TYPES' );
+        //echo "</div>";
+        break;
+
+      case 'topics':
+        $heading_call = JView::loadHelper('topics');
+        $heading = getTopicsLandingPage($params, $id=null, $this->admin_params);
+        $showIt_phrase = JText::_( 'JBS_CMN_TOPICS' );
+        //	echo "</div>";
+        break;
+
+      case 'books':
+        $heading_call = JView::loadHelper('book');
+        $heading = getBooksLandingPage($params, $id=null, $this->admin_params);
+        $showIt_phrase = JText::_( 'JBS_CMN_BOOKS' );
+          //echo "</div>";
+        break;
+
+      case 'years':
+        $heading_call = JView::loadHelper('year');
+        $heading = getYearsLandingPage($params, $id=null, $this->admin_params);
+        $showIt_phrase = JText::_( 'JBS_CMN_YEARS' );
+        //echo "</div>";
+        break;
+
+    }// End Switch
+
+
   if ($params->get('landing'.$showIt.'limit'))
   {
 	$images = new jbsImages();
@@ -87,14 +145,14 @@ for ($i=1;$i<=7;$i++) {
 	{
 		case 0:         // image only
 		$showhideall .= $buttonlink;
-                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.JText::_($showIt).'" title="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.JText::_($showIt).'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
+                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" title="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
 		$showhideall .= ' '; // spacer
 		$showhideall .= "\n\t".'</a>';
 		break;
 
 		case 1:         // image and label
 		$showhideall .= $buttonlink;
-                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.JText::_($showIt).'" title="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.JText::_($showIt).'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
+                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" title="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
 		$showhideall .= ' '; // spacer
 		$showhideall .= "\n\t".'</a>';
 		$showhideall .= $labellink;
@@ -111,58 +169,11 @@ for ($i=1;$i<=7;$i++) {
 
 	$showhideall .= "\n".'      </div> <!-- end div id="showhide" for '.$i.' -->'."\n";
 	echo $showhideall;
-}
+  }
 ?>
       <div id="landinglist">
+
 <?php
-
-    $heading_call = null;
-    $heading = null;
-    switch ($showIt) {
-
-      case 'teachers':
-        $heading_call = JView::loadHelper('teacher');
-        $heading = getTeacherLandingPage($params, $id=null, $this->admin_params);
-        //echo "</div>";
-        break;
-
-      case 'series':
-        $heading_call = JView::loadHelper('serieslist');
-        $heading = getSeriesLandingPage($params, $id=null, $this->admin_params);
-        //echo "</div>";
-        break;
-
-      case 'locations':
-        $heading_call = JView::loadHelper('location');
-        $heading = getLocationsLandingPage($params, $id=null, $this->admin_params);
-        //echo "</div>";
-        break;
-
-      case 'messagetypes':
-        $heading_call = JView::loadHelper('messagetype');
-        $heading = getMessageTypesLandingPage($params, $id=null, $this->admin_params);
-        //echo "</div>";
-        break;
-
-      case 'topics':
-        $heading_call = JView::loadHelper('topics');
-        $heading = getTopicsLandingPage($params, $id=null, $this->admin_params);
-        //	echo "</div>";
-        break;
-
-      case 'books':
-        $heading_call = JView::loadHelper('book');
-        $heading = getBooksLandingPage($params, $id=null, $this->admin_params);
-          //echo "</div>";
-        break;
-
-      case 'years':
-        $heading_call = JView::loadHelper('year');
-        $heading = getYearsLandingPage($params, $id=null, $this->admin_params);
-        //echo "</div>";
-        break;
-
-    }// End Switch
     if ($heading) {
       echo $heading;
     }

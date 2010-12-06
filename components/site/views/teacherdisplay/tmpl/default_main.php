@@ -82,7 +82,7 @@ switch ($this->params->get('show_teacher_studies'))
 
 <tr class="bsm_studiestitlerow">
 <td class="bsm_titletitle"> <?php echo JText::_('JBS_CMN_TITLE');?></td>
-<td class="bsm_titlescripture"> <?php echo JText::_('JBS_CMN_SCIPTURE');?></td>
+<td class="bsm_titlescripture"> <?php echo JText::_('JBS_CMN_SCRIPTURE');?></td>
 <td class="bsm_titledate"> <?php echo JText::_('JBS_CMN_STUDY_DATE');?></td>
 </tr>
 <?php foreach ($this->studies as $study) { ?>

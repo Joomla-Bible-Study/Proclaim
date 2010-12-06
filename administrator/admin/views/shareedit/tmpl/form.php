@@ -53,7 +53,7 @@ $mainframe =& JFactory::getApplication();
 
 echo $pane->startPane( 'content-pane' );
 
-echo $pane->startPanel( JText::_( 'JBS_ADM_GENERAL' ), 'GENERAL' );
+echo $pane->startPanel( JText::_( 'JBS_CMN_GENERAL' ), 'GENERAL' );
 echo $this->params->render( 'params' );
 echo $pane->endPanel();
 echo $pane->endPane();

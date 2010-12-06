@@ -22,21 +22,21 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			{
 		 case 1:
 			$elementid->id = 'scripture1';
-			$elementid->headertext = JText::_('JBS_CMN_SCIPTURE');
+			$elementid->headertext = JText::_('JBS_CMN_SCRIPTURE');
 			$esv = 0;
 			$scripturerow = 1;
 			$elementid->element = getScripture($params, $row, $esv, $scripturerow);
 			break;
 		case 2:
 			$elementid->id = 'scripture2';
-			$elementid->headertext = JText::_('JBS_CMN_SCIPTURE');
+			$elementid->headertext = JText::_('JBS_CMN_SCRIPTURE');
 			$esv = 0;
 			$scripturerow = 2;
 			$elementid->element = getScripture($params, $row, $esv, $scripturerow);
 			break;
 		case 3:
 			$elementid->id = 'secondary';
-			$elementid->headertext = JText::_('JBS_CMN_SCIPTURE');
+			$elementid->headertext = JText::_('JBS_CMN_SCRIPTURE');
 			$elementid->element = $row->secondary_reference;
 			break;
 		case 4:

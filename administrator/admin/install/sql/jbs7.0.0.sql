@@ -335,7 +335,7 @@ INSERT INTO `#__bsms_mimetype` (`id`, `mimetype`, `mimetext`, `published`) VALUE
 CREATE TABLE IF NOT EXISTS `#__bsms_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `value` varchar(15) DEFAULT '',
-  `text` varchar(15) DEFAULT '',
+  `text` varchar(20) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
@@ -344,8 +344,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_order` (
 --
 
 INSERT INTO `#__bsms_order` (`id`, `value`, `text`) VALUES
-(1, 'ASC', 'Ascending'),
-(2, 'DESC', 'Descending');
+(1, 'ASC', 'JBS_CMN_ASCENDING'),
+(2, 'DESC', 'JBS_CMN_DESCENDING');
 
 -- --------------------------------------------------------
 

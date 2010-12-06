@@ -61,7 +61,7 @@ function getBooksLandingPage($params, $id, $admin_params)
 		    ##$book .= '<a href="dummy">'; ## can uncomment this line and use instead of above line when bug-fixing for simpler code
 		    
 		    $book .= $numRows;
-		    $book .= $b->bookname;
+		    $book .= JText::sprintf($b->bookname);
     		
             $book .='</a>';
             
