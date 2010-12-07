@@ -431,8 +431,8 @@ class fx_Upgrade {
 	//	$numChildren =& $startNode->childCount; 
         $numChildren =& count($startNode);
       //  $childNodes =& $startNode->childNodes;
-        $childNodes =& $startNode->version;
-
+     //   $childNodes =& $startNode->version;
+        $childNodes =& $startNode['version']->children();
 		for($i = 0; $i < $numChildren; $i++) {
 			$currentNode =& $childNodes[$i];
 			$nodeName =& $currentNode->nodeName;
