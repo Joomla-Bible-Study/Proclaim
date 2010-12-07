@@ -39,7 +39,7 @@ class biblestudyViewcommentsedit extends JView
 		
 		$database	= & JFactory::getDBO();
 			
-		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $commentsedit->published);
+		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $commentsedit->published, 'JBS_CMN_YES', 'JBS_CMN_NO');
 		
 		
 		$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";

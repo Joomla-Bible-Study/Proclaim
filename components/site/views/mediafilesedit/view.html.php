@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.view' );
+jimport ('joomla.application.component.view');
 jimport ('joomla.application.component.helper');
 
 class biblestudyViewmediafilesedit extends JView {
@@ -85,7 +85,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$articlesSections =& $this->get('ArticlesSections');
 		$virtueMartCategories =& $this->get('virtueMartCategories');
 		
-		require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );
+		require_once( JPATH_COMPONENT_SITE.DS.'helpers'.DS.'toolbar.php' );
 		$toolbar = biblestudyHelperToolbar::getToolbar();
 		$this->assignRef('toolbar', $toolbar);
 		$isNew		= ($mediafilesedit->id < 1);
@@ -123,7 +123,7 @@ class biblestudyViewmediafilesedit extends JView {
 		
 		//Add the params from the model
 		$paramsdata = $mediafilesedit->params;
-		$paramsdefs = JPATH_COMPONENT_ADMINISTRATOR.DS.'models'.DS.'mediafilesedit.xml';
+		$paramsdefs = JPATH_COMPONENT_SITE.DS.'models'.DS.'mediafilesedit.xml';
 		$params = new JParameter($paramsdata, $paramsdefs);
 		$this->assignRef('params', $params);
 		
@@ -167,9 +167,8 @@ class biblestudyViewmediafilesedit extends JView {
 			$this->assignRef('studies', $studies);
 		}
 
-		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $mediafilesedit->published);
-		$lists['link_type'] = JHTML::_('select.booleanlist','link_type', 'class="inputbox"', $mediafilesedit->link_type);
-		$lists['internal_viewer'] = JHTML::_('select.booleanlist', 'internal_viewer', 'class="inputbox"', $mediafilesedit->internal_viewer);
+		$lists['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $mediafilesedit->published, 'JBS_CMN_YES', 'JBS_CMN_NO');
+		$lists['link_type'] = JHTML::_('select.booleanlist','link_type', 'class="inputbox"', $mediafilesedit->link_type, 'JBS_CMN_YES', 'JBS_CMN_NO');
 
 		$types5[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_SERVER' ) .' -' );
 		$types5 			= array_merge( $types5, $serversList);

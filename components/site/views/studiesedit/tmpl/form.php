@@ -286,7 +286,7 @@ echo $pane->endPane();
 			<?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_ADMIN_SUPERADMIN');?></option>
 		</select></td>
 	</tr>
-    <tr><td class="key" alsign="left"><label for="thumbnailm"><?php echo JText::_('JBS_CMN_THUMBNAIL');?></label></td><td><?php echo $this->lists['thumbnailm'];//echo $this->studiesedit->thumbnailm;?></td></tr>
+    <tr><td class="key" alsign="left"><label for="thumbnailm"><?php echo JText::_('JBS_CMN_THUMBNAIL');?></label></td><td><?php echo $this->lists['thumbnailm'];?></td></tr>
     <tr><td valign="top" class="key">
 							<?php echo JText::_( 'JBS_STY_STUDY_IMAGE' ); ?>:
 						</td>

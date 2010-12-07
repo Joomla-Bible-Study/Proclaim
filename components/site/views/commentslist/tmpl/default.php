@@ -69,7 +69,7 @@ $user =& JFactory::getUser();
         <td align="center" width="20"> <?php echo $published; ?> </td>
         <td width="20"><?php echo $row->id; ?> </td>
         
-        <td> <a href="<?php echo $link; ?>"><?php echo $row->studytitle.' - '.$row->bookname.' '.$row->chapter_begin; ?></a> </td>
+        <td> <a href="<?php echo $link; ?>"><?php echo $row->studytitle.' - '.JText::sprintf($row->bookname).' '.$row->chapter_begin; ?></a> </td>
         <td> <?php echo $row->full_name; ?> </td>
         <td> <?php echo $row->comment_date; ?> </td>
         
