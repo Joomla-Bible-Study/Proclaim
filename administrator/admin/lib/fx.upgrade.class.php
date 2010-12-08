@@ -180,7 +180,7 @@ class fx_Upgrade {
 	 * Main upgrade function. Processes XML file
 	 */
 	function doUpgrade() {
-	//	require_once( BIBLESTUDY_ROOT_PATH .DS. 'includes/domit/xml_domit_lite_include.php' ); //domit not included in Joomla 1.6 use php's simplexml instead
+	//	require_once( BIBLESTUDY_ROOT_PATH .DS. 'includes/domit/xml_domit_lite_include.php' );
 		if(!$this->silent) {
 			?>
 			<script language=JavaScript>
@@ -300,33 +300,28 @@ class fx_Upgrade {
 		}
 
 		//initiate XML doc
+        $xmlDoc = simplexml_load_file(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
 	//	$xmlDoc = new DOMIT_Lite_Document();
-   //     jimport('domit.xml_domit_lite_include');
-	//	$xmlDoc = new DOMIT_Lite_Document();
-    
 		//dump ($this->_upgradeDir, 'upgrade dir: '); dump($this->xmlFileName, 'xml file: ');
-        
-		$xmlDoc = simplexml_load_file(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
+	//	$xmlDoc->loadXML( $this->_upgradeDir .DS. $this->xmlFileName, false, true );
 
 		//load root element and check XML version (for future use)
 	//	$root = &$xmlDoc->documentElement;
-     //   $root =& $xmlDoc->document;
 	//	$comUpgradeVersion = $root->getAttribute( "version" );
 
 		//here comes the real stuff
 		if($upgrade == 0) {
-			/*
-            $installElement =& $root->firstChild;
-            $installElement =& $root->attributes();
-			$version = $installElement->getAttribute( "version" );
-			$versiondate = $installElement->getAttribute( "versiondate" );
-			$build = $installElement->getAttribute( "build" );
-			$versionname = $installElement->getAttribute( "versionname" );
-            */
+		//	$installElement =& $root->firstChild;
+		//	$version = $installElement->getAttribute( "version" );
+		//	$versiondate = $installElement->getAttribute( "versiondate" );
+		//	$build = $installElement->getAttribute( "build" );
+		//	$versionname = $installElement->getAttribute( "versionname" );
+            
             $version = $xmlDoc->install[0]["version"];
 			$versiondate = $xmlDoc->install[0][ "versiondate" ];
 			$build = $xmlDoc->install[0][ "build" ];
 			$versionname = $xmlDoc->install[0][ "versionname" ];
+            
 			if(!$this->silent)
 			{
 				?>
@@ -341,7 +336,7 @@ class fx_Upgrade {
 
 			//install mode, run install queries
 		//	$installElement = $root->getElementsByPath('install', 1);
-            $installElement = $xmlDoc->install;
+             $installElement = $xmlDoc->install;
 			if (!is_null($installElement)) {
 				$this->processNode($installElement,1);
 			}
@@ -367,31 +362,25 @@ class fx_Upgrade {
 			}
 			//upgrade mode
 		//	$upgradeElement = $root->getElementsByPath('upgrade', 1);
-          //  $upgradeElement = $root->getElementByPath('upgrade');
             $upgradeElement = $xmlDoc->upgrade;
-
 			if (!is_null($upgradeElement)) {
 				//walk through the versions
 			//	$numChildrenMain =& $upgradeElement->childCount;
                 $numChildrenMain = count($upgradeElement);
 			//	$childNodesMain =& $upgradeElement->childNodes;
-                $count = count($upgradeElement); //echo $count;
-   for($k = 0; $k < $numChildrenMain; $k++) {
-                {
+				for($k = 0; $k < $numChildrenMain; $k++) {
+			//		$versionElement =& $childNodesMain[$k];
+			//		$version = $versionElement->getAttribute( "version" );
+			//		$versiondate = $versionElement->getAttribute( "versiondate" );
+			//		$build = $versionElement->getAttribute( "build" );
+			//		$versionname = $versionElement->getAttribute( "versionname" );
+
                     $versionElement = $upgradeElement[$k];
                     $version = $upgradeElement[0]["version"];
         			$versiondate = $upgradeElement[0][ "versiondate" ];
         			$build = $upgradeElement[0][ "build" ];
         			$versionname = $upgradeElement[0][ "versionname" ];
-                
-			/*
-            	for($k = 0; $k < $numChildrenMain; $k++) {
-					$versionElement =& $childNodesMain[$k];
-					$version = $versionElement->getAttribute( "version" );
-					$versiondate = $versionElement->getAttribute( "versiondate" );
-					$build = $versionElement->getAttribute( "build" );
-					$versionname = $versionElement->getAttribute( "versionname" );
-            */
+                    
 					//when legacy version exists, just compare version, if date exists as well, compare date
 					if(($currentVersion->versiondate && $versiondate > $currentVersion->versiondate) OR (version_compare($version, $currentVersion->version, '>')) OR (version_compare($version, $currentVersion->version, '==') && $build > $currentVersion->build)) {
 						//these instructions are for a newer version than the currently installed version
@@ -428,19 +417,18 @@ class fx_Upgrade {
 	 * Processes "phpfile", "query" and "phpcode" child-nodes of the node provided
 	 */
 	function processNode(&$startNode,$batch = 0) {
-	//	$numChildren =& $startNode->childCount; 
+	//	$numChildren =& $startNode->childCount; //dump ($numChildren, 'numChildren: ');
         $numChildren =& count($startNode);
-      //  $childNodes =& $startNode->childNodes;
-     //   $childNodes =& $startNode->version;
+	//	$childNodes =& $startNode->childNodes;
         $childNodes =& $startNode['version']->children();
-     //   $childNodes =& $startNode->children(); //Not sure which one works
+
 		for($i = 0; $i < $numChildren; $i++) {
 			$currentNode =& $childNodes[$i];
-            
 		//	$nodeName =& $currentNode->nodeName;
             $nodeName = $childNodes->getName();
 		//	$nodemode = strtolower($currentNode->getAttribute( "mode" ));
             $nodemode = $currentNode->attributes();
+
 			switch($nodeName) {
 				case "phpfile":
 					//include file
@@ -500,7 +488,7 @@ class fx_Upgrade {
 						$this->_error = "";
 						$img = "tick.png";
 					}
-				//	$biblestudy_db->setQuery($currentNode->getText());
+			//		$biblestudy_db->setQuery($currentNode->getText());
                     $biblestudy_db->setQuery($query);
 					if(!$this->silent)
 					{
@@ -522,7 +510,7 @@ class fx_Upgrade {
 					}
 					break;
 				case "phpcode":
-				//	$code = $currentNode->getText(); //This will never happen because we dont' use this
+				//	$code = $currentNode->getText();
                     $code = $currentNode;
 					ini_set ("track_errors", 1);
 					if(@eval($code) === FALSE) {
@@ -551,6 +539,6 @@ class fx_Upgrade {
 			} //end switch()
 		} //end children loop
 	}
-}
+};
 
-}?>
+?>
