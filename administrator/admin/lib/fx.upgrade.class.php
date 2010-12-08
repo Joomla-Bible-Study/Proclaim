@@ -362,7 +362,7 @@ class fx_Upgrade {
 			}
 			//upgrade mode
 		//	$upgradeElement = $root->getElementsByPath('upgrade', 1);
-            $upgradeElement = $xmlDoc->upgrade;
+            $upgradeElement = $xmlDoc->upgrade->version;
 			if (!is_null($upgradeElement)) {
 				//walk through the versions
 			//	$numChildrenMain =& $upgradeElement->childCount;
@@ -420,7 +420,7 @@ class fx_Upgrade {
 	//	$numChildren =& $startNode->childCount; //dump ($numChildren, 'numChildren: ');
         $numChildren =& count($startNode);
 	//	$childNodes =& $startNode->childNodes;
-        $childNodes =& $startNode['version']->children();
+        $childNodes =& $startNode->children();
 
 		for($i = 0; $i < $numChildren; $i++) {
 			$currentNode =& $childNodes[$i];
