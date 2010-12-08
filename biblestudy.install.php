@@ -67,10 +67,10 @@ function com_install()
 
 
 		//install & upgrade class
-	//	$bsmsupgrade = new fx_Upgrade("com_biblestudy", "biblestudy.install.upgrade.xml", "bsms_", "install", false);
+		$bsmsupgrade = new fx_Upgrade("com_biblestudy", "biblestudy.install.upgrade.xml", "bsms_", "install", false);
 
 		// Start Installation/Upgrade
-	//	$bsmsupgrade->doUpgrade();
+		$bsmsupgrade->doUpgrade();
      
   //Check for presence of css or backup
     jimport('joomla.filesystem.file');

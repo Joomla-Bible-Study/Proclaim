@@ -3,25 +3,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.debug.php');
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.version.php');
 
-$parser =& JFactory::getXMLParser('Simple');
-$parser->loadFile(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
-$document =& $parser->document;
-$upgrades = $document->upgrade;
-//$count = count($upgrades); echo $count;
-for ($i = 0, $c = count($upgrades); $i < $c; $i ++)
-{
-    $upgrade =& $upgrades[$i];
-    //$count = count($upgrade); echo $count;
-    if ($up =& $upgrade->getElementByPath('version'))
-    {
-        $queries =& $up->query;
-        for ($ti = 0, $tc = count($queries); $ti < $tc; $ti ++)
-        {
-            $query = $queries[$ti];
-            echo $query->data().'<br /><br />';
-        }
-    }
-}
+
 
 $db = JFactory::getDBO();
 $query = 'SELECT id, params FROM #__bsms_mediafiles';

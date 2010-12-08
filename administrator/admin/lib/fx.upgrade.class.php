@@ -433,15 +433,19 @@ class fx_Upgrade {
       //  $childNodes =& $startNode->childNodes;
      //   $childNodes =& $startNode->version;
         $childNodes =& $startNode['version']->children();
+     //   $childNodes =& $startNode->children(); //Not sure which one works
 		for($i = 0; $i < $numChildren; $i++) {
 			$currentNode =& $childNodes[$i];
-			$nodeName =& $currentNode->nodeName;
-			$nodemode = strtolower($currentNode->getAttribute( "mode" ));
-
+            
+		//	$nodeName =& $currentNode->nodeName;
+            $nodeName = $childNodes->getName();
+		//	$nodemode = strtolower($currentNode->getAttribute( "mode" ));
+            $nodemode = $currentNode->attributes();
 			switch($nodeName) {
 				case "phpfile":
 					//include file
-					$fileName = $currentNode->getAttribute( "name" );
+				//	$fileName = $currentNode->getAttribute( "name" );
+                    $fileName = $currentNode->attributes();
 					$include = $this->_upgradeDir .DS . $fileName;
 					$fileCheck = file_exists($include);
 					if($fileCheck) {
@@ -477,7 +481,8 @@ class fx_Upgrade {
 					}
 					break;
 				case "query":
-					$query = $currentNode->getText();
+				//	$query = $currentNode->getText();
+                    $query = $currentNode;
 					$biblestudy_db =& JFactory::getDBO();
 
 					$biblestudy_db->setQuery($query);
@@ -495,7 +500,8 @@ class fx_Upgrade {
 						$this->_error = "";
 						$img = "tick.png";
 					}
-					$biblestudy_db->setQuery($currentNode->getText());
+				//	$biblestudy_db->setQuery($currentNode->getText());
+                    $biblestudy_db->setQuery($query);
 					if(!$this->silent)
 					{
 						if (!($nodemode=='silenterror' AND $this->_error != ""))
@@ -516,7 +522,8 @@ class fx_Upgrade {
 					}
 					break;
 				case "phpcode":
-					$code = $currentNode->getText();
+				//	$code = $currentNode->getText(); //This will never happen because we dont' use this
+                    $code = $currentNode;
 					ini_set ("track_errors", 1);
 					if(@eval($code) === FALSE) {
 						$img = "publish_x.png";

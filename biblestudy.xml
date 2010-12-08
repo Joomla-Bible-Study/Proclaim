@@ -12,14 +12,14 @@
 	<copyright>(C) 2010 Copyright Joomla Bible Study</copyright>
 	<license>GNU/GPL</license>
 	<version>7.0</version>
-	<creationDate>November 2010</creationDate>
+	<creationDate>December 2010</creationDate>
 	<description>Joomla Bible Study</description>
 
 	<installfile>biblestudy.install.php</installfile> <!-- Deprecated in 1.6 -->
 	<uninstallfile>uninstall.biblestudy.php</uninstallfile> <!-- Deprecated in 1.6 -->
     <install>
         <sql>
-            <file driver="mysql" charset="utf8">install/sql/jbs7.0.0.sql</file>
+          <!--  <file driver="mysql" charset="utf8">install/sql/jbs7.0.0.sql</file> -->
         </sql>
     </install>
 	<!-- Front end file, media and language specification -->
