@@ -85,20 +85,4 @@
 				<option value="1">JBS_ADM_AUTO_PUBLISH</option>
 			</param>
 		</params>
-		<params group="ALLVIDEOSRELOADED">
-			<param name="itemidlinktype" type="list" default="0" label="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKTYPE" description="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKTYPE_TT">
-				<option value="0">JBS_ADM_DONT_ADD_ITEMID</option>
-				<option value="1">JBS_ADM_FIND_ITEMID_MENUE</option>
-				<option value="2">JBS_ADM_ITEMID_BELOW</option>
-			</param>
-		<param name="itemidlinkview" type="list" default="studieslist" label="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKVIEW" description="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKVIEW_TT">
-			<option value="studieslist">JBS_CMN_STUDIES_LIST_VIEW</option>
-			<option value="studydetails">JBS_CMN_STUDY_DETAILS_VIEW</option>
-			<option value="teacherlist">JBS_CMN_TEACHERS_LIST_VIEW</option>
-			<option value="teacherdisplay">JBS_CMN_TEACHER_VIEW</option>
-			<option value="serieslist">JBS_CMN_SERIES_LIST_VIEW</option>
-			<option value="seriesdetail">JBS_CMN_SERIES_DETAIL_VIEW</option>
-		</param>
-			<param name="itemidlinknumber" type="text" default="" label="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKNUMBER" length="4" description="JBS_ADM_ALLVIDEOSRELOADED_ITEMIDLINKNUMBER_TT" />
-	</params>
-</root>
+	</root>

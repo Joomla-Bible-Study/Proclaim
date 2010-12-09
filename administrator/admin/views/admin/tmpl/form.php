@@ -58,10 +58,6 @@ echo $pane->startPanel( JText::_( 'JBS_ADM_FRONTEND_SUBMISSION' ), 'SUBMISSION' 
 echo $this->params->render( 'params' , 'SUBMISSION');
 echo $pane->endPanel();
 
-echo $pane->startPanel( JText::_( 'JBS_ADM_AVR_COMPATIBILITY' ), 'ALLVIDEOSRELOADED' );
-echo $this->params->render( 'params' , 'ALLVIDEOSRELOADED');
-echo $pane->endPanel();
-
 echo $pane->endPane();?>
 <tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE');?></td><td><?php
 if ($this->lists['main'])

@@ -338,7 +338,7 @@ class fx_Upgrade {
 		//	$installElement = $root->getElementsByPath('install', 1);
              $installElement = $xmlDoc->install;
 			if (!is_null($installElement)) {
-				$this->processNode($installElement,1);
+				$this->processNode($installElement,1, $type = '1');
 			}
 			if(!$this->silent) {
 				?>
@@ -399,7 +399,7 @@ class fx_Upgrade {
 						$this->insertVersionData( $version, $versiondate, $build, $versionname);
 						$added_version=1;
 
-						$this->processNode($versionElement,$k);
+						$this->processNode($versionElement,$k, $type = '2');
 					} //end if version newer check
 				} //end version element loop
 				if (!isset($added_version)) $this->insertVersionData( $version, $versiondate, $build, $versionname);
@@ -416,11 +416,20 @@ class fx_Upgrade {
 	/**
 	 * Processes "phpfile", "query" and "phpcode" child-nodes of the node provided
 	 */
-	function processNode(&$startNode,$batch = 0) {
+	function processNode(&$startNode,$batch = 0, $type) {
 	//	$numChildren =& $startNode->childCount; //dump ($numChildren, 'numChildren: ');
-        $numChildren =& count($startNode);
+    $childNodes =& $startNode->children();
+        if ($type = '1')
+        {
+            $numChildren =& count($childNodes);
+        }
+        else 
+        {
+            $numChildren =& count($startNode);
+        }
+
 	//	$childNodes =& $startNode->childNodes;
-        $childNodes =& $startNode->children();
+        
 
 		for($i = 0; $i < $numChildren; $i++) {
 			$currentNode =& $childNodes[$i];
@@ -501,7 +510,8 @@ class fx_Upgrade {
 									<img id="id<?php echo $i;?>_<?php echo $batch;?>_img" src="images/expandall.png" border="0">
 									Running SQL Query
 								</div>
-								<div id="id<?php echo $i;?>_<?php echo $batch;?>_details" style="display:None;" class="details"><?php echo $this->_error;?><pre><?php echo $biblestudy_db->_sql;?></pre></div>
+								<div id="id<?php echo $i;?>_<?php echo $batch;?>_details" style="display:None;" class="details"><?php echo $this->_error;?><pre>
+                                <?php echo $query; //$biblestudy_db->_sql;?></pre></div>
 							</td>
 							<td width="20" valign="top"><img src="images/<?php echo $img;?>" border="0"></td>
 						</tr>
