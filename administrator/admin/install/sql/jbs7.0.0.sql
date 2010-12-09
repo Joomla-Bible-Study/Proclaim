@@ -75,7 +75,7 @@ INSERT INTO `#__bsms_books` (`id`, `bookname`, `booknumber`, `published`) VALUES
 (11, 'JBS_BBK_1KINGS', 111, 1),
 (12, 'JBS_BBK_2KINGS', 112, 1),
 (13, 'JBS_BBK_1CHRONICLES', 113, 1),
-(14, 'JBS_BBK_2Chronicles', 114, 1),
+(14, 'JBS_BBK_2CHRONICLES', 114, 1),
 (15, 'JBS_BBK_EZRA', 115, 1),
 (16, 'JBS_BBK_NEHEMIAH', 116, 1),
 (17, 'JBS_BBK_ESTHER', 117, 1),
