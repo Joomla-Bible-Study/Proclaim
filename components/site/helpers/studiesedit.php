@@ -18,10 +18,7 @@ $studiesedit = '<table><tr>
 		<a href="'.JURI::base().'index.php?option=com_biblestudy&view=commentslist">'.JText::_('JBS_CMN_MANAGE_COMMENTS').'</a></td>
 	</tr>';
 	
-
-
-
-$studiesedit .= '</tr></table>';
+	$studiesedit .= '</table>';
 	
 return $studiesedit;
 }
