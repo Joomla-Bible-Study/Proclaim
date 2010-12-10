@@ -18,7 +18,6 @@ class jbsMedia
     {
         //First we get some items from GET and instantiate the images class
         $admin = new JBSAdmin();
-     //   $mediaPlayer = $admin->getMediaPlayer(); //dump ($mediaPlayer, 'mediaPlayer: ');
 
         $Itemid = JRequest::getInt('Itemid','1','get');
         $template = JRequest::getInt('templatemenuid','1','get');

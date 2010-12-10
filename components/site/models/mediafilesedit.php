@@ -14,7 +14,8 @@ class biblestudyModelmediafilesedit extends JModel {
 	
 	function __construct()
 	{
-		parent::__construct();
+		$config['table_path'] = JPATH_COMPONENT.DS.'tables';    // use site tables
+		parent::__construct($config);
 		$admin = $this->getAdmin();
 		//dump ($admin);
 		$this->_admin_params = new JParameter($admin[0]->params);

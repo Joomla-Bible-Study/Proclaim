@@ -17,7 +17,8 @@ class biblestudyModelcommentsedit extends JModel
 	 */
 	function __construct()
 	{
-		parent::__construct();
+		$config['table_path'] = JPATH_COMPONENT.DS.'tables';    // use site tables
+		parent::__construct($config);
 
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);

@@ -13,8 +13,8 @@ class biblestudyModelstudiesedit extends JModel {
 	 var $_admin;
 	 
 	function __construct() {
-		parent::__construct();
-
+		$config['table_path'] = JPATH_COMPONENT.DS.'tables';    // use site tables
+		parent::__construct($config);
 		$admin = $this->getAdmin();
 		$this->_admin_params = new JParameter($admin[0]->params);
 		$array = JRequest::getVar('cid',  0, '', 'array');
@@ -153,7 +153,7 @@ class biblestudyModelstudiesedit extends JModel {
    		$vTags = JRequest::getVar( 'topic_tags', '', 'post', 'string', JREQUEST_ALLOWRAW );
    		$iTags = explode(",", $vTags);
         
-        JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'tables');
+        JTable::addIncludePath(JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'tables');
         
         //$tagRow->load( 1 );
             

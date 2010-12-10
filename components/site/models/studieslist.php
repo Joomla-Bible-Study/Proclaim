@@ -31,7 +31,8 @@ class biblestudyModelstudieslist extends JModel
 
 	function __construct()
 	{
-		parent::__construct();
+		$config['table_path'] = JPATH_COMPONENT.DS.'tables';    // use site tables
+		parent::__construct($config);
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
       //  require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
         jimport('joomla.html.parameter');
