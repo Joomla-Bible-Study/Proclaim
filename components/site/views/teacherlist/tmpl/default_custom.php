@@ -29,9 +29,6 @@ $listingcall = JView::loadHelper('teacher');
       </tr>
     </tbody>
   </table>
-<?php if ($allow_entry > 0) {
-if ($entry_access <= $entry_user){ ?>
-<tr><td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form"><strong><?php echo JText::_('JBS_TCH_ADD_TEACHER');?></strong></a></td></tr><?php } }?>
 
 <tr><td>
 <?php 
