@@ -26,7 +26,7 @@ $approvedControllers = array(
 'podcastedit', 
 'studiesedit',
 'landingpage'
-);
+);  //santon 2010-12-08: some obsolete?
 
 if ( ! in_array($controller, $approvedControllers)) {
 $controller = 'studieslist';
@@ -40,7 +40,7 @@ require_once JPATH_COMPONENT . DS . 'controllers' . DS . $controller . '.php';
 	if($controller = JRequest::getWord('controller')) 
 	{
 	
-	 $controllercheck = array('studieslist','studydetails','serieslist','seriesdetail','teacherlist', 'teacheredit', 'teacherdisplay', 'commentsedit', 'commentslist', 'landingpage', 'mediafilesedit', 'podcastedit', 'studiesedit');
+	 $controllercheck = array('studieslist','studydetails','serieslist','seriesdetail','teacherlist', 'teacheredit', 'teacherdisplay', 'commentsedit', 'commentslist', 'landingpage', 'mediafilesedit', 'podcastedit', 'studiesedit');  //santon 2010-12-08: some obsolete?
 	//dump ($controllercheck, 'controllercheck: ');
 	$success = 0;
 	foreach ($controllercheck as $c)
