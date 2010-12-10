@@ -67,19 +67,12 @@
 		<param name="podcast" type="podcast" label="JBS_ADM_FILLIN_MEDIAFILE_PODCAST" description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_TT" default="" />
 		<param name="mime" type="mime" label="JBS_ADM_FILLIN_MEDIAFILE_MIME" description="JBS_ADM_FILLIN_MEDIAFILE_MIME_TT" default="" />
 	</params>
-	<params group="SUBMISSION">	
+	<params group="SUBMISSION" addpath="/administrator/components/com_biblestudy/elements">	
 			<param name="allow_entry_study" type="list" default="0" label="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY" description="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY_TT">
 				<option value="0">JBS_ADM_NO_FRONTEND_ACCESS</option>
 				<option value="1">JBS_ADM_ALLOW_FRONTEND_ACCESS</option>
 			</param>
-			<param name="entry_access" type="list" default="23" label="JBS_ADM_SUBMISSION_ENTRY_ACCESS" description="JBS_ADM_SUBMISSION_ENTRY_ACCESS_TT">
-				<option value="18">JBS_CMN_REGISTERED</option>
-				<option value="19">JBS_CMN_AUTHORS</option>
-				<option value="20">JBS_CMN_EDITORS</option>
-				<option value="21">JBS_CMN_PUBLISHERS</option>
-				<option value="23">JBS_CMN_MANAGERS</option>
-				<option value="24">JBS_CMN_ADMIN_SUPERADMIN</option>
-			</param>
+			<param name="entry_access" type="usergroup" multiple="yes" size="10" default="" label="JBS_ADM_SUBMISSION_ENTRY_ACCESS" description="JBS_ADM_SUBMISSION_ENTRY_ACCESS_TT" />
 			<param name="study_publish" type="list" default="0" label="JBS_ADM_SUBMISSION_STUDY_PUBLISH" description="JBS_ADM_SUBMISSION_STUDY_PUBLISH_TT">
 				<option value="0">JBS_ADM_NO_AUTO_PUBLISH</option>
 				<option value="1">JBS_ADM_AUTO_PUBLISH</option>

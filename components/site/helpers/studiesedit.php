@@ -20,32 +20,8 @@ $studiesedit = '<table><tr>
 	
 
 
-// Here we start the test to see if podcast entry allowed
-		
-				$database = & JFactory::getDBO();
-				$query = ('SELECT id, title, published FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC');
-				$database->setQuery( $query );
-				$podcasts = $database->loadAssocList();
-				
-	$studiesedit .= '<tr>
-		<td><strong>'.JText::_('JBS_CMN_PODCASTS').'</td></tr></strong>
-		<tr>
-		<td>
-		<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form'.'">'.JText::_('JBS_CMN_ADD_PODCAST').'</a></td>
-	</tr>
-	<tr>
-		<td>';
-		foreach ($podcasts as $podcast) 
-		{ 
-			$pod = $podcast['id']; 
-			$podtitle = $podcast['title']; 
-			$studiesedit .= 
-			'<tr>
-			<td><a href="'.JURI::base().'index.php?option=com_biblestudy&controller=podcastedit&view=podcastedit&layout=form&task=edit&cid[]='.$pod.'">'.$podtitle.'</a></td>
-		</tr>';
-	 	} // end foreach for podcasts as podcast
-	$studiesedit .= '</td>
-	</tr></table>';
+
+$studiesedit .= '</tr></table>';
 	
 return $studiesedit;
 }

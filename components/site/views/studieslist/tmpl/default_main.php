@@ -5,6 +5,7 @@
 defined('_JEXEC') or die(); ?>
 
 <?php
+
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
@@ -21,15 +22,7 @@ $document =& JFactory::getDocument();
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
 $teachers = $params->get('teacher_id');
-//dump ($teachers,'Teachers: ');
-	$user =& JFactory::getUser();
-	$entry_user = $user->get('gid');
-	if (!$entry_user) { $entry_user = 0;}
-	$entry_access = $this->admin_params->get('entry_access');
-	if (!$entry_access) {$entry_access = 23;}
-	$allow_entry = $this->admin_params->get('allow_entry_study');
-	//dump ($entry_access, 'entry_access: ');
-	if (($allow_entry > 0) && ($entry_access <= $entry_user))
+if ($this->allow)
 			{?>
 			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>
 			<?php

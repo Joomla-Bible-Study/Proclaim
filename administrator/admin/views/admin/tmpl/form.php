@@ -3,8 +3,6 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.debug.php');
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.version.php');
 
-
-
 $db = JFactory::getDBO();
 $query = 'SELECT id, params FROM #__bsms_mediafiles';
 $db->setQuery($query);

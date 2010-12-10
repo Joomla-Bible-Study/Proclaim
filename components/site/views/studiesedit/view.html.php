@@ -6,7 +6,8 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
 jimport('joomla.application.component.helper');
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 
 class biblestudyViewstudiesedit extends JView
 {
@@ -14,7 +15,9 @@ class biblestudyViewstudiesedit extends JView
 	function display($tpl = null)
 	{
 		
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
+		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+        include_once($path1.'authenticate.php');
+        $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$studiesedit		=& $this->get('Data');
 		$isNew		= ($studiesedit->id < 1);
 		$editor =& JFactory::getEditor();
@@ -40,13 +43,15 @@ class biblestudyViewstudiesedit extends JView
 		//JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		//$template = $this->get('Template');
 		//$params = new JParameter($template[0]->params);
-		$user =& JFactory::getUser();
-		$entry_user = $user->get('gid');
-		$entry_access = $admin_params->get('entry_access', 24) ;
-		$allow_entry = $admin_params->get('allow_entry_study', 0);
-		if ($allow_entry < 1) {return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
-		if (!$entry_user) { $entry_user = 0; }
-		if ($entry_user < $entry_access ){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}
+		$admin = new JBSAdmin();
+        $allow = false;
+        $allow = $admin->getPermission();
+        
+		//$entry_access = $admin_params->get('entry_access', 24) ;
+		//$allow_entry = $admin_params->get('allow_entry_study', 0);
+		//if ($allow_entry < 1) {return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
+        
+		if (!$allow){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}
 		
 		
 		$studiesedit =& $this->get('Data');

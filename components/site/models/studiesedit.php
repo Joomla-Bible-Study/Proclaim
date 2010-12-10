@@ -2,7 +2,8 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
 class biblestudyModelstudiesedit extends JModel {
 	/**
 	 * Constructor that retrieves the ID from the request
@@ -16,7 +17,9 @@ class biblestudyModelstudiesedit extends JModel {
 		$config['table_path'] = JPATH_COMPONENT.DS.'tables';    // use site tables
 		parent::__construct($config);
 		$admin = $this->getAdmin();
-		$this->_admin_params = new JParameter($admin[0]->params);
+		//$this->_admin_params = new JParameter($admin[0]->params);
+        $administration = new JBSAdmin();
+        $this->_admin_params = $administration->getAdminsettings();
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}

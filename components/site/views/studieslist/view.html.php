@@ -3,6 +3,7 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.stats.class.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 class biblestudyViewstudieslist extends JView {
 
 	/**
@@ -13,6 +14,7 @@ class biblestudyViewstudieslist extends JView {
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		include_once($path1.'image.php');
+        include_once($path1.'authenticate.php');
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
 		$document =& JFactory::getDocument();
 		$model =& $this->getModel();
@@ -21,27 +23,29 @@ class biblestudyViewstudieslist extends JView {
 		$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('admin', $admin);
 		$params 			=& $mainframe->getPageParameters();
-		//dump ($params, 'params: ');
+		
 		$templatemenuid = $params->get('templatemenuid');
 		if (!$templatemenuid){$templatemenuid = 1;}
 		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
-		//dump ($template, 'template: ');
+        
+        //See if user has permission to edit and whether admin params are set to allow front end editing of studies
+        $admin = new JBSAdmin();
+        $allow = $admin->getPermission();
+        $this->assignRef('allow', $allow);
+       
 		$document =& JFactory::getDocument();
 		JHTML::_('behavior.mootools');
-		//$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
-	//	$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
-        //$document->addScript(JURI::base().'components/com_biblestudy/assets/player/swfobject.js');
+        
 		//Import Scripts
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/jquery.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/noconflict.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/biblestudy.js');
 		$document->addScript(JURI::base().'components/com_biblestudy/assets/js/views/studieslist.js');
-		
 		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 		//Styles from tooltip.css moved to assets/css/biblestudy.css
 		//Import Stylesheets
@@ -49,18 +53,7 @@ class biblestudyViewstudieslist extends JView {
 
 		$url = $params->get('stylesheet');
 		if ($url) {$document->addStyleSheet($url);}
-		//Initialize templating class
-		//$tmplEninge = $this->loadHelper('templates.helper');
-		//$tmplEngine =& bibleStudyTemplate::getInstance();
-
-
-		//$params->merge($template[0]->params);
-		//$templateparams = $template[0]->params;
-		//$params->merge($templateparams);
-		//dump ($templateparams, 'templateparams: ');
-		//
-
-		//dump ($params, 'params: ');
+		
 		$uri				=& JFactory::getURI();
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
@@ -75,18 +68,7 @@ class biblestudyViewstudieslist extends JView {
 		$filter_location	= $mainframe->getuserStateFromRequest( $option.'filter_location','filter_location',0,'int');
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
 		$search				= JString::strtolower($mainframe->getUserStateFromRequest( $option.'search','search','','string'));
-/*
-		//Retrieve Parameters
-		$tmplStudiesList = $params->get('tmplStudiesList');
-		$tmplSingleStudyList = $params->get('tmplSingleStudyList');
 
-		//Retrieve the tags that are used in the current template
-		$tmplStudiesList = $tmplEngine->loadTagList(null, $tmplStudiesList);
-		$tmplSingleStudyList = $tmplEngine->loadTagList(null, $tmplSingleStudyList, true);
-
-		//@todo Find a way to assign the Return fo the buildSqlSelect to the Model Var
-		$model->_select = $tmplEngine->buildSqlSELECT($tmplSingleStudyList);
-*/		//dump ($template, 'template: ');
 		$items = $this->get('Data');
 		$total = $this->get('Total');
 
@@ -99,9 +81,7 @@ class biblestudyViewstudieslist extends JView {
 		$topics = $this->get('Topics');
 		$orders = $this->get('Orders');
 		$books = $this->get('Books');
-		//$chapters = $this->get('Chapters');
-
-		//dump ($topics);
+	
         //This is the helper for scripture formatting
         $scripture_call = Jview::loadHelper('scripture');
 		//end scripture helper

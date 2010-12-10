@@ -398,12 +398,12 @@ return $listing;
 
 	function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, $islink, $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template)
 		{
-$entry_user = 0;
-if (($allow_entry > 0) && ($rowcolid == 'row1col1')){
-$user =& JFactory::getUser();
-$entry_user = $user->get('gid');
-if (!$entry_user) { $entry_user = 0;}
-if (!$entry_access) {$entry_access = 23;}
+            require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+            $admin = new JBSAdmin();
+            $allow = $admin->getPermission();
+
+if (($allow) && ($rowcolid == 'row1col1')){
+
 $Itemid = JRequest::getVar('Itemid');
 }
 
@@ -414,7 +414,7 @@ $Itemid = JRequest::getVar('Itemid');
 						if ($colspan > 1) {$cell .= 'colspan="'.$colspan.'" ';}
 						//if ($rowspan > 1){$cell .='rowspan="'.$rowspan.'"';}
 						$cell .= '>';
-						if (($rowcolid == 'row1col1') && ($entry_user >= $entry_access) && ($allow_entry > 0)){
+						if (($rowcolid == 'row1col1') && $allow){
               $cell .= '<a href="'.JURI::base().'index.php?option=com_biblestudy&controller=studiesedit&view=studiesedit&task=edit&layout=form&cid[]='.$id3.'&item='.$Itemid.'"> ['.JText::_('JBS_CMN_EDIT').'] </a>';}
 						if ($islink > 0){$cell .= getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);}
 						$cell .= $element;

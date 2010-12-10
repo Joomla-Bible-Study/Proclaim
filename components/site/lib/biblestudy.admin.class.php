@@ -6,6 +6,8 @@
  */
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
 
 class JBSAdmin
 {
@@ -33,6 +35,100 @@ class JBSAdmin
     if ($num_rows && $isav->published == 1){$player = 'av';}
     return $player; //dump ($player, 'player: ');
  }
-}
+ 
+ function getAdminsettings()
+	{
+		$db =& JFactory::getDBO();
+		$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
+		$db->query();
+		$compat = $db->loadObject();
+		$admin_params = new JParameter($compat->params);
+					
+		return $admin_params;
+	}
+ 
+ function getPermission()
+{
+    $results = array();
+    //Get the level at which users can enter studies
+    $params = $this->getAdminsettings();
+    $entry_access = $params->get('entry_access');
+    
+    $allow_entry = $params->get('allow_entry_study', 0);
+        if (!$allow_entry){return false;}
+    
+    $database = JFactory::getDBO();
+    $query = "SELECT id, title FROM #__usergroups";
+    $database->setQuery($query);
+    $database->query();
+    $groupids = $database->loadObjectList();
+    $user =& JFactory::getUser();
+    if (JOOMLA_VERSION == '5')
+    {
+        $entry_user    = $user->get('gid');
+       	if (!$entry_user) { $entry_user = 0; }
+        if ($entry_user < $entry_access ){return FALSE;}
+    }
+    else
+    {
+        $usrid = $user->get('id');
+        $getGroups = JAccess::getGroupsByUser($usrid);
+        $sum2 = count($getGroups);    
+    
+    if (!is_array($entry_access))
+        {
+            $entry_access = $params->get('entry_access');
+            for ($i=0; $i<$sum2; $i++) 
+                {
+                    $newgrpid = $getGroups[$i];
+                    
+                      if ($newgrpid == $entry_access)
+                      {
+                        $results[] = 2;
+                      }
+                      else
+                      {
+                        $results[] = 3;
+                      }
+
+                } //end of for group ids
+            
+        }
+        else
+        {
+            
+
+            foreach($entry_access AS $entry)
+            {
+                
+                for ($i=0; $i<$sum2; $i++) 
+                {
+                    $newgrpid = $getGroups[$i];
+                    
+                      if ($newgrpid == $entry)
+                      {
+                        $results[] = 2;
+                      }
+                      else
+                      {
+                        $results[] = 3;
+                      }
+                } //end of for group ids
+            } //end of foreach $entry_access as $entry
+        } //end of else if not array $entry_access
+
+    //Check $results to see if any are true
+    if (in_array(2,$results))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    } 
+    } // end of if Joomla 1.6
+} // End of Permission function
+ 
+} // End of class
 
 ?>
