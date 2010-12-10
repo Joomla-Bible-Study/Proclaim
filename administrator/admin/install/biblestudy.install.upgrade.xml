@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <comupgrade version="1.0">
-	<install version="6.2.3" versiondate="2010-11-05" build="623" versionname="1Samuel">
+	<install version="7.0.0" versiondate="2011-1-05" build="1600" versionname="2Samuel">
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `id` int(11) NOT NULL,
 					  `podcast` text,
