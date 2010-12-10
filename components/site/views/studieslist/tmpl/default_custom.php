@@ -19,19 +19,8 @@ $document =& JFactory::getDocument();
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
-//dump ($this->admin_params);
-	$user =& JFactory::getUser();
-  //dump ($user, "U");
-	$entry_user = $user->get('gid');
-  //dump ($entry_user, "EU");
-	if (!$entry_user) { $entry_user = 0;}
-  //dump ($this->admin_params->get('entry_access'), "EA");
-
-$entry_access = $this->admin_params->get('entry_access');
-	if (!$entry_access) {$entry_access = 23;}
-	$allow_entry = $this->admin_params->get('allow_entry_study');
-	//dump ($allow_entry, 'allow_entry: ');
- 	if (($allow_entry > 0) && ($entry_access <= $entry_user))
+    
+ 	if ($this->allow)
 			{?>
 			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>
 			<?php

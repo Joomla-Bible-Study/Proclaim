@@ -46,7 +46,7 @@ class biblestudyControllercommentsedit extends JController
 	function save()
 	{
 		$model = $this->getModel('commentsedit');
-
+        $mainframe =& JFactory::getApplication();
 		if ($model->store($post)) {
 			$msg = JText::_( 'JBS_CMT_COMMENT_SAVED' );
 		} else {
@@ -56,7 +56,7 @@ class biblestudyControllercommentsedit extends JController
 		
 			$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist', $msg );
 			// Check the table in so it can be edited.... we are done with it anyway
-			$mainframe->redirect (str_replace("&amp;","&",$link));
+		//	$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
 
 	/**
