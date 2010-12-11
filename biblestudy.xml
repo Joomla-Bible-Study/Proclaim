@@ -1,31 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<extension type="component" version="1.6" method="upgrade">
-	<!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
-	if it is a new install or an actual upgrade; Normal installs will
-	behave like an install but upgrades will be treated appropriately even
-	if the interface doesn't support it properly -->
-	<!-- Generic Metadata -->
-	<name>com_biblestudy</name>
-	<author>JoomlaBibleStudy Team</author>
-	<authorEmail>info@joomlabiblestudy.org</authorEmail>
-	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-	<copyright>(C) 2010 Copyright Joomla Bible Study</copyright>
-	<license>GNU/GPL</license>
-	<version>7.0</version>
-	<creationDate>December 2010</creationDate>
-	<description>Joomla Bible Study</description>
-
-	<installfile>biblestudy.install.php</installfile> <!-- Deprecated in 1.6 -->
-	<uninstallfile>uninstall.biblestudy.php</uninstallfile> <!-- Deprecated in 1.6 -->
-    <install>
-        <sql>
-          <!--  <file driver="mysql" charset="utf8">install/sql/jbs7.0.0.sql</file> -->
-        </sql>
-    </install>
-	<!-- Front end file, media and language specification -->
-	 <filename>biblestudy.xml</filename>
-     <filename>biblestudy.install.php</filename>
-     <filename>uninstall.biblestudy.php</filename>
+<?xml version="1.0" encoding="utf-8"?>
+<install type="component"
+         version="1.5.0"
+         method="upgrade">
+  <!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
+        if it is a new install or an actual upgrade; Normal installs will
+        behave like an install but upgrades will be treated appropriately even
+        if the interface doesn't support it properly -->
+  <!-- Generic Metadata -->
+  <name>biblestudy</name>
+  <author>JoomlaBibleStudy Team</author>
+  <authorEmail>info@joomlabiblestudy.org</authorEmail>
+  <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+  <copyright>(C) 2010 Copyright Joomla Bible Study</copyright>
+  <license>GNU/GPL</license>
+  <version>7.0</version>
+  <creationDate>December 2010</creationDate>
+  <description>Joomla Bible Study</description>
+  <installfile>biblestudy.install.php</installfile>
+  <!-- Deprecated in 1.6 -->
+  <uninstallfile>uninstall.biblestudy.php</uninstallfile>
+  <!-- Deprecated in 1.6 -->
+  <install>
+    <sql>
+      <!--  <file driver="mysql" charset="utf8">install/sql/jbs7.0.0.sql</file> -->
+    </sql>
+  </install>
+  <!-- Front end file, media and language specification -->
+  <filename>biblestudy.xml</filename>
+  <filename>biblestudy.install.php</filename>
+  <filename>uninstall.biblestudy.php</filename>
   <files folder="site">
     <filename>index.html</filename>
     <filename>metadata.xml</filename>
@@ -46,11 +49,9 @@
     <folder>install</folder>
     <folder>lib</folder>
   </files>
-
-	<!--  Legacy 1.5 Language Support -->
-	<!-- Note: Replace this with the actual path to the language file -->
-
-<languages folder="site/languages">
+  <!--  Legacy 1.5 Language Support -->
+  <!-- Note: Replace this with the actual path to the language file -->
+  <languages folder="site/languages">
     <language tag="en-GB">en-GB.com_biblestudy.ini</language>
     <language tag="cs-CS">cs-CS.com_biblestudy.ini</language>
     <language tag="de-DE">de-DE.com_biblestudy.ini</language>
@@ -59,36 +60,32 @@
     <language tag="nl-NL">nl-NL.com_biblestudy.ini</language>
     <language tag="no-NO">no-NO.com_biblestudy.ini</language>
   </languages>
-  
-
- <administration>
+  <administration>
     <!-- Administration Menu Section -->
-    <menu>com_biblestudy</menu>
-  
-    <submenu> 
+    <menu img="../components/com_biblestudy/images/biblemenu.png">COM_BIBLESTUDY</menu>
+    <submenu>
       <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-      
-      <menu img="../components/com_biblestudy/images/biblemenu.png" link="option=com_biblestudy&amp;view=cpanel">ControlPanel</menu>
-      <menu link="option=com_biblestudy&amp;view=studieslist">Studies</menu>
-      <menu link="option=com_biblestudy&amp;view=mediafileslist">MediaFiles</menu>
-      <menu link="option=com_biblestudy&amp;view=templateslist">TemplateDisplaySettings</menu>
-      <menu link="option=com_biblestudy&amp;view=teacherlist">Teachers</menu>
+      <menu link="option=com_biblestudy&amp;view=cpanel">JBS_MNU_CONTROL_PANEL</menu>
+      <menu link="option=com_biblestudy&amp;view=studieslist">JBS_MNU_STUDIES</menu>
+      <menu link="option=com_biblestudy&amp;view=mediafileslist">JBS_MNU_MEDIA_FILES</menu>
+      <menu link="option=com_biblestudy&amp;view=templateslist">JBS_MNU_TEMPLATE_DISPLAY</menu>
+      <menu link="option=com_biblestudy&amp;view=teacherlist">JBS_MNU_TEACHERS</menu>
       <menu link="option=com_biblestudy&amp;view=bookslist">BibleBooks</menu>
-      <menu link="option=com_biblestudy&amp;view=medialist">MediaImages</menu>
-      <menu link="option=com_biblestudy&amp;view=serieslist">Series</menu>
-      <menu link="option=com_biblestudy&amp;view=serverslist">Servers</menu>
-      <menu link="option=com_biblestudy&amp;view=folderslist">ServerFolders</menu>
-      <menu link="option=com_biblestudy&amp;view=messagetypelist">MessageTypes</menu>
-      <menu link="option=com_biblestudy&amp;view=locationslist">Locations</menu>
+      <menu link="option=com_biblestudy&amp;view=medialist">JBS_MNU_MEDIA_IMAGES</menu>
+      <menu link="option=com_biblestudy&amp;view=serieslist">JBS_MNU_SERIES</menu>
+      <menu link="option=com_biblestudy&amp;view=serverslist">JBS_MNU_SERVERS</menu>
+      <menu link="option=com_biblestudy&amp;view=folderslist">JBS_MNU_SERVER_FOLDERS</menu>
+      <menu link="option=com_biblestudy&amp;view=messagetypelist">JBS_MNU_MESSAGE_TYPES</menu>
+      <menu link="option=com_biblestudy&amp;view=locationslist">JBS_MNU_LOCATIONS</menu>
       <menu link="option=com_biblestudy&amp;view=topicslist">Topics</menu>
-      <menu link="option=com_biblestudy&amp;view=podcastlist">Podcasts</menu>
-      <menu link="option=com_biblestudy&amp;view=mimetypelist">MimeTypes</menu>
-      <menu link="option=com_biblestudy&amp;view=commentslist">StudyComments</menu>
-      <menu link="option=com_biblestudy&amp;view=sharelist">SocialNetworkLinks</menu>
-      <menu link="option=com_biblestudy&amp;view=admin&amp;layout=form">Administration</menu>
-      <menu link="option=com_biblestudy&amp;view=cssedit">CSSEdit</menu> 
+      <menu link="option=com_biblestudy&amp;view=podcastlist">JBS_MNU_PODCASTS</menu>
+      <menu link="option=com_biblestudy&amp;view=mimetypelist">JBS_MNU_MIME_TYPES</menu>
+      <menu link="option=com_biblestudy&amp;view=commentslist">JBS_MNU_STUDY_COMMENTS</menu>
+      <menu link="option=com_biblestudy&amp;view=sharelist">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
+      <menu link="option=com_biblestudy&amp;view=admin&amp;layout=form">JBS_MNU_ADMINISTRATION</menu>
+      <menu link="option=com_biblestudy&amp;view=cssedit">JBS_MNU_CSS_EDIT</menu>
       <!-- Instead of link you can specify individual link attributes -->
-    </submenu> 
+    </submenu>
     <!-- Administration Main File Copy Section -->
     <files folder="admin">
       <filename>index.html</filename>
@@ -125,10 +122,11 @@
       <language tag="no-NO">no-NO.com_biblestudy.menu.ini</language>
     </languages>
   </administration>
-
-
-	<!--  Dependencies -->
-	<dependencies>
-		<dependency type="platform" name="joomla" operator="=" version="1.5" />
-	</dependencies>
-</extension>
+  <!--  Dependencies -->
+  <dependencies>
+    <dependency type="platform"
+                name="joomla"
+                operator="="
+                version="1.5" />
+  </dependencies>
+</install>
