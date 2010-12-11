@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<view title="Landing Page View">
+	<view title="JBS_MNU_LANDING_PAGE_VIEW">
 		<message>
-			<![CDATA[Shows the landing page view.]]>
+			<![CDATA[JBS_MNU_LANDING_PAGE_VIEW_TT]]>
 		</message>
 	</view>
-    <state>
-        <params>
-            <param id="test" label="test"/>
-        </params>
-    </state>
-
 </metadata>

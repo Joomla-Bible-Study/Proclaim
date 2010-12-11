@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<view title="Single Teacher View">
+	<view title="JBS_MNU_SINGLE_TEACHER_VIEW">
 		<message>
-			<![CDATA[Shows a Teacher's Layout Page.]]>
+			<![CDATA[JBS_MNU_SINGLE_TEACHER_VIEW_TT]]>
 		</message>
 	</view>
 </metadata>

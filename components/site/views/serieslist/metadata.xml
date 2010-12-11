@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<view title="Series List View">
+	<view title="JBS_CMN_SERIES_LIST_VIEW">
 		<message>
-			<![CDATA[Shows the main list of series.]]>
+			<![CDATA[JBS_MNU_SERIES_LIST_VIEW_TT]]>
 		</message>
 	</view>
 </metadata>

@@ -46,8 +46,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="JBS_TPL_FILTERS_TEACHER"
-           description="JBS_TPL_FILTERS_TEACHER_TT">
+           label="JBS_CMN_FILTERS_TEACHER"
+           description="JBS_CMN_FILTERS_TEACHER_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="series_id"
@@ -58,8 +58,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="JBS_TPL_FILTERS_SERIES"
-           description="JBS_TPL_FILTERS_SERIES_TT">
+           label="JBS_CMN_FILTERS_SERIES"
+           description="JBS_CMN_FILTERS_SERIES_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="booknumber"
@@ -70,8 +70,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="JBS_TPL_FILTERS_BOOKS"
-           description="JBS_TPL_FILTERS_BOOKS_TT">
+           label="JBS_CMN_FILTERS_BOOKS"
+           description="JBS_CMN_FILTERS_BOOKS_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="topic_id"
@@ -82,8 +82,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="JBS_TPL_FILTERS_TOPICS"
-           description="JBS_TPL_FILTERS_TOPICS_TT">
+           label="JBS_CMN_FILTERS_TOPICS"
+           description="JBS_CMN_FILTERS_TOPICS_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="messagetype"
@@ -94,8 +94,8 @@
            default="-1"
            multiple="multiple"
            size="5"
-           label="JBS_TPL_FILTERS_MESSAGETYPES"
-           description="JBS_TPL_FILTERS_MESSAGETYPES_TT">
+           label="JBS_CMN_FILTERS_MESSAGETYPES"
+           description="JBS_CMN_FILTERS_MESSAGETYPES_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="locations"
@@ -106,8 +106,8 @@
            default="-1"
            multiple="multiple"
            size="5"
-           label="JBS_TPL_FILTERS_LOCATIONS"
-           description="JBS_TPL_FILTERS_LOCATIONS_TT">
+           label="JBS_CMN_FILTERS_LOCATIONS"
+           description="JBS_CMN_FILTERS_LOCATIONS_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="default_order"
@@ -2215,7 +2215,7 @@
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_CMN_SCIPTURE</option>
       <option value="2">JBS_CMN_SCRIPTURE2</option>
-      <option value="3">JBS_CMN_SECONDARY_REFERENCES</option>
+      <option value="3">JBS_TPL_SECONDARY_REFERENCE</option>
       <option value="4">JBS_CMN_DURATION</option>
       <option value="25">JBS_CMN_THUMBNAIL</option>
       <option value="6">JBS_TPL_INTRODUCTION</option>
@@ -2252,7 +2252,7 @@
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_CMN_SCIPTURE</option>
       <option value="2">JBS_CMN_SCRIPTURE2</option>
-      <option value="3">JBS_CMN_SECONDARY_REFERENCES</option>
+      <option value="3">JBS_TPL_SECONDARY_REFERENCE</option>
       <option value="4">JBS_CMN_DURATION</option>
       <option value="25">JBS_CMN_THUMBNAIL</option>
       <option value="6">JBS_TPL_INTRODUCTION</option>
@@ -2289,7 +2289,7 @@
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_CMN_SCIPTURE</option>
       <option value="2">JBS_CMN_SCRIPTURE2</option>
-      <option value="3">JBS_CMN_SECONDARY_REFERENCES</option>
+      <option value="3">JBS_TPL_SECONDARY_REFERENCE</option>
       <option value="4">JBS_CMN_DURATION</option>
       <option value="25">JBS_CMN_THUMBNAIL</option>
       <option value="6">JBS_TPL_INTRODUCTION</option>
@@ -2326,7 +2326,7 @@
       <option value="8">JBS_TPL_TEACHER_TITLE</option>
       <option value="1">JBS_CMN_SCIPTURE</option>
       <option value="2">JBS_CMN_SCRIPTURE2</option>
-      <option value="3">JBS_CMN_SECONDARY_REFERENCES</option>
+      <option value="3">JBS_TPL_SECONDARY_REFERENCE</option>
       <option value="4">JBS_CMN_DURATION</option>
       <option value="25">JBS_CMN_THUMBNAIL</option>
       <option value="6">JBS_TPL_INTRODUCTION</option>

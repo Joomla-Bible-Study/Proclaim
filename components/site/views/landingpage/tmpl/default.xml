@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: default.xml tf 12-11-2007 $ -->
 <metadata>
-	<layout title="Landing Page Layout">
+	<layout title="JBS_MNU_LANDING_PAGE_LAYOUT">
 		<message>
-			<![CDATA[Create a link to the main Bible Studies List Page]]>
+			<![CDATA[JBS_MNU_LANDING_PAGE_LAYOUT_TT]]>
 		</message>
 	</layout>
 	<state>
-		<name>Landing Page Layout</name>
+		<name>JBS_MNU_LANDING_PAGE_LAYOUT</name>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="landingpage" />
-			<param name="templatemenuid" type="templatemenuid" default="" label="Template for this page" description="Choose a template for your page (set in admin/templates tab)" />
+			<param name="templatemenuid" type="templatemenuid" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_TT" />
         </params>
 	</state>
 </metadata>

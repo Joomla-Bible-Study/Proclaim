@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: default.xml tf 12-11-2007 $ -->
 <metadata>
-	<layout title="Studies List Layout">
+	<layout title="JBS_MNU_STUDIES_LIST_LAYOUT">
 		<message>
-                        <![CDATA[Create a link to the main Studies List Page]]>
+			<![CDATA[JBS_MNU_STUDIES_LIST_LAYOUT_TT]]>
 		</message>
 	</layout>
 	<state>
-		<name>Studies List Layout</name>
+		<name>JBS_MNU_STUDIES_LIST_LAYOUT</name>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="studieslist" />
-			<param name="templatemenuid" type="templatemenuid" default="" label="Template for this page" description="Choose a template for your page (set in admin/templates tab)" />
+			<param name="templatemenuid" type="templatemenuid" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_TT" />
    <param name="mteacher_id"
            type="sqlmultilistx"
            sql="SELECT * FROM #__bsms_teachers WHERE published = &#39;1&#39;"
@@ -19,8 +19,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="Select one or more teachers"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all teachers">
+           label="JBS_CMN_FILTERS_TEACHER"
+           description="JBS_CMN_FILTERS_TEACHER_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mseries_id"
@@ -31,8 +31,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="Select one or more series"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all series">
+           label="JBS_CMN_FILTERS_SERIES"
+           description="JBS_CMN_FILTERS_SERIES_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mbooknumber"
@@ -43,8 +43,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="Select one or more books"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all books">
+           label="JBS_CMN_FILTERS_BOOKS"
+           description="JBS_CMN_FILTERS_BOOKS_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mtopic_id"
@@ -55,8 +55,8 @@
            default="-1"
            multiple="multiple"
            size="10"
-           label="Select one or more topics"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all topics">
+           label="JBS_CMN_FILTERS_TOPICS"
+           description="JBS_CMN_FILTERS_TOPICS_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mmessagetype"
@@ -67,8 +67,8 @@
            default="-1"
            multiple="multiple"
            size="5"
-           label="Select one or more message types"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all message types">
+           label="JBS_CMN_FILTERS_MESSAGETYPES"
+           description="JBS_CMN_FILTERS_MESSAGETYPES_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mlocations"
@@ -79,8 +79,8 @@
            default="-1"
            multiple="multiple"
            size="5"
-           label="Select one or more locations"
-           description="Use Ctrl-click to select more than one item. Select Show All to show all locations">
+           label="JBS_CMN_FILTERS_LOCATIONS"
+           description="JBS_CMN_FILTERS_LOCATIONS_TT">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     </params>

@@ -14,7 +14,7 @@
 		</url>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="" />
-			<param name="templatemenuid" type="templatemenuid" default="" label="Template for this item" description="Choose a template defined in admin/templates tab for this item" />
+			<param name="templatemenuid" type="templatemenuid" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_TT" />
 		</params>	
 	</state>
 </metadata>
