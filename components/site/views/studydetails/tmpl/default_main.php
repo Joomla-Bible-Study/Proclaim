@@ -14,6 +14,7 @@ else { document.getElementById(d).style.display = "none"; }
 
 
 <?php
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 //$params = $mainframe->getPageParameters();
@@ -138,7 +139,12 @@ if ($params->get('list_items_view') == 0)
 <?php 
 
 ?>
-<?php if ($params->get('show_comments') < 2)
+<?php 
+$allow_comments = 0;
+$admin = new JBSAdmin();
+$allow_comments = $admin->commentsPermission($this->params);
+echo $allow_comments;
+if ($allow_comments > '9')
 		{
 		  
          echo '<div id="commentstable" >';

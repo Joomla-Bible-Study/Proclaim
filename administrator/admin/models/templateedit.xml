@@ -1785,15 +1785,13 @@
       <option value="2">JBS_TPL_SCRIPTURE_LINKS</option>
     </param>
     <param name="show_comments"
-           type="list"
-           default="1"
+           type="usergroup"
+           multiple="yes"
+           default=""
+           size="10"
            label="JBS_TPL_DETAILS_SHOW_COMMENTS"
-           description="JBS_TPL_DETAILS_SHOW_COMMENTS_TT">
-      <option value="0">JBS_CMN_EVERYONE</option>
-      <option value="1">JBS_CMN_REGISTERED</option>
-      <option value="2">JBS_CMN_HIDE</option>
-    </param>
-    <param name="link_comments"
+           description="JBS_TPL_DETAILS_SHOW_COMMENTS_TT" />
+     <param name="link_comments"
     	     default="0"
     	     type="list"
     	     label="JBS_TPL_DETAILS_LINK_COMMENTS"
@@ -1801,14 +1799,13 @@
       <option value="0">JBS_TPL_USE_HIDE_SHOW_LINK</option>
       <option value="1">JBS_TPL_SHOW_ALWAYS</option>
     </param>
-    <param name="comment_access"
-           type="list"
-           default="1"
-           label="JBS_TPL_DETAILS_COMMENT_ACCESS"
-           description="JBS_TPL_DETAILS_COMMENT_ACCESS_TT">
-      <option value="0">JBS_CMN_EVERYONE</option>
-      <option value="1">JBS_CMN_REGISTERED</option>
-    </param>
+    <param name="comment_access" 
+            type="usergroup" 
+            multiple="yes" 
+            size="10" 
+            default="" 
+            label="JBS_TPL_DETAILS_COMMENT_ACCESS" 
+            description="JBS_TPL_DETAILS_COMMENT_ACCESS_TT" />
     <param name="comment_publish"
            type="list"
            default="0"

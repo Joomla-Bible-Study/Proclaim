@@ -11,17 +11,13 @@ class biblestudyControllerstudiesedit extends JController
 		//$model = $this->getModel('studiesedit');
 		//$templatemenuid = $params->get('templatemenuid');
 		
-		$entry_user = $user->get('gid');
-        if (!$entry_user) { $entry_user = 0; }
-		$entry_access = ($params->get('entry_access')) ;
-		$allow_entry = $params->get('allow_entry_study');
-		if (!$allow_entry) {$allow_entry = 0;}
-		//if ($allow_entry < 1) {return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
-		if (!$entry_user) { $entry_user = 0; }
-		if ($allow_entry > 0) {
-			if ($entry_user < $entry_access){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
-		}
-		//dump ($entry_user, 'entry_user: ');
+        require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+        $admin = new JBSAdmin();
+        $allow = $admin->getPermission();
+        if (!$allow)
+        {
+            return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));
+        }
 		parent::__construct();
 
 		// Register Extra tasks

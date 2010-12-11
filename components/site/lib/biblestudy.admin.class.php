@@ -49,6 +49,7 @@ class JBSAdmin
  
  function getPermission()
 {
+    
     $results = array();
     //Get the level at which users can enter studies
     $params = $this->getAdminsettings();
@@ -128,7 +129,107 @@ class JBSAdmin
     } 
     } // end of if Joomla 1.6
 } // End of Permission function
- 
+
+function commentsPermission($params)
+{
+    $results = array();
+    $comments = 0;
+    $show_comments = $params->get('show_comments');
+    $enter_comments = $params->get('comments_access');
+    //$comments 10 is view only, 11 is view and edit, 0 is no view or edit
+    
+    $database = JFactory::getDBO();
+    $query = "SELECT id, title FROM #__usergroups";
+    $database->setQuery($query);
+    $database->query();
+    $groupids = $database->loadObjectList();
+    $user =& JFactory::getUser();
+    if (JOOMLA_VERSION == '5')
+    {
+        $comments_user    = $user->get('gid');
+       	if (!$comments_user) { $comments_user = 0; }
+        if ($comments_user < $show_comments ){return FALSE;}
+        $usertype = $user->get('gid');
+        if ($usertype >= $show_comments)
+        {
+            $results[] = 1;
+        }
+        if ($usertype >= $enter_comments)
+        {
+            $results[] = 2;
+        }
+        if (in_array('2',$results))
+        {
+            $comments = 11;
+        }
+        else
+        {
+            $comments = 10;
+        }
+        return $comments;
+    }
+    else
+    {
+        $usrid = $user->get('id');
+        $getGroups = JAccess::getGroupsByUser($usrid);
+        $sum2 = count($getGroups);    
+        foreach($show_comments AS $entry)
+            {
+                
+                for ($i=0; $i<$sum2; $i++) 
+                {
+                    $newgrpid = $getGroups[$i];
+                    
+                      if ($newgrpid == $entry)
+                      {
+                        $results[] = 2;
+                      }
+                      else
+                      {
+                        $results[] = 3;
+                      }
+                } //end of for group ids
+            } //end of foreach $entry_access as $entry
+
+    //Check $results to see if any are true. A 2 means they are found in the list, a 3 means they are not
+    if (in_array(2,$results))
+    {
+        $comments = 10;
+    }
+    else
+    {
+        $comments = 0;
+    }
+    if (!$comments) {return false;}
+    //Now we check to see if they can add comments
+    foreach($enter_comments AS $entry)
+            {
+                
+                for ($i=0; $i<$sum2; $i++) 
+                {
+                    $newgrpid = $getGroups[$i];
+                    
+                      if ($newgrpid == $entry)
+                      {
+                        $results[] = 2;
+                      }
+                      else
+                      {
+                        $results[] = 3;
+                      }
+                } //end of for group ids
+            } //end of foreach $entry_access as $entry 
+     if (in_array(2,$results))
+    {
+        $comments = 11;
+    }
+    else
+    {
+        $comments = 10;
+    }
+    return $comments;
+    } // end of if Joomla 1.6
+} 
 } // End of class
 
 ?>

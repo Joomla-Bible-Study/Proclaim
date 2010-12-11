@@ -1,43 +1,15 @@
 <?php defined('_JEXEC') or die();
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 function getComments($params, $row, $Itemid)
 {
-		$user =& JFactory::getUser();
-		$comment_access = $params->get('comment_access');
-		$comment_user = $user->usertype;
-		if (!$comment_user) { $comment_user = 0;} $comm = $params->get('show_comments'); //dump ($comment_user);
-		$yes = 0;
-		switch ($comm)
-		{
-			case 2:
-				$yes = 0;
-			break;
-
-			case 1:
-				if ($comment_user >= $comm)
-				{
-					$yes = 1;
-				}
-			break;
-
-			case 0:
-				$yes = 1;
-			break;
-		}
-
-		if ($yes == 0)
-		{
-			$comments = '';
-			return $comments;
-		}
-		/*if ($params->get('show_comments') >= $comment_user || $params->get('show_comments') == 2)
-		{
-			$comments = '';
-			return $comments;
-		}*/
-		else
-		{
-
+		$allow = 0;
+        $admin = new JBSAdmin();
+        $allow = $admin->commentsPermission($params);
+        if (!$allow){$comments = ''; return $comments;}
+        if ($allow > 9)
+        {
+            
+       
 		$database	= & JFactory::getDBO();
 		$editor =& JFactory::getEditor();
 
@@ -87,7 +59,9 @@ $comments .= '
 
 
 
-		if ($comment_access > $comment_user){$comments .= '<tr><td><strong>'.JText::_('JBS_CMT_REGISTER_TO_POST_COMMENTS').'</strong></td></tr>';}else{
+		if ($allow < 10){$comments .= '<tr><td><strong>'.JText::_('JBS_CMT_REGISTER_TO_POST_COMMENTS').'</strong></td></tr>';}
+        if ($allow > 10)
+        {
 		$comments .= '<tr><td>';
 		if ($user->name){$full_name = $user->name; } else {$full_name = ''; }
 		if ($user->email) {$user_email = $user->email;} else {$user_email = '';}
