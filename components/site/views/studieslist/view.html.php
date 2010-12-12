@@ -14,7 +14,7 @@ class biblestudyViewstudieslist extends JView {
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		include_once($path1.'image.php');
-        include_once($path1.'authenticate.php');
+        
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
 		$document =& JFactory::getDocument();
 		$model =& $this->getModel();

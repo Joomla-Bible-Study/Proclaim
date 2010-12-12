@@ -229,6 +229,10 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
      $params_mediaplayer = $params->get('media_player');
      $item_mediaplayer = $itemparams->get('player');
     if ($params_mediaplayer > 0) {$player->player = $params_mediaplayer;}
+    if ($item_mediaplayer == 0)
+    {
+        $player->player = 0;
+    }
     if ($item_mediaplayer == 1)
         {
             $player->player = 1;
