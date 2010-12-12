@@ -77,7 +77,7 @@
       <menu link="option=com_biblestudy&amp;view=folderslist">JBS_MNU_SERVER_FOLDERS</menu>
       <menu link="option=com_biblestudy&amp;view=messagetypelist">JBS_MNU_MESSAGE_TYPES</menu>
       <menu link="option=com_biblestudy&amp;view=locationslist">JBS_MNU_LOCATIONS</menu>
-      <menu link="option=com_biblestudy&amp;view=topicslist">Topics</menu>
+      <menu link="option=com_biblestudy&amp;view=topicslist">JBS_MNU_TOPICS</menu>
       <menu link="option=com_biblestudy&amp;view=podcastlist">JBS_MNU_PODCASTS</menu>
       <menu link="option=com_biblestudy&amp;view=mimetypelist">JBS_MNU_MIME_TYPES</menu>
       <menu link="option=com_biblestudy&amp;view=commentslist">JBS_MNU_STUDY_COMMENTS</menu>
