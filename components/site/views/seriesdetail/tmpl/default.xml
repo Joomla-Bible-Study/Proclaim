@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: default.xml tf 12-11-2007 $ -->
 <metadata>
-	<layout title="Single Series Layout">
+	<layout title="JBS_MNU_SINGLE_SERIES_LAYOUT">
 		<message>
-			<![CDATA[Create a link to a single series]]>
+			<![CDATA[JBS_MNU_SINGLE_SERIES_LAYOUT_TT]]>
 		</message>
 	</layout>
 	<state>
-		<name>Single Series Layout</name>
-		<description>Choose a single series to link to</description>
+		<name>JBS_MNU_SINGLE_SERIES_LAYOUT</name>
 		<url addpath="/administrator/components/com_biblestudy/elements">
-			<param name="id" type="series" default="" label="JBS_CMN_SELECT_SERIE" description="The series to link to" />
+			<param name="id" type="series" default="" label="JBS_CMN_SELECT_SERIE" description="JBS_MNU_SELECT_SERIES_TT" />
 		</url>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="" />

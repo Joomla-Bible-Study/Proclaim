@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Single Series View">
+	<view title="JBS_MNU_SINGLE_SERIES_VIEW">
 		<message>
-			<![CDATA[Shows an individual series.]]>
+			<![CDATA[JBS_MNU_SINGLE_SERIES_VIEW_TT]]>
 		</message>
-	</layout>
-	<state>
-		<name>Single Series</name>
-		<description>Shows the Series details view.</description>
-	</state>
+	</view>
 </metadata>

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: default.xml tf 12-11-2007 $ -->
 <metadata>
-	<layout title="Single Study Layout">
+	<layout title="JBS_MNU_SINGLE_STUDY_LAYOUT">
 		<message>
-			<![CDATA[Create a link to a single study]]>
+			<![CDATA[JBS_MNU_SINGLE_STUDY_LAYOUT_TT]]>
 		</message>
 	</layout>
 	<state>
-		<name>Single Study Layout</name>
-		<description>Choose a single study to link to</description>
+		<name>JBS_MNU_SINGLE_STUDY_LAYOUT</name>
 		<url addpath="/administrator/components/com_biblestudy/elements">
-			<param name="id" type="studydetails" default="" label="JBS_CMN_SELECT_STUDY" description="The study to link to" />
+			<param name="id" type="studydetails" default="" label="JBS_CMN_SELECT_STUDY" description="JBS_MNU_SELECT_STUDY_TT" />
 		</url>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="studydetails" />
