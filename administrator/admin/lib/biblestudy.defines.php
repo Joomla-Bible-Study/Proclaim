@@ -7,7 +7,6 @@
 * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
 * @link http://www.JoomlaBibleStudy.org
 **/
-//require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');  santon 2010-11-24 no more needed
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
 define ('BIBLESTUDY_VERSION', '7.0.0');
@@ -73,12 +72,5 @@ define ('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
 
 // Database defines
 define ('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
-
-//define the player in use whether All Videos (av) or All Videos Reloaded (avr)
-//We don't need this anymore as AVR has been removed from the component support
-//$admin = new JBSAdmin();
-//$player = $admin->getMediaPlayer();
-//define ('BIBLESTUDY_PLAYER',$player);
-
 
 ?>

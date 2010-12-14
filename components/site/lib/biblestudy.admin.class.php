@@ -6,7 +6,7 @@
  */
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once ( JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
 
 class JBSAdmin

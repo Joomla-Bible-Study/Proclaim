@@ -136,7 +136,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
         <td align="center"> <?php echo $published; ?> </td>
 		<td> <a href="<?php echo $link; ?>"><?php echo $date; ?></a> </td>
         <td><?php echo $row->message_type; ?></td>
-        <td><?php echo $row->bookname; echo ' '; echo $row->chapter_begin; echo ':'; echo $row->verse_begin; echo '-'; echo $row->chapter_end; echo ':'; echo $row->verse_end;?></td>
+        <td><?php echo JText::sprintf($row->bookname); echo ' '; echo $row->chapter_begin; echo ':'; echo $row->verse_begin; echo '-'; echo $row->chapter_end; echo ':'; echo $row->verse_end;?></td>
         <td><?php echo $row->teachername; ?></td>
 		<td><?php echo $row->studytitle; ?></td>
         <td><?php echo $row->series_text; ?></td>

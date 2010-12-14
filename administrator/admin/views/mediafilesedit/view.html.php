@@ -190,11 +190,11 @@ $this->assignRef('filepath', $filepath);
 		
 		if ($admin_params->get('show_location_media') > 0)
 			{
-				$query = "SELECT s.id AS value, CONCAT(s.studytitle,' - ', date_format(s.studydate, '%a %b %e %Y'), ' - ', s.studynumber, ' - ',l.location_text) AS text FROM #__bsms_studies AS s LEFT JOIN #__bsms_locations AS l ON (s.location_id = l.id) WHERE s.published = 1 ORDER BY s.studydate DESC";
+				$query = "SELECT s.id AS value, CONCAT(s.studytitle,' - ', date_format(s.studydate, '%Y-%m-%d'), ' - ', s.studynumber, ' - ',l.location_text) AS text FROM #__bsms_studies AS s LEFT JOIN #__bsms_locations AS l ON (s.location_id = l.id) WHERE s.published = 1 ORDER BY s.studydate DESC";
 			}
 		else 
 			{
-				$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
+				$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%Y-%m-%d'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
 			}
 		$database->setQuery($query);
 		$studies[] = JHTML::_('select.option', '0', '- '. JText::_( 'JBS_CMN_SELECT_STUDY' ) .' -' );
