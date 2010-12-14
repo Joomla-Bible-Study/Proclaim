@@ -272,7 +272,7 @@ function commentsEmail($params) {
 		$db =& JFactory::getDBO();
 		$query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE id = '.$comment_study_id;
 		$db->setQuery($query);
-		$comment_details = $db->loadObject($query);
+		$comment_details = $db->loadObject();
 		$comment_title = $comment_details->studytitle;
 		$comment_study_date = $comment_details->studydate;
 		$mail =& JFactory::getMailer();

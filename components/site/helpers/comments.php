@@ -11,14 +11,14 @@ function getComments($params, $row, $Itemid)
             
        
 		$database	= & JFactory::getDBO();
-		$editor =& JFactory::getEditor();
+	//	$editor =& JFactory::getEditor();
 
 		$query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = '.$row->id.' ORDER BY c.comment_date ASC';
 				//dump ($query, 'row');
 		$database->setQuery($query);
 		$commentsresult = $database->loadObjectList();
 		$pageclass_sfx = $params->get('pageclass_sfx');
-		$Itemid = JRequest::getVar('Itemid');
+		$Itemid = JRequest::getInt('Itemid','1','get');
 		$commentjava = "javascript:ReverseDisplay('comments')";
         
         switch ($params->get('link_comments',0))
@@ -30,7 +30,7 @@ function getComments($params, $row, $Itemid)
             break;
             
             case 1:
-            echo $comments = '<div id="comments">';
+            $comments = '<div id="comments">';
             break;
         }
 		
@@ -42,7 +42,7 @@ $comments .= '
 
 		foreach ($commentsresult as $comment){
 
-		$comment_date_display = JHTML::_('date',  $comment->comment_date, JText::_('DATE_FORMAT_LC3') , '$offset' );
+		$comment_date_display = JHTML::_('date',  $comment->comment_date, JText::_('DATE_FORMAT_LC3') );
 		$comments .= '<tbody>';
 		$comments .= '<tr><td><strong>'.$comment->full_name.'</strong> <i> - '.$comment_date_display.'</i></td></tr><tr><td>'.JText::_('JBS_CMN_COMMENT').': '.$comment->comment_text.'</td></tr><tr><td><hr /></td></tr>';
 		}//end of foreach
@@ -51,13 +51,7 @@ $comments .= '
 	} // End of if(count($commentsresult))
 
 
-
-
-
-
 		$comments .= '<table id="commentssubmittable">';
-
-
 
 		if ($allow < 10){$comments .= '<tr><td><strong>'.JText::_('JBS_CMT_REGISTER_TO_POST_COMMENTS').'</strong></td></tr>';}
         if ($allow > 10)
@@ -75,7 +69,8 @@ $comments .= '
 		//$comments .= $editor->display('comment_text', 'comment_text', '100%', '400', '70', '15').'</td></tr></table>';
 		$comments .= '<td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr>';
 //dump ($params->get('use_captcha'), 'captch: ');
-		if ($params->get('use_captcha') > 0) {
+		if ($params->get('use_captcha') > 0) 
+        {
 
 		// Begin captcha . Thanks OSTWigits
 		//Must be installed. Here we check that
@@ -91,7 +86,7 @@ $comments .= '
 				$comments .= JText::_('JBS_CMT_CAPTCHA_NOT_INSTALLED');
 			} //end of check for OSTWigit plugin
 
-			} // end of if for use of captcha
+		} // end of if for use of captcha
 		//dump ($params->get('comment_publish'));
 		$comments .=  '<tr><td>
 		<input type="hidden" name="study_id" id="study_id" value="'.$row->id.'" />
@@ -105,10 +100,10 @@ $comments .= '
 		<input type="hidden" name="Itemid" id="Itemid" value="'.$Itemid.'" />
 		<input type="submit" class="button" id="button" value="Submit"  />
 		</form>';
-		} //End of if $comment_access < $comment_user
-		//} //End of show_comments on for submit form
+		} //End of if $allow > 10
+		
 		$comments .= '</td></tr></table></div>';
 
 	return $comments;
-	} //end else if ($params->get('show_comments') < $comment_user)
+	} //end else if $allow > 9
 }

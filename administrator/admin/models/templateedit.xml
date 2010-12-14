@@ -1679,14 +1679,6 @@
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
-    <param name="show_pdf_view"
-           type="list"
-           default="1"
-           label="JBS_TPL_DETAILS_SHOW_PDF_VIEW"
-           description="JBS_TPL_DETAILS_SHOW_PDF_VIEW_TT">
-      <option value="0">JBS_CMN_HIDE</option>
-      <option value="1">JBS_CMN_SHOW</option>
-    </param>
     <param name="show_teacher_view"
            type="list"
            default="0"
