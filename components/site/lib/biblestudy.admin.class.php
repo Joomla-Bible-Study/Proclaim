@@ -230,6 +230,42 @@ function commentsPermission($params)
     return $comments;
     } // end of if Joomla 1.6
 } 
+
+function getShowLevel($row, $params)
+{
+    $show = null;
+    $database = JFactory::getDBO();
+    $query = "SELECT id, title FROM #__usergroups";
+    $database->setQuery($query);
+    $database->query();
+    $groupids = $database->loadObjectList();
+    $user =& JFactory::getUser();
+     if (JOOMLA_VERSION == '5')
+    {
+        $user_level    = $user->get('gid');
+       	if (!$user_level) { $user_level = 0; }
+        if ($row->show_level < $user_level ){$show = true;}
+        else {$show = false;}
+    }
+    else
+    {
+        $usrid = $user->get('id');
+        $getGroups = JAccess::getGroupsByUser($usrid);
+        $sum2 = count($getGroups); 
+        for ($i=0; $i<$sum2; $i++) 
+                {
+                    $newgrpid = $getGroups[$i];
+                    
+                      if ($newgrpid == $$row->show_level)
+                      {
+                        $show = true; return $show;
+                      }
+                }
+    }
+    
+    return $show;
+}
+
 } // End of class
 
 ?>
