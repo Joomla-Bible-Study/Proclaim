@@ -2,7 +2,7 @@
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
-require_once ( JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once ( JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 class biblestudyViewstudiesedit extends JView {
 	
 	function display($tpl = null) {
@@ -199,7 +199,7 @@ class biblestudyViewstudiesedit extends JView {
                 }
             }
             //$groups = array_merge($groups, $studiesedit->show_level);
-            $groups[]= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_STY_USER_LEVEL_TO_SHOW' ) .' -' );
+            $groups[]= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_STY_SELECT_GROUPS' ) .' -' );
             $groups	= array_merge( $groups, $database->loadObjectList() );
             $lists['show_level'] = JHTML::_('select.genericlist', $groups, 'show_level[]', 'class="inputbox" multiple="multiple" ', 'value', 'text',  $studiesedit->show_level);
          // $lists['specialty'] = JHTML::_('select.genericlist', $options, 'specialty[]', 'class="inputbox" multiple="multiple" ', 'value', 'text', $row->specialty);
