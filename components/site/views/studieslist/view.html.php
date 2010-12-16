@@ -231,13 +231,13 @@ class biblestudyViewstudieslist extends JView {
 		        $maxBooks = 48;
 		        break;
 		    case 127:
-		        $maxBooks = 12;
+		        $maxBooks = 14;
 		        break;
 		    case 128:
 		        $maxBooks = 14;
 		        break;
 		    case 129:
-		        $maxBooks = 3;
+		        $maxBooks = 4;
 		        break;
 		    case 130:
 		        $maxBooks = 9;
@@ -267,7 +267,7 @@ class biblestudyViewstudieslist extends JView {
 		        $maxBooks = 14;
 		        break;
 		    case 139:
-		        $maxBooks = 4;
+		        $maxBooks = 3;
 		        break;
 		    case 140:
 		        $maxBooks = 28;
@@ -349,6 +349,27 @@ class biblestudyViewstudieslist extends JView {
 		        break;
 		    case 166:
 		        $maxBooks = 22;
+		        break;
+		    case 167:   // JBS_BBK_TOBIT
+		        $maxBooks = 14;
+		        break;
+		    case 168:   // JBS_BBK_JUDITH
+		        $maxBooks = 16;
+		        break;
+		    case 169:   // JBS_BBK_1MACCABEES
+		        $maxBooks = 16;
+		        break;
+		    case 170:   // JBS_BBK_2MACCABEES
+		        $maxBooks = 15;
+		        break;
+		    case 171:   // JBS_BBK_WISDOM
+		        $maxBooks = 19;
+		        break;
+		    case 172:   // JBS_BBK_ECCLESIASTICUS
+		        $maxBooks = 51;
+		        break;
+		    case 173:   // JBS_BBK_BARUCH
+		        $maxBooks = 6;
 		        break;
 		}
 		for ($c=1;$c<=$maxBooks;$c++) {
