@@ -2,7 +2,7 @@
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
-
+require_once ( JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 class biblestudyViewstudiesedit extends JView {
 	
 	function display($tpl = null) {
@@ -44,7 +44,7 @@ class biblestudyViewstudiesedit extends JView {
 		// build the html select list for ordering
 
 		//Build the select list for the study image
-		$imagesPath = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images', 'stories');
+		$imagesPath = JPATH_SITE.DS.'images'.DS.$admin_params->get('study_images');
 		$imageList 	= JFolder::files($imagesPath, null, null, null, array('index.html'));
 
 		array_unshift($imageList, '- '.JText::_('JBS_CMN_NO_IMAGE').' -');
@@ -164,6 +164,48 @@ class biblestudyViewstudiesedit extends JView {
 		$types6 			= array_merge( $types6, $database->loadObjectList() );
 		$lists['server_cd'] = JHTML::_('select.genericlist', $types6, 'server_cd', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->server_cd );
 
+    
+        //Get user groups and put into select list Since 1.6
+        if (JOOMLA_VERSION == '6')
+        {
+            $query = "SELECT id AS value, title AS text FROM #__usergroups ORDER BY title ASC";
+            $database->setQuery($query);
+            $database->query();
+            $groups = $database->loadObjectList();
+            if (is_array($studiesedit->show_level))
+            {
+                $count2 = count($groups);
+                for ($k =0; $k<$count2; $k++)
+                {
+                    $sum = count($studiesedit->show_level);
+                    for ($i=0; $i<$sum2; $i++)
+                    {
+                        if ($groups[$k]->value == $show_level[$i]->id)
+                        {
+                            unset($groups[$k]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                
+                for ($j=0; $j<$count2; $j++)
+                {
+                    if ($groups[$j]->value == $studiesedit->show_level)
+                    {
+                        unset($groups[$j]);
+                    }
+                }
+            }
+            //$groups = array_merge($groups, $studiesedit->show_level);
+            $groups[]= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_STY_USER_LEVEL_TO_SHOW' ) .' -' );
+            $groups	= array_merge( $groups, $database->loadObjectList() );
+            $lists['show_level'] = JHTML::_('select.genericlist', $groups, 'show_level[]', 'class="inputbox" multiple="multiple" ', 'value', 'text',  $studiesedit->show_level);
+         // $lists['specialty'] = JHTML::_('select.genericlist', $options, 'specialty[]', 'class="inputbox" multiple="multiple" ', 'value', 'text', $row->specialty);
+         print_r($groups);
+        }
+        
 		$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('mediafiles', $mediafiles);
 		$this->assignRef('lists',		$lists);

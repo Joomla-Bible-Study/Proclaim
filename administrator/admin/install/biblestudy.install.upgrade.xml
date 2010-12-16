@@ -182,7 +182,7 @@
 				  `hits` int(10) NOT NULL DEFAULT '0',
 				  `user_id` int(10) DEFAULT NULL,
 				  `user_name` varchar(50) DEFAULT NULL,
-				  `show_level` int(2) NOT NULL DEFAULT '0',
+				  `show_level` varchar(100) NOT NULL DEFAULT '0',
 				  `location_id` int(3) DEFAULT NULL,
 				  `studytitle` text,
 				  `studyintro` text,
@@ -333,7 +333,7 @@
 					`location_text` VARCHAR(250) NULL,
 					`published` TINYINT(1) NOT NULL DEFAULT '1',
 					PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`</query>
-			<query mode="silenterror">ALTER TABLE #__bsms_studies ADD COLUMN show_level INT(2) NOT NULL default '0' AFTER user_name</query>
+			<query mode="silenterror">ALTER TABLE #__bsms_studies ADD COLUMN show_level varchar(100) NOT NULL default '0' AFTER user_name</query>
 			<query mode="silenterror">ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level</query>
 		</version>
 		<version version="6.1.0" versiondate="2009-11-30" build="613" versionname="Numbers">
@@ -425,6 +425,11 @@
         </version>
         <version version="6.2.3" versiondate="2010-11-03" build="623" versionname="1Samuel">
             <phpfile name="biblestudy.623.upgrade.php" />
+        </version>
+         <version version="6.2.4" versiondate="2010-11-03" build="624" versionname="2Samuel">
+            </version>
+        <version version="7.0.0" versiondate="2011-01-12" build="1190" versionname="1Kings">
+            <query mode="silenterror">ALTER TABLE #__bsms_studies MODIFY `show_level` varchar(100)</query>
         </version>
 	</upgrade>
 </comupgrade>

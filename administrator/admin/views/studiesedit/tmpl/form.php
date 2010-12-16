@@ -242,7 +242,16 @@ echo $pane->endPane(); */
 	</tr>
 	<tr>
         <td class="key" align="left"><?php echo JText::_('JBS_STY_USER_LEVEL_TO_SHOW');?></td>
-		<td><select name="show_level" id="show_level" class="inputbox"
+		<td>
+        <?php //If Joomla 1.6 get the user group list from the view.html.php
+        if (JOOMLA_VERSION == '6')
+        {
+            echo $this->lists['show_level'];
+        }
+        else
+        {
+            ?>
+            <select name="show_level" id="show_level" class="inputbox"
 			size="1">
 			<?php
 			$show = $this->studiesedit->show_level;
@@ -262,7 +271,11 @@ echo $pane->endPane(); */
 			<?php if ($show == '23') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_MANAGERS');?></option>
 			<option value="24"
 			<?php if ($show == '24') {echo 'selected="selected"';}?>><?php echo JText::_('JBS_CMN_ADMIN_SUPERADMIN');?></option>
-		</select></td>
+		</select>
+        <?php
+        } // end of if else joomla 1.6
+        ?>
+        </td>
 	</tr>
     <tr>
     	<td class="key" alsign="left">
