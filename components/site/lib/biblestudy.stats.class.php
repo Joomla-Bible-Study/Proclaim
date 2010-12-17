@@ -26,6 +26,7 @@ defined( '_JEXEC' ) or die('Restricted access');
 * Bible Study stats support class
 * @package com_biblestudy
 */
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once ($path1.'helper.php');
 class jbStats {
@@ -46,14 +47,21 @@ function top_score_site($item)
     //temporary
     if (!$level_user){$level_user = '23';}
 	$db = &JFactory::getDBO();
-	$db->setQuery('SELECT study_id, sum(downloads + plays) as added FROM #__bsms_mediafiles where published = 1 GROUP BY study_id');
+	$db->setQuery('SELECT m.study_id, s.show_level, s.published AS spub, sum(m.downloads + m.plays) as added FROM #__bsms_mediafiles AS m 
+    LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id)
+     where m.published = 1 GROUP BY m.study_id');
 	$format = $admin_params->get('format_popular','0');
 	
 	$db->query();
-	$results = $db->loadObjectList(); 
+	$rows = $db->loadObjectList(); 
+    $admin = new JBSAdmin();
+    $results = $admin->showRows($rows);
+    
 	foreach ($results as $result)
 		{
-			$db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id) WHERE #__bsms_studies.show_level <= '.$level_user.' AND #__bsms_mediafiles.study_id = '.$result->study_id);
+			$db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id, 
+            #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id) 
+            WHERE #__bsms_mediafiles.study_id = '.$result->study_id);
 			$db->query();
 			$hits = $db->loadObject();
 			if (!$hits->studytitle){$name = $hits->id;}else{$name = $hits->studytitle;}

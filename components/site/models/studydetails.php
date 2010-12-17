@@ -94,9 +94,7 @@ class biblestudyModelstudydetails extends JModel
 	{
 		// Load the data
 		if (empty( $this->_data )) {
-		  	$user =& JFactory::getUser();
-        $level_user = $user->get('gid');
-        if (!$level_user){$level_user = '23';}
+		  	
 			$id = JRequest::getVar('id', 0,'GET','INT');
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS teachername, '
 			. ' #__bsms_teachers.title AS teachertitle, '
@@ -115,7 +113,7 @@ class biblestudyModelstudydetails extends JModel
 			. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
 			. ' LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
             . ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
-			. '  WHERE #__bsms_studies.id = '.$id.' AND #__bsms_studies.show_level <= '.$level_user
+			. '  WHERE #__bsms_studies.id = '.$id 
             . ' GROUP BY #__bsms_studies.id';
 			//.$this->_id.;
 			$this->_db->setQuery( $query );

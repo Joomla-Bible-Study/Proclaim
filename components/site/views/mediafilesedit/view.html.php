@@ -3,20 +3,21 @@ defined('_JEXEC') or die();
 
 jimport ('joomla.application.component.view');
 jimport ('joomla.application.component.helper');
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 class biblestudyViewmediafilesedit extends JView {
 
 	function display($tpl = null) {
 		$admin =& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
-		//dump ($admin);
-		$user =& JFactory::getUser();
-		$entry_user = $user->get('gid');
-		$entry_access = $admin_params->get('entry_access', 24) ;
-		$allow_entry = $admin_params->get('allow_entry_study', 0);
-		if ($allow_entry < 1) {return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); }
-		if (!$entry_user) { $entry_user = 0; }
-		if ($entry_user < $entry_access ){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}
+		//Make sure the user is allowed to access the edit form
+        $permission = new JBSAdmin();
+        $allow = $permission->getPermission();
+        if (!$allow)
+        {
+            return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN')); 
+        }
+		
 		
 		if (JPluginHelper::importPlugin('system', 'avreloaded')) {
 			require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_avreloaded'.DS.'elements'.DS.'insertbutton.php');
@@ -197,6 +198,21 @@ class biblestudyViewmediafilesedit extends JView {
 		// build the html select list for ordering
 		$lists['ordering'] = JHTML::_('list.specificordering',  $mediafilesedit, $mediafilesedit->id, $ordering, 1 );
 
+ //Get user groups and put into select list Since 1.6
+        if (JOOMLA_VERSION == '6')
+        {
+            
+            $query = "SELECT id AS value, title AS text FROM #__usergroups ORDER BY title ASC";
+            $database->setQuery($query);
+            $database->query();
+            $groups = $database->loadObjectList();
+           
+            $studiesedit->show_level = explode(",",$studiesedit->show_level);
+          
+            JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+            $lists['show_level'] = JHTML::_('select.genericlist', $groups, 'show_level[]', 'class="inputbox" multiple="multiple" ', 'value', 'text',  $studiesedit->show_level);
+           
+        }
 //TF added this to make studies work in mediafiles
 		//$query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC";
 		//$database->setQuery($query);

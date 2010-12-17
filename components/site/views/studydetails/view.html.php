@@ -6,6 +6,7 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
 //jimport ('joomla.application.plugin.helper');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 $uri 		=& JFactory::getURI();
 //$pathway	=& $mainframe->getPathway();
 
@@ -33,8 +34,11 @@ class biblestudyViewstudydetails extends JView
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
 		//dump ($params);
-		$studydetails		=& $this->get('Data');
-        if (!$studydetails->id){echo '<H1>'.JText::_('JBS_STY_NO_RESULTS_NOT_ALLOWED_PLEASE_LOGIN').'</H1>';}
+		$studydetails  =& $this->get('Data');
+        $adminrows = new JBSAdmin();
+        $show = $adminrows->getShowLevel($studydetails);
+        if (!$show){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}
+       // if (!show){echo '<H1>'.JText::_('JBS_STY_NO_RESULTS_NOT_ALLOWED_PLEASE_LOGIN').'</H1>';}
 		//dump ($studydetails, "SD");
 		$admin =& $this->get('Admin');
 		

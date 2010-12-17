@@ -276,7 +276,7 @@ function getSeriesstudies($id, $params, $admin_params, $template)
     //	$numrows = $db->getAffectedRows();
     
         $admin = new JBSAdmin();
-        $result = $admin->showRows($results, $params);
+        $result = $admin->showRows($results);
         $numrows = count($result);
         
     
@@ -541,7 +541,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
         $count = count($result);
         for ($i=0; $i<$count; $i++)
         {
-            $show_level = $admin->getShowLevel($result[$i], $params);
+            $show_level = $admin->getShowLevel($result[$i]);
             if (!$show_level)
             {
                 unset($result[$i]);

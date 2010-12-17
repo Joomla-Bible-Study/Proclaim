@@ -325,15 +325,7 @@ function getTemplate() {
 			$where[] = " date_format(#__bsms_studies.studydate, '%Y')= ".(int) $filter_year;
 		}
 		
-		//Added for user level control
-		$user =& JFactory::getUser();
-		$level_user = $user->get('gid');
-        if (!$level_user){$level_user = '23';}
-		//$level_user = $user->usertype;
-		//dump ($level_user, 'Level_user: ');
-		$where[] = ' #__bsms_studies.show_level <= '.$level_user;
-
-		//End for user level control
+	
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 

@@ -230,7 +230,7 @@ function commentsPermission($params)
     } // end of if Joomla 1.6
 } 
 
-function getShowLevel($row, $params)
+function getShowLevel($row)
 {
     $show = null;
     $database = JFactory::getDBO();
@@ -251,32 +251,38 @@ function getShowLevel($row, $params)
         $usrid = $user->get('id');
         $getGroups = JAccess::getGroupsByUser($usrid);
         $sum2 = count($getGroups); 
-        
+        $showvar = explode(',',$row->show_level);
+        $sum3 = count($showvar);
+        for ($i = 0; $i<$sum3; $i++)
+        {
+
         foreach ($getGroups AS $newgrpid) 
-                {
-                   
-                    
-                      if ($newgrpid == $row->show_level)
-                      {
-                        $show = true; return $show;
-                      }
-                }
+            {
+                  if ($newgrpid == $showvar[$i])
+                  {
+                    $show = true; return $show;
+                  }
+            }
+
+        }
     }
     
     return $show;
 }
 
-function showRows($results, $params)
+function showRows($results)
 {
     $count = count($results);
+    
         for ($i=0; $i<$count; $i++)
         {
-            $show_level = $this->getShowLevel($results[$i], $params);
+            $show_level = $this->getShowLevel($results[$i]);
             if (!$show_level)
             {
                 unset($results[$i]);
             }
         }
+       
         return $results;
 }
 } // End of class

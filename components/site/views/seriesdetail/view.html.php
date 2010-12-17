@@ -66,7 +66,7 @@ class biblestudyViewseriesdetail extends JView
        
 		$db->setQuery( $query );
 		$studies = $db->loadObjectList();
-        
+        dump ($studies, 'studies: ');
         JRequest::setVar('returnid',$items->id,'get',true);
 		//dump ($items->id, 'studies: ');
 		//Passage link to BibleGateway

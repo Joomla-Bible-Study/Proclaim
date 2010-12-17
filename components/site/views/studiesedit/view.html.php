@@ -80,8 +80,8 @@ class biblestudyViewstudiesedit extends JView
 	//	$this->assignRef('toolbar', $toolbar);
 		
 		$javascript			= 'onchange="changeDisplayImage();"';
-		$directory = DS.'images/'.$admin_params->get('study_images', 'stories');
-		$studypath = JPATH_SITE.'/images/'.$admin_params->get('study_images', 'stories');
+		$directory = DS.'images/'.$admin_params->get('study_images');
+		$studypath = JPATH_SITE.'/images/'.$admin_params->get('study_images');
 		$fileList 	= JFolder::files($studypath);
 		foreach($fileList as $key=>$value)
 		{
@@ -173,7 +173,7 @@ class biblestudyViewstudiesedit extends JView
 			. ' WHERE mf.study_id = '.$studiesedit->id;
 			$database->setQuery( $query );
 			$mediafiles = $database->loadObjectList();
-		
+		dump ($mediafiles, 'mediafiles: ');
 		$query4 = 'SELECT id AS value, location_text AS text, published'
 			. ' FROM #__bsms_locations'
 			. ' WHERE published = 1'
@@ -220,6 +220,21 @@ class biblestudyViewstudiesedit extends JView
 		$types6 			= array_merge( $types6, $database->loadObjectList() );
 		$lists['server_cd'] = JHTML::_('select.genericlist', $types6, 'server_cd', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->server_cd );
 		
+         //Get user groups and put into select list Since 1.6
+        if (JOOMLA_VERSION == '6')
+        {
+            
+            $query = "SELECT id AS value, title AS text FROM #__usergroups ORDER BY title ASC";
+            $database->setQuery($query);
+            $database->query();
+            $groups = $database->loadObjectList();
+           
+            $studiesedit->show_level = explode(",",$studiesedit->show_level);
+          
+            JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+            $lists['show_level'] = JHTML::_('select.genericlist', $groups, 'show_level[]', 'class="inputbox" multiple="multiple" ', 'value', 'text',  $studiesedit->show_level);
+           
+        }
 		$this->assignRef('admin_params', $admin_params);
 		if ($studiesedit->id < 1) { $mediafiles = false;}
 		$this->assignRef('mediafiles', $mediafiles);

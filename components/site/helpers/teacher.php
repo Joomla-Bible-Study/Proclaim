@@ -2,6 +2,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 function getTeacher($params, $id, $admin_params)
 {
 	
@@ -296,8 +297,8 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
 		. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
 		. ' where #__bsms_teachers.id = ' .$id;
 	*/
-    $userinfo =& JFactory::getUser();
-	$user = $userinfo->get('gid');
+  //  $user =& JFactory::getUser();
+//	$userid = $userinfo->get('gid');
 	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 	  . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 	  . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
@@ -309,13 +310,17 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
 	  . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
 	  . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
 	  . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-	  . ' where #__bsms_teachers.id = ' .$id.' AND #__bsms_studies.published = 1 AND #__bsms_studies.show_level <= '.$user
+	  . ' where #__bsms_teachers.id = ' .$id.' AND #__bsms_studies.published = 1 '
 	  . ' GROUP BY #__bsms_studies.id'
 	  . ' order by studydate desc'
 	  . $limit;
 	
 	$db->setQuery($query);
-	$result = $db->loadObjectList();
+	$results = $db->loadObjectList();
+    
+    //Make sure we unset the rows the user isn't allowed to see
+    $admin = new JBSAdmin();
+    $result = $admin->showRows($results);
 	$numrows = $db->getAffectedRows(); 
 	$studieslimit = $params->get('studies',10);
 	//dump($studieslimit, 'numrows: ');

@@ -3,7 +3,7 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 jimport( 'joomla.application.component.view' );
 $uri 		=& JFactory::getURI();
 //$pathway	=& $mainframe->getPathway();
@@ -16,8 +16,8 @@ class biblestudyViewteacherdisplay extends JView
 		//TF added
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		// get the user information
-        $userinfo =& JFactory::getUser();
-		$user = $userinfo->get('gid');
+    //    $userinfo =& JFactory::getUser();
+	//	$user = $userinfo->get('gid');
         
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
@@ -82,11 +82,13 @@ class biblestudyViewteacherdisplay extends JView
  LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)
  LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id) 
  LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)
- WHERE #__bsms_studies.teacher_id = '.$teacher->id.' AND #__bsms_studies.published = 1 AND #__bsms_studies.show_level <= '.$user.' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
+ WHERE #__bsms_studies.teacher_id = '.$teacher->id.' AND #__bsms_studies.published = 1 GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
 '.$limit;
 		$database->setQuery( $query );
-		$studies = $database->loadObjectList();
-		//dump ($studies, 'studies: ');
+		$results = $database->loadObjectList();
+    //Make sure we unset the rows the user isn't allowed to see
+    $admin = new JBSAdmin();
+    $studies = $admin->showRows($results);
 		if($this->getLayout() == 'pagebreak') {
 			$this->_displayPagebreak($tpl);
 			return;
