@@ -65,6 +65,7 @@ class biblestudyViewserieslist extends JView {
 		$model->_select = $tmplEngine->buildSqlSELECT($tmplSingleStudyList);
 */		//dump ($template, 'template: ');
 		$items = $this->get('Data');
+      //  dump ($items, 'items: ');
 		$total = $this->get('Total');
 		//dump ($items, 'items: ');
 		$pagination = $this->get('Pagination');

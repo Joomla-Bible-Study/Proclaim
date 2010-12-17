@@ -84,6 +84,7 @@ function __construct()
 	function getDownloads($id) {
 		$query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = '.$id.' GROUP BY study_id';
 		$result = $this->_getList($query);
+        if (!$result){$result = '0'; return $result;}
 		return $result[0]->totalDownloads;
 		
 	}
@@ -91,6 +92,7 @@ function __construct()
 	function getPlays($id) {
 		$query = ' SELECT SUM(plays) AS totalPlays FROM #__bsms_mediafiles WHERE study_id = '.$id.' GROUP BY study_id';
 		$result = $this->_getList($query);
+        if (!$result){$result = '0'; return $result;}
 		return $result[0]->totalPlays;
 		
 	}

@@ -5,6 +5,7 @@ defined('_JEXEC') or die(); ?>
 
 <?php 
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
+$listingcall = JView::loadHelper('serieslist');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 $document =& JFactory::getDocument();
@@ -13,7 +14,7 @@ $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/bibl
 $params = $this->params;
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}	
-$listingcall = JView::loadHelper('serieslist');
+//$listingcall = JView::loadHelper('serieslist');
 
 ?>
 <form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
@@ -81,8 +82,8 @@ if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }
 <div class="listingfooter" >
 	<?php 
       
-      echo $this->pagination->getPagesLinks();
-      echo $this->pagination->getPagesCounter();
+   //   echo $this->pagination->getPagesLinks();
+   //   echo $this->pagination->getPagesCounter();
       //echo $this->pagination->getListFooter(); ?>
 </div> <!--end of bsfooter div-->
   </div><!--end of bspagecontainer div-->

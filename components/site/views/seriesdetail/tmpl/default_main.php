@@ -38,7 +38,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
  
 	$listing = getSerieslist($this->items, $this->params, $oddeven = 'bsodd', $this->admin_params, $this->template, $view = 1);
 	//dump ($listing, 'listing: ');
- 	echo $listing;
+	echo $listing;
  	
  	//echo '</table>';
  
@@ -61,7 +61,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	case 1:
     ?></tbody></table> <table id="bslisttable" cellspacing="0"><tr><td><?php
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule=0);
+     $header = getHeader($this->studies[0], $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule=0);
 	 echo $header;
 		
 		$class1 = 'bsodd';

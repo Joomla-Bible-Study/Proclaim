@@ -16,7 +16,7 @@ class biblestudyViewstudiesedit extends JView
 	{
 		
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
-        include_once($path1.'authenticate.php');
+        
         $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$studiesedit		=& $this->get('Data');
 		$isNew		= ($studiesedit->id < 1);

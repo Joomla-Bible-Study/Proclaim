@@ -168,42 +168,17 @@ class biblestudyViewstudiesedit extends JView {
         //Get user groups and put into select list Since 1.6
         if (JOOMLA_VERSION == '6')
         {
+            
             $query = "SELECT id AS value, title AS text FROM #__usergroups ORDER BY title ASC";
             $database->setQuery($query);
             $database->query();
             $groups = $database->loadObjectList();
-            if (is_array($studiesedit->show_level))
-            {
-                $count2 = count($groups);
-                for ($k =0; $k<$count2; $k++)
-                {
-                    $sum = count($studiesedit->show_level);
-                    for ($i=0; $i<$sum2; $i++)
-                    {
-                        if ($groups[$k]->value == $show_level[$i]->id)
-                        {
-                            unset($groups[$k]);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                
-                for ($j=0; $j<$count2; $j++)
-                {
-                    if ($groups[$j]->value == $studiesedit->show_level)
-                    {
-                        unset($groups[$j]);
-                    }
-                }
-            }
-            //$groups = array_merge($groups, $studiesedit->show_level);
-            $groups[]= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_STY_SELECT_GROUPS' ) .' -' );
-            $groups	= array_merge( $groups, $database->loadObjectList() );
+           
+            $studiesedit->show_level = explode(",",$studiesedit->show_level);
+          
+            JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
             $lists['show_level'] = JHTML::_('select.genericlist', $groups, 'show_level[]', 'class="inputbox" multiple="multiple" ', 'value', 'text',  $studiesedit->show_level);
-         // $lists['specialty'] = JHTML::_('select.genericlist', $options, 'specialty[]', 'class="inputbox" multiple="multiple" ', 'value', 'text', $row->specialty);
-         print_r($groups);
+           
         }
         
 		$this->assignRef('admin_params', $admin_params);

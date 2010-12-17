@@ -7,7 +7,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	//dump ($row);
 	$listing = '';
 	//$listing = '<table id="bslisttable" cellspacing="0">';
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
@@ -257,7 +257,7 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	$rows = $db->getAffectedRows();
     
           //temporary
-        if (!$level_user){$level_user = '0';}
+        
     	$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
     	. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
     	. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
@@ -272,19 +272,11 @@ function getSeriesstudies($id, $params, $admin_params, $template)
     	. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)'
     	.' WHERE s.series_id = '.$id.' AND s.published = 1 ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC');
         $db->setQuery($query);
-    	$result = $db->loadObjectList();
-    	$numrows = $db->getAffectedRows();
+    	$results = $db->loadObjectList();
+    //	$numrows = $db->getAffectedRows();
     
         $admin = new JBSAdmin();
-        $count = count($result);
-        for ($i=0; $i<$count; $i++)
-        {
-            $show_level = $admin->getShowLevel($result[$i], $params);
-            if (!$show_level)
-            {
-                unset($result[$i]);
-            }
-        }
+        $result = $admin->showRows($results, $params);
         $numrows = count($result);
         
     

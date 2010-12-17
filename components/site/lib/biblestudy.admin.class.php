@@ -74,15 +74,16 @@ class JBSAdmin
     {
         $usrid = $user->get('id');
         $getGroups = JAccess::getGroupsByUser($usrid);
+        
         $sum2 = count($getGroups);    
-    
+   
     if (!is_array($entry_access))
         {
             $entry_access = $params->get('entry_access');
-            for ($i=0; $i<$sum2; $i++) 
+           
+           foreach ($getGroups AS $newgrpid)
                 {
-                    $newgrpid = $getGroups[$i];
-                    
+                 
                       if ($newgrpid == $entry_access)
                       {
                         $results[] = 2;
@@ -97,15 +98,13 @@ class JBSAdmin
         }
         else
         {
-            
-
             foreach($entry_access AS $entry)
             {
                 
-                for ($i=0; $i<$sum2; $i++) 
+                
+           foreach ($getGroups AS $newgrpid)
                 {
-                    $newgrpid = $getGroups[$i];
-                    
+                                     
                       if ($newgrpid == $entry)
                       {
                         $results[] = 2;
@@ -176,9 +175,9 @@ function commentsPermission($params)
         foreach($show_comments AS $entry)
             {
                 
-                for ($i=0; $i<$sum2; $i++) 
+                foreach ($getGroups AS $newgrpid) 
                 {
-                    $newgrpid = $getGroups[$i];
+                    
                     
                       if ($newgrpid == $entry)
                       {
@@ -205,9 +204,9 @@ function commentsPermission($params)
     foreach($enter_comments AS $entry)
             {
                 
-                for ($i=0; $i<$sum2; $i++) 
+                foreach ($getGroups AS $newgrpid) 
                 {
-                    $newgrpid = $getGroups[$i];
+                   
                     
                       if ($newgrpid == $entry)
                       {
@@ -252,11 +251,12 @@ function getShowLevel($row, $params)
         $usrid = $user->get('id');
         $getGroups = JAccess::getGroupsByUser($usrid);
         $sum2 = count($getGroups); 
-        for ($i=0; $i<$sum2; $i++) 
+        
+        foreach ($getGroups AS $newgrpid) 
                 {
-                    $newgrpid = $getGroups[$i];
+                   
                     
-                      if ($newgrpid == $$row->show_level)
+                      if ($newgrpid == $row->show_level)
                       {
                         $show = true; return $show;
                       }
@@ -266,6 +266,19 @@ function getShowLevel($row, $params)
     return $show;
 }
 
+function showRows($results, $params)
+{
+    $count = count($results);
+        for ($i=0; $i<$count; $i++)
+        {
+            $show_level = $this->getShowLevel($results[$i], $params);
+            if (!$show_level)
+            {
+                unset($results[$i]);
+            }
+        }
+        return $results;
+}
 } // End of class
 
 ?>
