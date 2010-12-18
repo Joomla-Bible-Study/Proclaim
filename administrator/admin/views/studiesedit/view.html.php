@@ -169,6 +169,7 @@ class biblestudyViewstudiesedit extends JView {
         if (JOOMLA_VERSION == '6')
         {
             
+            
             $query = "SELECT id AS value, title AS text FROM #__usergroups ORDER BY title ASC";
             $database->setQuery($query);
             $database->query();
