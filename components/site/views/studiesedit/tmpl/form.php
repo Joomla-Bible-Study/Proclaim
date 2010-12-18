@@ -351,7 +351,7 @@ echo $pane->endPane();
 </table>
 </fieldset>
 </div>
-<?php if ($this->studiesedit->id > 1)
+<?php if ($this->studiesedit->id )
 	{ ?>
 <div class="editcell">
 <fieldset class="adminlist"><legend><?php echo JText::_( 'JBS_STY_MEDIA_THIS_STUDY' ); ?></legend>

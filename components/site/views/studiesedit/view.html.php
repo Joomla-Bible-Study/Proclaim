@@ -173,7 +173,7 @@ class biblestudyViewstudiesedit extends JView
 			. ' WHERE mf.study_id = '.$studiesedit->id;
 			$database->setQuery( $query );
 			$mediafiles = $database->loadObjectList();
-		dump ($mediafiles, 'mediafiles: ');
+	//	dump ($mediafiles, 'mediafiles: ');
 		$query4 = 'SELECT id AS value, location_text AS text, published'
 			. ' FROM #__bsms_locations'
 			. ' WHERE published = 1'

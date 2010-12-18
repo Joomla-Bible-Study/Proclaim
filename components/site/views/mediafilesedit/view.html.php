@@ -106,9 +106,10 @@ class biblestudyViewmediafilesedit extends JView {
 					array_unshift($docManCategories, JHTML::_('select.option', null, '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -', 'id', 'title'));
 				}
 		}
-		
+	if ($articlesSections)
+    {	
 		array_unshift($articlesSections, JHTML::_('select.option', null, '- '.JTEXT::_('JBS_MED_SELECT_SECTION').' -', 'id', 'title'));
-		
+	}	
 		//Run only if Virtuemart enabled
 		if ($vmenabled)
 		{
@@ -203,9 +204,9 @@ class biblestudyViewmediafilesedit extends JView {
         {
             
             $query = "SELECT id AS value, title AS text FROM #__usergroups ORDER BY title ASC";
-            $database->setQuery($query);
-            $database->query();
-            $groups = $database->loadObjectList();
+            $db->setQuery($query);
+            $db->query();
+            $groups = $db->loadObjectList();
            
             $studiesedit->show_level = explode(",",$studiesedit->show_level);
           
