@@ -3,11 +3,7 @@
 $user =& JFactory::getUser();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 $params = $this->params;
-$entry_user = $user->get('gid');
-$user_submit_name = $user->name;
-if ($user->name == ''){$user_submit_name = '';}
-$entry_access = ($params->get('entry_access')) - 1;
-$allow_entry = $params->get('allow_entry_study');
+
 $templatemenuid = $params->get('teachertemplateid');
 //dump ($templatemenuid);
 if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');}

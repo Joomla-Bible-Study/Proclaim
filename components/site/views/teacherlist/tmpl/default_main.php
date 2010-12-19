@@ -4,11 +4,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 $user =& JFactory::getUser();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 $params = $this->params;
-$entry_user = $user->get('gid');
-$user_submit_name = $user->name;
-if ($user->name == ''){$user_submit_name = '';}
-$entry_access = ($params->get('entry_access')) - 1;
-$allow_entry = $params->get('allow_entry_study');
+
 $templatemenuid = $params->get('teachertemplateid');
 //dump ($templatemenuid);
 if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');}
@@ -51,10 +47,7 @@ $class1 = 'bsodd';
 
     
     <tr class="<?php echo $oddeven; ?> lastrow">
-    <?php if ($allow_entry > 0) {
-if ($entry_access <= $entry_user){ ?>
-  <td><a href="index.php?option=com_biblestudy&view=teacheredit&layout=form&controller=teacheredit&cid[]=<?php echo $item->id?>"><?php echo '['.JText::_('JBS_CMN_EDIT').']';?></a></td>
-  <?php } }?>
+   
         <td class="bsm_teacherthumbnail" ><?php if ($item->thumb || $item->teacher_thumbnail){?>
         	<img src="<?php echo $image->path;?>" border="1" title="<?php echo $item->teachername;?>" alt="<?php echo $item->teachername;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" /><?php } ?>
         </td>
