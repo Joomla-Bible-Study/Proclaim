@@ -49,15 +49,15 @@ function openConverter1()
 ?>
 
     <table class="admintable">
- <!-- <tr><td><input type="submit" value="submit" onclick="validate_form()"/> <input type="button" value="cancel"> </td></tr>-->
+<!-- <tr><td><input type="submit" value="submit" onclick="validate_form()"/> <input type="button" value="cancel"> </td></tr>-->
     <tr><td></td>
     <td align="left"><table width="200"><tr><td >	<button type="button" onclick="submitbutton('save')">
-		<?php echo JText::_('Save');  ?>
+		<?php echo JText::_('JBS_CMN_SAVE');  ?>
 	</button></td><td>
 	<button type="button" onclick="submitbutton('cancel')">
-		<?php echo JText::_('Cancel') ?>
+		<?php echo JText::_('JBS_CMN_CANCEL') ?>
 	</button></td><td align="left"><?php echo $this->toolbar;?></td></tr></table></td></tr>
-<tr><td class="key"><?php echo JText::_('Parameters');?></td><td width="75">
+<tr><td class="key"><?php echo JText::_('JBS_CMN_PARAMETERS');?></td><td width="75">
 <?php
 jimport('joomla.html.pane');
 $pane =& JPane::getInstance ('sliders');

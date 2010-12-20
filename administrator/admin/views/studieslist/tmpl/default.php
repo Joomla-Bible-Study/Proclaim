@@ -83,7 +83,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
           <th width="20" align="center"><?php echo JHTML::_('grid.sort','JBS_CMN_PUBLISHED','published',$this->lists['order_Dir'],$this->lists['order']); ?></th>
 		  <th><?php echo JHTML::_('grid.sort','JBS_CMN_STUDY_DATE','studydate',$this->lists['order_Dir'],$this->lists['order']); ?></th>
           <th><?php echo JHTML::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messagetype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-          <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_SCIPTURE', 'booknumber', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+          <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_SCRIPTURE', 'booknumber', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
           <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_TEACHER' , 'teacher_id', $this->lists['order_Dir'], $this->lists['order']); ?></th>
 		  <th><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_TITLE', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
           <th><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_SERIES', 'series_id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>

@@ -85,7 +85,7 @@ echo $pane->endPane(); */
 			id="studyintro"><?php echo $this->studiesedit->studyintro;?></textarea></td>
 	</tr>
 	<tr>
-        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_SCIPTURE' ); ?></td>
+        <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_SCRIPTURE' ); ?></td>
 		<td>
 		<table width="60" border="0" cellspacing="1" cellpadding="1">
 			<tr>
@@ -347,7 +347,7 @@ echo $pane->endPane(); */
 		<tr>
 			<th><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE');?></th>
 			<th><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE');?></th>
-			<th><?php echo JText::_('JBS_CMN_SCIPTURE');?></th>
+			<th><?php echo JText::_('JBS_CMN_SCRIPTURE');?></th>
 			<th><?php echo JText::_('JBS_CMN_TEACHER');?></th>
 		</tr>
 	</thead>

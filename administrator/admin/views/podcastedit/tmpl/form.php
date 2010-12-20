@@ -133,7 +133,7 @@ $params = &JComponentHelper::getParams($option);?>
 
 	<thead><tr><th><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE');?></th>
 	<th><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE');?></th>
-	<th><?php echo JText::_('JBS_CMN_SCIPTURE');?></th>
+	<th><?php echo JText::_('JBS_CMN_SCRIPTURE');?></th>
 	<th><?php echo JText::_('JBS_PDC_EDIT_STUDY');?></th>
 	<th><?php echo JText::_('JBS_CMN_TEACHER');?></th>
 	</tr></thead>
