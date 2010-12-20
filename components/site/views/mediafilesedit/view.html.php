@@ -41,33 +41,46 @@ class biblestudyViewmediafilesedit extends JView {
 		$db = JFactory::getDBO();
         
        //First we check for the Joomla version and branch according to whether 1.5 or 1.6 because components are held in different tables
-       
-       $version = JVERSION;
-      // echo $version.'<br>';
-       $is15 = substr_count($version,'1.5');
-       if ($is15)
+           
+       if (JOOMLA_VERSION == '5')
        {
             $db->setQuery('SELECT name, enabled FROM #__components where enabled = 1');
+            	$db->query();
+            $components = $db->loadObjectList(); 
+		
+    		foreach ($components as $component)
+    		{
+    		  
+    			if ($component->name == 'VirtueMart')
+    			{
+    				$vmenabled = 1;
+    			}
+    			if ($component->name == 'DOCman')
+    			{
+    				$dmenabled = 1;
+    			}
+    		} 
        }
 	   else
        {
-            $db->setQuery('SELECT name, enabled FROM #__extensions where enabled = 1');
-       }	
-		$db->query();
-		$components = $db->loadObjectList(); 
+            $db->setQuery('SELECT element, enabled FROM #__extensions where enabled = 1');
+       	
+    		$db->query();
+    		$components = $db->loadObjectList(); 
 		
-		foreach ($components as $component)
-		{
-		  
-			if ($component->name == 'VirtueMart')
-			{
-				$vmenabled = 1;
-			}
-			if ($component->name == 'DOCman')
-			{
-				$dmenabled = 1;
-			}
-		} 
+    		foreach ($components as $component)
+    		{
+    		  
+    			if ($component->element == 'com_virtuemart')
+    			{
+    				$vmenabled = 1;
+    			}
+    			if ($component->element == 'com_docman')
+    			{
+    				$dmenabled = 1;
+    			}
+    		} 
+        }
 //		$vmenabled = JComponentHelper::getComponent('com_virtuemart',TRUE);
 //		$dmenabled = JComponentHelper::getComponent('com_docman',TRUE);
 		$this->assignRef('vmenabled', $vmenabled);

@@ -61,17 +61,6 @@ function openConverter1()
 		      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>"/>
 <?php $editor =& JFactory::getEditor();
 
-//AVR test
-jimport('joomla.filesystem.file');
-$dest = JPATH_SITE.DS.'/components/com_avreloaded/views/popup/view.html.php';
-$avrexists = JFile::exists($dest);
-if ($avrexists)
-{
-$avrread = JFile::read($dest);
-$isbsms = substr_count($avrread,'JoomlaBibleStudy');
-if ($isbsms){echo '<strong>'.JText::_('JBS_MED_AVR_IS_BS_READY').'</strong>';} else {echo '<strong>'.JText::_('JBS_MED_AVR_IS_NOT_BS_READY').'<br><a href="'.JURI::base().'index.php?option=com_biblestudy&controller=mediafilesedit&task=fixAVR">'.JText::_('JBS_MED_AVR_TRY_FIX').' <a href="http://www.JoomlaBibleStudy.org" target="_blank"> JoomlaBibleStudy.org </a> '.JText::_('JBS_MED_AVR_LOOK_FOR_FIX_DOWNLOAD').'</strong>';}
-}
-//End AVR test
 
 
 
