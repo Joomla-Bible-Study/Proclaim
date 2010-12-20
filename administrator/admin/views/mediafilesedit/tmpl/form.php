@@ -133,8 +133,10 @@ function openConverter1()
       	</td>
       </tr>
       <?php } //end of if $this->docManItem ?>
-
-      <tr>
+<?php if (JOOMLA_VERSION == '5')
+{ ?>
+    
+     <tr>
 
       	<td class="key">
                 <?php echo JText::_('JBS_MED_USE_ARTICLE');?></td>
@@ -165,7 +167,38 @@ function openConverter1()
       	</div>
       	</td>
       </tr>
+<?php } // end if Joomla 1.5 for articles
+else
+{ ?>
+    
+  <tr>
 
+      	<td class="key">
+                <?php echo JText::_('JBS_MED_USE_ARTICLE');?></td>
+      	<td>
+      	<?php
+      	if(isset($this->articlesItem)){
+      		echo '<span id="activeArticle">'.$this->articlesItem.'</span>';
+      		echo ' <a href="#" id="articleChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
+      	}
+      	?>
+      	
+      	<div id="articlesCategoriesContainer" class="selectContainer">
+      	<?php
+      	echo JText::_('JBS_MED_CATEGORY');
+      	?>
+      	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -'; ?></option></select>
+      	</div>
+      	<div id="articlesItemsContainer" class="selectContainer">
+      	<?php
+        echo JText::_('JBS_CMN_ITEM');
+      	?>
+      	<select id="categoryItems" name="categoryItem"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_ARTICLE').' -'; ?></option></select>
+      	</div>
+      	</td>
+      </tr>
+
+<?php } //end if Joomla 1.6 for articles ?>
        <?php if ($this->vmenabled > 0)
 	   { ?>
       <tr>

@@ -264,9 +264,21 @@ class biblestudyModelmediafilesedit extends JModel {
 		return $this->_getList($query);
 	}
 	
-    function getArticlesCat(){
-        
+    function getArticleCategories(){
+        $query = "SELECT id, title FROM #__categories WHERE `published`=1";
+        return $this->getList($query);
     }
+    function getArticleArticles($catId) {
+    
+        $query = "SELECT id, title FROM #__content WHERE `catid` = '$catId' AND `published`=1";
+        return json_encode($this->_getList($query));
+    }
+   	function getArticlesItem($id) {
+		$query = "SELECT title FROM #__content WHERE `id` = '$id'";
+		$this->_db->setQuery($query);
+		$data = $this->_db->loadRow();
+		return $data[0];
+	}
 	function getvirtueMartCategories(){
 		$query = "SELECT category_id AS id, category_name AS title FROM `#__vm_category` WHERE `category_publish` = 'Y'";
 		return $this->_getList($query);

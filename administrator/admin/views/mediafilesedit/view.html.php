@@ -14,7 +14,11 @@ class biblestudyViewmediafilesedit extends JView {
 			$this->assignRef('mbutton', $mbutton);
 		}
 
-		//Check to see if Docman and/or VirtueMart installed
+		//Import the article ids
+        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'articles.php');
+        $articlesform = new JFormFieldArticles();
+        $articleids = $articlesform->getInput();
+        dump ($articleids, 'articles: ');
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		
 		//Get Admin params
@@ -89,8 +93,15 @@ class biblestudyViewmediafilesedit extends JView {
 		//Get Data
 		$mediafilesedit	=& $this->get('Data');
 	
+    if (JOOMLA_VERSION == '5')
+    {
+   	    $articlesSections =& $this->get('ArticlesSections');        
+    }
+    else
+    {
+        $articlesCategories =& $this->get('ArticleCategories');
+    }
 
-	//	$articlesSections =& $this->get('ArticlesSections');
 		
 
 		//Manipulate Data

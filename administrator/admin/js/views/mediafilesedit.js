@@ -150,5 +150,11 @@ $j(document).ready( function() {
 		$j('#virtueMartCategoriesContainer').show();
 		$j('#activeVirtueMart').hide();
 		return false;
+	});
+    	$j('#articlesChange').click(function() {
+		$j(this).hide();
+		$j('#articlesSectionsContainer').show();
+		$j('#activeArticle').hide();
+		return false;
 	});	
 });
