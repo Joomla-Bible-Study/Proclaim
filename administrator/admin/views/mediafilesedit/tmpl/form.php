@@ -102,6 +102,17 @@ function openConverter1()
         <td >
 
         <?php echo $this->lists['studies'];?></td></tr>
+        <tr><td class="key"><?php echo JText::_( 'JBS_MED_PLAYER' );?></td>
+            <td>
+                <select name="player" id="player"><?php echo $this->mediafilesedit->player;?>
+                    <option value="100" <?php if ($this->mediafilesedit->player == 100){echo JText::_('JBS_SELECTED');}?> > <?php echo JText::_('JBS_CMN_USE_GLOBAL');?></option>
+                    <option value="0" <?php if ($this->mediafilesedit->player == 0){echo JText::_('JBS_SELECTED');}?> ><?php echo JText::_('JBS_CMN_DIRECT_LINK');?></option>
+                    <option value="1" <?php if ($this->mediafilesedit->player == 1){echo JText::_('JBS_SELECTED');}?> ><?php echo JText::_('JBS_CMN_USE_INTERNAL_PLAYER');?></option>
+                    <option value="3" <?php if ($this->mediafilesedit->player == 3){echo JText::_('JBS_SELECTED');}?> ><?php echo JText::_('JBS_CMN_USE_AV');?></option>
+                    <option value="7" <?php if ($this->mediafilesedit->player == 7){echo JText::_('JBS_SELECTED');}?> ><?php echo JText::_('JBS_CMN_USE_LEGACY_PLAYER');?></option>
+                </select>
+            </td>
+        </tr>
         <tr>
         <td class="key"><?php echo JText::_( 'JBS_CMN_ORDERING' );?></td>
 			<td >
