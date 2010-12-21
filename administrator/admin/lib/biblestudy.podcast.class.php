@@ -20,16 +20,17 @@ class JBSPodcast
     {
         //here's where we look at each mediafile to see if they are connected to this podcast
         $db = JFactory::getDBO();
-        $query = "SELECT id, params, published FROM `#__bsms_mediafiles` WHERE params LIKE '%podcasts%' and published = '1'";
+        $query = "SELECT id, podcast_id, published FROM `#__bsms_mediafiles` WHERE published = '1'";
         $db->setQuery($query);
         $results = $db->loadObjectList();
         $where = array();
         foreach ($results as $result)
         {
-        	$params = new JParameter($result->params);
+        //	$params = new JParameter($result->params);
         	//dump ($params, 'params: ');
-        	$podcasts = $params->get('podcasts');
-        	
+        //	$podcasts = $params->get('podcasts');
+        	$podcasts = explode(',',$result->podcast_id);
+            
         	switch ($podcasts)
         	{
         		case is_array($podcasts) :

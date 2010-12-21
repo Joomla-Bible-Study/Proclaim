@@ -122,7 +122,9 @@ class biblestudyModelmediafilesedit extends JModel {
 		}else{
 			$data['article_id'] = $data['categoryItem'];
 		}
-		
+		if (is_array($data['podcast_id'])){
+		  $data['podcast_id'] = implode(',',$data['podcast_id']);
+		}
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;

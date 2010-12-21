@@ -227,8 +227,7 @@ else
 
             <tr><td class="key"><?php echo JText::_('JBS_CMN_AVR');?></td><td><?php echo JText::_('JBS_MED_AVRELOADED_TT');?></td></tr>
             <tr><td class="key"></td><td><input class="text_area" name="mediacode" id="mediacode" size="200" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php
-			if (JPluginHelper::importPlugin('system', 'avreloaded'))
-					{echo $this->mbutton;}?></td></tr>
+			?></td></tr>
             <tr>
              <?php //<tr>?>
              <td class="key"> <?php echo JText::_('JBS_CMN_IMAGE');?>
@@ -280,36 +279,25 @@ echo $this->params->render ('params');
 echo $pane->endPanel();
 echo $pane->endPane();
 ?>
+
 </td></tr>
+<tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_PODCAST');?></td><td><?php echo $this->lists['podcasts'];?></td></tr>
   <tr>
-<td class="key"><?php echo JText::_('JBS_MED_CHOOSE_PODCAST');?></td><td>
-					<?php
 
-//jimport('joomla.html.pane');
+<tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_MIME_TYPE');?></td><td> <?php echo $this->lists['mime_type'];?>
+</td>
+</tr>
 
-echo $pane->startPane( 'content-pane' );
-echo $pane->startPanel( JText::_( 'JBS_CMN_PODCASTS' ), 'PODCAST' );
-echo $this->params->render( 'params','PODCAST' );
-echo $pane->endPanel();
-echo $pane->endPane();
-					?>
-				</td>
-            </tr>
+<tr><td class="key"><?php echo JText::_('JBS_MED_SHOW_DOWNLOAD_ICON');?></td><td>
 
-                <tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_MIME_TYPE');?></td><td> <?php echo $this->lists['mime_type'];?>
-				</td>
-            </tr>
-
-            <tr><td class="key"><?php echo JText::_('JBS_MED_SHOW_DOWNLOAD_ICON');?></td><td>
-
-			<select id="link_type" name="link_type"><?php echo $this->mediafilesedit->link_type;?>
-				<option value="0" <?php if ($this->mediafilesedit->link_type == 0){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_NO_DOWNLOAD_ICON');?></option>
-				<option value="1" <?php if ($this->mediafilesedit->link_type == 1){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_SHOW_DOWNLOAD_ICON');?></option>
-				<option value="2" <?php if ($this->mediafilesedit->link_type == 2){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_SHOW_ONLY_DOWNLOAD_ICON');?></option>
-			</select>
-			</td></tr>
-            <tr><td class="key"><?php echo JText::_('JBS_CMN_COMMENT');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="150" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP');?></td>
-            </tr>
+<select id="link_type" name="link_type"><?php echo $this->mediafilesedit->link_type;?>
+<option value="0" <?php if ($this->mediafilesedit->link_type == 0){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_NO_DOWNLOAD_ICON');?></option>
+<option value="1" <?php if ($this->mediafilesedit->link_type == 1){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_SHOW_DOWNLOAD_ICON');?></option>
+<option value="2" <?php if ($this->mediafilesedit->link_type == 2){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_SHOW_ONLY_DOWNLOAD_ICON');?></option>
+</select>
+</td></tr>
+<tr><td class="key"><?php echo JText::_('JBS_CMN_COMMENT');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="150" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP');?></td>
+</tr>
 
 
 

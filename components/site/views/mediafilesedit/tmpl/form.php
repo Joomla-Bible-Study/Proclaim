@@ -187,7 +187,7 @@ echo $pane->endPane();
      <?php if (isset($this->mediafilesedit->internal_viewer) )
 	{ ?>
      <tr>
-        <td class="key"><?php echo ('<a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,3955/Itemid,35/" target="_blank">'.JText::_('JBS_CMN_AVR').'</a>')?>
+        <td class="key"><?php echo (JText::_('JBS_CMN_AVR'))?>
         </td>
         <td>
 	<?php	echo JText::_('JBS_MED_USE_AVR_AS_SET_ABOVE'); ?>
@@ -196,8 +196,7 @@ echo $pane->endPane();
     <?php   } ?>
             <tr><td class="key"><?php echo JText::_('JBS_CMN_AVR');?></td><td><?php echo JText::_('JBS_MED_AVRELOADED_TT');?></td></tr>
             <tr><td class="key"></td><td><input class="text_area" name="mediacode" id="mediacode" size="100" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php
-			if (JPluginHelper::importPlugin('system', 'avreloaded'))
-					{echo $this->mbutton;}?></td></tr>
+		?></td></tr>
             <tr>
              <?php //<tr>?>
              <td class="key"> <?php echo JText::_('JBS_CMN_IMAGE');?>:
@@ -231,19 +230,7 @@ echo $pane->endPane();
               <td class="key"><?php echo JText::_('JBS_MED_TARGET');?>:</td><td><?php echo JText::_('JBS_MED_USE_FILENAME_AS_PATH').' ';?>
               <?php echo JText::_('JBS_MED_TARGET_FOR_LINK');?> <input class="text_area" type="text" name="special" id="special" size="15" maxlength="15" value="<?php echo $this->mediafilesedit->special;?>" /></td>
             </tr>
-             <tr>
-                <td class="key"><?php echo JText::_('JBS_MED_CHOOSE_PODCAST');?>:</td><td>
-					<?php
-$pane =& JPane::getInstance( 'sliders' );
-//jimport('joomla.html.pane');
-echo $pane->startPane( 'content-pane' );
-echo $pane->startPanel( JText::_( 'JBS_CMN_PODCASTS' ), 'PODCAST' );
-echo $this->params->render( 'params','PODCAST' );
-echo $pane->endPanel();
-echo $pane->endPane();
-					?>
-				</td>
-            </tr>
+            <tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_PODCAST');?></td><td><?php echo $this->lists['podcasts'];?></td></tr>
                 <tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_MIME_TYPE');?>:</td><td> <?php echo $this->lists['mime_type'];?>
 				</td>
             </tr>

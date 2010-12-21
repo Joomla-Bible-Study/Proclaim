@@ -125,7 +125,7 @@
 	</fieldset>
 </div>
 <?php if ($this->podcastedit->id) {
-$params = &JComponentHelper::getParams($option);?>
+//$params = &JComponentHelper::getParams($option);?>
 	<div class="editcell">
 	<fieldset class="adminlist">
 		<legend><?php echo JText::_( 'JBS_PDC_EPISODE_THIS_PODCAST' ); ?></legend>

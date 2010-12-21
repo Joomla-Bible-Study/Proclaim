@@ -7,7 +7,11 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 class biblestudyViewmediafilesedit extends JView {
 
 	function display($tpl = null) {
-		
+		$db = JFactory::getDBO();
+        $lists = array();
+        //Get Data
+		$mediafilesedit	=& $this->get('Data');
+        
 		if (JPluginHelper::importPlugin('system', 'avreloaded')) {
 			require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_avreloaded'.DS.'elements'.DS.'insertbutton.php');
 			$mbutton = JElementInsertButton::fetchElementImplicit('mediacode',JText::_('JBS_MED_AVR_MEDIA'));
@@ -15,10 +19,19 @@ class biblestudyViewmediafilesedit extends JView {
 		}
 
 		//Import the article ids
-        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'articles.php');
-        $articlesform = new JFormFieldArticles();
-        $articleids = $articlesform->getInput();
-        dump ($articleids, 'articles: ');
+     //   require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'articles.php');
+    //    $articlesform = new JFormFieldArticles();
+     //   $articleids = $articlesform->getInput();
+     //   dump ($articleids, 'articles: ');
+     
+ //Pick up the podcasts and display as a multiselect box
+     $query = "SELECT id AS value, title AS text from #__bsms_podcast WHERE published = 1 ORDER BY title ASC";
+     $db->setQuery($query);
+     $db->query();
+     $podcasts = $db->loadObjectList();
+     $mediafilesedit->podcast_id = explode(",",$mediafilesedit->podcast_id);
+   //  if (is_array($results)){$podcast_values = explode(",",$results->id);}
+     $lists['podcasts'] = JHTML::_('select.genericlist',$podcasts,'podcast_id[]','multiple class="inputbox"','value','text',$mediafilesedit->podcast_id);
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		
 		//Get Admin params
@@ -48,7 +61,7 @@ class biblestudyViewmediafilesedit extends JView {
 		//Here we check to see if docMan or VirtueMart are there by looking at their data tables so we don't error out
 		$vmenabled = NULL;
 		$dmenabled = NULL;
-		$db = JFactory::getDBO();
+		
         
        //First we check for the Joomla version and branch according to whether 1.5 or 1.6 because components are held in different tables
            
@@ -90,8 +103,7 @@ class biblestudyViewmediafilesedit extends JView {
 			}
 		}
        }
-		//Get Data
-		$mediafilesedit	=& $this->get('Data');
+		
 	
     if (JOOMLA_VERSION == '5')
     {
@@ -102,7 +114,8 @@ class biblestudyViewmediafilesedit extends JView {
         $articlesCategories =& $this->get('ArticleCategories');
     }
 
-		
+	//Temporary
+    $dmenabled = 1;	
 
 		//Manipulate Data
 		//Run only if Docman is enabled
@@ -180,7 +193,7 @@ $this->assignRef('filepath', $filepath);
 			}
 			$this->assignRef('virtueMartCategories', $virtueMartCategories);
 
-		$lists = array();
+		
 		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
 		JToolBarHelper::title(   JText::_( 'JBS_MED_EDIT_MEDIA' ).': <small><small>[ ' . $text.' ]</small></small>', 'mp3.png' );
 		JToolBarHelper::save();

@@ -121,7 +121,10 @@ class biblestudyModelmediafilesedit extends JModel {
 		}else{
 			$data['article_id'] = $data['categoryItem'];
 		}
-		
+		if (is_array($data['podcast_id'])){
+		  $data['podcast_id'] = implode(',',$data['podcast_id']);
+		}
+        
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
@@ -261,14 +264,16 @@ class biblestudyModelmediafilesedit extends JModel {
 	 * @desc Functions to satisfy the ajax requests
 	 */
 	function getdocManCategories() {
-		$query = "SELECT id, title FROM #__categories
-				  WHERE `section` = 'com_docman' AND `published`=1";
+	//	$query = "SELECT id, title FROM #__categories
+	//			  WHERE `section` = 'com_docman' AND `published`=1";
+      $query = "SELECT id, title FROM #__categories
+				  WHERE `extension` = 'com_content' AND `published`=1";
 		return $this->_getList($query);
 	}
 	
     function getArticleCategories(){
         $query = "SELECT id, title FROM #__categories WHERE `published`=1";
-        return $this->getList($query);
+        return $this->_getList($query);
     }
     function getArticleArticles($catId) {
     
@@ -286,7 +291,9 @@ class biblestudyModelmediafilesedit extends JModel {
 		return $this->_getList($query);
 	}
 	function getdocManCategoryItems($catId) {
-		$query = "SELECT id, dmname as name FROM #__docman
+	//	$query = "SELECT id, dmname as name FROM #__docman
+		//		  WHERE `catid`='$catId' AND `published`=1";
+      $query = "SELECT id, title as name FROM #__content
 				  WHERE `catid`='$catId' AND `published`=1";
 		return json_encode($this->_getList($query));
 	}
@@ -317,7 +324,8 @@ class biblestudyModelmediafilesedit extends JModel {
 	}
 	
 	function getDocManItem($id) {
-		$query = "SELECT dmname FROM #__docman WHERE `id` = '$id'";
+	//	$query = "SELECT dmname FROM #__docman WHERE `id` = '$id'";
+        $query = "SELECT title FROM #__content WHERE `id` = '$id'";
 		$this->_db->setQuery($query);
 		$data = $this->_db->loadRow();
 		return $data[0];
