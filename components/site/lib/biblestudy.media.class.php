@@ -227,7 +227,8 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
 */
      $player->player = 0;
      $params_mediaplayer = $params->get('media_player');
-     $item_mediaplayer = $itemparams->get('player');
+  //   $item_mediaplayer = $itemparams->get('player');
+     $item_mediaplayer = $media->player;
     if ($params_mediaplayer > 0) {$player->player = $params_mediaplayer;}
     if ($item_mediaplayer == 0)
     {
@@ -268,7 +269,8 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
       if (!$param_playertype){$param_playertype = 1;}
   //    dump ($param_playertype, 'param: ');
       //This is the media item specific parameter
-      $item_playertype = $itemparams->get('internal_popup');
+   //   $item_playertype = $itemparams->get('internal_popup');
+      $item_playertype = $media->popup;
    //   dump ($item_playertype, 'item: ');
       if ($param_playertype)
       {

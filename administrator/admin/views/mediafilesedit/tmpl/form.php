@@ -104,12 +104,22 @@ function openConverter1()
         <?php echo $this->lists['studies'];?></td></tr>
         <tr><td class="key"><?php echo JText::_( 'JBS_MED_PLAYER' );?></td>
             <td>
-                <select name="player" id="player"><?php echo $this->mediafilesedit->player;?>
+                <select name="player" id="player">
                     <option value="100" <?php if ($this->mediafilesedit->player == 100){echo JText::_('JBS_SELECTED');}?> > <?php echo JText::_('JBS_CMN_USE_GLOBAL');?></option>
-                    <option value="0" <?php if ($this->mediafilesedit->player == 0){echo JText::_('JBS_SELECTED');}?> ><?php echo JText::_('JBS_CMN_DIRECT_LINK');?></option>
-                    <option value="1" <?php if ($this->mediafilesedit->player == 1){echo JText::_('JBS_SELECTED');}?> ><?php echo JText::_('JBS_CMN_USE_INTERNAL_PLAYER');?></option>
-                    <option value="3" <?php if ($this->mediafilesedit->player == 3){echo JText::_('JBS_SELECTED');}?> ><?php echo JText::_('JBS_CMN_USE_AV');?></option>
-                    <option value="7" <?php if ($this->mediafilesedit->player == 7){echo JText::_('JBS_SELECTED');}?> ><?php echo JText::_('JBS_CMN_USE_LEGACY_PLAYER');?></option>
+                    <option value="0" <?php if ($this->mediafilesedit->player == 0){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_DIRECT_LINK');?></option>
+                    <option value="1" <?php if ($this->mediafilesedit->player == 1){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_INTERNAL_PLAYER');?></option>
+                    <option value="3" <?php if ($this->mediafilesedit->player == 3){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_AV');?></option>
+                    <option value="7" <?php if ($this->mediafilesedit->player == 7){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_LEGACY_PLAYER');?></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="key"><?php echo JText::_('JBS_MED_INTERNAL_POPUP');?></td>
+            <td>
+                <select name="popup" id="popup">
+                    <option value="1" <?php if ($this->mediafilesedit->popup == 1){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_POPUP');?></option>
+                    <option value="2" <?php if ($this->mediafilesedit->popup == 2){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_INLINE');?></option>
+                   <option value="3" <?php if ($this->mediafilesedit->popup == 3){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_GLOBAL');?></option>
                 </select>
             </td>
         </tr>
