@@ -149,7 +149,6 @@ if ($sh404exists)
 <option value="x"><?php echo JText::_('JBS_ADM_SELECT_EXISTING_PLAYER');?></option>
 <option value="0"><?php echo JText::_('JBS_CMN_DIRECT_LINK');?></option>
 <option value="1"><?php echo JText::_('JBS_CMN_INTERNAL_PLAYER');?></option>
-<option value="2"><?php echo JText::_('JBS_CMN_AVR');?></option>
 <option value="3"><?php echo JText::_('JBS_CMN_AVPLUGIN');?></option>
 <option value="7"><?php echo JText::_('JBS_CMN_LEGACY_PLAYER');?></option>
 <option value="100"><?php echo JText::_('JBS_NO_PLAYER_LISTED');?></option>
@@ -160,7 +159,6 @@ if ($sh404exists)
 <option value="x"><?php echo JText::_('JBS_ADM_SELECT_NEW_PLAYER');?></option>
 <option value="0"><?php echo JText::_('JBS_CMN_DIRECT_LINK');?></option>
 <option value="1"><?php echo JText::_('JBS_CMN_INTERNAL_PLAYER');?></option>
-<option value="2"><?php echo JText::_('JBS_CMN_AVR');?></option>
 <option value="3"><?php echo JText::_('JBS_CMN_AVPLUGIN');?></option>
 <option value="7"><?php echo JText::_('JBS_CMN_LEGACY_PLAYER');?></option>
 

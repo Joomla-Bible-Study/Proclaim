@@ -435,6 +435,7 @@
             <query mode="silenterror">ALTER TABLE #__bsms_mediafiles MODIFY `podcast_id` varchar(50)</query>
             <query>ALTER TABLE #__bsms_mediafiles ADD COLUMN `player` int(2) NULL</query>
             <query>ALTER TABLE #__bsms_mediafiles ADD COLUMN `popup` int(2) NULL</query>
+            <phpfile name="biblestudy.700.upgrade.php" />
         </version>
 	</upgrade>
 </comupgrade>

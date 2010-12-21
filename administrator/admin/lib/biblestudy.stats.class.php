@@ -273,50 +273,101 @@ function top_score()
 function players()
 {
     $db = &JFactory::getDBO();
-    $query = 'SELECT id, params FROM #__bsms_mediafiles';
+    
+    //No Player
+    $query = 'SELECT `id`, `player` FROM #__bsms_mediafiles WHERE `player` IS NULL';
     $db->setQuery($query);
     $db->query();
     $num_rows = $db->getNumRows();
-    $results = $db->loadObjectList();
-    $direct = 'player=0';
-    $internal = 'player=1';
-    $avr = 'player=2';
-    $av = 'player=3';
-    $legacy = 'player=7';
-    $add = 0;
-    $directcount = 0;
-    $internalcount = 0;
-    $avrcount = 0;
-    $avcount = 0;
-    $legacycount = 0;
-    foreach ($results AS $result)
-    {
-        $param = $result->params;
-        $isdirect = substr_count($param,$direct);
-        $directcount = $directcount + $isdirect;
-        $isinternal = substr_count($param,$internal);
-        $internalcount = $internalcount + $isinternal;
-        $isavr = substr_count($param,$avr);
-        $avrcount = $avrcount + $isavr;
-        $isav = substr_count($param,$av);
-        $avcount = $avcount + $isav;
-        $islegacy = substr_count($param, $legacy);
-        $legacycount = $legacycount + $islegacy;
-        $total = $directcount + $internalcount + $avrcount + $avcount;
-        $noplayer = $num_rows - $total;
-    }
-    $mediaplayers = '<strong>'.JText::_('JBS_CMN_DIRECT_LINK').': </strong>'.$directcount.
-    '<br /><strong>'.JText::_('JBS_CMN_INTERNAL_PLAYER').': </strong>'.$internalcount.
-    '<br /><strong>'.JText::_('JBS_CMN_AVR').': </strong>'.$avrcount.
-    '<br /><strong>'.JText::_('JBS_CMN_AVPLUGIN').': </strong>'.$avcount.
-    '<br /><strong>'.JText::_('JBS_CMN_LEGACY_PLAYER').': </strong>'.$legacycount.
-    '<br /><strong>'.JText::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
+    $results_noplayer = $db->loadObjectList();
+    $count_noplayer = count($results_noplayer);
+    
+    //100 = Global
+    $query = 'SELECT `id`, `player` FROM #__bsms_mediafiles WHERE `player` = 100';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results_globalplayer = $db->loadObjectList();
+    $count_globalplayer = count($results_globalplayer);
+    
+    //0 = Direct Link
+    $query = 'SELECT `id`, `player` FROM #__bsms_mediafiles WHERE `player` = 0';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results_directplayer = $db->loadObjectList();
+    $count_directplayer = count($results_directplayer);
+    
+    //1 = internal player
+    $query = 'SELECT `id`, `player` FROM #__bsms_mediafiles WHERE `player` = 1';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results_internalplayer = $db->loadObjectList();
+    $count_internalplayer = count($results_internalplayer);
+    
+    
+    //3 = All Videos
+    $query = 'SELECT `id`, `player` FROM #__bsms_mediafiles WHERE `player` = 3';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results_avplayer = $db->loadObjectList();
+    $count_avplayer = count($results_avplayer);
+    
+    //7 = legacy mp3 player
+    $query = 'SELECT `id`, `player` FROM #__bsms_mediafiles WHERE `player` = 7';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results_legacyplayer = $db->loadObjectList();
+    $count_legacyplayer = count($results_legacyplayer);
+    
+    $mediaplayers = '<strong>'.JText::_('JBS_CMN_DIRECT_LINK').': </strong>'.$count_directplayer.
+    '<br /><strong>'.JText::_('JBS_CMN_INTERNAL_PLAYER').': </strong>'.$count_internalplayer.
+    '<br /><strong>'.JText::_('JBS_CMN_AVPLUGIN').': </strong>'.$count_avplayer.
+    '<br /><strong>'.JText::_('JBS_CMN_LEGACY_PLAYER').': </strong>'.$count_legacyplayer.
+    '<br /><strong>'.JText::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT').': </strong>'.$count_noplayer; //dump ($mediaplayers, 'mediaplayers: ');
     return $mediaplayers;
 }
 
 function popups()
 {
     $db = &JFactory::getDBO();
+    
+    //1 popup
+    $query = 'SELECT id, params FROM #__bsms_mediafiles WHERE `popup` = 1';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results = $db->loadObjectList();
+    $popcount = count($results);
+    
+    //2 inline
+    $query = 'SELECT id, params FROM #__bsms_mediafiles WHERE `popup` = 2';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results = $db->loadObjectList();
+    $inlinecount = count($results);
+    
+    
+    //3 use Global Settings
+    $query = 'SELECT id, params FROM #__bsms_mediafiles WHERE `popup` = 3';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results = $db->loadObjectList();
+    $globalcount = count($results);
+    
+    //NULL is no player listed
+    $query = 'SELECT id, params FROM #__bsms_mediafiles WHERE `popup` IS NULL';
+    $db->setQuery($query);
+    $db->query();
+    $num_rows = $db->getNumRows();
+    $results = $db->loadObjectList();
+    $noplayer = count($results);
+    /*
     $query = 'SELECT id, params FROM #__bsms_mediafiles';
     $db->setQuery($query);
     $db->query();
@@ -351,6 +402,7 @@ function popups()
         $total = $inlinecount + $popcount + $globalcount;
         $noplayer = $num_rows - $total;
     }
+    */
     $popups = '<strong>'.JText::_('JBS_CMN_INLINE').': </strong>'.$inlinecount.
     '<br /><strong>'.JText::_('JBS_CMN_POPUP').': </strong>'.$popcount.
     '<br /><strong>'.JText::_('JBS_CMN_GLOBAL_SETTINGS').': </strong>'.$globalcount.

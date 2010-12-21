@@ -19,7 +19,7 @@ defined( '_JEXEC' ) or die('Restricted access');
 
 // Help get past php timeouts if we made it that far
 // Joomla 1.5 installer can be very slow and this helps avoid timeouts
-@set_time_limit(300);
+@set_time_limit(3600);
 $kn_maxTime = @ini_get('max_execution_time');
 
 $maxMem = trim(@ini_get('memory_limit'));
