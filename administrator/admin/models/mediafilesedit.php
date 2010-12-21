@@ -64,6 +64,8 @@ class biblestudyModelmediafilesedit extends JModel {
 			$this->_data->comment = null;
 			$this->_data->virtueMart_id = null;
 			$this->_data->params = null;
+            $this->_data->player = null;
+            $this->_data->popup = null;
 				
 				}
 		return $this->_data;

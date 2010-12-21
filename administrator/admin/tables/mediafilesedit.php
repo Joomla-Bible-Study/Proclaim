@@ -39,6 +39,8 @@ class Tablemediafilesedit extends JTable
 	var $virtueMart_id = null;
 	var $comment = null;
 	var $params = null;
+    var $player = null;
+    var $popup = null;
 	
 	
 

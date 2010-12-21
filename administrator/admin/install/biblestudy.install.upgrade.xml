@@ -65,7 +65,7 @@
 				  `filename` text,
 				  `size` varchar(50) DEFAULT NULL,
 				  `mime_type` int(3) DEFAULT NULL,
-				  `podcast_id` int(3) DEFAULT NULL,
+				  `podcast_id` varchar(50) DEFAULT NULL,
 				  `internal_viewer` tinyint(1) DEFAULT '0',
 				  `mediacode` text,
 				  `ordering` int(11) NOT NULL DEFAULT '0',
@@ -80,6 +80,8 @@
 				  `downloads` int(10) DEFAULT 0,
 				  `plays` int(10) DEFAULT 0,
 				  `params` text,
+                  `player` int(2) NULL,
+                  `popup` int(2) NULL,
 				  PRIMARY KEY (`id`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1</query>
 		<query>CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
@@ -430,6 +432,9 @@
             </version>
         <version version="7.0.0" versiondate="2011-01-12" build="1190" versionname="1Kings">
             <query mode="silenterror">ALTER TABLE #__bsms_studies MODIFY `show_level` varchar(100)</query>
+            <query mode="silenterror">ALTER TABLE #__bsms_mediafiles MODIFY `podcast_id` varchar(50)</query>
+            <query>ALTER TABLE #__bsms_mediafiles ADD COLUMN `player` int(2) NULL</query>
+            <query>ALTER TABLE #__bsms_mediafiles ADD COLUMN `popup` int(2) NULL</query>
         </version>
 	</upgrade>
 </comupgrade>
