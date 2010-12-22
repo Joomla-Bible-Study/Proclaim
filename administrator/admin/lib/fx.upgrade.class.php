@@ -375,11 +375,11 @@ class fx_Upgrade {
 			//		$build = $versionElement->getAttribute( "build" );
 			//		$versionname = $versionElement->getAttribute( "versionname" );
 
-                    $versionElement = $upgradeElement[$k];
-                    $version = $upgradeElement[0]["version"];
-        			$versiondate = $upgradeElement[0][ "versiondate" ];
-        			$build = $upgradeElement[0][ "build" ];
-        			$versionname = $upgradeElement[0][ "versionname" ];
+                   $versionElement = $upgradeElement[$k];
+                    $version = $versionElement[0]["version"];
+        			$versiondate = $versionElement[0][ "versiondate" ];
+        			$build = $versionElement[0][ "build" ];
+        			$versionname = $versionElement[0][ "versionname" ];
                     
 					//when legacy version exists, just compare version, if date exists as well, compare date
 					if(($currentVersion->versiondate && $versiondate > $currentVersion->versiondate) OR (version_compare($version, $currentVersion->version, '>')) OR (version_compare($version, $currentVersion->version, '==') && $build > $currentVersion->build)) {
