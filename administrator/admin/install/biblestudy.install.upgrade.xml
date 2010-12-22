@@ -420,7 +420,6 @@
 			<phpfile name="biblestudy.614.upgrade.php" />
 		</version>
         <version version="6.2.1" versiondate="2010-09-27" build="615" versionname="Joshua">
-            <phpfile name="biblestudy.615.upgrade.php" />
         </version>
         <version version="6.2.2" versiondate="2010-10-25" build="622" versionname="Judges">
             <phpfile name="biblestudy.622.upgrade.php" />
