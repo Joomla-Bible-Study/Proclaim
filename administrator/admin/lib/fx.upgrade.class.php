@@ -443,8 +443,7 @@ class fx_Upgrade {
                 $nodemode = $childNodes[$i]->attributes();
             }
 		
-        if ($type == 2){$nodemode = $childNodes[$i]->attributes();}
-			switch($nodeName) {
+        switch($nodeName) {
 				case "phpfile":
 					//include file
 				//	$fileName = $currentNode->getAttribute( "name" );

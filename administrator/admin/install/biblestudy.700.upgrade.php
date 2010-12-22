@@ -7,7 +7,7 @@
 
 defined( '_JEXEC' ) or die('Restricted access');
 require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
-$result_table = '<table><tr><td>This routine updates the mediafiles table to move the player type parameter to its own field in the database</td></tr>';
+
 
 $db = JFactory::getDBO();
 
@@ -16,7 +16,6 @@ $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
 $db->setQuery($query);
 $db->query();
 $results = $db->loadObjectList();
-
 //Now run through all the results, pull out the media player and the popup type and move them to their respective db fields
 foreach ($results AS $result)
 {
@@ -50,8 +49,28 @@ foreach ($results AS $result)
                 }
     }
 }
-$res = implode('<br />',$msg);
+$res = '<table><tr><td>This routine moves player and popup from a parameter to new database fields.</td></tr>';
+if (!$msg){$res .= JText::_('JBS_INS_NO_ERROR');}
+else
+{
+    $msg = array();
+    $r = 'Errors: <br />';
+    foreach ($msg AS $m)
+    {
+        $r .= $m.'<br />';
+    }
+}
+$result_table .= '<tr>
+		<td>
+			<div id="id_1" onClick="javascript:showDetail(this);" style="cursor:pointer;">
+				<img id="__img" src="images/expandall.png" border="0">
+				Executing PHP Code
+			</div>
+			<div id=_details" style="display:None;" class="details">'.$res.$r.'</div>
+		</td>
+		<td width="20" valign="top"><img src="images/collapseall.png" border="0"></td>
+	</tr>';
 
-$result_table .= '<tr><td>Results:'.$res.'</td></tr></table>';
+$result_table .= '</td></tr></table>';
 echo $result_table;
 ?>

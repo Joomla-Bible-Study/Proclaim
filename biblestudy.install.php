@@ -14,7 +14,34 @@
 //
 // Dont allow direct linking
 defined( '_JEXEC' ) or die('Restricted access');
+?>
+	<script language=JavaScript>
+			function showDetail(srcElement) {
+				var targetID, srcElement, targetElement, imgElementID, imgElement;
+				targetID = srcElement.id + "_details";
+				imgElementID = srcElement.id + "_img";
 
+				targetElement = document.getElementById(targetID);
+				imgElement = document.getElementById(imgElementID);
+				if (targetElement.style.display == "none") {
+					targetElement.style.display = "";
+					imgElement.src = "images/collapseall.png";
+				} else {
+					targetElement.style.display = "none";
+					imgElement.src = "images/expandall.png";
+				}
+			}
+			</script>
+			<style>
+			.details {
+				font-family: courier;
+				background-color: #EEEEEE;
+				border: 1px dashed #BBBBBB;
+				padding-left: 10px;
+				margin-left: 20px;
+				margin-top: 5px;
+			</style>
+<?php
 @error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 // Help get past php timeouts if we made it that far
@@ -71,7 +98,16 @@ function com_install()
 
 		// Start Installation/Upgrade
 		$bsmsupgrade->doUpgrade();
-     
+  //For some reason in version 7.0 the last phpfile doesn't run so we check here
+  $query = "SELECT `player` FROM #__bsms_mediafiles WHERE `player` IS NOT NULL";
+  $biblestudy_db->setQuery($query);
+  $biblestudy_db->query();
+  $results = $biblestudy_db->loadObjectList();
+  $count = count($results);
+  if (!$count)
+  {
+    include_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'install'.DS.'biblestudy.700.upgrade.php');
+  }   
   //Check for presence of css or backup
     jimport('joomla.filesystem.file');
     $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
