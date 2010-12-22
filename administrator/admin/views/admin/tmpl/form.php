@@ -3,40 +3,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.debug.php');
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.version.php');
 
-//Begin test code
-$xmlDoc = simplexml_load_file(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
-$upgradeElement = $xmlDoc->upgrade->version;
-$numChildrenMain = count($upgradeElement);
-			//	$childNodesMain =& $upgradeElement->childNodes;
-				for($k = 0; $k < $numChildrenMain; $k++) {
-			//		$versionElement =& $childNodesMain[$k];
-			//		$version = $versionElement->getAttribute( "version" );
-			//		$versiondate = $versionElement->getAttribute( "versiondate" );
-			//		$build = $versionElement->getAttribute( "build" );
-			//		$versionname = $versionElement->getAttribute( "versionname" );
 
-                   $versionElement = $upgradeElement[$k];
-                    $version = $versionElement[0]["version"];
-        			$versiondate = $versionElement[0][ "versiondate" ];
-        			$build = $versionElement[0][ "build" ];
-        			$versionname = $versionElement[0][ "versionname" ];
-                    $startNode = $versionElement;
-                    $numChildren =& count($startNode);
-                    
-                    for($i = 0; $i < $numChildren; $i++) {
-                        $childNodes =& $startNode->children();
-			$currentNode =& $childNodes[$i];
-            dump ($currentNode, 'currentNode: ');
-		//	$nodeName =& $currentNode->nodeName;
-            $nodeName = $childNodes->getName();
-		//	$nodemode = strtolower($currentNode->getAttribute( "mode" ));
-            $nodemode = $currentNode->attributes();
-          //  echo $nodeMode.'<br />';
-            }
-           }
-           
-
-//End Test code
 $db = JFactory::getDBO();
 $query = 'SELECT id, params FROM #__bsms_mediafiles';
 $db->setQuery($query);

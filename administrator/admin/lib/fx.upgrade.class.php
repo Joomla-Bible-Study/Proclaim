@@ -435,9 +435,15 @@ class fx_Upgrade {
 			$currentNode =& $childNodes[$i];
 		//	$nodeName =& $currentNode->nodeName;
             $nodeName = $childNodes->getName();
-		//	$nodemode = strtolower($currentNode->getAttribute( "mode" ));
+            //	$nodemode = strtolower($currentNode->getAttribute( "mode" ));
             $nodemode = $currentNode->attributes();
-
+            if ($type == 2)
+            {
+                $nodeName = $childNodes[$i]->getName();
+                $nodemode = $childNodes[$i]->attributes();
+            }
+		
+        if ($type == 2){$nodemode = $childNodes[$i]->attributes();}
 			switch($nodeName) {
 				case "phpfile":
 					//include file
