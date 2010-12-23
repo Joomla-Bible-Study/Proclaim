@@ -170,7 +170,7 @@ class jbsImages
 			$path = $folder .'/'. $image1;
 		}
 		
-		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		$imagepath = $this->getImagePath($path); //dump ($folder, 'folder: '); dump ($path, 'path: ');
 		return $imagepath;
 	}
 	

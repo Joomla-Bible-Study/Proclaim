@@ -12,7 +12,7 @@ defined('JPATH_BASE') or die();
  * using SQL result and explicitly specified params
  *
  */
- 
+ require_once JPATH_SITE.'/libraries/joomla/html/parameter/element.php'; 
 class JElementSQLMultiListX extends JElement
 {
         /**

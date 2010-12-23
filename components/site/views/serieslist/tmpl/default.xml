@@ -13,4 +13,17 @@
 			<param name="templatemenuid" type="templatemenuid" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_TT" />
 		</params>
 	</state>
+     <fields name="request">
+        <fieldset name="request">
+            <field name="templatemenuid" type="sql"
+                description="JBS_MNU_SELECT_TEMPLATE_TT"
+                label="JBS_MNU_SELECT_TEMPLATE"
+                default="1"
+                query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                key_field="id"
+                value_field="title"
+                required="true"
+            />
+        </fieldset>
+     </fields>
 </metadata>

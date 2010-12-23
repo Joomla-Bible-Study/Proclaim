@@ -85,4 +85,75 @@
     </param>
     </params>
 	</state>
+     <fields name="request">
+        <fieldset name="request">
+            <field name="templatemenuid" type="sql"
+                description="JBS_MNU_SELECT_TEMPLATE_TT"
+                label="JBS_MNU_SELECT_TEMPLATE"
+                default="1"
+                query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                key_field="id"
+                value_field="title"
+                required="true"
+            />
+        </fieldset>
+     </fields>
+     <fields name="params">
+     <fieldset name="basic" 
+     label="JBS_MNU_STUDIES_LIST_LAYOUT" addfieldpath="/administrator/components/com_biblestudy/models/fields" >
+     
+     <field name="mteacher_id"
+           type="teacherlist"
+           label="JBS_CMN_FILTERS_TEACHER"
+           description="JBS_CMN_FILTERS_TEACHER_TT"
+           multiple="true"
+           default="-1"
+           >
+       <option value="-1">JBS_CMN_SHOW_ALL</option>
+    </field>
+    <field name="mseries_id"
+           type="serieslist"
+           multiple="true"
+           label="JBS_CMN_FILTERS_SERIES"
+           description="JBS_CMN_FILTERS_SERIES_TT"
+           default="-1">
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
+    </field>
+    <field name="mbooknumber"
+           type="bookslist"
+           multiple="true"
+           label="JBS_CMN_FILTERS_BOOKS"
+           description="JBS_CMN_FILTERS_BOOKS_TT"
+           default="-1">
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
+    </field>
+    <field name="mtopic_id"
+           type="topicslist"
+           multiple="true"
+           size="10"
+           label="JBS_CMN_FILTERS_TOPICS"
+           description="JBS_CMN_FILTERS_TOPICS_TT"
+           default="-1">
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
+    </field>
+    <field name="mmessagetype"
+           type="messagetypelist"
+           multiple="true"
+           label="JBS_CMN_FILTERS_MESSAGETYPES"
+           description="JBS_CMN_FILTERS_MESSAGETYPES_TT"
+           default="-1">
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
+    </field>
+    <field name="mlocations"
+           type="locationslist"
+           multiple="true"
+           label="JBS_CMN_FILTERS_LOCATIONS"
+           description="JBS_CMN_FILTERS_LOCATIONS_TT"
+           default="-1">
+      <option value="-1">JBS_CMN_SHOW_ALL</option>
+    </field>
+     
+     </fieldset>
+     
+     </fields>
 </metadata>
