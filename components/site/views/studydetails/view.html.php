@@ -35,6 +35,7 @@ class biblestudyViewstudydetails extends JView
 		$params = new JParameter($template[0]->params);
 		//dump ($params);
 		$studydetails  =& $this->get('Data');
+        
         $adminrows = new JBSAdmin();
         $show = $adminrows->getShowLevel($studydetails);
         if (!$show){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}

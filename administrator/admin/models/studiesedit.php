@@ -10,7 +10,34 @@ class biblestudyModelstudiesedit extends JModel {
 	 * @access	public
 	 * @return	void
 	 */
-	 var $_admin;
+	 
+     	protected function populateState()
+	{
+		// Initialise variables.
+		$app = JFactory::getApplication('administrator');
+
+		// Load the filter state.
+		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		
+
+		$state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
+		$this->setState('filter.state', $state);
+
+	
+
+		$language = $this->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
+		$this->setState('filter.language', $language);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_biblestudy');
+		$this->setState('params', $params);
+
+		// List state information.
+		parent::populateState('studytitle', 'asc');
+	}
+     var $_admin;
 	 
 	function __construct() {
 		parent::__construct();

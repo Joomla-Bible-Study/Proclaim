@@ -7,14 +7,14 @@
         behave like an install but upgrades will be treated appropriately even
         if the interface doesn't support it properly -->
   <!-- Generic Metadata -->
-  <name>biblestudy</name>
+  <name>com_biblestudy</name>
   <author>JoomlaBibleStudy Team</author>
   <authorEmail>info@joomlabiblestudy.org</authorEmail>
   <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
   <copyright>(C) 2010 Copyright Joomla Bible Study</copyright>
   <license>GNU/GPL</license>
   <version>7.0</version>
-  <creationDate>December 2010</creationDate>
+  <creationDate>January 2010</creationDate>
   <description>Joomla Bible Study</description>
   <installfile>biblestudy.install.php</installfile>
   <!-- Deprecated in 1.6 -->

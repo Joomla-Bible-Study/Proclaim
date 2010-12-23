@@ -21,6 +21,9 @@ class biblestudyViewstudiesedit extends JView {
 		
 		//Get Data
 		$studiesedit =& $this->get('Data');
+        $items = $studiesedit;
+     //   $this->state		= $this->get('State');
+        $this->assignRef('items',$items);
 		$books =& $this->get('books');
 		$isNew		= ($studiesedit->id < 1);
 		$editor =& JFactory::getEditor();
