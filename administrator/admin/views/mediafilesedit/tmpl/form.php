@@ -75,10 +75,40 @@ function openConverter1()
 			<li>
 				<?php echo $this->form->getLabel('ordering'); ?>
 				<?php echo $this->form->getInput('ordering'); ?>
-			</li>		
+			</li>			
 		</ul>
 	</fieldset>
-	</div>
+	<fieldset class="panelform">
+		<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></legend>
+		<ul class="adminformlist">
+			<li>
+				<?php echo $this->form->getLabel('docMan_id'); ?>
+				<?php echo $this->form->getInput('docMan_id'); ?>
+			</li>
+			<li>
+				<?php echo $this->form->getLabel('article_id'); ?>
+				<?php echo $this->form->getInput('article_id'); ?>
+			</li>
+		</ul>
+	</fieldset>	
+	<fieldset class="panelform">
+		<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></legend>
+		<ul class="adminformlist">
+			<li>
+				<?php echo $this->form->getLabel('player'); ?>
+				<?php echo $this->form->getInput('player'); ?>
+			</li>	
+			<li>
+				<?php echo $this->form->getLabel('popup'); ?>
+				<?php echo $this->form->getInput('popup'); ?>
+			</li>
+			<li>
+				<?php echo $this->form->getLabel('mediacode'); ?>
+				<?php echo $this->form->getInput('mediacode'); ?>
+			</li>
+		</ul>
+	</fieldset>
+	</div>	
 	<div class="width-30 fltrt">
 		<fieldset class="panelform">
 			<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_STATS'); ?></legend>
@@ -102,34 +132,6 @@ function openConverter1()
 
 
     <table class="admintable">
-        <tr><td class="key"><?php echo JText::_( 'JBS_MED_PLAYER' );?></td>
-            <td>
-                <select name="player" id="player">
-                    <option value="100" <?php if ($this->mediafilesedit->player == 100){echo JText::_('JBS_SELECTED');}?> > <?php echo JText::_('JBS_CMN_USE_GLOBAL');?></option>
-                    <option value="0" <?php if ($this->mediafilesedit->player == 0){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_DIRECT_LINK');?></option>
-                    <option value="1" <?php if ($this->mediafilesedit->player == 1){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_INTERNAL_PLAYER');?></option>
-                    <option value="3" <?php if ($this->mediafilesedit->player == 3){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_AV');?></option>
-                    <option value="7" <?php if ($this->mediafilesedit->player == 7){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_LEGACY_PLAYER');?></option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td class="key"><?php echo JText::_('JBS_MED_INTERNAL_POPUP');?></td>
-            <td>
-                <select name="popup" id="popup">
-                    <option value="1" <?php if ($this->mediafilesedit->popup == 1){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_POPUP');?></option>
-                    <option value="2" <?php if ($this->mediafilesedit->popup == 2){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_INLINE');?></option>
-                   <option value="3" <?php if ($this->mediafilesedit->popup == 3){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_GLOBAL');?></option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-        <td class="key"><?php echo JText::_( 'JBS_CMN_ORDERING' );?></td>
-			<td >
-
-				<?php echo $this->lists['ordering']; ?>
-			</td>
-		</tr>
      <?php if ($this->dmenabled > 0)
 	 { ?>
       <tr>
