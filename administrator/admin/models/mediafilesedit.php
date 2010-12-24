@@ -1,9 +1,9 @@
 <?php
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.model');
+jimport('joomla.application.component.modeladmin');
 
-class biblestudyModelmediafilesedit extends JModel {
+class biblestudyModelmediafilesedit extends JModelAdmin {
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
@@ -404,5 +404,15 @@ class biblestudyModelmediafilesedit extends JModel {
 		return $query;
 	}
 
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.mediafilesedit', 'mediafilesedit', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
+
+		return $form;
+	}
 }
 ?>
