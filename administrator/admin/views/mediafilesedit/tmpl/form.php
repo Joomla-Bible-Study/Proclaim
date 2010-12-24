@@ -1,5 +1,7 @@
 <?php defined('_JEXEC') or die('Restricted access');
 
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
 ?>
 <script language="javascript" type="text/javascript">
 
@@ -53,55 +55,53 @@ function openConverter1()
 		}
         </script>
 <form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
-
-
-  <div class="col100">
-	<fieldset class="adminform">
+  <div class="width-70 fltlft">
+	<fieldset class="panelform">
 		<legend><?php echo JText::_( 'JBS_MED_MEDIA_FILES_DETAILS' ); ?></legend>
 		      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>"/>
-<?php $editor =& JFactory::getEditor();
-
-
-
-
-?>
+		<ul class="adminformlist">
+			<li>
+				<?php echo $this->form->getLabel('published'); ?> 
+				<?php echo $this->form->getInput('published');?>
+			</li>
+			<li>
+				<?php echo $this->form->getLabel('createdate'); ?>
+				<?php echo $this->form->getInput('createdate'); ?>
+			</li>
+			<li>
+				<?php echo $this->form->getLabel('study_id'); ?>
+				<?php echo $this->form->getInput('study_id'); ?>
+			</li>	
+			<li>
+				<?php echo $this->form->getLabel('ordering'); ?>
+				<?php echo $this->form->getInput('ordering'); ?>
+			</li>		
+		</ul>
+	</fieldset>
+	</div>
+	<div class="width-30 fltrt">
+		<fieldset class="panelform">
+			<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_STATS'); ?></legend>
+			<ul>
+				<li>
+					<?php echo $this->form->getLabel('plays'); ?>
+					<?php echo $this->form->getInput('plays'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('downloads'); ?>
+					<?php echo $this->form->getInput('downloads'); ?>
+				</li>
+			</ul>
+		</fieldset>
+	</div>
+	<div class="width-100 fltlft">
+		<fieldset class="panelform">
+			<legend>Details</legend>
+<?php $editor =& JFactory::getEditor();?>
 
 
 
     <table class="admintable">
-    <?php if ($this->mediafilesedit->id)
-	{
-    	?><tr><td class="key"><?php echo JText::_('JBS_CMN_DOWNLOADS'); ?></td><td><?php echo $this->mediafilesedit->downloads; ?></td><tr>
-		<tr><td class="key"><?php echo JText::_('JBS_CMN_PLAYS'); ?></td><td><?php echo $this->mediafilesedit->plays; ?></td></tr><?php
-    } ?>
-      <tr>
-        <td class="key"><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?></td>
-        <td > <?php echo $this->lists['published'];
-		?>
-          </td>
-
-      </tr>
-      <tr>
-       <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_CREATE_DATE_YMD_HMS' ); ?></td>
-        <td>
-        <?php if (!$this->mediafilesedit->id)
-		{
-			echo JHTML::_('calendar', date('Y-m-d H:i:s'), 'createdate', 'createdate');
-		}
-		else {
-			echo JHTML::_('calendar', date('Y-m-d H:i:s', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate');
-        }
-
-		//echo JHTML::_('calendar', date('D M j Y', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); ?>
-        <br />
-		<span style="font-family: serif; color: gray;">(<?php echo JText::_( 'JBS_CMN_YMD_HMS' ); ?>)</span>
-        </td>
-		</tr>
-        <tr>
-        <td class="key"><?php echo JText::_( 'JBS_CMN_STUDY' );?></td>
-        <td >
-
-        <?php echo $this->lists['studies'];?></td></tr>
         <tr><td class="key"><?php echo JText::_( 'JBS_MED_PLAYER' );?></td>
             <td>
                 <select name="player" id="player">

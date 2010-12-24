@@ -5,8 +5,10 @@ jimport( 'joomla.application.component.view' );
 jimport ('joomla.application.component.helper');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 class biblestudyViewmediafilesedit extends JView {
-
+	protected $form;
+	
 	function display($tpl = null) {
+		$this->form = $this->get("Form");
 		$db = JFactory::getDBO();
         $lists = array();
         //Get Data
