@@ -1,7 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
 ?>
 <script language="javascript" type="text/javascript">
 
@@ -55,83 +53,83 @@ function openConverter1()
 		}
         </script>
 <form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
-  <div class="width-70 fltlft">
-	<fieldset class="panelform">
+
+
+  <div class="col100">
+	<fieldset class="adminform">
 		<legend><?php echo JText::_( 'JBS_MED_MEDIA_FILES_DETAILS' ); ?></legend>
 		      	<img id="loading" src="<?php echo JURI::base().'components/com_biblestudy/images/loading.gif'; ?>"/>
-		<ul class="adminformlist">
-			<li>
-				<?php echo $this->form->getLabel('published'); ?> 
-				<?php echo $this->form->getInput('published');?>
-			</li>
-			<li>
-				<?php echo $this->form->getLabel('createdate'); ?>
-				<?php echo $this->form->getInput('createdate'); ?>
-			</li>
-			<li>
-				<?php echo $this->form->getLabel('study_id'); ?>
-				<?php echo $this->form->getInput('study_id'); ?>
-			</li>	
-			<li>
-				<?php echo $this->form->getLabel('ordering'); ?>
-				<?php echo $this->form->getInput('ordering'); ?>
-			</li>			
-		</ul>
-	</fieldset>
-	<fieldset class="panelform">
-		<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_LINKER'); ?></legend>
-		<ul class="adminformlist">
-			<li>
-				<?php echo $this->form->getLabel('docMan_id'); ?>
-				<?php echo $this->form->getInput('docMan_id'); ?>
-			</li>
-			<li>
-				<?php echo $this->form->getLabel('article_id'); ?>
-				<?php echo $this->form->getInput('article_id'); ?>
-			</li>
-		</ul>
-	</fieldset>	
-	<fieldset class="panelform">
-		<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></legend>
-		<ul class="adminformlist">
-			<li>
-				<?php echo $this->form->getLabel('player'); ?>
-				<?php echo $this->form->getInput('player'); ?>
-			</li>	
-			<li>
-				<?php echo $this->form->getLabel('popup'); ?>
-				<?php echo $this->form->getInput('popup'); ?>
-			</li>
-			<li>
-				<?php echo $this->form->getLabel('mediacode'); ?>
-				<?php echo $this->form->getInput('mediacode'); ?>
-			</li>
-		</ul>
-	</fieldset>
-	</div>	
-	<div class="width-30 fltrt">
-		<fieldset class="panelform">
-			<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_STATS'); ?></legend>
-			<ul>
-				<li>
-					<?php echo $this->form->getLabel('plays'); ?>
-					<?php echo $this->form->getInput('plays'); ?>
-				</li>
-				<li>
-					<?php echo $this->form->getLabel('downloads'); ?>
-					<?php echo $this->form->getInput('downloads'); ?>
-				</li>
-			</ul>
-		</fieldset>
-	</div>
-	<div class="width-100 fltlft">
-		<fieldset class="panelform">
-			<legend>Details</legend>
-<?php $editor =& JFactory::getEditor();?>
+<?php $editor =& JFactory::getEditor();
+
+
+
+
+?>
 
 
 
     <table class="admintable">
+    <?php if ($this->mediafilesedit->id)
+	{
+    	?><tr><td class="key"><?php echo JText::_('JBS_CMN_DOWNLOADS'); ?></td><td><?php echo $this->mediafilesedit->downloads; ?></td><tr>
+		<tr><td class="key"><?php echo JText::_('JBS_CMN_PLAYS'); ?></td><td><?php echo $this->mediafilesedit->plays; ?></td></tr><?php
+    } ?>
+      <tr>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?></td>
+        <td > <?php echo $this->lists['published'];
+		?>
+          </td>
+
+      </tr>
+      <tr>
+       <td class="key" align="left"><?php echo JText::_( 'JBS_CMN_CREATE_DATE_YMD_HMS' ); ?></td>
+        <td>
+        <?php if (!$this->mediafilesedit->id)
+		{
+			echo JHTML::_('calendar', date('Y-m-d H:i:s'), 'createdate', 'createdate');
+		}
+		else {
+			echo JHTML::_('calendar', date('Y-m-d H:i:s', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate');
+        }
+
+		//echo JHTML::_('calendar', date('D M j Y', strtotime($this->mediafilesedit->createdate)), 'createdate', 'createdate'); ?>
+        <br />
+		<span style="font-family: serif; color: gray;">(<?php echo JText::_( 'JBS_CMN_YMD_HMS' ); ?>)</span>
+        </td>
+		</tr>
+        <tr>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_STUDY' );?></td>
+        <td >
+
+        <?php echo $this->lists['studies'];?></td></tr>
+        <tr><td class="key"><?php echo JText::_( 'JBS_MED_PLAYER' );?></td>
+            <td>
+                <select name="player" id="player">
+                    <option value="100" <?php if ($this->mediafilesedit->player == 100){echo JText::_('JBS_SELECTED');}?> > <?php echo JText::_('JBS_CMN_USE_GLOBAL');?></option>
+                    <option value="0" <?php if ($this->mediafilesedit->player == 0){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_DIRECT_LINK');?></option>
+                    <option value="1" <?php if ($this->mediafilesedit->player == 1){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_INTERNAL_PLAYER');?></option>
+                    <option value="3" <?php if ($this->mediafilesedit->player == 3){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_AV');?></option>
+                    <option value="7" <?php if ($this->mediafilesedit->player == 7){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_LEGACY_PLAYER');?></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="key"><?php echo JText::_('JBS_MED_INTERNAL_POPUP');?></td>
+            <td>
+                <select name="popup" id="popup">
+                    <option value="1" <?php if ($this->mediafilesedit->popup == 1){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_POPUP');?></option>
+                    <option value="2" <?php if ($this->mediafilesedit->popup == 2){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_INLINE');?></option>
+                   <option value="3" <?php if ($this->mediafilesedit->popup == 3){echo 'selected="selected"';}?> > <?php echo JText::_('JBS_CMN_USE_GLOBAL');?></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+        <td class="key"><?php echo JText::_( 'JBS_CMN_ORDERING' );?></td>
+			<td >
+
+				<?php echo $this->lists['ordering']; ?>
+			</td>
+		</tr>
      <?php if ($this->dmenabled > 0)
 	 { ?>
       <tr>
@@ -197,7 +195,8 @@ else
   <tr>
 
       	<td class="key">
-                <?php echo JText::_('JBS_MED_USE_ARTICLE');?></td>
+                <?php echo JText::_('JBS_MED_USE_ARTICLE');?>
+        </td>
       	<td>
       	<?php
       	if(isset($this->articlesItem)){
@@ -205,18 +204,15 @@ else
       		echo ' <a href="#" id="articleChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
       	}
       	?>
-      	
+      	 <?php echo $this->form->getLabel('article_id'); ?>
+      	<?php echo $this->form->getInput('article_id'); ?>
       	<div id="articlesCategoriesContainer" class="selectContainer">
-      	<?php
-      	echo JText::_('JBS_MED_CATEGORY');
-      	?>
+       
       	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -'; ?></option></select>
-      	</div>
-      	<div id="articlesItemsContainer" class="selectContainer">
-      	<?php
-        echo JText::_('JBS_CMN_ITEM');
-      	?>
-      	<select id="categoryItems" name="categoryItem"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_ARTICLE').' -'; ?></option></select>
+      	</div>      	      
+      	<div id="articlesItemsContainer" class="selectContainer">     	    	
+      	<select id="categoryItems" name="categoryItem">
+      		<option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_ARTICLE').' -'; ?></option></select>
       	</div>
       	</td>
       </tr>
