@@ -34,7 +34,7 @@ $j(document).ready( function() {
 			});
 		});
 	
-	// Articles Integration
+	// Articles Integration (1.5 Version)
 	$j('#articlesSections').change(function() {
 		$j('#articleSectionCategories').removeOption(/./);
 		var secId = $j('#articlesSections option:selected').attr('value');
@@ -157,4 +157,22 @@ $j(document).ready( function() {
 		$j('#activeArticle').hide();
 		return false;
 	});	
+    	
+    	
+   //Articles Integration (1.6 Version)
+    	$j('#jform_article_id').change(function(){
+    		var catId = $j(this).val();
+    		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesCategoryItems&format=raw&catId=' + catId;
+    		$j.ajax({
+    			dataType : "json",
+    			url : url,
+    			success : function(data) {
+    				$j.each(data, function(entryIndex, entry) {
+    					$j('#categoryItems').addOption(entry['id'],	entry['title']);
+    					$j('#articlesItemsContainer').show();
+    				});
+    			}
+    		});
+    		$j(this).selectOptions("- Select an Article - ");
+    	});
 });
