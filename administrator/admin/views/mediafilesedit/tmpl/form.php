@@ -144,7 +144,6 @@ function openConverter1()
       	?>
       	<div id="docMainCategoriesContainer" class="selectContainer" style="<?php echo $this->docManStyle; ?>">
       	<?php
-                echo JText::_('JBS_MED_CATEGORY');
       		echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategory', null, 'id', 'title', null, 'docManCategories');
       	?>
       	</div>
@@ -204,7 +203,6 @@ else
       		echo ' <a href="#" id="articleChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
       	}
       	?>
-      	 <?php echo $this->form->getLabel('article_id'); ?>
       	<?php echo $this->form->getInput('article_id'); ?>
       	<div id="articlesCategoriesContainer" class="selectContainer">
        
