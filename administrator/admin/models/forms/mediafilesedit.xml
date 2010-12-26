@@ -33,9 +33,11 @@
 		label="JBS_MED_USE_DOCMAN" description="JBS_MED_USE_DOCMAN_DESC"
 		class="inputbox" required="false"/>	
 		
-	<field name="article_id" type="study" extension="com_biblestudy"
-		label="JBS_MED_USE_ARTICLE" description="JBS_MED_USE_ARTICLE_DESC"
-		class="inputbox" required="false"/>	
+	<field name="article_id" type="category" extension="com_content"
+			label="JCATEGORY" description="JFIELD_CATEGORY_DESC"
+			class="inputbox" required="false" default="-1">
+			<option value="-1">JBS_MED_SELECT_CATEGORY</option>
+	</field>	
 	
 	<field name="player" type="list" label="JBS_MED_PLAYER"
 			description="JBS_MED_PLAYER_DESC" class="inputbox" size="1"
@@ -57,5 +59,7 @@
 	
 	<field name="mediacode" type="text" label="JBS_CMN_AVR"
 			description="JBS_MED_AVRELOADED_TT" class="inputbox" size="100" />
+			
+	
 
 </form>
