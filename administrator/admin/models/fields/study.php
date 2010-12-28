@@ -30,7 +30,7 @@ class JFormFieldStudy extends JFormField
 		$db->setQuery("SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%Y-%m-%d'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC");
 		$html[] = JHTML::_('select.option', '0', '- '. JText::_( 'JBS_CMN_SELECT_STUDY' ) .' -' );
 		$html = array_merge($html, $db->loadObjectList());
-		return JHTML::_('select.genericlist', $html, 'study_id', 'class="inputbox" size="1" ', 'value', 'text', $mediafilesedit->study_id);
+		return JHTML::_('select.genericlist', $html, 'study_id', 'class="inputbox" size="1" ', 'value', 'text', $this->mediafilesedit->study_id);
 	}
 }
 

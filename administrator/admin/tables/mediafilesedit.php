@@ -64,6 +64,29 @@ class Tablemediafilesedit extends JTable
         return parent::bind($array, $ignore);
 }
 
+/**
+         * Overloaded load function
+         *
+         * @param       int $pk primary key
+         * @param       boolean $reset reset data
+         * @return      boolean
+         * @see JTable:load
+         */
+        public function load($pk = null, $reset = true) 
+        {
+                if (parent::load($pk, $reset)) 
+                {
+                        // Convert the params field to a registry.
+                        $params = new JRegistry;
+                        $params->loadJSON($this->params);
+                        $this->params = $params;
+                        return true;
+                }
+                else
+                {
+                        return false;
+                }
+        }
 		
 }
 ?>

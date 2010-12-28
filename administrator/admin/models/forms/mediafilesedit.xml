@@ -59,7 +59,13 @@
 	
 	<field name="mediacode" type="text" label="JBS_CMN_AVR"
 			description="JBS_MED_AVRELOADED_TT" class="inputbox" size="100" />
-			
-	
-
+	<fields name="params">
+        <fieldset name="params">		
+        	<field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH" description="JBS_MED_PLAYERWIDTH_TT" />
+            <field name="playerheight" default="" type="text" label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_TT" />
+            <field name="itempopuptitle" type="text" size="150" default="" label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
+            <field name="itempopupfooter" type="text" size="150" default="" label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
+            <field name="popupmargin" type="text" default="50" label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_TT" />
+        </fieldset>
+    </fields>
 </form>

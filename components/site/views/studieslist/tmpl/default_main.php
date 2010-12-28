@@ -118,7 +118,7 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
  $class1 = 'bsodd';
  $class2 = 'bseven';
  $oddeven = $class1;
-
+//dump ($this->items,'items: ');
  foreach ($this->items as $row) { //Run through each row of the data result from the model
 	if($oddeven == $class1){ //Alternate the color background
 	$oddeven = $class2;
@@ -128,15 +128,16 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
 
 	$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
  	echo $listing;
+   // dump ($listing, 'listing: ');
  }
  ?>
  </tbody></table>
 <div class="listingfooter" >
 	<?php
 
-      echo $this->pagination->getPagesLinks();
-      echo $this->pagination->getPagesCounter();
-      //echo $this->pagination->getListFooter();
+    //  echo $this->pagination->getPagesLinks();
+    //  echo $this->pagination->getPagesCounter();
+      echo $this->pagination->getListFooter();
 
 	  ?>
 </div> <!--end of bsfooter div-->

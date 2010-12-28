@@ -70,9 +70,10 @@ class biblestudyViewstudieslist extends JView {
 		$search				= JString::strtolower($mainframe->getUserStateFromRequest( $option.'search','search','','string'));
 
 		$results = $this->get('Data');
-		$total = $this->get('Total');
+        $total = $this->get('Total');
         //Remove the studies the user is not allowed to see
         $items = $admin->showRows($results);
+        
 		$pagination = $this->get('Pagination');
 		$teachers = $this->get('Teachers');
 		$series = $this->get('Series');

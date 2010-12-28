@@ -251,7 +251,10 @@ function getShowLevel($row)
         $usrid = $user->get('id');
         $getGroups = JAccess::getGroupsByUser($usrid);
         $sum2 = count($getGroups); 
-        $showvar = explode(',',$row->show_level);
+        if (substr_count($row->show_level,','))
+        {$showvar = explode(',',$row->show_level);}
+         //dump ($row->show_level, 'showvar: ');
+        else {$showvar = $row->show_level;}
         $sum3 = count($showvar);
         for ($i = 0; $i<$sum3; $i++)
         {

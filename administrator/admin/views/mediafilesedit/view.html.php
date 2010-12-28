@@ -116,8 +116,7 @@ class biblestudyViewmediafilesedit extends JView {
         $articlesCategories =& $this->get('ArticleCategories');
     }
 
-	//Temporary
-    $dmenabled = 1;	
+
 
 		//Manipulate Data
 		//Run only if Docman is enabled

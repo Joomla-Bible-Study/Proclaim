@@ -34,7 +34,7 @@ foreach ($results AS $result)
         if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-                    $msg[] = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS').' '.$error;
+                    $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
                 }
     }
     if ($popup)
@@ -45,7 +45,27 @@ foreach ($results AS $result)
         if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
-                    $msg[] = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS').' '.$error;
+                    $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
+                }
+    }
+    
+}
+//Get all the study records
+$query = "SELECT id, show_level FROM #__bsms_studies";
+$db->setQuery($query);
+$db->query();
+$results = $db->getObjectlist();
+foreach ($results AS $result)
+{
+    if ($result->show_level == 0)
+    {
+        $query = "UPDATE #__bsms_studies SET `show_level` = '1' WHERE `id` = $result->id LIMIT 1";
+        $db->setQuery($query);
+        $db->query();
+        if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+                    $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
                 }
     }
 }
