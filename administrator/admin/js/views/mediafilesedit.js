@@ -173,6 +173,6 @@ $j(document).ready( function() {
     				});
     			}
     		});
-    		$j(this).selectOptions("- Select an Article - ");
+    		$j(this).selectOptions("- Select an Article - ");   // santon 2010-12-28 Convert to phrase?
     	});
 });

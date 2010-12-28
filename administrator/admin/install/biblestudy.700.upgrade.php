@@ -49,7 +49,7 @@ foreach ($results AS $result)
                 }
     }
 }
-$res = '<table><tr><td>This routine moves player and popup from a parameter to new database fields.</td></tr>';
+$res = '<table><tr><td>This routine moves player and popup from a parameter to new database fields.</td></tr>';  //santon 2010-12-28 convert to phrase
 if (!$msg){$res .= JText::_('JBS_INS_NO_ERROR');}
 else
 {
