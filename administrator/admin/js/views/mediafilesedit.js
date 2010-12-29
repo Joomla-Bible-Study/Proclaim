@@ -1,3 +1,9 @@
+/**
+ * Handles js for mediafilesedit view. Uses JQuery
+ * 
+ * @version     $Id$
+ * @package     JoomlaBibleStudy
+ */
 $j(document).ready( function() {
 	$j('#loading').ajaxStart( function() {
 		$j(this).show();
@@ -157,22 +163,14 @@ $j(document).ready( function() {
 		$j('#activeArticle').hide();
 		return false;
 	});	
-    	
-    	
-   //Articles Integration (1.6 Version)
-    	$j('#jform_article_id').change(function(){
-    		var catId = $j(this).val();
-    		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesCategoryItems&format=raw&catId=' + catId;
-    		$j.ajax({
-    			dataType : "json",
-    			url : url,
-    			success : function(data) {
-    				$j.each(data, function(entryIndex, entry) {
-    					$j('#categoryItems').addOption(entry['id'],	entry['title']);
-    					$j('#articlesItemsContainer').show();
-    				});
-    			}
-    		});
-    		$j(this).selectOptions("- Select an Article - ");   // santon 2010-12-28 Convert to phrase?
+    
+   /* @Author: Eugen
+   /* Articles Integration (1.6 Version)
+   */ 
+    	$j('#jform_article_id').change(function(){   		
+    		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesCategoryItems&format=raw';
+    		var categories = $j("#categoryItems");
+    		categories.removeOption(/./); //Remove all the items before reloading them
+    		categories.ajaxAddOption(url, {catId: $j(this).val()}, false);
     	});
 });
