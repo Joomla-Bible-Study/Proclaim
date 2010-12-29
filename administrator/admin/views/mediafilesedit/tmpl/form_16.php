@@ -91,6 +91,8 @@ function openConverter1()
 			<li>
 				<?php echo $this->form->getLabel('article_id'); ?>
 				<?php echo $this->form->getInput('article_id'); ?>
+	      		<select id="categoryItems" name="categoryItem"></select>
+			
 			</li>
 		</ul>
 	</fieldset>	
@@ -114,7 +116,7 @@ function openConverter1()
 	</div>	
 	<div class="width-30 fltrt">
 		<fieldset class="panelform">
-			<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_STATS'); ?></legend>
+			<legend><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></legend>
 			<ul>
 				<li>
 					<?php echo $this->form->getLabel('plays'); ?>
@@ -124,10 +126,52 @@ function openConverter1()
 					<?php echo $this->form->getLabel('downloads'); ?>
 					<?php echo $this->form->getInput('downloads'); ?>
 				</li>
+				<li>
+					<?php echo $this->form->getLabel('server'); ?> 
+					<?php echo $this->form->getInput('server'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('path'); ?> 
+					<?php echo $this->form->getInput('path'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('filename'); ?> 
+					<?php echo $this->form->getInput('filename'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('size'); ?>
+					<?php echo $this->form->getInput('size'); ?>
+				</li>
 			</ul>
 		</fieldset>
 	</div>
-    
+	<div class="width-30 fltrt">
+		<fieldset class="panelform">
+			<legend><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></legend>
+			<ul>
+				<li>
+					<?php echo $this->form->getLabel('media_image'); ?>
+					<?php echo $this->form->getInput('media_image'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('size'); ?>
+					<?php echo $this->form->getInput('size'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('server'); ?> 
+					<?php echo $this->form->getInput('server'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('path'); ?> 
+					<?php echo $this->form->getInput('path'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('filename'); ?> 
+					<?php echo $this->form->getInput('filename'); ?>
+				</li>
+			</ul>
+		</fieldset>
+	</div>    
    
     <div class="width-30 fltrt">
                  
@@ -157,96 +201,8 @@ function openConverter1()
 
 
     <table class="admintable">
-     <?php if ($this->dmenabled > 0)
-	 { ?>
-      <tr>
-      	<td class="key">
-                <?php echo JText::_('JBS_MED_USE_DOCMAN')?></td>
-      	<td>
-      	<?php
-      	if(isset($this->docManItem)){
-      		echo '<span id="activeDocMan">'.$this->docManItem.'</span>';
-      		echo ' <a href="#" id="docmanChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
-      	}
-      	?>
-      	<div id="docMainCategoriesContainer" class="selectContainer" style="<?php echo $this->docManStyle; ?>">
-      	<?php
-                echo JText::_('JBS_MED_CATEGORY');
-      		echo JHTML::_('select.genericlist', $this->docManCategories, 'docManCategory', null, 'id', 'title', null, 'docManCategories');
-      	?>
-      	</div>
-      	<div id="docManItemsContainer" class="selectContainer">
-                <?php echo JText::_('JBS_CMN_ITEM'); ?><select id="docManItems" name="docManItem"></select>
-      	</div>
-      	</td>
-      </tr>
-      <?php } //end of if $this->docManItem ?>
-<?php if (JOOMLA_VERSION == '5')
-{ ?>
-    
-     <tr>
 
-      	<td class="key">
-                <?php echo JText::_('JBS_MED_USE_ARTICLE');?></td>
-      	<td>
-      	<?php
-      	if(isset($this->articleItem)){
-      		echo '<span id="activeArticle">'.$this->articleItem.'</span>';
-      		echo ' <a href="#" id="articleChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
-      	}
-      	?>
-      	<div id="articlesSectionsContainer" class="selectContainer" style="<?php echo $this->articleStyle; ?>">
-      	<?php
-                echo JText::_('JBS_MED_SECTION');
-      //		echo JHTML::_('select.genericlist', $this->articlesSections, 'articlesSections', null, 'id', 'title', null, 'articlesSections');
-      	?>
-      	</div>
-      	<div id="articlesCategoriesContainer" class="selectContainer">
-      	<?php
-      	echo JText::_('JBS_MED_CATEGORY');
-      	?>
-      	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -'; ?></option></select>
-      	</div>
-      	<div id="articlesItemsContainer" class="selectContainer">
-      	<?php
-        echo JText::_('JBS_CMN_ITEM');
-      	?>
-      	<select id="categoryItems" name="categoryItem"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_ARTICLE').' -'; ?></option></select>
-      	</div>
-      	</td>
-      </tr>
-<?php } // end if Joomla 1.5 for articles
-else
-{ ?>
-    
-  <tr>
 
-      	<td class="key">
-                <?php echo JText::_('JBS_MED_USE_ARTICLE');?></td>
-      	<td>
-      	<?php
-      	if(isset($this->articlesItem)){
-      		echo '<span id="activeArticle">'.$this->articlesItem.'</span>';
-      		echo ' <a href="#" id="articleChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
-      	}
-      	?>
-      	
-      	<div id="articlesCategoriesContainer" class="selectContainer">
-      	<?php
-      	echo JText::_('JBS_MED_CATEGORY');
-      	?>
-      	<select id="articleSectionCategories" name="articleSectionCategories"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_CATEGORY').' -'; ?></option></select>
-      	</div>
-      	<div id="articlesItemsContainer" class="selectContainer">
-      	<?php
-        echo JText::_('JBS_CMN_ITEM');
-      	?>
-      	<select id="categoryItems" name="categoryItem"><option selected="selected"><?php echo '- '.JTEXT::_('JBS_MED_SELECT_ARTICLE').' -'; ?></option></select>
-      	</div>
-      	</td>
-      </tr>
-
-<?php } //end if Joomla 1.6 for articles ?>
        <?php if ($this->vmenabled > 0)
 	   { ?>
       <tr>
@@ -272,41 +228,8 @@ else
       </tr>
       <?php } // end if $this->virtueMartItem ?>
 
+  </td></tr>
 
-            <tr><td class="key"><?php echo JText::_('JBS_CMN_AVR');?></td><td><?php echo JText::_('JBS_MED_AVRELOADED_TT');?></td></tr>
-            <tr><td class="key"></td><td><input class="text_area" name="mediacode" id="mediacode" size="200" maxlength="500" onChange="AvReloadedInsert(this.mtag);" onKeyUp="AvReloadedInsert(this.mtag);" onKeyPress="AvReloadedInsert(this.mtag);" value="<?php echo $this->mediafilesedit->mediacode;?>" /><?php
-			?></td></tr>
-            <tr>
-             <?php //<tr>?>
-             <td class="key"> <?php echo JText::_('JBS_CMN_IMAGE');?>
-              </td><td>  <?php echo $this->lists['image'];?></td>
-            </tr>
-            <tr>
-            <td class="key">
-            <?php echo JText::_( 'JBS_CMN_FILESIZE');?></td>
-            <td>
-			<?php $file_jbs_media = $this->filepath; $remotefilesize=getSizeFile("$file_jbs_media");
-            if (!$remotefilesize){}
-			elseif ($remotefilesize == 404){echo 'File not found. Check your link<br />';}
-			elseif ($remotefilesize == -1){}
-			else{
-            	echo '<b>'.JText::_('JBS_MED_SERVER_LOOKUP').': </b>'.$remotefilesize.
-            '<button type="button" onClick="sizebutton('.$remotefilesize.')"> '.JText::_('JBS_MED_ADD_SIZE').'</button><br />'; }?>
-            <input class="text_area" type="text" name="size" id="size" size="20" maxlength="20" onChange="decOnly(this);" onKeyUp="decOnly(this);" onKeyPress="decOnly(this);" value="<?php echo $this->mediafilesedit->size;?>"/>
-            <a href="javascript:openConverter1();">
-            <?php echo '- '.JText::_('JBS_MED_FILESIZE_CONVERTER');?>
-            </a>
-            </td>
-            </tr>
-
-            <tr>
-              <td class="key"><?php echo JText::_('JBS_CMN_SERVER');?></td><td> <?php echo $this->lists['server'];?></td>
-            </tr>
-            <tr>
-              <td class="key" ><?php echo JText::_('JBS_MED_PATH_OR_FOLDER');?></td><td><?php echo $this->lists['path'];?></td>
-            </tr>
-           <tr>
-              <td class="key" ><?php echo JText::_('JBS_MED_FILENAME');?></td><td><input class="text_area" type="text" name="filename" id="filename" size="100" maxlength="250" value="<?php echo $this->mediafilesedit->filename;?>"  /></td></tr>
 
 
       <tr><td class="key"><?php echo JText::_( 'JBS_MED_UPLOAD_FILE' ); ?></td><td><input type="file" id="file" name="file" size="75"/><?php echo JText::_('JBS_MED_TRY_USING_UPLOAD_BUTTON');?></td>
