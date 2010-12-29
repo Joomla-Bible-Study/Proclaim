@@ -16,23 +16,7 @@ function sizebutton(remotefilesize)
 }
 </script>
 
-<script type="text/javascript">
-
-function openConverter1()
-		{
-			var Wheight=125;
-			var Wwidth=300;
-			var winl = (screen.width - Wwidth) / 2;
-			var wint = (screen.height - Wheight) / 2;
-
-			var msg1=window.open('components/com_biblestudy/convert1.htm',"Window",'scrollbars=1,width='+Wwidth+',height='+Wheight+',top='+wint+',left='+winl	);
-			if (!msg1.closed) {
-				msg1.focus();
-			}
-		}
-
-</script>
-	<script language="javascript" type="text/javascript">
+<script language="javascript" type="text/javascript">
 		<!--
 		function submitbutton(pressbutton)
 		{
@@ -76,8 +60,20 @@ function openConverter1()
 				<?php echo $this->form->getInput('study_id'); ?>
 			</li>	
 			<li>
+				<?php echo $this->form->getLabel('podcast_id'); ?>
+				<?php echo $this->form->getInput('podcast_id'); ?>
+			</li>
+			<li>
+				<?php echo $this->form->getLabel('link_type'); ?>
+				<?php echo $this->form->getInput('link_type'); ?>
+			</li>
+			<li>
 				<?php echo $this->form->getLabel('ordering'); ?>
 				<?php echo $this->form->getInput('ordering'); ?>
+			</li>
+			<li>
+				<?php echo $this->form->getLabel('comment'); ?>
+				<?php echo $this->form->getInput('comment'); ?>
 			</li>			
 		</ul>
 	</fieldset>
@@ -116,7 +112,7 @@ function openConverter1()
 	</div>	
 	<div class="width-30 fltrt">
 		<fieldset class="panelform">
-			<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_STATS'); ?></legend>
+			<legend><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></legend>
 			<ul>
 				<li>
 					<?php echo $this->form->getLabel('plays'); ?>
@@ -126,21 +122,8 @@ function openConverter1()
 					<?php echo $this->form->getLabel('downloads'); ?>
 					<?php echo $this->form->getInput('downloads'); ?>
 				</li>
-			
-			</ul>
-		</fieldset>
-	</div>
-	<div class="width-30 fltrt">
-		<fieldset class="panelform">
-			<legend><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></legend>
-			<ul>
 				<li>
-					<?php echo $this->form->getLabel('media_image'); ?>
-					<?php echo $this->form->getInput('media_image'); ?>
-				</li>
-				<li>
-					<?php echo $this->form->getLabel('size'); ?>
-					<?php echo $this->form->getInput('size'); ?>
+					<?php echo $this->form->getLabel('spacer'); ?>
 				</li>
 				<li>
 					<?php echo $this->form->getLabel('server'); ?> 
@@ -153,6 +136,25 @@ function openConverter1()
 				<li>
 					<?php echo $this->form->getLabel('filename'); ?> 
 					<?php echo $this->form->getInput('filename'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('size'); ?>
+					<?php echo $this->form->getInput('size'); ?>
+				</li>
+			</ul>
+		</fieldset>
+	</div>
+	<div class="width-30 fltrt">
+		<fieldset class="panelform">
+			<legend><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></legend>
+			<ul>
+				<li>
+					<?php echo $this->form->getLabel('media_image'); ?>
+					<?php echo $this->form->getInput('media_image'); ?>
+				</li>
+				<li>
+					<?php echo $this->form->getLabel('mime_type'); ?>
+					<?php echo $this->form->getInput('mime_type'); ?>
 				</li>
 			</ul>
 		</fieldset>
@@ -240,23 +242,7 @@ echo $pane->endPane();
 */ ?>
 
 </td></tr>
-<tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_PODCAST');?></td><td><?php echo $this->lists['podcasts'];?></td></tr>
-  <tr>
 
-<tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_MIME_TYPE');?></td><td> <?php echo $this->lists['mime_type'];?>
-</td>
-</tr>
-
-<tr><td class="key"><?php echo JText::_('JBS_MED_SHOW_DOWNLOAD_ICON');?></td><td>
-
-<select id="link_type" name="link_type"><?php echo $this->mediafilesedit->link_type;?>
-<option value="0" <?php if ($this->mediafilesedit->link_type == 0){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_NO_DOWNLOAD_ICON');?></option>
-<option value="1" <?php if ($this->mediafilesedit->link_type == 1){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_SHOW_DOWNLOAD_ICON');?></option>
-<option value="2" <?php if ($this->mediafilesedit->link_type == 2){echo ' selected ';}?> > <?php echo JText::_('JBS_MED_SHOW_ONLY_DOWNLOAD_ICON');?></option>
-</select>
-</td></tr>
-<tr><td class="key"><?php echo JText::_('JBS_CMN_COMMENT');?></td><td><input class="text_area" type="text" name="comment" id="comment" size="150" maxlength="150" value="<?php echo $this->mediafilesedit->comment;?>" /><?php echo '  '.JText::_('JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP');?></td>
-</tr>
 
 
 
