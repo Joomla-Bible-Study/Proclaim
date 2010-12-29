@@ -310,7 +310,14 @@ class biblestudyModelmediafilesedit extends JModelAdmin {
 
 	function getCategoryItems($catId) {
 		$query = "SELECT id, title FROM #__content WHERE `state` = 1 AND `catid` = '$catId'";
-		return json_encode($this->_getList($query));
+		$this->getDBO()->setQuery($query);
+		
+		//We need to make the result in the right format for the ajax request 
+		$articles = array("-1" => JText::_("JBS_MED_SELECT_ARTICLE"));
+		foreach($this->getDBO()->loadAssocList() as $article) {
+			$articles[$article['id']] = $article['title'];			
+		}
+		return json_encode($articles);
 	}
 	
 	function getVirtueMartItems($catId){
