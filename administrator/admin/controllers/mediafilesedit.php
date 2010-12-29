@@ -309,37 +309,7 @@ class biblestudyControllermediafilesedit extends JController {
 		$items =& $model->getVirtueMartItems($catId);
 		echo $items;
 	}
-	function fixAVR()
-	{
-		jimport('joomla.filesystem.file');
-		$src = JPATH_SITE.DS.'components/com_biblestudy/assets/avr/view.html.php';
-		$dest = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view.html.php';
-		$avrbackup = JPATH_SITE.DS.'components/com_avreloaded/views/popup/view2.html.php';
-		$avrexists = JFile::exists($dest);
-		if ($avrexists)
-			{
-				if (!JFile::copy($dest, $avrbackup))
-				{
-					echo "<script> alert('Copy Operation 1 Failed'); window.history.go(-1); </script>\n";
-					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist' );
-				}
-
-				if (!JFile::copy($src, $dest))
-				{
-					echo "<script> alert('Copy Operation 2 Failed'); window.history.go(-1); </script>\n";
-					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist' );
-				}
-			}
-		$dest = JPATH_SITE.DS.'/components/com_avreloaded/views/popup/view.html.php';
-		$avrexists = JFile::exists($dest);
-		$avrread = JFile::read($dest);
-		$isbsms = substr_count($avrread,'JoomlaBibleStudy');
-		if ($isbsms)
-		{
-			$msg = JText::_( 'JBS_MED_OPERATION_SUCCESS_AVR_FILE_COPIED' );
-			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
-		}
-	}
+	
 
 	function resetDownloads()
 	{

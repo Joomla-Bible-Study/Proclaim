@@ -212,3 +212,16 @@ if ($sh404exists)
 </tr>
 </table>
 </fieldset>
+
+<form action="index.php" method="post" name="adminForm4" id="adminForm4" enctype="multipart/form-data">
+<div class="width-70 fltlft">
+	<fieldset class="panelform">
+		<legend><?php echo JText::_( 'JBS_MED_MEDIA_FILES_DETAILS' ); ?></legend>
+		      	
+		<ul class="adminformlist">
+			<li>
+				<?php echo $this->form->getLabel('ppfrom'); ?> 
+				<?php echo $this->form->getInput('ppfrom');?>
+			</li>
+        </ul>
+</form>

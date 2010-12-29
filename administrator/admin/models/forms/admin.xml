@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+<field name="ppfrom" type="list" label="JBS_PERM_62"
+			description="JBS_PERM_DESC" class="inputbox" size="1"
+			default="">
+		<option value="0">JBS_PERM_62_EVERYONE</option>
+		<option value="18">JBS_PERM_62_REGISTERED</option>
+		<option value="19">JBS_PERM_62_AUTHOR</option>
+		<option value="20">JBS_PERM_62_EDITOR</option>
+		<option value="22">JBS_PERM_62_PUBLISHER</option>
+        <option value="23">JBS_PERM_62_MANAGER</option>
+        <option value="24">JBS_PERM_62_SUPER</option>
+	</field>
+</form>

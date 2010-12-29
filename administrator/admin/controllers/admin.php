@@ -205,5 +205,27 @@ function resetPlays()
                
        $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );    
  }
+ 
+ function changePermissions()
+ {
+    $db = JFactory::getDBO();
+        $msg = null;
+        $from = JRequest::getInt('ppfrom','','post');
+        $to = JRequest::getInt('ppto','','post');
+        $query = "UPDATE #__bsms_studies SET `show_level` = '$to' WHERE `show_level` = '$from'";
+        $db->setQuery($query);
+        $db->query();
+        if ($db->getErrorNum() > 0)
+				{
+					$msg = JText::_('JBS_ADM_ERROR_OCCURED').' '.$db->getErrorMsg();
+				}
+                else
+                {
+                    $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL');
+                }
+               
+       $this->setRedirect( 'index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg );    
+    
+ }
 }
 ?>

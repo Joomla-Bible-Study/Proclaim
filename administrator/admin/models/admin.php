@@ -5,7 +5,7 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
-
+jimport('joomla.application.component.modeladmin');
 
 class biblestudyModeladmin extends JModel
 {
@@ -77,6 +77,15 @@ class biblestudyModeladmin extends JModel
 		return true;
 	}
 
-	
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
+
+		return $form;
+	}	
 }
 ?>

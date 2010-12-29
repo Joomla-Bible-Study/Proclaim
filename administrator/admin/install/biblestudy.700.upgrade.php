@@ -69,6 +69,7 @@ foreach ($results AS $result)
                 }
     }
 }
+
 $res = '<table><tr><td>This routine moves player and popup from a parameter to new database fields.</td></tr>';  //santon 2010-12-28 convert to phrase
 if (!$msg){$res .= JText::_('JBS_INS_NO_ERROR');}
 else
@@ -90,6 +91,7 @@ $result_table .= '<tr>
 		</td>
 		<td width="20" valign="top"><img src="images/collapseall.png" border="0"></td>
 	</tr>';
+
 
 $result_table .= '</td></tr></table>';
 echo $result_table;
