@@ -169,8 +169,9 @@ $j(document).ready( function() {
    */ 
     	$j('#jform_article_id').change(function(){   		
     		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesCategoryItems&format=raw';
-    		var categories = $j("#categoryItems");
+    		var categories = $j("#categoryItems");   		
     		categories.removeOption(/./); //Remove all the items before reloading them
     		categories.ajaxAddOption(url, {catId: $j(this).val()}, false);
+    		categories.show();
     	});
 });
