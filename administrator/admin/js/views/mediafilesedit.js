@@ -163,10 +163,8 @@ $j(document).ready( function() {
 		$j('#activeArticle').hide();
 		return false;
 	});	
-    
-   /* @Author: Eugen
-   /* Articles Integration (1.6 Version)
-   */ 
+   
+    	//Articles Integration (1.6 Version)
     	$j('#jform_article_id').change(function(){   		
     		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesCategoryItems&format=raw';
     		var categories = $j("#categoryItems");   		
