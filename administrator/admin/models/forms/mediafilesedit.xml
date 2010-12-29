@@ -106,8 +106,9 @@
 		<option value="2">JBS_CMN_INLINE</option>
 	</field>
 	
-	<field name="mediacode" type="text" label="JBS_CMN_AVR"
-			description="JBS_MED_AVRELOADED_TT" class="inputbox" size="100" />
+	<field name="mediacode" type="textarea" label="JBS_CMN_AVR"
+			description="JBS_MED_AVRELOADED_TT" class="inputbox" cols="64" rows="2" />
+			
 	<fields name="params">
         <fieldset name="params">		
         	<field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH" description="JBS_MED_PLAYERWIDTH_TT" />
