@@ -1,3 +1,7 @@
+#categoryItems {
+	display: none;
+}
+
 #loading {
 	display: none;
 	position: absolute;
