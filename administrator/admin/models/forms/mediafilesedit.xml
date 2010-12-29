@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset>
-	<field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
+	<fieldset addfieldpath="/administrator/components/com_biblestudy/models/fields">
+	<field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="1" required="true">
 		<option value="0">No</option>
 		<option value="1">Yes</option>
 	</field>
@@ -10,9 +10,14 @@
 			description="JBS_CMN_CREATE_DATE_YMD_HMS_DESC" class="inputbox" size="22"
 			format="%Y-%m-%d %H:%:%i" filter="user_utc" required="true"/>		
 			
-	<field name="study_id" type="study" extension="com_biblestudy"
-		label="JBS_CMN_STUDY" description="JBS_CMN_STUDY_DESC"
-		class="inputbox" required="true"/>	
+	<field name="study_id" 
+        type="modal_studydetails" 
+        extension="com_biblestudy"
+		label="JBS_CMN_STUDY" 
+        description="JBS_CMN_STUDY_DESC"
+		required="true"
+        win_width="300" win_height="300"
+   />	
 	</fieldset>
 	
 	<field name="plays"  type="text" class="readonly" label="JBS_CMN_PLAYS"

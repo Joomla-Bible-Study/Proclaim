@@ -170,14 +170,19 @@ $db->setQuery( $query );
 $db->query();
 $thefile = $db->loadObject();
 $protocol = $params->get('protocol','http://');
-
-if (substr($thefile->spath,0,4)=='http') 
-{$filepath = $thefile->spath.$thefile->fpath.$thefile->filename;}
-else {$filepath = $protocol.$thefile->spath.$thefile->fpath.$thefile->filename;}
-
-$this->assignRef('filepath', $filepath);	
-
-			if($mediafilesedit->docMan_id != 0 && !$isNew) {
+if ($thefile)
+    {
+        if (substr($thefile->spath,0,4)=='http') 
+        {$filepath = $thefile->spath.$thefile->fpath.$thefile->filename;}
+        else {$filepath = $protocol.$thefile->spath.$thefile->fpath.$thefile->filename;}
+        	
+    }
+else
+{
+    $filepath = '';
+}			
+$this->assignRef('filepath', $filepath);
+if($mediafilesedit->docMan_id != 0 && !$isNew) {
 				$this->assignRef('docManItem', $model->getDocManItem($mediafilesedit->docMan_id));
 				$this->assign('docManStyle', 'display: none');
 			}

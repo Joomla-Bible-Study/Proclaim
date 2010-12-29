@@ -139,7 +139,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
         <td> <?php echo $this->pagination->getRowOffset( $i ); ?> </td>
         <td> <?php echo $checked; ?> </td>
         <td align="center"> <?php echo $published; ?> </td>
-        <td><a class="pointer" onclick="if (window.parent) window.parent.<?php echo $function;?>('<?php echo $row->id; ?>', '<?php echo $row->id; ?>');">
+        <td><a class="pointer" onclick="if (window.parent) window.parent.<?php echo $function;?>('<?php echo $row->id; ?>', '<?php echo $row->studytitle; ?>');">
 		<?php echo $row->studytitle; ?></a></td>
 
         <td><?php echo $row->message_type; ?></td>

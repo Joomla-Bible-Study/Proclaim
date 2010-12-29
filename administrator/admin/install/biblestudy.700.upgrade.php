@@ -54,7 +54,7 @@ foreach ($results AS $result)
 $query = "SELECT id, show_level FROM #__bsms_studies";
 $db->setQuery($query);
 $db->query();
-$results = $db->getObjectlist();
+$results = $db->loadObjectlist();
 foreach ($results AS $result)
 {
     if ($result->show_level == 0)

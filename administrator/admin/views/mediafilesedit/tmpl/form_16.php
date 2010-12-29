@@ -116,7 +116,7 @@ function openConverter1()
 	</div>	
 	<div class="width-30 fltrt">
 		<fieldset class="panelform">
-			<legend><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></legend>
+			<legend><?php echo JText::_('JBS_MED_MEDIA_FILES_STATS'); ?></legend>
 			<ul>
 				<li>
 					<?php echo $this->form->getLabel('plays'); ?>
@@ -126,22 +126,7 @@ function openConverter1()
 					<?php echo $this->form->getLabel('downloads'); ?>
 					<?php echo $this->form->getInput('downloads'); ?>
 				</li>
-				<li>
-					<?php echo $this->form->getLabel('server'); ?> 
-					<?php echo $this->form->getInput('server'); ?>
-				</li>
-				<li>
-					<?php echo $this->form->getLabel('path'); ?> 
-					<?php echo $this->form->getInput('path'); ?>
-				</li>
-				<li>
-					<?php echo $this->form->getLabel('filename'); ?> 
-					<?php echo $this->form->getInput('filename'); ?>
-				</li>
-				<li>
-					<?php echo $this->form->getLabel('size'); ?>
-					<?php echo $this->form->getInput('size'); ?>
-				</li>
+			
 			</ul>
 		</fieldset>
 	</div>
