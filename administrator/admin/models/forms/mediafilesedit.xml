@@ -29,10 +29,28 @@
 		<option value="0">0</option>
 	</field>
 	
-	<field name="docMan_id" type="study" extension="com_biblestudy"
+	<field name="docMan_id" type="docman" extension="com_biblestudy"
 		label="JBS_MED_USE_DOCMAN" description="JBS_MED_USE_DOCMAN_DESC"
 		class="inputbox" required="false"/>	
 		
+	<field name="server" type="servers" extension="com_biblestudy"
+		label="JBS_CMN_SERVER" description="JBS_ADM_FILLIN_MEDIAFILE_SERVER_TT"
+		class="inputbox" required="false"/>
+		
+	<field name="path" type="paths" extension="com_biblestudy"
+		label="JBS_MED_PATH_OR_FOLDER" description="JBS_ADM_FILLIN_MEDIAFILE_SERVER_TT"
+		class="inputbox" required="false"/>		
+		
+	<field name="media_image" type="mediaimages" extension="com_biblestudy"
+		label="JBS_CMN_IMAGE" description="JBS_CMN_IMAGE_DESC"
+		class="inputbox" required="false"/>	
+		
+	<field name="filename" type="text" label="JBS_MED_FILENAME"
+			description="JBS_MED_FILENAME_DESC" class="inputbox" size="26" />
+			
+	<field name="size" type="text" label="JBS_CMN_FILESIZE"
+		description="JBS_CMN_FILESIZE_DESC" class="inputbox" size="15" />
+			
 	<field name="article_id" type="category" extension="com_content"
 			label="JCATEGORY" description="JFIELD_CATEGORY_DESC"
 			class="inputbox" required="false" default="-1">
