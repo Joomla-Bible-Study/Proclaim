@@ -4,7 +4,7 @@ $j(document).ready(function() {
 	$j('#size').rules('add', {
 		required: true,
 		messages: {
-			required: "This field is required",
+			required: "This field is required"
 		}
 	})
 	
