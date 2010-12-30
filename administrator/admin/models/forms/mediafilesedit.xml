@@ -77,10 +77,13 @@
 	</field>		
 		
 	<field name="filename" type="text" label="JBS_MED_FILENAME"
-			description="JBS_MED_FILENAME_DESC" class="inputbox" size="26" />
+			description="JBS_MED_USE_FILENAME_AS_PATH" class="inputbox" size="26" />
 			
 	<field name="size" type="filesize" label="JBS_CMN_FILESIZE"
 		description="JBS_CMN_FILESIZE_DESC" class="inputbox" size="15" />
+		
+	<field name="special" type="text" label="JBS_MED_TARGET"
+		description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15" />
 			
 	<field name="article_id" type="category" extension="com_content"
 			label="JCATEGORY" description="JFIELD_CATEGORY_DESC"
@@ -109,12 +112,20 @@
 	<field name="mediacode" type="textarea" label="JBS_CMN_AVR"
 			description="JBS_MED_AVRELOADED_TT" class="inputbox" cols="64" rows="2" />
 			
+	<field name="virtuemart_categories" type="sql" label="JBS_MED_CATEGORY" default="-1">
+		<option value="-1">JBS_MED_SELECT_CATEGORY</option>
+	</field>
+	
+	<field name="virtuemart_id" type="sql" label="JBS_CMN_ITEM" default="-1">
+		<option value="-1">JBS_MED_SELECT_VM_ITEM</option>
+	</field>
+			
 	<fields name="params">
-        <fieldset name="params">		
+        <fieldset name="params">	
         	<field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH" description="JBS_MED_PLAYERWIDTH_TT" />
             <field name="playerheight" default="" type="text" label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_TT" />
-            <field name="itempopuptitle" type="text" size="150" default="" label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
-            <field name="itempopupfooter" type="text" size="150" default="" label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
+            <field name="itempopuptitle" type="text" size="35" default="" label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
+            <field name="itempopupfooter" type="text" size="35" default="" label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
             <field name="popupmargin" type="text" default="50" label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_TT" />
         </fieldset>
     </fields>
