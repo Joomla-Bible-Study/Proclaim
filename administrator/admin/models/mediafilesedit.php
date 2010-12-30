@@ -3,7 +3,13 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modeladmin');
 
-class biblestudyModelmediafilesedit extends JModelAdmin {
+if(class_exists(JModelAdmin)) {
+	abstract class modelClass extends JModelAdmin{}
+}else{
+	abstract class modelClass extends JModel{}
+}
+
+class biblestudyModelmediafilesedit extends modelClass {
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
