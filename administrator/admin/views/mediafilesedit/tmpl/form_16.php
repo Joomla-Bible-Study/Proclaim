@@ -7,40 +7,12 @@ JHtml::_('behavior.formvalidation');
 $params = $this->form->getFieldsets('params');
 ?>
 <script language="javascript" type="text/javascript">
-
 function sizebutton(remotefilesize)
-{
-    
+{  
     var objTB = document.getElementById("size");
     objTB.value = remotefilesize;
 }
 </script>
-
-<script language="javascript" type="text/javascript">
-		<!--
-		function submitbutton(pressbutton)
-		{
-			var form = document.adminForm;
-			if (pressbutton == 'cancel')
-			{
-				submitform( pressbutton );
-				return;
-			}
-			// do field validation
-			if (form.study_id.value == "0")
-			{
-				alert( "<?php echo JText::_( 'JBS_MED_CHOOSE_STUDY_TO_LINK', true ); ?>" );
-			}
-			else if (form.media_image.value == "0")
-			{
-				alert( "<?php echo JText::_( 'JBS_MED_CHOOSE_IMAGE', true ); ?>" );
-			}
-			else
-			{
-				submitform( pressbutton );
-			}
-		}
-        </script>
 <form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
   <div class="width-70 fltlft">
 	<fieldset class="panelform">
@@ -107,8 +79,22 @@ function sizebutton(remotefilesize)
 				<?php echo $this->form->getLabel('mediacode'); ?>
 				<?php echo $this->form->getInput('mediacode'); ?>
 			</li>
-		</ul>
+		</ul>	
 	</fieldset>
+	
+	<fieldset class="panelform">
+		<legend><?php echo JText::_('JBS_MED_USE_VIRTUEMART'); ?></legend>
+		<ul class="adminformlist">
+			<li>VM is not yet compatible with 1.6
+				<?php //echo $this->form->getLabel('virtuemart_categories'); ?>
+				<?php //echo $this->form->getInput('virtuemart_categories'); ?>
+			</li>	
+			<li>
+				<?php //echo $this->form->getLabel('virtuemart_id'); ?>
+				<?php //echo $this->form->getInput('virtuemart_id'); ?>
+			</li>
+		</ul>	
+	</fieldset>	
 	</div>	
 	<div class="width-30 fltrt">
 		<fieldset class="panelform">
@@ -141,6 +127,10 @@ function sizebutton(remotefilesize)
 					<?php echo $this->form->getLabel('size'); ?>
 					<?php echo $this->form->getInput('size'); ?>
 				</li>
+				<li>
+					<?php echo $this->form->getLabel('special'); ?>
+					<?php echo $this->form->getInput('special'); ?>
+				</li>				
 			</ul>
 		</fieldset>
 	</div>
@@ -159,102 +149,30 @@ function sizebutton(remotefilesize)
 			</ul>
 		</fieldset>
 	</div>    
-   
     <div class="width-30 fltrt">
-                 
-               <?php  echo JHtml::_('sliders.start', 'biblestudy-slider'); ?>
-<?php foreach ($params as $name => $fieldset): ?>
-                <?php echo JHtml::_('sliders.panel', JText::_($fieldset->label), $name.'-params');?>
-        <?php if (isset($fieldset->description) && trim($fieldset->description)): ?>
-                <p class="tip"><?php echo $this->escape(JText::_($fieldset->description));?></p>
-        <?php endif;?>
+		<?php  echo JHtml::_('sliders.start', 'biblestudy-slider');
+			 foreach ($params as $name => $fieldset):
+             	echo JHtml::_('sliders.panel', JText::_($fieldset->label), $name.'-params');
+       			if (isset($fieldset->description) && trim($fieldset->description)): ?>
+                	<p class="tip">
+                		<?php echo $this->escape(JText::_($fieldset->description));?>
+                	</p>
+      			<?php endif;?>
                 <fieldset class="panelform" >
-                <legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
-                        <ul class="adminformlist">
-        <?php foreach ($this->form->getFieldset($name) as $field) : ?>
-                                <li><?php echo $field->label; ?><?php echo $field->input; ?></li>
-        <?php endforeach; ?>
-                        </ul>
+	                <legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
+	                <ul class="adminformlist">
+	        			<?php foreach ($this->form->getFieldset($name) as $field) : ?>
+	                   		<li><?php echo $field->label; ?><?php echo $field->input; ?></li>
+	       				<?php endforeach; ?>
+	                </ul>
                 </fieldset>
-<?php endforeach; ?>
- 
-                <?php echo JHtml::_('sliders.end'); ?>
+			 <?php endforeach; ?>
+		<?php echo JHtml::_('sliders.end'); ?>
         </div>
-	<div class="width-100 fltlft">
-		<fieldset class="panelform">
-			<legend>Details</legend>
-<?php $editor =& JFactory::getEditor();?>
-
-
-
-    <table class="admintable">
-
-
-       <?php if ($this->vmenabled > 0)
-	   { ?>
-      <tr>
-      	<td class="key">
-                <?php echo JText::_('JBS_MED_USE_VIRTUEMART');?></td>
-      	<td>
-      	<?php
-      	if(isset($this->virtueMartItem)){
-      		echo '<span id="activeVirtueMart">'.$this->virtueMartItem.'</span>';
-      		echo ' <a href="#" id="virtueMartChange">'.JText::_('JBS_CMN_CHANGE').'</a>';
-      	}
-      	?>
-      	<div id="virtueMartCategoriesContainer" class="selectContainer" style="<?php echo $this->virtueMartStyle; ?>">
-      	<?php
-                echo JText::_('JBS_MED_CATEGORY');
-      		echo JHTML::_('select.genericlist', $this->virtueMartCategories, 'virtueMartCategory', null, 'id', 'title', null, 'virtueMartCategories');
-      	?>
-      	</div>
-      	<div id="virtueMartItemsContainer" class="selectContainer">
-                <?php echo JText::_('JBS_CMN_ITEM'); ?><select id="virtueMartItems" name="virtueMartItem"></select>
-      	</div>
-      	</td>
-      </tr>
-      <?php } // end if $this->virtueMartItem ?>
-
-  </td></tr>
-
-
-
-      <tr><td class="key"><?php echo JText::_( 'JBS_MED_UPLOAD_FILE' ); ?></td><td><input type="file" id="file" name="file" size="75"/><?php echo JText::_('JBS_MED_TRY_USING_UPLOAD_BUTTON');?></td>
-            </tr>
-            <tr>
-              <td class="key"></td><td><?php echo JText::_('JBS_MED_MAX_UPLOAD_PHP').': '.ini_get('upload_max_filesize');?></td>
-            </tr>
-			<tr>
-              <td class="key"><?php echo JText::_('JBS_MED_TARGET');?></td><td><?php echo JText::_('JBS_MED_USE_FILENAME_AS_PATH');?>
-              <?php echo JText::_('JBS_MED_TARGET_FOR_LINK')?> <input class="text_area" type="text" name="special" id="special" size="15" maxlength="15" value="<?php echo $this->mediafilesedit->special;?>" /></td>
-            </tr>
-     <tr><td class="key"><?php echo JText::_('JBS_CMN_PARAMETERS');?></td><td>
-     <?php jimport('joomla.html.pane');
- ?>
-
-<?php /*
-$pane =& JPane::getInstance( 'sliders');
-echo $pane->startPane ('content-pane');
-echo $pane->startPanel(JText::_('JBS_MED_MEDIA_FILE_PARAMETERS'), 'MEDIAFILE_1');
-echo $this->params->render ('params');
-echo $pane->endPanel();
-echo $pane->endPane();
-*/ ?>
-
-</td></tr>
-
-
-
-
-    </table>
-	</fieldset>
-</div>
-<div class="clr"></div>
 
 <input type="hidden" name="option" value="com_biblestudy" />
 <input type="hidden" name="id" value="<?php echo $this->mediafilesedit->id; ?>" />
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="controller" value="mediafilesedit" />
-
 </form>
 
