@@ -7,8 +7,16 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 jimport('joomla.application.component.modeladmin');
 
-class biblestudyModeladmin extends JModel
-{
+if(class_exists
+(JModelAdmin)) {
+abstract class modelClass extends JModelAdmin{}
+}else{
+abstract class modelClass extends JModel{}
+}
+
+class biblestudyModeladmin extends modelClass {
+//class biblestudyModeladmin extends JModelAdmin
+//{
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *

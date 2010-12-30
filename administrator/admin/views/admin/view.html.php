@@ -15,9 +15,9 @@ class biblestudyViewadmin extends JView
 	function display($tpl = null)
 	{
 
-        //$this->form = $this->get("Form");
-        $this->form = &JForm::getInstance('myform', JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'models' .DS. 'forms' .DS. 'admin.xml');
-
+        $this->form = $this->get("Form");
+      //  $this->form = &JForm::getInstance('myform', JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'models' .DS. 'forms' .DS. 'admin.xml');
+        $db = JFactory::getDBO();
         JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$admin		=& $this->get('Data');
 		$this->assignRef('admin', $admin);
@@ -187,7 +187,22 @@ class biblestudyViewadmin extends JView
     		$lists['showhide'] = JHTML::_('select.genericlist',  $folderfinal9, 'showhide', 'class="inputbox"', 'value', 'value', $admin->showhide );
         }
 
-
+//Get user groups and put into select list Since 1.6
+        if (JOOMLA_VERSION == '6')
+        {
+            
+            
+            $query = "SELECT id AS value, title AS text FROM #__usergroups ORDER BY title ASC";
+            $db->setQuery($query);
+            $db->query();
+            $groups = $db->loadObjectList();
+           
+           // $studiesedit->show_level = explode(",",$studiesedit->show_level);
+          
+            JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+            $lists['show_level'] = JHTML::_('select.genericlist', $groups, 'show_level', 'class="inputbox" ', 'value', 'text',  'show_level');
+           
+        }
 		jimport( 'joomla.i18n.help' );
 		$this->assignRef('lists', $lists);
 

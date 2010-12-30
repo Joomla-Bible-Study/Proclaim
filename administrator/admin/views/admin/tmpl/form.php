@@ -213,10 +213,13 @@ if ($sh404exists)
 </table>
 </fieldset>
 
+<table>
+<tr>
+<td>
 <form action="index.php" method="post" name="adminForm4" id="adminForm4" enctype="multipart/form-data">
-<div class="width-70 fltlft">
+<div class="width-200 fltlft">
 	<fieldset class="panelform">
-		<legend><?php echo JText::_( 'JBS_MED_MEDIA_FILES_DETAILS' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_CHANGE_PERMISSIONS' ); ?></legend>
 		      	
 		<ul class="adminformlist">
 			<li>
@@ -224,4 +227,15 @@ if ($sh404exists)
 				<?php echo $this->form->getInput('ppfrom');?>
 			</li>
         </ul>
+</td>
+<td>
+<?php echo $this->lists['show_level']; ?>
+</td>
+</tr>
+ <input type="hidden" name="option" value="com_biblestudy" />
+<input type="hidden" name="task" value="changePermissions" />
+<input type="hidden" name="controller" value="admin" />
+<input type="submit" value="Submit" />
+</div>
 </form>
+</table>
