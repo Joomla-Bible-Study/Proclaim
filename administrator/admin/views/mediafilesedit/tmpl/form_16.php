@@ -13,7 +13,7 @@ function sizebutton(remotefilesize)
     objTB.value = remotefilesize;
 }
 </script>
-<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
   <div class="width-70 fltlft">
 	<fieldset class="panelform">
 		<legend><?php echo JText::_( 'JBS_MED_MEDIA_FILES_DETAILS' ); ?></legend>
@@ -85,7 +85,7 @@ function sizebutton(remotefilesize)
 	<fieldset class="panelform">
 		<legend><?php echo JText::_('JBS_MED_USE_VIRTUEMART'); ?></legend>
 		<ul class="adminformlist">
-			<li>VM is not yet compatible with 1.6
+			<li>VM is not yet compatible with Joomla 1.6
 				<?php //echo $this->form->getLabel('virtuemart_categories'); ?>
 				<?php //echo $this->form->getInput('virtuemart_categories'); ?>
 			</li>	
