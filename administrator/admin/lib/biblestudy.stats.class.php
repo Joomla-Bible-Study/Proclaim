@@ -367,48 +367,16 @@ function popups()
     $num_rows = $db->getNumRows();
     $results = $db->loadObjectList();
     $noplayer = count($results);
-    /*
-    $query = 'SELECT id, params FROM #__bsms_mediafiles';
-    $db->setQuery($query);
-    $db->query();
-    $num_rows = $db->getNumRows();
-    $results = $db->loadObjectList();
-    $inline = 'internal_popup=2';
-    $pop = 'internal_popup=1';
-    $global = 'internal_popup=3';
- //   $avr = 'player=2';
-//    $av = 'player=3';
-    $add = 0;
-//    $directcount = 0;
-//    $internalcount = 0;
-    $inlinecount = 0;
-    $popcount = 0;
-    $globalcount = 0;
-  //  $avrcount = 0;
- //   $avcount = 0;
-    foreach ($results AS $result)
-    {
-        $param = $result->params;
-        $isinline = substr_count($param,$inline);
-        $inlinecount = $inlinecount + $isinline;
-        $ispop = substr_count($param,$pop);
-        $popcount = $popcount + $ispop;
-        $isglobal =substr_count($param,$global);
-        $globalcount = $globalcount + $isglobal;
-     //   $isavr = substr_count($param,$avr);
-     //   $avrcount = $avrcount + $isavr;
-     //   $isav = substr_count($param,$av);
-     //   $avcount = $avcount + $isav;
-        $total = $inlinecount + $popcount + $globalcount;
-        $noplayer = $num_rows - $total;
-    }
-    */
+   
     $popups = '<strong>'.JText::_('JBS_CMN_INLINE').': </strong>'.$inlinecount.
     '<br /><strong>'.JText::_('JBS_CMN_POPUP').': </strong>'.$popcount.
     '<br /><strong>'.JText::_('JBS_CMN_GLOBAL_SETTINGS').': </strong>'.$globalcount.
     '<br /><strong>'.JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
     return $popups;
 }
+
+    
+
 }
 
 ?>

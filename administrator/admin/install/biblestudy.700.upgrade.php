@@ -10,7 +10,7 @@ require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.ph
 
 
 $db = JFactory::getDBO();
-
+$msg = array();
 //Get all the media file records
 $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
 $db->setQuery($query);
@@ -51,37 +51,75 @@ foreach ($results AS $result)
     
 }
 //Get all the study records
-$query = "SELECT id, show_level FROM #__bsms_studies";
+
+$query = "UPDATE #__bsms_studies SET `show_level` = '1' WHERE `show_level` = '0'";
 $db->setQuery($query);
 $db->query();
-$results = $db->loadObjectlist();
-foreach ($results AS $result)
-{
-    if ($result->show_level == 0)
-    {
-        $query = "UPDATE #__bsms_studies SET `show_level` = '1' WHERE `id` = $result->id LIMIT 1";
-        $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() > 0)
+if ($db->getErrorNum() > 0)
 				{
 					$error = $db->getErrorMsg();
                     $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
                 }
-    }
-}
-
-$res = '<table><tr><td>This routine moves player and popup from a parameter to new database fields.</td></tr>';  //santon 2010-12-28 convert to phrase
-if (!$msg){$res .= JText::_('JBS_INS_NO_ERROR');}
+$query = "UPDATE #__bsms_studies SET `show_level` = '2' WHERE `show_level` = '18'";
+$db->setQuery($query);
+$db->query();
+if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+                    $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
+                }
+$query = "UPDATE #__bsms_studies SET `show_level` = '3' WHERE `show_level` = '19'";
+$db->setQuery($query);
+$db->query();
+if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+                    $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
+                }
+$query = "UPDATE #__bsms_studies SET `show_level` = '4' WHERE `show_level` = '20'";
+$db->setQuery($query);
+$db->query();
+if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+                    $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
+                }
+$query = "UPDATE #__bsms_studies SET `show_level` = '5' WHERE `show_level` = '22'";
+$db->setQuery($query);
+$db->query();
+if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+                    $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
+                }
+$query = "UPDATE #__bsms_studies SET `show_level` = '6' WHERE `show_level` = '23'";
+$db->setQuery($query);
+$db->query();
+if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+                    $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
+                }
+$query = "UPDATE #__bsms_studies SET `show_level` = '7' WHERE `show_level` = '24'";
+$db->setQuery($query);
+$db->query();
+if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+                    $msg[] = JText::_('JBS_ADM_ERROR_OCCURED').' '.$error;
+                }
+$res = '<table><tr><td>This routine moves player and popup from a parameter to new database fields and adjusts user groups for the studies show_level.</td></tr>';  //santon 2010-12-28 convert to phrase
+if (count($msg) < 1){$res .= JText::_('JBS_INS_NO_ERROR');}
 else
 {
-    $msg = array();
+    
     $r = 'Errors: <br />';
     foreach ($msg AS $m)
     {
         $r .= $m.'<br />';
     }
 }
-$result_table .= '<tr>
+$result_table = '<tr>
 		<td>
 			<div id="id_1" onClick="javascript:showDetail(this);" style="cursor:pointer;">
 				<img id="__img" src="images/expandall.png" border="0">

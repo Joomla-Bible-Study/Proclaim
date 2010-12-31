@@ -31,17 +31,33 @@ class Tableadmin extends JTable
 	var $main = null;
 	var $showhide = null;
 
-	function bind($array, $ignore = '')
-{ 
-        if (key_exists( 'params', $array ) && is_array( $array['params'] ))
+	 public function bind($array, $ignore = '') 
         {
-                $registry = new JRegistry();
-                $registry->loadArray($array['params']);
-                $array['params'] = $registry->toString();
+                if (isset($array['params']) && is_array($array['params'])) 
+                {
+                        // Convert the params field to a string.
+                        $parameter = new JRegistry;
+                        $parameter->loadArray($array['params']);
+                        $array['params'] = (string)$parameter;
+                }
+                return parent::bind($array, $ignore);
         }
-        return parent::bind($array, $ignore);
-}
 
+     public function load($pk = null, $reset = true) 
+        {
+                if (parent::load($pk, $reset)) 
+                {
+                        // Convert the params field to a registry.
+                        $params = new JRegistry;
+                        $params->loadJSON($this->params);
+                        $this->params = $params;
+                        return true;
+                }
+                else
+                {
+                        return false;
+                }
+        }
 	/**
 	 * Constructor
 	 *

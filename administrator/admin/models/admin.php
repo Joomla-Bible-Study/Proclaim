@@ -7,8 +7,7 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 jimport('joomla.application.component.modeladmin');
 
-if(class_exists
-(JModelAdmin)) {
+if(class_exists('JModelAdmin')) {
 abstract class modelClass extends JModelAdmin{}
 }else{
 abstract class modelClass extends JModel{}
