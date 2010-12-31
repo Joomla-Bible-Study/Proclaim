@@ -7,11 +7,11 @@
         behave like an install but upgrades will be treated appropriately even
         if the interface doesn't support it properly -->
   <!-- Generic Metadata -->
-  <name>com_biblestudy</name>
+  <name>biblestudy</name>
   <author>JoomlaBibleStudy Team</author>
   <authorEmail>info@joomlabiblestudy.org</authorEmail>
   <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-  <copyright>(C) 2010 Copyright Joomla Bible Study</copyright>
+  <copyright>(C) 2011 Copyright Joomla Bible Study</copyright>
   <license>GNU/GPL</license>
   <version>7.0</version>
   <creationDate>January 2011</creationDate>
@@ -28,7 +28,7 @@
   <!-- Front end file, media and language specification -->
   <filename>biblestudy.xml</filename>
   <filename>biblestudy.install.php</filename>
-  <filename>uninstall.biblestudy.php</filename>
+  <filename>biblestudy.uninstall.php</filename>
   <files folder="site">
     <filename>index.html</filename>
     <filename>metadata.xml</filename>
@@ -110,16 +110,22 @@
     <languages folder="admin/languages">
       <language tag="en-GB">en-GB.com_biblestudy.ini</language>
       <language tag="en-GB">en-GB.com_biblestudy.menu.ini</language>
+      <language tag="en-GB">en-GB.com_biblestudy.sys.ini</language>
       <language tag="cs-CZ">cs-CZ.com_biblestudy.ini</language>
       <language tag="cs-CZ">cs-CZ.com_biblestudy.menu.ini</language>
+      <language tag="cs-CZ">cs-CZ.com_biblestudy.sys.ini</language>
       <language tag="de-DE">de-DE.com_biblestudy.ini</language>
       <language tag="de-DE">de-DE.com_biblestudy.menu.ini</language>
+       <language tag="de-DE">de-DE.com_biblestudy.sys.ini</language>
       <language tag="es-ES">es-ES.com_biblestudy.ini</language>
       <language tag="es-ES">es-ES.com_biblestudy.menu.ini</language>
+       <language tag="es-ES">es-ES.com_biblestudy.sys.ini</language>
       <language tag="hu_HU">hu-HU.com_biblestudy.menu.ini</language>
+       <language tag="hu_HU">hu-HU.com_biblestudy.sys.ini</language>
       <language tag="nl-NL">nl-NL.com_biblestudy.ini</language>
       <language tag="no-NO">no-NO.com_biblestudy.ini</language>
       <language tag="no-NO">no-NO.com_biblestudy.menu.ini</language>
+      <language tag="no-NO">no-NO.com_biblestudy.sys.ini</language>
     </languages>
   </administration>
   <!--  Dependencies -->
