@@ -18,7 +18,7 @@
   <description>Joomla Bible Study</description>
   <installfile>biblestudy.install.php</installfile>
   <!-- Deprecated in 1.6 -->
-  <uninstallfile>uninstall.biblestudy.php</uninstallfile>
+  <uninstallfile>biblestudy.uninstall.php</uninstallfile>
   <!-- Deprecated in 1.6 -->
   <install>
     <sql>
