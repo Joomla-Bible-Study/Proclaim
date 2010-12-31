@@ -415,6 +415,10 @@ class fx_Upgrade {
 
 	/**
 	 * Processes "phpfile", "query" and "phpcode" child-nodes of the node provided
+     * To Do: the counting is wrong because it is counting the elements then processing them all as sql, leaving out the php
+     * file inclusion for verion 7.0. So for a 6.1 db, it upgrades to 6.2 and does fine for all 6.2.x but there are no sql queries until
+     * 7.0 and it will have an empty sql query for the last one (where there isn't supposed to be a query) then doesn't include the php 
+     * file
 	 */
 	function processNode(&$startNode,$batch = 0, $type) {
 	//	$numChildren =& $startNode->childCount; //dump ($numChildren, 'numChildren: ');

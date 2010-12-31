@@ -123,9 +123,9 @@ $result_table = '<tr>
 		<td>
 			<div id="id_1" onClick="javascript:showDetail(this);" style="cursor:pointer;">
 				<img id="__img" src="images/expandall.png" border="0">
-				Executing PHP Code
+				Including PHP File
 			</div>
-			<div id=_details" style="display:None;" class="details">'.$res.$r.'</div>
+			<div id=id_1_details" style="display:None;" class="details">'.$res.$r.'</div>
 		</td>
 		<td width="20" valign="top"><img src="images/collapseall.png" border="0"></td>
 	</tr>';
