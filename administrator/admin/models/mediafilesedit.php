@@ -1,12 +1,11 @@
 <?php
 defined('_JEXEC') or die();
 
-
-
-if(class_exists(JModelAdmin)) {
+//Joomla 1.6 <-> 1.5 Branch
+try {
 	jimport('joomla.application.component.modeladmin');
 	abstract class modelClass extends JModelAdmin{}
-}else{
+}catch(Exception $e){
 	jimport('joomla.application.component.model');
 	abstract class modelClass extends JModel{}
 }
