@@ -1,11 +1,13 @@
 <?php
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.modeladmin');
+
 
 if(class_exists(JModelAdmin)) {
+	jimport('joomla.application.component.modeladmin');
 	abstract class modelClass extends JModelAdmin{}
 }else{
+	jimport('joomla.application.component.model');
 	abstract class modelClass extends JModel{}
 }
 
@@ -17,6 +19,8 @@ class biblestudyModelmediafilesedit extends modelClass {
 	 * @return	void
 	 */
 	var $_admin;
+	var $_text_prefix = 'COM_BIBLESTUDY';
+	
 	function __construct()
 	{
 		parent::__construct();
@@ -417,6 +421,9 @@ class biblestudyModelmediafilesedit extends modelClass {
 		return $query;
 	}
 
+	/**
+	 * The below methods are used strictly by Joomla 1.6 ONLY
+	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
@@ -427,5 +434,19 @@ class biblestudyModelmediafilesedit extends modelClass {
 
 		return $form;
 	}
+	
+	public function getItem($pk = null) {
+		return parent::getItem($pk);
+	}
+	
+	protected function loadFormData() {
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafileedit.data', array());
+		if(empty($data))
+			$data = $this->getItem();
+			
+		return $data;
+	}
+	
+	
 }
 ?>
