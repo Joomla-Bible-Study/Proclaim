@@ -131,7 +131,7 @@ class biblestudyViewstudiesedit extends JView
 			. ' ORDER BY id';
 		$database->setQuery( $query3 );
 		$series_id = $database->loadObjectList();
-		$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_SERIE' ) .' -' );
+		$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_SERIES' ) .' -' );
 		$types3 			= array_merge( $types3, $database->loadObjectList() );
 		$lists['series_id'] = JHTML::_('select.genericlist', $types3, 'series_id', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->series_id );
 		
@@ -141,7 +141,7 @@ class biblestudyViewstudiesedit extends JView
 			. ' ORDER BY message_type';
 		$database->setQuery( $query4 );
 		$messagetype = $database->loadObjectList();
-		$types4[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_MESSAGE_TYPE' ) .' -' );
+		$types4[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_MESSAGETYPE' ) .' -' );
 		$types4 			= array_merge( $types4, $database->loadObjectList() );
 		$lists['messagetype'] = JHTML::_('select.genericlist', $types4, 'messagetype', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->messagetype );
 		

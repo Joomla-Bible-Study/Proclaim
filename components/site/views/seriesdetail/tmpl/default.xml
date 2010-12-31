@@ -9,7 +9,7 @@
 	<state>
 		<name>JBS_MNU_SINGLE_SERIES_LAYOUT</name>
 		<url addpath="/administrator/components/com_biblestudy/elements">
-			<param name="id" type="series" default="" label="JBS_CMN_SELECT_SERIE" description="JBS_MNU_SELECT_SERIES_TT" />
+			<param name="id" type="series" default="" label="JBS_CMN_SELECT_SERIES" description="JBS_MNU_SELECT_SERIES_TT" />
 		</url>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="" />
@@ -22,7 +22,7 @@
         >
             <field name="id" type="modal_seriesdetail"
 				description="JBS_MNU_SELECT_SERIES_TT"
-				label="JBS_CMN_SELECT_SERIE"
+				label="JBS_CMN_SELECT_SERIES"
 				required="true"
 			/>
             <field name="templatemenuid" type="sql"

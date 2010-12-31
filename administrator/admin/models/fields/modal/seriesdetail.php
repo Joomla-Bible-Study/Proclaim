@@ -77,14 +77,14 @@ class JFormFieldModal_Seriesdetail extends JFormField
 		}
 
 		if (empty($title)) {
-			$title = JText::_('JBS_CMN_SELECT_SERIE');
+			$title = JText::_('JBS_CMN_SELECT_SERIES');
 		}
 
 		$link = 'index.php?option=com_biblestudy&amp;view=serieslist&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChart_'.$this->id;
 
 		JHTML::_('behavior.modal', 'a.modal');
 		$html = "\n".'<div class="fltlft"><input type="text" id="'.$this->id.'_name" value="'.htmlspecialchars($title, ENT_QUOTES, 'UTF-8').'" disabled="disabled" /></div>';
-		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="'.JText::_('JBS_CMN_SELECT_SERIE').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('JBS_CMN_SELECT_SERIE').'</a></div></div>'."\n";
+		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="'.JText::_('JBS_CMN_SELECT_SERIES').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('JBS_CMN_SELECT_SERIES').'</a></div></div>'."\n";
 		// The active study id field.
 		if (0 == (int)$this->value) {
 			$value = '';
