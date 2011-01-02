@@ -70,7 +70,6 @@
       <menu link="option=com_biblestudy&amp;view=mediafileslist">COM_BIBLESTUDY_JBS_MNU_MEDIA_FILES</menu>
       <menu link="option=com_biblestudy&amp;view=templateslist">COM_BIBLESTUDY_JBS_MNU_TEMPLATE_DISPLAY</menu>
       <menu link="option=com_biblestudy&amp;view=teacherlist">COM_BIBLESTUDY_JBS_MNU_TEACHERS</menu>
-      <menu link="option=com_biblestudy&amp;view=bookslist">BibleBooks</menu>
       <menu link="option=com_biblestudy&amp;view=medialist">COM_BIBLESTUDY_JBS_MNU_MEDIA_IMAGES</menu>
       <menu link="option=com_biblestudy&amp;view=serieslist">COM_BIBLESTUDY_JBS_MNU_SERIES</menu>
       <menu link="option=com_biblestudy&amp;view=serverslist">COM_BIBLESTUDY_JBS_MNU_SERVERS</menu>

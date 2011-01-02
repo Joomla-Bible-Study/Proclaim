@@ -240,9 +240,6 @@ table.fbstat .col2 {
             <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=teacherlist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_TEACHERS');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-teachers.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_TEACHERS');?> </a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=bookslist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_BIBLEBOOKS');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-biblebooks.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_BIBLEBOOKS'); ?> </span></a> </div>
-          </div>
-          <div style = "float:left;">
             <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=medialist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_MEDIAIMAGES');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-mediaimages.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_MEDIAIMAGES');?> </a> </div>
           </div>
           <div style = "float:left;">
