@@ -84,7 +84,7 @@ class JFormFieldModal_studydetails extends JFormField
 
 		JHTML::_('behavior.modal', 'a.modal');
 		$html = "\n".'<div class="fltlft"><input type="text" id="'.$this->id.'_name" value="'.htmlspecialchars($title, ENT_QUOTES, 'UTF-8').'" disabled="disabled" /></div>';
-		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="'.JText::_('JBS_CHANGE_STUDY_BUTTON').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('COM_NEWSFEEDS_CHANGE_FEED_BUTTON').'</a></div></div>'."\n";
+		$html .= '<div class="button2-left"><div class="blank"><a class="modal" title="'.JText::_('JBS_CMN_SELECT_STUDY').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('JBS_CMN_SELECT_STUDY').'</a></div></div>'."\n";
 		// The active study id field.
 		if (0 == (int)$this->value) {
 			$value = '';
