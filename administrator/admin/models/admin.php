@@ -86,13 +86,58 @@ class biblestudyModeladmin extends modelClass {
 
 	public function getForm($data = array(), $loadData = true)
 	{
-		// Get the form.
+		$app	= JFactory::getApplication();
+        // Get the form.
 		$form = $this->loadForm('com_biblestudy.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
 		}
 
 		return $form;
+	}
+    
+    /**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return	mixed	The data for the form.
+	 * @since	1.6
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.admin.data', array());
+
+		if (empty($data)) {
+			$data = $this->getItem();
+
+			// Prime some default values.
+			if ($this->getState('admin.id') == 0) {
+				$app = JFactory::getApplication();
+			//	$data->set('catid', JRequest::getInt('catid', $app->getUserState('com_biblestudy.admin.filter.category_id')));
+			}
+		}
+
+		return $data;
+	}
+    
+    /**
+	 * Method to get a single record.
+	 *
+	 * @param	integer	The id of the primary key.
+	 *
+	 * @return	mixed	Object on success, false on failure.
+	 * @since	1.6
+	 */
+	public function getItem($pk = null)
+	{
+		if ($item = parent::getItem($pk)) {
+			// Convert the params field to an array.
+			$registry = new JRegistry;
+			$registry->loadJSON($item->params);
+			$item->params = $registry->toArray();
+		}
+
+		return $item;
 	}	
 }
 ?>

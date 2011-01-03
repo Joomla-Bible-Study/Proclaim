@@ -66,5 +66,21 @@ class Tableadmin extends JTable
 	function Tableadmin(& $db) {
 		parent::__construct('#__bsms_admin', 'id', $db);
 	}
+    
+    	/**
+	 * Overload the store method for the Weblinks table.
+	 *
+	 * @param	boolean	Toggle whether null values should be updated.
+	 * @return	boolean	True on success, false on failure.
+	 * @since	1.6
+	 */
+	public function store($updateNulls = false)
+	{
+
+		// Attempt to store the user data.
+		return parent::store($updateNulls);
+	}
+
+
 }
 ?>
