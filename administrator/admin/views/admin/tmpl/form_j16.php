@@ -1,23 +1,19 @@
-<?php defined('_JEXEC') or die('Restricted access');
+<?php 
+// No direct access to this file
+defined('_JEXEC') or die('Restricted access');
+
+//call to biblestudy.defines.php
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.debug.php');
 //require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.version.php');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
-$params = $this->form->getFieldsets();
-
+// params not working well not sure what carectier is cosing the problem
+//$params = $this->form->getFieldsets();
 $db = JFactory::getDBO();
 
-
-
 ?>
-
-
-
-
-
-    
-    
+   
 <div class="width-100 fltlft">
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <?php echo JHtml::_('sliders.start', 'biblestudy-slider'); ?>
