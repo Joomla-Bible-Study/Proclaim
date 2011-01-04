@@ -1,10 +1,13 @@
 <?php
 /**
- * Podcast list View for Bible Study Component
- *
- * @license		GNU/GPL
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
+
+//No Direct Access
 defined('_JEXEC') or die();
+
 jimport('joomla.application.component.view');
 jimport('joomla.i18n.help');
 
