@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: modal.php 19437 2010-11-10 11:56:23Z infograf768 $
+ * @version		$Id$
  * @package		Joomla.Administrator
  * @subpackage	com_biblestudy
  * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.

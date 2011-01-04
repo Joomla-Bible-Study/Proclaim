@@ -1,6 +1,6 @@
 <?php
 /**
-* @version $Id: biblestudy.debug.php v1 $
+* @version $Id$
 * Bible Study Component
 * @package Bible Study
 *

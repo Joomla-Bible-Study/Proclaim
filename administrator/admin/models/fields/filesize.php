@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: filters.php 19730 2010-12-02 13:06:49Z chdemko $
+ * @version		$Id$
  * @package		Joomla.Framework
  * @subpackage	Form
  * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.

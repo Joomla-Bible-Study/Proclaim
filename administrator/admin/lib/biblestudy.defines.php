@@ -1,6 +1,6 @@
 <?php
 /**
-* @version $Id: biblestudy.defines.php 1 $
+* @version $Id$
 * Bible Study Component
 * @package Bible Study
 * @Copyright (C) 2010 Joomla Bible Study All rights reserved

@@ -1,6 +1,6 @@
 <?php
 /**
-* @version		$Id: contact.php 8591 2007-08-27 21:09:32Z hackwar $
+* @version		$Id$
 * @package		Joomla
 * @copyright	Copyright (C) 2005 - 2007 Open Source Matters. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php

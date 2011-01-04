@@ -1,7 +1,7 @@
 <?php
 
 /*************************************************
- * $Id: Snoopy.class.php 361 2006-08-07 09:30:31Z beat $
+ * $Id$
 
 Snoopy - the PHP net client
 Author: Monte Ohrt <monte@ispi.net>

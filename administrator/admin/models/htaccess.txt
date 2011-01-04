@@ -1,5 +1,5 @@
 ##
-# @version $Id: htaccess.txt 9975 2008-01-30 17:02:11Z ircmaxell $
+# @version $Id$
 # @package Joomla
 # @copyright Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
 # @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
