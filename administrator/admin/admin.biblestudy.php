@@ -1,6 +1,12 @@
 <?php
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+//No Direct Access
+defined('_JEXEC') or die();
 
 define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
