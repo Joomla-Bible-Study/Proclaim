@@ -1,4 +1,11 @@
 <?php
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+
+//No Direct Access
 defined('_JEXEC') or die();
 
 //Joomla 1.6 <-> 1.5 Branch
