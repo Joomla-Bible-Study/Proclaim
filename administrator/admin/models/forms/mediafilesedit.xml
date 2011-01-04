@@ -86,7 +86,7 @@
 		description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15" />
 			
 	<field name="article_id" type="category" extension="com_content"
-			label="JCATEGORY" description="JFIELD_CATEGORY_DESC"
+			label="JBS_MED_USE_ARTICLE" description="JFIELD_CATEGORY_DESC"
 			class="inputbox" required="false" default="-1">
 			<option value="-1">JBS_MED_SELECT_CATEGORY</option>
 	</field>	
