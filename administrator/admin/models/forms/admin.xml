@@ -79,8 +79,6 @@
         <option value="1">JBS_ADM_ADDTHIS_SHARE</option>
       </field>
     </fieldset>
-  </fields>
-  <fields name="FILLIN-STUDY">
     <fieldset name="FILLIN-STUDY"
               label="JBS_ADM_AUTO_FILL_STUDY_REC">
       <field name="location_id"
@@ -148,8 +146,18 @@
         <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
       </field>
     </fieldset>
-  </fields>
-  <fields name="FILLIN-IMAGES">
+     <field name="JBS_ADM_DEFAULT_STUDY_IMAGE"
+         type="sql"
+         extension="com_biblestudy"
+         id="media_image"
+         label="JBS_ADM_DEFAULT_STUDYLIST_IMAGE"
+         description="JBS_ADM_DEFAULT_STUDYLIST_IMAGE_TT"
+         class="inputbox"
+         query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
+         key_field="id"
+         value_field="media_image_name">
+    <option value="-1">JBS_CMN_DEFAULT_IMAGE</option>
+  </field>
     <fieldset name="FILLIN-IMAGES"
               label="JBS_ADM_IMAGE_FOLDERS">
       <field name="series_imagefolder"
@@ -177,8 +185,6 @@
              label="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES"
              description="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES_TT" />
     </fieldset>
-  </fields>
-  <fields name="FILLIN-MEDIAFILE">
     <fieldset name="FILLIN-MEDIAFILE"
               label="JBS_ADM_AUTO_FILL_MEDIA_REC">
       <field name="download"
@@ -245,9 +251,6 @@
         <option value="-1">JBS_CMN_SELECT_MIMETYPE</option>
       </field>
     </fieldset>
-  </fields>
-  <fields name="SUBMISSION"
-          addpath="/administrator/components/com_biblestudy/elements">
     <fieldset name="SUBMISSION"
               label="JBS_ADM_FRONTEND_SUBMISSION">
       <field name="allow_entry_study"
@@ -272,17 +275,14 @@
         <option value="1">JBS_ADM_AUTO_PUBLISH</option>
       </field>
     </fieldset>
-  </fields>
-  <field name="JBS_ADM_DEFAULT_STUDY_IMAGE"
-         type="sql"
-         extension="com_biblestudy"
-         id="media_image"
-         label="JBS_ADM_DEFAULT_STUDYLIST_IMAGE"
-         description="JBS_ADM_DEFAULT_STUDYLIST_IMAGE_TT"
-         class="inputbox"
-         query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
-         key_field="id"
-         value_field="media_image_name">
-    <option value="-1">JBS_CMN_DEFAULT_IMAGE</option>
-  </field>
+ </fields>
+ <fields name="images" >
+    <fieldset name="images" addfieldpath="/administrator/models/fields">
+        <field name="study"
+            type="studyimage"
+            
+        >
+       
+    </fieldset>
+ </fields>
 </form>
