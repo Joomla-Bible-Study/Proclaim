@@ -1,4 +1,12 @@
-<?php defined('_JEXEC') or die('Restricted access');
+<?php
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+
+//No Direct Access
+defined('_JEXEC') or die();
 
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');

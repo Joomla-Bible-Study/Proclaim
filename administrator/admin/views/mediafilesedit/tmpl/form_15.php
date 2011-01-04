@@ -1,4 +1,12 @@
-<?php defined('_JEXEC') or die('Restricted access');
+<?php
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+
+//No Direct Access
+defined('_JEXEC') or die();
 
 ?>
 <script language="javascript" type="text/javascript">
