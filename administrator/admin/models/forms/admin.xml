@@ -276,10 +276,4 @@
       </field>
     </fieldset>
  </fields>
- <fields name="images" >
-    <fieldset name="images" addfieldpath="/administrator/models/fields">
-        <field name="study"
-            type="studyimage">      
-    </fieldset>
- </fields>
-</form>
+ </form>

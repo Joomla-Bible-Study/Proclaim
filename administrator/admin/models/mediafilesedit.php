@@ -9,12 +9,13 @@
 defined('_JEXEC') or die();
 
 //Joomla 1.6 <-> 1.5 Branch
-try {
-	jimport('joomla.application.component.modeladmin');
-	abstract class modelClass extends JModelAdmin{}
-}catch(Exception $e){
-	jimport('joomla.application.component.model');
-	abstract class modelClass extends JModel{}
+jimport('joomla.application.component.model');
+jimport('joomla.application.component.modeladmin');
+
+if(class_exists('JModelAdmin')) {
+abstract class modelClass extends JModelAdmin{}
+}else{
+abstract class modelClass extends JModel{}
 }
 
 class biblestudyModelmediafilesedit extends modelClass {
