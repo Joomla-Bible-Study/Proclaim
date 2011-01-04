@@ -12,8 +12,8 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 
 //Branch the JView based on the joomla version
 if(JOOMLA_VERSION == 6)
-	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'mediafilesedits'.DS.'viewj16.html.php');
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'mediafileslist'.DS.'viewj16.html.php');
 else
-	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'mediafilesedits'.DS.'viewj15.html.php');
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'mediafileslist'.DS.'viewj15.html.php');
 
 ?>

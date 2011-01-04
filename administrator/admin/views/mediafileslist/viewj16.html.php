@@ -14,7 +14,7 @@ jimport('joomla.application.component.view');
  * @package     BibleStudy.Administrator
  * @since       7.0
  */
-class biblestudyViewmediafilesedits extends JView {
+class biblestudyViewmediafileslist extends JView {
 
     protected $items;
     protected $pagination;
