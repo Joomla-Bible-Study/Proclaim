@@ -1,25 +1,32 @@
 <?php
+
 /**
  * @version     $Id$
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
-
 //No Direct Access
 defined('_JEXEC') or die();
 
 
 //Joomla 1.6 <-> 1.5 Branch
-jimport('joomla.application.component.model');
-jimport('joomla.application.component.modeladmin');
+try {
+    jimport('joomla.application.component.modellist');
 
-if(class_exists('JModelAdmin')) {
-abstract class modelClass extends JModelAdmin{}
-}else{
-abstract class modelClass extends JModel{}
+    abstract class modelClass extends JModelList {
+        
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.model');
+
+    abstract class modelClass extends JModel {
+        
+    }
+
 }
 
-class biblestudyModelmediafileslist extends modelClass {
+class biblestudyModelmediafileslist extends JModelList {
 
     var $_data;
     var $_total = null;
@@ -136,7 +143,52 @@ class biblestudyModelmediafileslist extends modelClass {
         return $this->_deletes;
     }
 
-    
+    /**
+     * @since   7.0
+     */
+    protected function populateState() {
+        parent::populateState('mediafile.ordering', 'asc');
+    }
+
+    /**
+     *
+     * @param <string> $id   A prefix for the store id
+     * @return <string>      A store id
+     * @since 7.0
+     */
+    protected function getStoreId($id = '') {
+        return parent::getStoreId($id);
+    }
+
+    /**
+     * Build an SQL query to load the list data
+     *
+     * @return  JDatabaseQuery
+     * @since   7.0
+     */
+    protected function getListQuery() {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select(
+                $this->getState(
+                        'list.select',
+                        'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename,
+                        mediafile.createdate, mediafile.plays, mediafile.downloads'));
+
+        $query->from('`#__bsms_mediafiles` AS mediafile');
+
+        //Join over the studies
+        $query->select('study.studytitle AS studytitle');
+        $query->join('LEFT', '`#__bsms_studies` AS study ON study.id = mediafile.study_id');
+
+        //Join over the mediatypes
+        $query->select('mediatype.media_text AS mediaType');
+        $query->join('LEFT', '`#__bsms_media` AS mediatype ON mediatype.id = mediafile.media_image');
+
+        return $query;
+    }
+
 }
 
 ?>
