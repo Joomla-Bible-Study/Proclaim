@@ -1,7 +1,7 @@
 <?php
 /**
  * @version     $Id$
- * @package     Joomla
+ * @package     com_biblestudy
  * @license     GNU/GPL
  */
 
