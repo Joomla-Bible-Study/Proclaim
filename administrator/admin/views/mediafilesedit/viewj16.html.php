@@ -26,11 +26,7 @@ class biblestudyViewmediafilesedit extends JView {
 		$this->setLayout('form');
         	
 		//Get the js and css files
-		$document =& JFactory::getDocument();
-		$document->addStyleSheet(JURI::base().'components/com_biblestudy/css/mediafilesedit.css');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
-		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
+		$document =& JFactory::getDocument();	
 		$document->addScript(JURI::base().'components/com_biblestudy/js/views/mediafilesedit.js');
 		
 		$this->addToolbar();
