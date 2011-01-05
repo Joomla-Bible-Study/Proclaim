@@ -26,7 +26,7 @@ try {
 
 }
 
-class biblestudyModelmediafileslist extends JModelList {
+class biblestudyModelmediafileslist extends modelClass {
 
     var $_data;
     var $_total = null;
@@ -188,7 +188,6 @@ class biblestudyModelmediafileslist extends JModelList {
 
         return $query;
     }
-
 }
 
 ?>

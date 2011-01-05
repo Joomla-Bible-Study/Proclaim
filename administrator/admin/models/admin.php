@@ -88,6 +88,13 @@ class biblestudyModeladmin extends modelClass {
 		return true;
 	}
 
+        /**
+         *
+         * @param <boolean> $data
+         * @param <array> $loadData
+         * @return <type>
+         * @since   7.0
+         */
 	public function getForm($data = array(), $loadData = true)
 	{
 		$app	= JFactory::getApplication();

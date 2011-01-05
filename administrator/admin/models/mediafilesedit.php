@@ -185,7 +185,7 @@ class biblestudyModelmediafilesedit extends modelClass {
 		}
 		return true;
 	}
-	function publish($cid = array(), $publish = 1)
+	function legacyPublish($cid = array(), $publish = 1)
 	{
 
 		if (count( $cid ))
