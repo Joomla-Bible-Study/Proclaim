@@ -20,7 +20,7 @@ class biblestudyControllermediafilesedit extends JControllerForm {
      *
      * @since 7.0
      */
-    protected $view_list = 'mediafileslist';
+    protected $view_list = 'cpanel';
 
     /**
 	 * constructor (registers additional tasks to methods)

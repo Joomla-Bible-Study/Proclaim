@@ -1,9 +1,25 @@
 <?php
-// Check to ensure this file is included in Joomla!
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+
+//No Direct Access
 defined('_JEXEC') or die();
 
-class biblestudyControlleradmin extends JController {
-	/**
+jimport('joomla.application.component.controllerform');
+
+class biblestudyControlleradmin extends JControllerForm {
+
+    /**
+     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+     *
+     * @since 7.0
+     */
+    protected $view_list = 'cpanel';
+
+    /**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
@@ -22,7 +38,7 @@ class biblestudyControlleradmin extends JController {
 	 * display the edit form
 	 * @return void
 	 */
-	function edit()
+	function legacyEdit()
 	{
 		JRequest::setVar( 'view', 'admin' );
 		JRequest::setVar( 'layout', 'form'  );
@@ -68,7 +84,7 @@ class biblestudyControlleradmin extends JController {
 	}
 
 	
-	function cancel()
+	function legacyCancel()
 	{
 		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );

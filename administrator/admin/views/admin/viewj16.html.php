@@ -201,8 +201,8 @@ class biblestudyViewadmin extends JView
     	protected function addToolbar() 
         {
     	   JToolBarHelper::title(   JText::_( 'JBS_CMN_ADMINISTRATION' ), 'administration');
-    		JToolBarHelper::save();
-    		JToolBarHelper::apply();
+    		JToolBarHelper::save('admin.save');
+    		JToolBarHelper::apply('admin.apply');
             JToolBarHelper::cancel();
     		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false );
     		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false );

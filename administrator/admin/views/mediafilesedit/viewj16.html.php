@@ -37,8 +37,8 @@ class biblestudyViewmediafilesedit extends JView {
 		$isNew		= ($this->item->id < 1);
 		$title = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
 		JToolBarHelper::title(JText::_( 'JBS_MED_EDIT_MEDIA' ).': <small><small>['. $title.']</small></small>', 'mp3.png' );
-                JToolBarHelper::apply('mediafilesedit.apply', 'JTOOLBAR_APPLY');
-                JToolBarHelper::save('mediafilesedit.save', 'JTOOLBAR_SAVE');
+                JToolBarHelper::apply('mediafilesedit.apply');
+                JToolBarHelper::save('mediafilesedit.save');
 
 		if(!$isNew){
                     JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset Download Hits', 'JBS_MED_RESET_DOWNLOAD_HITS', false, false );

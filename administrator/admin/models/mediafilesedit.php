@@ -433,8 +433,13 @@ class biblestudyModelmediafilesedit extends modelClass {
 	}
 
 	/**
-	 * The below methods are used strictly by Joomla 1.6 ONLY
-	 */
+         * Get the form data
+         * 
+         * @param <Array> $data
+         * @param <Boolean> $loadData
+         * @return <type>
+         * @since 7.0
+         */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
