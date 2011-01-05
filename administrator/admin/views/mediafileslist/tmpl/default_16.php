@@ -17,7 +17,23 @@ $saveOrder = $listOrder == 'mediafile.ordering';
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileslist'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-search fltlft">
-            <label class="filter-search-lbl" for="filter_search">Filter here</label>
+            <label class="filter-search-lbl" for="filter_filename"><?php echo JText::_('JBS_MED_FILENAME'); ?>: </label>
+            <input type="text" name="filter_filename" id="filter_filename" value="<?php echo $this->escape($this->state->get('filter.filename')); ?>" title="<?php echo JText::_('COM_CONTENT_FILTER_SEARCH_DESC'); ?>" />
+            <label class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>: </label>
+            <input type="text" name="filter_studytitle" id="filter_studytitle" value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>" title="<?php echo JText::_('COM_CONTENT_FILTER_SEARCH_DESC'); ?>" />
+
+            <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+            <button type="button" onclick="document.id('filter_filename').value='';document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+        </div>
+        <div class="filter-select fltrt">
+            <select name="filter_mediatypeId" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JBS_MED_SELECT_MEDIATYPE'); ?></option>
+                <?php echo JHtml::_('select.options', $this->mediatypes, 'value', 'text', $this->state->get('filter.mediatypeId')); ?>
+            </select>
+            <select name="filter_published" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
+            </select>
         </div>
     </fieldset>
     <div class="clr"></div>
@@ -73,7 +89,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
             </td>
             <td class="center">
-                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafileslist', true, 'cb', '', ''); ?>
+                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafileslist.', true, 'cb', '', ''); ?>
             </td>
             <td class="order">
                 <?php if($listDirn == 'asc') : ?>

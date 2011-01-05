@@ -22,9 +22,9 @@ class biblestudyViewmediafileslist extends JView {
 
     function display($tpl = null) {
         $this->state = $this->get('State');
-
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
+        $this->mediatypes = $this->get('Mediatypes');
 
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
