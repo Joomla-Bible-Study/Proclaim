@@ -163,7 +163,7 @@ $j(document).ready( function() {
 		$j('#activeArticle').hide();
 		return false;
 	});	
-   
+
     	//Articles Integration (1.6 Version)
     	$j('#jform_article_id').change(function(){   		
     		var url = 'index.php?option=com_biblestudy&task=mediafilesedit.articlesCategoryItems&format=raw';
