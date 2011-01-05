@@ -40,7 +40,36 @@ defined( '_JEXEC' ) or die('Restricted access');
 				padding-left: 10px;
 				margin-left: 20px;
 				margin-top: 5px;
-			</style>
+.fbscs {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fbscslist {
+	list-style: none;
+	padding: 5px 10px;
+	margin: 3px 0;
+	border: 1px solid #66CC66;
+	background: #D6FEB8;
+	display: block;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333;
+}
+
+.fbscslisterror {
+	list-style: none;
+	padding: 5px 10px;
+	margin: 3px 0;
+	border: 1px solid #FF9999;
+	background: #FFCCCC;
+	display: block;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333;
+}
+</style>
 <?php
 @error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
@@ -76,7 +105,7 @@ ignore_user_abort(true);
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 
 include_once(BIBLESTUDY_PATH_ADMIN_LIB .DS. 'fx.upgrade.class.php');
-
+// Install Bible Study Component
 function com_install()
 {
 	$biblestudy_db = JFactory::getDBO();
@@ -138,37 +167,6 @@ function com_install()
 
 	?>
 <br />
-<style>
-.fbscs {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.fbscslist {
-	list-style: none;
-	padding: 5px 10px;
-	margin: 3px 0;
-	border: 1px solid #66CC66;
-	background: #D6FEB8;
-	display: block;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color: #333;
-}
-
-.fbscslisterror {
-	list-style: none;
-	padding: 5px 10px;
-	margin: 3px 0;
-	border: 1px solid #FF9999;
-	background: #FFCCCC;
-	display: block;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color: #333;
-}
-</style>
 
 <div style="border: 1px solid #ccc; background: #FBFBFB; padding: 10px; text-align: left; margin: 10px 0;">
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -196,37 +194,6 @@ function com_install()
 	{
 		// Minimum version requirements not satisfied
 		?>
-<style>
-.fbscs {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.fbscslist {
-	list-style: none;
-	padding: 5px 10px;
-	margin: 3px 0;
-	border: 1px solid #66CC66;
-	background: #D6FEB8;
-	display: block;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color: #333;
-}
-
-.fbscslisterror {
-	list-style: none;
-	padding: 5px 10px;
-	margin: 3px 0;
-	border: 1px solid #FF9999;
-	background: #FFCCCC;
-	display: block;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color: #333;
-}
-</style>
 
 <div style="border: 1px solid #ccc; background: #FBFBFB; padding: 10px; text-align: left; margin: 10px 0;">
 <table width="100%" border="0" cellpadding="0" cellspacing="0">

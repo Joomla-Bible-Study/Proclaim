@@ -300,7 +300,9 @@ class fx_Upgrade {
 		}
 
 		//initiate XML doc
-        $xmlDoc = simplexml_load_file(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
+		$xml = new JSimpleXML;
+		$xml->loadFile(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
+        //$xmlDoc = simplexml_load_file(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml');
 	//	$xmlDoc = new DOMIT_Lite_Document();
 		//dump ($this->_upgradeDir, 'upgrade dir: '); dump($this->xmlFileName, 'xml file: ');
 	//	$xmlDoc->loadXML( $this->_upgradeDir .DS. $this->xmlFileName, false, true );
