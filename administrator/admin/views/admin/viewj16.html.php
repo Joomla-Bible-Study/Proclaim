@@ -12,10 +12,12 @@ require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.stats.class.php');
 class biblestudyViewadmin extends JView
 {
 	protected $form;
+
 	function display($tpl = null)
 	{
 
         $this->form = $this->get("Form");
+        dump($this->form);
       //  $this->form = &JForm::getInstance('myform', JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'models' .DS. 'forms' .DS. 'admin.xml');
         $db = JFactory::getDBO();
         JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');

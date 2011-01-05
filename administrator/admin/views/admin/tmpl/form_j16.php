@@ -1,6 +1,13 @@
-<?php 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+<?php
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+
+//No Direct Access
+defined('_JEXEC') or die();
+
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 //call to biblestudy.defines.php
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
