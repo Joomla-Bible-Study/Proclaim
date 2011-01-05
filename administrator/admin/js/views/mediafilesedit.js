@@ -9,7 +9,7 @@ $j(document).ready( function() {
 		$j(this).show();
 	});
 	$j('#loading').ajaxStop( function() {
-		$j(this).hide();
+            setTimeout("$j('#loading').hide()", 2000);
 	});
 	
 	// Docman integration
@@ -169,6 +169,7 @@ $j(document).ready( function() {
     		var url = 'index.php?option=com_biblestudy&task=mediafilesedit.articlesCategoryItems&format=raw';
     		var categories = $j("#categoryItems");   		
     		categories.removeOption(/./); //Remove all the items before reloading them
+                $j('#loadingMsg').html('Loading Articles');
     		categories.ajaxAddOption(url, {catId: $j(this).val()}, false);
     		categories.show();
     	});
