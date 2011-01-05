@@ -130,7 +130,7 @@ class biblestudyController extends JController
             echo '
                 <div id="loading">
                     <img src="'.JURI::base() . 'components/com_biblestudy/images/loading.gif."/>
-                    <span>Loading...</span>
+                    <span id="loadingMsg">Loading...</span>
                 </div>
                 ';
         }
