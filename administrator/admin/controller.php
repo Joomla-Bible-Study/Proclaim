@@ -22,7 +22,11 @@ class biblestudyController extends JController
 	 */
 	function display()
 	{
-				$type = JRequest::getWord('view');
+				require_once JPATH_COMPONENT.'/helpers/submenus.php';
+
+		      // Load the submenu.
+                BiblestudyHelper::addSubmenu(JRequest::getWord('view', 'cpanel'));
+                $type = JRequest::getWord('view');
 				if (!$type){
 				JRequest::setVar( 'view'  , 'cpanel');
 			//	$model = $this->getModel('studieslist');

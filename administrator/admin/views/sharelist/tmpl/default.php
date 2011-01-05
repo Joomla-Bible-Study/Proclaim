@@ -1,4 +1,6 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php defined('_JEXEC') or die('Restricted access'); 
+$mainframe =& JFactory::getApplication();
+?>
 <form action="<?php echo $this->request_url; ?>" method="post" name="adminForm">
 <div id="editcell">
 	<table class="adminlist">
