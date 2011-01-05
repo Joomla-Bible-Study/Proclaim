@@ -9,13 +9,18 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.controller');
-
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 class biblestudyController extends JController
 {
     protected $default_view = 'cpanel';
 
 	function display()
 	{
+            if (JOOMLA_VERSION == '6')
+            {
+                require_once(JPATH_COMPONENT .DS. 'helpers' .DS. 'submenus.php');
+                BiblestudyHelper::addSubmenu(JRequest::getWord('view', 'cpanel'));
+            }
             $view = JRequest::getWord('view', 'cpanel');
             $layout = JRequest::getWord('layout', 'default');
             $id = JRequest::getInt('id');

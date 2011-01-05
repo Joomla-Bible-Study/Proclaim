@@ -26,7 +26,11 @@ class biblestudyModeladmin extends modelClass {
 	 * @access	public
 	 * @return	void
 	 */
-	function __construct()
+	
+    var $_text_prefix = 'COM_BIBLESTUDY';
+    var $_admin;
+    
+    function __construct()
 	{
 		parent::__construct();
 
@@ -88,17 +92,13 @@ class biblestudyModeladmin extends modelClass {
 		return true;
 	}
 
-        /**
-         *
-         * @param <boolean> $data
-         * @param <array> $loadData
-         * @return <type>
-         * @since   7.0
-         */
+
+  	/**
+	 * The below methods are used strictly by Joomla 1.6 ONLY
+	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		$app	= JFactory::getApplication();
-        // Get the form.
+		// Get the form.
 		$form = $this->loadForm('com_biblestudy.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
@@ -106,28 +106,16 @@ class biblestudyModeladmin extends modelClass {
 
 		return $form;
 	}
-    
-    /**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return	mixed	The data for the form.
-	 * @since	1.6
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
+	
+	public function getItem($pk = null) {
+		return parent::getItem($pk);
+	}
+	
+	protected function loadFormData() {
 		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.admin.data', array());
-
-		if (empty($data)) {
+		if(empty($data))
 			$data = $this->getItem();
-
-			// Prime some default values.
-			if ($this->getState('admin.id') == 0) {
-				$app = JFactory::getApplication();
-			//	$data->set('catid', JRequest::getInt('catid', $app->getUserState('com_biblestudy.admin.filter.category_id')));
-			}
-		}
-
+			
 		return $data;
 	}
     
@@ -139,7 +127,7 @@ class biblestudyModeladmin extends modelClass {
 	 * @return	mixed	Object on success, false on failure.
 	 * @since	1.6
 	 */
-	public function getItem($pk = null)
+/*	public function getItem($pk = null)
 	{
 		if ($item = parent::getItem($pk)) {
 			// Convert the params field to an array.
@@ -149,6 +137,7 @@ class biblestudyModeladmin extends modelClass {
 		}
 
 		return $item;
-	}	
+	}
+*/	
 }
 ?>

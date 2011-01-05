@@ -31,6 +31,11 @@ class biblestudyModelmediafilesedit extends modelClass {
 	function __construct()
 	{
 		parent::__construct();
+        
+        /**
+         * To do - J16 has new way of retrieving parameters so we need to implement it here too
+        */
+         
 		$admin = $this->getAdmin();
 		$this->_admin_params = new JParameter($admin[0]->params);
 		$array = JRequest::getVar('cid',  0, '', 'array');

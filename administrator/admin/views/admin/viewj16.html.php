@@ -5,6 +5,8 @@
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
+jimport ('joomla.application.component.helper');
+jimport( 'joomla.i18n.help' );
 
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.stats.class.php');
@@ -12,25 +14,24 @@ require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.stats.class.php');
 class biblestudyViewadmin extends JView
 {
 	protected $form;
+	protected $item;
+	protected $state;
 
 	function display($tpl = null)
 	{
 
         $this->form = $this->get("Form");
-        dump($this->form);
-      //  $this->form = &JForm::getInstance('myform', JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'models' .DS. 'forms' .DS. 'admin.xml');
+		$this->item = $this->get("Item");
+		$this->state = $this->get("State");
+		$this->setLayout('form');
+        $this->addToolbar();
+        
+     
         $db = JFactory::getDBO();
         JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 		$admin		=& $this->get('Data');
 		$this->assignRef('admin', $admin);
-		JToolBarHelper::title(   JText::_( 'JBS_CMN_ADMINISTRATION' ), 'administration');
-		JToolBarHelper::save();
-		JToolBarHelper::apply();
-        JToolBarHelper::cancel();
-		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false );
-		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false );
-		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false );
-        JToolBarHelper::help('biblestudy', true );
+		
 		$paramsdata = $admin->params;
 		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'admin.xml';
 		$params = new JParameter($paramsdata, $paramsdefs);
@@ -196,5 +197,18 @@ class biblestudyViewadmin extends JView
 		
 		parent::display($tpl);
 	}
+    
+    	protected function addToolbar() 
+        {
+    	   JToolBarHelper::title(   JText::_( 'JBS_CMN_ADMINISTRATION' ), 'administration');
+    		JToolBarHelper::save();
+    		JToolBarHelper::apply();
+            JToolBarHelper::cancel();
+    		JToolBarHelper::custom( 'resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false );
+    		JToolBarHelper::custom( 'resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false );
+    		JToolBarHelper::custom( 'resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false );
+            JToolBarHelper::divider();
+            JToolBarHelper::help('biblestudy', true );
+        }
 }
 ?>

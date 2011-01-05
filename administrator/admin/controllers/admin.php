@@ -35,7 +35,7 @@ class biblestudyControlleradmin extends JController {
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
+	function legacySave()
 	{
 		$model = $this->getModel('admin');
 
