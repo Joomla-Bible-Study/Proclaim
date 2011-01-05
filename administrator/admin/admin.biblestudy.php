@@ -11,26 +11,11 @@ defined('_JEXEC') or die();
 define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
 
+jimport('joomla.application.component.controller');
 
-// Require the base controller
-require_once (JPATH_COMPONENT.DS.'controller.php');
+$controller = JController::getInstance('biblestudy');
 
-// Require specific controller if requested
-if($controller = JRequest::getWord('controller')) {
-	require_once (JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php');
-}
+$controller->execute(JRequest::getCmd('task'));
+$controller->redirect();
 
-$controller = JRequest::getVar( 'controller' );
-
-		
-		$classname	= 'biblestudyController'.$controller;
-		
-		$controller = new $classname( );
-		
-
-		// Perform the Request task 
-		$controller->execute( JRequest::getWord('task'));
-		//Redirect if set by the controller 
-		
-		$controller->redirect();
 ?>

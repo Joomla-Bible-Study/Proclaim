@@ -1,32 +1,26 @@
 <?php
+
 /**
- * Bible Study default controller
- * 
- * @license		GNU/GPL
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+//No Direct Access
+defined('_JEXEC') or die();
+
 jimport('joomla.application.component.controller');
 
-/**
- * Bible Study Component Controller
- *
- * 
- */
 class biblestudyController extends JController
 {
-	/**
-	 * Method to display the view
-	 *
-	 * @access	public
-	 */
+    protected $default_view = 'cpanel';
+
 	function display()
 	{
-				require_once JPATH_COMPONENT.'/helpers/submenus.php';
-
-		      // Load the submenu.
-                BiblestudyHelper::addSubmenu(JRequest::getWord('view', 'cpanel'));
-                $type = JRequest::getWord('view');
+            $view = JRequest::getWord('view', 'cpanel');
+            $layout = JRequest::getWord('layout', 'default');
+            $id = JRequest::getInt('id');
+            
+				$type = JRequest::getWord('view');
 				if (!$type){
 				JRequest::setVar( 'view'  , 'cpanel');
 			//	$model = $this->getModel('studieslist');
