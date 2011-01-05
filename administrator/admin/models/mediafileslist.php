@@ -159,7 +159,7 @@ class biblestudyModelmediafileslist extends modelClass {
         $mediaTypeId = $this->getUserStateFromRequest($this->context.'.filter.mediatype', 'filter_mediatypeId');
         $this->setState('filter.mediatypeId', $mediaTypeId);
         
-        parent::populateState('mediafile.cratedate', 'desc');
+        parent::populateState('mediafile.createdate', 'desc');
     }
 
     /**

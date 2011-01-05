@@ -166,7 +166,7 @@ $j(document).ready( function() {
    
     	//Articles Integration (1.6 Version)
     	$j('#jform_article_id').change(function(){   		
-    		var url = 'index.php?option=com_biblestudy&controller=mediafilesedit&task=articlesCategoryItems&format=raw';
+    		var url = 'index.php?option=com_biblestudy&task=mediafilesedit.articlesCategoryItems&format=raw';
     		var categories = $j("#categoryItems");   		
     		categories.removeOption(/./); //Remove all the items before reloading them
     		categories.ajaxAddOption(url, {catId: $j(this).val()}, false);

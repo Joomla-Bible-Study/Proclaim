@@ -1,3 +1,20 @@
+#loading {
+    -moz-border-radius:7px 7px 7px 7px;
+    border-radius:7px 7px 7px 7px;
+    background-color: #FFFFFF;
+    border:1px solid black;
+    padding:16px;
+    position:fixed;
+    right:0;
+    text-align:center;
+    top:0;
+    width:158px;
+    margin: 7px;
+    display: none;
+}
+#loading span {
+    font-weight: bold;
+}
 .icon-48-openbible {
 background-image:url(openbible.gif);
 }

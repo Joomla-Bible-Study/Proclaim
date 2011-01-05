@@ -20,7 +20,6 @@ $params = $this->form->getFieldsets('params');
     <div class="width-65 fltlft">
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_MED_MEDIA_FILES_DETAILS'); ?></legend>
-            <img id="loading" src="<?php echo JURI::base() . 'components/com_biblestudy/images/loading.gif'; ?>"/>
             <ul class="adminformlist">
                 <li>
                     <?php echo $this->form->getLabel('published'); ?>
