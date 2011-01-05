@@ -1,22 +1,28 @@
 <?php
-defined('_JEXEC') or die();
-
 /**
- * Media Edit Controller
- *
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
 
-jimport('joomla.application.component.model');
-jimport('joomla.application.component.modeladmin');
+//No Direct Access
+defined('_JEXEC') or die();
 
-if(class_exists('JModelAdmin')) {
-abstract class modelClass extends JModelAdmin{}
-}else{
-abstract class modelClass extends JModel{}
-}
+jimport('joomla.application.component.controllerform');
 
-class biblestudyControllermediafilesedit extends JController {
-	/**
+class biblestudyControllermediafilesedit extends JControllerForm {
+
+    /*
+     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+     *
+     * @todo    We should rename this controler to "mediafile" and the list view controller
+     * to "mediafiles" so that the pluralization in 1.6 would work properly
+     *
+     * @since 7.0
+     */
+    protected $view_list = 'mediafileslist';
+
+    /**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
@@ -95,25 +101,11 @@ class biblestudyControllermediafilesedit extends JController {
 
 	}
 
-
-	/**
-	 * display the edit form
-	 * @return void
-	 */
-	function edit()
-	{
-		JRequest::setVar( 'view', 'mediafilesedit' );
-		JRequest::setVar( 'layout', 'form'  );
-		JRequest::setVar('hidemainmenu', 1);
-
-		parent::display();
-	}
-
 	/**
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
+	function legacySave()
 	{
 
 		$model = $this->getModel('mediafilesedit');
@@ -141,7 +133,7 @@ class biblestudyControllermediafilesedit extends JController {
 	* apply rcord
 	* @return Void
 	*/
-	function apply()
+	function legacyApply()
 	{
 
 		$model = $this->getModel('mediafilesedit');
@@ -273,15 +265,6 @@ class biblestudyControllermediafilesedit extends JController {
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist' );
 	}
 
-	/**
-	 * cancel editing a record
-	 * @return void
-	 */
-	function cancel()
-	{
-		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist', $msg );
-	}
 
 	function docmanCategoryItems() {
 		//hide errors and warnings
