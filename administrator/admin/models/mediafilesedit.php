@@ -32,7 +32,7 @@ class biblestudyModelmediafilesedit extends modelClass {
 		parent::__construct();
         
         /**
-         * To do - J16 has new way of retrieving parameters so we need to implement it here too
+         * @todo J16 has new way of retrieving parameters so we need to implement it here too
         */
          
 		$admin = $this->getAdmin();
