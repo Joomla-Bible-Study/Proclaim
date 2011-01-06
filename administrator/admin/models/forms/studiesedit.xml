@@ -9,7 +9,7 @@
            description="JBS_MED_CREATE_DATE_YMD_HMS_TT" class="inputbox" size="22"
            format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
     
-    <field name="comments" type="radio" label="JBS_CMN_COMMENTS" description="JBS_CMN_COMMENTS_DESC" class="inputbox" default="0" required="true">
+    <field name="comments" type="radio" label="JBS_CMN_COMMENTS" description="JBS_CMN_COMMENTS_DESC" class="inputbox" default="0">
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
@@ -44,36 +44,36 @@
 
     <field name="teacher_id" type="sql" extension="com_biblestudy"
 		label="JBS_CMN_TEACHER" description="JBS_CMN_TEACHER_DESC"
-                class="inputbox" required="true" query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC" key_field="id" value_field="teachername">
+                class="inputbox" query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC" key_field="id" value_field="teachername">
         <option value="-1">JBS_CMN_SELECT_TEACHER</option>
     </field>
 
     <field name="location_id" type="sql" extension="com_biblestudy"
 		label="JBS_CMN_LOCATION" description="JBS_CMN_LOCATION_DESC"
-                class="inputbox" required="true" query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER by location_text ASC" key_field="id" value_field="location_text">
+                class="inputbox" query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER by location_text ASC" key_field="id" value_field="location_text">
         <option value="-1">JBS_CMN_SELECT_LOCATION</option>
     </field>
 
     <field name="series_id" type="sql" extension="com_biblestudy"
 		label="JBS_CMN_SERIES" description="JBS_CMN_SERIES_DESC"
-                class="inputbox" required="true" query="SELECT id, series_text FROM #__bsms_series WHERE published = 1 ORDER by series_text ASC" key_field="id" value_field="series_text">
+                class="inputbox" query="SELECT id, series_text FROM #__bsms_series WHERE published = 1 ORDER by series_text ASC" key_field="id" value_field="series_text">
         <option value="-1">JBS_CMN_SELECT_SERIES</option>
     </field>
 
     <field name="topics_id" type="sql" extension="com_biblestudy"
 		label="JBS_CMN_TOPIC" description="JBS_CMN_TOPIC_DESC"
-                class="inputbox" required="true" query="SELECT id, topic_text FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC" key_field="id" value_field="topic_text">
+                class="inputbox" query="SELECT id, topic_text FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC" key_field="id" value_field="topic_text">
         <option value="-1">JBS_CMN_SELECT_TOPIC</option>
     </field>
 
     <field name="messagetype" type="sql" extension="com_biblestudy"
 		label="JBS_CMN_MESSAGE_TYPE" description="JBS_CMN_MESSAGE_TYPE_DESC"
-                class="inputbox" required="true" query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC" key_field="id" value_field="message_type">
+                class="inputbox" query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC" key_field="id" value_field="message_type">
         <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
     </field>
 
     <field name="thumbnailm" type="imagelist" label="JBS_STY_STUDY_IMAGE" description="JBS_STY_STUDY_IMAGE_DESC"
-                class="inputbox" required="true" query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC" key_field="id" value_field="message_type">
+                class="inputbox" query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC" key_field="id" value_field="message_type">
         <option value="-1">JBS_CMN_SELECT_IMAGE</option>
     </field>
 

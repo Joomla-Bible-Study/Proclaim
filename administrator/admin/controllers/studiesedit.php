@@ -37,7 +37,7 @@ class biblestudyControllerstudiesedit extends JControllerForm {
      * display the edit form
      * @return void
      */
-    function edit() {
+    function legacyEdit() {
         JRequest::setVar('view', 'studiesedit');
         JRequest::setVar('layout', 'form');
         JRequest::setVar('hidemainmenu', 1);
@@ -67,7 +67,7 @@ class biblestudyControllerstudiesedit extends JControllerForm {
      * apply a record
      * @return void
      */
-    function save() {
+    function legacySave() {
         $model = $this->getModel('studiesedit');
         $cid = JRequest::getVar('id', 1, 'post', 'int');
         if ($model->store($post)) {
@@ -134,7 +134,7 @@ class biblestudyControllerstudiesedit extends JControllerForm {
      * cancel editing a record
      * @return void
      */
-    function cancel() {
+    function legacyCancel() {
         $msg = JText::_('JBS_CMN_OPERATION_CANCELLED');
         $this->setRedirect('index.php?option=com_biblestudy&view=studieslist', $msg);
     }

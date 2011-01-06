@@ -20,6 +20,7 @@ class biblestudyViewstudiesedit extends JView {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->mediafiles = $this->get('MediaFiles');
+        $this->setLayout('form');
 
         $this->addToolbar();
         parent::display($tpl);

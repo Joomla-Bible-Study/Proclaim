@@ -187,11 +187,17 @@ defined('_JEXEC') or die();
                             if (count($this->mediafiles) > 0) :
                                 foreach ($this->mediafiles as $i => $item) :
                     ?>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    <tr class="row<?php echo $i % 2; ?>">
+                                        <td align="center">
+                                            <a href="<?php echo JRoute::_("index.php?option=com_biblestudy&task=mediafilesedit.edit&id=".(int)$item->id); ?>">
+                                                <?php echo $this->escape($item->filename); ?>
+                                            </a>
+                                        </td>
+                                        <td align="center">
+                                            <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
+                                        </td>
+                                        <td>???</td>
+                                        <td>???</td>
                                     </tr>
                     <?php
                                     endforeach;
@@ -204,7 +210,7 @@ defined('_JEXEC') or die();
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="#">View All Media Files</a></td>
+                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileslist'); ?>">View All Media Files</a></td>
                                     </tr>
                                 </tfoot>
                             </table>
