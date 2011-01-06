@@ -143,6 +143,7 @@ class biblestudyController extends JController
         private function addCSS() {
             $doc =& JFactory::getDocument();
             $doc->addStyleSheet(JURI::base().'components/com_biblestudy/css/general.css');
+            $doc->addStyleSheet(JURI::base().'components/com_biblestudy/css/icons.css');
         }
 
         private function addJS() {
