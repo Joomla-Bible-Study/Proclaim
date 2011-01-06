@@ -1,4 +1,12 @@
 /*Studiesedit*/
+.inlineFields div {
+    float: left;
+}
+
+.inlineFields label {
+    min-width:70px !important;
+}
+
 #thumbPreview {
     border:3px dashed #CCCCCC;
     clear:both;

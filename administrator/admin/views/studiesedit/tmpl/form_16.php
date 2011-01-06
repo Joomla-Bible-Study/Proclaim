@@ -33,112 +33,183 @@ defined('_JEXEC') or die();
                     <?php echo $this->form->getInput('script1'); ?>
                 </li>
                 <li>
-                    <?php echo $this->form->getLabel('secondary_reference'); ?>
-                    <?php echo $this->form->getInput('secondary_reference'); ?>
-                </li>
-                <li>
-                    <?php echo $this->form->getLabel('teacher_id'); ?>
-                    <?php echo $this->form->getInput('teacher_id'); ?>
-                </li>
-                <li>
-                    <?php echo $this->form->getLabel('location_id'); ?>
-                    <?php echo $this->form->getInput('location_id'); ?>
-                </li>
-                <li>
-                    <?php echo $this->form->getLabel('series_id'); ?>
-                    <?php echo $this->form->getInput('series_id'); ?>
-                </li>
-                <li>
-                    <?php echo $this->form->getLabel('topics_id'); ?>
-                    <?php echo $this->form->getInput('topics_id'); ?>
-                </li>
-                <li>
-                    <?php echo $this->form->getLabel('messagetype'); ?>
-                    <?php echo $this->form->getInput('messagetype'); ?>
-                </li>
-                <li>
-                    <?php echo $this->form->getLabel('thumbnailm'); ?>
-                    <?php echo $this->form->getInput('thumbnailm'); ?>
-                    <div id="thumbPreview">
-                        <?php
-                            if(empty($this->item->thumbnailm))
-                             echo JText::_('JBS_STY_NO_IMAGE');
-                            else
-                                //echo JHtml::_('html.image', $this->item->thumbnailm);
-                        ?>
+                    <label><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></label>
+                    <div class="inlineFields">
+                        <div>
+                            <?php echo $this->form->getLabel('booknumber'); ?><br/>
+                            <?php echo $this->form->getInput('booknumber'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('chapter_begin'); ?><br/>
+                            <?php echo $this->form->getInput('chapter_begin'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('verse_begin'); ?><br/>
+                            <?php echo $this->form->getInput('verse_begin'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('chapter_end'); ?><br/>
+                            <?php echo $this->form->getInput('chapter_end'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('verse_end'); ?><br/>
+                            <?php echo $this->form->getInput('verse_end'); ?>
+                        </div>
                     </div>
                 </li>
                 <li>
-                    <?php echo $this->form->getLabel('studytext'); ?>                    
+                    <label><?php echo JText::_('JBS_CMN_SCRIPTURE2'); ?></label>
+                    <div class="inlineFields">
+                        <div>
+                            <?php echo $this->form->getLabel('booknumber2'); ?><br/>
+                            <?php echo $this->form->getInput('booknumber2'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('chapter_begin2'); ?><br/>
+                            <?php echo $this->form->getInput('chapter_begin2'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('verse_begin2'); ?><br/>
+                            <?php echo $this->form->getInput('verse_begin2'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('chapter_end2'); ?><br/>
+                            <?php echo $this->form->getInput('chapter_end2'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('verse_end2'); ?><br/>
+                            <?php echo $this->form->getInput('verse_end2'); ?>
+                        </div>
+                    </div>
                 </li>
-            </ul>
-            <div class="clr"></div>
-            <?php echo $this->form->getInput('studytext'); ?>
-        </fieldset>
-    </div>
-    <div class="width-35 fltrt">
-        <fieldset class="panelform">
-            <legend><?php echo JText::_('JBS_PUBLISHING_OPTIONS'); ?></legend>
-            <ul>
                 <li>
+                    <?php echo $this->form->getLabel('secondary_reference'); ?>
+                    <?php echo $this->form->getInput('secondary_reference'); ?>
+                        </li>
+                        <li>
+                            <label><?php echo JText::_('JBS_CMN_DURATION'); ?></label>
+                            <div class="inlineFields">
+                                <div>
+                                    <?php echo $this->form->getLabel('media_hours'); ?><br/>
+                                    <?php echo $this->form->getInput('media_hours'); ?>
+                                </div>
+                                <div>
+                                    <?php echo $this->form->getLabel('media_minutes'); ?><br/>
+                                    <?php echo $this->form->getInput('media_minutes'); ?>
+                                </div>
+                                <div>
+                                    <?php echo $this->form->getLabel('media_seconds'); ?><br/>
+                                    <?php echo $this->form->getInput('media_seconds'); ?>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                    <?php echo $this->form->getLabel('teacher_id'); ?>
+                    <?php echo $this->form->getInput('teacher_id'); ?>
+                        </li>
+                        <li>
+                    <?php echo $this->form->getLabel('location_id'); ?>
+                    <?php echo $this->form->getInput('location_id'); ?>
+                        </li>
+                        <li>
+                    <?php echo $this->form->getLabel('series_id'); ?>
+                    <?php echo $this->form->getInput('series_id'); ?>
+                        </li>
+                        <li>
+                    <?php echo $this->form->getLabel('topics_id'); ?>
+                    <?php echo $this->form->getInput('topics_id'); ?>
+                        </li>
+                        <li>
+                    <?php echo $this->form->getLabel('messagetype'); ?>
+                    <?php echo $this->form->getInput('messagetype'); ?>
+                        </li>
+                        <li>
+                    <?php echo $this->form->getLabel('thumbnailm'); ?>
+                    <?php echo $this->form->getInput('thumbnailm'); ?>
+                            <div id="thumbPreview">
+                        <?php
+                            if (empty($this->item->thumbnailm))
+                                echo JText::_('JBS_STY_NO_IMAGE');
+                            else
+                            //echo JHtml::_('html.image', $this->item->thumbnailm);
+                                ?>
+                        </div>
+                    </li>
+                    <li>
+                    <?php echo $this->form->getLabel('studytext'); ?>
+                        </li>
+                    </ul>
+                    <div class="clr"></div>
+            <?php echo $this->form->getInput('studytext'); ?>
+                        </fieldset>
+                    </div>
+                    <div class="width-35 fltrt">
+                        <fieldset class="panelform">
+                            <legend><?php echo JText::_('JBS_PUBLISHING_OPTIONS'); ?></legend>
+                            <ul>
+                                <li>
                     <?php echo $this->form->getLabel('published'); ?>
                     <?php echo $this->form->getInput('published'); ?>
-                </li>
-                <li>
+                        </li>
+                        <li>
                     <?php echo $this->form->getLabel('studydate'); ?>
                     <?php echo $this->form->getInput('studydate'); ?>
-                </li>
-                <li>
+                        </li>
+                        <li>
                     <?php echo $this->form->getLabel('comments'); ?>
                     <?php echo $this->form->getInput('comments'); ?>
-                </li>
-                <li>
+                        </li>
+                        <li>
+                    <?php echo $this->form->getLabel('user_id'); ?>
+                    <?php echo $this->form->getInput('user_id'); ?>
+                        </li>
+                        <li>
                     <?php echo $this->form->getLabel('show_level'); ?>
                     <?php echo $this->form->getInput('show_level'); ?>
-                </li>
-            </ul>
-        </fieldset>
-    </div>
-    <div class="width-35 fltrt">
-        <fieldset class="panelform">
-            <legend><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></legend>
-            <table class="adminlist">
-                <thead>
-                    <tr>
-                        <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
-                        <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-                        <th align="center"><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></th>
-                        <th align="center"><?php echo JText::_('JBS_CMN_TEACHER'); ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if (count($this->mediafiles) > 0) :
-                        foreach ($this->mediafiles as $i => $item) :
-                    ?>
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+            <div class="width-35 fltrt">
+                <fieldset class="panelform">
+                    <legend><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></legend>
+                    <table class="adminlist">
+                        <thead>
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
+                                <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
+                                <th align="center"><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></th>
+                                <th align="center"><?php echo JText::_('JBS_CMN_TEACHER'); ?></th>
                             </tr>
+                        </thead>
+                        <tbody>
                     <?php
-                            endforeach;
-                        else:
+                            if (count($this->mediafiles) > 0) :
+                                foreach ($this->mediafiles as $i => $item) :
                     ?>
-                            <tr>
-                                <td colspan="4" align="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
-                            </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                    <?php
+                                    endforeach;
+                                else:
+                    ?>
+                                    <tr>
+                                        <td colspan="4" align="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
+                                    </tr>
                     <?php endif; ?>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4"><a href="#">View All Media Files</a></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </fieldset>
-        <input type="hidden" name="task" value=""/>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4"><a href="#">View All Media Files</a></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </fieldset>
+                        <input type="hidden" name="task" value=""/>
         <?php echo JHtml::_('form.token'); ?>
     </div>
 </form>
