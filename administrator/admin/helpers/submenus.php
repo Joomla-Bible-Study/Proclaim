@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: weblinks.php 19253 2010-10-28 22:25:26Z eddieajau $
+ * @version		$Id$
  * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */

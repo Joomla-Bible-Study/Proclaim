@@ -303,7 +303,7 @@ class biblestudyModelstudieslist extends modelClass {
         $query->select('book.booknumber AS value, book.bookname AS text');
         $query->from('#__bsms_books AS book');
         $query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
-        $query->group('study.id');
+        $query->group('book.id');
         $query->order('book.bookname');
 
         $db->setQuery($query->__toString());
@@ -321,7 +321,7 @@ class biblestudyModelstudieslist extends modelClass {
         $query->select('teacher.id AS value, teacher.teachername AS text');
         $query->from('#__bsms_teachers AS teacher');
         $query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
-        $query->group('study.id');
+        $query->group('teacher.id');
         $query->order('teacher.teachername');
 
         $db->setQuery($query->__toString());
@@ -339,7 +339,7 @@ class biblestudyModelstudieslist extends modelClass {
         $query->select('series.id AS value, series.series_text AS text');
         $query->from('#__bsms_series AS series');
         $query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
-        $query->group('study.id');
+        $query->group('series.id');
         $query->order('series.series_text');
 
         $db->setQuery($query->__toString());
@@ -357,7 +357,7 @@ class biblestudyModelstudieslist extends modelClass {
         $query->select('messageType.id AS value, messageType.message_type AS text');
         $query->from('#__bsms_message_type AS messageType');
         $query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
-        $query->group('study.id');
+        $query->group('messageType.id');
         $query->order('messageType.message_type');
 
         $db->setQuery($query->__toString());
@@ -375,7 +375,7 @@ class biblestudyModelstudieslist extends modelClass {
         $query->select('topic.id AS value, topic.topic_text AS text');
         $query->from('#__bsms_topics AS topic');
         $query->join('INNER', '#__bsms_studies AS study ON study.topics_id = topic.id');
-        $query->group('study.id');
+        $query->group('topic.id');
         $query->order('topic.topic_text');
 
         $db->setQuery($query->__toString());
