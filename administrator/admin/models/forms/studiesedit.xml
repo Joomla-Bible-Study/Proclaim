@@ -20,7 +20,7 @@
 
     <field name="studyintro" type="textarea" cols="57" rows="3" class="inputbox" label="JBS_CMN_DESCRIPTION" description="JBS_CMN_DESCRIPTION_DESC"/>
 
-    <field name="studynumber" type="text" class="inputbox" size="5" label="JBS_CMN_STUDYNUMBER" desciption="JBS_CMN_STUDYNUMBER_DESC"/>
+    <field name="studynumber" type="text" class="inputbox" size="8" label="JBS_CMN_STUDYNUMBER" desciption="JBS_CMN_STUDYNUMBER_DESC"/>
     
     <field name="secondary_reference" type="text" class="inputbox" size="100" label="JBS_CMN_SECONDARY_REFERENCES" desciption="JBS_CMN_SECONDARY_REFERENCES_DESC"/>
 
