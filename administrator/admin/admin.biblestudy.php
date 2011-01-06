@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @version     $Id$
  * @package     com_biblestudy
@@ -14,8 +13,32 @@ define('JSTOP', '});');
 jimport('joomla.application.component.controller');
 
 $controller = JController::getInstance('biblestudy');
-
 $controller->execute(JRequest::getCmd('task'));
 $controller->redirect();
+addLoadingDiv();
+addCSS();
+addJS();
+
+function addLoadingDiv() {
+    echo '
+                <div id="loading">
+                    <img src="' . JURI::base() . 'components/com_biblestudy/images/loading.gif."/>
+                    <span id="loadingMsg">Loading...</span>
+                </div>
+                ';
+}
+
+function addCSS() {
+    $doc = & JFactory::getDocument();
+    $doc->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/general.css');
+    $doc->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/icons.css');
+}
+
+function addJS() {
+    $doc = & JFactory::getDocument();
+    $doc->addScript(JURI::base() . 'components/com_biblestudy/js/jquery.js');
+    $doc->addScript(JURI::base() . 'components/com_biblestudy/js/noconflict.js');
+    $doc->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
+}
 
 ?>

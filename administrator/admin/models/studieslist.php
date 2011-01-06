@@ -267,7 +267,7 @@ class biblestudyModelstudieslist extends modelClass {
         $query->select(
                 $this->getState(
                         'list.select',
-                        'study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
+                        'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
                         study.verse_begin, study.chapter_end, study.verse_end, study.hits'));
         $query->from('#__bsms_studies AS study');
 

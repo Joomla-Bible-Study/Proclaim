@@ -36,9 +36,6 @@ class biblestudyController extends JController
 			$model =& $this->getModel('studydetails');
 		//	$model->hit();
 		}
-		$this->addLoadingDiv();
-                $this->addCSS();
-                $this->addJS();
 		parent::display();
 	}
 
@@ -129,28 +126,6 @@ class biblestudyController extends JController
             // output $contents
             echo json_encode($files);
             
-        }
-
-        private function addLoadingDiv() {
-            echo '
-                <div id="loading">
-                    <img src="'.JURI::base() . 'components/com_biblestudy/images/loading.gif."/>
-                    <span id="loadingMsg">Loading...</span>
-                </div>
-                ';
-        }
-
-        private function addCSS() {
-            $doc =& JFactory::getDocument();
-            $doc->addStyleSheet(JURI::base().'components/com_biblestudy/css/general.css');
-            $doc->addStyleSheet(JURI::base().'components/com_biblestudy/css/icons.css');
-        }
-
-        private function addJS() {
-            $doc =& JFactory::getDocument();
-            $doc->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
-            $doc->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
-            $doc->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
         }
 }
 

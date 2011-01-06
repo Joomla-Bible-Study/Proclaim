@@ -1,23 +1,21 @@
 <?php
-
 /**
- * studies Edit Controller for Bible Study Component
- *
-
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
-// Check to ensure this file is included in Joomla!
+
+//No Direct Access
 defined('_JEXEC') or die();
 
-/**
- * studies Edit Controller
- *
- */
-class biblestudyControllerstudiesedit extends JController {
+jimport('joomla.application.component.controllerform');
+
+class biblestudyControllerstudiesedit extends JControllerForm {
     /*
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
      *
-     * @todo    We should rename this controler to "mediafile" and the list view controller
-     * to "mediafiles" so that the pluralization in 1.6 would work properly
+     * @todo    We should rename this controler to "study" and the list view controller
+     * to "studies" so that the pluralization in 1.6 would work properly
      *
      * @since 7.0
      */
