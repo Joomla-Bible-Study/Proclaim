@@ -1,3 +1,18 @@
+/*Studiesedit*/
+#thumbPreview {
+    border:3px dashed #CCCCCC;
+    clear:both;
+    color:#8E8E8E;
+    font-size:20px;
+    font-weight:bold;
+    padding-bottom:47px;
+    padding-top:47px;
+    padding-left: 2px;
+    padding-right: 2px;
+    width:134px;
+}
+
+/*General*/
 #loading {
     -moz-border-radius:7px 7px 7px 7px;
     border-radius:7px 7px 7px 7px;
