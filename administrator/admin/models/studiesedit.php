@@ -1,9 +1,23 @@
 <?php
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+
+//No Direct Access
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.model');
+//Joomla 1.6 <-> 1.5 Branch
+try {
+	jimport('joomla.application.component.modeladmin');
+	abstract class modelClass extends JModelAdmin{}
+}catch(Exception $e){
+	jimport('joomla.application.component.model');
+	abstract class modelClass extends JModel{}
+}
 
-class biblestudyModelstudiesedit extends JModel {
+class biblestudyModelstudiesedit extends modelClass {
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
@@ -324,6 +338,38 @@ class biblestudyModelstudiesedit extends JModel {
 			$this->_admin = $this->_getList($query);
 		}
 		return $this->_admin;
+	}
+
+	/**
+         * Get the form data
+         *
+         * @param <Array> $data
+         * @param <Boolean> $loadData
+         * @return <type>
+         * @since 7.0
+         */
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.studiesedit', 'studiesedit', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
+
+		return $form;
+        }
+
+        /**
+         *
+         * @return <type>
+         * @since   7.0
+         */
+	protected function loadFormData() {
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.studiesedit.data', array());
+		if(empty($data))
+			$data = $this->getItem();
+
+		return $data;
 	}
 	
 }

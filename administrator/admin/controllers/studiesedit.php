@@ -1,10 +1,10 @@
 <?php
+
 /**
  * studies Edit Controller for Bible Study Component
  *
 
  */
-
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -12,149 +12,152 @@ defined('_JEXEC') or die();
  * studies Edit Controller
  *
  */
-class biblestudyControllerstudiesedit extends JController
-{
-	/**
-	 * constructor (registers additional tasks to methods)
-	 * @return void
-	 */
-	function __construct()
-	{
-		parent::__construct();
+class biblestudyControllerstudiesedit extends JController {
+    /*
+     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+     *
+     * @todo    We should rename this controler to "mediafile" and the list view controller
+     * to "mediafiles" so that the pluralization in 1.6 would work properly
+     *
+     * @since 7.0
+     */
 
-		// Register Extra tasks
-		$this->registerTask( 'add'  , 	'edit' );
-	}
+    protected $view_list = 'studieslist';
 
-	/**
-	 * display the edit form
-	 * @return void
-	 */
-	function edit()
-	{
-		JRequest::setVar( 'view', 'studiesedit' );
-		JRequest::setVar( 'layout', 'form'  );
-		JRequest::setVar('hidemainmenu', 1);
+    /**
+     * constructor (registers additional tasks to methods)
+     * @return void
+     */
+    function __construct() {
+        parent::__construct();
 
-		parent::display();
-	}
+        // Register Extra tasks
+        $this->registerTask('add', 'edit');
+    }
 
-	/**
-	 * save a record (and redirect to main page)
-	 * @return void
-	 */
-/*	function save() {
-		$model = $this->getModel('studiesedit');
-		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_STY_STUDY_SAVED' );
-		} else {
-			$msg = JText::_( 'JBS_STY_ERROR_SAVING_STUDY' );
-		}
+    /**
+     * display the edit form
+     * @return void
+     */
+    function edit() {
+        JRequest::setVar('view', 'studiesedit');
+        JRequest::setVar('layout', 'form');
+        JRequest::setVar('hidemainmenu', 1);
 
-		// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&view=studieslist';
-		$this->setRedirect($link, $msg);
-	}
-*/	
-	/**
-	 * apply a record
-	 * @return void
-	 */
-	function save() {
-		$model = $this->getModel('studiesedit');
-		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
-		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_STY_STUDY_SAVED' );
-		} else {
-			$msg = JText::_( 'JBS_STY_ERROR_SAVING_STUDY' );
-		}
+        parent::display();
+    }
 
-		// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&controller=studiesedit&task=edit&cid[]='.$cid.'';
-		$this->setRedirect($link, $msg);
-	}
+    /**
+     * save a record (and redirect to main page)
+     * @return void
+     */
+    /* 	function save() {
+      $model = $this->getModel('studiesedit');
+      if ($model->store($post)) {
+      $msg = JText::_( 'JBS_STY_STUDY_SAVED' );
+      } else {
+      $msg = JText::_( 'JBS_STY_ERROR_SAVING_STUDY' );
+      }
 
-	/**
-	 * remove record(s)
-	 * @return void
-	 */
-	function remove()
-	{
-		$model = $this->getModel('studiesedit');
-		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_STY_ERROR_DELETING_STUDY' );
-		} else {
-			$msg = JText::_( 'JBS_STY_STUDY_DELETED' );
-		}
+      // Check the table in so it can be edited.... we are done with it anyway
+      $link = 'index.php?option=com_biblestudy&view=studieslist';
+      $this->setRedirect($link, $msg);
+      }
+     */
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
-	}
-	function publish()
-	{
-		$mainframe =& JFactory::getApplication();
+    /**
+     * apply a record
+     * @return void
+     */
+    function save() {
+        $model = $this->getModel('studiesedit');
+        $cid = JRequest::getVar('id', 1, 'post', 'int');
+        if ($model->store($post)) {
+            $msg = JText::_('JBS_STY_STUDY_SAVED');
+        } else {
+            $msg = JText::_('JBS_STY_ERROR_SAVING_STUDY');
+        }
 
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+        // Check the table in so it can be edited.... we are done with it anyway
+        $link = 'index.php?option=com_biblestudy&controller=studiesedit&task=edit&cid[]=' . $cid . '';
+        $this->setRedirect($link, $msg);
+    }
 
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_PUBLISH' ) );
-		}
+    /**
+     * remove record(s)
+     * @return void
+     */
+    function remove() {
+        $model = $this->getModel('studiesedit');
+        if (!$model->delete()) {
+            $msg = JText::_('JBS_STY_ERROR_DELETING_STUDY');
+        } else {
+            $msg = JText::_('JBS_STY_STUDY_DELETED');
+        }
 
-		$model = $this->getModel('studiesedit');
-		if(!$model->publish($cid, 1)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
+        $this->setRedirect('index.php?option=com_biblestudy&view=studieslist', $msg);
+    }
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist' );
-	}
+    function publish() {
+        $mainframe = & JFactory::getApplication();
 
+        $cid = JRequest::getVar('cid', array(0), 'post', 'array');
 
-	function unpublish()
-	{
-		$mainframe =& JFactory::getApplication();
+        if (!is_array($cid) || count($cid) < 1) {
+            JError::raiseError(500, JText::_('JBS_CMN_SELECT_ITEM_PUBLISH'));
+        }
 
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+        $model = $this->getModel('studiesedit');
+        if (!$model->publish($cid, 1)) {
+            echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
+        }
 
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_UNPUBLISH' ) );
-		}
+        $this->setRedirect('index.php?option=com_biblestudy&view=studieslist');
+    }
 
-		$model = $this->getModel('studiesedit');
-		if(!$model->publish($cid, 0)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
+    function unpublish() {
+        $mainframe = & JFactory::getApplication();
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist' );
-	}
+        $cid = JRequest::getVar('cid', array(0), 'post', 'array');
 
-	/**
-	 * cancel editing a record
-	 * @return void
-	 */
-	function cancel()
-	{
-		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=studieslist', $msg );
-	}
+        if (!is_array($cid) || count($cid) < 1) {
+            JError::raiseError(500, JText::_('JBS_CMN_SELECT_ITEM_UNPUBLISH'));
+        }
 
-	function resetHits()
-	{
-		$msg = null;
-		$id 	= JRequest::getInt( 'id', 0, 'post'); //dump ($cid, 'cid: ');
-		$db = JFactory::getDBO();
-		$db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = ".$id);
-		$reset = $db->query();
-		if ($db->getErrorNum() > 0)
-				{
-					$error = $db->getErrorMsg();
-                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS').' '.$error;
-                    $this->setRedirect( 'index.php?option=com_biblestudy&view=studiesedit&controller=admin&layout=form&cid[]='.$id, $msg );
-				}
-		else
-			{
-				$updated = $db->getAffectedRows();
-                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
-				$this->setRedirect( 'index.php?option=com_biblestudy&view=studiesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
-			}
-	}
+        $model = $this->getModel('studiesedit');
+        if (!$model->publish($cid, 0)) {
+            echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
+        }
+
+        $this->setRedirect('index.php?option=com_biblestudy&view=studieslist');
+    }
+
+    /**
+     * cancel editing a record
+     * @return void
+     */
+    function cancel() {
+        $msg = JText::_('JBS_CMN_OPERATION_CANCELLED');
+        $this->setRedirect('index.php?option=com_biblestudy&view=studieslist', $msg);
+    }
+
+    function resetHits() {
+        $msg = null;
+        $id = JRequest::getInt('id', 0, 'post'); //dump ($cid, 'cid: ');
+        $db = JFactory::getDBO();
+        $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
+        $reset = $db->query();
+        if ($db->getErrorNum() > 0) {
+            $error = $db->getErrorMsg();
+            $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
+            $this->setRedirect('index.php?option=com_biblestudy&view=studiesedit&controller=admin&layout=form&cid[]=' . $id, $msg);
+        } else {
+            $updated = $db->getAffectedRows();
+            $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
+            $this->setRedirect('index.php?option=com_biblestudy&view=studiesedit&controller=studiesedit&layout=form&cid[]=' . $id, $msg);
+        }
+    }
+
 }
+
 ?>

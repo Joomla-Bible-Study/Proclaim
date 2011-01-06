@@ -449,12 +449,13 @@ class biblestudyModelmediafilesedit extends modelClass {
 		}
 
 		return $form;
-	}
-	
-	public function getItem($pk = null) {
-		return parent::getItem($pk);
-	}
-	
+        }
+
+        /**
+         *
+         * @return <type>
+         * @since   7.0
+         */
 	protected function loadFormData() {
 		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafileedit.data', array());
 		if(empty($data))

@@ -212,7 +212,7 @@ class biblestudyModelmediafileslist extends modelClass {
 
         //Join over the studies
         $query->select('study.studytitle AS studytitle');
-        $query->join('LEFT', '`#__bsms_studies` AS study ON study.id = mediafile.study_id');
+        $query->join('LEFT', '#__bsms_studies AS study ON study.id = mediafile.study_id');
 
         //Join over the mediatypes
         $query->select('mediatype.media_text AS mediaType');
