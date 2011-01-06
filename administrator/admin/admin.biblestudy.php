@@ -9,15 +9,15 @@ defined('_JEXEC') or die();
 
 define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
-
-jimport('joomla.application.component.controller');
-
-$controller = JController::getInstance('biblestudy');
-$controller->execute(JRequest::getCmd('task'));
-$controller->redirect();
 addLoadingDiv();
 addCSS();
 addJS();
+
+jimport('joomla.application.component.controller');
+$controller = JController::getInstance('biblestudy');
+$controller->execute(JRequest::getCmd('task'));
+$controller->redirect();
+
 
 function addLoadingDiv() {
     echo '
