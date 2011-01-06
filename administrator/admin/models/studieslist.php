@@ -255,6 +255,37 @@ class biblestudyModelstudieslist extends modelClass {
     }
 
     /**
+     * @since   7.0
+     */
+    protected function  populateState() {
+        $studytitle = $this->getUserStateFromRequest($this->context.'.filter.studytitle', 'filter_studytitle');
+        $this->setState('filter.studytitle', $studytitle);
+
+        $book = $this->getUserStateFromRequest($this->context.'.filter.book', 'filter_book');
+        $this->setState('filter.book', $book);
+
+        $teacher = $this->getUserStateFromRequest($this->context.'.filter.teacher', 'filter_teacher');
+        $this->setState('filter.teacher', $teacher);
+
+        $series = $this->getUserStateFromRequest($this->context.'.filter.series', 'filter_series');
+        $this->setState('filter.series', $series);
+
+        $messageType = $this->getUserStateFromRequest($this->context.'.filter.messageType', 'filter_message_type');
+        $this->setState('filter.messageType', $messageType);
+
+        $year = $this->getUserStateFromRequest($this->context.'.filter.year', 'filter_year');
+        $this->setState('filter.year', $year);
+
+        $topic = $this->getUserStateFromRequest($this->context.'.filter.topic', 'filter_topic');
+        $this->setState('filter.topic', $topic);
+
+        $state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
+        $this->setState('filter.state', $state);
+
+        parent::populateState('study.studydate', 'DESC');
+    }
+
+    /**
      * Build an SQL query to load the list data
      * 
      * @return  JDatabaseQuery
@@ -289,6 +320,50 @@ class biblestudyModelstudieslist extends modelClass {
 
         //Join over Plays?
         //Join over Downloads?
+
+        //Filter by studytitle
+        $studytitle = $this->getState('filter.studytitle');
+        if(!empty($studytitle))
+            $query->where('study.studytitle LIKE "'.$studytitle.'%"');
+
+        //Filter by book
+        $book = $this->getState('filter.book');
+        if(!empty($book))
+            $query->where('study.booknumber = '.(int)$book.' OR study.booknumber2 = '.(int)$book);
+
+        //Filter by teacher
+        $teacher = $this->getState('filter.teacher');
+        if(!empty($teacher))
+            $query->where('study.teacher_id = '.(int)$teacher);
+
+        //Filter by series
+        $series = $this->getState('filter.series');
+        if(!empty($series))
+            $query->where('study.series_id = '.(int)$series);
+
+        //Filter by message type
+        $messageType = $this->getState('filter.messageType');
+        if(!empty($messageType))
+            $query->where('study.messageType = '.(int)$messageType);
+
+        //Filter by Year?
+
+        //Filter by topic
+        $topic = $this->getState('filter.topic');
+        if(!empty($topic))
+            $query->where('study.topics_id = '.(int)$topic);
+
+        //Filter by publish state
+        //@todo This is not filtering correctly
+        $state = $this->getState('filter.state');
+        if(!empty($state))
+            $query->where('study.published = '.(int)$state);
+
+        //Add the list ordering clause
+        $orderCol = $this->state->get('list.ordering');
+        $orderDirn = $this->state->get('list.direction');
+        $query->order($db->getEscaped($orderCol.' '.$orderDirn));
+        
         return $query;
     }
 

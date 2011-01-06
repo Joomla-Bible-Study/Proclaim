@@ -23,31 +23,31 @@ $listDirn = $this->state->get('list.direction');
         <div class="filter-select fltrt">
             <select name="filter_book" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
-                <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.bookId')); ?>
+                <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.book')); ?>
             </select>
             <select name="filter_teacher" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_TEACHER'); ?></option>
-                <?php echo JHtml::_('select.options', $this->teachers, 'value', 'text', $this->state->get('filter.teacherId')); ?>
+                <?php echo JHtml::_('select.options', $this->teachers, 'value', 'text', $this->state->get('filter.teacher')); ?>
             </select>
             <select name="filter_series" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_SERIES'); ?></option>
-                <?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.seriesId')); ?>
+                <?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.series')); ?>
             </select>
             <select name="filter_message_type" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_MESSAGE_TYPE'); ?></option>
-                <?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageTypeId')); ?>
+                <?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
             </select>
             <select name="filter_years" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
                 <?php //echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageTypeId')); ?>
             </select>
-            <select name="filter_topics" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_topic" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_TOPIC'); ?></option>
-                <?php echo JHtml::_('select.options', $this->topics, 'value', 'text', $this->state->get('filter.topicId')); ?>
+                <?php echo JHtml::_('select.options', $this->topics, 'value', 'text', $this->state->get('filter.topic')); ?>
             </select>
-            <select name="filter_published" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_state" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
+                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.state'), true); ?>
             </select>
         </div>
     </fieldset>
@@ -58,7 +58,7 @@ $listDirn = $this->state->get('list.direction');
                 <th width="1%">
                     <input type="checkbox" name="checkall-toggle" value="" onclick="checkAll(this)"/>
                 </th>
-                <th width="5%">
+                <th width="8%">
                     <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
                 </th>
                 <th>
