@@ -32,6 +32,8 @@ class biblestudyControllermediafilesedit extends JControllerForm {
 		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
 		$this->registerTask( 'upload'  ,     'upload' );
+
+                
 	}
 	function upload()
 	{
