@@ -33,7 +33,7 @@ class JBSAdmin
     $num_rows = $db->getNumRows();
     $isav = $db->loadObject($query);
     if ($num_rows && $isav->published == 1){$player = 'av';}
-    return $player; //dump ($player, 'player: ');
+    return $player;
  }
  
  function getAdminsettings()
@@ -253,7 +253,6 @@ function getShowLevel($row)
         $sum2 = count($getGroups); 
         if (substr_count($row->show_level,','))
         {$showvar = explode(',',$row->show_level);}
-         //dump ($row->show_level, 'showvar: ');
         else {$showvar = $row->show_level;}
         $sum3 = count($showvar);
         for ($i = 0; $i<$sum3; $i++)

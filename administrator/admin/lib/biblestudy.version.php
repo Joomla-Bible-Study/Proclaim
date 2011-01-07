@@ -82,19 +82,6 @@ class CBiblestudyVersion {
 	}
 
 	/** 
-	* Retrieve installed Bible Study version, copyright and license as string.
-	*
-	* @return string "Installed version: Kunena X.Y.Z | YYYY-MM-DD | BUILDNUMBER [versionname] | © Copyright: Kunena | License: GNU GPL"
-	*/
-	/* unused AS 2010-12-01
-	function versionHTML()
-	{
-		$version = CBiblestudyVersion::version();
-		return  _BIBLESTUDY_INSTALLED_VERSION.': '.$version.' | '._BIBLESTUDY_COPYRIGHT.': &copy; 2007-2010 <a href = "http://www.JoomlaBibleStudy.org" target = "_blank">'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</a>  | '._BIBLESTUDY_LICENSE.': <a href = "http://www.gnu.org/copyleft/gpl.html" target = "_blank">GNU GPL</a>';
-	}
-    */
-
-	/** 
 	* Retrieve MySQL Server version.
 	*
 	* @return string MySQL version

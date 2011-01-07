@@ -31,10 +31,6 @@ else
 {
     define('JOOMLA_VERSION','6');
 }
-//$language =& JFactory::getLanguage();
-//$lang = $language->getBackwardLang();
-
-//define('BIBLESTUDY_LANGUAGE', $lang);
 
 // File system paths
 define('BIBLESTUDY_COMPONENT_RELPATH', 'components' .DS. BIBLESTUDY_COMPONENT_NAME);

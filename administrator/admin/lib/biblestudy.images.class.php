@@ -20,8 +20,6 @@ class jbsImages
 		$admin_params = new JParameter($compat->params);
 		return $admin_params;
 	}		
-
-
 	
 	function getImagePath($path)
 	{
@@ -49,7 +47,7 @@ class jbsImages
 				$tmp->mime		= @$info['mime'];
 				if (!$tmp->width) {$tmp->width=0;}
 				if (!$tmp->height) {$tmp->height=0;}
-		} //dump ($tmp, 'image: ');
+		}
 	return $tmp;
 	}
 
@@ -60,19 +58,19 @@ class jbsImages
 		$image = null;
 		$database	= & JFactory::getDBO();
 		$database->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
-		$admin = $database->loadObject(); //print_r($admin);
+		$admin = $database->loadObject();
 		$admin_params = new JParameter($admin->params);
 		if ($admin->main == '- JBS_CMN_DEFAULT_IMAGE -' || ($admin->main && !$admin_params->get('media_imagefolder')))   // 2010-11-12 santon: need to be changed
 			{
-				$path = 'components/com_biblestudy/images'; //dump ($path, 'path: ');
+				$path = 'components/com_biblestudy/images';
 			}
 		if ($admin->main && $admin_params->get('media_imagefolder'))
 			{
 				$path = 'images/'. $admin_params->get('media_imagefolder');
 			}
 		$image = ($admin->main == '- JBS_CMN_DEFAULT_IMAGE -' ? 'openbible.png' : $admin->main );  // 2010-11-12 santon: need to be changed
-		$i_path = $path .'/'. $image; //dump ($i_path, 'i_path: ');
-		$mainimage = $this->getImagePath($i_path);	//dump ($mainimage, 'mainimage: ');
+		$i_path = $path .'/'. $image;
+		$mainimage = $this->getImagePath($i_path);
 		return $mainimage;	
 	}	
 
@@ -87,7 +85,6 @@ class jbsImages
 		{
 			$mediaimagefolder = 'images/'. $admin_params->get('media_imagefolder');
 		}
-//		$mediaimagefolder = ($admin_params->get('media_imagefolder') ? 'images' .DS. $admin_params->get('media_imagefolder') : 'components/com_biblestudy/images' );
 		return $mediaimagefolder;
 	}
 	
@@ -102,7 +99,6 @@ class jbsImages
 		{
 			$seriesimagefolder = 'images/'. $admin_params->get('series_imagefolder');
 		}
-	//	$seriesimagefolder = ($admin_params->get('series_imagefolder') ? 'images' .DS. $admin_params->get('series_imagefolder') : 'images/stories' );
 		return $seriesimagefolder;
 	}
 	
@@ -117,8 +113,6 @@ class jbsImages
 		{
 			$studiesimagefolder = 'images/'. $admin_params->get('study_images');
 		}
-	//	$studiesimagefolder = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
-		//$studiesimagefolder = ($admin_params->get('study_images') ? 'images/stories' : 'images' .DS. $admin_params->get('study_images'));
 		return $studiesimagefolder;
 	}
 	
@@ -133,7 +127,6 @@ class jbsImages
 		{
 			$teacherimagefolder = 'images/'. $admin_params->get('teachers_imagefolder');
 		}
-//		$teacherimagefolder = ($admin_params->get('teacher_imagefolder') ? 'images' .DS. $admin_params->get('teacher_imagefolder') : 'images/stories');
 		return $teacherimagefolder;
 	}
 	
@@ -151,14 +144,13 @@ class jbsImages
 		$imagepath = array();
 		$folder = $this->getSeriesImageFolder();
 		$path = $folder .'/'. $image;
-		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
 	
 	function getTeacherThumbnail($image1=NULL, $image2=NULL)
 	{
 		$imagepath = array();
-		//$image1 is teacher->thumbnail, $image2 is teacher->thumb
 		if ($image1 == '- JBS_CMN_NO_IMAGE - ' || !$image1)     // 2010-11-12 santon: need to be changed
 		{
 			$path = $image2;
@@ -169,7 +161,7 @@ class jbsImages
 			$path = $folder .'/'. $image1;
 		}
 		
-		$imagepath = $this->getImagePath($path); //dump ($path, 'imagepath: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
 	
@@ -185,7 +177,7 @@ class jbsImages
 			$folder = $this->getTeacherImageFolder();
 			$path = $folder .'/'. $image1;
 		}
-		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
 	
@@ -202,7 +194,7 @@ class jbsImages
 		{
 			$path = $media2;
 		}
-		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
 	
@@ -218,11 +210,10 @@ class jbsImages
 		}
 		
 		$path = $folder .'/'. $image;
-		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
-	
-	
+		
 } // End of class
 	
 ?>

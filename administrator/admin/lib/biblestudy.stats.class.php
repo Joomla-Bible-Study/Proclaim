@@ -119,10 +119,7 @@ class jbStats {
 	 */
 	function get_top_books() {
 		$biblestudy_db = &JFactory::getDBO();
-		//$biblestudy_db->setQuery('SELECT booknumber, COUNT(hits) as totalmsg FROM #__bsms_studies' .
-		//		' GROUP BY id ORDER BY booknumber LIMIT 5');
-
-				$biblestudy_db->setQuery('SELECT booknumber, COUNT( hits ) AS totalmsg FROM jos_bsms_studies GROUP BY booknumber ORDER BY totalmsg DESC LIMIT 5');
+		$biblestudy_db->setQuery('SELECT booknumber, COUNT( hits ) AS totalmsg FROM jos_bsms_studies GROUP BY booknumber ORDER BY totalmsg DESC LIMIT 5');
 		$results=$biblestudy_db->loadObjectList();
 		$results=$biblestudy_db->query();
 		        check_dberror("Unable to load books.");
@@ -153,13 +150,11 @@ class jbStats {
 
 	function get_topthirtydays() {
 		$month = mktime(0, 0, 0, date("m")-3 , date("d"), date("Y"));
-		$lastmonth = date("Y-m-d 00:00:01",$month); //echo $lastmonth;
+		$lastmonth = date("Y-m-d 00:00:01",$month);
 		$biblestudy_db = &JFactory::getDBO();
-		$query = 'SELECT * FROM #__bsms_studies WHERE published = "1" AND hits >0 AND UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "'.$lastmonth.'" )ORDER BY hits DESC LIMIT 5 '; //echo $query;
-			//$query = 'SELECT * FROM #__bsms_studies WHERE UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "2009-02-10 00:00:00" )ORDER BY hits DESC LIMIT 5 ';
-
+		$query = 'SELECT * FROM #__bsms_studies WHERE published = "1" AND hits >0 AND UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "'.$lastmonth.'" )ORDER BY hits DESC LIMIT 5 ';
 		$biblestudy_db->setQuery($query);
-		$results = $biblestudy_db->loadObjectList(); //dump ($results, 'results: ');
+		$results = $biblestudy_db->loadObjectList();
 		$top_studies = null;
 		if (!$results)
 		{
@@ -172,11 +167,8 @@ class jbStats {
 				$top_studies .= $result->hits.' '.JText::_('JBS_CMN_HITS').' - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->id.'">'.$result->studytitle.'</a> - '.date('Y-m-d', strtotime($result->studydate)).'<br>';
 			}
 		}
-		//return count($results) > 0 ? $results : array();
-		//dump ($results, 'results: ');
 		return  $top_studies;
-		//return intval($biblestudy_db->loadResult());
-	}
+		}
 	function total_mediafiles()
 	{
 		$biblestudy_db = &JFactory::getDBO();
@@ -194,19 +186,16 @@ function get_top_downloads() {
 		{
 			$top_studies .= $result->downloads.' - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->sid.'">'.$result->stitle.'</a> - '.date('Y-m-d', strtotime($result->sdate)).'<br>';
 		}
-		//return count($results) > 0 ? $results : array();
 		return  $top_studies;
 	}
 
 	function get_downloads_ninety() {
 		$month = mktime(0, 0, 0, date("m")-3 , date("d"), date("Y"));
-		$lastmonth = date("Y-m-d 00:00:01",$month); //echo $lastmonth;
+		$lastmonth = date("Y-m-d 00:00:01",$month);
 		$biblestudy_db = &JFactory::getDBO();
-		$query = 'SELECT #__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished, #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate FROM #__bsms_mediafiles LEFT JOIN #__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id) WHERE #__bsms_mediafiles.published = "1" AND downloads >0 AND UNIX_TIMESTAMP(createdate) > UNIX_TIMESTAMP( "'.$lastmonth.'" )ORDER BY downloads DESC LIMIT 5 '; //echo $query;
-			//$query = 'SELECT * FROM #__bsms_studies WHERE UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( "2009-02-10 00:00:00" )ORDER BY hits DESC LIMIT 5 ';
-
+		$query = 'SELECT #__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished, #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate FROM #__bsms_mediafiles LEFT JOIN #__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id) WHERE #__bsms_mediafiles.published = "1" AND downloads >0 AND UNIX_TIMESTAMP(createdate) > UNIX_TIMESTAMP( "'.$lastmonth.'" )ORDER BY downloads DESC LIMIT 5 '; 
 		$biblestudy_db->setQuery($query);
-		$results = $biblestudy_db->loadObjectList(); //dump ($results, 'results: ');
+		$results = $biblestudy_db->loadObjectList();
 		$top_studies = null;
 		if (!$results)
 		{
@@ -219,10 +208,7 @@ function get_top_downloads() {
 				$top_studies .= $result->downloads.' '.JText::_('JBS_CMN_HITS').' - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->sid.'">'.$result->stitle.'</a> - '.date('Y-m-d', strtotime($result->sdate)).'<br>';
 			}
 		}
-		//return count($results) > 0 ? $results : array();
-		//dump ($results, 'results: ');
 		return  $top_studies;
-		//return intval($biblestudy_db->loadResult());
 	}
 
 function total_downloads()
@@ -255,18 +241,14 @@ function top_score()
 		}
 	rsort($final);
 	array_splice($final,5);
-	//$topscoretable = '<table cellspacing="0" cellpadding="0">';
     $topscoretable = '';
 	foreach ($final as $key=>$value)
 		{
-		//	$topscoretable .= '<tr><td>';
 			foreach ($value as $scores)
 			{
 				$topscoretable .= $scores;
 			}
-		//	$topscoretable .= '</td></tr>';
 		}
-//	$topscoretable .= '</table>';
 	return $topscoretable;
 }
 
@@ -371,12 +353,9 @@ function popups()
     $popups = '<strong>'.JText::_('JBS_CMN_INLINE').': </strong>'.$inlinecount.
     '<br /><strong>'.JText::_('JBS_CMN_POPUP').': </strong>'.$popcount.
     '<br /><strong>'.JText::_('JBS_CMN_GLOBAL_SETTINGS').': </strong>'.$globalcount.
-    '<br /><strong>'.JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL').': </strong>'.$noplayer; //dump ($mediaplayers, 'mediaplayers: ');
+    '<br /><strong>'.JText::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL').': </strong>'.$noplayer;
     return $popups;
 }
-
-    
-
 }
 
 ?>

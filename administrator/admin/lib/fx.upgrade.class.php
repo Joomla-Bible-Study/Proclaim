@@ -298,29 +298,15 @@ class fx_Upgrade {
 				<?php
 			}
 		}
-
 		//initiate XML doc
-		//$xml = new JSimpleXML;
-		//$xml->loadFile(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml',NULL,true);
-        	//$xmlDoc = new simplexml_load_file(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml',NULL,true);
 		include_once (BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.install.upgrade.xml.php');
 		$xmlDoc = new SimpleXMLElement($xmlstr);		
-	//	$xmlDoc = new DOMIT_Lite_Document();
-		//dump ($this->_upgradeDir, 'upgrade dir: '); dump($this->xmlFileName, 'xml file: ');
-	//	$xmlDoc->loadXML( $this->_upgradeDir .DS. $this->xmlFileName, false, true );
-
 		//load root element and check XML version (for future use)
 	//	$root = &$xmlDoc->documentElement;
 	//	$comUpgradeVersion = $root->getAttribute( "version" );
 
 		//here comes the real stuff
-		if($upgrade == 0) {
-		//	$installElement =& $root->firstChild;
-		//	$version = $installElement->getAttribute( "version" );
-		//	$versiondate = $installElement->getAttribute( "versiondate" );
-		//	$build = $installElement->getAttribute( "build" );
-		//	$versionname = $installElement->getAttribute( "versionname" );
-            
+		if($upgrade == 0) {            
             $version = $xmlDoc->install[0]["version"];
 			$versiondate = $xmlDoc->install[0][ "versiondate" ];
 			$build = $xmlDoc->install[0][ "build" ];
@@ -339,7 +325,6 @@ class fx_Upgrade {
 			}
 
 			//install mode, run install queries
-		//	$installElement = $root->getElementsByPath('install', 1);
              $installElement = $xmlDoc->install;
 			if (!is_null($installElement)) {
 				$this->processNode($installElement,1, $type = '1');
@@ -365,20 +350,11 @@ class fx_Upgrade {
 				<?php
 			}
 			//upgrade mode
-		//	$upgradeElement = $root->getElementsByPath('upgrade', 1);
             $upgradeElement = $xmlDoc->upgrade->version;
 			if (!is_null($upgradeElement)) {
 				//walk through the versions
-			//	$numChildrenMain =& $upgradeElement->childCount;
                 $numChildrenMain = count($upgradeElement);
-			//	$childNodesMain =& $upgradeElement->childNodes;
 				for($k = 0; $k < $numChildrenMain; $k++) {
-			//		$versionElement =& $childNodesMain[$k];
-			//		$version = $versionElement->getAttribute( "version" );
-			//		$versiondate = $versionElement->getAttribute( "versiondate" );
-			//		$build = $versionElement->getAttribute( "build" );
-			//		$versionname = $versionElement->getAttribute( "versionname" );
-
                    $versionElement = $upgradeElement[$k];
                     $version = $versionElement[0]["version"];
         			$versiondate = $versionElement[0][ "versiondate" ];
@@ -441,9 +417,7 @@ class fx_Upgrade {
 
 		for($i = 0; $i < $numChildren; $i++) {
 			$currentNode =& $childNodes[$i];
-		//	$nodeName =& $currentNode->nodeName;
             $nodeName = $childNodes->getName();
-            //	$nodemode = strtolower($currentNode->getAttribute( "mode" ));
             $nodemode = $currentNode->attributes();
             if ($type == 2)
             {
@@ -454,7 +428,6 @@ class fx_Upgrade {
         switch($nodeName) {
 				case "phpfile":
 					//include file
-				//	$fileName = $currentNode->getAttribute( "name" );
                     $fileName = $currentNode->attributes();
 					$include = $this->_upgradeDir .DS . $fileName;
 					$fileCheck = file_exists($include);
@@ -468,12 +441,6 @@ class fx_Upgrade {
 					else {
 						$this->_error = "<font color=\"red\">File not found!</font>";
 					}
-				//	if (!$fileCheck || $this->_error) {
-				//	if ($this->_error) {
-					//	$img = "publish_x.png";
-						//$img = "tick.png";
-					//	$this->_return = false;
-				//	}
 					
 					if(!$this->silent) {
 						?>
@@ -491,7 +458,6 @@ class fx_Upgrade {
 					}
 					break;
 				case "query":
-				//	$query = $currentNode->getText();
                     $query = $currentNode;
 					$biblestudy_db =& JFactory::getDBO();
 
@@ -510,7 +476,6 @@ class fx_Upgrade {
 						$this->_error = "";
 						$img = "tick.png";
 					}
-			//		$biblestudy_db->setQuery($currentNode->getText());
                     $biblestudy_db->setQuery($query);
 					if(!$this->silent)
 					{
@@ -524,7 +489,7 @@ class fx_Upgrade {
 									Running SQL Query
 								</div>
 								<div id="id<?php echo $i;?>_<?php echo $batch;?>_details" style="display:None;" class="details"><?php echo $this->_error;?><pre>
-                                <?php echo $query; //$biblestudy_db->_sql;?></pre></div>
+                                <?php echo $query; ?></pre></div>
 							</td>
 							<td width="20" valign="top"><img src="images/<?php echo $img;?>" border="0"></td>
 						</tr>
@@ -533,7 +498,6 @@ class fx_Upgrade {
 					}
 					break;
 				case "phpcode":
-				//	$code = $currentNode->getText();
                     $code = $currentNode;
 					ini_set ("track_errors", 1);
 					if(@eval($code) === FALSE) {

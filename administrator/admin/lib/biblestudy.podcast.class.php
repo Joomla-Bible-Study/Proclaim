@@ -26,9 +26,6 @@ class JBSPodcast
         $where = array();
         foreach ($results as $result)
         {
-        //	$params = new JParameter($result->params);
-        	//dump ($params, 'params: ');
-        //	$podcasts = $params->get('podcasts');
         	$podcasts = explode(',',$result->podcast_id);
             
         	switch ($podcasts)
@@ -59,7 +56,6 @@ class JBSPodcast
         if ($where)
         {$where = ' WHERE '.$where.' AND ';}
         else {return $msg= '';}  // no (published) studies
-        //dump ($where, 'where: ');
         		$query = 'SELECT p.id AS pid, p.podcastlimit,'
         			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate, mf.params,'
            			. ' mf.docMan_id, mf.article_id,'
@@ -82,7 +78,6 @@ class JBSPodcast
         		
         		$db->setQuery( $query );
         		$episodes = $db->loadObjectList();
-        		//dump ($episodes, 'episode: ');
                 
         		
         return $episodes;
