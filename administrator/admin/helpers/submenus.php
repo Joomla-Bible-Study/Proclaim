@@ -37,7 +37,7 @@ class BiblestudyHelper
 		);
         JSubMenuHelper::addEntry(
 			JText::_('JBS_CMN_MEDIA_FILES'),
-			'index.php?option=com_biblestudy&view=mediafileslist',
+			'index.php?option=com_biblestudy&view=medialist',
 			$vName == 'Media Files'
 		);
 		JSubMenuHelper::addEntry(
