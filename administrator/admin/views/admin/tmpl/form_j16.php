@@ -56,6 +56,7 @@ $params = $this->form->getFieldsets();
                     </li>
                 </ul>
             </fieldset>
+
         </div>
         <div class="width-40 fltrt">
             <fieldset class="panelform">
