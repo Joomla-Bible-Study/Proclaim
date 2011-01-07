@@ -61,7 +61,6 @@
     <language tag="no-NO">no-NO.com_biblestudy.ini</language>
   </languages>
   <administration>
-    <!-- Administration Menu Section -->
     <menu img="../components/com_biblestudy/images/biblemenu.png">COM_BIBLESTUDY</menu>
     <submenu>
       <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
@@ -115,12 +114,12 @@
       <language tag="cs-CZ">cs-CZ.com_biblestudy.sys.ini</language>
       <language tag="de-DE">de-DE.com_biblestudy.ini</language>
       <language tag="de-DE">de-DE.com_biblestudy.menu.ini</language>
-       <language tag="de-DE">de-DE.com_biblestudy.sys.ini</language>
+      <language tag="de-DE">de-DE.com_biblestudy.sys.ini</language>
       <language tag="es-ES">es-ES.com_biblestudy.ini</language>
       <language tag="es-ES">es-ES.com_biblestudy.menu.ini</language>
-       <language tag="es-ES">es-ES.com_biblestudy.sys.ini</language>
+      <language tag="es-ES">es-ES.com_biblestudy.sys.ini</language>
       <language tag="hu_HU">hu-HU.com_biblestudy.menu.ini</language>
-       <language tag="hu_HU">hu-HU.com_biblestudy.sys.ini</language>
+      <language tag="hu_HU">hu-HU.com_biblestudy.sys.ini</language>
       <language tag="nl-NL">nl-NL.com_biblestudy.ini</language>
       <language tag="no-NO">no-NO.com_biblestudy.ini</language>
       <language tag="no-NO">no-NO.com_biblestudy.menu.ini</language>
