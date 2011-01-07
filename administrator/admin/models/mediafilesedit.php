@@ -432,6 +432,18 @@ class biblestudyModelmediafilesedit extends modelClass {
 		return $query;
 	}
 
+        /**
+         * Overloads the JModelAdmin save routine in order to impload the podcast_id
+         * 
+         * @param array $data
+         * @return <Boolean> True on sucessfull save
+         * @since   7.0
+         */
+        public function save($data) {
+            //Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
+            $data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(',', $data['podcast_id']);
+            return parent::save($data);
+        }
 	/**
          * Get the form data
          * 
@@ -458,8 +470,11 @@ class biblestudyModelmediafilesedit extends modelClass {
          */
 	protected function loadFormData() {
 		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafileedit.data', array());
-		if(empty($data))
-			$data = $this->getItem();
+		if(empty($data)) {
+                    $data = $this->getItem();
+                    $data->podcast_id = explode(',', $data->podcast_id);
+                }
+			
 			
 		return $data;
 	}

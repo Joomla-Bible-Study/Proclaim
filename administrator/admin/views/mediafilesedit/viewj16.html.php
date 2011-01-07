@@ -9,7 +9,6 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
-jimport('joomla.application.component.helper');
 jimport('joomla.i18n.help');
 
 class biblestudyViewmediafilesedit extends JView {
@@ -17,6 +16,7 @@ class biblestudyViewmediafilesedit extends JView {
     protected $form;
     protected $item;
     protected $state;
+    protected $defaults;
 
     function display($tpl = null) {
         $this->form = $this->get("Form");
@@ -24,6 +24,16 @@ class biblestudyViewmediafilesedit extends JView {
         $this->state = $this->get("State");
         $this->setLayout('form');
 
+        $this->getModel("Admin");
+        
+        /*
+         * //Eugen
+         * @todo    I'm trying to get the settings from the administrator
+         */
+        $this->loadHelper('params');
+        $this->defaults = BsmHelper::getDefaults();
+        
+        
         //Get the js and css files
         $document = & JFactory::getDocument();
         $document->addScript(JURI::base() . 'components/com_biblestudy/js/views/mediafilesedit.js');
