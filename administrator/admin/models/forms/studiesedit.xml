@@ -72,10 +72,7 @@
         <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
     </field>
 
-    <field name="thumbnailm" type="imagelist" label="JBS_STY_STUDY_IMAGE" description="JBS_STY_STUDY_IMAGE_DESC"
-                class="inputbox" query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC" key_field="id" value_field="message_type">
-        <option value="-1">JBS_CMN_SELECT_IMAGE</option>
-    </field>
+    <field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE" description="JBS_STY_STUDY_IMAGE_DESC"/>
 
     <field name="studytext" type="Editor" class="inputbox" buttons="true" height="300" label="JBS_STY_STUDY_TEXT" description="JBS_STY_STUDY_TEXT_DESC"/>
 

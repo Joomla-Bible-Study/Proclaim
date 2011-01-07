@@ -126,14 +126,6 @@ defined('_JEXEC') or die();
                         <li>
                     <?php echo $this->form->getLabel('thumbnailm'); ?>
                     <?php echo $this->form->getInput('thumbnailm'); ?>
-                            <div id="thumbPreview">
-                        <?php
-                            if (empty($this->item->thumbnailm))
-                                echo JText::_('JBS_STY_NO_IMAGE');
-                            else
-                            //echo JHtml::_('html.image', $this->item->thumbnailm);
-                                ?>
-                        </div>
                     </li>
                     <li>
                     <?php echo $this->form->getLabel('studytext'); ?>

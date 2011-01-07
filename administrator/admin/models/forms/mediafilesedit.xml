@@ -122,7 +122,7 @@
 			
 	<fields name="params">
         <fieldset name="params">	
-        	<field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH" description="JBS_MED_PLAYERWIDTH_TT" />
+            <field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH" description="JBS_MED_PLAYERWIDTH_TT" />
             <field name="playerheight" default="" type="text" label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_TT" />
             <field name="itempopuptitle" type="text" size="35" default="" label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />
             <field name="itempopupfooter" type="text" size="35" default="" label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER" />

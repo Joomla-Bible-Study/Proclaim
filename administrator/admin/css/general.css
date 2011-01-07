@@ -1,3 +1,7 @@
+/*Admin*/
+div.current .panelform {
+    border:1px solid #CCCCCC !important;
+}
 /*Studiesedit*/
 .inlineFields div {
     float: left;
@@ -5,19 +9,6 @@
 
 .inlineFields label {
     min-width:70px !important;
-}
-
-#thumbPreview {
-    border:3px dashed #CCCCCC;
-    clear:both;
-    color:#8E8E8E;
-    font-size:20px;
-    font-weight:bold;
-    padding-bottom:47px;
-    padding-top:47px;
-    padding-left: 2px;
-    padding-right: 2px;
-    width:134px;
 }
 
 /*General*/
@@ -39,15 +30,15 @@
     font-weight: bold;
 }
 .icon-48-openbible {
-background-image:url(openbible.gif);
+    background-image:url(openbible.gif);
 }
 
 .inlinePlayer {
-	border: 1px solid black;
-	position: absolute;
-	width: 290px;
-	margin-left: -293px;
-	height: 24px;
-	display:none;
-	background-color:  #ffffff;
+    border: 1px solid black;
+    position: absolute;
+    width: 290px;
+    margin-left: -293px;
+    height: 24px;
+    display:none;
+    background-color:  #ffffff;
 }
