@@ -1,16 +1,32 @@
 <?php
-/**
- * Podcast List Model for Bible Study Component
- 
- */
 
-// Check to ensure this file is included in Joomla!
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+//No Direct Access
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.model' );
 
+//Joomla 1.6 <-> 1.5 Branch
+try {
+    jimport('joomla.application.component.modellist');
 
-class biblestudyModelpodcastlist extends JModel
+    abstract class modelClass extends JModelList {
+
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.model');
+
+    abstract class modelClass extends JModel {
+
+    }
+
+}
+
+class biblestudyModelpodcastlist extends modelClass
 {
 	/**
 	 * Podcastlist data array

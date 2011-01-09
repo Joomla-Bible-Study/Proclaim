@@ -1,9 +1,32 @@
 <?php
+
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+//No Direct Access
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.model' );
 
-class biblestudyModelbookslist extends JModel {
+//Joomla 1.6 <-> 1.5 Branch
+try {
+    jimport('joomla.application.component.modellist');
+
+    abstract class modelClass extends JModelList {
+
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.model');
+
+    abstract class modelClass extends JModel {
+
+    }
+
+}
+
+class biblestudyModelbookslist extends modelClass {
 	/**
 	 * bookslist data array
 	 *
