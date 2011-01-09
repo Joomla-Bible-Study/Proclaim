@@ -23,6 +23,10 @@ $params = $this->form->getFieldsets();
                         <?php echo $this->form->getInput('compat_mode', 'params'); ?>
                     </li>
                     <li>
+                        <?php echo $this->form->getLabel('drop_tables', 'params'); ?>
+                        <?php echo $this->form->getInput('drop_tables', 'params'); ?>
+                    </li>
+                    <li>
                         <?php echo $this->form->getLabel('admin_store', 'params'); ?>
                         <?php echo $this->form->getInput('admin_store', 'params'); ?>
                     </li>
@@ -101,20 +105,41 @@ $params = $this->form->getFieldsets();
     </div>
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_SYSTEM_DEFAULTS'), 'admin-system-defaults'); ?>
-    <div class="width-100">
-        <div class="width-60 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></legend>
-                <ul>
+                        <div class="width-100">
+                            <div class="width-60 fltlft">
+                                <fieldset class="panelform">
+                                    <legend><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></legend>
+                                    <ul>
+                                        <li>
+                        <?php echo $this->form->getLabel('default_main_image', 'params'); ?>
+                        <?php echo $this->form->getInput('default_main_image', 'params'); ?>
+                    </li>
                     <li>
-
+                        <?php echo $this->form->getLabel('default_study_image', 'params'); ?>
+                        <?php echo $this->form->getInput('default_study_image', 'params'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('default_series_image', 'params'); ?>
+                        <?php echo $this->form->getInput('default_series_image', 'params'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('default_teacher_image', 'params'); ?>
+                        <?php echo $this->form->getInput('default_teacher_image', 'params'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('default_download_image', 'params'); ?>
+                        <?php echo $this->form->getInput('default_download_image', 'params'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('default_showHide_image', 'params'); ?>
+                        <?php echo $this->form->getInput('default_showHide_image', 'params'); ?>
                     </li>
                 </ul>
             </fieldset>
         </div>
         <div class="width-40 fltrt">
             <fieldset class="panelform">
-                <legend><?php echo JText::_('FILLIN-STUDY'); ?></legend>
+                <legend><?php echo JText::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></legend>
                 <ul>
                     <li>
                         <?php echo $this->form->getLabel('location_id', 'params'); ?>
@@ -175,151 +200,55 @@ $params = $this->form->getFieldsets();
     </div>
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_PLAYER_SETTINGS'), 'admin-player-settings'); ?>
-    <div class="width-100">
-        Player options
-    </div>
-    <?php echo JHtml::_('tabs.end'); ?>
-
-                                <div class="width-60 fltrt">
-                                    <fieldset class="adminform">
-                                        <legend><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></legend>
-
-                                        <ul>
-
-
-                                            <li><?php echo JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE'); ?><?php
-                                    if ($this->lists['main']) {
-                                        echo $this->lists['main'];
-                                        echo ' ' . JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE_TT');
-                                    } else {
-                                        echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
-                                    }
-        ?></li>
-                                <li><?php echo JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE'); ?><?php
-                                    if (isset($this->lists['study'])) {
-                                        echo $this->lists['study'];
-                                        echo ' ' . JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE_TT');
-                                    } else {
-                                        echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
-                                    }
-        ?></li>
-                                <li><?php echo JText::_('JBS_ADM_DEFAULT_SERIES_IMAGE'); ?><?php
-                                    if (isset($this->lists['series'])) {
-                                        echo $this->lists['series'];
-                                        echo ' ' . JText::_('JBS_ADM_DEFAULT_SERIES_IMAGE_TT');
-                                    } else {
-                                        echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
-                                    }
-        ?></li>
-
-                                <li><?php echo JText::_('JBS_ADM_DEFAULT_TEACHER_IMAGE'); ?><?php
-                                    if (isset($this->lists['teacher'])) {
-                                        echo $this->lists['teacher'];
-                                        echo ' ' . JText::_('JBS_ADM_DEFAULT_TEACHER_IMAGE_TT');
-                                    } else {
-                                        echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
-                                    }
-        ?></li>
-                                <li><?php echo JText::_('JBS_ADM_DOWNLOAD_IMAGE'); ?><?php
-                                    if (isset($this->lists['download'])) {
-                                        echo $this->lists['download'];
-                                        echo ' ' . JText::_('JBS_ADM_DOWNLOAD_IMAGE_TT');
-                                    } else {
-                                        echo JText::_('JBS_ADM_ERROR_FINDING_LIST');
-                                    }
-        ?></li>
-                                <li><?php echo JText::_('JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE'); ?>
-                    <?php echo $this->lists['showhide'];
-                                    echo ' ' . JText::_('JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_TT'); ?>
-                                </li>
-                            </ul>
-                        </fieldset>
-                    </div>
-                    <input type="hidden" name="task" value="" />
-    <?php echo JHtml::_('form.token'); ?>
-                                </form>
-
-
-
-                                <div class="width-100 fltlft">
-
-                                    <form action="index.php" method="post" name="adminForm2" id="adminForm2">
-
-                                        <fieldset class="adminform">
-                                            <legend><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></legend>
-                                            <table class="admintable">
-                                                <tr><td class="key"><?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?> </td><td><?php echo $this->playerstats; ?></td> </tr>
-                                                <tr>
-                                                    <td class="key"><?php echo JText::_('JBS_ADM_CHANGE_PLAYERS'); ?></td>
-                                                    <td>
-
-                                                        <select name="from" id="from">
-                                                            <option value="x"><?php echo JText::_('JBS_ADM_SELECT_EXISTING_PLAYER'); ?></option>
-                                                            <option value="0"><?php echo JText::_('JBS_CMN_DIRECT_LINK'); ?></option>
-                                                            <option value="1"><?php echo JText::_('JBS_CMN_INTERNAL_PLAYER'); ?></option>
-                                                            <option value="3"><?php echo JText::_('JBS_CMN_AVPLUGIN'); ?></option>
-                                                            <option value="7"><?php echo JText::_('JBS_CMN_LEGACY_PLAYER'); ?></option>
-                                                            <option value="100"><?php echo JText::_('JBS_NO_PLAYER_LISTED'); ?></option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <select name="to" id="to">
-                                                            <option value="x"><?php echo JText::_('JBS_ADM_SELECT_NEW_PLAYER'); ?></option>
-                                                            <option value="0"><?php echo JText::_('JBS_CMN_DIRECT_LINK'); ?></option>
-                                                            <option value="1"><?php echo JText::_('JBS_CMN_INTERNAL_PLAYER'); ?></option>
-                                                            <option value="3"><?php echo JText::_('JBS_CMN_AVPLUGIN'); ?></option>
-                                                            <option value="7"><?php echo JText::_('JBS_CMN_LEGACY_PLAYER'); ?></option>
-
-                                                        </select>
-                                                        <input type="hidden" name="option" value="com_biblestudy" />
-                                                        <input type="hidden" name="task" value="changePlayers" />
-                                                        <input type="hidden" name="controller" value="admin" />
-                                                        <input type="submit" value="Submit" />
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </fieldset>
-
-                                    </form>
-                                </div>
-                                <div class="width-100 fltlft">
-
-                                    <form action="index.php" method="post" name="adminForm3" id="adminForm3">
-                                        <div class="col100">
-                                            <fieldset class="adminform">
-                                                <legend><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></legend>
-                                                <table class="admintable">
-                                                    <tr><td class="key"><?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?> </td><td><?php echo $this->popups; ?></td> </tr>
-                                                    <tr>
-                                                        <td class="key"><?php echo JText::_('JBS_ADM_CHANGE_POPUP'); ?></td>
-                                                        <td>
-
-                                                            <select name="pfrom" id="pfrom">
-                                                                <option value="x"><?php echo JText::_('JBS_ADM_SELECT_EXISTING_OPTION'); ?></option>
-                                                                <option value="2"><?php echo JText::_('JBS_CMN_INLINE'); ?></option>
-                                                                <option value="1"><?php echo JText::_('JBS_CMN_POPUP_NEW_WINDOW'); ?></option>
-                                                                <option value="3"><?php echo JText::_('JBS_CMN_USE_GLOBAL'); ?></option>
-                                                                <option value="100"><?php echo JText::_('JBS_ADM_NO_OPTION_LISTED'); ?></option>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <select name="pto" id="pto">
-                                                                <option value="x"><?php echo JText::_('JBS_ADM_SELECT_NEW_OPTION'); ?></option>
-                                                                <option value="2"><?php echo JText::_('JBS_CMN_INLINE'); ?></option>
-                                                                <option value="1"><?php echo JText::_('JBS_CMN_POPUP_NEW_WINDOW'); ?></option>
-                                                                <option value="3"><?php echo JText::_('JBS_CMN_USE_GLOBAL'); ?></option>
-
-
-                            </select>
-                            <input type="hidden" name="option" value="com_biblestudy" />
-                            <input type="hidden" name="task" value="changePopup" />
-                            <input type="hidden" name="controller" value="admin" />
-
-                            <input type="submit" value="Submit" />
-                        </td>
-                    </tr>
-                </table>
+                        <div class="width-100">
+                            <div class="width-50 fltlft">
+                                <fieldset class="panelform">
+                                    <legend><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></legend>
+                                    <ul>
+                                        <li>
+                        <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
+                        <?php echo $this->playerstats; ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('from', 'params'); ?>
+                        <?php echo $this->form->getInput('from', 'params'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('to', 'params'); ?>
+                        <?php echo $this->form->getInput('to', 'params'); ?>
+                    </li>
+                    <li>
+                        <input type="submit" value="Submit" />
+                    </li>
+                </ul>
             </fieldset>
         </div>
-    </form>
-</div>
+        <div class="width-50 fltrt">
+            <fieldset class="panelform">
+                <legend><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></legend>
+                <ul>
+                    <li>
+                        <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?><br/>
+                        <?php echo $this->popups; ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('pFrom', 'params'); ?>
+                        <?php echo $this->form->getInput('pFrom', 'params'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('pTo', 'params'); ?>
+                        <?php echo $this->form->getInput('pTo', 'params'); ?>
+                    </li>
+                    <li>
+                        <input type="submit" value="Submit" />
+                    </li>
+                </ul>
+            </fieldset>
+        </div>        
+    </div>
+    <div class="clr"></div>
+    <?php echo JHtml::_('tabs.end'); ?>
+                        <input type="hidden" name="task" value="" />
+    <?php echo JHtml::_('form.token'); ?>
+</form>
+
