@@ -12,11 +12,11 @@ $params = $this->form->getFieldsets();
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <?php echo JHtml::_('tabs.start'); ?>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADMIN_PARAMS'), 'admin-settings'); ?>
+    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PARAMS'), 'admin-settings'); ?>
     <div class="width-100">
         <div class="width-60 fltlft">
             <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_COMPONENT_SETTINGS'); ?></legend>
+                <legend><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></legend>
                 <ul>
                     <li>
                         <?php echo $this->form->getLabel('compat_mode', 'params'); ?>
@@ -104,7 +104,7 @@ $params = $this->form->getFieldsets();
         </div>        
     </div>
     <div class="clr"></div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_SYSTEM_DEFAULTS'), 'admin-system-defaults'); ?>
+    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_SYSTEM_DEFAULTS'), 'admin-system-defaults'); ?>
                         <div class="width-100">
                             <div class="width-60 fltlft">
                                 <fieldset class="panelform">
@@ -199,7 +199,7 @@ $params = $this->form->getFieldsets();
         </div>
     </div>
     <div class="clr"></div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_PLAYER_SETTINGS'), 'admin-player-settings'); ?>
+    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_PLAYER_SETTINGS'), 'admin-player-settings'); ?>
                         <div class="width-100">
                             <div class="width-50 fltlft">
                                 <fieldset class="panelform">

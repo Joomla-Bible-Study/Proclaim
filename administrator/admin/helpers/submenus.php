@@ -26,7 +26,7 @@ class BiblestudyHelper
 	public static function addSubmenu($vName = 'biblestudy')
 	{
 		JSubMenuHelper::addEntry(
-			JText::_('JBS_CMN_CONTROL_PANEL'),
+			JText::_('JBS_CPL_CONTROL_PANEL'),
 			'index.php?option=com_biblestudy&view=cpanel',
 			$vName == 'Control Panel'
 		);
@@ -41,7 +41,7 @@ class BiblestudyHelper
 			$vName == 'Media Files'
 		);
 		JSubMenuHelper::addEntry(
-			JText::_('JBS_TEMPLATE_DISPLAY_SETTINGS'),
+			JText::_('JBS_TPL_TEMPLATE_DISPLAY_SETTINGS'),
 			'index.php?option=com_biblestudy&view=templateslist',
 			$vName == 'Templates'
 		);
@@ -91,7 +91,7 @@ class BiblestudyHelper
 			$vName == 'Podcasts'
 		);
         JSubMenuHelper::addEntry(
-			JText::_('JBS_CMN_MIMETYPES'),
+			JText::_('JBS_CMN_MIME_TYPES'),
 			'index.php?option=com_biblestudy&view=mimetypelist',
 			$vName == 'Mime Types'
 		);
