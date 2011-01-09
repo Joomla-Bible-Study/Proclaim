@@ -1,18 +1,32 @@
 <?php
-/**
- * Series Edit Controller for Bible Study Component
- * 
- 
- */
 
-// Check to ensure this file is included in Joomla!
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+//No Direct Access
 defined('_JEXEC') or die();
 
-/**
- * Series Edit Controller
- *
- */
-class biblestudyControllerseriesedit extends JController
+
+//Joomla 1.6 <-> 1.5 Branch
+try {
+    jimport('joomla.application.component.controllerform');
+
+    abstract class controllerClass extends JControllerForm {
+
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.controller');
+
+    abstract class controllerClass extends JController {
+
+    }
+
+}
+
+class biblestudyControllerseriesedit extends controllerClass
 {
 	/**
 	 * constructor (registers additional tasks to methods)

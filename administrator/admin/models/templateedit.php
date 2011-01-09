@@ -1,8 +1,23 @@
 <?php
-defined('_JEXEC') or die('Restricted Access');
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 
-jimport('joomla.application.component.model');
-class biblestudyModeltemplateedit extends JModel {
+//No Direct Access
+defined('_JEXEC') or die();
+
+//Joomla 1.6 <-> 1.5 Branch
+try {
+	jimport('joomla.application.component.modeladmin');
+	abstract class modelClass extends JModelAdmin{}
+}catch(Exception $e){
+	jimport('joomla.application.component.model');
+	abstract class modelClass extends JModel{}
+}
+
+class biblestudyModeltemplateedit extends modelClass {
 	var $_id;
 	var $_template;
 

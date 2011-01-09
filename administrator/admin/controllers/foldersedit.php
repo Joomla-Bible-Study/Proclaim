@@ -1,18 +1,32 @@
 <?php
-/**
- * Folders Edit Controller for Bible Study Component
- * 
- 
- */
 
-// Check to ensure this file is included in Joomla!
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+//No Direct Access
 defined('_JEXEC') or die();
 
-/**
- * Folders Edit Controller
- *
- */
-class biblestudyControllerfoldersedit extends JController
+
+//Joomla 1.6 <-> 1.5 Branch
+try {
+    jimport('joomla.application.component.controllerform');
+
+    abstract class modelClass extends JControllerForm {
+
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.controller');
+
+    abstract class modelClass extends JController {
+
+    }
+
+}
+
+class biblestudyControllerfoldersedit extends modelClass
 {
 	/**
 	 * constructor (registers additional tasks to methods)

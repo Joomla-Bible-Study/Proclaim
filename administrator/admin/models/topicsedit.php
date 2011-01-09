@@ -1,13 +1,24 @@
 <?php
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 
-
-// Check to ensure this file is included in Joomla!
+//No Direct Access
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.model');
+//Joomla 1.6 <-> 1.5 Branch
+try {
+	jimport('joomla.application.component.modeladmin');
+	abstract class modelClass extends JModelAdmin{}
+}catch(Exception $e){
+	jimport('joomla.application.component.model');
+	abstract class modelClass extends JModel{}
+}
 
 
-class biblestudyModeltopicsedit extends JModel
+class biblestudyModeltopicsedit extends modelClass
 {
 	/**
 	 * Constructor that retrieves the ID from the request

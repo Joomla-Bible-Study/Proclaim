@@ -1,16 +1,32 @@
 <?php
+
 /**
  * @version     $Id$
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
-
 //No Direct Access
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.controllerform');
 
-class biblestudyControllermediafilesedit extends JControllerForm {
+//Joomla 1.6 <-> 1.5 Branch
+try {
+    jimport('joomla.application.component.controllerform');
+
+    abstract class controllerClass extends JControllerForm {
+
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.controller');
+
+    abstract class controllerClass extends JController {
+
+    }
+
+}
+
+class biblestudyControllermediafilesedit extends controllerClass {
 
     /*
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in

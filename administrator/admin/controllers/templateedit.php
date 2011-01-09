@@ -1,8 +1,32 @@
 <?php
-defined('_JEXEC') or die('Restricted Access');
 
-jimport('joomla.application.component.controller');
-class biblestudyControllertemplateedit extends JController {
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+//No Direct Access
+defined('_JEXEC') or die();
+
+
+//Joomla 1.6 <-> 1.5 Branch
+try {
+    jimport('joomla.application.component.controllerform');
+
+    abstract class controllerClass extends JControllerForm {
+
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.controller');
+
+    abstract class controllerClass extends JController {
+
+    }
+
+}
+
+class biblestudyControllertemplateedit extends controllerForm {
 
 	function __construct() {
 		parent::__construct();

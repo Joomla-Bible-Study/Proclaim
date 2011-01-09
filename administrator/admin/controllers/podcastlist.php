@@ -1,14 +1,32 @@
 <?php
 
 /**
- * @author Joomla Bible Study
- * @copyright 2010
- * @desc Controller for the podcast list.
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
-// Check to ensure this file is included in Joomla!
+//No Direct Access
 defined('_JEXEC') or die();
 
-class biblestudyControllerpodcastlist extends JController
+
+//Joomla 1.6 <-> 1.5 Branch
+try {
+    jimport('joomla.application.component.controlleradmin');
+
+    abstract class controllerClass extends JControllerAdmin {
+
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.controller');
+
+    abstract class controllerClass extends JController {
+
+    }
+
+}
+
+class biblestudyControllerpodcastlist extends controllerClass
 {
  /**
  * constructor (registers additional tasks to methods)
