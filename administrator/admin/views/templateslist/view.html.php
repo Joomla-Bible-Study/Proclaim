@@ -1,29 +1,19 @@
 <?php
-defined('_JEXEC') or die('Restricted Access');
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 
-jimport('joomla.application.component.view');
-class biblestudyViewtemplateslist extends JView {
+//No Direct Access
+defined('_JEXEC') or die();
 
-	function display() {
-		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'templates.png');
-		JToolBarHelper::publishList();
-		JToolBarHelper::unpublishList();
-		JToolBarHelper::editList();
-		JToolBarHelper::deleteList();
-		JToolBarHelper::custom('copy', 'copy.png', 'copy_f2.png', 'Copy', true);
-		JToolBarHelper::addNew();
-        JToolBarHelper::help('biblestudy', true );
-		//Initialize templating class
-		$tmplEngine = $this->loadHelper('templates.helper');
-		$tmplEngine =& bibleStudyTemplate::getInstance();
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 
-		$templates = $this->get('templates');
+//Branch the JView based on the joomla version
+if(JOOMLA_VERSION == 6)
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'templateslist'.DS.'viewj16.html.php');
+else
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'templateslist'.DS.'viewj15.html.php');
 
-		$this->assignRef('tmplEngine', $tmplEngine);
-		$this->assignRef('tmplTypes', $tmplTypes);
-		$this->assignRef('templates', $templates);
-		parent::display();
-	}
-}
 ?>
