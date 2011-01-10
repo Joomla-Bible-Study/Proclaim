@@ -97,6 +97,7 @@ ignore_user_abort(true);
 // Bible Study wide defines
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 include_once(BIBLESTUDY_PATH_ADMIN_LIB .DS. 'fx.upgrade.class.php');
+include_once(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.upgrade.php');
 // Install Bible Study Component
 function com_install()
 {
@@ -104,23 +105,34 @@ function com_install()
 	// Determine MySQL version from phpinfo
 	$biblestudy_db->setQuery("SELECT VERSION() as mysql_version");
 	$mysqlversion = $biblestudy_db->loadResult();
+    $jbsupgrade = new JBSUpgrade();
+    //Check to be sure JBS is the correct version for upgrade
+    $checkversion = $jbsupgrade->version();
+    switch ($checkversion)
+    {
+        case 1:
+        $doupgrade = FALSE;
+        break;
+        
+        case 2:
+        $doupgrade = TRUE;
+        $upgradeit = $jbsupgrade->fresh();
+        break;
+        
+        case 3:
+        $doupgrade = TRUE;
+        $upgradeit = $jbsupgrade->upgrade();
+        
+    }
 	//before we do anything else we want to check for minimum system requirements
-	if (version_compare(phpversion(), BIBLESTUDY_MIN_PHP, ">=") && version_compare($mysqlversion, BIBLESTUDY_MIN_MYSQL, ">"))
+	if (version_compare(phpversion(), BIBLESTUDY_MIN_PHP, ">=") && version_compare($mysqlversion, BIBLESTUDY_MIN_MYSQL, ">")&& ($doupgrade))
 	{				
 	//install & upgrade class
-	$bsmsupgrade = new fx_Upgrade("com_biblestudy", "biblestudy.install.upgrade.xml", "bsms_", "install", false);
+    
+//	$bsmsupgrade = new fx_Upgrade("com_biblestudy", "biblestudy.install.upgrade.xml", "bsms_", "install", false);
 	// Start Installation/Upgrade
-	$bsmsupgrade->doUpgrade();
-	//For some reason in version 7.0 the last phpfile doesn't run so we check here
-	$query = "SELECT `player` FROM #__bsms_mediafiles WHERE `player` IS NOT NULL";
-	$biblestudy_db->setQuery($query);
-	$biblestudy_db->query();
-	$results = $biblestudy_db->loadObjectList();
-	$count = count($results);
-	if (!$count)
-	{
-		include_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'install'.DS.'biblestudy.700.upgrade.php');
-	}   
+//	$bsmsupgrade->doUpgrade();
+	
 	//Check for presence of css or backup
     jimport('joomla.filesystem.file');
     $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
@@ -166,6 +178,7 @@ function com_install()
 		<br />
 		<strong>mysql version: <font color="green"><?php echo $mysqlversion; ?></font> (Required &gt; <?php echo BIBLESTUDY_MIN_MYSQL; ?>)</strong>
 		</div>
+        <div><?php echo $upgradeit;?></div>
 		</td>
 	</tr>
 	</table>
