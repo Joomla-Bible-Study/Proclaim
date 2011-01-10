@@ -137,7 +137,7 @@ defined('_JEXEC') or die();
                     </div>
                     <div class="width-35 fltrt">
                         <fieldset class="panelform">
-                            <legend><?php echo JText::_('JBS_PUBLISHING_OPTIONS'); ?></legend>
+                            <legend><?php echo JText::_('JBS_CMN_PUBLISHING_OPTIONS'); ?></legend>
                             <ul>
                                 <li>
                     <?php echo $this->form->getLabel('published'); ?>
@@ -202,7 +202,7 @@ defined('_JEXEC') or die();
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileslist'); ?>">View All Media Files</a></td>
+                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileslist').'>'.JText::_('JBS_STY_VIEW_ALL_MEDIAFILES'); ?>"</a></td>
                                     </tr>
                                 </tfoot>
                             </table>
