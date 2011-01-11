@@ -16,6 +16,9 @@
   <version>7.0</version>
   <creationDate>January 2011</creationDate>
   <description>Joomla Bible Study</description>
+  <updateservers>
+		<server type="extension">http://www.joomlabiblestudy.com/updates/jbs.xml</server>
+  </updateservers>
   <installfile>biblestudy.install.php</installfile>
   <!-- Deprecated in 1.6 -->
   <uninstallfile>biblestudy.uninstall.php</uninstallfile>
