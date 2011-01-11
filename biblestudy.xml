@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install type="component"
-         version="1.5.0"
+         version="1.6.0"
          method="upgrade">
   <!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
         if it is a new install or an actual upgrade; Normal installs will
@@ -48,6 +48,7 @@
     <folder>helpers</folder>
     <folder>install</folder>
     <folder>lib</folder>
+	<folder>languages</folder>
   </files>
   <!--  Legacy 1.5 Language Support -->
   <!-- Note: Replace this with the actual path to the language file -->
@@ -61,27 +62,27 @@
     <language tag="no-NO">no-NO.com_biblestudy.ini</language>
   </languages>
   <administration>
-    <menu img="../components/com_biblestudy/images/biblemenu.png">COM_BIBLESTUDY</menu>
+    <menu view="cpanel" img="../components/com_biblestudy/images/biblemenu.png">COM_BIBLESTUDY</menu>
     <submenu>
       <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-      <menu link="option=com_biblestudy&amp;view=cpanel">COM_BIBLESTUDY_JBS_MNU_CONTROL_PANEL</menu>
-      <menu link="option=com_biblestudy&amp;view=studieslist">COM_BIBLESTUDY_JBS_MNU_STUDIES</menu>
-      <menu link="option=com_biblestudy&amp;view=mediafileslist">COM_BIBLESTUDY_JBS_MNU_MEDIA_FILES</menu>
-      <menu link="option=com_biblestudy&amp;view=templateslist">COM_BIBLESTUDY_JBS_MNU_TEMPLATE_DISPLAY</menu>
-      <menu link="option=com_biblestudy&amp;view=teacherlist">COM_BIBLESTUDY_JBS_MNU_TEACHERS</menu>
-      <menu link="option=com_biblestudy&amp;view=medialist">COM_BIBLESTUDY_JBS_MNU_MEDIA_IMAGES</menu>
-      <menu link="option=com_biblestudy&amp;view=serieslist">COM_BIBLESTUDY_JBS_MNU_SERIES</menu>
-      <menu link="option=com_biblestudy&amp;view=serverslist">COM_BIBLESTUDY_JBS_MNU_SERVERS</menu>
-      <menu link="option=com_biblestudy&amp;view=folderslist">COM_BIBLESTUDY_JBS_MNU_SERVER_FOLDERS</menu>
-      <menu link="option=com_biblestudy&amp;view=messagetypelist">COM_BIBLESTUDY_JBS_MNU_MESSAGE_TYPES</menu>
-      <menu link="option=com_biblestudy&amp;view=locationslist">COM_BIBLESTUDY_JBS_MNU_LOCATIONS</menu>
-      <menu link="option=com_biblestudy&amp;view=topicslist">COM_BIBLESTUDY_JBS_MNU_TOPICS</menu>
-      <menu link="option=com_biblestudy&amp;view=podcastlist">COM_BIBLESTUDY_JBS_MNU_PODCASTS</menu>
-      <menu link="option=com_biblestudy&amp;view=mimetypelist">COM_BIBLESTUDY_JBS_MNU_MIME_TYPES</menu>
-      <menu link="option=com_biblestudy&amp;view=commentslist">COM_BIBLESTUDY_JBS_MNU_STUDY_COMMENTS</menu>
-      <menu link="option=com_biblestudy&amp;view=sharelist">COM_BIBLESTUDY_JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
+      <menu view="cpanel">COM_BIBLESTUDY_JBS_MNU_CONTROL_PANEL</menu>
+      <menu view="studieslist">COM_BIBLESTUDY_JBS_MNU_STUDIES</menu>
+      <menu view="mediafileslist">COM_BIBLESTUDY_JBS_MNU_MEDIA_FILES</menu>
+      <menu view="templateslist">COM_BIBLESTUDY_JBS_MNU_TEMPLATE_DISPLAY</menu>
+      <menu view="teacherlist">COM_BIBLESTUDY_JBS_MNU_TEACHERS</menu>
+      <menu view="medialist">COM_BIBLESTUDY_JBS_MNU_MEDIA_IMAGES</menu>
+      <menu view="serieslist">COM_BIBLESTUDY_JBS_MNU_SERIES</menu>
+      <menu view="serverslist">COM_BIBLESTUDY_JBS_MNU_SERVERS</menu>
+      <menu view="folderslist">COM_BIBLESTUDY_JBS_MNU_SERVER_FOLDERS</menu>
+      <menu view="messagetypelist">COM_BIBLESTUDY_JBS_MNU_MESSAGE_TYPES</menu>
+      <menu view="locationslist">COM_BIBLESTUDY_JBS_MNU_LOCATIONS</menu>
+      <menu view="topicslist">COM_BIBLESTUDY_JBS_MNU_TOPICS</menu>
+      <menu view="podcastlist">COM_BIBLESTUDY_JBS_MNU_PODCASTS</menu>
+      <menu view="mimetypelist">COM_BIBLESTUDY_JBS_MNU_MIME_TYPES</menu>
+      <menu view="commentslist">COM_BIBLESTUDY_JBS_MNU_STUDY_COMMENTS</menu>
+      <menu view="sharelist">COM_BIBLESTUDY_JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
       <menu link="option=com_biblestudy&amp;view=admin&amp;layout=form">COM_BIBLESTUDY_JBS_MNU_ADMINISTRATION</menu>
-      <menu link="option=com_biblestudy&amp;view=cssedit">COM_BIBLESTUDY_JBS_MNU_CSS_EDIT</menu>
+      <menu view="cssedit">COM_BIBLESTUDY_JBS_MNU_CSS_EDIT</menu>
       <!-- Instead of link you can specify individual link attributes -->
     </submenu>
     <!-- Administration Main File Copy Section -->
