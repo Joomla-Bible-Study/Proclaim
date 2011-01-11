@@ -25,8 +25,8 @@ class JBSUpgrade
             $db->setQuery($query);
             $db->query();
             $oldversion = $db->loadObjectList();
-            if ($oldversion) {$ver = 1; return $ver;}
-            if (!$oldversion){$ver = 2; return $ver;}
+            if ($oldversion) {$ver = 1; }
+            if (!$oldversion){$ver = 2; }
         }
         foreach ($versions AS $version)
         {
@@ -36,8 +36,31 @@ class JBSUpgrade
             {
                 $ver = 3; 
             }
-            return $ver;
+            if ($build == '1390')
+            {
+                $ver = 4;
+            }
         }
+        
+        switch ($ver)
+        {
+            case 1:
+            $message = false;
+            break;
+            
+            case 2:
+            $message = $this->fresh();
+            break;
+            
+            case 3:
+            $message = $this->upgrade();
+            break;
+            
+            case 4:
+            $message = '7.0.0 already installed. Refreshing install.';
+            break;
+        }
+        return $message;
     }
     function upgrade()
     {
@@ -67,7 +90,7 @@ class JBSUpgrade
         $msg[] = ob_get_contents();
         ob_end_clean();
         
-        $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `versiondate`='2011-2-12', `build`='1390', `versionname`='1Kings'";
+        $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-2-12', `build`='1390', `versionname`='1Kings'";
         $msg[] = $this->performdb($query);
         
         $res = '<table><tr><td>Upgrade Joomla Bible Study to version 7.0.0</td></tr>';  //santon 2010-12-28 convert to phrase
@@ -447,7 +470,7 @@ class JBSUpgrade
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ";
     $msg[] = $this->performdb($query);
 
-    $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `versiondate`='2011-2-12', `build`='1390', `versionname`='1Kings'";
+    $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-2-12', `build`='1390', `versionname`='1Kings'";
         $msg[] = $this->performdb($query);
                 
          require(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.install.special.php');
