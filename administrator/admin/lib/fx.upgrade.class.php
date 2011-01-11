@@ -428,6 +428,7 @@ class fx_Upgrade {
         switch($nodeName) {
 				case "phpfile":
 					//include file
+                    /*
                     $fileName = $currentNode->attributes();
 					$include = $this->_upgradeDir .DS . $fileName;
 					$fileCheck = file_exists($include);
@@ -456,8 +457,10 @@ class fx_Upgrade {
 						</tr>
 						<?php
 					}
+                    */
 					break;
 				case "query":
+                /*
                     $query = $currentNode;
 					$biblestudy_db =& JFactory::getDBO();
 
@@ -496,6 +499,7 @@ class fx_Upgrade {
 						<?php
 						}
 					}
+                    */
 					break;
 				case "phpcode":
                     $code = $currentNode;

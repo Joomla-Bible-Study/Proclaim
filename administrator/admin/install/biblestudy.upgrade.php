@@ -7,7 +7,7 @@
 
 defined( '_JEXEC' ) or die('Restricted access');
 require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
-$this->database = JFactory::getDBO();
+//$this->db = JFactory::getDBO();
 class JBSUpgrade
 {
 
@@ -17,8 +17,8 @@ class JBSUpgrade
         $query = 'SELECT * FROM #__bsms_version';
         $db->setQuery($query);
         $db->query();
-        $version = $db->loadObject();
-        if (!$version)
+        $versions = $db->loadObjectList();
+        if (!$versions)
         {
             //check to be sure a really early version is not installed 1 = older version 2 = no version 3 = correct version
             $query = "SELECT * FROM #__bsms_studies";
@@ -28,13 +28,16 @@ class JBSUpgrade
             if ($oldversion) {$ver = 1; return $ver;}
             if (!$oldversion){$ver = 2; return $ver;}
         }
-        $build = $version->build;
-        if ($build < 624){$ver = 1; return $ver;}
-        if ($build == '624')
+        foreach ($versions AS $version)
         {
-            $ver = 3; return $ver;
+            $build = $version->build;
+            $ver = 1; 
+            if ($build == '614')
+            {
+                $ver = 3; 
+            }
+            return $ver;
         }
-        
     }
     function upgrade()
     {
@@ -46,9 +49,16 @@ class JBSUpgrade
         $msg[] = $this->performdb($query);
         $query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN `popup` int(2) NULL";
         $msg[] = $this->performdb($query);
-        $query = "ALTER TABLE #__bsms_timeset ADD COLUMN `backup` VARCHAR(14)";
+        $query = "DROP TABLE #__bsms_timeset";
         $msg[] = $this->performdb($query);
-        $query = "INSERT INTO `#__bsms_timeset` SET `backup`='1281646339'";
+        $query = "CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
+                    `timeset` VARCHAR(14) ,
+                    `backup` VARCHAR(14) ,
+                    KEY `timeset` (`timeset`)
+                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
+         $msg[] = $this->performdb($query);
+        
+        $query = "INSERT INTO `#__bsms_timeset` SET `timeset`='1281646339', `backup` = '1281646339'";
         $msg[] = $this->performdb($query);
         
         //Run the 700 upgrade php file
@@ -56,6 +66,9 @@ class JBSUpgrade
         ob_start();
         $msg[] = ob_get_contents();
         ob_end_clean();
+        
+        $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `versiondate`='2011-2-12', `build`='1390', `versionname`='1Kings'";
+        $msg[] = $this->performdb($query);
         
         $res = '<table><tr><td>Upgrade Joomla Bible Study to version 7.0.0</td></tr>';  //santon 2010-12-28 convert to phrase
         if (count($msg) < 1){$res .= JText::_('JBS_INS_NO_ERROR');}
@@ -364,12 +377,10 @@ class JBSUpgrade
          
          //Load up the default values
          
-         $query = "INSERT INTO `#__bsms_timeset` SET `timeset`='1281646339'";
+         $query = "INSERT INTO `#__bsms_timeset` SET `timeset`='1281646339', `backup` = '1281646339'";
          $msg[] = $this->performdb($query);
                 
-        $query = "INSERT INTO `#__bsms_timeset` SET `backup`='1281646339'";
-         $msg[] = $this->performdb($query);
-         
+               
          $query = "INSERT INTO `#__bsms_studies` SET `studydate`='2010-03-13 00:10:00', `teacher_id`=1, `studynumber`='2010-001', `booknumber`='101', `chapter_begin`='01', `verse_begin`='01', `chapter_end`='01', `verse_end`='31', `studytitle`='Sample Study Title', `studyintro`='Sample text you can use as an introduction to your study', `studytext`='This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com'";
          $msg[] = $this->performdb($query);
          
@@ -409,8 +420,10 @@ class JBSUpgrade
          $query = "INSERT INTO `#__bsms_mediafiles` VALUES (NULL, 1, 2, 1, 1, '','myfile.mp3', 12332, 1, 1, 0, '', 0, '2009-09-13 00:10:00', 1,'',1,0,0,'',0,0,0,'',1,1)";
          $msg[] = $this->performdb($query);
          
-         $query = "INSERT INTO `#__bsms_admin` VALUES (1, '', '', '', '', 'speaker24.png', 'download.png', 'openbible.png', '0', 'compat_mode=0 drop_tables=0 admin_store=1 studylistlimit=10 popular_limit=1 series_imagefolder= media_imagefolder= teachers_imagefolder= study_images= podcast_imagefolder= location_id= teacher_id= series_id= booknumber= topic_id= messagetype= avr=0 download= target= server= path= podcast=0 mime=0 allow_entry_study=0 entry_access=23 study_publish=0 socialnetworking=1')</query>
-<query>INSERT INTO `#__bsms_teachers` VALUES (NULL,'','', 'Billy Sunday','Pastor','555-555-5555','billy@sunday.com','http://billysunday.com','William Ashley Sunday was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ','components/com_biblestudy/images/billy_sunday11.jpg','276','197','components/com_biblestudy/images/images.jpg','101','141','Billy Sunday: 1862-1935',0,1,1,1)";
+         $query = "INSERT INTO `#__bsms_admin` VALUES (1, '', '', '', '', 'speaker24.png', 'download.png', 'openbible.png', '0', 'compat_mode=0 drop_tables=0 admin_store=1 studylistlimit=10 popular_limit=1 series_imagefolder= media_imagefolder= teachers_imagefolder= study_images= podcast_imagefolder= location_id= teacher_id= series_id= booknumber= topic_id= messagetype= avr=0 download= target= server= path= podcast=0 mime=0 allow_entry_study=0 entry_access=23 study_publish=0 socialnetworking=1')";
+         $msg[] = $this->performdb($query);
+         
+         $query = "INSERT INTO `#__bsms_teachers` VALUES (NULL,'','', 'Billy Sunday','Pastor','555-555-5555','billy@sunday.com','http://billysunday.com','William Ashley Sunday was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ','components/com_biblestudy/images/billy_sunday11.jpg','276','197','components/com_biblestudy/images/images.jpg','101','141','Billy Sunday: 1862-1935',0,1,1,1)";
          $msg[] = $this->performdb($query);
          
           $query = "INSERT INTO `#__bsms_share` (`id`, `name`, `params`, `published`) VALUES 
@@ -422,7 +435,21 @@ class JBSUpgrade
          
          $query = "INSERT INTO `#__bsms_templates` VALUES (1, 'tmplList', '', 1, 'itemslimit=10\n compatibilityMode=0\n studieslisttemplateid=1\n detailstemplateid=1\n teachertemplateid=1\n serieslisttemplateid=1\n seriesdetailtemplateid=1\n teacher_id=\n show_teacher_list=0\n series_id=0\n booknumber=0\n topic_id=0\n messagetype=0\n locations=0\n default_order=DESC\n show_page_image=1\n tooltip=1\n show_verses=0\n stylesheet=\n date_format=2\n duration_type=1\n useavr=0\n popuptype=window\n media_player=0\n player_width=290\n show_filesize=1\n store_page=flypage.tpl\n show_page_title=1\n page_title=Bible\n Studies\n use_headers_list=1\n list_intro=\n intro_show=1\n listteachers=1\n teacherlink=1\n details_text=Study\n Details\n show_book_search=1\n show_teacher_search=1\n show_series_search=1\n show_type_search=1\n show_year_search=1\n show_order_search=1\n show_topic_search=1\n show_locations_search=1\n show_popular=1\n tip_title=Sermon\n Information\n tip_item1_title=Title\n tip_item1=5\n tip_item2_title=Details\n tip_item2=6\n tip_item3_title=Teacher\n tip_item3=7\n tip_item4_title=Reference\n tip_item4=1\n tip_item5_title=Date\n tip_item5=10\n row1col1=18\n r1c1custom=\n r1c1span=1\n rowspanr1c1=1\n linkr1c1=0\n row1col2=5\n r1c2custom=\n r1c2span=1\n rowspanr1c2=1\n linkr1c2=1\n row1col3=1\n r1c3custom=\n r1c3span=1\n rowspanr1c3=1\n linkr1c3=0\n row1col4=20\n r1c4custom=\n rowspanr1c4=1\n linkr1c4=0\n row2col1=6\n r2c1custom=\n r2c1span=4\n rowspanr2c1=1\n linkr2c1=0\n row2col2=0\n r2c2custom=\n r2c2span=1\n rowspanr2c2=1\n linkr2c2=0\n row2col3=0\n r2c3custom=\n r2c3span=1\n rowspanr2c3=1\n linkr2c3=0\n row2col4=0\n r2c4custom=\n rowspanr2c4=1\n linkr2c4=0\n row3col1=0\n r3c1custom=\n r3c1span=1\n rowspanr3c1=1\n linkr3c1=0\n row3col2=0\n r3c2custom=\n r3c2span=1\n linkr3c2=0\n row3col3=0\n r3c3custom=\n r3c3span=1\n rowspanr3c3=1\n linkr3c3=0\n row3col4=0\n r3c4custom=\n rowspanr3c4=1\n linkr3c4=0\n row4col1=0\n r4c1custom=\n r4c1span=1\n rowspanr4c1=1\n linkr4c1=0\n row4col2=0\n r4c2custom=\n r4c2span=1\n rowspanr4c2=1\n linkr4c2=0\n row4col3=0\n r4c3custom=\n r4c3span=1\n rowspanr4c3=1\n linkr4c3=0\n row4col4=0\n r4c4custom=\n rowspanr4c4=1\n linkr4c4=0\n show_print_view=1\n show_pdf_view=1\n show_teacher_view=1\n show_passage_view=1\n use_headers_view=1\n list_items_view=0\n title_line_1=1\n customtitle1=\n title_line_2=4\n customtitle2=\n view_link=1\n link_text=Return\n to\n Studies\n List\n show_scripture_link=1\n show_comments=0\n comment_access=1\n comment_publish=0\n use_captcha=1\n email_comments=1\n recipient=\n subject=Comments\n on\n studies\n body=Comments\n entered.\n moduleitems=3\n teacher_title=Our\n Teachers\n show_teacher_studies=1\n teacherlink=1\n studies=5\n label_teacher=Latest\n Messages\n series_title=Our\n Series\n show_series_title=1\n show_page_image_series=1\n series_show_description=1\n series_characters=\n search_series=1\n series_limit=5\n serieselement1=1\n seriesislink1=1\n serieselement2=1\n seriesislink2=1\n serieselement3=1\n seriesislink3=1\n serieselement4=1\n seriesislink4=1\n series_detail_sort=1\n series_detail_order=DESC\n series_detail_show_link=1\n series_detail_limit=\n series_list_return=1\n series_detail_1=5\n series_detail_islink1=1\n series_detail_2=7\n series_detail_islink2=0\n series_detail_3=10\n series_detail_islink3=0\n series_detail_4=20\n series_detail_islink4=0', 'Default','textfile24.png','pdf24.png')";
          $msg[] = $this->performdb($query);
-         
+ 
+     $query = "CREATE TABLE IF NOT EXISTS `jos_bsms_version` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `version` varchar(20) NOT NULL,
+      `versiondate` date NOT NULL,
+      `installdate` date NOT NULL,
+      `build` varchar(20) NOT NULL,
+      `versionname` varchar(40) DEFAULT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ";
+    $msg[] = $this->performdb($query);
+
+    $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `versiondate`='2011-2-12', `build`='1390', `versionname`='1Kings'";
+        $msg[] = $this->performdb($query);
+                
          require(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.install.special.php');
         ob_start();
         $msg[] = ob_get_contents();
@@ -433,13 +460,13 @@ class JBSUpgrade
         else
         {
             
-            $r = 'Results: <br />';
+            $r .= 'Results: <br />';
             foreach ($msg AS $m)
             {
                 $r .= $m.'<br />';
             }
         }
-        $result_table = '<tr>
+        $result_table .= '<tr>
         		<td>
         			'.$res.$r.'
         		</td>
@@ -453,9 +480,10 @@ class JBSUpgrade
     
     function performdb($query=null)
     {
+        $db = JFactory::getDBO();
         $results = '';
         if (!$query){$results = "Error. No query found"; return $results;}
-        $db = &$this->database;
+        //$db = &$this->database;
         $db->setQuery($query);
         $db->query();
         if ($db->getErrorNum() > 0)

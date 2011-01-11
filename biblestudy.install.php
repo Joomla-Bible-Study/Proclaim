@@ -129,9 +129,9 @@ function com_install()
 	{				
 	//install & upgrade class
     
-//	$bsmsupgrade = new fx_Upgrade("com_biblestudy", "biblestudy.install.upgrade.xml", "bsms_", "install", false);
+	$bsmsupgrade = new fx_Upgrade("com_biblestudy", "biblestudy.install.upgrade.xml", "bsms_", "install", false);
 	// Start Installation/Upgrade
-//	$bsmsupgrade->doUpgrade();
+	$bsmsupgrade->doUpgrade();
 	
 	//Check for presence of css or backup
     jimport('joomla.filesystem.file');
@@ -199,7 +199,7 @@ function com_install()
 		<td width="80%" valign="top" style="padding: 10px;">
 		<div
 			style="border: 1px solid #FFCC99; background: #FFFFCC; padding: 20px; margin: 20px; clear: both;">
-		<strong>I N S T A L L : <font color="red">F A I L E D - Minimum Version Requirements not satisfied</font> </strong>
+		<strong>I N S T A L L : <font color="red">F A I L E D - Minimum Version Requirements not satisfied. Joomla Bible Study 6.2.4 minimum</font> </strong>
 		<br />
 		<br />
 		<strong>php version: <font color="<?php echo version_compare(phpversion(), BIBLESTUDY_MIN_PHP, '>=')?'green':'red'; ?>"><?php echo phpversion(); ?></font> (Required &gt;= <?php echo BIBLESTUDY_MIN_PHP; ?>)</strong>

@@ -25,8 +25,20 @@ class biblestudyViewstudieslist extends JView {
         $this->messageTypes = $this->get('MessageTypes');
         $this->years = $this->get('Years');
         $this->topics = $this->get('Topics');
-
         $this->addToolbar();
+        
+        //test code begin
+        $db = JFactory::getDBO();
+        $query = "SELECT * FROM #__bsms_version";
+        $db->setQuery($query);
+        $db->query();
+        $versions = $db->loadObjectList();
+        foreach ($versions AS $version)
+        {
+            $build = $version->build;
+            echo $build.'<br />';
+        } 
+        //test code end
         parent::display($tpl);
 
     }
