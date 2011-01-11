@@ -28,20 +28,22 @@ class JBSUpgrade
             if ($oldversion) {$ver = 1; }
             if (!$oldversion){$ver = 2; }
         }
-        foreach ($versions AS $version)
+        else
         {
-            $build = $version->build;
-            $ver = 1; 
-            if ($build == '614')
+            foreach ($versions AS $version)
             {
-                $ver = 3; 
-            }
-            if ($build == '1390')
-            {
-                $ver = 4;
+                $build = $version->build;
+                $ver = 1; 
+                if ($build == '614')
+                {
+                    $ver = 3; 
+                }
+                if ($build > 614)
+                {
+                    $ver = 4;
+                }
             }
         }
-        
         switch ($ver)
         {
             case 1:
@@ -98,7 +100,7 @@ class JBSUpgrade
         else
         {
             
-            $r = 'Errors: <br />';
+            $r = 'Queries or Errors: <br />';
             foreach ($msg AS $m)
             {
                 $r .= $m.'<br />';

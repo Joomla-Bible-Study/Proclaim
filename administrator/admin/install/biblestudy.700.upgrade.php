@@ -121,16 +121,12 @@ else
 }
 $result_table = '<tr>
 		<td>
-			<div id="id_1" onClick="javascript:showDetail(this);" style="cursor:pointer;">
-				<img id="__img" src="images/expandall.png" border="0">
-				Including PHP File
-			</div>
-			<div id=id_1_details" style="display:None;" class="details">'.$res.$r.'</div>
+			'.$res.$r.'
 		</td>
-		<td width="20" valign="top"><img src="images/collapseall.png" border="0"></td>
+		
 	</tr>';
 
 
-$result_table .= '</td></tr></table>';
-echo $result_table;
+$result_table .= '</table>';
+return $result_table;
 ?>

@@ -4,7 +4,7 @@
  * Bible Study Component
  * @package Bible Study
  *
- * @Copyright (C) 2007 - 2010 Joomla Bible Study Team All rights reserved
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  *
@@ -49,17 +49,54 @@ include_once(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.upgrade.php');
 // Install Bible Study Component
 function com_install()
 {
-	$biblestudy_db = JFactory::getDBO();
-	// Determine MySQL version from phpinfo
-//	$biblestudy_db->setQuery("SELECT VERSION() as mysql_version");
-//	$mysqlversion = $biblestudy_db->loadResult();
+    $application = JFactory::getApplication();
+	?>
+<script type="text/javascript" language="JavaScript">
+function HideContent(d) {
+document.getElementById(d).style.display = "none";
+}
+function ShowContent(d) {
+document.getElementById(d).style.display = "block";
+}
+function ReverseDisplay(d) {
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+</script>
+<?php
+    $biblestudy_db = JFactory::getDBO();
+	
     $jbsupgrade = new JBSUpgrade();
     //Check to be sure JBS is the correct version for upgrade
     $message = $jbsupgrade->version();
-  //  if (!message) {$doupgrade = false;}else {$doupgrade = true;}
-	
-	
-?><div><table><tr><td><?php	
+  
+if (!$message)
+{
+    $application->enqueueMessage( JText::_( 'Joomla Bible Study version 6.2.4 required as minimum for install of 7.0.0' )) ;
+    return false;
+}	
+if ($message)
+{	
+?>
+<div style="border: 1px solid #ccc; background: #FBFBFB; padding: 10px; text-align: left; margin: 10px 0;">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" summary="">
+	<tr>
+		<td width="10%" valign="top" style="padding: 10px;"><a
+			href="index2.php?option=com_biblestudy"><img
+			src="components/com_biblestudy/images/openbible.png" alt="Bible Study"
+			border="0"></a></td>
+		<td width="90%" valign="top" style="padding: 10px;">
+		<div
+			style="border: 1px solid #FFCC99; background: #FFFFCC; padding: 20px; margin: 20px; clear: both;">
+		<strong>I N S T A L L : <font color="green">Successful</font> </strong>
+		<br />
+		
+		</div>
+        <strong><a class="heading" href="javascript:ReverseDisplay('message')">>>
+        <?php echo JText::_('JBS_CMN_SHOW_HIDE_RESULTS');?><<</a>
+        <div id="message" style="display:none;"></strong>
+        <?php echo $messsage;?>
+        <table><tr><td><?php	
 	//Check for presence of css or backup
     jimport('joomla.filesystem.file');
     $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
@@ -87,59 +124,16 @@ function com_install()
         }
     }    
     }
-	?></td><tr></table></div>
-<div style="border: 1px solid #ccc; background: #FBFBFB; padding: 10px; text-align: left; margin: 10px 0;">
-<table width="100%" border="0" cellpadding="0" cellspacing="0" summary="">
-	<tr>
-		<td width="10%" valign="top" style="padding: 10px;"><a
-			href="index2.php?option=com_biblestudy"><img
-			src="components/com_biblestudy/images/openbible.png" alt="Bible Study"
-			border="0"></a></td>
-		<td width="90%" valign="top" style="padding: 10px;">
-		<div
-			style="border: 1px solid #FFCC99; background: #FFFFCC; padding: 20px; margin: 20px; clear: both;">
-		<strong>I N S T A L L : <font color="green">Successful</font> </strong>
-		<br />
-		<br />
-		<strong>php version: <font color="green"><?php echo phpversion(); ?></font> (Required &gt;= <?php echo BIBLESTUDY_MIN_PHP; ?>)</strong>
-		<br />
-		<strong>mysql version: <font color="green"><?php echo $mysqlversion; ?></font> (Required &gt; <?php echo BIBLESTUDY_MIN_MYSQL; ?>)</strong>
-		</div>
-        <div><?php echo $messsage;?></div>
+	?></td><tr></table>
+        </div>
 		</td>
 	</tr>
 	</table>
 </div>
 <?php
-	
+} // end if $message	
 
-		// Minimum version requirements not satisfied
-		
-if (!$message)
-{ 
-?>
-<div style="border: 1px solid #ccc; background: #FBFBFB; padding: 10px; text-align: left; margin: 10px 0;">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width="20%" valign="top" style="padding: 10px;"><a
-			href="index2.php?option=com_biblestudy"><img
-			src="components/com_biblestudy/images/openbible.png" alt="Bible Study Management System"
-			border="0"></a></td>
-		<td width="80%" valign="top" style="padding: 10px;"></div>
-		<div
-			style="border: 1px solid #FFCC99; background: #FFFFCC; padding: 20px; margin: 20px; clear: both;">
-		<strong>I N S T A L L : <font color="red">F A I L E D - Minimum Version Requirements not satisfied. Joomla Bible Study 6.2.4 minimum</font> </strong>
-		<br />
-		<br />
-		<strong>php version: <font color="<?php echo version_compare(phpversion(), BIBLESTUDY_MIN_PHP, '>=')?'green':'red'; ?>"><?php echo phpversion(); ?></font> (Required &gt;= <?php echo BIBLESTUDY_MIN_PHP; ?>)</strong>
-		<br />
-		<strong>mysql version: <font color="<?php echo version_compare($mysqlversion, BIBLESTUDY_MIN_MYSQL, '>')?'green':'red'; ?>"><?php echo $mysqlversion; ?></font> (Required &gt; <?php echo BIBLESTUDY_MIN_MYSQL; ?>)</strong>
-		</td>
-	</tr>
-</table>
- 	</div>
-<?php
-}	  
+	
 	// Rest of footer
 ?>
 <div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">

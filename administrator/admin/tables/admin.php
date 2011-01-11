@@ -78,6 +78,11 @@ class Tableadmin extends JTable
 	{
 
 		// Attempt to store the user data.
+        $oldrow = JTable::getInstance('admin', 'Table');
+			if (!$oldrow->load($this->id) && $oldrow->getError())
+			{
+				$this->setError($oldrow->getError());
+			}
 		return parent::store($updateNulls);
 	}
 
