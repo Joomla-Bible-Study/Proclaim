@@ -10,11 +10,19 @@ defined('_JEXEC') or die();
 
 //Joomla 1.6 <-> 1.5 Branch
 try {
-	jimport('joomla.application.component.modeladmin');
-	abstract class modelClass extends JModelAdmin{}
-}catch(Exception $e){
-	jimport('joomla.application.component.model');
-	abstract class modelClass extends JModel{}
+    jimport('joomla.application.component.modeladmin');
+
+    abstract class modelClass extends JModelAdmin {
+        
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.model');
+
+    abstract class modelClass extends JModel {
+        
+    }
+
 }
 
 class biblestudyModeltemplateedit extends modelClass {
@@ -144,6 +152,35 @@ class biblestudyModeltemplateedit extends modelClass {
 			}
 		}
 	}
+ /**
+     * Get the form data
+     *
+     * @param <Array> $data
+     * @param <Boolean> $loadData
+     * @return <type>
+     * @since 7.0
+     */
+    public function getForm($data = array(), $loadData = true) {
+        // Get the form.
+        $form = $this->loadForm('com_biblestudy.templateedit', 'templateedit', array('control' => 'jform', 'load_data' => $loadData));
+        if (empty($form)) {
+            return false;
+        }
 
+        return $form;
+    }
+
+    /**
+     *
+     * @return <type>
+     * @since   7.0
+     */
+    protected function loadFormData() {
+        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.templateedit.data', array());
+        if (empty($data))
+            $data = $this->getItem();
+
+        return $data;
+    }
 }
 ?>

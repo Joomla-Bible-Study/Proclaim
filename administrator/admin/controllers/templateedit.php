@@ -25,9 +25,8 @@ try {
     }
 
 }
-
-class biblestudyControllertemplateedit extends controllerForm {
-
+class biblestudyControllertemplateedit extends controllerClass {
+protected $view_list = 'templateslist';
 	function __construct() {
 		parent::__construct();
 

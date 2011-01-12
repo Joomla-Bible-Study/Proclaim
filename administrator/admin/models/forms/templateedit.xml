@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="TEMPLATES"
+          addurl="/administrator/components/com_biblestudy/elements">
+            <field name="studieslisttemplateid"
+                   type="studieslisttemplateid"
+                   default=""
+                   label="JBS_TPL_TEMPLATE_STUDIES_LIST"
+                   description="JBS_TPL_TEMPLATE_STUDIES_LIST_TT" />
+            <field name="detailstemplateid"
+                   type="detailstemplateid"
+                   default=""
+                   label="JBS_TPL_TEMPLATE_STUDY_DETAIL"
+                   description="JBS_TPL_TEMPLATE_STUDY_DETAIL_TT" />
+            <field name="teachertemplateid"
+                   type="teachertemplateid"
+                   default=""
+                   label="JBS_TPL_TEMPLATE_TEACHER"
+                   description="JBS_TPL_TEMPLATE_TEACHER_TT" />
+            <field name="serieslisttemplateid"
+                   type="serieslisttemplateid"
+                   default=""
+                   label="JBS_TPL_TEMPLATE_SERIES_LIST"
+                   description="JBS_TPL_TEMPLATE_SERIES_LIST_TT" />
+            <field name="seriesdetailtemplateid"
+                   type="seriesdetailtemplateid"
+                   default=""
+                   label="JBS_TPL_TEMPLATE_SERIES_DETAIL"
+                   description="JBS_TPL_TEMPLATE_SERIES_DETAIL_TT" />
+        </fieldset>
+    </fields>
+</form>

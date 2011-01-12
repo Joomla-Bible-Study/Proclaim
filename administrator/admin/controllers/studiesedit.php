@@ -26,7 +26,7 @@ try {
 
 }
 
-class biblestudyControllerstudiesedit extends controllerForm {
+class biblestudyControllerstudiesedit extends controllerClass {
     /*
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
      *
