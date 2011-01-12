@@ -1,44 +1,19 @@
 <?php
-defined('_JEXEC') or die('Restricted Access');
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 
-jimport('joomla.application.component.view');
-class biblestudyViewtemplateedit extends JView {
-	function display() {
-		//Get template if editing
-		$template = $this->get('template');
-		if(empty($template->id)) {
-			JToolbarHelper::title(JText::_('JBS_TPL_CREATE_TEMPLATE'), 'templates.png');
-		}else{
-			JToolbarHelper::title(JText::_('JBS_TPL_EDIT_TEMPLATE'), 'templates.png');
-		}
-		JToolbarHelper::save();
-		JToolbarHelper::apply();
-		JToolbarHelper::cancel();
-		JToolBarHelper::help('biblestudy', true );
-		$lists = array();
-		//Load the template params from its row and assign to $this
-		$paramsdata = $template->params;
-		$paramsdefs = JPATH_COMPONENT.DS.'models'.DS.'templateedit.xml';
-		$params = new JParameter($paramsdata, $paramsdefs);
-		$this->assignRef('params', $params);
-		$data['published'] = JHTML::_('select.booleanlist', 'published', 'class="inputbox"', $template->published);
+//No Direct Access
+defined('_JEXEC') or die();
 
-		$this->assignRef('template', $template);
-		$this->assignRef('data', $data);
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 
-		//create the list for the text image
-		$javascript			= 'onchange="changeDisplayImage();"';
-		$directory			= 'components/com_biblestudy/images';
-		$lists['text']	= JHTML::_('list.images',  'text', $template->text, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
-		
-		
-		$lists['pdf']	= JHTML::_('list.images',  'pdf', $template->pdf, $javascript, $directory, "bmp|gif|jpg|png|swf"  );
-		
-		//Include the Jquery Library and Plugins
-		$document =& JFactory::getDocument();
-        $document->addStyleSheet(JURI::base().'components/com_biblestudy/css/icons.css');
-		$this->assignRef('lists', $lists);
-		parent::display();
-	}
-}
+//Branch the JView based on the joomla version
+if(JOOMLA_VERSION == 6)
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'templateedit'.DS.'viewj16.html.php');
+else
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'templateedit'.DS.'viewj15.html.php');
+
 ?>
