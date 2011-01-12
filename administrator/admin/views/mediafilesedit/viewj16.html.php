@@ -9,7 +9,6 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
-jimport('joomla.i18n.help');
 
 class biblestudyViewmediafilesedit extends JView {
 

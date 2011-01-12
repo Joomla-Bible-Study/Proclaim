@@ -26,9 +26,9 @@ try {
 
 }
 
-class biblestudyControllerMediafileslist extends controllerClass
-{
-        /**
+class biblestudyControllerMediafileslist extends controllerClass {
+
+    /**
      * Proxy for getModel
      *
      * @param <String> $name    The name of the model
@@ -37,9 +37,9 @@ class biblestudyControllerMediafileslist extends controllerClass
      *
      * @since 7.0
      */
-    public function &getModel($name = 'mediafilesedit', $prefix = 'biblestudyModel')
-    {
+    public function &getModel($name = 'mediafilesedit', $prefix = 'biblestudyModel') {
         $model = parent::getModel($name, $prefix, array('ignore_request' => true));
         return $model;
     }
+
 }

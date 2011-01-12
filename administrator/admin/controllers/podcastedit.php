@@ -28,7 +28,9 @@ try {
 
 class biblestudyControllerpodcastedit extends controllerClass
 {
- /**
+    protected $view_list = 'podcastlist';
+
+    /**
  * constructor (registers additional tasks to methods)
  * @return void
  */
@@ -45,7 +47,7 @@ class biblestudyControllerpodcastedit extends controllerClass
  * display the edit form
  * @return void
  */
- function edit()
+ function legacyEdit()
  {
   JRequest::setVar( 'view', 'podcastedit' );
   JRequest::setVar( 'layout', 'form' );
@@ -58,7 +60,7 @@ class biblestudyControllerpodcastedit extends controllerClass
  * save a record (and redirect to main page)
  * @return void
  */
- function save()
+ function legtacySave()
  {
   $model = $this->getModel('podcastedit');
 
@@ -77,7 +79,7 @@ class biblestudyControllerpodcastedit extends controllerClass
 	 * apply a record
 	 * @return void
 	 */
-	function apply()
+	function legacyApply()
 	{
 		$model = $this->getModel('podcastedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
@@ -96,7 +98,7 @@ class biblestudyControllerpodcastedit extends controllerClass
  * remove record(s)
  * @return void
  */
- function remove()
+ function legacyRemove()
  {
   $model = $this->getModel('podcastedit');
   if(!$model->delete()) {
@@ -107,7 +109,7 @@ class biblestudyControllerpodcastedit extends controllerClass
 
   $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
  }
-function publish()
+function legacyPublish()
  {
   $mainframe =& JFactory::getApplication();
 
@@ -126,7 +128,7 @@ function publish()
  }
 
 
- function unpublish()
+ function legacyUnpublish()
  {
   $mainframe =& JFactory::getApplication();
 
@@ -147,7 +149,7 @@ function publish()
  * cancel editing a record
  * @return void
  */
- function cancel()
+ function legacyCancel()
  {
   $msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
   $this->setRedirect( 'index.php?option=com_biblestudy&view=podcastlist', $msg );
