@@ -170,6 +170,9 @@ class biblestudyModeltemplateedit extends modelClass {
         return $form;
     }
 
+ public function getItem($pk = null) {
+        return parent::getItem($pk);
+    }
     /**
      *
      * @return <type>

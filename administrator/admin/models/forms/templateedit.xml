@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fields name="fields">
+
     <fieldset name="GENERAL">
             <field name="itemslimit"
                    type="text"
@@ -9,7 +9,7 @@
                    label="JBS_TPL_ITEMSLIMIT"
                    description="JBS_TPL_ITEMSLIMIT_TT" />
     </fieldset>
-        <fieldset name="TEMPLATES">
+        <fieldset name="TEMPLATES" >
             <field name="studieslisttemplateid"
                    type="sql"
                    default=""
@@ -61,7 +61,7 @@
                    required="true"
             />
         </fieldset>
-        <fieldset name="FILTERS">
+        <fieldset name="FILTERS" >
             <field name="teacher_id"
                    type="sql"
                    sql="SELECT * FROM #__bsms_teachers WHERE published = &#39;1&#39;"
@@ -160,8 +160,8 @@
               <option value="0">JBS_CMN_HIDE</option>
               <option value="1">JBS_CMN_SHOW</option>
             </field>
-          </fields>
-          <fields group="VERSES">
+          </fieldset>
+          <fieldset name="VERSES">
             <field name="show_verses"
                    type="list"
                    default="0"
@@ -324,7 +324,7 @@
                    description="JBS_TPL_MEDIA_STORE_PAGE_TT"
                    size="60" />
         </fieldset>
-        <fieldset group="STUDIESVIEW"  />
+        <fieldset name="STUDIESVIEW">
             <field name="useexpert_list"
                    type="list"
                    default="0"
@@ -338,7 +338,7 @@
                    rows="10"
                    cols="100"
                    label="JBS_TPL_HEADERCODE"
-                   description="JBS_TPL_HEADERCODE_TT">
+                   description="JBS_TPL_HEADERCODE_TT" />
             </field>
             <field name="templatecode"
                    type="textarea"
@@ -358,7 +358,7 @@
           &lt;/tbody&gt;
         &lt;/table&gt;"
                    label="JBS_TPL_TEMPLATECODE"
-                   description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_TT">
+                   description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_TT" />
             </field>
             <field name="wrapcode"
                    type="radio"
@@ -368,7 +368,7 @@
               <option value="T">JBS_TPL_TABLE</option>
               <option value="D">JBS_TPL_DIV</option>
             </field>
-          </fields>
+          </fieldset>
           <fieldset name="LISTITEMS">
             <field name="show_page_title"
                    type="list"
@@ -534,9 +534,8 @@
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT"
-           multiple="false">
-    </field>
-    <field name="r1c1custom"
+           multiple="false" />
+   <field name="r1c1custom"
            type="text"
            size="100"
            default=""
@@ -556,14 +555,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-     </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row1col2"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r1c2custom"
            type="text"
            size="100"
@@ -575,20 +572,17 @@
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
-     </field>
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT" />
     <field name="linkr1c2"
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row1col3"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r1c3custom"
            type="text"
            size="100"
@@ -608,15 +602,13 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row1col4"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
-    <field name="r1c4custom"
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
+     <field name="r1c4custom"
            type="text"
            size="100"
            default=""
@@ -626,16 +618,14 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
   </fieldset>
   <fieldset name="ROW2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
   <field name="row2col1"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r2c1custom"
            type="text"
            size="100"
@@ -647,7 +637,7 @@
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT" />
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -657,14 +647,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row2col2"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r2c2custom"
            type="text"
            size="100"
@@ -676,7 +664,7 @@
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT" />
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS2TO4</option>
@@ -685,14 +673,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row2col3"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r2c3custom"
            type="text"
            size="100"
@@ -712,14 +698,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row2col4"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r2c4custom"
            type="text"
            size="100"
@@ -730,16 +714,14 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
   </fieldset>
   <fieldset name="ROW3" addfieldpath="/administrator/components/com_biblestudy/models/fields">
    <field name="row3col1"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r3c1custom"
            type="text"
            size="100"
@@ -761,14 +743,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row3col2"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r3c2custom"
            type="text"
            size="100"
@@ -789,14 +769,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row3col3"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r3c3custom"
            type="text"
            size="100"
@@ -816,14 +794,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row3col4"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r3c4custom"
            type="text"
            size="100"
@@ -834,16 +810,14 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
   </fieldset>
   <fieldset name="ROW4" addfieldpath="/administrator/components/com_biblestudy/models/fields">
   <field name="row4col1"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r4c1custom"
            type="text"
            size="100"
@@ -865,14 +839,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row4col2"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r4c2custom"
            type="text"
            size="100"
@@ -893,14 +865,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row4col3"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r4c3custom"
            type="text"
            size="100"
@@ -920,14 +890,12 @@
            type="link"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="row4col4"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="r4c4custom"
            type="text"
            size="100"
@@ -938,8 +906,7 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
   </fieldset>
   <fieldset name="DETAILS">
   <field name="show_print_view"
@@ -1053,7 +1020,7 @@
            default=""
            size="10"
            label="JBS_TPL_DETAILS_SHOW_COMMENTS"
-           description="JBS_TPL_DETAILS_SHOW_COMMENTS_TT" />
+           description="JBS_TPL_DETAILS_SHOW_COMMENTS_TT">
      <field name="link_comments"
     	     default="0"
     	     type="list"
@@ -1125,7 +1092,6 @@
            description="JBS_TPL_DETAILS_TEMPLATECODE_TT" />
   </fieldset>
   <fieldset name="TEACHER">
-  <fields group="TEACHER">
     <field name="teacher_title"
            type="text"
            default="Our Teachers"
@@ -1172,7 +1138,7 @@
            rows="10"
            cols="100"
            label="JBS_TPL_HEADERCODE"
-           description="JBS_TPL_HEADERCODE_TT"></field>
+           description="JBS_TPL_HEADERCODE_TT" />
     <field name="teacher_templatecode"
            type="textarea"
            rows="10"
@@ -1191,7 +1157,7 @@
   &lt;/tbody&gt;
 &lt;/table&gt;"
            label="JBS_TPL_TEACHERLIST_TEMPLATECODE"
-           description="JBS_TPL_TEACHER_TEMPLATECODE_TT"></field>
+           description="JBS_TPL_TEACHER_TEMPLATECODE_TT" />
     <field name="teacher_wrapcode"
            type="radio"
            default="0"
@@ -1226,9 +1192,9 @@
   &lt;/tbody&gt;
 &lt;/table&gt;"
            label="JBS_TPL_TEACHERDETAIL_TEMPLATECODE"
-           description="JBS_TPL_TEACHER_TEMPLATECODE_TT"></field>
+           description="JBS_TPL_TEACHER_TEMPLATECODE_TT" />
   </fieldset>
-  <fieldset name="SERIES" />
+  <fieldset name="SERIES">
    <field name="series_title"
            default="Our Series"
            type="text"
@@ -1399,15 +1365,14 @@
            rows="10"
            cols="100"
            label="JBS_TPL_HEADERCODE"
-           description="JBS_TPL_HEADERCODE_TT">
-    </field>
+           description="JBS_TPL_HEADERCODE_TT" />
     <field name="series_templatecode"
            type="textarea"
            rows="10"
            cols="100"
            default=""
            label="JBS_TPL_TEMPLATECODE"
-           description="JBS_TPL_SERIES_TEMPLATECODE_TT"></field>
+           description="JBS_TPL_SERIES_TEMPLATECODE_TT" />
     <field name="series_wrapcode"
            type="radio"
            default="0"
@@ -1417,7 +1382,7 @@
       <option value="D">JBS_TPL_DIV</option>
     </field>
     </fieldset>
-<fieldset name="SERIESDETAIL"
+<fieldset name="SERIESDETAIL">
           addfieldpath="/administrator/components/com_biblestudy/models/fields">
 <field name="series_detail_sort"
            default="1"
@@ -1463,8 +1428,7 @@
            type="seriesoptions"
            default="5"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_1"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
-    </field>
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT" />
     <field name="series_detail_islink1"
            type="list"
            default="1"
@@ -1477,8 +1441,7 @@
            type="seriesoptions"
            default="7"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_2"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
-    </field>
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT" />
     <field name="series_detail_islink2"
            type="list"
            default="0"
@@ -1491,8 +1454,7 @@
            type="seriesoptions"
            default="10"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_3"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
-    </field>
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT" />
     <field name="series_detail_islink3"
            type="list"
            default="0"
@@ -1505,8 +1467,7 @@
            type="seriesoptions"
            default="20"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_4"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
-    </field>
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT" />
     <field name="series_detail_islink4"
            type="list"
            default="0"
@@ -1528,8 +1489,9 @@
            cols="100"
            label="JBS_TPL_SERIESDETAIL_TEMPLATECODE"
            description="JBS_TPL_SERIESDETAIL_TEMPLATECODE_TT" />
-  </fields>
-  <fields group="TOOLTIP">
+  </field>
+  </fieldset>
+  <fieldset name="TOOLTIP">
     <field name="tip_title"
            type="text"
            default="Sermon Information"
@@ -1687,8 +1649,7 @@
            type="listoptions"
            default="1"
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr1c1custom"
            type="text"
            size="100"
@@ -1710,14 +1671,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow1col2"
            type="listoptions"
            default="5"
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-     </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr1c2custom"
            type="text"
            size="100"
@@ -1738,14 +1697,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow1col3"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr1c3custom"
            type="text"
            size="100"
@@ -1765,14 +1722,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow1col4"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr1c4custom"
            type="text"
            size="100"
@@ -1783,16 +1738,14 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
   </fieldset>
   <fieldset name="DETAILSROW2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
       <field name="drow2col1"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr2c1custom"
            type="text"
            size="100"
@@ -1814,14 +1767,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow2col2"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr2c2custom"
            type="text"
            size="100"
@@ -1842,14 +1793,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow2col3"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr2c3custom"
            type="text"
            size="100"
@@ -1869,14 +1818,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow2col4"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr2c4custom"
            type="text"
            size="100"
@@ -1887,16 +1834,14 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
   </fieldset>
   <fieldset name="DETAILSROW3" addfieldpath="/administrator/components/com_biblestudy/models/fields">
    <field name="drow3col1"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr3c1custom"
            type="text"
            size="100"
@@ -1918,14 +1863,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow3col2"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr3c2custom"
            type="text"
            size="100"
@@ -1946,14 +1889,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow3col3"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr3c3custom"
            type="text"
            size="100"
@@ -1973,14 +1914,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow3col4"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr3c4custom"
            type="text"
            size="100"
@@ -1991,16 +1930,14 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-  </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
   </fieldset>
   <fieldset name="DETAILSROW4" addfieldpath="/administrator/components/com_biblestudy/models/fields">
     <field name="drow4col1"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr4c1custom"
            type="text"
            size="100"
@@ -2022,14 +1959,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow4col2"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr4c2custom"
            type="text"
            size="100"
@@ -2050,14 +1985,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow4col3"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr4c3custom"
            type="text"
            size="100"
@@ -2077,14 +2010,12 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
     <field name="drow4col4"
            type="listoptions"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
-    </field>
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT" />
     <field name="dr4c4custom"
            type="text"
            size="100"
@@ -2095,10 +2026,9 @@
            type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
-    </field>
+           description="JBS_TPL_TYPE_OF_LINK_TT" />
   </fieldset>
-  <fieldset name="LANDINGPAGE" />
+  <fieldset name="LANDINGPAGE">
       <field type="list"
            name="landing_hide"
            default="0"
@@ -2221,7 +2151,7 @@
            type="text"
            label="JBS_TPL_LANDINGPAGE_TEACHERSLABEL"
            default="Speakers"
-           size="45"></field>
+           size="45" />
     <field name="linkto"
            type="radio"
            label="JBS_TPL_LANDINGPAGE_LINKTO"
@@ -2245,7 +2175,7 @@
            type="text"
            label="JBS_TPL_LANDINGPAGE_SERIESLABEL"
            default="Series"
-           size="45"></field>
+           size="45" />
     <field name="series_linkto"
            type="radio"
            label="JBS_TPL_LANDINGPAGE_LINKTO"
@@ -2269,7 +2199,7 @@
            type="text"
            label="JBS_TPL_LANDINGPAGE_BOOKSLABEL"
            default="Books"
-           size="45"></field>
+           size="45" />
     <field name="showtopics"
            type="radio"
            label="JBS_TPL_LANDINGPAGE_SHOWTOPICS"
@@ -2286,7 +2216,7 @@
            type="text"
            label="JBS_TPL_LANDINGPAGE_TOPICSLABEL"
            default="Topics"
-           size="45"></field>
+           size="45" />
     <field name="showlocations"
            type="radio"
            label="JBS_TPL_LANDINGPAGE_SHOWLOCATIONS"
@@ -2303,7 +2233,7 @@
            type="text"
            label="JBS_TPL_LANDINGPAGE_LOCATIONSLABEL"
            default="Locations"
-           size="45"></field>
+           size="45" />
     <field name="showmessagetypes"
            type="radio"
            label="JBS_TPL_LANDINGPAGE_SHOWMESSAGETYPES"
@@ -2320,7 +2250,7 @@
            type="text"
            label="JBS_TPL_LANDINGPAGE_MESSAGETYPESLABEL"
            default="Message Types"
-           size="45"></field>
+           size="45" />
     <field name="showyears"
            type="radio"
            label="JBS_TPL_LANDINGPAGE_SHOWYEARS"
@@ -2337,7 +2267,7 @@
            type="text"
            label="JBS_TPL_LANDINGPAGE_YEARSLABEL"
            default="Years"
-           size="45"></field>
+           size="45" />
   </fieldset>
-    </fields>
+
 </form>

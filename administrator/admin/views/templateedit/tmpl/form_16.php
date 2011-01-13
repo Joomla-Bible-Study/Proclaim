@@ -7,7 +7,7 @@
 
 //No Direct Access
 defined('_JEXEC') or die();
-$params = $this->form->getFieldsets('params');
+
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">

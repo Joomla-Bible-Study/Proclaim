@@ -21,7 +21,7 @@ class biblestudyViewTemplateedit extends JView {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->types = $this->get('Types');
-
+        $this->form = $this->get("Form");
         $this->addToolbar();
         parent::display($tpl);
     }
