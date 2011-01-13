@@ -12,7 +12,7 @@ JHtml::_('script', 'system/multiselect.js', false, true);
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templateslist'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=podcastlist'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
             <select name="filter_state" class="inputbox" onchange="this.form.submit()">
@@ -55,7 +55,7 @@ $listDirn = $this->state->get('list.direction');
                     <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                 </td>
                 <td class="center">
-                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'templateslist.', true, 'cb', '', ''); ?>
+                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'podcastlist.', true, 'cb', '', ''); ?>
                 </td>
                 <td class="center">
                     <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=podcastedit.edit&id='.(int)$item->id); ?>">
