@@ -12,7 +12,11 @@ class biblestudyViewcssedit extends JView
 	
 	function display($tpl = null)
 	{
-		
+		$isNew = $this->item->id == 0;
+       if($isNew){
+           $text = JText::_('JBS_NEW');}
+       else {
+           $text = JText::_('JBS_EDIT');}		
 		
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
 	$lists		=& $this->get('Data');
