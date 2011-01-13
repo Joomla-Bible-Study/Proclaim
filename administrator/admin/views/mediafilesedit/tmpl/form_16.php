@@ -61,8 +61,6 @@ $params = $this->form->getFieldsets('params');
                 <li>
                     <?php echo $this->form->getLabel('article_id'); ?>
                     <?php echo $this->form->getInput('article_id'); ?>
-                    <select id="categoryItems" name="categoryItem"></select>
-
                 </li>
             </ul>
         </fieldset>

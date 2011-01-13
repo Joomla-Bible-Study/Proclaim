@@ -21,6 +21,10 @@ class biblestudyViewmediafilesedit extends JView {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
+
+        //Needed to load the article field type, article selector
+        JFormHelper::addFieldPath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_content'.DS.'models'.DS.'fields'.DS.'modal');
+
         $this->setLayout('form');
 
         $this->getModel("Admin");

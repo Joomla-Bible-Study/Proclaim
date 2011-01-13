@@ -27,6 +27,12 @@ class biblestudyViewstudiesedit extends JView {
     }
 
     protected function addToolbar() {
+        $isNew = $this->item->id == 0;
+        if($isNew)
+            $text = JText::_('JBS_NEW');
+        else
+            $text = JText::_('JBS_EDIT');
+
         JToolBarHelper::title(JText::_('JBS_STY_EDIT_STUDY') . ': <small><small>[ ' . $text . ' ]</small></small>', 'studies.png');
         JToolBarHelper::apply('studiesedit.apply');
         JToolBarHelper::save('studiesedit.save');

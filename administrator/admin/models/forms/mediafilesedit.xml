@@ -85,7 +85,7 @@
     <field name="special" type="text" label="JBS_MED_TARGET"
 		description="JBS_MED_TARGET_FOR_LINK" class="inputbox" size="15" />
 			
-    <field name="article_id" type="article" extension="com_content"
+    <field name="article_id" type="Modal_Article" extension="com_content"
 			label="JBS_MED_USE_ARTICLE" description="JFIELD_CATEGORY_DESC"
 			class="inputbox" required="false" default="-1"/>
 	
