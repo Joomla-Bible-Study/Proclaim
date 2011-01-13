@@ -17,6 +17,7 @@ class biblestudyViewmediafilesedit extends JView {
     protected $state;
     protected $defaults;
 
+
     function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
@@ -27,7 +28,7 @@ class biblestudyViewmediafilesedit extends JView {
 
         $this->setLayout('form');
 
-        $this->getModel("Admin");
+        //$this->getModel("Admin"); //need to fix not loding right. bcc
         
         /*
          * //Eugen
