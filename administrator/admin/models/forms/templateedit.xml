@@ -359,7 +359,6 @@
         &lt;/table&gt;"
                    label="JBS_TPL_TEMPLATECODE"
                    description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_TT" />
-            </field>
             <field name="wrapcode"
                    type="radio"
                    default="0"
