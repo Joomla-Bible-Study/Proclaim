@@ -254,4 +254,6 @@ defined('_JEXEC') or die();
                  </ul>  
         </div>
     </div>
+    <div class="clr"></div>
+    <?php echo JHtml::_('tabs.end'); ?>
 </form>
