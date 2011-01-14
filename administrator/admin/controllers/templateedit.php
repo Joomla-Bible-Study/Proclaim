@@ -38,7 +38,7 @@ class biblestudyControllertemplateedit extends controllerClass {
         $this->registerTask('apply', 'save');
     }
 
-    function edit() {
+    function legacyEdit() {
         JRequest::setVar('view', 'templateedit');
         JRequest::setVar('layout', 'form');
         JRequest::setVar('hidemenu', 1);
@@ -61,7 +61,7 @@ class biblestudyControllertemplateedit extends controllerClass {
         $this->setRedirect('index.php?option=com_biblestudy&view=templateslist', $msg);
     }
 
-    function save() {
+    function legacySave() {
         $model = $this->getModel('templateedit');
         $data = JRequest::get('post');
         if ($model->store($post)) {
@@ -152,7 +152,7 @@ class biblestudyControllertemplateedit extends controllerClass {
         $this->setRedirect('index.php?option=com_biblestudy&view=templateslist', $msg);
     }
 
-    function cancel() {
+    function legacyCancel() {
         $msg = JText::_('JBS_CMN_OPERATION_CANCELLED');
         $this->setRedirect('index.php?option=com_biblestudy&view=templateslist', $msg);
     }
