@@ -124,6 +124,22 @@ if ($message)
         }
     }    
     }
+    //Check for default details text link image and copy if not present
+    $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'images'.DS.'textfile24.png';
+    $dest = JPATH_SITE.DS.'images'.DS.'textfile24.png';
+    $imageexists = JFile::exists($dest);
+    if (!$imageexists)
+    {
+        echo "<br /><br />Copying default details link image to images folder";
+        if ($imagesuccess = JFile::copy($src, $dest))
+        {
+            echo '<br />Success copying image to images folder';
+        }
+        else
+        {
+            echo '<br />Problem copying details link image to images folder. Manually copy from /components/com_biblestudy/images/textfile24.png to images folder';
+        }
+    }
 	?></td><tr></table>
         </div>
 		</td>

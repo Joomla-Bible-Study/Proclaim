@@ -2,13 +2,17 @@
 <form>
 
     <fieldset name="GENERAL">
-            <field name="itemslimit"
-                   type="text"
-                   size="2"
-                   default="5"
-                   label="JBS_TPL_ITEMSLIMIT"
-                   description="JBS_TPL_ITEMSLIMIT_TT" />
-    </fieldset>
+            <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_TT" class="inputbox" default="0" required="true">
+            <option value="0">JBS_CMN_NO</option>
+            <option value="1">JBS_CMN_YES</option>
+            </field>
+            <field name="title"
+                    type="text"
+                    size="50"
+                    label="JBS_TPL_TEMPLATE_NAME"
+                    required="true"
+                    description="JBS_TPL_TEMPLATE_NAME_TT" />
+            </fieldset>
         <fieldset name="TEMPLATES" >
             <field name="studieslisttemplateid"
                    type="sql"
@@ -64,7 +68,7 @@
         <fieldset name="FILTERS" >
             <field name="teacher_id"
                    type="sql"
-                   sql="SELECT * FROM #__bsms_teachers WHERE published = &#39;1&#39;"
+                   query="SELECT * FROM #__bsms_teachers WHERE published = 1"
                    key_field="id"
                    value_field="teachername"
                    default="-1"
@@ -76,7 +80,7 @@
             </field>
             <field name="series_id"
                    type="sql"
-                   sql="SELECT #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.published AS srpub, #__bsms_studies.series_id, #__bsms_studies.published AS spub FROM #__bsms_series LEFT JOIN #__bsms_studies ON ( #__bsms_studies.id = #__bsms_series.id ) WHERE #__bsms_series.published = &#39;1&#39;"
+                   query="SELECT #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.published AS srpub, #__bsms_studies.series_id, #__bsms_studies.published AS spub FROM #__bsms_series LEFT JOIN #__bsms_studies ON ( #__bsms_studies.id = #__bsms_series.id ) WHERE #__bsms_series.published = 1"
                    key_field="sid"
                    value_field="series_text"
                    default="-1"
@@ -88,7 +92,7 @@
             </field>
             <field name="booknumber"
                    type="sql"
-                   sql="SELECT DISTINCT #__bsms_studies.booknumber AS sbn, #__bsms_studies.published AS spub, #__bsms_books.booknumber AS bbn, #__bsms_books.bookname FROM #__bsms_books LEFT JOIN #__bsms_studies ON (#__bsms_studies.booknumber = #__bsms_books.booknumber) WHERE #__bsms_studies.published = &#39;1&#39; ORDER BY #__bsms_books.booknumber ASC"
+                   query="SELECT DISTINCT #__bsms_studies.booknumber AS sbn, #__bsms_studies.published AS spub, #__bsms_books.booknumber AS bbn, #__bsms_books.bookname FROM #__bsms_books LEFT JOIN #__bsms_studies ON (#__bsms_studies.booknumber = #__bsms_books.booknumber) WHERE #__bsms_studies.published = 1 ORDER BY #__bsms_books.booknumber ASC"
                    key_field="sbn"
                    value_field="bookname"
                    default="-1"
@@ -100,7 +104,7 @@
             </field>
             <field name="topic_id"
                    type="sql"
-                   sql="SELECT DISTINCT #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_studies.topics_id, #__bsms_studytopics.topic_id, #__bsms_studytopics.study_id FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.id = #__bsms_studies.topics_id)"
+                   query="SELECT DISTINCT #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_studies.topics_id, #__bsms_studytopics.topic_id, #__bsms_studytopics.study_id FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.id = #__bsms_studies.topics_id)"
                    key_field="tid"
                    value_field="topic_text"
                    default="-1"
@@ -112,7 +116,7 @@
             </field>
             <field name="messagetype"
                    type="sql"
-                   sql="SELECT * FROM #__bsms_message_type WHERE published = &#39;1&#39;"
+                   query="SELECT * FROM #__bsms_message_type WHERE published = 1"
                    key_field="id"
                    value_field="message_type"
                    default="-1"
@@ -124,7 +128,7 @@
             </field>
             <field name="locations"
                    type="sql"
-                   sql="SELECT * FROM #__bsms_locations WHERE published = &#39;1&#39;"
+                   query="SELECT * FROM #__bsms_locations WHERE published = 1"
                    key_field="id"
                    value_field="location_text"
                    default="-1"
@@ -134,14 +138,7 @@
                    description="JBS_CMN_FILTERS_LOCATIONS_TT">
               <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="default_order"
-                   type="list"
-                   default="DESC"
-                   label="JBS_TPL_FILTERS_DEFAULTORDER"
-                   description="JBS_TPL_FILTERS_DEFAULTORDER_TT">
-              <option value="DESC">JBS_CMN_DESCENDING</option>
-              <option value="ASC">JBS_CMN_ASCENDING</option>
-            </field>
+            
           </fieldset>
           <fieldset name="FP_IMAGES">
             <field name="show_page_image"
@@ -208,7 +205,12 @@
             </field>
         </fieldset>
         <fieldset name="MEDIA">
-            <field name="protocol" 
+            <field name="text"  
+                    type="media" 
+                    size="75"
+                    label="JBS_TPL_DETAILS_LINK_IMAGE"
+                    description ="JBS_TPL_DETAILS_LINK_IMAGE_TT" />
+           <field name="protocol" 
                     type="text" 
                     size="10" 
                     default="http://"
@@ -369,6 +371,20 @@
             </field>
           </fieldset>
           <fieldset name="LISTITEMS">
+          <field name="itemslimit"
+                   type="text"
+                   size="2"
+                   default="5"
+                   label="JBS_TPL_ITEMSLIMIT"
+                   description="JBS_TPL_ITEMSLIMIT_TT" />
+          <field name="default_order"
+                   type="list"
+                   default="DESC"
+                   label="JBS_TPL_FILTERS_DEFAULTORDER"
+                   description="JBS_TPL_FILTERS_DEFAULTORDER_TT">
+              <option value="DESC">JBS_CMN_DESCENDING</option>
+              <option value="ASC">JBS_CMN_ASCENDING</option>
+            </field>
             <field name="show_page_title"
                    type="list"
                    default="1"

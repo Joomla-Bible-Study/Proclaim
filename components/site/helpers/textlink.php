@@ -23,38 +23,33 @@ if (!$object_vars) {
 if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
 
 	if ($textorpdf == 'text') {
-		if ($template[0]->text == '- Use Default -') { $i_path = 'components/com_biblestudy/images/textfile24.png'; $textimage = getImagePath($i_path); }
-	else
-	{
- 	 if ($template[0]->text && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->text; }
-
-		$textimage = $images->getImagePath($i_path);
-	}
-	   $src = JURI::base().$textimage->path;
+		if (!$template[0]->text ) { $i_path = 'components/com_biblestudy/images/textfile24.png'; 
+        $textimage = getImagePath($i_path); 
+        $src = JURI::base().$textimage->path;
 		$height = $textimage->height;
 		$width = $textimage->width;
-		//$addItemid = '';
-		//$addItemid = getItemidLink($isplugin=0, $admin_params);
+        }
+    elseif (substr_count($template[0]->text,'http://'))
+    {
+        $src = $template[0]->text;
+        $height = '24';
+        $width = '24';
+    }
+	else
+	{
+ 	 if ($template[0]->text ) { $i_path = $template[0]->text; }
+
+		$textimage = $images->getImagePath($i_path);
+        $src = JURI::base().$textimage->path;
+		$height = $textimage->height;
+		$width = $textimage->width;
+	}
+	   
+		
        $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&templatemenuid='.$templatemenuid ).JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 	}
-	if ($textorpdf == 'pdf')
-	{
-		if ($template[0]->pdf == '- Use Default -') { $i_path = 'components/com_biblestudy/images/pdf24.png'; $pdfimage = getImagePath($i_path); }
-	else
-	{
-	  	if ($template[0]->pdf && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$template[0]->pdf; }
-	  	if ($template[0]->pdf && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$template[0]->pdf;}
-		$pdfimage = $images->getImagePath($i_path);
-	}
-		$src = JURI::base().$pdfimage->path;
-		$height = $pdfimage->height;
-		$width = $pdfimage->width;
-	    $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf' );
-		//$link = 'index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id . '&format=pdf';
-        $details_text = $params->get('details_text').' - '.JText::_('JBS_CMN_PDF_VERSION');
-	}
-	//dump ($i_path, 'text: ');
+	
 	if ($params->get('tooltip') >0)
 		{
 			$linktext = getTooltip($row->id, $row, $params, $admin_params, $template);

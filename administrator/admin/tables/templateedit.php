@@ -27,5 +27,16 @@ function bind($array, $ignore = '')
         return parent::bind($array, $ignore);
 }
 
+public function store($updateNulls = false)
+	{
+
+		// Attempt to store the user data.
+        $oldrow = JTable::getInstance('templateedit', 'Table');
+			if (!$oldrow->load($this->id) && $oldrow->getError())
+			{
+				$this->setError($oldrow->getError());
+			}
+		return parent::store($updateNulls);
+	}
 }
 ?>
