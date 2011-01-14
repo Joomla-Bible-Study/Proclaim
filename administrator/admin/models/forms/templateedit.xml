@@ -1487,7 +1487,6 @@
            cols="100"
            label="JBS_TPL_SERIESDETAIL_TEMPLATECODE"
            description="JBS_TPL_SERIESDETAIL_TEMPLATECODE_TT" />
-  </field>
   </fieldset>
   <fieldset name="TOOLTIP">
     <field name="tip_title"
