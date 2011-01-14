@@ -636,7 +636,7 @@
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT" />
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -663,7 +663,7 @@
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT" />
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS2TO4</option>
@@ -1019,7 +1019,7 @@
            default=""
            size="10"
            label="JBS_TPL_DETAILS_SHOW_COMMENTS"
-           description="JBS_TPL_DETAILS_SHOW_COMMENTS_TT">
+           description="JBS_TPL_DETAILS_SHOW_COMMENTS_TT" />
      <field name="link_comments"
     	     default="0"
     	     type="list"
@@ -1381,8 +1381,7 @@
       <option value="D">JBS_TPL_DIV</option>
     </field>
     </fieldset>
-<fieldset name="SERIESDETAIL">
-          addfieldpath="/administrator/components/com_biblestudy/models/fields">
+<fieldset name="SERIESDETAIL" addfieldpath="/administrator/components/com_biblestudy/models/fields">
 <field name="series_detail_sort"
            default="1"
            type="list"
