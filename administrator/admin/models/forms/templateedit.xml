@@ -12,12 +12,14 @@
                     label="JBS_TPL_TEMPLATE_NAME"
                     required="true"
                     description="JBS_TPL_TEMPLATE_NAME_TT" />
-    </fieldset>
-    <field name="text"
+        <field name="text"
                     type="media"
+                    directory="/"
                     size="75"
                     label="JBS_TPL_DETAILS_LINK_IMAGE"
                     description ="JBS_TPL_DETAILS_LINK_IMAGE_TT" />
+    </fieldset>
+    
     <fields name="params">
         <fieldset name="TEMPLATES" >
             <field name="studieslisttemplateid"

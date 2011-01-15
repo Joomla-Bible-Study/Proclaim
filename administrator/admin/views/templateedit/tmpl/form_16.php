@@ -19,14 +19,9 @@ defined('_JEXEC') or die();
         <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_GENERAL'); ?></legend>
                  <ul class="adminformlist">
-                <li>
-                    <?php echo $this->form->getLabel('published'); ?>
-                    <?php echo $this->form->getInput('published'); ?>
-                </li>
-                <li>
-                    <?php echo $this->form->getLabel('title'); ?>
-                    <?php echo $this->form->getInput('title'); ?>
-                </li>
+                <?php foreach($this->form->getFieldset('GENERAL') as $field): ?>
+                        <li><?php echo $field->label;echo $field->input;?></li>
+                    <?php endforeach; ?>
                 <?php foreach($this->form->getFieldset('TEMPLATES') as $field): ?>
                         <li><?php echo $field->label;echo $field->input;?></li>
                     <?php endforeach; ?>
