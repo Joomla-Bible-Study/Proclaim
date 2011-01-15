@@ -353,10 +353,11 @@ class biblestudyModelstudieslist extends modelClass {
         if(!empty($topic))
             $query->where('study.topics_id = '.(int)$topic);
 
-        //Filter by publish state
-        //@todo This is not filtering correctly
+        //Filter by state
         $state = $this->getState('filter.state');
-        if(!empty($state))
+        if(empty($state))
+            $query->where('study.published = 0 OR study.published = 1');
+        else
             $query->where('study.published = '.(int)$state);
 
         //Add the list ordering clause

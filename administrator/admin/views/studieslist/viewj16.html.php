@@ -40,7 +40,10 @@ class biblestudyViewstudieslist extends JView {
         JToolBarHelper::publishList('studieslist.publish');
         JToolBarHelper::unpublishList('studieslist.unpublish');
         JToolBarHelper::divider();
-        JToolBarHelper::trash('studieslist.trash');
+        if($this->state->get('filter.state') == -2)
+            JToolBarHelper::deleteList('', 'artistudieslist.delete','JTOOLBAR_EMPTY_TRASH');
+        else
+            JToolBarHelper::trash('studieslist.trash');
     }
 
 }

@@ -34,7 +34,10 @@ class biblestudyViewtemplateslist extends JView {
         JToolBarHelper::publishList('templateslist.publish');
         JToolBarHelper::unpublishList('templateslist.unpublish');
         JToolBarHelper::divider();
-        JToolBarHelper::trash('templateslist.trach');
+        if($this->state->get('filter.state') == -2)
+            JToolBarHelper::deleteList('', 'templateslist.delete','JTOOLBAR_EMPTY_TRASH');
+        else
+            JToolBarHelper::trash('templateslist.trash');
     }
 
 }

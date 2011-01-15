@@ -92,9 +92,11 @@ class biblestudyModelTemplateslist extends modelClass {
 
         //Filter by state
         $state = $this->getState('filter.state');
-        if (!empty($state)) {
+        if(empty($state))
+            $query->where('template.published = 0 OR template.published = 1');
+        else
             $query->where('template.published = ' . (int) $state);
-        }
+        
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');

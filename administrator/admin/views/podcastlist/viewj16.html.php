@@ -31,7 +31,10 @@ class biblestudyViewpodcastlist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('podcastlist.publish');
         JToolBarHelper::unpublishList('podcastlist.unpublish');
-        JToolBarHelper::trash('podcastlist.trash');
+        if($this->state->get('filter.state') == -2)
+            JToolBarHelper::deleteList('', 'podcastlist.delete','JTOOLBAR_EMPTY_TRASH');
+        else
+            JToolBarHelper::trash('podcastlist.trash');
     }
 
 }

@@ -147,18 +147,18 @@ class biblestudyModelmediafileslist extends modelClass {
      * @since   7.0
      */
     protected function populateState() {
-        $filename = $this->getUserStateFromRequest($this->context.'.filter.filename', 'filter_filename');
+        $filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
         $this->setState('filter.filename', $filename);
 
-        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published');
-        $this->setState('filter.published', $published);
+        $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
+        $this->setState('filter.state', $state);
 
-        $study = $this->getUserStateFromRequest($this->context.'.filter.studytitle', 'filter_studytitle');
+        $study = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $study);
 
-        $mediaTypeId = $this->getUserStateFromRequest($this->context.'.filter.mediatype', 'filter_mediatypeId');
+        $mediaTypeId = $this->getUserStateFromRequest($this->context . '.filter.mediatype', 'filter_mediatypeId');
         $this->setState('filter.mediatypeId', $mediaTypeId);
-        
+
         parent::populateState('mediafile.createdate', 'DESC');
     }
 
@@ -217,33 +217,33 @@ class biblestudyModelmediafileslist extends modelClass {
         //Join over the mediatypes
         $query->select('mediatype.media_text AS mediaType');
         $query->join('LEFT', '`#__bsms_media` AS mediatype ON mediatype.id = mediafile.media_image');
-        
-        //Filter by published state
-        $published = $this->getState('filter.published');
-        if(is_numeric($published))
-            $query->where('mediafile.published = '.(int)$published);
-        elseif ($published === '')
+
+        //Filter by state
+        $state = $this->getState('filter.state');
+        if (empty($state))
             $query->where('mediafile.published = 0 OR mediafile.published = 1');
+        else
+            $query->where('mediafile.published = ' . (int) $state);
 
         //Filter by filename
         $filename = $this->getState('filter.filename');
-        if(!empty($filename))
-            $query->where('mediafile.filename LIKE "'.$filename.'%"');
+        if (!empty($filename))
+            $query->where('mediafile.filename LIKE "' . $filename . '%"');
 
         //Filter by study title
         $study = $this->getState('filter.studytitle');
-        if(!empty($study))
-            $query->where('study.studytitle LIKE "'.$study.'%"');
+        if (!empty($study))
+            $query->where('study.studytitle LIKE "' . $study . '%"');
 
         //Filter by media type
         $mediaType = $this->getState('filter.mediatypeId');
-        if(!empty($mediaType))
-            $query->where('mediafile.media_image = '.(int)$mediaType);
+        if (!empty($mediaType))
+            $query->where('mediafile.media_image = ' . (int) $mediaType);
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
-        $query->order($db->getEscaped($orderCol.' '.$orderDirn));
+        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
 
         return $query;
     }

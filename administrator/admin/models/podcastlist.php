@@ -143,7 +143,9 @@ class biblestudyModelpodcastlist extends modelClass {
 
         //Filter by state
         $state = $this->getState('filter.state');
-        if (!empty($state))
+        if(empty($state))
+            $query->where('podcast.published = 0 OR podcast.published = 1');
+        else
             $query->where('podcast.published = ' . (int) $state);
 
         //Add the list ordering clause

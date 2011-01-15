@@ -175,9 +175,10 @@ class biblestudyModelteacherlist extends modelClass {
 
         //Filter by state
         $state = $this->getState('filter.state');
-        if (!empty($state)) {
+        if(empty($state))
+            $query->where('teacher.published = 0 OR teacher.published = 1');
+        else
             $query->where('teacher.published = ' . (int) $state);
-        }
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
