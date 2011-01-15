@@ -256,4 +256,6 @@ defined('_JEXEC') or die();
     </div>
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.end'); ?>
+    <input type="hidden" name="task" value="" />
+    <?php echo JHtml::_('form.token'); ?>
 </form>

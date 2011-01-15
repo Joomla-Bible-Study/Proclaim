@@ -87,7 +87,7 @@ class biblestudyControllertemplateedit extends controllerClass {
         $this->setRedirect($link, $msg);
     }
 
-    function publish() {
+    function legacyPublish() {
         $mainframe = & JFactory::getApplication();
         $cid = JRequest::getVar('cid', array(0), 'post', 'array');
 
@@ -103,7 +103,7 @@ class biblestudyControllertemplateedit extends controllerClass {
         $this->setRedirect('index.php?option=com_biblestudy&view=templateslist');
     }
 
-    function unpublish() {
+    function legacyUnpublish() {
         $mainframe = & JFactory::getApplication();
         $cid = JRequest::getVar('cid', array(0), 'post', 'array');
         if ($cid[0] == 1) {

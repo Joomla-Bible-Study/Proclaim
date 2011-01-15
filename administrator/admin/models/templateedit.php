@@ -115,7 +115,7 @@ class biblestudyModeltemplateedit extends modelClass {
 	 * @todo Make sure there is at least one template of each type
 	 * @return unknown_type
 	 */
-	function delete() {
+	function legacyDelete() {
 		$cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		$row =& $this->getTable();
 
