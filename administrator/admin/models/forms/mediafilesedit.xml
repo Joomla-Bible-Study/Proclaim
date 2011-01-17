@@ -10,12 +10,10 @@
 			description="JBS_MED_CREATE_DATE_YMD_HMS_TT" class="inputbox" size="22"
 			format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
 			
-        <field name="study_id" type="sql" extension="com_biblestudy"
-		label="JBS_CMN_STUDY" description="JBS_MED_STUDY_TT"
-		class="inputbox" required="true" query="SELECT id, CONCAT(studytitle,' - ', date_format(studydate, '%Y-%m-%d'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC" key_field="id" value_field="text">
-            <option value="-1">JBS_CMN_SELECT_STUDY</option>
-        </field>
-		
+        <field name="study_id" type="Modal_Study"
+		label="JBS_CMN_STUDY" description="JBS_CMN_STUDY_DESC"
+		class="inputbox" required="true"/>
+
         <field name="podcast_id" type="sql" label="JBS_MED_CHOOSE_PODCAST"
                 description="JBS_MED_CHOOSE_PODCAST_TT" class="inputbox"
                 multiple="multiple" query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC" key_field="id" value_field="title"/>
