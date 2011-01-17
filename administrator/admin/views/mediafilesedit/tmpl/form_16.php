@@ -35,7 +35,7 @@ $params = $this->form->getFieldsets('params');
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('podcast_id'); ?>
-                    <?php echo $this->form->getInput('podcast_id'); ?>
+                    <?php echo $this->form->getInput('podcast_id', null, $this->admin->params['podcast']); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('link_type'); ?>
