@@ -45,7 +45,7 @@ class biblestudyControllerserversedit extends controllerClass
 	 * display the edit form
 	 * @return void
 	 */
-	function edit()
+	function legacyEdit()
 	{
 		JRequest::setVar( 'view', 'serversedit' );
 		JRequest::setVar( 'layout', 'form'  );
@@ -58,7 +58,7 @@ class biblestudyControllerserversedit extends controllerClass
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
+	function legacySave()
 	{
 		$model = $this->getModel('serversedit');
 
@@ -78,7 +78,7 @@ class biblestudyControllerserversedit extends controllerClass
 	 * apply a record
 	 * @return void
 	 */
-	function apply()
+	function legacyApply()
 	{
 		$model = $this->getModel('serveredit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
@@ -97,7 +97,7 @@ class biblestudyControllerserversedit extends controllerClass
 	 * remove record(s)
 	 * @return void
 	 */
-	function remove()
+	function legacyRemove()
 	{
 		$model = $this->getModel('serversedit');
 		if(!$model->delete()) {
@@ -108,7 +108,7 @@ class biblestudyControllerserversedit extends controllerClass
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=serverslist', $msg );
 	}
-function publish()
+function legacyPublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -127,7 +127,7 @@ function publish()
 	}
 
 
-	function unpublish()
+	function legacyUnpublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -148,7 +148,7 @@ function publish()
 	 * cancel editing a record
 	 * @return void
 	 */
-	function cancel()
+	function legacyCancel()
 	{
 		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=serverslist', $msg );

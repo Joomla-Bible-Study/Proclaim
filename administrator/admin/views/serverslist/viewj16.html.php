@@ -9,7 +9,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 
-class biblestudyViewteacherlist extends JView {
+class biblestudyViewServerslist extends JView {
 
     protected $items;
     protected $pagination;

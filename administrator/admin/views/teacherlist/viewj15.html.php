@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id$
+ * @version     $Id
  * @package     com_biblestudy
  * @license     GNU/GPL
  */

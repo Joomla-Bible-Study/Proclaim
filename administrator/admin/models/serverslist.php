@@ -26,55 +26,76 @@ try {
 
 }
 
+class biblestudyModelserverslist extends modelClass {
 
-class biblestudyModelserverslist extends modelClass
-{
-	/**
-	 * serverslist data array
-	 *
-	 * @var array
-	 */
-	var $_data;
-	var $allow_deletes = null;
+    /**
+     * serverslist data array
+     *
+     * @var array
+     */
+    var $_data;
+    var $allow_deletes = null;
 
+    /**
+     * Returns the query
+     * @return string The query to be used to retrieve the rows from the database
+     */
+    function _buildQuery() {
+        $query = ' SELECT * '
+                . ' FROM #__bsms_servers '
+        ;
 
-	/**
-	 * Returns the query
-	 * @return string The query to be used to retrieve the rows from the database
-	 */
-	function _buildQuery()
-	{
-		$query = ' SELECT * '
-			. ' FROM #__bsms_servers '
-		;
+        return $query;
+    }
 
-		return $query;
-	}
+    /**
+     * Retrieves the data
+     * @return array Array of objects containing the data from the database
+     */
+    function getData() {
+        // Lets load the data if it doesn't already exist
+        if (empty($this->_data)) {
+            $query = $this->_buildQuery();
+            $this->_data = $this->_getList($query);
+        }
 
-	/**
-	 * Retrieves the data
-	 * @return array Array of objects containing the data from the database
-	 */
-	function getData()
-	{
-		// Lets load the data if it doesn't already exist
-		if (empty( $this->_data ))
-		{
-			$query = $this->_buildQuery();
-			$this->_data = $this->_getList( $query );
-		}
+        return $this->_data;
+    }
 
-		return $this->_data;
-	}
-function getDeletes()
-	{
-		if (empty($this->_deletes)) {
-			$query = 'SELECT allow_deletes'
-			. ' FROM #__bsms_admin'
-			. ' WHERE id = 1';
-			$this->_deletes = $this->_getList($query);
-		}
-		return $this->_deletes;
-	}
+    function getDeletes() {
+        if (empty($this->_deletes)) {
+            $query = 'SELECT allow_deletes'
+                    . ' FROM #__bsms_admin'
+                    . ' WHERE id = 1';
+            $this->_deletes = $this->_getList($query);
+        }
+        return $this->_deletes;
+    }
+    
+    protected function getListQuery() {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select(
+                $this->getState(
+                        'list.select',
+                        'teacher.id, teacher.published, teacher.ordering, teacher.teachername'));
+        $query->from('#__bsms_teachers AS teacher');
+
+        //Filter by state
+        $state = $this->getState('filter.state');
+        if(empty($state))
+            $query->where('teacher.published = 0 OR teacher.published = 1');
+        else
+            $query->where('teacher.published = ' . (int) $state);
+
+        //Add the list ordering clause
+        $orderCol = $this->state->get('list.ordering');
+        $orderDirn = $this->state->get('list.direction');
+        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        return $query;
+    }
+
 }
+
 ?>
