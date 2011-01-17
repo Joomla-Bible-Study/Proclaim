@@ -58,7 +58,7 @@ $listDirn = $this->state->get('list.direction');
                     <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                 </td>
                 <td class="center">
-                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'templateslist.', true, 'cb', '', ''); ?>
+                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'teacherlist.', true, 'cb', '', ''); ?>
                 </td>
                 <td class="center">
                 <?php if($listDirn == 'asc') : ?>
