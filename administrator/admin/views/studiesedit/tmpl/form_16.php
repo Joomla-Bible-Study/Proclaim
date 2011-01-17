@@ -37,7 +37,7 @@ defined('_JEXEC') or die();
                     <div class="inlineFields">
                         <div>
                             <?php echo $this->form->getLabel('booknumber'); ?><br/>
-                            <?php echo $this->form->getInput('booknumber'); ?>
+                            <?php echo $this->form->getInput('booknumber', null, $this->admin->params['booknumber']); ?>
                         </div>
                         <div>
                             <?php echo $this->form->getLabel('chapter_begin'); ?><br/>
@@ -105,27 +105,27 @@ defined('_JEXEC') or die();
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('teacher_id'); ?>
-                    <?php echo $this->form->getInput('teacher_id'); ?>
+                    <?php echo $this->form->getInput('teacher_id', null, $this->admin->params['teacher_id']); ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('location_id'); ?>
-                    <?php echo $this->form->getInput('location_id'); ?>
+                    <?php echo $this->form->getInput('location_id', null, $this->admin->params['location_id']); ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('series_id'); ?>
-                    <?php echo $this->form->getInput('series_id'); ?>
+                    <?php echo $this->form->getInput('series_id', null, $this->admin->params['series_id']); ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('topics_id'); ?>
-                    <?php echo $this->form->getInput('topics_id'); ?>
+                    <?php echo $this->form->getInput('topics_id', null, $this->admin->params['topic_id']); ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('messagetype'); ?>
-                    <?php echo $this->form->getInput('messagetype'); ?>
+                    <?php echo $this->form->getInput('messagetype', null, $this->admin->params['messagetype']); ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('thumbnailm'); ?>
-                    <?php echo $this->form->getInput('thumbnailm'); ?>
+                    <?php echo $this->form->getInput('thumbnailm', null, $this->admin->params['default_study_image']); ?>
                     </li>
                     <li>
                     <?php echo $this->form->getLabel('studytext'); ?>
@@ -153,7 +153,7 @@ defined('_JEXEC') or die();
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('user_id'); ?>
-                    <?php echo $this->form->getInput('user_id'); ?>
+                    <?php echo $this->form->getInput('user_id', null, $this->admin->user_id); ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('show_level'); ?>

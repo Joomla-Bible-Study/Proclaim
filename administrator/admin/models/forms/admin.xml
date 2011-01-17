@@ -39,21 +39,11 @@
 
     </fields>
     <fields name="params">
-        <field name="default_main_image" type="list" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_TT">
-            <option>JBS_CMN_DEFAULT_IMAGE</option>
-        </field>
-        <field name="default_study_image" type="list" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_TT">
-            <option>JBS_CMN_NO_IMAGE</option>
-        </field>
-        <field name="default_series_image" type="list" label="JBS_ADM_DEFAULT_SERIES_IMAGE" description="JBS_ADM_DEFAULT_SERIES_IMAGE_TT">
-            <option>JBS_CMN_NO_IMAGE</option>
-        </field>
-        <field name="default_teacher_image" type="list" label="JBS_ADM_DEFAULT_TEACHER_IMAGE" description="JBS_ADM_DEFAULT_TEACHER_IMAGE_TT">
-            <option>JBS_CMN_NO_IMAGE</option>
-        </field>
-        <field name="default_download_image" type="list" label="JBS_ADM_DOWNLOAD_IMAGE" description="JBS_ADM_DOWNLOAD_IMAGE_TT">
-            <option>JBS_CMN_NO_IMAGE</option>
-        </field>
+        <field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE" description="JBS_ADM_DEFAULT_MAIN_IMAGE_TT"/>
+        <field name="default_study_image" type="media" size="50" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_TT"/>        
+        <field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE" description="JBS_ADM_DEFAULT_SERIES_IMAGE_TT"/>
+        <field name="default_teacher_image" type="media" size="50" label="JBS_ADM_DEFAULT_TEACHER_IMAGE" description="JBS_ADM_DEFAULT_TEACHER_IMAGE_TT"/>
+        <field name="default_download_image" type="media" size="50" label="JBS_ADM_DOWNLOAD_IMAGE" description="JBS_ADM_DOWNLOAD_IMAGE_TT"/>
         <field name="default_showHide_image" type="list" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE" description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_TT">
             <option>JBS_CMN_DEFAULT_IMAGE</option>
         </field>
@@ -98,7 +88,7 @@
             <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
         </field>
 
-        <field name="JBS_ADM_DEFAULT_STUDY_IMAGE" type="sql" extension="com_biblestudy" id="media_image"
+        <field name="JBS_ADM_DEFAULT_STUDY_IMAGE" type="media" extension="com_biblestudy" id="media_image"
          label="JBS_ADM_DEFAULT_STUDYLIST_IMAGE" description="JBS_ADM_DEFAULT_STUDYLIST_IMAGE_TT" class="inputbox"
          query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
          key_field="id"

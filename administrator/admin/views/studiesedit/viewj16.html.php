@@ -15,6 +15,7 @@ class biblestudyViewstudiesedit extends JView {
     protected $form;
     protected $item;
     protected $state;
+    protected $admin;
 
     function display($tpl = null) {
         $this->form = $this->get("Form");
@@ -22,6 +23,9 @@ class biblestudyViewstudiesedit extends JView {
         $this->mediafiles = $this->get('MediaFiles');
         $this->setLayout('form');
 
+        $this->loadHelper('params');
+        $this->admin = BsmHelper::getAdmin();
+        
         $this->addToolbar();
         parent::display($tpl);
     }

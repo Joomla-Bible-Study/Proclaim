@@ -23,7 +23,12 @@ class BsmHelper extends JComponentHelper {
      */
     public function getAdmin() {
         $admin = JModel::getInstance('Admin', 'biblestudyModel');
-        return $admin->getItem(1);
+        $admin = $admin->getItem(1);
+
+        //Add the current user id
+        $user = JFactory::getUser();
+        $admin->user_id = $user->id;
+        return $admin;
     }
 }
 ?>
