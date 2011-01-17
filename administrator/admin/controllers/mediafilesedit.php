@@ -44,10 +44,12 @@ class biblestudyControllermediafilesedit extends controllerClass {
 	 */
 	function __construct()
 	{
+            //$this->getModel("Admin");
 		parent::__construct();
 		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
 		$this->registerTask( 'upload'  ,     'upload' );
+                
 
                 
 	}

@@ -21,11 +21,9 @@ class BsmHelper extends JComponentHelper {
      *
      * @since   7.0
      */
-    public function getDefaults() {
-        jimport('joomla.form.form');
-        JForm::addFormPath(JPATH_COMPONENT.DS.'models'.DS.'forms'); 
-        $form = &JForm::getInstance('com_biblestudy.admin', 'admin');
-
+    public function getAdmin() {
+        $admin = JModel::getInstance('Admin', 'biblestudyModel');
+        return $admin->getItem(1);
     }
 }
 ?>

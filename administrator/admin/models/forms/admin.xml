@@ -123,7 +123,7 @@
             <option value="1">JBS_CMN_YES</option>
         </field>
         <field name="target" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_TT">
-            <option value="0">JBS_ADM_NO_DEFAULT</option>
+            <option value=" ">JBS_ADM_NO_DEFAULT</option>
             <option value="_blank">JBS_ADM_NEW_WINDOW</option>
             <option value="_self">JBS_ADM_SAME_WINDOW</option>
             <option value="_parent">JBS_ADM_PARENT_WINDOW</option>

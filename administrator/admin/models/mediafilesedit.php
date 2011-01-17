@@ -42,7 +42,7 @@ class biblestudyModelmediafilesedit extends modelClass {
         /**
          * @todo J16 has new way of retrieving parameters so we need to implement it here too
          */
-        $admin = $this->getAdmin();
+        $admin = $this->getLegacyAdmin();
         $this->_admin_params = new JParameter($admin[0]->params);
         $array = JRequest::getVar('cid', 0, '', 'array');
         $this->setId((int) $array[0]);
@@ -266,7 +266,7 @@ class biblestudyModelmediafilesedit extends modelClass {
         return true;
     }
 
-    function getAdmin() {
+    function getLegacyAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT params'
                     . ' FROM #__bsms_admin'
@@ -484,7 +484,6 @@ class biblestudyModelmediafilesedit extends modelClass {
 
         return $data;
     }
-
 }
 
 ?>

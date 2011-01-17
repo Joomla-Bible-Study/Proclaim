@@ -12,20 +12,20 @@ defined('_JEXEC') or die();
 try {
     jimport('joomla.application.component.modeladmin');
 
-    abstract class modelClass extends JModelAdmin {
+    abstract class adminClass extends JModelAdmin {
         
     }
 
 } catch (Exception $e) {
     jimport('joomla.application.component.model');
 
-    abstract class modelClass extends JModel {
+    abstract class adminClass extends JModel {
         
     }
 
 }
 
-class biblestudyModeladmin extends modelClass {
+class biblestudyModeladmin extends adminClass {
 
 //class biblestudyModeladmin extends JModelAdmin
 //{

@@ -15,7 +15,7 @@ class biblestudyViewmediafilesedit extends JView {
     protected $form;
     protected $item;
     protected $state;
-    protected $defaults;
+    protected $admin;
 
 
     function display($tpl = null) {
@@ -23,25 +23,15 @@ class biblestudyViewmediafilesedit extends JView {
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
 
-        //Needed to load the article field type, article selector
+        //Load the Admin settings
+        $this->loadHelper('params');
+        $this->admin = BsmHelper::getAdmin();
+
+        //Needed to load the article field type for the article selector
         JFormHelper::addFieldPath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_content'.DS.'models'.DS.'fields'.DS.'modal');
 
         $this->setLayout('form');
-
-        //$this->getModel("Admin"); //need to fix not loding right. bcc
         
-        /*
-         * //Eugen
-         * @todo    I'm trying to get the settings from the administrator
-         */
-        $this->loadHelper('params');
-        $this->defaults = BsmHelper::getDefaults();
-        
-        
-        //Get the js and css files
-        $document = & JFactory::getDocument();
-        $document->addScript(JURI::base() . 'components/com_biblestudy/js/views/mediafilesedit.js');
-
         $this->addToolbar();
         parent::display($tpl);
     }

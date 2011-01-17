@@ -39,7 +39,7 @@ $params = $this->form->getFieldsets('params');
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('link_type'); ?>
-                    <?php echo $this->form->getInput('link_type'); ?>
+                    <?php echo $this->form->getInput('link_type', null, $this->admin->params['download']); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('ordering'); ?>
@@ -113,11 +113,11 @@ $params = $this->form->getFieldsets('params');
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('server'); ?>
-                    <?php echo $this->form->getInput('server'); ?>
+                    <?php echo $this->form->getInput('server', null, $this->admin->params['server']); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('path'); ?>
-                    <?php echo $this->form->getInput('path'); ?>
+                    <?php echo $this->form->getInput('path', null, $this->admin->params['path']); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('filename'); ?>
@@ -129,7 +129,7 @@ $params = $this->form->getFieldsets('params');
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('special'); ?>
-                    <?php echo $this->form->getInput('special'); ?>
+                    <?php echo $this->form->getInput('special', null, $this->admin->params['target']); ?>
                 </li>
             </ul>
         </fieldset>
@@ -144,7 +144,7 @@ $params = $this->form->getFieldsets('params');
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('mime_type'); ?>
-                    <?php echo $this->form->getInput('mime_type'); ?>
+                    <?php echo $this->form->getInput('mime_type', null, $this->admin->params['mime']); ?>
                 </li>
             </ul>
         </fieldset>
