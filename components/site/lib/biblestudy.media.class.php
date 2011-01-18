@@ -77,7 +77,7 @@ class jbsMedia
                           $media->spath.$media->fpath.$media->filename.'&size='.$media->size.'">';
         		  }
         	     $downloadlink .= '<img src="'.$download_image.'" alt="'.JText::_('JBS_MED_DOWNLOAD').'" height="'.
-                 $height.'" width="'.$width.'" title="'.JText::_('JBS_MED_DOWNLOAD').'" /></a>';
+                 $height.'" width="'.$width.'" border="0" title="'.JText::_('JBS_MED_DOWNLOAD').'" /></a>';
 
         	  	}
         	  	switch ($link_type)
@@ -385,7 +385,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                     $playercode =
                     "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=0&view=popup&Itemid=".$Itemid.
                     "&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
-                    $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width.
+                    $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' border='0' width='".$width.
                     "' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
                 break;
             }
@@ -416,7 +416,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                     "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&Itemid=".$Itemid.
                     "&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
                     $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width.
-                    "' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
+                    "' title='".$mimetype." ".$duration." ".$filesize."' border='0' alt='".$src."'></a>";
                 break;
             }
         break;
@@ -433,7 +433,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                	$playercode =
                 "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=3&template=".$template.
                 "&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".$player->playerheight."'); return false\"\">
-                <img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize.
+                <img src='".$src."' height='".$height."' width='".$width."' border='0' title='".$mimetype." ".$duration." ".$filesize.
                 "' alt='".$src."'></a>";
                 break;
 
@@ -461,7 +461,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
             {
                 case 2:
                 $playercode = '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
-		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$player->playerwidth.'">
+		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer'.$media->id.'" border="0" height="24" width="'.$player->playerwidth.'">
 		<param name="movie" value="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf">
 		<param name="FlashVars" value="playerID='.$media->id.'&amp;soundFile='.$path.'">
 		<param name="quality" value="high">
@@ -477,7 +477,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                 $playercode =
                 "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=7&template=".$template.
                 "&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".$player->playerheight."'); return false\"\">
-                <img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize.
+                <img src='".$src."' border='0' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize.
                 "' alt='".$src."'></a>";
                 break;
             }
