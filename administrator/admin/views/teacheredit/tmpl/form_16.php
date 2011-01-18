@@ -34,7 +34,7 @@ defined('_JEXEC') or die();
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('teacher_image'); ?>
-                    <?php echo $this->form->getInput('teacher_image'); ?>
+                    <?php echo $this->form->getInput('teacher_image', null, $this->admin->params['default_teacher_image']); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('teacher_thumbnail'); ?>

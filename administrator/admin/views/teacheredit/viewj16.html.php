@@ -15,12 +15,16 @@ class biblestudyViewteacheredit extends JView {
     protected $form;
     protected $item;
     protected $state;
-    protected $defaults;
+    protected $admin;
 
     function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
+
+        //Load the Admin settings
+        $this->loadHelper('params');
+        $this->admin = BsmHelper::getAdmin();
 
         $this->setLayout("form");
         $this->addToolbar();

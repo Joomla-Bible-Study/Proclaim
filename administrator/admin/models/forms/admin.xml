@@ -35,10 +35,6 @@
             <option value="0">JBS_ADM_INTERNAL_SHARE</option>
             <option value="1">JBS_ADM_ADDTHIS_SHARE</option>
         </field>
-
-
-    </fields>
-    <fields name="params">
         <field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE" description="JBS_ADM_DEFAULT_MAIN_IMAGE_TT"/>
         <field name="default_study_image" type="media" size="50" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_TT"/>        
         <field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE" description="JBS_ADM_DEFAULT_SERIES_IMAGE_TT"/>
@@ -189,5 +185,15 @@
             <option value="3">JBS_CMN_USE_GLOBAL</option>
         </field>
 
+        <!--
+        Eugen:
+        This is for future versions of the component to simplify all of our image
+        operations. Currently this is not implemented at all
+        -->
+        <field name="imageLib" type="list" label="JBS_ADM_IMAGE_LIBRARY">
+            <option value="legacy">Legacy</option>
+            <option value="gd">GD</option>
+            <option value="imagemagick">ImageMagick</option>
+        </field>
     </fields>
 </form>
