@@ -14,7 +14,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class JElementtemplatemenuid extends JElement
+class JElementt extends JElement
 {
 	/**
 	 * Element name
@@ -22,7 +22,7 @@ class JElementtemplatemenuid extends JElement
 	 * @access	protected
 	 * @var		string
 	 */
-	var	$_name = 'templatemenuid';
+	var	$_name = 't';
 
 	function fetchElement($name, $value, &$node, $control_name)
 	{

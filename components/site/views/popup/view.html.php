@@ -115,7 +115,7 @@ if ($itemparams->get('player')== 1 || $player == 1)
 {  
   $embedshare = $params->get('embedshare','FALSE'); // Used for Embed Share replace with param
 	echo    "<script type='text/javascript'>
-swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',link:'".JURI::base()."index.php?option=com_biblestudy&view=studieslist&templatemenuid=".$templateid."',image:'".$params->get('popupimage', 'components/com_biblestudy/images/speaker24.png')."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300',plugins:'viral-2','viral.onpause':'".$embedshare."','viral.oncomplete':'".$embedshare."','viral.allowmenu':'".$embedshare."'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
+swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',link:'".JURI::base()."index.php?option=com_biblestudy&view=studieslist&t=".$templateid."',image:'".$params->get('popupimage', 'components/com_biblestudy/images/speaker24.png')."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300',plugins:'viral-2','viral.onpause':'".$embedshare."','viral.oncomplete':'".$embedshare."','viral.allowmenu':'".$embedshare."'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
 </script>
 <div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>".JText::_('JBS_MED_GET_FLASH')."</a> ".JText::_('JBS_MED_TO_SEE_PLAYER')."</div>";
 //  Flashvar - Colors, Autostart, Title, Author, Date, Description, Link, Image
@@ -123,7 +123,7 @@ swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/play
 //    Attributes - ID, Name
 
 // Did not include ,link:'http://www.newhorizoncf.org',image:'/images/mp3player.jpg' in the Flashvar until adding options
-// use this: JURI::base()."index.php?option=com_biblestudy&view=studieslist&templatemenuid=".$templateid
+// use this: JURI::base()."index.php?option=com_biblestudy&view=studieslist&t=".$templateid
 }
 /**
  * @desc This is already possible by adding text in the Header and Footer in the Media drop down in the template so i've removed. Added Scripture
@@ -190,5 +190,4 @@ function titles($text, $media, $scripture, $date, $length)
     
             
     ?>
-
 

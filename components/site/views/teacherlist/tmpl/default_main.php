@@ -5,13 +5,13 @@ $user =& JFactory::getUser();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 $params = $this->params;
 
-$templatemenuid = $params->get('teachertemplateid');
-//dump ($templatemenuid);
-if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');}
+$t = $params->get('teachertemplateid');
+//dump ($t);
+if (!$t) {$t = JRequest::getVar('t', 1, 'get', 'int');}
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 $admin_params = $this->admin_params;
 include_once($path1.'image.php');
-//if (!$templatemenuid){$templatemenuid = 1;}
+//if (!$t){$t = 1;}
 ?>
 <div id="biblestudy" class="noRefTagger">
 <table id="bsm_teachertable" cellspacing="0">
@@ -52,7 +52,7 @@ $class1 = 'bsodd';
         	<img src="<?php echo $image->path;?>" border="1" title="<?php echo $item->teachername;?>" alt="<?php echo $item->teachername;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" /><?php } ?>
         </td>
         <td class="bsm_teachername">
-            <a href="index.php?option=com_biblestudy&view=teacherdisplay&id=<?php echo $item->id.'&templatemenuid='.$templatemenuid;?>"><?php echo $teacherdisplay;?></a>
+            <a href="index.php?option=com_biblestudy&view=teacherdisplay&id=<?php echo $item->id.'&t='.$t;?>"><?php echo $teacherdisplay;?></a>
         </td>
         
         <td align="left" class="bsm_short">

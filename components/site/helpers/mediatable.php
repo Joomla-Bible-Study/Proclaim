@@ -69,7 +69,7 @@ if (!$row->id) {return FALSE;}
 	$itemparams = new JParameter ($media->params);
 	//$Itemid = $params->get('detailstemplateid', 1);
     $Itemid = JRequest::getInt('Itemid','1','get');
-    $template = JRequest::getInt('templatemenuid','1','get');
+    $template = JRequest::getInt('t','1','get');
 	$images = new jbsImages();
  	$image = $images->getMediaImage($media->path2, $media->impath);
 

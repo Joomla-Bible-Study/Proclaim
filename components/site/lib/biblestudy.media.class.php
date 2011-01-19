@@ -20,7 +20,7 @@ class jbsMedia
         $admin = new JBSAdmin();
 
         $Itemid = JRequest::getInt('Itemid','1','get');
-        $template = JRequest::getInt('templatemenuid','1','get');
+        $template = JRequest::getInt('t','1','get');
 	    $images = new jbsImages();
         $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
         include_once ($path1.'helper.php');
@@ -354,7 +354,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
     $frontcolor = $params->get('frontcolor','0xFFFFFF');
     $lightcolor = $params->get('lightcolor','0x000000');
     $screencolor = $params->get('screencolor','0xFFFFFF');
-    $template = JRequest::getInt('templatemenuid','1','get');
+    $template = JRequest::getInt('t','1','get');
     //Here we get more information about the particular media file
     $filesize = getFilesize($media->size);
     $duration = getDuration($params, $row); //This one IS needed

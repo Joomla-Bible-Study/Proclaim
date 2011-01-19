@@ -11,9 +11,9 @@ function getTeacher($params, $id, $admin_params)
 	include_once($path1.'image.php');
 	$teacher = null;
 	$teacherid = null;
-	//$templatemenuid = $params->get('templatemenuid');
-	$templatemenuid = $params->get('teachertemplateid');
-	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+	//$t = $params->get('t');
+	$t = $params->get('teachertemplateid');
+	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 	$viewtype = JRequest::getVar('view');
 	//dump ($viewtype, 'view: ');
 		if ($viewtype == 'studieslist')
@@ -70,7 +70,7 @@ function getTeacher($params, $id, $admin_params)
 		$teacher .= '<tr><td>';
 		if ($params->get('teacherlink') > 0)
 			{
-				$teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&amp;id='.$tresult->id.'&templatemenuid='.$templatemenuid.'">';
+				$teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&amp;id='.$tresult->id.'&t='.$t.'">';
 			}
 		$teacher .= $tresult->teachername;
 		if ($params->get('teacherlink') > 0)
@@ -97,13 +97,13 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$teacher = null;
 	$teacherid = null;
-	$templatemenuid = $params->get('templatemenuid');
-	//$templatemenuid = $params->get('teachertemplateid');
+	$t = $params->get('t');
+	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landingteacherlimit');
 	if (!$limit) {$limit = 10000;}
 	$menu =& JSite::getMenu();
 	
-	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 		$teacher = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
@@ -147,10 +147,10 @@ function getTeacherLandingPage($params, $id, $admin_params)
             $teacher .= "\n\t\t" . '<td id="landing_td">';
             
             if ($params->get('linkto') == 0) {
-		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
+		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t='.$t.'">';
             } else {
 		    
-		        $teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&templatemenuid='.$templatemenuid.$addItemid.'">';
+		        $teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&t='.$t.$addItemid.'">';
 		    };
 		    $teacher .= $b->teachername;
     		
@@ -219,7 +219,7 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	$label = str_replace('{{image}}', '<img src="'. $imagelarge->path.'" width="'.$imagelarge->width.'" height="'.$imagelarge->height.'" />', $label);
 	$label = str_replace('{{short}}', $row->short, $label);
 	$label = str_replace('{{thumbnail}}', '<img src="'. $imagesmall->path.'" width="'.$imagesmall->width.'" height="'.$imagesmall->height.'" />', $label);
-    $label = str_replace('{{url}}', 'index.php?component=com_biblestudy&view=teacherdisplay&id='.$row->id .'&templatemenuid='.$template, $label);
+    $label = str_replace('{{url}}', 'index.php?component=com_biblestudy&view=teacherdisplay&id='.$row->id .'&t='.$template, $label);
 	return $label;
 
 }

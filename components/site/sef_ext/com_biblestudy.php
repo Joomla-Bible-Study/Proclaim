@@ -105,7 +105,7 @@ switch ($view) {
  }
  
  // remove biblestudy URL from GET vars list, so that they don't show up as query string in the URL
- shRemoveFromGETVarsList('templatemenuid');
+ shRemoveFromGETVarsList('t');
  
  
 // ------------------  standard plugin finalize function - don't change ---------------------------  

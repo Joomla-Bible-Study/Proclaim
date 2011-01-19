@@ -31,10 +31,10 @@ class biblestudyViewteacherdisplay extends JView
 		$params = &$mainframe->getPageParameters();
 		$url = $params->get('stylesheet');
 		if ($url) {$document->addStyleSheet($url);}
-		$templatemenuid = $params->get('templatemenuid');
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
-		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$t = $params->get('t');
+		if (!$t){$t = 1;}
+		JRequest::setVar( 't', $t, 'get');
+		//JRequest::setVar( 't', $params->get('t'), 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
 		$url = $params->get('stylesheet');

@@ -9,7 +9,7 @@ class Dump_File{
  	
   	$id = JRequest::getVar('id', 0, 'GET', 'INT');
   	$hits = $this->hitDownloads($id);
-	$template = JRequest::getInt('templatemenuid','1','get');	
+	$template = JRequest::getInt('t','1','get');	
 	$db	= & JFactory::getDBO();
     //Get the template so we can find a protocol
     $query = 'SELECT id, params FROM #__bsms_templates WHERE `id` = '.$template;

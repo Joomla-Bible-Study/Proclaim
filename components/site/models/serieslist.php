@@ -35,10 +35,10 @@ class biblestudyModelserieslist extends JModel
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params 			=& $mainframe->getPageParameters();
 		//dump ($params);
-		$templatemenuid = $params->get('templatemenuid');
-		//dump ($templatemenuid);
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		$t = $params->get('t');
+		//dump ($t);
+		if (!$t){$t = 1;}
+		JRequest::setVar( 't', $t, 'get');
 	//	require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
     jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
@@ -122,7 +122,7 @@ function setSelect($string){
 
 function getTemplate() {
 		if(empty($this->_template)) {
-			$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+			$templateid = JRequest::getVar('t',1,'get', 'int');
 			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'

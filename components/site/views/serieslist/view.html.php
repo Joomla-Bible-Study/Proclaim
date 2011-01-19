@@ -21,9 +21,9 @@ class biblestudyViewserieslist extends JView {
 		$this->assignRef('admin', $admin);
 		$params 			=& $mainframe->getPageParameters();
 		//dump ($params, 'params: ');
-		$templatemenuid = $params->get('templatemenuid');
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		$t = $params->get('t');
+		if (!$t){$t = 1;}
+		JRequest::setVar( 't', $t, 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
 		//dump ($template, 'template: ');

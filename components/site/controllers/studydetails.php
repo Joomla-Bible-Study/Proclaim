@@ -40,9 +40,9 @@ class biblestudyControllerstudydetails extends JController
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		$params 			=& $mainframe->getPageParameters();
-		$templatemenuid = $params->get('templatemenuid');
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		$t = $params->get('t');
+		if (!$t){$t = 1;}
+		JRequest::setVar( 't', $t, 'get');
 		//$template = $model->get('Template');
 		$params = new JParameter($model->_template[0]->params); dump ($params, 'params: ');
 		if ($params->get('useexpert_details') > 0)
@@ -99,9 +99,9 @@ class biblestudyControllerstudydetails extends JController
 	$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		$params 			=& $mainframe->getPageParameters();
-		$templatemenuid = $params->get('templatemenuid');
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		$t = $params->get('t');
+		if (!$t){$t = 1;}
+		JRequest::setVar( 't', $t, 'get');
 		//$template = $model->get('Template');
 		$params = new JParameter($model->_template[0]->params);
 		//dump ($params);
@@ -138,7 +138,7 @@ class biblestudyControllerstudydetails extends JController
 		}
 		$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
 
-		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&Itemid='.$returnmenu.'&templatemenuid='.$templatemenuid.'&msg='.$msg, 'Comment Added');
+		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&Itemid='.$returnmenu.'&t='.$t.'&msg='.$msg, 'Comment Added');
 	} // End of $cap
 	}
 	//Begin scripture links plugin function

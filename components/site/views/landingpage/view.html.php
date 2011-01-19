@@ -34,11 +34,11 @@ class biblestudyViewLandingpage extends JView {
 		
 
 		//dump ($params, 'params: ');
-		$templatemenuid = $params->get('templatemenuid');
+		$t = $params->get('t');
 		$test = $params->get('bookslabel');
 		//echo $test;
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		if (!$t){$t = 1;}
+		JRequest::setVar( 't', $t, 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
 		//dump ($template, 'template: ');

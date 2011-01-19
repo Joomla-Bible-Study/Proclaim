@@ -12,13 +12,13 @@ $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'image.php');
 include_once($path1.'teacher.php');
 
-$templatemenuid = JRequest::getVar('templatemenuid', 1,'get', 'int');
+$t = JRequest::getVar('t', 1,'get', 'int');
 
-if (!$templatemenuid) {$templatemenuid = 1;}
-$templatemenuid = $this->params->get('teachertemplateid');
-	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+if (!$t) {$t = 1;}
+$t = $this->params->get('teachertemplateid');
+	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 $studieslisttemplateid = $this->params->get('studieslisttemplateid');
-	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('templatemenuid',1,'get','int');}
+	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('t',1,'get','int');}
 	if (!$teacher->teacher_image) { $image->path = $teacher->image; $image->height = $teacher->imageh; $image->width = $teacher->imagew; }
 	//if (!$teacher->teacher_image) { $i_path = $teacher->image; }
 	else
@@ -104,6 +104,6 @@ echo '<table><tr><td id="bsmsteacherstudyfooter"><a href="'.JRoute::_('index.php
 	 // end of if show_teacher_studies ?>
 <?php 
 //if ($this->menuid){$link = '&Itemid='.$this->menuid;}?>
-<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&templatemenuid='.$templatemenuid;?>"><?php echo '<--'.JText::_('JBS_TCH_RETURN_TEACHER_LIST');?></a>
+<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&t='.$t;?>"><?php echo '<--'.JText::_('JBS_TCH_RETURN_TEACHER_LIST');?></a>
 </table>
 </div>

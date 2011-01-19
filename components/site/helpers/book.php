@@ -10,11 +10,11 @@ function getBooksLandingPage($params, $id, $admin_params)
 //	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$book = null;
 	$teacherid = null;
-	$templatemenuid = $params->get('templatemenuid');
-	//$templatemenuid = $params->get('teachertemplateid');
+	$t = $params->get('t');
+	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landingbooklimit');
 	if (!$limit) {$limit = 10000;}
-	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 		$book = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
@@ -57,7 +57,7 @@ function getBooksLandingPage($params, $id, $admin_params)
                 $book .= "\n\t" . '<tr>';
             }
             $book .= "\n\t\t" . '<td id="landing_td">';
-		    $book .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_book='.$b->booknumber.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
+		    $book .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_book='.$b->booknumber.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t='.$t.'">';
 		    ##$book .= '<a href="dummy">'; ## can uncomment this line and use instead of above line when bug-fixing for simpler code
 		    
 		    $book .= $numRows;

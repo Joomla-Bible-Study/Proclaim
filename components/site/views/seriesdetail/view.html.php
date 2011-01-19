@@ -26,9 +26,9 @@ class biblestudyViewseriesdetail extends JView
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		$params 			=& $mainframe->getPageParameters();
-		$templatemenuid = $params->get('templatemenuid');
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		$t = $params->get('t');
+		if (!$t){$t = 1;}
+		JRequest::setVar( 't', $t, 'get');
 		$template = $this->get('Template');
 		$params = new JParameter($template[0]->params);
 		//dump ($params, 'params2: ');

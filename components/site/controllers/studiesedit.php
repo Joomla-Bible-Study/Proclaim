@@ -9,7 +9,7 @@ class biblestudyControllerstudiesedit extends JController
 		$params =& $mainframe->getPageParameters();
 		
 		//$model = $this->getModel('studiesedit');
-		//$templatemenuid = $params->get('templatemenuid');
+		//$t = $params->get('t');
 		
         require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
         $admin = new JBSAdmin();
@@ -60,9 +60,9 @@ class biblestudyControllerstudiesedit extends JController
 			$mainframe->redirect (str_replace("&amp;","&",$link));
 		}
 		
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid.'&Itemid=1');
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t.'&Itemid=1');
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -81,9 +81,9 @@ class biblestudyControllerstudiesedit extends JController
 			$msg = JText::_( 'JBS_STY_STUDY_DELETED' );
 		}
 		//$params =& $mainframe->getPageParameters();
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid.'&Itemid=1');
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t.'&Itemid=1');
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 			
@@ -102,9 +102,9 @@ class biblestudyControllerstudiesedit extends JController
 		if(!$model->publish($cid, 1)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid.'&Itemid=1');
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t.'&Itemid=1');
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -124,9 +124,9 @@ class biblestudyControllerstudiesedit extends JController
 		if(!$model->publish($cid, 0)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid.'&Itemid=1');
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t.'&Itemid=1');
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -140,9 +140,9 @@ class biblestudyControllerstudiesedit extends JController
 		$mainframe =& JFactory::getApplication();
 		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}

@@ -38,9 +38,9 @@ class biblestudyViewstudiesedit extends JView
 		$admin=& $this->get('Admin');
 		$admin_params = new JParameter($admin[0]->params);
 		$params =& $mainframe->getPageParameters();
-		//$templatemenuid = $params->get('templatemenuid', 1);
+		//$t = $params->get('t', 1);
 		//dump ($admin_params, 'template: ');
-		//JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
+		//JRequest::setVar( 't', $t, 'get');
 		//$template = $this->get('Template');
 		//$params = new JParameter($template[0]->params);
 		$admin = new JBSAdmin();

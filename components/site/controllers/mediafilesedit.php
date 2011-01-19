@@ -59,9 +59,9 @@ class biblestudyControllermediafilesedit extends JController {
 			$msg = JText::_('JBS_MED_ERROR_SAVING_MEDIA');
 		}
 
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -78,9 +78,9 @@ class biblestudyControllermediafilesedit extends JController {
 		} else {
 			$msg = JText::_( 'JBS_MED_MEDIA_DELETED' );
 		}
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -98,10 +98,10 @@ class biblestudyControllermediafilesedit extends JController {
 		if(!$model->publish($cid, 1)) {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 	}
@@ -122,9 +122,9 @@ class biblestudyControllermediafilesedit extends JController {
 			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
 		}
 		//$params =& $mainframe->getPageParameters();
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect ($link);
 		//$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafileslist' );
@@ -139,9 +139,9 @@ class biblestudyControllermediafilesedit extends JController {
 		$mainframe =& JFactory::getApplication();
 		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t);
 		// Check the table in so it can be edited.... we are done with it anyway
 		$mainframe->redirect (str_replace("&amp;","&",$link));
 			
@@ -169,13 +169,13 @@ class biblestudyControllermediafilesedit extends JController {
 		$folderpath = $folder->folderpath;
 		$folderpath = str_replace("/",DS,$folderpath);
 		//dump ($folderpath, 'Folderpath: ');
-		$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');
-		if (!$templatmenuid) {$templatemenuid = 1;}
-		//$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&templatemenuid='.$templatemenuid);}
-		$templatemenuid = '&templatemenuid='.$templatemenuid;
+		$t = JRequest::getVar('t', 1, 'get', 'int');
+		if (!$templatmenuid) {$t = 1;}
+		//$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&msg='.$msg.'&t='.$t);}
+		$t = '&t='.$t;
 		$filename = $file['name'];
 		if ($filename == 'index.htm' || $filename == 'index.html' || $filename == 'index.php'){
-			$mainframe->redirect("index.php?option=$option&view=studieslist".$templatemenuid, "File of this type not allowed.");
+			$mainframe->redirect("index.php?option=$option&view=studieslist".$t, "File of this type not allowed.");
 		}
 		if ($admin_params->get('character_filter') > 0)
 		{
@@ -205,7 +205,7 @@ class biblestudyControllermediafilesedit extends JController {
 			//if (!JFile::upload($file['tmp_name'], $fullfilename)) {
 				//$fullfilename = $_SERVER['DOCUMENT_ROOT'].$folderpath. $file['name'];}
 			if (!JFile::upload($file['tmp_name'], $fullfilename)) {	
-				$mainframe->redirect("index.php?option=$option&view=studieslist".$templatemenuid, 'Upload failed, check to make sure that the path "'.$fullfilename.'" exists on this server');
+				$mainframe->redirect("index.php?option=$option&view=studieslist".$t, 'Upload failed, check to make sure that the path "'.$fullfilename.'" exists on this server');
 				return;
 			}
 

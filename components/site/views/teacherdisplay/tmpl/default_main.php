@@ -13,14 +13,14 @@ $teacher = $this->teacher;
 $admin_params = $this->admin_params;
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'image.php');
-$templatemenuid = JRequest::getVar('templatemenuid', 1,'get', 'int');
-if (!$templatemenuid) {$templatemenuid = 1;}
-$templatemenuid = $this->params->get('teachertemplateid');
-	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+$t = JRequest::getVar('t', 1,'get', 'int');
+if (!$t) {$t = 1;}
+$t = $this->params->get('teachertemplateid');
+	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 $studieslisttemplateid = $this->params->get('studieslisttemplateid');
 	$images = new jbsImages();
 
-	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('templatemenuid',1,'get','int');}
+	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('t',1,'get','int');}
 
 ?>
 <div id="biblestudy" class="noRefTagger">
@@ -87,7 +87,7 @@ switch ($this->params->get('show_teacher_studies'))
 </tr>
 <?php foreach ($this->studies as $study) { ?>
  <tr>
-  <td class="bsm_studylink"> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->id.'&templatemenuid='.$studieslisttemplateid;?>"><?php echo $study->studytitle; ?></a></td>
+  <td class="bsm_studylink"> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->id.'&t='.$studieslisttemplateid;?>"><?php echo $study->studytitle; ?></a></td>
   <td class="bsm_scripture"> <?php if ($study->bookname) {echo $study->bookname.' '.$study->chapter_begin;}?></td>
   <td class="bsm_date"> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC') , '$offset'); echo $date;?></td>
  </tr>
@@ -129,6 +129,6 @@ switch ($this->params->get('show_teacher_studies'))
 ?> </td></tr>
 <?php
 ?>
-<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist&templatemenuid=<?php echo $templatemenuid;?>"><?php echo '<-- '.JText::_('JBS_TCH_RETURN_TEACHER_LIST');?></a> <?php if ($this->params->get('teacherlink', '1') > 0) { echo ' | <a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.(int)$teacher->id.'&templatemenuid='.$templatemenuid.'">'.JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER').' --></a>';}
+<tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist&t=<?php echo $t;?>"><?php echo '<-- '.JText::_('JBS_TCH_RETURN_TEACHER_LIST');?></a> <?php if ($this->params->get('teacherlink', '1') > 0) { echo ' | <a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.(int)$teacher->id.'&t='.$t.'">'.JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER').' --></a>';}
 ?></td></tr></table>
 </div>

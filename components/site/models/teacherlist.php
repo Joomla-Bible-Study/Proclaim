@@ -31,7 +31,7 @@ function __construct()
       //  require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
         jimport('joomla.html.parameter');
 		$params 			=& $mainframe->getPageParameters();
-		JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		JRequest::setVar( 't', $params->get('t'), 'get');
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
 		
@@ -106,7 +106,7 @@ function getTotal()
 function getTemplate() 
 		{
 			if(empty($this->_template)) {
-				$templateid = JRequest::getVar('templatemenuid','1','get','int');
+				$templateid = JRequest::getVar('t','1','get','int');
 				if ($templateid < 1) {$templateid = 1;}
 				$query = 'SELECT *'
 				. ' FROM #__bsms_templates'

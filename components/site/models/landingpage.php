@@ -35,10 +35,10 @@ class biblestudyModellandingpage extends JModel
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		//$params =& $mainframe->getPageParameters();
 		$params 			=& $mainframe->getPageParameters();
-		$templatemenuid = $params->get('templatemenuid');
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
-		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$t = $params->get('t');
+		if (!$t){$t = 1;}
+		JRequest::setVar( 't', $t, 'get');
+		//JRequest::setVar( 't', $params->get('t'), 'get');
 	//	require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
         jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
@@ -211,7 +211,7 @@ function getBooks() {
 
 function getTemplate() {
 		if(empty($this->_template)) {
-			$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+			$templateid = JRequest::getVar('t',1,'get', 'int');
 			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'

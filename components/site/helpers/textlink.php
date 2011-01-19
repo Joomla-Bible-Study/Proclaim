@@ -10,7 +10,7 @@ include_once($path1.'helper.php');
 $scripturerow = 1;
 $scripture1 = getScripture($params, $row, $esv=null, $scripturerow);
 $intro = str_replace('"','',$row->studyintro);
-$templatemenuid = $params->get('detailstemplateid',1);
+$t = $params->get('detailstemplateid',1);
 	//This was added to see if we could get AVR to behave properly. In somes cases it errors out with Popup Database Error is there is no Itemid
 //	$itemid = JRequest::getVar('Itemid','get');
 //	if (!$itemid) {JRequest::setVar('Itemid',1,'get'); $itemid='1';}
@@ -20,7 +20,7 @@ $object_vars = @get_object_vars( $template ) ;
 //dump ($object_vars, 'myobject: ');
 if (!$object_vars) {
 	$images = new jbsImages();
-if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 	if ($textorpdf == 'text') {
 		if (!$template[0]->text ) { $i_path = 'components/com_biblestudy/images/textfile24.png'; 
@@ -46,7 +46,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
 	}
 	   
 		
-       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&templatemenuid='.$templatemenuid ).JHTML::_('behavior.tooltip');
+       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&t='.$t ).JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 	}
 	
@@ -65,4 +65,3 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
    return $linktext;
 } // end of if object_vars is FALSE
 }
-

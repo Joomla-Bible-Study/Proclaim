@@ -473,11 +473,11 @@ $Itemid = JRequest::getVar('Itemid');
 				$addItemid = getItemidLink($isplugin=0, $admin_params);
 				if (!$Itemid)
 					{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&t='.$params->get('detailstemplateid'));
 				 	}
 				 else
 				 	{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&t='.$params->get('detailstemplateid'));
 		 		}
 				$column = '<a href="'.$link.'">';
 			 break;
@@ -489,7 +489,7 @@ $Itemid = JRequest::getVar('Itemid');
 			 break;
 
 			case 3 :
-				 $link = JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $tid.'&templatemenuid='.$params->get('teachertemplateid'));
+				 $link = JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay' . '&id=' . $tid.'&t='.$params->get('teachertemplateid'));
 				 if ($tmenu > 0) {$link .= '&Itemid='.$tmenu;}
 				 $column .= '<a href="'.$link.'">';
 			 break;
@@ -499,11 +499,11 @@ $Itemid = JRequest::getVar('Itemid');
 				//$addItemid = getItemidLink($isplugin=0, $admin_params);
 				if (!$Itemid)
 					{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));//.$addItemid;
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&t='.$params->get('detailstemplateid'));//.$addItemid;
 				 	}
 				 else
 				 	{
-				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&templatemenuid='.$params->get('detailstemplateid'));
+				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&t='.$params->get('detailstemplateid'));
 		 		}
 				$column = getTooltip($row->id, $row, $params, $admin_params, $template);
 		   		$column .= '<a href="'.$link.'">';
@@ -564,7 +564,7 @@ function getListingExp($row, $params, $admin_params, $template)
 	$label = str_replace('{{studyintro}}', $row->studyintro, $label);
 	$label = str_replace('{{scripture}}', getScripture($params, $row, 0, 1), $label);
 	$label = str_replace('{{topics}}', $row->topic_text, $label);
-    $label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id .'&templatemenuid='.$template, $label);
+    $label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id .'&t='.$template, $label);
     //$label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
     $label = str_replace('{{mediatime}}', getDuration($params, $row), $label);
 //	$label = str_replace('{{thumbnail}}', '<img src="images/'.$admin_params->get('study_images')."/".$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);

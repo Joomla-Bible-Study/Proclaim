@@ -10,11 +10,11 @@ function getLocationsLandingPage($params, $id, $admin_params)
 	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$location = null;
 	$teacherid = null;
-	$templatemenuid = $params->get('templatemenuid');
-	//$templatemenuid = $params->get('teachertemplateid');
+	$t = $params->get('t');
+	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landinglocationslimit');
 	if (!$limit) {$limit = 10000;}
-	if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 		$location = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
@@ -55,7 +55,7 @@ function getLocationsLandingPage($params, $id, $admin_params)
                 $location .= "\n\t" . '<tr>';
             }
             $location .= "\n\t\t" . '<td id="landing_td">';
-		    $location .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_location='.$b->id.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&templatemenuid='.$templatemenuid.'">';
+		    $location .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_location='.$b->id.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$t.'">';
 		    
 		    $location .= $b->location_text;
     		

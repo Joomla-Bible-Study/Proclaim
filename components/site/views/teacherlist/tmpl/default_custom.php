@@ -4,13 +4,13 @@ $user =& JFactory::getUser();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 $params = $this->params;
 
-$templatemenuid = $params->get('teachertemplateid');
-//dump ($templatemenuid);
-if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid', 1, 'get', 'int');}
+$t = $params->get('teachertemplateid');
+//dump ($t);
+if (!$t) {$t = JRequest::getVar('t', 1, 'get', 'int');}
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 $admin_params = $this->admin_params;
 include_once($path1.'image.php');
-//if (!$templatemenuid){$templatemenuid = 1;}
+//if (!$t){$t = 1;}
 
 $listingcall = JView::loadHelper('teacher');
 
@@ -45,7 +45,7 @@ $listingcall = JView::loadHelper('teacher');
   
   
   foreach ($this->items as $row) { //Run through each row of the data result from the model
-  $listing = getTeacherListExp($row, $params, $oddeven=0, $this->admin_params, $templatemenuid);
+  $listing = getTeacherListExp($row, $params, $oddeven=0, $this->admin_params, $t);
 	echo $listing;
  }
  

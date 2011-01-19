@@ -35,7 +35,7 @@ class jbStats {
 
 function top_score_site($item)
 	{
-	$t = JRequest::getInt('templatemenuid',1,'get');
+	$t = JRequest::getInt('t',1,'get');
    // $Itemid = JRequet::getInt('Itemid','get');
 	$admin_params = getAdminsettings();
 	$limit = $admin_params->get('popular_limit','25');
@@ -67,7 +67,7 @@ function top_score_site($item)
 			if (!$hits->studytitle){$name = $hits->id;}else{$name = $hits->studytitle;}
 			if ($format < 1){$total = $result->added + $hits->hits;}
             else $total = $result->added;
-			$selectvalue = JRoute::_(JURI::base().'index.php?option=com_biblestudy&view=studydetails&id='.$hits->id.'&templatemenuid='.$t.'&Itemid='.$item);
+			$selectvalue = JRoute::_(JURI::base().'index.php?option=com_biblestudy&view=studydetails&id='.$hits->id.'&t='.$t.'&Itemid='.$item);
 			$selectdisplay = '<strong>'.$name.'</strong> - '.JText::_('JBS_CMN_SCORE').': '.$total;
 			$final2 = array('score'=>$total,'select'=> $selectvalue, 'display'=> $selectdisplay);
 			$final[] = $final2;

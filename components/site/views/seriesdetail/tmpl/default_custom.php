@@ -15,8 +15,8 @@ $params = $this->params;
 $url = $this->params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}	
 $listingcall = JView::loadHelper('serieslist');
-$templatemenuid = $this->params->get('serieslisttemplateid');
-if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
+$t = $this->params->get('serieslisttemplateid');
+if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 ?>
 <form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
@@ -34,7 +34,7 @@ if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'ge
  	?></table>
 <?php	if ($this->params->get('series_list_return') > 0) 
 		{
-            echo '<table><tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&templatemenuid='.$templatemenuid).'"><< '.JText::_('JBS_SER_RETURN_SERIES_LIST').'</a> | <a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_series='.$this->items->id.'&templatemenuid='.$templatemenuid).'">'.JText::_('JBS_CMN_SHOW_ALL').' '.JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES').' >></a></td></tr></table>';
+            echo '<table><tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=serieslist&t='.$t).'"><< '.JText::_('JBS_SER_RETURN_SERIES_LIST').'</a> | <a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_series='.$this->items->id.'&t='.$t).'">'.JText::_('JBS_CMN_SHOW_ALL').' '.JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES').' >></a></td></tr></table>';
         }
 ?>        
   </div><!--end of bspagecontainer div-->

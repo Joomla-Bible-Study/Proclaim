@@ -44,10 +44,10 @@ class biblestudyModelstudieslist extends modelClass {
 
         // Get the pagination request variables
         $limit = $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
-        //$limitstart = $mainframe->getUserStateFromRequest( $option.'limitstart', 'limitstart', 0);
+       
         $limitstart = $mainframe->getUserStateFromRequest('com_biblestudy&view=studieslist.limitstart', 'limitstart', 0, 'int');
 
-        //$limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
+       
         $this->setState('limit', $limit);
         $this->setState('limitstart', $limitstart);
     }
@@ -59,22 +59,7 @@ class biblestudyModelstudieslist extends modelClass {
     function _buildQuery() {
         $where = $this->_buildContentWhere();
         $orderby = $this->_buildContentOrderBy();
-        //dump ($this->test());
-        /*
-          $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
-          . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
-          . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-          . ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text'
-          . ' FROM #__bsms_studies'
-          . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-          . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-          . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-          . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-          . ' LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
-          . $where
-          . $orderby
-          ;
-         */
+        
         $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
                 . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
                 . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'

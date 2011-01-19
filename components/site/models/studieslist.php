@@ -5,9 +5,24 @@ jimport( 'joomla.application.component.model' );
 
 $params = &JComponentHelper::getParams($option);
 $default_order = $params->get('default_order');
+//Joomla 1.6 <-> 1.5 Branch
+try {
+    jimport('joomla.application.component.modellist');
 
-class biblestudyModelstudieslist extends JModel
-{
+    abstract class modelClass extends JModelList {
+        
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.model');
+
+    abstract class modelClass extends JModel {
+        
+    }
+
+}
+
+class biblestudyModelstudieslist extends modelClass {
 
 	var $_total = null;
 	var $_pagination = null;
@@ -39,10 +54,10 @@ class biblestudyModelstudieslist extends JModel
 		//$params =& $mainframe->getPageParameters();
 		$params 			=& $mainframe->getPageParameters();
         
-		$templatemenuid = $params->get('templatemenuid');
-		if (!$templatemenuid){$templatemenuid = 1;}
-		JRequest::setVar( 'templatemenuid', $templatemenuid, 'get');
-		//JRequest::setVar( 'templatemenuid', $params->get('templatemenuid'), 'get');
+		$t = $params->get('t');
+		if (!$t){$t = 1;}
+		JRequest::setVar( 't', $t, 'get');
+		//JRequest::setVar( 't', $params->get('t'), 'get');
 		
 		$template = $this->getTemplate();
         jimport('joomla.html.parameter');
@@ -51,9 +66,7 @@ class biblestudyModelstudieslist extends JModel
 		//dump ($params, 'params: ');
 		$config = JFactory::getConfig();
 		// Get the pagination request variables
-		//$limitstart = JRequest::getVar('limitstart', 0, '', 'int');
-		//$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $config->getValue('config.list_limit'), 'int'));
-		//$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $params->get('items'), 'int'));
+		
 		$this->setState('limit',$params->get('itemslimit'),'limit',$params->get('itemslimit'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
 
@@ -244,7 +257,7 @@ function getBooks() {
 	 */
 function getTemplate() {
 		if(empty($this->_template)) {
-			$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
+			$templateid = JRequest::getVar('t',1,'get', 'int');
 			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'
@@ -630,5 +643,15 @@ function getTemplate() {
           }
 	return $orderby;
 	}
+    
+     protected function getListQuery()
+        {
+                // Create a new query object.         
+                $db = JFactory::getDBO();
+                $query = $db->getQuery(true);
+                // Select some fields
+                $query = $this->_buildQuery();
+                return $query;
+        }
 }
 ?>
