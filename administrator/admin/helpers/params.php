@@ -19,9 +19,12 @@ class BsmHelper extends JComponentHelper {
     /**
      * Gets the settings from Admin
      *
+     * @param   $isSite   Boolean   True if this is called from the frontend
      * @since   7.0
      */
-    public function getAdmin() {
+    public function getAdmin($isSite = false) {
+        if($isSite)
+            JModel::addIncludePath (JPATH_COMPONENT_ADMINISTRATOR.DS.'models');
         $admin = JModel::getInstance('Admin', 'biblestudyModel');
         $admin = $admin->getItem(1);
 

@@ -18,7 +18,12 @@ $controller = JController::getInstance('biblestudy');
 $controller->execute(JRequest::getCmd('task'));
 $controller->redirect();
 
-
+/**
+ * Adds a loading div for any ajax requests via JQuery
+ * This will become obsolete if we move away from JQuery
+ * 
+ * @since   7.0
+ */
 function addLoadingDiv() {
     echo '
                 <div id="loading">
@@ -28,12 +33,22 @@ function addLoadingDiv() {
                 ';
 }
 
+/**
+ * Global css
+ *
+ * @since   7.0
+ */
 function addCSS() {
     $doc = & JFactory::getDocument();
     $doc->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/general.css');
     $doc->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/icons.css');
 }
 
+/**
+ * Global JS
+ * 
+ * @since   7.0
+ */
 function addJS() {
     $doc = & JFactory::getDocument();
     $doc->addScript(JURI::base() . 'components/com_biblestudy/js/jquery.js');
