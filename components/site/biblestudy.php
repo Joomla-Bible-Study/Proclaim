@@ -8,8 +8,12 @@ define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
 
 // Require the base controller
-require_once (JPATH_COMPONENT.DS.'controller.php');
+jimport("joomla.application.component.controller");
+$controller = JController::getInstance('biblestudy');
+$controller->execute(JRequest::getCmd('task'));
+$controller->redirect();
 
+//The Below is not required anymore, because joomla will handle this for us
 if ($controller = JRequest::getWord('controller')) {
 $approvedControllers = array(
 'studieslist',
@@ -78,15 +82,15 @@ require_once JPATH_COMPONENT . DS . 'controllers' . DS . $controller . '.php';
 // Create the controller
 //
 
-	$classname	= 'biblestudyController'.$controller;
+	//$classname	= 'biblestudyController'.$controller;
 	//dump ($classname, 'controller');
 //	
-	$controller = new $classname( );
+	//$controller = new $classname( );
 	//dump ($controller, 'controller: ');
 	// Perform the Request task
-	$controller->execute( JRequest::getWord('task'));
+	//$controller->execute( JRequest::getWord('task'));
 	
 	// Redirect if set by the controller
-	$controller->redirect();
+	//$controller->redirect();
 
 ?>
