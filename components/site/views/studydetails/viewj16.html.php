@@ -25,20 +25,23 @@ class biblestudyViewstudydetails extends JView
 		$contentConfig = &JComponentHelper::getParams( 'com_biblestudy' );
 		$dispatcher	=& JDispatcher::getInstance();
 		// Get the menu item object
-		//$menus = &JMenu::getInstance();
-		$menu =& JSite::getMenu();
-		$item =& $menu->getActive();
-		$params 			=& $mainframe->getPageParameters();
-		$t = $params->get('t',1);
-		if (!$t){$t = 1;}
-		JRequest::setVar( 't', $t, 'get');
-		
-	//	dump ($params);
+	
 		$studydetails  =& $this->get('Data');
+         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
-        $this->params = BsmHelper::getTemplateparams(true);
+        $this->admin_params = $this->admin;
+        
+         $t = JRequest::getInt('t','get',1);
+        if (!$t) {
+            $t = 1;
+        }
+        JRequest::setVar('t', $t, 'get');
+        $template = BsmHelper::getTemplateparams(true);
+        $this->params = $template;
+	    $params = $this->params;
+       
         
         $adminrows = new JBSAdmin();
         $show = $adminrows->getShowLevel($studydetails);
@@ -111,7 +114,7 @@ class biblestudyViewstudydetails extends JView
                 // End process prepare content plugins
 		$this->assignRef('template', $template);
 		$this->assignRef('print', $print);
-		$this->assignRef('params' , $params);	
+	//	$this->assignRef('params' , $params);	
 		$this->assignRef('studydetails', $studydetails);
 		$this->assignRef('article', $article);
   		$this->assignRef('passage_link', $passage_link);

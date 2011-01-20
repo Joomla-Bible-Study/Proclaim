@@ -19,7 +19,7 @@ $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 //$params = $mainframe->getPageParameters();
 $params = $this->params;
-//dump ($params);
+//print_r($params->params['show_comments']);
 $document =& JFactory::getDocument();
 $document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');

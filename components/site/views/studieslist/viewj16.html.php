@@ -22,12 +22,19 @@ class biblestudyViewstudieslist extends JView {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
 
-        //Load the Admin settings
+        //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
-
-
+        $this->admin_params = $this->admin;
+        
+         $t = JRequest::getInt('t','get',1);
+        if (!$t) {
+            $t = 1;
+        }
+        JRequest::setVar('t', $t, 'get');
+        $this->params = BsmHelper::getTemplateparams(true);
+       
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $path1 = JPATH_SITE . DS . 'components' . DS . 'com_biblestudy' . DS . 'helpers' . DS;
@@ -36,19 +43,11 @@ class biblestudyViewstudieslist extends JView {
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers');
         $document = & JFactory::getDocument();
         $model = & $this->getModel();
-        $admin = & $this->get('Admin');
-        $admin_params = new JParameter($admin[0]->params);
-        $this->assignRef('admin_params', $admin_params);
-        $this->assignRef('admin', $admin);
-        $params = & $mainframe->getPageParameters();
+        
+        
 
-        $t = $params->get('t');
-        if (!$t) {
-            $t = 1;
-        }
-        JRequest::setVar('t', $t, 'get');
-        $template = $this->get('Template');
-        $params = new JParameter($template[0]->params);
+       
+        
 
         //See if user has permission to edit and whether admin params are set to allow front end editing of studies
         $admin = new JBSAdmin();
