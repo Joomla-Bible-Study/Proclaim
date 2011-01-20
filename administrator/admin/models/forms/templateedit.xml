@@ -1035,7 +1035,7 @@
             </field>
             <field name="show_comments"
            type="usergroup"
-           multiple="yes"
+           multiple="true"
            default=""
            size="10"
            label="JBS_TPL_DETAILS_SHOW_COMMENTS"
@@ -1050,7 +1050,7 @@
             </field>
             <field name="comment_access"
             type="usergroup" 
-            multiple="yes" 
+            multiple="true" 
             size="10" 
             default="" 
             label="JBS_TPL_DETAILS_COMMENT_ACCESS" 

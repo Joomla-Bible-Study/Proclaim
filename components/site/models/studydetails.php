@@ -55,7 +55,7 @@ class biblestudyModelstudydetails extends JModel
 		$this->_id = $id;
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
-		//dump ($params, 'params: ');
+	//	dump ($template, 'params: ');
 	//if($params2->get('record_hits') == 1){
 		$this->hit();
 	//}

@@ -36,14 +36,21 @@ class JBSAdmin
     return $player;
  }
  
- function getAdminsettings()
+function getAdminsettings()
 	{
-		$db =& JFactory::getDBO();
+		if (JOOMLA_VERSION == '5')
+        {
+        $db =& JFactory::getDBO();
 		$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
 		$db->query();
 		$compat = $db->loadObject();
 		$admin_params = new JParameter($compat->params);
-					
+		}
+        else
+        {
+        include_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'params.php');
+        $admin_params = BsmHelper::getAdmin(true);
+        }			
 		return $admin_params;
 	}
  

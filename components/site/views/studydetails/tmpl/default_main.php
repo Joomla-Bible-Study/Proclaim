@@ -37,7 +37,7 @@ $sharecall = JView::loadHelper('share');
 
 	<?php 
 	
-	
+
 	if ($this->params->get('show_print_view') > 0) 
 	{
 		$text = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'JBS_CMN_PRINT' ) );

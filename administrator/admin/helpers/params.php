@@ -33,5 +33,14 @@ class BsmHelper extends JComponentHelper {
         $admin->user_id = $user->id;
         return $admin;
     }
+    
+    public function getTemplateparams($isSite = false){
+        if ($isSite)
+            JModel::addIncludePath (JPATH_COMPONENT_ADMINISTRATOR.DS.'models');
+        $pk = JRequest::getInt('t','get','1');
+        $template = JModel::getInstance('Templateedit', 'biblestudyModel');
+        $template = $template->getItem($pk);
+        return $template;
+    }
 }
 ?>

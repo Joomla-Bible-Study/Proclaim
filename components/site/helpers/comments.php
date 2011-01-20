@@ -2,7 +2,8 @@
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 function getComments($params, $row, $Itemid)
 {
-		$allow = 0;
+		
+        $allow = 0;
         $admin = new JBSAdmin();
         $allow = $admin->commentsPermission($params);
         if (!$allow){$comments = ''; return $comments;}
@@ -74,6 +75,8 @@ $comments .= '
 
 		// Begin captcha . Thanks OSTWigits
 		//Must be installed. Here we check that
+        $checkplugin = JPluginHelper::importPlugin('system','captcha');
+        dump ($checkplugin, 'checkplugin: ');
 		if (JPluginHelper::importPlugin('system', 'captcha'))
 			{
 				$comments .= '<table><tr><td>'.JText::_('JBS_CMT_ENTER_CAPTCHA_TEXT').'&nbsp
