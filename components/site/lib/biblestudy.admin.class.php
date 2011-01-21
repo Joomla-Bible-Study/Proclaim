@@ -140,8 +140,8 @@ function commentsPermission($params)
 {
     $results = array();
     $comments = 0;
-    $show_comments = $params->params['show_comments'];
-    $enter_comments = $params->params['comment_access'];
+    $show_comments = $params->get('show_comments');
+    $enter_comments = $params->get('comment_access');
     //$comments 10 is view only, 11 is view and edit, 0 is no view or edit
     
     $database = JFactory::getDBO();

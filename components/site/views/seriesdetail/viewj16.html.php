@@ -34,8 +34,11 @@ class biblestudyViewseriesdetail extends JView
             $t = 1;
         }
         JRequest::setVar('t', $t, 'get');
-        $this->params = BsmHelper::getTemplateparams(true);
-	    $params = $this->params;
+      //  $this->params = BsmHelper::getTemplateparams(true);
+	  //  $params = $this->params;
+        
+        $template = $this->get('template');
+        $params = new JParameter($template[0]->params);
 		//dump ($params, 'params2: ');
 		$items		=& $this->get('Data');
 		//dump ($items);
@@ -113,7 +116,7 @@ class biblestudyViewseriesdetail extends JView
                 // End process prepare content plugins
 		$this->assignRef('template', $template);
 		$this->assignRef('print', $print);
-	//	$this->assignRef('params' , $params);	
+		$this->assignRef('params' , $params);	
 	//	$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('items', $items);
 		$this->assignRef('article', $article);

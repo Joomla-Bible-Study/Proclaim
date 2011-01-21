@@ -26,8 +26,10 @@ class biblestudyViewserieslist extends JView {
             $t = 1;
         }
         JRequest::setVar('t', $t, 'get');
-        $this->params = BsmHelper::getTemplateparams(true);
-	    $params = $this->params;
+      //  $this->params = BsmHelper::getTemplateparams(true);
+	  //  $params = $this->params;
+        $template = $this->get('template');
+        $params = new JParameter($template[0]->params);
 		//dump ($template, 'template: ');
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
@@ -98,7 +100,7 @@ class biblestudyViewserieslist extends JView {
 		$this->assignRef('items',		$items);
 
 		$this->assignRef('request_url',	$uri->toString());
-	//	$this->assignRef('params', $params);
+		$this->assignRef('params', $params);
 		parent::display($tpl);
 	}
 }

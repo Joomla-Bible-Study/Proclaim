@@ -33,7 +33,10 @@ class biblestudyViewstudieslist extends JView {
             $t = 1;
         }
         JRequest::setVar('t', $t, 'get');
-        $this->params = BsmHelper::getTemplateparams(true);
+        
+        $template = $this->get('template');
+        $params = new JParameter($template[0]->params);
+      //  $this->params = BsmHelper::getTemplateparams(true);
        
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');

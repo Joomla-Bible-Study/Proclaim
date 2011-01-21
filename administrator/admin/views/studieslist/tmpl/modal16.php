@@ -107,7 +107,7 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo JHtml::_('jgrid.published', $item->published, $i, 'studieslist.', true, 'cb', '', ''); ?>
                     </td>
                     <td class="center">
-                        scripture
+                <?php echo $this->escape($item->bookname).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
                     </td>
                     <td class="center">
                 <?php echo $this->escape($item->teachername); ?>

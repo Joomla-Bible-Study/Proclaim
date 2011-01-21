@@ -303,6 +303,10 @@ class biblestudyModelstudieslist extends modelClass {
         $query->select('topic.topic_text');
         $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = study.topics_id');
 
+        //Join over Books
+        $query->select('book.bookname');
+        $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
+        
         //Join over Plays?
         //Join over Downloads?
 
@@ -315,6 +319,7 @@ class biblestudyModelstudieslist extends modelClass {
         $book = $this->getState('filter.book');
         if(!empty($book))
             $query->where('study.booknumber = '.(int)$book.' OR study.booknumber2 = '.(int)$book);
+            $query->join('LEFT', '#__bsms_books AS books ON books.booknumber = study.booknumber');
 
         //Filter by teacher
         $teacher = $this->getState('filter.teacher');

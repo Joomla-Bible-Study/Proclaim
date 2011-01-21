@@ -38,10 +38,12 @@ class biblestudyViewstudydetails extends JView
             $t = 1;
         }
         JRequest::setVar('t', $t, 'get');
-        $template = BsmHelper::getTemplateparams(true);
-        $this->params = $template;
-	    $params = $this->params;
-       
+        //$template = BsmHelper::getTemplateparams(true);
+        //$this->params = $template;
+	    //$params = $this->params;
+        
+        $template = $this->get('template');
+        $params = new JParameter($template[0]->params);
         
         $adminrows = new JBSAdmin();
         $show = $adminrows->getShowLevel($studydetails);
@@ -114,7 +116,7 @@ class biblestudyViewstudydetails extends JView
                 // End process prepare content plugins
 		$this->assignRef('template', $template);
 		$this->assignRef('print', $print);
-	//	$this->assignRef('params' , $params);	
+		$this->assignRef('params' , $params);	
 		$this->assignRef('studydetails', $studydetails);
 		$this->assignRef('article', $article);
   		$this->assignRef('passage_link', $passage_link);

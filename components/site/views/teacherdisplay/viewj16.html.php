@@ -34,8 +34,10 @@ class biblestudyViewteacherdisplay extends JView
             $t = 1;
         }
         JRequest::setVar('t', $t, 'get');
-        $this->params = BsmHelper::getTemplateparams(true);
-	    $params = $this->params;
+        $template = $this->get('template');
+        $params = new JParameter($template[0]->params);
+      //  $this->params = BsmHelper::getTemplateparams(true);
+	  //  $params = $this->params;
         
 		
 		$url = $params->get('stylesheet');
@@ -88,7 +90,7 @@ class biblestudyViewteacherdisplay extends JView
 		
 		$this->assignRef('studies', $studies);
 		$this->assignRef('print', $print);
-	//	$this->assignRef('params' , $params);	
+		$this->assignRef('params' , $params);	
 	//	$this->assignRef('admin_params', $admin_params);
 		$this->assignRef('template', $template);
 	//	$this->assignRef('user', $user);
