@@ -1,91 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fields name="params">
-        <field name="compat_mode" type="radio" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE" description="JBS_ADM_MEDIA_COMPAT_MODE_TT">
+        <field name="compat_mode" type="radio" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE" description="JBS_ADM_MEDIA_COMPAT_MODE_DESC">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-        <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_TT">
+        <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_DESC">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-        <field name="admin_store" type="list" default="0" label="JBS_ADM_ADMIN_STORE" description="JBS_ADM_ADMIN_STORE_TT">
+        <field name="admin_store" type="list" default="0" label="JBS_ADM_ADMIN_STORE" description="JBS_ADM_ADMIN_STORE_DESC">
             <option value="0">JBS_CMN_SHOW</option>
             <option value="1">JBS_CMN_HIDE</option>
         </field>
-        <field name="studylistlimit" type="text" size="3" label="JBS_ADM_STUDYLISTLIMIT" description="JBS_ADM_STUDYLISTLIMIT_TT" default="" />
-        <field name="show_location_media" type="list" default="0" label="JBS_ADM_SHOW_LOCATION_MEDIA" description="JBS_ADM_SHOW_LOCATION_MEDIA_TT">
+        <field name="studylistlimit" type="text" size="3" label="JBS_ADM_STUDYLISTLIMIT" description="JBS_ADM_STUDYLISTLIMIT_DESC" default="" />
+        <field name="show_location_media" type="list" default="0" label="JBS_ADM_SHOW_LOCATION_MEDIA" description="JBS_ADM_SHOW_LOCATION_MEDIA_DESC">
             <option value="0">JBS_CMN_HIDE</option>
             <option value="1">JBS_CMN_SHOW</option>
         </field>
-        <field name="popular_limit" type="text" size="3" label="JBS_ADM_POPULAR_LIMIT" dscription="JBS_ADM_POPULAR_LIMIT_TT" />
-        <field name="character_filter" type="list" default="1" label="JBS_ADM_CHARACTER_FILTER" description="JBS_ADM_CHARACTER_FILTER_TT">
+        <field name="popular_limit" type="text" size="3" label="JBS_ADM_POPULAR_LIMIT" dscription="JBS_ADM_POPULAR_LIMIT_DESC" />
+        <field name="character_filter" type="list" default="1" label="JBS_ADM_CHARACTER_FILTER" description="JBS_ADM_CHARACTER_FILTER_DESC">
             <option value="0">JBS_ADM_NO_FILTER</option>
             <option value="1">JBS_ADM_FILTER</option>
         </field>
-        <field name="format_popular" default="0"  type="list" label="JBS_ADM_FORMAT_POPULAR" description="JBS_ADM_FORMAT_POPULAR_TT">
+        <field name="format_popular" default="0"  type="list" label="JBS_ADM_FORMAT_POPULAR" description="JBS_ADM_FORMAT_POPULAR_DESC">
             <option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
             <option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
         </field>
-        <field name="socialnetworking"  type="list" default="1" label="JBS_ADM_SOCIALNETWORKING" description="JBS_ADM_SOCIALNETWORKING_TT">
+        <field name="socialnetworking"  type="list" default="1" label="JBS_ADM_SOCIALNETWORKING" description="JBS_ADM_SOCIALNETWORKING_DESC">
             <option value="0">JBS_CMN_HIDE</option>
             <option value="1">JBS_CMN_SHOW</option>
         </field>
-        <field name="sharetype" type="list" default="1" label="JBS_ADM_SHARETYPE" description="JBS_ADM_SHARETYPE_TT">
+        <field name="sharetype" type="list" default="1" label="JBS_ADM_SHARETYPE" description="JBS_ADM_SHARETYPE_DESC">
             <option value="0">JBS_ADM_INTERNAL_SHARE</option>
             <option value="1">JBS_ADM_ADDTHIS_SHARE</option>
         </field>
-        <field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE" description="JBS_ADM_DEFAULT_MAIN_IMAGE_TT"/>
-        <field name="default_study_image" type="media" size="50" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_TT"/>        
-        <field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE" description="JBS_ADM_DEFAULT_SERIES_IMAGE_TT"/>
-        <field name="default_teacher_image" type="media" size="50" label="JBS_ADM_DEFAULT_TEACHER_IMAGE" description="JBS_ADM_DEFAULT_TEACHER_IMAGE_TT"/>
-        <field name="default_download_image" type="media" size="50" label="JBS_ADM_DOWNLOAD_IMAGE" description="JBS_ADM_DOWNLOAD_IMAGE_TT"/>
-        <field name="default_showHide_image" type="list" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE" description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_TT">
+        <field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE" description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC"/>
+        <field name="default_study_image" type="media" size="50" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_DESC"/>        
+        <field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE" description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC"/>
+        <field name="default_teacher_image" type="media" size="50" label="JBS_ADM_DEFAULT_TEACHER_IMAGE" description="JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC"/>
+        <field name="default_download_image" type="media" size="50" label="JBS_ADM_DOWNLOAD_IMAGE" description="JBS_ADM_DOWNLOAD_IMAGE_DESC"/>
+        <field name="default_showHide_image" type="list" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE" description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC">
             <option>JBS_CMN_DEFAULT_IMAGE</option>
         </field>
         <field name="location_id" type="sql" extension="com_biblestudy" label="JBS_CMN_LOCATION"
-             description="JBS_ADM_FILLIN_STUDY_LOCATION_ID_TT" class="inputbox"
+             description="JBS_ADM_FILLIN_STUDY_LOCATION_ID_DESC" class="inputbox"
              query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER BY location_text ASC"
              key_field="id"
              value_field="location_text">
             <option value="-1">JBS_CMN_SELECT_LOCATION</option>
         </field>
         <field name="teacher_id" type="sql" class="inputbox" default="-1" label="JBS_CMN_TEACHER_NAME"
-             description="JBS_ADM_FILLIN_STUDY_TEACHER_ID_TT"
+             description="JBS_ADM_FILLIN_STUDY_TEACHER_ID_DESC"
              query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER BY teachername ASC"
              key_field="id"
              value_field="teachername">
             <option value="-1">JBS_CMN_SELECT_TEACHER</option>
         </field>
         <field name="series_id" type="sql" default="-1" label="JBS_CMN_SERIES"
-             description="JBS_ADM_FILLIN_STUDY_SERIES_ID_TT" class="intputbox"
+             description="JBS_ADM_FILLIN_STUDY_SERIES_ID_DESC" class="intputbox"
              query="SELECT id, series_text FROM #__bsms_series WHERE published = 1"
              key_field="id"
              value_field="series_text">
             <option value="-1">JBS_CMN_SELECT_SERIES</option>
         </field>
         <field name="booknumber" type="sql" default="-1" label="JBS_CMN_BOOK"
-             description="JBS_ADM_FILLIN_STUDY_BOOKNUMBER_TT" class="inputbox"
+             description="JBS_ADM_FILLIN_STUDY_BOOKNUMBER_DESC" class="inputbox"
              query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
              key_field="booknumber"
              value_field="bookname">
             <option value="-1">JBS_CMN_SELECT_BOOK</option>
         </field>
         <field name="topic_id" type="sql" default="-1" label="JBS_CMN_TOPIC"
-             description="JBS_ADM_FILLIN_STUDY_TOPIC_ID_TT" class="inputbox"
+             description="JBS_ADM_FILLIN_STUDY_TOPIC_ID_DESC" class="inputbox"
              query="SELECT DISTINCT #__bsms_studies.topics_id, #__bsms_topics.topic_text, #__bsms_topics.id AS tid FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) WHERE #__bsms_topics.published = 1 ORDER BY #__bsms_topics.topic_text ASC"
              key_field="tid"
              value_field="topic_text">
             <option value="-1">JBS_CMN_SELECT_TOPIC</option>
         </field>
         <field name="messagetype" type="messagetypelist" default="-1" label="JBS_CMN_MESSAGE_TYPE"
-             description="JBS_ADM_FILLIN_STUDY_MESSAGETYPE_TT" class="inputbox"
+             description="JBS_ADM_FILLIN_STUDY_MESSAGETYPE_DESC" class="inputbox"
              query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER BY message_type ASC">
             <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
         </field>
 
         <field name="JBS_ADM_DEFAULT_STUDY_IMAGE" type="media" extension="com_biblestudy" id="media_image"
-         label="JBS_ADM_DEFAULT_STUDYLIST_IMAGE" description="JBS_ADM_DEFAULT_STUDYLIST_IMAGE_TT" class="inputbox"
+         label="JBS_ADM_DEFAULT_STUDYLIST_IMAGE" description="JBS_ADM_DEFAULT_STUDYLIST_IMAGE_DESC" class="inputbox"
          query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
          key_field="id"
          value_field="media_image_name">
@@ -94,21 +94,21 @@
 
         <field name="series_imagefolder" type="folderlist" hide_none="-1" directory="/images"
              label="JBS_ADM_FILLIN_IMAGES_SERIES_IMAGEFOLDER"
-             description="JBS_ADM_FILLIN_IMAGES_SERIES_IMAGEFOLDER_TT" />
+             description="JBS_ADM_FILLIN_IMAGES_SERIES_IMAGEFOLDER_DESC" />
         <field name="media_imagefolder" type="folderlist" hide_none="-1" directory="/images"
              label="JBS_ADM_FILLIN_IMAGES_MEDIA_IMAGEFOLDER"
-             description="JBS_ADM_FILLIN_IMAGES_MEDIA_IMAGEFOLDER_TT" />
+             description="JBS_ADM_FILLIN_IMAGES_MEDIA_IMAGEFOLDER_DESC" />
         <field name="teachers_imagefolder" type="folderlist" hide_none="-1" directory="/images"
              label="JBS_ADM_FILLIN_IMAGES_TEACHERS_IMAGEFOLDER"
-             description="JBS_ADM_FILLIN_IMAGES_TEACHERS_IMAGEFOLDER_TT" />
-        <field name="study_images" type="folderlist" hide_none="-1" directory="/images" label="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES" description="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES_TT" />
+             description="JBS_ADM_FILLIN_IMAGES_TEACHERS_IMAGEFOLDER_DESC" />
+        <field name="study_images" type="folderlist" hide_none="-1" directory="/images" label="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES" description="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES_DESC" />
 
 
-        <field name="download" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_TT">
+        <field name="download" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-        <field name="target" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_TT">
+        <field name="target" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_DESC">
             <option value=" ">JBS_ADM_NO_DEFAULT</option>
             <option value="_blank">JBS_ADM_NEW_WINDOW</option>
             <option value="_self">JBS_ADM_SAME_WINDOW</option>
@@ -116,28 +116,28 @@
             <option value="_top">JBS_ADM_FULL_WINDOW</option>
         </field>
         <field name="server" type="sql" class="inputbox" label="JBS_ADM_FILLIN_MEDIAFILE_SERVER"
-             description="JBS_ADM_FILLIN_MEDIAFILE_SERVER_TT" default="-1"
+             description="JBS_ADM_FILLIN_MEDIAFILE_SERVER_DESC" default="-1"
              query="SELECT id, server_name FROM #__bsms_servers WHERE published = 1 ORDER BY server_name ASC"
              key_field="id"
              value_field="server_name">
             <option value="-1">JBS_CMN_SELECT_SERVER</option>
         </field>
         <field name="path" type="sql" class="inputbox" label="JBS_ADM_FILLIN_MEDIAFILE_PATH"
-             description="JBS_ADM_FILLIN_MEDIAFILE_PATH_TT" default="-1"
+             description="JBS_ADM_FILLIN_MEDIAFILE_PATH_DESC" default="-1"
              query="SELECT id, foldername FROM #__bsms_folders WHERE published = 1 ORDER BY id ASC"
              key_field="id"
              value_field="foldername">
             <option value="-1">JBS_CMN_SELECT_FOLDER</option>
         </field>
         <field name="podcast" type="sql" class="inputbox" label="JBS_ADM_FILLIN_MEDIAFILE_PODCAST"
-             description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_TT" default="-1"
+             description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC" default="-1"
              query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
              key_field="id"
              value_field="title">
             <option value="-1">JBS_CMN_SELECT_PODCAST</option>
         </field>
         <field name="mime" type="sql" class="inputbox" label="JBS_ADM_FILLIN_MEDIAFILE_MIME"
-             description="JBS_ADM_FILLIN_MEDIAFILE_MIME_TT" default="-1"
+             description="JBS_ADM_FILLIN_MEDIAFILE_MIME_DESC" default="-1"
              query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
              key_field="id"
              value_field="mimetext">
@@ -145,14 +145,14 @@
         </field>
 
         <field name="allow_entry_study" type="list" default="0" label="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY"
-             description="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY_TT">
+             description="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY_DESC">
             <option value="0">JBS_ADM_NO_FRONTEND_ACCESS</option>
             <option value="1">JBS_ADM_ALLOW_FRONTEND_ACCESS</option>
         </field>
         <field name="entry_access" type="usergroup" default="5" label="JBS_ADM_SUBMISSION_ENTRY_ACCESS"
-             description="JBS_ADM_SUBMISSION_ENTRY_ACCESS_TT" />
+             description="JBS_ADM_SUBMISSION_ENTRY_ACCESS_DESC" />
         <field name="study_publish" type="list" default="0" label="JBS_ADM_SUBMISSION_STUDY_PUBLISH"
-             description="JBS_ADM_SUBMISSION_STUDY_PUBLISH_TT">
+             description="JBS_ADM_SUBMISSION_STUDY_PUBLISH_DESC">
             <option value="0">JBS_ADM_NO_AUTO_PUBLISH</option>
             <option value="1">JBS_ADM_AUTO_PUBLISH</option>
         </field>
@@ -162,7 +162,7 @@
             <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
             <option value="3">JBS_CMN_AVPLUGIN</option>
             <option value="7">JBS_CMN_LEGACY_PLAYER</option>
-            <option value="100">JBS_NO_PLAYER_LISTED</option>
+            <option value="100">JBS_ADM_NO_PLAYER_LISTED</option>
         </field>
         <field name="to" type="list" label="">
             <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
@@ -189,6 +189,7 @@
         Eugen:
         This is for future versions of the component to simplify all of our image
         operations. Currently this is not implemented at all
+	santon: Please use JBS_* phrases
         -->
         <field name="imageLib" type="list" label="JBS_ADM_IMAGE_LIBRARY">
             <option value="legacy">Legacy</option>

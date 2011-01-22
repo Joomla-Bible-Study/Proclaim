@@ -61,7 +61,7 @@ echo $pane->endPane();?>
 <tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE');?></td><td><?php
 if ($this->lists['main'])
 {
-    echo $this->lists['main']; echo ' '.JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE_TT');
+    echo $this->lists['main']; echo ' '.JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE_DESC');
 }
 else
 {
@@ -71,7 +71,7 @@ else
 <tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE');?></td><td><?php
 if (isset($this->lists['study']))
 {
-    echo $this->lists['study']; echo ' '.JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE_TT');
+    echo $this->lists['study']; echo ' '.JText::_('JBS_ADM_DEFAULT_STUDY_IMAGE_DESC');
 }
 else
 {
@@ -81,7 +81,7 @@ else
 <tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_SERIES_IMAGE');?></td><td><?php
 if (isset($this->lists['series']))
 {
-    echo $this->lists['series']; echo ' '.JText::_('JBS_ADM_DEFAULT_SERIES_IMAGE_TT');
+    echo $this->lists['series']; echo ' '.JText::_('JBS_ADM_DEFAULT_SERIES_IMAGE_DESC');
 }
 else
 {
@@ -92,7 +92,7 @@ else
 <tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_TEACHER_IMAGE');?></td><td><?php
 if (isset($this->lists['teacher']))
 {
-    echo $this->lists['teacher']; echo ' '.JText::_('JBS_ADM_DEFAULT_TEACHER_IMAGE_TT');
+    echo $this->lists['teacher']; echo ' '.JText::_('JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC');
 }
 else
 {
@@ -102,7 +102,7 @@ else
 <tr><td class="key"><?php echo JText::_('JBS_ADM_DOWNLOAD_IMAGE');?></td><td><?php
 if (isset($this->lists['download']))
 {
-    echo $this->lists['download']; echo ' '.JText::_('JBS_ADM_DOWNLOAD_IMAGE_TT');
+    echo $this->lists['download']; echo ' '.JText::_('JBS_ADM_DOWNLOAD_IMAGE_DESC');
 }
 else
 {
@@ -110,7 +110,7 @@ else
 }
 ?></td></tr>
 <tr><td class="key"><?php echo JText::_('JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE');?></td><td>
-<?php echo $this->lists['showhide']; echo ' '.JText::_('JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_TT');?></td></tr>
+<?php echo $this->lists['showhide']; echo ' '.JText::_('JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC');?></td></tr>
 
 <?php //test for sh404SEF
 jimport('joomla.filesystem.file');
@@ -152,7 +152,7 @@ if ($sh404exists)
 <option value="1"><?php echo JText::_('JBS_CMN_INTERNAL_PLAYER');?></option>
 <option value="3"><?php echo JText::_('JBS_CMN_AVPLUGIN');?></option>
 <option value="7"><?php echo JText::_('JBS_CMN_LEGACY_PLAYER');?></option>
-<option value="100"><?php echo JText::_('JBS_NO_PLAYER_LISTED');?></option>
+<option value="100"><?php echo JText::_('JBS_ADM_NO_PLAYER_LISTED');?></option>
 </select>
 </td>
 <td>

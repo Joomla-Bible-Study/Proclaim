@@ -3,14 +3,14 @@
 <metadata>
 	<layout title="JBS_MNU_STUDIES_LIST_LAYOUT">
 		<message>
-			<![CDATA[JBS_MNU_STUDIES_LIST_LAYOUT_TT]]>
+			<![CDATA[JBS_MNU_STUDIES_LIST_LAYOUT_DESC]]>
 		</message>
 	</layout>
 	<state>
 		<name>JBS_MNU_STUDIES_LIST_LAYOUT</name>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="studieslist" />
-			<param name="templatemenuid" type="templatemenuid" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_TT" />
+			<param name="templatemenuid" type="templatemenuid" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_DESC" />
    <param name="mteacher_id"
            type="sqlmultilistx"
            sql="SELECT * FROM #__bsms_teachers WHERE published = &#39;1&#39;"
@@ -20,7 +20,7 @@
            multiple="multiple"
            size="10"
            label="JBS_CMN_FILTERS_TEACHER"
-           description="JBS_CMN_FILTERS_TEACHER_TT">
+           description="JBS_CMN_FILTERS_TEACHER_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mseries_id"
@@ -32,7 +32,7 @@
            multiple="multiple"
            size="10"
            label="JBS_CMN_FILTERS_SERIES"
-           description="JBS_CMN_FILTERS_SERIES_TT">
+           description="JBS_CMN_FILTERS_SERIES_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mbooknumber"
@@ -44,7 +44,7 @@
            multiple="multiple"
            size="10"
            label="JBS_CMN_FILTERS_BOOKS"
-           description="JBS_CMN_FILTERS_BOOKS_TT">
+           description="JBS_CMN_FILTERS_BOOKS_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mtopic_id"
@@ -56,7 +56,7 @@
            multiple="multiple"
            size="10"
            label="JBS_CMN_FILTERS_TOPICS"
-           description="JBS_CMN_FILTERS_TOPICS_TT">
+           description="JBS_CMN_FILTERS_TOPICS_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mmessagetype"
@@ -68,7 +68,7 @@
            multiple="multiple"
            size="5"
            label="JBS_CMN_FILTERS_MESSAGETYPES"
-           description="JBS_CMN_FILTERS_MESSAGETYPES_TT">
+           description="JBS_CMN_FILTERS_MESSAGETYPES_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mlocations"
@@ -80,7 +80,7 @@
            multiple="multiple"
            size="5"
            label="JBS_CMN_FILTERS_LOCATIONS"
-           description="JBS_CMN_FILTERS_LOCATIONS_TT">
+           description="JBS_CMN_FILTERS_LOCATIONS_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     </params>
@@ -88,7 +88,7 @@
      <fields name="request">
         <fieldset name="request">
             <field name="templatemenuid" type="sql"
-                description="JBS_MNU_SELECT_TEMPLATE_TT"
+                description="JBS_MNU_SELECT_TEMPLATE_DESC"
                 label="JBS_MNU_SELECT_TEMPLATE"
                 default="1"
                 query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
@@ -105,7 +105,7 @@
      <field name="mteacher_id"
            type="teacherlist"
            label="JBS_CMN_FILTERS_TEACHER"
-           description="JBS_CMN_FILTERS_TEACHER_TT"
+           description="JBS_CMN_FILTERS_TEACHER_DESC"
            multiple="true"
            default="-1"
            >
@@ -115,7 +115,7 @@
            type="serieslist"
            multiple="true"
            label="JBS_CMN_FILTERS_SERIES"
-           description="JBS_CMN_FILTERS_SERIES_TT"
+           description="JBS_CMN_FILTERS_SERIES_DESC"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
@@ -123,7 +123,7 @@
            type="bookslist"
            multiple="true"
            label="JBS_CMN_FILTERS_BOOKS"
-           description="JBS_CMN_FILTERS_BOOKS_TT"
+           description="JBS_CMN_FILTERS_BOOKS_DESC"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
@@ -132,7 +132,7 @@
            multiple="true"
            size="10"
            label="JBS_CMN_FILTERS_TOPICS"
-           description="JBS_CMN_FILTERS_TOPICS_TT"
+           description="JBS_CMN_FILTERS_TOPICS_DESC"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
@@ -140,7 +140,7 @@
            type="messagetypelist"
            multiple="true"
            label="JBS_CMN_FILTERS_MESSAGETYPES"
-           description="JBS_CMN_FILTERS_MESSAGETYPES_TT"
+           description="JBS_CMN_FILTERS_MESSAGETYPES_DESC"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
@@ -148,7 +148,7 @@
            type="locationslist"
            multiple="true"
            label="JBS_CMN_FILTERS_LOCATIONS"
-           description="JBS_CMN_FILTERS_LOCATIONS_TT"
+           description="JBS_CMN_FILTERS_LOCATIONS_DESC"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>

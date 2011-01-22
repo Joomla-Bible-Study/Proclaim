@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <params>
-    <param name="mainlink" type="text" size="200" default="" label="JBS_SHR_MAINLINK" description="JBS_SHR_MAINLINK_TT" />
-    <param name="item1prefix" type="text" size="50" default="" label="JBS_SHR_ITEM1PREFIX" description="JBS_SHR_ITEMPREFIX_TT" />
-    <param name="item1" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_TT">
+    <param name="mainlink" type="text" size="200" default="" label="JBS_SHR_MAINLINK" description="JBS_SHR_MAINLINK_DESC" />
+    <param name="item1prefix" type="text" size="50" default="" label="JBS_SHR_ITEM1PREFIX" description="JBS_SHR_ITEMPREFIX_DESC" />
+    <param name="item1" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="200">JBS_SHR_LINK_STUDY</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
@@ -25,9 +25,9 @@
       <option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
       <option value="24">JBS_CMN_CUSTOM</option>
     </param>
-    <param name="item1custom" size="100" type="text" default="" label="JBS_SHR_ITEM1CUSTOM" description="JBS_SHR_ITEMCUSTOM_TT" />
-    <param name="item2prefix" size="50" type="text" default="" label="JBS_SHR_ITEM2PREFIX" description="JBS_SHR_ITEMPREFIX_TT" />
-    <param name="item2" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_TT">
+    <param name="item1custom" size="100" type="text" default="" label="JBS_SHR_ITEM1CUSTOM" description="JBS_SHR_ITEMCUSTOM_DESC" />
+    <param name="item2prefix" size="50" type="text" default="" label="JBS_SHR_ITEM2PREFIX" description="JBS_SHR_ITEMPREFIX_DESC" />
+    <param name="item2" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="200">JBS_SHR_LINK_STUDY</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
@@ -49,9 +49,9 @@
       <option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
       <option value="24">JBS_CMN_CUSTOM</option>
     </param>
-    <param name="item2custom" size="100" type="text" default="" label="JBS_SHR_ITEM2CUSTOM" description="JBS_SHR_ITEMCUSTOM_TT" />
-    <param name="item3prefix" size="50" type="text" default="" label="JBS_SHR_ITEM3PREFIX" description="JBS_SHR_ITEMPREFIX_TT" />
-    <param name="item3" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_TT">
+    <param name="item2custom" size="100" type="text" default="" label="JBS_SHR_ITEM2CUSTOM" description="JBS_SHR_ITEMCUSTOM_DESC" />
+    <param name="item3prefix" size="50" type="text" default="" label="JBS_SHR_ITEM3PREFIX" description="JBS_SHR_ITEMPREFIX_DESC" />
+    <param name="item3" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="200">JBS_SHR_LINK_STUDY</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
@@ -73,9 +73,9 @@
       <option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
       <option value="24">JBS_CMN_CUSTOM</option>
     </param>
-    <param name="item3custom" size="100" type="text" default="" label="JBS_SHR_ITEM3CUSTOM" description="JBS_SHR_ITEMCUSTOM_TT" />
-    <param name="item4prefix" size="50" type="text" default="" label="JBS_SHR_ITEM4PREFIX" description="JBS_SHR_ITEMPREFIX_TT" />
-    <param name="item4" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_TT">
+    <param name="item3custom" size="100" type="text" default="" label="JBS_SHR_ITEM3CUSTOM" description="JBS_SHR_ITEMCUSTOM_DESC" />
+    <param name="item4prefix" size="50" type="text" default="" label="JBS_SHR_ITEM4PREFIX" description="JBS_SHR_ITEMPREFIX_DESC" />
+    <param name="item4" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="200">JBS_SHR_LINK_STUDY</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
@@ -97,17 +97,17 @@
       <option value="16">JBS_TPL_MESSAGE_TYPE_BRACE</option>
       <option value="24">JBS_CMN_CUSTOM</option>
     </param>
-    <param name="item4custom" size="100" type="text" default="" label="JBS_SHR_ITEM4CUSTOM" description="JBS_SHR_ITEMCUSTOM_TT" />
-    <param name="use_bitly" type="list" default="0" label="JBS_SHR_USE_BITLY" description="JBS_SHR_USE_BITLY_TT">
+    <param name="item4custom" size="100" type="text" default="" label="JBS_SHR_ITEM4CUSTOM" description="JBS_SHR_ITEMCUSTOM_DESC" />
+    <param name="use_bitly" type="list" default="0" label="JBS_SHR_USE_BITLY" description="JBS_SHR_USE_BITLY_DESC">
       <option value="0">JBS_CMN_DONT_USE</option>
       <option value="1">JBS_CMN_USE_BITLY</option>
     </param>
-    <param name="username" type="text" size="100" default="" label="JBS_SHR_USERNAME" description="JBS_SHR_USERNAME_TT" />
-    <param name="api" size="200" type="text" default="" label="JBS_SHR_API" description="JBS_SHR_API_TT" />
-    <param name="shareimage" type="text" size="200" default="" label="JBS_SHR_SHAREIMAGE" description="JBS_SHR_SHAREIMAGE_TT" />
-    <param name="shareimageh" type="text" size="5" default="" label="JBS_SHR_SHAREIMAGEH" description="JBS_SHR_SHAREIMAGEHW_TT" />
-    <param name="shareimagew" type="text" size="5" default="" label="JBS_SHR_SHAREIMAGEW" description="JBS_SHR_SHAREIMAGEHW_TT" />
-    <param name="totalcharacters" type="text" default="" label="JBS_SHR_TOTALCHARACTERS" description="JBS_SHR_TOTALCHARACTERS_TT" />
-    <param name="alttext" type="text" default="" label="JBS_SHR_ALTTEXT" description="JBS_SHR_ALTTEXT_TT" />
+    <param name="username" type="text" size="100" default="" label="JBS_SHR_USERNAME" description="JBS_SHR_USERNAME_DESC" />
+    <param name="api" size="200" type="text" default="" label="JBS_SHR_API" description="JBS_SHR_API_DESC" />
+    <param name="shareimage" type="text" size="200" default="" label="JBS_SHR_SHAREIMAGE" description="JBS_SHR_SHAREIMAGE_DESC" />
+    <param name="shareimageh" type="text" size="5" default="" label="JBS_SHR_SHAREIMAGEH" description="JBS_SHR_SHAREIMAGEHW_DESC" />
+    <param name="shareimagew" type="text" size="5" default="" label="JBS_SHR_SHAREIMAGEW" description="JBS_SHR_SHAREIMAGEHW_DESC" />
+    <param name="totalcharacters" type="text" default="" label="JBS_SHR_TOTALCHARACTERS" description="JBS_SHR_TOTALCHARACTERS_DESC" />
+    <param name="alttext" type="text" default="" label="JBS_SHR_ALTTEXT" description="JBS_SHR_ALTTEXT_DESC" />
   </params>
 </root>

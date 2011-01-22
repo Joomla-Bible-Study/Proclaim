@@ -133,7 +133,7 @@ INSERT INTO `#__bsms_books` (`id`, `bookname`, `booknumber`, `published`) VALUES
 (69, 'JBS_BBK_1MACCABEES', 169, 1),
 (70, 'JBS_BBK_2MACCABEES', 170, 1),
 (71, 'JBS_BBK_WISDOM', 171, 1),
-(72, 'JBS_BBK_ECCLESIASTICUS', 172, 1),
+(72, 'JBS_BBK_SIRACH', 172, 1),
 (73, 'JBS_BBK_BARUCH', 173, 1);
 
 -- --------------------------------------------------------

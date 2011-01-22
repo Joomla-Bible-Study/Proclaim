@@ -394,7 +394,7 @@ class biblestudyViewstudieslist extends JView {
             case 171:   // JBS_BBK_WISDOM
                 $maxBooks = 19;
                 break;
-            case 172:   // JBS_BBK_ECCLESIASTICUS
+            case 172:   // JBS_BBK_SIRACH
                 $maxBooks = 51;
                 break;
             case 173:   // JBS_BBK_BARUCH

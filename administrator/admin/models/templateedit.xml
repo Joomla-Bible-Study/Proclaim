@@ -6,7 +6,7 @@
            size="2"
            default="5"
            label="JBS_TPL_ITEMSLIMIT"
-           description="JBS_TPL_ITEMSLIMIT_TT" />
+           description="JBS_TPL_ITEMSLIMIT_DESC" />
   </params>
   <params group="TEMPLATES"
           addpath="/administrator/components/com_biblestudy/elements">
@@ -14,27 +14,27 @@
            type="studieslisttemplateid"
            default=""
            label="JBS_TPL_TEMPLATE_STUDIES_LIST"
-           description="JBS_TPL_TEMPLATE_STUDIES_LIST_TT" />
+           description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC" />
     <param name="detailstemplateid"
            type="detailstemplateid"
            default=""
            label="JBS_TPL_TEMPLATE_STUDY_DETAIL"
-           description="JBS_TPL_TEMPLATE_STUDY_DETAIL_TT" />
+           description="JBS_TPL_TEMPLATE_STUDY_DETAIL_DESC" />
     <param name="teachertemplateid"
            type="teachertemplateid"
            default=""
            label="JBS_TPL_TEMPLATE_TEACHER"
-           description="JBS_TPL_TEMPLATE_TEACHER_TT" />
+           description="JBS_TPL_TEMPLATE_TEACHER_DESC" />
     <param name="serieslisttemplateid"
            type="serieslisttemplateid"
            default=""
            label="JBS_TPL_TEMPLATE_SERIES_LIST"
-           description="JBS_TPL_TEMPLATE_SERIES_LIST_TT" />
+           description="JBS_TPL_TEMPLATE_SERIES_LIST_DESC" />
     <param name="seriesdetailtemplateid"
            type="seriesdetailtemplateid"
            default=""
            label="JBS_TPL_TEMPLATE_SERIES_DETAIL"
-           description="JBS_TPL_TEMPLATE_SERIES_DETAIL_TT" />
+           description="JBS_TPL_TEMPLATE_SERIES_DETAIL_DESC" />
   </params>
   <params group="FILTERS"
           addpath="/administrator/components/com_biblestudy/elements">
@@ -47,7 +47,7 @@
            multiple="multiple"
            size="10"
            label="JBS_CMN_FILTERS_TEACHER"
-           description="JBS_CMN_FILTERS_TEACHER_TT">
+           description="JBS_CMN_FILTERS_TEACHER_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="series_id"
@@ -59,7 +59,7 @@
            multiple="multiple"
            size="10"
            label="JBS_CMN_FILTERS_SERIES"
-           description="JBS_CMN_FILTERS_SERIES_TT">
+           description="JBS_CMN_FILTERS_SERIES_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="booknumber"
@@ -71,7 +71,7 @@
            multiple="multiple"
            size="10"
            label="JBS_CMN_FILTERS_BOOKS"
-           description="JBS_CMN_FILTERS_BOOKS_TT">
+           description="JBS_CMN_FILTERS_BOOKS_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="topic_id"
@@ -83,7 +83,7 @@
            multiple="multiple"
            size="10"
            label="JBS_CMN_FILTERS_TOPICS"
-           description="JBS_CMN_FILTERS_TOPICS_TT">
+           description="JBS_CMN_FILTERS_TOPICS_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="messagetype"
@@ -95,7 +95,7 @@
            multiple="multiple"
            size="5"
            label="JBS_CMN_FILTERS_MESSAGETYPES"
-           description="JBS_CMN_FILTERS_MESSAGETYPES_TT">
+           description="JBS_CMN_FILTERS_MESSAGETYPES_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="locations"
@@ -107,14 +107,14 @@
            multiple="multiple"
            size="5"
            label="JBS_CMN_FILTERS_LOCATIONS"
-           description="JBS_CMN_FILTERS_LOCATIONS_TT">
+           description="JBS_CMN_FILTERS_LOCATIONS_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="default_order"
            type="list"
            default="DESC"
            label="JBS_TPL_FILTERS_DEFAULTORDER"
-           description="JBS_TPL_FILTERS_DEFAULTORDER_TT">
+           description="JBS_TPL_FILTERS_DEFAULTORDER_DESC">
       <option value="DESC">JBS_CMN_DESCENDING</option>
       <option value="ASC">JBS_CMN_ASCENDING</option>
     </param>
@@ -124,7 +124,7 @@
            type="list"
            default="1"
            label="JBS_TPL_FP_SHOW_PAGE_IMAGE"
-           description="JBS_TPL_FP_SHOW_PAGE_IMAGE_TT">
+           description="JBS_TPL_FP_SHOW_PAGE_IMAGE_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -132,7 +132,7 @@
            type="list"
            default="1"
            label="JBS_TPL_FP_IMAGES_TOOLTIP"
-           description="JBS_TPL_FP_IMAGES_TOOLTIP_TT">
+           description="JBS_TPL_FP_IMAGES_TOOLTIP_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -142,7 +142,7 @@
            type="list"
            default="0"
            label="JBS_TPL_VERSES_SHOW_VERSES"
-           description="JBS_TPL_VERSES_SHOW_VERSES_TT">
+           description="JBS_TPL_VERSES_SHOW_VERSES_DESC">
       <option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
       <option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
     </param>
@@ -151,12 +151,12 @@
            size="50"
            default=""
            label="JBS_TPL_VERSES_STYLESHEET"
-           description="JBS_TPL_VERSES_STYLESHEET_TT" />
+           description="JBS_TPL_VERSES_STYLESHEET_DESC" />
     <param name="date_format"
            type="list"
            default="2"
            label="JBS_TPL_VERSES_DATE_FORMAT"
-           description="JBS_TPL_VERSES_DATE_FORMAT_TT">
+           description="JBS_TPL_VERSES_DATE_FORMAT_DESC">
       <option value="0">JBS_TPL_DATE_FORMAT_MMM_D_YYYY</option>
       <option value="1">JBS_TPL_DATE_FORMAT_MMM_D</option>
       <option value="2">JBS_TPL_DATE_FORMAT_M_D_YYYY</option>
@@ -173,12 +173,12 @@
            size="25"
            default=""
            label="JBS_TPL_VERSES_CUSTOM_DATE_FORMAT"
-           description="JBS_TPL_VERSES_CUSTOM_DATE_FORMAT_TT" />
+           description="JBS_TPL_VERSES_CUSTOM_DATE_FORMAT_DESC" />
     <param name="duration_type"
            type="list"
            default="2"
            label="JBS_TPL_VERSES_DURATION_TYPE"
-           description="JBS_TPL_VERSES_DURATION_TYPE_TT">
+           description="JBS_TPL_VERSES_DURATION_TYPE_DESC">
       <option value="1">JBS_TPL_HOURS_MIN_SEC_SLASH</option>
       <option value="2">JBS_TPL_HOURS_MIN_SEC_COLON</option>
     </param>
@@ -189,12 +189,12 @@
             size="10" 
             default="http://"
             label="JBS_TPL_MEDIA_PROTOCOL"
-            description="JBS_TPL_MEDIA_PROTOCOL_TT" /> 
+            description="JBS_TPL_MEDIA_PROTOCOL_DESC" /> 
     <param name="media_player" 
             type="list" 
             default="0" 
             label="JBS_TPL_MEDIA_MEDIA_PLAYER" 
-            description="JBS_TPL_MEDIA_MEDIA_PLAYER_TT">
+            description="JBS_TPL_MEDIA_MEDIA_PLAYER_DESC">
 			<option value="0">JBS_CMN_DIRECT_LINK</option>
 			<option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
       <option value="2">JBS_CMN_USE_AVR</option>
@@ -205,7 +205,7 @@
            type="list"
            default="window"
            label="JBS_TPL_MEDIA_POPUPTYPE"
-           description="JBS_TPL_MEDIA_POPUPTYPE_TT">
+           description="JBS_TPL_MEDIA_POPUPTYPE_DESC">
       <option value="window">JBS_TPL_WINDOW</option>
       <option value="lightbox">JBS_TPL_LIGHTBOX</option>
     </param>
@@ -213,7 +213,7 @@
            type="list"
            default="1"
            label="JBS_TPL_MEDIA_INTERNAL_POPUP"
-           description="JBS_TPL_MEDIA_INTERNAL_POPUP_TT">
+           description="JBS_TPL_MEDIA_INTERNAL_POPUP_DESC">
       <option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
       <option value="2">JBS_CMN_INLINE</option>
     </param>
@@ -221,12 +221,12 @@
            type="text"
            default="400"
            label="JBS_TPL_MEDIA_PLAYER_WIDTH"
-           description="JBS_TPL_MEDIA_PLAYER_WIDTH_TT" />
+           description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC" />
     <param name="player_height"
            type="text"
            default="300"
            label="JBS_TPL_MEDIA_PLAYER_HEIGHT"
-           description="JBS_TPL_MEDIA_PLAYER_HEIGHT_TT" />
+           description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC" />
     <param name="embedshare" 
             default="TRUE" 
             type="list" 
@@ -239,55 +239,55 @@
            type="text"
            default="0x287585"
            label="JBS_TPL_MEDIA_BACKCOLOR"
-           description="JBS_TPL_MEDIA_BACKCOLOR_TT" />
+           description="JBS_TPL_MEDIA_BACKCOLOR_DESC" />
     <param name="frontcolor"
            type="text"
            default="0xFFFFFF"
            label="JBS_TPL_MEDIA_FRONTCOLOR"
-           description="JBS_TPL_MEDIA_FRONTCOLOR_TT" />
+           description="JBS_TPL_MEDIA_FRONTCOLOR_DESC" />
     <param name="lightcolor"
            type="text"
            default="0x000000"
            label="JBS_TPL_MEDIA_LIGHTCOLOR"
-           description="JBS_TPL_MEDIA_LIGHTCOLOR_TT" />
+           description="JBS_TPL_MEDIA_LIGHTCOLOR_DESC" />
     <param name="screencolor"
            type="text"
            default="0x000000"
            label="JBS_TPL_MEDIA_SCREENCOLOR"
-           description="JBS_TPL_MEDIA_SCREENCOLOR_TT" />
+           description="JBS_TPL_MEDIA_SCREENCOLOR_DESC" />
     <param name="popuptitle"
            type="text"
            size="150"
            default="{{title}}"
            label="JBS_MED_MEDIA_POPUPTITLE"
-           description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_TT" />
+           description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC" />
     <param name="popupfooter"
            type="text"
            size="150"
            default="{{filename}}"
            label="JBS_MED_MEDIA_POPUPFOOTER"
-           description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_TT" />
+           description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC" />
     <param name="popupmargin"
            type="text"
            default="50"
            label="JBS_MED_MEDIA_POPUPMARGIN"
-           description="JBS_TPL_MEDIA_POPUPMARGIN_TT" />
+           description="JBS_TPL_MEDIA_POPUPMARGIN_DESC" />
     <param name="popupbackground"
            type="text"
            default="black"
            label="JBS_TPL_MEDIA_POPUPBACKGROUND"
-           description="JBS_TPL_MEDIA_POPUPBACKGROUND_TT" />
+           description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC" />
     <param name="popupimage"
            type="text"
            size="150"
            default="components/com_biblestudy/images/speaker24.png"
            label="JBS_TPL_MEDIA_POPUPIMAGE"
-           description="JBS_TPL_MEDIA_POPUPIMAGE_TT" />
+           description="JBS_TPL_MEDIA_POPUPIMAGE_DESC" />
     <param name="show_filesize"
            type="list"
            default="1"
            label="JBS_TPL_MEDIA_SHOW_FILESIZE"
-           description="JBS_TPL_MEDIA_SHOW_FILESIZE_TT">
+           description="JBS_TPL_MEDIA_SHOW_FILESIZE_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_TPL_SHOW_FILESIZE</option>
       <option value="2">JBS_TPL_SHOW_COMMENT</option>
@@ -297,7 +297,7 @@
            type="text"
            default="flypage.tpl"
            label="JBS_TPL_MEDIA_STORE_PAGE"
-           description="JBS_TPL_MEDIA_STORE_PAGE_TT"
+           description="JBS_TPL_MEDIA_STORE_PAGE_DESC"
            size="60" />
   </params>
   <params group="STUDIESVIEW"
@@ -306,7 +306,7 @@
            type="list"
            default="0"
            label="JBS_TPL_CUSTOM_VIEW"
-           description="JBS_TPL_CUSTOM_VIEW_TT">
+           description="JBS_TPL_CUSTOM_VIEW_DESC">
       <option value="0">JBS_CMN_DONT_USE</option>
       <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
@@ -315,7 +315,7 @@
            rows="10"
            cols="100"
            label="JBS_TPL_HEADERCODE"
-           description="JBS_TPL_HEADERCODE_TT">
+           description="JBS_TPL_HEADERCODE_DESC">
     </param>
     <param name="templatecode"
            type="textarea"
@@ -335,7 +335,7 @@
   &lt;/tbody&gt;
 &lt;/table&gt;"
            label="JBS_TPL_TEMPLATECODE"
-           description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_TT">
+           description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_DESC">
     </param>
     <param name="wrapcode"
            type="radio"
@@ -351,7 +351,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE"
-           description="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -359,12 +359,12 @@
            type="text"
            default="Bible Studies"
            label="JBS_TPL_LISTITEMS_PAGE_TITLE"
-           description="JBS_TPL_LISTITEMS_PAGE_TITLE_TT" />
+           description="JBS_TPL_LISTITEMS_PAGE_TITLE_DESC" />
     <param name="use_headers_list"
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST"
-           description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_TT">
+           description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
       <option value="0">JBS_TPL_NO_HEADER_ROW</option>
       <option value="1">JBS_TPL_USE_HEADER_ROW</option>
     </param>
@@ -373,12 +373,12 @@
            rows="10"
            cols="100"
            label="JBS_TPL_LISTITEMS_LIST_INTRO"
-           description="JBS_TPL_LISTITEMS_LIST_INTRO_TT" />
+           description="JBS_TPL_LISTITEMS_LIST_INTRO_DESC" />
     <param name="intro_show"
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_INTRO_SHOW"
-           description="JBS_TPL_LISTITEMS_INTRO_SHOW_TT">
+           description="JBS_TPL_LISTITEMS_INTRO_SHOW_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_TPL_LISTITEMS_SHOW_BELOW_TEACHERS</option>
       <option value="2">JBS_TPL_LISTITEMS_SHOW_BESIDE_TEACHERS</option>
@@ -387,7 +387,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_LIST_TEACHER_SHOW"
-           description="JBS_TPL_LISTITEMS_LIST_TEACHER_SHOW_TT">
+           description="JBS_TPL_LISTITEMS_LIST_TEACHER_SHOW_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -395,12 +395,12 @@
            type="text"
            default=""
            label="JBS_TPL_LISTITEMS_LISTTEACHERS"
-           description="JBS_TPL_LISTITEMS_LISTTEACHERS_TT" />
+           description="JBS_TPL_LISTITEMS_LISTTEACHERS_DESC" />
     <param name="teacherlink"
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_TEACHERLINK"
-           description="JBS_TPL_LISTITEMS_TEACHERLINK_TT">
+           description="JBS_TPL_LISTITEMS_TEACHERLINK_DESC">
       <option value="0">JBS_TPL_HIDE_LINK</option>
       <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
@@ -409,12 +409,12 @@
            default="Study Details"
            size="50"
            label="JBS_TPL_LISTITEMS_DETAILS_TEXT"
-           description="JBS_TPL_LISTITEMS_DETAILS_TEXT_TT" />
+           description="JBS_TPL_LISTITEMS_DETAILS_TEXT_DESC" />
     <param name="show_book_search"
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_BOOK_SEARCH"
-           description="JBS_TPL_LISTITEMS_SHOW_BOOK_SEARCH_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_BOOK_SEARCH_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
       <option value="2">JBS_TPL_SHOW_ALWAYS</option>
@@ -423,7 +423,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_USE_GO_BUTTON"
-           description="JBS_TPL_LISTITEMS_USE_GO_BUTTON_TT">
+           description="JBS_TPL_LISTITEMS_USE_GO_BUTTON_DESC">
       <option value="0">JBS_CMN_DONT_USE</option>
       <option value="1">JBS_TPL_LISTITEMS_USE_GO_BUTTON</option>
     </param>
@@ -431,7 +431,7 @@
            type="list"
            default="0"
            label="JBS_TPL_LISTITEMS_BOOKLIST"
-           description="JBS_TPL_LISTITEMS_BOOKLIST_TT">
+           description="JBS_TPL_LISTITEMS_BOOKLIST_DESC">
       <option value="0">JBS_TPL_SHOW_ALL_BOOKS</option>
       <option value="1">JBS_TPL_SHOW_BOOKS_W_STUDIES</option>
     </param>
@@ -439,7 +439,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH"
-           description="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
       <option value="2">JBS_TPL_SHOW_ALWAYS</option>
@@ -448,7 +448,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH"
-           description="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
       <option value="2">JBS_TPL_SHOW_ALWAYS</option>
@@ -457,7 +457,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH"
-           description="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
       <option value="2">JBS_TPL_SHOW_ALWAYS</option>
@@ -466,7 +466,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH"
-           description="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -474,7 +474,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH"
-           description="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -482,7 +482,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH"
-           description="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
       <option value="2">JBS_TPL_SHOW_ALWAYS</option>
@@ -491,7 +491,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH"
-           description="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_TPL_SHOW_UNLESS_FILTERED</option>
       <option value="2">JBS_TPL_SHOW_ALWAYS</option>
@@ -500,7 +500,7 @@
            type="list"
            default="1"
            label="JBS_TPL_LISTITEMS_SHOW_POPULAR"
-           description="JBS_TPL_LISTITEMS_SHOW_POPULAR_TT">
+           description="JBS_TPL_LISTITEMS_SHOW_POPULAR_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -516,7 +516,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -552,13 +552,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r1c1span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -568,7 +568,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -593,7 +593,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -629,13 +629,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r1c2span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS2TO4</option>
@@ -644,7 +644,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -669,7 +669,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -705,13 +705,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r1c3span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS3TO4</option>
     </param>
@@ -719,7 +719,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -744,7 +744,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -780,12 +780,12 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="linkr1c4"
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -807,7 +807,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -843,13 +843,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r2c1span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -859,7 +859,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -884,7 +884,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -920,13 +920,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r2c2span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS2TO4</option>
@@ -935,7 +935,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -960,7 +960,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -996,13 +996,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r2c3span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS3TO4</option>
     </param>
@@ -1010,7 +1010,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1035,7 +1035,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -1071,12 +1071,12 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="linkr2c4"
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1098,7 +1098,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -1134,13 +1134,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r3c1span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -1150,7 +1150,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1175,7 +1175,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -1211,13 +1211,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r3c2span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS3TO4</option>
@@ -1226,7 +1226,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1251,7 +1251,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -1287,13 +1287,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r3c3span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS3TO4</option>
     </param>
@@ -1301,7 +1301,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1326,7 +1326,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -1362,12 +1362,12 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="linkr3c4"
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1389,7 +1389,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -1425,13 +1425,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r4c1span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -1441,7 +1441,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1466,7 +1466,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -1502,13 +1502,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r4c2span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS3TO4</option>
@@ -1517,7 +1517,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1542,7 +1542,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -1578,13 +1578,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="r4c3span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS3TO4</option>
     </param>
@@ -1592,7 +1592,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1617,7 +1617,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -1653,12 +1653,12 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="linkr4c4"
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="4">JBS_TPL_LINK_TO_DETAILS_TOOLTIP</option>
@@ -1675,7 +1675,7 @@
            type="list"
            default="1"
            label="JBS_TPL_DETAILS_SHOW_PRINT_VIEW"
-           description="JBS_TPL_DETAILS_SHOW_PRINT_VIEW_TT">
+           description="JBS_TPL_DETAILS_SHOW_PRINT_VIEW_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -1683,7 +1683,7 @@
            type="list"
            default="0"
            label="JBS_TPL_DETAILS_SHOW_TEACHER_VIEW"
-           description="JBS_TPL_DETAILS_SHOW_TEACHER_VIEW_TT">
+           description="JBS_TPL_DETAILS_SHOW_TEACHER_VIEW_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -1691,7 +1691,7 @@
            type="list"
            default="1"
            label="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW"
-           description="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW_TT">
+           description="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
       <option value="2">JBS_TPL_SHOW_ALWAYS_NO_HIDE_SHOW_LINK</option>
@@ -1700,7 +1700,7 @@
            type="list"
            default="1"
            label="JBS_TPL_DETAILS_USE_HEADERS_VIEW"
-           description="JBS_TPL_DETAILS_USE_HEADERS_VIEW_TT">
+           description="JBS_TPL_DETAILS_USE_HEADERS_VIEW_DESC">
       <option value="0">JBS_TPL_NO_HEADER_ROW</option>
       <option value="1">JBS_TPL_USE_HEADER_ROW</option>
     </param>
@@ -1708,7 +1708,7 @@
            type="list"
            default="0"
            label="JBS_TPL_DETAILS_LIST_ITEMS_VIEW"
-           description="JBS_TPL_DETAILS_LIST_ITEMS_VIEW_TT">
+           description="JBS_TPL_DETAILS_LIST_ITEMS_VIEW_DESC">
       <option value="0">JBS_TPL_SHOW_LIST_ITEMS</option>
       <option value="1">JBS_TPL_SHOW_MEDIA</option>
       <option value="2">JBS_TPL_SHOW_NOTHING</option>
@@ -1717,7 +1717,7 @@
            type="list"
            default="1"
            label="JBS_TPL_DETAILS_TITLE_LINE_1"
-           description="JBS_TPL_DETAILS_TITLE_LINE_1_TT">
+           description="JBS_TPL_DETAILS_TITLE_LINE_1_DESC">
       <option value="0">JBS_TPL_DONT_SHOW</option>
       <option value="1">JBS_TPL_TITLE_BRACE</option>
       <option value="2">JBS_TPL_TEACHER_BRACE</option>
@@ -1732,12 +1732,12 @@
            default=""
            size="75"
            label="JBS_TPL_DETAILS_CUSTOMTITLE1"
-           description="JBS_TPL_DETAILS_CUSTOMTITLE_TT" />
+           description="JBS_TPL_DETAILS_CUSTOMTITLE_DESC" />
     <param name="title_line_2"
            type="list"
            default="4"
            label="JBS_TPL_DETAILS_TITLE_LINE_2"
-           description="JBS_TPL_DETAILS_TITLE_LINE_2_TT">
+           description="JBS_TPL_DETAILS_TITLE_LINE_2_DESC">
       <option value="0">JBS_TPL_DONT_SHOW</option>
       <option value="1">JBS_TPL_TITLE_BRACE</option>
       <option value="2">JBS_TPL_TEACHER_BRACE</option>
@@ -1752,12 +1752,12 @@
            default=""
            size="75"
            label="JBS_TPL_DETAILS_CUSTOMTITLE2"
-           description="JBS_TPL_DETAILS_CUSTOMTITLE_TT" />
+           description="JBS_TPL_DETAILS_CUSTOMTITLE_DESC" />
     <param name="view_link"
            type="list"
            default="1"
            label="JBS_TPL_DETAILS_VIEW_LINK"
-           description="JBS_TPL_DETAILS_VIEW_LINK_TT">
+           description="JBS_TPL_DETAILS_VIEW_LINK_DESC">
       <option value="0">JBS_TPL_HIDE_LINK</option>
       <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
@@ -1766,12 +1766,12 @@
            size="75"
            default="Return to Studies List"
            label="JBS_TPL_DETAILS_LINK_TEXT"
-           description="JBS_TPL_DETAILS_LINK_TEXT_TT" />
+           description="JBS_TPL_DETAILS_LINK_TEXT_DESC" />
     <param name="show_scripture_link"
            type="list"
            default="0"
            label="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK"
-           description="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK_TT">
+           description="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK_DESC">
       <option value="0">JBS_TPL_NO_PLUGINS</option>
       <option value="1">JBS_TPL_ALL_PLUGINS</option>
       <option value="2">JBS_TPL_SCRIPTURE_LINKS</option>
@@ -1782,12 +1782,12 @@
            default=""
            size="10"
            label="JBS_TPL_DETAILS_SHOW_COMMENTS"
-           description="JBS_TPL_DETAILS_SHOW_COMMENTS_TT" />
+           description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC" />
      <param name="link_comments"
     	     default="0"
     	     type="list"
     	     label="JBS_TPL_DETAILS_LINK_COMMENTS"
-    	     description="JBS_TPL_DETAILS_LINK_COMMENTS_TT">
+    	     description="JBS_TPL_DETAILS_LINK_COMMENTS_DESC">
       <option value="0">JBS_TPL_USE_HIDE_SHOW_LINK</option>
       <option value="1">JBS_TPL_SHOW_ALWAYS</option>
     </param>
@@ -1797,12 +1797,12 @@
             size="10" 
             default="" 
             label="JBS_TPL_DETAILS_COMMENT_ACCESS" 
-            description="JBS_TPL_DETAILS_COMMENT_ACCESS_TT" />
+            description="JBS_TPL_DETAILS_COMMENT_ACCESS_DESC" />
     <param name="comment_publish"
            type="list"
            default="0"
            label="JBS_TPL_DETAILS_COMMENT_PUBLISH"
-           description="JBS_TPL_DETAILS_COMMENT_PUBLISH_TT">
+           description="JBS_TPL_DETAILS_COMMENT_PUBLISH_DESC">
       <option value="0">JBS_TPL_APPROVAL_BACKEND</option>
       <option value="1">JBS_TPL_NO_APPROVAL</option>
     </param>
@@ -1810,7 +1810,7 @@
            type="list"
            default="1"
            label="JBS_TPL_DETAILS_USE_CAPTCHA"
-           description="JBS_TPL_DETAILS_USE_CAPTCHA_TT">
+           description="JBS_TPL_DETAILS_USE_CAPTCHA_DESC">
       <option value="0">JBS_TPL_NO_CAPTCHA</option>
       <option value="1">JBS_TPL_CAPTCHA_OSTWIGITS</option>
     </param>
@@ -1818,7 +1818,7 @@
            type="list"
            default="1"
            label="JBS_TPL_DETAILS_EMAIL_COMMENTS"
-           description="JBS_TPL_DETAILS_EMAIL_COMMENTS_TT">
+           description="JBS_TPL_DETAILS_EMAIL_COMMENTS_DESC">
       <option value="0">JBS_TPL_NO_EMAIL</option>
       <option value="1">JBS_TPL_EMAIL_SENT</option>
     </param>
@@ -1827,7 +1827,7 @@
            default=""
            size="40"
            label="JBS_TPL_DETAILS_RECIPIENT"
-           description="JBS_TPL_DETAILS_RECIPIENT_TT" />
+           description="JBS_TPL_DETAILS_RECIPIENT_DESC" />
     <param name="subject"
            type="text"
            default="Comments on studies"
@@ -1846,7 +1846,7 @@
            type="list"
            default="0"
            label="JBS_TPL_CUSTOM_VIEW"
-           description="JBS_TPL_CUSTOM_VIEW_TT">
+           description="JBS_TPL_CUSTOM_VIEW_DESC">
       <option value="0">JBS_CMN_DONT_USE</option>
       <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
@@ -1855,19 +1855,19 @@
            rows="10"
            cols="100"
            label="JBS_TPL_DETAILS_STUDY_DETAILTEMPLATE"
-           description="JBS_TPL_DETAILS_TEMPLATECODE_TT" />
+           description="JBS_TPL_DETAILS_TEMPLATECODE_DESC" />
   </params>
   <params group="TEACHER">
     <param name="teacher_title"
            type="text"
            default="Our Teachers"
            label="JBS_TPL_TEACHER_TEACHER_TITLE"
-           description="JBS_TPL_TEACHER_TEACHER_TITLE_TT" />
+           description="JBS_TPL_TEACHER_TEACHER_TITLE_DESC" />
     <param name="show_teacher_studies"
            type="list"
            default="1"
            label="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES"
-           description="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES_TT">
+           description="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES_DESC">
       <option value="0">JBS_TPL_HIDE_STUDY</option>
       <option value="1">JBS_TPL_SHOW_STUDIES_TEACHER_LIST</option>
       <option value="2">JBS_TPL_SHOW_STUDIES_STUDIESLIST</option>
@@ -1877,19 +1877,19 @@
            type="text"
            default=""
            label="JBS_TPL_TEACHER_STUDIES"
-           description="JBS_TPL_TEACHER_STUDIES_TT" />
+           description="JBS_TPL_TEACHER_STUDIES_DESC" />
     <param name="label_teacher"
            type="text"
            default="Latest Messages"
            label="JBS_TPL_TEACHER_LABEL_TEACHER"
-           description="JBS_TPL_TEACHER_LABEL_TEACHER_TT" />
+           description="JBS_TPL_TEACHER_LABEL_TEACHER_DESC" />
     <param type="spacer"
            label=""></param>
     <param name="teacherlink"
     	     type="list"
     	     default="1"
     	     label="JBS_TPL_TEACHER_TEACHERLINK"
-    	     description="JBS_TPL_TEACHER_TEACHERLINK_TT"> 
+    	     description="JBS_TPL_TEACHER_TEACHERLINK_DESC"> 
         <option value="0">JBS_TPL_HIDE_LINK</option>
         <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
@@ -1897,7 +1897,7 @@
            type="list"
            default="0"
            label="JBS_TPL_CUSTOM_VIEW_TEACHERLIST"
-           description="JBS_TPL_CUSTOM_VIEW_TT">
+           description="JBS_TPL_CUSTOM_VIEW_DESC">
       <option value="0">JBS_CMN_DONT_USE</option>
       <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
@@ -1906,7 +1906,7 @@
            rows="10"
            cols="100"
            label="JBS_TPL_HEADERCODE"
-           description="JBS_TPL_HEADERCODE_TT"></param>
+           description="JBS_TPL_HEADERCODE_DESC"></param>
     <param name="teacher_templatecode"
            type="textarea"
            rows="10"
@@ -1925,7 +1925,7 @@
   &lt;/tbody&gt;
 &lt;/table&gt;"
            label="JBS_TPL_TEACHERLIST_TEMPLATECODE"
-           description="JBS_TPL_TEACHER_TEMPLATECODE_TT"></param>
+           description="JBS_TPL_TEACHER_TEMPLATECODE_DESC"></param>
     <param name="teacher_wrapcode"
            type="radio"
            default="0"
@@ -1940,7 +1940,7 @@
            type="list"
            default="0"
            label="JBS_TPL_CUSTOM_VIEW_TEACHERDETAIL"
-           description="JBS_TPL_CUSTOM_VIEW_TT">
+           description="JBS_TPL_CUSTOM_VIEW_DESC">
       <option value="0">JBS_CMN_DONT_USE</option>
       <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
@@ -1962,7 +1962,7 @@
   &lt;/tbody&gt;
 &lt;/table&gt;"
            label="JBS_TPL_TEACHERDETAIL_TEMPLATECODE"
-           description="JBS_TPL_TEACHER_TEMPLATECODE_TT"></param>
+           description="JBS_TPL_TEACHER_TEMPLATECODE_DESC"></param>
   </params>
   <params group="SERIES"
           addpath="/administrator/components/com_biblestudy/elements">
@@ -1970,12 +1970,12 @@
            default="Our Series"
            type="text"
            label="JBS_TPL_SERIES_SERIES_TITLE"
-           description="JBS_TPL_SERIES_SERIES_TITLE_TT" />
+           description="JBS_TPL_SERIES_SERIES_TITLE_DESC" />
     <param name="show_series_title"
            default="1"
            type="list"
            label="JBS_TPL_SERIES_SHOW_SERIES_TITLE"
-           description="JBS_TPL_SERIES_SHOW_SERIES_TITLE_TT">
+           description="JBS_TPL_SERIES_SHOW_SERIES_TITLE_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -1983,7 +1983,7 @@
            default="1"
            type="list"
            label="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES"
-           description="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES_TT">
+           description="JBS_TPL_SERIES_SHOW_PAGE_IMAGE_SERIES_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -1991,7 +1991,7 @@
            default="1"
            type="list"
            label="JBS_TPL_SERIES_SERIES_SHOW_DESCRIPTION"
-           description="JBS_TPL_SERIES_SERIES_SHOW_DESCRIPTION_TT">
+           description="JBS_TPL_SERIES_SERIES_SHOW_DESCRIPTION_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -1999,12 +1999,12 @@
            type="text"
            default=""
            label="JBS_TPL_SERIES_SERIES_CHARACTERS"
-           description="JBS_TPL_SERIES_SERIES_CHARACTERS_TT" />
+           description="JBS_TPL_SERIES_SERIES_CHARACTERS_DESC" />
     <param name="search_series"
            default="1"
            type="list"
            label="JBS_TPL_SERIES_SEARCH_SERIES"
-           description="JBS_TPL_SERIES_SEARCH_SERIES_TT">
+           description="JBS_TPL_SERIES_SEARCH_SERIES_DESC">
       <option value="0">JBS_CMN_HIDE</option>
       <option value="1">JBS_CMN_SHOW</option>
     </param>
@@ -2012,12 +2012,12 @@
            type="text"
            default="5"
            label="JBS_TPL_SERIES_SERIES_LIMIT"
-           description="JBS_TPL_SERIES_SERIES_LIMIT_TT" />
+           description="JBS_TPL_SERIES_SERIES_LIMIT_DESC" />
     <param name="series_list_order"
            type="list"
            default="ASC"
            label="JBS_TPL_SERIES_SERIES_LIST_ORDER"
-           description="JBS_TPL_SERIES_SERIES_LIST_ORDER_TT">
+           description="JBS_TPL_SERIES_SERIES_LIST_ORDER_DESC">
       <option value="ASC">JBS_CMN_ASCENDING</option>
       <option value="DESC">JBS_CMN_DESCENDING</option>
     </param>
@@ -2025,7 +2025,7 @@
            type="list"
            default="series_text"
            label="JBS_TPL_SERIES_SERIES_ORDER_FIELD"
-           description="JBS_TPL_SERIES_SERIES_ORDER_FIELD_TT">
+           description="JBS_TPL_SERIES_SERIES_ORDER_FIELD_DESC">
       <option value="series_text">JBS_TPL_SERIES_TITLE_TEXT</option>
       <option value="id">JBS_CMN_ID</option>
       <option value="t.teachername">JBS_CMN_TEACHER_NAME</option>
@@ -2034,7 +2034,7 @@
            type="list"
            default="1"
            label="JBS_TPL_SERIES_SERIESELEMENT1"
-           description="JBS_TPL_SERIES_SERIESELEMENT_TT">
+           description="JBS_TPL_SERIES_SERIESELEMENT_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SERIES_TITLE_BRACE</option>
       <option value="2">JBS_TPL_THUMBNAIL_BRACE</option>
@@ -2049,7 +2049,7 @@
            type="list"
            default="1"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_SERIES_DETAILS</option>
       <option value="3">JBS_TPL_LINK_TEACHER_DETAILS</option>
@@ -2058,7 +2058,7 @@
            type="list"
            default="6"
            label="JBS_TPL_SERIES_SERIESELEMENT2"
-           description="JBS_TPL_SERIES_SERIESELEMENT_TT">
+           description="JBS_TPL_SERIES_SERIESELEMENT_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SERIES_TITLE_BRACE</option>
       <option value="2">JBS_TPL_THUMBNAIL_BRACE</option>
@@ -2072,7 +2072,7 @@
            type="list"
            default="1"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_SERIES_DETAILS</option>
       <option value="3">JBS_TPL_LINK_TEACHER_DETAILS</option>
@@ -2081,7 +2081,7 @@
            type="list"
            default="0"
            label="JBS_TPL_SERIES_SERIESELEMENT3"
-           description="JBS_TPL_SERIES_SERIESELEMENT_TT">
+           description="JBS_TPL_SERIES_SERIESELEMENT_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SERIES_TITLE_BRACE</option>
       <option value="2">JBS_TPL_THUMBNAIL_BRACE</option>
@@ -2095,7 +2095,7 @@
            type="list"
            default="1"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_SERIES_DETAILS</option>
       <option value="3">JBS_TPL_LINK_TEACHER_DETAILS</option>
@@ -2104,7 +2104,7 @@
            type="list"
            default="0"
            label="JBS_TPL_SERIES_SERIESELEMENT4"
-           description="JBS_TPL_SERIES_SERIESELEMENT_TT">
+           description="JBS_TPL_SERIES_SERIESELEMENT_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SERIES_TITLE_BRACE</option>
       <option value="2">JBS_TPL_THUMBNAIL_BRACE</option>
@@ -2118,7 +2118,7 @@
            type="list"
            default="1"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_SERIES_DETAILS</option>
       <option value="3">JBS_TPL_LINK_TEACHER_DETAILS</option>
@@ -2127,7 +2127,7 @@
            type="list"
            default="0"
            label="JBS_TPL_CUSTOM_VIEW"
-           description="JBS_TPL_CUSTOM_VIEW_TT">
+           description="JBS_TPL_CUSTOM_VIEW_DESC">
       <option value="0">JBS_CMN_DONT_USE</option>
       <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
@@ -2136,7 +2136,7 @@
            rows="10"
            cols="100"
            label="JBS_TPL_HEADERCODE"
-           description="JBS_TPL_HEADERCODE_TT">
+           description="JBS_TPL_HEADERCODE_DESC">
     </param>
     <param name="series_templatecode"
            type="textarea"
@@ -2144,7 +2144,7 @@
            cols="100"
            default=""
            label="JBS_TPL_TEMPLATECODE"
-           description="JBS_TPL_SERIES_TEMPLATECODE_TT"></param>
+           description="JBS_TPL_SERIES_TEMPLATECODE_DESC"></param>
     <param name="series_wrapcode"
            type="radio"
            default="0"
@@ -2160,7 +2160,7 @@
            default="1"
            type="list"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_SORT"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_SORT_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_SORT_DESC">
       <option value="studydate">JBS_CMN_STUDY_DATE</option>
       <option value="studytitle">JBS_CMN_STUDY_TITLE</option>
       <option value="booknumber">JBS_CMN_BOOK</option>
@@ -2170,7 +2170,7 @@
            type="list"
            default="DESC"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ORDER"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ORDER_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ORDER_DESC">
       <option value="DESC">JBS_CMN_DESCENDING</option>
       <option value="ASC">JBS_CMN_ASCENDING</option>
     </param>
@@ -2178,12 +2178,12 @@
            type="text"
            default=""
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_LIMIT"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_LIMIT_TT" />
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_LIMIT_DESC" />
     <param name="series_list_return"
            type="list"
            default="1"
            label="JBS_TPL_SERIESDETAIL_SERIES_LIST_RETURN"
-           description="JBS_TPL_SERIESDETAIL_SERIES_LIST_RETURN_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_LIST_RETURN_DESC">
       <option value="0">JBS_TPL_HIDE_LINK</option>
       <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
@@ -2191,7 +2191,7 @@
            type="list"
            default="0"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_LISTTYPE"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_LISTTYPE_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_LISTTYPE_DESC">
       <option value="0">JBS_TPL_SERIESDETAIL_SERIESLIST_STYLE</option>
       <option value="1">JBS_TPL_SERIESDETAIL_STUDIESLIST</option>
       <option value="2">JBS_TPL_SERIESDETAIL_CUSTOM_SERIES_LIST</option>
@@ -2200,7 +2200,7 @@
            type="list"
            default="5"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_1"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC">
       <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_CMN_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2229,7 +2229,7 @@
            type="list"
            default="1"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_DESC">
       <option value="0">JBS_TPL_HIDE_LINK</option>
       <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
@@ -2237,7 +2237,7 @@
            type="list"
            default="7"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_2"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC">
       <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_CMN_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2266,7 +2266,7 @@
            type="list"
            default="0"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_DESC">
       <option value="0">JBS_TPL_HIDE_LINK</option>
       <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
@@ -2274,7 +2274,7 @@
            type="list"
            default="10"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_3"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC">
       <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_CMN_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2303,7 +2303,7 @@
            type="list"
            default="0"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_DESC">
       <option value="0">JBS_TPL_HIDE_LINK</option>
       <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
@@ -2311,7 +2311,7 @@
            type="list"
            default="20"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_4"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC">
       <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_CMN_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2340,14 +2340,14 @@
            type="list"
            default="0"
            label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK"
-           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_TT">
+           description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ISLINK_DESC">
       <option value="0">JBS_TPL_HIDE_LINK</option>
       <option value="1">JBS_TPL_SHOW_LINK</option>
     </param>
     <param name="useexpert_seriesdetail"
            type="list"
            label="JBS_TPL_CUSTOM_VIEW"
-           description="JBS_TPL_CUSTOM_VIEW_TT">
+           description="JBS_TPL_CUSTOM_VIEW_DESC">
       <option value="0">JBS_CMN_DONT_USE</option>
       <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
     </param>
@@ -2356,7 +2356,7 @@
            rows="10"
            cols="100"
            label="JBS_TPL_SERIESDETAIL_TEMPLATECODE"
-           description="JBS_TPL_SERIESDETAIL_TEMPLATECODE_TT" />
+           description="JBS_TPL_SERIESDETAIL_TEMPLATECODE_DESC" />
   </params>
   <params group="TOOLTIP">
     <param name="tip_title"
@@ -2364,18 +2364,18 @@
            default="Sermon Information"
            size="100"
            label="JBS_TPL_TOOLTIP_TIP_TITLE"
-           description="JBS_TPL_TOOLTIP_TIP_TITLE_TT" />
+           description="JBS_TPL_TOOLTIP_TIP_TITLE_DESC" />
     <param name="tip_item1_title"
            type="text"
            default="Title"
            label="JBS_TPL_TOOLTIP_TIP_ITEM1_TITLE"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
            size="100" />
     <param name="tip_item1"
            type="list"
            default="5"
            label="JBS_TPL_TOOLTIP_TIP_ITEM1"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
       <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_CMN_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2398,13 +2398,13 @@
            type="text"
            default="Details"
            label="JBS_TPL_TOOLTIP_TIP_ITEM2_TITLE"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
            size="100" />
     <param name="tip_item2"
            type="list"
            default="6"
            label="JBS_TPL_TOOLTIP_TIP_ITEM2"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
       <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_CMN_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2427,13 +2427,13 @@
            type="text"
            default="Teacher"
            label="JBS_TPL_TOOLTIP_TIP_ITEM3_TITLE"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
            size="100" />
     <param name="tip_item3"
            type="list"
            default="7"
            label="JBS_TPL_TOOLTIP_TIP_ITEM3"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
       <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_CMN_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2456,13 +2456,13 @@
            type="text"
            default="Reference"
            label="JBS_TPL_TOOLTIP_TIP_ITEM4_TITLE"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
            size="100" />
     <param name="tip_item4"
            type="list"
            default="1"
            label="JBS_TPL_TOOLTIP_TIP_ITEM4"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
       <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_CMN_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2485,13 +2485,13 @@
            type="text"
            default="Date"
            label="JBS_TPL_TOOLTIP_TIP_ITEM5_TITLE"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_TT"
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
            size="100" />
     <param name="tip_item5"
            type="list"
            default="10"
            label="JBS_TPL_TOOLTIP_TIP_ITEM5"
-           description="JBS_TPL_TOOLTIP_TIP_ITEM_TT">
+           description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
       <option value="5">JBS_CMN_STUDY_TITLE</option>
       <option value="10">JBS_CMN_STUDY_DATE</option>
       <option value="7">JBS_CMN_TEACHER_NAME</option>
@@ -2521,7 +2521,7 @@
            type="list"
            default="1"
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -2557,13 +2557,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr1c1span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -2573,7 +2573,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -2596,7 +2596,7 @@
            type="list"
            default="5"
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -2632,13 +2632,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr1c2span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS2TO4</option>
@@ -2647,7 +2647,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -2670,7 +2670,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -2706,13 +2706,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr1c3span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS3TO4</option>
     </param>
@@ -2720,7 +2720,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -2743,7 +2743,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -2779,12 +2779,12 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dlinkr1c4"
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -2804,7 +2804,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -2840,13 +2840,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr2c1span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -2856,7 +2856,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -2879,7 +2879,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -2915,13 +2915,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr2c2span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS2TO4</option>
@@ -2930,7 +2930,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -2953,7 +2953,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -2989,13 +2989,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr2c3span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS3TO4</option>
     </param>
@@ -3003,7 +3003,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3026,7 +3026,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -3062,12 +3062,12 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dlinkr2c4"
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3087,7 +3087,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -3123,13 +3123,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr3c1span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -3139,7 +3139,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3162,7 +3162,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -3198,13 +3198,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr3c2span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS3TO4</option>
@@ -3213,7 +3213,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3236,7 +3236,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -3272,13 +3272,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr3c3span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS3TO4</option>
     </param>
@@ -3286,7 +3286,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3309,7 +3309,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -3345,12 +3345,12 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dlinkr3c4"
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3370,7 +3370,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -3406,13 +3406,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr4c1span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS1TO2</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS1TO3</option>
@@ -3422,7 +3422,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3445,7 +3445,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -3481,13 +3481,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr4c2span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
       <option value="3">JBS_TPL_SPAN_COLUMNS3TO4</option>
@@ -3496,7 +3496,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3519,7 +3519,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -3555,13 +3555,13 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dr4c3span"
            type="list"
            default="1"
            size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_TT">
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
       <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
       <option value="2">JBS_TPL_SPAN_COLUMNS3TO4</option>
     </param>
@@ -3569,7 +3569,7 @@
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3592,7 +3592,7 @@
            type="list"
            default=""
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
-           description="JBS_TPL_DETAILS_CHOOSE_ITEM_TT">
+           description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>
       <option value="1">JBS_TPL_SCRIPTURE1_BRACE</option>
       <option value="2">JBS_TPL_SCRIPTURE2_BRACE</option>
@@ -3628,12 +3628,12 @@
            size="100"
            default=""
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
-           description="JBS_TPL_DETAILS_CREATE_CUSTOM_TT" />
+           description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
     <param name="dlinkr4c4"
            type="list"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
-           description="JBS_TPL_TYPE_OF_LINK_TT">
+           description="JBS_TPL_TYPE_OF_LINK_DESC">
       <option value="0">JBS_TPL_NO_LINK</option>
       <option value="1">JBS_TPL_LINK_TO_DETAILS</option>
       <option value="2">JBS_TPL_LINK_TO_MEDIA</option>
@@ -3649,7 +3649,7 @@
            name="landing_hide"
            default="0"
            label="JBS_TPL_LANDINGPAGE_LANDING_HIDE"
-           description="JBS_TPL_LANDINGPAGE_LANDING_HIDE_TT">
+           description="JBS_TPL_LANDINGPAGE_LANDING_HIDE_DESC">
       <option value="0">JBS_TPL_BUTTON_ONLY</option>
       <option value="1">JBS_TPL_BUTTON_LABEL</option>
       <option value="2">JBS_TPL_LABEL_ONLY</option>
@@ -3659,12 +3659,12 @@
            size="100"
            default="Show/Hide All"
            label="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL"
-           description="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL_TT" />
+           description="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL_DESC" />
     <param type="list"
            name="headingorder_1"
            default="teachers"
            label="JBS_TPL_LANDINGPAGE_HEADINGORDER_1"
-           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_DESC">
       <option value="teachers">JBS_CMN_TEACHERS</option>
       <option value="series">JBS_CMN_SERIES</option>
       <option value="books">JBS_CMN_BOOKS</option>
@@ -3677,7 +3677,7 @@
            name="headingorder_2"
            default="series"
            label="JBS_TPL_LANDINGPAGE_HEADINGORDER_2"
-           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_DESC">
       <option value="teachers">JBS_CMN_TEACHERS</option>
       <option value="series">JBS_CMN_SERIES</option>
       <option value="books">JBS_CMN_BOOKS</option>
@@ -3690,7 +3690,7 @@
            name="headingorder_3"
            default="books"
            label="JBS_TPL_LANDINGPAGE_HEADINGORDER_3"
-           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_DESC">
       <option value="teachers">JBS_CMN_TEACHERS</option>
       <option value="series">JBS_CMN_SERIES</option>
       <option value="books">JBS_CMN_BOOKS</option>
@@ -3703,7 +3703,7 @@
            name="headingorder_4"
            default="topics"
            label="JBS_TPL_LANDINGPAGE_HEADINGORDER_4"
-           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_DESC">
       <option value="teachers">JBS_CMN_TEACHERS</option>
       <option value="series">JBS_CMN_SERIES</option>
       <option value="books">JBS_CMN_BOOKS</option>
@@ -3716,7 +3716,7 @@
            name="headingorder_5"
            default="locations"
            label="JBS_TPL_LANDINGPAGE_HEADINGORDER_5"
-           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_DESC">
       <option value="teachers">JBS_CMN_TEACHERS</option>
       <option value="series">JBS_CMN_SERIES</option>
       <option value="books">JBS_CMN_BOOKS</option>
@@ -3729,7 +3729,7 @@
            name="headingorder_6"
            default="messagetypes"
            label="JBS_TPL_LANDINGPAGE_HEADINGORDER_6"
-           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_DESC">
       <option value="teachers">JBS_CMN_TEACHERS</option>
       <option value="series">JBS_CMN_SERIES</option>
       <option value="books">JBS_CMN_BOOKS</option>
@@ -3742,7 +3742,7 @@
            name="headingorder_7"
            default="years"
            label="JBS_TPL_LANDINGPAGE_HEADINGORDER_7"
-           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_TT">
+           description="JBS_TPL_LANDINGPAGE_HEADINGORDER_DESC">
       <option value="teachers">JBS_CMN_TEACHERS</option>
       <option value="series">JBS_CMN_SERIES</option>
       <option value="books">JBS_CMN_BOOKS</option>
@@ -3762,7 +3762,7 @@
     <param name="landingteacherslimit"
            type="text"
            label="JBS_TPL_LANDINGPAGE_LANDINGTEACHERSLIMIT"
-           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
            size="5" />
     <param name="teacherslabel"
            type="text"
@@ -3787,7 +3787,7 @@
     <param name="landingserieslimit"
            type="text"
            label="JBS_TPL_LANDINGPAGE_LANDINGSERIESLIMIT"
-           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
            size="5" />
     <param name="serieslabel"
            type="text"
@@ -3812,7 +3812,7 @@
     <param name="landingbookslimit"
            type="text"
            label="JBS_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT"
-           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
            size="5" />
     <param name="bookslabel"
            type="text"
@@ -3830,7 +3830,7 @@
     <param name="landingtopicslimit"
            type="text"
            label="JBS_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT"
-           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
            size="5" />
     <param name="topicslabel"
            type="text"
@@ -3848,7 +3848,7 @@
     <param name="landinglocationslimit"
            type="text"
            label="JBS_TPL_LANDINGPAGE_LANDINGLOCATIONSLIMIT"
-           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
            size="5" />
     <param name="locationslabel"
            type="text"
@@ -3866,7 +3866,7 @@
     <param name="landingmessagetypeslimit"
            type="text"
            label="JBS_TPL_LANDINGPAGE_LANDINGMESSAGETYPESLIMIT"
-           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
            size="5" />
     <param name="messagetypeslabel"
            type="text"
@@ -3884,7 +3884,7 @@
     <param name="landingyearslimit"
            type="text"
            label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT"
-           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_TT"
+           description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
            size="5" />
     <param name="yearslabel"
            type="text"

@@ -3,17 +3,17 @@
 <metadata>
 	<layout title="JBS_MNU_SINGLE_STUDY_LAYOUT">
 		<message>
-			<![CDATA[JBS_MNU_SINGLE_STUDY_LAYOUT_TT]]>
+			<![CDATA[JBS_MNU_SINGLE_STUDY_LAYOUT_DESC]]>
 		</message>
 	</layout>
 	<state>
 		<name>JBS_MNU_SINGLE_STUDY_LAYOUT</name>
 		<url addpath="/administrator/components/com_biblestudy/elements">
-			<param name="id" type="studydetails" default="" label="JBS_CMN_SELECT_STUDY" description="JBS_MNU_SELECT_STUDY_TT" />
+			<param name="id" type="studydetails" default="" label="JBS_CMN_SELECT_STUDY" description="JBS_MNU_SELECT_STUDY_DESC" />
 		</url>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="studydetails" />
-			<param name="templatemenuid" type="templatemenuid" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_TT" />
+			<param name="templatemenuid" type="templatemenuid" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_DESC" />
 		</params>	
 	</state>
     <fields name="request">
@@ -26,7 +26,7 @@
 				required="true"
 			/>
             <field name="t" type="sql"
-                description="JBS_MNU_SELECT_TEMPLATE_TT"
+                description="JBS_MNU_SELECT_TEMPLATE_DESC"
                 label="JBS_MNU_SELECT_TEMPLATE"
                 default="1"
                 query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
