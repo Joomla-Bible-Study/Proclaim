@@ -21,7 +21,9 @@ $document =& JFactory::getDocument();
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
+//print_r ($this->admin_params);
 $teachers = $params->get('teacher_id');
+
 if ($this->allow)
 			{?>
 			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>

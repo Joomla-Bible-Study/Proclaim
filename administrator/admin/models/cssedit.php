@@ -39,4 +39,39 @@ function &getData()
 		
 		return $this->_data;
 	}
+
+ /**
+     * Get the form data
+     *
+     * @param <Array> $data
+     * @param <Boolean> $loadData
+     * @return <type>
+     * @since 7.0
+     */
+    public function getForm($data = array(), $loadData = true) {
+        // Get the form.
+        $form = $this->loadForm('com_biblestudy.cssedit', 'cssedit', array('control' => 'jform', 'load_data' => $loadData));
+
+        if (empty($form)) {
+            return false;
+        }
+
+        return $form;
+    }
+
+    /**
+     *
+     * @return <type>
+     * @since   7.0
+     */
+    protected function loadFormData() {
+        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.cssedit.data', array());
+        if (empty($data)) {
+            $data = $this->getItem();
+            $data->podcast_id = explode(',', $data->podcast_id);
+        }
+
+
+        return $data;
+    }
 }

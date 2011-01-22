@@ -48,8 +48,11 @@ class JBSAdmin
 		}
         else
         {
-        include_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'params.php');
-        $admin_params = BsmHelper::getAdmin(true);
+        $db =& JFactory::getDBO();
+		$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
+		$db->query();
+		$compat = $db->loadObject();
+		$admin_params = new JParameter($compat->params);
         }			
 		return $admin_params;
 	}

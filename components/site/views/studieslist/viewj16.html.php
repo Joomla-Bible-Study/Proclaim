@@ -26,7 +26,11 @@ class biblestudyViewstudieslist extends JView {
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
-        $this->admin_params = $this->admin;
+        
+        $admin_parameters = $this->get('Admin');
+        $this->admin_params = new JParameter($admin_parameters[0]->params);
+       
+     //   dump ($admin_params, 'admin_params: ');
         
          $t = JRequest::getInt('t','get',1);
         if (!$t) {
@@ -35,9 +39,10 @@ class biblestudyViewstudieslist extends JView {
         JRequest::setVar('t', $t, 'get');
         
         $template = $this->get('template');
+       
         $params = new JParameter($template[0]->params);
       //  $this->params = BsmHelper::getTemplateparams(true);
-       
+   //     dump ($params,'template: ');
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $path1 = JPATH_SITE . DS . 'components' . DS . 'com_biblestudy' . DS . 'helpers' . DS;

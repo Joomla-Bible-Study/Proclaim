@@ -73,21 +73,13 @@ $comments .= '
 		if ($params->get('use_captcha') > 0) 
         {
 
-		// Begin captcha . Thanks OSTWigits
-		//Must be installed. Here we check that
-        $checkplugin = JPluginHelper::importPlugin('system','captcha');
-        dump ($checkplugin, 'checkplugin: ');
-		if (JPluginHelper::importPlugin('system', 'captcha'))
-			{
-				$comments .= '<table><tr><td>'.JText::_('JBS_CMT_ENTER_CAPTCHA_TEXT').'&nbsp
-				<input name="word" type="text" id="word" value="" style="vertical-align:middle" size="10">&nbsp;
-				<img src="'.JURI::base().'index.php?option=com_biblestudy&view=studydetails&controller=studydetails&task=displayimg">
-				</td></tr>';
-			}
-			else
-			{
-				$comments .= JText::_('JBS_CMT_CAPTCHA_NOT_INSTALLED');
-			} //end of check for OSTWigit plugin
+		  // Begin captcha 
+          //  $comments .= '<div id="recaptcha_div"></div>
+         //   <input type="button" value="Show reCAPTCHA" onclick="showRecaptcha(\'recaptcha_div\');"></input>';
+        require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
+  $publickey = "6Ldut8ASAAAAAOeTkhVNyDGTFUlKXV3ynfKi3fBJ"; // you got this from the signup page
+  $comments .= recaptcha_get_html($publickey);
+		
 
 		} // end of if for use of captcha
 		//dump ($params->get('comment_publish'));

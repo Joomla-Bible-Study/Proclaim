@@ -133,7 +133,9 @@ if ($params->get('list_items_view') == 0)
 
 		  
          echo '<div id="commentstable" >';
-	   
+    require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
+  $publickey = "6Ldut8ASAAAAAOeTkhVNyDGTFUlKXV3ynfKi3fBJ"; // you got this from the signup page
+  echo recaptcha_get_html($publickey);
         $Itemid = JRequest::getVar('Itemid',1);
 		$comments_call = JView::loadHelper('comments');
         $comments = getComments($params, $row, $Itemid);
@@ -141,7 +143,6 @@ if ($params->get('list_items_view') == 0)
     
    		?>
 	
-		</div>
 
 
 <?php 

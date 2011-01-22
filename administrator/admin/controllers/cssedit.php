@@ -93,7 +93,7 @@ if ($return)
 
 
 
-	function save()
+	function legacySave()
 	{
 		$mainframe =& JFactory::getApplication();
 

@@ -115,16 +115,7 @@ function setSelect($string){
 	 * @desc Returns teachers
 	 * @return Array
 	 */
-	 function getAdmin()
-	{
-		if (empty($this->_admin)) {
-			$query = 'SELECT *'
-			. ' FROM #__bsms_admin'
-			. ' WHERE id = 1';
-			$this->_admin = $this->_getList($query);
-		}
-		return $this->_admin;
-	}
+	 
 	
 	function getTeachers() {
 		if (empty($this->_teachers)) {
@@ -267,7 +258,18 @@ function getTemplate() {
 		}
 		return $this->_template;
 	}
-		
+
+function getAdmin()
+	{
+		if (empty($this->_admin)) {
+			$query = 'SELECT *'
+			. ' FROM #__bsms_admin'
+			. ' WHERE id = 1';
+			$this->_admin = $this->_getList($query);
+		}
+		return $this->_admin;
+	}
+    		
 	function getData()
 	{
 		$mainframe =& JFactory::getApplication();
