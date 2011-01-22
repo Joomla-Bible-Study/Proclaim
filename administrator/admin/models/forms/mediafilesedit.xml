@@ -11,7 +11,7 @@
 			format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
 			
         <field name="study_id" type="Modal_Study"
-		label="JBS_CMN_STUDY" description="JBS_CMN_STUDY_DESC"
+		label="JBS_CMN_STUDY" description="JBS_MED_CHOOSE_STUDY_DESC"
 		class="inputbox" required="true"/>
 
         <field name="podcast_id" type="sql" label="JBS_MED_CHOOSE_PODCAST"
