@@ -16,7 +16,7 @@ class biblestudyViewstudydetails extends JView
 	
 	function display($tpl = null)
 	{
-		//TF added
+		
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		//$dispatcher	   =& JDispatcher::getInstance();
 		$document =& JFactory::getDocument();
@@ -31,8 +31,8 @@ class biblestudyViewstudydetails extends JView
          //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin(true);
-        $this->admin_params = $this->admin;
+     //   $this->admin = BsmHelper::getAdmin(true);
+     //   $this->admin_params = $this->admin;
         
          $t = JRequest::getInt('t','get',1);
         if (!$t) {
@@ -45,6 +45,11 @@ class biblestudyViewstudydetails extends JView
         
         $template = $this->get('template');
         $params = new JParameter($template[0]->params);
+        
+        
+        //print_r($this->admin_params);
+        $a_params = $this->get('Admin');
+        $this->admin_params = new JParameter($a_params[0]->params);
         
         $adminrows = new JBSAdmin();
         $show = $adminrows->getShowLevel($studydetails);
