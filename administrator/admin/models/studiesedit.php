@@ -31,7 +31,7 @@ class biblestudyModelstudiesedit extends modelClass {
 
     function __construct() {
         parent::__construct();
-
+        
         $admin = $this->getAdmin();
         $this->_admin_params = new JParameter($admin[0]->params);
         $array = JRequest::getVar('cid', 0, '', 'array');

@@ -58,7 +58,7 @@ class Tablestudiesedit extends JTable
 	var $thumbnailm = null;
 	var $thumbhm = null;
 	var $thumbwm = null;
-	var $params = '';
+	var $params = null;
 	/**
 	 * Constructor
 	 *
