@@ -46,10 +46,7 @@ class biblestudyModellandingpage extends JModel
 		
 		//dump ($params, 'params: ');
 		$config = JFactory::getConfig();
-		// Get the pagination request variables
-		//$limitstart = JRequest::getVar('limitstart', 0, '', 'int');
-		//$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $config->getValue('config.list_limit'), 'int'));
-		//$this->setState('limit', $mainframe->getUserStateFromRequest('com_biblestudy.limit', 'limit', $params->get('items'), 'int'));
+		
 		$this->setState('limit',$params->get('itemslimit'),'limit',$params->get('itemslimit'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
 

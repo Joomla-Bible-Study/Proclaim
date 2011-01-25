@@ -1071,6 +1071,20 @@
                 <option value="0">JBS_TPL_NO_CAPTCHA</option>
                 <option value="1">JBS_TPL_CAPTCHA_OSTWIGITS</option>
             </field>
+            <field name="public_key"
+            type="text"
+            size="25"
+            label="JBS_TPL_PUBLIC_KEY"
+            description="JBS_TPL_PUBLIC_KEY_DESC"
+            default=""
+            />
+            <field name="private_key"
+            type="text"
+            size="25"
+            label="JBS_TPL_PRIVATE_KEY"
+            description="JBS_TPL_PRIVATE_KEY_DESC"
+            default=""
+            />
             <field name="email_comments"
            type="list"
            default="1"

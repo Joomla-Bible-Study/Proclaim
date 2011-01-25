@@ -52,52 +52,9 @@ $comments .= '
 	} // End of if(count($commentsresult))
 
 
-		$comments .= '<table id="commentssubmittable">';
 
-		if ($allow < 10){$comments .= '<tr><td><strong>'.JText::_('JBS_CMT_REGISTER_TO_POST_COMMENTS').'</strong></td></tr>';}
-        if ($allow > 10)
-        {
-		$comments .= '<tr><td>';
-		if ($user->name){$full_name = $user->name; } else {$full_name = ''; }
-		if ($user->email) {$user_email = $user->email;} else {$user_email = '';}
-
-		$comments .= '<form action="index.php" method="post"><strong>'
-		.JText::_('JBS_CMT_POST_COMMENT').'</strong></td></tr>
-                <tr><td>'.JText::_('JBS_CMT_FULL_NAME').
-		'</td><td><input class="text_area" size="50" type="text" name="full_name" id="full_name" value="'.$full_name.'" /></td></tr>
-                <tr><td>'.JText::_('JBS_CMT_EMAIL').'</td><td><input class="text_area" type="text" size="50" name="user_email" id="user_email" value="'.$user->email.'" /></td></tr>
-                <tr><td>'.JText::_('JBS_CMN_COMMENT').':</td>';
-		//$comments .= $editor->display('comment_text', 'comment_text', '100%', '400', '70', '15').'</td></tr></table>';
-		$comments .= '<td><textarea class="text_area" cols="20" rows="4" style="width:400px" name="comment_text" id="comment_text"></textarea></td></tr>';
-//dump ($params->get('use_captcha'), 'captch: ');
-		if ($params->get('use_captcha') > 0) 
-        {
-
-		  // Begin captcha 
-          //  $comments .= '<div id="recaptcha_div"></div>
-         //   <input type="button" value="Show reCAPTCHA" onclick="showRecaptcha(\'recaptcha_div\');"></input>';
-        require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
-  $publickey = "6Ldut8ASAAAAAOeTkhVNyDGTFUlKXV3ynfKi3fBJ"; // you got this from the signup page
-  $comments .= recaptcha_get_html($publickey);
 		
-
-		} // end of if for use of captcha
-		//dump ($params->get('comment_publish'));
-		$comments .=  '<tr><td>
-		<input type="hidden" name="study_id" id="study_id" value="'.$row->id.'" />
-		<input type="hidden" name="task" value="comment" />
-		<input type="hidden" name="option" value="com_biblestudy" />
-		<input type="hidden" name="published" id="published" value="'.$params->get('comment_publish').'"  />
-		<input type="hidden" name="view" value="studydetails" />
-		<input type="hidden" name="controller" value="studydetails" />
-		<input type="hidden" name="comment_date" id="comment_date" value="'.date('Y-m-d H:i:s').'"  />
-		<input type="hidden" name="study_detail_id" id="study_detail_id" value="'.$row->id.'"  />
-		<input type="hidden" name="Itemid" id="Itemid" value="'.$Itemid.'" />
-		<input type="submit" class="button" id="button" value="Submit"  />
-		</form>';
-		} //End of if $allow > 10
 		
-		$comments .= '</td></tr></table></div>';
 
 	return $comments;
 	} //end else if $allow > 9

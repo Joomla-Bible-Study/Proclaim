@@ -67,19 +67,7 @@ class biblestudyControllerstudydetails extends JController
 		parent::display();
 	}
 
-	function displayimg()
-        {
-           if (JPluginHelper::importPlugin('system', 'captcha'))
-			{
-				$mainframe =& JFactory::getApplication();
-				// By default, just display an image
-				$document = &JFactory::getDocument();
-				$doc = &JDocument::getInstance('raw');
-				// Swap the objects
-				$document = $doc;
-				$mainframe->triggerEvent('onCaptcha_display', array());
-			}
-	}
+	
 
 	function comment()
 	{
@@ -111,7 +99,7 @@ class biblestudyControllerstudydetails extends JController
 	{
 	//Begin reCaptcha 
 	  require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
-        $privatekey = "6Ldut8ASAAAAAPL8rWoqqK-Cwk5nTtrDaJCgZZwB";
+        $privatekey = $params->get('private_key');
   $resp = recaptcha_check_answer ($privatekey,
                                 $_SERVER["REMOTE_ADDR"],
                                 $_POST["recaptcha_challenge_field"],
@@ -144,7 +132,7 @@ class biblestudyControllerstudydetails extends JController
 		}
 		$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
 
-		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&task=view&Itemid='.$returnmenu.'&t='.$t.'&msg='.$msg, 'Comment Added');
+		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&t='.$t.'&msg='.$msg, 'Comment Added');
 	} // End of $cap
 	}
 	//Begin scripture links plugin function

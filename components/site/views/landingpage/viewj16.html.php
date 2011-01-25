@@ -19,9 +19,9 @@ class biblestudyViewLandingpage extends JView {
 		$model =& $this->getModel();
 		 //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
-        $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin(true);
-        $this->admin_params = $this->admin;
+      //  $this->loadHelper('params');
+      //  $this->admin = BsmHelper::getAdmin(true);
+      //  $this->admin_params = $this->admin;
         
          $t = JRequest::getInt('t','get',1);
         if (!$t) {
@@ -33,6 +33,8 @@ class biblestudyViewLandingpage extends JView {
         
         $template = $this->get('template');
         $params = new JParameter($template[0]->params);
+        $admin = $this->get('Admin');
+        $this->admin_params = new JParameter($admin[0]->params);
 /*
  $menuitemid = JRequest::getInt( 'Itemid' );
   if ($menuitemid)

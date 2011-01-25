@@ -29,20 +29,16 @@ class biblestudyViewstudieslist extends JView {
         
         $admin_parameters = $this->get('Admin');
         $this->admin_params = new JParameter($admin_parameters[0]->params);
-       
-     //   dump ($admin_params, 'admin_params: ');
-        
-         $t = JRequest::getInt('t','get',1);
+      // 
+ $t = JRequest::getInt('t','get',1);
         if (!$t) {
             $t = 1;
         }
         JRequest::setVar('t', $t, 'get');
-        
         $template = $this->get('template');
-       
         $params = new JParameter($template[0]->params);
-      //  $this->params = BsmHelper::getTemplateparams(true);
-   //     dump ($params,'template: ');
+        $a_params = $this->get('Admin');
+        $this->admin_params = new JParameter($a_params[0]->params);
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $path1 = JPATH_SITE . DS . 'components' . DS . 'com_biblestudy' . DS . 'helpers' . DS;

@@ -44,18 +44,7 @@ $listingcall = JView::loadHelper('listing');
     ?>
 
 
-<?php if ($params->get('show_comments') < 2)
-		{?>
-        <div id="commentstable" >
-	
-<?php $Itemid = JRequest::getVar('Itemid');
-		$comments_call = JView::loadHelper('comments');
-        $comments = getComments($params, $row, $Itemid);
-		echo $comments;
-		?>
-	
-		</div>
-<?php } //end of if comments param?>
+
 <?php
 switch ($this->params->get('show_passage_view', '0'))
         {
@@ -83,21 +72,19 @@ switch ($this->params->get('show_passage_view', '0'))
                 echo '</div>';
                 break;
         }
-?>
-	<div class="listingfooter"><br />
-    <?php $link_text = $this->params->get('link_text');
-			if (!$link_text) {
-				$link_text = JText::_('JBS_CMN_RETURN_STUDIES_LIST');
-			}
-			if ($this->params->get('view_link') > 0){
-					//$returnmenu = $params->get('t');
-					$t = $params->get('studieslisttemplateid');
-					if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
-					//$returnmenu = JRequest::getVar('t', 'get', 'int');
-					if (!isset($returnmenu)) {$returnmenu = 1;}
-					//dump ($returnmenu, 'returnmenu: ');
-					$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t='.$t);?>
-			<a href="<?php echo $link;?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>
-    </div><!--end of footer div-->
+if ($params->get('show_comments') < 2)
+		{?>
+        <div id="commentstable" >
+	
+<?php $Itemid = JRequest::getVar('Itemid');
+		$comments_call = JView::loadHelper('comments');
+        $comments = getComments($params, $row, $Itemid);
+		echo $comments;
+		?>
+	
+		</div>
+<?php } //end of if comments param?>
+
+
 
 </div><!--End of page container div-->

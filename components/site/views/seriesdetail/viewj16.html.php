@@ -27,18 +27,17 @@ class biblestudyViewseriesdetail extends JView
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
-        $this->admin_params = $this->admin;
+       // $this->admin_params = $this->admin;
         
          $t = JRequest::getInt('t','get',1);
         if (!$t) {
             $t = 1;
         }
         JRequest::setVar('t', $t, 'get');
-      //  $this->params = BsmHelper::getTemplateparams(true);
-	  //  $params = $this->params;
-        
         $template = $this->get('template');
         $params = new JParameter($template[0]->params);
+        $a_params = $this->get('Admin');
+        $this->admin_params = new JParameter($a_params[0]->params);
 		//dump ($params, 'params2: ');
 		$items		=& $this->get('Data');
 		//dump ($items);

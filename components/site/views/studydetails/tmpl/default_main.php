@@ -62,22 +62,22 @@ if ($this->admin_params->get('socialnetworking')> 0)
 <table><tr><td>
   
  
- <?php if ($params->get('show_teacher_view') > 0)
+ <?php if ($this->params->get('show_teacher_view') > 0)
 	{ ?>        
     
     <?php	
 	$teacher_call = JView::loadHelper('teacher');
-	$teacher = getTeacher($params, $row->teacher_id, $this->admin_params);
+	$teacher = getTeacher($this->params, $row->teacher_id, $this->admin_params);
 	echo $teacher;
 	echo '</td><td>';
 	}?>
 	
 	
 	<?php
-	if ($params->get('title_line_1') + $params->get('title_line_2') > 0) 
+	if ($this->params->get('title_line_1') + $params->get('title_line_2') > 0) 
 	{
 		$title_call = JView::loadHelper('title');
-		$title = getTitle($params, $row, $this->admin_params, $this->template);
+		$title = getTitle($this->params, $row, $this->admin_params, $this->template);
 		echo $title;
 	}?> 
 
@@ -87,23 +87,23 @@ if ($this->admin_params->get('socialnetworking')> 0)
  
  <table id="bsmsdetailstable" cellspacing="0">
      <?php //dump ($params->get('use_headers_view'), 'headers: ');
-if ($params->get('use_headers_view') > 0 || $params->get('list_items_view')< 1)
+if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items_view')< 1)
 	{	
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($row, $params, $this->admin_params, $this->template, $showheader=$params->get('use_headers_view'), $ismodule=0);
+     $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader=$params->get('use_headers_view'), $ismodule=0);
      echo $header;
 	}	?>
     <tbody>
 
         <?php 
-if ($params->get('list_items_view') == 1)
+if ($this->params->get('list_items_view') == 1)
 		{
 			echo '<tr class="bseven"><td class="media">';
 		//	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		//	include_once($path1.'mediatable.php');
             require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
             $media = new jbsMedia();
-            $listing = $media->getMediaTable($row, $params, $this->admin_params);
+            $listing = $media->getMediaTable($row, $this->params, $this->admin_params);
 		//	$listing = getMediatable($params, $row, $this->admin_params);
 			echo $listing;
 			echo '</td></tr>';
@@ -112,7 +112,7 @@ if ($params->get('list_items_view') == 1)
 if ($params->get('list_items_view') == 0)
 		{
 			$oddeven = 'bsodd';
- 			$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
+ 			$listing = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
  			echo $listing;
 		}?>
  </tbody></table>
@@ -129,19 +129,7 @@ if ($params->get('list_items_view') == 0)
 <?php 
 
 ?>
-<?php 
 
-		  
-         echo '<div id="commentstable" >';
-    require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
-  $publickey = "6Ldut8ASAAAAAOeTkhVNyDGTFUlKXV3ynfKi3fBJ"; // you got this from the signup page
-  echo recaptcha_get_html($publickey);
-        $Itemid = JRequest::getVar('Itemid',1);
-		$comments_call = JView::loadHelper('comments');
-        $comments = getComments($params, $row, $Itemid);
-		echo $comments;
-    
-   		?>
 	
 
 
@@ -173,30 +161,6 @@ if ($params->get('list_items_view') == 0)
                 break;
         }
 ?>
-        
-	<div class="listingfooter"><br />
-    <?php $link_text = $this->params->get('link_text');
-			if (!$link_text) {
-				$link_text = JText::_('JBS_CMN_RETURN_STUDIES_LIST');
-			}
-			if ($this->params->get('view_link') > 0){
-					//$returnmenu = $params->get('t');
-					$t = $params->get('studieslisttemplateid');
-					if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
-					//$returnmenu = JRequest::getVar('t', 'get', 'int');
-					if (!isset($returnmenu)) {$returnmenu = 1;}
-					//dump ($returnmenu, 'returnmenu: ');
-			$Itemid = JRequest::getVar('Itemid','','get');
-			if (!$Itemid)
-				{
-					//$itemid_call = JView::loadHelper('helper');
-					//$addItemid = getItemidLink($isplugin=0, $admin_params);
-		 	$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t='.$t);}
-			 else
-			 {
-			 $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t='.$t);	
-			 }?>
-			<a href="<?php echo $link;?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>
-    </div><!--end of footer div-->
+
 
 </div><!--End of page container div-->

@@ -34,26 +34,22 @@ class biblestudyViewstudydetails extends JView
      //   $this->admin = BsmHelper::getAdmin(true);
      //   $this->admin_params = $this->admin;
         
-         $t = JRequest::getInt('t','get',1);
+        $t = JRequest::getInt('t','get',1);
         if (!$t) {
             $t = 1;
         }
         JRequest::setVar('t', $t, 'get');
-        //$template = BsmHelper::getTemplateparams(true);
-        //$this->params = $template;
-	    //$params = $this->params;
-        
         $template = $this->get('template');
         $params = new JParameter($template[0]->params);
-        
-        
-        //print_r($this->admin_params);
         $a_params = $this->get('Admin');
         $this->admin_params = new JParameter($a_params[0]->params);
         
+        //$template = BsmHelper::getTemplateparams(true);
+        //$this->params = $template;
+	    //$params = $this->params;
         $adminrows = new JBSAdmin();
         $show = $adminrows->getShowLevel($studydetails);
-        if (!$show){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}
+     //   if (!$show){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}
        
 		
 		//Passage link to BibleGateway
@@ -65,10 +61,6 @@ class biblestudyViewstudydetails extends JView
 				$version = $st_params->get('bible_version');
 				$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 			}
-		
-		//We pick up the variable to show media in view - this is only used in the view.pdf.php. Here we simply pass the variable to the default template
-		$show_media = $contentConfig->get('show_media_view');
-		$this->assignRef('show_media', $show_media);
 		
 		//Added database queries from the default template - moved here instead
 		$database	= & JFactory::getDBO();
