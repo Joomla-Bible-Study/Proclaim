@@ -396,11 +396,12 @@ echo $pane->endPane();
 	<?php $user =& JFactory::getUser();
 	$user_name = $this->studiesedit->user_name;
 	if ($user_name == ''){$user_name = $user->name;}
-	?> <input type="hidden" name="option" value="com_biblestudy" /> <input
-	type="hidden" name="id" value="<?php echo $this->studiesedit->id; ?>" />
-<input type="hidden" name="task" value="" /> <input type="hidden"
-	name="controller" value="studiesedit" /> <input type="hidden"
-	name="user_id" value="<?php echo $user->get('id');?>" />
+	?> 
+    <input type="hidden" name="option" value="com_biblestudy" /> 
+    <input type="hidden" name="id" value="<?php echo $this->studiesedit->id; ?>" />
+    <input type="hidden" name="task" value="" /> 
+    <input type="hidden" name="controller" value="studiesedit" /> 
+    <input type="hidden" name="user_id" value="<?php echo $user->get('id');?>" />
     <?php if ($this->admin_params->get('study_publish') > 0)
 		{ ?>
     <input type="hidden" name="published" value="1"  />

@@ -91,6 +91,7 @@ $allow = 0;
 		} // end of if for use of captcha
 		//dump ($params->get('comment_publish'));
         echo '</td></tr><tr><td>
+        
 		<input type="hidden" name="study_id" id="study_id" value="'.$this->studydetails->id.'" />
 		<input type="hidden" name="task" value="comment" />
 		<input type="hidden" name="option" value="com_biblestudy" />

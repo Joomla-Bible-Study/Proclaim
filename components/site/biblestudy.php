@@ -14,6 +14,7 @@ $controller->execute(JRequest::getCmd('task'));
 $controller->redirect();
 
 //The Below is not required anymore, because joomla will handle this for us
+//This is here because of a security flaw and was added as an extra measure of security
 if ($controller = JRequest::getWord('controller')) {
 $approvedControllers = array(
 'studieslist',
