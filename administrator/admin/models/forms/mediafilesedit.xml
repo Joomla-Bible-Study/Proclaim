@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset>
-        <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
+        <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="1" required="true">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
@@ -43,8 +43,8 @@
         <option value="0">0</option>
     </field>
 	
-    <field name="comment" type="textarea" label="JBS_CMN_COMMENT"
-				description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" cols="64" rows="5" class="inputbox" size="1"/>
+    <field name="comment" type="text" size="50" label="JBS_CMN_COMMENT"
+				description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox" />
 	
     <field name="docMan_id" type="docman" extension="com_biblestudy"
 		label="JBS_MED_USE_DOCMAN" description="JBS_MED_USE_DOCMAN_DESC"
@@ -63,7 +63,7 @@
     </field>
 		
     <field name="media_image" type="sql" extension="com_biblestudy"
-		label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
+		label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC" required="true"
 		class="inputbox" query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC" key_field="id" value_field="media_image_name">
         <option value="-1">JBS_MED_SELECT_MEDIA_TYPE</option>
     </field>
