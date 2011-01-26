@@ -42,6 +42,7 @@ class biblestudyModelmediafilesedit extends modelClass {
         /**
          * @todo J16 has new way of retrieving parameters so we need to implement it here too
          */
+        jimport( 'joomla.html.parameter' );
         $admin = $this->getLegacyAdmin();
         $this->_admin_params = new JParameter($admin[0]->params);
         $array = JRequest::getVar('cid', 0, '', 'array');
