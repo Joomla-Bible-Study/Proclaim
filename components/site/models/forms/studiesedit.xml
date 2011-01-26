@@ -24,13 +24,13 @@
 
     <field name="studynumber" type="text" class="inputbox" size="8" label="JBS_CMN_STUDYNUMBER" desciption="JBS_STY_STUDYNUMBER_DESC"/>
 
-    <field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_BOOK" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY bookname ASC" key_field="booknumber" value_field="bookname"/>
+    <field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_BOOK" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname"/>
     <field name="chapter_begin" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN" desciption="JBS_STY_SCRIPTURE_DESC"/>
     <field name="verse_begin" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN"/>
     <field name="chapter_end" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END" desciption="JBS_STY_SCRIPTURE_DESC"/>
     <field name="verse_end" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END" desciption="JBS_STY_SCRIPTURE_DESC"/>
 
-    <field name="booknumber2" type="SQL" class="inputbox" label="JBS_STY_BOOK2" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY bookname ASC" key_field="booknumber" value_field="bookname"/>
+    <field name="booknumber2" type="SQL" class="inputbox" label="JBS_STY_BOOK2" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname"/>
     <field name="chapter_begin2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN2" desciption="JBS_STY_SCRIPTURE_DESC"/>
     <field name="verse_begin2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN2"/>
     <field name="chapter_end2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END2" desciption="JBS_STY_SCRIPTURE_DESC"/>

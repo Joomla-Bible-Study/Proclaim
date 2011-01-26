@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
-
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 class biblestudyViewstudiesedit extends JView {
 
     protected $form;
@@ -25,7 +25,13 @@ class biblestudyViewstudiesedit extends JView {
 
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin($issite = true);
-        
+  //check permissions to enter studies
+  $admin_settings = new JBSAdmin();
+  $permission = $admin_settings->getPermission();
+   if ($permission !== true) {
+			JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+			return false;
+		}      
      //   $this->addToolbar();
         parent::display($tpl);
     }
