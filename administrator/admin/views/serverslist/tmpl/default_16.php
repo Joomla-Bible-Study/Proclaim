@@ -8,7 +8,7 @@
 
 //No Direct Access
 defined('_JEXEC') or die('Restricted access'); ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=serverslist'); ?>" method="post" name="adminForm" id="adminForm">
 <div id="editcell">
 	<table class="adminlist">
 	<thead>
@@ -33,7 +33,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	{
 		$row = &$this->items[$i];
 		$checked 	= JHTML::_('grid.id',   $i, $row->id );
-		$link 		= JRoute::_( 'index.php?option=com_biblestudy&controller=serversedit&task=edit&cid[]='. $row->id );
+		$link 		= JRoute::_('index.php?option=com_biblestudy&task=serversedit.edit&id=' . (int) $item->id);
 		$published 	= JHTML::_('grid.published', $row, $i );
 
 		?>
@@ -58,8 +58,8 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	</table>
 </div>
 
-<input type="hidden" name="option" value="com_biblestudy" />
+
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="boxchecked" value="0" />
-<input type="hidden" name="controller" value="serversedit" />
+
 </form>
