@@ -122,7 +122,7 @@ class biblestudyModeltopicsedit extends modelClass
 		}
 		return true;
 	}
-function publish($cid = array(), $publish = 1)
+function legacypublish($cid = array(), $publish = 1)
 	{
 		
 		if (count( $cid ))
@@ -141,6 +141,37 @@ function publish($cid = array(), $publish = 1)
 			}
 		}		
 	}			
+    /**
+     * Get the form data
+     *
+     * @param <Array> $data
+     * @param <Boolean> $loadData
+     * @return <type>
+     * @since 7.0
+     */
+    public function getForm($data = array(), $loadData = true) {
+        // Get the form.
+        $form = $this->loadForm('com_biblestudy.topicsedit', 'topicsedit', array('control' => 'jform', 'load_data' => $loadData));
+
+        if (empty($form)) {
+            return false;
+        }
+
+        return $form;
+    }
+
+    /**
+     *
+     * @return <type>
+     * @since   7.0
+     */
+    protected function loadFormData() {
+        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.topicsedit.data', array());
+        if (empty($data)) 
+            $data = $this->getItem();
+
+        return $data;
+    }
 
 }
 ?>
