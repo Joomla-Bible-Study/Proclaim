@@ -72,7 +72,7 @@ else { document.getElementById(d).style.display = "none"; }
   
 if (!$message)
 {
-    $application->enqueueMessage( JText::_( 'Joomla Bible Study version 6.2.4 required as minimum for install of 7.0.0' )) ;  // 2011-01-21 santon: is JText available during installation? Phrase must be adapted!
+    $application->enqueueMessage( 'Joomla Bible Study version 6.2.4 required as minimum for install of 7.0.0' ) ;
     return false;
 }	
 if ($message)
@@ -96,7 +96,7 @@ if ($message)
         <?php echo JText::_('JBS_CMN_SHOW_HIDE_RESULTS');?><<</a>
         <div id="message" style="display:none;"></strong>
         <?php echo $messsage;?>
-        <table><tr><td><?php	// 2011-01-21 santon: is JText available during installation? (3 lines up)
+        <table><tr><td><?php	// 2011-01-21 santon: JText in NOT available during installation!!! (3 lines up)
 	//Check for presence of css or backup
     jimport('joomla.filesystem.file');
     $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
