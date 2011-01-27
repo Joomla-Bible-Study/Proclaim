@@ -9,6 +9,10 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 
+/**
+ * @package     BibleStudy.Administrator
+ * @since       7.0
+ */
 class biblestudyViewServerslist extends JView {
 
     protected $items;
@@ -36,13 +40,13 @@ class biblestudyViewServerslist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_TCH_TEACHER_MANAGER'), 'teachers.png');
-        JToolBarHelper::addNew('teacheredit.add');
-        JToolBarHelper::editList('teacheredit.edit');
+        JToolBarHelper::title(JText::_('JBS_TCH_SERVERS_MANAGER'), 'servers.png');
+        JToolBarHelper::addNew('serversedit.add');
+        JToolBarHelper::editList('serversedit.edit');
         JToolBarHelper::divider();
-        JToolBarHelper::publishList('teacherlist.publish');
-        JToolBarHelper::unpublishList('teacherlist.unpublish');
-        JToolBarHelper::trash('teacherlist.trash');
+        JToolBarHelper::publishList('serverslist.publish');
+        JToolBarHelper::unpublishList('serverslist.unpublish');
+        JToolBarHelper::trash('serverslist.trash');
     }
 
 }
