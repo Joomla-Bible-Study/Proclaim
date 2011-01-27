@@ -36,7 +36,6 @@ $listDirn = $this->state->get('list.direction');
                 </th>
                 <th alicn="center">
                     <?php echo(JText::_('JBS_PDC_DESCRIPTION')); ?>
-                    <?php echo(JText::_('JBS_PODCAST_DESCRIPTION')); ?>
                 </th>
             </tr>
         </thead>
