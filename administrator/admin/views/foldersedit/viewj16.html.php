@@ -1,40 +1,43 @@
 <?php
+
 /**
- * @version     $Id$
+ * @version     $Id
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
-
 //No Direct Access
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.view' );
+jimport('joomla.application.component.view');
 
+class biblestudyViewFoldersedit extends JView {
 
-class biblestudyViewfoldersedit extends JView
-{
-	
-	function display($tpl = null)
-	{
-		
-		$foldersedit		=& $this->get('Data');
-		$isNew		= ($foldersedit->id < 1);
-		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
-		JToolBarHelper::title(   JText::_( 'JBS_FLD_FOLDERS_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'folder.png' );
-		JToolBarHelper::save();
-		if ($isNew)  {
-			JToolBarHelper::cancel();
-		} else {
-			JToolBarHelper::apply();
-			// for existing items the button is renamed `close`
-			JToolBarHelper::cancel( 'cancel', 'Close' );
-		}
-		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy', true );
-		$this->assignRef('foldersedit',		$foldersedit);
+    protected $form;
+    protected $item;
+    protected $state;
+    protected $defaults;
 
-		parent::display($tpl);
-	}
+    function display($tpl = null) {
+        $this->form = $this->get("Form");
+        $this->item = $this->get("Item");
+        $this->state = $this->get("State");
+
+        $this->setLayout("form");
+        $this->addToolbar();
+        parent::display($tpl);
+    }
+
+    protected function addToolbar() {
+        $isNew = ($this->item->id < 1);
+        $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
+        JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'folder.png');
+        JToolBarHelper::save('foldersedit.save');
+        if ($isNew)
+            JToolBarHelper::cancel();
+        else {
+            JToolBarHelper::apply('foldersedit.apply');
+            JToolBarHelper::cancel('foldersedit.cancel', 'JTOOLBAR_CLOSE');
+        }
+    }
+
 }
-?>

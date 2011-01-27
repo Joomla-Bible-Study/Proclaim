@@ -10,23 +10,30 @@ defined('_JEXEC') or die();
 
 //Joomla 1.6 <-> 1.5 Branch
 try {
-	jimport('joomla.application.component.modeladmin');
-	abstract class modelClass extends JModelAdmin{}
-}catch(Exception $e){
-	jimport('joomla.application.component.model');
-	abstract class modelClass extends JModel{}
+    jimport('joomla.application.component.modeladmin');
+
+    abstract class modelClass extends JModelAdmin {
+        
+    }
+
+} catch (Exception $e) {
+    jimport('joomla.application.component.model');
+
+    abstract class modelClass extends JModel {
+        
+    }
+
 }
 
-class biblestudyModelfoldersedit extends modelClass
-{
+class biblestudyModelfoldersedit extends modelClass {
+
 	/**
 	 * Constructor that retrieves the ID from the request
 	 *
 	 * @access	public
 	 * @return	void
 	 */
-	function __construct()
-	{
+	function __construct() {
 		parent::__construct();
 
 		$array = JRequest::getVar('cid',  0, '', 'array');
@@ -37,7 +44,7 @@ class biblestudyModelfoldersedit extends modelClass
 	function setId($id)
 	{
 		// Set id and wipe data
-		$this->_id		= $id;
+		$this->_id	= $id;
 		$this->_data	= null;
 		
 	}
@@ -129,7 +136,7 @@ class biblestudyModelfoldersedit extends modelClass
 		}
 		return true;
 	}
-function publish($cid = array(), $publish = 1)
+function legacypublish($cid = array(), $publish = 1)
 	{
 		
 		if (count( $cid ))
@@ -148,6 +155,37 @@ function publish($cid = array(), $publish = 1)
 			}
 		}		
 	}			
+    /**
+     * Get the form data
+     *
+     * @param <Array> $data
+     * @param <Boolean> $loadData
+     * @return <type>
+     * @since 7.0
+     */
+    public function getForm($data = array(), $loadData = true) {
+        // Get the form.
+        $form = $this->loadForm('com_biblestudy.foldersedit', 'foldersedit', array('control' => 'jform', 'load_data' => $loadData));
+
+        if (empty($form)) {
+            return false;
+        }
+
+        return $form;
+    }
+
+    /**
+     *
+     * @return <type>
+     * @since   7.0
+     */
+    protected function loadFormData() {
+        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.foldersedit.data', array());
+        if (empty($data)) 
+            $data = $this->getItem();
+
+        return $data;
+    }
 
 }
 ?>

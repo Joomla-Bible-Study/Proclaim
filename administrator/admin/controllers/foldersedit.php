@@ -13,26 +13,27 @@ defined('_JEXEC') or die();
 try {
     jimport('joomla.application.component.controllerform');
 
-    abstract class modelClass extends JControllerForm {
+    abstract class controllerClass extends JControllerForm {
 
     }
 
 } catch (Exception $e) {
     jimport('joomla.application.component.controller');
 
-    abstract class modelClass extends JController {
+    abstract class controllerClass extends JController {
 
     }
 
 }
 
-class biblestudyControllerfoldersedit extends modelClass
+class biblestudyControllerfoldersedit extends controllerClass
 {
 	/**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
-	 protected $view_list = 'serverslist';
+	protected $view_list = 'serverslist';
+	 
 	function __construct()
 	{
 		parent::__construct();
@@ -45,7 +46,7 @@ class biblestudyControllerfoldersedit extends modelClass
 	 * display the edit form
 	 * @return void
 	 */
-	function edit()
+	function legacyedit()
 	{
 		JRequest::setVar( 'view', 'foldersedit' );
 		JRequest::setVar( 'layout', 'form'  );
@@ -58,7 +59,7 @@ class biblestudyControllerfoldersedit extends modelClass
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
+	function legacysave()
 	{
 		$model = $this->getModel('foldersedit');
 		
@@ -77,7 +78,7 @@ class biblestudyControllerfoldersedit extends modelClass
 	 * apply a record
 	 * @return void
 	 */
-	function apply()
+	function legacyapply()
 	{
 		$model = $this->getModel('foldersedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );		
@@ -96,7 +97,7 @@ class biblestudyControllerfoldersedit extends modelClass
 	 * remove record(s)
 	 * @return void
 	 */
-	function remove()
+	function legacyremove()
 	{
 		$model = $this->getModel('foldersedit');
 		if(!$model->delete()) {
@@ -107,7 +108,7 @@ class biblestudyControllerfoldersedit extends modelClass
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=folderslist', $msg );
 	}
-function publish()
+function legacypublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -126,7 +127,7 @@ function publish()
 	}
 
 
-	function unpublish()
+	function legacyunpublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -148,7 +149,7 @@ function publish()
 	 * cancel editing a record
 	 * @return void
 	 */
-	function cancel()
+	function legacycancel()
 	{
 		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=folderslist', $msg );
