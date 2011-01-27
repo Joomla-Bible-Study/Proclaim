@@ -64,13 +64,19 @@ defined('_JEXEC') or die();
                     <?php echo $this->form->getLabel('thumb'); ?>
                     <?php echo $this->form->getInput('thumb'); ?>
                 </li>
-                <li>
-                    <?php echo $this->form->getLabel('information'); ?>
-                    <?php echo $this->form->getInput('information'); ?>
-                </li>
+                
             </ul>
         </fieldset>
-    </div>   
+    </div>  
+    <div>
+    <fieldset class="panelform">
+    <legend><?php echo JText::_('JBS_TCH_INFORMATION'); ?></legend>
+    
+            
+             <?php echo $this->form->getInput('information'); ?>
+        
+    </fieldset>
+    </div> 
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>
 </form>
