@@ -33,7 +33,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	{
 		$row = &$this->items[$i];
 		$checked 	= JHTML::_('grid.id',   $i, $row->id );
-		$link 		= JRoute::_('index.php?option=com_biblestudy&task=serversedit.edit&id=' . (int) $item->id);
+		$link 		= JRoute::_('index.php?option=com_biblestudy&task=serversedit.edit&id=' . (int) $row->id);
 		$published 	= JHTML::_('grid.published', $row, $i );
 
 		?>

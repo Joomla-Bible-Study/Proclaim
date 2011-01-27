@@ -12,6 +12,10 @@ defined('_JEXEC') or die('Restricted access');
 		<fieldset class="panelform">
 			<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
 			<ul class="adminformlist">
+                <li>
+                    <?php echo $this->form->getLabel('published'); ?>
+					<?php echo $this->form->getInput('published'); ?>
+                </li>
 				<li>
 					<?php echo $this->form->getLabel('server_name'); ?>
 					<?php echo $this->form->getInput('server_name'); ?>

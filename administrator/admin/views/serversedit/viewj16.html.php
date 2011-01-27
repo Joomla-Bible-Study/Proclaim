@@ -30,13 +30,13 @@ class biblestudyViewServersedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_TCH_TEACHER_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'teachers.png');
-        JToolBarHelper::save('teacheredit.save');
+        JToolBarHelper::title(JText::_('JBS_SVR_SERVER_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'servers.png');
+        JToolBarHelper::save('serversedit.save');
         if ($isNew)
             JToolBarHelper::cancel();
         else {
-            JToolBarHelper::apply('teacheredit.apply');
-            JToolBarHelper::cancel('teacheredit.cancel', 'JTOOLBAR_CLOSE');
+            JToolBarHelper::apply('serversedit.apply');
+            JToolBarHelper::cancel('serversedit.cancel', 'JTOOLBAR_CLOSE');
         }
     }
 

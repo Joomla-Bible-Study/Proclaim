@@ -33,6 +33,9 @@ class biblestudyControllerserversedit extends controllerClass
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
+
+protected $view_list = 'serverslist';
+
 	function __construct()
 	{
 		parent::__construct();
