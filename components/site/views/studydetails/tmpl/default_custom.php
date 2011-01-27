@@ -72,19 +72,7 @@ switch ($this->params->get('show_passage_view', '0'))
                 echo '</div>';
                 break;
         }
-if ($params->get('show_comments') < 2)
-		{?>
-        <div id="commentstable" >
-	
-<?php $Itemid = JRequest::getVar('Itemid');
-		$comments_call = JView::loadHelper('comments');
-        $comments = getComments($params, $row, $Itemid);
-		echo $comments;
-		?>
-	
-		</div>
-<?php } //end of if comments param?>
-
+?>
 
 
 </div><!--End of page container div-->
