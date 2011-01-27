@@ -62,6 +62,7 @@ class biblestudyModelstudieslist extends modelClass {
 		$template = $this->getTemplate();
         jimport('joomla.html.parameter');
 		$params = new JParameter($template[0]->params);
+        
 		$this->_params = $params;
 		//dump ($params, 'params: ');
 		$config = JFactory::getConfig();
@@ -636,13 +637,14 @@ function getAdmin()
             }
             else
             {
-                $orderby = ' ORDER BY studydate '.$params->get('default_order').' ';
+                $orderby = ' ORDER BY studydate '.$this->_params->get('default_order').' ';
             }
         }
       else
           {
-            $orderby = ' ORDER BY studydate '.$params->get('default_order').' ';
+            $orderby = ' ORDER BY studydate '.$this->_params->get('default_order').' ';
           }
+         
 	return $orderby;
 	}
     

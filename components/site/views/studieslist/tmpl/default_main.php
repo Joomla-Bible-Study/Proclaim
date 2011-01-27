@@ -139,7 +139,7 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
 
     //  echo $this->pagination->getPagesLinks();
     //  echo $this->pagination->getPagesCounter();
-      echo $this->pagination->getListFooter();
+    //  echo $this->pagination->getListFooter();
       echo $this->pagination->getPagesLinks();
 
 	  ?>

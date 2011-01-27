@@ -53,7 +53,7 @@ class JFormFieldModal_Study extends JFormField
 		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
 		// The current user display field.
-		$html[] = '<div class="fltlft">';
+		$html[] = '<div class="fltrt">';
 		$html[] = '  <input type="text" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
 		$html[] = '</div>';
 
