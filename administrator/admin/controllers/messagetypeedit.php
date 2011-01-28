@@ -33,7 +33,9 @@ class biblestudyControllermessagetypeedit extends controllerClass
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
-	function __construct()
+	
+    protected $view_list = 'messagetypelist';
+    function __construct()
 	{
 		parent::__construct();
 
@@ -45,7 +47,7 @@ class biblestudyControllermessagetypeedit extends controllerClass
 	 * display the edit form
 	 * @return void
 	 */
-	function edit()
+	function legacyEdit()
 	{
 		JRequest::setVar( 'view', 'messagetypeedit' );
 		JRequest::setVar( 'layout', 'form'  );
@@ -58,7 +60,7 @@ class biblestudyControllermessagetypeedit extends controllerClass
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
+	function legacySave()
 	{
 		$model = $this->getModel('messagetypeedit');
 
@@ -77,7 +79,7 @@ class biblestudyControllermessagetypeedit extends controllerClass
 	 * apply a record
 	 * @return void
 	 */
-	function apply()
+	function legacyApply()
 	{
 		$model = $this->getModel('messagetypeedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
@@ -96,7 +98,7 @@ class biblestudyControllermessagetypeedit extends controllerClass
 	 * remove record(s)
 	 * @return void
 	 */
-	function remove()
+	function legacyRemove()
 	{
 		$model = $this->getModel('messagetypeedit');
 		if(!$model->delete()) {
@@ -107,7 +109,7 @@ class biblestudyControllermessagetypeedit extends controllerClass
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=messagetypelist', $msg );
 	}
-function publish()
+function legacyPublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -126,7 +128,7 @@ function publish()
 	}
 
 
-	function unpublish()
+	function legacyUnpublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -147,7 +149,7 @@ function publish()
 	 * cancel editing a record
 	 * @return void
 	 */
-	function cancel()
+	function legacyCancel()
 	{
 		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=messagetypelist', $msg );
