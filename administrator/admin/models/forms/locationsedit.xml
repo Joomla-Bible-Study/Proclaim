@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
+        <option value="0">JBS_CMN_NO</option>
+        <option value="1">JBS_CMN_YES</option>
+    </field>
+    <field name="location_text" type="text" label="JBS_LOC_LOCATION_NAME" description="JBS_LOC_LOCATION_NAME_DESC" size="75" required="true" />
+</form>
