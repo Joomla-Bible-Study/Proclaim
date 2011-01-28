@@ -5,7 +5,7 @@
  * @license     GNU/GPL
  */
 //No Direct Access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('restricted access');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-100">

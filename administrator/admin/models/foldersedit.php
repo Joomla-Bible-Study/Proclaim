@@ -136,7 +136,7 @@ class biblestudyModelfoldersedit extends modelClass {
 		}
 		return true;
 	}
-function legacypublish($cid = array(), $publish = 1)
+function legacyPublish($cid = array(), $publish = 1)
 	{
 		
 		if (count( $cid ))
@@ -166,7 +166,6 @@ function legacypublish($cid = array(), $publish = 1)
     public function getForm($data = array(), $loadData = true) {
         // Get the form.
         $form = $this->loadForm('com_biblestudy.foldersedit', 'foldersedit', array('control' => 'jform', 'load_data' => $loadData));
-
         if (empty($form)) {
             return false;
         }
@@ -181,7 +180,7 @@ function legacypublish($cid = array(), $publish = 1)
      */
     protected function loadFormData() {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.foldersedit.data', array());
-        if (empty($data)) 
+        if (empty($data))
             $data = $this->getItem();
 
         return $data;
