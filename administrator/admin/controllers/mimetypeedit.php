@@ -32,7 +32,9 @@ class biblestudyControllermimetypeedit extends controllerClass
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
-	function __construct()
+	
+    protected $view_list = 'mimetypelist';
+    function __construct()
 	{
 		parent::__construct();
 
@@ -44,7 +46,7 @@ class biblestudyControllermimetypeedit extends controllerClass
 	 * display the edit form
 	 * @return void
 	 */
-	function edit()
+	function legacyEdit()
 	{
 		JRequest::setVar( 'view', 'mimetypeedit' );
 		JRequest::setVar( 'layout', 'form'  );
@@ -57,7 +59,7 @@ class biblestudyControllermimetypeedit extends controllerClass
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
+	function legacySave()
 	{
 		$model = $this->getModel('mimetypeedit');
 
@@ -76,7 +78,7 @@ class biblestudyControllermimetypeedit extends controllerClass
 	 * apply a record
 	 * @return void
 	 */
-	function apply()
+	function legacyApply()
 	{
 		$model = $this->getModel('mimetypeedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
@@ -95,7 +97,7 @@ class biblestudyControllermimetypeedit extends controllerClass
 	 * remove record(s)
 	 * @return void
 	 */
-	function remove()
+	function legacyRemove()
 	{
 		$model = $this->getModel('mimetypeedit');
 		if(!$model->delete()) {
@@ -106,7 +108,7 @@ class biblestudyControllermimetypeedit extends controllerClass
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mimetypelist', $msg );
 	}
-function publish()
+function legacyPublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -125,7 +127,7 @@ function publish()
 	}
 
 
-	function unpublish()
+	function legacyUnpublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -146,7 +148,7 @@ function publish()
 	 * cancel editing a record
 	 * @return void
 	 */
-	function cancel()
+	function legacyCancel()
 	{
 		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mimetypelist', $msg );

@@ -1,37 +1,19 @@
 <?php
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 
-
-// Check to ensure this file is included in Joomla!
+//No Direct Access
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.view' );
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 
+//Branch the JView based on the joomla version
+if(JOOMLA_VERSION == 5)
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'mimetypeedit'.DS.'viewj16.html.php');
+else
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'mimetypeedit'.DS.'viewj15.html.php');
 
-class biblestudyViewmimetypeedit extends JView
-{
-	
-	function display($tpl = null)
-	{
-		
-		$mimetypeedit		=& $this->get('Data');
-		$isNew		= ($mimetypeedit->id < 1);
-		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		$text = $isNew ? JText::_( 'JBS_CMN_NEW' ) : JText::_( 'JBS_CMN_EDIT' );
-		JToolBarHelper::title(   JText::_( 'JBS_MMT_MIME_TYPE_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'mimetype.png' );
-		JToolBarHelper::save();
-		if ($isNew)  {
-			JToolBarHelper::cancel();
-		} else {
-			JToolBarHelper::apply();
-			// for existing items the button is renamed `close`
-			JToolBarHelper::cancel( 'cancel', 'Close' );
-		}
-		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy', true );
-
-		$this->assignRef('mimetypeedit',		$mimetypeedit);
-
-		parent::display($tpl);
-	}
-}
 ?>
