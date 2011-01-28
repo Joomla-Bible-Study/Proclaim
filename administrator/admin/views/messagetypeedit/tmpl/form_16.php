@@ -17,8 +17,8 @@ defined('_JEXEC') or die('Restricted access');
 					<?php echo $this->form->getInput('published'); ?>
                 </li>
 				<li>
-					<?php echo $this->form->getLabel('messagetypetext'); ?>
-					<?php echo $this->form->getInput('messagetypetext'); ?>
+					<?php echo $this->form->getLabel('message_type'); ?>
+					<?php echo $this->form->getInput('message_type'); ?>
 				</li>
 			</ul>
 

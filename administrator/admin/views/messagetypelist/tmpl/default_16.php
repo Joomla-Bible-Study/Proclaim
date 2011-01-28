@@ -58,6 +58,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
 </div>
 
 
+<input type="hidden" name="task" value="" />
 <input type="hidden" name="boxchecked" value="0" />
 
 </form>

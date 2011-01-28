@@ -79,15 +79,15 @@ class biblestudyModelserverslist extends modelClass {
         $query->select(
                 $this->getState(
                         'list.select',
-                        'teacher.id, teacher.published, teacher.ordering, teacher.teachername'));
-        $query->from('#__bsms_teachers AS teacher');
+                        'server.id, server.published, server.ordering, server.server_name'));
+        $query->from('#__bsms_servers AS server');
 
         //Filter by state
         $state = $this->getState('filter.state');
         if(empty($state))
-            $query->where('teacher.published = 0 OR teacher.published = 1');
+            $query->where('server.published = 0 OR server.published = 1');
         else
-            $query->where('teacher.published = ' . (int) $state);
+            $query->where('server.published = ' . (int) $state);
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');

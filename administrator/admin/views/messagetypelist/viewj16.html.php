@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @version     $Id
  * @package     com_biblestudy
@@ -10,34 +9,45 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 
+/**
+ * @package     BibleStudy.Administrator
+ * @since       7.0
+ */
 class biblestudyViewMessagetypelist extends JView {
 
-    protected $form;
-    protected $item;
+    protected $items;
+    protected $pagination;
     protected $state;
-    protected $defaults;
 
     function display($tpl = null) {
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
-        $this->state = $this->get("State");
+        $this->items = $this->get('Items');
+        $this->pagination = $this->get('Pagination');
+        $this->state = $this->get('State');
 
-        $this->setLayout("form");
+        //Check for errors
+        if (count($errors = $this->get('Errors'))) {
+            JError::raiseError(500, implode("\n", $errors));
+            return false;
+        }
+
         $this->addToolbar();
         parent::display($tpl);
     }
 
+    /**
+     * Add the page title and toolbar
+     *
+     * @since 7.0
+     */
     protected function addToolbar() {
-        $isNew = ($this->item->id < 1);
-        $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_MST_MESSAGETYPE_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'servers.png');
-        JToolBarHelper::save('messagetypelist.save');
-        if ($isNew)
-            JToolBarHelper::cancel();
-        else {
-            JToolBarHelper::apply('messagetypelist.apply');
-            JToolBarHelper::cancel('messagetypelist.cancel', 'JTOOLBAR_CLOSE');
-        }
+        JToolBarHelper::title(JText::_('JBS_MST_MESSAGETYPE_MANAGER'), 'messagetype.png');
+        JToolBarHelper::addNew('messagetypeedit.add');
+        JToolBarHelper::editList('messagetypeedit.edit');
+        JToolBarHelper::divider();
+        JToolBarHelper::publishList('messagetypelist.publish');
+        JToolBarHelper::unpublishList('messagetypelist.unpublish');
+        JToolBarHelper::trash('messagetypelist.trash');
     }
 
 }
+?>

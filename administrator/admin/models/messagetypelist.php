@@ -74,5 +74,27 @@ function getDeletes()
 		}
 		return $this->_deletes;
 	}
+    
+    protected function getListQuery() {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select(
+                $this->getState(
+                        'list.select',
+                        'messagetype.id, messagetype.published, messagetype.message_type'));
+                        
+        $query->from('#__bsms_message_type AS messagetype');
+
+        //Filter by state
+        $state = $this->getState('filter.state');
+        if(empty($state))
+            $query->where('messagetype.published = 0 OR messagetype.published = 1');
+        else
+            $query->where('messagetype.published = ' . (int) $state);
+
+        
+        return $query;
+    }
 }
 ?>
