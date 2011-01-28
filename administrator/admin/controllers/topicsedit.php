@@ -32,7 +32,7 @@ class biblestudyControllertopicsedit extends controllerClass
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
-	protected $view_list = 'folderslist';
+	protected $view_list = 'topcslist';
 	 
 	function __construct()
 	{
