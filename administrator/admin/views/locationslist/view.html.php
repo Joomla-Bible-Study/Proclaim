@@ -1,52 +1,19 @@
 <?php
 /**
- * books list View for Bible Study Component
- * 
- * @license		GNU/GPL
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
 
-// Check to ensure this file is included in Joomla!
+//No Direct Access
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.view' );
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 
+//Branch the JView based on the joomla version
+if(JOOMLA_VERSION == 5)
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'locationslist'.DS.'viewj16.html.php');
+else
+	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'locationslist'.DS.'viewj15.html.php');
 
-class biblestudyViewlocationslist extends JView
-{
-	
-	function display($tpl = null)
-	{
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
-		//$document =& JFactory::getDocument();
-		//$document->addStyleSheet('http://www.calvarychapelnewberg.net/j15/administrator/components/com_biblestudy/css/general.css');
- 		$params = &JComponentHelper::getParams($option);
-		JToolBarHelper::title(   JText::_( 'JBS_LOC_LOCATIONS_MANAGER' ), 'locations.png' );
-		//Checks to see if the admin allows rows to be deleted
-		
-		JToolBarHelper::deleteList();
-		JToolBarHelper::publishList();
-		JToolBarHelper::unpublishList();
-		JToolBarHelper::editListX();
-		JToolBarHelper::addNewX();
-		//JToolBarHelper::preferences('com_biblestudy', '550');
-		jimport( 'joomla.i18n.help' );
-		JToolBarHelper::help( 'biblestudy', true );
-		$db=& JFactory::getDBO();
-		$uri	=& JFactory::getURI();
-		
-	// Get data from the model
-	$items		= & $this->get( 'Data');
-	$total		= & $this->get( 'Total');
-	$pagination = & $this->get( 'Pagination' );
-	
-	$javascript 	= 'onchange="document.adminForm.submit();"';	
-
-	$this->assignRef('items',		$items);
-	$this->assignRef('pagination',	$pagination);
-	$this->assignRef('request_url',	$uri->toString());
-
-		parent::display($tpl);
-	}
-}
 ?>
