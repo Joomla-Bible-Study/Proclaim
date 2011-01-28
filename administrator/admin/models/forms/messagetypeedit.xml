@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
+        <option value="0">JBS_CMN_NO</option>
+        <option value="1">JBS_CMN_YES</option>
+    </field>
+    <field name="message_type" type="text" label="JBS_MST_MESSAGETYPE_TEXT" description="JBS_MST_MESSAGETYPE_DESC" size="75" required="true" />
+</form>
