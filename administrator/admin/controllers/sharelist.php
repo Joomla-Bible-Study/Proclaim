@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     $Id: podcastlist.php 1362 2011-01-12 08:42:00Z genu $
+ * @version     $Id: locationslist.php 1362 2011-01-12 08:42:00Z genu $
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
@@ -26,7 +26,7 @@ try {
 
 }
 
-class biblestudyControllerServersList extends controllerClass {
+class biblestudyControllerShareList extends controllerClass {
 
 /**
      * Proxy for getModel
@@ -37,7 +37,7 @@ class biblestudyControllerServersList extends controllerClass {
      *
      * @since 7.0
      */
-    public function &getModel($name = 'serversedit', $prefix = 'biblestudyModel') {
+    public function &getModel($name = 'shareedit', $prefix = 'biblestudyModel') {
         $model = parent::getModel($name, $prefix, array('ignore_request' => true));
         return $model;
     }

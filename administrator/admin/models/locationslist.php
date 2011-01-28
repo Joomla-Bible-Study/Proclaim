@@ -122,9 +122,9 @@ protected function getListQuery() {
         $query = $db->getQuery(true);
 
         $query->select(
-                $this->getState(
+                
                         'list.select',
-                        'locations.id, locations.published, locations.location_text'));
+                        'locations.id, locations.published, locations.location_text');
         $query->where('locations.published = 0 OR locations.published = 1');
         $query->from('`#__bsms_locations` AS locations');
         
