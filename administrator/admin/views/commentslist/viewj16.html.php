@@ -82,9 +82,7 @@ $query = "SELECT id AS value, CONCAT(studytitle,' - ', studydate, ' - ', studynu
         JToolBarHelper::divider();
         JToolBarHelper::publishList('commentslist.publish');
         JToolBarHelper::unpublishList('commentslist.unpublish');
-        JToolBarHelper::trash('commentslist.trash');
-		JToolBarHelper::addNewX('commentslist.new');
-    }
+        JToolBarHelper::trash('commentslist.trash');    }
 	
 }
 ?>
