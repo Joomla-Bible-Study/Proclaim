@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset>
+        <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="1" required="true">
+            <option value="0">JBS_CMN_NO</option>
+            <option value="1">JBS_CMN_YES</option>
+        </field>
+    <field name="name" type="text" label="JBS_SHR_NAME"
+			description="JBS_SHR_NAME_DESC" class="inputbox" size="26" />
+	<field name="shareimage" type="media" label="JBS_CMN_IMAGE" description="JBS_CMN_IMAGE_DESC" />
+	
+    </fieldset>
+	
+	<fields name="params">
+        <fieldset name="params">
+            <field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH" description="JBS_MED_PLAYERWIDTH_DESC" />
+            <field name="playerheight" default="" type="text" label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_DESC" />
+            <field name="itempopuptitle" type="text" size="35" default="" label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
+            <field name="itempopupfooter" type="text" size="35" default="" label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
+            <field name="popupmargin" type="text" default="50" label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC" />
+        </fieldset>
+    </fields>
+</form>

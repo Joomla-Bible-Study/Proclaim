@@ -33,6 +33,8 @@ class biblestudyControllershareedit extends controllerClass
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
+	 protected $view_list = 'sharelist';
+	 
 	function __construct()
 	{
 		parent::__construct();
@@ -45,7 +47,7 @@ class biblestudyControllershareedit extends controllerClass
 	 * display the edit form
 	 * @return void
 	 */
-	function edit()
+	function legacyEdit()
 	{
 		JRequest::setVar( 'view', 'shareedit' );
 		JRequest::setVar( 'layout', 'form'  );
@@ -58,7 +60,7 @@ class biblestudyControllershareedit extends controllerClass
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
+	function legacySave()
 	{
 		$model = $this->getModel('shareedit');
 
@@ -77,7 +79,7 @@ class biblestudyControllershareedit extends controllerClass
 	 * apply a record
 	 * @return void
 	 */
-	function apply()
+	function legacyApply()
 	{
 		$model = $this->getModel('shareedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
@@ -97,7 +99,7 @@ class biblestudyControllershareedit extends controllerClass
 	 * remove record(s)
 	 * @return void
 	 */
-	function remove()
+	function legacyRemove()
 	{
 		$model = $this->getModel('shareedit');
 		if(!$model->delete()) {
@@ -108,7 +110,7 @@ class biblestudyControllershareedit extends controllerClass
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=sharelist', $msg );
 	}
-function publish()
+function legacypublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -127,7 +129,7 @@ function publish()
 	}
 
 
-	function unpublish()
+	function legacyunpublish()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -148,7 +150,7 @@ function publish()
 	 * cancel editing a record
 	 * @return void
 	 */
-	function cancel()
+	function legacycancel()
 	{
 		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=sharelist', $msg );
