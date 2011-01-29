@@ -166,7 +166,7 @@ class biblestudyModelstudieslist extends modelClass {
      * @access public
      * @return integer
      */
-    function getPagination() {
+    function legacyGetPagination() {
         // Lets load the content if it doesn't already exist
         if (empty($this->_pagination)) {
             jimport('joomla.html.pagination');

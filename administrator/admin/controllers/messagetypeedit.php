@@ -27,7 +27,7 @@ try {
 }
 
 
-class biblestudyControllermessagetypeedit extends controllerClass
+class biblestudyControllerMessagetypeEdit extends controllerClass
 {
 	/**
 	 * constructor (registers additional tasks to methods)

@@ -71,7 +71,20 @@ class biblestudyModelserverslist extends modelClass {
         }
         return $this->_deletes;
     }
-    
+
+    /**
+     * @since   7.0
+     */
+    protected function  populateState() {
+        $state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
+        $this->setState('filter.state', $state);
+
+        parent::populateState('server.server_name', 'DESC');
+    }
+    /**
+     *
+     * @since   7.0
+     */
     protected function getListQuery() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -79,7 +92,7 @@ class biblestudyModelserverslist extends modelClass {
         $query->select(
                 $this->getState(
                         'list.select',
-                        'server.id, server.published, server.ordering, server.server_name'));
+                        'server.id, server.published, server.server_path, server.server_name'));
         $query->from('#__bsms_servers AS server');
 
         //Filter by state
