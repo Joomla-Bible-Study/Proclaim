@@ -13,9 +13,6 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	<table class="adminlist">
 	<thead>
 		<tr>
-			<th width="5">
-				<?php echo JText::_( 'JBS_CMN_ID' ); ?>
-			</th>
 			<th width="20">
 				<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" />
 			</th>
@@ -23,43 +20,40 @@ defined('_JEXEC') or die('Restricted access'); ?>
 				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>			
 			<th>
+				<?php echo JText::_( 'JBS_MMT_MIME_TEXT' ); ?>
+			</th>
+                        <th>
 				<?php echo JText::_( 'JBS_MMT_MIME_TYPE' ); ?>
 			</th>
 		</tr>			
 	</thead>
 	<?php
-	$k = 0;
-	for ($i=0, $n=count( $this->items ); $i < $n; $i++)
-	{
-		$row = &$this->items[$i];
-		$checked 	= JHTML::_('grid.id',   $i, $row->id );
-		$link 		= JRoute::_('index.php?option=com_biblestudy&task=mimetypeedit.edit&id=' . (int) $row->id);
-		$published 	= JHTML::_('grid.published', $row, $i );
+	foreach ($this->items as $i => $item) :
+		$link 		= JRoute::_('index.php?option=com_biblestudy&task=mimetypeedit.edit&id=' . (int) $item->id);
 
 		?>
-		<tr class="<?php echo "row$k"; ?>">
-			<td width="5">
-				<?php echo $row->id; ?>
-			</td>
+		<tr class="row<?php echo $i % 2; ?>">
 			<td width="20">
-				<?php echo $checked; ?>
-			</td>
+                    <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                        </td>
 			<td width="20" align="center">
-				<?php echo $published; ?>
+				                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mimetypelist.', true, 'cb', '', ''); ?>
+
 			</td>
 			<td>
-				<a href="<?php echo $link; ?>"><?php echo $row->mimetype; ?></a>
+				<a href="<?php echo $link; ?>"><?php echo $item->mimetext; ?></a>
 			</td>
+                        <td>
+                            <?php echo $this->escape($item->mimetype); ?>
+                        </td>
 		</tr>
-		<?php
-		$k = 1 - $k;
-	}
-	?>
+		<?php endforeach; ?>
 	</table>
 </div>
-
-
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="boxchecked" value="0" />
+<input type="hidden" name="task" value=""/>
+                    <input type="hidden" name="boxchecked" value="0"/>
+                    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
+                    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
+    <?php echo JHtml::_('form.token'); ?>
 
 </form>

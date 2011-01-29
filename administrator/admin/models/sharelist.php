@@ -24,6 +24,8 @@ try {
 
     }
 
+
+
 }
 
 class biblestudyModelsharelist extends modelClass
@@ -132,5 +134,42 @@ function getDeletes()
 		}
 		return $this->_deletes;
 	}
+
+        /**
+     * @since   7.0
+     */
+    protected function  populateState() {
+        $state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
+        $this->setState('filter.state', $state);
+
+        parent::populateState('share.name', 'ASC');
+    }
+    /**
+     *
+     * @since   7.0
+     */
+    protected function getListQuery() {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select(
+                $this->getState(
+                        'list.select',
+                        'share.id, share.name, share.params, share.published'));
+        $query->from('#__bsms_share AS share');
+
+        //Filter by state
+        $state = $this->getState('filter.state');
+        if(empty($state))
+            $query->where('share.published = 0 OR share.published = 1');
+        else
+            $query->where('share.published = ' . (int) $state);
+
+        //Add the list ordering clause
+        $orderCol = $this->state->get('list.ordering');
+        $orderDirn = $this->state->get('list.direction');
+        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        return $query;
+    }
 }
 ?>

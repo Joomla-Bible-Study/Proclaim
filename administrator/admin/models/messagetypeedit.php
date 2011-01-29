@@ -166,11 +166,8 @@ class biblestudyModelmessagetypeedit extends modelClass
      */
     protected function loadFormData() {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.messagetypeedit.data', array());
-        if (empty($data)) {
+        if (empty($data)) 
             $data = $this->getItem();
-            $data->podcast_id = explode(',', $data->podcast_id);
-        }
-
 
         return $data;
     }

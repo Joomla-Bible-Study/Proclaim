@@ -119,5 +119,36 @@ function getDeletes()
 		}
 		return $this->_deletes;
 	}
+
+        /**
+     * @since   7.0
+     */
+    protected function populateState() {
+        $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
+        $this->setState('filter.state', $state);
+
+        parent::populateState('mimetype.mimetext', 'ASC');
+    }
+
+    protected function getListQuery() {
+
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select(
+                $this->getState(
+                'list.select',
+                'mimetype.id, mimetype.mimetype, mimetype.mimetext, mimetype.published'));
+        $query->from('`#__bsms_mimetype` AS mimetype');
+
+        //Filter by state
+        $state = $this->getState('mimetype.state');
+        if (empty($state))
+            $query->where('mimetype.published = 0 OR mimetype.published = 1');
+        else
+            $query->where('mimetype.published = ' . (int) $state);
+
+        return $query;
+    }
 }
 ?>

@@ -74,5 +74,42 @@ function getDeletes()
 		}
 		return $this->_deletes;
 	}
+
+        /**
+     * @since   7.0
+     */
+    protected function  populateState() {
+        $state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
+        $this->setState('filter.state', $state);
+
+        parent::populateState('topic.topic_text', 'ASC');
+    }
+    /**
+     *
+     * @since   7.0
+     */
+    protected function getListQuery() {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select(
+                $this->getState(
+                        'list.select',
+                        'topic.id, topic.topic_text, topic.published'));
+        $query->from('#__bsms_topics AS topic');
+
+        //Filter by state
+        $state = $this->getState('filter.state');
+        if(empty($state))
+            $query->where('topic.published = 0 OR topic.published = 1');
+        else
+            $query->where('topic.published = ' . (int) $state);
+
+        //Add the list ordering clause
+        $orderCol = $this->state->get('list.ordering');
+        $orderDirn = $this->state->get('list.direction');
+        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        return $query;
+    }
 }
 ?>
