@@ -25,112 +25,109 @@ try {
     }
 
 }
-class biblestudyControllercommentsedit extends controllerClass
-{
-	/**
-	 * constructor (registers additional tasks to methods)
-	 * @return void
-	 */
-	function __construct()
-	{
-		parent::__construct();
 
-		// Register Extra tasks
-		$this->registerTask( 'add'  , 	'edit' );
-	}
+class biblestudyControllercommentsedit extends controllerClass {
 
-	/**
-	 * display the edit form
-	 * @return void
-	 */
-	function edit()
-	{
-		JRequest::setVar( 'view', 'commentsedit' );
-		JRequest::setVar( 'layout', 'form'  );
-		JRequest::setVar('hidemainmenu', 1);
+    protected $view_list = 'commentslist';
+    /**
+     * constructor (registers additional tasks to methods)
+     * @return void
+     */
+    function __construct() {
+        parent::__construct();
 
-		parent::display();
-	}
+        // Register Extra tasks
+        $this->registerTask('add', 'edit');
+    }
 
-	/**
-	 * save a record (and redirect to main page)
-	 * @return void
-	 */
-	function save()
-	{
-		$model = $this->getModel('commentsedit');
+    /**
+     * display the edit form
+     * @return void
+     */
+    function legacyEdit() {
+        JRequest::setVar('view', 'commentsedit');
+        JRequest::setVar('layout', 'form');
+        JRequest::setVar('hidemainmenu', 1);
 
-		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_CMT_COMMENT_SAVED' );
-		} else {
-			$msg = JText::_( 'JBS_CMT_ERROR_SAVING_COMMENT' );
-		}
+        parent::display();
+    }
 
-		// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&view=commentslist';
-		$this->setRedirect($link, $msg);
-	}
+    /**
+     * save a record (and redirect to main page)
+     * @return void
+     */
+    function legacySave() {
+        $model = $this->getModel('commentsedit');
 
-	/**
-	 * remove record(s)
-	 * @return void
-	 */
-	function remove()
-	{
-		$model = $this->getModel('commentsedit');
-		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_CMT_ERROR_DELETING_ITEM' );
-		} else {
-			$msg = JText::_( 'JBS_CMT_ITEMS_DELETED' );
-		}
+        if ($model->store($post)) {
+            $msg = JText::_('JBS_CMT_COMMENT_SAVED');
+        } else {
+            $msg = JText::_('JBS_CMT_ERROR_SAVING_COMMENT');
+        }
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist', $msg );
-	}
-function publish()
-	{
-		$mainframe =& JFactory::getApplication();
+        // Check the table in so it can be edited.... we are done with it anyway
+        $link = 'index.php?option=com_biblestudy&view=commentslist';
+        $this->setRedirect($link, $msg);
+    }
 
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+    /**
+     * remove record(s)
+     * @return void
+     */
+    function legacyRemove() {
+        $model = $this->getModel('commentsedit');
+        if (!$model->delete()) {
+            $msg = JText::_('JBS_CMT_ERROR_DELETING_ITEM');
+        } else {
+            $msg = JText::_('JBS_CMT_ITEMS_DELETED');
+        }
 
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_PUBLISH' ) );
-		}
+        $this->setRedirect('index.php?option=com_biblestudy&view=commentslist', $msg);
+    }
 
-		$model = $this->getModel('commentsedit');
-		if(!$model->publish($cid, 1)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
+    function legacyPublish() {
+        $mainframe = & JFactory::getApplication();
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist' );
-	}
+        $cid = JRequest::getVar('cid', array(0), 'post', 'array');
 
+        if (!is_array($cid) || count($cid) < 1) {
+            JError::raiseError(500, JText::_('JBS_CMN_SELECT_ITEM_PUBLISH'));
+        }
 
-	function unpublish()
-	{
-		$mainframe =& JFactory::getApplication();
+        $model = $this->getModel('commentsedit');
+        if (!$model->publish($cid, 1)) {
+            echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
+        }
 
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+        $this->setRedirect('index.php?option=com_biblestudy&view=commentslist');
+    }
 
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'JBS_CMN_SELECT_ITEM_UNPUBLISH' ) );
-		}
+    function legacyUnpublish() {
+        $mainframe = & JFactory::getApplication();
 
-		$model = $this->getModel('commentsedit');
-		if(!$model->publish($cid, 0)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
+        $cid = JRequest::getVar('cid', array(0), 'post', 'array');
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist' );
-	}
+        if (!is_array($cid) || count($cid) < 1) {
+            JError::raiseError(500, JText::_('JBS_CMN_SELECT_ITEM_UNPUBLISH'));
+        }
 
-	/**
-	 * cancel editing a record
-	 * @return void
-	 */
-	function cancel()
-	{
-		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=commentslist', $msg );
-	}
+        $model = $this->getModel('commentsedit');
+        if (!$model->publish($cid, 0)) {
+            echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
+        }
+
+        $this->setRedirect('index.php?option=com_biblestudy&view=commentslist');
+    }
+
+    /**
+     * cancel editing a record
+     * @return void
+     */
+    function legacyCancel() {
+        $msg = JText::_('JBS_CMN_OPERATION_CANCELLED');
+        $this->setRedirect('index.php?option=com_biblestudy&view=commentslist', $msg);
+    }
+
 }
+
 ?>

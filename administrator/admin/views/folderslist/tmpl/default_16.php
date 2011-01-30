@@ -16,7 +16,6 @@
                 </tr>
             </thead>
             <?php
-                        $k = 0;
                         foreach ($this->items as $i => $item) :
                             $link = JRoute::_('index.php?option=com_biblestudy&task=foldersedit.edit&id=' . (int) $item->id);
             ?>
