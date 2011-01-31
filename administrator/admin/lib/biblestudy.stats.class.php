@@ -307,7 +307,7 @@ function players()
     
     $mediaplayers = '<strong>'.JText::_('JBS_CMN_DIRECT_LINK').': </strong>'.$count_directplayer.
     '<br /><strong>'.JText::_('JBS_CMN_INTERNAL_PLAYER').': </strong>'.$count_internalplayer.
-    '<br /><strong>'.JText::_('JBS_CMN_AVPLUGIN').': </strong>'.$count_avplayer.
+    '<br /><strong><a href="http://extensions.joomla.org/extensions/multimedia/multimedia-players/video-players-a-gallery/11572" target="blank">'.JText::_('JBS_CMN_AVPLUGIN').'</a>: </strong>'.$count_avplayer.
     '<br /><strong>'.JText::_('JBS_CMN_LEGACY_PLAYER').': </strong>'.$count_legacyplayer.
     '<br /><strong>'.JText::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT').': </strong>'.$count_noplayer; //dump ($mediaplayers, 'mediaplayers: ');
     return $mediaplayers;

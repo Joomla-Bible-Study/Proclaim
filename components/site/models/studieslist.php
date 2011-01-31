@@ -106,9 +106,9 @@ function setSelect($string){
               . ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
 			  . $where
 			  . ' GROUP BY #__bsms_studies.id'
-			  . $orderby
+			 // . $orderby
 			  ;
-	    
+	   print_r($where);
 		return $query;
 	}
 
@@ -330,6 +330,8 @@ function getAdmin()
 	{
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params = &JComponentHelper::getParams($option); //dump ($params, 'params: ');
+        $params = $this->_params;
+       	
 		$default_order = $params->get('default_order');
 		$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic',		'filter_topic',		0,		'int' );
 		$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book',		'filter_book',		0,		'int' );
@@ -417,6 +419,7 @@ function getAdmin()
             $menuseries = $menuparams->get('mseries_id');
             $menutopics = $menuparams->get('mtopic_id');
             $menumessagetype = $menuparams->get('mmessagetype');
+           
            // $params->merge( $menuparams );
           }
 
@@ -644,7 +647,8 @@ function getAdmin()
           {
             $orderby = ' ORDER BY studydate '.$this->_params->get('default_order').' ';
           }
-         
+          
+      $orderby = '';   
 	return $orderby;
 	}
     

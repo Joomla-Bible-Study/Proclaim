@@ -178,7 +178,7 @@
             <option value="3">JBS_CMN_USE_GLOBAL</option>
             <option value="100">JBS_ADM_NO_OPTION_LISTED</option>
         </field>
-        <field name="pTo" type="list">
+        <field name="pTo" type="list" label="">
             <option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
             <option value="2">JBS_CMN_INLINE</option>
             <option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
