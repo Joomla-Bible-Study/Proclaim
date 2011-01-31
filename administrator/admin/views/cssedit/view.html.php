@@ -1,11 +1,14 @@
 <?php
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 
-
-// Check to ensure this file is included in Joomla!
+//No Direct Access
 defined('_JEXEC') or die();
-
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 jimport( 'joomla.application.component.view' );
-
 
 class biblestudyViewcssedit extends JView
 {

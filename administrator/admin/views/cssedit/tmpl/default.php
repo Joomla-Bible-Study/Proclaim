@@ -1,5 +1,14 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php
+/**
+ * @version     $Id$
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 
+//No Direct Access
+defined('_JEXEC') or die('Restricted access'); 
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">

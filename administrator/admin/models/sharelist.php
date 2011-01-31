@@ -8,25 +8,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-
-//Joomla 1.6 <-> 1.5 Branch
-try {
     jimport('joomla.application.component.modellist');
 
     abstract class modelClass extends JModelList {
 
     }
-
-} catch (Exception $e) {
-    jimport('joomla.application.component.model');
-
-    abstract class modelClass extends JModel {
-
-    }
-
-
-
-}
 
 class biblestudyModelsharelist extends modelClass
 {

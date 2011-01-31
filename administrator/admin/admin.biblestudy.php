@@ -29,49 +29,10 @@ addLoadingDiv();
 addCSS();
 addJS();
 
-// Joomla! 1.6 detection
-jimport('joomla.filesystem.file');
-if(!version_compare( JVERSION, '1.6.0', 'ge' )) {
-	define('BIBLESTUDY_JVERSION','15');
-} else {
-	define('BIBLESTUDY_JVERSION','16');
-}
-
-if(!defined('BIBLESTUDYENGINE')) {
-	define('BIBLESTUDYENGINE', 1); // Required for accessing Akeeba Engine's factory class
-	define('BIBLESTUDYPLATFORM', 'joomla15'); // So that platform-specific stuff can get done!
-}
-
-// Setup Akeeba's ACLs, honoring laxed permissions in component's parameters, if set
-if(BIBLESTUDY_JVERSION == '15')
-{
-// Require the base controller
-require_once (JPATH_COMPONENT.DS.'controller.php');
-if($controller = JRequest::getWord('controller')) {
-	require_once (JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php');
-}
-
-$controller = JRequest::getVar( 'controller' );
-
-		
-		$classname	= 'biblestudyController'.$controller;
-		
-		$controller = new $classname( );
-		
-
-		// Perform the Request task 
-		$controller->execute( JRequest::getWord('task'));
-		//Redirect if set by the controller 
-		
-		$controller->redirect();
-}
-else
-{
 jimport('joomla.application.component.controller');
 $controller = JController::getInstance('biblestudy');
 $controller->execute(JRequest::getCmd('task'));
 $controller->redirect();
-}
 
 /**
  * Adds a loading div for any ajax requests via JQuery

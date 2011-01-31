@@ -1,19 +1,41 @@
 <?php
+
 /**
  * @version     $Id$
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
-
 //No Direct Access
 defined('_JEXEC') or die();
-
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+jimport('joomla.application.component.view');
+class biblestudyViewpodcastlist extends JView {
 
-//Branch the JView based on the joomla version
-if(JOOMLA_VERSION == 6)
-	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'podcastlist'.DS.'viewj16.html.php');
-else
-	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'podcastlist'.DS.'viewj15.html.php');
+    protected $items;
+    protected $pagination;
+    protected $state;
 
+    function display($tpl = null) {
+        $this->items = $this->get('Items');
+        $this->pagination = $this->get('Pagination');
+        $this->state = $this->get('State');
+
+        $this->addToolbar();
+        parent::display($tpl);
+    }
+    
+    protected function addToolbar() {
+        JToolBarHelper::title(JText::_('JBS_PDC_PODCAST_MANAGER'), 'podcast.png');
+        JToolBarHelper::addNew('podcastedit.add');
+        JToolBarHelper::editList('podcastedit.edit');
+        JToolBarHelper::divider();
+        JToolBarHelper::publishList('podcastlist.publish');
+        JToolBarHelper::unpublishList('podcastlist.unpublish');
+        if($this->state->get('filter.state') == -2)
+            JToolBarHelper::deleteList('', 'podcastlist.delete','JTOOLBAR_EMPTY_TRASH');
+        else
+            JToolBarHelper::trash('podcastlist.trash');
+    }
+
+}
 ?>

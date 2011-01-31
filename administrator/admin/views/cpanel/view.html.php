@@ -7,7 +7,7 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 jimport( 'joomla.application.component.view' );
 
 class biblestudyViewcpanel extends JView

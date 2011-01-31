@@ -4,16 +4,46 @@
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
-
 //No Direct Access
 defined('_JEXEC') or die();
-
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+jimport('joomla.application.component.view');
 
-//Branch the JView based on the joomla version
-if(JOOMLA_VERSION == 6)
-	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'commentslist'.DS.'viewj16.html.php');
-else
-	require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'views'.DS.'commentslist'.DS.'viewj15.html.php');
+class biblestudyViewcommentslist extends JView
+{
+    protected $items;
+    protected $pagination;
+    protected $state;
 
+    function display($tpl = null) {
+        $this->items = $this->get('Items');
+        $this->pagination = $this->get('Pagination');
+        $this->state = $this->get('State');
+
+        //Check for errors
+        if (count($errors = $this->get('Errors'))) {
+            JError::raiseError(500, implode("\n", $errors));
+            return false;
+        }
+
+        $this->addToolbar();
+        parent::display($tpl);
+    }
+
+    /**
+     * Add the page title and toolbar
+     *
+     * @since 7.0
+     */
+    protected function addToolbar() {
+        JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_MANAGER'), 'servers.png');
+        JToolBarHelper::addNew('commentsedit.add');
+        JToolBarHelper::editList('commentsedit.edit');
+        JToolBarHelper::divider();
+        JToolBarHelper::publishList('commentslist.publish');
+        JToolBarHelper::unpublishList('commentslist.unpublish');
+        JToolBarHelper::trash('commentslist.trash');
+    }
+
+}
 ?>

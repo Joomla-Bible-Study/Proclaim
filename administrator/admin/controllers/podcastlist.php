@@ -8,23 +8,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-
-//Joomla 1.6 <-> 1.5 Branch
-try {
     jimport('joomla.application.component.controlleradmin');
 
     abstract class controllerClass extends JControllerAdmin {
 
     }
-
-} catch (Exception $e) {
-    jimport('joomla.application.component.controller');
-
-    abstract class controllerClass extends JController {
-
-    }
-
-}
 
 class biblestudyControllerpodcastlist extends controllerClass {
 
