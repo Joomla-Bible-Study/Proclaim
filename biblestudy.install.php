@@ -68,8 +68,10 @@ else { document.getElementById(d).style.display = "none"; }
 	
     $jbsupgrade = new JBSUpgrade();
     //Check to be sure JBS is the correct version for upgrade
+    ob_start();
     $message = $jbsupgrade->version();
-  
+    $results = ob_get_contents();
+   
 if (!$message)
 {
     $application->enqueueMessage( 'Joomla Bible Study version 6.2.4 required as minimum for install of 7.0.0' ) ;
@@ -95,7 +97,8 @@ if ($message)
         <strong><a class="heading" href="javascript:ReverseDisplay('message')">>>
         <?php echo JText::_('JBS_CMN_SHOW_HIDE_RESULTS');?><<</a>
         <div id="message" style="display:none;"></strong>
-        <?php echo $messsage;?>
+        <?php echo $results;
+         ob_end_flush();?>
         <table><tr><td><?php	// 2011-01-21 santon: JText in NOT available during installation!!! (3 lines up)
 	//Check for presence of css or backup
     jimport('joomla.filesystem.file');
@@ -147,6 +150,7 @@ if ($message)
 	</table>
 </div>
 <?php
+
 } // end if $message	
 
 	
@@ -179,5 +183,6 @@ It is very important that you do a couple of things when you first install the c
 </table>
 </div>
 	<?php
+
 }
 ?>
