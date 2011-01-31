@@ -11,10 +11,10 @@ defined('_JEXEC') or die();
 JHtml::_('script', 'system/multiselect.js', false, true);
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
-$saveOrder = $listOrder == 'mediafile.ordering';
+$saveOrder = $listOrder == 'serieslist.ordering';
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileslist'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=serieslist'); ?>" method="post" name="adminForm" id="adminForm">
     <table class="adminlist">
         <thead>
             <tr>
@@ -38,17 +38,17 @@ $saveOrder = $listOrder == 'mediafile.ordering';
         </tfoot>
         <?php
         foreach($this->items as $i => $item) :
-            $ordering = ($listOrder == 'mediafile.ordering');
+            $ordering = ($listOrder == 'serieslist.ordering');
         ?>
         <tr class="row<?php echo $i % 2; ?>">
             <td class="center">
                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
             </td>
             <td class="center">
-                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafileslist.', true, 'cb', '', ''); ?>
+                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'serieslist.', true, 'cb', '', ''); ?>
             </td>           
             <td align="left">
-                <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediafilesedit.edit&id='.(int)$item->id); ?>">
+                <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=seriesedit.edit&id='.(int)$item->id); ?>">
                     <?php echo $this->escape($item->series_text); ?>
                 </a>
             </td>            

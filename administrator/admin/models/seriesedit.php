@@ -132,7 +132,7 @@ class biblestudyModelseriesedit extends modelClass {
      * @access	public
      * @return	boolean	True on success
      */
-    function delete() {
+    function legacyDelete() {
         $cids = JRequest::getVar('cid', array(0), 'post', 'array');
 
         $row = & $this->getTable();
@@ -148,7 +148,7 @@ class biblestudyModelseriesedit extends modelClass {
         return true;
     }
 
-    function publish($cid = array(), $publish = 1) {
+    function legacyPublish($cid = array(), $publish = 1) {
 
         if (count($cid)) {
             $cids = implode(',', $cid);
@@ -164,6 +164,36 @@ class biblestudyModelseriesedit extends modelClass {
                 return false;
             }
         }
+    }
+/**
+     * Get the form data
+     *
+     * @param <Array> $data
+     * @param <Boolean> $loadData
+     * @return <type>
+     * @since 7.0
+     */
+    public function getForm($data = array(), $loadData = true) {
+        // Get the form.
+        $form = $this->loadForm('com_biblestudy.seriesedit', 'seriesedit', array('control' => 'jform', 'load_data' => $loadData));
+        if (empty($form)) {
+            return false;
+        }
+
+        return $form;
+    }
+
+    /**
+     *
+     * @return <type>
+     * @since   7.0
+     */
+    protected function loadFormData() {
+        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.seriesedit.data', array());
+        if (empty($data))
+            $data = $this->getItem();
+
+        return $data;
     }
 
 }
