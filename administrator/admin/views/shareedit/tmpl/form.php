@@ -18,7 +18,7 @@ $params = $this->form->getFieldsets('params');
                     <?php echo $this->form->getLabel('published'); ?>
 					<?php echo $this->form->getInput('published'); ?>
                 </li>
-				<li> //Round one need to fix all the way
+				<li>
 					<?php echo $this->form->getLabel('name'); ?>
 					<?php echo $this->form->getInput('name'); ?>
 				</li>
@@ -28,8 +28,6 @@ $params = $this->form->getFieldsets('params');
 				</li> 
 			</ul>
 		</fieldset>
-	</div>
-    <div class="width-35 fltrt">
        <fieldset class="panelform" >
        <legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
        
