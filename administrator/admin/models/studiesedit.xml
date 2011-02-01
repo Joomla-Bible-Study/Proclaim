@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-	<params>
-		<param name="tags" default="0" type="text" label="JBS_STY_TAGS" description="JBS_STY_TAGS_DESC" />
-	</params>
-</root>
