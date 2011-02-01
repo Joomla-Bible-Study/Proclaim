@@ -153,7 +153,7 @@ if ($message)
 
 } // end if $message	
 
-/ Install modules and plugins -- BEGIN
+// Install modules and plugins -- BEGIN
 
 // -- General settings
 jimport('joomla.installer.installer');
