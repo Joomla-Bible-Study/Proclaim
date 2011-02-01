@@ -79,9 +79,9 @@
             <option value="-1">JBS_CMN_SELECT_TOPIC</option>
         </field>
         <field name="messagetype" type="messagetypelist" default="-1" label="JBS_CMN_MESSAGE_TYPE"
-             description="JBS_ADM_FILLIN_STUDY_MESSAGETYPE_DESC" class="inputbox"
+             description="JBS_ADM_FILLIN_STUDY_MESSAGE_TYPE_DESC" class="inputbox"
              query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER BY message_type ASC">
-            <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
+            <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
         </field>
 
         <field name="JBS_ADM_DEFAULT_STUDY_IMAGE" type="media" extension="com_biblestudy" id="media_image"
@@ -141,7 +141,7 @@
              query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
              key_field="id"
              value_field="mimetext">
-            <option value="-1">JBS_CMN_SELECT_MIMETYPE</option>
+            <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
         </field>
 
         <field name="allow_entry_study" type="list" default="0" label="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY"

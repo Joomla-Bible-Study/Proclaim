@@ -27,7 +27,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
         </div>
         <div class="filter-select fltrt">
             <select name="filter_mediatypeId" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JBS_MED_SELECT_MEDIATYPE'); ?></option>
+                <option value=""><?php echo JText::_('JBS_MED_SELECT_MEDIA_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->mediatypes, 'value', 'text', $this->state->get('filter.mediatypeId')); ?>
             </select>
             <select name="filter_state" class="inputbox" onchange="this.form.submit()">

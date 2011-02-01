@@ -42,7 +42,7 @@
 		<param name="series_id" type="series" default="" label="JBS_CMN_SERIES" description="JBS_ADM_FILLIN_STUDY_SERIES_ID_DESC" />
 		<param name="booknumber" type="book" default="" label="JBS_CMN_BOOK" description="JBS_ADM_FILLIN_STUDY_BOOKNUMBER_DESC" />
 		<param name="topic_id" type="topic" default="" label="JBS_CMN_TOPIC" description="JBS_ADM_FILLIN_STUDY_TOPIC_ID_DESC" />
-		<param name="messagetype" type="messagetype" default="" label="JBS_CMN_MESSAGE_TYPE" description="JBS_ADM_FILLIN_STUDY_MESSAGETYPE_DESC" />
+		<param name="messagetype" type="messagetype" default="" label="JBS_CMN_MESSAGE_TYPE" description="JBS_ADM_FILLIN_STUDY_MESSAGE_TYPE_DESC" />
 	</params>
 	<params group="FILLIN-IMAGES">
 		<param name="series_imagefolder" type="folderlist" hide_none="-1" directory="/images" size="150" label="JBS_ADM_FILLIN_IMAGES_SERIES_IMAGEFOLDER" description="JBS_ADM_FILLIN_IMAGES_SERIES_IMAGEFOLDER_DESC" />

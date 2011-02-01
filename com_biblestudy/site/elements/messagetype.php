@@ -36,7 +36,7 @@ class JElementmessagetype extends JElement
 				' ORDER BY #__bsms_message_type.id ASC';
 		$db->setQuery($query);
 		$options = $db->loadObjectList();
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('JBS_CMN_SELECT_MESSAGETYPE').' -', 'id', 'message_type'));
+		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('JBS_CMN_SELECT_MESSAGE_TYPE').' -', 'id', 'message_type'));
 
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'id', 'message_type', $value, $control_name.$name );
 	}

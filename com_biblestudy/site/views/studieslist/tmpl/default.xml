@@ -67,8 +67,8 @@
            default="-1"
            multiple="multiple"
            size="5"
-           label="JBS_CMN_FILTERS_MESSAGETYPES"
-           description="JBS_CMN_FILTERS_MESSAGETYPES_DESC">
+           label="JBS_CMN_FILTERS_MESSAGE_TYPES"
+           description="JBS_CMN_FILTERS_MESSAGE_TYPES_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </param>
     <param name="mlocations"
@@ -139,8 +139,8 @@
     <field name="mmessagetype"
            type="messagetypelist"
            multiple="true"
-           label="JBS_CMN_FILTERS_MESSAGETYPES"
-           description="JBS_CMN_FILTERS_MESSAGETYPES_DESC"
+           label="JBS_CMN_FILTERS_MESSAGE_TYPES"
+           description="JBS_CMN_FILTERS_MESSAGE_TYPES_DESC"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>

@@ -71,7 +71,7 @@
     <field name="mime_type" type="sql" extension="com_biblestudy"
 		label="JBS_MED_CHOOSE_MIME_TYPE" description="JBS_MED_CHOOSE_MIME_TYPE_DESC"
 		class="inputbox" query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC" key_field="id" value_field="mimetext">
-        <option value="-1">JBS_CMN_SELECT_MIMETYPE</option>
+        <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
     </field>
 		
     <field name="filename" type="text" label="JBS_MED_FILENAME"

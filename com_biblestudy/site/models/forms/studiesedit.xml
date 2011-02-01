@@ -69,7 +69,7 @@
     <field name="messagetype" type="sql" extension="com_biblestudy"
 		label="JBS_CMN_MESSAGE_TYPE" description="JBS_STY_MESSAGE_TYPE_DESC"
                 class="inputbox" query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC" key_field="id" value_field="message_type">
-        <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
+        <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
     </field>
 
     <field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE" description="JBS_STY_STUDY_IMAGE_DESC"/>

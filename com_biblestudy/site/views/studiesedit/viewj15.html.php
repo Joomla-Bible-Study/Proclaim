@@ -141,7 +141,7 @@ class biblestudyViewstudiesedit extends JView
 			. ' ORDER BY message_type';
 		$database->setQuery( $query4 );
 		$messagetype = $database->loadObjectList();
-		$types4[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_MESSAGETYPE' ) .' -' );
+		$types4[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_MESSAGE_TYPE' ) .' -' );
 		$types4 			= array_merge( $types4, $database->loadObjectList() );
 		$lists['messagetype'] = JHTML::_('select.genericlist', $types4, 'messagetype', 'class="inputbox" size="1" ', 'value', 'text',  $studiesedit->messagetype );
 		

@@ -52,9 +52,9 @@ class biblestudyControllermimetypeedit extends controllerClass
 		$model = $this->getModel('mimetypeedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_MMT_MIMETYPE_SAVED' );
+			$msg = JText::_( 'JBS_MMT_MIME_TYPE_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_MMT_ERROR_SAVING_MIMETYPE' );
+			$msg = JText::_( 'JBS_MMT_ERROR_SAVING_MIME_TYPE' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -71,9 +71,9 @@ class biblestudyControllermimetypeedit extends controllerClass
 		$model = $this->getModel('mimetypeedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_MMT_MIMETYPE_SAVED' );
+			$msg = JText::_( 'JBS_MMT_MIME_TYPE_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_MMT_ERROR_SAVING_MIMETYPE' );
+			$msg = JText::_( 'JBS_MMT_ERROR_SAVING_MIME_TYPE' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -89,9 +89,9 @@ class biblestudyControllermimetypeedit extends controllerClass
 	{
 		$model = $this->getModel('mimetypeedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_MMT_ERROR_DELETING_MIMETYPE' );
+			$msg = JText::_( 'JBS_MMT_ERROR_DELETING_MIME_TYPE' );
 		} else {
-			$msg = JText::_( 'JBS_MMT_MIMETYPE_DELETED' );
+			$msg = JText::_( 'JBS_MMT_MIME_TYPE_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=mimetypelist', $msg );

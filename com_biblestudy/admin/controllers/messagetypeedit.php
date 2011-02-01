@@ -52,9 +52,9 @@ class biblestudyControllerMessagetypeEdit extends controllerClass
 		$model = $this->getModel('messagetypeedit');
 
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_MST_MESSAGETYPE_SAVED' );
+			$msg = JText::_( 'JBS_MST_MESSAGE_TYPE_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_MST_ERROR_SAVING_MESSAGETYPE' );
+			$msg = JText::_( 'JBS_MST_ERROR_SAVING_MESSAGE_TYPE' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -71,9 +71,9 @@ class biblestudyControllerMessagetypeEdit extends controllerClass
 		$model = $this->getModel('messagetypeedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
 		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_MST_MESSAGETYPE_SAVED' );
+			$msg = JText::_( 'JBS_MST_MESSAGE_TYPE_SAVED' );
 		} else {
-			$msg = JText::_( 'JBS_MST_ERROR_SAVING_MESSAGETYPE' );
+			$msg = JText::_( 'JBS_MST_ERROR_SAVING_MESSAGE_TYPE' );
 		}
 
 		// Check the table in so it can be edited.... we are done with it anyway
@@ -89,9 +89,9 @@ class biblestudyControllerMessagetypeEdit extends controllerClass
 	{
 		$model = $this->getModel('messagetypeedit');
 		if(!$model->delete()) {
-			$msg = JText::_( 'JBS_MST_ERROR_DELETING_MESSAGETYPE' );
+			$msg = JText::_( 'JBS_MST_ERROR_DELETING_MESSAGE_TYPE' );
 		} else {
-			$msg = JText::_( 'JBS_MST_MESSAGETYPE_DELETED' );
+			$msg = JText::_( 'JBS_MST_MESSAGE_TYPE_DELETED' );
 		}
 
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=messagetypelist', $msg );
