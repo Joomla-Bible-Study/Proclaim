@@ -106,9 +106,9 @@ function setSelect($string){
               . ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
 			  . $where
 			  . ' GROUP BY #__bsms_studies.id'
-			 // . $orderby
+			  . $orderby
 			  ;
-	   print_r($where);
+	   print_r($query);
 		return $query;
 	}
 
@@ -640,15 +640,15 @@ function getAdmin()
             }
             else
             {
-                $orderby = ' ORDER BY studydate '.$this->_params->get('default_order').' ';
+                $orderby = ' ORDER BY studydate '.$this->_params->get('default_order', 'DESC').' ';
             }
         }
       else
           {
-            $orderby = ' ORDER BY studydate '.$this->_params->get('default_order').' ';
+            $orderby = ' ORDER BY studydate '.$this->_params->get('default_order', 'DESC').' ';
           }
           
-      $orderby = '';   
+    //  $orderby = '';   
 	return $orderby;
 	}
     

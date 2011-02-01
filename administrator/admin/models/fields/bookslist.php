@@ -34,7 +34,7 @@ class JFormFieldBookslist extends JFormFieldList
         {
                 $db = JFactory::getDBO();
                 $query = $db->getQuery(true);
-                $query->select('id,bookname');
+                $query->select('booknumber,bookname');
                 $query->from('#__bsms_books');
                 $db->setQuery((string)$query);
                 $messages = $db->loadObjectList();
@@ -43,7 +43,7 @@ class JFormFieldBookslist extends JFormFieldList
                 {
                         foreach($messages as $message) 
                         {
-                                $options[] = JHtml::_('select.option', $message->id, $message->bookname);
+                                $options[] = JHtml::_('select.option', $message->booknumber, $message->bookname);
                         }
                 }
                 $options = array_merge(parent::getOptions(), $options);
