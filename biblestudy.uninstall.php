@@ -167,4 +167,7 @@ $mainframe =& JFactory::getApplication(); ?>
 		print '<td>Database tables have not been removed<p> Be sure to uninstall the module and plugin as well. </p> <p> To complete remove Bible Study Management System, remove all database tables that start with #__bsms (or jos_bsms in most cases). </p></td></tr>';
 	}
 
- } //end of com_uninstall?>
+ } //end of com_uninstall
+jimport('joomla.filesystem.folder');
+jimport('joomla.filesystem.file');
+?>

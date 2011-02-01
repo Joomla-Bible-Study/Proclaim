@@ -153,6 +153,59 @@ if ($message)
 
 } // end if $message	
 
+/ Install modules and plugins -- BEGIN
+
+// -- General settings
+jimport('joomla.installer.installer');
+$db = & JFactory::getDBO();
+$status = new JObject();
+$status->component = array();
+$status->modules = array();
+$status->plugins = array();
+if( version_compare( JVERSION, '1.6.0', 'ge' ) ) {
+	$src = dirname(__FILE__);
+} else {
+	$src = $this->parent->getPath('source');
+}
+
+// -- mod_biblestudy module
+$installer = new JInstaller;
+$result = $installer->install($src.'mod_biblestudy');
+$status->modules[] = array('name'=>'mod_biblestudy','client'=>'site', 'result'=>$result);
+
+$query = "UPDATE #__modules SET position='left', ordering=97, published=0 WHERE `module`='mod_biblestudy'";
+$db->setQuery($query);
+$db->query();
+
+//Check for version of Sermon Speaker 3.4 or higher
+      $ssversion = $this->versionXML($component='sermonspeaker');
+      if (!$ssversion){$ssversion = JText::_('No Sermon Speaker version found - Module not installed');}
+	  else {
+	  // -- Sermon Speaker Converter module
+$installer = new JInstaller;
+$result = $installer->install($src.'jbs_sermon_speaker_convert');
+$status->component[] = array('name'=>'jbs_sermon_speaker_convert','client'=>'admin', 'result'=>$result);
+}
+
+// -- biblestudysearch plugin (do not enable automatically!)
+$installer = new JInstaller;
+$result = $installer->install($src.DS.'jbspodcast');
+$status->plugins[] = array('name'=>'jbspodcast','group'=>'system', 'result'=>$result);
+
+$query = "UPDATE #__plugins SET published=1 WHERE `element`='jbspodcast'";
+$db->setQuery($query);
+$db->query();
+
+// -- biblestudysearch plugin
+$installer = new JInstaller;
+$result = $installer->install($src.DS.'biblestudysearch');
+$status->plugins[] = array('name'=>'biblestudysearch','group'=>'system', 'result'=>$result);
+
+$query = "UPDATE #__plugins SET published=1 WHERE `element`='biblestudysearch'";
+$db->setQuery($query);
+$db->query();
+// Install modules and plugins -- END
+
 	
 	// Rest of footer
 ?>

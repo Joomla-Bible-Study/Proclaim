@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.6" type="plugin" group="system">
+	<name>System - JBS Podcast Publish</name>
+	<author>Tom Fuller</author>
+	<creationDate>September 8, 2010</creationDate>
+	<copyright>This component is released under the GNU/GPL License</copyright>
+	<authorEmail>tomfuller2@gmail.com</authorEmail>
+	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+	<version>7.0.0</version>
+	<description>When activated this plugin will publish each podcast to your site on a schedule you determine. Only works with JBS version 7.0.x</description>
+	<files>
+		<filename plugin="jbspodcast">jbspodcast.php</filename>
+	</files> 
+	<params>
+        <param name="email" type="list" default="1" label="Send email notification" description="Select Yes to send an email when the podcast has been published.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="recipients" type="text" default="" size="80" label="To Email address(s)" description="Email address to notify. Leave empty to send to the system default email address. Specify multiple addresses by separating them with a comma." />
+		<param name="subject" type="text" default="Joomla Bible Study Podcast(s) Published" size="60" label="Subject" description="" />
+		<param name="body" type="text" default="Podcast(s) publishing status:" size="60" label="Body" description="" />
+        <param name="method" type="list" default="0" label="Choose publishing method" description="Choose whether to publish by hour or by specific day/time">
+            <option value="0">By Hours</option>
+            <option value="1">By Schedule</option>
+        </param>
+		<param name="xhours" type="text" default="24" size="3" label="Publish every x hours" description="Run Bible Study Podcast Publish every hour after the last run. (Enter 24 for once a day)" />
+        <param name="day1" type="list" default="0" label="Day 1" description="Choose a day to publish">
+            <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour1" type="list" default="0" label="Hour of Day 1" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="day2" type="list" default="0" label="Day 2" description="Choose a day to publish">
+            <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour2" type="list" default="0" label="Hour of Day 2" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="day3" type="list" default="0" label="Day 3" description="Choose a day to publish">
+            <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour3" type="list" default="0" label="Hour of Day 3" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="day4" type="list" default="0" label="Day 4" description="Choose a day to publish">
+           <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour4" type="list" default="0" label="Hour of Day 4" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="day5" type="list" default="0" label="Day 5" description="Choose a day to publish">
+           <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour5" type="list" default="0" label="Hour of Day 5" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="day6" type="list" default="0" label="Day 6" description="Choose a day to publish">
+            <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour6" type="list" default="0" label="Hour of Day 6" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="day7" type="list" default="0" label="Day 7" description="Choose a day to publish">
+            <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour7" type="list" default="0" label="Hour of Day 7" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="day8" type="list" default="0" label="Day 8" description="Choose a day to publish">
+            <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour8" type="list" default="0" label="Hour of Day 8" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="day9" type="list" default="0" label="Day 9" description="Choose a day to publish">
+            <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour9" type="list" default="0" label="Hour of Day 9" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="day10" type="list" default="0" label="Day 10" description="Choose a day to publish">
+            <option value="-1">Choose a Day</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </param>
+        <param name="hour10" type="list" default="0" label="Hour of Day 10" description="Choose an hour to publish">
+            <option value="0">Choose an hour</option>
+            <option value="1">1:00</option>
+            <option value="2">2:00</option>
+            <option value="3">3:00</option>
+            <option value="4">4:00</option>
+            <option value="5">5:00</option>
+            <option value="6">6:00</option>
+            <option value="7">7:00</option>
+            <option value="8">8:00</option>
+            <option value="9">9:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00 (1PM)</option>
+            <option value="14">14:00 (2PM)</option>
+            <option value="15">15:00 (3PM)</option>
+            <option value="16">16:00 (4PM)</option>
+            <option value="17">17:00 (5PM)</option>
+            <option value="18">18:00 (6PM)</option>
+            <option value="19">19:00 (7PM)</option>
+            <option value="20">20:00 (8PM)</option>
+            <option value="21">21:00 (9PM)</option>
+            <option value="22">22:00 (10PM)</option>
+            <option value="23">23:00 (11PM)</option>
+            <option value="24">24:00 (12AM)</option>
+        </param>
+        <param name="offset" type="list" label="Use Server Time Offset" default="0" description="If time settings are off, try adjusting to configuration time offset set in Global">
+            <option value="0">No Offset</option>
+            <option value="1">Use Offset</option>
+        </param>
+  </params>
+</install>
