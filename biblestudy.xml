@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install type="component"
+<extension type="component"
          version="1.6.0"
          method="upgrade">
   <!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
@@ -19,11 +19,9 @@
   <updateservers>
 		<server type="extension">http://www.joomlabiblestudy.com/updates/jbs.xml</server>
   </updateservers>
-  <installfile>biblestudy.install.php</installfile>
-  <!-- Deprecated in 1.6 -->
-  <uninstallfile>biblestudy.uninstall.php</uninstallfile>
-  <!-- Deprecated in 1.6 -->
-  <install>
+  <!-- Runs on install/uninstall/update; New in 1.6 -->
+        <scriptfile>biblestudy.install.php</scriptfile>
+   <install>
     <sql>
       <!--  <file driver="mysql" charset="utf8">install/sql/jbs7.0.0.sql</file> -->
     </sql>
@@ -129,11 +127,5 @@
       <language tag="no-NO">no-NO.com_biblestudy.sys.ini</language>
     </languages>
   </administration>
-  <!--  Dependencies -->
-  <dependencies>
-    <dependency type="platform"
-                name="joomla"
-                operator="="
-                version="1.5" />
-  </dependencies>
-</install>
+ 
+</extension>
