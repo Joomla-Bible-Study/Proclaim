@@ -108,7 +108,7 @@ function setSelect($string){
 			  . ' GROUP BY #__bsms_studies.id'
 			  . $orderby
 			  ;
-	   print_r($query);
+	 //  print_r($query);
 		return $query;
 	}
 
