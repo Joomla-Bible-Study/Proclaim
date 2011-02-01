@@ -214,7 +214,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
         </div>
     </div>
      <div class="clr"></div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_SERIES'), 'admin-system-defaults'); ?>
+    <?php echo JHtml::_('tabs.panel', JText::_('JBS_CMN_SERIES'), 'admin-system-defaults'); ?>
     <div class="width-100">
         <div class="width-60 fltlft">
             <fieldset class="panelform">
