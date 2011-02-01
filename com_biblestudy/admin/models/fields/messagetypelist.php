@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @author Tom Fuller
+ * @copyright 2010
+ * Displays a mesage type list for the studieslist menu item
+ */
+
+// No direct access to this file
+defined('_JEXEC') or die;
+ 
+// import the list field type
+jimport('joomla.form.helper');
+JFormHelper::loadFieldClass('list');
+ 
+/**
+ * Message Type List Form Field class for the Joomla Bible Study component
+ */
+class JFormFieldMessagetypelist extends JFormFieldList
+{
+        /**
+         * The field type.
+         *
+         * @var         string
+         */
+        protected $type = 'Messagetypelist';
+ 
+        /**
+         * Method to get a list of options for a list input.
+         *
+         * @return      array           An array of JHtml options.
+         */
+        protected function getOptions() 
+        {
+                $db = JFactory::getDBO();
+                $query = $db->getQuery(true);
+                $query->select('id,message_type');
+                $query->from('#__bsms_message_type');
+                $db->setQuery((string)$query);
+                $messages = $db->loadObjectList();
+                $options = array();
+                if ($messages)
+                {
+                        foreach($messages as $message) 
+                        {
+                                $options[] = JHtml::_('select.option', $message->id, $message->message_type);
+                        }
+                }
+                $options = array_merge(parent::getOptions(), $options);
+                return $options;
+        }
+}
+
+
+?>

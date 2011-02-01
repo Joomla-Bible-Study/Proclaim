@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <params >
+    <param name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH" description="JBS_MED_PLAYERWIDTH_DESC" />
+    <param name="playerheight" default="" type="text" label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_DESC" />
+    <param name="itempopuptitle" type="text" size="150" default="" label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
+    <param name="itempopupfooter" type="text" size="150" default="" label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
+    <param name="popupmargin" type="text" default="50" label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC" />
+  </params>
+  </root>

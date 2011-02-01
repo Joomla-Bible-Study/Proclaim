@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
+        <option value="0">JBS_CMN_NO</option>
+        <option value="1">JBS_CMN_YES</option>
+    </field>
+    <field name="title"  type="text" label="JBS_PDC_PODCAST_NAME"
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
+    <field name="description"  type="textarea" label="JBS_PDC_PODCAST_DESCRIPTION"
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"
+                        cols="60" rows="5"/>
+    <field name="author"  type="text" label="JBS_PDC_PODCAST_AUTHOR"
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
+    <field name="website" type="text" label="JBS_PDC_WEBSITE_URL" size="80"
+                        description="JBS_PODCAST_WEBSITE_DESC"/>
+    <field name="editor_name"  type="text" label="JBS_PDC_EDITORS_NAME"
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
+    <field name="editor_email"  type="text" label="JBS_PDC_EDITORS_EMAIL"
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
+    <field name="podcastsearch"  type="text" label="JBS_PDC_PODCAST_SEARCH_WORDS"
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
+    <field name="language"  type="language" label="JBS_PDC_PODCAST_LANGUAGE"
+			description ="JBS_PDC_PODCAST_NAME_DESC"/>
+    <field name="detailstemplateid"  type="sql" label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK"
+			description ="JBS_PDC_PODCAST_NAME_DESC"
+                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
+                        key_field="id" value_field="title"/>
+    <field name="image"  type="media" label="JBS_PDC_IMAGE_URL"
+			description ="JBS_PDC_PODCAST_NAME_DESC"/>
+    <field name="podcastimage"  type="media" label="JBS_PDC_PODCAST_LOGO"
+			description ="JBS_PDC_PODCAST_NAME_DESC"/>
+    <field name="filename"  type="text" label="JBS_PDC_PODCAST_XML_FILENAME"
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
+    <field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE" size="3"
+                        description="JBS_PODCAST_LIMIT_DESC"/>
+    <field name="episodetitle"  type="text" label="JBS_PDC_EPISODE_TITLE"
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
+    <field name="custom"  type="textarea" label="JBS_CMN_CUSTOM"
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"
+                        cols="48" rows="2"/>
+</form>
