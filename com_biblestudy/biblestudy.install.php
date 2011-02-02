@@ -43,16 +43,17 @@ if ($maxMem) {
 }
 ignore_user_abort(true);
 // Bible Study wide defines
-require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-//include_once(BIBLESTUDY_PATH_ADMIN_LIB .DS. 'fx.upgrade.class.php');
-include_once(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.upgrade.php');
-// Install Bible Study Component
+
 
 class com_biblestudyInstallerScript
 {
 
     function install($parent)
 {
+    require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+
+    include_once(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.upgrade.php');
+// Install Bible Study Component
     // $parent is the class calling this method
     $parent->getParent()->setRedirectURL('index.php?option=com_biblestudy');
 
@@ -196,14 +197,12 @@ It is very important that you do a couple of things when you first install the c
 
 function uninstall($parent)
 {
-    $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-$params = &JComponentHelper::getParams('com_biblestudy');
-$database	= & JFactory::getDBO();
-$database->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
-$database->query();
-$compat = $database->loadObject();
-$admin_params = new JParameter($compat->params);
-$drop_tables = $admin_params->get('drop_tables');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+
+$admin = new BsmHelper();
+
+$admin_params = $admin->getAdmin($issite = false);
+$drop_tables = $admin_params->params['drop_tables'];
 
 	if ($drop_tables >0)
 	{
@@ -348,7 +347,7 @@ $drop_tables = $admin_params->get('drop_tables');
 				}
 $mainframe =& JFactory::getApplication(); ?>
 
-<tr><td><table><tr><td><img src = "<?php echo $mainframe->getCfg("live_site"); ?>/components/com_biblestudy/images/openbible.png" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" /></td><td><h2>Joomla Bible Study Uninstalled</h2></td></tr></table></td>
+<tr><td><table><tr><td><img src = "<?php echo JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'images' .DS. 'openbible.png';?>" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" /></td><td><h2>Joomla Bible Study Uninstalled</h2></td></tr></table></td>
 <?php
 		
 		$drop_result .= '</table>';
