@@ -34,6 +34,7 @@ class jbsMedia
 
         //Here we get a list of the media ids associated with the study we got from $row
         $mediaids = $this->getMediaRows($row->id);
+        //$mediaids = '';
         $rowcount = count($mediaids); // echo $rowcount; return true;
         if ($rowcount < 1) {$table = null; return $table;}
 

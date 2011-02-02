@@ -129,7 +129,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
             $mediaclass = new jbsMedia(); 
 			$elementid->id = 'jbsmedia';
 			$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-		    $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
+            $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
             break;
 		case 22:
 			$elementid->id = 'store';

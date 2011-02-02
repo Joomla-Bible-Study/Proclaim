@@ -38,7 +38,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <div class="inlineFields">
                         <div>
                             <?php echo $this->form->getLabel('booknumber'); ?><br/>
-                            <?php echo $this->form->getInput('booknumber', null, $this->admin->params['booknumber']); ?>
+                            <?php echo $this->form->getInput('booknumber'); ?>
                         </div>
                         <div>
                             <?php echo $this->form->getLabel('chapter_begin'); ?><br/>

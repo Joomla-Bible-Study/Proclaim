@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="1" required="true">
+    <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="1" >
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
@@ -15,15 +15,15 @@
         class="inputbox" size="22"
         format="%Y-%m-%d %H:%M:%S"
         filter="user_utc"
-        required="true"/>
+        />
     <field name="full_name"  type="text"
         label="JBS_CMT_FULL_NAME"
         description ="JBS_CMT_FULL_NAME_DESC"
-        size="10"/>
+        size="30"/>
     <field name="user_email"  type="text"
         label="JBS_CMT_EMAIL"
         description ="JBS_CMT_EMAIL_DESC"
-        size="10"/>
+        size="40"/>
     <field name="comment_text"  type="textarea"
         label="JBS_CMN_COMMENT"
         description ="JBS_CMN_COMMENT_DESC"

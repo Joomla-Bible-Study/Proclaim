@@ -3,6 +3,7 @@ defined('_JEXEC') or die();
 
 function getHeader($row, $params, $admin_params, $template, $showheader, $ismodule)
 { 
+//print_r($row);
 //dump ($template, 'Header - Template: ');
 	//$nh checks to see if there is a header in use, otherwise it puts a line at the top of the listing
 	$nh = FALSE;
@@ -314,7 +315,7 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
 
 function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template)
 {
-		
+		//print_r($row);
 	 	$headercell = '<th id="';
 	 	$elementid = getElementid($rowid, $row, $params, $admin_params, $template);
 		if (!isset($elementid->id)) {$headercell .= 'customhead';}
