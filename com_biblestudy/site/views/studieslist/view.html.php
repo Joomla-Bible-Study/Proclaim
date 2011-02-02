@@ -28,7 +28,10 @@ class biblestudyViewstudieslist extends JView {
         $this->admin = BsmHelper::getAdmin(true);
         
         $admin_parameters = $this->get('Admin');
+        
         $this->admin_params = new JParameter($admin_parameters[0]->params);
+        
+        
       // 
  $t = JRequest::getInt('t','get',1);
         if (!$t) {

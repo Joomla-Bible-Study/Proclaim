@@ -198,153 +198,158 @@ It is very important that you do a couple of things when you first install the c
 function uninstall($parent)
 {
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'params.php');
+jimport('joomla.html.parameter');
+$db =& JFactory::getDBO();
+		$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
+		$db->query();
+		$compat = $db->loadObject();
+		$admin_params = new JParameter($compat->params);
 
-$admin = new BsmHelper();
 
-$admin_params = $admin->getAdmin($issite = false);
-$drop_tables = $admin_params->params['drop_tables'];
+$drop_tables = $admin_params->get('drop_tables');
 
 	if ($drop_tables >0)
 	{
 		$drop_result = '<table><tr><td><H3>Uninstall Results: Tables removed unless noted below</H3></td></tr>';
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_studies");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_studies");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_teachers");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_teachers");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_topics");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_topics");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_servers");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_servers");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_series");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_series");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_message_type");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_message_type");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_folders");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_folders");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_order");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_order");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_search");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_search");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_schemaversion");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_schemaversion");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_media");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_media");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_books");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_books");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_podcast");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_podcast");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_mimetype");
-		$database->query();
-		if ($database->getErrorNum()) {
-				$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_mimetype");
+		$db->query();
+		if ($db->getErrorNum()) {
+				$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_mediafiles");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_mediafiles");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_templates");
-		$database->query();
-		if ($database->getErrorNum()) {
-				$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_templates");
+		$db->query();
+		if ($db->getErrorNum()) {
+				$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_comments");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_comments");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_admin");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_admin");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_studytopics");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_studytopics");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_version");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_version");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_share");
-		$database->query();
-		if ($database->getErrorNum()) {
-				$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_share");
+		$db->query();
+		if ($db->getErrorNum()) {
+				$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-		$database->setQuery ("DROP TABLE IF EXISTS #__bsms_locations");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_locations");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
 				}
-    $database->setQuery ("DROP TABLE IF EXISTS #__bsms_timeset");
-		$database->query();
-		if ($database->getErrorNum()) {
-					$drop_result .=  '<tr><td>Database Error: '.$database->stderr().' </td></tr> ';
+    $db->setQuery ("DROP TABLE IF EXISTS #__bsms_timeset");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<tr><td>db Error: '.$db->stderr().' </td></tr> ';
 					
-				}
+					}
 $mainframe =& JFactory::getApplication(); ?>
 
 <tr><td><table><tr><td><img src = "<?php echo JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'images' .DS. 'openbible.png';?>" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" /></td><td><h2>Joomla Bible Study Uninstalled</h2></td></tr></table></td>
