@@ -30,7 +30,7 @@ class BiblestudyHelper {
                         $vName == 'Control Panel'
         );
         JSubMenuHelper::addEntry(
-                        JText::_('JBS_STY_STUDIES_MANAGER'),
+                        JText::_('JBS_CMN_STUDIES'),
                         'index.php?option=com_biblestudy&view=studieslist',
                         $vName == 'Studies'
         );
@@ -40,7 +40,7 @@ class BiblestudyHelper {
                         $vName == 'Media Files'
         );
         JSubMenuHelper::addEntry(
-                        JText::_('JBS_TPL_TEMPLATE_DISPLAY_SETTINGS'),
+                        JText::_('JBS_CMN_TEMPLATES'),
                         'index.php?option=com_biblestudy&view=templateslist',
                         $vName == 'Templates'
         );
