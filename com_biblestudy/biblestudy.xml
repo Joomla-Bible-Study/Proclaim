@@ -29,7 +29,7 @@
   <!-- Front end file, media and language specification -->
   <filename>biblestudy.xml</filename>
   <filename>biblestudy.install.php</filename>
-  <filename>biblestudy.uninstall.php</filename>
+ 
   <files folder="site">
     <filename>index.html</filename>
     <filename>biblestudy.php</filename>
@@ -46,7 +46,6 @@
     <folder>images</folder>
     <folder>elements</folder>
     <folder>helpers</folder>
-    <folder>install</folder>
     <folder>lib</folder>
 	<folder>languages</folder>
   </files>
