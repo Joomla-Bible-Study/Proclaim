@@ -52,11 +52,13 @@ class JBSUpgrade
             break;
             
             case 2:
-            $message = $this->fresh();
+        //    $message = $this->fresh();
+            $message = 'fresh';
             break;
             
             case 3:
-            $message = $this->upgrade();
+        //    $message = $this->upgrade();
+            $message = 'upgrade';
             break;
             
             case 4:
@@ -92,11 +94,9 @@ class JBSUpgrade
         
         //Run the 700 upgrade php file
         require(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
-        ob_start();
-        $msg[] = ob_get_contents();
-        ob_end_clean();
         
-        $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-2-12', `build`='1390', `versionname`='1Kings'";
+        
+        $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-02-12', `build`='1390', `versionname`='1Kings', `versiondate`='2011-02-15'";
         $msg[] = $this->performdb($query);
         
         $res = '<table><tr><td>Upgrade Joomla Bible Study to version 7.0.0</td></tr>';  //santon 2010-12-28 convert to phrase
@@ -477,7 +477,7 @@ class JBSUpgrade
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ";
     $msg[] = $this->performdb($query);
 
-    $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-2-12', `build`='1390', `versionname`='1Kings'";
+    $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-2-12', `build`='1390', `versionname`='1Kings', `versiondate`='2011-02-15'";
         $msg[] = $this->performdb($query);
                 
          require(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.install.special.php');
@@ -523,6 +523,7 @@ class JBSUpgrade
                         }
                         else
                         {$results = $query;}
+        print $results.'<br /><br />';
         return $results;
     }
 }
