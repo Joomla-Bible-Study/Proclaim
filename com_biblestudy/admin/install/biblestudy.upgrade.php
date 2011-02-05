@@ -100,7 +100,8 @@ class JBSUpgrade
         $msg[] = $this->performdb($query);
         
         $res = '<table><tr><td>Upgrade Joomla Bible Study to version 7.0.0</td></tr>';  //santon 2010-12-28 convert to phrase
-        if (count($msg) < 1){$res .= JText::_('JBS_INS_NO_ERROR');}
+        if (count($msg) < 1){$res .= JText::_('JBS_INS_NO_ERROR');
+		}
         else
         {
             
