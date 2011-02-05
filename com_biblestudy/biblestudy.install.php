@@ -50,7 +50,8 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
         if (!$version)
         {
      		$db->setQuery ("SELECT schemaVersion  FROM #__bsms_schemaVersion");
-    		$schema = $db->loadResult(); //dump ($schema, 'schema: ');
+    		$schema = $db->loadResult(); 
+			dump ($schema, 'schema: ');
             if (!schema)
             {
                 $db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaversion");
@@ -158,6 +159,7 @@ if (!$message)
             $install = new jbs607Install();
             $message = $install->upgrade607();
             echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.7', 'publishing-details'); ?>
+			</fieldset>
             <fieldset class="panelform">
             <?php echo $message;     
             break;
@@ -167,6 +169,7 @@ if (!$message)
             $install = new jbs608Install();
             $message = $install->upgrade608();
             echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.8', 'publishing-details'); ?>
+			</fieldset>
             <fieldset class="panelform">
             <?php echo $message; 
             break;
@@ -176,6 +179,7 @@ if (!$message)
             $install = new jbs611Install();
             $message = $install->upgrade611();
             echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.11a', 'publishing-details'); ?>
+			</fieldset>
             <fieldset class="panelform">
             <?php echo $message; 
             break;
@@ -185,6 +189,7 @@ if (!$message)
             $install = new jbs613Install();
             $message = $install->upgrade613();
             echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.0', 'publishing-details'); ?>
+			</fieldset>
             <fieldset class="panelform">
             <?php echo $message; 
             break;
@@ -194,6 +199,7 @@ if (!$message)
             $install = new jbs614Install();
             $message = $install->upgrade614();
             echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.0', 'publishing-details'); ?>
+			</fieldset>
             <fieldset class="panelform">
             <?php echo $message; 
             break;
@@ -201,6 +207,7 @@ if (!$message)
             case 8:
             $message = 'No special requirements for this version.';
             echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.5', 'publishing-details'); ?>
+			</fieldset>
             <fieldset class="panelform">
             <?php echo $message; 
             
@@ -209,6 +216,7 @@ if (!$message)
             $install = new jbs622Install();
             $message = $install->upgrade622();
             echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.1', 'publishing-details'); ?>
+			</fieldset>
             <fieldset class="panelform">
             <?php echo $message; 
             break;
@@ -218,6 +226,7 @@ if (!$message)
             $install = new jbs623Install();
             $message = $install->upgrade623();
             echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.3', 'publishing-details'); ?>
+			</fieldset>
             <fieldset class="panelform">
             <?php echo $message; 
             break;
@@ -227,7 +236,8 @@ if (!$message)
             $install = new jbs700Install();
             $message = $install->upgrade700(); 
             echo JHtml::_('sliders.panel','Upgrade JBS Version 7.0.0', 'publishing-details'); ?>
-            <fieldset class="panelform">
+			</fieldset>
+            <!-- <fieldset class="panelform"> -->
             <?php echo $message; 
             break;
 
@@ -288,7 +298,7 @@ echo JHtml::_('sliders.panel','CSS', 'publishing-details'); ?>
         
 	
     <?php echo JHtml::_('sliders.end'); ?>
-
+</fieldset>
 </div> <!--end of div for panelform -->
 <?php
 
