@@ -45,9 +45,9 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
         $query = 'SELECT * FROM #__bsms_version ORDER BY `build` DESC';
         $db->setQuery($query);
         $db->query();
-        $versions = $db->loadObject();
+        $version = $db->loadObject();
         //If there are no versions then it must be an older version of the component
-        if (!$versions)
+        if (!$version)
         {
      		$db->setQuery ("SELECT schemaVersion  FROM #__bsms_schemaVersion");
     		$schema = $db->loadResult(); //dump ($schema, 'schema: ');
@@ -89,60 +89,45 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
         }
         else
         {
-            foreach ($versions AS $version)
+            if ($version->build == '700')
             {
-                if ($version->build == '700')
-                {
-                    $build = '700';
-                    $start = 12;
-                }
-                if ($version->build == '624')
-                {
-                    $build = '624';
-                    $start = 11; 
-                }
-                if ($version->build == '623')
-                {
-                    $build = '623';
-                    $start = 10;
-                }
-                if ($version->build == '622')
-                {
-                    $build = '622';
-                    $start = 9;
-                }
-                if ($version->build == '615')
-                {
-                    $build = '615';
-                    $start = 8;
-                }
-                if ($version->build == '614')
-                {
-                    $build = '614';
-                    $start = 7;
-                }
+                $build = '700';
+                $start = 12;
+            }
+            if ($version->build == '624')
+            {
+                $build = '624';
+                $start = 11; 
+            }
+            if ($version->build == '623')
+            {
+                $build = '623';
+                $start = 10;
+            }
+            if ($version->build == '622')
+            {
+                $build = '622';
+                $start = 9;
+            }
+            if ($version->build == '615')
+            {
+                $build = '615';
+                $start = 8;
+            }
+            if ($version->build == '614')
+            {
+                $build = '614';
+                $start = 7;
             }
         }
     
 // Install Bible Study Component
     // $parent is the class calling this method
  //   $parent->getParent()->setRedirectURL('index.php?option=com_biblestudy');
-
-   
-	?>
-
-<?php
-    $biblestudy_db = JFactory::getDBO();
-	
-  //  $jbsupgrade = new JBSUpgrade();
-    //Check to be sure JBS is the correct version for upgrade
   
-  //  $message = $jbsupgrade->version();
-   
-   
 if (!$message)
 {
-    $application->enqueueMessage( 'Joomla Bible Study version 6.2.4 required as minimum for install of 7.0.0' ) ;
+    $application->enqueueMessage( 'There was a problem with the install. Please contact customer service' ) ;
     return false;
 }	
 
@@ -209,7 +194,7 @@ if (!$message)
             
             case 8:
             $message = 'No special requirements for this version.';
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.5.5', 'publishing-details'); ?>
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.5', 'publishing-details'); ?>
             <fieldset class="panelform">
             <?php echo $message; 
             
