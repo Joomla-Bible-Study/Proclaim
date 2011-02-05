@@ -7,6 +7,8 @@
  */
 defined( '_JEXEC' ) or die('Restricted access');
   
+  function upgrade622()
+  {
  $result_table = '<table><tr><td>This routine checks for possible issues with the upgrade to podcasts and adjusts if needed</td></tr>';
   $db = JFactory::getDBO();
   $query = "SELECT count(`id`) FROM  #__bsms_mediafiles WHERE `params` LIKE '%podcast1%' GROUP BY `id`";
@@ -32,6 +34,7 @@ $count = 0;
   $db->query();
   $afternumrows = $db->getNumRows();              
                 	$result_table .= '<tr><td>'.$rows.' row(s) in need of adjustment.</td></tr> <tr><td>'.$afternumrows.' row(s) not fixed.</td></tr></table>';
-                    echo $result_table;
+ return $result_table;
+ }
  
 ?>

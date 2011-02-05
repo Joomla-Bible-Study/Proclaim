@@ -23,5 +23,5 @@ if (!$cssexists)
 		{$result_table .= '<tr><td>CSS data installed</td></tr>';}
 	}
 $result_table .= '</table>';
-echo $result_table;
+return $result_table;
 ?>

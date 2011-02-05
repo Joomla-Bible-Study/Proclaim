@@ -5,10 +5,6 @@
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-        <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_DESC">
-            <option value="0">JBS_CMN_NO</option>
-            <option value="1">JBS_CMN_YES</option>
-        </field>
         <field name="admin_store" type="list" default="0" label="JBS_ADM_ADMIN_STORE" description="JBS_ADM_ADMIN_STORE_DESC">
             <option value="0">JBS_CMN_SHOW</option>
             <option value="1">JBS_CMN_HIDE</option>
@@ -83,7 +79,10 @@
              query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER BY message_type ASC">
             <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
         </field>
-
+        <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_DESC">
+            <option value="0">JBS_CMN_NO</option>
+            <option value="1">JBS_CMN_YES</option>
+        </field>
         <field name="JBS_ADM_DEFAULT_STUDY_IMAGE" type="media" extension="com_biblestudy" id="media_image"
          label="JBS_ADM_DEFAULT_STUDYLIST_IMAGE" description="JBS_ADM_DEFAULT_STUDYLIST_IMAGE_DESC" class="inputbox"
          query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"

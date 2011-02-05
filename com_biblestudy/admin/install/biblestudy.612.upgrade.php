@@ -5,6 +5,9 @@
  * @copyright 2010
  */
 defined('_JEXEC') or die();
+
+function upgrade612()
+{
 $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
 $dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
 $db = &JFactory::getDBO();
@@ -40,5 +43,6 @@ if (!$cssexists)
 		
 	}
 $result_table .= '</table>';
-echo $result_table;
+return $result_table;
+}
 ?>

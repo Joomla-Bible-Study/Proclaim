@@ -7,6 +7,8 @@
 
 defined( '_JEXEC' ) or die('Restricted access');
 
+function upgrade623()
+{
 $result_table = '<table><tr><td>This routine updates the mediafiles table to adjust the player type parameter</td></tr>';
 
 $db = JFactory::getDBO();
@@ -43,5 +45,6 @@ $db->query();
 $after = $db->loadResult();
 if (!$after) {$after = 0;}
 $result_table .= '<tr><td>'.$before.' row(s) in need of adjustment.</td></tr> <tr><td>'.$after.' row(s) not fixed.</td></tr></table>';
-echo $result_table;
+return $result_table;
+}
 ?>

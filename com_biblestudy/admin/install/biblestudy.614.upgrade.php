@@ -6,6 +6,9 @@
  * @desc Updates the media files table to reflect new way of associating podcasts and adds Landing Page CSS
  */
 defined( '_JEXEC' ) or die('Restricted access');
+
+function upgrade614()
+{
  $result_table = '<table><tr><td>This routine adds some items to the css file for the Landing Page view and updates the mediafiles table</td></tr>';
 //This updates the mediafiles table to reflect the new way of associating files to podcasts
 $db = JFactory::getDBO();
@@ -165,5 +168,6 @@ if ($avrexists)
 		}
 	}
 	$result_table .= '</table>';
-	echo $result_table;
+	return $result_table;
+ }
 ?>

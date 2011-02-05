@@ -5,12 +5,14 @@
  * @copyright 2010
  */
 defined( '_JEXEC' ) or die('Restricted access');
+
+function upgrade613()
+{
 $result_table = '<table><tr><td>This routine updaters the database to reflect changes to the way the media player is accessed. If no mediafile records are indicated, then no changes were needed. CSS is also added to support the Landing Page view.</td></tr>';
 //Read current css file, add share information if not already there, write and close
 jimport('joomla.filesystem.file');
 $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
 $dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
-
 
 
 //Now we are going to update the db. We no longer use the field for AVR but it happens in a param so we need to get rid of the internal_viewer after setting the param accordingly
@@ -96,5 +98,6 @@ if ($avrexists)
 
 
 	$result_table .= '</table>';
-	echo $result_table;
+	return $result_table;
+ }
 ?>
