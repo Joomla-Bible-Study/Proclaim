@@ -8,7 +8,8 @@ defined( '_JEXEC' ) or die('Restricted access');
 
 function upgrade608()
 {
-$query = "CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
+    $db = JFactory::getDBO();
+    $query = "CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
 				`id` INT(3) NOT NULL AUTO_INCREMENT,
 				`published` TINYINT(1) NOT NULL default '0',
 				`study_id` INT(11) NOT NULL,

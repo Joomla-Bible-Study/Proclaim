@@ -133,8 +133,6 @@ $msg2 = $msg2.$msg;
 						$error = "DB function failed with error number ".$db->getErrorNum()."<br /><font color=\"red\">";
 						$error .= $db->stderr(true);
 						$error .= "</font>";
-						
-					
 					}
 					else
 					{
@@ -143,8 +141,6 @@ $msg2 = $msg2.$msg;
 					}
                     $results .= '<tr><td><div >'.$error.'<pre>';
                     $results .= $query.'</pre></div></td>';
-        
-        
        return $results;
     }
 

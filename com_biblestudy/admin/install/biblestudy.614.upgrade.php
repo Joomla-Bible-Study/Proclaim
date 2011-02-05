@@ -10,6 +10,47 @@ defined( '_JEXEC' ) or die('Restricted access');
 function upgrade614()
 {
  $result_table = '<table><tr><td>This routine adds some items to the css file for the Landing Page view and updates the mediafiles table</td></tr>';
+ 
+ 	$query = "CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
+				  `id` int(3) NOT NULL AUTO_INCREMENT,
+				  `study_id` int(3) NOT NULL DEFAULT '0',
+				  `topic_id` int(3) NOT NULL DEFAULT '0',
+				  PRIMARY KEY (`id`),
+				  UNIQUE KEY `id` (`id`),
+				  KEY `id_2` (`id`)
+				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
+            $msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;
+
+        $query = "CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
+                `timeset` VARCHAR(14) ,
+                KEY `timeset` (`timeset`)
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+            $msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;
+
+			$query = "ALTER TABLE #__bsms_teachers MODIFY `title` varchar(250)";
+            $msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;
+
+			$query = "ALTER TABLE #__bsms_admin ADD COLUMN showhide char(255) DEFAULT NULL";
+            $msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;
+
+			$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN downloads int(10) DEFAULT 0";
+            $msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;
+
+			$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN plays int(10) DEFAULT 0";
+            $msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;
+
+            $query = "INSERT INTO `#__bsms_timeset` SET `timeset`='1281646339'";
+            $msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;
+
+$result_table .= $msg2;
+
 //This updates the mediafiles table to reflect the new way of associating files to podcasts
 $db = JFactory::getDBO();
    $query = 'SELECT id, params, podcast_id FROM #__bsms_mediafiles WHERE podcast_id > 0';
@@ -170,4 +211,29 @@ if ($avrexists)
 	$result_table .= '</table>';
 	return $result_table;
  }
+ 
+   function performdb($query)
+    {
+        $db = JFactory::getDBO();
+        $results = '';
+        if (!$query){$results = "Error. No query found"; return $results;}
+        $db->setQuery($query);
+        $db->query();
+        
+        		if ($db->getErrorNum() != 0)
+					{
+						$error = "DB function failed with error number ".$db->getErrorNum()."<br /><font color=\"red\">";
+						$error .= $db->stderr(true);
+						$error .= "</font>";
+					}
+					else
+					{
+						$error = "";
+						
+					}
+                    $results .= '<tr><td><div >'.$error.'<pre>';
+                    $results .= $query.'</pre></div></td>';
+       return $results;
+    }
+
 ?>

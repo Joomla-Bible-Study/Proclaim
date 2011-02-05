@@ -33,109 +33,121 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
    // include_once(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.upgrade.php');
         $application = JFactory::getApplication();
         $db = JFactory::getDBO();
+        $build = '';
+        //check to be sure a really early version is not installed 1 = older version 2 = no version 3 = correct version
+            $query = "SELECT * FROM #__bsms_studies";
+            $db->setQuery($query);
+            $db->query();
+            $version = $db->loadObjectList();
+            if (!$version){$build = 'fresh'; }
+            
         $query = 'SELECT * FROM #__bsms_version';
         $db->setQuery($query);
         $db->query();
         $versions = $db->loadObjectList();
+        //If there are no versions then it must be an older version of the component
         if (!$versions)
         {
-            
-       
-		$db->setQuery ("SELECT schemaVersion  FROM #__bsms_schemaVersion");
-		$schema = $db->loadResult(); //dump ($schema, 'schema: ');
-        if (!schema)
-        {
-            $db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaversion");
-            $schema = $db->loadResult(); 
-        }
-		if ($schema)
-		{
-			switch ($schema)
-			{
-				case '600':
-				$vers = '6.0.7';
-				$dt = '2008-04-10';
-				$build = '600';
-				$vername = 'Genesis';
-				break;
-			
-				case '608':
-				$vers = '6.0.8-10';
-				$dt = '2008-08-14';
-				$build = '608';
-				$vername = 'Exodus';
-				break;
-				
-				case '611':
-				$vers = '6.0.11';
-				$dt = '2008-10-22';
-				$build = '611';
-				$vername = 'Leviticus';
-				break;
-				
-				case '612':
-				$vers = '6.1.0';
-				$dt = '2009-11-30';
-				$build = '613';
-				$vername = 'Numbers';
-				break;
-				
-				case '613':
-				$vers = '6.1.0';
-				$dt = '2009-11-30';
-				$build = '613';
-				$vername = 'Numbers';
-				break;
-				
-				default:
-				$vers = '6.0.7';
-				$dt = '2008-04-10';
-				$build = '600';
-				$vername = 'Genesis';
-				break;
-			}
-            //check to be sure a really early version is not installed 1 = older version 2 = no version 3 = correct version
-            $query = "SELECT * FROM #__bsms_studies";
-            $db->setQuery($query);
-            $db->query();
-            $oldversion = $db->loadObjectList();
-            if ($oldversion) {$ver = 1; }
-            if (!$oldversion){$ver = 2; }
+     		$db->setQuery ("SELECT schemaVersion  FROM #__bsms_schemaVersion");
+    		$schema = $db->loadResult(); //dump ($schema, 'schema: ');
+            if (!schema)
+            {
+                $db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaversion");
+                $schema = $db->loadResult(); 
+            }
+    		if ($schema)
+    		{
+    			switch ($schema)
+    			{
+    				case '600':
+    				$build = '600';
+    				break;
+    			
+    				case '608':
+    				$build = '608';
+    				break;
+    				
+    				case '611':
+    				$build = '611';
+    				break;
+    				
+    				case '612':
+                    $build = '613';
+    				break;
+    				
+    				case '613':
+    				$build = '613';
+    				break;
+    			}
+            }
         }
         else
         {
             foreach ($versions AS $version)
             {
-                $build = $version->build;
-                $ver = 1; 
-                if ($build == '624')
+                if ($version->build == '700')
                 {
-                    $ver = 3; 
+                    $build = '700';
                 }
-                if ($build > 624)
+                if ($version->build == '624')
                 {
-                    $ver = 4;
+                    $build = '624'; 
+                }
+                if ($version->build == '623')
+                {
+                    $build = '623';
+                }
+                if ($version->build == '622')
+                {
+                    $build = '622';
+                }
+                if ($version->build == '615')
+                {
+                    $build = '615';
+                }
+                if ($version->build == '614')
+                {
+                    $build = '614';
                 }
             }
         }
-        switch ($ver)
+        switch ($build)
         {
-            case 1:
-            $application->enqueueMessage( 'Joomla Bible Study version 6.2.4 required as minimum for install of 7.0.0' ) ;
-            return false;
+            case '600':
             break;
             
-            case 2:
+            case '608':
+            break;
+            
+            case '611':
+            break;
+            
+            case '613':
+            break;
+            
+            case '614':
+            break;
+            
+            case '615':
+            break;
+            
+            case '622':
+            break;
+            
+            case '623':
+            break;
+            
+            case 'fresh':
             require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.fresh.install.php');
             $message = jbsFresh();
             break;
             
-            case 3:
+            case '624':
             require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
             $message = upgrade700(); 
             break;
             
-            case 4:
+            case '700':
             $message = '7.0.0 already installed. Refreshing install.';
             break;
         }
