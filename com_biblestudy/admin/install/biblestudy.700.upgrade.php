@@ -6,9 +6,11 @@
  */
 
 defined( '_JEXEC' ) or die('Restricted access');
+
+
 require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
 
-
+class jbs700Install{
 
         function upgrade700()
     {
@@ -144,5 +146,5 @@ $msg2 = $msg2.$msg;
        return $results;
     }
 
-
+}
 ?>

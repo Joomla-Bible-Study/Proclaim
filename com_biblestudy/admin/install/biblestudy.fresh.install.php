@@ -5,6 +5,8 @@
  * @copyright 2011
  */
 defined('_JEXEC') or die();
+class jbsFreshInstall{
+    
 function jbsFresh()
     {
         $msg = '';
@@ -395,7 +397,7 @@ function jbsFresh()
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ";
     $msg = $this->performdb($query);
     $msg2 = $msg2.$msg;
-    $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-2-12', `build`='1390', `versionname`='1Kings', `versiondate`='2011-02-15'";
+    $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-2-12', `build`='700', `versionname`='1Kings', `versiondate`='2011-02-15'";
         $msg = $this->performdb($query);
         $msg2 = $msg2.$msg;
          $include =  JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.install.special.php';      
@@ -452,5 +454,5 @@ function jbsFresh()
        return $results;
     }
 
-
+}
 ?>

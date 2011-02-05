@@ -6,7 +6,9 @@
  * @desc Updates the CSS .media to .jbsmedia because some templates had media as a tag
  */
 defined( '_JEXEC' ) or die('Restricted access');
-  
+
+class jbs622Install{  
+    
   function upgrade622()
   {
  $result_table = '<table><tr><td>This routine checks for possible issues with the upgrade to podcasts and adjusts if needed</td></tr>';
@@ -36,5 +38,5 @@ $count = 0;
                 	$result_table .= '<tr><td>'.$rows.' row(s) in need of adjustment.</td></tr> <tr><td>'.$afternumrows.' row(s) not fixed.</td></tr></table>';
  return $result_table;
  }
- 
+} 
 ?>

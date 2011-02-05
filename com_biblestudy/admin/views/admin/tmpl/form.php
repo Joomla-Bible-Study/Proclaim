@@ -23,8 +23,8 @@ $params = $this->form->getFieldsets();
                         <?php echo $this->form->getInput('compat_mode', 'params'); ?>
                     </li>
                     <li>
-                        <?php echo $this->form->getLabel('drop_tables'); ?>
-                        <?php echo $this->form->getInput('drop_tables'); ?>
+                        <?php echo $this->form->getLabel('drop_tables', 'params'); ?>
+                        <?php echo $this->form->getInput('drop_tables', 'params'); ?>
                     </li>
                     <li>
                         <?php echo $this->form->getLabel('admin_store', 'params'); ?>

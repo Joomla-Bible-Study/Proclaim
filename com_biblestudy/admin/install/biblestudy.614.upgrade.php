@@ -7,6 +7,8 @@
  */
 defined( '_JEXEC' ) or die('Restricted access');
 
+class jbs614Install{
+
 function upgrade614()
 {
  $result_table = '<table><tr><td>This routine adds some items to the css file for the Landing Page view and updates the mediafiles table</td></tr>';
@@ -235,5 +237,5 @@ if ($avrexists)
                     $results .= $query.'</pre></div></td>';
        return $results;
     }
-
+}
 ?>

@@ -6,6 +6,8 @@
  */
 defined( '_JEXEC' ) or die('Restricted access');
 
+class jbs613Install{
+    
 function upgrade613()
 {
 $result_table = '<table><tr><td>This routine updaters the database to reflect changes to the way the media player is accessed. If no mediafile records are indicated, then no changes were needed. CSS is also added to support the Landing Page view.</td></tr>';
@@ -264,4 +266,5 @@ if ($avrexists)
                     $results .= $query.'</pre></div></td>';
        return $results;
     }
+}
 ?>

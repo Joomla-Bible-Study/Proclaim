@@ -6,6 +6,8 @@
  */
 defined( '_JEXEC' ) or die('Restricted access');
 
+class jbs608Install{
+    
 function upgrade608()
 {
     $db = JFactory::getDBO();
@@ -128,4 +130,5 @@ function performdb($query)
         
        return $results;
     }
+}
 ?>

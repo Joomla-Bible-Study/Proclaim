@@ -24,6 +24,7 @@ class biblestudyViewFolderslist extends JView {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
 
+
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));

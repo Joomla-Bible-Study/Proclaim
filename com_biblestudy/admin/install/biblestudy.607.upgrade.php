@@ -5,6 +5,8 @@
  * @copyright 2011
  */
 defined( '_JEXEC' ) or die('Restricted access');
+
+class jbs607Install{
 function upgrade607()
 {
             $query = "ALTER TABLE #__bsms_studies ADD COLUMN media_hours VARCHAR(2) NULL AFTER studyintro";
@@ -116,4 +118,5 @@ function performdb($query)
         
        return $results;
     }
+}
 ?>
