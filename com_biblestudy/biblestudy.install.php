@@ -114,40 +114,51 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
         switch ($build)
         {
             case '600':
+            $start = 10;
             break;
             
             case '608':
+            $start = 9;
             break;
             
             case '611':
+            $start = 8;
             break;
             
             case '613':
+            $start = 7;
             break;
             
             case '614':
+            $start = 6;
             break;
             
             case '615':
+            $start = 5;
             break;
             
             case '622':
+            $start = 4;
             break;
             
             case '623':
+            $start = 3;
             break;
             
-            case 'fresh':
-            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.fresh.install.php');
-            $message = jbsFresh();
-            break;
-            
-            case '624':
+             case '624':
+            $start = 2;
             require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
             $message = upgrade700(); 
             break;
             
+            case 'fresh':
+            $start = 1;
+            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.fresh.install.php');
+            $message = jbsFresh();
+            break;
+                   
             case '700':
+            $start = 0;
             $message = '7.0.0 already installed. Refreshing install.';
             break;
         }
