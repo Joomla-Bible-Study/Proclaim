@@ -34,17 +34,18 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
         $application = JFactory::getApplication();
         $db = JFactory::getDBO();
         $build = '';
+        $start = 1;
         //check to be sure a really early version is not installed 1 = older version 2 = no version 3 = correct version
             $query = "SELECT * FROM #__bsms_studies";
             $db->setQuery($query);
             $db->query();
             $version = $db->loadObjectList();
-            if (!$version){$build = 'fresh'; $start = 9;}
+            if (!$version){$build = 'fresh';}
             
-        $query = 'SELECT * FROM #__bsms_version';
+        $query = 'SELECT * FROM #__bsms_version ORDER BY `build` DESC';
         $db->setQuery($query);
         $db->query();
-        $versions = $db->loadObjectList();
+        $versions = $db->loadObject();
         //If there are no versions then it must be an older version of the component
         if (!$versions)
         {
@@ -61,27 +62,27 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
     			{
     				case '600':
     				$build = '600';
-                    $start = 0;
+                    $start = 2;
     				break;
     			
     				case '608':
     				$build = '608';
-                    $start = 1;
+                    $start = 3;
     				break;
     				
     				case '611':
     				$build = '611';
-                    $start = 2;
+                    $start = 4;
     				break;
     				
     				case '612':
                     $build = '613';
-                    $start = 3;
+                    $start = 6;
     				break;
     				
     				case '613':
     				$build = '613';
-                    $start = 3;
+                    $start = 6;
     				break;
     			}
             }
@@ -93,89 +94,36 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                 if ($version->build == '700')
                 {
                     $build = '700';
-                    $start = 10;
+                    $start = 12;
                 }
                 if ($version->build == '624')
                 {
                     $build = '624';
-                    $start = 8; 
+                    $start = 11; 
                 }
                 if ($version->build == '623')
                 {
                     $build = '623';
-                    $start = 7;
+                    $start = 10;
                 }
                 if ($version->build == '622')
                 {
                     $build = '622';
-                    $start = 6;
+                    $start = 9;
                 }
                 if ($version->build == '615')
                 {
                     $build = '615';
-                    $start = 5;
+                    $start = 8;
                 }
                 if ($version->build == '614')
                 {
                     $build = '614';
-                    $start = 4;
+                    $start = 7;
                 }
             }
         }
-     /*   $start = 10;
-        switch ($build)
-        {
-            case '600':
-            $start = 0;
-            break;
-            
-            case '608':
-            $start = 1;
-            break;
-            
-            case '611':
-            $start = 2;
-            break;
-            
-            case '613':
-            $start = 3;
-            break;
-            
-            case '614':
-            $start = 4;
-            break;
-            
-            case '615':
-            $start = 5;
-            break;
-            
-            case '622':
-            $start = 6;
-            break;
-            
-            case '623':
-            $start = 7;
-            break;
-            
-             case '624':
-            $start = 8;
-        
-         //   require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
-        //    $message = upgrade700(); 
-            break;
-            
-            case 'fresh':
-            $start = 9;
-         //   require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.fresh.install.php');
-         //   $message = jbsFresh();
-            break;
-                   
-            case '700':
-            $start = 10;
-         //   $message = '7.0.0 already installed. Refreshing install.';
-            break;
-        }
-*/
+    
 // Install Bible Study Component
     // $parent is the class calling this method
  //   $parent->getParent()->setRedirectURL('index.php?option=com_biblestudy');
@@ -207,82 +155,11 @@ if (!$message)
 <?php echo JHtml::_('sliders.start','content-sliders-1',array('useCookie'=>1)); ?>
     
     <?php //Here is where we start processing each $build to see which files to include and report
-    for($counter = $start; $counter < 11; $counter++)
+    for($counter = $start; $counter < 13; $counter++)
     {
         switch ($counter)
         {
-            case 0:
-            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.607.upgrade.php');
-            $message = upgrade607();
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.7', 'publishing-details'); ?>
-            <fieldset class="panelform">
-            <?php echo $message;     
-            break;
-            
             case 1:
-            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.608.upgrade.php');
-            $message = upgrade608();
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.8', 'publishing-details'); ?>
-            <fieldset class="panelform">
-            <?php echo $message; 
-            break;
-            
-            case 2:
-            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.611.upgrade.php');
-            $message = upgrade611();
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.11a', 'publishing-details'); ?>
-            <fieldset class="panelform">
-            <?php echo $message; 
-            break;
-            
-            case 3:
-            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.613.upgrade.php');
-            $message = upgrade613();
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.0', 'publishing-details'); ?>
-            <fieldset class="panelform">
-            <?php echo $message; 
-            break;
-            
-            case 4:
-            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.614.upgrade.php');
-            $message = upgrade614();
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.0', 'publishing-details'); ?>
-            <fieldset class="panelform">
-            <?php echo $message; 
-            break;
-            
-            case 5:
-            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.622.upgrade.php');
-            $message = upgrade622();
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.1', 'publishing-details'); ?>
-            <fieldset class="panelform">
-            <?php echo $message; 
-            break;
-            
-            case 6:
-            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
-            $message = upgrade623();
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.3', 'publishing-details'); ?>
-            <fieldset class="panelform">
-            <?php echo $message; 
-            break;
-            
-            case 7:
-            $message = '<tr><td>No special database changes required for this version</td></tr>';
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4', 'publishing-details'); ?>
-            <fieldset class="panelform">
-            <?php echo $message; 
-            break;
-            
-            case 8:
-            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
-            $message = upgrade700(); 
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 7.0.0', 'publishing-details'); ?>
-            <fieldset class="panelform">
-            <?php echo $message; 
-            break;
-            
-            case 9:
             require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.fresh.install.php');
             $message = jbsFresh();
             echo JHtml::_('sliders.panel','JBS Fresh Installation Version 7.0.0', 'publishing-details'); ?>
@@ -290,7 +167,84 @@ if (!$message)
              <?php echo $message; 
             break;
             
+            case 2:
+            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.607.upgrade.php');
+            $message = upgrade607();
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.7', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message;     
+            break;
+            
+            case 3:
+            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.608.upgrade.php');
+            $message = upgrade608();
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.8', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message; 
+            break;
+            
+            case 4:
+            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.611.upgrade.php');
+            $message = upgrade611();
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.11a', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message; 
+            break;
+            
+            case 6:
+            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.613.upgrade.php');
+            $message = upgrade613();
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.0', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message; 
+            break;
+            
+            case 7:
+            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.614.upgrade.php');
+            $message = upgrade614();
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.0', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message; 
+            break;
+            
+            case 8:
+            $message = 'No special requirements for this version.';
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.5.5', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message; 
+            
+            case 9:
+            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.622.upgrade.php');
+            $message = upgrade622();
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.1', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message; 
+            break;
+            
             case 10:
+            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
+            $message = upgrade623();
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.3', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message; 
+            break;
+            
+            case 11:
+            $message = '<tr><td>No special database changes required for this version</td></tr>';
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message; 
+            break;
+            
+            case 11:
+            require_once (JPATH_ADMINISTRATOR .DS. 'component' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
+            $message = upgrade700(); 
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 7.0.0', 'publishing-details'); ?>
+            <fieldset class="panelform">
+            <?php echo $message; 
+            break;
+
+            case 12:
             $message = '<tr><td>JBS Version 7.0.0 already installed. Doing file refresh</td></tr>';
             break;
             
