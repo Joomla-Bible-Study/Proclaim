@@ -1,48 +1,60 @@
 <?php
 
 /**
- * @author Joomla Bible Study
- * @copyright 2010
+ * @author Tom Fuller
+ * @copyright 2011
  */
-defined('_JEXEC') or die();
+defined( '_JEXEC' ) or die('Restricted access');
 
+class jbs611Install{
+    
 function upgrade611()
 {
-$src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
-$dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
-$db = &JFactory::getDBO();
-$result_table = '<table><tr><td>This routine updates the mediafiles table. If 0 results then no records needed updating</td></tr>';
-$db->setQuery("UPDATE #__bsms_mediafiles SET params = 'player=2', internal_viewer = '0' WHERE internal_viewer = '1' AND params IS NULL");
-	$db->query();
-	if ($db->getErrorNum() > 0)
-			{
-				$error = $db->getErrorMsg();
-				$result_table .= '<tr><td>An error occured while updating mediafiles table: '.$error.'</td></tr>';
-			}
-	else
-	{
-		$result = $db->getAffectedRows();
-		if ($result > 0)
-		{
-			$result_table .= '<tr><td>'.$result.' Mediafiles records updated</td></tr>';
-		}
-		
-	}
-//Let's check to see if there is a css file - if not, we'll copy one over
-$cssexists = JFile::exists($dest);
-if (!$cssexists)
-	{
-		if (!JFile::copy($src, $dest))
-		{
-			$result_table .= '<tr><td>There was a problem installing the CSS data file. Copy manually /components/com_biblestudy/assets/css/biblestudy.css.dist to same folder with .css only extension</td></tr>';
-		}
-		else
-		{
-			$result_table .= '<tr><td>CSS data installed</td></tr>';
-		}
-		
-	}
-$result_table .= '</table>';
-return $result_table;
+$query = "CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
+					`id` INT NOT NULL AUTO_INCREMENT,
+					`location_text` VARCHAR(250) NULL,
+					`published` TINYINT(1) NOT NULL DEFAULT '1',
+					PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`";
+            $msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;   
+			
+            $query = "ALTER TABLE #__bsms_studies ADD COLUMN show_level varchar(100) NOT NULL default '0' AFTER user_name";
+			$msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;   
+            
+            $query = "ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level";
+            $msg = $this->performdb($query);
+            $msg2 = $msg2.$msg;   
+            
+$res = '<table><tr><td>Upgrade Joomla Bible Study to version 7.0.0</td></tr>';  
+        
+        $result_table = $res.$msg2.'</table>';
+
+        return $result_table;
+}
+function performdb($query)
+    {
+        $db = JFactory::getDBO();
+        $results = '';
+        if (!$query){$results = "Error. No query found"; return $results;}
+        $db->setQuery($query);
+        $db->query();
+        
+        		if ($db->getErrorNum() != 0)
+					{
+						$error = "DB function failed with error number ".$db->getErrorNum()."<br /><font color=\"red\">";
+						$error .= $db->stderr(true);
+						$error .= "</font>";
+					}
+					else
+					{
+						$error = "";
+						
+					}
+                    $results .= '<tr><td><div >'.$error.'<pre>';
+                    $results .= $query.'</pre></div></td>';
+       return $results;
+    }
+    
 }
 ?>
