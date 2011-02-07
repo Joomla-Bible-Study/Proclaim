@@ -54,17 +54,37 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
         //If there are no versions then it must be an older version of the component
         if (!$version)
         {
-     		$db->setQuery ("SELECT schemaVersion  FROM #__bsms_schemaVersion");
-    		$schema = $db->loadResult(); 
-			dump ($schema, 'schema: ');
+     		
+            $schema = false; 
+			foreach ($tables as $table)
+            {
+                $studies = $prefix.'bsms_schemaVersion';
+                $schemaexists = substr_count($table,$studies);
+                if ($schemaexists){$schema = true;}
+            }
+            if ($schema)
+            {
+                $db->setQuery ("SELECT schemaVersion  FROM #__bsms_schemaVersion");
+                $schema = $db->loadResult();
+            }
             if (!schema)
             {
-                $db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaversion");
-                $schema = $db->loadResult(); 
+                   foreach ($tables as $table)
+                {
+                    $studies = $prefix.'bsms_schemaversion';
+                    $schemaexists = substr_count($table,$studies);
+                    if ($schemaexists){$schema = true;}
+                }
+                if ($schema){
+                    $db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaversion");
+                    $schema = $db->loadResult(); 
+    
+                }
             }
     		if ($schema)
     		{
-    			switch ($schema)
+    			
+                switch ($schema)
     			{
     				case '600':
     				$build = '600';
