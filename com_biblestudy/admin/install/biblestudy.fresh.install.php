@@ -303,7 +303,7 @@ function jbsFresh()
         $query = "CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
                     `timeset` VARCHAR(14) ,
                     `backup` VARCHAR(14) ,
-                    KEY `timeset` (`timeset`)
+                    PRIMARY KEY (`timeset`)
                     ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
          $msg = $this->performdb($query);
          $msg2 = $msg2.$msg;
