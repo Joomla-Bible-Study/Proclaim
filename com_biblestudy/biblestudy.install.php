@@ -32,96 +32,69 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 
         $application = JFactory::getApplication();
         $db = JFactory::getDBO();
-        $build = 'fresh';
-        $start = 1;
-        //check to be sure a really early version is not installed 1 = older version 2 = no version 3 = correct version
+        
+        //First we check to see if there is a current version database installed. This will have a #__bsms_version table so we check for it's existence.
+        
+        
+        //check to be sure a really early version is not installed $versiontype: 1 = current version type 2 = older version type 3 = no version
+        //
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
-        $version = false;
-        foreach ($tables as $table)
-            {
-                $studies = $prefix.'bsms_studies';
-                $jbsexists = substr_count($table,$studies);
-                if ($jbsexists){$version = true;}
-            }
-    if (!$version){
-        
-        $build = 'fresh';
-        
-        //Check to see if there is a version table
-        foreach ($tables as $table)
+        $versiontype = 3;
+        $start = 1;
+         foreach ($tables as $table)
         {
             $studies = $prefix.'bsms_version';
-            $versionexists = substr_count($table,$studies);
-            if ($versionexists){$version = true;}
+            $currentversionexists = substr_count($table,$studies);
+            if ($currentversionexists){$currentversion = true;}
         }    
-        $query = 'SELECT * FROM #__bsms_version ORDER BY `build` DESC';
-        $db->setQuery($query);
-        $db->query();
-        $oldversion = $db->loadObject();
-        //If there are no versions then it must be an older version of the component
-       
-     		
-            $schema = false; 
-			foreach ($tables as $table)
+        //Only move forward if a current version type is not found
+        if (!$versiontype)      
+        {
+            //Now let's check to see if there is an older database type (prior to 6.2)
+            $oldversion = false;
+            foreach ($tables as $table)
             {
                 $studies = $prefix.'bsms_schemaVersion';
-                $schemaexists = substr_count($table,$studies);
-                if ($schemaexists){$schema = true;}
+                $oldversionexists = substr_count($table,$studies);
+                if ($oldversionexists){$oldversion = true; $olderversiontype = 1;}
             }
-            if ($schema)
-            {
-                $db->setQuery ("SELECT schemaVersion  FROM #__bsms_schemaVersion");
-                $schema = $db->loadResult();
-            }
-            if (!schema)
+            if (!$oldversion)
             {
                    foreach ($tables as $table)
                 {
                     $studies = $prefix.'bsms_schemaversion';
-                    $schemaexists = substr_count($table,$studies);
-                    if ($schemaexists){$schema = true;}
+                    $olderversionexists = substr_count($table,$studies);
+                    if ($olderversionexists){$oldversion = true; $olderversiontype = 2;}
                 }
-                if ($schema){
-                    $db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaversion");
-                    $schema = $db->loadResult(); 
-    
-                }
-            }
-    		if ($schema)
-    		{
-    			
-                switch ($schema)
-    			{
-    				case '600':
-    				$build = '600';
-                    $start = 2;
-    				break;
-    			
-    				case '608':
-    				$build = '608';
-                    $start = 3;
-    				break;
-    				
-    				case '611':
-    				$build = '611';
-                    $start = 4;
-    				break;
-    				
-    				case '612':
-                    $build = '613';
-                    $start = 6;
-    				break;
-    				
-    				case '613':
-    				$build = '613';
-                    $start = 6;
-    				break;
-    			}
             }
         }
-        else
+        //Finally if both current version and old version are false, we double check to make sure there are no JBS tables in the database. 
+        if (!$currentversion && !$oldversion)
         {
+            foreach ($tables as $table)
+            {
+                $studies = $prefix.'bsms_studies';
+                $jbsexists = substr_count($table,$studies);
+                if ($jbsexists){$versiontype = 3;}
+            }
+            //If in this loop we find a studies table but no schema or version table, it is an older and unsupported version for upgrade so we bail
+            if (!$jbsexists)
+            {
+              //  $application->enqueueMessage( 'There was a problem with the install. Please contact customer service' ) ;
+              //  return false;
+            }
+        }
+        
+        //Now we run a switch case on the versiontype and run an install routine accordingly
+        switch ($versiontype)
+        {
+            case 1:
+            //This is a current database version so we check to see which version. We query to get the highest build in the version table
+            $query = 'SELECT * FROM #__bsms_version ORDER BY `build` DESC';
+            $db->setQuery($query);
+            $db->query();
+            $version = $db->loadObject();
             if ($version->build == '700')
             {
                 $build = '700';
@@ -152,8 +125,54 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                 $build = '614';
                 $start = 7;
             }
+            break;
+            
+            case 2:
+            //This is an older version of the software so we check it's version
+            if ($olderversiontype == 1)
+            {
+                $db->setQuery ("SELECT schemaVersion  FROM #__bsms_schemaVersion");
+            }
+            else
+            {
+                $db->setQuery ("SELECT schemaVersion FROM #__bsms_schemaversion");
+            }
+            $schema = $db->loadResult();
+             switch ($schema)
+    			{
+    				case '600':
+    				$build = '600';
+                    $start = 2;
+    				break;
+    			
+    				case '608':
+    				$build = '608';
+                    $start = 3;
+    				break;
+    				
+    				case '611':
+    				$build = '611';
+                    $start = 4;
+    				break;
+    				
+    				case '612':
+                    $build = '613';
+                    $start = 6;
+    				break;
+    				
+    				case '613':
+    				$build = '613';
+                    $start = 6;
+    				break;
+    			}
+            break;
+            
+            case 3:
+            //There is no version installed so we run the fresh installation routine
+            $start = 1;
+            break;
         }
-    
+ 
 // Install Bible Study Component
     // $parent is the class calling this method
  //   $parent->getParent()->setRedirectURL('index.php?option=com_biblestudy');
@@ -187,15 +206,8 @@ if (!$message)
             break;
             
             case 2:
-            //require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.607.upgrade.php');
-            //$install = new jbs607Install();
-           // $message = $install->upgrade607();
-           // echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.7', 'publishing-details'); ?>
-			</fieldset>
-            <fieldset class="panelform">
-            <?php //echo $message;  
             $application->enqueueMessage( 'You must have a minimum of JBS version 6.0.8 to upgrade. Please go to www.JoomlaBibleStudy.org and contact customer service.' ) ;
-    return false;   
+           // return false;   
             break;
             
             case 3:
