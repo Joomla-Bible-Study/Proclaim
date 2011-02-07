@@ -33,13 +33,18 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
    // include_once(BIBLESTUDY_PATH_ADMIN_INSTALL .DS. 'biblestudy.upgrade.php');
         $application = JFactory::getApplication();
         $db = JFactory::getDBO();
-        $build = '';
+        $build = 'fresh';
         $start = 1;
         //check to be sure a really early version is not installed 1 = older version 2 = no version 3 = correct version
-            $query = "SELECT * FROM #__bsms_studies";
-            $db->setQuery($query);
-            $db->query();
-            $version = $db->loadObjectList();
+        $tables = $db->getTableList();
+        $prefix = $db->getPrefix();
+        $version = false;
+        foreach ($tables as $table)
+            {
+                $studies = $prefix.'bsms_studies';
+                $jbsexists = substr_count($table,$studies);
+                if ($jbsexists){$version = true;}
+            }
             if (!$version){$build = 'fresh';}
             
         $query = 'SELECT * FROM #__bsms_version ORDER BY `build` DESC';
@@ -155,13 +160,15 @@ if (!$message)
             break;
             
             case 2:
-            require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.607.upgrade.php');
-            $install = new jbs607Install();
-            $message = $install->upgrade607();
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.7', 'publishing-details'); ?>
+            //require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.607.upgrade.php');
+            //$install = new jbs607Install();
+           // $message = $install->upgrade607();
+           // echo JHtml::_('sliders.panel','Upgrade JBS Version 6.0.7', 'publishing-details'); ?>
 			</fieldset>
             <fieldset class="panelform">
-            <?php echo $message;     
+            <?php //echo $message;  
+            $application->enqueueMessage( 'You must have a minimum of JBS version 6.0.8 to upgrade. Please go to www.JoomlaBibleStudy.org and contact customer service.' ) ;
+    return false;   
             break;
             
             case 3:
@@ -225,7 +232,7 @@ if (!$message)
             require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
             $install = new jbs623Install();
             $message = $install->upgrade623();
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.3', 'publishing-details'); ?>
+            echo JHtml::_('sliders.panel','Upgrading JBS Version 6.2.3', 'publishing-details'); ?>
 			</fieldset>
             <fieldset class="panelform">
             <?php echo $message; 
@@ -235,7 +242,7 @@ if (!$message)
             require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
             $install = new jbs700Install();
             $message = $install->upgrade700(); 
-            echo JHtml::_('sliders.panel','Upgrade JBS Version 7.0.0', 'publishing-details'); ?>
+            echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4 to 7.0.0', 'publishing-details'); ?>
 			</fieldset>
             <!-- <fieldset class="panelform"> -->
             <?php echo $message; 
