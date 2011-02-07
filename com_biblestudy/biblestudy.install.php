@@ -44,15 +44,23 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                 $jbsexists = substr_count($table,$studies);
                 if ($jbsexists){$version = true;}
             }
-            if (!$version){$build = 'fresh';}
-            
+    if (!$version){
+        
+        $build = 'fresh';
+        
+        //Check to see if there is a version table
+        foreach ($tables as $table)
+        {
+            $studies = $prefix.'bsms_version';
+            $versionexists = substr_count($table,$studies);
+            if ($versionexists){$version = true;}
+        }    
         $query = 'SELECT * FROM #__bsms_version ORDER BY `build` DESC';
         $db->setQuery($query);
         $db->query();
-        $version = $db->loadObject();
+        $oldversion = $db->loadObject();
         //If there are no versions then it must be an older version of the component
-        if (!$version)
-        {
+       
      		
             $schema = false; 
 			foreach ($tables as $table)
