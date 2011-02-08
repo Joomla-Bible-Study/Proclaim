@@ -20,15 +20,19 @@ class jbs700Install{
         //Alter some tables
         $msg = '';
         $msg2 = '';
+        
         $query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN `player` int(2) NULL";
         $msg = $this->performdb($query);
         $msg2 = $msg2.$msg;
+        
         $query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN `popup` int(2) NULL";
         $msg = $this->performdb($query);
         $msg2 = $msg2.$msg;
+        
         $query = "DROP TABLE #__bsms_timeset";
         $msg = $this->performdb($query);
         $msg2 = $msg2.$msg;
+        
         $query = "CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
                     `timeset` VARCHAR(14) ,
                     `backup` VARCHAR(14) ,
@@ -36,9 +40,11 @@ class jbs700Install{
                     ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
          $msg = $this->performdb($query);
         $msg2 = $msg2.$msg;
+        
         $query = "INSERT INTO `#__bsms_timeset` SET `timeset`='1281646339', `backup` = '1281646339'";
         $msg = $this->performdb($query);
         $msg2 = $msg2.$msg;
+        
         $query = "INSERT  INTO `#__bsms_media` VALUES (15,'You Tube','You Tube','','youtube24.png','You Tube Video', 1)";
         $msg = $this->performdb($query);
         $msg2 = $msg2.$msg;

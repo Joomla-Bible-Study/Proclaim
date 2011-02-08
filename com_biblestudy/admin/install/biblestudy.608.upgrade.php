@@ -24,9 +24,9 @@ function upgrade608()
             $msg = $this->performdb($query);
             $msg2 = $msg2.$msg;   
              
-			$query = "ALTER TABLE #__bsms_studies ADD COLUMN booknumber2 VARCHAR(4) NULL AFTER secondary_reference";
-            $msg = $this->performdb($query);
-            $msg2 = $msg2.$msg;
+		//	$query = "ALTER TABLE #__bsms_studies ADD COLUMN booknumber2 VARCHAR(4) NULL AFTER secondary_reference";
+        //    $msg = $this->performdb($query);
+        //    $msg2 = $msg2.$msg;
 
 			$query = "ALTER TABLE #__bsms_studies ADD COLUMN chapter_begin2 VARCHAR(4) NULL AFTER booknumber2";
             $msg = $this->performdb($query);
