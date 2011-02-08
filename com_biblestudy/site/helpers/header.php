@@ -317,7 +317,10 @@ function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $row
 {
 		//print_r($row);
 	 	$headercell = '<th id="';
-	 	$elementid = getElementid($rowid, $row, $params, $admin_params, $template);
+        if ($rowid == '20'){$elementid = null; $elementid->headertext = JText::_('JBS_CMN_MEDIA'); $elementid->id = 'jbsmedia';}
+        else
+        {$elementid = getElementid($rowid, $row, $params, $admin_params, $template);}
+	 	
 		if (!isset($elementid->id)) {$headercell .= 'customhead';}
 	 	else {$headercell .= $elementid->id.'head';}
 		$headercell .= '" class="'.$rowcolid;
