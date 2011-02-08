@@ -240,41 +240,34 @@ function commentsPermission($params)
 function getShowLevel($row)
 {
     $show = null;
+  /*
     $database = JFactory::getDBO();
     $query = "SELECT id, title FROM #__usergroups";
     $database->setQuery($query);
     $database->query();
     $groupids = $database->loadObjectList();
+  */  
     $user =& JFactory::getUser();
-     if (JOOMLA_VERSION == '5')
+    $usrid = $user->get('id');
+    $getGroups = JAccess::getGroupsByUser($usrid);
+    $sum2 = count($getGroups); 
+    if (substr_count($row->show_level,','))
+    {$showvar = explode(',',$row->show_level);}
+    else {$showvar = $row->show_level;}
+    $sum3 = count($showvar);
+    for ($i = 0; $i<$sum3; $i++)
     {
-        $user_level    = $user->get('gid');
-       	if (!$user_level) { $user_level = 0; }
-        if ($row->show_level < $user_level ){$show = true;}
-        else {$show = false;}
-    }
-    else
-    {
-        $usrid = $user->get('id');
-        $getGroups = JAccess::getGroupsByUser($usrid);
-        $sum2 = count($getGroups); 
-        if (substr_count($row->show_level,','))
-        {$showvar = explode(',',$row->show_level);}
-        else {$showvar = $row->show_level;}
-        $sum3 = count($showvar);
-        for ($i = 0; $i<$sum3; $i++)
+
+    foreach ($getGroups AS $newgrpid) 
         {
-
-        foreach ($getGroups AS $newgrpid) 
-            {
-                  if ($newgrpid == $showvar[$i])
-                  {
-                    $show = true; return $show;
-                  }
-            }
-
+              if ($newgrpid == $showvar[$i])
+              {
+                $show = true; return $show;
+              }
         }
+
     }
+   
     
     return $show;
 }
@@ -294,6 +287,16 @@ function showRows($results)
        
         return $results;
 }
+
+    function getUserGroups()
+    {
+        $database = JFactory::getDBO();
+        $query = "SELECT id, title FROM #__usergroups";
+        $database->setQuery($query);
+        $database->query();
+        $groupids = $database->loadObjectList();
+        return $groupids;
+    }
 } // End of class
 
 ?>
