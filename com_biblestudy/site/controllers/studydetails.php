@@ -104,16 +104,17 @@ class biblestudyControllerstudydetails extends JController
                                 $_SERVER["REMOTE_ADDR"],
                                 $_POST["recaptcha_challenge_field"],
                                 $_POST["recaptcha_response_field"]);
-
+dump($_POST);
   if (!$resp->is_valid) {
     // What happens when the CAPTCHA was entered incorrectly
     $mess = JText::_('JBS_STY_INCORRECT_KEY');
     echo "<script language='javascript' type='text/javascript'>alert('" . $mess ."')</script>";
-    echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
+    //echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
+    echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()";
     return;
     $cap = 0;
-    die ("The reCAPTCHA wasn't entered correctly. Go back and try it again." .
-         "(reCAPTCHA said: " . $resp->error . ")");
+  //  die ("The reCAPTCHA wasn't entered correctly. Go back and try it again." .
+  //       "(reCAPTCHA said: " . $resp->error . ")");
   } else {
     $cap = 1;
   }

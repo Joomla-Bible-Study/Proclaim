@@ -16,7 +16,7 @@
 
     <field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY" description="JBS_STY_SUBMITTED_BY_DESC"/>
 
-    <field name="show_level" default="1" type="accesslevel" label="JBS_STY_USER_LEVEL_TO_SHOW" desciption="JBS_STY_USER_LEVEL_TO_SHOW_DESC" multiple="multiple"/>
+    <field name="show_level" default="1" type="usergroup" label="JBS_STY_USER_LEVEL_TO_SHOW" desciption="JBS_STY_USER_LEVEL_TO_SHOW_DESC" multiple="true"/>
     
     <field name="studytitle" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" description="JBS_STY_TITLE_DESC"/>
 

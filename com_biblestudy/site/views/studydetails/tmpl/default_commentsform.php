@@ -84,7 +84,7 @@ $allow = 0;
  </script>
  <?php
         require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
-        $publickey = $this->params-get('public_key'); // you got this from the signup page
+        $publickey = $this->params->get('public_key'); // you got this from the signup page
         echo recaptcha_get_html($publickey);
 		
 

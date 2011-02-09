@@ -60,7 +60,7 @@ print_r($this->items);
         $admin = new JBSAdmin();
         $allow = $admin->getPermission();
         $this->assignRef('allow', $allow);
-
+        
         $document = & JFactory::getDocument();
         JHTML::_('behavior.mootools');
         $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');

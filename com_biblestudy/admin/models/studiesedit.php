@@ -127,7 +127,8 @@ class biblestudyModelstudiesedit extends modelClass {
         $data['scripture'] = implode(';', $scriptures);
         // Added since Joomla 1.6 to implode show_level if array
         if (is_array($data['show_level'])) {
-            $data['show_level'] = implode(",", $data['show_level']);
+           // $data['show_level'] = implode(",", $data['show_level']);
+          
         }
         // Bind the form fields to the table
         if (!$row->bind($data)) {
