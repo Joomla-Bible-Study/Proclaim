@@ -34,13 +34,14 @@ class biblestudyControllerstudiesedit extends controllerClass {
         parent::__construct();
 
         // Register Extra tasks
-        $this->registerTask('add', 'edit');
+      //  $this->registerTask('add', 'edit');
     }
 
     /**
      * display the edit form
      * @return void
      */
+   /*
     function legacyEdit() {
         JRequest::setVar('view', 'studiesedit');
         JRequest::setVar('layout', 'form');
@@ -48,7 +49,7 @@ class biblestudyControllerstudiesedit extends controllerClass {
 
         parent::display();
     }
-
+*/
     /**
      * save a record (and redirect to main page)
      * @return void
@@ -71,6 +72,7 @@ class biblestudyControllerstudiesedit extends controllerClass {
      * apply a record
      * @return void
      */
+   /*
     function legacySave() {
         $model = $this->getModel('studiesedit');
         $cid = JRequest::getVar('id', 1, 'post', 'int');
@@ -84,11 +86,12 @@ class biblestudyControllerstudiesedit extends controllerClass {
         $link = 'index.php?option=com_biblestudy&controller=studiesedit&task=edit&cid[]=' . $cid . '';
         $this->setRedirect($link, $msg);
     }
-
+*/
     /**
      * remove record(s)
      * @return void
      */
+/*
     function remove() {
         $model = $this->getModel('studiesedit');
         if (!$model->delete()) {
@@ -133,17 +136,17 @@ class biblestudyControllerstudiesedit extends controllerClass {
 
         $this->setRedirect('index.php?option=com_biblestudy&view=studieslist');
     }
-
+*/
     /**
      * cancel editing a record
      * @return void
      */
-    function legacyCancel() {
+/*    function legacyCancel() {
         $msg = JText::_('JBS_CMN_OPERATION_CANCELLED');
         $this->setRedirect('index.php?option=com_biblestudy&view=studieslist', $msg);
     }
 
-    function resetHits() {
+*/    function resetHits() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'post'); //dump ($cid, 'cid: ');
         $db = JFactory::getDBO();
