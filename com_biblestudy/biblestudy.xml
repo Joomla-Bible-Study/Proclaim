@@ -20,15 +20,12 @@
 		<server type="extension">http://www.joomlabiblestudy.com/updates/jbs.xml</server>
   </updateservers>
   <!-- Runs on install/uninstall/update; New in 1.6 -->
-        <scriptfile>biblestudy.install.php</scriptfile>
-   <install>
-    <sql>
-      <!--  <file driver="mysql" charset="utf8">install/sql/jbs7.0.0.sql</file> -->
-    </sql>
-  </install>
+    <scriptfile>biblestudy.script.php</scriptfile>
+	<installfile>biblestudy.install.php</installfile>
+	<uninstallfile>biblestudy.uninstall.php</uninstallfile>
   <!-- Front end file, media and language specification -->
   <filename>biblestudy.xml</filename>
-  <filename>biblestudy.install.php</filename>
+  <filename>biblestudy.script.php</filename>
   <!-- <filename>biblestudy.uninstall.php</filename> -->
   <files folder="site">
     <filename>index.html</filename>
@@ -126,5 +123,4 @@
       <language tag="no-NO">no-NO.com_biblestudy.sys.ini</language>
     </languages>
   </administration>
- 
 </extension>
