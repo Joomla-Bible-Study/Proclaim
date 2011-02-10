@@ -77,7 +77,7 @@
       <menu link="index.php?option=com_biblestudy&amp;view=mimetypelist" view="mimetypelist" alt="COM_BIBLESTUDY_JBS_MNU_MIME_TYPES">COM_BIBLESTUDY_JBS_MNU_MIME_TYPES</menu>
       <menu link="index.php?option=com_biblestudy&amp;view=commentslist" view="commentslist" alt="COM_BIBLESTUDY_JBS_MNU_STUDY_COMMENTS">COM_BIBLESTUDY_JBS_MNU_STUDY_COMMENTS</menu>
       <menu link="index.php?option=com_biblestudy&amp;view=sharelist" view="sharelist" alt="COM_BIBLESTUDY_JBS_MNU_SOCIAL_NETWORK_LINKS">COM_BIBLESTUDY_JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" view="admin" alt="COM_BIBLESTUDY_JBS_MNU_ADMINISTRATION">COM_BIBLESTUDY_JBS_MNU_ADMINISTRATION</menu>
+      <menu link="index.php?option=com_biblestudy&amp;view=admin&amp;layout=edit&amp;id=1" view="admin" alt="COM_BIBLESTUDY_JBS_MNU_ADMINISTRATION">COM_BIBLESTUDY_JBS_MNU_ADMINISTRATION</menu>
       <menu link="index.php?option=com_biblestudy&amp;view=cssedit" view="cssedit" alt="COM_BIBLESTUDY_JBS_MNU_CSS_EDIT">COM_BIBLESTUDY_JBS_MNU_CSS_EDIT</menu>
       <!-- Instead of link you can specify individual link attributes -->
     </submenu>
