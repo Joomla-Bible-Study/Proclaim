@@ -37,7 +37,8 @@ class biblestudyViewmediafile extends JView {
        if ($permission !== true) {
     			JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
     			return false;
-    		}      
+    		} 
+           
         $this->setLayout('form');
         
       //  $this->addToolbar();

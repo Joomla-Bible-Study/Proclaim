@@ -8,53 +8,16 @@ defined('_JEXEC') or die('Restricted access');
 
 class Tablemediafile extends JTable
 {
-	/**
-	 * Primary Key
-	 *
-	 * @var int
-	 */
-	var $id = null;
-
-	/**
-	 * @var string
-	 */
-	var $study_id = null;
-	var $media_image = null;
-	var $server = null;
-	var $path = null;
-	var $published = 1;
-	var $special = null;
-	var $filename = null;
-	var $size = null;
-	var $mime_type = null;
-	var $podcast_id = null;
-	var $internal_viewer = null;
-	var $ordering = null;
-	var $mediacode = null;
-	var $createdate = null;
-	var $link_type = null;
-	var $hits = null;
-	var $docMan_id = null;
-	var $article_id = null;
-	var $virtueMart_id = null;
-	var $comment = null;
-	var $params = null;
-    var $player = null;
-    var $popup = null;
 	
-	
-
 	/**
 	 * Constructor
 	 *
 	 * @param object Database connector object
 	 */
-
-
-	public function __construct(&$db)
-	{
+	function Tablemediafile(& $db) {
 		parent::__construct('#__bsms_mediafiles', 'id', $db);
 	}
+
  public function bind($array, $ignore = '') 
         {
                 if (isset($array['params']) && is_array($array['params'])) 

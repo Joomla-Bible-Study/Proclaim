@@ -1,29 +1,18 @@
 <?php
 
 /**
- * @version     $Id: mediafilesedit.php 1394 2011-01-17 21:39:05Z genu $
+ * @version     $Id: mediafilesedit.php 1466 2011-01-31 23:13:03Z bcordis $
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
 //No Direct Access
 defined('_JEXEC') or die();
 
-//Joomla 1.6 <-> 1.5 Branch
-try {
     jimport('joomla.application.component.modeladmin');
 
     abstract class modelClass extends JModelAdmin {
         
     }
-
-} catch (Exception $e) {
-    jimport('joomla.application.component.model');
-
-    abstract class modelClass extends JModel {
-        
-    }
-
-}
 
 class biblestudyModelmediafile extends modelClass {
 
@@ -42,12 +31,21 @@ class biblestudyModelmediafile extends modelClass {
         /**
          * @todo J16 has new way of retrieving parameters so we need to implement it here too
          */
-        jimport( 'joomla.html.parameter' );
+        
+        jimport('joomla.html.parameter');
         $admin = $this->getLegacyAdmin();
         $this->_admin_params = new JParameter($admin[0]->params);
         $array = JRequest::getVar('cid', 0, '', 'array');
         $this->setId((int) $array[0]);
     }
+
+
+	public function getTable($type = 'mediafile', $prefix = 'Table', $config = array())
+	{
+		JTable::addIncludePath(JPATH_COMPONENT.DS.'tables');
+        return JTable::getInstance($type, $prefix, $config);
+	}
+
 
     function setId($id) {
         // Set id and wipe data
@@ -95,10 +93,6 @@ class biblestudyModelmediafile extends modelClass {
         }
         return $this->_data;
     }
-	public function getTable($type = 'Mediafile', $prefix = 'Table', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
 
     /**
      * Method to store a record
@@ -109,17 +103,7 @@ class biblestudyModelmediafile extends modelClass {
      * study, so that it doesn't default to 0, buecause that will break the
      * ordering functionality.
      */
-    function getLegacyAdmin() {
-        if (empty($this->_admin)) {
-            $query = 'SELECT params'
-                    . ' FROM #__bsms_admin'
-                    . ' WHERE id = 1';
-            $this->_admin = $this->_getList($query);
-        }
-        return $this->_admin;
-    }
-   
-   function store() {
+    function store() {
         $row = & $this->getTable();
 
         $data = JRequest::get('post'); //dump ($data, 'data: ');
@@ -206,7 +190,23 @@ class biblestudyModelmediafile extends modelClass {
         return true;
     }
 
-   
+    function legacyPublish($cid = array(), $publish = 1) {
+
+        if (count($cid)) {
+            $cids = implode(',', $cid);
+
+            $query = 'UPDATE #__bsms_mediafiles'
+                    . ' SET published = ' . intval($publish)
+                    . ' WHERE id IN ( ' . $cids . ' )'
+
+            ;
+            $this->_db->setQuery($query);
+            if (!$this->_db->query()) {
+                $this->setError($this->_db->getErrorMsg());
+                return false;
+            }
+        }
+    }
 
     /**
      * Method to move a mediafile listing
@@ -265,7 +265,16 @@ class biblestudyModelmediafile extends modelClass {
         return true;
     }
 
-    
+    function getLegacyAdmin() {
+        if (empty($this->_admin)) {
+            $query = 'SELECT params'
+                    . ' FROM #__bsms_admin'
+                    . ' WHERE id = 1';
+            $this->_admin = $this->_getList($query);
+        }
+        return $this->_admin;
+    }
+
     /**
      * @desc Functions to satisfy the ajax requests
      */
@@ -450,7 +459,7 @@ class biblestudyModelmediafile extends modelClass {
      */
     public function getForm($data = array(), $loadData = true) {
         // Get the form.
-        $form = $this->loadForm('com_biblestudy.mediafilesedit', 'mediafilesedit', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_biblestudy.mediafile', 'mediafile', array('control' => 'jform', 'load_data' => $loadData));
 
         if (empty($form)) {
             return false;
@@ -465,7 +474,7 @@ class biblestudyModelmediafile extends modelClass {
      * @since   7.0
      */
     protected function loadFormData() {
-        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafilesedit.data', array());
+        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafile.data', array());
         if (empty($data)) {
             $data = $this->getItem();
             $data->podcast_id = explode(',', $data->podcast_id);
