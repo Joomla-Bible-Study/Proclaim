@@ -28,8 +28,6 @@ class com_biblestudyInstallerScript
 window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler'), $$('div#content-sliders-1.pane-sliders > .panel > div.pane-slider'), {onActive: function(toggler, i) {toggler.addClass('pane-toggler-down');toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_content-sliders-1',$$('div#content-sliders-1.pane-sliders > .panel > h3').indexOf(toggler));},onBackground: function(toggler, i) {toggler.addClass('pane-toggler');toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');i.removeClass('pane-down');if($$('div#content-sliders-1.pane-sliders > .panel > h3').length==$$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler').length) Cookie.write('jpanesliders_content-sliders-1',-1);},duration: 300,display: 1,show: 1,opacity: false,alwaysHide: true}); });
  </script>
  <?php
-    
-
         $application = JFactory::getApplication();
         $db = JFactory::getDBO();
         
@@ -95,7 +93,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                 case '700':
                     $message = '<tr><td>JBS Version 7.0.0 already installed. Doing file refresh</td></tr>';
                     echo JHtml::_('sliders.panel','Re-installing Version 7.0.0', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                 break;
@@ -105,8 +103,8 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4 to 7.0.0', 'publishing-details'); ?>
-        			</fieldset>
-                    <!-- <fieldset class="panelform"> -->
+        			
+                    <fieldset class="panelform">
                     <?php //echo $message; 
                 break;
                 
@@ -115,7 +113,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs623Install();
                     $message = $install->upgrade623();
                     echo JHtml::_('sliders.panel','Upgrading JBS Version 6.2.3', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                     
@@ -123,8 +121,8 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4 to 7.0.0', 'publishing-details'); ?>
-        			</fieldset>
-                    <!-- <fieldset class="panelform"> -->
+        			
+                    <fieldset class="panelform">
                     <?php //echo $message;  
                 break;
                 
@@ -133,7 +131,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs622Install();
                     $message = $install->upgrade622();
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.1', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                     
@@ -149,15 +147,15 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4 to 7.0.0', 'publishing-details'); ?>
-        			</fieldset>
-                    <!-- <fieldset class="panelform"> -->
+        			
+                    <fieldset class="panelform">
                     <?php //echo $message;   
                 break;
                 
                 case '615':
                     $message = 'No special requirements for this version.';
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.5', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                     
@@ -165,7 +163,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs622Install();
                     $message = $install->upgrade622();
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.1', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                     
@@ -173,7 +171,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs623Install();
                     $message = $install->upgrade623();
                     echo JHtml::_('sliders.panel','Upgrading JBS Version 6.2.3', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                     
@@ -181,8 +179,8 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4 to 7.0.0', 'publishing-details'); ?>
-        			</fieldset>
-                    <!-- <fieldset class="panelform"> -->
+        			
+                    <fieldset class="panelform">
                     <?php //echo $message;   
                 break;
                 
@@ -191,13 +189,13 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs614Install();
                     $message = $install->upgrade614();
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.4', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                     
                     $message = 'No special requirements for this version.';
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.5', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                     
@@ -205,7 +203,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs622Install();
                     $message = $install->upgrade622();
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.1', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                     
@@ -213,7 +211,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs623Install();
                     $message = $install->upgrade623();
                     echo JHtml::_('sliders.panel','Upgrading JBS Version 6.2.3', 'publishing-details'); ?>
-        			</fieldset>
+        			
                     <fieldset class="panelform">
                     <?php //echo $message;
                     
@@ -221,8 +219,8 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                     echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4 to 7.0.0', 'publishing-details'); ?>
-        			</fieldset>
-                    <!-- <fieldset class="panelform"> -->
+        			
+                    <fieldset class="panelform">
                     <?php //echo $message;    
                 break;
             }
@@ -253,7 +251,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs611Install();
                         $message = $install->upgrade611();
                         echo JHtml::_('sliders.panel','Upgrade to JBS Version 6.0.11a', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                                                   
@@ -261,13 +259,13 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs614Install();
                         $message = $install->upgrade614();
                         echo JHtml::_('sliders.panel','Upgrade to JBS Version 6.1.4', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
                         $message = 'No special requirements for this version.';
                         echo JHtml::_('sliders.panel','Upgrade to JBS Version 6.1.5', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -275,7 +273,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs622Install();
                         $message = $install->upgrade622();
                         echo JHtml::_('sliders.panel','Upgrade JBS to Version 6.2.1', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -283,7 +281,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs623Install();
                         $message = $install->upgrade623();
                         echo JHtml::_('sliders.panel','Upgrading to JBS Version 6.2.3', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -291,8 +289,8 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs700Install();
                         $message = $install->upgrade700(); 
                         echo JHtml::_('sliders.panel','Upgrade to JBS Version 6.2.4 to 7.0.0', 'publishing-details'); ?>
-            			</fieldset>
-                        <!-- <fieldset class="panelform"> -->
+            			
+                        <fieldset class="panelform">
                         <?php //echo $message;     
     				break;
     				
@@ -302,13 +300,13 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs614Install();
                         $message = $install->upgrade614();
                         echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.4', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
                         $message = 'No special requirements for this version.';
                         echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.5', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -316,7 +314,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs622Install();
                         $message = $install->upgrade622();
                         echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.1', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -324,7 +322,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs623Install();
                         $message = $install->upgrade623();
                         echo JHtml::_('sliders.panel','Upgrading JBS Version 6.2.3', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -332,8 +330,8 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs700Install();
                         $message = $install->upgrade700(); 
                         echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4 to 7.0.0', 'publishing-details'); ?>
-            			</fieldset>
-                        <!-- <fieldset class="panelform"> -->
+            			
+                        <fieldset class="panelform">
                         <?php //echo $message;      
     				break;
     		
@@ -342,7 +340,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs613Install();
                         $message = $install->upgrade613();
                         echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.0', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -351,13 +349,13 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs614Install();
                         $message = $install->upgrade614();
                         echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.0', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
                         $message = 'No special requirements for this version.';
                         echo JHtml::_('sliders.panel','Upgrade JBS Version 6.1.5', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -365,7 +363,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs622Install();
                         $message = $install->upgrade622();
                         echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.1', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -373,7 +371,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs623Install();
                         $message = $install->upgrade623();
                         echo JHtml::_('sliders.panel','Upgrading JBS Version 6.2.3', 'publishing-details'); ?>
-            			</fieldset>
+            			
                         <fieldset class="panelform">
                         <?php //echo $message;
                         
@@ -381,8 +379,8 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
                         $install = new jbs700Install();
                         $message = $install->upgrade700(); 
                         echo JHtml::_('sliders.panel','Upgrade JBS Version 6.2.4 to 7.0.0', 'publishing-details'); ?>
-            			</fieldset>
-                        <!-- <fieldset class="panelform"> -->
+            			
+						<fieldset class="panelform">
                         <?php //echo $message;        
     				break;
     			}
@@ -391,84 +389,21 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
             case 3:
                         //There is a version installed, but it is older than 6.0.8 and we can't upgrade it
                         $application->enqueueMessage( 'There was a problem with the install. You may be using a version older than 6.0.8. Please contact customer service at www.JoomlaBibleStudy.org' ) ;
+						echo '<fieldset class="panelform">';
                         return false;
             break;
+
             case 4:
             //There is no version installed so we run the fresh installation routine
                         require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.fresh.install.php');
                         $install = new jbsFreshInstall();
                         $message = $install->jbsFresh();
                         echo JHtml::_('sliders.panel','JBS Fresh Installation Version 7.0.0', 'publishing-details'); ?>
+						
                         <fieldset class="panelform">
-                         <?php echo $message; 
+                         <?php echo $message;
             break;
         }
-?>
-<div class="width-100">
-
-<fieldset class="panelform">
-<legend><?php echo 'Installation/Upgrade Results'; ?></legend>  
-    
-<?php echo JHtml::_('sliders.start','content-sliders-1',array('useCookie'=>1)); ?>
-    
-<?php
-echo JHtml::_('sliders.panel','CSS', 'publishing-details'); ?>                     
-<fieldset class="panelform">
- 
-    <table><tr><td><?php	
-	//Check for presence of css or backup
-    jimport('joomla.filesystem.file');
-    $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
-    $dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
-    $backup = JPATH_SITE.DS.'images'.DS.'biblestudy.css';
-    $cssexists = JFile::exists($dest);  
-    $backupexists = JFile::exists($backup);
-    if (!$cssexists)
-    {
-        echo '<br /><font color="red"><strong>CSS File not found.</strong> </font>';
-        if ($backupexists)
-        {
-            echo '<br />Backup CSS file found at /images/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=copycss">Click here to copy from backup.</a>';
-        }
-    else
-    {
-        $copysuccess = JFile::copy($src, $dest);
-        if ($copysuccess)
-        {
-            echo '<br />CSS File copied from distribution source';
-        }
-        else
-        {
-            echo '<br />Problem writing file. Manually copy /components/com_biblestudy/assets/css/biblestudy.css.dist to biblestudy.css';
-        }
-    }    
-    }
-    //Check for default details text link image and copy if not present
-    $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'images'.DS.'textfile24.png';
-    $dest = JPATH_SITE.DS.'images'.DS.'textfile24.png';
-    $imageexists = JFile::exists($dest);
-    if (!$imageexists)
-    {
-        echo "<br /><br />Copying default details link image to images folder";
-        if ($imagesuccess = JFile::copy($src, $dest))
-        {
-            echo '<br />Success copying image to images folder';
-        }
-        else
-        {
-            echo '<br />Problem copying details link image to images folder. Manually copy from /components/com_biblestudy/images/textfile24.png to images folder';
-        }
-    }
-	?></td><tr></table>
-        
-	
-    <?php echo JHtml::_('sliders.end'); ?>
-</fieldset>
-</div> <!--end of div for panelform -->
-<?php
-
-	// Rest of footer
-}
-  
+	} //Function Installer
 } // end of class
 ?>

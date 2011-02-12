@@ -5,6 +5,7 @@
  * @copyright 2011
  */
 defined('_JEXEC') or die();
+
 class jbsFreshInstall{
     
 function jbsFresh()
@@ -382,8 +383,7 @@ function jbsFresh()
             `title` = "Default",
             `text` = "textfile24.png", 
             `pdf` = "pdf24.png"
-            ;';
-        
+            ';
          $msg = $this->performdb($query);
          $msg2 = $msg2.$msg;
      $query = "CREATE TABLE IF NOT EXISTS `#__bsms_version` (
@@ -400,8 +400,7 @@ function jbsFresh()
     $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-2-12', `build`='700', `versionname`='1Kings', `versiondate`='2011-02-15'";
         $msg = $this->performdb($query);
         $msg2 = $msg2.$msg;
-         $include =  JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.install.special.php';      
-                 
+         $include =  JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.install.special.php';
        	$fileCheck = file_exists($include);
 					if($fileCheck) {
 						ob_start();
@@ -417,12 +416,10 @@ function jbsFresh()
                 $msg2 = $msg2.$msg;
                 $msg = '<div >'.$error.'<pre>'.$include.'</pre></div></td>';
                 $msg2 = $msg2.$msg;
-          $res = '<table><tr><td>Fresh Installation of Joomla Bible Study version 7.0.0</td></tr>';  
+          $res = 'Fresh Installation of Joomla Bible Study version 7.0.0';  
        
-        $result_table .= $res.$msg2.'</table>';
-        
-        
-        
+        $result_table .= $res.$msg2.'';
+  
         return $result_table;
     }
     
@@ -433,26 +430,19 @@ function jbsFresh()
         if (!$query){$results = "Error. No query found"; return $results;}
         $db->setQuery($query);
         $db->query();
-        
         		if ($db->getErrorNum() != 0)
 					{
 						$error = "DB function failed with error number ".$db->getErrorNum()."<br /><font color=\"red\">";
 						$error .= $db->stderr(true);
 						$error .= "</font>";
-						
-					
 					}
 					else
 					{
 						$error = "";
-						
 					}
-                    $results .= '<tr><td><div >'.$error.'<pre>';
-                    $results .= $query.'</pre></div></td>';
-        
-        
+                    $results .= '<div >'.$error.'<pre>';
+                    $results .= $query.'</pre></div>';
        return $results;
     }
-
 }
 ?>
