@@ -9,6 +9,8 @@
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 JHtml::_('script', 'system/multiselect.js', false, true);
+
+
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 $saveOrder = $listOrder == 'mediafile.ordering';
@@ -127,6 +129,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
     </table>
     <div>
         <input type="hidden" name="task" value=""/>
+        <input type = "hidden" name = "option" value = "com_biblestudy" />
         <input type="hidden" name="boxchecked" value="0"/>
         <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
         <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>

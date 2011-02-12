@@ -7,6 +7,10 @@ defined('_JEXEC') or die('Restricted access');
 define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
 
+require_once(JPATH_ADMINISTRATOR.DS.'includes'.DS.'toolbar.php');
+$doc =& JFactory::getDocument();
+$doc->addScript("includes" .DS. "js" .DS. "joomla.javascript.js");
+
 // Require the base controller
 jimport("joomla.application.component.controller");
 $controller = JController::getInstance('biblestudy');
