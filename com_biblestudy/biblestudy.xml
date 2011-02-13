@@ -56,24 +56,24 @@
     <menu view="cpanel" img="../components/com_biblestudy/images/biblemenu.png" alt="COM_BIBLESTUDY">COM_BIBLESTUDY</menu>
     <submenu>
       <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
-      <menu link="index.php?option=com_biblestudy&amp;view=cpanel" view="cpanel" alt="COM_BIBLESTUDY_JBS_MNU_CONTROL_PANEL">COM_BIBLESTUDY_JBS_MNU_CONTROL_PANEL</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=studieslist" view="studieslist" alt="COM_BIBLESTUDY_JBS_MNU_STUDIES">COM_BIBLESTUDY_JBS_MNU_STUDIES</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=mediafileslist" view="mediafileslist" alt="COM_BIBLESTUDY_JBS_MNU_MEDIA_FILES">COM_BIBLESTUDY_JBS_MNU_MEDIA_FILES</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=templateslist" view="templateslist" alt="COM_BIBLESTUDY_JBS_MNU_TEMPLATE_DISPLAY">COM_BIBLESTUDY_JBS_MNU_TEMPLATE_DISPLAY</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=teacherlist" view="teacherlist" alt="COM_BIBLESTUDY_JBS_MNU_TEACHERS">COM_BIBLESTUDY_JBS_MNU_TEACHERS</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=medialist" view="medialist" alt="COM_BIBLESTUDY_JBS_MNU_MEDIA_IMAGES">COM_BIBLESTUDY_JBS_MNU_MEDIA_IMAGES</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=serieslist" view="serieslist" alt="COM_BIBLESTUDY_JBS_MNU_SERIES">COM_BIBLESTUDY_JBS_MNU_SERIES</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=serverslist" view="serverslist" alt="COM_BIBLESTUDY_JBS_MNU_SERVERS">COM_BIBLESTUDY_JBS_MNU_SERVERS</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=foldersliet" view="folderslist" alt="COM_BIBLESTUDY_JBS_MNU_SERVER_FOLDERS">COM_BIBLESTUDY_JBS_MNU_SERVER_FOLDERS</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=messagetypelist" view="messagetypelist" alt="COM_BIBLESTUDY_JBS_MNU_MESSAGE_TYPES">COM_BIBLESTUDY_JBS_MNU_MESSAGE_TYPES</menu>
-      <menu link="index.php?option=option=com_biblestudy&amp;view=locationslist" view="locationslist" alt="COM_BIBLESTUDY_JBS_MNU_LOCATIONS">COM_BIBLESTUDY_JBS_MNU_LOCATIONS</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=topicslist" view="topicslist" alt="COM_BIBLESTUDY_JBS_MNU_TOPICS">COM_BIBLESTUDY_JBS_MNU_TOPICS</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=podcastlist" view="podcastlist" alt="COM_BIBLESTUDY_JBS_MNU_PODCASTS">COM_BIBLESTUDY_JBS_MNU_PODCASTS</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=mimetypelist" view="mimetypelist" alt="COM_BIBLESTUDY_JBS_MNU_MIME_TYPES">COM_BIBLESTUDY_JBS_MNU_MIME_TYPES</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=commentslist" view="commentslist" alt="COM_BIBLESTUDY_JBS_MNU_STUDY_COMMENTS">COM_BIBLESTUDY_JBS_MNU_STUDY_COMMENTS</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=sharelist" view="sharelist" alt="COM_BIBLESTUDY_JBS_MNU_SOCIAL_NETWORK_LINKS">COM_BIBLESTUDY_JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=admin&amp;layout=form" view="admin" alt="COM_BIBLESTUDY_JBS_MNU_ADMINISTRATION">COM_BIBLESTUDY_JBS_MNU_ADMINISTRATION</menu>
-      <menu link="index.php?option=com_biblestudy&amp;view=cssedit" view="cssedit" alt="COM_BIBLESTUDY_JBS_MNU_CSS_EDIT">COM_BIBLESTUDY_JBS_MNU_CSS_EDIT</menu>
+      <menu link="option=com_biblestudy&amp;view=cpanel" view="cpanel" alt="COM_BIBLESTUDY_JBS_MNU_CONTROL_PANEL">COM_BIBLESTUDY_JBS_MNU_CONTROL_PANEL</menu>
+      <menu link="option=com_biblestudy&amp;view=studieslist" view="studieslist" alt="COM_BIBLESTUDY_JBS_MNU_STUDIES">COM_BIBLESTUDY_JBS_MNU_STUDIES</menu>
+      <menu link="option=com_biblestudy&amp;view=mediafileslist" view="mediafileslist" alt="COM_BIBLESTUDY_JBS_MNU_MEDIA_FILES">COM_BIBLESTUDY_JBS_MNU_MEDIA_FILES</menu>
+      <menu link="option=com_biblestudy&amp;view=templateslist" view="templateslist" alt="COM_BIBLESTUDY_JBS_MNU_TEMPLATE_DISPLAY">COM_BIBLESTUDY_JBS_MNU_TEMPLATE_DISPLAY</menu>
+      <menu link="option=com_biblestudy&amp;view=teacherlist" view="teacherlist" alt="COM_BIBLESTUDY_JBS_MNU_TEACHERS">COM_BIBLESTUDY_JBS_MNU_TEACHERS</menu>
+      <menu link="option=com_biblestudy&amp;view=medialist" view="medialist" alt="COM_BIBLESTUDY_JBS_MNU_MEDIA_IMAGES">COM_BIBLESTUDY_JBS_MNU_MEDIA_IMAGES</menu>
+      <menu link="option=com_biblestudy&amp;view=serieslist" view="serieslist" alt="COM_BIBLESTUDY_JBS_MNU_SERIES">COM_BIBLESTUDY_JBS_MNU_SERIES</menu>
+      <menu link="option=com_biblestudy&amp;view=serverslist" view="serverslist" alt="COM_BIBLESTUDY_JBS_MNU_SERVERS">COM_BIBLESTUDY_JBS_MNU_SERVERS</menu>
+      <menu link="option=com_biblestudy&amp;view=foldersliet" view="folderslist" alt="COM_BIBLESTUDY_JBS_MNU_SERVER_FOLDERS">COM_BIBLESTUDY_JBS_MNU_SERVER_FOLDERS</menu>
+      <menu link="option=com_biblestudy&amp;view=messagetypelist" view="messagetypelist" alt="COM_BIBLESTUDY_JBS_MNU_MESSAGE_TYPES">COM_BIBLESTUDY_JBS_MNU_MESSAGE_TYPES</menu>
+      <menu link="option=option=com_biblestudy&amp;view=locationslist" view="locationslist" alt="COM_BIBLESTUDY_JBS_MNU_LOCATIONS">COM_BIBLESTUDY_JBS_MNU_LOCATIONS</menu>
+      <menu link="option=com_biblestudy&amp;view=topicslist" view="topicslist" alt="COM_BIBLESTUDY_JBS_MNU_TOPICS">COM_BIBLESTUDY_JBS_MNU_TOPICS</menu>
+      <menu link="option=com_biblestudy&amp;view=podcastlist" view="podcastlist" alt="COM_BIBLESTUDY_JBS_MNU_PODCASTS">COM_BIBLESTUDY_JBS_MNU_PODCASTS</menu>
+      <menu link="option=com_biblestudy&amp;view=mimetypelist" view="mimetypelist" alt="COM_BIBLESTUDY_JBS_MNU_MIME_TYPES">COM_BIBLESTUDY_JBS_MNU_MIME_TYPES</menu>
+      <menu link="option=com_biblestudy&amp;view=commentslist" view="commentslist" alt="COM_BIBLESTUDY_JBS_MNU_STUDY_COMMENTS">COM_BIBLESTUDY_JBS_MNU_STUDY_COMMENTS</menu>
+      <menu link="option=com_biblestudy&amp;view=sharelist" view="sharelist" alt="COM_BIBLESTUDY_JBS_MNU_SOCIAL_NETWORK_LINKS">COM_BIBLESTUDY_JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
+      <menu link="option=com_biblestudy&amp;view=admin&amp;layout=edit&amp;id=1" view="admin" alt="COM_BIBLESTUDY_JBS_MNU_ADMINISTRATION">COM_BIBLESTUDY_JBS_MNU_ADMINISTRATION</menu>
+      <menu link="option=com_biblestudy&amp;view=cssedit" view="cssedit" alt="COM_BIBLESTUDY_JBS_MNU_CSS_EDIT">COM_BIBLESTUDY_JBS_MNU_CSS_EDIT</menu>
       <!-- Instead of link you can specify individual link attributes -->
     </submenu>
     <!-- Administration Main File Copy Section -->
@@ -96,7 +96,7 @@
       <folder>lib</folder>
       <folder>install</folder>
       <folder>images</folder>
-    </files>
+	</files>
     <languages folder="admin/languages">
       <language tag="en-GB">en-GB.com_biblestudy.ini</language>
       <language tag="en-GB">en-GB.com_biblestudy.menu.ini</language>
