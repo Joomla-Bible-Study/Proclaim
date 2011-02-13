@@ -106,27 +106,27 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('teacher_id'); ?>
-                    <?php echo $this->form->getInput('teacher_id', null, $this->admin->params['teacher_id']); ?>
+                    <?php echo $this->form->getInput('teacher_id', null, empty($this->item->teacher_id) ? $this->admin->params['teacher_id'] : $this->item->teacher_id) ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('location_id'); ?>
-                    <?php echo $this->form->getInput('location_id', null, $this->admin->params['location_id']); ?>
+                    <?php echo $this->form->getInput('location_id', null, empty($this->item->location_id) ? $this->admin->params['location_id'] : $this->item->location_id) ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('series_id'); ?>
-                    <?php echo $this->form->getInput('series_id', null, $this->admin->params['series_id']); ?>
+                    <?php echo $this->form->getInput('series_id', null, empty($this->item->series_id) ? $this->admin->params['series_id'] : $this->item->series_id) ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('topics_id'); ?>
-                    <?php echo $this->form->getInput('topics_id', null, $this->admin->params['topic_id']); ?>
+                    <?php echo $this->form->getInput('topics_id', null, empty($this->item->topics_id) ? $this->admin->params['topics_id'] : $this->item->topics_id) ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('messagetype'); ?>
-                    <?php echo $this->form->getInput('messagetype', null, $this->admin->params['messagetype']); ?>
+                    <?php echo $this->form->getInput('messagetype', null, empty($this->item->messagetype) ? $this->admin->params['messagetype'] : $this->item->messagetype) ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('thumbnailm'); ?>
-                    <?php echo $this->form->getInput('thumbnailm', null, $this->admin->params['default_study_image']); ?>
+                    <?php echo $this->form->getInput('thumbnailm', null, empty($this->item->thumbnailm) ? $this->admin->params['thumbnailm'] : $this->item->thumbnailm) ?>
                     </li>
                     <li>
                     <?php echo $this->form->getLabel('studytext'); ?>
@@ -154,7 +154,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('user_id'); ?>
-                    <?php echo $this->form->getInput('user_id', null, $this->admin->user_id); ?>
+                    <?php echo $this->form->getInput('user_id', null, empty($this->item->user_id) ? $this->admin->user_id : $this->item->user_id) ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('show_level'); ?>

@@ -327,6 +327,19 @@ class biblestudyModelstudiesedit extends modelClass {
     }
 
     /**
+     * Overloads the JModelAdmin save routine in order to impload the user show level
+     *
+     * @param array $data
+     * @return <Boolean> True on sucessfull save
+     * @since   7.0
+     */
+    public function save($data) {
+        //Implode only if they selected at least one user level. Otherwise just clear the the user_level field
+        $data['show_level'] = empty($data['show_level']) ? '' : implode(',', $data['show_level']);
+        return parent::save($data);
+    }
+
+    /**
      *
      * @return <type>
      * @since   7.0
@@ -335,6 +348,7 @@ class biblestudyModelstudiesedit extends modelClass {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.studiesedit.data', array());
         if (empty($data))
             $data = $this->getItem();
+            $data->show_level = explode(',', $data->show_level);
 
         return $data;
     }
