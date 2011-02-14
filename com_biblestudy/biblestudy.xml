@@ -17,11 +17,10 @@
   <creationDate>January 2011</creationDate>
   <description>Joomla Bible Study</description>
   <updateservers>
-		<server type="extension">http://www.joomlabiblestudy.com/updates/jbs.xml</server>
+		<server type="collection" priority="2" name="Collection Update Site">http://www.joomlabiblestudy.com/updates/jbs.xml</server>
   </updateservers>
   <!-- Front end file, media and language specification -->
   <filename>biblestudy.xml</filename>
-  <!-- <filename>biblestudy.uninstall.php</filename> -->
   <files folder="site">
     <filename>index.html</filename>
     <filename>biblestudy.php</filename>
@@ -41,8 +40,14 @@
     <folder>lib</folder>
     <folder>languages</folder>
   </files>
+  <!-- Need to start using this
+  	<media destination="com_biblestudy">
+		<filename>com_beta.jpg</filename>
+	</media>
+	-->
+	
   <!--  Legacy 1.5 Language Support -->
-  <!-- Note: Replace this with the actual path to the language file -->
+  <!-- Note: Replace this with the actual path to the language file
   <languages folder="site/languages">
     <language tag="en-GB">en-GB.com_biblestudy.ini</language>
     <language tag="cs-CS">cs-CS.com_biblestudy.ini</language>
@@ -51,7 +56,8 @@
     <language tag="hu-HU">hu-HU.com_biblestudy.ini</language>
     <language tag="nl-NL">nl-NL.com_biblestudy.ini</language>
     <language tag="no-NO">no-NO.com_biblestudy.ini</language>
-  </languages>
+  </languages> -->
+  
   <administration>
     <menu view="cpanel" img="../components/com_biblestudy/images/biblemenu.png" alt="COM_BIBLESTUDY">COM_BIBLESTUDY</menu>
     <submenu>
@@ -76,6 +82,7 @@
       <menu link="option=com_biblestudy&amp;view=cssedit" view="cssedit" alt="COM_BIBLESTUDY_JBS_MNU_CSS_EDIT">COM_BIBLESTUDY_JBS_MNU_CSS_EDIT</menu>
       <!-- Instead of link you can specify individual link attributes -->
     </submenu>
+	
     <!-- Administration Main File Copy Section -->
     <files folder="admin">
       <filename>index.html</filename>
@@ -97,6 +104,9 @@
       <folder>install</folder>
       <folder>images</folder>
 	</files>
+  
+  <!--  Legacy 1.5 Language Support -->
+  <!-- Note: Replace this with the actual path to the language file -->
     <languages folder="admin/languages">
       <language tag="en-GB">en-GB.com_biblestudy.ini</language>
       <language tag="en-GB">en-GB.com_biblestudy.menu.ini</language>
@@ -117,12 +127,17 @@
       <language tag="no-NO">no-NO.com_biblestudy.menu.ini</language>
       <language tag="no-NO">no-NO.com_biblestudy.sys.ini</language>
     </languages>
+	
    <files>
       <filename>biblestudy.script.php</filename>
    </files>
   </administration>
-  <!-- Runs on install/uninstall/update; New in 1.6 -->
-	<installfile>biblestudy.install.php</installfile>
-	<uninstallfile>biblestudy.uninstall.php</uninstallfile>    
+  
+  	<!--  Dependencies -->
+	<dependencies>
+		<dependency type="platform" name="joomla" operator="=" version="1.6" />
+	</dependencies>
+  
     <scriptfile>biblestudy.script.php</scriptfile>
+	
 </extension>

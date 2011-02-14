@@ -4,41 +4,7 @@
  * @author Tom Fuller
  * @copyright 2011
  */
-defined('_JEXEC') or die();
-class jbsFreshInstall{
 
-function performdb($query)
-    {
-        $db = JFactory::getDBO();
-        $results = '';
-        if (!$query){$results = "Error. No query found"; return $results;}
-        $db->setQuery($query);
-        $db->query();
-        
-        		if ($db->getErrorNum() != 0)
-					{
-						$error = "DB function failed with error number " . $db->getErrorNum() ."<br /><font color='red'>";
-						$error .= $db->stderr(true);
-						$error .= "</font>";
-						
-					
-					}
-					else
-					{
-						$error = "";
-						
-					}
-                    $results .= '<tr><td><div >'.$error.'<pre>';
-                    $results .= $query . '</pre></div></td>';
-        
-        
-       return $results;
-    }
-    
-function jbsFresh()
-    {
-        $msg = '';
-        $msg2 = '';
 		die("hello im a donkey");
         $query = "CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `id` int(11) NOT NULL,
