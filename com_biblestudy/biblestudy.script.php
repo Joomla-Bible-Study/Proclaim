@@ -9,6 +9,7 @@
  * @link http://www.JoomlaBibleStudy.org
  *
  * Install Based on Kunena Component
+ * Referince http://svn.joomla.org/project/cms/development/trunk/tests/_data/installer_packages/
  **/
  //
  // Dont allow direct linking
@@ -24,7 +25,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 class com_biblestudyInstallerScript {
 
 	function install($parent) {
-		echo '&lt;p&gt;'. JText::_('COM_BIBLESTUDY_16_CUSTOM_INSTALL_SCRIPT') . '&lt;/p&gt;';
+		echo '<p>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_INSTALL_SCRIPT') . '</p>';
 		$db =& JFactory::getDBO();
 			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'jbs7.0.0.sql');
 			$db->setQuery($query);
@@ -32,7 +33,7 @@ class com_biblestudyInstallerScript {
 	}
 
 	function uninstall($parent) {
-		//echo '&lt;p&gt;'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UNINSTALL_SCRIPT') .'&lt;/p&gt;';
+		//echo '<p>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UNINSTALL_SCRIPT') .'</p>';
 		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 		require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'params.php');
 
@@ -202,7 +203,7 @@ class com_biblestudyInstallerScript {
 	} //end of function uninstall()
 
 	function update($parent) {
-		echo '&lt;p&gt;'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UPDATE_SCRIPT') .'&lt;/p&gt;';
+		echo '<p>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UPDATE_SCRIPT') .'</p>';
 
     ?>
  <?php
@@ -594,26 +595,26 @@ echo JHtml::_('sliders.panel','CSS', 'publishing-details'); ?>
     jimport('joomla.filesystem.file');
     $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
     $dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
-    $backup = JPATH_SITE.DS.'images'.DS.'biblestudy.css';
+    $backup = JPATH_SITE.DS.'media'.DS.'com_biblestudy'.DS.'backup'.DS.'biblestudy.css';
     $cssexists = JFile::exists($dest);  
     $backupexists = JFile::exists($backup);
     if (!$cssexists)
     {
-        echo '<br /><font color="red"><strong>CSS File not found.</strong> </font>';
+        echo '<p><font color="red"><strong>'.JText::sprintf('COM_BIBLESTUDY_16_CSS_FILE_NOT_FOUND').</strong> </font></p>';
         if ($backupexists)
         {
-            echo '<br />Backup CSS file found at /images/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=copycss">Click here to copy from backup.</a>';
+            echo '<p>Backup CSS file found at /images/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=copycss">Click here to copy from backup.</a></p>';
         }
     else
     {
         $copysuccess = JFile::copy($src, $dest);
         if ($copysuccess)
         {
-            echo '<br />CSS File copied from distribution source';
+            echo '<p>'. JText::sprintf('COM_BIBLESTUDY_16_CSS_COPIED') . 'CSS File copied from distribution source'.'</p>';
         }
         else
         {
-            echo '<br />Problem writing file. Manually copy /components/com_biblestudy/assets/css/biblestudy.css.dist to biblestudy.css';
+            echo '<P>'.JText::sprintf('COM_BIBLESTUDY_16_CSS_COPIED_DISCRIPTION').'Problem writing file. Manually copy /components/com_biblestudy/assets/css/biblestudy.css.dist to biblestudy.css</p>';
         }
     }    
     }
@@ -643,7 +644,7 @@ echo JHtml::_('sliders.panel','CSS', 'publishing-details'); ?>
 
 	// Rest of footer
 ?>
-<!--<div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
+<div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
 <img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="flote: left" />
 <strong>Thank you for using Joomla Bible Study!</strong>
 <br />
@@ -665,7 +666,7 @@ It is very important that you do a couple of things when you first install the c
 		<p>Bible Study Component <em>for Joomla! </em> &copy; by <a
 			href="http://www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a>.
 		All rights reserved.</p>
-</div> -->
+</div>
 <?php
 		// An example of setting a redirect to a new location after the install is completed
 		//$parent-&gt;getParent()-&gt;set('redirect_url', 'http://www.google.com');
@@ -675,4 +676,3 @@ It is very important that you do a couple of things when you first install the c
   
 } // end of class
 ?>
-</pre><div id="directions_extension" style="position: absolute !important; background-image: initial !important; background-attachment: initial !important; background-origin: initial !important; background-clip: initial !important; background-color: rgb(238, 238, 255) !important; border-top-width: 1px !important; border-right-width: 1px !important; border-bottom-width: 1px !important; border-left-width: 1px !important; border-top-style: solid !important; border-right-style: solid !important; border-bottom-style: solid !important; border-left-style: solid !important; border-top-color: rgb(170, 170, 255) !important; border-right-color: rgb(170, 170, 255) !important; border-bottom-color: rgb(170, 170, 255) !important; border-left-color: rgb(170, 170, 255) !important; padding-top: 3px !important; padding-right: 3px !important; padding-bottom: 3px !important; padding-left: 3px !important; border-top-left-radius: 5px 5px !important; border-top-right-radius: 5px 5px !important; border-bottom-right-radius: 5px 5px !important; border-bottom-left-radius: 5px 5px !important; display: none; background-position: initial initial !important; background-repeat: initial initial !important; "></div></body></html>
