@@ -1,20 +1,18 @@
 <?php
-
 /**
- * @version     $Id: cssedit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
+ * CSS Edit Controller for Bible Study Component
+ *
+
  */
-//No Direct Access
+
+// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.controllerform');
-
-    abstract class controllerClass extends JControllerForm {
-
-    }
-
-class biblestudyControllercssedit extends controllerClass
+/**
+ * Series Edit Controller
+ *
+ */
+class biblestudyControllercssedit extends JController
 {
 	/**
 	 * constructor (registers additional tasks to methods)
@@ -30,7 +28,7 @@ class biblestudyControllercssedit extends controllerClass
 
 function cancel()
 	{
-		$msg = JText::_( 'JBS_CMN_OPERATION_CANCELLED' );
+		$msg = JText::_( 'Operation Cancelled' );
 		$this->setRedirect( 'index.php?option=com_biblestudy&view=cpanel', $msg );
 	}
 	/**
@@ -72,7 +70,7 @@ if ($return)
 		{
 
 
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$filename);
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$filename);
 		}
  // mosRedirect( "index2.php?option=$option&task=manage_css", "CSS has been reset to default settings." );
 }
@@ -81,7 +79,7 @@ if ($return)
 
 
 
-	function legacySave()
+	function save()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -93,7 +91,7 @@ if ($return)
 		$filecontent	= JRequest::getVar('filecontent', '', 'post', 'string', JREQUEST_ALLOWRAW);
 
 		if (!$filecontent) {
-			$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CSS_CONTENT_EMPTY'));
+			$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Content empty.'));
 		}
 
 		// Set FTP credentials, if given
@@ -111,10 +109,10 @@ if ($return)
 		if ($return)
 		{
 
-		$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('JBS_CSS_FILE_SAVED'));
+		$mainframe->redirect('index.php?option='.$option.'&view=cssedit',  JText::_('File Saved'));
 		}
 		else {
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
 		}
 	}
     function backup()
@@ -135,10 +133,10 @@ if ($return)
     		if ($return)
     		{
 
-    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSS_BACKUP_SAVED'));
+    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('Backup Saved to /images folder'));
     		}
     		else {
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
     		}
     }
 
@@ -160,10 +158,10 @@ if ($return)
     		if ($return)
     		{
 
-    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSS_BACKUP_RESTORED'));
+    		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('Backup restored from /images folder'));
     		}
     		else {
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
+                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('Operation Failed').': '.JText::_('Failed to open file for writing').': '.$file);
     		}
     }
 }

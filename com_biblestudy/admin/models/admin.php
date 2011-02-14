@@ -55,7 +55,8 @@ class biblestudyModeladmin extends adminClass {
      * @access	public
      * @return	boolean	True on success
      */
-    function store() {
+ 
+    function store($updateNulls = 'false') {
         $row = & $this->getTable();
 
         $data = JRequest::get('post');
@@ -91,10 +92,10 @@ class biblestudyModeladmin extends adminClass {
 	 * @return	JTable	A database object
 	 * @since	1.6
 	 */
-//	public function getTable($type = 'Admin', $prefix = 'Admin', $config = array())
-//	{
-//		return JTable::getInstance($type, $prefix, $config);
-//	}
+	public function getTable($type = 'admin', $prefix = 'Table', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
     /**
      * Gets the form from the XML file.
      *
@@ -113,9 +114,20 @@ class biblestudyModeladmin extends adminClass {
     }
 
     public function getItem($pk = null) {
-        return parent::getItem($pk);
+        return parent::getItem(1);
     }
 
+public function getItem2($pk = 1)
+	{
+		if ($item = parent::getItem($pk)) {
+			// Convert the params field to an array.
+			$registry = new JRegistry;
+			$registry->loadJSON($item->params);
+			$item->params = $registry->toArray();
+		}
+
+		return $item;
+	}
     protected function loadFormData() {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.admin.data', array());
         if (empty($data))

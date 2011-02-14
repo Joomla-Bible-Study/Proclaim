@@ -1,24 +1,15 @@
-<?php
-/**
- * @version     $Id: default.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+<?php defined('_JEXEC') or die('Restricted access'); ?>
 
-//No Direct Access
-defined('_JEXEC') or die('Restricted access'); 
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'JBS_CSS_CSSEDIT_INTRO' ); ?></legend>
+		<legend><?php echo JText::_( 'CSS - which controls the look and feel' ); ?></legend>
 
 		<table class="admintable">
         <tr>
 			<td width="100" align="right" class="key">
 				<label for="css">
-					<?php echo JText::_( 'JBS_CSS_CSS' ); ?>:
+					<?php echo JText::_( 'CSS' ); ?>:
 				</label>
 			</td>
 			<td>

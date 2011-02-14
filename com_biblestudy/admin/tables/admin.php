@@ -8,7 +8,7 @@ defined('_JEXEC') or die('Restricted access');
 
 
 
-class Tableadmin extends JTable
+class TableAdmin extends JTable
 {
 	/**
 	 * Primary Key
@@ -30,6 +30,7 @@ class Tableadmin extends JTable
 	var $download = null;
 	var $main = null;
 	var $showhide = null;
+    var $drop_tables = null;
 
 	 public function bind($array, $ignore = '') 
         {
@@ -40,6 +41,7 @@ class Tableadmin extends JTable
                         $parameter->loadArray($array['params']);
                         $array['params'] = (string)$parameter;
                 }
+                
                 return parent::bind($array, $ignore);
         }
 
@@ -63,7 +65,7 @@ class Tableadmin extends JTable
 	 *
 	 * @param object Database connector object
 	 */
-	function Tableadmin(& $db) {
+	function TableAdmin(& $db) {
 		parent::__construct('#__bsms_admin', 'id', $db);
 	}
     
@@ -74,15 +76,19 @@ class Tableadmin extends JTable
 	 * @return	boolean	True on success, false on failure.
 	 * @since	1.6
 	 */
-	public function store($updateNulls = false)
+	
+    public function store($updateNulls = false)
 	{
-
+        if (!$this->id)
+        {
+            return false;
+        }
 		// Attempt to store the user data.
-        $oldrow = JTable::getInstance('admin', 'Table');
-			if (!$oldrow->load($this->id) && $oldrow->getError())
-			{
-				$this->setError($oldrow->getError());
-			}
+   //     $oldrow = JTable::getInstance('admin', 'Table');
+	//		if (!$oldrow->load($this->id) && $oldrow->getError())
+	//		{
+	//			$this->setError($oldrow->getError());
+	//		}
 		return parent::store($updateNulls);
 	}
 
