@@ -9,7 +9,7 @@
  * @link http://www.JoomlaBibleStudy.org
  *
  * Install Based on Kunena Component
- * Referince http://svn.joomla.org/project/cms/development/trunk/tests/_data/installer_packages/
+ * Reference http://svn.joomla.org/project/cms/development/trunk/tests/_data/installer_packages/
  **/
  //
  // Dont allow direct linking
@@ -18,7 +18,7 @@
       <script type="text/javascript">
 window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler'), $$('div#content-sliders-1.pane-sliders > .panel > div.pane-slider'), {onActive: function(toggler, i) {toggler.addClass('pane-toggler-down');toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_content-sliders-1',$$('div#content-sliders-1.pane-sliders > .panel > h3').indexOf(toggler));},onBackground: function(toggler, i) {toggler.addClass('pane-toggler');toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');i.removeClass('pane-down');if($$('div#content-sliders-1.pane-sliders > .panel > h3').length==$$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler').length) Cookie.write('jpanesliders_content-sliders-1',-1);},duration: 300,display: 1,show: 1,opacity: false,alwaysHide: true}); });
  </script>
- <?PHP
+ <?php
  
 // Bible Study wide defines
 
