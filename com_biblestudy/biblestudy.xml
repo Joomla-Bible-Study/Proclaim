@@ -48,7 +48,7 @@
 	-->
 	
   <!--  Legacy 1.5 Language Support -->
-  <!-- Note: Replace this with the actual path to the language file
+  <!-- Note: Replace this with the actual path to the language file -->
   <languages folder="site/languages">
     <language tag="en-GB">en-GB/en-GB.com_biblestudy.ini</language>
     <language tag="cs-CS">cs-CS/cs-CS.com_biblestudy.ini</language>
@@ -57,7 +57,7 @@
     <language tag="hu-HU">hu-HU/hu-HU.com_biblestudy.ini</language>
     <language tag="nl-NL">nl-NL/nl-NL.com_biblestudy.ini</language>
     <language tag="no-NO">no-NO/no-NO.com_biblestudy.ini</language>
-  </languages> -->
+  </languages>
   
   <administration>
     <menu view="cpanel" img="../components/com_biblestudy/images/biblemenu.png" alt="COM_BIBLESTUDY">COM_BIBLESTUDY</menu>
@@ -73,7 +73,7 @@
       <menu link="option=com_biblestudy&amp;view=serverslist" view="serverslist" alt="COM_BIBLESTUDY_JBS_MNU_SERVERS">COM_BIBLESTUDY_JBS_MNU_SERVERS</menu>
       <menu link="option=com_biblestudy&amp;view=foldersliet" view="folderslist" alt="COM_BIBLESTUDY_JBS_MNU_SERVER_FOLDERS">COM_BIBLESTUDY_JBS_MNU_SERVER_FOLDERS</menu>
       <menu link="option=com_biblestudy&amp;view=messagetypelist" view="messagetypelist" alt="COM_BIBLESTUDY_JBS_MNU_MESSAGE_TYPES">COM_BIBLESTUDY_JBS_MNU_MESSAGE_TYPES</menu>
-      <menu link="option=option=com_biblestudy&amp;view=locationslist" view="locationslist" alt="COM_BIBLESTUDY_JBS_MNU_LOCATIONS">COM_BIBLESTUDY_JBS_MNU_LOCATIONS</menu>
+      <menu link="option=com_biblestudy&amp;view=locationslist" view="locationslist" alt="COM_BIBLESTUDY_JBS_MNU_LOCATIONS">COM_BIBLESTUDY_JBS_MNU_LOCATIONS</menu>
       <menu link="option=com_biblestudy&amp;view=topicslist" view="topicslist" alt="COM_BIBLESTUDY_JBS_MNU_TOPICS">COM_BIBLESTUDY_JBS_MNU_TOPICS</menu>
       <menu link="option=com_biblestudy&amp;view=podcastlist" view="podcastlist" alt="COM_BIBLESTUDY_JBS_MNU_PODCASTS">COM_BIBLESTUDY_JBS_MNU_PODCASTS</menu>
       <menu link="option=com_biblestudy&amp;view=mimetypelist" view="mimetypelist" alt="COM_BIBLESTUDY_JBS_MNU_MIME_TYPES">COM_BIBLESTUDY_JBS_MNU_MIME_TYPES</menu>
@@ -110,22 +110,16 @@
   <!-- Note: Replace this with the actual path to the language file -->
     <languages folder="admin/languages">
       <language tag="en-GB">en-GB/en-GB.com_biblestudy.ini</language>
-      <language tag="en-GB">en-GB/en-GB.com_biblestudy.menu.ini</language>
       <language tag="en-GB">en-GB/en-GB.com_biblestudy.sys.ini</language>
       <language tag="cs-CZ">cs-CZ/cs-CZ.com_biblestudy.ini</language>
-      <language tag="cs-CZ">cs-CZ/cs-CZ.com_biblestudy.menu.ini</language>
       <language tag="cs-CZ">cs-CZ/cs-CZ.com_biblestudy.sys.ini</language>
       <language tag="de-DE">de-DE/de-DE.com_biblestudy.ini</language>
-      <language tag="de-DE">de-DE/de-DE.com_biblestudy.menu.ini</language>
-      <language tag="de-DE">/de-DEde-DE.com_biblestudy.sys.ini</language>
+      <language tag="de-DE">de-DE/de-DE.com_biblestudy.sys.ini</language>
       <language tag="es-ES">es-ES/es-ES.com_biblestudy.ini</language>
-      <language tag="es-ES">es-ES/es-ES.com_biblestudy.menu.ini</language>
       <language tag="es-ES">es-ES/es-ES.com_biblestudy.sys.ini</language>
-      <language tag="hu_HU">hu-HU/hu-HU.com_biblestudy.menu.ini</language>
       <language tag="hu_HU">hu-HU/hu-HU.com_biblestudy.sys.ini</language>
       <language tag="nl-NL">nl-NL/nl-NL.com_biblestudy.ini</language>
       <language tag="no-NO">nl-NL/no-NO.com_biblestudy.ini</language>
-      <language tag="no-NO">no-NO/no-NO.com_biblestudy.menu.ini</language>
       <language tag="no-NO">no-NO/no-NO.com_biblestudy.sys.ini</language>
     </languages>
 	

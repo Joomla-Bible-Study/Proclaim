@@ -600,7 +600,7 @@ echo JHtml::_('sliders.panel','CSS', 'publishing-details'); ?>
     $backupexists = JFile::exists($backup);
     if (!$cssexists)
     {
-        echo '<p><font color="red"><strong>'.JText::sprintf('COM_BIBLESTUDY_16_CSS_FILE_NOT_FOUND').</strong> </font></p>';
+        echo '<p><font color="red"><strong>'.JText::sprintf('COM_BIBLESTUDY_16_CSS_FILE_NOT_FOUND').'</strong> </font></p>';
         if ($backupexists)
         {
             echo '<p>Backup CSS file found at /images/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=copycss">Click here to copy from backup.</a></p>';
