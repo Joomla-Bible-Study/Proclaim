@@ -59,6 +59,7 @@ class biblestudyModeladmin extends adminClass {
     function store($updateNulls = 'false') {
         $row = & $this->getTable();
 
+
         $data = JRequest::get('post');
         //dump ($data, 'post: ');
         // Bind the form fields to the hello table
@@ -82,6 +83,7 @@ class biblestudyModeladmin extends adminClass {
 
         return true;
     }
+
 
 /**
 	 * Returns a reference to the a Table object, always creating it.
@@ -156,6 +158,9 @@ public function getItem2($pk = 1)
       return $item;
       }
      */
+
+
+
 }
 
 ?>

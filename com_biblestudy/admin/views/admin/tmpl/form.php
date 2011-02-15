@@ -9,8 +9,22 @@ defined('_JEXEC') or die();
 
 $params = $this->form->getFieldsets();
 ?>
- 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
+ <script type="text/javascript">
+	Joomla.submitbutton3 = function(pressbutton) {
+		var form = document.getElementById('adminForm');
+			form.tooltype.value = 'players';
+            form.admin.task = 'tools';
+			form.submit();
+	   }
+
+	Joomla.submitbutton4 = function(pressbutton) {
+		var form = document.getElementById('adminForm');
+			form.tooltype.value = 'popups';
+            form.admin.task = 'tools';
+			form.submit();
+	   }
+</script>
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
    <?php echo JHtml::_('tabs.start'); ?>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PARAMS'), 'admin-settings'); ?>
     <div class="width-100">
@@ -196,16 +210,62 @@ $params = $this->form->getFieldsets();
                     </li>
                 </ul>
             </fieldset>
-             <input type="hidden" name="task" value="" />
-    <?php echo JHtml::_('form.token'); ?>
-</form>
+             
+             
         </div>
     </div>
     <div class="clr"></div>
-  
+  <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_PLAYER_SETTINGS'), 'admin-player-settings'); ?>
+                        <div class="width-100">
+                            <div class="width-50 fltlft">
+                                <fieldset class="panelform">
+                                    <legend><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></legend>
+                                    <ul>
+                                        <li>
+                        <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
+                        <?php echo $this->playerstats; ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('from', 'params'); ?>
+                        <?php echo $this->form->getInput('from', 'params'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('to', 'params'); ?>
+                        <?php echo $this->form->getInput('to', 'params'); ?>
+                    </li>
+                    <li>
+                        <input type="submit" value="Submit" onclick="Joomla.submitbutton3()"/>
+                    </li>
+                </ul>
+            </fieldset>
         </div>        
     </div>
-    <div class="clr"></div>
+   
+    <div class="width-50 fltrt">
+            <fieldset class="panelform">
+                <legend><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></legend>
+                <ul>
+                    <li>
+                        <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?><br/>
+                        <?php echo $this->popups; ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('pFrom', 'params'); ?>
+                        <?php echo $this->form->getInput('pFrom', 'params'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('pTo', 'params'); ?>
+                        <?php echo $this->form->getInput('pTo', 'params'); ?>
+                    </li>
+                    <li>
+                        <input type="submit" value="Submit" onclick="Joomla.submitbutton4()"/>
+                    </li>
+                </ul>
+            </fieldset>
+    </div>
+    <input type="hidden" name="task" value="" />
+    <?php echo JHtml::_('form.token'); ?>
+</form>
     <?php echo JHtml::_('tabs.end'); ?>
                        
 

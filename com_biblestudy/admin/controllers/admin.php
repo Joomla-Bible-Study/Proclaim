@@ -36,6 +36,28 @@ class biblestudyControlleradmin extends controllerClass {
         $this->registerTask('apply', 'save');
     }
 
+    function tools()
+    {
+        $tool = JRequest::getVar('tooltype','','post');
+        switch ($tool)
+        {
+            case 'players':
+            $player = $this->changePlayers();
+            if (!$player) {
+			$msg = JText::_('JBS_MSG_FAILURE');
+            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+		      }
+            break;
+            
+            case 'popups':
+            $popups = $this->changePopup();
+            if (!$popups) {
+			$msg = JText::_('JBS_MSG_FAILURE');
+            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+			}
+            break;
+        }
+    }
     /**
      * display the edit form
      * @return void
@@ -169,8 +191,6 @@ class biblestudyControlleradmin extends controllerClass {
         } else {
             $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL');
         }
-
-
 
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg);
     }
