@@ -202,64 +202,7 @@ $params = $this->form->getFieldsets();
         </div>
     </div>
     <div class="clr"></div>
-    <form action="index.php" method="post" name="adminForm2" id="adminForm2">
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_PLAYER_SETTINGS'), 'admin-player-settings'); ?>
-                        <div class="width-100">
-                            <div class="width-50 fltlft">
-                                <fieldset class="panelform">
-                                    <legend><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></legend>
-                                    <ul>
-                                        <li>
-                        <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
-                        <?php echo $this->playerstats; ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('from', 'params'); ?>
-                        <?php echo $this->form->getInput('from', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('to', 'params'); ?>
-                        <?php echo $this->form->getInput('to', 'params'); ?>
-                    </li>
-                    <li>
-                        <input type="submit" value="Submit" />
-                    </li>
-                </ul>
-            </fieldset>
-            <input type="hidden" name="option" value="com_biblestudy" />
-            <input type="hidden" name="task" value="changePlayers" />
-            <input type="hidden" name="controller" value="admin" />
-            <?php echo JHtml::_('form.token'); ?>
-            </form>
-        </div>
-        
-        <form action="index.php" method="post" name="adminForm3" id="adminForm3">
-        <div class="width-50 fltrt">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></legend>
-                <ul>
-                    <li>
-                        <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?><br/>
-                        <?php echo $this->popups; ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('pFrom', 'params'); ?>
-                        <?php echo $this->form->getInput('pFrom', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('pTo', 'params'); ?>
-                        <?php echo $this->form->getInput('pTo', 'params'); ?>
-                    </li>
-                    <li>
-                        <input type="submit" value="Submit" />
-                    </li>
-                </ul>
-            </fieldset>
-             <input type="hidden" name="option" value="com_biblestudy" />
-            <input type="hidden" name="task" value="changePopup" />
-            <input type="hidden" name="controller" value="admin" />
-            <?php echo JHtml::_('form.token'); ?>
-            </form>
+  
         </div>        
     </div>
     <div class="clr"></div>

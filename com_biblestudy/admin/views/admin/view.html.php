@@ -41,10 +41,11 @@ class biblestudyViewadmin extends JView {
         JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
         JToolBarHelper::save('admin.save');
         JToolBarHelper::apply('admin.apply');
-        JToolBarHelper::cancel();
-        JToolBarHelper::custom('resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
-        JToolBarHelper::custom('resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
-        JToolBarHelper::custom('resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false);
+        JToolBarHelper::cancel('admin.cancel');
+        JToolBarHelper::divider();
+        JToolBarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
+        JToolBarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
+        JToolBarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false);
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }
