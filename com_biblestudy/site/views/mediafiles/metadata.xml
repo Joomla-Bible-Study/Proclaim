@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<view title="JBS_CMN_MEDIAFILES_LIST_VIEW">
+	<view title="JBS_MNU_MEDIAFILES_LIST_EDIT">
 		<message>
 			<![CDATA[JBS_MNU_MEDIAFILES_LIST_VIEW_DESC]]>
 		</message>

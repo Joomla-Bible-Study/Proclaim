@@ -34,7 +34,8 @@ class biblestudyViewmessages extends JView {
         		JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
         		return false;
         	} 
-       
+     //Puts a new record link at the top of the form
+      echo '<a href="index.php?option=com_biblestudy&view=message&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';  
         parent::display($tpl);
 
     }

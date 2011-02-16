@@ -8,6 +8,12 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
+// Access check.
+if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) 
+{
+        return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+}
+
 // Check for PHP4
 if (defined('PHP_VERSION')) {
     $version = PHP_VERSION;

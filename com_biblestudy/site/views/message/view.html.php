@@ -25,7 +25,7 @@ class biblestudyViewmessage extends JView {
         $this->setLayout('form');
 
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin();
+        $this->admin = BsmHelper::getAdmin($isSite = true);
         //check permissions to enter studies
         $admin_settings = new JBSAdmin();
         $permission = $admin_settings->getPermission();

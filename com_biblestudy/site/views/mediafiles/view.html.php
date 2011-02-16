@@ -44,7 +44,8 @@ class biblestudyViewmediafiles extends JView {
 
  // render the toolbar on the page. rendering it here means that it is displayed on every view of your component.
 // echo biblestudyHelperToolbar::getToolbar();
- echo '<a href="index.php?option=com_biblestudy&view=mediafile&layout=form">New Record</a>';
+      //Puts a new record link at the top of the form
+      echo '<a href="index.php?option=com_biblestudy&view=mediafile&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';
 
         parent::display($tpl);
     }

@@ -26,12 +26,14 @@ $params = $this->form->getFieldsets();
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
    <?php echo JHtml::_('tabs.start'); ?>
+    
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PARAMS'), 'admin-settings'); ?>
     <div class="width-100">
         <div class="width-60 fltlft">
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></legend>
                 <ul>
+                    
                     <li>
                         <?php echo $this->form->getLabel('compat_mode', 'params'); ?>
                         <?php echo $this->form->getInput('compat_mode', 'params'); ?>
@@ -262,6 +264,22 @@ $params = $this->form->getFieldsets();
                     </li>
                 </ul>
             </fieldset>
+    </div>
+    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PERMISSIONS'), 'admin-settings'); ?>
+    <div class="width-100">
+    
+    <div class="width-60 fltlft">
+            <fieldset class="panelform">
+                <legend><?php echo JText::_('JBS_ADM_PERMISSION_SETTINGS'); ?></legend>
+                <ul>
+                    <li>
+                        <?php echo $this->form->getLabel('rules', 'params'); ?>
+                        <?php echo $this->form->getInput('rules', 'params'); ?>
+                    </li>
+                </ul>
+            </fieldset>
+
+    </div>
     </div>
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>

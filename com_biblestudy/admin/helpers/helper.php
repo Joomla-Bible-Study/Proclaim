@@ -5,66 +5,30 @@ require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. '
  * @copyright 2009
  * @desc This is a general helper file. In the future we should bring lots of small functions into this file
  */
-//This function is designed to extract an Itemid for the component if none exists in the GET variable. Mainly to address problems with 
-// All Videos Reloaded
- function getItemidLink(){
-  $itemid = null;
-  
-  $admin_params = getAdminsettings();
-  $itemidlinktype = $admin_params->get('itemidlinktype', 1);
-  $itemidlinkview = $admin_params->get('itemidlinkview', 'studieslist');
-  $itemidlinknumber = $admin_params->get('itemidlinknumber',1);
-  $menus  = &JApplication::getMenu('site', array()); 
-  
-  //Get the correct componentid from #__menu
-  $db	= & JFactory::getDBO();
-  
-  $jversion = JOOMLA_VERSION;
-    if ($jversion == '5') 
+
+
+    
+function getActions($messageId = 0)
         {
-                $query = "SELECT id, componentid, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
-                $db->setQuery($query);
-                $db->query();
-                $component = $db->loadObject();
-                $items  = $menus->getItems('componentid', $component->componentid);
-        }
-        else {
-                $query = "SELECT id, component_id, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
-                $db->setQuery($query);
-                $db->query();
-                $component = $db->loadObject();
-                $items  = $menus->getItems('component_id', $component->componentid);
-            }
-  
-   foreach ($items as $menu) {
-    if (@$menu->query['view'] == $itemidlinkview) {
-     $itemid = $menu->id; 
-     break;
-    }
-   }
-   if (!isset($itemid) && count($items)) {
-    $itemid = $items[0]->id; 
-   }
+                $user  = JFactory::getUser();
+                $result        = new JObject;
  
-  switch ($itemidlinktype)
-   			{
-			   	case 0:
-			   	$itemid = '';
-			   	break;
-			   	
-			   	case 1:
-   				//Look for an itemid in the com_menu table from the /helpers/helper.php file
-   				$itemid = $itemid; //dump($itemid, 'itemid: ');
-   				break;
-   				
-			   	case 2:
-   				//Add in an Itemid from the parameter
-   				$itemid = $itemidlinknumber;
-   				break;
-   			} 
-   			
-  return($itemid);
- }
+                if (empty($messageId)) {
+                        $assetName = 'com_biblestudy';
+                }
+                
+ 
+                $actions = array(
+                        'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.delete'
+                );
+ 
+                foreach ($actions as $action) {
+                        $result->set($action,        $user->authorise($action, $assetName));
+                }
+ 
+                return $result;
+        }
+ 
 function getAdminsettings()
 	{
 			$db =& JFactory::getDBO();
@@ -139,4 +103,5 @@ else { document.getElementById(d).style.display = "none"; }
 
 		return $showhide;
 	}
+
 ?>
