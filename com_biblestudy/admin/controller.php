@@ -16,11 +16,10 @@ class biblestudyController extends JController
 
 	function display()
 	{
-            if (JOOMLA_VERSION == '6')
-            {
+            
                 require_once(JPATH_COMPONENT .DS. 'helpers' .DS. 'submenus.php');
                 BiblestudyHelper::addSubmenu(JRequest::getWord('view', 'cpanel'));
-            }
+           
             $view = JRequest::getWord('view', 'cpanel');
             $layout = JRequest::getWord('layout', 'default');
             $id = JRequest::getInt('id');
@@ -28,8 +27,26 @@ class biblestudyController extends JController
 				$type = JRequest::getWord('view');
 				if (!$type){
 				JRequest::setVar( 'view'  , 'cpanel');
-			//	$model = $this->getModel('studieslist');
 				}
+                if ($type == 'admin')
+                {
+                  $tool = JRequest::getVar('tooltype','','post');
+                    if ($tool)
+                    {
+                        switch ($tool)
+                        {
+                            case 'players':
+                            $player = $this->changePlayers();
+                            $this->setRedirect('index.php?option=com_biblestudy&view=admin', $player);
+                		    break;
+                            
+                            case 'popups':
+                            $popups = $this->changePopup();
+                            $this->setRedirect('index.php?option=com_biblestudy&view=admin', $popups);
+                            break;
+                        }
+                    }
+                }
 		
 		if(JRequest::getCmd('view') == 'studydetails')
 		{
@@ -127,6 +144,61 @@ class biblestudyController extends JController
             echo json_encode($files);
             
         }
+
+ function changePlayers() {
+
+        $db = JFactory::getDBO();
+        $msg = null;
+        $data		= JRequest::getVar('jform', array(), 'post', 'array');
+        $from = $data['params']['from'];
+        $to = $data['params']['to'];
+        switch ($from) {
+            case '100':
+                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` IS NULL";
+                break;
+
+            default:
+                $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` = '$from'";
+                break;
+        }
+        $db->setQuery($query);
+        $db->query();
+        $num_rows = $db->getAffectedRows();
+        if ($db->getErrorNum() > 0) {
+            $msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
+        } else {
+            
+            $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL').'<br /> '.JText::_('JBS_ADM_AFFECTED_ROWS').': '.$num_rows;
+           // $msg .= 'from: '.$from.' to: '.$to.' Query: '.$query;
+        }
+
+        return $msg;
+    }
+
+    function changePopup() {
+
+        $db = JFactory::getDBO();
+        $msg = null;
+        $data		= JRequest::getVar('jform', array(), 'post', 'array');
+        $from = $data['params']['pFrom'];
+        $to = $data['params']['pTo'];
+        
+        $query = "UPDATE #__bsms_mediafiles SET `popup` = '$to' WHERE `popup` = '$from'";
+        $db->setQuery($query);
+        $db->query();
+        $num_rows = $db->getAffectedRows();
+        if ($db->getErrorNum() > 0) {
+            $msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
+        } else {
+            
+            $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL').'<br /> '.JText::_('JBS_ADM_AFFECTED_ROWS').': '.$num_rows;
+           // $msg .= 'from: '.$from.' to: '.$to.' Query: '.$query;
+        }
+
+        return $msg;
+    }
+
+
 }
 
 ?>

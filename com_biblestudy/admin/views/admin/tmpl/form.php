@@ -13,14 +13,14 @@ $params = $this->form->getFieldsets();
 	Joomla.submitbutton3 = function(pressbutton) {
 		var form = document.getElementById('adminForm');
 			form.tooltype.value = 'players';
-            form.admin.task = 'tools';
+            form.task = 'tools';
 			form.submit();
 	   }
 
 	Joomla.submitbutton4 = function(pressbutton) {
 		var form = document.getElementById('adminForm');
 			form.tooltype.value = 'popups';
-            form.admin.task = 'tools';
+            form.task = 'tools';
 			form.submit();
 	   }
 </script>
@@ -282,6 +282,7 @@ $params = $this->form->getFieldsets();
     </div>
     </div>
     <input type="hidden" name="task" value="" />
+    <input type="hidden" name="tooltype" value="" />
     <?php echo JHtml::_('form.token'); ?>
 </form>
     <?php echo JHtml::_('tabs.end'); ?>
