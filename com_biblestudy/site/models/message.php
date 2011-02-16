@@ -365,7 +365,8 @@ class biblestudyModelmessage extends modelClass {
 
 	public function getTable($type = 'Message', $prefix = 'Table', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		JTable::addIncludePath(JPATH_COMPONENT.DS.'tables');
+        return JTable::getInstance($type, $prefix, $config);
 	}
 }
 
