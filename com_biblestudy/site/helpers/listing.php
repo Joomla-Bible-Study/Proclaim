@@ -398,15 +398,7 @@ return $listing;
 
 	function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, $islink, $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template)
 		{
-            require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
-            $admin = new JBSAdmin();
-            $allow = $admin->getPermission();
-
-if (($allow) && ($rowcolid == 'row1col1')){
-
-$Itemid = JRequest::getVar('Itemid');
-}
-
+            
 			$cell = '
 						<td class="'.$rowcolid.' '.$elementid;
 						if ($lastcol == 1) {$cell .= ' lastcol';}
@@ -414,10 +406,7 @@ $Itemid = JRequest::getVar('Itemid');
 						if ($colspan > 1) {$cell .= 'colspan="'.$colspan.'" ';}
 						//if ($rowspan > 1){$cell .='rowspan="'.$rowspan.'"';}
 						$cell .= '>';
-						if (($rowcolid == 'row1col1') && $allow){
-						  
-                          
-              $cell .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&task=studiesedit.edit&id=' . (int) $id3).'"> ['.JText::_('JBS_CMN_EDIT').'] </a>';}
+						
 						if ($islink > 0){$cell .= getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);}
 						$cell .= $element;
 						switch ($islink)

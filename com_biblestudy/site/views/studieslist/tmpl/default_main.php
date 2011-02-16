@@ -24,14 +24,6 @@ $params = $this->params;
 //print_r ($this->admin_params);
 $teachers = $params->get('teacher_id');
 
-if ($this->allow)
-			{?>
-			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>
-			<?php
-			$studiesedit_call = JView::loadHelper('studiesedit');
-			$studiesedit = getStudiesedit($row = null, $params);
-			echo $studiesedit;
-			}
 
 $listingcall = JView::loadHelper('listing');
 
