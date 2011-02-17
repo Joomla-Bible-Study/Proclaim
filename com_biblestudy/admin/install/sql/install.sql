@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS #__bsms_install ( fielda int(10) );
