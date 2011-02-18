@@ -26,189 +26,8 @@ class com_biblestudyInstallerScript {
 
 	function install($parent) {
 		echo '<p>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_INSTALL_SCRIPT') . '</p>';
-		$db =& JFactory::getDBO();
-			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'jbs7.0.0.sql');
-			$db->setQuery($query);
-			$db->queryBatch();
-	}
-
-	function uninstall($parent) {
-		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
-		require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'params.php');
-
-		$db =& JFactory::getDBO();
-				$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
-				$db->query();
-				$admin = $db->loadObject();
-       
-
-				$drop_tables = $admin->drop_tables;
-
-	if ($drop_tables > 0)
-	{
-		$drop_result = '<div><H3>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UNINSTALL_SCRIPT') .'</H3>';
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_studies");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_teachers");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_topics");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_servers");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_series");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_message_type");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </tp> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_folders");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_order");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_search");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_schemaversion");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_media");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_books");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_podcast");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_mimetype");
-		$db->query();
-		if ($db->getErrorNum()) {
-				$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_mediafiles");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_templates");
-		$db->query();
-		if ($db->getErrorNum()) {
-				$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_comments");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_admin");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_studytopics");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_version");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_share");
-		$db->query();
-		if ($db->getErrorNum()) {
-				$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_locations");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-				}
-    $db->setQuery ("DROP TABLE IF EXISTS #__bsms_timeset");
-		$db->query();
-		if ($db->getErrorNum()) {
-					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-					
-					}
-	$mainframe =& JFactory::getApplication(); ?>
-
-	<h2><?php echo JText::_('Joomla_Bible_Study_Uninstalled'); ?></h2>
-	<?php
 		
-		$drop_result .= '</div>';
-		echo '<div><p>'.$drop_result.' </p></div> '; //dump ($drop_result, 'drop_result: ');
-	}
-	else
-	{
-		print '<div><p>Database tables have not been removed <br /> Be sure to uninstall the module and plugin as well. </p> <p> To complete remove Bible Study Management System, remove all database tables that start with #__bsms (or jos_bsms in most cases). </p></div>';
-	}
-
- 
-	} //end of function uninstall()
-
-	function update($parent) {
-		echo '<p>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UPDATE_SCRIPT') .'</p>';
-
-    ?>
- <?php
-    
-
-        $application = JFactory::getApplication();
+		$application = JFactory::getApplication();
         $db = JFactory::getDBO();
         
         //First we check to see if there is a current version database installed. This will have a #__bsms_version table so we check for it's existence.
@@ -571,7 +390,192 @@ class com_biblestudyInstallerScript {
                         $application->enqueueMessage( '' . JText::_('UPGRADE_JBS_VERSION_CANT_UPGRADE') . '') ;
                         return false;
             break;
+			
+			case 4:
+			$db =& JFactory::getDBO();
+			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'jbs7.0.0.sql');
+			$db->setQuery($query);
+			$db->queryBatch();
+			echo JHtml::_('sliders.panel', JText::_('INSTALLING_VERSION_700') , 'publishing-details'); ?>
+            			</fieldset>
+                        <!-- <fieldset class="panelform"> -->
+                        <?php //echo $message;
+			break;
 		}
+	}
+
+	function uninstall($parent) {
+		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+		require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'params.php');
+
+		$db =& JFactory::getDBO();
+				$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
+				$db->query();
+				$admin = $db->loadObject();
+       
+
+				$drop_tables = $admin->drop_tables;
+
+	if ($drop_tables > 0)
+	{
+		$drop_result = '<div><H3>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UNINSTALL_SCRIPT') .'</H3>';
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_studies");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_teachers");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_topics");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_servers");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_series");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_message_type");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </tp> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_folders");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_order");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_search");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_schemaversion");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_media");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_books");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_podcast");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_mimetype");
+		$db->query();
+		if ($db->getErrorNum()) {
+				$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_mediafiles");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_templates");
+		$db->query();
+		if ($db->getErrorNum()) {
+				$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_comments");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_admin");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_studytopics");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_version");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_share");
+		$db->query();
+		if ($db->getErrorNum()) {
+				$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+		$db->setQuery ("DROP TABLE IF EXISTS #__bsms_locations");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+				}
+    $db->setQuery ("DROP TABLE IF EXISTS #__bsms_timeset");
+		$db->query();
+		if ($db->getErrorNum()) {
+					$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
+					
+					}
+	$mainframe =& JFactory::getApplication(); ?>
+
+	<h2><?php echo JText::_('Joomla_Bible_Study_Uninstalled'); ?></h2>
+	<?php
+		
+		$drop_result .= '</div>';
+		echo '<div><p>'.$drop_result.' </p></div> '; //dump ($drop_result, 'drop_result: ');
+	}
+	else
+	{
+		print '<div><p>Database tables have not been removed <br /> Be sure to uninstall the module and plugin as well. </p> <p> To complete remove Bible Study Management System, remove all database tables that start with #__bsms (or jos_bsms in most cases). </p></div>';
+	}
+
+ 
+	} //end of function uninstall()
+
+	function update($parent) {
+		echo '<p>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UPDATE_SCRIPT') .'</p>';
+ 
 	} // End Update
 
 	function preflight($type, $parent) {
