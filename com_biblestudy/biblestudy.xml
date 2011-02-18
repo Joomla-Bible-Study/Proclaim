@@ -13,7 +13,7 @@
   <license>GNU/GPL</license>
   <version>7.0.0</version>
   <creationDate>January 2011</creationDate>
-  <description>Joomla Bible Study</description>
+  <description>COM_BIBLESTUDY_XML_DESCRIPTION</description>
  	
 	<!-- Installer Hooks -->
 	<!-- <installfile>biblestudy.install.php</installfile>  Deprecated in 1.6 -->
