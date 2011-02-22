@@ -37,7 +37,7 @@ class JElementbook extends JElement
 		$db->setQuery($query);
 		$options = $db->loadObjectList();
 		//dump ($options, 'options: ');
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('JBS_CMN_SELECT_BOOK').' -', 'booknumber', 'bookname'));
+		array_unshift($options, JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_BOOK'), 'booknumber', 'bookname'));
 
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'booknumber', 'bookname', $value, $control_name.$name );
 	}

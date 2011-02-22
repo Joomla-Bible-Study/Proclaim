@@ -34,7 +34,7 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.series')); ?>
             </select>
             <select name="filter_message_type" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JBS_CMN_MESSAGE_TYPE'); ?></option>
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
             </select>
             <select name="filter_years" class="inputbox" onchange="this.form.submit()">

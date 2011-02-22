@@ -34,7 +34,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 						echo '<select name="filter_book" id="filter_book" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
 						if (!$filter_book ) {
 						echo 'selected="selected"';}
-						echo '>- '.JText::_('JBS_CMN_SELECT_BOOK').' -'.'</option>';
+						echo '>'.JText::_('JBS_CMN_SELECT_BOOK').'</option>';
                         foreach ($bookid as $bookid2) {
 	                        $format = $bookid2['text'];
 	                        $output = JText::sprintf($format);
@@ -64,7 +64,7 @@ $query2 = 'SELECT booknumber AS value, bookname AS text, published'
 						echo '<select name="filter_topic" id="filter_topic" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
 						if (!$filter_topic ) {
 						echo 'selected="selected"';}
-						echo '>- '.JText::_('JBS_CMN_SELECT_TOPIC').' -'.'</option>';
+						echo '>'.JText::_('JBS_CMN_SELECT_TOPIC').'</option>';
                         foreach ($topicsid as $topicsid2) {
 	                        $format = $topicsid2['text'];
 	                        $output = JText::sprintf($format);

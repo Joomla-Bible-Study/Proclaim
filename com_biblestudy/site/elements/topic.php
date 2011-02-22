@@ -36,7 +36,7 @@ class JElementtopic extends JElement
 				' ORDER BY #__bsms_topics.topic_text ASC';
 		$db->setQuery($query);
 		$options = $db->loadObjectList();
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('JBS_CMN_SELECT_TOPIC').' -', 'topics_id', 'topic_text'));
+		array_unshift($options, JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_TOPIC'), 'topics_id', 'topic_text'));
 
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'topics_id', 'topic_text', $value, $control_name.$name );
 	}

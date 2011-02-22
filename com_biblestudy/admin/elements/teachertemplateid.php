@@ -24,7 +24,7 @@ class JElementteachertemplateid extends JElement
 		;
 		$db->setQuery( $query );
 		$options = $db->loadObjectList( );
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('JBS_CMN_SELECT_TEMPLATE').' -', 'id', 'text'));
+		array_unshift($options, JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_TEMPLATE'), 'id', 'text'));
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'id', 'text', $value, $control_name.$name );
 	}
 }

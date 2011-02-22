@@ -36,7 +36,7 @@ class JElementseries extends JElement
 				' ORDER BY #__bsms_series.series_text ASC';
 		$db->setQuery($query);
 		$options = $db->loadObjectList();
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('JBS_CMN_SELECT_SERIES').' -', 'series_id', 'series_text'));
+		array_unshift($options, JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_SERIES'), 'series_id', 'series_text'));
 
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'series_id', 'series_text', $value, $control_name.$name );
 	}

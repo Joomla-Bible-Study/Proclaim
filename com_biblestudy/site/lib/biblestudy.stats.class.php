@@ -39,7 +39,7 @@ function top_score_site($item)
    // $Itemid = JRequet::getInt('Itemid','get');
 	$admin_params = getAdminsettings();
 	$limit = $admin_params->get('popular_limit','25');
-	$top = '<select onchange="goTo()" id="urlList"><option value="">- '.JText::_('JBS_CMN_SELECT_POPULAR_STUDY').' -</option>';
+	$top = '<select onchange="goTo()" id="urlList"><option value="">'.JText::_('JBS_CMN_SELECT_POPULAR_STUDY').'</option>';
  	$final = array();
     $final2 = array();
     $user =& JFactory::getUser();

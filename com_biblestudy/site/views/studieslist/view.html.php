@@ -142,38 +142,38 @@ class biblestudyViewstudieslist extends JView {
         if ($params->get('use_go_button', 0) == 0) {
             $go = 'onchange="this.form.submit()"';
         }
-        $types[] = JHTML::_('select.option', '0', '- ' . JTEXT::_('JBS_CMN_SELECT_TEACHER') . ' -');
+        $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEACHER'));
         $types = array_merge($types, $teachers);
         $lists['teacher_id'] = JHTML::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_teacher");
 
         //Build Series List for drop down menu
-        $types3[] = JHTML::_('select.option', '0', '- ' . JTEXT::_('JBS_CMN_SELECT_SERIES') . ' -');
+        $types3[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_SERIES'));
         $types3 = array_merge($types3, $series);
         $lists['seriesid'] = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_series");
 
         //Build message types
-        $types4[] = JHTML::_('select.option', '0', '- ' . JTEXT::_('JBS_CMN_SELECT_MESSAGETYPE') . ' -');
+        $types4[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_MESSAGETYPE'));
         $types4 = array_merge($types4, $messageTypes);
         $lists['messagetypeid'] = JHTML::_('select.genericlist', $types4, 'filter_messagetype', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_messagetype");
 
         //build study years
-        $years[] = JHTML::_('select.option', '0', '- ' . JTEXT::_('JBS_CMN_SELECT_YEAR') . ' -');
+        $years[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_YEAR'));
         $years = array_merge($years, $studyYears);
         $lists['studyyear'] = JHTML::_('select.genericlist', $years, 'filter_year', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_year");
 
         //build locations
-        $loc[] = JHTML::_('select.option', '0', '- ' . JTEXT::_('JBS_CMN_SELECT_LOCATION') . ' -');
+        $loc[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_LOCATION'));
         $loc = array_merge($loc, $locations);
         $lists['locations'] = JHTML::_('select.genericlist', $loc, 'filter_location', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_location");
 
         //Build Topics
-        $top[] = JHTML::_('select.option', '0', '- ' . JTEXT::_('JBS_CMN_SELECT_TOPIC') . ' -');
+        $top[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TOPIC'));
         $top = array_merge($top, $topics);
         $lists['topics'] = JHTML::_('select.genericlist', $top, 'filter_topic', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_topic");
 
 
         //Build Books
-        $boo[] = JHTML::_('select.option', '0', '- ' . JTEXT::_('JBS_CMN_SELECT_BOOK') . ' -');
+        $boo[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_BOOK'));
         $boo = array_merge($boo, $book);
         $lists['books'] = JHTML::_('select.genericlist', $boo, 'filter_book', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_book");
 
@@ -407,7 +407,7 @@ class biblestudyViewstudieslist extends JView {
         $lists['chapters'] = JHTML::_('select.genericlist', $chap, 'filter_chapter', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_chapter");
 
         //Build order
-        $ord[] = JHTML::_('select.option', '0', '- ' . JTEXT::_('JBS_CMN_SELECT_ORDER') . ' -');
+        $ord[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_ORDER'));
         $ord = array_merge($ord, $orders);
         $lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_orders");
 

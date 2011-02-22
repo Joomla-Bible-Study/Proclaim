@@ -31,9 +31,9 @@ class biblestudyViewTemplateedit extends JView {
     protected function addToolbar() {
         $isNew = $this->item->id == 0;
         if ($isNew) {
-            $text = JText::_('JBS_NEW');
+            $text = JText::_('JBS_CMN_NEW');
         } else {
-            $text = JText::_('JBS_EDIT');
+            $text = JText::_('JBS_CMN_EDIT');
         }
         JToolBarHelper::title(JText::_('JBS_TPL_CREATE_TEMPLATE'), 'templates.png');
         JToolbarHelper::save('templateedit.save');

@@ -100,18 +100,18 @@ class biblestudyViewserieslist extends JView {
 	  	$this->assignRef('main', $main);
 	  	
 		//Build Series List for drop down menu
-		$types3[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_SERIES' ) .' -' );
+		$types3[] 		= JHTML::_('select.option',  '0', JText::_( 'JBS_CMN_SELECT_SERIES' ));
 		$types3 			= array_merge( $types3, $series );
 		$lists['seriesid']	= JHTML::_('select.genericlist',   $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series" );
 
 		//build orders
-		$ord[] 		= JHTML::_('select.option',  '0', '- '. JText::_( 'JBS_CMN_SELECT_ORDER' ) .' -' );
+		$ord[] 		= JHTML::_('select.option',  '0', JText::_( 'JBS_CMN_SELECT_ORDER' ));
 		$orders 			= array_merge( $ord, $orders );
 		$lists['sorting']	= JHTML::_('select.genericlist',   $orders, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders" );
 
 
 		//Build order
-		$ord[]		= JHTML::_('select.option', '0', '- '. JTEXT::_('JBS_CMN_SELECT_ORDER') . ' -');
+		$ord[]		= JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_ORDER'));
 		$ord		= array_merge($ord, $orders);
 		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_orders");
 		
