@@ -11,7 +11,7 @@ class jbs622Install{
     
   function upgrade622()
   {
- 
+    $msg = false;
     $db = JFactory::getDBO();
     $query = "SELECT count(`id`) FROM  #__bsms_mediafiles WHERE `params` LIKE '%podcast1%' GROUP BY `id`";
     $db->setQuery($query);
@@ -21,7 +21,8 @@ class jbs622Install{
     $db->setQuery($query);
     $db->query();
     $results = $db->loadObjectList();
-    
+  if ($results)
+  {  
     $count = 0;
     foreach ($results AS $result)
     {
@@ -37,6 +38,9 @@ class jbs622Install{
     if ($db->getErrorNum() != 0)
     {$msg = false;}
     else {$msg = true;}
+  }
+  $application = JFactory::getApplication();
+  $application->enqueueMessage( ''. JText::_('Upgrading from build 622') .'' ) ;
     return $msg;
  }
 } 

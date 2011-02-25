@@ -16,21 +16,16 @@ $query = "CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
 					`published` TINYINT(1) NOT NULL DEFAULT '1',
 					PRIMARY KEY (`id`) ) TYPE=MyISAM CHARACTER SET `utf8`";
             $msg = $this->performdb($query);
-            $msg2 = $msg2.$msg;   
+              
 			
             $query = "ALTER TABLE #__bsms_studies ADD COLUMN show_level varchar(100) NOT NULL default '0' AFTER user_name";
 			$msg = $this->performdb($query);
-            $msg2 = $msg2.$msg;   
             
             $query = "ALTER TABLE #__bsms_studies ADD COLUMN location_id INT(3) NULL AFTER show_level";
             $msg = $this->performdb($query);
-            $msg2 = $msg2.$msg;   
-            
-$res = '<table><tr><td>Upgrade Joomla Bible Study to version 7.0.0</td></tr>';  
-        
-        $result_table = $res.$msg2.'</table>';
-
-        return $result_table;
+$application = JFactory::getApplication();            
+$application->enqueueMessage( ''. JText::_('Upgrading to 6.0.11a') .'' ) ;
+        return $msg;
 }
 function performdb($query)
     {

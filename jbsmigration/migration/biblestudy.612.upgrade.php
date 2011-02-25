@@ -29,7 +29,7 @@ if (!$cssexists)
 		}
 		
 	}
-
+$application->enqueueMessage( ''. JText::_('Upgrading from build 612') .'' ) ;
 return $msg;
 }
 

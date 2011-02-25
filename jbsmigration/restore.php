@@ -96,6 +96,7 @@ class JBSImport
 					}
        else
        {
+        //To Do - delete uploaded file
         $result = true;
         return $result;
        }
@@ -127,6 +128,7 @@ class JBSImport
         {
             $result = true;            
         }
+        //To do: delete uploaded file
 		return $result;
 	}
     

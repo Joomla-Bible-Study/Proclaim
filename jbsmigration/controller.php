@@ -37,6 +37,8 @@ class jbsmigrationController extends JController
             $export = new JBSExport();
             $result = $export->exportdb();
             if ($result){
+                
+                
                 $application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS') .'' ) ;
                 }
             else
@@ -52,7 +54,20 @@ function doimport()
             $application = JFactory::getApplication();
             $import = new JBSImport();
             $result = $import->importdb();
-            if ($result){$application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS') .'' ) ;}
+            if ($result)
+            {
+                $migrate = new JBSMigrate();
+                $migration = $migrate->migrate();
+                if ($migration)
+                {
+                    $application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS') .'' ) ;
+                }
+                else
+                {
+                    $application->enqueueMessage( ''. JText::_('JBS_EI_FAILURE') .'' ) ;
+                }
+                $application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS') .'' ) ;
+            }
             else
             {
                 $application->enqueueMessage( ''. JText::_('JBS_EI_FAILURE') .'' ) ;

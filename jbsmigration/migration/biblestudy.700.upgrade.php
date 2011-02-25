@@ -64,30 +64,32 @@ class jbs700Install{
         $db->setQuery($query);
         $db->query();
         $results = $db->loadObjectList();
-        
-//Now run through all the results, pull out the media player and the popup type and move them to their respective db fields
-foreach ($results AS $result)
-{
-    $params = new JParameter($result->params);
-    $player = $params->get('player');
-    $popup = $params->get('internal_popup');
-    if ($player)
+if ($results)
+{        
+    //Now run through all the results, pull out the media player and the popup type and move them to their respective db fields
+    foreach ($results AS $result)
     {
-        if ($player == 2)
+        $params = new JParameter($result->params);
+        $player = $params->get('player');
+        $popup = $params->get('internal_popup');
+        if ($player)
         {
-            $player = 3;
+            if ($player == 2)
+            {
+                $player = 3;
+            }
+            $query = "UPDATE #__bsms_mediafiles SET `player` = '$player' WHERE `id` = $result->id LIMIT 1";
+            $msg = $this->performdb($query);
+            
         }
-        $query = "UPDATE #__bsms_mediafiles SET `player` = '$player' WHERE `id` = $result->id LIMIT 1";
-        $msg = $this->performdb($query);
+        if ($popup)
+        {
+            $query = "UPDATE #__bsms_mediafiles SET `popup` = '$popup' WHERE `id` = $result->id LIMIT 1";
+            $msg = $this->performdb($query);
+            
+        }
         
     }
-    if ($popup)
-    {
-        $query = "UPDATE #__bsms_mediafiles SET `popup` = '$popup' WHERE `id` = $result->id LIMIT 1";
-        $msg = $this->performdb($query);
-        
-    }
-    
 }
 //Get all the study records
 
@@ -118,8 +120,8 @@ $msg = $this->performdb($query);
 $query = "UPDATE #__bsms_studies SET `show_level` = '7' WHERE `show_level` = '24'";
 $msg = $this->performdb($query);
         
-
-       
+        $application = JFactory::getApplication();
+       $application->enqueueMessage( ''. JText::_('Upgrading to build 700') .'' ) ;
         return $msg;
     }
 

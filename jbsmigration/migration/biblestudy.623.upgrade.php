@@ -27,19 +27,21 @@ $query = 'SELECT id, params FROM #__bsms_mediafiles';
 $db->setQuery($query);
 $db->query();
 $results = $db->loadObjectList();
-foreach ($results AS $result)
+if ($results)
 {
-    $isplayertype = substr_count($result->params,'internal_popup=0');
-    if ($isplayertype)
+    foreach ($results AS $result)
     {
-        $oldparams = $result->params;
-        $newparams = str_replace('internal_popup=0','internal_popup=2',$oldparams);
-        $query = "UPDATE #__bsms_mediafiles SET `params` = '".$newparams."' WHERE id = ".$result->id;
-        $db->setQuery($query);
-        $db->query();
+        $isplayertype = substr_count($result->params,'internal_popup=0');
+        if ($isplayertype)
+        {
+            $oldparams = $result->params;
+            $newparams = str_replace('internal_popup=0','internal_popup=2',$oldparams);
+            $query = "UPDATE #__bsms_mediafiles SET `params` = '".$newparams."' WHERE id = ".$result->id;
+            $db->setQuery($query);
+            $db->query();
+        }
     }
 }
-
 //Now we check again to see if there are any rows that didn't get changed and report that
 $query = "SELECT count(`id`) FROM #__bsms_mediafiles WHERE `params` LIKE '%internal_popup=0%' GROUP BY id";
 $db->setQuery($query);
@@ -52,8 +54,8 @@ $db->query();
     {
         $msg = true;
     }
-
-
+$application = JFactory::getApplication();
+$application->enqueueMessage( ''. JText::_('Upgrading Build 623') .'' ) ;
 return $msg;
 }
 

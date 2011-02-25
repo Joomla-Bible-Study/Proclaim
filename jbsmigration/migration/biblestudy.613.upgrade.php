@@ -10,7 +10,6 @@ class jbs613Install{
     
 function upgrade613()
 {
-$result_table = '<table><tr><td>This routine updaters the database to reflect changes to the way the media player is accessed. If no mediafile records are indicated, then no changes were needed. CSS is also added to support the Landing Page view.</td></tr>';
 
 			$query = "CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `id` int(11) NOT NULL,
@@ -147,61 +146,15 @@ $msg = $this->performdb($query);
 
 
 
-//Read current css file, add share information if not already there, write and close
-jimport('joomla.filesystem.file');
-$src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
-$dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
 
 
 //Now we are going to update the db. We no longer use the field for AVR but it happens in a param so we need to get rid of the internal_viewer after setting the param accordingly
 $database = &JFactory::getDBO();
 $query = "UPDATE #__bsms_mediafiles SET params = 'player=2', internal_viewer = '0' WHERE internal_viewer = '1' AND params IS NULL";
  $msg = $this->performdb($query);
-	
-
-//Now we look inside the css to see if there are share items, if not, we'll add them
-
-
-	$dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
-    $src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
-    $cssexists = JFile::exists($dest);
-    if (!$cssexists) {JFile::copy($src, $dest);}
-	$shareread = JFile::read($dest);
-    
-	$shareexists = 1;
-	$shareexists = substr_count($shareread,'#bsmsshare'); 
-	if ($shareexists < 1)
-	{
-		$csssharecode = '
-		/*Social Networking Items */
-		#bsmsshare {
-		  margin: 0;
-		  border-collapse:separate;
-		  float:right;
-		  border: 1px solid #CFCFCF;
-		  background-color: #F5F5F5;
-		}
-		#bsmsshare th, #bsmsshare td {
-		  text-align:center;
-		  padding:0 0 0 0;
-		  border:none;
-		}
-		#bsmsshare th {
-			color:#0b55c4;
-			font-weight:bold;
-		}';
-			$sharewrite = $shareread.$csssharecode;
-			if (!JFile::write($dest, $sharewrite))
-			{
-				$msg = false;
-			}
-			else
-			{
-				$msg = true;
-			}
-	}
-
-	return $msg;
+$application = JFactory::getApplication();	
+$application->enqueueMessage( ''. JText::_('Upgrading from build 613') .'' ) ;
+return $msg;
  }
  
  function performdb($query)

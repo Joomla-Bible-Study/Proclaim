@@ -85,36 +85,36 @@ class JBSMigrate
                 break;
                 
                 case '624':
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.700.upgrade.php');
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                     //echo $message; 
                 break;
                 
                 case '623':
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.623.upgrade.php');
                     $install = new jbs623Install();
                     $message = $install->upgrade623();
                      //echo $message;
                     
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.700.upgrade.php');
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                     //echo $message;  
                 break;
                 
                 case '622':
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.622.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.622.upgrade.php');
                     $install = new jbs622Install();
                     $message = $install->upgrade622();
                      //echo $message;
                     
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.623.upgrade.php');
                     $install = new jbs623Install();
                     $message = $install->upgrade623();
                      //echo $message;
                     
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.700.upgrade.php');
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                      //echo $message;   
@@ -125,24 +125,24 @@ class JBSMigrate
                     echo JHtml::_('sliders.panel', JText::_('UPGRADE_JBS_VERSION_615') , 'publishing-details'); 
         			 //echo $message;
                     
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.622.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.622.upgrade.php');
                     $install = new jbs622Install();
                     $message = $install->upgrade622();
                     //echo $message;
                     
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.623.upgrade.php');
                     $install = new jbs623Install();
                     $message = $install->upgrade623();
                      //echo $message;
                     
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.700.upgrade.php');
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                      //echo $message;   
                 break;
                 
                 case '614':
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.614.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.614.upgrade.php');
                     $install = new jbs614Install();
                     $message = $install->upgrade614();
                      //echo $message;
@@ -150,17 +150,17 @@ class JBSMigrate
                     $message = 'No special requirements for this version.';
                      //echo $message;
                     
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.622.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.622.upgrade.php');
                     $install = new jbs622Install();
                     $message = $install->upgrade622();
                      //echo $message;
                     
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.623.upgrade.php');
                     $install = new jbs623Install();
                     $message = $install->upgrade623();
                      //echo $message;
                     
-                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
+                    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.700.upgrade.php');
                     $install = new jbs700Install();
                     $message = $install->upgrade700(); 
                      //echo $message;    
@@ -189,12 +189,12 @@ class JBSMigrate
     			
     				case '608':
     				                            
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.611.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.611.upgrade.php');
                         $install = new jbs611Install();
                         $message = $install->upgrade611();
                         //echo $message;
                                                   
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.614.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.614.upgrade.php');
                         $install = new jbs614Install();
                         $message = $install->upgrade614();
                          //echo $message;
@@ -202,17 +202,17 @@ class JBSMigrate
                         $message = 'No special requirements for this version.';
                          //echo $message;
                         
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.622.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.622.upgrade.php');
                         $install = new jbs622Install();
                         $message = $install->upgrade622();
                          //echo $message;
                         
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.623.upgrade.php');
                         $install = new jbs623Install();
                         $message = $install->upgrade623();
                          //echo $message;
                         
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.700.upgrade.php');
                         $install = new jbs700Install();
                         $message = $install->upgrade700(); 
                         //echo $message;     
@@ -220,7 +220,7 @@ class JBSMigrate
     				
     				case '611':
     				      
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.614.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.614.upgrade.php');
                         $install = new jbs614Install();
                         $message = $install->upgrade614();
                          //echo $message;
@@ -228,30 +228,30 @@ class JBSMigrate
                         $message = 'No special requirements for this version.';
                          //echo $message;
                         
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.622.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.622.upgrade.php');
                         $install = new jbs622Install();
                         $message = $install->upgrade622();
                          //echo $message;
                         
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.623.upgrade.php');
                         $install = new jbs623Install();
                         $message = $install->upgrade623();
                          //echo $message;
                         
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.700.upgrade.php');
                         $install = new jbs700Install();
                         $message = $install->upgrade700(); 
                         //echo $message;      
     				break;
     		
     				case '613':
-    				    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.613.upgrade.php');
+    				    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.613.upgrade.php');
                         $install = new jbs613Install();
                         $message = $install->upgrade613();
                          //echo $message;
                         
                                               
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.614.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.614.upgrade.php');
                         $install = new jbs614Install();
                         $message = $install->upgrade614();
                          //echo $message;
@@ -259,17 +259,17 @@ class JBSMigrate
                         $message = 'No special requirements for this version.';
                          //echo $message;
                         
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.622.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.622.upgrade.php');
                         $install = new jbs622Install();
                         $message = $install->upgrade622();
                          //echo $message;
                         
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.623.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.623.upgrade.php');
                         $install = new jbs623Install();
                         $message = $install->upgrade623();
                          //echo $message;
                         
-                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'install' .DS. 'biblestudy.700.upgrade.php');
+                        require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'migration' .DS. 'biblestudy.700.upgrade.php');
                         $install = new jbs700Install();
                         $message = $install->upgrade700(); 
                          //echo $message;        
