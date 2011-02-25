@@ -22,6 +22,7 @@ class jbsmigrationViewjbsmigration extends JView
     
     function addToolbar() 
     {
+        JToolBarHelper::title(JText::_('JBS_EI_TITLE') , 'folder.png');
         jimport( 'joomla.i18n.help' );
         JToolBarHelper::help( 'jbsexportimport', true );
     }

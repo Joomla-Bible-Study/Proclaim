@@ -2,7 +2,7 @@
 
 <form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
 <table>
-<legend><h1><?php echo JText::_('JBS_EI_TITLE');?></h1></legend>
+
     <tr>
     <td><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/export.jpg';?>" alt="Export" height="48" width="48" /></td>
         <td>
@@ -28,6 +28,7 @@
     <tr><td><td><td><?php echo JText::_('JBS_EI_UPLOAD_MAX').': '.ini_get('upload_max_filesize');?><br />
     <?php echo JText::_('JBS_EI_MAX_EXECUTION_TIME').': '.ini_get('max_execution_time');?>
     </td></td><td></tr>
+    <tr><td><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/migrate.jpg';?>" alt="Import" height="48" width="48" /></td><td><a href="index.php?option=com_jbsmigration&task=migrate&run=1"><?php echo JText::_('JBS_EI_MIGRATE_ONLY');?></a></td><td></td></tr>
 </table>
 
 <input type="hidden" name="option" value="com_jbsmigration" />

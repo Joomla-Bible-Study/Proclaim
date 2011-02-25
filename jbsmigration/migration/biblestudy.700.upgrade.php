@@ -15,22 +15,43 @@ class jbs700Install{
         function upgrade700()
     {
         $db = JFactory::getDBO();
-       
+       $messages = array();
         
         //Alter some tables
         $msg = '';
                 
         $query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN `player` int(2) NULL";
         $msg = $this->performdb($query);
-        
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
         $query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN `popup` int(2) NULL";
         $msg = $this->performdb($query);
-        
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
         $query = "DROP TABLE #__bsms_timeset";
         $msg = $this->performdb($query);
-        
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
         $query = "CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
                     `timeset` VARCHAR(14) ,
@@ -38,15 +59,36 @@ class jbs700Install{
                     KEY `timeset` (`timeset`)
                     ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
          $msg = $this->performdb($query);
-        
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
         $query = "INSERT INTO `#__bsms_timeset` SET `timeset`='1281646339', `backup` = '1281646339'";
         $msg = $this->performdb($query);
-        
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
         $query = "INSERT  INTO `#__bsms_media` VALUES (15,'You Tube','You Tube','','youtube24.png','You Tube Video', 1)";
         $msg = $this->performdb($query);
-        
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
         $query = "ALTER TABLE `#__bsms_admin` ADD COLUMN `drop_tables` int(3) NULL default '0' AFTER `showhide`";
         $msg = $this->performdb($query);
@@ -54,11 +96,25 @@ class jbs700Install{
         
         $query = "UPDATE `#__bsms_admin` SET `drop_tables` = 0 WHERE id = 1";
         $msg = $this->performdb($query);
-        
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
        
-        $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-02-12', `build`='1390', `versionname`='1Kings', `versiondate`='2011-02-15'";
+        $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-03-12', `build`='700', `versionname`='1Kings', `versiondate`='2011-03-15'";
         $msg = $this->performdb($query);
-        
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
         $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
         $db->setQuery($query);
@@ -95,34 +151,86 @@ if ($results)
 
 $query = "UPDATE #__bsms_studies SET `show_level` = '1' WHERE `show_level` = '0'";
 $msg = $this->performdb($query);
-
+ if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
 
 $query = "UPDATE #__bsms_studies SET `show_level` = '2' WHERE `show_level` = '18'";
 $msg = $this->performdb($query);
-
+ if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
 
 $query = "UPDATE #__bsms_studies SET `show_level` = '3' WHERE `show_level` = '19'";
 $msg = $this->performdb($query);
-
+ if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
 
 $query = "UPDATE #__bsms_studies SET `show_level` = '4' WHERE `show_level` = '20'";
 $msg = $this->performdb($query);
-
+ if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
 $query = "UPDATE #__bsms_studies SET `show_level` = '5' WHERE `show_level` = '22'";
 $msg = $this->performdb($query);
-
+ if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
 $query = "UPDATE #__bsms_studies SET `show_level` = '6' WHERE `show_level` = '23'";
 $msg = $this->performdb($query);
-
+ if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
 $query = "UPDATE #__bsms_studies SET `show_level` = '7' WHERE `show_level` = '24'";
 $msg = $this->performdb($query);
-        
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }       
         $application = JFactory::getApplication();
        $application->enqueueMessage( ''. JText::_('Upgrading to build 700') .'' ) ;
-        return $msg;
+       $results = array('build'=>'700','messages'=>$messages);
+    
+    return $results;
+        
     }
 
   function performdb($query)
@@ -131,15 +239,17 @@ $msg = $this->performdb($query);
         $results = false;
         $db->setQuery($query);
         $db->query();
-        
-		if ($db->getErrorNum() != 0)
-			{
-				$results = false; return $results;
-			}
-			else
-			{
-				$results = true; return $results;
-            }
+           		if ($db->getErrorNum() != 0)
+					{
+						$results = JText::_('JBS_EI_DB_ERROR').': '.$db->getErrorNum()."<br /><font color=\"red\">";
+						$results .= $db->stderr(true);
+						$results .= "</font>";
+                        return $results;
+					}
+				else
+					{
+						$results = false; return $results;
+					}	
     }
 
 }

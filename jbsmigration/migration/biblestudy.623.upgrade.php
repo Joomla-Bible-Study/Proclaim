@@ -12,7 +12,7 @@ class jbs623Install{
 function upgrade623()
 {
 
-
+$messages = array();
 $db = JFactory::getDBO();
 $before = 0;
 $after = 0;
@@ -42,22 +42,52 @@ if ($results)
         }
     }
 }
-//Now we check again to see if there are any rows that didn't get changed and report that
-$query = "SELECT count(`id`) FROM #__bsms_mediafiles WHERE `params` LIKE '%internal_popup=0%' GROUP BY id";
-$db->setQuery($query);
-$db->query();
-	if ($db->getErrorNum() != 0)
-    {
-        $msg = false;
-    }
-    else
-    {
-        $msg = true;
-    }
-$application = JFactory::getApplication();
-$application->enqueueMessage( ''. JText::_('Upgrading Build 623') .'' ) ;
-return $msg;
+
+$query = "INSERT INTO #__bsms_version SET `version` = '6.2.3', `installdate`='2010-11-03', `build`='623', `versionname`='1Samuel', `versiondate`='2010-11-03'";
+        $msg = $this->performdb($query);
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+ $query = "INSERT INTO #__bsms_version SET `version` = '6.2.4', `installdate`='2010-11-09', `build`='623', `versionname`='2Samuel', `versiondate`='2010-11-09'";
+        $msg = $this->performdb($query);
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }                  
+//$application = JFactory::getApplication();
+//$application->enqueueMessage( ''. JText::_('Upgrading Build 623') .'' ) ;
+$results = array('build'=>'623','messages'=>$messages);
+    
+    return $results;
 }
+
+ function performdb($query)
+    {
+        $db = JFactory::getDBO();
+        $results = false;
+        $db->setQuery($query);
+        $db->query();
+           		if ($db->getErrorNum() != 0)
+					{
+						$results = JText::_('JBS_EI_DB_ERROR').': '.$db->getErrorNum()."<br /><font color=\"red\">";
+						$results .= $db->stderr(true);
+						$results .= "</font>";
+                        return $results;
+					}
+				else
+					{
+						$results = false; return $results;
+					}	
+    }
 
 }
 ?>

@@ -24,7 +24,8 @@ class jbsmigrationController extends JController
 	 */
 	function display()
 	{
-		
+		$application = JFactory::getApplication();
+        JRequest::setVar('migrationdone','0','get');
         $task = JRequest::getWord('task','','get');
         $run = 0;
         
@@ -37,8 +38,6 @@ class jbsmigrationController extends JController
             $export = new JBSExport();
             $result = $export->exportdb();
             if ($result){
-                
-                
                 $application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS') .'' ) ;
                 }
             else
@@ -46,11 +45,26 @@ class jbsmigrationController extends JController
                 $application->enqueueMessage( ''. JText::_('JBS_EI_FAILURE') .'' ) ;
             }
         }
-
+        if ($task == 'migrate' && $run == 1)
+        {
+            $migrate = new JBSMigrate();
+            $migration = $migrate->migrate();
+            if ($migration)
+            {
+                $application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS') .'' ) ;
+                JRequest::setVar('migrationdone','1','get');
+            }
+            else
+            {
+                $application->enqueueMessage( ''. JText::_('JBS_EI_FAILURE') .'' ) ;
+            }
+        }
 		parent::display();
 	}
+
 function doimport()
 {
+            
             $application = JFactory::getApplication();
             $import = new JBSImport();
             $result = $import->importdb();
@@ -61,12 +75,14 @@ function doimport()
                 if ($migration)
                 {
                     $application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS') .'' ) ;
+                    JRequest::setVar('migrationdone','1','get');
                 }
                 else
                 {
                     $application->enqueueMessage( ''. JText::_('JBS_EI_FAILURE') .'' ) ;
                 }
                 $application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS') .'' ) ;
+                JRequest::setVar('migrationdone','1','get');
             }
             else
             {
@@ -75,7 +91,7 @@ function doimport()
             
   parent::display();   
  }
-    
+  
 }
 
 ?>

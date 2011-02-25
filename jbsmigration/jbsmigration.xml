@@ -14,7 +14,7 @@
   <license>GNU/GPL</license>
   <version>1.0.0</version>
   <creationDate>February 2011</creationDate>
-  <description>Joomla Bible Study</description>
+  <description>Joomla Bible Study Migration Tool to Version 7</description>
   <files>jbsmigration.xml</files>
    <administration>
     <!-- Administration Menu Section -->
