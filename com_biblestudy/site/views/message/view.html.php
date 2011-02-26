@@ -19,6 +19,12 @@ class biblestudyViewmessage extends JView {
     protected $admin;
 
     function display($tpl = null) {
+        
+        // Access check.
+if (!JFactory::getUser()->authorise('core.edit', 'com_biblestudy')) 
+{
+        return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+}
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->mediafiles = $this->get('MediaFiles');
@@ -28,11 +34,11 @@ class biblestudyViewmessage extends JView {
         $this->admin = BsmHelper::getAdmin($isSite = true);
         //check permissions to enter studies
         $admin_settings = new JBSAdmin();
-        $permission = $admin_settings->getPermission();
-        if ($permission !== true) {
-        		JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-        		return false;
-        	} 
+      //  $permission = $admin_settings->getPermission();
+      //  if ($permission !== true) {
+       // 		JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+        //		return false;
+        //	} 
       //  $this->addToolbar();
         parent::display($tpl);
     }
