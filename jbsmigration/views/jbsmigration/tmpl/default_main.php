@@ -20,7 +20,7 @@
             <input class="input_box" id="importdb" name="importdb" type="file" size="57" />
         </td>
     </tr>
-    <tr><td></td><td>
+    <tr><td><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/folder.jpg';?>" alt="Tmp Folder" height="48" width="48" /></td><td>
     <?php echo JText::_('JBS_EI_IMPORT_FROM_FOLDER');?>
     </td><td>
     <input type="text" id="install_directory" name="install_directory" class="input_box" size="70" value="<?php echo $this->tmp_dest .DS; ?>" />
