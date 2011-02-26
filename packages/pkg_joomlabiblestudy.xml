@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <extension type="package" version="1.6">
 	<name>Joomla Bible Study Package</name>
-	<packagename>joomlabiblestudy</packagename>
-	<version>1.6.0</version>
+	<packagename>joomlabiblestudysystem</packagename>
+	<version>7.0.0</version>
 	<url>http://www.joomlabiblestudy.org</url>
 	<packager>Tom Fuller</packager>
 	<packagerurl>http://www.joomlabiblestudy.org</packagerurl>
