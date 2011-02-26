@@ -9,7 +9,8 @@
            <a href="index.php?option=com_jbsmigration&task=export&run=1"> <?php echo JText::_('JBS_EI_EXPORT'); ?></a>
         </td><td></td><td></td>
     </tr>
-    
+   <?php if (substr_count(JVERSION,'1.6') > 0)
+   { ?> 
     <tr>
         <td><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/import.jpg';?>" alt="Import" height="48" width="48" /></td>
         <td>
@@ -29,6 +30,7 @@
     <?php echo JText::_('JBS_EI_MAX_EXECUTION_TIME').': '.ini_get('max_execution_time');?>
     </td></td><td></tr>
     <tr><td><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/migrate.jpg';?>" alt="Import" height="48" width="48" /></td><td><a href="index.php?option=com_jbsmigration&task=migrate&run=1"><?php echo JText::_('JBS_EI_MIGRATE_ONLY');?></a></td><td></td></tr>
+    <?php } ?>
 </table>
 
 <input type="hidden" name="option" value="com_jbsmigration" />
