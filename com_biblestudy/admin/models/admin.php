@@ -160,8 +160,8 @@ public function getItem2($pk = 1)
      */
 public function save($data)
 	{
-		$table	= JTable::getInstance('com_biblestudy');
-
+	//	$table	= JTable::getInstance('extension');
+        $table = $this->getTable();
 		// Save the rules.
 		if (isset($data['params']) && isset($data['params']['rules'])) {
 			jimport('joomla.access.rules');
