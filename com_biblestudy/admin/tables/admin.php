@@ -41,7 +41,7 @@ class TableAdmin extends JTable
                         $parameter->loadArray($array['params']);
                         $array['params'] = (string)$parameter;
                 }
-                
+               
                 return parent::bind($array, $ignore);
         }
 

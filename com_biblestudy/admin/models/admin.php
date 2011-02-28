@@ -158,9 +158,34 @@ public function getItem2($pk = 1)
       return $item;
       }
      */
-
-
-
+	public function save($data)
+	{
+ if(isset($data['rules']))
+                    {
+                    jimport('joomla.access.rules');
+                    $rules = new JRules($data['rules']);
+                    $asset = JTable::getInstance('asset');
+                    
+                    if(! $asset->loadByName('com_biblestudy'))
+                    {
+                    $root = JTable::getInstance('asset');
+                    $root->loadByName('root.1');
+                    $asset->name = 'com_biblestudy';
+                    $asset->setLocation($root->id, 'last-child');
+                    //$asset->parent_id = $root->id;
+                    }
+                    $asset->title = JText::_('Joomla Bible Study General ACL Rules');
+                    $asset->rules = (string)$rules;
+                    
+                    if($asset->check() === false || ! $asset->store())
+                    {
+                    $this->setError($asset->getError());
+                    return false;
+                    }
+                    
+                    unset($data['rules']);
+                    } 
+    }
 }
 
 ?>
