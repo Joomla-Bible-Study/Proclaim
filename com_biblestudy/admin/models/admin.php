@@ -168,11 +168,11 @@ public function save($data)
 			$rules	= new JRules($data['params']['rules']);
 			$asset	= JTable::getInstance('asset');
 
-			if (!$asset->loadByName($data['option'])) {
+			if (!$asset->loadByName('com_biblestudy')) {
 				$root	= JTable::getInstance('asset');
 				$root->loadByName('root.1');
-				$asset->name = $data['option'];
-				$asset->title = $data['option'];
+				$asset->name = 'com_biblestudy';
+				$asset->title = 'General Rules for Joomla Bible Study';
 				$asset->setLocation($root->id,'last-child');
 			}
 			$asset->rules = (string) $rules;
