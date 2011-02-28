@@ -158,34 +158,67 @@ public function getItem2($pk = 1)
       return $item;
       }
      */
-	public function save($data)
+public function save($data)
 	{
- if(isset($data['rules']))
-                    {
-                    jimport('joomla.access.rules');
-                    $rules = new JRules($data['rules']);
-                    $asset = JTable::getInstance('asset');
-                    
-                    if(! $asset->loadByName('com_biblestudy'))
-                    {
-                    $root = JTable::getInstance('asset');
-                    $root->loadByName('root.1');
-                    $asset->name = 'com_biblestudy';
-                    $asset->setLocation($root->id, 'last-child');
-                    //$asset->parent_id = $root->id;
-                    }
-                    $asset->title = JText::_('Joomla Bible Study General ACL Rules');
-                    $asset->rules = (string)$rules;
-                    
-                    if($asset->check() === false || ! $asset->store())
-                    {
-                    $this->setError($asset->getError());
-                    return false;
-                    }
-                    
-                    unset($data['rules']);
-                    } 
-    }
+		$table	= JTable::getInstance('com_biblestudy');
+
+		// Save the rules.
+		if (isset($data['params']) && isset($data['params']['rules'])) {
+			jimport('joomla.access.rules');
+			$rules	= new JRules($data['params']['rules']);
+			$asset	= JTable::getInstance('asset');
+
+			if (!$asset->loadByName($data['option'])) {
+				$root	= JTable::getInstance('asset');
+				$root->loadByName('root.1');
+				$asset->name = $data['option'];
+				$asset->title = $data['option'];
+				$asset->setLocation($root->id,'last-child');
+			}
+			$asset->rules = (string) $rules;
+
+			if (!$asset->check() || !$asset->store()) {
+				$this->setError($asset->getError());
+				return false;
+			}
+
+			// We don't need this anymore
+			unset($data['option']);
+			unset($data['params']['rules']);
+		}
+
+		// Load the previous Data
+		if (!$table->load($data['id'])) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		unset($data['id']);
+
+		// Bind the data.
+		if (!$table->bind($data)) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Check the data.
+		if (!$table->check()) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Store the data.
+		if (!$table->store()) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Clean the cache.
+		$cache = JFactory::getCache('_system');
+		$cache->clean();
+
+		return true;
+	}
 }
 
 ?>
