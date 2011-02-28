@@ -44,7 +44,7 @@ class biblestudyControlleradmin extends controllerClass {
             case 'players':
             $player = $this->changePlayers();
             if (!$player) {
-			$msg = JText::_('JBS_MSG_FAILURE');
+			$msg = JText::_('JBS_ADM_MSG_FAILURE');
             $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
 		      }
             break;
@@ -52,7 +52,7 @@ class biblestudyControlleradmin extends controllerClass {
             case 'popups':
             $popups = $this->changePopup();
             if (!$popups) {
-			$msg = JText::_('JBS_MSG_FAILURE');
+			$msg = JText::_('JBS_ADM_MSG_FAILURE');
             $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
 			}
             break;
