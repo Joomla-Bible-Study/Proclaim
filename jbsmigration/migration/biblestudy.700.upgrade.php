@@ -105,6 +105,48 @@ class jbs700Install{
                 $messages[] = $msg;
              }
        
+       $query = "ALTER Table `#__bsms_order` MODIFY value VARCHAR(50)";
+       $msg = $this->performdb($query);
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
+        
+       $query = "ALTER Table `#__bsms_mediafiles` MODIFY podcast_id VARCHAR(50)";
+       $msg = $this->performdb($query);
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }     
+       $query = "UPDATE `#__bsms_order` SET text = 'JBS_CMN_ASCENDING' WHERE id = 1";
+        $msg = $this->performdb($query);
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
+             
+         $query = "UPDATE `#__bsms_order` SET text = 'JBS_CMN_DESCENDING' WHERE id = 2";
+        $msg = $this->performdb($query);
+         if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-03-12', `build`='700', `versionname`='1Kings', `versiondate`='2011-03-15'";
         $msg = $this->performdb($query);
          if (!$msg)
