@@ -25,12 +25,12 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 class com_biblestudyInstallerScript {
 
 	function install($parent) {
-		echo '<p>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_INSTALL_SCRIPT') . '</p>';
+		echo '<p>'. JText::_('JBS_INS_16_CUSTOM_INSTALL_SCRIPT') . '</p>';
 			$db =& JFactory::getDBO();
 			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'jbs7.0.0.sql');
 			$db->setQuery($query);
 			$db->queryBatch();
-			echo JHtml::_('sliders.panel', JText::_('INSTALLING_VERSION_700') , 'publishing-details');
+			echo JHtml::_('sliders.panel', JText::_('JBS_INS_16_INSTALLING_VERSION_700') , 'publishing-details');
 	}
 
 	function uninstall($parent) {
@@ -51,9 +51,9 @@ class com_biblestudyInstallerScript {
 			$db->setQuery($query);
 			$db->queryBatch();
 			$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-		$drop_result = '<div><H3>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UNINSTALL_SCRIPT') .'</H3>'?>;
+		$drop_result = '<div><H3>'. JText::_('JBS_INS_16_CUSTOM_UNINSTALL_SCRIPT') .'</H3>'?>;
 
-	<h2><?php echo JText::_('Joomla_Bible_Study_Uninstalled'); ?></h2>
+	<h2><?php echo JText::_('JBS_INS_UNINSTALLED'); ?></h2>
 	<?php
 		
 		$drop_result .= '</div>';
@@ -68,19 +68,19 @@ class com_biblestudyInstallerScript {
 	} //end of function uninstall()
 
 	function update($parent) {
-		echo '<p>'. JText::_('COM_BIBLESTUDY_16_CUSTOM_UPDATE_SCRIPT') .'</p>';
+		echo '<p>'. JText::_('JBS_INS_16_CUSTOM_UPDATE_SCRIPT') .'</p>';
  
 	} // End Update
 
 	function preflight($type, $parent) {
-		echo '<p>'. JText::sprintf('COM_BIBLESTUDY_16_CUSTOM_PREFLIGHT', $type) .'</p>';
+		echo '<p>'. JText::sprintf('JBS_INS_16_CUSTOM_PREFLIGHT', $type) .'</p>';
 	}
 
 	function postflight($type, $parent) { ?>
 		<div class="width-100">
 
 		<fieldset class="panelform">
-		<legend><?php echo JText::sprintf('Installation/Upgrade Results', $type); ?></legend>  
+		<legend><?php echo JText::sprintf('JBS_INS_INSTALLATION_UPGRADE_RESULTS', $type); ?></legend>  
     
 		<?php echo JHtml::_('sliders.start','content-sliders-1',array('useCookie'=>1)); 
 
@@ -95,21 +95,21 @@ class com_biblestudyInstallerScript {
 		$backupexists = JFile::exists($backup);
 		if (!$cssexists)
 		{
-			echo '<p><font color="red"><strong>'.JText::_('COM_BIBLESTUDY_16_CSS_FILE_NOT_FOUND').'</strong> </font></p>';
+			echo '<p><font color="red"><strong>'.JText::_('JBS_INS_16_CSS_FILE_NOT_FOUND').'</strong> </font></p>';
 			if ($backupexists)
 			{
-				echo '<p>' . JText::_('COM_BIBLESTUDY_16_BACKUPCSS') .' /images/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=copycss">'. JText::_('COM_BIBLESTUDY_16_CSS_BACKUP') . '</a></p>';
+				echo '<p>' . JText::_('JBS_INS_16_BACKUPCSS') .' /images/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=copycss">'. JText::_('JBS_INS_16_CSS_BACKUP') . '</a></p>';
 			}
 			else
 			{
 				$copysuccess = JFile::copy($src, $dest);
 				if ($copysuccess)
 				{
-					echo '<p>'. JText::_('COM_BIBLESTUDY_16_CSS_COPIED_SOURCE') . '</p>';
+					echo '<p>'. JText::_('JBS_INS_16_CSS_COPIED_SOURCE') . '</p>';
 				}
 				else
 				{
-					echo '<P>'. JText::_('COM_BIBLESTUDY_16_CSS_COPIED_DISCRIPTION1') . '&frasl;components&frasl;com_biblestudy&frasl;assets&frasl;css&frasl;biblestudy.css.dist' . JText::_('COM_BIBLESTUDY_16_CSS_COPIED_DISCRIPTION2') . '</p>';
+					echo '<P>'. JText::_('JBS_INS_16_CSS_COPIED_DISCRIPTION1') . '&frasl;components&frasl;com_biblestudy&frasl;assets&frasl;css&frasl;biblestudy.css.dist' . JText::_('JBS_INS_16_CSS_COPIED_DISCRIPTION2') . '</p>';
 				}
 			}
 		}    
@@ -120,14 +120,14 @@ class com_biblestudyInstallerScript {
 		$imageexists = JFile::exists($dest);
 		if (!$imageexists)
 		{
-			echo '<br /><br />' . JText::_('COM_BIBLESTUDY_16_COPYING_IMAGE');
+			echo '<br /><br />' . JText::_('JBS_INS_16_COPYING_IMAGE');
 			if ($imagesuccess = JFile::copy($src, $dest))
 			{
-				echo '<br />' . JText::_('COM_BIBLESTUDY_16_COPYING_SUCCESS');
+				echo '<br />' . JText::_('JBS_INS_16_COPYING_SUCCESS');
 			}
 			else
 			{
-				echo '<br />' . JText::_('COM_BIBLESTUDY_16_COPYING_PROBLEM_FOLDER1') . '/components/com_biblestudy/images/textfile24.png' . JText::_('COM_BIBLESTUDY_16_COPYING_PROBLEM_FOLDER2');
+				echo '<br />' . JText::_('JBS_INS_16_COPYING_PROBLEM_FOLDER1') . '/components/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_16_COPYING_PROBLEM_FOLDER2');
 			}
 		}
 	?>
@@ -140,23 +140,23 @@ class com_biblestudyInstallerScript {
 			<!-- Rest of footer -->
 		<div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
 		<img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="flote: left" />
-		<strong><?php echo JText::_('COM_BIBLESTUDY_16_THANK_YOU'); ?></strong>
+		<strong><?php echo JText::_('JBS_INS_16_THANK_YOU'); ?></strong>
 		<br />
 		<?php //$mainframe =& JFactory::getApplication(); ?>
-		<img src = "components/com_biblestudy/images/openbible.png" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" align="left" /> <?php echo JText::_('COM_BIBLESTUDY_16_CONGRATULATIONS'); ?> 
+		<img src = "components/com_biblestudy/images/openbible.png" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" align="left" /> <?php echo JText::_('JBS_INS_16_CONGRATULATIONS'); ?> 
 		<p>
-		<?php echo JText::_('COM_BIBLESTUDY_16_STATEMENT1'); ?> </p>
+		<?php echo JText::_('JBS_INS_16_STATEMENT1'); ?> </p>
 		<p>
-		<?php echo JText::_('COM_BIBLESTUDY_16_STATEMENT2'); ?></p>
+		<?php echo JText::_('JBS_INS_16_STATEMENT2'); ?></p>
 		<p>
-		<?php echo JText::_('COM_BIBLESTUDY_16_STATEMENT3'); ?></p>
+		<?php echo JText::_('JBS_INS_16_STATEMENT3'); ?></p>
 		<p>
-		<?php echo JText::_('COM_BIBLESTUDY_16_STATEMENT4'); ?></p>
+		<?php echo JText::_('JBS_INS_16_STATEMENT4'); ?></p>
 		<p>
 		</p>
-		<p><a href="http://www.joomlabiblestudy.org/forums.html" target="_blank"><?php echo JText::_('COM_BIBLESTUDY_16_VISIT_FORUM'); ?></a></p>
-		<p><a href="http://www.joomlabiblestudy.org" target="_blank"><?php echo JText::_('COM_BIBLESTUDY_16_GET_MORE_HELP'); ?></a></p>
-		<p><a href="http://www.JoomlaBibleStudy.org/jbsdocs" target="_blank"><?php echo JText::_('COM_BIBLESTUDY_16_VISIT_DOCUMENTATION'); ?></a></p>
+		<p><a href="http://www.joomlabiblestudy.org/forums.html" target="_blank"><?php echo JText::_('JBS_INS_16_VISIT_FORUM'); ?></a></p>
+		<p><a href="http://www.joomlabiblestudy.org" target="_blank"><?php echo JText::_('JBS_INS_16_GET_MORE_HELP'); ?></a></p>
+		<p><a href="http://www.JoomlaBibleStudy.org/jbsdocs" target="_blank"><?php echo JText::_('JBS_INS_16_VISIT_DOCUMENTATION'); ?></a></p>
 		<p>Bible Study Component <em>for Joomla! </em> &copy; by <a
 			href="http://www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a>.
 		All rights reserved.</p>
