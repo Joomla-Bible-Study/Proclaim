@@ -189,6 +189,177 @@ if ($results)
         
     }
 }
+ $query = "ALTER TABLE `#__bsms_admin` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }       
+  $query = "ALTER TABLE `#__bsms_comments` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+  $query = "ALTER TABLE `#__bsms_folders` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
+ $query = "ALTER TABLE `#__bsms_locations` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }  
+$query = "ALTER TABLE `#__bsms_media` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+
+$query = "ALTER TABLE `#__bsms_message_type` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
+
+$query = "ALTER TABLE `#__bsms_mimetype` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+
+$query = "ALTER TABLE `#__bsms_podcast` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+
+$query = "ALTER TABLE `#__bsms_series` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+
+$query = "ALTER TABLE `#__bsms_servers` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+
+$query = "ALTER TABLE `#__bsms_share` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+
+$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+ 
+ $query = "ALTER TABLE `#__bsms_teachers` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+
+$query = "ALTER TABLE `#__bsms_templates` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+
+$query = "ALTER TABLE `#__bsms_topics` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $msg = $this->performdb($query);
+  if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             } 
+
 //Get all the study records
 
 $query = "UPDATE #__bsms_studies SET `show_level` = '1' WHERE `show_level` = '0'";
@@ -267,6 +438,8 @@ $msg = $this->performdb($query);
              {
                 $messages[] = $msg;
              }       
+
+              
         $application = JFactory::getApplication();
        $application->enqueueMessage( ''. JText::_('Upgrading to build 700') .'' ) ;
        $results = array('build'=>'700','messages'=>$messages);
