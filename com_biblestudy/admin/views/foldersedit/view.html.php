@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 jimport('joomla.application.component.view');
 
-class biblestudyViewFoldersedit extends JView {
+class BibleStudyViewFoldersedit extends JView {
 
     protected $form;
     protected $item;

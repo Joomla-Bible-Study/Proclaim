@@ -7,28 +7,6 @@ require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. '
  */
 
 
-    
-function getActions($messageId = 0)
-        {
-                $user  = JFactory::getUser();
-                $result        = new JObject;
- 
-                if (empty($messageId)) {
-                        $assetName = 'com_biblestudy';
-                }
-                
- 
-                $actions = array(
-                        'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.delete'
-                );
- 
-                foreach ($actions as $action) {
-                        $result->set($action,        $user->authorise($action, $assetName));
-                }
- 
-                return $result;
-        }
- 
 function getAdminsettings()
 	{
 			$db =& JFactory::getDBO();

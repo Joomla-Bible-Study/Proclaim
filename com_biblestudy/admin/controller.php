@@ -8,6 +8,15 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
+// Access check.
+if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) 
+{
+        return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+}
+
+// require helper file
+JLoader::register('BibleStudyHelper', dirname(__FILE__) . DS . 'helpers' . DS . 'biblestudy.php');
+
 jimport('joomla.application.component.controller');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 class biblestudyController extends JController

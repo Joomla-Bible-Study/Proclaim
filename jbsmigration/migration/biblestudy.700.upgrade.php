@@ -189,7 +189,7 @@ if ($results)
         
     }
 }
- $query = "ALTER TABLE `#__bsms_admin` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $query = "ALTER TABLE #__bsms_admin ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -199,7 +199,7 @@ if ($results)
              {
                 $messages[] = $msg;
              }       
-  $query = "ALTER TABLE `#__bsms_comments` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+  $query = "ALTER TABLE #__bsms_comments ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -209,7 +209,7 @@ if ($results)
              {
                 $messages[] = $msg;
              } 
-  $query = "ALTER TABLE `#__bsms_folders` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+  $query = "ALTER TABLE #__bsms_folders ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -219,7 +219,7 @@ if ($results)
              {
                 $messages[] = $msg;
              }
- $query = "ALTER TABLE `#__bsms_locations` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $query = "ALTER TABLE #__bsms_locations ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -229,7 +229,7 @@ if ($results)
              {
                 $messages[] = $msg;
              }  
-$query = "ALTER TABLE `#__bsms_media` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_media ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -239,7 +239,7 @@ $query = "ALTER TABLE `#__bsms_media` ADD COLUMN `asset_id` INT(10) NOT NULL, `a
              {
                 $messages[] = $msg;
              } 
-$query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -250,7 +250,7 @@ $query = "ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `asset_id` INT(10) NOT NUL
                 $messages[] = $msg;
              } 
 
-$query = "ALTER TABLE `#__bsms_message_type` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_message_type ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -261,7 +261,7 @@ $query = "ALTER TABLE `#__bsms_message_type` ADD COLUMN `asset_id` INT(10) NOT N
                 $messages[] = $msg;
              }
 
-$query = "ALTER TABLE `#__bsms_mimetype` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_mimetype ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -272,7 +272,7 @@ $query = "ALTER TABLE `#__bsms_mimetype` ADD COLUMN `asset_id` INT(10) NOT NULL,
                 $messages[] = $msg;
              } 
 
-$query = "ALTER TABLE `#__bsms_podcast` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_podcast ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -283,7 +283,7 @@ $query = "ALTER TABLE `#__bsms_podcast` ADD COLUMN `asset_id` INT(10) NOT NULL, 
                 $messages[] = $msg;
              } 
 
-$query = "ALTER TABLE `#__bsms_series` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_series ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -294,7 +294,7 @@ $query = "ALTER TABLE `#__bsms_series` ADD COLUMN `asset_id` INT(10) NOT NULL, `
                 $messages[] = $msg;
              } 
 
-$query = "ALTER TABLE `#__bsms_servers` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_servers ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -305,7 +305,7 @@ $query = "ALTER TABLE `#__bsms_servers` ADD COLUMN `asset_id` INT(10) NOT NULL, 
                 $messages[] = $msg;
              } 
 
-$query = "ALTER TABLE `#__bsms_share` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_share ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -316,7 +316,7 @@ $query = "ALTER TABLE `#__bsms_share` ADD COLUMN `asset_id` INT(10) NOT NULL, `a
                 $messages[] = $msg;
              } 
 
-$query = "ALTER TABLE `#__bsms_studies` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_studies ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -327,7 +327,7 @@ $query = "ALTER TABLE `#__bsms_studies` ADD COLUMN `asset_id` INT(10) NOT NULL, 
                 $messages[] = $msg;
              } 
  
- $query = "ALTER TABLE `#__bsms_teachers` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+ $query = "ALTER TABLE #__bsms_teachers ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -338,7 +338,7 @@ $query = "ALTER TABLE `#__bsms_studies` ADD COLUMN `asset_id` INT(10) NOT NULL, 
                 $messages[] = $msg;
              } 
 
-$query = "ALTER TABLE `#__bsms_templates` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_templates ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {
@@ -349,7 +349,7 @@ $query = "ALTER TABLE `#__bsms_templates` ADD COLUMN `asset_id` INT(10) NOT NULL
                 $messages[] = $msg;
              } 
 
-$query = "ALTER TABLE `#__bsms_topics` ADD COLUMN `asset_id` INT(10) NOT NULL, `access` INT(10) NOT NULL";
+$query = "ALTER TABLE #__bsms_topics ADD COLUMN asset_id INT(10) NOT NULL, ADD COLUMN access INT(10) NOT NULL";
  $msg = $this->performdb($query);
   if (!$msg)
              {

@@ -90,7 +90,7 @@
       <menu link="option=com_biblestudy&amp;view=medialist" view="medialist" alt="JBS_MNU_MEDIA_IMAGES">JBS_MNU_MEDIA_IMAGES</menu>
       <menu link="option=com_biblestudy&amp;view=serieslist" view="serieslist" alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
       <menu link="option=com_biblestudy&amp;view=serverslist" view="serverslist" alt="JBS_MNU_SERVERS">JBS_MNU_SERVERS</menu>
-      <menu link="option=com_biblestudy&amp;view=foldersliet" view="folderslist" alt="JBS_MNU_SERVER_FOLDERS">JBS_MNU_SERVER_FOLDERS</menu>
+      <menu link="option=com_biblestudy&amp;view=folderslist" view="folderslist" alt="JBS_MNU_SERVER_FOLDERS">JBS_MNU_SERVER_FOLDERS</menu>
       <menu link="option=com_biblestudy&amp;view=messagetypelist" view="messagetypelist" alt="JBS_MNU_MESSAGE_TYPES">JBS_MNU_MESSAGE_TYPES</menu>
       <menu link="option=com_biblestudy&amp;view=locationslist" view="locationslist" alt="JBS_MNU_LOCATIONS">JBS_MNU_LOCATIONS</menu>
       <menu link="option=com_biblestudy&amp;view=topicslist" view="topicslist" alt="JBS_MNU_TOPICS">JBS_MNU_TOPICS</menu>
