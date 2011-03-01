@@ -15,7 +15,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
 }
 
 // require helper file
-JLoader::register('BibleStudyHelper', dirname(__FILE__) . DS . 'helpers' . DS . 'biblestudy.php');
+//JLoader::register('BibleStudyHelper', dirname(__FILE__) . DS . 'helpers' . DS . 'biblestudy.php');
 
 jimport('joomla.application.component.controller');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
@@ -26,8 +26,8 @@ class biblestudyController extends JController
 	function display()
 	{
             
-                require_once(JPATH_COMPONENT .DS. 'helpers' .DS. 'submenus.php');
-                BiblestudyHelper::addSubmenu(JRequest::getWord('view', 'cpanel'));
+        require_once(JPATH_COMPONENT .DS. 'helpers' .DS. 'biblestudy.php');
+        BiblestudyHelper::addSubmenu(JRequest::getWord('view', 'cpanel'));
            
             $view = JRequest::getWord('view', 'cpanel');
             $layout = JRequest::getWord('layout', 'default');
