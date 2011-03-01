@@ -39,6 +39,8 @@ class biblestudyViewadmin extends JView {
 
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
+        JToolBarHelper::preferences('com_biblestudy','600','600',JText::_('JBS_ADMIN_PERMISSIONS'));
+        JToolBarHelper::divider();
         JToolBarHelper::save('admin.save');
         JToolBarHelper::apply('admin.apply');
         JToolBarHelper::cancel('admin.cancel');

@@ -265,22 +265,7 @@ $params = $this->form->getFieldsets();
                 </ul>
             </fieldset>
     </div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PERMISSIONS'), 'admin-settings'); ?>
-    <div class="width-100">
-    
-    <div class="width-60 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_ADM_PERMISSION_SETTINGS'); ?></legend>
-                <ul>
-                    <li>
-                        <?php echo $this->form->getLabel('rules', 'params'); ?>
-                        <?php echo $this->form->getInput('rules', 'params'); ?>
-                    </li>
-                </ul>
-            </fieldset>
-
-    </div>
-    </div>
+   
     <input type="hidden" name="task" value="" />
     <input type="hidden" name="tooltype" value="" />
     <?php echo JHtml::_('form.token'); ?>

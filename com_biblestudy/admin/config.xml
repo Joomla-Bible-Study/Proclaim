@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config menu="hide">
-	
+	<fieldset
+                name="permissions"
+                label="JCONFIG_PERMISSIONS_LABEL"
+                description="JCONFIG_PERMISSIONS_DESC"
+        >
+                <field
+                        name="rules"
+                        type="rules"
+                        label="JBS_ADM_PERMISSION_SETTINGS"
+                        class="inputbox"
+                        validate="rules"
+                        filter="rules"
+                        component="com_biblestudy"
+                        section="component"
+                />
+        </fieldset>
 </config>
