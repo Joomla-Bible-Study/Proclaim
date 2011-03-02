@@ -36,13 +36,17 @@ class biblestudyViewcommentslist extends JView
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_MANAGER'), 'servers.png');
-        JToolBarHelper::addNew('commentsedit.add');
-        JToolBarHelper::editList('commentsedit.edit');
+        $canDo = BibleStudyHelper::getActions();
+        JToolBarHelper::title(JText::_('JBS_CMT_COMMENTS_MANAGER'), 'comments.png');
+        if ($canDo->get('core.create')) 
+        { JToolBarHelper::addNew('commentsedit.add'); }
+        if ($canDo->get('core.edit')) 
+        {JToolBarHelper::editList('commentsedit.edit');}
         JToolBarHelper::divider();
         JToolBarHelper::publishList('commentslist.publish');
         JToolBarHelper::unpublishList('commentslist.unpublish');
-        JToolBarHelper::trash('commentslist.trash');
+        if ($canDo->get('core.delete')) 
+        {JToolBarHelper::trash('commentslist.trash');}
     }
 
 }

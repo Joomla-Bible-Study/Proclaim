@@ -9,20 +9,98 @@ defined('_JEXEC') or die('Restriced Access');
 class BibleStudyHelper
 {
     public static $extension = 'com_biblestudy';
-public static function getActions($folderId = 0, $studyId = 0, $mediafileeditId = 0, $templateId = 0, $teacherId = 0, $mediaId = 0, $seriesId = 0, $serverId = 0, $locationId = 0, $topicId = 0, $podcastId = 0, $mimetypeId = 0, $commentId = 0, $shareId = 0, $messagetypeId = 0, $messageId = 0, $mediafileId = 0, $cssId = 0, $adminId = 0)
+public static function getActions($Itemid = 0, $type = null)
         {
                 $user  = JFactory::getUser();
                 $result        = new JObject;
  
-                if (empty($folderId)) {
+                if (empty($Itemid)) {
                         $assetName = 'com_biblestudy';
                 }
                 else {
-                    $assetName = 'com_biblestudy.foldersedit.'.(int)$Itemid;
+                    switch ($type)
+                    {
+                        case 'foldersedit':
+                        $assetName = 'com_biblestudy.foldersedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'commentsedit':
+                        $assetName = 'com_biblestudy.commentsedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'cssedit':
+                        $assetName = 'com_biblestudy.cssedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'locationsedit':
+                        $assetName = 'com_biblestudy.locationsedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'mediaedit':
+                        $assetName = 'com_biblestudy.mediaedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'mediafilesedit':
+                        $assetName = 'com_biblestudy.mediafilesedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'messagetypeedit':
+                        $assetName = 'com_biblestudy.messagetypeedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'mimetypeedit':
+                        $assetName = 'com_biblestudy.mimetypeedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'podcastedit':
+                        $assetName = 'com_biblestudy.podcastedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'seriesedit':
+                        $assetName = 'com_biblestudy.seriesedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'serversedit':
+                        $assetName = 'com_biblestudy.serversedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'shareedit':
+                        $assetName = 'com_biblestudy.shareedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'studiesedit':
+                        $assetName = 'com_biblestudy.studiesedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'teacheredit':
+                        $assetName = 'com_biblestudy.teacheredit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'templateedit':
+                        $assetName = 'com_biblestudy.templateedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'topicsedit':
+                        $assetName = 'com_biblestudy.topicsedit.'.(int)$Itemid;
+                        break;
+                        
+                        case 'message':
+                        $assetName = 'com_biblestudy.message.'.(int)$Itemid;
+                        break;
+                        
+                        case 'mediafile':
+                        $assetName = 'com_biblestudy.mediafile.'.(int)$Itemid;
+                        break;
+                        
+                        default:
+                        $assetName = 'com_biblestudy.studiesedit.'.(int)$Itemid;
+                        break;
+                    }
+                    
                 }
  
                 $actions = array(
-                        'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.delete'
+                        'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete'
                 );
  
                 foreach ($actions as $action) {

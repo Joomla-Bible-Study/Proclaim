@@ -29,6 +29,7 @@ class biblestudyViewcommentsedit extends JView {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 	JToolBarHelper::title(   JText::_( 'JBS_CMT_EDIT_COMMENT' ).': <small><small>[ ' . $text.' ]</small></small>', 'comments.png' );
+    $canDo = BibleStudyHelper::getActions($type = 'commentsedit', $Itemid = $this->item->id);
         JToolBarHelper::save('commentsedit.save');
         if ($isNew)
             JToolBarHelper::cancel('commentsedit.cancel', 'JTOOLBAR_CLOSE');

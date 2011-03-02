@@ -51,9 +51,11 @@ class BibleStudyViewFolderslist extends JView {
         { JToolBarHelper::addNew('foldersedit.add'); }
         if ($canDo->get('core.edit')) 
         {JToolBarHelper::editList('foldersedit.edit');}
+        if ($canDo->get('core.edit.state')) {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('folderslist.publish');
         JToolBarHelper::unpublishList('folderslist.unpublish');
+        }
         if ($canDo->get('core.delete')) 
         {JToolBarHelper::trash('folderslist.trash');}
     }

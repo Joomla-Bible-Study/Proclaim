@@ -6,96 +6,134 @@
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
                 <action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
+               	<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
         </section>
         <section name="message">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="studiesedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="teacheredit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="locationedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="seriesedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="topicsedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="podcastedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="shareedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="commentsedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="mediafile">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="mediafilesedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="mediaedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="messagetypeedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="mimetypeedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="serversedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="foldersedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="templateedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="cssedit">
                 <action name="core.delete" title="JACTION_DELETE" description="JBS_ACCESS_DELETE_DESC" />
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
                 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+                <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+                <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
         </section>
          <section name="admin">
                 <action name="core.edit" title="JACTION_EDIT" description="JBS_ACCESS_EDIT_DESC" />
