@@ -395,7 +395,10 @@ function getAdmin()
 			$where[] = " date_format(#__bsms_studies.studydate, '%Y')= ".(int) $filter_year;
 		}
 		
-	
+        //Check for authorization to view the study
+        $user	= JFactory::getUser();
+        $groups	= implode(',', $user->getAuthorisedViewLevels());
+		$where[] = '#__bsms_studies.access IN ('.$groups.')';
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
         

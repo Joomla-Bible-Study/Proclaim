@@ -16,8 +16,6 @@
 
     <field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY" description="JBS_STY_SUBMITTED_BY_DESC"/>
 
-    <field name="show_level" default="1" type="accesslevel" label="JBS_STY_USER_LEVEL_TO_SHOW" desciption="JBS_STY_USER_LEVEL_TO_SHOW_DESC" multiple="true"/>
-    
     <field name="studytitle" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" description="JBS_STY_TITLE_DESC"/>
 
     <field name="studyintro" type="textarea" cols="57" rows="3" class="inputbox" label="JBS_CMN_DESCRIPTION" description="JBS_STY_DESCRIPTION_DESC"/>
@@ -81,4 +79,10 @@
 
     <field name="studytext" type="Editor" class="inputbox" buttons="true" height="300" label="JBS_STY_STUDY_TEXT" description="JBS_STY_STUDY_TEXT_DESC"/>
 
+	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+			translate_label="false" class="inputbox" filter="rules"
+			component="com_biblestudy" section="studiesedit" validate="rules"
+		/>
+	<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
+	description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
 </form>

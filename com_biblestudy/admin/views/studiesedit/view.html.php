@@ -25,12 +25,13 @@ class biblestudyViewstudiesedit extends JView {
 
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin();
-        
+       	$this->canDo	= BibleStudyHelper::getActions($type = 'studiesedit', $Itemid = $this->item->id);
         $this->addToolbar();
         parent::display($tpl);
     }
 
     protected function addToolbar() {
+      //  $canDo = BibleStudyHelper::getActions($type = 'studiesedit', $Itemid = $this->item->id);
         $isNew = $this->item->id == 0;
         if($isNew)
             $text = JText::_('JBS_CMN_NEW');

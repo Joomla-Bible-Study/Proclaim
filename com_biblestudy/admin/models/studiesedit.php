@@ -18,6 +18,21 @@ class biblestudyModelstudiesedit extends modelClass {
 
     var $_admin;
 
+/**
+         * Method override to check if you can edit an existing record.
+         *
+         * @param       array   $data   An array of input data.
+         * @param       string  $key    The name of the key for the primary key.
+         *
+         * @return      boolean
+         * @since       1.6
+         */
+        protected function allowEdit($data = array(), $key = 'id')
+        {
+                // Check specific edit permission then general edit permission.
+                return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.studiesedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+        }
+        
     function __construct() {
         parent::__construct();
         
@@ -114,7 +129,7 @@ class biblestudyModelstudiesedit extends modelClass {
         $data['studyintro'] = str_replace('"', "'", $data['studyintro']);
         $data['studynumber'] = str_replace('"', "'", $data['studynumber']);
         $data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
-        $data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
+      //  $data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
 
         //	$msg = $data['show_level'];
 

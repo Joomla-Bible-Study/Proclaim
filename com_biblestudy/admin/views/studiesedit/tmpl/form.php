@@ -13,6 +13,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_STY_DETAILS'); ?></legend>
             <ul>
+            	
                 <li>
                     <?php echo $this->form->getLabel('studytitle'); ?>
                     <?php echo $this->form->getInput('studytitle'); ?>
@@ -156,10 +157,17 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <?php echo $this->form->getLabel('user_id'); ?>
                     <?php echo $this->form->getInput('user_id', null, empty($this->item->user_id) ? $this->admin->user_id : $this->item->user_id) ?>
                         </li>
-                        <li>
-                    <?php echo $this->form->getLabel('show_level'); ?>
-                    <?php echo $this->form->getInput('show_level'); ?>
-                        </li>
+                    <li><?php echo $this->form->getLabel('access'); ?>
+        				<?php echo $this->form->getInput('access'); ?></li>
+                    	<?php if ($this->canDo->get('core.admin')): ?>
+        					<li><span class="faux-label"><?php echo JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL'); ?></span>
+        						<div class="button2-left"><div class="blank">
+        							<button type="button" onclick="document.location.href='#access-rules';">
+        								<?php echo JText::_('JGLOBAL_PERMISSIONS_ANCHOR'); ?>
+							         </button>
+						</div></div>
+					</li>
+				<?php endif; ?>   
                     </ul>
                 </fieldset>
             </div>
@@ -208,7 +216,23 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                                 </tfoot>
                             </table>
                         </fieldset>
-                        <input type="hidden" name="task" value=""/>
-        <?php echo JHtml::_('form.token'); ?>
+                        
     </div>
+    	<div class="clr"></div>
+	<?php if ($this->canDo->get('core.admin')): ?>
+		<div class="width-100 fltlft">
+			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
+
+				<?php echo JHtml::_('sliders.panel',JText::_('COM_CONTENT_FIELDSET_RULES'), 'access-rules'); ?>
+
+				<fieldset class="panelform">
+					<?php echo $this->form->getLabel('rules'); ?>
+					<?php echo $this->form->getInput('rules'); ?>
+				</fieldset>
+
+			<?php echo JHtml::_('sliders.end'); ?>
+		</div>
+	<?php endif; ?>
+ <input type="hidden" name="task" value=""/>
+        <?php echo JHtml::_('form.token'); ?>
 </form>
