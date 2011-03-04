@@ -398,7 +398,7 @@ function getAdmin()
         //Check for authorization to view the study
         $user	= JFactory::getUser();
         $groups	= implode(',', $user->getAuthorisedViewLevels());
-		$where[] = '#__bsms_studies.access IN ('.$groups.')';
+	//	$where[] = '#__bsms_studies.access IN ('.$groups.')';
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
         
