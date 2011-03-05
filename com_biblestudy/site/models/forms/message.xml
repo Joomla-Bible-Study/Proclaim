@@ -79,6 +79,8 @@
 
     <field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE" description="JBS_STY_STUDY_IMAGE_DESC"/>
 
-    <field name="studytext" type="Editor" class="inputbox" buttons="true" height="300" label="JBS_STY_STUDY_TEXT" description="JBS_STY_STUDY_TEXT_DESC"/>
+    <field name="studytext" type="editor" class="inputbox"
+			label="JBS_STY_STUDY_TEXT" description="JBS_STY_STUDY_TEXT_DESC"
+			filter="raw" buttons="true" />
 
 </form>

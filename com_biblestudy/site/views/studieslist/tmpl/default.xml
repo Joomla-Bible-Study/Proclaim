@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: default.xml tf 12-11-2007 $ -->
 <metadata>
-	<layout title="JBS_MNU_STUDIES_LIST_LAYOUT">
+	<layout title="JBS_MNU_STUDIESLIST_LIST_EDIT">
 		<message>
-			<![CDATA[JBS_MNU_STUDIES_LIST_LAYOUT_DESC]]>
+			<![CDATA[JBS_MNU_STUDIESLIST_LIST_EDIT]]>
 		</message>
 	</layout>
     <fields name="request">

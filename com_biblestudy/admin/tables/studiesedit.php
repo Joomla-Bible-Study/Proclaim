@@ -77,33 +77,12 @@ class Tablestudiesedit extends JTable
                 $array['params'] = $registry->toString();
         }
         
-    
-       
-
+  
 
         return parent::bind($array, $ignore);
 }
 
-public function store($updateNulls = false)
-	{
-	   
-        //Allows HTML content to come through to the database row
-        $array['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
-        $array['studyintro'] = str_replace('"', "'", $array['studyintro']);
-        $array['studynumber'] = str_replace('"', "'", $array['studynumber']);
-        $array['secondary_reference'] = str_replace('"', "'", $array['secondary_reference']);
-      
-/*
-        foreach ($array['scripture'] as $scripture) {
-            if (!$array['text'][key($array['scripture'])] == '') {
-                $scriptures[] = $scripture . ' ' . $array['text'][key($array['scripture'])];
-            }
-            next($array['scripture']);
-        }
-        $array['scripture'] = implode(';', $scriptures);
-*/
-       	return parent::store($updateNulls);
-    }
+
 
   /**
          * Method to compute the default name of the asset.

@@ -12,8 +12,8 @@ class JBSExport{
  function exportdb()
     {
         $result = false;
-        $fix = $this->fixTextentries();
-        if (!$fix){echo 'Problem with Fix';}
+      //  $fix = $this->fixTextentries();
+      //  if (!$fix){echo 'Problem with Fix';}
         $db =& JFactory::getDBO();
 		$config =& JFactory::getConfig();
 		$abspath    = JPATH_SITE;
