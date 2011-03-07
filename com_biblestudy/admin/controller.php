@@ -19,7 +19,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
 
 jimport('joomla.application.component.controller');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-require_once (JPATH_COMPONENT. DS. 'helpers '.DS. 'biblestudy.php');
+//require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers '.DS. 'biblestudy.php');
 class biblestudyController extends JController
 {
     protected $default_view = 'cpanel';

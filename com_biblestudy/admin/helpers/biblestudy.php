@@ -218,7 +218,7 @@ public static function getActions($Itemid = 0, $type = null)
 	{
 		// Filter settings
 		jimport('joomla.application.component.helper');
-		$config		= JComponentHelper::getParams('com_biblestudy'); dump ($config);
+		$config		= JComponentHelper::getParams('com_biblestudy'); //dump ($config);
 		$user		= JFactory::getUser();
 		$userGroups	= JAccess::getGroupsByUser($user->get('id'));
 

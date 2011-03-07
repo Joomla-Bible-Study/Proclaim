@@ -168,8 +168,8 @@ JHtml::_('behavior.formvalidation');
                </div>
                <div class="formelm-area">      
               
-                    <?php echo $this->form->getLabel('show_level'); ?>
-                    <?php echo $this->form->getInput('show_level'); ?>
+                    <?php echo $this->form->getLabel('access'); ?>
+                    <?php echo $this->form->getInput('access'); ?>
                </div>     
               
         

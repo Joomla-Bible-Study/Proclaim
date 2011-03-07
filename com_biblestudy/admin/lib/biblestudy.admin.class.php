@@ -71,14 +71,7 @@ function getAdminsettings()
     $database->query();
     $groupids = $database->loadObjectList();
     $user =& JFactory::getUser();
-    if (JOOMLA_VERSION == '5')
-    {
-        $entry_user    = $user->get('gid');
-       	if (!$entry_user) { $entry_user = 0; }
-        if ($entry_user < $entry_access ){return FALSE;}
-    }
-    else
-    {
+    
         $usrid = $user->get('id');
         $getGroups = JAccess::getGroupsByUser($usrid);
         
@@ -133,7 +126,7 @@ function getAdminsettings()
     {
         return false;
     } 
-    } // end of if Joomla 1.6
+     // end of if Joomla 1.6
 } // End of Permission function
 
 function commentsPermission($params)

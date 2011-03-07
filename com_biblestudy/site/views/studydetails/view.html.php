@@ -48,8 +48,20 @@ class biblestudyViewstudydetails extends JView
         //$this->params = $template;
 	    //$params = $this->params;
         $adminrows = new JBSAdmin();
-        $show = $adminrows->getShowLevel($studydetails);
+     //   $show = $adminrows->getShowLevel($studydetails);
      //   if (!$show){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}
+       
+       //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user = JFactory::getUser();
+        $groups	= $user->getAuthorisedViewLevels(); 
+        $count = count($items);
+            if ($studydetails->access > 1)
+            {
+               if (!in_array($studydetails->access,$groups))
+               {
+                    return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));
+               } 
+	        }
        
 		
 		//Passage link to BibleGateway

@@ -30,23 +30,25 @@ class biblestudyViewstudieslist extends JView {
         $admin_parameters = $this->get('Admin');
         
         $this->admin_params = new JParameter($admin_parameters[0]->params);
-        //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         
+        //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
-        $groups	= implode(',', $user->getAuthorisedViewLevels());
+        $groups	= $user->getAuthorisedViewLevels(); 
         $count = count($items);
+        
         for ($i = 0; $i < $count; $i++)
         {
+            
             if ($items[$i]->access > 1)
             {
                if (!in_array($items[$i]->access,$groups))
                {
-                    unset($items[$i]);
+                    unset($items[$i]); 
                } 
 	        }
         }
         $this->items = $items;
-      // 
+      
  $t = JRequest::getInt('t','get',1);
         if (!$t) {
             $t = 1;
@@ -110,7 +112,7 @@ class biblestudyViewstudieslist extends JView {
         $filter_orders = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
         $search = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
 
-        $items = $this->get('Data');
+       // $items = $this->get('Data');
         $total = $this->get('Total');
         //Remove the studies the user is not allowed to see
       //  $items = $admin->showRows($results);

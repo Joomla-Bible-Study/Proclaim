@@ -47,7 +47,7 @@ function top_score_site($item)
     //temporary
     if (!$level_user){$level_user = '23';}
 	$db = &JFactory::getDBO();
-	$db->setQuery('SELECT m.study_id, s.show_level, s.published AS spub, sum(m.downloads + m.plays) as added FROM #__bsms_mediafiles AS m 
+	$db->setQuery('SELECT m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added FROM #__bsms_mediafiles AS m 
     LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id)
      where m.published = 1 GROUP BY m.study_id');
 	$format = $admin_params->get('format_popular','0');

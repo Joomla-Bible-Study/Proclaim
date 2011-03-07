@@ -32,12 +32,30 @@ class biblestudyViewmediafile extends JView {
         jimport('joomla.form.helper');
         JFormHelper::addFieldPath(JPATH_SITE.DS.'components'.DS.'com_content'.DS.'models'.DS.'fields'.DS.'modal');
     //check permissions to enter studies
-      $admin_settings = new JBSAdmin();
-      $permission = $admin_settings->getPermission();
-       if ($permission !== true) {
-    			JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-    			return false;
-    		} 
+    $admin = new JBSAdmin();
+    $params = $admin->getAdminsettings();
+    $entry_access = $params->get('entry_access');
+    $allow_entry = $params->get('allow_entry_study', 0);
+    
+        if (!$allow_entry){
+            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+            }
+        
+        $user = JFactory::getUser();
+      
+      $permission = false; 
+      $groups = JAccess::getGroupsByUser($user->id);
+      
+           foreach ($groups as $group)
+           {
+                if ($entry_access <= $group){$permission = true;}
+           }
+           if (!$permission)
+           {
+                JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+                return false; 
+           }
            
         $this->setLayout('form');
         

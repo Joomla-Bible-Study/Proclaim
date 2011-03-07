@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 
     jimport('joomla.application.component.modeladmin');
     jimport('joomla.html.parameter');
+    require_once JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'biblestudy.php';
     abstract class modelClass extends JModelAdmin {
         
     }
@@ -83,7 +84,7 @@ class biblestudyModelmessage extends modelClass {
             $this->_data->hits = null;
             $this->_data->user_id = null;
             $this->_data->user_name = null;
-            $this->_data->show_level = null;
+            
             $this->_data->location_id = ($this->_admin_params->get('location_id') > 0 ? $this->_admin_params->get('location_id') : null);
             $this->_data->thumbnailm = ($admin[0]->study != '- JBS_CMN_NO_IMAGE -' ? $admin[0]->study : null);   // 2010-11-12 santon: need to be changed
             //$this->_data->thumbnailm = null;
@@ -140,10 +141,7 @@ class biblestudyModelmessage extends modelClass {
         }
         $data['scripture'] = implode(';', $scriptures);
         // Added since Joomla 1.6 to implode show_level if array
-        if (is_array($data['show_level'])) {
-           // $data['show_level'] = implode(",", $data['show_level']);
-          
-        }
+        
         // Bind the form fields to the table
         if (!$row->bind($data)) {
             $this->setError($this->_db->getErrorMsg());
@@ -340,18 +338,7 @@ class biblestudyModelmessage extends modelClass {
         return $form;
     }
 
-    /**
-     * Overloads the JModelAdmin save routine in order to impload the user show level
-     *
-     * @param array $data
-     * @return <Boolean> True on sucessfull save
-     * @since   7.0
-     */
-    public function save($data) {
-        //Implode only if they selected at least one user level. Otherwise just clear the the user_level field
-        $data['show_level'] = empty($data['show_level']) ? '' : implode(',', $data['show_level']);
-        return parent::save($data);
-    }
+  
 
     /**
      *

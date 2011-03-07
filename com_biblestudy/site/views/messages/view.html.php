@@ -27,13 +27,34 @@ class biblestudyViewmessages extends JView {
         $this->years = $this->get('Years');
         $this->topics = $this->get('Topics');
       //  $this->addToolbar();
-        //check permissions to enter studies
-        $admin_settings = new JBSAdmin();
-        $permission = $admin_settings->getPermission();
-        if ($permission !== true) {
-        		JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-        		return false;
-        	} 
+        
+        
+    //check permissions to enter studies
+    $admin = new JBSAdmin();
+    $params = $admin->getAdminsettings();
+    $entry_access = $params->get('entry_access');
+    $allow_entry = $params->get('allow_entry_study', 0);
+    
+        if (!$allow_entry){
+            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+            }
+        
+        $user = JFactory::getUser();
+      
+      $permission = false; 
+      $groups = JAccess::getGroupsByUser($user->id);
+      
+           foreach ($groups as $group)
+           {
+                if ($entry_access <= $group){$permission = true;}
+           }
+           if (!$permission)
+           {
+                JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+                return false; 
+           }
+
      //Puts a new record link at the top of the form
       echo '<a href="index.php?option=com_biblestudy&view=message&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';  
         parent::display($tpl);
