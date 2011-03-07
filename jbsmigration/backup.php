@@ -12,8 +12,7 @@ class JBSExport{
  function exportdb()
     {
         $result = false;
-      //  $fix = $this->fixTextentries();
-      //  if (!$fix){echo 'Problem with Fix';}
+      
         $db =& JFactory::getDBO();
 		$config =& JFactory::getConfig();
 		$abspath    = JPATH_SITE;
@@ -289,72 +288,8 @@ function writefile($dobackup)
    		return true;
     }
 
-function fixTextentries()
-{
-    
-    $fix = false;
-    $db = JFactory::getDBO();
-    $query = "SELECT id, studytext, studyintro FROM #__bsms_studies";
-    $db->setQuery($query);
-    $db->query();
-    if ($db->getErrorNum() == 0)
-        {
-    	   $fix = true;
-        }
-    $results = $db->loadObjectList();
-    foreach ($results AS $result)
-    {
-        $studytext = $this->msword_conversion($result->studytext);
-        $studyintro = $this->msword_conversion($result->studyintro);
-      //  $studytext = htmlentities($result->studytext,ENT_QUOTES,'cp1251');
-      //  $studyinto = htmlentities($result->studyintro,ENT_QUOTES,'cp1251');
-        $id = $result->id;
-        $query = "UPDATE #__bsms_studies SET studyintro = '$studyintro' , studytext = '$studytext' WHERE id = '$id' LIMIT 1";
-        $db->setQuery($query);
-        $db->query();
-    }
-    echo JText::_('JBS_EI_DONE');
-    return $fix;
-}
 
 
-function msword_conversion($str)
-{
-$str = str_replace(chr(130), ',', $str);    // baseline single quote
-$str = str_replace(chr(131), 'NLG', $str);  // florin
-$str = str_replace(chr(132), '"', $str);    // baseline double quote
-$str = str_replace(chr(133), '...', $str);  // ellipsis
-$str = str_replace(chr(134), '**', $str);   // dagger (a second footnote)
-$str = str_replace(chr(135), '***', $str);  // double dagger (a third footnote)
-$str = str_replace(chr(136), '^', $str);    // circumflex accent
-$str = str_replace(chr(137), 'o/oo', $str); // permile
-$str = str_replace(chr(138), 'Sh', $str);   // S Hacek
-$str = str_replace(chr(139), '<', $str);    // left single guillemet
-// $str = str_replace(chr(140), 'OE', $str);   // OE ligature
-$str = str_replace(chr(145), "'", $str);    // left single quote
-$str = str_replace(chr(146), "'", $str);    // right single quote
- $str = str_replace(chr(147), '"', $str);    // left double quote
- $str = str_replace(chr(148), '"', $str);    // right double quote
-$str = str_replace(chr(149), '-', $str);    // bullet
-$str = str_replace(chr(150), '-–', $str);    // endash
-$str = str_replace(chr(151), '--', $str);   // emdash
- $str = str_replace(chr(152), '~', $str);    // tilde accent
- $str = str_replace(chr(153), '(TM)', $str); // trademark ligature
-$str = str_replace(chr(154), 'sh', $str);   // s Hacek
-$str = str_replace(chr(155), '>', $str);    // right single guillemet
-// $str = str_replace(chr(156), 'oe', $str);   // oe ligature
-$str = str_replace(chr(159), 'Y', $str);    // Y Dieresis
-$str = str_replace('°C', '&deg;C', $str);    // Celcius is used quite a lot so it makes sense to add this in
-$str = str_replace('£', '&pound;', $str);
-$str = str_replace("'", "'", $str);
-$str = str_replace('"', '"', $str);
-$str = str_replace('–', '&ndash;', $str);
-$str = str_replace(chr(8216),'"',$str);
-$str = str_replace(chr(8217),'"',$str);
-$str = str_replace(chr(8220),'"',$str);
-$str = str_replace(chr(8221),'"',$str);
-return $str;
-}
 
 } // end of class
 ?>
