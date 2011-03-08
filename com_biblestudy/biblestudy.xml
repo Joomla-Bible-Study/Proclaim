@@ -5,7 +5,7 @@
         behave like an install but upgrades will be treated appropriately even
         if the interface doesn't support it properly -->
   <!-- Generic Metadata -->
-  <name>biblestudy</name>
+  <name>com_biblestudy</name>
   <author>JoomlaBibleStudy Team</author>
   <authorEmail>info@joomlabiblestudy.org</authorEmail>
   <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
