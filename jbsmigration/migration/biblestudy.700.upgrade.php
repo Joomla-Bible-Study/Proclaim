@@ -362,7 +362,7 @@ $query = "ALTER TABLE #__bsms_topics ADD COLUMN asset_id INT(10) NOT NULL, ADD C
 
 //Get all the study records
 
-$query = "UPDATE #__bsms_studies SET `show_level` = '1' WHERE `show_level` = '0'";
+$query = "UPDATE #__bsms_studies SET `access` = '1' WHERE `show_level` = '0'";
 $msg = $this->performdb($query);
  if (!$msg)
              {
@@ -373,7 +373,7 @@ $msg = $this->performdb($query);
                 $messages[] = $msg;
              }
 
-$query = "UPDATE #__bsms_studies SET `show_level` = '2' WHERE `show_level` = '18'";
+$query = "UPDATE #__bsms_studies SET `access` = '2' WHERE `show_level` = '18'";
 $msg = $this->performdb($query);
  if (!$msg)
              {
@@ -384,7 +384,7 @@ $msg = $this->performdb($query);
                 $messages[] = $msg;
              }
 
-$query = "UPDATE #__bsms_studies SET `show_level` = '3' WHERE `show_level` = '19'";
+$query = "UPDATE #__bsms_studies SET `access` = '2' WHERE `show_level` = '19'";
 $msg = $this->performdb($query);
  if (!$msg)
              {
@@ -395,7 +395,7 @@ $msg = $this->performdb($query);
                 $messages[] = $msg;
              }
 
-$query = "UPDATE #__bsms_studies SET `show_level` = '4' WHERE `show_level` = '20'";
+$query = "UPDATE #__bsms_studies SET `access` = '2' WHERE `show_level` = '20'";
 $msg = $this->performdb($query);
  if (!$msg)
              {
@@ -406,7 +406,7 @@ $msg = $this->performdb($query);
                 $messages[] = $msg;
              }
         
-$query = "UPDATE #__bsms_studies SET `show_level` = '5' WHERE `show_level` = '22'";
+$query = "UPDATE #__bsms_studies SET `access` = '3' WHERE `show_level` = '22'";
 $msg = $this->performdb($query);
  if (!$msg)
              {
@@ -417,7 +417,7 @@ $msg = $this->performdb($query);
                 $messages[] = $msg;
              }
         
-$query = "UPDATE #__bsms_studies SET `show_level` = '6' WHERE `show_level` = '23'";
+$query = "UPDATE #__bsms_studies SET `access` = '3' WHERE `show_level` = '23'";
 $msg = $this->performdb($query);
  if (!$msg)
              {
@@ -428,7 +428,7 @@ $msg = $this->performdb($query);
                 $messages[] = $msg;
              }
         
-$query = "UPDATE #__bsms_studies SET `show_level` = '7' WHERE `show_level` = '24'";
+$query = "UPDATE #__bsms_studies SET `access` = '3' WHERE `show_level` = '24'";
 $msg = $this->performdb($query);
   if (!$msg)
              {
