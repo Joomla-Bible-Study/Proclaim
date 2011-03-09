@@ -168,7 +168,7 @@ class biblestudyViewstudieslist extends JView {
         $lists['seriesid'] = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_series");
 
         //Build message types
-        $types4[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_MESSAGETYPE'));
+        $types4[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_MESSAGE_TYPE'));
         $types4 = array_merge($types4, $messageTypes);
         $lists['messagetypeid'] = JHTML::_('select.genericlist', $types4, 'filter_messagetype', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_messagetype");
 

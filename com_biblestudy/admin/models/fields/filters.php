@@ -82,9 +82,9 @@ class JFormFieldFilters extends JFormField
 			$html[] = '		<td>';
 			$html[] = '				<select name="'.$this->name.'['.$group->value.'][filter_type]" id="'.$this->id.$group->value.'_filter_type" class="hasTip" title="'.JText::_('JGLOBAL_FILTER_TYPE_LABEL').'::'.JText::_('JGLOBAL_FILTER_TYPE_DESC').'">';
 			$html[] = '					<option value="BL"'.($group_filter['filter_type'] == 'BL' ? ' selected="selected"' : '').'>'.JText::_('JBS_ADM_OPTION_BLACK_LIST').'</option>';
-			$html[] = '					<option value="WL"'.($group_filter['filter_type'] == 'WL' ? ' selected="selected"' : '').'>'.JText::_('JBS_ADMIN_OPTION_WHITE_LIST').'</option>';
-			$html[] = '					<option value="NH"'.($group_filter['filter_type'] == 'NH' ? ' selected="selected"' : '').'>'.JText::_('JBS_ADMIN_OPTION_NO_HTML').'</option>';
-			$html[] = '					<option value="NONE"'.($group_filter['filter_type'] == 'NONE' ? ' selected="selected"' : '').'>'.JText::_('JBS_ADMIN_OPTION_NO_FILTER').'</option>';
+			$html[] = '					<option value="WL"'.($group_filter['filter_type'] == 'WL' ? ' selected="selected"' : '').'>'.JText::_('JBS_ADM_OPTION_WHITE_LIST').'</option>';
+			$html[] = '					<option value="NH"'.($group_filter['filter_type'] == 'NH' ? ' selected="selected"' : '').'>'.JText::_('JBS_ADM_OPTION_NO_HTML').'</option>';
+			$html[] = '					<option value="NONE"'.($group_filter['filter_type'] == 'NONE' ? ' selected="selected"' : '').'>'.JText::_('JBS_ADM_OPTION_NO_FILTER').'</option>';
 			$html[] = '				</select>';
 			$html[] = '		</td>';
 			$html[] = '		<td>';

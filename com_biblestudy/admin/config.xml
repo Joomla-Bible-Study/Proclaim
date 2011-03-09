@@ -20,14 +20,14 @@
         	<fieldset
 		name="filters"
 		addfieldpath="/administrator/components/com_biblestudy/models/fields"
-		label="JBS_ADMIN_TEXT_FILTERS_LABEL"
-		description="JBS_ADMIN_TEXT_FILTERS_DESC"
+		label="JBS_ADM_TEXT_FILTERS_LABEL"
+		description="JBS_ADM_TEXT_FILTERS_DESC"
 		>
 
 		<field
 			name="filters"
 			type="filters"
-			label="JBS_ADMIN_TEXT_FILTERS_LABEL"
+			label="JBS_ADM_TEXT_FILTERS_LABEL"
 			class="inputbox"
 			filter="" />
 	</fieldset>
