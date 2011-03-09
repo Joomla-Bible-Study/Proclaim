@@ -1034,10 +1034,8 @@
                 <option value="2">JBS_TPL_SCRIPTURE_LINKS</option>
             </field>
             <field name="show_comments"
-           type="usergroup"
-           multiple="true"
+           type="accesslevel"
            default=""
-           size="10"
            label="JBS_TPL_DETAILS_SHOW_COMMENTS"
            description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC" />
             <field name="link_comments"
@@ -1049,9 +1047,7 @@
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
             <field name="comment_access"
-            type="usergroup" 
-            multiple="true" 
-            size="10" 
+            type="accesslevel" 
             default="" 
             label="JBS_TPL_DETAILS_COMMENT_ACCESS" 
             description="JBS_TPL_DETAILS_COMMENT_ACCESS_DESC" />
@@ -1073,14 +1069,14 @@
             </field>
             <field name="public_key"
             type="text"
-            size="25"
+            size="50"
             label="JBS_TPL_CAPTCHA_PUBLIC_KEY"
             description="JBS_TPL_CAPTCHA_PUBLIC_KEY_DESC"
             default=""
             />
             <field name="private_key"
             type="text"
-            size="25"
+            size="50"
             label="JBS_TPL_CAPTCHA_PRIVATE_KEY"
             description="JBS_TPL_CAPTCHA_PRIVATE_KEY_DESC"
             default=""

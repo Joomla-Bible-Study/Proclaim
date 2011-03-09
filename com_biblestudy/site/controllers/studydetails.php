@@ -104,7 +104,7 @@ class biblestudyControllerstudydetails extends JController
                                 $_SERVER["REMOTE_ADDR"],
                                 $_POST["recaptcha_challenge_field"],
                                 $_POST["recaptcha_response_field"]);
-dump($_POST);
+
   if (!$resp->is_valid) {
     // What happens when the CAPTCHA was entered incorrectly
     $mess = JText::_('JBS_STY_INCORRECT_KEY');
