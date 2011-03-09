@@ -536,18 +536,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	$db->setQuery($query);
 	$result = $db->loadObjectList();
 	$numrows = $db->getAffectedRows();
-/*	
-      $admin = new JBSAdmin();
-        $count = count($result);
-        for ($i=0; $i<$count; $i++)
-        {
-            $show_level = $admin->getShowLevel($result[$i]);
-            if (!$show_level)
-            {
-                unset($result[$i]);
-            }
-        }
-*/
+
      //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups	= $user->getAuthorisedViewLevels(); 

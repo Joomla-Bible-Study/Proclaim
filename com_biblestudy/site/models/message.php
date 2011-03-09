@@ -349,7 +349,7 @@ class biblestudyModelmessage extends modelClass {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
         if (empty($data))
             $data = $this->getItem();
-            $data->show_level = explode(',', $data->show_level);
+           // $data->show_level = explode(',', $data->show_level);
 
         return $data;
     }

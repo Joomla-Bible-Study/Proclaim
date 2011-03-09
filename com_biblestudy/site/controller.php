@@ -74,7 +74,7 @@ class biblestudyController extends JController {
 		}
 		$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
 
-		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&t='.$t.'&msg='.$msg, 'Comment Added');
+		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&t='.$t, $msg);
 	} // End of $cap
 	}
     
