@@ -121,12 +121,12 @@ $params = $this->form->getFieldsets();
     </div>
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_SYSTEM_DEFAULTS'), 'admin-system-defaults'); ?>
-                        <div class="width-100">
-                            <div class="width-60 fltlft">
-                                <fieldset class="panelform">
-                                    <legend><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></legend>
-                                    <ul>
-                                        <li>
+		<div class="width-100">
+				<div class="width-60 fltlft">
+						<fieldset class="panelform">
+            		<legend><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></legend>
+								<ul>
+										<li>
                         <?php echo $this->form->getLabel('default_main_image', 'params'); ?>
                         <?php echo $this->form->getInput('default_main_image', 'params'); ?>
                     </li>
@@ -212,18 +212,16 @@ $params = $this->form->getFieldsets();
                     </li>
                 </ul>
             </fieldset>
-             
-             
         </div>
     </div>
     <div class="clr"></div>
-  <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_PLAYER_SETTINGS'), 'admin-player-settings'); ?>
-                        <div class="width-100">
-                            <div class="width-50 fltlft">
-                                <fieldset class="panelform">
-                                    <legend><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></legend>
-                                    <ul>
-                                        <li>
+  	<?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_PLAYER_SETTINGS'), 'admin-player-settings'); ?>
+  	<div class="width-100">
+				<div class="width-50 fltlft">
+						<fieldset class="panelform">
+								<legend><?php echo JText::_('JBS_CMN_MEDIA_FILES'); ?></legend>
+								<ul>
+										<li>
                         <?php echo JText::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?><br/>
                         <?php echo $this->playerstats; ?>
                     </li>
@@ -241,9 +239,7 @@ $params = $this->form->getFieldsets();
                 </ul>
             </fieldset>
         </div>        
-    </div>
-   
-    <div class="width-50 fltrt">
+    		<div class="width-50 fltrt">
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_ADM_POPUP_OPTIONS'); ?></legend>
                 <ul>
@@ -264,7 +260,9 @@ $params = $this->form->getFieldsets();
                     </li>
                 </ul>
             </fieldset>
+    		</div>
     </div>
+    <div class="clr"></div>
    
     <input type="hidden" name="task" value="" />
     <input type="hidden" name="tooltype" value="" />

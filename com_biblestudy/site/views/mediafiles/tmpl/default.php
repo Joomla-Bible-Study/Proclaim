@@ -20,9 +20,9 @@ $saveOrder = $listOrder == 'mediafile.ordering';
     <fieldset id="filter-bar">
         <div class="filter-search fltlft">
             <label class="filter-search-lbl" for="filter_filename"><?php echo JText::_('JBS_MED_FILENAME'); ?>: </label>
-            <input type="text" name="filter_filename" id="filter_filename" value="<?php echo $this->escape($this->state->get('filter.filename')); ?>" title="<?php echo JText::_('COM_CONTENT_FILTER_SEARCH_DESC'); ?>" />
+            <input type="text" name="filter_filename" id="filter_filename" value="<?php echo $this->escape($this->state->get('filter.filename')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
             <label class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>: </label>
-            <input type="text" name="filter_studytitle" id="filter_studytitle" value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>" title="<?php echo JText::_('COM_CONTENT_FILTER_SEARCH_DESC'); ?>" />
+            <input type="text" name="filter_studytitle" id="filter_studytitle" value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
 
             <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button" onclick="document.id('filter_filename').value='';document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>

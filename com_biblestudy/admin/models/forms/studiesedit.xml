@@ -20,26 +20,26 @@
 
     <field name="studyintro" type="textarea" cols="57" rows="3" class="inputbox" label="JBS_CMN_DESCRIPTION" description="JBS_STY_DESCRIPTION_DESC"/>
 
-    <field name="studynumber" type="text" class="inputbox" size="8" label="JBS_CMN_STUDYNUMBER" desciption="JBS_STY_STUDYNUMBER_DESC"/>
+    <field name="studynumber" type="text" class="inputbox" size="8" label="JBS_CMN_STUDYNUMBER" description="JBS_STY_STUDYNUMBER_DESC"/>
 
     <field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_BOOK" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname">
         <option value="-1">JBS_CMN_SELECT_BOOK</option>
     </field>
     
-    <field name="chapter_begin" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN" desciption="JBS_STY_SCRIPTURE_DESC"/>
-    <field name="verse_begin" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN"/>
-    <field name="chapter_end" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END" desciption="JBS_STY_SCRIPTURE_DESC"/>
-    <field name="verse_end" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END" desciption="JBS_STY_SCRIPTURE_DESC"/>
+    <field name="chapter_begin" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN" description="JBS_STY_SCRIPTURE_DESC"/>
+    <field name="verse_begin" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN" description="JBS_STY_SCRIPTURE_DESC"/>
+    <field name="chapter_end" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END" description="JBS_STY_SCRIPTURE_DESC"/>
+    <field name="verse_end" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END" description="JBS_STY_SCRIPTURE_DESC"/>
 
     <field name="booknumber2" type="SQL" class="inputbox" label="JBS_STY_BOOK2" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname">
         <option value="-1">JBS_CMN_SELECT_BOOK</option>
     </field>
-    <field name="chapter_begin2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN2" desciption="JBS_STY_SCRIPTURE_DESC"/>
-    <field name="verse_begin2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN2"/>
-    <field name="chapter_end2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END2" desciption="JBS_STY_SCRIPTURE_DESC"/>
-    <field name="verse_end2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END2" desciption="JBS_STY_SCRIPTURE_DESC"/>
+    <field name="chapter_begin2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN2" description="JBS_STY_SCRIPTURE_DESC"/>
+    <field name="verse_begin2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_BEGIN2" description="JBS_STY_SCRIPTURE_DESC"/>
+    <field name="chapter_end2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END2" description="JBS_STY_SCRIPTURE_DESC"/>
+    <field name="verse_end2" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END2" description="JBS_STY_SCRIPTURE_DESC"/>
 
-    <field name="secondary_reference" type="text" class="inputbox" size="100" label="JBS_CMN_SECONDARY_REFERENCES" desciption="JBS_STY_SECONDARY_REFERENCES_DESC"/>
+    <field name="secondary_reference" type="text" class="inputbox" size="100" label="JBS_CMN_SECONDARY_REFERENCES" description="JBS_STY_SECONDARY_REFERENCES_DESC"/>
 
     <field name="media_hours" type="text" class="inputbox" size="5" label="JBS_CMN_HOURS"/>
     <field name="media_minutes" type="text" class="inputbox" size="5" label="JBS_CMN_MINUTES" />
