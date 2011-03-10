@@ -41,8 +41,11 @@ class biblestudyViewServerslist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
+        $canDo = BibleStudyHelper::getActions();
         JToolBarHelper::title(JText::_('JBS_SVR_SERVERS_MANAGER'), 'servers.png');
-        JToolBarHelper::addNew('serversedit.add');
+        if ($canDo->get('serversedit.create'))
+                {JToolBarHelper::addNew('serversedit.add');}
+                JToolBarHelper::addNew('serversedit.add');
         JToolBarHelper::editList('serversedit.edit');
         JToolBarHelper::divider();
         JToolBarHelper::publishList('serverslist.publish');

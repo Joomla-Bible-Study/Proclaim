@@ -106,7 +106,7 @@ class Tablestudiesedit extends JTable
          */
         protected function _getAssetTitle()
         {
-                $title = 'Joomla Bible Study Studies Asset';
+                $title = 'JBS Study: '.$this->studytitle;
                 return $title;
         }
  

@@ -16,12 +16,67 @@ defined('_JEXEC') or die();
 
 class biblestudyModelserversedit extends modelClass {
 
+  /**
+         * Method override to check if you can edit an existing record.
+         *
+         * @param       array   $data   An array of input data.
+         * @param       string  $key    The name of the key for the primary key.
+         *
+         * @return      boolean
+         * @since       1.6
+         */
+        protected function allowEdit($data = array(), $key = 'id')
+        {
+                // Check specific edit permission then general edit permission.
+                return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.serversedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+        }
     /**
      * Constructor that retrieves the ID from the request
      *
      * @access	public
      * @return	void
      */
+    
+    /**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param	object	$record	A record object.
+	 *
+	 * @return	boolean	True if allowed to delete the record. Defaults to the permission set in the component.
+	 * @since	1.6
+	 */
+	protected function canDelete($record)
+	{
+		$user = JFactory::getUser();
+
+		return $user->authorise('core.delete', 'com_biblestudy.article.'.(int) $record->id);
+	}
+
+	/**
+	 * Method to test whether a state can be edited.
+	 *
+	 * @param	object	$record	A record object.
+	 *
+	 * @return	boolean	True if allowed to change the state of the record. Defaults to the permission set in the component.
+	 * @since	1.6
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+
+		// Check for existing article.
+		if (!empty($record->id)) {
+			return $user->authorise('core.edit.state', 'com_biblestudy.serversedit.'.(int) $record->id);
+		}
+		
+		// Default to component settings if neither article nor category known.
+		else {
+			return parent::canEditState($record);
+		}
+	}
+    
+    
+    
     function __construct() {
         parent::__construct();
 

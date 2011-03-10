@@ -8,7 +8,7 @@
 defined('_JEXEC') or die();
 
 $params = $this->form->getFieldsets('params');
-
+ echo $this->toolbar;
 ?>
 <script language="javascript" type="text/javascript">
     function sizebutton(remotefilesize)
