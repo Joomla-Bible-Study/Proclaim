@@ -176,6 +176,24 @@ class JBSImport
                             $db->setQuery($query);
                             $db->query();
                         }
+                    if (substr_count($newtable,'podcast'))
+                        {
+                            $query = 'ALTER TABLE '.$backuptable.'_genesis MODIFY description TEXT';
+                            $db->setQuery($query);
+                            $db->query();
+                        }
+                         if (substr_count($newtable,'series'))
+                        {
+                            $query = 'ALTER TABLE '.$backuptable.'_genesis MODIFY description TEXT';
+                            $db->setQuery($query);
+                            $db->query();
+                        }
+                         if (substr_count($newtable,'teachers'))
+                        {
+                            $query = 'ALTER TABLE '.$backuptable.'_genesis MODIFY information TEXT';
+                            $db->setQuery($query);
+                            $db->query();
+                        }
                 }
                 
              }

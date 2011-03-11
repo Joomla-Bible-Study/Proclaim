@@ -311,6 +311,24 @@ function writefile($dobackup)
                 $db->setQuery($query);
                 $db->query();
             }
+            if (substr_count($backuptable,'podcast'))
+            {
+                $query = 'ALTER TABLE '.$backuptable.'_genesis MODIFY description BLOB';
+                $db->setQuery($query);
+                $db->query();
+            }
+             if (substr_count($backuptable,'series'))
+            {
+                $query = 'ALTER TABLE '.$backuptable.'_genesis MODIFY description BLOB';
+                $db->setQuery($query);
+                $db->query();
+            }
+             if (substr_count($backuptable,'teachers'))
+            {
+                $query = 'ALTER TABLE '.$backuptable.'_genesis MODIFY information BLOB';
+                $db->setQuery($query);
+                $db->query();
+            }
         }
         return $newbackuptables;
     }
