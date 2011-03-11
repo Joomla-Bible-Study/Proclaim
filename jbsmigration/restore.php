@@ -28,6 +28,7 @@ class JBSImport
         if ($uploadresults && (substr_count($installtype,'sql') < 1))
         {
                $result = $this->installdb($uploadresults);
+               $docopy = $this->copynewtables();
               
         }
         return $result;
@@ -131,7 +132,60 @@ class JBSImport
         //To do: delete uploaded file
 		return $result;
 	}
+  
+  function copynewtables()
+  {
     
+        $db = JFactory::getDBO();
+        $tables = $db->getTableList();
+        $prefix = $db->getPrefix();
+              
+        foreach ($tables AS $table)
+        {
+             $jbs = $prefix.'bsms_';
+             $jbstables = substr_count($table,$jbs);
+             if ($jbstables)
+             {
+                $jbsgenesis = substr_count($table,'genesis');
+                if (!$jbsgenesis )
+                {
+                    $query = 'DROP TABLE '.$table;
+                    $db->setQuery($query);
+                    $db->query();
+                }
+                else
+                {
+                    $oldtablelength = strlen($table);
+                    $newtablelength = $oldtablelength - 8;
+                    $newtable = substr($table,0,$newtablelength);
+                    $query = 'CREATE TABLE '.$newtable.' SELECT * FROM '.$table;
+                    $db->setQuery($query);
+                    $db->query();
+                    
+                    $query = 'DROP TABLE '.$table;
+                    $db->setQuery($query);
+                    $db->query();
+                    
+                    if (substr_count($newtable,'studies'))
+                        {
+                            $query = 'ALTER TABLE '.$newtable.' MODIFY studytext TEXT';
+                            $db->setQuery($query);
+                            $db->query();
+                            
+                            $query = 'ALTER TABLE '.$newtable.' MODIFY studytext2 TEXT';
+                            $db->setQuery($query);
+                            $db->query();
+                        }
+                }
+                
+             }
+        }
+       
+        
+        
+        
+  }  
+  
 }
 
 ?>

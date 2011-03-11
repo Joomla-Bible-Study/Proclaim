@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author David Waslh http://davidwalsh.name/backup-mysql-database-php
+ * @author Tom Fuller
  * @copyright 2011
  */
 defined( '_JEXEC' ) or die( 'Restricted access' ); 
@@ -41,9 +41,11 @@ class JBSExport{
         JError::raiseNotice('SOME_ERROR_CODE', 'JBS_EI_NO_TABLES');
         }
         
-             
+       //Copy tables to a temp copy, changing TEXT to BLOB
+       $newbackuptables = $this->copytables($backuptables);
+            
        $dobackup = false;
-       $dobackup = $this->backup_tables($host,$user,$password,$dbname,$backuptables);
+       $dobackup = $this->backup_tables($host,$user,$password,$dbname,$newbackuptables);
        if (!$dobackup)
        {
             JError::raiseNotice('SOME_ERROR_CODE', 'JBS_EI_NO_BACKUP');
@@ -288,8 +290,41 @@ function writefile($dobackup)
    		return true;
     }
 
+    function copytables($backuptables)
+    {
+        $newbackuptables = array();
+        $db = JFactory::getDBO();
+        foreach ($backuptables AS $backuptable)
+        {
+            $query = 'CREATE TABLE '.$backuptable.'_genesis SELECT * FROM '.$backuptable;
+            print_r ($query);
+            $db->setQuery($query);
+            $db->query();
+            $newbackuptables[] = $backuptable.'_genesis';
+            if (substr_count($backuptable,'studies'))
+            {
+                $query = 'ALTER TABLE '.$backuptable.'_genesis MODIFY studytext BLOB';
+                $db->setQuery($query);
+                $db->query();
+                
+                $query = 'ALTER TABLE '.$backuptable.'_genesis MODIFY studytext2 BLOB';
+                $db->setQuery($query);
+                $db->query();
+            }
+        }
+        return $newbackuptables;
+    }
 
-
+    function deletecopy($backuptables)
+    {
+        $db = JFactory::getDBO();
+        foreach ($backuptables AS $backuptable)
+        {
+            $query = 'DROP TABLE '.$backuptable;
+            $db->setQuery($query);
+            $db->query();
+        }
+    }
 
 } // end of class
 ?>

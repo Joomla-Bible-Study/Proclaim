@@ -12,7 +12,7 @@
   <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
   <copyright>(C) 2011 Copyright Joomla Bible Study</copyright>
   <license>GNU/GPL</license>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <creationDate>March 2011</creationDate>
   <description>Joomla Bible Study Migration Tool to Version 7</description>
   <files>jbsmigration.xml</files>
