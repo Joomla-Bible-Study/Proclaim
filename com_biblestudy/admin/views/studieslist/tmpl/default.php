@@ -119,7 +119,7 @@ $listDirn = $this->state->get('list.direction');
                     </a>
                 </td>
                 <td class="center">
-                    scripture
+                     <?php echo $this->escape($this->books); ?>
                 </td>
                 <td class="center">
                 <?php echo $this->escape($item->teachername); ?>
