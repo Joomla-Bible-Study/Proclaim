@@ -2,7 +2,8 @@
 defined('_JEXEC') or die();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 jimport( 'joomla.application.component.model' );
-
+ include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
+ 
 $params = &JComponentHelper::getParams($option);
 $default_order = $params->get('default_order');
 
@@ -201,7 +202,7 @@ function getBooks() {
   . ' FROM #__bsms_books'
   . ' WHERE published = 1'
   . ' ORDER BY booknumber';
-			$this->_Books = $this->_getList($query);
+			$this->_Books = getTranslated($this->_getList($query));
 		}
 		return $this->_Books;
 	}

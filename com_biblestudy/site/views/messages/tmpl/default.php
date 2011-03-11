@@ -76,21 +76,9 @@ $listDirn = $this->state->get('list.direction');
                 <th>
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
                 </th>
-                <th>
-                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
-                </th>
-                <th>
-                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_TOPIC', 'topic.topic_text', $listDirn, $listOrder); ?>
-                </th>
-                <th align="center">
-                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_HITS', 'study.hits', $listDirn, $listOrder); ?>
-                </th>
-                <th align="center">
-                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
-                </th>
-                <th align="center">
-                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_DOWNLOADS', 'mediafile.downloads', $listDirn, $listOrder); ?>
-                </th>
+                
+                
+                
             </tr>
         </thead>
         <tfoot>
@@ -119,7 +107,7 @@ $listDirn = $this->state->get('list.direction');
                     </a>
                 </td>
                 <td class="center">
-                     <?php echo $this->escape($item->bookname).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
+                     <?php echo JText::_($this->escape($item->bookname)).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
                 </td>
                 <td class="center">
                 <?php echo $this->escape($item->teachername); ?>
@@ -127,21 +115,9 @@ $listDirn = $this->state->get('list.direction');
                     <td class="center">
                 <?php echo $this->escape($item->messageType); ?>
                     </td>
-                    <td class="center">
-                <?php echo $this->escape($item->series_text); ?>
-                    </td>
-                    <td class="center">
-                <?php echo $this->escape($item->topic_text); ?>
-                    </td>
-                    <td class="center">
-                <?php echo $this->escape($item->hits); ?>
-                    </td>
-                    <td class="center">
-                        N/A
-                    </td>
-                    <td class="center">
-                        N/A
-                    </td>
+                    
+                    
+                    
                 </tr>
         <?php endforeach; ?>
                     </table>

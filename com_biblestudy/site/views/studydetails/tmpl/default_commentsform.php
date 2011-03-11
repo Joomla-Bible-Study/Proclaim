@@ -113,7 +113,9 @@ $commentjava = "javascript:ReverseDisplay('comments')";
  <?php
         require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
         $publickey = $this->params->get('public_key'); // you got this from the signup page
-        echo recaptcha_get_html($publickey);
+        if ($this->params->get('public_key'))
+        {echo recaptcha_get_html($publickey);}
+        else{echo JText::_('JBS_CMN_NO_KEY');}
 		
 
 		} // end of if for use of captcha

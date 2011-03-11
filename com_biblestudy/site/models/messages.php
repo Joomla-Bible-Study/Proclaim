@@ -8,6 +8,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
+     include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
     jimport('joomla.application.component.modellist');
 
     abstract class modelClass extends JModelList {
@@ -362,7 +363,8 @@ class biblestudyModelMessages extends modelClass {
         $query->order('book.bookname');
 
         $db->setQuery($query->__toString());
-        return $db->loadObjectList();
+        $books = getTranslated($db->loadObjectList());
+        return $books;
     }
 
     /*

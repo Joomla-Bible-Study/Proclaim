@@ -11,6 +11,7 @@ defined('_JEXEC') or die();
     jimport('joomla.application.component.modeladmin');
     
     require_once JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'biblestudy.php';
+    include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
 
     abstract class modelClass extends JModelAdmin {
         
@@ -294,7 +295,8 @@ class biblestudyModelstudiesedit extends modelClass {
                 . ' WHERE published = 1'
                 . ' ORDER BY booknumber';
         $this->_db->setQuery($query);
-        return $this->_getList($query);
+        $books = getTranslated($this->_getList($query));
+        return $books;
     }
 
     function getAdmin() {
@@ -365,7 +367,7 @@ class biblestudyModelstudiesedit extends modelClass {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.studiesedit.data', array());
         if (empty($data))
             $data = $this->getItem();
-            $data->show_level = explode(',', $data->show_level);
+          //  $data->show_level = explode(',', $data->show_level);
 
         return $data;
     }

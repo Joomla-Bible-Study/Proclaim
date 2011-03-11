@@ -22,7 +22,7 @@
 
     <field name="studynumber" type="text" class="inputbox" size="8" label="JBS_CMN_STUDYNUMBER" description="JBS_STY_STUDYNUMBER_DESC"/>
 
-    <field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_BOOK" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname">
+    <field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_BOOK" translate="true" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname">
         <option value="-1">JBS_CMN_SELECT_BOOK</option>
     </field>
     
@@ -31,7 +31,7 @@
     <field name="chapter_end" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END" description="JBS_STY_SCRIPTURE_DESC"/>
     <field name="verse_end" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END" description="JBS_STY_SCRIPTURE_DESC"/>
 
-    <field name="booknumber2" type="SQL" class="inputbox" label="JBS_STY_BOOK2" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname">
+    <field name="booknumber2" type="SQL" class="inputbox" label="JBS_STY_BOOK2" translate="true" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname">
         <option value="-1">JBS_CMN_SELECT_BOOK</option>
     </field>
     <field name="chapter_begin2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN2" description="JBS_STY_SCRIPTURE_DESC"/>
@@ -64,7 +64,7 @@
     </field>
 
     <field name="topics_id" type="sql" extension="com_biblestudy"
-		label="JBS_CMN_TOPIC" description="JBS_STY_TOPIC_DESC"
+		label="JBS_CMN_TOPIC" description="JBS_STY_TOPIC_DESC" translate="true"
                 class="inputbox" query="SELECT id, topic_text FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC" key_field="id" value_field="topic_text">
         <option value="-1">JBS_CMN_SELECT_TOPIC</option>
     </field>
