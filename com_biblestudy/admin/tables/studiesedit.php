@@ -77,7 +77,11 @@ class Tablestudiesedit extends JTable
                 $array['params'] = $registry->toString();
         }
         
-  
+        // Bind the rules.
+        if (isset($array['rules']) && is_array($array['rules'])) {
+        $rules = new JRules($array['rules']);
+        $this->setRules($rules);
+        }
 
         return parent::bind($array, $ignore);
 }

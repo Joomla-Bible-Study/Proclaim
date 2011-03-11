@@ -74,8 +74,9 @@
         <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
     </field>
 		
-    <field name="filename" type="text" label="JBS_MED_FILENAME"
+    <field name="filename" type="media" label="JBS_MED_FILENAME"
 			description="JBS_MED_USE_FILENAME_AS_PATH" class="inputbox" size="50" />
+
 			
     <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
 		description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15" />

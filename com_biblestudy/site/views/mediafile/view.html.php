@@ -63,9 +63,10 @@ class biblestudyViewmediafile extends JView {
 		$toolbar = biblestudyHelperToolbar::getToolbar();
 		$this->assignRef('toolbar', $toolbar);
 		$isNew		= ($mediafilesedit->id < 1);
-		$alt = "Upload";
-		$bar=& JToolBar::getInstance( 'toolbar' );
-		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&directory=", 800, 700 );
+	//	$alt = "Upload";
+     //   $bar = new JToolBar( 'Toolbar' );
+	//	$bar=& JToolBar::getInstance( 'toolbar' );
+	//	$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&folder=", 800, 700 );
       //  $this->addToolbar();
         parent::display($tpl);
     }
