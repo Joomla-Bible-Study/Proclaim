@@ -61,7 +61,7 @@ class com_biblestudyInstallerScript {
 	}
 	else
 	{
-		print '<div><p>Database tables have not been removed <br /> Be sure to uninstall the module and plugin as well. </p> <p> To complete remove Bible Study Management System, remove all database tables that start with #__bsms (or jos_bsms in most cases). </p></div>';
+		print '<div><p>'.JText::_('JBS_INS_NO_DATABASE_REMOVED').'</p></div>';
 	}
 
  
