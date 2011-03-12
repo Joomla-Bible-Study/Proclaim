@@ -39,8 +39,8 @@ $params = $this->form->getFieldsets();
                         <?php echo $this->form->getInput('compat_mode', 'params'); ?>
                     </li>
                     <li>
-                        <?php echo $this->form->getLabel('drop_tables', 'params'); ?>
-                        <?php echo $this->form->getInput('drop_tables', 'params'); ?>
+                        <?php echo $this->form->getLabel('drop_tables', 'adminsettings'); ?>
+                        <?php echo $this->form->getInput('drop_tables', 'adminsettings'); ?>
                     </li>
                     <li>
                         <?php echo $this->form->getLabel('admin_store', 'params'); ?>

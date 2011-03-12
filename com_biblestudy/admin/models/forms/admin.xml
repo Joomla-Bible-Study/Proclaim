@@ -60,7 +60,7 @@
              value_field="series_text">
             <option value="-1">JBS_CMN_SELECT_SERIES</option>
         </field>
-        <field name="booknumber" type="sql" default="-1" label="JBS_CMN_BOOK"
+        <field name="booknumber" type="sql" default="-1" label="JBS_CMN_BOOK" translate="true"
              description="JBS_ADM_FILLIN_STUDY_BOOKNUMBER_DESC" class="inputbox"
              query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
              key_field="booknumber"
@@ -79,10 +79,7 @@
              query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER BY message_type ASC">
             <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
         </field>
-        <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_DESC">
-            <option value="0">JBS_CMN_NO</option>
-            <option value="1">JBS_CMN_YES</option>
-        </field>
+       
         <field name="JBS_ADM_DEFAULT_STUDY_IMAGE" type="media" extension="com_biblestudy" id="media_image"
          label="JBS_ADM_DEFAULT_STUDYLIST_IMAGE" description="JBS_ADM_DEFAULT_STUDYLIST_IMAGE_DESC" class="inputbox"
          query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
@@ -195,6 +192,12 @@
             <option value="legacy">Legacy</option>
             <option value="gd">GD</option>
             <option value="imagemagick">ImageMagick</option>
+        </field>
+    </fields>
+    <fields name="adminsettings">
+     <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_DESC">
+            <option value="0">JBS_CMN_NO</option>
+            <option value="1">JBS_CMN_YES</option>
         </field>
     </fields>
 </form>
