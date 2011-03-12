@@ -47,11 +47,11 @@ class com_biblestudyInstallerScript {
 
 	if ($drop_tables > 0)
 	{		$db =& JFactory::getDBO();
-			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'unistall-dbtables.sql');
+			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'uninstall-dbtables.sql');
 			$db->setQuery($query);
 			$db->queryBatch();
 			$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-		$drop_result = '<div><H3>'. JText::_('JBS_INS_16_CUSTOM_UNINSTALL_SCRIPT') .'</H3>'?>;
+		$drop_result .= '<div><H3>'. JText::_('JBS_INS_16_CUSTOM_UNINSTALL_SCRIPT') .'</H3>'?>;
 
 	<h2><?php echo JText::_('JBS_INS_UNINSTALLED'); ?></h2>
 	<?php
