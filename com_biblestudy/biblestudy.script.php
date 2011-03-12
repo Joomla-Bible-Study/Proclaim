@@ -80,7 +80,7 @@ class com_biblestudyInstallerScript {
 		<div class="width-100">
 
 		<fieldset class="panelform">
-		<legend><?php echo JText::sprintf('JBS_INS_INSTALLATION_UPGRADE_RESULTS', $type); ?></legend>  
+		<legend><?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type); ?></legend>  
     
 		<?php echo JHtml::_('sliders.start','content-sliders-1',array('useCookie'=>1)); 
 
