@@ -194,10 +194,8 @@
             <option value="imagemagick">ImageMagick</option>
         </field>
     </fields>
-    <fields name="adminsettings">
-     <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_DESC">
+		<field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_DESC">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-    </fields>
 </form>

@@ -50,14 +50,14 @@ class com_biblestudyInstallerScript {
 			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'uninstall-dbtables.sql');
 			$db->setQuery($query);
 			$db->queryBatch();
-			$drop_result .=  '<p>db Error: '.$db->stderr().' </p> ';
-		$drop_result .= '<div><H3>'. JText::_('JBS_INS_16_CUSTOM_UNINSTALL_SCRIPT') .'</H3>'?>;
+			$drop_result .= '<p>db Error: '.$db->stderr().' </p> ';
+			$drop_result .= '<div><H3>'. JText::_('JBS_INS_16_CUSTOM_UNINSTALL_SCRIPT') .'</H3>';?>
 
 	<h2><?php echo JText::_('JBS_INS_UNINSTALLED'); ?></h2>
 	<?php
 		
 		$drop_result .= '</div>';
-		echo '<div><p>'.$drop_result.' </p></div> '; //dump ($drop_result, 'drop_result: ');
+		echo '<div><p>'.$drop_result.' </p></div> ';
 	}
 	else
 	{
@@ -142,7 +142,6 @@ class com_biblestudyInstallerScript {
 		<img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="flote: left" />
 		<strong><?php echo JText::_('JBS_INS_16_THANK_YOU'); ?></strong>
 		<br />
-		<?php //$mainframe =& JFactory::getApplication(); ?>
 		<img src = "components/com_biblestudy/images/openbible.png" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" align="left" /> <?php echo JText::_('JBS_INS_16_CONGRATULATIONS'); ?> 
 		<p>
 		<?php echo JText::_('JBS_INS_16_STATEMENT1'); ?> </p>
