@@ -354,7 +354,7 @@ class biblestudyModelstudiesedit extends modelClass {
      */
     public function save($data) {
         //Implode only if they selected at least one user level. Otherwise just clear the the user_level field
-        $data['show_level'] = empty($data['show_level']) ? '' : implode(',', $data['show_level']);
+       // $data['show_level'] = empty($data['show_level']) ? '' : implode(',', $data['show_level']);
         return parent::save($data);
     }
 

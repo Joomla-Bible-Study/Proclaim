@@ -119,13 +119,13 @@ class Tablestudiesedit extends JTable
          *
          * @return      int
          * @since       1.6
-         
+        */ 
         protected function _getAssetParentId()
         {
                 $asset = JTable::getInstance('Asset');
-                $asset->loadByName('com_biblestudy');
+                $asset->loadByName('com_biblestudy'); 
                 return $asset->id;
         }
-        */
+        
 }
 ?>
