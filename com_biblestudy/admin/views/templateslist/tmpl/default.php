@@ -16,7 +16,7 @@ $listDirn = $this->state->get('list.direction');
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
             <select name="filter_type" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JBS_TMP_SELECT_TMPL_TYPE'); ?></option>
+                <option value=""><?php echo JText::_('JBS_TPL_SELECT_TMPL_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->types, 'text', 'text', $this->state->get('filter.type')); ?>
             </select>
             <select name="filter_state" class="inputbox" onchange="this.form.submit()">
