@@ -106,6 +106,7 @@
                    default="-1"
                    multiple="true"
                    size="10"
+				   translate="true"
                    label="JBS_CMN_FILTERS_BOOKS"
                    description="JBS_CMN_FILTERS_BOOKS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
@@ -550,7 +551,7 @@
         <fieldset name="ROW1" addfieldpath="/administrator/components/com_biblestudy/models/fields">
             <field name="row1col1"
            type="listoptions"
-           default=""
+           default="" translate="true"
            label="JBS_TPL_DETAILS_CHOOSE_ITEM"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC"
            multiple="false" />
