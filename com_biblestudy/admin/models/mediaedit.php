@@ -30,6 +30,20 @@ class biblestudyModelmediaedit extends modelClass {
         $array = JRequest::getVar('cid', 0, '', 'array');
         $this->setId((int) $array[0]);
     }
+/**
+         * Method override to check if you can edit an existing record.
+         *
+         * @param       array   $data   An array of input data.
+         * @param       string  $key    The name of the key for the primary key.
+         *
+         * @return      boolean
+         * @since       1.6
+         */
+        protected function allowEdit($data = array(), $key = 'id')
+        {
+                // Check specific edit permission then general edit permission.
+                return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediaedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+        }
 
     function setId($id) {
         // Set id and wipe data
