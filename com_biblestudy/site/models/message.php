@@ -107,6 +107,7 @@ class biblestudyModelmessage extends modelClass {
          */
         protected function allowEdit($data = array(), $key = 'id')
         {
+                dump ($data);
                 // Check specific edit permission then general edit permission.
                 return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.message.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
         }

@@ -13,7 +13,7 @@ public static function getActions($Itemid = 0, $type = null)
         {
                 $user  = JFactory::getUser();
                 $result        = new JObject;
- 
+
                 if (empty($Itemid)) {
                         $assetName = 'com_biblestudy';
                 }
@@ -98,7 +98,7 @@ public static function getActions($Itemid = 0, $type = null)
                     }
                     
                 }
- 
+// dump ($assetName);
                 $actions = array(
                         'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete'
                 );

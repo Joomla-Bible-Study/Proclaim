@@ -20,11 +20,6 @@ class biblestudyViewmessage extends JView {
 
     function display($tpl = null) {
         
-        // Access check.
-if (!JFactory::getUser()->authorise('core.edit', 'com_biblestudy')) 
-{
-        return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-}
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->mediafiles = $this->get('MediaFiles');
@@ -32,12 +27,18 @@ if (!JFactory::getUser()->authorise('core.edit', 'com_biblestudy'))
 
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin($isSite = true);
+        
         //check permissions to enter studies
-    $admin = new JBSAdmin();
-    $params = $admin->getAdminsettings();
-    $entry_access = $params->get('entry_access');
-    $allow_entry = $params->get('allow_entry_study', 0);
-    
+        $admin = new JBSAdmin();
+        $params = $admin->getAdminsettings();
+        if (!JFactory::getUser()->authorise('core.edit', 'com_biblestudy')) 
+        {
+                return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+        
+        $entry_access = $params->get('entry_access');
+        $allow_entry = $params->get('allow_entry_study', 0);
+        
         if (!$allow_entry){
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
             return false;
@@ -57,25 +58,18 @@ if (!JFactory::getUser()->authorise('core.edit', 'com_biblestudy'))
                 JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
                 return false; 
            }
-      //  $this->addToolbar();
+           
+      //Check to see if the user can edit this record
+      $canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
+    //  dump ($this->item->id);
+      if (!$canDo->get('core.edit'))
+      {
+            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            return false; 
+      }
+      
         parent::display($tpl);
     }
-/*
-    protected function addToolbar() {
-        $isNew = $this->item->id == 0;
-        if($isNew)
-            $text = JText::_('JBS_CMN_NEW');
-        else
-            $text = JText::_('JBS_CMN_EDIT');
 
-        JToolBarHelper::title(JText::_('JBS_STY_EDIT_STUDY') . ': <small><small>[ ' . $text . ' ]</small></small>', 'studies.png');
-        JToolBarHelper::apply('studiesedit.apply');
-        JToolBarHelper::save('studiesedit.save');
-        JToolBarHelper::divider();
-        JToolBarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
-        JToolBarHelper::divider();
-        JToolBarHelper::cancel('studiesedit.cancel');
-    }
-*/
 }
 ?>

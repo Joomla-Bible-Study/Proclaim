@@ -59,6 +59,14 @@ class Tablestudiesedit extends JTable
 	var $thumbhm = null;
 	var $thumbwm = null;
 	var $params = null;
+    
+    /**
+	 * The rules associated with this record.
+	 *
+	 * @var	JRules	A JRules object.
+	 */
+	protected $_rules;
+    
 	/**
 	 * Constructor
 	 *

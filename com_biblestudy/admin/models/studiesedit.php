@@ -382,7 +382,7 @@ class biblestudyModelstudiesedit extends modelClass {
 	 * @since	1.6
 	 */
 
-	public function getTable($type = 'Studiesedit', $prefix = 'Table', $config = array())
+	public function getTable($type = 'studiesedit', $prefix = 'Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}

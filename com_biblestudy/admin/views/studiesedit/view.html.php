@@ -8,6 +8,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 class biblestudyViewstudiesedit extends JView {
@@ -31,7 +32,7 @@ class biblestudyViewstudiesedit extends JView {
     }
 
     protected function addToolbar() {
-      //  $canDo = BibleStudyHelper::getActions($type = 'studiesedit', $Itemid = $this->item->id);
+        $canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
         $isNew = $this->item->id == 0;
         if($isNew)
             $text = JText::_('JBS_CMN_NEW');
