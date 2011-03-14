@@ -32,15 +32,15 @@ class JFormFieldLinkoptions extends JFormFieldList
          */
         protected function getOptions() 
         {
-                $options[] = JHtml::_('select.option', '0', 'JBS_TPL_NO_LINK');
-                $options[] = JHtml::_('select.option', '1', 'JBS_TPL_LINK_TO_DETAILS');
-                $options[] = JHtml::_('select.option', '4', 'JBS_TPL_LINK_TO_DETAILS_TOOLTIP');
-                $options[] = JHtml::_('select.option', '2', 'JBS_TPL_LINK_TO_MEDIA');        
-                $options[] = JHtml::_('select.option', '5', 'JBS_TPL_LINK_TO_MEDIA_TOOLTIP');
-                $options[] = JHtml::_('select.option', '3', 'JBS_TPL_LINK_TO_TEACHERS_PROFILE');
-                $options[] = JHtml::_('select.option', '6', 'JBS_TPL_LINK_TO_TEACHERS_PROFILE');
-                $options[] = JHtml::_('select.option', '7', 'JBS_TPL_LINK_TO_TEACHERS_PROFILE');
-                $options[] = JHtml::_('select.option', '8', 'JBS_TPL_LINK_TO_TEACHERS_PROFILE');
+                $options[] = JHtml::_('select.option', '0', JText::_('JBS_TPL_NO_LINK'));
+                $options[] = JHtml::_('select.option', '1', JText::_('JBS_TPL_LINK_TO_DETAILS'));
+                $options[] = JHtml::_('select.option', '4', JText::_('JBS_TPL_LINK_TO_DETAILS_TOOLTIP'));
+                $options[] = JHtml::_('select.option', '2', JText::_('JBS_TPL_LINK_TO_MEDIA'));        
+                $options[] = JHtml::_('select.option', '5', JText::_('JBS_TPL_LINK_TO_MEDIA_TOOLTIP'));
+                $options[] = JHtml::_('select.option', '3', JText::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
+                $options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_LINK_TO_FIRST_ARTICLE'));
+                $options[] = JHtml::_('select.option', '7', JText::_('JBS_TPL_LINK_TO_VIRTUEMART'));
+                $options[] = JHtml::_('select.option', '8', JText::_('JBS_TPL_LINK_TO_DOCMAN'));
                 $options = array_merge(parent::getOptions(), $options);
                 return $options;
         }
