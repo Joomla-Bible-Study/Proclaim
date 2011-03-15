@@ -179,8 +179,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                             <tr>
                                 <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
                                 <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-                                <th align="center"><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></th>
-                                <th align="center"><?php echo JText::_('JBS_CMN_TEACHER'); ?></th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -197,8 +196,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                                         <td align="center">
                                             <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                                         </td>
-                                        <td>???</td>
-                                        <td>???</td>
+                                        
                                     </tr>
                     <?php
                                     endforeach;
