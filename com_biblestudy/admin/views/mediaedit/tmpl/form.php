@@ -61,8 +61,8 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 				</tr>
 			</table>
 	</fieldset>
- </div>
- <div class="col100">
+</div>
+<div class="col100">
 	<fieldset class="panelform">
 		<ul>
 			<li>
