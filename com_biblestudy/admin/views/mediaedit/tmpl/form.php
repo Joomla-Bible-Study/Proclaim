@@ -30,44 +30,50 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 			}
 		}
         </script>
-<form action="index.php" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
 <div class="col100">
-	<fieldset class="adminform">
+	<fieldset class="panelform">
 		<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
-
-
-    <table class="admintable">
-      <tr><td ></td>
-        <td align="left" ><label for="media"><strong> <?php echo JText::_( 'JBS_MED_EXTENSIONS_IMAGES' ); ?> </strong>
-          </label></td>
-
-      </tr>
-      <tr>
-        <td class="key"><?php echo JText::_( 'JBS_CMN_PUBLISHED');?></td>
-        <td>
-		<?php echo $this->lists['published'];?>
-
-        </td>
-      </tr>
-      <tr>
-        <td class="key"><?php echo JText::_( 'JBS_MED_NAME_IMAGE');?></td>
-        <td> <input class="text_area" type="text" name="media_image_name" id="media_image_name" size="100" maxlength="250" value="<?php echo $this->mediaedit->media_image_name;?>" />
-        </td>
-      </tr>
-       <tr>
-        <td class="key"><?php echo JText::_( 'JBS_CMN_DESCRIPTION');?></td>
-        <td> <input class="text_area" type="text" name="media_text" id="media_text" size="100" maxlength="250" value="<?php echo $this->mediaedit->media_text;?>" />
-        </td>
-      </tr>
-      <tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_IMAGE');?></td><td><?php echo $this->lists['media']; echo '  '.JText::_('JBS_CMN_CURRENT_FOLDER').': '.$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('JBS_CMN_SET_DEFAULT_FOLDER').'</a>';?><br /><?php echo JText::_('JBS_CMN_THIS_FIELD_IS_USED_INSTEAD_BELOW');?></td>
-      </tr>
-      <tr><td class="key"><?php echo JText::_('JBS_MED_PATH_IMAGE');?></td><td><input class="text_area" type="text" name="media_image_path" id="media_image_path" size="150" value="<?php echo $this->mediaedit->media_image_path;?>" /></td></tr>
-      <tr>
-        <td class="key"><?php echo JText::_( 'JBS_MED_ALT_TEXT_IMAGE');?></td>
-        <td> <input class="text_area" type="text" name="media_alttext" id="media_alttext" size="100" maxlength="250" value="<?php echo $this->mediaedit->media_alttext;?>" />
-        </td>
-      </tr>
-    </table>
+			<ul>
+				<li>
+					<label for="media"><strong> <?php echo JText::_( 'JBS_MED_EXTENSIONS_IMAGES' ); ?> </strong>
+					</label>
+				</li>
+				<li>
+                    <?php echo $this->form->getLabel('published'); ?>
+                    <?php echo $this->form->getInput('published'); ?>
+				</li>
+				<li>
+                    <?php echo $this->form->getLabel('media_image_name'); ?>
+                    <?php echo $this->form->getInput('media_image_name'); ?>
+				</li>
+				<li>
+                    <?php echo $this->form->getLabel('media_text'); ?>
+                    <?php echo $this->form->getInput('media_text'); ?>
+				</li>
+			</ul>
+	</fieldset>
+</div>
+<div class="col100">
+	<fieldset class="panelform">
+			<table summary="">
+				<tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_IMAGE');?></td><td><?php echo $this->lists['media']; echo '  '.JText::_('JBS_CMN_CURRENT_FOLDER').': '.$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('JBS_CMN_SET_DEFAULT_FOLDER').'</a>';?><br /><?php echo JText::_('JBS_CMN_THIS_FIELD_IS_USED_INSTEAD_BELOW');?></td>
+				</tr>
+			</table>
+	</fieldset>
+ </div>
+ <div class="col100">
+	<fieldset class="panelform">
+		<ul>
+			<li>
+                <?php echo $this->form->getLabel('media_image_path'); ?>
+                <?php echo $this->form->getInput('media_image_path'); ?>
+			</li>
+			<li>
+                <?php echo $this->form->getLabel('media_alttext'); ?>
+                <?php echo $this->form->getInput('media_alttext'); ?>
+			</li>
+		</ul>
 	</fieldset>
 </div>
 <div class="clr"></div>

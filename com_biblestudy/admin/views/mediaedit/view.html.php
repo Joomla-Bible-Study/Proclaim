@@ -13,9 +13,16 @@ jimport( 'joomla.application.component.view' );
 
 class biblestudyViewmediaedit extends JView
 {
+
+    protected $form;
+    protected $item;
+    protected $state;
+    protected $admin;
 	
 	function display($tpl = null)
 	{
+        $this->form = $this->get("Form");
+        $this->item = $this->get("Item");
 		
 		$database = & JFactory::getDBO();
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
