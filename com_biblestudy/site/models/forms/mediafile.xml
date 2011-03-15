@@ -6,8 +6,8 @@
             <option value="1">JBS_CMN_YES</option>
         </field>
 	
-        <field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE_YMD_HMS"
-			description="JBS_MED_CREATE_DATE_YMD_HMS_DESC" class="inputbox" size="22"
+        <field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
+			description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
 			format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
 			
         <field name="study_id" type="Modal_Study"

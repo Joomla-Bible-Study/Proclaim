@@ -159,19 +159,20 @@ $params = $this->form->getFieldsets('params');
             <?php echo $this->escape(JText::_($fieldset->description)); ?>
                         </p>
         <?php endif; ?>
-                            <fieldset class="panelform" >
-                                <legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
-                                <ul class="adminformlist">
-                <?php foreach ($this->form->getFieldset($name) as $field) : ?>
-                                <li><?php echo $field->label; ?><?php echo $field->input; ?></li>
-                <?php endforeach; ?>
-                            </ul>
-                        </fieldset>
-        <?php endforeach; ?>
+				<fieldset class="panelform" >
+						<legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
+						<ul class="adminformlist">
+                		<?php foreach ($this->form->getFieldset($name) as $field) : ?>
+								<li><?php echo $field->label; ?><?php echo $field->input; ?>
+								</li>
+                		<?php endforeach; ?>
+						</ul>
+				</fieldset>
+				<?php endforeach; ?>
         <?php echo JHtml::_('sliders.end'); ?>
-                            </div>
+		</div>
 
-                            <input type="hidden" name="task" value="" />
+		<input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>
 </form>
 

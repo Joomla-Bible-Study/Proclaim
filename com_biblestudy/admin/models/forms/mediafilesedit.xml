@@ -6,8 +6,8 @@
             <option value="1">JBS_CMN_YES</option>
         </field>
 	
-        <field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE_YMD_HMS"
-			description="JBS_MED_CREATE_DATE_YMD_HMS_DESC" class="inputbox" size="22"
+        <field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
+			description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
 			format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
 			
         <field name="study_id" type="Modal_Study"
@@ -51,13 +51,13 @@
 		class="inputbox" required="false"/>	
 		
     <field name="server" type="sql" extension="com_biblestudy"
-		label="JBS_CMN_SERVER" description="JBS_MED_SERVER_DESC"
+		label="JBS_CMN_SERVER" description="JBS_MED_SERVER_DESC" required="true"
 		class="inputbox" default="-1" query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC" key_field="id" value_field="server_name">
         <option value="-1">JBS_CMN_SELECT_SERVER</option>
     </field>
 		
     <field name="path" type="sql" extension="com_biblestudy"
-		label="JBS_MED_PATH_OR_FOLDER" description="JBS_MED_PATH_OR_FOLDER_DESC"
+		label="JBS_MED_PATH_OR_FOLDER" description="JBS_MED_PATH_OR_FOLDER_DESC" required="true"
 		class="inputbox" default="-1" query="SELECT id, foldername FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC" key_field="id" value_field="foldername">
         <option value="-1">JBS_CMN_SELECT_FOLDER</option>
     </field>
@@ -74,7 +74,7 @@
         <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
     </field>
 		
-    <field name="filename" type="text" label="JBS_MED_FILENAME"
+    <field name="filename" type="text" label="JBS_MED_FILENAME" required="true"
 			description="JBS_MED_USE_FILENAME_AS_PATH" class="inputbox" size="26" />
 			
     <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
