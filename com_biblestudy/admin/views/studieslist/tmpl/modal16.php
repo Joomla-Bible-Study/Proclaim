@@ -25,7 +25,7 @@ $listDirn = $this->state->get('list.direction');
         <div class="filter-select fltrt">
             <select name="filter_book" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
-                <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.book')); ?>
+                <?php echo JHtml::_('select.options', JText::_($this->books), 'value', 'text', $this->state->get('filter.book')); ?>
             </select>
             <select name="filter_teacher" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_TEACHER'); ?></option>
@@ -107,7 +107,7 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo JHtml::_('jgrid.published', $item->published, $i, 'studieslist.', true, 'cb', '', ''); ?>
                     </td>
                     <td class="center">
-                <?php echo $this->escape($item->bookname).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
+                <?php echo $this->escape(JText::_($item->bookname)).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
                     </td>
                     <td class="center">
                 <?php echo $this->escape($item->teachername); ?>
