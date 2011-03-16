@@ -26,4 +26,5 @@
     <field name="thumb" type="text" class="inputbox" size="60" label="JBS_TCH_THUMBNAIL_URL" description="JBS_TCH_THUMBNAIL_URL_DESC"/>
     <field name="information" type="editor" class="inputbox" label="JBS_TCH_OTHER_INFORMATION" description="JBS_TCH_OTHER_INFORMATION_DESC"
     filter="ContentHelper::filterText" buttons="true" />
+    <field name="asset_id" type="hidden" filter="unset" />
 </form>

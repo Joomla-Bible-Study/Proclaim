@@ -232,5 +232,6 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 		</div>
 	<?php endif; ?>
  <input type="hidden" name="task" value=""/>
+ 
         <?php echo JHtml::_('form.token'); ?>
 </form>

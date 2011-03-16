@@ -21,6 +21,7 @@ class biblestudyViewstudiesedit extends JView {
     function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
+        
         $this->mediafiles = $this->get('MediaFiles');
         $this->setLayout('form');
 

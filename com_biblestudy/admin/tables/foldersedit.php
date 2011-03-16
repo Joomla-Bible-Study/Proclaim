@@ -73,7 +73,7 @@ class Tablefoldersedit extends JTable
          */
         protected function _getAssetTitle()
         {
-                $title = 'Joomla Bible Study Folders Asset';
+                $title = 'JBS Folder: '.$this->foldername;
                 return $title;
         }
  

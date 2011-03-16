@@ -2298,4 +2298,5 @@
            size="45" />
         </fieldset>
     </fields>
+    <field name="asset_id" type="hidden" filter="unset" />
 </form>

@@ -28,4 +28,5 @@
         label="JBS_CMN_COMMENT"
         description ="JBS_CMN_COMMENT_DESC"
         rows="10" cols="50"/>
+        
 </form>

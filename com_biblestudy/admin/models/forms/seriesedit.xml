@@ -12,4 +12,5 @@
     </field>
     <field name="description" type="Editor" class="inputbox" buttons="true" height="300" label="JBS_CMN_DESCRIPTION" description="JBS_CMN_DESCRIPTION_DESC" />
     <field name="series_thumbnail" type="media" size="46" label="JBS_SER_SERIES_THUMBNAIL_IMAGE" description="JBS_SER_SERIES_THUMBNAIL_IMAGE_DESC"/>
+    <field name="asset_id" type="hidden" filter="unset" />
 </form>

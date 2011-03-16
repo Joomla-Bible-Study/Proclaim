@@ -8,7 +8,7 @@
     <field name="name" type="text" label="JBS_SHR_NAME"
 			description="JBS_SHR_NAME_DESC" class="inputbox" size="26" />
 	<field name="shareimage" type="media" label="JBS_CMN_IMAGE" description="JBS_CMN_IMAGE_DESC" />
-	
+	<field name="asset_id" type="hidden" filter="unset" />
     </fieldset>
 	
 	<fields name="params">

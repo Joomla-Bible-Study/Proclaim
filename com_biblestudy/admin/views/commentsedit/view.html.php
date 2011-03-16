@@ -19,7 +19,7 @@ class biblestudyViewcommentsedit extends JView {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-
+        
         $this->setLayout("form");
         $this->addToolbar();
         parent::display($tpl);

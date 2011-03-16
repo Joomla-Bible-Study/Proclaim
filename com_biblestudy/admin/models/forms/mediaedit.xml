@@ -12,4 +12,5 @@
 	<field name="media_image_path" type="text" class="inputbox" size="60" label="JBS_MED_PATH_IMAGE" description="JBS_MED_PATH_IMAGE_DESC"/>
 	
 	<field name="media_alttext" type="text" class="inputbox" size="60" label="JBS_MED_ALT_TEXT_IMAGE" description="JBS_MED_ALT_TEXT_IMAGE_DESC"/>
+    <field name="asset_id" type="hidden" filter="unset" />
 </form>

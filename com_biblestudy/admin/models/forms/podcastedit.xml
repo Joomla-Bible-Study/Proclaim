@@ -38,4 +38,5 @@
     <field name="custom"  type="textarea" label="JBS_CMN_CUSTOM"
 			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"
                         cols="48" rows="2"/>
+   <field name="asset_id" type="hidden" filter="unset" />
 </form>

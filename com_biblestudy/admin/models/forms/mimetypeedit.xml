@@ -6,4 +6,5 @@
     </field>
     <field name="mimetext" type="text" label="JBS_MMT_MIME_TYPE" description="JBS_MMT_MIME_TYPE_DESC" size="50" required="true" />
     <field name="mimetype" type="text" label="JBS_MMT_MIME_TYPE_CODE" description="JBS_MMT_MIME_TYPE_CODE_DESC" size="75" required="true" />
+    <field name="asset_id" type="hidden" filter="unset" />
 </form>

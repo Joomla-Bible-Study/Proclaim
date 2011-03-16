@@ -21,7 +21,7 @@ class BibleStudyViewFoldersedit extends JView {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-
+        $this->canDo	= BibleStudyHelper::getActions($type = 'foldersedit', $Itemid = $this->item->id);
         $this->setLayout("form");
         $this->addToolbar();
         parent::display($tpl);

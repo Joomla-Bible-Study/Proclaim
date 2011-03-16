@@ -87,4 +87,5 @@
 		/>
 	<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
 	description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+    <field name="asset_id" type="hidden" filter="unset" />
 </form>
