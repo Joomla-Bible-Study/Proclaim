@@ -30,7 +30,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 		<div class="width-100 fltlft">
 			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
 
-				<?php echo JHtml::_('sliders.panel',JText::_('JBS_STY_FIELDSET_RULES'), 'access-rules'); ?>
+				<?php echo JHtml::_('sliders.panel',JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
 
 				<fieldset class="panelform">
 					<?php echo $this->form->getLabel('rules'); ?>
