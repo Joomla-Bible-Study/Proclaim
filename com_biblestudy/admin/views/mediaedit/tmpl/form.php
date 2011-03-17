@@ -51,20 +51,12 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <?php echo $this->form->getLabel('media_text'); ?>
                     <?php echo $this->form->getInput('media_text'); ?>
 				</li>
-			</ul>
-	</fieldset>
-</div>
-<div class="col100">
-	<fieldset class="panelform">
-			<table summary="">
-				<tr><td class="key"><?php echo JText::_('JBS_MED_CHOOSE_IMAGE');?></td><td><?php echo $this->lists['media']; echo '  '.JText::_('JBS_CMN_CURRENT_FOLDER').': '.$this->directory.' -  <a  href="index.php?option=com_biblestudy&view=admin&layout=form" target="_blank">'.JText::_('JBS_CMN_SET_DEFAULT_FOLDER').'</a>';?><br /><?php echo JText::_('JBS_CMN_THIS_FIELD_IS_USED_INSTEAD_BELOW');?></td>
-				</tr>
-			</table>
-	</fieldset>
-</div>
-<div class="col100">
-	<fieldset class="panelform">
-		<ul>
+			
+                <li>
+                    <?php echo $this->form->getLabel('path2'); ?>
+                    <?php echo $this->form->getInput('path2'); ?>
+                    
+                </li>
 			<li>
                 <?php echo $this->form->getLabel('media_image_path'); ?>
                 <?php echo $this->form->getInput('media_image_path'); ?>
@@ -77,9 +69,20 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 	</fieldset>
 </div>
 <div class="clr"></div>
+	
+	<?php if ($this->canDo->get('core.admin')): ?>
+		<div class="width-100 fltlft">
+			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
 
-<input type="hidden" name="option" value="com_biblestudy" />
-<input type="hidden" name="id" value="<?php echo $this->mediaedit->id; ?>" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="controller" value="mediaedit" />
+				<?php echo JHtml::_('sliders.panel',JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
+
+				<fieldset class="panelform">
+					<?php echo $this->form->getLabel('rules'); ?>
+					<?php echo $this->form->getInput('rules'); ?>
+				</fieldset>
+
+			<?php echo JHtml::_('sliders.end'); ?>
+		</div>
+	<?php endif; ?>
+ <input type="hidden" name="task" value=""/>
 </form>

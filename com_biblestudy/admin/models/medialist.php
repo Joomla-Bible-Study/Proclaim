@@ -81,7 +81,7 @@ class biblestudyModelmedialist extends modelClass {
         $query->select(
                 $this->getState(
                         'list.select',
-                        'media.id, media.published, media.media_image_name, media.path2'));
+                        'media.id, media.published, media.media_image_name, media.path2, media.media_image_path'));
         $query->from('#__bsms_media AS media');
 
         //Filter by state

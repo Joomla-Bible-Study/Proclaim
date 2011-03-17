@@ -17,6 +17,11 @@ class biblestudyViewmedialist extends JView {
     protected $state;
 
     function display($tpl = null) {
+        
+        $admin = $this->get('Admin');
+		$admin_params = new JParameter($admin[0]->params);
+		$directory = ($admin_params->get('media_imagefolder') != '' ? '/images/'.$admin_params->get('media_imagefolder') : '/components/com_biblestudy/images');
+        $this->assignRef('directory', $directory);
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');

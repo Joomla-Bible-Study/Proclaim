@@ -113,7 +113,7 @@ class biblestudyModelmediaedit extends modelClass {
      * @access	public
      * @return	boolean	True on success
      */
-    function delete() {
+    function legacyDelete() {
         $cids = JRequest::getVar('cid', array(0), 'post', 'array');
 
         $row = & $this->getTable();
@@ -129,7 +129,7 @@ class biblestudyModelmediaedit extends modelClass {
         return true;
     }
 
-    function publish($cid = array(), $publish = 1) {
+    function legacyPublish($cid = array(), $publish = 1) {
 
         if (count($cid)) {
             $cids = implode(',', $cid);
@@ -182,7 +182,7 @@ class biblestudyModelmediaedit extends modelClass {
      * @since   7.0
      */
     protected function loadFormData() {
-        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafileedit.data', array());
+        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediaedit.data', array());
         if (empty($data)) {
             $data = $this->getItem();
             $data->podcast_id = explode(',', $data->podcast_id);

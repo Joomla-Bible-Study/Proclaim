@@ -43,7 +43,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 </td>
             </tr>
         </tfoot>
-        <?php
+        <?php 
         foreach($this->items as $i => $item) :
             $ordering = ($listOrder == 'mediafile.ordering');
         ?>
@@ -55,7 +55,24 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafileslist.', true, 'cb', '', ''); ?>
             </td>
             <td class="order">
-                <?php echo $this->escape($item->path2); ?>
+               <?php //echo $this->directory;
+               $path = JURI::base().'../';
+               if ($item->path2)
+               {
+                    if (!substr_count($item->path2,'/')) {$image = $this->directory.'/'.$item->path2;}
+                    else
+                    {
+                        $image = '../images/'.$item->path2;
+                    }
+               }
+               else
+               {
+                    $image = $item->media_image_path;
+                    $path = '../';
+               }
+               
+               ?>
+              <img src=" <?php echo $path.$image; ?>" alt="<?php echo $item->media_alttext;?>"/>
             </td>
             <td class="left">
                 <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=mediaedit.edit&id='.(int)$item->id); ?>">

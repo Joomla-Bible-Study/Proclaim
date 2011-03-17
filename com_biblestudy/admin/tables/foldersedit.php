@@ -1,6 +1,6 @@
 <?php
 /**
- * Bible Study Series table class
+ * Bible Study Foldersedit table class
  * 
  * 
  */
