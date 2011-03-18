@@ -1,15 +1,22 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php
+/**
+ * @version     $Id: default.php 1466 2011-01-31 23:13:03Z bcordis $
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
+//No Direct Access
+defined('_JEXEC') or die(); ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="adminform">
-		<legend><?php echo JText::_( 'CSS - which controls the look and feel' ); ?></legend>
+		<legend><?php echo JText::_( 'JBS_CSS_CSSEDIT_INTRO' ); ?></legend>
 
 		<table class="admintable">
         <tr>
 			<td width="100" align="right" class="key">
 				<label for="css">
-					<?php echo JText::_( 'CSS' ); ?>:
+					<?php echo JText::_( 'JBS_CSS_CSS' ); ?>:
 				</label>
 			</td>
 			<td>

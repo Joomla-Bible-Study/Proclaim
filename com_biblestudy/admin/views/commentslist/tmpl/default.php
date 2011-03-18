@@ -35,7 +35,7 @@ foreach ($this->items as $i => $item) :
         <td align="center" width="20">
                     <?php echo JHtml::_('jgrid.published', $item->published, $i, 'commentslist.', true, 'cb', '', ''); ?>
         </td>
-        <td> <a href="<?php echo $link; ?>"><?php echo $item->studytitle.' - '.$item->bookname.' '.$item->chapter_begin; ?></a> </td>
+        <td> <a href="<?php echo $link; ?>"><?php echo $item->studytitle.' - '.JText::_($item->bookname).' '.$item->chapter_begin; ?></a> </td>
         <td> <?php echo $item->full_name; ?> </td>
         <td> <?php echo $item->comment_date; ?> </td>
       </tr>

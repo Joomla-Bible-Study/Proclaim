@@ -13,7 +13,7 @@
 	
 	<fields name="params">
         <fieldset name="params">
-            <field name="mainlink" default="" type="text" label="JBS_SHR_MAINLINK" description="JBS_SHR_MAINLINKH_DESC" />
+            <field name="mainlink" default="" type="text" label="JBS_SHR_MAINLINK" description="JBS_SHR_MAINLINK_DESC" />
             <field name="item1prefix" default="" type="text" label="JBS_SHR_ITEM1PREFIX" description="JBS_SHR_ITEMCUSTOM_DESC" />
              <field name="item1" type="list" default="" label="JBS_SHR_ITEM" description="JBS_SHR_ITEM_DESC">
       <option value="0">JBS_CMN_NOTHING</option>

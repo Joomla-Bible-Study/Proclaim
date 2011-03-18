@@ -262,7 +262,7 @@
                     default="TRUE" 
                     type="list" 
                     label="JBS_TPL_MEDIA_EMBEDSHARE"
-                    description="If set to Show a menu is presented in the internal media player that allows sharing and embedding options">
+                    description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">
                 <option value="FALSE">JBS_TPL_NO_SHARE</option>
                 <option value="TRUE">JBS_TPL_SHOW_SHARE</option>
             </field>

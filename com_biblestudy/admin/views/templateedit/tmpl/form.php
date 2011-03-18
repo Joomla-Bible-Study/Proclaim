@@ -28,14 +28,42 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                 </ul>
         </fieldset>
     </div>
-        
  </div>
+
  <div class="clr"></div>
- <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_LIST_ITEMS'), 'admin-system-defaults'); ?>
+    <?php echo JHtml::_('tabs.panel', JText::_('JBS_CMN_MEDIA'), 'admin-system-defaults'); ?>
     <div class="width-100">
         <div class="width-60 fltlft">
             <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_TPL_LIST_ITEMS'); ?></legend>      
+                <legend><?php echo JText::_('JBS_CMN_MEDIA'); ?></legend> 
+                <ul class="adminformlist">
+                    <?php foreach($this->form->getFieldset('MEDIA') as $field): ?>
+                        <li><?php echo $field->label;echo $field->input;?></li>
+                    <?php endforeach; ?>
+                </ul>
+        </div>
+    </div>
+
+	<div class="clr"></div>
+    <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_LANDING_PAGE'), 'admin-system-defaults'); ?>
+    <div class="width-100">
+        <div class="width-60 fltlft">
+            <fieldset class="panelform">
+                <legend><?php echo JText::_('JBS_TPL_LANDING_PAGE'); ?></legend>      
+                    	<ul class="adminformlist">
+                <?php foreach($this->form->getFieldset('LANDINGPAGE') as $field): ?>
+                        <li><?php echo $field->label;echo $field->input;?></li>
+                    <?php endforeach; ?>
+                 </ul>  
+        </div>
+    </div>
+
+ <div class="clr"></div>
+ <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_STUDY_LIST_VIEW'), 'admin-system-defaults'); ?>
+    <div class="width-100">
+        <div class="width-60 fltlft">
+            <fieldset class="panelform">
+                <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_VIEW'); ?></legend>      
                     <?php echo JHtml::_('sliders.start','content-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
 
             <?php echo JHtml::_('sliders.panel',JText::_('JBS_TPL_VERSES_DATES_CSS'), 'publishing-details'); ?>
@@ -127,26 +155,11 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
     </div>
     
  <div class="clr"></div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_CMN_MEDIA'), 'admin-system-defaults'); ?>
+    <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_STUDY_DETAILS_VIEW'), 'admin-system-defaults'); ?>
     <div class="width-100">
         <div class="width-60 fltlft">
             <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_CMN_MEDIA'); ?></legend> 
-                <ul class="adminformlist">
-                    <?php foreach($this->form->getFieldset('MEDIA') as $field): ?>
-                        <li><?php echo $field->label;echo $field->input;?></li>
-                    <?php endforeach; ?>
-                </ul>
-        </div>
-    </div>
-    
-    
- <div class="clr"></div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_DETAILS_VIEW'), 'admin-system-defaults'); ?>
-    <div class="width-100">
-        <div class="width-60 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_TPL_DETAILS_VIEW'); ?></legend>      
+                <legend><?php echo JText::_('JBS_TPL_STUDY_DETAILS_VIEW'); ?></legend>      
 <?php echo JHtml::_('sliders.start','content-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
 
 <?php echo JHtml::_('sliders.panel',JText::_('JBS_TPL_DETAILS_VIEW'), 'publishing-details'); ?>
@@ -240,19 +253,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
     <?php echo JHtml::_('sliders.end'); ?>            
         </div>
     </div>
-     <div class="clr"></div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_LANDING_PAGE'), 'admin-system-defaults'); ?>
-    <div class="width-100">
-        <div class="width-60 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_TPL_LANDING_PAGE'); ?></legend>      
-                    	<ul class="adminformlist">
-                <?php foreach($this->form->getFieldset('LANDINGPAGE') as $field): ?>
-                        <li><?php echo $field->label;echo $field->input;?></li>
-                    <?php endforeach; ?>
-                 </ul>  
-        </div>
-    </div>
+
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.end'); ?>
     <input type="hidden" name="task" value="" />

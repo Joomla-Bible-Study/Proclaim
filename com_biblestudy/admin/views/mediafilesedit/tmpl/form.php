@@ -150,15 +150,12 @@ $params = $this->form->getFieldsets('params');
         </fieldset>
     </div>
     <div class="width-35 fltrt">
-        <?php
-                    echo JHtml::_('sliders.start', 'biblestudy-slider');
-                    foreach ($params as $name => $fieldset):
-                        echo JHtml::_('sliders.panel', JText::_($fieldset->label), $name . '-params');
-                        if (isset($fieldset->description) && trim($fieldset->description)): ?>
-                            <p class="tip">
-            <?php echo $this->escape(JText::_($fieldset->description)); ?>
-                        </p>
-        <?php endif; ?>
+        <?php foreach ($params as $name => $fieldset):
+									if (isset($fieldset->description) && trim($fieldset->description)): ?>
+											<p class="tip">
+											<?php echo $this->escape(JText::_($fieldset->description)); ?>
+											</p>
+        		<?php endif; ?>
 				<fieldset class="panelform" >
 						<legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
 						<ul class="adminformlist">
@@ -169,7 +166,6 @@ $params = $this->form->getFieldsets('params');
 						</ul>
 				</fieldset>
 				<?php endforeach; ?>
-        <?php echo JHtml::_('sliders.end'); ?>
 		</div>
 <div class="clr"></div>
 	

@@ -16,7 +16,7 @@ class biblestudyViewcssedit extends JView
 		
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
         $lists		=& $this->get('Data');
-		$text = JText::_( 'Edit CSS' );
+		$text = JText::_( 'JBS_CSS_CSS_EDIT' );
 		
 		
 		$this->assignRef('lists',		$lists);
@@ -25,12 +25,12 @@ class biblestudyViewcssedit extends JView
 	}
  protected function addToolbar() {
     
-    JToolBarHelper::title(   JText::_( 'CSS Edit' ).': <small><small>[ ' . $text.' ]</small></small>', 'css.png' );
+    JToolBarHelper::title(   JText::_( 'JBS_CSS_CSS_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'css.png' );
         JToolBarHelper::save('cssedit.save');
 	//	JToolBarHelper::save();
         JToolBarHelper::cancel('cssedit.cancel');
-		JToolBarHelper::custom('cssedit.backup','archive','Backup CSS', 'Backup CSS',false, false);
-		JToolBarHelper::custom( 'cssedit.resetcss', 'save', 'Reset CSS', 'Reset CSS', false, false );
+		JToolBarHelper::custom('cssedit.backup','archive','Backup CSS', 'JBS_CSS_BACKUP_CSS',false, false);
+		JToolBarHelper::custom( 'cssedit.resetcss', 'save', 'Reset CSS', 'JBS_CSS_RESET_CSS', false, false );
 		JToolBarHelper::help('biblestudy', true );
     }
 }

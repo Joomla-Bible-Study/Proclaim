@@ -51,7 +51,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 </th>
                 <th width="5%">
                     <?php
-                        echo JHtml::_('grid.sort', 'JGRID_HEADING_ORDERING', 'mediafile.ordering', $listDirn, $listOrder);
+                        echo JHtml::_('grid.sort', 'JBS_CMN_HEADING_ORDERING', 'mediafile.ordering', $listDirn, $listOrder);
                         echo JHtml::_('grid.order', $this->items, 'filesave.png', 'mediafiles.saveorer');
                     ?>
                 </th>

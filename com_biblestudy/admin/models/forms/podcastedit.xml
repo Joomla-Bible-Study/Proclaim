@@ -32,7 +32,7 @@
     <field name="filename"  type="text" label="JBS_PDC_PODCAST_XML_FILENAME"
 			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
     <field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE" size="3"
-                        description="JBS_PODCAST_LIMIT_DESC"/>
+                        description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC"/>
     <field name="episodetitle"  type="text" label="JBS_PDC_EPISODE_TITLE"
 			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
     <field name="custom"  type="textarea" label="JBS_CMN_CUSTOM"
