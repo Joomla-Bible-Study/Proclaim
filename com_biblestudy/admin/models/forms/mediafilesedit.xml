@@ -115,6 +115,10 @@
     <field name="virtuemart_id" type="sql" label="JBS_CMN_ITEM" default="-1">
         <option value="-1">JBS_MED_SELECT_VM_ITEM</option>
     </field>
+     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+			translate_label="false" class="inputbox" filter="rules"
+			component="com_biblestudy" section="mediafilesedit" validate="rules"
+		/>
 	<field name="asset_id" type="hidden" filter="unset" />		
     <fields name="params">
         <fieldset name="params">
