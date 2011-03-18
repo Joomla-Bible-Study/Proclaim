@@ -33,7 +33,7 @@ class biblestudyViewmediaedit extends JView
 		$directory = ($admin_params->get('media_imagefolder') != '' ? '/images/'.$admin_params->get('media_imagefolder') : '/components/com_biblestudy/images');
         $this->assignRef('directory', $directory);
        
-        $this->canDo	= BibleStudyHelper::getActions($type = 'mediaedit', $Itemid = $this->item->id);
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mediaedit' );
         $this->addToolbar();
 		parent::display($tpl);
 	}

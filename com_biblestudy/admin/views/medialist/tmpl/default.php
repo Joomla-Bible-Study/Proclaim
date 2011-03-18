@@ -14,7 +14,7 @@ $listDirn = $this->state->get('list.direction');
 $saveOrder = $listOrder == 'mediafile.ordering';
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileslist'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=medialist'); ?>" method="post" name="adminForm" id="adminForm">
     <table class="adminlist">
         <thead>
             <tr>
@@ -62,7 +62,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                     if (!substr_count($item->path2,'/')) {$image = $this->directory.'/'.$item->path2;}
                     else
                     {
-                        $image = '../images/'.$item->path2;
+                        $image = $item->path2;
                     }
                }
                else
