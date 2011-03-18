@@ -16,6 +16,16 @@ defined('_JEXEC') or die();
 
 class biblestudyControllermediaedit extends controllerClass
 {
+    /*
+     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+     *
+     * @todo    We should rename this controler to "mediafile" and the list view controller
+     * to "mediafiles" so that the pluralization in 1.6 would work properly
+     *
+     * @since 7.0
+     */
+    protected $view_list = 'mediafileslist';
+	
 	/**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
@@ -45,7 +55,7 @@ class biblestudyControllermediaedit extends controllerClass
 	 * save a record (and redirect to main page)
 	 * @return void
 	 */
-	function save()
+	function legacySave()
 	{
 		$model = $this->getModel('mediaedit');
 
@@ -64,7 +74,7 @@ class biblestudyControllermediaedit extends controllerClass
 	 * apply a record
 	 * @return void
 	 */
-	function apply()
+	function legacyApply()
 	{
 		$model = $this->getModel('mediaedit');
 		$cid 	= JRequest::getVar( 'id', 1, 'post', 'int' );
