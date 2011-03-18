@@ -24,7 +24,7 @@ class biblestudyControllermediaedit extends controllerClass
      *
      * @since 7.0
      */
-    protected $view_list = 'mediafileslist';
+    protected $view_list = 'mediaedit';
 	
 	/**
 	 * constructor (registers additional tasks to methods)
