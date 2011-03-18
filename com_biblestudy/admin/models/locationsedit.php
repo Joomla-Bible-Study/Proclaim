@@ -111,7 +111,7 @@ class biblestudyModellocationsedit extends modelClass
 	 * @access	public
 	 * @return	boolean	True on success
 	 */
-	function delete()
+	function legacyDelete()
 	{
 		$cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -128,7 +128,7 @@ class biblestudyModellocationsedit extends modelClass
 		}
 		return true;
 	}
-	function legacypublish($cid = array(), $publish = 1)
+	function legacyPublish($cid = array(), $publish = 1)
 	{
 		
 		if (count( $cid ))

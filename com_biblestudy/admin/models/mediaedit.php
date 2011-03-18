@@ -185,7 +185,6 @@ class biblestudyModelmediaedit extends modelClass {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediaedit.data', array());
         if (empty($data)) {
             $data = $this->getItem();
-            $data->podcast_id = explode(',', $data->podcast_id);
         }
 
 
