@@ -35,11 +35,13 @@ class biblestudyViewMimetypeedit extends JView {
         JToolBarHelper::title(JText::_('JBS_MMT_MIME_TYPE_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'mimetype.png');
         JToolBarHelper::save('mimetypeedit.save');
         if ($isNew)
-            JToolBarHelper::cancel();
-        else {
-            JToolBarHelper::apply('mimetypeedit.apply');
+			JToolBarHelper::cancel('mimetypeedit.cancel', 'JTOOLBAR_CANCEL');
+		else {
+			JToolBarHelper::apply('mimetypeedit.apply');
             JToolBarHelper::cancel('mimetypeedit.cancel', 'JTOOLBAR_CLOSE');
         }
+		JToolBarHelper::divider();
+        JToolBarHelper::help('biblestudy', true);
     }
 
 }

@@ -33,11 +33,13 @@ class biblestudyViewMessagetypeedit extends JView {
         JToolBarHelper::title(JText::_('JBS_MST_MESSAGE_TYPE_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'folder.png');
         JToolBarHelper::save('messagetypeedit.save');
         if ($isNew)
-            JToolBarHelper::cancel();
+            JToolBarHelper::cancel('messagetypeedit.cancel', 'JTOOLBAR_CANCEL');
         else {
             JToolBarHelper::apply('messagetypeedit.apply');
             JToolBarHelper::cancel('messagetypeedit.cancel', 'JTOOLBAR_CLOSE');
         }
+		JToolBarHelper::divider();
+        JToolBarHelper::help('biblestudy', true);
     }
 
 }

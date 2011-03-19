@@ -37,11 +37,13 @@ class biblestudyViewSeriesedit extends JView {
         JToolBarHelper::title(JText::_('JBS_SER_SERIES_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'series.png');
         JToolBarHelper::save('seriesedit.save');
         if ($isNew)
-            JToolBarHelper::cancel();
-        else {
-            JToolBarHelper::apply('seriesedit.apply');
+			JToolBarHelper::cancel('seriesedit.cancel', 'JTOOLBAR_CANCEL');
+		else {
+			JToolBarHelper::apply('seriesedit.apply');
             JToolBarHelper::cancel('seriesedit.cancel', 'JTOOLBAR_CLOSE');
         }
+		JToolBarHelper::divider();
+		JToolBarHelper::help('biblestudy', true);
     }
 
 }

@@ -32,11 +32,13 @@ class biblestudyViewcommentsedit extends JView {
     $canDo = BibleStudyHelper::getActions($type = 'commentsedit', $Itemid = $this->item->id);
         JToolBarHelper::save('commentsedit.save');
         if ($isNew)
-            JToolBarHelper::cancel('commentsedit.cancel', 'JTOOLBAR_CLOSE');
+            JToolBarHelper::cancel('commentsedit.cancel', 'JTOOLBAR_CANCEL');
         else {
             JToolBarHelper::apply('commentsedit.apply');
             JToolBarHelper::cancel('commentsedit.cancel', 'JTOOLBAR_CLOSE');
         }
+		JToolBarHelper::divider();
+		JToolBarHelper::help('biblestudy', true );
     }
 
 }

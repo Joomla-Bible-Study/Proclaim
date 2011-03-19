@@ -40,9 +40,14 @@ class biblestudyViewstudiesedit extends JView {
         else
             $text = JText::_('JBS_CMN_EDIT');
 
-        JToolBarHelper::title(JText::_('JBS_STY_EDIT_STUDY') . ': <small><small>[ ' . $text . ' ]</small></small>', 'studies.png');
-        JToolBarHelper::apply('studiesedit.apply');
+        JToolBarHelper::title(JText::_('JBS_STY_EDIT_STUDY') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');
         JToolBarHelper::save('studiesedit.save');
+		if ($isNew)
+			JToolBarHelper::cancel('studiesedit.cancel', 'JTOOLBAR_CANCEL');
+		else {
+			JToolBarHelper::apply('studiesedit.apply');
+			JToolBarHelper::cancel('studiesedit.cancel', 'JTOOLBAR_CLOSE');
+		}
         JToolBarHelper::divider();
         JToolBarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
         JToolBarHelper::divider();

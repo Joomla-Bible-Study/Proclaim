@@ -34,11 +34,13 @@ class BibleStudyViewFoldersedit extends JView {
         JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'folder.png');
         JToolBarHelper::save('foldersedit.save');
         if ($isNew)
-            JToolBarHelper::cancel('foldersedit.cancel', 'JTOOLBAR_CLOSE');
-        else {
-            JToolBarHelper::apply('foldersedit.apply');
+			JToolBarHelper::cancel('foldersedit.cancel', 'JTOOLBAR_CANCEL');
+		else {
+			JToolBarHelper::apply('foldersedit.apply');
             JToolBarHelper::cancel('foldersedit.cancel', 'JTOOLBAR_CLOSE');
         }
+		JToolBarHelper::divider();
+        JToolBarHelper::help('biblestudy', true);
     }
 
 }

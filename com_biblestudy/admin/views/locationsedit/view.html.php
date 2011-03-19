@@ -33,11 +33,13 @@ class biblestudyViewLocationsedit extends JView {
         JToolBarHelper::title(JText::_('JBS_LOC_LOCATION_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'locations.png');
         JToolBarHelper::save('locationsedit.save');
         if ($isNew)
-            JToolBarHelper::cancel();
-        else {
-            JToolBarHelper::apply('locationsedit.apply');
+			JToolBarHelper::cancel('locationsedit.cancel', 'JTOOLBAR_CANCEL');
+		else {
+			JToolBarHelper::apply('locationsedit.apply');
             JToolBarHelper::cancel('locationsedit.cancel', 'JTOOLBAR_CLOSE');
         }
+		JToolBarHelper::divider();
+        JToolBarHelper::help('biblestudy', true);
     }
 
 }

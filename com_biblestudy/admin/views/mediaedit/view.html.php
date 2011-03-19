@@ -40,18 +40,22 @@ class biblestudyViewmediaedit extends JView
     
      protected function addToolbar() {
         $canDo = BibleStudyHelper::getActions($this->item->id, 'mediaedit');
-        $isNew = $this->item->id == 0;
+        $isNew = $this->item->id == 1;
         if($isNew)
             $text = JText::_('JBS_CMN_NEW');
         else
             $text = JText::_('JBS_CMN_EDIT');
 
-        JToolBarHelper::title(JText::_('JBS_MED_EDIT_MEDIA') . ': <small><small>[ ' . $text . ' ]</small></small>', 'mediaimages.png');
-        JToolBarHelper::apply('mediaedit.apply');
+        JToolBarHelper::title(JText::_('JBS_MED_EDIT_MEDIA') . ': <small><small>[ ' . $title . ' ]</small></small>', 'mediaimages.png');
         JToolBarHelper::save('mediaedit.save');
-        JToolBarHelper::divider();
-        
-        JToolBarHelper::cancel('mediaedit.cancel');
+        if ($isNew)
+			JToolBarHelper::cancel('mediaedit.cancel', 'JTOOLBAR_CANCEL');
+		else {
+			JToolBarHelper::apply('mediaedit.apply');
+			JToolBarHelper::cancel('mediaedit.cancel', 'JTOOLBAR_CLOSE');
+		{
+		JToolBarHelper::divider();
+        JToolBarHelper::help('biblestudy', true);
     }
 }
 ?>

@@ -33,11 +33,13 @@ class biblestudyViewTopicsedit extends JView {
         JToolBarHelper::title(JText::_('JBS_TPC_TOPIC_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'topics.png');
         JToolBarHelper::save('topicsedit.save');
         if ($isNew)
-            JToolBarHelper::cancel();
+            JToolBarHelper::cancel('topicsedit.cancel', 'JTOOLBAR_CANCEL');
         else {
             JToolBarHelper::apply('topicsedit.apply');
             JToolBarHelper::cancel('topicsedit.cancel', 'JTOOLBAR_CLOSE');
         }
+		JToolBarHelper::divider();
+        JToolBarHelper::help('biblestudy', true);
     }
 
 }

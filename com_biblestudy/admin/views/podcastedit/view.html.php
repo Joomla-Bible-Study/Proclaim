@@ -31,11 +31,13 @@ class biblestudyViewpodcastedit extends JView {
         JToolBarHelper::title(JText::_('JBS_PDC_PODCAST_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'podcast.png');
         JToolBarHelper::save('podcastedit.save');
         if($isNew)
-            JToolBarHelper::cancel();
+            JToolBarHelper::cancel('podcastedit.cancel', 'JTOOLBAR_CANCEL');
         else {
             JToolBarHelper::apply('podcastedit.apply');
             JToolBarHelper::cancel('podcastedit.cancel', 'JTOOLBAR_CLOSE');
         }
+		JToolBarHelper::divider();
+        JToolBarHelper::help('biblestudy', true);
 
     }
 }

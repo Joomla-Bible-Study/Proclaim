@@ -37,8 +37,13 @@ class biblestudyViewTemplateedit extends JView {
         }
         JToolBarHelper::title(JText::_('JBS_TPL_CREATE_TEMPLATE'), 'templates.png');
         JToolbarHelper::save('templateedit.save');
-        JToolbarHelper::apply('templateedit.apply');
-        JToolbarHelper::cancel('templateedit.cancel');
+		if ($isNew)
+			JToolbarHelper::cancel('templateedit.cancel', 'JTOOLBAR_CANCEL');
+		else {
+			JToolbarHelper::apply('templateedit.apply');
+			JToolbarHelper::cancel('templateedit.cancel', 'JTOOLBAR_CLOSE');
+        JToolBarHelper::divider();
+        JToolBarHelper::help('biblestudy', true);
     }
 
 }

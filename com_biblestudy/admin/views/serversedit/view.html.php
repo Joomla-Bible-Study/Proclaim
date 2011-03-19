@@ -37,11 +37,13 @@ class biblestudyViewServersedit extends JView {
         JToolBarHelper::title(JText::_('JBS_SVR_SERVER_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'servers.png');
         JToolBarHelper::save('serversedit.save');
         if ($isNew)
-            JToolBarHelper::cancel();
-        else {
-            JToolBarHelper::apply('serversedit.apply');
-            JToolBarHelper::cancel('serversedit.cancel', 'JTOOLBAR_CLOSE');
+			JToolBarHelper::cancel('serversedit.cancel', 'JTOOLBAR_CANCEL'); 
+		else {
+			JToolBarHelper::apply('serversedit.apply');
+            JToolBarHelper::cancel('serversedit.cancel', 'JTOOLBAR_CLOSE');            
         }
+		JToolBarHelper::divider();
+		JToolBarHelper::help('biblestudy', true);
     }
 
 }
