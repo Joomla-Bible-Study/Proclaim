@@ -6,4 +6,8 @@
     </field>
     <field name="message_type" type="text" label="JBS_MST_MESSAGE_TYPE_TEXT" description="JBS_MST_MESSAGE_TYPE_DESC" size="75" required="true" />
     <field name="asset_id" type="hidden" filter="unset" />
+    <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+			translate_label="false" class="inputbox" filter="rules"
+			component="com_biblestudy" section="commentsedit" validate="rules"
+		/>
 </form>
