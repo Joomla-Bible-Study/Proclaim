@@ -75,7 +75,7 @@ class Tablecommentsedit extends JTable
          */
         protected function _getAssetTitle()
         {
-                $title = 'Joomla Bible Study Comments Asset';
+                $title = 'JBS Comment - id/date: '.$this->user_id.' - '.$this->comment_date;
                 return $title;
         }
  
