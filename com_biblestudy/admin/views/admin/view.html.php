@@ -43,7 +43,7 @@ class biblestudyViewadmin extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::save('admin.save');
         JToolBarHelper::apply('admin.apply');
-        JToolBarHelper::cancel('admin.cancel');
+        JToolBarHelper::cancel('admin.cancel', 'JTOOLBAR_CLOSE');
         JToolBarHelper::divider();
         JToolBarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
         JToolBarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
