@@ -42,6 +42,7 @@ class biblestudyViewTemplateedit extends JView {
 		else {
 			JToolbarHelper::apply('templateedit.apply');
 			JToolbarHelper::cancel('templateedit.cancel', 'JTOOLBAR_CLOSE');
+		}
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

@@ -51,7 +51,7 @@ class biblestudyViewstudiesedit extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
         JToolBarHelper::divider();
-        JToolBarHelper::cancel('studiesedit.cancel');
+        JToolBarHelper::help('biblestudy', true);
     }
 
 }

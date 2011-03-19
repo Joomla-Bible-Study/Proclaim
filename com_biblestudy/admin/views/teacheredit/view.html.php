@@ -43,7 +43,7 @@ class biblestudyViewteacheredit extends JView {
             JToolBarHelper::cancel('teacheredit.cancel', 'JTOOLBAR_CLOSE');
         }
 		JToolBarHelper::divider();
-        JToolBarHelper::cancel('studiesedit.cancel');
+        JToolBarHelper::help('biblestudy', true);
     }
 
 } 

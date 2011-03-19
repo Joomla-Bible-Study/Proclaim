@@ -53,7 +53,7 @@ class biblestudyViewmediaedit extends JView
 		else {
 			JToolBarHelper::apply('mediaedit.apply');
 			JToolBarHelper::cancel('mediaedit.cancel', 'JTOOLBAR_CLOSE');
-		{
+		}
 		JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }
