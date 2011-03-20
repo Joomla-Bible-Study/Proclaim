@@ -9,6 +9,7 @@
 defined('_JEXEC') or die();
 
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 
 jimport('joomla.application.component.view');
 
@@ -23,7 +24,7 @@ class biblestudyViewMimetypeedit extends JView {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'messagetypeedit');
         $this->setLayout("form");
         $this->addToolbar();
         parent::display($tpl);
