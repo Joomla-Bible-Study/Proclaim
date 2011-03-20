@@ -26,8 +26,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
         </fieldset>
     </div>
  <div class="clr"></div>
-	
-	<?php if ($this->canDo->get('core.admin')): ?>
+		<?php if ($this->canDo->get('core.admin')): ?>
 		<div class="width-100 fltlft">
 			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
 

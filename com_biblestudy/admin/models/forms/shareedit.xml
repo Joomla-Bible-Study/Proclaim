@@ -9,6 +9,10 @@
 			description="JBS_SHR_NAME_DESC" class="inputbox" size="26" />
 	<field name="shareimage" type="media" label="JBS_CMN_IMAGE" description="JBS_CMN_IMAGE_DESC" />
 	<field name="asset_id" type="hidden" filter="unset" />
+    <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+			translate_label="false" class="inputbox" filter="rules"
+			component="com_biblestudy" section="shareedit" validate="rules"
+		/>
     </fieldset>
 	
 	<fields name="params">
