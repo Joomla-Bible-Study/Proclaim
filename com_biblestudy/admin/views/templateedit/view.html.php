@@ -8,6 +8,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 class biblestudyViewTemplateedit extends JView {
@@ -22,6 +23,7 @@ class biblestudyViewTemplateedit extends JView {
         $this->state = $this->get('State');
         $this->types = $this->get('Types');
         $this->form = $this->get("Form");
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'templateedit');
         $this->addToolbar();
         
         $this->setLayout("form");

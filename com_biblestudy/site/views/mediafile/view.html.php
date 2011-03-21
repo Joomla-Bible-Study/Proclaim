@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 
 class biblestudyViewmediafile extends JView {
 
@@ -23,7 +24,7 @@ class biblestudyViewmediafile extends JView {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
         //Load the Admin settings
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin($issite = true);

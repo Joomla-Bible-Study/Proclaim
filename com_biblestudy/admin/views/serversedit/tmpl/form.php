@@ -27,18 +27,22 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 				</li>
             </ul>
      </div>           
-             <div class="width-60 fltlft">
-		<fieldset class="panelform">
-			<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
-			<ul class="adminformlist">
-                <li>
-                    <?php echo $this->form->getLabel('rules'); ?>
-					<?php echo $this->form->getInput('rules'); ?>
-                </li>
-            </ul>
+             <div class="clr"></div>
+	
+	<?php if ($this->canDo->get('core.admin')): ?>
+		<div class="width-100 fltlft">
+			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
 
-		</fieldset>
-	</div>
+				<?php echo JHtml::_('sliders.panel',JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
+
+				<fieldset class="panelform">
+					<?php echo $this->form->getLabel('rules'); ?>
+					<?php echo $this->form->getInput('rules'); ?>
+				</fieldset>
+
+			<?php echo JHtml::_('sliders.end'); ?>
+		</div>
+	<?php endif; ?>
   <input type="hidden" name="task" value="" />
   <?php echo JHtml::_('form.token'); ?>
 </form>

@@ -76,6 +76,12 @@ class Tablemessage extends JTable
                 $registry->loadArray($array['params']);
                 $array['params'] = $registry->toString();
         }
+        
+        // Bind the rules.
+    if (isset($array['rules']) && is_array($array['rules'])) {
+    $rules = new JRules($array['rules']);
+    $this->setRules($rules);
+    }
         return parent::bind($array, $ignore);
 }
 
@@ -90,7 +96,7 @@ class Tablemessage extends JTable
         protected function _getAssetName()
         {
                 $k = $this->_tbl_key;
-                return 'com_biblestudy.message.'.(int) $this->$k;
+                return 'com_biblestudy.studiesedit.'.(int) $this->$k;
         }
  
         /**

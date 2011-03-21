@@ -27,6 +27,12 @@ class Tablemediafile extends JTable
                         $parameter->loadArray($array['params']);
                         $array['params'] = (string)$parameter;
                 }
+                
+                // Bind the rules.
+    if (isset($array['rules']) && is_array($array['rules'])) {
+    $rules = new JRules($array['rules']);
+    $this->setRules($rules);
+    }
                 return parent::bind($array, $ignore);
         }	
 
@@ -66,7 +72,7 @@ class Tablemediafile extends JTable
         protected function _getAssetName()
         {
                 $k = $this->_tbl_key;
-                return 'com_biblestudy.mediafile.'.(int) $this->$k;
+                return 'com_biblestudy.mediafilesedit.'.(int) $this->$k;
         }
  
         /**

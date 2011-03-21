@@ -21,7 +21,7 @@ class biblestudyViewteacheredit extends JView {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'teacheredit');
         //Load the Admin settings
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin();
