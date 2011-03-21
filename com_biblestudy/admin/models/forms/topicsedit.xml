@@ -5,4 +5,9 @@
         <option value="1">JBS_CMN_YES</option>
     </field>
     <field name="topic_text" type="text" label="JBS_CMN_TOPIC" description="JBS_CMN_TOPIC_DESC" size="75" required="true" />
+    <field name="asset_id" type="hidden" filter="unset" />
+    <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+			translate_label="false" class="inputbox" filter="rules"
+			component="com_biblestudy" section="topicsedit" validate="rules"
+		/>
 </form>
