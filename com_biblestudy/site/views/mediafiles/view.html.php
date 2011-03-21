@@ -8,6 +8,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 jimport('joomla.application.component.helper');
 jimport('joomla.html.toolbar');
@@ -23,6 +24,7 @@ class biblestudyViewmediafiles extends JView {
     protected $state;
 
     function display($tpl = null) {
+         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
@@ -43,10 +45,12 @@ class biblestudyViewmediafiles extends JView {
 
 
  // render the toolbar on the page. rendering it here means that it is displayed on every view of your component.
-// echo biblestudyHelperToolbar::getToolbar();
-      //Puts a new record link at the top of the form
-      echo '<a href="index.php?option=com_biblestudy&view=mediafile&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';
 
+      //Puts a new record link at the top of the form
+      if ($this->canDo->get('core.create')) 
+        { 
+            echo '<a href="index.php?option=com_biblestudy&view=mediafile&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';
+        }
         parent::display($tpl);
     }
 

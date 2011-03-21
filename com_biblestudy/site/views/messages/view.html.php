@@ -9,6 +9,7 @@
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 class biblestudyViewmessages extends JView {
@@ -17,6 +18,7 @@ class biblestudyViewmessages extends JView {
     protected $state;
 
     function display($tpl = null) {
+         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'studiesedit');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
@@ -56,7 +58,10 @@ class biblestudyViewmessages extends JView {
            }
 
      //Puts a new record link at the top of the form
-      echo '<a href="index.php?option=com_biblestudy&view=message&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';  
+     if ($this->canDo->get('core.create')) 
+     { 
+      echo '<a href="index.php?option=com_biblestudy&view=message&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';
+     }  
         parent::display($tpl);
 
     }

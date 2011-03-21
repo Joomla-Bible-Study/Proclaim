@@ -7,6 +7,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 /**
@@ -23,7 +24,7 @@ class biblestudyViewMimetypelist extends JView {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mimetypeedit');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));
@@ -41,12 +42,17 @@ class biblestudyViewMimetypelist extends JView {
      */
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_MMT_MIME_TYPE_MANAGER'), 'mimetype.png');
-        JToolBarHelper::addNew('mimetypeedit.add');
-        JToolBarHelper::editList('mimetypeedit.edit');
+        if ($this->canDo->get('core.create')) 
+        { JToolBarHelper::addNew('mimetypeedit.add'); }
+        if ($this->canDo->get('core.edit')) 
+        {JToolBarHelper::editList('mimetypeedit.edit');}
+        if ($this->canDo->get('core.edit.state')) {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('mimetypelist.publish');
         JToolBarHelper::unpublishList('mimetypelist.unpublish');
-        JToolBarHelper::trash('mimetypelist.trash');
+        }
+        if ($this->canDo->get('core.delete')) 
+        {JToolBarHelper::trash('mimetypelist.trash');}
     }
 
 }

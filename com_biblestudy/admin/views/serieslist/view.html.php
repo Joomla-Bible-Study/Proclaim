@@ -8,6 +8,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport( 'joomla.application.component.view' );
 
 class biblestudyViewserieslist extends JView
@@ -22,7 +23,7 @@ class biblestudyViewserieslist extends JView
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'seriesedit');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));
@@ -40,10 +41,17 @@ class biblestudyViewserieslist extends JView
      */
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_SER_SERIES_MANAGER'), 'series.png');
-        JToolBarHelper::addNew('seriesedit.add');
-        JToolBarHelper::editList('seriesedit.edit');
+         if ($this->canDo->get('core.create')) 
+        { JToolBarHelper::addNew('seriesedit.add'); }
+        if ($this->canDo->get('core.edit')) 
+        {JToolBarHelper::editList('seriesedit.edit');}
+        if ($this->canDo->get('core.edit.state')) {
         JToolBarHelper::divider();
-        JToolBarHelper::trash('serieslist.trash');
+        JToolBarHelper::publishList('serieslist.publish');
+        JToolBarHelper::unpublishList('serieslist.unpublish');
+        }
+        if ($this->canDo->get('core.delete')) 
+        {JToolBarHelper::trash('serieslist.trash');}
     }
 
 }

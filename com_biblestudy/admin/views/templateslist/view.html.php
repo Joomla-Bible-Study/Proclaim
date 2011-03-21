@@ -8,6 +8,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 class biblestudyViewtemplateslist extends JView {
@@ -21,23 +22,24 @@ class biblestudyViewtemplateslist extends JView {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->types = $this->get('Types');
-
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'templateedit');
         $this->addToolbar();
         parent::display($tpl);
     }
 
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'templates.png');
-        JToolBarHelper::addNew('templateedit.add');
-        JToolBarHelper::editList('templateedit.edit');
+        if ($this->canDo->get('core.create')) 
+        { JToolBarHelper::addNew('templateedit.add'); }
+        if ($this->canDo->get('core.edit')) 
+        {JToolBarHelper::editList('templateedit.edit');}
+        if ($this->canDo->get('core.edit.state')) {
         JToolBarHelper::divider();
-        JToolBarHelper::publishList('templateslist.publish');
-        JToolBarHelper::unpublishList('templateslist.unpublish');
-        JToolBarHelper::divider();
-        if($this->state->get('filter.state') == -2)
-            JToolBarHelper::deleteList('', 'templateslist.delete','JTOOLBAR_EMPTY_TRASH');
-        else
-            JToolBarHelper::trash('templateslist.trash');
+        JToolBarHelper::publishList('templatelist.publish');
+        JToolBarHelper::unpublishList('templatelist.unpublish');
+        }
+        if ($this->canDo->get('core.delete')) 
+        {JToolBarHelper::trash('templatelist.trash');}
     }
 
 }

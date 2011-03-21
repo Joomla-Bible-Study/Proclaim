@@ -22,9 +22,14 @@ class biblestudyControllercommentsedit extends controllerClass {
      * @return void
      */
     function __construct() {
+     
+    
+     
         parent::__construct();
 
     }
+    
+   
 
 }
 

@@ -8,6 +8,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 /**
@@ -25,7 +26,7 @@ class biblestudyViewmediafileslist extends JView {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->mediatypes = $this->get('Mediatypes');
-
+         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));
@@ -43,15 +44,22 @@ class biblestudyViewmediafileslist extends JView {
      */
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_MED_MEDIA_FILES_MANAGER'), 'mp3.png');
-        JToolBarHelper::addNew('mediafilesedit.add');
-        JToolBarHelper::editList('mediafilesedit.edit');
+        if ($this->canDo->get('core.create')) 
+        {JToolBarHelper::addNew('mediafilesedit.add');}
+        if ($this->canDo->get('core.edit')) 
+        {JToolBarHelper::editList('mediafilesedit.edit');}
+        if ($this->canDo->get('core.edit.state')) {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('mediafileslist.publish');
         JToolBarHelper::unpublishList('mediafileslist.unpublish');
+        }
+         if ($this->canDo->get('core.delete')) 
+        {
         if($this->state->get('filter.state') == -2)
             JToolBarHelper::deleteList('', 'mediafileslist.delete','JTOOLBAR_EMPTY_TRASH');
         else
             JToolBarHelper::trash('mediafileslist.trash');
+        }
     }
 
 }

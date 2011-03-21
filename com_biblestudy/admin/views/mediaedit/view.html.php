@@ -46,14 +46,15 @@ class biblestudyViewmediaedit extends JView
         else
             $text = JText::_('JBS_CMN_EDIT');
 
-        JToolBarHelper::title(JText::_('JBS_MED_EDIT_MEDIA') . ': <small><small>[ ' . $title . ' ]</small></small>', 'mediaimages.png');
-        JToolBarHelper::save('mediaedit.save');
-        if ($isNew)
-			JToolBarHelper::cancel('mediaedit.cancel', 'JTOOLBAR_CANCEL');
-		else {
-			JToolBarHelper::apply('mediaedit.apply');
-			JToolBarHelper::cancel('mediaedit.cancel', 'JTOOLBAR_CLOSE');
-		}
+        if ($this->canDo->get('core.edit','com_biblestudy'))
+        {
+            JToolBarHelper::save('mediaedit.save');
+            if (!$isNew)
+    	     {
+    			JToolBarHelper::apply('mediaedit.apply');
+             }    
+        }
+        JToolBarHelper::cancel('mediaedit.cancel', 'JTOOLBAR_CLOSE');
 		JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

@@ -3,7 +3,7 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport( 'joomla.application.component.view' );
 
 
@@ -12,7 +12,11 @@ class biblestudyViewcssedit extends JView
 	
 	function display($tpl = null)
 	{
-		
+		 if (!JFactory::getUser()->authorize('core.manage','com_biblestudy'))
+        {
+            JError::raiseError(404,JText::_('JBS_CMN_NOT_AUTHORIZED'));
+            return false;
+        } 
 		
 		JHTML::_('stylesheet', 'icons.css', JURI::base().'components/com_biblestudy/css/');
         $lists		=& $this->get('Data');

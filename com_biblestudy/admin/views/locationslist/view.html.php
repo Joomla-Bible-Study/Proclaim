@@ -7,6 +7,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 /**
@@ -23,7 +24,7 @@ class biblestudyViewlocationslist extends JView {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-
+         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'locationsedit');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));
@@ -41,12 +42,17 @@ class biblestudyViewlocationslist extends JView {
      */
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_LOC_LOCATIONS_MANAGER'), 'locations.png');
-        JToolBarHelper::addNew('locationsedit.add');
-        JToolBarHelper::editList('locationsedit.edit');
+        if ($this->canDo->get('core.create')) 
+        { JToolBarHelper::addNew('locationsedit.add');}
+        if ($this->canDo->get('core.edit')) 
+        {        JToolBarHelper::editList('locationsedit.edit');}
+        if ($this->canDo->get('core.edit.state')) {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('locationslist.publish');
         JToolBarHelper::unpublishList('locationslist.unpublish');
-        JToolBarHelper::trash('locationslist.trash');
+        }
+        if ($this->canDo->get('core.delete')) 
+        {JToolBarHelper::trash('locationslist.trash');}
     }
 
 }

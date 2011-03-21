@@ -21,6 +21,13 @@ class biblestudyViewcommentsedit extends JView {
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'commentsedit');
+       
+        if (!JFactory::getUser()->authorize('core.manage','com_biblestudy'))
+        {
+            JError::raiseError(404,JText::_('JBS_CMN_NOT_AUTHORIZED'));
+            return false;
+        } 
+        
         $this->setLayout("form");
         $this->addToolbar();
         parent::display($tpl);
@@ -30,15 +37,16 @@ class biblestudyViewcommentsedit extends JView {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 	JToolBarHelper::title(   JText::_( 'JBS_CMT_EDIT_COMMENT' ).': <small><small>[ ' . $text.' ]</small></small>', 'comments.png' );
-    $canDo = BibleStudyHelper::getActions($this->item->id, 'commentsedit');
+    if ($this->canDo->get('core.edit','com_biblestudy'))
+    {
         JToolBarHelper::save('commentsedit.save');
-        if ($isNew)
-            JToolBarHelper::cancel('commentsedit.cancel', 'JTOOLBAR_CANCEL');
-        else {
+        if (!$isNew)
+            {
             JToolBarHelper::apply('commentsedit.apply');
-            JToolBarHelper::cancel('commentsedit.cancel', 'JTOOLBAR_CLOSE');
-        }
-		JToolBarHelper::divider();
+            }
+    }
+		JToolBarHelper::cancel('commentsedit.cancel', 'JTOOLBAR_CANCEL');
+        JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true );
     }
 

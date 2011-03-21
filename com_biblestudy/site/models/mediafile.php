@@ -51,7 +51,7 @@ class biblestudyModelmediafile extends modelClass {
         protected function allowEdit($data = array(), $key = 'id')
         {
                 // Check specific edit permission then general edit permission.
-                return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediafile.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+                return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediafilesedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
         }
         
 	public function getTable($type = 'mediafile', $prefix = 'Table', $config = array())

@@ -8,6 +8,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 class biblestudyViewLocationsedit extends JView {
@@ -21,7 +22,12 @@ class biblestudyViewLocationsedit extends JView {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
-        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'foldersedit');
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'locationsedit');
+        if (!JFactory::getUser()->authorize('core.manage','com_biblestudy'))
+        {
+            JError::raiseError(404,JText::_('JBS_CMN_NOT_AUTHORIZED'));
+            return false;
+        } 
         $this->setLayout("form");
         $this->addToolbar();
         parent::display($tpl);
@@ -31,13 +37,15 @@ class biblestudyViewLocationsedit extends JView {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_LOC_LOCATION_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'locations.png');
-        JToolBarHelper::save('locationsedit.save');
-        if ($isNew)
-			JToolBarHelper::cancel('locationsedit.cancel', 'JTOOLBAR_CANCEL');
-		else {
-			JToolBarHelper::apply('locationsedit.apply');
-            JToolBarHelper::cancel('locationsedit.cancel', 'JTOOLBAR_CLOSE');
+        if ($this->canDo->get('core.edit','com_biblestudy'))
+        {
+            JToolBarHelper::save('locationsedit.save');
+            if (!$isNew)
+    	     {
+    			JToolBarHelper::apply('locationsedit.apply');
+             }    
         }
+        JToolBarHelper::cancel('locationsedit.cancel', 'JTOOLBAR_CLOSE');
 		JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

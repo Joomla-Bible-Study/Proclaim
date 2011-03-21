@@ -7,7 +7,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-//require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'helper.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 /**
@@ -24,7 +24,7 @@ class BibleStudyViewFolderslist extends JView {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'foldersedit');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));
@@ -42,21 +42,17 @@ class BibleStudyViewFolderslist extends JView {
      */
     protected function addToolbar() {
       
-      
-      
-        $canDo = BibleStudyHelper::getActions();
-
         JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_MANAGER'), 'servers.png');
-        if ($canDo->get('core.create')) 
+        if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('foldersedit.add'); }
-        if ($canDo->get('core.edit')) 
+        if ($this->canDo->get('core.edit')) 
         {JToolBarHelper::editList('foldersedit.edit');}
-        if ($canDo->get('core.edit.state')) {
+        if ($this->canDo->get('core.edit.state')) {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('folderslist.publish');
         JToolBarHelper::unpublishList('folderslist.unpublish');
         }
-        if ($canDo->get('core.delete')) 
+        if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('folderslist.trash');}
     }
 
