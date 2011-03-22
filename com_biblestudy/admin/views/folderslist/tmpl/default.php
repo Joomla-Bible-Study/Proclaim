@@ -16,6 +16,13 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     </th>
                 </tr>
             </thead>
+            	<tfoot>
+			<tr>
+				<td colspan="10">
+					<?php echo $this->pagination->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
             <?php
                         foreach ($this->items as $i => $item) :
                             $link = JRoute::_('index.php?option=com_biblestudy&task=foldersedit.edit&id=' . (int) $item->id);
