@@ -52,7 +52,10 @@ class biblestudyViewtopicslist extends JView {
         JToolBarHelper::unpublishList('topicslist.unpublish');
         }
         if ($this->canDo->get('core.delete')) 
-        {JToolBarHelper::trash('topicslist.trash');}
+        {JToolBarHelper::trash('topicslist.trash');
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'topicslist.delete','JTOOLBAR_EMPTY_TRASH');}
+        }
     }
 
 }

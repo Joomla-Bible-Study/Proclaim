@@ -91,14 +91,27 @@ class biblestudyModeltopicsedit extends modelClass
 
 		return true;
 	}
+	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param	type	The table type to instantiate
+	 * @param	string	A prefix for the table class name. Optional.
+	 * @param	array	Configuration array for model. Optional.
+	 * @return	JTable	A database object
+	 * @since	1.6
+	 */
 
+	public function getTable($type = 'topicsedit', $prefix = 'Table', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
 	/**
 	 * Method to delete record(s)
 	 *
 	 * @access	public
 	 * @return	boolean	True on success
 	 */
-	function delete()
+/*	function delete()
 	{
 		$cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -115,6 +128,7 @@ class biblestudyModeltopicsedit extends modelClass
 		}
 		return true;
 	}
+*/ 
 function legacypublish($cid = array(), $publish = 1)
 	{
 		

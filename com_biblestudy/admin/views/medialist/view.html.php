@@ -44,10 +44,18 @@ class biblestudyViewmedialist extends JView {
      */
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_MED_MEDIA_MANAGER'), 'mediaimages.png');
-        JToolBarHelper::addNew('mediaedit.add');
-        JToolBarHelper::editList('mediaedit.edit');
+        if ($this->canDo->get('core.create')) 
+        { JToolBarHelper::addNew('mediaedit.add'); }
+        if ($this->canDo->get('core.edit')) 
+        {JToolBarHelper::editList('mediaedit.edit');}
+        if ($this->canDo->get('core.edit.state')) {
         JToolBarHelper::divider();
-        JToolBarHelper::trash('medialist.trash');
+        JToolBarHelper::publishList('medialist.publish');
+        JToolBarHelper::unpublishList('medialist.unpublish');
+        }
+        if ($this->canDo->get('core.delete')) 
+        {JToolBarHelper::trash('medialist.trash');
+        JToolBarHelper::deleteList('', 'medialist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

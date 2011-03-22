@@ -11,6 +11,15 @@ defined('_JEXEC') or die('Restricted access');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=topicslist'); ?>" method="post" name="adminForm" id="adminForm">
+<fieldset id="filter-bar">
+    <div class="filter-select fltrt">
+
+			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
+			</select>
+   </div>
+</fieldset>
 <div id="editcell">
 	<table class="adminlist">
 	<thead>
@@ -26,6 +35,13 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 			</th>
 		</tr>			
 	</thead>
+    	<tfoot>
+			<tr>
+				<td colspan="10">
+					<?php echo $this->pagination->getListFooter(); ?>
+				</td>
+			</tr>
+		</tfoot>
 	<?php
 	foreach ($this->items as $i => $item) :
 		$row = &$this->items[$i];
