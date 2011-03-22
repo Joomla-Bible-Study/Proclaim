@@ -39,12 +39,9 @@ class biblestudyViewmediaedit extends JView
 	}
     
      protected function addToolbar() {
-        $canDo = BibleStudyHelper::getActions($this->item->id, 'mediaedit');
-        $isNew = $this->item->id == 1;
-        if($isNew)
-            $text = JText::_('JBS_CMN_NEW');
-        else
-            $text = JText::_('JBS_CMN_EDIT');
+       
+        $isNew = $this->item->id < 1;
+        $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
 
         if ($this->canDo->get('core.edit','com_biblestudy'))
         {

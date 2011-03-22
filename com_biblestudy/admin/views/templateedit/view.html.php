@@ -32,19 +32,17 @@ class biblestudyViewTemplateedit extends JView {
 
     protected function addToolbar() {
         $isNew = $this->item->id == 0;
-        if ($isNew) {
-            $text = JText::_('JBS_CMN_NEW');
-        } else {
-            $text = JText::_('JBS_CMN_EDIT');
-        }
+        $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_TPL_CREATE_TEMPLATE'), 'templates.png');
+        if ($this->canDo->get('core.edit','com_biblestudy'))
+        {
         JToolbarHelper::save('templateedit.save');
-		if ($isNew)
-			JToolbarHelper::cancel('templateedit.cancel', 'JTOOLBAR_CANCEL');
-		else {
+		if (!$isNew)
+		  {
 			JToolbarHelper::apply('templateedit.apply');
-			JToolbarHelper::cancel('templateedit.cancel', 'JTOOLBAR_CLOSE');
-		}
+		  }
+        }
+        JToolbarHelper::cancel('templateedit.cancel', 'JTOOLBAR_CLOSE');
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

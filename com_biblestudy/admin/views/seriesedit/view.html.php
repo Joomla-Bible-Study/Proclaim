@@ -36,13 +36,15 @@ class biblestudyViewSeriesedit extends JView {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_SER_SERIES_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'series.png');
+         if ($this->canDo->get('core.edit','com_biblestudy'))
+        {
         JToolBarHelper::save('seriesedit.save');
-        if ($isNew)
-			JToolBarHelper::cancel('seriesedit.cancel', 'JTOOLBAR_CANCEL');
-		else {
+        if (!$isNew)
+			{
 			JToolBarHelper::apply('seriesedit.apply');
-            JToolBarHelper::cancel('seriesedit.cancel', 'JTOOLBAR_CLOSE');
+            }
         }
+        JToolBarHelper::cancel('seriesedit.cancel', 'JTOOLBAR_CLOSE');
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
     }

@@ -34,13 +34,15 @@ class biblestudyViewMimetypeedit extends JView {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_MMT_MIME_TYPE_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'mimetype.png');
+         if ($this->canDo->get('core.edit','com_biblestudy'))
+        {
         JToolBarHelper::save('mimetypeedit.save');
-        if ($isNew)
-			JToolBarHelper::cancel('mimetypeedit.cancel', 'JTOOLBAR_CANCEL');
-		else {
+        if (!$isNew)
+		 {
 			JToolBarHelper::apply('mimetypeedit.apply');
-            JToolBarHelper::cancel('mimetypeedit.cancel', 'JTOOLBAR_CLOSE');
+         }
         }
+        JToolBarHelper::cancel('mimetypeedit.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

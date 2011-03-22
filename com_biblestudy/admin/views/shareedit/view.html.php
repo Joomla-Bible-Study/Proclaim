@@ -32,13 +32,15 @@ class biblestudyViewShareedit extends JView {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_SHR_SOCIAL_NETWORK_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'social.png');
+        if ($this->canDo->get('core.edit','com_biblestudy'))
+        {
         JToolBarHelper::save('shareedit.save');
-		if ($isNew)
-			JToolBarHelper::cancel('shareedit.cancel', 'JTOOLBAR_CANCEL');
-		else {
+		if (!$isNew)
+		{
 			JToolBarHelper::apply('shareedit.apply');
-			JToolBarHelper::cancel('shareedit.cancel', 'JTOOLBAR_CLOSE');
 		}
+        }
+        JToolBarHelper::cancel('shareedit.cancel', 'JTOOLBAR_CLOSE');
 		JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

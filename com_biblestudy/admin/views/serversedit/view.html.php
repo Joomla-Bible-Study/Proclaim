@@ -36,13 +36,15 @@ class biblestudyViewServersedit extends JView {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_SVR_SERVER_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'servers.png');
+         if ($this->canDo->get('core.edit','com_biblestudy'))
+        {
         JToolBarHelper::save('serversedit.save');
-        if ($isNew)
-			JToolBarHelper::cancel('serversedit.cancel', 'JTOOLBAR_CANCEL'); 
-		else {
+        if (!$isNew)
+		{
 			JToolBarHelper::apply('serversedit.apply');
-            JToolBarHelper::cancel('serversedit.cancel', 'JTOOLBAR_CLOSE');            
         }
+        }
+        JToolBarHelper::cancel('serversedit.cancel', 'JTOOLBAR_CLOSE');  
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
     }
