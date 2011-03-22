@@ -35,11 +35,11 @@ class biblestudyViewtemplateslist extends JView {
         {JToolBarHelper::editList('templateedit.edit');}
         if ($this->canDo->get('core.edit.state')) {
         JToolBarHelper::divider();
-        JToolBarHelper::publishList('templatelist.publish');
-        JToolBarHelper::unpublishList('templatelist.unpublish');
+        JToolBarHelper::publishList('templateslist.publish');
+        JToolBarHelper::unpublishList('templateslist.unpublish');
         }
         if ($this->canDo->get('core.delete')) 
-        {JToolBarHelper::trash('templatelist.trash');}
+        {JToolBarHelper::trash('templateslist.trash');}
     }
 
 }
