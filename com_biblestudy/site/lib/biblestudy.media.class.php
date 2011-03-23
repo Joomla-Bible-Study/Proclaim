@@ -45,8 +45,8 @@ class jbsMedia
         foreach ($mediaids AS $media)
         {
             //Step 1 is to get the media file
-
-            $image = $images->getMediaImage($media->path2, $media->impath);
+//dump ($media->impath);
+            $image = $images->getMediaImage($media->impath, $media->path2);
 
             $itemparams = new JParameter ($media->params);
 

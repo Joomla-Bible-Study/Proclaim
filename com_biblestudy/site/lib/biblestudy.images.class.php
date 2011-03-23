@@ -89,6 +89,7 @@ class jbsImages
 			$mediaimagefolder = 'images/'. $admin_params->get('media_imagefolder');
 		}
 //		$mediaimagefolder = ($admin_params->get('media_imagefolder') ? 'images' .DS. $admin_params->get('media_imagefolder') : 'components/com_biblestudy/images' );
+
 		return $mediaimagefolder;
 	}
 	
@@ -143,6 +144,7 @@ class jbsImages
 		$imagepath = array();
 		$folder = $this->getStudiesImageFolder();
 		$path = $folder .'/'. $image;
+        if (substr_count($image,'/')) {$path = $image;}
 		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
@@ -152,6 +154,7 @@ class jbsImages
 		$imagepath = array();
 		$folder = $this->getSeriesImageFolder();
 		$path = $folder .'/'. $image;
+        if (substr_count($image,'/')) {$path = $image;}
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
 		return $imagepath;
 	}
@@ -163,11 +166,14 @@ class jbsImages
 		if ($image1 == '- JBS_CMN_NO_IMAGE - ' || !$image1)     // 2010-11-12 santon: need to be changed
 		{
 			$path = $image2;
+            if (!substr_count($path,'/')) {$path = $folder .'/'.$image2;}
 		}
 		else
 		{
 			$folder = $this->getTeacherImageFolder();
 			$path = $folder .'/'. $image1;
+            if (substr_count($image1,'/') > 0)
+            {$path = $image1;}
 		}
 		
 		$imagepath = $this->getImagePath($path); //dump ($folder, 'folder: '); dump ($path, 'path: ');
@@ -176,15 +182,20 @@ class jbsImages
 	
 	function getTeacherImage($image1=null, $image2=null)
 	{
-		if (!$image1)
+		$imagepath = array();
+        $folder = $this->getTeacherImageFolder();
+        if (!$image1)
 		{
 			$path = $image2;
+            if (!substr_count($path,'/')) {$path = $folder .'/'.$image2;}
 		}
 		else
 		{
-			$imagepath = array();
+			
 			$folder = $this->getTeacherImageFolder();
 			$path = $folder .'/'. $image1;
+            if (substr_count($media1,'/') > 0)
+            {$path = $image1;}
 		}
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
 		return $imagepath;
@@ -193,15 +204,18 @@ class jbsImages
 	function getMediaImage($media1=NULL, $media2=NULL) //$media1 is the new, $media2 is the old full path
 	{
 		$imagepath = array();
+        $folder = $this->getMediaImageFolder();
 		if ($media1)
 		{
-			$folder = $this->getMediaImageFolder();
 			$path = $folder .'/'. $media1;
-
+            if (substr_count($media1,'/') > 0)
+            {$path = $media1;}
+//dump ($folder); dump($path);
 		}
 		else
 		{
 			$path = $media2;
+            if (!substr_count($path,'/')) {$path = $folder .'/'.$media2;}
 		}
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
 		return $imagepath;
