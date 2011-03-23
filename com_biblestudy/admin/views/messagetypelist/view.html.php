@@ -53,6 +53,8 @@ class biblestudyViewMessagetypelist extends JView {
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('messagetypelist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'messagetypelist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

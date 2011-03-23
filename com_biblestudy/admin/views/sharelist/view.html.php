@@ -49,6 +49,8 @@ class biblestudyViewsharelist extends JView {
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('sharelist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'sharelist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

@@ -115,6 +115,9 @@ function getDeletes()
     protected function populateState() {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
+        
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
         parent::populateState('mimetype.mimetext', 'ASC');
     }
@@ -130,12 +133,14 @@ function getDeletes()
                 'mimetype.id, mimetype.mimetype, mimetype.mimetext, mimetype.published'));
         $query->from('`#__bsms_mimetype` AS mimetype');
 
-        //Filter by state
-        $state = $this->getState('mimetype.state');
-        if (empty($state))
-            $query->where('mimetype.published = 0 OR mimetype.published = 1');
-        else
-            $query->where('mimetype.published = ' . (int) $state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('mimetype.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(mimetype.published = 0 OR mimetype.published = 1)');
+		}
 
         return $query;
     }

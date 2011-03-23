@@ -127,6 +127,9 @@ function getDeletes()
     protected function  populateState() {
         $state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
+        
+         $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
         parent::populateState('share.name', 'ASC');
     }
@@ -144,12 +147,14 @@ function getDeletes()
                         'share.id, share.name, share.params, share.published'));
         $query->from('#__bsms_share AS share');
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if(empty($state))
-            $query->where('share.published = 0 OR share.published = 1');
-        else
-            $query->where('share.published = ' . (int) $state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('share.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(share.published = 0 OR share.published = 1)');
+		}
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');

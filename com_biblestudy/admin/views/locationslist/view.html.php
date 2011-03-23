@@ -53,6 +53,8 @@ class biblestudyViewlocationslist extends JView {
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('locationslist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'locationslist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

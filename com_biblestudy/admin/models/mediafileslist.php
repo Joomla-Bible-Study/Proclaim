@@ -141,6 +141,9 @@ class biblestudyModelmediafileslist extends modelClass {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
 
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+        
         $study = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $study);
 
@@ -206,12 +209,14 @@ class biblestudyModelmediafileslist extends modelClass {
         $query->select('mediatype.media_text AS mediaType');
         $query->join('LEFT', '`#__bsms_media` AS mediatype ON mediatype.id = mediafile.media_image');
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if (empty($state))
-            $query->where('mediafile.published = 0 OR mediafile.published = 1');
-        else
-            $query->where('mediafile.published = ' . (int) $state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('mediafile.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(mediafile.published = 0 OR mediafile.published = 1)');
+		}
 
         //Filter by filename
         $filename = $this->getState('filter.filename');

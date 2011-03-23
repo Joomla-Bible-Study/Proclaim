@@ -19,10 +19,10 @@ $listDirn = $this->state->get('list.direction');
                 <option value=""><?php echo JText::_('JBS_TPL_SELECT_TMPL_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->types, 'text', 'text', $this->state->get('filter.type')); ?>
             </select>
-            <select name="filter_state" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.state'), true); ?>
-            </select>
+            	<select name="filter_published" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
+			</select>
         </div>
     </fieldset>
     <div class="clr"></div>

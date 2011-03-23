@@ -50,6 +50,8 @@ class biblestudyViewcommentslist extends JView
         }
         if ($canDo->get('core.delete')) 
         {JToolBarHelper::trash('commentslist.trash');}
+        if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'commentslist.delete','JTOOLBAR_EMPTY_TRASH');}
         
     }
 

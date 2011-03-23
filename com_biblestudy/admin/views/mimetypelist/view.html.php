@@ -53,6 +53,8 @@ class biblestudyViewMimetypelist extends JView {
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('mimetypelist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'mimetypelist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

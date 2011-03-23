@@ -15,6 +15,15 @@ $saveOrder = $listOrder == 'serieslist.ordering';
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=serieslist'); ?>" method="post" name="adminForm" id="adminForm">
+<fieldset id="filter-bar">
+    <div class="filter-select fltrt">
+
+			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
+			</select>
+   </div>
+</fieldset>
     <table class="adminlist">
         <thead>
             <tr>

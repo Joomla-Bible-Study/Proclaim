@@ -66,6 +66,10 @@ class biblestudyModelserieslist extends modelClass {
     protected function populateState() {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
+        
+         $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+        
         parent::populateState('series.series_text', 'ASC');
     }
 
@@ -84,11 +88,14 @@ class biblestudyModelserieslist extends modelClass {
                         'series.id, series_text, series.published'));
         $query->from('#__bsms_series AS series');
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if (!empty($state)) {
-            $query->where('series.published = ' . (int) $state);
-        }
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('series.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(series.published = 0 OR series.published = 1)');
+		}
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');

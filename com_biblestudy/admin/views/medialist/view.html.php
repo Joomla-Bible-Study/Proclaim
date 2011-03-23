@@ -54,7 +54,8 @@ class biblestudyViewmedialist extends JView {
         JToolBarHelper::unpublishList('medialist.unpublish');
         }
         if ($this->canDo->get('core.delete')) 
-        {JToolBarHelper::trash('medialist.trash');
+        {JToolBarHelper::trash('medialist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
         JToolBarHelper::deleteList('', 'medialist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 

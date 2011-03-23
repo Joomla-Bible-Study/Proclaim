@@ -47,6 +47,8 @@ class biblestudyViewstudieslist extends JView {
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('studieslist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'studieslist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

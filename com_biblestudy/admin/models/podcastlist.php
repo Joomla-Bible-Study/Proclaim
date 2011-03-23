@@ -111,6 +111,9 @@ class biblestudyModelpodcastlist extends modelClass {
     protected function populateState() {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
+        
+         $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
         parent::populateState('podcast.title', 'ASC');
     }
@@ -129,12 +132,14 @@ class biblestudyModelpodcastlist extends modelClass {
                         'podcast.id, podcast.published, podcast.title, podcast.description'));
         $query->from('#__bsms_podcast AS podcast');
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if(empty($state))
-            $query->where('podcast.published = 0 OR podcast.published = 1');
-        else
-            $query->where('podcast.published = ' . (int) $state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('podcast.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(podcast.published = 0 OR podcast.published = 1)');
+		}
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');

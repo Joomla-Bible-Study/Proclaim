@@ -66,6 +66,10 @@ class biblestudyModelmedialist extends modelClass {
     protected function populateState() {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
+        
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+        
         parent::populateState('media.media_image_name', 'ASC');
     }
 
@@ -84,11 +88,14 @@ class biblestudyModelmedialist extends modelClass {
                         'media.id, media.published, media.media_image_name, media.path2, media.media_image_path'));
         $query->from('#__bsms_media AS media');
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if (!empty($state)) {
-            $query->where('media.published = ' . (int) $state);
-        }
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('media.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(media.published = 0 OR media.published = 1)');
+		}
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');

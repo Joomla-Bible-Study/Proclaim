@@ -66,6 +66,9 @@ class biblestudyModelserverslist extends modelClass {
     protected function  populateState() {
         $state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
+        
+         $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
         parent::populateState('server.server_name', 'DESC');
     }
@@ -83,12 +86,14 @@ class biblestudyModelserverslist extends modelClass {
                         'server.id, server.published, server.server_path, server.server_name'));
         $query->from('#__bsms_servers AS server');
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if(empty($state))
-            $query->where('server.published = 0 OR server.published = 1');
-        else
-            $query->where('server.published = ' . (int) $state);
+       // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('server.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(server.published = 0 OR server.published = 1)');
+		}
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');

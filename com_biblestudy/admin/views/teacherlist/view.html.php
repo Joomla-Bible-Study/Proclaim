@@ -49,6 +49,8 @@ class biblestudyViewteacherlist extends JView {
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('teacherlist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'teacherlist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

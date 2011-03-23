@@ -15,10 +15,10 @@ $listDirn = $this->state->get('list.direction');
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templateslist'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
-            <select name="filter_state" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.state'), true); ?>
-            </select>
+            <select name="filter_published" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
+			</select>
         </div>
     </fieldset>
     <div class="clr"></div>

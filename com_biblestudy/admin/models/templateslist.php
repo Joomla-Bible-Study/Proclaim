@@ -55,6 +55,10 @@ class biblestudyModelTemplateslist extends modelClass {
 
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
+        
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+        
         parent::populateState('template.title', 'ASC');
     }
 
@@ -78,12 +82,14 @@ class biblestudyModelTemplateslist extends modelClass {
         if (!empty($type))
             $query->where('template.type = ' . $type); //@todo  $type should be escaped to prevent sql injection
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if(empty($state))
-            $query->where('template.published = 0 OR template.published = 1');
-        else
-            $query->where('template.published = ' . (int) $state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('temmplate.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(template.published = 0 OR template.published = 1)');
+		}
         
 
         //Add the list ordering clause

@@ -89,7 +89,7 @@ function getDeletes()
                         'topic.id, topic.topic_text, topic.published'));
         $query->from('#__bsms_topics AS topic');
 
-        	// Filter by published state
+        // Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
 			$query->where('topic.published = ' . (int) $published);
@@ -97,14 +97,7 @@ function getDeletes()
 		else if ($published === '') {
 			$query->where('(topic.published = 0 OR topic.published = 1)');
 		}
-       /* 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if(empty($state))
-            $query->where('topic.published = 0 OR topic.published = 1');
-        else
-            $query->where('topic.published = ' . (int) $state);
-*/
+       
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');

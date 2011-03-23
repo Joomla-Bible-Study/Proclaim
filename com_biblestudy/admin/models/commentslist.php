@@ -125,7 +125,10 @@ class biblestudyModelcommentslist extends modelClass {
     protected function populateState() {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
-
+        
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+        
         parent::populateState('comment.comment_date', 'DESC');
     }
 
@@ -143,12 +146,14 @@ class biblestudyModelcommentslist extends modelClass {
                         'comment.*'));
         $query->from('#__bsms_comments AS comment');
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if (empty($state))
-            $query->where('comment.published = 0 OR comment.published = 1');
-        else
-            $query->where('comment.published = ' . (int) $state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('comment.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(comment.published = 0 OR comment.published = 1)');
+		}
 
         //Join over Studies
         $query->select('study.studytitle AS studytitle');

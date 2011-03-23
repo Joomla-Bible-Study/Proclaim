@@ -54,6 +54,8 @@ class BibleStudyViewFolderslist extends JView {
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('folderslist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'folderslist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

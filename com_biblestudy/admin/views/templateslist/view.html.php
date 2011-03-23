@@ -40,6 +40,8 @@ class biblestudyViewtemplateslist extends JView {
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('templateslist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'templateslist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

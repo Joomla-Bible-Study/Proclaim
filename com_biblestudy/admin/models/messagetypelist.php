@@ -66,6 +66,9 @@ class biblestudyModelmessagetypelist extends modelClass {
     protected function populateState() {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
+        
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
         parent::populateState('messagetype.message_type', 'ASC');
     }
@@ -85,12 +88,14 @@ class biblestudyModelmessagetypelist extends modelClass {
 
         $query->from('#__bsms_message_type AS messagetype');
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if (empty($state))
-            $query->where('messagetype.published = 0 OR messagetype.published = 1');
-        else
-            $query->where('messagetype.published = ' . (int) $state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('messagetype.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(messagetype.published = 0 OR messagetype.published = 1)');
+		}
 
         return $query;
     }

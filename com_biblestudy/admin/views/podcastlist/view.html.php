@@ -38,6 +38,8 @@ class biblestudyViewpodcastlist extends JView {
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('podcastlist.trash');}
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        JToolBarHelper::deleteList('', 'podcastlist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

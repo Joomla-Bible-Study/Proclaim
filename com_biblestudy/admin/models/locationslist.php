@@ -107,6 +107,9 @@ class biblestudyModellocationslist extends modelClass {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
 
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+        
         parent::populateState('location.location_text', 'ASC');
     }
 
@@ -121,12 +124,14 @@ class biblestudyModellocationslist extends modelClass {
                 'location.id, location.published, location.location_text'));
         $query->from('`#__bsms_locations` AS location');
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if (empty($state))
-            $query->where('location.published = 0 OR location.published = 1');
-        else
-            $query->where('location.published = ' . (int) $state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('location.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(location.published = 0 OR location.published = 1)');
+		}
         
         return $query;
     }

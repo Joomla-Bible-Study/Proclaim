@@ -236,6 +236,9 @@ class biblestudyModelstudieslist extends modelClass {
     protected function  populateState() {
         $studytitle = $this->getUserStateFromRequest($this->context.'.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
+        
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
         $book = $this->getUserStateFromRequest($this->context.'.filter.book', 'filter_book');
         $this->setState('filter.book', $book);
@@ -334,12 +337,14 @@ class biblestudyModelstudieslist extends modelClass {
         if(!empty($topic))
             $query->where('study.topics_id = '.(int)$topic);
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if(empty($state))
-            $query->where('study.published = 0 OR study.published = 1');
-        else
-            $query->where('study.published = '.(int)$state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('study.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(study.published = 0 OR study.published = 1)');
+		}
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
