@@ -32,6 +32,7 @@ JHtml::_('behavior.formvalidation');
              </div>
              <div class="formelm">
                     <?php echo $this->form->getLabel('studyintro'); ?>
+                    <div class="clr"></div>
                     <?php echo $this->form->getInput('studyintro'); ?>
                </div>
                <div class="formelm">
