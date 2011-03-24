@@ -186,6 +186,15 @@ if ($results)
             $msg = $this->performdb($query);
             
         }
+        //Update the params to json
+        $params = new JParameter($result->params);
+            $params2	= $params->toObject();
+            $params2 = json_encode($params2);
+            
+        
+        $query = "UPDATE #__bsms_mediafiles SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
+        $msg = $this->performdb($query);
+        
         
     }
 }
@@ -550,7 +559,61 @@ $msg = $this->performdb($query);
              {
                 $messages[] = $msg;
              }      
-             
+
+//Fix studies params
+$query = "SELECT `id`, `params` FROM #__bsms_studies";
+$db->setQuery($query);
+$db->query();
+$results = $db->loadObjectList();
+if ($results)
+{
+    foreach ($results AS $result)
+    {
+        //Update the params to json
+        $params = new JParameter($result->params);
+        $params2	= $params->toObject();
+        $params2 = json_encode($params2);
+        $query = "UPDATE #__bsms_studies SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
+        $msg = $this->performdb($query);
+    }
+}
+
+//Fix share params
+$query = "SELECT `id`, `params` FROM #__bsms_share";
+$db->setQuery($query);
+$db->query();
+$results = $db->loadObjectList();
+if ($results)
+{
+    foreach ($results AS $result)
+    {
+        //Update the params to json
+        $params = new JParameter($result->params);
+        $params2	= $params->toObject();
+        $params2 = json_encode($params2);
+        $query = "UPDATE #__bsms_share SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
+        $msg = $this->performdb($query);
+    }
+}
+
+
+//Fix template params
+$query = "SELECT `id`, `params` FROM #__bsms_templates";
+$db->setQuery($query);
+$db->query();
+$results = $db->loadObjectList();
+if ($results)
+{
+    foreach ($results AS $result)
+    {
+        //Update the params to json
+        $params = new JParameter($result->params);
+        $params2	= $params->toObject();
+        $params2 = json_encode($params2);
+        $query = "UPDATE #__bsms_templates SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
+        $msg = $this->performdb($query);
+    }
+}             
 $application = JFactory::getApplication();
 $application->enqueueMessage( ''. JText::_('Upgrading to build 700') .'' ) ;
 $results = array('build'=>'700','messages'=>$messages);
@@ -577,6 +640,7 @@ $results = array('build'=>'700','messages'=>$messages);
 						$results = false; return $results;
 					}	
     }
+
 
 }
 ?>

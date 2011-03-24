@@ -20,21 +20,25 @@ foreach ($messages AS $message)
  <?php
  echo JHtml::_('sliders.start','content-sliders-migration', array('useCookie'=>1));  
  echo JHtml::_('sliders.panel', JText::_('JBS_MIGRATE_VERSION').' '.$message['build'] , 'publishing-details'); ?>
- <?php foreach ($message AS $msg)
- {   
-    if (is_array($msg))
-    {
-        foreach ($msg AS $m)
+ <?php if (is_array($message))
+ {
+    foreach ($message AS $msg)
+     {   
+        if (is_array($msg))
         {
-            echo $m;
+            foreach ($msg AS $m)
+            {
+                echo $m;
+            }
         }
-    }
-    else
-        {
-            echo $msg;
-        } 
-    
- }?>
+        else
+            {
+                echo $msg;
+            } 
+        
+     }
+ }
+ else {print_r($message);}?>
  <?php echo JHtml::_('sliders.end'); ?>
  </fieldset>
 </div>
