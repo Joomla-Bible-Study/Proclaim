@@ -24,6 +24,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('studyintro'); ?>
+                    <div class="clr"></div>
                     <?php echo $this->form->getInput('studyintro'); ?>
                 </li>
                 <li>
