@@ -50,20 +50,15 @@ class com_biblestudyInstallerScript {
 			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'uninstall-dbtables.sql');
 			$db->setQuery($query);
 			$db->queryBatch();
-			$drop_result .= '<p>db Error: '.$db->stderr().' </p> ';
-			$drop_result .= '<div><H3>'. JText::_('JBS_INS_16_CUSTOM_UNINSTALL_SCRIPT') .'</H3>';?>
-
-	<h2><?php echo JText::_('JBS_INS_UNINSTALLED'); ?></h2>
-	<?php
-		
-		$drop_result .= '</div>';
-		echo '<div><p>'.$drop_result.' </p></div> ';
+			$drop_result .= '<p>db Error: '.$db->stderr().'</p>';
+			$drop_result .= '<H3>'. JText::_('JBS_INS_CUSTOM_UNINSTALL_SCRIPT') .'</H3>';
 	}
 	else
 	{
-		print '<div><p>'.JText::_('JBS_INS_NO_DATABASE_REMOVED').'</p></div>';
+		$drop_result = '<H3>'.JText::_('JBS_INS_NO_DATABASE_REMOVED').'</H3>';
 	}
-
+  echo '<h2>'. JText::_('JBS_INS_UNINSTALLED').'</h2> <div>'.$drop_result.'</div>';
+	
  
 	} //end of function uninstall()
 
