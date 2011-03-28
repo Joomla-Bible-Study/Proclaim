@@ -14,7 +14,21 @@ class fixJBSAssets
     public function AssetEntry()
     {
         $objects = array(array(name=>'#__bsms_servers',titlefield=>'server_name',assetname=>'serversedit'),
-                        array(name=>'#__bsms_folders',titlefield=>'foldername',assetname=>'foldersedit'));
+                        array(name=>'#__bsms_folders',titlefield=>'foldername',assetname=>'foldersedit'),
+                        array(name=>'#__bsms_studies',titlefield=>'studytitle',assetname=>'studiesedit'),
+                        array(name=>'#__bsms_comments',titlefield=>'comment_date',assetname=>'commentsedit'),
+                        array(name=>'#__bsms_locations',titlefield=>'location_text',assetname=>'locationsedit'),
+                        array(name=>'#__bsms_media',titlefield=>'media_text',assetname=>'mediaedit'),
+                        array(name=>'#__bsms_mediafiles',titlefield=>'filename',assetname=>'mediafilesedit'),
+                        array(name=>'#__bsms_messagetype',titlefield=>'message_type',assetname=>'messagetypeedit'),
+                        array(name=>'#__bsms_mimetype',titlefield=>'mimetext',assetname=>'mimetypeedit'),
+                        array(name=>'#__bsms_podcast',titlefield=>'title',assetname=>'podcastedit'),
+                        array(name=>'#__bsms_series',titlefield=>'series_text',assetname=>'seriesedit'),
+                        array(name=>'#__bsms_share',titlefield=>'name',assetname=>'shareedit'),
+                        array(name=>'#__bsms_teachers',titlefield=>'teachername',assetname=>'teacheredit'),
+                        array(name=>'#__bsms_templates',titlefield=>'title',assetname=>'templateedit'),
+                        array(name=>'#__bsms_topics',titlefield=>'topic_text',assetname=>'topicsedit'),
+                        );
 
         foreach ($objects AS $object)
         {
@@ -66,6 +80,11 @@ class fixJBSAssets
              
             $query = 'UPDATE '.$name.' SET asset_id = '.$table->id.' WHERE id = '.$oldtable->id;
     		$this->db_new->setQuery($query);
+    		$this->db_new->query();
+            
+            //Since parent_id and level don't seem to set properly, let's add them back to the assets table
+            $query = 'UPDATE #__assets SET parent_id = '.$parent_id.', level = 2 WHERE id = '.$table->id;
+            $this->db_new->setQuery($query);
     		$this->db_new->query();
         
             }
