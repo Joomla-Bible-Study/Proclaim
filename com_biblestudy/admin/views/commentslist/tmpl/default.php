@@ -8,13 +8,6 @@
 //No Direct Access
 defined('_JEXEC') or die('Restricted access');
 
-        
-require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
-
-$assetfix = new fixJBSAssets();
-$assetdofix = $assetfix->AssetEntry();
-      //  if ($assetdofix){echo 'it worked.';}else{echo 'if failed';}
-      print_r($assetdofix);
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
  ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=commentslist'); ?>" method="post" name="adminForm" id="adminForm">

@@ -20,7 +20,7 @@ class fixJBSAssets
                         array(name=>'#__bsms_locations',titlefield=>'location_text',assetname=>'locationsedit'),
                         array(name=>'#__bsms_media',titlefield=>'media_text',assetname=>'mediaedit'),
                         array(name=>'#__bsms_mediafiles',titlefield=>'filename',assetname=>'mediafilesedit'),
-                        array(name=>'#__bsms_messagetype',titlefield=>'message_type',assetname=>'messagetypeedit'),
+                        array(name=>'#__bsms_message_type',titlefield=>'message_type',assetname=>'messagetypeedit'),
                         array(name=>'#__bsms_mimetype',titlefield=>'mimetext',assetname=>'mimetypeedit'),
                         array(name=>'#__bsms_podcast',titlefield=>'title',assetname=>'podcastedit'),
                         array(name=>'#__bsms_series',titlefield=>'series_text',assetname=>'seriesedit'),
@@ -69,6 +69,7 @@ class fixJBSAssets
         {
             foreach ($oldtables AS $oldtable)
             {
+                @set_time_limit(300);
                 $table = JTable::getInstance('Asset', 'JTable', array('dbo' => $this->db_new));
                 $table->name = 'com_biblestudy.'.$assetname.'.'.$oldtable->id;
                 $table->parent_id = $parent_id;

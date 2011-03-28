@@ -73,7 +73,20 @@ class com_biblestudyInstallerScript {
 
 	function postflight($type, $parent) { ?>
 		<div class="width-100">
-
+<?php // Check to see if assets have been fixed
+        $db = JFactory::getDBO();
+        $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
+        $db->setQuery($query);
+        $db->query();
+        if (!$db->loadResult())
+        {
+            require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
+            $assetfix = new fixJBSAssets();
+            echo JText::_('JBS_INS_16_ASSET_IN_PROCESS').'<br />';
+            $assetdofix = $assetfix->AssetEntry();
+            if ($assetdofix){echo JText::_('JBS_INS_16_ASSET_SUCCESS');}else{echo JText::_('JBS_INS_16_ASSET_FAILURE');}
+        }
+?>
 		<fieldset class="panelform">
 		<legend><?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type); ?></legend>  
     
