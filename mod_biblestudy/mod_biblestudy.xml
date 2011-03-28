@@ -34,7 +34,13 @@
                 value_field="title"
                 required="true"
             />
-            
+     <field name="moduleitems"
+                description="JBS_MOD_ITEMS_DESC"
+                label="JBS_MOD_ITEMS"
+                default="5"
+                type="text"
+                size="10"
+           />       
      <field name="mteacher_id"
            type="teacherlist"
            label="JBS_CMN_FILTERS_TEACHER"
