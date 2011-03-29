@@ -63,7 +63,7 @@ class com_biblestudyInstallerScript {
 	} //end of function uninstall()
 
 	function update($parent) {
-		echo '<p>'. JText::_('JBS_INS_16_CUSTOM_UPDATE_SCRIPT') .'</p>';
+	//	echo '<p>'. JText::_('JBS_INS_16_CUSTOM_UPDATE_SCRIPT') .'</p>';
  
 	} // End Update
 
@@ -82,9 +82,11 @@ class com_biblestudyInstallerScript {
         {
             require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
             $assetfix = new fixJBSAssets();
-            echo JText::_('JBS_INS_16_ASSET_IN_PROCESS').'<br />';
+            echo '<p>'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
             $assetdofix = $assetfix->AssetEntry();
-            if ($assetdofix){echo JText::_('JBS_INS_16_ASSET_SUCCESS');}else{echo JText::_('JBS_INS_16_ASSET_FAILURE');}
+            echo '<p>';
+            if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
+            echo '/p>';
         }
 ?>
 		<fieldset class="panelform">
@@ -147,7 +149,7 @@ class com_biblestudyInstallerScript {
 
 			<!-- Rest of footer -->
 		<div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
-		<img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="flote: left" />
+		<img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="flote: left" /><br />
 		<strong><?php echo JText::_('JBS_INS_16_THANK_YOU'); ?></strong>
 		<br />
 		<?php echo JText::_('JBS_INS_16_CONGRATULATIONS'); ?> 
