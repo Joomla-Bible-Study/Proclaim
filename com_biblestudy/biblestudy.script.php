@@ -150,7 +150,7 @@ class com_biblestudyInstallerScript {
 		<img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="flote: left" />
 		<strong><?php echo JText::_('JBS_INS_16_THANK_YOU'); ?></strong>
 		<br />
-		<img src = "components/com_biblestudy/images/openbible.png" alt = "Joomla Bible Study" title="Joomla Bible Study" border = "0" align="left" /> <?php echo JText::_('JBS_INS_16_CONGRATULATIONS'); ?> 
+		<?php echo JText::_('JBS_INS_16_CONGRATULATIONS'); ?> 
 		<p>
 		<?php echo JText::_('JBS_INS_16_STATEMENT1'); ?> </p>
 		<p>
