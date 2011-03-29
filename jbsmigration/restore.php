@@ -178,19 +178,19 @@ class JBSImport
                         }
                     if (substr_count($newtable,'podcast'))
                         {
-                            $query = 'ALTER TABLE '.$newtable.'_genesis MODIFY description TEXT';
+                            $query = 'ALTER TABLE '.$newtable.' MODIFY description TEXT';
                             $db->setQuery($query);
                             $db->query();
                         }
                          if (substr_count($newtable,'series'))
                         {
-                            $query = 'ALTER TABLE '.$newtable.'_genesis MODIFY description TEXT';
+                            $query = 'ALTER TABLE '.$newtable.' MODIFY description TEXT';
                             $db->setQuery($query);
                             $db->query();
                         }
                          if (substr_count($newtable,'teachers'))
                         {
-                            $query = 'ALTER TABLE '.$newtable.'_genesis MODIFY information TEXT';
+                            $query = 'ALTER TABLE '.$newtable.' MODIFY information TEXT';
                             $db->setQuery($query);
                             $db->query();
                         }
