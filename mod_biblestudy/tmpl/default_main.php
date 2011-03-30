@@ -16,6 +16,7 @@ if ($url) {$document->addStyleSheet($url);}
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy/helpers/';
     include_once($path1.'header.php');
     include_once($path1.'helper.php');
+    include_once($path1.'listing.php');
     $header = getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
     //dump ($list);
     //header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'));
@@ -33,10 +34,10 @@ foreach ($list as $study) {
 	} else {
 	$oddeven = $class1;
 	}
-	include_once($path1.'listing.php');
-//	dump ($params, 'params: ');
+	
+//	print_r ($study);
 	$listing = getListing($study, $params, $oddeven, $admin_params, $template, $ismodule);
- 	echo $listing;
+ 	echo $listing; 
 	//modBiblestudyHelper::renderStudy($study, $params, $oddeven);
 	}
 	?>

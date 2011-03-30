@@ -46,20 +46,19 @@ class modBiblestudyHelper
 		if ($messagetype_menu > 0) {
 			$where[] = ' #__bsms_studies.messagetype = '.(int) $messagetype_menu;
 		}
-		$user =& JFactory::getUser();
-		$level_user = $user->get('gid');
-		$where[] = ' #__bsms_studies.show_level <= '.$level_user;	
+		
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( $condition, $where ) : '' );
 
 $where2 = array();
 		$continue = 0;
-		if ($params->get('mult_teachers')) 
+		if (is_array($teacher)) 
 			{ 
 				if (!$filter_teacher)
 				{
 					$continue = 1;
-					$filters = explode(",", $params->get('mult_teachers'));
+				//	$filters = explode(",", $teacher);
+                    $filters = $teacher;
 					foreach ($filters AS $filter)
 						{
 							$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
@@ -67,13 +66,14 @@ $where2 = array();
 				}
 			}
 		
-		if ($params->get('mult_locations')) 
+		if (is_array($locations)) 
 			{ 
 				if (!$filter_location)
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_locations'));
+				//	$filters = explode(",", $locations);
+                    $filters = $locations;
 					foreach ($filters AS $filter)
 						{
 							$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
@@ -81,13 +81,14 @@ $where2 = array();
 				}
 			}
 			
-		if ($params->get('mult_books')) 
+		if (is_array($books)) 
 			{ 
 				if (!$filter_book)
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_books'));
+				//	$filters = explode(",", $books);
+                    $filters = $books;
 					foreach ($filters AS $filter)
 						{
 							$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
@@ -95,13 +96,14 @@ $where2 = array();
 				}
 			}
 		
-		if ($params->get('mult_series')) 
+		if (is_array($series)) 
 			{ 
 				if (!$filter_series)
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_series'));
+				//	$filters = explode(",", $series);
+                    $filters = $series;
 					foreach ($filters AS $filter)
 						{
 							$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
@@ -109,13 +111,14 @@ $where2 = array();
 				}
 			}
 			
-		if ($params->get('mult_topics')) 
+		if (is_array($topics)) 
 			{ 
 				if (!$filter_topic) 
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_topics'));
+				//	$filters = explode(",", $topics);
+                    $filters = $topics;
 					foreach ($filters AS $filter)
 						{
 							$where2[] = '#__bsms_studies.topics_id = '.(int)$filter;
@@ -123,13 +126,14 @@ $where2 = array();
 				}
 			}
 			
-		if ($params->get('mult_messagetype')) 
+		if (is_array($messagetype_menu)) 
 			{ 
 				if (!$filter_messagetype)
 				{
 					$continue = 1;
 					$filters = null;
-					$filters = explode(",", $params->get('mult_messagetype'));
+				//	$filters = explode(",", $messagetype_menu);
+                    $filters = $messagetype_menu;
 					foreach ($filters AS $filter)
 						{
 							$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
