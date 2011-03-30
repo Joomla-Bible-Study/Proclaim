@@ -86,7 +86,7 @@ class com_biblestudyInstallerScript {
             $assetdofix = $assetfix->AssetEntry();
             echo '<p>';
             if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
-            echo '/p>';
+            echo '</p>';
         }
 ?>
 		<fieldset class="panelform">
@@ -149,7 +149,7 @@ class com_biblestudyInstallerScript {
 
 			<!-- Rest of footer -->
 		<div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
-		<img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="flote: left" /><br />
+		<img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="flote: left" />
 		<strong><?php echo JText::_('JBS_INS_16_THANK_YOU'); ?></strong>
 		<br />
 		<?php echo JText::_('JBS_INS_16_CONGRATULATIONS'); ?> 
