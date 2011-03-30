@@ -35,13 +35,15 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
                 $component = $db->loadObject();
                 $items  = $menus->getItems('component_id', $component->componentid);
             }
-  
+  if (is_array($items))
+  {
    foreach ($items as $menu) {
     if (@$menu->query['view'] == $itemidlinkview) {
      $itemid = $menu->id; 
      break;
     }
    }
+  }
    if (!isset($itemid) && count($items)) {
     $itemid = $items[0]->id; 
    }

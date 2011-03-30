@@ -47,9 +47,9 @@ foreach ($list as $study) {
     <?php $link_text = $params->get('pagetext', 'More Bible Studies');
 			
 			if ($params->get('show_link') > 0){
-					$templatemenuid = $params->get('studielisttemplateid');
-					if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
-					//$addItemid = getItemidLink($isplugin = 0, $admin_params);
-					$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&templatemenuid='.$templatemenuid);?>
+					$t = $params->get('studielisttemplateid');
+					if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
+					
+					$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t='.$t);?>
 			<a href="<?php echo $link;?>"> <?php echo $link_text.'<br />'; ?> </a> <?php } //End of if view_link not 0?>
     </div><!--end of footer div-->

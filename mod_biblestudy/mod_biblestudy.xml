@@ -8,7 +8,7 @@
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
 	<version>7.0.0</version>
-	<description>A module to display Bible Studies</description>
+	<description>JBS_MDL_DESCRIPTION</description>
 	<files>
 		<filename module="mod_biblestudy">mod_biblestudy.php</filename>
 		<filename>helper.php</filename>
@@ -25,7 +25,7 @@
  
      <fields name="params">
      <fieldset name="basic" 
-     label="JBS_MNU_STUDIES_LIST_LAYOUT" addfieldpath="/administrator/components/com_biblestudy/models/fields" >
+     label="JBS_MDL_LIST_LAYOUT" addfieldpath="/administrator/components/com_biblestudy/models/fields" >
      
      <field name="t" type="sql"
                 description="JBS_MNU_SELECT_TEMPLATE_DESC"
@@ -37,12 +37,27 @@
                 required="true"
             />
      <field name="moduleitems"
-                description="JBS_MOD_ITEMS_DESC"
-                label="JBS_MOD_ITEMS"
+                description="JBS_MDL_ITEMS_DESC"
+                label="JBS_MDL_ITEMS"
                 default="5"
                 type="text"
                 size="10"
-           />       
+           />
+           <field name="show_link" type="radio" default="1" label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC">
+			<option value="1">Show</option>
+			<option value="0">Hide</option>
+		</field>
+    <field name="pagetext" type="text" size="50" default="More Bible Studies" label="JBS_MDL_LINK_TEXT" description="JBS_MDL_LINK_TEXT_DESC" />
+    <field name="show_verses"
+                   type="list"
+                   default="0"
+                   label="JBS_TPL_VERSES_SHOW_VERSES"
+                   description="JBS_TPL_VERSES_SHOW_VERSES_DESC">
+                <option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
+                <option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
+            </field>
+  </fieldset>
+  <fieldset name="JBS_MDL_FILTERS" label="JBS_MDL_FILTERS" addfieldpath="/administrator/components/com_biblestudy/models/fields">        
      <field name="teacher_id"
            type="teacherlist"
            label="JBS_CMN_FILTERS_TEACHER"
@@ -60,7 +75,7 @@
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
-    <field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_FILTERS_BOOKS" multiple="true" translate="true" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname" description="JBS_CMN_FILTERS_BOOKS_DESC">
+    <field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_FILTERS_BOOKS" multiple="true" translate="true" query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC" key_field="booknumber" value_field="bookname" description="JBS_CMN_FILTERS_BOOKS_DESC" default="-1">
         <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
     
@@ -139,6 +154,9 @@
            value_field="title"
            required="true"
     />
+    
+</fieldset>
+<fieldset name="JBS_MDL_TOOLTIP" label="JBS_MDL_TOOLTIP">
       <field name="tip_title"
            type="text"
            default="Sermon Information"
@@ -290,25 +308,8 @@
                 <option value="28">JBS_TPL_MEDIA_PLAYS</option>
                 <option value="29">JBS_TPL_MEDIA_DOWNLOADS</option>
             </field>
-      <field name="show_link" type="radio" default="1" label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC">
-			<option value="1">Show</option>
-			<option value="0">Hide</option>
-		</field>
-    <field name="pagetext" type="text" size="50" default="More Bible Studies" label="JBS_MDL_LINK_TEXT" description="JBS_MDL_LINK_TEXT_DESC" />
-    <field name="show_verses"
-                   type="list"
-                   default="0"
-                   label="JBS_TPL_VERSES_SHOW_VERSES"
-                   description="JBS_TPL_VERSES_SHOW_VERSES_DESC">
-                <option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
-                <option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
-            </field>
-      <field name="protocol"
-                    type="text" 
-                    size="10" 
-                    default="http://"
-                    label="JBS_TPL_MEDIA_PROTOCOL"
-                    description="JBS_TPL_MEDIA_PROTOCOL_DESC" /> 
+</fieldset>
+ <fieldset name="JBS_MDL_MEDIA" label="JBS_MDL_MEDIA">     
             <field name="media_player"
                     type="list" 
                     default="0" 
@@ -412,6 +413,14 @@
                 <option value="2">JBS_TPL_SHOW_COMMENT</option>
                 <option value="3">JBS_TPL_SHOW_COMMENT_OR_FILESIZE</option>
             </field>
+            <field name="protocol"
+                    type="text" 
+                    size="10" 
+                    default="http://"
+                    label="JBS_TPL_MEDIA_PROTOCOL"
+                    description="JBS_TPL_MEDIA_PROTOCOL_DESC" />    
+ </fieldset>
+ <fieldset name="JBS_MDL_MORE_SETTINGS" label="JBS_MDL_MORE_SETTINGS">
             <field name="store_page"
                    type="text"
                    default="flypage.tpl"
@@ -458,6 +467,8 @@
                 <option value="8">JBS_TPL_DATE_FORMAT_USE_GLOBAL</option>
                 <option value="9">JBS_TPL_DATE_FORMAT_YYYY_MM_DD</option>
             </field>
+  </fieldset>
+  <fieldset name="JBS_MDL_EXPERT_MODE" label="JBS_MDL_EXPERT_MODE">
       <field name="useexpert_module" type="list" label="JBS_MDL_CUSTOM_VIEW" default="0" description="JBS_MDL_CUSTOM_VIEW_DESC">
             <option value="0">JBS_CMN_DONT_USE</option>
             <option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
@@ -470,7 +481,10 @@
              <option value="D">DIV</option>
     </field>
    </fieldset>
-   <fieldset name="ROW1" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+   <fieldset name="ROW1" label="JBS_MDL_ROW1" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+   <field name="spacer1" type="spacer" class="text"
+			label="JBS_MDL_COLUMN1"
+			/>
             <field name="row1col1"
            type="listoptions"
            default="" translate="true"
@@ -498,6 +512,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer2" type="spacer" class="text"
+			label="JBS_MDL_COLUMN2"
+			/>
             <field name="row1col2"
            type="listoptions"
            default=""
@@ -520,6 +537,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer3" type="spacer" class="text"
+			label="JBS_MDL_COLUMN3"
+			/>
             <field name="row1col3"
            type="listoptions"
            default=""
@@ -545,6 +565,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer4" type="spacer" class="text"
+			label="JBS_MDL_COLUMN4"
+			/>
             <field name="row1col4"
            type="listoptions"
            default=""
@@ -562,7 +585,10 @@
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
-        <fieldset name="ROW2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+        <fieldset name="ROW2" label="JBS_MDL_ROW2" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+         <field name="spacer1" type="spacer" class="text"
+			label="JBS_MDL_COLUMN1"
+			/>
             <field name="row2col1"
            type="listoptions"
            default=""
@@ -590,6 +616,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer2" type="spacer" class="text"
+			label="JBS_MDL_COLUMN2"
+			/>
             <field name="row2col2"
            type="listoptions"
            default=""
@@ -616,6 +645,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer3" type="spacer" class="text"
+			label="JBS_MDL_COLUMN3"
+			/>
             <field name="row2col3"
            type="listoptions"
            default=""
@@ -641,6 +673,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer4" type="spacer" class="text"
+			label="JBS_MDL_COLUMN4"
+			/>
             <field name="row2col4"
            type="listoptions"
            default=""
@@ -658,7 +693,10 @@
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
-        <fieldset name="ROW3" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+        <fieldset name="ROW3" label="JBS_MDL_ROW3" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+         <field name="spacer1" type="spacer" class="text"
+			label="JBS_MDL_COLUMN1"
+			/>
             <field name="row3col1"
            type="listoptions"
            default=""
@@ -686,6 +724,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer2" type="spacer" class="text"
+			label="JBS_MDL_COLUMN2"
+			/>
             <field name="row3col2"
            type="listoptions"
            default=""
@@ -712,6 +753,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer3" type="spacer" class="text"
+			label="JBS_MDL_COLUMN3"
+			/>
             <field name="row3col3"
            type="listoptions"
            default=""
@@ -737,6 +781,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer4" type="spacer" class="text"
+			label="JBS_MDL_COLUMN4"
+			/>
             <field name="row3col4"
            type="listoptions"
            default=""
@@ -754,7 +801,10 @@
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
         </fieldset>
-        <fieldset name="ROW4" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+        <fieldset name="ROW4" label="JBS_MDL_ROW4" addfieldpath="/administrator/components/com_biblestudy/models/fields">
+         <field name="spacer1" type="spacer" class="text"
+			label="JBS_MDL_COLUMN1"
+			/>
             <field name="row4col1"
            type="listoptions"
            default=""
@@ -782,6 +832,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer2" type="spacer" class="text"
+			label="JBS_MDL_COLUMN2"
+			/>
             <field name="row4col2"
            type="listoptions"
            default=""
@@ -808,6 +861,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer3" type="spacer" class="text"
+			label="JBS_MDL_COLUMN3"
+			/>
             <field name="row4col3"
            type="listoptions"
            default=""
@@ -833,6 +889,9 @@
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
+            <field name="spacer4" type="spacer" class="text"
+			label="JBS_MDL_COLUMN4"
+			/>
             <field name="row4col4"
            type="listoptions"
            default=""
