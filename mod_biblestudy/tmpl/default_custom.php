@@ -7,7 +7,9 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die(); 
-
+$document =& JFactory::getDocument();
+$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
+//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'listing.php'); 
 ?>

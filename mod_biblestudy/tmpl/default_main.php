@@ -4,7 +4,7 @@
 $show_link = $params->get('show_link',1);
 $pagetext = $params->get('pagetext');
 $document =& JFactory::getDocument();
-$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 //$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $url = $params->get('stylesheet');
 $ismodule = 1;
