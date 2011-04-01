@@ -29,40 +29,12 @@ class biblestudyViewmessage extends JView {
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin($isSite = true);
         
-        //check permissions to enter studies
-        $admin = new JBSAdmin();
-        $params = $admin->getAdminsettings();
-        if (!JFactory::getUser()->authorise('core.edit', 'com_biblestudy')) 
-        {
-                return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-        }
-        
-        $entry_access = $params->get('entry_access');
-        $allow_entry = $params->get('allow_entry_study', 0);
-        
-        if (!$allow_entry){
-            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-            return false;
-            }
-        
+                
         $user = JFactory::getUser();
       
-      $permission = false; 
-      $groups = JAccess::getGroupsByUser($user->id);
       
-           foreach ($groups as $group)
-           {
-                if ($entry_access <= $group){$permission = true;}
-           }
-           if (!$permission)
-           {
-                JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-                return false; 
-           }
-           
-      //Check to see if the user can edit this record
       $canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
-    //  dump ($this->item->id);
+    
       if (!$canDo->get('core.edit'))
       {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));

@@ -79,23 +79,7 @@ $params = $this->form->getFieldsets();
 
         </div>
         <div class="width-40 fltrt">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_ADM_FRONTEND_SUBMISSION'); ?></legend>
-                <ul>
-                    <li>
-                        <?php echo $this->form->getLabel('allow_entry_study', 'params'); ?>
-                        <?php echo $this->form->getInput('allow_entry_study', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('entry_access', 'params'); ?>
-                        <?php echo $this->form->getInput('entry_access', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('study_publish', 'params'); ?>
-                        <?php echo $this->form->getInput('study_publish', 'params'); ?>
-                    </li>
-                </ul>
-            </fieldset>
+           
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_ADM_IMAGE_FOLDERS'); ?> </legend>
                 <ul>

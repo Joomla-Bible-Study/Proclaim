@@ -9,6 +9,7 @@
 defined('_JEXEC') or die();
 require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 jimport('joomla.application.component.view');
 jimport('joomla.application.component.helper');
 jimport('joomla.html.toolbar');
@@ -38,8 +39,11 @@ class biblestudyViewmediafiles extends JView {
         }
 
 
- 
- 
+ if (!$this->canDo->get('core.edit')) 
+        {
+            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+        }
  // Load the toolbar helper
  require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );
 

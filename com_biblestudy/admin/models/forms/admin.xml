@@ -140,18 +140,7 @@
             <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
         </field>
 
-        <field name="allow_entry_study" type="list" default="0" label="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY"
-             description="JBS_ADM_SUBMISSION_ALLOW_ENTRY_STUDY_DESC">
-            <option value="0">JBS_ADM_NO_FRONTEND_ACCESS</option>
-            <option value="1">JBS_ADM_ALLOW_FRONTEND_ACCESS</option>
-        </field>
-        <field name="entry_access" type="accesslevel" default="5" label="JBS_ADM_SUBMISSION_ENTRY_ACCESS"
-             description="JBS_ADM_SUBMISSION_ENTRY_ACCESS_DESC" />
-        <field name="study_publish" type="list" default="0" label="JBS_ADM_SUBMISSION_STUDY_PUBLISH"
-             description="JBS_ADM_SUBMISSION_STUDY_PUBLISH_DESC">
-            <option value="0">JBS_ADM_NO_AUTO_PUBLISH</option>
-            <option value="1">JBS_ADM_AUTO_PUBLISH</option>
-        </field>
+       
         <field name="from" type="list" label="JBS_ADM_CHANGE_PLAYERS">
             <option value="x">JBS_ADM_SELECT_EXISTING_PLAYER</option>
             <option value="0">JBS_CMN_DIRECT_LINK</option>
