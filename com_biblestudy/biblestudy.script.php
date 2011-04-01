@@ -71,8 +71,34 @@ class com_biblestudyInstallerScript {
 		echo '<p>'. JText::sprintf('JBS_INS_16_CUSTOM_PREFLIGHT', $type) .'</p>';
 	}
 
-	function postflight($type, $parent) { ?>
+	function postflight($type, $parent) {
+	// get document to add scripts
+	$document	= JFactory::getDocument();
+	$document->addScript('components/com_biblestudy/js/dwProgressBar.js');
+	?>
+	
+	<script type="text/javascript">
+
+window.addEvent('domready', function() {
+	$('assetinstall').setStyle('display', 'none');
+
+});
+
+</script>
+	
 		<div class="width-100">
+		<div id="assetinstall">
+					<p class="text"><?php echo JText::_('Installing asset_id'); ?></p>
+					<div id="pb3"></div>
+		</div>
+		<div id="done">
+					<h2><?php echo JText::_('Joomla 1.6 Upgrade Finished!'); ?></h2>
+					<p class="text">
+						<?php echo JText::_('You can check your new site here'); ?>:&nbsp;
+						<a href="<?php echo JURI::root(); ?>jupgrade/" target="_blank"><?php echo JText::_('Site'); ?></a> and
+						<a href="<?php echo JURI::root(); ?>jupgrade/administrator/" target="_blank"><?php echo JText::_('Administrator'); ?></a>
+					</p>
+		</div>
 <?php // Check to see if assets have been fixed
         $db = JFactory::getDBO();
         $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
@@ -176,4 +202,3 @@ class com_biblestudyInstallerScript {
 	}
   
 } // end of class
-?>
