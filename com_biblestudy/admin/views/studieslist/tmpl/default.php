@@ -131,7 +131,7 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo $this->escape($item->series_text); ?>
                     </td>
                     <td class="center">
-                <?php echo $this->escape($item->topic_text); ?>
+                <?php echo JText::_($this->escape($item->topic_text)); ?>
                     </td>
                     <td class="center">
                 <?php echo $this->escape($item->hits); ?>

@@ -58,7 +58,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                 <?php echo JHtml::_('jgrid.published', $item->published, $i, 'topicslist.', true, 'cb', '', ''); ?>
                     </td>
 			<td>
-				<a href="<?php echo $link; ?>"><?php echo $item->topic_text; ?></a>
+				<a href="<?php echo $link; ?>"><?php echo JText::_($item->topic_text); ?></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>

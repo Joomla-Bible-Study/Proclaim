@@ -443,7 +443,10 @@ class biblestudyModelstudieslist extends modelClass {
         $query->order('topic.topic_text');
 
         $db->setQuery($query->__toString());
-        return $db->loadObjectList();
+        $topics = getTranslated($db->loadObjectList());
+       // return $db->loadObjectList();
+       return $topics;
+
     }
 
 }
