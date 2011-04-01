@@ -134,16 +134,16 @@ location.href = url;
 
 
 /**
- * Install Joomla 1.6 
+ * Install Assets Joomla 1.6 
  *
  * @return	bool	
  * @since	0.4.
  */
-function install(event){
+function assetinstall(event){
 
-  var mySlideInstall = new Fx.Slide('install');
+  var mySlideInstall = new Fx.Slide('assetinstall');
   mySlideInstall.hide();
-  $('install').setStyle('display', 'block');
+  $('assetinstall').setStyle('display', 'block');
   mySlideInstall.toggle();
 
 	var pb3 = new dwProgressBar({

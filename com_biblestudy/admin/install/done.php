@@ -10,8 +10,3 @@
  * @author		Matias Aguirre <maguirre@matware.com.ar>
  * @link		http://www.matware.com.ar
  */
-
-			$assetdofix = $assetfix->AssetEntry();
-            echo '<p>';
-            if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
-            echo '</p>';

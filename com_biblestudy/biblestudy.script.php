@@ -81,6 +81,7 @@ class com_biblestudyInstallerScript {
 
 window.addEvent('domready', function() {
 	$('assetinstall').setStyle('display', 'none');
+	$('done').setStyle('display', 'none');
 
 });
 
@@ -92,29 +93,25 @@ window.addEvent('domready', function() {
 					<div id="pb3"></div>
 		</div>
 		<div id="done">
-					<h2><?php echo JText::_('Joomla 1.6 Upgrade Finished!'); ?></h2>
-					<p class="text">
-						<?php echo JText::_('You can check your new site here'); ?>:&nbsp;
-						<a href="<?php echo JURI::root(); ?>jupgrade/" target="_blank"><?php echo JText::_('Site'); ?></a> and
-						<a href="<?php echo JURI::root(); ?>jupgrade/administrator/" target="_blank"><?php echo JText::_('Administrator'); ?></a>
-					</p>
+					<h2><?php echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>'; ?></h2>
+					<?php if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} ?>
 		</div>
-<?php // Check to see if assets have been fixed
-        $db = JFactory::getDBO();
-        $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
-        $db->setQuery($query);
-        $db->query();
-        if (!$db->loadResult())
-        {
-            require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
-            $assetfix = new fixJBSAssets();
-            echo '<p>'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
-            $assetdofix = $assetfix->AssetEntry();
-            echo '<p>';
-            if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
-            echo '</p>';
-        }
-?>
+//<?php // Check to see if assets have been fixed
+        //$db = JFactory::getDBO();
+       // $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
+        //$db->setQuery($query);
+        //$db->query();
+        //if (!$db->loadResult())
+        //{
+        //    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. //'biblestudy.assets.php');
+        //    $assetfix = new fixJBSAssets();
+        //    echo '<p>'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
+        //    $assetdofix = $assetfix->AssetEntry();
+        //    echo '<p>';
+        //    if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
+        //    echo '</p>';
+        //}
+//?>
 		<fieldset class="panelform">
 		<legend><?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type); ?></legend>  
     
