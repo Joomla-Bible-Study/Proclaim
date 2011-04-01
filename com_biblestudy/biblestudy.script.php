@@ -87,7 +87,6 @@ $db = JFactory::getDBO();
 	<script type="text/javascript">
 
 window.addEvent('domready', function() {
-	$('assetinstall').setStyle('display', 'none');
 	$('done').setStyle('display', 'none');
 
 });
@@ -119,7 +118,7 @@ window.addEvent('domready', function() {
         //    if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
         //    echo '</p>';
         //}
-//?>
+?>
 		<fieldset class="panelform">
 		<legend><?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type); ?></legend>  
     
