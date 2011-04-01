@@ -98,7 +98,7 @@
       <menu link="option=com_biblestudy&amp;view=mimetypelist" view="mimetypelist" alt="JBS_MNU_MIME_TYPES">JBS_MNU_MIME_TYPES</menu>
       <menu link="option=com_biblestudy&amp;view=commentslist" view="commentslist" alt="JBS_MNU_STUDY_COMMENTS">JBS_MNU_STUDY_COMMENTS</menu>
       <menu link="option=com_biblestudy&amp;view=sharelist" view="sharelist" alt="JBS_MNU_SOCIAL_NETWORK_LINKS">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
-      <menu link="option=com_biblestudy&amp;view=admin&amp;layout=edit&amp;id=1" view="admin" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
+      <menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" view="admin" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
       <menu link="option=com_biblestudy&amp;view=cssedit" view="cssedit" alt="JBS_MNU_CSS_EDIT">JBS_MNU_CSS_EDIT</menu>
       <!-- Instead of link you can specify individual link attributes -->
     </submenu>

@@ -75,6 +75,13 @@ class com_biblestudyInstallerScript {
 	// get document to add scripts
 	$document	= JFactory::getDocument();
 	$document->addScript('components/com_biblestudy/js/dwProgressBar.js');
+
+$db = JFactory::getDBO();
+        $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
+        $db->setQuery($query);
+        $db->query();
+        if (!$db->loadResult())
+        {
 	?>
 	
 	<script type="text/javascript">
@@ -96,7 +103,8 @@ window.addEvent('domready', function() {
 					<h2><?php echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>'; ?></h2>
 					<?php if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} ?>
 		</div>
-//<?php // Check to see if assets have been fixed
+<?php }
+// Check to see if assets have been fixed
         //$db = JFactory::getDBO();
        // $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
         //$db->setQuery($query);
