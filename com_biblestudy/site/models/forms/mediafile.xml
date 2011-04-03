@@ -15,7 +15,7 @@
 		class="inputbox" required="true"/>
 
         <field name="podcast_id" type="sql" label="JBS_MED_SELECT_PODCASTS"
-                description="JBS_MED_CHOOSE_PODCASTS_DESC" class="inputbox"
+                description="JBS_MED_CHOOSE_PODCAST_DESC" class="inputbox"
                 multiple="multiple" query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC" key_field="id" value_field="title"/>
 			
         <field name="link_type" type="list" extension="com_biblestudy"

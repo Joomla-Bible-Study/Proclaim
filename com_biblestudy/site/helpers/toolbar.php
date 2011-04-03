@@ -17,7 +17,7 @@ jimport('joomla.html.toolbar');
               //  $bar->appendButton( 'Standard', 'cancel', 'Cancel', 'cancel', false );
  				$toolview = JRequest::getVar('view');
  				if ($toolview == 'mediafile')
-				 {$bar->appendButton( 'Popup', 'upload', 'Upload', "index.php?option=com_media&tmpl=component&task=popupUpload&folder=", 600, 400 );}
+				 {$bar->appendButton( 'Popup', 'upload', 'JBS_MED_UPLOAD', "index.php?option=com_media&tmpl=component&task=popupUpload&folder=", 600, 400 );}
  
                 return $bar->render();
  

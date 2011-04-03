@@ -43,7 +43,7 @@ $commentjava = "javascript:ReverseDisplay('comments')";
 				
 		$db->setQuery($query);
 		$comments = $db->loadObjectList();
-  if (!count($comments)) {echo '<tr><td>'.JText::_('JBS_CMN_NO_COMMENT').'</td></tr></table>';}
+  if (!count($comments)) {echo '<tr><td>'.JText::_('JBS_STY_NO_COMMENT').'</td></tr></table>';}
   else
   {
         foreach ($comments as $comment){
