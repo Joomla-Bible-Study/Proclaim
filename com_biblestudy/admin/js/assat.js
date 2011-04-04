@@ -33,7 +33,7 @@ function assetinstall(event){
         if (!$db->loadResult())
         {
             require_once (JPATH_ADMINISTRATOR .DS. 'components/com_biblestudy/install/biblestudy.assets.php');
-            $assetfix = new fixJBSAssets();
+            $assetfix = new fixJBSAssets();}
 			pb3.set(100);
 			pb3.finish();
 			done();
