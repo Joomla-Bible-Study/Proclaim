@@ -100,7 +100,7 @@ class com_biblestudyInstallerScript {
             $assetfix = new fixJBSAssets();
 			echo '<div id="assetinstall">';
             echo '<p class="text">'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
-			<div id="pb3"></div>
+			echo '<div id="pb3"></div>';
             $assetdofix = $assetfix->AssetEntry();
 			echo '</div>';
             echo '<div id="done">';
