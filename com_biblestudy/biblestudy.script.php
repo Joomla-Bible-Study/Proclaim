@@ -72,11 +72,15 @@ class com_biblestudyInstallerScript {
 	}
 
 	function postflight($type, $parent) {
+	
+	JHTML::_('behavior.mootools');
+	
 	// get document to add scripts
 	$document	= JFactory::getDocument();
 	$document->addScript('components/com_biblestudy/js/dwProgressBar.js');
+	$document->addScript('components/com_biblestudy/js/assat.js');
 
-$db = JFactory::getDBO();
+	$db = JFactory::getDBO();
         $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
         $db->setQuery($query);
         $db->query();
@@ -88,6 +92,7 @@ $db = JFactory::getDBO();
 
 window.addEvent('domready', function() {
 	$('done').setStyle('display', 'none');
+	$('assetinstall').addEvent('click', checks);
 
 });
 
