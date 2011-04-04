@@ -16,7 +16,8 @@
  defined( '_JEXEC' ) or die('Restricted access');
  ?>
       <script type="text/javascript">
-window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler'), $$('div#content-sliders-1.pane-sliders > .panel > div.pane-slider'), {onActive: function(toggler, i) {toggler.addClass('pane-toggler-down');toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_content-sliders-1',$$('div#content-sliders-1.pane-sliders > .panel > h3').indexOf(toggler));},onBackground: function(toggler, i) {toggler.addClass('pane-toggler');toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');i.removeClass('pane-down');if($$('div#content-sliders-1.pane-sliders > .panel > h3').length==$$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler').length) Cookie.write('jpanesliders_content-sliders-1',-1);},duration: 300,display: 1,show: 1,opacity: false,alwaysHide: true}); });
+window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler'), $$('div#content-sliders-1.pane-sliders > .panel > div.pane-slider'), {onActive: function(toggler, i) {toggler.addClass('pane-toggler-down');toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_content-sliders-1',$$('div#content-sliders-1.pane-sliders > .panel > h3').indexOf(toggler));},onBackground: function(toggler, i) {toggler.addClass('pane-toggler');toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');i.removeClass('pane-down');if($$('div#content-sliders-1.pane-sliders > .panel > h3').length==$$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler').length) Cookie.write('jpanesliders_content-sliders-1',-1);},duration: 300,display: 1,show: 1,opacity: false,alwaysHide: true});	$('done').setStyle('display', 'none');
+	$('assetinstall').addEvent('click', checks); });
  </script>
  <?php
  
@@ -87,42 +88,25 @@ class com_biblestudyInstallerScript {
         if (!$db->loadResult())
         {
 	?>
-	
-	<script type="text/javascript">
-
-window.addEvent('domready', function() {
-	$('done').setStyle('display', 'none');
-	$('assetinstall').addEvent('click', checks);
-
-});
-
-</script>
-	
-		<div class="width-100">
-		<div id="assetinstall">
-					<p class="text"><?php echo JText::_('Installing asset_id'); ?></p>
-					<div id="pb3"></div>
-		</div>
-		<div id="done">
-					<h2><?php echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>'; ?></h2>
-					<?php if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} ?>
-		</div>
 <?php }
 // Check to see if assets have been fixed
-        //$db = JFactory::getDBO();
-       // $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
-        //$db->setQuery($query);
-        //$db->query();
-        //if (!$db->loadResult())
-        //{
-        //    require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. //'biblestudy.assets.php');
-        //    $assetfix = new fixJBSAssets();
-        //    echo '<p>'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
-        //    $assetdofix = $assetfix->AssetEntry();
-        //    echo '<p>';
-        //    if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
-        //    echo '</p>';
-        //}
+        $db = JFactory::getDBO();
+        $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
+        $db->setQuery($query);
+        $db->query();
+        if (!$db->loadResult())
+        {
+           require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
+            $assetfix = new fixJBSAssets();
+			echo '<div id="assetinstall">';
+            echo '<p class="text">'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
+			<div id="pb3"></div>
+            $assetdofix = $assetfix->AssetEntry();
+			echo '</div>';
+            echo '<div id="done">';
+            if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
+            echo '</div>';
+        }
 ?>
 		<fieldset class="panelform">
 		<legend><?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type); ?></legend>  

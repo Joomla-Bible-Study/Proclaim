@@ -25,15 +25,6 @@ function assetinstall(event){
     method: 'get',
 		noCache: true,
     onComplete: function( response ) {
-	
-		$db = JFactory::getDBO();
-		$query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
-        $db->setQuery($query);
-        $db->query();
-        if (!$db->loadResult())
-        {
-            require_once (JPATH_ADMINISTRATOR .DS. 'components/com_biblestudy/install/biblestudy.assets.php');
-            $assetfix = new fixJBSAssets();}
 			pb3.set(100);
 			pb3.finish();
 			done();
