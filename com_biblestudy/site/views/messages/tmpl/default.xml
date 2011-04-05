@@ -41,11 +41,15 @@
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
     <field name="mbooknumber"
-           type="bookslist"
-           multiple="true"
+           type="SQL"
+           class="inputbox"
            label="JBS_CMN_FILTERS_BOOKS"
-           description="JBS_CMN_FILTERS_BOOKS_DESC"
-           default="-1">
+           multiple="true"
+           translate="true"
+           query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
+           key_field="booknumber"
+           value_field="bookname"
+           description="JBS_CMN_FILTERS_BOOKS_DESC">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
     <field name="mtopic_id"

@@ -16,7 +16,7 @@
 
     <field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY" description="JBS_STY_SUBMITTED_BY_DESC"/>
 
-    <field name="studytitle" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" description="JBS_STY_TITLE_DESC"/>
+    <field name="studytitle" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" description="JBS_STY_TITLE_DESC" required="true"/>
 
     <field name="studyintro" type="editor"  class="inputbox" label="JBS_CMN_DESCRIPTION" description="JBS_STY_DESCRIPTION_DESC"
     filter="BibleStudyHelper::filterText" buttons="true"/>

@@ -536,7 +536,7 @@ function getAdmin()
 										}
 									{
 										$continue = 1;
-										$where2[] = '#__bsms_studytopics.topic_id = '.(int)$filter;');
+										$where2[] = '#__bsms_studytopics.topic_id = '.(int)$filter;
 										$where2[] = '#__bsms_studies.topics_id = '.(int)$filter; 
 									}
 								}

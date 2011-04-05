@@ -14,7 +14,7 @@ class Tableteacheredit extends JTable
 	 * @var int
 	 */
 	var $id = null;
-	var $published = null;
+	var $published = 1;
 
 	/**
 	 * @var string
@@ -34,7 +34,7 @@ class Tableteacheredit extends JTable
 	var $short = null;
 	var $ordering = null;
 	var $catid = null;
-	var $list_show = null;
+	var $list_show = 1;
 	var $teacher_thumbnail = null;
 	var $teacher_image = null;
 	/**

@@ -18,7 +18,7 @@ class Tabletopicsedit extends JTable
 	 * @var int
 	 */
 	var $id = null;
-	var $published = null;
+	var $published = 1;
 	/**
 	 * @var string
 	 */

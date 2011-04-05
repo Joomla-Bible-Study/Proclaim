@@ -231,7 +231,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
     <div class="width-100">
         <div class="width-60 fltlft">
             <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_TPL_SERIES_LIST'); ?></legend>      
+                <legend><?php echo JText::_('JBS_CMN_SERIES'); ?></legend>      
                     <?php echo JHtml::_('sliders.start','content-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
                     
                         <?php echo JHtml::_('sliders.panel',JText::_('JBS_TPL_SERIES_LIST'), 'publishing-details'); ?>

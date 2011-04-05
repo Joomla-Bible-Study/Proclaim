@@ -66,6 +66,7 @@ function setSelect($string){
 		. ' LEFT JOIN #__bsms_teachers AS t ON (se.teacher = t.id)'
 		. $where
 		. $orderby
+		;
 		return $query;
 	}
 
