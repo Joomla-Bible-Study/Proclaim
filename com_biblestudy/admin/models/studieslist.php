@@ -331,7 +331,10 @@ class biblestudyModelstudieslist extends modelClass {
             $query->where('study.messageType = '.(int)$messageType);
 
         //Filter by Year?
-
+        $year = $this->getState('filter.year');
+        if (!empty($year))
+            $query->where('study.studydate = YEAR('.(int)$year.')' );
+            
         //Filter by topic
         $topic = $this->getState('filter.topic');
         if(!empty($topic))
