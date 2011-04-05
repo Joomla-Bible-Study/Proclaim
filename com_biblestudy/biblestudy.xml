@@ -78,6 +78,13 @@
     <language tag="no-NO">no-NO/no-NO.com_biblestudy.ini</language>
   </languages>
   
+  	<!-- Media files -->
+	<media destination="com_biblestudy" folder="media">
+		<folder>media</folder>
+		<folder>js</folder>
+		<folder>backup</folder>
+	</media>
+  
   <administration>
     <menu view="cpanel" img="../components/com_biblestudy/images/biblemenu.png" alt="JBS_CMN_COM_BIBLESTUDY">JBS_CMN_COM_BIBLESTUDY</menu>
     <submenu>
@@ -142,7 +149,7 @@
       <language tag="no-NO">nl-NL/no-NO.com_biblestudy.ini</language>
       <language tag="no-NO">no-NO/no-NO.com_biblestudy.sys.ini</language>
     </languages>
-
+	
   </administration>
   
     <updateservers>

@@ -49,9 +49,6 @@ function cancel()
 	 * @return void
 	 */
 
-
-
-
 function resetcss() {
 	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$savfilename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.sav';
@@ -68,18 +65,12 @@ function resetcss() {
 		fclose($savcssfilein);
 if ($return)
 		{
-
-
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$filename);
+            $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$filename);
 		}
  // mosRedirect( "index2.php?option=$option&task=manage_css", "CSS has been reset to default settings." );
 }
 
-
-
-
-
-	function save()
+function save()
 	{
 		$mainframe =& JFactory::getApplication();
 
@@ -115,7 +106,8 @@ if ($return)
                         $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
 		}
 	}
-    function backup()
+	
+function backup()
     {
         	$mainframe =& JFactory::getApplication();
             // Set FTP credentials, if given
@@ -124,7 +116,7 @@ if ($return)
     		$ftp = JClientHelper::getCredentials('ftp');
             $filename		= 'biblestudy.css';
     		$src = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
-            $dest = JPATH_ROOT.DS.'images'.DS.'biblestudy.css';
+            $dest = JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup'.DS.'biblestudy.css';
 
     		// Try to make the css file writeable
 
@@ -132,15 +124,14 @@ if ($return)
             $return = JFile::copy($src, $dest);
     		if ($return)
     		{
-
     		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSS_BACKUP_SAVED'));
     		}
     		else {
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
+                    $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
     		}
     }
 
-    function copycss()
+function copycss()
     {
         $mainframe =& JFactory::getApplication();
             // Set FTP credentials, if given
@@ -149,7 +140,7 @@ if ($return)
     		$ftp = JClientHelper::getCredentials('ftp');
             $filename		= 'biblestudy.css';
     		$dest = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
-            $src = JPATH_ROOT.DS.'images'.DS.'biblestudy.css';
+            $src = JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup'.DS.'biblestudy.css';
 
     		// Try to make the css file writeable
 
@@ -157,12 +148,10 @@ if ($return)
             $return = JFile::copy($src, $dest);
     		if ($return)
     		{
-
     		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSS_BACKUP_RESTORED'));
     		}
     		else {
-                        $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
+					$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
     		}
     }
 }
-?>
