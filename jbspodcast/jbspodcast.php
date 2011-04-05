@@ -21,8 +21,6 @@ class plgSystemjbspodcast extends JPlugin {
         
         //First check to see what method of updating the podcast we are using
         $method = $params->get('method','0');
-       // $dopodcast = $this->doPodcast();
-       // $email = $this->doEmail($params, $dopodcast);
         if ($method == '0')
         {
             $check = $this->checktime($params); 
@@ -62,7 +60,6 @@ class plgSystemjbspodcast extends JPlugin {
         $frequency = $params->get('xhours','86400');
         $difference = $frequency * 3600;
         $checkit = $now - $lasttime;
-      //  echo 'lastime: '.$lasttime.' - frequency: '.$difference.' = seconds since last time: '.$check;
          if ($checkit > $difference) {return true;}
          else {return false;}
     }
@@ -78,15 +75,15 @@ class plgSystemjbspodcast extends JPlugin {
         $db->setQuery('SELECT `timeset` FROM `#__bsms_timeset`', 0, 1);
         $result = $db->loadObject();
         $lasttime = $result->timeset;
-        $difference = $now - $lasttime; //echo 'now: '.$now.' lasttime: '.$lasttime.' difference: '.$difference;
-        $date = getdate($now); //dump ($date, 'date: ');
+        $difference = $now - $lasttime;
+        $date = getdate($now);
         $day = $date['wday'];
-        $systemhour = $date['hours']; //echo 'date: '.$day.' hour: '.$hour.' paramday: '.$params->get('day1').' paramhour: '.$params->get('hour1');
+        $systemhour = $date['hours'];
         if ($params->get('offset', '0') > 0){$hour = $systemhour + $offset;} else {$hour = $systemhour;}
         
         if ($params->get('day1')== $day && $params->get('hour1') == $hour && $difference > 3600)
         {
-           $checkdays = TRUE; //dump ($checkdays, 'checkdays: ');
+           $checkdays = TRUE;
         }
         if ($params->get('day2')== $day)
         {
@@ -168,7 +165,7 @@ class plgSystemjbspodcast extends JPlugin {
     {
         $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
         include_once($path1.'writexml.php');
-        $podcast = writeXML(); //dump ($podcast, 'podcast: ');
+        $podcast = writeXML();
         return $podcast; 
     }
     
@@ -192,18 +189,13 @@ class plgSystemjbspodcast extends JPlugin {
     		$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
     		$db->setQuery($query);
     		$podid = $db->loadObjectList();
-    		//Here we get links to the actual podcast files
-    	//	$errors = JError::getErrors();
-          //  dump($errors,'errors: ');					
+    		//Here we get links to the actual podcast files					
     		if (count($podid)) 
     		{
     			foreach ($podid as $podids2) 
     			{
     				$file = JURI::root().$podids2->filename; 
-                  //  $exists = JFile::exists($file); dump ($exists, 'exists: ');
-                  //  if (JFile::exists($file)){$Body .= $Body.'<br><a href="'.$site.$podids2->filename.'">'.$podids2->title.'</a>';}
-                  //  else {$Body .='<br />There was a problem writing '.$podids2->filename;}
-                  $Body2 .= '<br><a href="'.$file.'">'.$podids2->title.'</a>';
+					$Body2 .= '<br><a href="'.$file.'">'.$podids2->title.'</a>';
                     if (!$dopodcast){$Body2 .= ' - '.JText::_('There were errors reported. Please check files.');}
                     if ($dopodcast){$Body2 .= ' - '.JText::_('There were no errors reported.');}
     			}

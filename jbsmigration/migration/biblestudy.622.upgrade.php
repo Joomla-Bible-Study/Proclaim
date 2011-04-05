@@ -54,8 +54,6 @@ class jbs622Install{
              {
                 $messages[] = $msg;
              }             
- // $application = JFactory::getApplication();
-  //$application->enqueueMessage( ''. JText::_('Upgrading from build 622') .'' ) ;
   $results = array('build'=>'622','messages'=>$messages);
     
     return $results;
@@ -81,4 +79,3 @@ class jbs622Install{
 					}	
     }
 } 
-?>

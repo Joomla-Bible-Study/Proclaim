@@ -27,7 +27,6 @@ class JBSPodcast
         foreach ($results as $result)
         {
         	$params = new JParameter($result->params);
-        	//dump ($params, 'params: ');
         	$podcasts = $params->get('podcasts');
         	
         	switch ($podcasts)
@@ -58,12 +57,12 @@ class JBSPodcast
         if ($where)
         {$where = ' WHERE '.$where.' AND ';}
         else {return $msg= '';}
-        //dump ($where, 'where: ');
         		$query = 'SELECT p.id AS pid, p.podcastlimit,'
         			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate, mf.params,'
            			. ' mf.docMan_id, mf.article_id,'
         			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin, s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
         			. ' s.media_hours, s.media_minutes, s.media_seconds,'
+					. ' se.series_text,' //Bug off Travis Spencer
         			. ' sr.id AS srid, sr.server_path,'
         			. ' f.id AS fid, f.folderpath,'
         			. ' t.id AS tid, t.teachername,'
@@ -71,6 +70,7 @@ class JBSPodcast
         			. ' mt.id AS mtid, mt.mimetype'
         			. ' FROM #__bsms_mediafiles AS mf'
         			. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
+					. ' LEFT JOIN #__bsms_series AS se ON (se.id = s.series_id)' //Bug off Travis Spencer
         			. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
         			. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
         			. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
@@ -81,12 +81,7 @@ class JBSPodcast
         		
         		$db->setQuery( $query );
         		$episodes = $db->loadObjectList();
-        		//dump ($episodes, 'episode: ');
-                
-        		
         return $episodes;
     }
 
 }
-
-?>

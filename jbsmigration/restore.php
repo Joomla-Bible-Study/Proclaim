@@ -13,7 +13,7 @@ class JBSImport
      function importdb()
      {
         $result = FALSE;
-     // Attempt to increase the maximum execution time for php scripts
+      // Attempt to increase the maximum execution time for php scripts
       @set_time_limit(300);
        $installtype = JRequest::getString('install_directory','','post');
        if (substr_count($installtype,'sql'))
@@ -72,7 +72,6 @@ class JBSImport
 		// Move uploaded file
 		jimport('joomla.filesystem.file');
 		$uploaded = JFile::upload($tmp_src, $tmp_dest);
-      //  $moved = JFile::move($tmp_dest, JPATH_SITE .DS. 'media');
         if ($uploaded){return $tmp_src;}
         else {return false;}
 	
@@ -205,5 +204,3 @@ class JBSImport
   }  
   
 }
-
-?>

@@ -44,6 +44,3 @@ $controller = 'studieslist';
 
 require_once JPATH_COMPONENT . DS . 'controllers' . DS . $controller . '.php';
 }
-
-
-?>

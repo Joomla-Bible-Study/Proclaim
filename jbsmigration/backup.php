@@ -345,4 +345,3 @@ function writefile($dobackup)
     }
 
 } // end of class
-?>

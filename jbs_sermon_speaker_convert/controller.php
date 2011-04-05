@@ -21,4 +21,3 @@ class ss2jbsController extends JController
 		parent::display();
 	}
 }
-?>

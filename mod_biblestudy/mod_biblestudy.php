@@ -4,23 +4,16 @@
 
 require(dirname(__FILE__).DS.'helper.php');
 require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
-// Need for inline player
-$document =& JFactory::getDocument();
-$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-$params = new JParameter($params);
-//require_once(dirname(__FILE__).DS.'helper.php');
-$templatemenuid = $params->get('t');
-//if ($templatemenuid) 
-//	{
+	// Need for inline player
+	$document =& JFactory::getDocument();
+	$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+	$params = new JParameter($params);
+	$templatemenuid = $params->get('t');
 	$template = modBiblestudyHelper::getTemplate($params);
-//		$params = new JParameter($template[0]->params);
-		//dump ($params, 'params: ');
-	//}
 
-$admin = modBiblestudyHelper::getAdmin();
-$admin_params = new JParameter($admin[0]->params);
-//dump ($admin_params, 'admin_params: ');
-$items = modBiblestudyHelper::getLatest($params);
+	$admin = modBiblestudyHelper::getAdmin();
+	$admin_params = new JParameter($admin[0]->params);
+	$items = modBiblestudyHelper::getLatest($params);
 
 
 //check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -41,26 +34,23 @@ $items = modBiblestudyHelper::getLatest($params);
         }
         $list = $items;
        
-//$layouttype = $params->get('layouttype');
-global $mainframe; 
+	global $mainframe; 
 
-$document =& JFactory::getDocument();
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
-$language =& JFactory::getLanguage();
-$language->load('com_biblestudy');
-$config =& JComponentHelper::getParams( 'com_biblestudy' );
+	$document =& JFactory::getDocument();
+	$language =& JFactory::getLanguage();
+	$language->load('com_biblestudy');
+	$config =& JComponentHelper::getParams( 'com_biblestudy' );
 //we need to load the path to the helper files
-$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
-$url = $params->get('stylesheet');
-if ($url) {$document->addStyleSheet($url);}
-$pageclass_sfx = $params->get('pageclass_sfx');
-if ($params->get('useexpert_module')> 0)
+	$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+	$url = $params->get('stylesheet');
+	if ($url) {$document->addStyleSheet($url);}
+	$pageclass_sfx = $params->get('pageclass_sfx');
+	if ($params->get('useexpert_module')> 0)
      {
      	$layout = 'default_custom';
 	 }
-else
+	else
 	{
 		$layout = 'default_main';
 	}
-require(JModuleHelper::getLayoutPath('mod_biblestudy', $layout));
-?>
+	require(JModuleHelper::getLayoutPath('mod_biblestudy', $layout));

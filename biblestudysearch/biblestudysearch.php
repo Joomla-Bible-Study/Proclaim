@@ -1,9 +1,6 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 <?php $mainframe->registerEvent( 'onSearch', 'botSearchBiblestudies' );
 $mainframe->registerEvent( 'onSearchAreas', 'botSearchBiblestudiesAreas' );
-//$pluginParams2 = new JParameter( $plugin->params );
-//$title = $pluginParams2->get('search_title');
-function &botSearchBiblestudiesAreas() {
 	static $areas = array(
 		'biblestudies' => 'Bible Studies'
 	);
@@ -37,17 +34,17 @@ if ($phrase == 'exact'){
 "   OR (LOWER(topic_text) LIKE '%text%')";
 }
 else
-{
+	{
 	$words = explode( ' ', $text );
 	$wheres = array();
 	foreach ($words as $word) {
 		$wheres[] = "(LOWER(studytitle) LIKE '%$word%')
 		OR (LOWER(studytext) LIKE '%$word%')" .
 		" OR (LOWER(studyintro) LIKE '%$word%')".
-"   OR (LOWER(teachername) LIKE '%text%')" .
-"   OR (LOWER(bookname) LIKE '%text%')" .
-"   OR (LOWER(series_text) LIKE '%text%')" .
-"   OR (LOWER(topic_text) LIKE '%text%')";
+		"   OR (LOWER(teachername) LIKE '%text%')" .
+		"   OR (LOWER(bookname) LIKE '%text%')" .
+		"   OR (LOWER(series_text) LIKE '%text%')" .
+		"   OR (LOWER(topic_text) LIKE '%text%')";
 }
 if ($phrase == 'all')
 {
@@ -143,7 +140,4 @@ switch ($set_title)
 		$rows = $db->loadObjectList();
 		
 		return $rows;
-}
-?>
-		
-		
+}	

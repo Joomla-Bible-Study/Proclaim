@@ -43,4 +43,3 @@ function versionXML($component)
        }
 	}
 }
-?>

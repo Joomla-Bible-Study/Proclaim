@@ -375,8 +375,6 @@ $query = "UPDATE #__bsms_mediafiles SET params = 'player=2', internal_viewer = '
              {
                 $messages[] = $msg;
              }             
-//$application = JFactory::getApplication();	
-//$application->enqueueMessage( ''. JText::_('Upgrading from build 613') .'' ) ;
 $results = array('build'=>'613','messages'=>$messages);
     
     return $results;
@@ -402,4 +400,3 @@ $results = array('build'=>'613','messages'=>$messages);
 					}	
     }
 }
-?>

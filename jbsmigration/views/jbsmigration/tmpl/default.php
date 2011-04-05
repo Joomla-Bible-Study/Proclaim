@@ -9,5 +9,3 @@ if ($done > 0)
 } 
 echo $this->loadTemplate('main');
 
-?>
-

@@ -640,7 +640,4 @@ $results = array('build'=>'700','messages'=>$messages);
 						$results = false; return $results;
 					}	
     }
-
-
 }
-?>

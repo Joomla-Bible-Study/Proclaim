@@ -5,7 +5,6 @@ $show_link = $params->get('show_link',1);
 $pagetext = $params->get('pagetext');
 $document =& JFactory::getDocument();
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $url = $params->get('stylesheet');
 $ismodule = 1;
 if ($url) {$document->addStyleSheet($url);}
@@ -18,8 +17,6 @@ if ($url) {$document->addStyleSheet($url);}
     include_once($path1.'helper.php');
     include_once($path1.'listing.php');
     $header = getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
-    //dump ($list);
-    //header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'));
     echo $header;
    ?>
 
@@ -34,11 +31,8 @@ foreach ($list as $study) {
 	} else {
 	$oddeven = $class1;
 	}
-	
-//	print_r ($study);
 	$listing = getListing($study, $params, $oddeven, $admin_params, $template, $ismodule);
- 	echo $listing; 
-	//modBiblestudyHelper::renderStudy($study, $params, $oddeven);
+ 	echo $listing;
 	}
 	?>
 	</tbody></table>

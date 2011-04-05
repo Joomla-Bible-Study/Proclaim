@@ -11,4 +11,3 @@ else
 	{
 		echo $this->loadTemplate('main');
 	}
-?>

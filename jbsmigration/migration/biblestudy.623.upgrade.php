@@ -62,9 +62,7 @@ $query = "INSERT INTO #__bsms_version SET `version` = '6.2.3', `installdate`='20
              else
              {
                 $messages[] = $msg;
-             }                  
-//$application = JFactory::getApplication();
-//$application->enqueueMessage( ''. JText::_('Upgrading Build 623') .'' ) ;
+             }
 $results = array('build'=>'623','messages'=>$messages);
     
     return $results;
@@ -90,4 +88,3 @@ $results = array('build'=>'623','messages'=>$messages);
     }
 
 }
-?>

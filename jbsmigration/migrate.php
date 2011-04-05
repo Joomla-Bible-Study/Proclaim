@@ -349,5 +349,3 @@ class JBSMigrate
         //return $message;
     }
 }
-
-?>

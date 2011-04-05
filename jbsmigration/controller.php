@@ -32,7 +32,6 @@ class jbsmigrationController extends JController
         $run = JRequest::getInt('run','','get');
         
         $import = JRequest::getVar('file','','post');
-     //   print_r($task);
         if ($task == 'export' && $run == 1)
         {
             $export = new JBSExport();
@@ -93,5 +92,3 @@ function doimport()
  }
   
 }
-
-?>

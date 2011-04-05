@@ -47,4 +47,3 @@ function performdb($query)
 					}	
     }
 }
-?>

@@ -58,8 +58,6 @@ function upgrade611()
              {
                 $messages[] = $msg;
              }
-   // $application = JFactory::getApplication();            
-  //  $application->enqueueMessage( ''. JText::_('Upgrading to 6.0.11a') .'' ) ;
     
     $results = array('build'=>'611','messages'=>$messages); //dump ($results);
     
@@ -85,4 +83,3 @@ function performdb($query)
     }
     
 }
-?>

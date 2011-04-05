@@ -72,7 +72,6 @@ class SefExt_com_biblestudy extends SefExt
 			$title[] = $view;
 		}
 		
-		//dump($vars,'vars');
 // ***** Filter section
 		if($filter_year)
 		{
@@ -130,4 +129,3 @@ class SefExt_com_biblestudy extends SefExt
     }
 
 }
-?>

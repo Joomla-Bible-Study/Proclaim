@@ -57,7 +57,6 @@ $where2 = array();
 				if (!$filter_teacher)
 				{
 					$continue = 1;
-				//	$filters = explode(",", $teacher);
                     $filters = $teacher;
 					foreach ($filters AS $filter)
 						{
@@ -72,7 +71,6 @@ $where2 = array();
 				{
 					$continue = 1;
 					$filters = null;
-				//	$filters = explode(",", $locations);
                     $filters = $locations;
 					foreach ($filters AS $filter)
 						{
@@ -87,7 +85,6 @@ $where2 = array();
 				{
 					$continue = 1;
 					$filters = null;
-				//	$filters = explode(",", $books);
                     $filters = $books;
 					foreach ($filters AS $filter)
 						{
@@ -102,7 +99,6 @@ $where2 = array();
 				{
 					$continue = 1;
 					$filters = null;
-				//	$filters = explode(",", $series);
                     $filters = $series;
 					foreach ($filters AS $filter)
 						{
@@ -117,7 +113,6 @@ $where2 = array();
 				{
 					$continue = 1;
 					$filters = null;
-				//	$filters = explode(",", $topics);
                     $filters = $topics;
 					foreach ($filters AS $filter)
 						{
@@ -131,8 +126,6 @@ $where2 = array();
 				if (!$filter_messagetype)
 				{
 					$continue = 1;
-					$filters = null;
-				//	$filters = explode(",", $messagetype_menu);
                     $filters = $messagetype_menu;
 					foreach ($filters AS $filter)
 						{
@@ -160,44 +153,32 @@ $where2 = array();
 			. ' ORDER BY #__bsms_studies.studydate DESC ';
 		$db->setQuery( $query, 0, $items );
 		$rows = $db->loadObjectList();
-		//dump ($rows, 'rows: ');
 		return $rows;
 	}
 	function _buildContentWhere()
 	{
-		
-	
-		//return $where;
-		//return $this->where;
+
 	}
 	
 	function getTemplate($params) {
 		$db =& JFactory::getDBO();
-		//if(empty($this->_template)) {
 			$templateid = $params->get('modulemenuid', 1);
-			//$templateid = JRequest::getVar('templatemenuid',1,'get', 'int');
-			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'
 			. ' WHERE published = 1 AND id = '.$templateid;
 			$db->setQuery($query);
 			$template = $db->loadObjectList();
-			//$this->_template = $this->_getList($query);
-			//dump ($this->_template, 'this->_template');
-		//}
 		return $template;
 	}	
 	
 	 function getAdmin()
 	{
-		//if (empty($this->_admin)) {
 			$db =& JFactory::getDBO();
 			$query = 'SELECT *'
 			. ' FROM #__bsms_admin'
 			. ' WHERE id = 1';
 			$db->setQuery($query);
 			$admin = $db->loadObjectList();
-		//}
 		return $admin;
 	}
 	
@@ -206,5 +187,3 @@ $where2 = array();
 		require(JModuleHelper::getLayoutPath('mod_biblestudy', '_study'));
 	}
 }
-	
-?>

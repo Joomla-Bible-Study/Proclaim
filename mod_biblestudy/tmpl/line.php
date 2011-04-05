@@ -13,16 +13,6 @@ a[title]:hover:after{
 }
 
 #
-
-
-<!--
-.indented
-   {
-   padding-left: 5pt;
-   padding-right: 5pt;
-   font-size: 0.85em;
-   }
--->
 </STYLE>
 <?php
 $linebreak = $params->get('linebreak');

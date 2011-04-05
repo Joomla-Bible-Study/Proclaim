@@ -40,4 +40,3 @@ class JElementdetailsitemid extends JElement
 		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'id', 'text', $value, $control_name.$name );
 	}
 }
-//CONCAT(#__bsms_books.bookname,':',#__bsms_studies.chapter_begin,' - ',#__bsms_studies.studydate)

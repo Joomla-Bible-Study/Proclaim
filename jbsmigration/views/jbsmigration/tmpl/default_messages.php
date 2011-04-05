@@ -44,4 +44,3 @@ foreach ($messages AS $message)
 </div>
 <?php
 }
- ?>      

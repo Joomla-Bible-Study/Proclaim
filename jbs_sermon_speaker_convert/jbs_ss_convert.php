@@ -344,4 +344,3 @@ function convertSS()
         return $sermontime;
     }
 }
-?>

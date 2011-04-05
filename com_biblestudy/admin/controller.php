@@ -14,12 +14,9 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy'))
         return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-// require helper file
-//JLoader::register('BibleStudyHelper', dirname(__FILE__) . DS . 'helpers' . DS . 'biblestudy.php');
 
 jimport('joomla.application.component.controller');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-//require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers '.DS. 'biblestudy.php');
 class biblestudyController extends JController
 {
     protected $default_view = 'cpanel';
@@ -61,7 +58,6 @@ class biblestudyController extends JController
 		if(JRequest::getCmd('view') == 'studydetails')
 		{
 			$model =& $this->getModel('studydetails');
-		//	$model->hit();
 		}
 		parent::display();
 	}
@@ -179,7 +175,6 @@ class biblestudyController extends JController
         } else {
             
             $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL').'<br /> '.JText::_('JBS_ADM_AFFECTED_ROWS').': '.$num_rows;
-           // $msg .= 'from: '.$from.' to: '.$to.' Query: '.$query;
         }
 
         return $msg;
@@ -202,7 +197,6 @@ class biblestudyController extends JController
         } else {
             
             $msg = JText::_('JBS_ADM_OPERATION_SUCCESSFUL').'<br /> '.JText::_('JBS_ADM_AFFECTED_ROWS').': '.$num_rows;
-           // $msg .= 'from: '.$from.' to: '.$to.' Query: '.$query;
         }
 
         return $msg;
@@ -210,5 +204,3 @@ class biblestudyController extends JController
 
 
 }
-
-?>

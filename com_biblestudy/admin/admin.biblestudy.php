@@ -72,5 +72,3 @@ function addJS() {
     $doc->addScript(JURI::base() . 'components/com_biblestudy/js/noconflict.js');
     $doc->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 }
-
-?>

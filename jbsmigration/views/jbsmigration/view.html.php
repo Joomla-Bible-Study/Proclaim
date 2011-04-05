@@ -27,4 +27,3 @@ class jbsmigrationViewjbsmigration extends JView
         JToolBarHelper::help( 'jbsexportimport', true );
     }
 }
-?>

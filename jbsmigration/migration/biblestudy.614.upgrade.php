@@ -155,4 +155,3 @@ $results = array('build'=>'614','messages'=>$messages);
 					}	
     }
 }
-?>

@@ -18,4 +18,3 @@ require_once (JPATH_COMPONENT.DS.'controller.php');
 		//Redirect if set by the controller 
 		
 		$controller->redirect();
-?>

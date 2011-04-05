@@ -24,4 +24,3 @@ $controller = JRequest::getVar( 'controller' );
 		//Redirect if set by the controller 
 		
 		$controller->redirect();
-?>

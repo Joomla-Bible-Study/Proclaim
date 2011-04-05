@@ -9,7 +9,6 @@
 defined('_JEXEC') or die(); 
 $document =& JFactory::getDocument();
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'listing.php'); 
 ?>
@@ -67,7 +66,6 @@ switch ($params->get('module_wrapcode')) {
 			if ($params->get('show_link') > 0){
 					$t = $params->get('t');
 					if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
-					//$addItemid = getItemidLink($isplugin = 0, $admin_params);
 					$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t='.$t);?>
 			<a href="<?php echo $link;?>"> <?php echo $link_text.'<br />'; ?> </a> <?php } //End of if view_link not 0?>
 </div><!--end of footer div-->

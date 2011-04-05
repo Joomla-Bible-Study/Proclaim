@@ -1293,5 +1293,3 @@ class Snoopy
 		return $postdata;
 	}
 }
-
-?>
