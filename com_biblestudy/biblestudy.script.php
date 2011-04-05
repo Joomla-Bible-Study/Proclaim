@@ -39,6 +39,7 @@ class com_biblestudyInstallerScript {
 		require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'params.php');
 
         //We must remove the assets manually each time
+        $db =& JFactory::getDBO();
         $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
         $db->setQuery($query);
         $db->query();
