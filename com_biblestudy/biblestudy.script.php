@@ -81,15 +81,7 @@ class com_biblestudyInstallerScript {
 	$document->addScript('components/com_biblestudy/js/dwProgressBar.js');
 	$document->addScript('components/com_biblestudy/js/assat.js');
 
-	$db = JFactory::getDBO();
-        $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
-        $db->setQuery($query);
-        $db->query();
-        if (!$db->loadResult())
-        {
-	?>
-<?php }
-// Check to see if assets have been fixed
+	// Check to see if assets have been fixed
         $db = JFactory::getDBO();
         $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
         $db->setQuery($query);
@@ -97,10 +89,11 @@ class com_biblestudyInstallerScript {
         if (!$db->loadResult())
         {
            require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
-            $assetfix = new fixJBSAssets();
 			echo '<div id="assetinstall">';
             echo '<p class="text">'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
-			echo '<div id="pb3"></div>';
+			echo '<div id="pb3">';
+			$assetfix = new fixJBSAssets();
+			echo '</div>';
             $assetdofix = $assetfix->AssetEntry();
 			echo '</div>';
             echo '<div id="done">';
