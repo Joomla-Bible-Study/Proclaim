@@ -318,7 +318,10 @@ class biblestudyModelMessages extends modelClass {
             $query->where('study.messageType = '.(int)$messageType);
 
         //Filter by Year?
-
+        $year = $this->getState('filter.year');
+        if (!empty($year))
+            $query->where('date_format(study.studydate, "%Y") = '.(int)$year );
+            
         //Filter by topic
         $topic = $this->getState('filter.topic');
         if(!empty($topic))
@@ -430,4 +433,18 @@ class biblestudyModelMessages extends modelClass {
         return $db->loadObjectList();
     }
 
+public function getYears(){
+        $db = $this->getDBO();
+        $query = $db->getQuery(true);
+        
+        $query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
+        $query->from('#__bsms_studies' );
+        $query->order('value');
+        
+        $db->setQuery($query->__toString());
+        $year = $db->loadObjectList();
+      //  dump ($year);
+        return $year;
+    }
+    
 }

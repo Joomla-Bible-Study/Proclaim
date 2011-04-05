@@ -20,7 +20,7 @@ $listDirn = $this->state->get('list.direction');
             <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button" onclick="document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
         </div>
-        <div class="filter-select fltrt">
+        <div class="filter-select fltlft">
             <select name="filter_book" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
                 <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.book')); ?>
@@ -39,7 +39,7 @@ $listDirn = $this->state->get('list.direction');
             </select>
             <select name="filter_years" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
-                <?php //echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageTypeId')); ?>
+                <?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
             </select>
             <select name="filter_topic" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_TOPIC'); ?></option>

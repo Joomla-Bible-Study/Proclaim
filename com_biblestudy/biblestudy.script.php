@@ -38,6 +38,15 @@ class com_biblestudyInstallerScript {
 		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 		require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'params.php');
 
+        //We must remove the assets manually each time
+        $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
+        $db->setQuery($query);
+        $db->query();
+        $parent_id = $db->loadResult();
+        $query = "DELTE FROM #__assets WHERE parent_id = ".$parent_id;
+        $db->setQuery($query);
+        $db->query();
+        
 		$db =& JFactory::getDBO();
 				$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
 				$db->query();
