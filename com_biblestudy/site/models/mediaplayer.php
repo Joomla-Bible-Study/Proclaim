@@ -217,4 +217,3 @@ function publish($cid = array(), $publish = 1)
 		return true;
 	}
 }
-?>

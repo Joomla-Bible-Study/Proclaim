@@ -14,8 +14,6 @@ $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/bibl
 $params = $this->params;
 $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}	
-//$listingcall = JView::loadHelper('serieslist');
-
 ?>
 <form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
 
@@ -39,17 +37,10 @@ if ( $this->params->get( 'show_series_title' ) >0 ) {
 	?>
       </h1>
 <!--header-->
-    
-    
     <div id="bsdropdownmenu">
 
 <?php 
-
-	
-if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }   
-	 
-//if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
-  
+if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }  
 ?>
 
 
@@ -64,7 +55,6 @@ if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }
  $oddeven = $class1;
 
  foreach ($this->items as $row) { //Run through each row of the data result from the model
- 	//echo '<table id="bslisttable" cellspacing="0">';
 	if($oddeven == $class1){ //Alternate the color background
 	$oddeven = $class2;
 	} else {
@@ -72,7 +62,6 @@ if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }
 	}
 
 	$listing = getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template, $view = 0);
-	//dump ($listing, 'listing: ');
  	echo $listing;
  	
  	//echo '</table>';
@@ -80,11 +69,6 @@ if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }
  ?>
  </tbody></table>
 <div class="listingfooter" >
-	<?php 
-      
-   //   echo $this->pagination->getPagesLinks();
-   //   echo $this->pagination->getPagesCounter();
-      //echo $this->pagination->getListFooter(); ?>
 </div> <!--end of bsfooter div-->
   </div><!--end of bspagecontainer div-->
   <input name="option" value="com_biblestudy" type="hidden">

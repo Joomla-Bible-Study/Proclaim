@@ -53,5 +53,3 @@ class biblestudyViewmediafile extends JView {
 
 
 }
-
-?>

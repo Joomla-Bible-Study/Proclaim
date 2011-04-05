@@ -1,17 +1,14 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
-<?php //$params = &JComponentHelper::getParams($option);  
+<?php defined('_JEXEC') or die('Restricted access');   
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 $user =& JFactory::getUser();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 $params = $this->params;
 
 $t = $params->get('teachertemplateid');
-//dump ($t);
 if (!$t) {$t = JRequest::getVar('t', 1, 'get', 'int');}
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 $admin_params = $this->admin_params;
 include_once($path1.'image.php');
-//if (!$t){$t = 1;}
 ?>
 <div id="biblestudy" class="noRefTagger">
 <table id="bsm_teachertable" cellspacing="0">
@@ -25,8 +22,6 @@ $class1 = 'bsodd';
  $oddeven = $class1;
 ?>
  
-	
-    
 <?php foreach ($this->items as $item) {
 	if ($item->title) {$teacherdisplay = $item->teachername.' - '.$item->title;}else {$teacherdisplay = $item->teachername;}
 	if($oddeven == $class1){ //Alternate the color background
@@ -36,13 +31,6 @@ $class1 = 'bsodd';
 	}
 	$images = new jbsImages();
 	$image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
-//if (!$item->teacher_thumbnail) { $image->path = $item->thumb; $image->height = $item->thumbh; $image->width = $item->thumbw; }
-//	else
-//	{
-//		if ($item->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$item->teacher_thumbnail; }
-//		if ($item->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$item->teacher_thumbnail;}
-//		$image = getImage($i_path);
-//	}
 ?>
 
     

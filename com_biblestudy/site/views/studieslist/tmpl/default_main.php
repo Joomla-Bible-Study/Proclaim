@@ -15,13 +15,9 @@ $book_menu = $this->params->get('booknumber');
 $location_menu = $this->params->get('locations');
 $series_menu = $this->params->get('series_id');
 $messagetype_menu = $this->params->get('messagetype');
-//$params = $mainframe->getPageParameters();
 $document =& JFactory::getDocument();
-//$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
-//print_r ($this->admin_params);
 $teachers = $params->get('teacher_id');
 
 
@@ -128,10 +124,6 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
  </tbody></table>
 <div class="listingfooter" >
 	<?php
-
-    //  echo $this->pagination->getPagesLinks();
-    //  echo $this->pagination->getPagesCounter();
-    //  echo $this->pagination->getListFooter();
       echo $this->pagination->getPagesLinks();
 
 	  ?>

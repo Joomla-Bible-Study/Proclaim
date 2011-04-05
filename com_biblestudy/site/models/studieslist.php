@@ -49,22 +49,17 @@ class biblestudyModelstudieslist extends modelClass {
 		$config['table_path'] = JPATH_COMPONENT.DS.'tables';    // use site tables
 		parent::__construct($config);
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-      //  require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
-        jimport('joomla.html.parameter');
-		//$params =& $mainframe->getPageParameters();
 		$params 			=& $mainframe->getPageParameters();
         
 		$t = $params->get('t');
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
-		//JRequest::setVar( 't', $params->get('t'), 'get');
 		
 		$template = $this->getTemplate();
         jimport('joomla.html.parameter');
 		$params = new JParameter($template[0]->params);
         
 		$this->_params = $params;
-		//dump ($params, 'params: ');
 		$config = JFactory::getConfig();
 		// Get the pagination request variables
 		
@@ -108,7 +103,6 @@ function setSelect($string){
 			  . ' GROUP BY #__bsms_studies.id'
 			  . $orderby
 			  ;
-	 //  print_r($query);
 		return $query;
 	}
 
@@ -192,13 +186,6 @@ function setSelect($string){
 	 */
 	function getTopics() {
 		if (empty($this->_Topics)) {
-		    /*
-			$query = 'SELECT DISTINCT #__bsms_studies.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text, #__bsms_topics.published'
-			. ' FROM #__bsms_studies'
-			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
-			. ' WHERE #__bsms_topics.published = 1'
-			. ' ORDER BY #__bsms_topics.topic_text ASC';
-			*/
             $query = 'SELECT DISTINCT #__bsms_studytopics.topic_id as id, #__bsms_studytopics.topic_id AS value, #__bsms_topics.topic_text AS text'
             . ' FROM #__bsms_studytopics'
             . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
@@ -250,12 +237,10 @@ function getBooks() {
 function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
-			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'
 			. ' WHERE published = 1 AND id = '.$templateid;
 			$this->_template = $this->_getList($query);
-			//dump ($this->_template, 'this->_template');
 		}
 		return $this->_template;
 	}
@@ -274,14 +259,11 @@ function getAdmin()
 	function getData()
 	{
 		$mainframe =& JFactory::getApplication();
-		//$params =& $mainframe->getPageParameters();
-		//dump($data, 'Data from Model');
 		// Lets load the data if it doesn't already exist
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
 			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
-			//$this->_data = $this->_getList( $query, $this->getState('limitstart'), $params->get('itemslimit') );
 		}
 
 		return $this->_data;
@@ -299,7 +281,6 @@ function getAdmin()
 		{
 			$query = $this->_buildQuery();
 			$this->_total = $this->_getListCount($query);
-			//dump ($this->getState('limitstart'), 'limitstart: ');
 			
 		}
 
@@ -348,8 +329,6 @@ function getAdmin()
 		$messagetype_menu = $params->get('messagetype', 1);
 		$location_menu = $params->get('locations', 1);
 		$chapter_menu = $params->get('chapter', 1);
-	//	$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',				'word' );
-   //     $filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',	'word' );
 		$where = array();
 		$rightnow = date('Y-m-d H:i:s');
 		$where[] = ' #__bsms_studies.published = 1';
@@ -398,7 +377,6 @@ function getAdmin()
         //Check for authorization to view the study
         $user	= JFactory::getUser();
         $groups	= implode(',', $user->getAuthorisedViewLevels());
-	//	$where[] = '#__bsms_studies.access IN ('.$groups.')';
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
         
@@ -421,9 +399,7 @@ function getAdmin()
             $menubooks = $menuparams->get('mbooknumber');
             $menuseries = $menuparams->get('mseries_id');
             $menutopics = $menuparams->get('mtopic_id');
-            $menumessagetype = $menuparams->get('mmessagetype');
-           
-           // $params->merge( $menuparams );
+            $menumessagetype = $menuparams->get('mmessagetype');;
           }
 
         
@@ -432,7 +408,7 @@ function getAdmin()
 		if (($params->get('teacher_id') || $menuteacher ) && !$filter_teacher) 
 			{ 
 				if ($menuteacher) {$filters = $menuteacher;}
-					else {$filters = $params->get('teacher_id');} //dump ($filters, 'filters: ');
+					else {$filters = $params->get('teacher_id');}
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -440,18 +416,16 @@ function getAdmin()
 								{
 									if ($filter == -1)
 										{
-											//$continue = 0;
 											break;
 										}
 									{
 										$continue = 1;
-										$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter; //dump ($where2, 'where2: ');
+										$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
 									}
 								}
 							break;
 							
 						case -1:
-							//$continue = 0;
 						break;
 						
 						default:
@@ -463,7 +437,7 @@ function getAdmin()
 		if (($params->get('locations') || $menulocations)&& !$filter_location) 
 			{ 
 				if ($menulocations){$filters = $menulocations;}
-					else {$filters = $params->get('locations');} //dump ($filters, 'filters: ');
+					else {$filters = $params->get('locations');}
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -471,18 +445,16 @@ function getAdmin()
 								{
 									if ($filter == -1)
 										{
-											//$continue = 0;
 											break;
 										}
 									{
 										$continue = 1;
-										$where2[] = '#__bsms_studies.location_id = '.(int)$filter; //dump ($where2, 'where2: ');
+										$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
 									}
 								}
 							break;
 							
 						case -1:
-							//$continue = 0;
 						break;
 						
 						default:
@@ -494,7 +466,7 @@ function getAdmin()
 		if (($params->get('booknumber') || $menubooks) && !$filter_book) 
 			{ 
 				if ($menubooks){$filters = $menubooks;}
-					else {$filters = $params->get('booknumber');} //dump ($filters, 'filters: ');
+					else {$filters = $params->get('booknumber');}
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -502,18 +474,16 @@ function getAdmin()
 								{
 									if ($filter == -1)
 										{
-											//$continue = 0;
 											break;
 										}
 									{
 										$continue = 1;
-										$where2[] = '#__bsms_studies.booknumber = '.(int)$filter; //dump ($where2, 'where2: ');
+										$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
 									}
 								}
 							break;
 							
 						case -1:
-							//$continue = 0;
 						break;
 						
 						default:
@@ -525,7 +495,7 @@ function getAdmin()
 		if (($params->get('series_id') || $menuseries) && !$filter_series) 
 			{ 
 				if ($menuseries) {$filters = $menuseries;}
-					else {$filters = $params->get('series_id');} //dump ($filters, 'filters: ');
+					else {$filters = $params->get('series_id');}
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -533,18 +503,16 @@ function getAdmin()
 								{
 									if ($filter == -1)
 										{
-											//$continue = 0;
 											break;
 										}
 									{
 										$continue = 1;
-										$where2[] = '#__bsms_studies.series_id = '.(int)$filter; //dump ($where2, 'where2: ');
+										$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
 									}
 								}
 							break;
 							
 						case -1:
-							//$continue = 0;
 						break;
 						
 						default:
@@ -556,7 +524,7 @@ function getAdmin()
 		if (($params->get('topic_id') || $menutopics) && !$filter_topic) 
 			{ 
 				if ($menutopics) {$filters = $menutopics;}
-					else {$filters = $params->get('topic_id');} //dump ($filters, 'filters: ');
+					else {$filters = $params->get('topic_id');}
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -564,19 +532,17 @@ function getAdmin()
 								{
 									if ($filter == -1)
 										{
-											//$continue = 0;
 											break;
 										}
 									{
 										$continue = 1;
-										$where2[] = '#__bsms_studytopics.topic_id = '.(int)$filter; //dump ($where2, 'where2: ');
+										$where2[] = '#__bsms_studytopics.topic_id = '.(int)$filter;');
 										$where2[] = '#__bsms_studies.topics_id = '.(int)$filter; 
 									}
 								}
 							break;
 							
 						case -1:
-							//$continue = 0;
 						break;
 						
 						default:
@@ -589,7 +555,7 @@ function getAdmin()
 		if (($params->get('messagetype') || $menumessagetype) && !$filter_messagetype) 
 			{ 
 				if ($menumessagetype){$filters = $menumessagetype;}
-					else {$filters = $params->get('messagetype');} //dump ($filters, 'filters: ');
+					else {$filters = $params->get('messagetype');}
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -597,12 +563,11 @@ function getAdmin()
 								{
 									if ($filter == -1)
 										{
-											//$continue = 0;
 											break;
 										}
 									{
 										$continue = 1;
-										$where2[] = '#__bsms_studies.messagetype = '.(int)$filter; //dump ($where2, 'where2: ');
+										$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
 									}
 								}
 							break;
@@ -619,10 +584,7 @@ function getAdmin()
 				}
 					
 		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
-//dump ($where2, 'where2: ');
-//dump ($continue, 'continue: ');
 		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}
-		//dump ($where, 'where: ');
 		return $where;
 	}
 	
@@ -649,9 +611,7 @@ function getAdmin()
       else
           {
             $orderby = ' ORDER BY studydate '.$this->_params->get('default_order', 'DESC').' ';
-          }
-          
-    //  $orderby = '';   
+          } 
 	return $orderby;
 	}
     
@@ -665,4 +625,3 @@ function getAdmin()
                 return $query;
         }
 }
-?>

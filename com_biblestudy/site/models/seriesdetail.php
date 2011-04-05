@@ -34,7 +34,6 @@ class biblestudyModelseriesdetail extends JModel
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
 		$this->_id = $id;
-      //  require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
         jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
@@ -86,12 +85,10 @@ class biblestudyModelseriesdetail extends JModel
 function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
-			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'
 			. ' WHERE published = 1 AND id = '.$templateid;
 			$this->_template = $this->_getList($query);
-			//dump ($this->_template, 'this->_template');
 		}
 		return $this->_template;
 	}
@@ -108,4 +105,3 @@ function getTemplate() {
 	
 //end class
 }
-?>

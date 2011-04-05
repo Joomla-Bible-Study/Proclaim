@@ -59,7 +59,6 @@ class biblestudyModelcommentslist extends modelClass {
             $query = $this->_buildQuery();
             $this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
         }
-        //$this->setState('limitstart', $limitstart);
         return $this->_data;
     }
 
@@ -93,8 +92,6 @@ class biblestudyModelcommentslist extends modelClass {
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $where = array();
-        //$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'ordering',	'cmd' );
-        //$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );
         $filter_studyid = $mainframe->getUserStateFromRequest($option . 'filter_studyid', 'filter_studyid', 0, 'int');
         if ($filter_studyid > 0) {
             $where[] = 'c.study_id = ' . (int) $filter_studyid;
@@ -167,5 +164,3 @@ class biblestudyModelcommentslist extends modelClass {
     }
 
 }
-
-?>

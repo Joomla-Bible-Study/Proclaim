@@ -115,5 +115,3 @@ if ($dosef){
       (isset($shLangName) ? @$shLangName : null));
 }      
 // ------------------  standard plugin finalize function - don't change ---------------------------
-  
-?>

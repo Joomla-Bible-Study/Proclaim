@@ -123,9 +123,6 @@ switch ($this->params->get('show_teacher_studies'))
 	echo $studies;
 	break;
 }
-
-
-
 ?> </td></tr>
 <?php
 ?>

@@ -39,13 +39,11 @@ class biblestudyModelteacherdisplay extends JModel
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-      //  require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
         jimport('joomla.html.parameter');
 		$params 			=& $mainframe->getPageParameters();
 		$t = $params->get('t');
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
-		//JRequest::setVar( 't', $params->get('t'), 'get');
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
 		$this->setId((int)$array[0]);
@@ -76,12 +74,10 @@ class biblestudyModelteacherdisplay extends JModel
 function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
-			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'
 			. ' WHERE published = 1 AND id = '.$templateid;
 			$this->_template = $this->_getList($query);
-			//dump ($this->_template, 'this->_template');
 		}
 		return $this->_template;
 	}
@@ -99,4 +95,3 @@ function getAdmin()
 	
 //end class
 }
-?>

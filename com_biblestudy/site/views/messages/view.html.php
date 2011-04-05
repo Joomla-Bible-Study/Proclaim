@@ -49,5 +49,3 @@ class biblestudyViewmessages extends JView {
     }
 
 }
-
-?>

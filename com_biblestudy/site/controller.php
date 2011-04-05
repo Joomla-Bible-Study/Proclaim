@@ -30,9 +30,7 @@ class biblestudyController extends JController {
 		$t = $params->get('t');
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
-		//$template = $model->get('Template');
 		$params = new JParameter($model->_template[0]->params);
-		//dump ($params);
 	$cap = 1;
 
 	if ($params->get('use_captcha') > 0)
@@ -43,18 +41,13 @@ class biblestudyController extends JController {
         $challenge = JRequest::getVar('recaptcha_challenge_field','','post');
         $response =  JRequest::getVar('recaptcha_response_field','','post');
   $resp = recaptcha_check_answer ($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
-//$_POST["recaptcha_challenge_field"]
-//$_POST["recaptcha_response_field"])
   if (!$resp->is_valid) {
     // What happens when the CAPTCHA was entered incorrectly
     $mess = JText::_('JBS_STY_INCORRECT_KEY');
     echo "<script language='javascript' type='text/javascript'>alert('" . $mess ."')</script>";
     echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
-  //  echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()";
     return;
     $cap = 0;
-  //  die ("The reCAPTCHA wasn't entered correctly. Go back and try it again." .
-  //       "(reCAPTCHA said: " . $resp->error . ")");
   } else {
     $cap = 1;
   }
@@ -86,10 +79,8 @@ class biblestudyController extends JController {
     $menu = JSite::getMenu();
     $menuparams = $menu->getParams( $menuitemid );
   }
-		//$params =& $mainframe->getPageParameters();
 		$comment_author = JRequest::getVar('full_name', 'Anonymous', 'POST', 'WORD');
 		$comment_study_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
-		//$comment_study_id = $this->thestudy;
 		$comment_email = JRequest::getVar('user_email', 'No Email', 'POST', 'WORD');
 		$comment_text = JRequest::getVar('comment_text', 'None', 'POST', 'WORD');
 		$comment_published = JRequest::getVar('published', 0, 'POST', 'INT');

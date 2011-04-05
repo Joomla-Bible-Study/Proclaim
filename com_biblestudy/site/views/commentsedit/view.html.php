@@ -36,9 +36,5 @@ class biblestudyViewcommentsedit extends JView {
         
         
         parent::display($tpl);
-    }
-
-   
-  
+    } 
 }
-?>

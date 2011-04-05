@@ -5,13 +5,9 @@ defined('_JEXEC') or die(); ?>
 
 <?php 
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-//JHTML::_('behavior.tooltip');
 
 $document =& JFactory::getDocument();
-//$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-//$params = $this->params;
 $url = $this->params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}	
 $listingcall = JView::loadHelper('serieslist');
@@ -24,23 +20,15 @@ if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 <!--<tbody><tr>-->
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-  
-    
-   
+
 <!--header-->
-    
-    
-   
      <table id="seriestable" cellspacing="0">
       <tbody>
 
         <?php 
  
 	$listing = getSerieslist($this->items, $this->params, $oddeven = 'bsodd', $this->admin_params, $this->template, $view = 1);
-	//dump ($listing, 'listing: ');
 	echo $listing;
- 	
- 	//echo '</table>';
  
  ?>
 
@@ -75,7 +63,6 @@ if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 			} else {
 			$oddeven = $class1;
 			}
-    //        dump ($row,'$row: ');
 		  $studylisting = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
 		  echo $studylisting;
 		}

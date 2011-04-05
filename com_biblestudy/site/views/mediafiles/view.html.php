@@ -57,9 +57,4 @@ class biblestudyViewmediafiles extends JView {
         }
         parent::display($tpl);
     }
-
-   
-
 }
-
-?>

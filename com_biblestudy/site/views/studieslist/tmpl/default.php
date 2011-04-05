@@ -8,5 +8,3 @@ if ($this->params->get('useexpert_list') > 0) {
 } else {
     echo $this->loadTemplate('main');
 }
-?>
-

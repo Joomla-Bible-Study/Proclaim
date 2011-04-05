@@ -26,7 +26,6 @@ class biblestudyModelteacherlist extends JModel
 function __construct()
 	{
 		parent::__construct();
-		//$admin = $this->_getAdmin;
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
       //  require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
         jimport('joomla.html.parameter');
@@ -63,7 +62,6 @@ function __construct()
 	function getData()
 	{
 		// Lets load the data if it doesn't already exist
-		//if (empty( $this->_data ))
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
@@ -129,4 +127,3 @@ function getAdmin()
 	}
 
 }
-?>

@@ -38,7 +38,6 @@ class biblestudyModelmessage extends modelClass {
     function &getData() {
         // Load the data
         $admin = $this->getAdmin();
-        //dump ($admin, 'admin: ');
         if (empty($this->_data)) {
             $query = ' SELECT * FROM #__bsms_studies ' .
                     '  WHERE id = ' . $this->_id;
@@ -87,11 +86,9 @@ class biblestudyModelmessage extends modelClass {
             
             $this->_data->location_id = ($this->_admin_params->get('location_id') > 0 ? $this->_admin_params->get('location_id') : null);
             $this->_data->thumbnailm = ($admin[0]->study != '- JBS_CMN_NO_IMAGE -' ? $admin[0]->study : null);   // 2010-11-12 santon: need to be changed
-            //$this->_data->thumbnailm = null;
             $this->_data->thumbhm = null;
             $this->_data->thumbwm = null;
             $this->_data->params = null;
-            //dump ($this->_data);
         }
         return $this->_data;
     }
@@ -118,7 +115,6 @@ class biblestudyModelmessage extends modelClass {
      * @return	boolean	True on success
      */
     function store() {
-        //$post           = JRequest::get( 'post' );
         // fix up special html fields
 
         $row = & $this->getTable();
@@ -131,8 +127,6 @@ class biblestudyModelmessage extends modelClass {
         $data['studynumber'] = str_replace('"', "'", $data['studynumber']);
         $data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
         $data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
-
-        //	$msg = $data['show_level'];
 
         foreach ($data['scripture'] as $scripture) {
             if (!$data['text'][key($data['scripture'])] == '') {
@@ -158,14 +152,11 @@ class biblestudyModelmessage extends modelClass {
 
         // Store the table to the database
         //Checks to make sure a valid date field has been entered
-        if (!$row->studydate)
-            $row->studydate = date('Y-m-d H:i:s');
-        //if ($row->description) { $row->description = str_replace('"',"'",$row->description); }
+        if (!$row->studydate) {
+            $row->studydate = date('Y-m-d H:i:s'); }
         if (!$row->store()) {
             $this->setError($this->_db->getErrorMsg());
             return false;
-            //$this->setError( $row->getErrorMsg() );
-            //return false;
         }
 
         //Get Tags
@@ -174,16 +165,12 @@ class biblestudyModelmessage extends modelClass {
 
         JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'tables');
 
-        //$tagRow->load( 1 );
-
         foreach ($iTags as $aTag) {
             if (is_numeric($aTag)) {
                 //It's an existing tag.  Add it
                 if ($aTag != "") {
 
                     $tagRow = & JTable::getInstance('studytopics', 'Table');
-
-                    //dump ($isDup, "D");
 
                     $isDup = $this->isDuplicate($row->id, $aTag);
 
@@ -350,7 +337,6 @@ class biblestudyModelmessage extends modelClass {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
         if (empty($data))
             $data = $this->getItem();
-           // $data->show_level = explode(',', $data->show_level);
 
         return $data;
     }
@@ -371,5 +357,3 @@ class biblestudyModelmessage extends modelClass {
         return JTable::getInstance($type, $prefix, $config);
 	}
 }
-
-?>

@@ -67,11 +67,6 @@ class biblestudyViewstudieslist extends JView {
         $document = & JFactory::getDocument();
         $model = & $this->getModel();
         
-        
-
-       
-        
-
         //See if user has permission to edit and whether admin params are set to allow front end editing of studies
         $admin = new JBSAdmin();
         $allow = $admin->getPermission();
@@ -111,11 +106,8 @@ class biblestudyViewstudieslist extends JView {
         $filter_location = $mainframe->getuserStateFromRequest($option . 'filter_location', 'filter_location', 0, 'int');
         $filter_orders = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
         $search = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
-
-       // $items = $this->get('Data');
         $total = $this->get('Total');
         //Remove the studies the user is not allowed to see
-      //  $items = $admin->showRows($results);
 
         $pagination = $this->get('Pagination');
         $teachers = $this->get('Teachers');
@@ -131,19 +123,16 @@ class biblestudyViewstudieslist extends JView {
         $scripture_call = Jview::loadHelper('scripture');
         //end scripture helper
         $translated_call = JView::loadHelper('translated');
-        //dump ($topics, 'topics: ');
         $topics = getTranslated($topics);
 
         $orders = getTranslated($orders);
         $book = getTranslated($books);
-        //$this->assignRef('books', $books);
         $this->assignRef('template', $template);
         $this->assignRef('pagination', $pagination);
         $this->assignRef('order', $orders);
         $this->assignRef('topic', $topics);
         $menu = & JSite::getMenu();
         $item = & $menu->getActive();
-//dump ($item,'item: ');
         $images = new jbsImages();
 
         $main = $images->mainStudyImage(); // dump ($main, 'main: ');
@@ -419,7 +408,6 @@ class biblestudyViewstudieslist extends JView {
         for ($c = 1; $c <= $maxBooks; $c++) {
             $chap[] = JHTML::_('select.option', $c, $c);
         }
-        //$chap		= array_merge($chap, $chapter);
         $lists['chapters'] = JHTML::_('select.genericlist', $chap, 'filter_chapter', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_chapter");
 
         //Build order

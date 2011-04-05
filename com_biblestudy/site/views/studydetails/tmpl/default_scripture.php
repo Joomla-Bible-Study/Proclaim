@@ -9,8 +9,6 @@
 
 defined('_JEXEC') or die();
 
-?>
-<?php 
         switch ($this->params->get('show_passage_view', '0'))
         {
             case 0:
@@ -37,4 +35,3 @@ defined('_JEXEC') or die();
                 echo '</div>';
                 break;
         }
-?>

@@ -84,7 +84,6 @@ class biblestudyModelcommentsedit extends modelClass {
         // Store the table to the database
         if (!$row->store()) {
             $this->setError($this->_db->getErrorMsg());
-//			$this->setError( $row->getErrorMsg() );
             return false;
         }
 
@@ -163,5 +162,3 @@ class biblestudyModelcommentsedit extends modelClass {
     }
 
 }
-
-?>

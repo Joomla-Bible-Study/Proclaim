@@ -1,3 +1,11 @@
+<?php
+
+/**
+ * @author Tom Fuller
+ * @copyright 2011
+ */
+defined('_JEXEC') or die('Restricted access'); ?>
+
 <script type="text/javascript" language="JavaScript">
 function HideContent(d) {
 document.getElementById(d).style.display = "none";
@@ -10,14 +18,8 @@ if(document.getElementById(d).style.display == "none") { document.getElementById
 else { document.getElementById(d).style.display = "none"; }
 }
 </script>
-
 <?php
 
-/**
- * @author Tom Fuller
- * @copyright 2011
- */
-defined('_JEXEC') or die('Restricted access'); 
 $commentjava = "javascript:ReverseDisplay('comments')";	
  switch ($this->params->get('link_comments',0))
         {
@@ -36,9 +38,7 @@ $commentjava = "javascript:ReverseDisplay('comments')";
 <div id="commentstable" >		<table id="bslisttable" cellspacing="0" border="0"><thead><tr class="lastrow"><th id="commentshead" class="row1col1">
 		<?php echo JText::_('JBS_CMN_COMMENTS');?></th></tr></thead>
 <?php
-	
-       
-        $db = JFactory::getDBO();
+	$db = JFactory::getDBO();
         $query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = '.$this->studydetails->id.' ORDER BY c.comment_date ASC';
 				
 		$db->setQuery($query);
@@ -116,10 +116,7 @@ $commentjava = "javascript:ReverseDisplay('comments')";
         if ($this->params->get('public_key'))
         {echo recaptcha_get_html($publickey);}
         else{echo JText::_('JBS_CMN_NO_KEY');}
-		
-
-		} // end of if for use of captcha
-		//dump ($params->get('comment_publish'));
+		}
         echo '</td></tr><tr><td>
         
 		<input type="hidden" name="study_id" id="study_id" value="'.$this->studydetails->id.'" />
@@ -138,6 +135,6 @@ $commentjava = "javascript:ReverseDisplay('comments')";
 </form>
 <?php
 
-} //end if $allow > 9?>
+} //end if $allow > 9 ?>
 </div>
 </div>

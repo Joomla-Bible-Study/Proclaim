@@ -28,7 +28,6 @@ class Dump_File{
 		. ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
 		. ' WHERE #__bsms_mediafiles.id = '.$id.' LIMIT 1';
 		$db->setQuery( $query );
-		//echo $id; 
 		
 	$media = $db->LoadObject();
 	
@@ -36,23 +35,11 @@ class Dump_File{
 	$path = $media->fpath;
 	$filename = $media->filename;
 	$size = $media->size;
-   // dump ($protocol, 'protocol: ');
 	$download_file = $protocol.$server.$path.$filename;
-    
-	//if ($size < 1) { $size = filesize($download_file); }
 	$mime_type = $media->mimetext;
     $user_agent = (isset($_SERVER["HTTP_USER_AGENT"]) ) ? $_SERVER["HTTP_USER_AGENT"] : $HTTP_USER_AGENT;
     while (@ob_end_clean());
 	$full = $server.$path.$filename;
-    //dump ($filesize, 'Filesize: ');
-	//dump ($download_file, 'Download File: ');
-    //header("HTTP/1.1 200 OK");
-    //header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-   // header("Expires: 0");
-    //header("Location: http://".$server.$path."/2008/10-19-08-PM.mp3");
-    //header("Content-Length:5000000");
-//	header("Content-type: application/octet-stream");
-    //header("Content-Type: audio/mpeg");
     header("Cache-Control: public");
     header("Content-Description: File Transfer");
 	header("Content-Disposition: attachment; filename=".basename($download_file));
@@ -66,7 +53,6 @@ class Dump_File{
     	header("Content-Length: ".$size);
     }
     readfile($download_file);
-	//header("Content-Transfer-Encoding: binary");
 	$url = $download_file;
 	$out_file_name = $filename;
 	//start
@@ -136,14 +122,9 @@ function normal_download($url,$out_file_name){
 	//Here we increment the hit counter
  	function hitDownloads($id)
 	{
-	//	$id = JRequest::getVar('id', 0, 'GET', 'INT'); //dump ($id, 'id: ');
 		$db =& JFactory::getDBO();
 		$db->setQuery('UPDATE '.$db->nameQuote('#__bsms_mediafiles').'SET '.$db->nameQuote('downloads').' = '.$db->nameQuote('downloads').' + 1 '.' WHERE id = '.$id);
 		$db->query();
 		return true;
-//		return false;
 	}
 } //end of class
-
-
-?>

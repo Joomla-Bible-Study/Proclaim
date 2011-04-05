@@ -58,5 +58,3 @@ class JFormFieldFilesize extends JFormField
 		return '<a href="javascript:openConverter1();">'.JText::_('JBS_MED_FILESIZE_CONVERTER').'</a>';
 	}
 }
-
-

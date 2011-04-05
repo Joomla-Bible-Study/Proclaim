@@ -19,7 +19,6 @@ class biblestudyViewserieslist extends JView {
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
-       // $this->admin_params = $this->admin;
         
         $t = JRequest::getInt('t','get',1);
         if (!$t) {
@@ -70,11 +69,8 @@ class biblestudyViewserieslist extends JView {
 	        }
         }
         $this->items = $items;
-      //  dump ($items, 'items: ');
 		$total = $this->get('Total');
-		//dump ($items, 'items: ');
 		$pagination = $this->get('Pagination');
-		//$teachers = $this->get('Teachers');
 		$series = $this->get('Series');
 		$orders = $this->get('Orders');
 		
@@ -87,7 +83,6 @@ class biblestudyViewserieslist extends JView {
 		
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
-//dump ($admin[0]->main, 'main: ');
 		//Get the main study list image
 		$images = new jbsImages();
 		$main = $images->mainStudyImage();
@@ -110,14 +105,10 @@ class biblestudyViewserieslist extends JView {
 		$ord		= array_merge($ord, $orders);
 		$lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_orders");
 		
-		//$lists['search']= $search;
-		
 		$this->assignRef('lists',		$lists);
-	//	$this->assignRef('items',		$items);
 
 		$this->assignRef('request_url',	$uri->toString());
 		$this->assignRef('params', $params);
 		parent::display($tpl);
 	}
 }
-?>

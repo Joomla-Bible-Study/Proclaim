@@ -22,11 +22,8 @@ else { document.getElementById(d).style.display = "none"; }
 <?php
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
-//$params = $mainframe->getPageParameters();
 $params = $this->params;
 $admin_params = $this->admin_params;
-
-//dump ($params);
 $document =& JFactory::getDocument();
 $document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
 $document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
@@ -34,18 +31,13 @@ $url = $params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
 $row = $this->studydetails;
 $listingcall = JView::loadHelper('listing');
-//dump ($row, 'row: ');
 ?>
  <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
     <?php
    
     $details = getStudyExp($row, $params, $admin_params, $this->template);
 		echo $details;
-    ?>
 
-
-
-<?php
 switch ($this->params->get('show_passage_view', '0'))
         {
             case 0:
@@ -73,6 +65,4 @@ switch ($this->params->get('show_passage_view', '0'))
                 break;
         }
 ?>
-
-
 </div><!--End of page container div-->

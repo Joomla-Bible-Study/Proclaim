@@ -26,12 +26,10 @@
             $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
             $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
-        //$document->addScript(JURI::base().'components/com_biblestudy/assets/player/swfobject.js');
         
         // If this is a direct new window then all we need to do is perform hitPlay and close this window
 		if ($close == 1)
             {
-              //  $play = $getMedia->hitPlay($mediaid); //dump ($mediaid, 'play: ');
                 echo JHTML::_('content.prepare','<script language=javascript>window.close();</script>');
                 
             }
@@ -40,26 +38,22 @@
             jimport ('joomla.application.component.helper');
 			
             $getMedia = new jbsMedia();
-            $media = $getMedia->getMediaRows2($mediaid); //dump ($media, 'media: ');
+            $media = $getMedia->getMediaRows2($mediaid);
             $db	= & JFactory::getDBO();
 			$query = 'SELECT * FROM #__bsms_templates WHERE id = '.$templateid; 
             $db->setQuery($query);
             $db->query();
             $template = $db->loadObject();
-            $params = new JParameter($template->params); // dump ($params, 'params: ');
-            $itemparams = new JParameter($media->params); // dump ($media, 'params; ');
+            $params = new JParameter($template->params);
+            $itemparams = new JParameter($media->params);
             $saveid = $media->id;
             $media->id = $media->study_id;
-			$scripture = getScripture($params, $media, $esv='0', $scripturerow='1'); //dump ($media->study_id, 'scripture: ');
+			$scripture = getScripture($params, $media, $esv='0', $scripturerow='1');
             $media->id = $saveid;
             $date = getstudyDate($params, $media->studydate);
 			// The popup window call the counter function
 			$play = $getMedia->hitPlay($mediaid);
 			$length = getDuration($params, $media);
-          //  $studyintro = str_replace('"', '\"', $media->studyintro);
-          //  $studyintro = str_replace("'", "\'", $media->studyintro);
-          //  $studytitle = str_replace("'", "\'", $media->studytitle);
-          //  $studytitle = str_replace('"', '\"', $media->studytitle);
             $badchars = array("'", '"');
             $studytitle = str_replace($badchars, ' ', $media->studytitle);
             $studyintro = str_replace($badchars, ' ', $media->studyintro);
@@ -70,14 +64,10 @@
             				{
             					$path1 = 'http://'.$path1;
             				}
-          // 	$itemparams = new JParameter ($media->params);
-          //  dump ($media->params, 'itemparams: ');
 		    $playerwidth = $params->get('player_width');
             $playerheight = $params->get('player_height');
             if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
             if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
-          //  dump ($playerwidth, 'width: ');
-          //  dump ($playerheight, 'height: ');
             $extraparams = '';
         	if ($itemparams->get('playervars')){$extraparams = $itemparams->get('playervars');}
 			if ($itemparams->get('altflashvars'))
@@ -104,7 +94,6 @@ if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams
 $footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
 if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);}
 echo '<div class="popuptitle"><p class="popuptitle">'.$headertext.'</p></div>';
-//dump ($headertext, 'header: ');
 //Here is where we choose whether to use the Internal Viewer or All Videos
 if ($itemparams->get('player') == 3 || $player == 3) {
     $mediacode = $getMedia->getAVmediacode($media->mediacode);
@@ -118,22 +107,6 @@ if ($itemparams->get('player')== 1 || $player == 1)
 swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',link:'".JURI::base()."index.php?option=com_biblestudy&view=studieslist&t=".$templateid."',image:'".$params->get('popupimage', 'components/com_biblestudy/images/speaker24.png')."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300',plugins:'viral-2','viral.onpause':'".$embedshare."','viral.oncomplete':'".$embedshare."','viral.allowmenu':'".$embedshare."'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
 </script>
 <div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>".JText::_('JBS_MED_GET_FLASH')."</a> ".JText::_('JBS_MED_TO_SEE_PLAYER')."</div>";
-//  Flashvar - Colors, Autostart, Title, Author, Date, Description, Link, Image
-//    Params - Allowfullscreen, Allowscriptaccess
-//    Attributes - ID, Name
-
-// Did not include ,link:'http://www.newhorizoncf.org',image:'/images/mp3player.jpg' in the Flashvar until adding options
-// use this: JURI::base()."index.php?option=com_biblestudy&view=studieslist&t=".$templateid
-}
-/**
- * @desc This is already possible by adding text in the Header and Footer in the Media drop down in the template so i've removed. Added Scripture
-echo "<BR>Date: ". $date;
-if ($scripture) {echo " - Scripture: " . $scripture;}
-echo "<BR>Title: ". $studytitle;
-echo "<BR>Teacher: ". $media->teachername;
-*/
-
-
 //TODO:Need to get difference between direct popup and not so can have popup use this script
 if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
 {
@@ -172,7 +145,6 @@ echo $footertext;
 
 function titles($text, $media, $scripture, $date, $length)
 {
-   // dump ($text, 'text1: ');
    if (isset($media->teachername)){ $text = str_replace('{{teacher}}', $media->teachername, $text);}
    if (isset($date)){ $text = str_replace('{{studydate}}', $date, $text);}
    if (isset($media->filename)) {$text = str_replace('{{filename}}', $media->filename, $text);}
@@ -180,14 +152,7 @@ function titles($text, $media, $scripture, $date, $length)
    if (isset($length)){ $text = str_replace('{{length}}', $length, $text);}
    if (isset($media->studytitle)){ $text = str_replace('{{title}}', $media->studytitle, $text);}
    if (isset($scripture)){ $text = str_replace('{{scripture}}', $scripture, $text);}
- //  dump ($text, 'text2: ');
     return $text;
 }
-
     
     } //end of class 
-    
-    
-            
-    ?>
-

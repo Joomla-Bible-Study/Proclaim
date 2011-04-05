@@ -5,11 +5,9 @@
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
-//jimport ('joomla.application.plugin.helper');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 
 $uri 		=& JFactory::getURI();
-//$pathway	=& $mainframe->getPathway();
 
 class biblestudyViewstudydetails extends JView
 {
@@ -18,7 +16,6 @@ class biblestudyViewstudydetails extends JView
 	{
 		
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		//$dispatcher	   =& JDispatcher::getInstance();
 		$document =& JFactory::getDocument();
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         $document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
@@ -31,8 +28,6 @@ class biblestudyViewstudydetails extends JView
          //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
         $this->loadHelper('params');
-     //   $this->admin = BsmHelper::getAdmin(true);
-     //   $this->admin_params = $this->admin;
         
         $t = JRequest::getInt('t','get',1);
         if (!$t) {
@@ -43,13 +38,7 @@ class biblestudyViewstudydetails extends JView
         $params = new JParameter($template[0]->params);
         $a_params = $this->get('Admin');
         $this->admin_params = new JParameter($a_params[0]->params);
-        
-        //$template = BsmHelper::getTemplateparams(true);
-        //$this->params = $template;
-	    //$params = $this->params;
         $adminrows = new JBSAdmin();
-     //   $show = $adminrows->getShowLevel($studydetails);
-     //   if (!$show){return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));}
        
        //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
@@ -123,14 +112,13 @@ class biblestudyViewstudydetails extends JView
 		$this->assignRef('detailslink', $detailslink);
 		//End social networking
 	 	
-                // End process prepare content plugins
+        // End process prepare content plugins
 		$this->assignRef('template', $template);
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);	
 		$this->assignRef('studydetails', $studydetails);
 		$this->assignRef('article', $article);
   		$this->assignRef('passage_link', $passage_link);
-		//$this->assignRef('scripture', $scripture);
 		
 		parent::display($tpl);
 	}
@@ -142,4 +130,3 @@ class biblestudyViewstudydetails extends JView
 		
 	}
 }
-?>

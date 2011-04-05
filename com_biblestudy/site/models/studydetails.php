@@ -21,25 +21,11 @@ class biblestudyModelstudydetails extends JModel
 	{
 		parent::__construct();
 		$mainframe =& JFactory::getApplication();
-		//added for single study view off of menu
-		//$menu	=& JSite::getMenu();
-		//$item    = $menu->getActive();
-		//$params	=& $menu->getParams($item->id);
-		//$params2 =& $mainframe->getPageParameters();
-		//$id = $params2->get('id');
-		//$params =& JSiteHelper::getMenuParams();
-		//$id = $params->get('id', 0);
-		//dump ($id, 'id: ');
-		//if (!$id)
-		//	{
-				$id = JRequest::getVar('id', 0,'GET','INT');
-				//dump ($id, 'id: ');
-			//}
-		
+		$id = JRequest::getVar('id', 0,'GET','INT');
+
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$this->setId((int)$array[0]);
-		//$params 			=& $mainframe->getPageParameters();
 		
 		 ////set the default view search path
         $this->addTablePath(JPATH_COMPONENT.DS.'tables');
@@ -47,18 +33,11 @@ class biblestudyModelstudydetails extends JModel
 		$t = $params->get('t');
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
-		
-		//JRequest::setVar( 't', $params->get('t'), 'get');
-		//JRequest::setVar('id', $params->get('id'), 'get');
-        //require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
         jimport('joomla.html.parameter');
 		$this->_id = $id;
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
-	//	dump ($template, 'params: ');
-	//if($params2->get('record_hits') == 1){
 		$this->hit();
-	//}
 	}
 	
 	function setId($id)
@@ -77,18 +56,10 @@ class biblestudyModelstudydetails extends JModel
 	 */
 	function hit()
 	{
-		/*$mainframe =& JFactory::getApplication();
-		if ($this->_id)
-		{
-			$study = $this->getTable();
-			$study->hit($this->_id);
-			return true;
-		}*/
 		$db =& JFactory::getDBO();
 		$db->setQuery('UPDATE '.$db->nameQuote('#__bsms_studies').'SET '.$db->nameQuote('hits').' = '.$db->nameQuote('hits').' + 1 '.' WHERE id = '.$this->_id);
 		$db->query();
 		return true;
-//		return false;
 	}
 	function &getData()
 	{
@@ -158,12 +129,10 @@ class biblestudyModelstudydetails extends JModel
 function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
-			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'
 			. ' WHERE published = 1 AND id = '.$templateid;
 			$this->_template = $this->_getList($query);
-			//dump ($this->_template, 'this->_template');
 		}
 		return $this->_template;
 	}
@@ -180,4 +149,3 @@ function getTemplate() {
 	
 //end class
 }
-?>

@@ -1,13 +1,9 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-
-
 <?php
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
-//$params = $mainframe->getPageParameters();
 $params = $this->params;
-//print_r($params->params['show_comments']);
 $document =& JFactory::getDocument();
 $document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
@@ -16,7 +12,6 @@ if ($url) {$document->addStyleSheet($url);}
 $row = $this->studydetails;
 $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');
-//dump ($row, 'row: ');
 ?>
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
  <div id="bsmHeader">
@@ -31,9 +26,6 @@ $sharecall = JView::loadHelper('share');
 		$text = JHTML::_('image.site',  'printButton.png', '/images/M_images/', NULL, NULL, JText::_( 'JBS_CMN_PRINT' ) );
         echo '<a href="#&tmpl=component" onclick="window.print();return false;">'.$text.'</a>';
 	}
-
-	
-	
 	?>
 
 </div>
@@ -74,7 +66,7 @@ if ($this->admin_params->get('socialnetworking')> 0)
    </div><!-- header -->
  
  <table id="bsmsdetailstable" cellspacing="0">
-     <?php //dump ($params->get('use_headers_view'), 'headers: ');
+     <?php 
 if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items_view')< 1)
 	{	
      $headerCall = JView::loadHelper('header');
@@ -87,12 +79,9 @@ if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items
 if ($this->params->get('list_items_view') == 1)
 		{
 			echo '<tr class="bseven"><td class="media">';
-		//	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
-		//	include_once($path1.'mediatable.php');
             require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
             $media = new jbsMedia();
             $listing = $media->getMediaTable($row, $this->params, $this->admin_params);
-		//	$listing = getMediatable($params, $row, $this->admin_params);
 			echo $listing;
 			echo '</td></tr>';
 			
@@ -117,11 +106,5 @@ if ($params->get('list_items_view') == 0)
 <?php 
 
 ?>
-
-	
-
-
-
-
 
 </div><!--End of page container div-->

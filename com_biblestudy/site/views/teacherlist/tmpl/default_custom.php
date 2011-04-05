@@ -5,12 +5,10 @@ $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 $params = $this->params;
 
 $t = $params->get('teachertemplateid');
-//dump ($t);
 if (!$t) {$t = JRequest::getVar('t', 1, 'get', 'int');}
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 $admin_params = $this->admin_params;
 include_once($path1.'image.php');
-//if (!$t){$t = 1;}
 
 $listingcall = JView::loadHelper('teacher');
 

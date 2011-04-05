@@ -33,13 +33,10 @@ class biblestudyModelserieslist extends JModel
 	{
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		$params 			=& $mainframe->getPageParameters();
-		//dump ($params);
+		$params =& $mainframe->getPageParameters();
 		$t = $params->get('t');
-		//dump ($t);
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
-	//	require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
     jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
@@ -69,7 +66,6 @@ function setSelect($string){
 		. ' LEFT JOIN #__bsms_teachers AS t ON (se.teacher = t.id)'
 		. $where
 		. $orderby
-		; //dump ($query, 'query: ');
 		return $query;
 	}
 
@@ -123,12 +119,10 @@ function setSelect($string){
 function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
-			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'
 			. ' WHERE published = 1 AND id = '.$templateid;
 			$this->_template = $this->_getList($query);
-			//dump ($this->_template, 'this->_template');
 		}
 		return $this->_template;
 	}
@@ -136,14 +130,11 @@ function getTemplate() {
 	function getData()
 	{
 		$mainframe =& JFactory::getApplication();
-		//$params =& $mainframe->getPageParameters();
-		//dump($data, 'Data from Model');
 		// Lets load the data if it doesn't already exist
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
 			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
-			//$this->_data = $this->_getList( $query, $this->getState('limitstart'), $params->get('itemslimit') );
 		}
 
 		return $this->_data;
@@ -161,8 +152,6 @@ function getTemplate() {
 		{
 			$query = $this->_buildQuery();
 			$this->_total = $this->_getListCount($query);
-			//dump ($this->getState('limitstart'), 'limitstart: ');
-			
 		}
 
 		return $this->_total;
@@ -195,19 +184,12 @@ function getTemplate() {
 		$default_order = $params->get('default_order');
 		$filter_series		= $mainframe->getUserStateFromRequest( $option.'filter_series',		'filter_series',		0,				'int' );
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'DESC',				'word' );
-
-		//$series_menu = $params->get('series_id', 1);
 		$where = array();
-		//$rightnow = date('Y-m-d H:i:s');
 		$where[] = ' se.published = 1';
-		//$where[] = " date_format(#__bsms_studies.studydate, '%Y-%m-%d %T') <= ".(int)$rightnow;
 
 		if ($filter_series > 0) {
 			$where[] = ' se.id = '.(int) $filter_series;
 		}
-		//if ($params->get('series_id')){
-		//	$where[]= ' se.id = '.$params->get('series_id');
-		//}
         
         
         	
@@ -218,7 +200,7 @@ function getTemplate() {
 		if ($params->get('series_id')&& !$filter_series) 
 			{ 
 				
-					$filters = $params->get('series_id'); //dump ($filters, 'filters: ');
+					$filters = $params->get('series_id');
 					switch ($filters)
 					{
 						case is_array($filters) :
@@ -226,18 +208,16 @@ function getTemplate() {
 								{
 									if ($filter == -1)
 										{
-											//$continue = 0;
 											break;
 										}
 									{
 										$continue = 1;
-										$where2[] = 'se.id = '.(int)$filter; //dump ($where2, 'where2: ');
+										$where2[] = 'se.id = '.(int)$filter;
 									}
 								}
 							break;
 							
 						case -1:
-							//$continue = 0;
 						break;
 						
 						default:
@@ -246,30 +226,9 @@ function getTemplate() {
 							break;
 					}
 				}
-
-/*		if ($params->get('mult_series')) 
-			{ 
-				if (!$filter_series)
-				{
-					$continue = 1;
-					$filters = null;
-					$filters = explode(",", $params->get('mult_series'));
-					//dump ($filters, 'filters: ');
-					foreach ($filters AS $filter)
-						{
-							$where2[] = 'se.id = '.(int)$filter;
-							//dump ($where2, 'where2: ');
-						}
-					if ($params->get('series_id')) {$where2[] = 'se.id = '.$params->get('series_id');}
-				}
-			}
-			
-*/		
-	
 		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
 
 		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}
-		//dump ($where, 'where: ');
 		return $where;
 	}
 	
@@ -280,7 +239,6 @@ function getTemplate() {
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
         $template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
-	//	$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders',		'filter_orders',		'ASC',	'word' );
         $filter_orders		= $params->get('series_list_order','ASC');
         $filter_orders_field = $params->get('series_order_field','series_text');
 		
@@ -290,4 +248,3 @@ function getTemplate() {
 		return $orderby;
 	}
 }
-?>

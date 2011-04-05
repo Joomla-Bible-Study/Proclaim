@@ -124,7 +124,6 @@ class biblestudyModelmediafile extends modelClass {
         //This checks to see if the user has uploaded a file instead of just entered one in the box. It replaces the filename with the name of the uploaded file
 
         $file = JRequest::getVar('file', null, 'files', 'array');
-        //	$filename_upload = strtolower($file['name']);
         $filename_upload = $file['name'];
         if (isset($filename_upload)) {
             $name_bak = $data['filename'];
@@ -133,7 +132,6 @@ class biblestudyModelmediafile extends modelClass {
         if ($filename_upload == '') {
             $data['filename'] = $name_bak;
         }
-        //$data['filename'] = str_replace(' ','_',$data['filename']);
 
         if ($this->_admin_params->get('character_filter') > 0) {
             $badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');
@@ -141,7 +139,6 @@ class biblestudyModelmediafile extends modelClass {
         }
         $data['filename'] = str_replace('&', '_and_', $data['filename']);
         $data['mediacode'] = str_replace('"', "'", $data['mediacode']);
-        //$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );
         // Bind the form fields to the  table
         if ($data['docManItem'] == null) {
             $data['docMan_id'] = 0;
@@ -293,8 +290,6 @@ class biblestudyModelmediafile extends modelClass {
      * @desc Functions to satisfy the ajax requests
      */
     function getdocManCategories() {
-        //	$query = "SELECT id, title FROM #__categories
-        //			  WHERE `section` = 'com_docman' AND `published`=1";
         $query = "SELECT id, title FROM #__categories
 				  WHERE `extension` = 'com_content' AND `published`=1";
         return $this->_getList($query);
@@ -324,8 +319,6 @@ class biblestudyModelmediafile extends modelClass {
     }
 
     function getdocManCategoryItems($catId) {
-        //	$query = "SELECT id, dmname as name FROM #__docman
-        //		  WHERE `catid`='$catId' AND `published`=1";
         $query = "SELECT id, title as name FROM #__content
 				  WHERE `catid`='$catId' AND `published`=1";
         return json_encode($this->_getList($query));
@@ -364,7 +357,6 @@ class biblestudyModelmediafile extends modelClass {
     }
 
     function getDocManItem($id) {
-        //	$query = "SELECT dmname FROM #__docman WHERE `id` = '$id'";
         $query = "SELECT title FROM #__content WHERE `id` = '$id'";
         $this->_db->setQuery($query);
         $data = $this->_db->loadRow();
@@ -459,7 +451,6 @@ class biblestudyModelmediafile extends modelClass {
     }
 
     protected function preprocessForm(JForm $form, $data, $group = 'content') {
-        //$form->addFieldPath(JPATH_ADMINISTRATOR . '/com_content/models/fields/modal');
         parent::preprocessForm($form, $data, $group);
     }
 
@@ -498,5 +489,3 @@ class biblestudyModelmediafile extends modelClass {
         return $data;
     }
 }
-
-?>

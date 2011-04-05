@@ -99,7 +99,6 @@ class biblestudyModelMessages extends modelClass {
             $query = $this->_buildQuery();
             $this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
         }
-        //$this->setState('limitstart', $limitstart);
         return $this->_data;
     }
 
@@ -124,10 +123,6 @@ class biblestudyModelMessages extends modelClass {
                     . $sermon_id
             ;
             $db->setQuery($query);
-            //var_dump ($db->loadAssocList()).'<hr>';
-            //$files = array($i => $db->loadAssocList($sermon->id));
-            //var_dump ($files);
-            //var_dump ($db->loadAssocList());
             $mediaFiles[$sermon->id] = $db->loadAssocList();
         }
         $this->_files = $mediaFiles;
@@ -177,9 +172,6 @@ class biblestudyModelMessages extends modelClass {
         $filter_messagetype = $mainframe->getUserStateFromRequest($option . 'filter_messagetype', 'filter_messagetype', 0, 'int');
         $filter_year = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
         $filter_orders = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
-        //$search				= $mainframe->getUserStateFromRequest( $option.'search',			'search',			'',				'string' );
-        //$search				= JString::strtolower( $search );
-        //$filter_searchby	= $mainframe->getUserStateFromRequest( $option.'filter_searchby','filter_searchby','','word' );
 
 
 
@@ -216,7 +208,6 @@ class biblestudyModelMessages extends modelClass {
         $orders = array('id', 'published', 'studydate', 'messagetype', 'teacher_id', 'studytitle', 'series_id', 'topics_id', 'hits', 'totalplays', 'totaldownloads');
         $filter_order = $mainframe->getUserStateFromRequest($option . 'filter_order', 'filter_order', 'ordering', 'cmd');
         $filter_order_Dir = strtoupper($mainframe->getUserStateFromRequest($option . 'filter_order_Dir', 'filter_order_Dir', 'ASC'));
-        //$filter_orders = $mainframe->getUserStateFromRequest($option.'filter_orders','filter_orders','DESC','word');
         if ($filter_order_Dir != 'ASC' && $filter_order_Dir != 'DESC') {
             $filter_order_Dir = 'ASC';
         }
@@ -440,5 +431,3 @@ class biblestudyModelMessages extends modelClass {
     }
 
 }
-
-?>

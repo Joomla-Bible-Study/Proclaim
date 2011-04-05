@@ -43,6 +43,4 @@ class biblestudyViewmessage extends JView {
       
         parent::display($tpl);
     }
-
 }
-?>

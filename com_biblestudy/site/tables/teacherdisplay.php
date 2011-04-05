@@ -41,4 +41,3 @@ class Tableteacherdisplay extends JTable
 		parent::__construct('#__bsms_teachers', 'id', $db);
 	}
 }
-?>

@@ -11,25 +11,20 @@ $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'helper.php');
 $document =& JFactory::getDocument();
 $document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
-$showhide = getShowhide(); //dump ($showhide, 'showhide: ');
+$showhide = getShowhide();
 $document->addScriptDeclaration($showhide);
-//$document->addStyleSheet(JURI::base().'components/com_biblestudy'.DS.'tooltip.css');
 $stylesheet = JURI::base().'components/com_biblestudy/assets/css/biblestudy.css';
 $document->addStyleSheet($stylesheet);
 $params = $this->params;
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'image.php');
 $d_path1 = ($this->admin_params->get('media_imagefolder') ? 'images/'.$this->admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
-//dump( $params, 'Variable Name' );
-//dump ($this->admin_params);
 
 
 $listingcall = JView::loadHelper('listing');
 
 ?>
 <form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
-
-<!--<tbody><tr>-->
   <div id="biblestudy_landing" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
     <div id="bsms_header">
@@ -130,11 +125,7 @@ for ($i=1;$i<=7;$i++) {
   if ($params->get('landing'.$showIt.'limit'))
   {
 	$images = new jbsImages();
-	$showhide_tmp = $images->getShowHide($this->admin[0]->showhide); //dump ($this->admin[0]->showhide, 'showhideimage: ');
-//	$d_image = ($this->admin[0]->showhide ? DS.$this->admin[0]->showhide : '/showhide.gif');
-//	$d_path = $d_path1.$d_image;
-//	$showhide_tmp = $images->getImagePath($d_path);
-    $showhide_image = $showhide_tmp->path; //dump ($showhide_tmp, 'showhide_tmp');
+	$showhide_tmp = $images->getShowHide($this->admin[0]->showhide);
 
 	$showhideall = "      <div id='showhide'>";
 

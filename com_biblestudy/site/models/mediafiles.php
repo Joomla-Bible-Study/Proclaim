@@ -57,7 +57,6 @@ class biblestudyModelmediafiles extends modelClass {
             $query = $this->_buildQuery();
             $this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
         }
-        //$this->setState('limitstart', $limitstart);
         return $this->_data;
     }
 
@@ -237,5 +236,3 @@ class biblestudyModelmediafiles extends modelClass {
     }
 
 }
-
-?>

@@ -45,17 +45,12 @@ if ( $this->params->get( 'show_series_title' ) >0 ) {
 <?php 
 
 	
-if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }   
-	 
-//if ($this->params->get('show_order_search') > 0) { echo $this->lists['orders'];}
-  
+if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }  
 ?>
 
 
     </div><!--dropdownmenu-->
       <?php
-
-//dump ($params->get('series_wrapcode'), "Series Wrap");
   switch ($params->get('series_wrapcode')) {
       case '0':
         //Do Nothing

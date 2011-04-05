@@ -34,18 +34,13 @@ class biblestudyModellandingpage extends JModel
 	{
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		//$params =& $mainframe->getPageParameters();
 		$params 			=& $mainframe->getPageParameters();
 		$t = $params->get('t');
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
-		//JRequest::setVar( 't', $params->get('t'), 'get');
-	//	require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
         jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
 		$params = new JParameter($template[0]->params);
-		
-		//dump ($params, 'params: ');
 		$config = JFactory::getConfig();
 		
 		$this->setState('limit',$params->get('itemslimit'),'limit',$params->get('itemslimit'),'int');
@@ -210,12 +205,10 @@ function getBooks() {
 function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
-			//dump ($templateid, 'templateid: ');
 			$query = 'SELECT *'
 			. ' FROM #__bsms_templates'
 			. ' WHERE published = 1 AND id = '.$templateid;
 			$this->_template = $this->_getList($query);
-			//dump ($this->_template, 'this->_template');
 		}
 		return $this->_template;
 	}
@@ -223,14 +216,11 @@ function getTemplate() {
 	function getData()
 	{
 		$mainframe =& JFactory::getApplication();
-		//$params =& $mainframe->getPageParameters();
-		//dump($data, 'Data from Model');
 		// Lets load the data if it doesn't already exist
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
 			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
-			//$this->_data = $this->_getList( $query, $this->getState('limitstart'), $params->get('itemslimit') );
 		}
 
 		return $this->_data;
@@ -247,9 +237,7 @@ function getTemplate() {
 		if (empty($this->_total))
 		{
 			$query = $this->_buildQuery();
-			$this->_total = $this->_getListCount($query);
-			//dump ($this->getState('limitstart'), 'limitstart: ');
-			
+			$this->_total = $this->_getListCount($query);			
 		}
 
 		return $this->_total;
@@ -423,7 +411,6 @@ function getTemplate() {
 		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
 
 		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}
-		//dump ($where, 'where: ');
 		return $where;
 	}
 	
@@ -444,4 +431,3 @@ function getTemplate() {
 		return $orderby;
 	}
 }
-?>

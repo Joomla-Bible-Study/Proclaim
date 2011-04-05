@@ -36,4 +36,3 @@ class Tablecommentsedit extends JTable
 		parent::__construct('#__bsms_comments', 'id', $db);
 	}
 }
-?>

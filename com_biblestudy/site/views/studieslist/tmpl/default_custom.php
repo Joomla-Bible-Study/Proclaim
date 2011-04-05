@@ -13,10 +13,7 @@ $book_menu = $this->params->get('booknumber');
 $location_menu = $this->params->get('locations');
 $series_menu = $this->params->get('series_id');
 $messagetype_menu = $this->params->get('messagetype');
-//$params = $mainframe->getPageParameters();
 $document =& JFactory::getDocument();
-//$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-//$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.css');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
     
@@ -65,7 +62,6 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 	{
 	$teacher_call = JView::loadHelper('teacher');
 	$teacher = getTeacher($params, $id=null, $this->admin_params);
-	//if ($teacher) {echo $teacher;}
 	}
 
 	?>
@@ -159,7 +155,6 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
         echo '</div>';
         break;
       }
-//dump ($this->items);
 ?>
 
 
@@ -168,7 +163,6 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
 
       echo $this->pagination->getPagesLinks();
       echo $this->pagination->getPagesCounter();
-      //echo $this->pagination->getListFooter();
 
 	  ?>
 </div> <!--end of bsfooter div-->
