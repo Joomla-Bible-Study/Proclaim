@@ -26,6 +26,7 @@ class biblestudyViewstudieslist extends JView {
         $this->series = $this->get('Series');
         $this->messageTypes = $this->get('MessageTypes');
         $this->years = $this->get('Years');
+      //  dump ($this->years);
         $this->topics = $this->get('Topics');
         $this->addToolbar();
         
