@@ -6,7 +6,7 @@
             <option value="1">JBS_CMN_YES</option>
         </field>
     <field name="name" type="text" label="JBS_SHR_NAME"
-			description="JBS_SHR_NAME_DESC" class="inputbox" size="26" />
+			description="JBS_SHR_NAME_DESC" class="inputbox" size="26"  required="true"/>
 	<field name="shareimage" type="media" label="JBS_CMN_IMAGE" description="JBS_CMN_IMAGE_DESC" />
 	<field name="asset_id" type="hidden" filter="unset" />
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"

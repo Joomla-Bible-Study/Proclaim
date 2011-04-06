@@ -42,7 +42,7 @@ class BibleStudyViewFolderslist extends JView {
      */
     protected function addToolbar() {
       
-        JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_MANAGER'), 'servers.png');
+        JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_MANAGER'), 'folder.png');
         if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('foldersedit.add'); }
         if ($this->canDo->get('core.edit')) 

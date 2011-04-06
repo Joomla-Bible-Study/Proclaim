@@ -27,33 +27,29 @@ class biblestudyViewstudiesedit extends JView {
 
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin();
-       	$this->canDo	= BibleStudyHelper::getActions($type = 'studiesedit', $Itemid = $this->item->id);
+       	$this->canDo = BibleStudyHelper::getActions($type = 'studiesedit', $Itemid = $this->item->id);
         $this->addToolbar();
         parent::display($tpl);
     }
 
     protected function addToolbar() {
-        $canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
-        $isNew = $this->item->id == 0;
-        if($isNew)
-            $text = JText::_('JBS_CMN_NEW');
-        else
-            $text = JText::_('JBS_CMN_EDIT');
+        $isNew = ($this->item->id < 1);
+        $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
+        JToolBarHelper::title(JText::_('JBS_STY_STUDIES_MANAGER') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');
 
-        JToolBarHelper::title(JText::_('JBS_STY_EDIT_STUDY') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');
+        $canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
         if ($this->canDo->get('core.edit','com_biblestudy'))
         {
-        JToolBarHelper::save('studiesedit.save');
-		if (!$isNew)
-			{
-			JToolBarHelper::apply('studiesedit.apply');
-    		}
+          JToolBarHelper::save('studiesedit.save');
+          JToolBarHelper::apply('studiesedit.apply');
         }
-        if ($this->canDo->get('core.edit','com_biblestudy'))
+        JToolBarHelper::cancel('studiesedit.cancel', 'JTOOLBAR_CANCEL');
+        if ($this->canDo->get('core.edit','com_biblestudy') && !$isNew)
         {
+            JToolBarHelper::divider();
             JToolBarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
         }
-        JToolBarHelper::cancel('studiesedit.cancel', 'JTOOLBAR_CLOSE');
+
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

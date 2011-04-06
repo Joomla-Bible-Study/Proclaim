@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     $Id
+ * @version     $Id:
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
@@ -23,10 +23,10 @@ class biblestudyViewSeriesedit extends JView {
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'seriesedit');
- //Load the Admin settings
+        //Load the Admin settings
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin();
-        
+
         $this->setLayout("form");
         $this->addToolbar();
         parent::display($tpl);
@@ -35,16 +35,15 @@ class biblestudyViewSeriesedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_SER_SERIES_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'series.png');
-         if ($this->canDo->get('core.edit','com_biblestudy'))
+        JToolBarHelper::title(JText::_('JBS_SER_SERIES_MANAGER') . ': <small><small>[' . $title . ']</small></small>', 'series.png');
+
+        if ($this->canDo->get('core.edit','com_biblestudy'))
         {
-        JToolBarHelper::save('seriesedit.save');
-        if (!$isNew)
-			{
-			JToolBarHelper::apply('seriesedit.apply');
-            }
+          JToolBarHelper::save('seriesedit.save');
+          JToolBarHelper::apply('seriesedit.apply');
         }
-        JToolBarHelper::cancel('seriesedit.cancel', 'JTOOLBAR_CLOSE');
+        JToolBarHelper::cancel('seriesedit.cancel', 'JTOOLBAR_CANCEL');
+
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
     }

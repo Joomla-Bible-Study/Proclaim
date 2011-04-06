@@ -36,17 +36,16 @@ class biblestudyViewLocationsedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_LOC_LOCATION_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'locations.png');
+        JToolBarHelper::title(JText::_('JBS_LOC_LOCATIONS_MANAGER') . ': <small><small>[' . $title . ']</small></small>', 'locations.png');
+
         if ($this->canDo->get('core.edit','com_biblestudy'))
         {
-            JToolBarHelper::save('locationsedit.save');
-            if (!$isNew)
-    	     {
-    			JToolBarHelper::apply('locationsedit.apply');
-             }    
+          JToolBarHelper::save('locationsedit.save');
+          JToolBarHelper::apply('locationsedit.apply');
         }
-        JToolBarHelper::cancel('locationsedit.cancel', 'JTOOLBAR_CLOSE');
-		JToolBarHelper::divider();
+        JToolBarHelper::cancel('locationsedit.cancel', 'JTOOLBAR_CANCEL');
+
+        JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }
 

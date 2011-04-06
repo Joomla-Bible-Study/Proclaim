@@ -22,14 +22,17 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 	<table class="adminlist">
 	<thead>
 		<tr>
-			<th width="20">
+			<th width="1%">
 				<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" />
 			</th>
-			<th width="20" align="center">
+			<th width="8%"  align="center">
 				<?php echo JText::_( 'JBS_CMN_PUBLISHED' ); ?>
 			</th>			
 			<th>
 				<?php echo JText::_( 'JBS_CMN_SERVER' ); ?>
+			</th>
+			<th>
+				<?php echo JText::_( 'JBS_SVR_SERVER_NAME' ); ?>
 			</th>
 		</tr>			
 	</thead>
@@ -49,14 +52,17 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 
 		?>
 		 <tr class="row<?php echo $i % 2; ?>">
-			<td width="20">
+			<td>
 				<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 			</td>
-			<td width="20" align="center">
+			<td align="center">
 				<?php echo JHtml::_('jgrid.published', $item->published, $i, 'serverslist.', true, 'cb', '', ''); ?>
 			</td>
 			<td>
 				<a href="<?php echo $link; ?>"><?php echo $row->server_path; ?></a>
+			</td>
+			<td>
+				<?php echo $row->server_name; ?>
 			</td>
 		</tr>
 		<?php endforeach; ?>

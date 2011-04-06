@@ -43,7 +43,7 @@ class biblestudyViewmedialist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_MED_MEDIA_MANAGER'), 'mediaimages.png');
+        JToolBarHelper::title(JText::_('JBS_MDI_MEDIA_IMAGES_MANAGER'), 'mediaimages.png');
         if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('mediaedit.add'); }
         if ($this->canDo->get('core.edit')) 

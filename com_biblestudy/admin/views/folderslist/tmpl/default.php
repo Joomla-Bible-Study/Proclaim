@@ -14,14 +14,17 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
         <table class="adminlist">
             <thead>
                 <tr>
-                    <th width="20">
+                    <th width="1%">
                         <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
                     </th>
-                    <th width="20" align="center">
+                    <th width="8%" align="center">
                         <?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
                     </th>
                     <th>
                         <?php echo JText::_('JBS_FLD_FOLDERS'); ?>
+                    </th>
+                    <th>
+                        <?php echo JText::_('JBS_FLD_FOLDER_NAME'); ?>
                     </th>
                 </tr>
             </thead>
@@ -45,6 +48,9 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         </td>
                         <td>
                             <a href="<?php echo $link; ?>"><?php echo $item->folderpath; ?></a>
+                        </td>
+                        <td>
+                            <?php echo $item->foldername; ?>
                         </td>
                     </tr>
             <?php endforeach; ?>

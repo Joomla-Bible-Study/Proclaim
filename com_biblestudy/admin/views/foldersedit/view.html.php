@@ -34,19 +34,17 @@ class BibleStudyViewFoldersedit extends JView {
     }
 
     protected function addToolbar() {
-        
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'folder.png');
+        JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_MANAGER') . ': <small><small>[' . $title . ']</small></small>', 'folder.png');
+
         if ($this->canDo->get('core.edit','com_biblestudy'))
         {
-            JToolBarHelper::save('foldersedit.save');
-            if (!$isNew)
-    	     {
-    			JToolBarHelper::apply('foldersedit.apply');
-             }    
+          JToolBarHelper::save('foldersedit.save');
+          JToolBarHelper::apply('foldersedit.apply');
         }
-        JToolBarHelper::cancel('foldersedit.cancel', 'JTOOLBAR_CLOSE');
+        JToolBarHelper::cancel('foldersedit.cancel', 'JTOOLBAR_CANCEL');
+
 		JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

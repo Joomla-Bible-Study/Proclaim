@@ -49,7 +49,7 @@ JHtml::_('behavior.formvalidation');
                <div class="inlineFields">
                <legend><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></legend>
                     
-              <strong> <label><?php echo JText::_('JBS_CMN_SCRIPTURE1'); ?></label></strong>
+              <strong> <label><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></label></strong>
                         <div>
                             <?php echo $this->form->getLabel('booknumber'); ?>
                             <?php echo $this->form->getInput('booknumber'); ?>

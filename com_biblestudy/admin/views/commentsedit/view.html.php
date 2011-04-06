@@ -36,18 +36,17 @@ class biblestudyViewcommentsedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-	JToolBarHelper::title(   JText::_( 'JBS_CMT_EDIT_COMMENT' ).': <small><small>[ ' . $text.' ]</small></small>', 'comments.png' );
-    if ($this->canDo->get('core.edit','com_biblestudy'))
-    {
-        JToolBarHelper::save('commentsedit.save');
-        if (!$isNew)
-            {
-            JToolBarHelper::apply('commentsedit.apply');
-            }
-    }
-		JToolBarHelper::cancel('commentsedit.cancel', 'JTOOLBAR_CANCEL');
+        JToolBarHelper::title(JText::_( 'JBS_CMT_COMMENTS_MANAGER' ).': <small><small>[ ' . $title.' ]</small></small>', 'comments.png' );
+
+        if ($this->canDo->get('core.edit','com_biblestudy'))
+        {
+          JToolBarHelper::save('commentsedit.save');
+          JToolBarHelper::apply('commentsedit.apply');
+        }
+        JToolBarHelper::cancel('commentsedit.cancel', 'JTOOLBAR_CANCEL');
+
         JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true );
+        JToolBarHelper::help('biblestudy', true );
     }
 
 }

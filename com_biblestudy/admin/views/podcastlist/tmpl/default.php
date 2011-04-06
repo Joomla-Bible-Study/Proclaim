@@ -31,10 +31,10 @@ $listDirn = $this->state->get('list.direction');
                 <th width="8%">
                     <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'podcast.published', $listDirn, $listOrder); ?>
                 </th>
-                <th alicn="center">
+                <th align="center">
                     <?php echo JHtml::_('grid.sort', 'JBS_PDC_PODCAST', 'podcast.title', $listDirn, $listOrder); ?>
                 </th>
-                <th alicn="center">
+                <th align="center">
                     <?php echo(JText::_('JBS_PDC_DESCRIPTION')); ?>
                 </th>
             </tr>

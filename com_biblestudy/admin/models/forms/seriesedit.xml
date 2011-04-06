@@ -4,7 +4,7 @@
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
-    <field name="series_text" type="text" label="JBS_SER_SERIES_NAME" description="JBS_SER_SERIES_NAME_DESC" size="50" />
+    <field name="series_text" type="text" label="JBS_SER_SERIES_NAME" description="JBS_SER_SERIES_NAME_DESC" size="50"  required="true"/>
     <field name="teacher" type="sql" extension="com_biblestudy"
 		label="JBS_CMN_TEACHER" description="JBS_STY_TEACHER_DESC"
                 class="inputbox" query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC" key_field="id" value_field="teachername">

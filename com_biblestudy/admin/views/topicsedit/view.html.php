@@ -31,17 +31,16 @@ class biblestudyViewTopicsedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_TPC_TOPIC_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'topics.png');
+        JToolBarHelper::title(JText::_('JBS_TPC_TOPICS_MANAGER') . ': <small><small>[' . $title . ']</small></small>', 'topics.png');
+
         if ($this->canDo->get('core.edit','com_biblestudy'))
         {
-        JToolBarHelper::save('topicsedit.save');
-        if (!$isNew)
-            {
-            JToolBarHelper::apply('topicsedit.apply');
-            }
+          JToolBarHelper::save('topicsedit.save');
+          JToolBarHelper::apply('topicsedit.apply');
         }
-        JToolBarHelper::cancel('topicsedit.cancel', 'JTOOLBAR_CLOSE');
-		JToolBarHelper::divider();
+        JToolBarHelper::cancel('topicsedit.cancel', 'JTOOLBAR_CANCEL');
+
+        JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }
 

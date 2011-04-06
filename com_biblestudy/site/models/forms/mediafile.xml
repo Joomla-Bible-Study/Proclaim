@@ -14,7 +14,7 @@
 		label="JBS_CMN_STUDY" description="JBS_MED_CHOOSE_STUDY_DESC"
 		class="inputbox" required="true"/>
 
-        <field name="podcast_id" type="sql" label="JBS_MED_SELECT_PODCASTS"
+        <field name="podcast_id" type="sql" label="JBS_MED_CHOOSE_PODCAST"
                 description="JBS_MED_CHOOSE_PODCAST_DESC" class="inputbox"
                 multiple="multiple" query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC" key_field="id" value_field="title"/>
 			
@@ -51,13 +51,13 @@
 		class="inputbox" required="false"/>	
 		
     <field name="server" type="sql" extension="com_biblestudy"
-		label="JBS_CMN_SERVER" description="JBS_MED_SERVER_DESC"
+		label="JBS_CMN_SERVER" description="JBS_MED_SERVER_DESC" required="true"
 		class="inputbox" default="-1" query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC" key_field="id" value_field="server_name">
         <option value="-1">JBS_CMN_SELECT_SERVER</option>
     </field>
 		
     <field name="path" type="sql" extension="com_biblestudy"
-		label="JBS_MED_PATH_OR_FOLDER" description="JBS_MED_PATH_OR_FOLDER_DESC"
+		label="JBS_MED_PATH_OR_FOLDER" description="JBS_MED_PATH_OR_FOLDER_DESC" required="true"
 		class="inputbox" default="-1" query="SELECT id, foldername FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC" key_field="id" value_field="foldername">
         <option value="-1">JBS_CMN_SELECT_FOLDER</option>
     </field>
@@ -74,9 +74,8 @@
         <option value="-1">JBS_CMN_SELECT_MIME_TYPE</option>
     </field>
 		
-    <field name="filename" type="media" label="JBS_MED_FILENAME"
-			description="JBS_MED_USE_FILENAME_AS_PATH" class="inputbox" size="50" />
-
+    <field name="filename" type="text" label="JBS_MED_FILENAME" required="true"
+			description="JBS_MED_USE_FILENAME_AS_PATH" class="inputbox" size="26" />
 			
     <field name="size" type="filesize" label="JBS_CMN_FILESIZE"
 		description="JBS_MED_FILESIZE_DESC" class="inputbox" size="15" />

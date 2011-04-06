@@ -29,15 +29,9 @@ class biblestudyViewcssedit extends JView
 	}
  protected function addToolbar() {
     
-    JToolBarHelper::title(   JText::_( 'JBS_CSS_CSS_EDIT' ).': <small><small>[ ' . $text.' ]</small></small>', 'css.png' );
-        JToolBarHelper::save('cssedit.save');
-		JToolBarHelper::divider();
-	//	JToolBarHelper::save();
-		if ($isNew)
-			JToolBarHelper::cancel('cssedit.cancel', 'JTOOLBAR_CANCEL');
-		else {
-			JToolBarHelper::cancel('cssedit.cancel', 'JTOOLBAR_CLOSE');
-		}
+        JToolBarHelper::title(JText::_( 'JBS_CSS_CSS_EDIT' ), 'css.png' );
+        JToolBarHelper::apply('cssedit.save');
+        JToolBarHelper::cancel('cssedit.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::divider();
 		JToolBarHelper::custom('cssedit.backup','archive','Backup CSS', 'JBS_CSS_BACKUP_CSS',false, false);
 		JToolBarHelper::custom( 'cssedit.resetcss', 'save', 'Reset CSS', 'JBS_CSS_RESET_CSS', false, false );

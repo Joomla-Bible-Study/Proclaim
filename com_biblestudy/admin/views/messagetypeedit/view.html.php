@@ -31,17 +31,16 @@ class biblestudyViewMessagetypeedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_MST_MESSAGE_TYPE_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'folder.png');
-         if ($this->canDo->get('core.edit','com_biblestudy'))
+        JToolBarHelper::title(JText::_('JBS_MST_MESSAGE_TYPE_MANAGER') . ': <small><small>[' . $title . ']</small></small>', 'messagetype.png');
+
+        if ($this->canDo->get('core.edit','com_biblestudy'))
         {
-        JToolBarHelper::save('messagetypeedit.save');
-        if (!$isNew)
-         {
-            JToolBarHelper::apply('messagetypeedit.apply');
-         }
+          JToolBarHelper::save('messagetypeedit.save');
+          JToolBarHelper::apply('messagetypeedit.apply');
         }
         JToolBarHelper::cancel('messagetypeedit.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::divider();
+
+        JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }
 

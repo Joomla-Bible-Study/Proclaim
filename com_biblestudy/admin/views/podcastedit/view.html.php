@@ -29,20 +29,17 @@ class biblestudyViewpodcastedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_PDC_PODCAST_EDIT') . ': <small><small>[' . $title . ']</small></small>', 'podcast.png');
+        JToolBarHelper::title(JText::_('JBS_PDC_PODCAST_MANAGER') . ': <small><small>[' . $title . ']</small></small>', 'podcast.png');
         
-         if ($this->canDo->get('core.edit','com_biblestudy'))
+        if ($this->canDo->get('core.edit','com_biblestudy'))
         {
-            JToolBarHelper::save('podcastedit.save');
-            if(!$isNew)
-            {
-            JToolBarHelper::apply('podcastedit.apply');
-            }
+           JToolBarHelper::save('podcastedit.save');
+           JToolBarHelper::apply('podcastedit.apply');
         }
-        JToolBarHelper::cancel('podcastedit.cancel', 'JTOOLBAR_CLOSE');
-		JToolBarHelper::divider();
-        JToolBarHelper::help('biblestudy', true);
+        JToolBarHelper::cancel('podcastedit.cancel', 'JTOOLBAR_CANCEL');
 
+        JToolBarHelper::divider();
+        JToolBarHelper::help('biblestudy', true);
     }
 }
 ?>

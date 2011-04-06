@@ -4,8 +4,8 @@
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
-    <field name="foldername" type="text" label="JBS_FLD_FOLDER_NAME" description="JBS_FLD_FOLDER_NAME_DESC" size="50" />
-    <field name="folderpath" type="text" label="JBS_FLD_FOLDER_PATH" description="JBS_FLD_FOLDER_PATH_DESC" size="75" required="true" />
+    <field name="foldername" type="text" label="JBS_FLD_FOLDER_NAME" description="JBS_FLD_FOLDER_NAME_DESC" size="50" required="true"/>
+    <field name="folderpath" type="text" label="JBS_FLD_FOLDER_PATH" description="JBS_FLD_FOLDER_PATH_DESC" size="75" required="true"/>
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 			translate_label="false" class="inputbox" filter="rules"
 			component="com_biblestudy" section="foldersedit" validate="rules"

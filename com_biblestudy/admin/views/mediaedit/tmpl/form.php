@@ -22,7 +22,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 			// do field validation
 			if (form.media_image_name.value == "")
 			{
-				alert( "<?php echo JText::_( 'JBS_MED_ENTER_IMAGE_NAME', true ); ?>" );
+				alert( "<?php echo JText::_( 'JBS_MDI_ENTER_IMAGE_NAME', true ); ?>" );
 			}
 			else
 			{
@@ -36,7 +36,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 		<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
 			<ul>
 				<li>
-					<label for="media"><strong> <?php echo JText::_( 'JBS_MED_EXTENSIONS_IMAGES' ); ?> </strong>
+					<label for="media"><strong> <?php echo JText::_( 'JBS_MDI_EXTENSIONS_IMAGES' ); ?> </strong>
 					</label>
 				</li>
 				<li>

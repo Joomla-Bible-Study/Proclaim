@@ -5,7 +5,7 @@
         <option value="1">JBS_CMN_YES</option>
     </field>
     <field name="title"  type="text" label="JBS_PDC_PODCAST_NAME"
-			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"/>
+			description ="JBS_PDC_PODCAST_NAME_DESC" size="20" required="true"/>
     <field name="description"  type="textarea" label="JBS_PDC_PODCAST_DESCRIPTION"
 			description ="JBS_PDC_PODCAST_NAME_DESC" size="20"
                         cols="60" rows="5"/>
