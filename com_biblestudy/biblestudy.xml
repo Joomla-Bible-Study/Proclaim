@@ -80,9 +80,9 @@
   
   	<!-- Media files -->
 	<media destination="com_biblestudy" folder="media">
-		<folder>media</folder>
-		<folder>js</folder>
-		<folder>backup</folder>
+	<!--	<folder>media</folder> -->
+	<!--	<folder>js</folder> -->
+	<!--	<folder>backup</folder> -->
 	</media>
   
   <administration>
