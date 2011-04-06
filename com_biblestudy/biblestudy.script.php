@@ -56,7 +56,7 @@ class com_biblestudyInstallerScript {
         $db->setQuery($query);
         $db->query();
         $parent_id = $db->loadResult();
-        $query = "DELTE FROM #__assets WHERE parent_id = ".$parent_id;
+        $query = "DELETE FROM #__assets WHERE parent_id = ".$parent_id;
         $db->setQuery($query);
         $db->query();
    		$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'uninstall-dbtables.sql');
