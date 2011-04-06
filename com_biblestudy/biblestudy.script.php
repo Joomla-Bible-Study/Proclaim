@@ -38,15 +38,7 @@ class com_biblestudyInstallerScript {
 		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 		require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'params.php');
 
-        //We must remove the assets manually each time
-        $db =& JFactory::getDBO();
-        $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
-        $db->setQuery($query);
-        $db->query();
-        $parent_id = $db->loadResult();
-        $query = "DELTE FROM #__assets WHERE parent_id = ".$parent_id;
-        $db->setQuery($query);
-        $db->query();
+        
         
 		$db =& JFactory::getDBO();
 				$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
@@ -57,12 +49,21 @@ class com_biblestudyInstallerScript {
 				$drop_tables = $admin->drop_tables;
 
 	if ($drop_tables > 0)
-	{		$db =& JFactory::getDBO();
-			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'uninstall-dbtables.sql');
-			$db->setQuery($query);
-			$db->queryBatch();
-			$drop_result .= '<p>db Error: '.$db->stderr().'</p>';
-			$drop_result .= '<H3>'. JText::_('JBS_INS_CUSTOM_UNINSTALL_SCRIPT') .'</H3>';
+	{		
+	   //We must remove the assets manually each time
+        $db =& JFactory::getDBO();
+        $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
+        $db->setQuery($query);
+        $db->query();
+        $parent_id = $db->loadResult();
+        $query = "DELTE FROM #__assets WHERE parent_id = ".$parent_id;
+        $db->setQuery($query);
+        $db->query();
+   		$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'uninstall-dbtables.sql');
+		$db->setQuery($query);
+		$db->queryBatch();
+		$drop_result .= '<p>db Error: '.$db->stderr().'</p>';
+		$drop_result .= '<H3>'. JText::_('JBS_INS_CUSTOM_UNINSTALL_SCRIPT') .'</H3>';
 	}
 	else
 	{
