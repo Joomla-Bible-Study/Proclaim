@@ -10,8 +10,8 @@
         class="inputbox"
         required="true"/>
     <field name="comment_date" type="calendar" 
-        label="JBS_CMN_CREATE_DATE"
-        description="JBS_MED_CREATE_DATE_DESC"
+        label="JBS_CMT_CREATE_DATE"
+        description="JBS_CMT_CREATE_DATE_DESC"
         class="inputbox" size="22"
         format="%Y-%m-%d %H:%M:%S"
         filter="user_utc"
