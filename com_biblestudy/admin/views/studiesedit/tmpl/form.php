@@ -40,7 +40,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <div class="inlineFields">
                         <div>
                             <?php echo $this->form->getLabel('booknumber'); ?><br/>
-                            <?php echo $this->form->getInput('booknumber'); ?>
+                            <?php echo $this->form->getInput('booknumber', null, empty($this->item->booknumber) ? $this->admin->params['booknumber'] : $this->item->booknumber); ?>
                         </div>
                         <div>
                             <?php echo $this->form->getLabel('chapter_begin'); ?><br/>
@@ -120,7 +120,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('topics_id'); ?>
-                    <?php echo $this->form->getInput('topics_id', null, empty($this->item->topics_id) ? $this->admin->params['topics_id'] : $this->item->topics_id) ?>
+                    <?php echo $this->form->getInput('topics_id', null, empty($this->item->topics_id) ? $this->admin->params['topic_id'] : $this->item->topics_id) ?>
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('messagetype'); ?>
@@ -128,7 +128,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         </li>
                         <li>
                     <?php echo $this->form->getLabel('thumbnailm'); ?>
-                    <?php echo $this->form->getInput('thumbnailm', null, empty($this->item->thumbnailm) ? $this->admin->params['thumbnailm'] : $this->item->thumbnailm) ?>
+                    <?php echo $this->form->getInput('thumbnailm', null, empty($this->item->thumbnailm) ? $this->admin->params['default_study_image'] : $this->item->thumbnailm) ?>
                     </li>
                     <li>
                     <?php echo $this->form->getLabel('studytext'); ?>

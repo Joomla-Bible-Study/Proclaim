@@ -43,69 +43,71 @@ class biblestudyControllermediafilesedit extends controllerClass {
 	}
 	function upload()
 	{
-		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.path');
-		$db=& JFactory::getDBO();
-			//get admin params
-		$query = 'SELECT params'
-			. ' FROM #__bsms_admin'
-			. ' WHERE id = 1';
-		$db->setQuery($query);
-		$admin = $db->loadObject();
-		$admin_params = new JParameter($admin->params);
-		//end get admin params
-		$file = JRequest::getVar('file', null, 'files', 'array' );
-		$filename = '';
-		$path = JRequest::getVar('path', null, 'POST', 'INT');
-		$query = 'SELECT id, folderpath FROM #__bsms_folders WHERE id = '.$path.' LIMIT 1';
-		$db->setQuery($query);
-		$folder = $db->loadObject();
-		$folderpath = $folder->folderpath;
-		//This is where we check the make the extension is of a filetype that is okay to upload
-		$filename = $file['name'];
-		if ($filename == 'index.htm'){
-			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");   // santon review
-			return;
-		}
-		if ($filename == 'index.html'){
-			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
-			return;
-		}
-		if ($filename == 'index.php'){
-			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
-			return;
-		}
-		if ($filename == 'index.htm' || $filename == 'index.html' || $filename == 'index.php'){
-			$mainframe->redirect("index.php?option=$option&view=studieslist".$templatemenuid, "File of this type not allowed.");
-		}
-		if ($admin_params->get('character_filter') > 0)
-		{
-			//This removes any characters that might cause headaches to browsers. This also does the same thing in the model
-			$badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');
-			$file['name'] = str_replace($badchars, '_', $file['name']);
-		}
-		$file['name'] = str_replace('&', '_and_', $file['name']);
-		$filename = str_replace($badchars, '_', $file['name']);
-		$filename = str_replace('&', '_and_', $file['name']);
-		if(isset($file) && is_array($file) && $file['name'] != '')
-		{
-			$fullfilename = JPATH_SITE.$folderpath. strtolower($file['name']);
-			$filename = strtolower($file['name']);
-
-
-			if (JFile::exists($fullfilename)) {
-				$mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed, file already exists.");
-				return;
-			}
-
-			if (!JFile::upload($file['tmp_name'], $fullfilename)) {
-				$mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed.");
-				return;
-			}
-
-		}
-
+		die('biblestudyControllermediafilesedit.upload is no more used');
+		
+//		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
+//		jimport('joomla.filesystem.file');
+//		jimport('joomla.filesystem.path');
+//		$db=& JFactory::getDBO();
+//			//get admin params
+//		$query = 'SELECT params'
+//			. ' FROM #__bsms_admin'
+//			. ' WHERE id = 1';
+//		$db->setQuery($query);
+//		$admin = $db->loadObject();
+//		$admin_params = new JParameter($admin->params);
+//		//end get admin params
+//		$file = JRequest::getVar('file', null, 'files', 'array' );
+//		$filename = '';
+//		$path = JRequest::getVar('path', null, 'POST', 'INT');
+//		$query = 'SELECT id, folderpath FROM #__bsms_folders WHERE id = '.$path.' LIMIT 1';
+//		$db->setQuery($query);
+//		$folder = $db->loadObject();
+//		$folderpath = $folder->folderpath;
+//		//This is where we check the make the extension is of a filetype that is okay to upload
+//		$filename = $file['name'];
+//		if ($filename == 'index.htm'){
+//			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");   // santon review
+//			return;
+//		}
+//		if ($filename == 'index.html'){
+//			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
+//			return;
+//		}
+//		if ($filename == 'index.php'){
+//			$mainframe->redirect("index.php?option=$option&view=mediafileslist", "File of this type not allowed.");
+//			return;
+//		}
+//		if ($filename == 'index.htm' || $filename == 'index.html' || $filename == 'index.php'){
+//			$mainframe->redirect("index.php?option=$option&view=studieslist".$templatemenuid, "File of this type not allowed.");
+//		}
+//		if ($admin_params->get('character_filter') > 0)
+//		{
+//			//This removes any characters that might cause headaches to browsers. This also does the same thing in the model
+//			$badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');
+//			$file['name'] = str_replace($badchars, '_', $file['name']);
+//		}
+//		$file['name'] = str_replace('&', '_and_', $file['name']);
+//		$filename = str_replace($badchars, '_', $file['name']);
+//		$filename = str_replace('&', '_and_', $file['name']);
+//		if(isset($file) && is_array($file) && $file['name'] != '')
+//		{
+//			$fullfilename = JPATH_SITE.$folderpath. strtolower($file['name']);
+//			$filename = strtolower($file['name']);
+//
+//
+//			if (JFile::exists($fullfilename)) {
+//				$mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed, file already exists.");
+//				return;
+//			}
+//
+//			if (!JFile::upload($file['tmp_name'], $fullfilename)) {
+//				$mainframe->redirect("index.php?option=$option&view=mediafileslist", "Upload failed.");
+//				return;
+//			}
+//
+//		}
+//
 
 	}
 
@@ -115,26 +117,27 @@ class biblestudyControllermediafilesedit extends controllerClass {
 	 */
 	function legacySave()
 	{
+		die('biblestudyControllermediafilesedit.legacySave is no more used');
 
-		$model = $this->getModel('mediafilesedit');
-		//dump ($post, 'post: ');
-		$file = JRequest::getVar('file', null, 'files', 'array' );
-		$setDocman = JRequest::getVar('docManItem', null, 'post');
-		$setFile = $file['name'];
-		$setArticle = JRequest::getVar('articleTitle', null, 'post');
-
-		if ($model->store($post)) {
-			$msg = JText::_( 'JBS_MED_MEDIA_SAVED' );
-		} else {
-			$msg = JText::_( 'JBS_MED_ERROR_SAVING_MEDIA' );
-		}
-
-		$filename_upload = strtolower($file['name']);
-		if (isset($filename_upload)){
-			$uploadFile=$this->upload();}
-			// Check the table in so it can be edited.... we are done with it anyway
-			$link = 'index.php?option=com_biblestudy&view=mediafileslist';
-			$this->setRedirect($link, $msg);
+//		$model = $this->getModel('mediafilesedit');
+//		//dump ($post, 'post: ');
+//		$file = JRequest::getVar('file', null, 'files', 'array' );
+//		$setDocman = JRequest::getVar('docManItem', null, 'post');
+//		$setFile = $file['name'];
+//		$setArticle = JRequest::getVar('articleTitle', null, 'post');
+//
+//		if ($model->store($post)) {
+//			$msg = JText::_( 'JBS_MED_MEDIA_SAVED' );
+//		} else {
+//			$msg = JText::_( 'JBS_MED_ERROR_SAVING_MEDIA' );
+//		}
+//
+//		$filename_upload = strtolower($file['name']);
+//		if (isset($filename_upload)){
+//			$uploadFile=$this->upload();}
+//			// Check the table in so it can be edited.... we are done with it anyway
+//			$link = 'index.php?option=com_biblestudy&view=mediafileslist';
+//			$this->setRedirect($link, $msg);
 	}
 	
 	/**

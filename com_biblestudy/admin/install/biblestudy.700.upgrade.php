@@ -120,7 +120,7 @@ $query = "UPDATE #__bsms_studies SET `show_level` = '7' WHERE `show_level` = '24
 $msg = $this->performdb($query);
 $msg2 = $msg2.$msg;        
 
-        $res = '<table><tr><td>Upgrade Joomla Bible Study to version 7.0.0</td></tr>';  
+        $res = '<table><tr><td>'. JText::_('JBS_INS_16_UPGRADE_700') .'</td></tr>';  
         
         $result_table = $res.$msg2.'</table>';
 //  echo 'function upgrade end: ';
@@ -132,13 +132,13 @@ $msg2 = $msg2.$msg;
     {
         $db = JFactory::getDBO();
         $results = '';
-        if (!$query){$results = "Error. No query found"; return $results;}
+        if (!$query){$results = JText::_('JBS_INS_16_ERROR_NO_QUERY_FOUND'); return $results;}
         $db->setQuery($query);
         $db->query();
         
         		if ($db->getErrorNum() != 0)
 					{
-						$error = "DB function failed with error number ".$db->getErrorNum()."<br /><font color=\"red\">";
+						$error = JText::_('JBS_INS_16_DB_FUNCTION_FAILED_ERROR_NUM') .$db->getErrorNum()."<br /><font color=\"red\">";
 						$error .= $db->stderr(true);
 						$error .= "</font>";
 					}

@@ -62,7 +62,7 @@ class JBSUpgrade
             break;
             
             case 4:
-            $message = '7.0.0 already installed. Refreshing install.';
+            $message = JText::_('JBS_INS_16_REFRESHING_INSTALLED_700');
             break;
         }
         return $message;
@@ -99,13 +99,13 @@ class JBSUpgrade
         $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-02-12', `build`='1390', `versionname`='1Kings', `versiondate`='2011-02-15'";
         $msg[] = $this->performdb($query);
         
-        $res = '<table><tr><td>Upgrade Joomla Bible Study to version 7.0.0</td></tr>';  //santon 2010-12-28 convert to phrase
+        $res = '<table><tr><td>'. JText::_('JBS_INS_16_UPGRADE_700'). '</td></tr>';
         if (count($msg) < 1){$res .= JText::_('JBS_INS_NO_ERROR');
 		}
         else
         {
             
-            $r = 'Queries or Errors: <br />';
+            $r = JText::_('JBS_INS_16_QUERIES_ERRORS');
             foreach ($msg AS $m)
             {
                 $r .= $m.'<br />';
@@ -486,12 +486,12 @@ class JBSUpgrade
         $msg[] = ob_get_contents();
         ob_end_clean();
          
-          $res = '<table><tr><td>Upgrade Joomla Bible Study to version 7.0.0</td></tr>';  //santon 2010-12-28 convert to phrase
+        $res = '<table><tr><td>'. JText::_('JBS_INS_16_UPGRADE_700'). '</td></tr>';
         if (count($msg) < 1){$res .= JText::_('JBS_INS_NO_ERROR');}
         else
         {
             
-            $r .= 'Results: <br />';
+            $r .= JText::_('JBS_INS_16_QUERIES_ERRORS');
             foreach ($msg AS $m)
             {
                 $r .= $m.'<br />';
@@ -513,7 +513,7 @@ class JBSUpgrade
     {
         $db = JFactory::getDBO();
         $results = '';
-        if (!$query){$results = "Error. No query found"; return $results;}
+        if (!$query){$results = JText::_('JBS_INS_16_ERROR_NO_QUERY_FOUND'); return $results;}
         //$db = &$this->database;
         $db->setQuery($query);
         $db->query();
