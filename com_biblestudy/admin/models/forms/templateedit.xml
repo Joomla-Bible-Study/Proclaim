@@ -552,7 +552,7 @@
             <field name="row1col1"
            type="listoptions"
            default="" translate="true"
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL1"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC"
            multiple="false" />
             <field name="r1c1custom"
@@ -579,7 +579,7 @@
             <field name="row1col2"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL2"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r1c2custom"
            type="text"
@@ -601,7 +601,7 @@
             <field name="row1col3"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL3"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r1c3custom"
            type="text"
@@ -626,7 +626,7 @@
             <field name="row1col4"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL4"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r1c4custom"
            type="text"
@@ -644,7 +644,7 @@
             <field name="row2col1"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL1"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r2c1custom"
            type="text"
@@ -671,7 +671,7 @@
             <field name="row2col2"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL2"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r2c2custom"
            type="text"
@@ -697,7 +697,7 @@
             <field name="row2col3"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL3"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r2c3custom"
            type="text"
@@ -722,7 +722,7 @@
             <field name="row2col4"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL4"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r2c4custom"
            type="text"
@@ -740,7 +740,7 @@
             <field name="row3col1"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL1"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r3c1custom"
            type="text"
@@ -767,7 +767,7 @@
             <field name="row3col2"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL2"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r3c2custom"
            type="text"
@@ -793,7 +793,7 @@
             <field name="row3col3"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL3"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r3c3custom"
            type="text"
@@ -818,7 +818,7 @@
             <field name="row3col4"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL4"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r3c4custom"
            type="text"
@@ -836,7 +836,7 @@
             <field name="row4col1"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL1"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r4c1custom"
            type="text"
@@ -863,7 +863,7 @@
             <field name="row4col2"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL2"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r4c2custom"
            type="text"
@@ -889,7 +889,7 @@
             <field name="row4col3"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL3"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r4c3custom"
            type="text"
@@ -914,7 +914,7 @@
             <field name="row4col4"
            type="listoptions"
            default=""
-           label="JBS_TPL_DETAILS_CHOOSE_ITEM"
+           label="JBS_TPL_DETAILS_CHOOSE_ITEM_COL4"
            description="JBS_TPL_DETAILS_CHOOSE_ITEM_DESC" />
             <field name="r4c4custom"
            type="text"

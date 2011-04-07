@@ -8,6 +8,7 @@
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 
 jimport('joomla.application.component.view');
 
@@ -18,6 +19,7 @@ class biblestudyViewcommentslist extends JView
     protected $state;
 
     function display($tpl = null) {
+        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'commentsedit');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
@@ -32,12 +34,11 @@ class biblestudyViewcommentslist extends JView
         $this->admin = BsmHelper::getAdmin($issite = true);
         
         //check permissions to enter studies
-      $admin_settings = new JBSAdmin();
-      $permission = $admin_settings->getPermission();
-       if ($permission !== true) {
-    			JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-    			return false;
-    		}      
+       if (!$this->canDo->get('core.edit')) 
+        {
+            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            return false;
+        }
         $this->setLayout('form');
         
         parent::display($tpl);

@@ -42,7 +42,7 @@ class biblestudyViewmessages extends JView {
      //Puts a new record link at the top of the form
      if ($this->canDo->get('core.create')) 
      { 
-      echo '<a href="index.php?option=com_biblestudy&view=message&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';
+      $this->newlink = '<a href="index.php?option=com_biblestudy&view=message&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';
      }  
         parent::display($tpl);
 

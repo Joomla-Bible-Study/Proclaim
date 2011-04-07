@@ -600,7 +600,7 @@ function getStudyExp($row, $params, $admin_params, $template)
 	//This will eventually replace mediatable in this context.  Just for clarity.
 	include_once($path1.'media.php');
     include_once($path1.'share.php');
-    include_once($path1.'comments.php');
+  //  include_once($path1.'comments.php');
     include_once($path1.'date.php');
     include_once($path1.'duration.php');
     include_once($path1.'image.php');
@@ -670,8 +670,8 @@ function getStudyExp($row, $params, $admin_params, $template)
     $label = str_replace('{{pdfview}}', $link, $label);
 
     //Comments
-    $comments = getComments($params, $row, $row->id);
-	$label = str_replace('{{comments}}', $comments, $label);
+  //  $comments = getComments($params, $row, $row->id);
+//	$label = str_replace('{{comments}}', $comments, $label);
 
     return $label;
 }

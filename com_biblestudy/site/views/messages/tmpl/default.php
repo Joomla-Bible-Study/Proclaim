@@ -11,6 +11,7 @@ JHtml::_('script', 'system/multiselect.js', false, true);
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
+<h2><?php echo JText::_('JBS_CMN_MESSAGES_LIST');?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-search fltlft">
@@ -51,6 +52,8 @@ $listDirn = $this->state->get('list.direction');
             </select>
         </div>
     </fieldset>
+   <div> 
+   <h3> <?php echo $this->newlink; ?></h3></div>
     <div class="clr"></div>
     <table class="adminlist">
         <thead>
