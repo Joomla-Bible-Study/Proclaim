@@ -13,6 +13,7 @@ class fixJBSAssets
 {
     public function AssetEntry()
     {
+		print '<p>'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
         $objects = array(array(name=>'#__bsms_servers',titlefield=>'server_name',assetname=>'serversedit'),
                         array(name=>'#__bsms_folders',titlefield=>'foldername',assetname=>'foldersedit'),
                         array(name=>'#__bsms_studies',titlefield=>'studytitle',assetname=>'studiesedit'),

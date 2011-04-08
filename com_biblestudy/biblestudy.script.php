@@ -16,8 +16,7 @@
  defined( '_JEXEC' ) or die('Restricted access');
  ?>
       <script type="text/javascript">
-window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler'), $$('div#content-sliders-1.pane-sliders > .panel > div.pane-slider'), {onActive: function(toggler, i) {toggler.addClass('pane-toggler-down');toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_content-sliders-1',$$('div#content-sliders-1.pane-sliders > .panel > h3').indexOf(toggler));},onBackground: function(toggler, i) {toggler.addClass('pane-toggler');toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');i.removeClass('pane-down');if($$('div#content-sliders-1.pane-sliders > .panel > h3').length==$$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler').length) Cookie.write('jpanesliders_content-sliders-1',-1);},duration: 300,display: 1,show: 1,opacity: false,alwaysHide: true});	$('done').setStyle('display', 'none');
-	$('assetinstall').addEvent('click', checks); });
+window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler'), $$('div#content-sliders-1.pane-sliders > .panel > div.pane-slider'), {onActive: function(toggler, i) {toggler.addClass('pane-toggler-down');toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_content-sliders-1',$$('div#content-sliders-1.pane-sliders > .panel > h3').indexOf(toggler));},onBackground: function(toggler, i) {toggler.addClass('pane-toggler');toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');i.removeClass('pane-down');if($$('div#content-sliders-1.pane-sliders > .panel > h3').length==$$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler').length) Cookie.write('jpanesliders_content-sliders-1',-1);},duration: 300,display: 1,show: 1,opacity: false,alwaysHide: true}); });
  </script>
  <?php
  
@@ -84,13 +83,6 @@ class com_biblestudyInstallerScript {
 	}
 
 	function postflight($type, $parent) {
-	
-	JHTML::_('behavior.mootools');
-	
-	// get document to add scripts
-	$document	= JFactory::getDocument();
-	$document->addScript('components/com_biblestudy/js/dwProgressBar.js');
-	$document->addScript('components/com_biblestudy/js/assat.js');
 
 	// Check to see if assets have been fixed
         $db = JFactory::getDBO();
@@ -99,17 +91,10 @@ class com_biblestudyInstallerScript {
         $db->query();
         if (!$db->loadResult())
         {
-           require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
-			echo '<div id="assetinstall">';
-            echo '<p class="text">'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
-			echo '<div id="pb3">';
+			require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
 			$assetfix = new fixJBSAssets();
-			echo '</div>';
             $assetdofix = $assetfix->AssetEntry();
-			echo '</div>';
-            echo '<div id="done">';
             if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
-            echo '</div>';
         }
 ?>
 		<fieldset class="panelform">
