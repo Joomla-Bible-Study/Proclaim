@@ -134,7 +134,6 @@ class biblestudyViewstudieslist extends JView {
         $menu = & JSite::getMenu();
         $item = & $menu->getActive();
         $images = new jbsImages();
-
         $main = $images->mainStudyImage(); // dump ($main, 'main: ');
 
         $this->assignRef('main', $main);

@@ -35,7 +35,7 @@ $approvedControllers = array(
 'podcastedit', 
 'studiesedit',
 'landingpage'
-);  //santon 2010-12-08: some obsolete?
+);
 
 if ( ! in_array($controller, $approvedControllers)) {
 $controller = 'studieslist';

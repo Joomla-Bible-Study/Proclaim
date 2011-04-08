@@ -106,17 +106,13 @@ $params = $this->form->getFieldsets();
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_SYSTEM_DEFAULTS'), 'admin-system-defaults'); ?>
 		<div class="width-100">
-				<div class="width-60 fltlft">
-						<fieldset class="panelform">
-            		<legend><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></legend>
-								<ul>
-										<li>
+        <div class="width-60 fltlft">
+            <fieldset class="panelform">
+                <legend><?php echo JText::_('JBS_CMN_DEFAULT_IMAGES'); ?></legend>
+                <ul>
+                    <li>
                         <?php echo $this->form->getLabel('default_main_image', 'params'); ?>
                         <?php echo $this->form->getInput('default_main_image', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('default_study_image', 'params'); ?>
-                        <?php echo $this->form->getInput('default_study_image', 'params'); ?>
                     </li>
                     <li>
                         <?php echo $this->form->getLabel('default_series_image', 'params'); ?>
@@ -164,6 +160,10 @@ $params = $this->form->getFieldsets();
                     <li>
                         <?php echo $this->form->getLabel('messagetype', 'params'); ?>
                         <?php echo $this->form->getInput('messagetype', 'params'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('default_study_image', 'params'); ?>
+                        <?php echo $this->form->getInput('default_study_image', 'params'); ?>
                     </li>
                 </ul>
             </fieldset>

@@ -32,13 +32,13 @@
             <option value="1">JBS_ADM_ADDTHIS_SHARE</option>
         </field>
         <field name="default_main_image" type="media" size="50" label="JBS_ADM_DEFAULT_MAIN_IMAGE" description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC"/>
-        <field name="default_study_image" type="media" size="50" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_DESC"/>        
         <field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE" description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC"/>
         <field name="default_teacher_image" type="media" size="50" label="JBS_ADM_DEFAULT_TEACHER_IMAGE" description="JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC"/>
         <field name="default_download_image" type="media" size="50" label="JBS_ADM_DOWNLOAD_IMAGE" description="JBS_ADM_DOWNLOAD_IMAGE_DESC"/>
         <field name="default_showHide_image" type="list" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE" description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC">
             <option>JBS_CMN_DEFAULT_IMAGE</option>
         </field>
+
         <field name="location_id" type="sql" extension="com_biblestudy" label="JBS_CMN_LOCATION"
              description="JBS_ADM_FILLIN_STUDY_LOCATION_ID_DESC" class="inputbox"
              query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER BY location_text ASC"
@@ -79,14 +79,7 @@
              query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER BY message_type ASC">
             <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
         </field>
-       
-        <field name="JBS_ADM_DEFAULT_STUDY_IMAGE" type="media" extension="com_biblestudy" id="media_image"
-         label="JBS_ADM_DEFAULT_STUDYLIST_IMAGE" description="JBS_ADM_DEFAULT_STUDYLIST_IMAGE_DESC" class="inputbox"
-         query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
-         key_field="id"
-         value_field="media_image_name">
-            <option value="-1">JBS_CMN_DEFAULT_IMAGE</option>
-        </field>
+        <field name="default_study_image" type="media" size="50" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_DESC"/>        
 
         <field name="series_imagefolder" type="folderlist" hide_none="-1" directory="/images"
              label="JBS_ADM_FILLIN_IMAGES_SERIES_IMAGEFOLDER"
@@ -97,7 +90,9 @@
         <field name="teachers_imagefolder" type="folderlist" hide_none="-1" directory="/images"
              label="JBS_ADM_FILLIN_IMAGES_TEACHERS_IMAGEFOLDER"
              description="JBS_ADM_FILLIN_IMAGES_TEACHERS_IMAGEFOLDER_DESC" />
-        <field name="study_images" type="folderlist" hide_none="-1" directory="/images" label="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES" description="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES_DESC" />
+        <field name="study_images" type="folderlist" hide_none="-1" directory="/images"
+        	 label="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES"
+        	 description="JBS_ADM_FILLIN_IMAGES_STUDY_IMAGES_DESC" />
 
 
         <field name="download" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC">

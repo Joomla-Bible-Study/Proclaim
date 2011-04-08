@@ -7,7 +7,6 @@ jimport('joomla.application.component.view');
 jimport('joomla.application.component.helper');
 jimport('joomla.i18n.help');
 
-require_once (JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'lib' . DS . 'biblestudy.defines.php');
 require_once (BIBLESTUDY_PATH_ADMIN_LIB . DS . 'biblestudy.stats.class.php');
 
 class biblestudyViewadmin extends JView {
