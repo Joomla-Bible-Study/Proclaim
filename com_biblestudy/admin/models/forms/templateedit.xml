@@ -149,24 +149,7 @@
             </field>
             
         </fieldset>
-        <fieldset name="FP_IMAGES">
-            <field name="show_page_image"
-                   type="list"
-                   default="1"
-                   label="JBS_TPL_FP_SHOW_PAGE_IMAGE"
-                   description="JBS_TPL_FP_SHOW_PAGE_IMAGE_DESC">
-                <option value="0">JBS_CMN_HIDE</option>
-                <option value="1">JBS_CMN_SHOW</option>
-            </field>
-            <field name="tooltip"
-                   type="list"
-                   default="1"
-                   label="JBS_TPL_FP_IMAGES_TOOLTIP"
-                   description="JBS_TPL_FP_IMAGES_TOOLTIP_DESC">
-                <option value="0">JBS_CMN_HIDE</option>
-                <option value="1">JBS_CMN_SHOW</option>
-            </field>
-        </fieldset>
+        
         <fieldset name="VERSES">
             <field name="show_verses"
                    type="list"
@@ -398,6 +381,15 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
+            <field name="show_page_image"
+                   type="list"
+                   default="1"
+                   label="JBS_TPL_FP_SHOW_PAGE_IMAGE"
+                   description="JBS_TPL_FP_SHOW_PAGE_IMAGE_DESC">
+                <option value="0">JBS_CMN_HIDE</option>
+                <option value="1">JBS_CMN_SHOW</option>
+            </field>
+            
             <field name="page_title"
                    type="text"
                    default="Bible Studies"
@@ -412,11 +404,12 @@
                 <option value="1">JBS_TPL_USE_HEADER_ROW</option>
             </field>
             <field name="list_intro"
-                   type="textarea"
-                   rows="10"
-                   cols="100"
+                   type="editor"
+                   height="300"
+                   width="500"
                    label="JBS_TPL_LISTITEMS_LIST_INTRO"
-                   description="JBS_TPL_LISTITEMS_LIST_INTRO_DESC" />
+                   description="JBS_TPL_LISTITEMS_LIST_INTRO_DESC" 
+                   filter="ContentHelper::filterText" buttons="true" />
             <field name="intro_show"
                    type="list"
                    default="1"
@@ -1526,6 +1519,14 @@
            size="100"
            label="JBS_TPL_TOOLTIP_TIP_TITLE"
            description="JBS_TPL_TOOLTIP_TIP_TITLE_DESC" />
+           <field name="tooltip"
+                   type="list"
+                   default="1"
+                   label="JBS_TPL_FP_IMAGES_TOOLTIP"
+                   description="JBS_TPL_FP_IMAGES_TOOLTIP_DESC">
+                <option value="0">JBS_CMN_HIDE</option>
+                <option value="1">JBS_CMN_SHOW</option>
+            </field>
             <field name="tip_item1_title"
            type="text"
            default="Title"

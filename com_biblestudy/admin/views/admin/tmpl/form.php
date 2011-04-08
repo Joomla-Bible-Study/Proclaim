@@ -78,30 +78,7 @@ $params = $this->form->getFieldsets();
             </fieldset>
 
         </div>
-        <div class="width-40 fltrt">
-           
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_ADM_IMAGE_FOLDERS'); ?> </legend>
-                <ul>
-                    <li>
-                        <?php echo $this->form->getLabel('series_imagefolder', 'params'); ?>
-                        <?php echo $this->form->getInput('series_imagefolder', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('media_imagefolder', 'params'); ?>
-                        <?php echo $this->form->getInput('media_imagefolder', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('teachers_imagefolder', 'params'); ?>
-                        <?php echo $this->form->getInput('teachers_imagefolder', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('study_images', 'params'); ?>
-                        <?php echo $this->form->getInput('study_images', 'params'); ?>
-                    </li>
-                </ul>
-            </fieldset>
-        </div>        
+              
     </div>
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_SYSTEM_DEFAULTS'), 'admin-system-defaults'); ?>

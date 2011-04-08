@@ -35,7 +35,7 @@
         <field name="default_series_image" type="media" size="50" label="JBS_ADM_DEFAULT_SERIES_IMAGE" description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC"/>
         <field name="default_teacher_image" type="media" size="50" label="JBS_ADM_DEFAULT_TEACHER_IMAGE" description="JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC"/>
         <field name="default_download_image" type="media" size="50" label="JBS_ADM_DOWNLOAD_IMAGE" description="JBS_ADM_DOWNLOAD_IMAGE_DESC"/>
-        <field name="default_showHide_image" type="list" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE" description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC">
+        <field name="default_showHide_image" type="media" label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE" description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC">
             <option>JBS_CMN_DEFAULT_IMAGE</option>
         </field>
 

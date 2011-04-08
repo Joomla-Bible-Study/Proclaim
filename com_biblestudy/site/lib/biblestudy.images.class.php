@@ -63,17 +63,16 @@ class jbsImages
 		$database->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
 		$admin = $database->loadObject(); //print_r($admin);
 		$admin_params = new JParameter($admin->params);
-		if ($admin->main == '- JBS_CMN_DEFAULT_IMAGE -' || ($admin->main && !$admin_params->get('media_imagefolder')))   // 2010-11-12 santon: need to be changed
+		if (!$admin_params->get('default_main_image') )   
 			{
-				$path = 'components/com_biblestudy/images'; //dump ($path, 'path: ');
+				$path = 'components/com_biblestudy/images/openbible.png';
 			}
-		if ($admin->main && $admin_params->get('media_imagefolder'))
-			{
-				$path = 'images/'. $admin_params->get('media_imagefolder');
-			}
-		$image = ($admin->main == '- JBS_CMN_DEFAULT_IMAGE -' ? 'openbible.png' : $admin->main );  // 2010-11-12 santon: need to be changed
-		$i_path = $path .'/'. $image; //dump ($i_path, 'i_path: ');
-		$mainimage = $this->getImagePath($i_path);	//dump ($mainimage, 'mainimage: ');
+		else
+            {
+                $path = $admin_params->get('default_main_image');
+            }
+		
+		$mainimage = $this->getImagePath($path);	//dump ($mainimage, 'mainimage: ');
 		return $mainimage;	
 	}	
 
@@ -163,7 +162,7 @@ class jbsImages
 	{
 		$imagepath = array();
 		//$image1 is teacher->thumbnail, $image2 is teacher->thumb
-		if ($image1 == '- JBS_CMN_NO_IMAGE - ' || !$image1)     // 2010-11-12 santon: need to be changed
+		if ($image1 == '- JBS_CMN_NO_IMAGE - ' || !$image1)     // 2010-11-12 santon: need to be changed, 2011-04-08 TF I think I fixed this already
 		{
 			$path = $image2;
             if (!substr_count($path,'/')) {$path = $folder .'/'.$image2;}
@@ -223,16 +222,20 @@ class jbsImages
 	
 	function getShowHide($image)
 	{
-		if ($image == '- JBS_CMN_DEFAULT_IMAGE -' || !$image)     // 2010-11-12 santon: need to be changed
+		$database	= & JFactory::getDBO();
+		$database->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
+		$admin = $database->loadObject(); //print_r($admin);
+		$admin_params = new JParameter($admin->params);
+        if (!$admin_params->get('default_showHide_image') )     
 		{
-			$image = 'showhide.gif'; $folder = 'components/com_biblestudy/images';
+			$path = 'components/com_biblestudy/images/showhide.gif';
 		}
 		else
 		{
-			$folder = $this->getMediaImageFolder();
+			$path = $admin_params->get('default_showHide_image');
 		}
 		
-		$path = $folder .'/'. $image;
+		
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
 		return $imagepath;
 	}

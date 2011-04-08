@@ -80,6 +80,9 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                 <legend><?php echo JText::_('JBS_TPL_LIST_ITEMS'); ?></legend>
 				<ul class="adminformlist">
                 <?php foreach($this->form->getFieldset('LISTITEMS') as $field): ?>
+                        <?php  $thename = $field->label; if (substr_count($thename,'jform_params_list_intro-lbl'))
+                        {echo '<div class="clr"></div>';}
+                      //  dump($thename); ?>               
                         <li><?php echo $field->label;echo $field->input;?></li>
                     <?php endforeach; ?>
                 </ul>
