@@ -55,7 +55,6 @@
     <folder>tables</folder>
     <folder>controllers</folder>
     <folder>images</folder>
-    <folder>elements</folder>
     <folder>helpers</folder>
     <folder>lib</folder>
   </files>
@@ -126,7 +125,6 @@
       <folder>views</folder>
       <folder>models</folder>
       <folder>helpers</folder>
-      <folder>elements</folder>
       <folder>controllers</folder>
       <folder>lib</folder>
       <folder>install</folder>
