@@ -35,7 +35,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('teacher_image'); ?>
-                    <?php echo $this->form->getInput('teacher_image', null, $this->admin->params['default_teacher_image']); ?>
+                    <?php echo $this->form->getInput('teacher_image', null, empty($this->item->teacher_image) ? $this->admin->params['default_teacher_image'] : $this->item->teacher_image); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('teacher_thumbnail'); ?>
@@ -44,6 +44,10 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                 <li>
                     <?php echo $this->form->getLabel('image'); ?>
                     <?php echo $this->form->getInput('image'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('thumb'); ?>
+                    <?php echo $this->form->getInput('thumb'); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('phone'); ?>
@@ -60,10 +64,6 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                 <li>
                     <?php echo $this->form->getLabel('short'); ?>
                     <?php echo $this->form->getInput('short'); ?>
-                </li>
-                <li>
-                    <?php echo $this->form->getLabel('thumb'); ?>
-                    <?php echo $this->form->getInput('thumb'); ?>
                 </li>
                 
             </ul>

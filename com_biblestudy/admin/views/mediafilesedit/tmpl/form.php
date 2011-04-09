@@ -35,11 +35,11 @@ $params = $this->form->getFieldsets('params');
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('podcast_id'); ?>
-                    <?php echo $this->form->getInput('podcast_id', null, $this->admin->params['podcast']); ?>
+                    <?php echo $this->form->getInput('podcast_id', null, empty($this->item->podcast_id) ? $this->admin->params['podcast'] : $this->item->podcast_id);?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('link_type'); ?>
-                    <?php echo $this->form->getInput('link_type', null, $this->admin->params['download']); ?>
+                    <?php echo $this->form->getInput('link_type', null, empty($this->item->link_type) ? $this->admin->params['download'] : $this->item->link_type); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('ordering'); ?>
@@ -113,11 +113,11 @@ $params = $this->form->getFieldsets('params');
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('server'); ?>
-                    <?php echo $this->form->getInput('server', null, $this->admin->params['server']); ?>
+                    <?php echo $this->form->getInput('server', null, empty($this->item->server) ? $this->admin->params['server'] : $this->item->server); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('path'); ?>
-                    <?php echo $this->form->getInput('path', null, $this->admin->params['path']); ?>
+                    <?php echo $this->form->getInput('path', null, empty($this->item->path) ? $this->admin->params['path'] : $this->item->path); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('filename'); ?>
@@ -129,7 +129,7 @@ $params = $this->form->getFieldsets('params');
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('special'); ?>
-                    <?php echo $this->form->getInput('special', null, $this->admin->params['target']); ?>
+                    <?php echo $this->form->getInput('special', null, empty($this->item->special) ? $this->admin->params['target'] : $this->item->special); ?>
                 </li>
             </ul>
         </fieldset>
@@ -144,7 +144,7 @@ $params = $this->form->getFieldsets('params');
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('mime_type'); ?>
-                    <?php echo $this->form->getInput('mime_type', null, $this->admin->params['mime']); ?>
+                    <?php echo $this->form->getInput('mime_type', null, empty($this->item->mime_type) ? $this->admin->params['mime'] : $this->item->mime_type); ?>
                 </li>
             </ul>
         </fieldset>

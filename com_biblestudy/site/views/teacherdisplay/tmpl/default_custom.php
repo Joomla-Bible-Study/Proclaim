@@ -38,6 +38,7 @@ if (!$teacher->teacher_image) { $image->path = $teacher->image; $image->height =
 		if ($teacher->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
 		$image = getImage($i_path);
 	}
+?>
 <table id="bslisttable" cellspacing="0">
 <?php
 

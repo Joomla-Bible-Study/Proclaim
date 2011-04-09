@@ -27,7 +27,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 				</li> 
                 <li>
 					<?php echo $this->form->getLabel('series_thumbnail'); ?>
-					<?php echo $this->form->getInput('series_thumbnail', null, $this->admin->params['default_series_image']); ?>
+					<?php echo $this->form->getInput('series_thumbnail', null, empty($this->item->series_thumbnail) ? $this->admin->params['default_series_image'] : $this->item->series_thumbnail); ?>
 				</li> 
 			</ul>
             <div class="clr"></div>
