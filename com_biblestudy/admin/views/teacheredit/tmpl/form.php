@@ -34,8 +34,10 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <?php echo $this->form->getInput('title'); ?>
                 </li>
                 <li>
+                    
                     <?php echo $this->form->getLabel('teacher_image'); ?>
-                    <?php echo $this->form->getInput('teacher_image', null, empty($this->item->teacher_image) ? $this->admin->params['default_teacher_image'] : $this->item->teacher_image); ?>
+                    <?php // teachername is required; fill in default if empty and leave value otherwise
+                          echo $this->form->getInput('teacher_image', null, empty($this->item->teachername) ? $this->admin->params['default_teacher_image'] : $this->item->teacher_image); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('teacher_thumbnail'); ?>

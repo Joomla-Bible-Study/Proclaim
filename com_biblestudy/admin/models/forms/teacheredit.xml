@@ -13,7 +13,7 @@
 			default="0">
         <option value="0">0</option>
     </field>
-    <field name="teachername" type="text" class="inputbox" size="60" label="JBS_CMN_TEACHER" description="JBS_TCH_TEACHER_DESC"/>
+    <field name="teachername" type="text" class="inputbox" size="60" label="JBS_CMN_TEACHER" description="JBS_TCH_TEACHER_DESC" required="true"/>
     <field name="title" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
     <field name="teacher_image" type="media" label="JBS_TCH_TEACHER_IMAGE" description ="JBS_TCH_TEACHER_IMAGE_DESC"/>
     <field name="teacher_thumbnail" type="media" label="JBS_TCH_TEACHER_THUMBNAIL" description ="JBS_TCH_TEACHER_THUMBNAIL_DESC"/>
