@@ -165,6 +165,11 @@ class JBSImport
                     $db->setQuery($query);
                     $db->query();
                     
+                    //For some reason the auto_increment was dropped in the backup so we need to add it back
+                    $query = 'ALTER TABLE '.$newtable.' MODIFY id int(10) NOT NULL AUTO_INCREMENT';
+                    $db->setQuery($query);
+                    $db->query();
+                    
                     if (substr_count($newtable,'studies'))
                         {
                             $query = 'ALTER TABLE '.$newtable.' MODIFY studytext TEXT';

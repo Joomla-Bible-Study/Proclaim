@@ -43,9 +43,22 @@ class JBSExport{
         
        //Copy tables to a temp copy, changing TEXT to BLOB
        $newbackuptables = $this->copytables($backuptables);
-            
+     //  dump ($newbackuptables);
+                  
        $dobackup = false;
        $dobackup = $this->backup_tables($host,$user,$password,$dbname,$newbackuptables);
+       //  dump ($newbackuptables);
+       //Now let's delete the backup tables
+    //   $deleteit = deletecopy($newbackuptables);
+       
+      // JRequest::setVar('jbsmessages',$deleteit,'get','array');
+    $errorfile = array();
+    foreach ($newbackuptables AS $newbackuptable)
+        {
+            $query = 'DROP TABLE IF EXISTS '.$newbackuptable;
+            $db->setQuery($query);
+            $db->query();
+        }  
        if (!$dobackup)
        {
             JError::raiseNotice('SOME_ERROR_CODE', 'JBS_EI_NO_BACKUP');
@@ -54,6 +67,7 @@ class JBSExport{
        {
             $downloadfile = $this->output_file($dobackup[0], $dobackup[1], $mime_type='');
        }
+    
     }
 
 /* backup the db OR just a table */
@@ -226,9 +240,11 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 		$bytes_send += strlen($buffer);
 	}
  fclose($file);
+
  } else die('Error - can not open file.');
  
 die();
+unlink($file);
 }	
 /* This function is not used */
 function writefile($dobackup)
@@ -297,7 +313,7 @@ function writefile($dobackup)
         foreach ($backuptables AS $backuptable)
         {
             $query = 'CREATE TABLE '.$backuptable.'_genesis SELECT * FROM '.$backuptable;
-            print_r ($query);
+           // print_r ($query);
             $db->setQuery($query);
             $db->query();
             $newbackuptables[] = $backuptable.'_genesis';
@@ -335,13 +351,19 @@ function writefile($dobackup)
 
     function deletecopy($backuptables)
     {
+        $errorfile = array();
         $db = JFactory::getDBO();
         foreach ($backuptables AS $backuptable)
         {
-            $query = 'DROP TABLE '.$backuptable;
+            $query = 'DROP TABLE IF EXISTS '.$backuptable;
             $db->setQuery($query);
             $db->query();
+            if ($db->getErrorNum() != 0)
+		  {
+		      $errorfile[] = $db->stderr(true);
+          }
         }
+        return $errorfile;
     }
 
 } // end of class
