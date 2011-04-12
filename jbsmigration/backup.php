@@ -67,7 +67,7 @@ class JBSExport{
        {
             $downloadfile = $this->output_file($dobackup[0], $dobackup[1], $mime_type='');
        }
-    
+    unlink($dobackup[0]);
     }
 
 /* backup the db OR just a table */
