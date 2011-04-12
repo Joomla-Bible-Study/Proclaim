@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 					  `showhide` char(255) DEFAULT NULL,
                       `drop_tables` int(3) DEFAULT NULL,
 					  `params` text,
+                      `asset_id` int(10),
+                      `access` int(10),
 					  PRIMARY KEY (`id`)
 					) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -42,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 --
 
 INSERT INTO `#__bsms_admin` (`id`, `podcast`, `series`, `study`, `teacher`, `media`, `download`, `main`, `showhide`, `drop_tables`, `params`) VALUES
-		(1, '', '', '', '', 'speaker24.png', 'download.png', 'openbible.png', '0', '0', '{"compat_mode":"0","admin_store":"1","studylistlimit":"10","show_location_media":"0","popular_limit":"","character_filter":"1","format_popular":"0","socialnetworking":"1","sharetype":"1","default_main_image":"","default_study_image":"","default_series_image":"","default_teacher_image":"","default_download_image":"","default_showHide_image":"","location_id":"-1","teacher_id":"1","series_id":"-1","booknumber":"-1","topic_id":"-1","messagetype":"-1","series_imagefolder":"","media_imagefolder":"","teachers_imagefolder":"","study_images":"","download":"1","target":" ","server":"1","path":"14","podcast":"-1","mime":"1","allow_entry_study":"1","entry_access":"1","study_publish":"1","from":"x","to":"x","pFrom":"x","pTo":"x"}');
+		(1, '', '', '', '', 'speaker24.png', 'download.png', 'openbible.png', '0', '0', '{"compat_mode":"0","admin_store":"1","studylistlimit":"10","show_location_media":"0","popular_limit":"","character_filter":"1","format_popular":"0","socialnetworking":"1","sharetype":"1","default_main_image":"","default_study_image":"","default_series_image":"","default_teacher_image":"","default_download_image":"","default_showHide_image":"","location_id":"-1","teacher_id":"1","series_id":"-1","booknumber":"-1","topic_id":"-1","messagetype":"-1","series_imagefolder":"","media_imagefolder":"","teachers_imagefolder":"","study_images":"","download":"1","target":" ","server":"1","path":"14","podcast":"-1","mime":"1","allow_entry_study":"1","entry_access":"1","study_publish":"1","from":"x","to":"x","pFrom":"x","pTo":"x"},0,0');
 
 -- --------------------------------------------------------
 
@@ -152,6 +154,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
 					  `user_email` varchar(100) NOT NULL DEFAULT '',
 					  `comment_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 					  `comment_text` text NOT NULL,
+                      `asset_id` int(10),
+                      `access` int(10),
 					  PRIMARY KEY (`id`)
 					) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -171,6 +175,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
 				  `foldername` varchar(250) NOT NULL DEFAULT '',
 				  `folderpath` varchar(250) NOT NULL DEFAULT '',
 				  `published` tinyint(1) NOT NULL DEFAULT '1',
+                  `asset_id` int(10),
+                  `access` int(10),
 				  PRIMARY KEY (`id`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -179,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
 --
 
 INSERT INTO `#__bsms_folders` (`id`, `foldername`, `folderpath`, `published`) VALUES
-			(1, 'My Folder Name', '/media/', 1);
+			(1, 'My Folder Name', '/media/', 1, 0,0);
 
 -- --------------------------------------------------------
 
@@ -191,6 +197,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
     				  `id` int(11) NOT NULL AUTO_INCREMENT,
     				  `location_text` varchar(250) DEFAULT NULL,
     				  `published` tinyint(1) NOT NULL DEFAULT '1',
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -199,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
 --
 
 INSERT INTO `#__bsms_locations` (`id`, `location_text`, `published`) VALUES 
-			(1, 'My Location', 1);
+			(1, 'My Location', 1,0,0);
 
 -- --------------------------------------------------------
 
@@ -215,6 +223,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_media` (
     				  `path2` varchar(150) NOT NULL,
     				  `media_alttext` varchar(250) NOT NULL DEFAULT '',
     				  `published` tinyint(1) NOT NULL DEFAULT '1',
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -223,19 +233,19 @@ CREATE TABLE IF NOT EXISTS `#__bsms_media` (
 --
 
 INSERT  INTO `#__bsms_media` (`id`, `media_text`, `media_image_name`, `media_image_path`, `path2`, `media_alttext`, `published`) VALUES 
-		  (1, 'mp3 compressed audio file', 'mp3', '','speaker24.png', 'mp3 audio file', 1),
-		  (2, 'Video', 'Video File', '','video24.png', 'Video File', 1),
-		  (3, 'm4v', 'Video Podcast', '','podcast-video24.png', 'Video Podcast', 1),
-		  (4, 'Streaming Audio', 'Streaming Audio', '','streamingaudio24.png', 'Streaming Audio', 1),
-		  (5, 'Streaming Video', 'Streaming Video', '','streamingvideo24.png', 'Streaming Video', 1),
-		  (6, 'Real Audio', 'Real Audio', '','realplayer24.png', 'Real Audio', 1),
-		  (7, 'Windows Media Audio', 'Windows Media Audio', '','windows-media24.png', 'Windows Media File', 1),
-		  (8, 'Podcast Audio', 'Podcast Audio', '','podcast-audio24.png', 'Podcast Audio', 1),
-		  (9, 'CD', 'CD', '','cd.png', 'CD', 1),
-		  (10, 'DVD', 'DVD', '','dvd.png', 'DVD', 1), 
-		  (11,'Download','Download', '', 'download.png', 'Download', '1'),
-		  (12,'Article','Article', '', 'textfile24.png', 'Article', '1'),
-		  (13,'You Tube','You Tube','','youtube24.png','You Tube Video', 1);
+		  (1, 'mp3 compressed audio file', 'mp3', '','speaker24.png', 'mp3 audio file', 1,0,0),
+		  (2, 'Video', 'Video File', '','video24.png', 'Video File', 1,0,0),
+		  (3, 'm4v', 'Video Podcast', '','podcast-video24.png', 'Video Podcast', 1,0,0),
+		  (4, 'Streaming Audio', 'Streaming Audio', '','streamingaudio24.png', 'Streaming Audio', 1,0,0),
+		  (5, 'Streaming Video', 'Streaming Video', '','streamingvideo24.png', 'Streaming Video', 1,0,0),
+		  (6, 'Real Audio', 'Real Audio', '','realplayer24.png', 'Real Audio', 1,0,0),
+		  (7, 'Windows Media Audio', 'Windows Media Audio', '','windows-media24.png', 'Windows Media File', 1,0,0),
+		  (8, 'Podcast Audio', 'Podcast Audio', '','podcast-audio24.png', 'Podcast Audio', 1,0,0),
+		  (9, 'CD', 'CD', '','cd.png', 'CD', 1,0,0),
+		  (10, 'DVD', 'DVD', '','dvd.png', 'DVD', 1,0,0), 
+		  (11,'Download','Download', '', 'download.png', 'Download', '1',0,0),
+		  (12,'Article','Article', '', 'textfile24.png', 'Article', '1',0,0),
+		  (13,'You Tube','You Tube','','youtube24.png','You Tube Video', 1,0,0);
 
 -- --------------------------------------------------------
 
@@ -270,6 +280,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
     				  `params` text,
                       `player` int(2) NULL,
                       `popup` int(2) NULL,
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -278,7 +290,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
 --
 
 INSERT INTO `#__bsms_mediafiles` (`id`, `study_id`, `media_image`, `server`, `path`, `special`, `filename`, `size`, `mime_type`, `podcast_id`, `internal_viewer`, `mediacode`, `ordering`, `createdate`, `link_type`, `hits`, `published`, `docMan_id`, `article_id`, `comment`, `virtueMart_id`, `downloads`, `plays`, `params`, `player`, `popup`) VALUES
-			(1, 1, 2, 1, 1, '', 'myfile.mp3', 12332, 1, 1, 0, '', 0, '2009-09-13 00:10:00', 1,'',1,0,0,'',0,0,0,'',1,1);
+			(1, 1, 2, 1, 1, '', 'myfile.mp3', 12332, 1, 1, 0, '', 0, '2009-09-13 00:10:00', 1,'',1,0,0,'',0,0,0,'',1,1,0,0);
 
 -- --------------------------------------------------------
 
@@ -290,6 +302,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
     				  `id` int(11) NOT NULL AUTO_INCREMENT,
     				  `message_type` text NOT NULL,
     				  `published` tinyint(1) NOT NULL DEFAULT '1',
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -298,7 +312,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
 --
 
 INSERT INTO `#__bsms_message_type` (`id`, `message_type`, `published`) VALUES
-			(1, 'Sunday', 1);
+			(1, 'Sunday', 1,0,0);
 
 -- --------------------------------------------------------
 
@@ -311,6 +325,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
     				  `mimetype` varchar(50) DEFAULT NULL,
     				  `mimetext` varchar(50) DEFAULT NULL,
     				  `published` tinyint(1) NOT NULL DEFAULT '1',
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -319,21 +335,21 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
 --
 
 INSERT INTO `#__bsms_mimetype` (`id`, `mimetype`, `mimetext`, `published`) VALUES 
-		  (1,'audio/mpeg3','MP3 Audio',1), 
-		  (2,'audio/x-pn-realaudio','Real Audio',1),
-		  (3,'video/x-m4v','Podcast Video m4v',1),
-		  (4,'application/vnd.rn-realmedia','Real Media rm',1),
-		  (5,'audio/x-ms-wma','Windows Media Audio WMA',1),
-		  (6,'text/html','Text',1),
-		  (7,'audio/x-wav','Windows wav File',1),
-		  (8,'audio/x-pn-realaudio-plugin',' Real audio Plugin.rpm',1),
-		  (9,'audio/x-pn-realaudio','Real Media File .rm',1),
-		  (10,'audio/x-realaudio','Rea Audio File .ra',1),
-		  (11,'audio/x-pn-realaudio','Read Audio File.ram',1),
-		  (12,'video/mpeg',' Mpeg video .mpg',1),
-		  (13,'audio/mpeg','Video .mp2 File',1),
-		  (14,'video/x-msvideo',' Video .avi File',1),
-		  (15,'video/x-flv',' Flash Video FLV',1);
+		  (1,'audio/mpeg3','MP3 Audio',1,0,0), 
+		  (2,'audio/x-pn-realaudio','Real Audio',1,0,0),
+		  (3,'video/x-m4v','Podcast Video m4v',1,0,0),
+		  (4,'application/vnd.rn-realmedia','Real Media rm',1,0,0),
+		  (5,'audio/x-ms-wma','Windows Media Audio WMA',1,0,0),
+		  (6,'text/html','Text',1,0,0),
+		  (7,'audio/x-wav','Windows wav File',1,0,0),
+		  (8,'audio/x-pn-realaudio-plugin',' Real audio Plugin.rpm',1,0,0),
+		  (9,'audio/x-pn-realaudio','Real Media File .rm',1,0,0),
+		  (10,'audio/x-realaudio','Rea Audio File .ra',1,0,0),
+		  (11,'audio/x-pn-realaudio','Read Audio File.ram',1,0,0),
+		  (12,'video/mpeg',' Mpeg video .mpg',1,0,0),
+		  (13,'audio/mpeg','Video .mp2 File',1,0,0),
+		  (14,'video/x-msvideo',' Video .avi File',1,0,0),
+		  (15,'video/x-flv',' Flash Video FLV',1,0,0);
 
 -- --------------------------------------------------------
 
@@ -382,6 +398,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
     				  `episodetitle` int(11) DEFAULT NULL,
     				  `custom` varchar(200) DEFAULT NULL,
     				  `detailstemplateid` int(11) DEFAULT NULL,
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -390,7 +408,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
 --
 
 INSERT INTO `#__bsms_podcast` (`id`, `title`, `website`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`) VALUES 
-		 (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', 'en-us', 'Jim Editor', 'jim@mywebsite.com', 50, 1, NULL, NULL, NULL);
+		 (1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', 'en-us', 'Jim Editor', 'jim@mywebsite.com', 50, 1, NULL, NULL, NULL,0,0);
 
 -- --------------------------------------------------------
 
@@ -423,6 +441,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series` (
     				  `description` text,
     				  `series_thumbnail` varchar(150) DEFAULT NULL,
     				  `published` tinyint(1) NOT NULL DEFAULT '1',
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -431,7 +451,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series` (
 --
 
 INSERT INTO `#__bsms_series` (`id`, `series_text`, `teacher`, `description`, `series_thumbnail`, `published`) VALUES
-			(1, 'Worship Series', NULL, NULL, NULL, 1);
+			(1, 'Worship Series', NULL, NULL, NULL, 1,0,0);
 
 -- --------------------------------------------------------
 
@@ -447,6 +467,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
     				  `server_type` char(5) NOT NULL DEFAULT 'local',
     				  `ftp_username` char(255) NOT NULL,
     				  `ftp_password` char(255) NOT NULL,
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -455,7 +477,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
 --
 
 INSERT INTO `#__bsms_servers` (`id`, `server_name`, `server_path`, `published`, `server_type`, `ftp_username`, `ftp_password`) VALUES
-			(1, 'Your Server Name', 'www.mywebsite.com', 1, 'local', '', '');
+			(1, 'Your Server Name', 'www.mywebsite.com', 1, 'local', '', '',0,0);
 
 -- --------------------------------------------------------
 
@@ -468,6 +490,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_share` (
     				  `name` varchar(250) DEFAULT NULL,
     				  `params` text,
     				  `published` tinyint(1) NOT NULL DEFAULT '1',
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -476,10 +500,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_share` (
 --
 
 INSERT INTO `#__bsms_share` (`id`, `name`, `params`, `published`) VALUES
-			(1, 'FaceBook', '{"mainlink":"http://www.facebook.com/sharer.php?","item1prefix":"u=","item1":200,"item1custom":"","item2prefix":"t=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":8,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"components/com_biblestudy/images/facebook.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":"","alttext":"FaceBook"}', 1),
-			(2, 'Twitter', '{"mainlink":"http://twitter.com/home?","item1prefix":"status=","item1":200,"item1custom":"","item2prefix":"","item2":5,"item2custom":"","item3prefix":"","item3":1,"item3custom":"","item4prefix":"","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"components/com_biblestudy/images/twitter.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":140,"alttext":"Twitter"}', 1),
-			(3, 'Delicious', '{"mainlink":"http://delicious.com/save?","item1prefix":"url=","item1":200,"item1custom":"","item2prefix":"&title=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"components/com_biblestudy/images/delicious.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"Delicious"}', 1),
-			(4, 'MySpace', '{"mainlink":"http://www.myspace.com/index.cfm?","item1prefix":"fuseaction=postto&t=","item1":5,"item1custom":"","item2prefix":"&c=","item2":6,"item2custom":"","item3prefix":"&u=","item3":200,"item3custom":"","item4prefix":"&l=1","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"components/com_biblestudy/images/myspace.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"MySpace"}', 1);
+			(1, 'FaceBook', '{"mainlink":"http://www.facebook.com/sharer.php?","item1prefix":"u=","item1":200,"item1custom":"","item2prefix":"t=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":8,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"components/com_biblestudy/images/facebook.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":"","alttext":"FaceBook"}', 1,0,0),
+			(2, 'Twitter', '{"mainlink":"http://twitter.com/home?","item1prefix":"status=","item1":200,"item1custom":"","item2prefix":"","item2":5,"item2custom":"","item3prefix":"","item3":1,"item3custom":"","item4prefix":"","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"components/com_biblestudy/images/twitter.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":140,"alttext":"Twitter"}', 1,0,0),
+			(3, 'Delicious', '{"mainlink":"http://delicious.com/save?","item1prefix":"url=","item1":200,"item1custom":"","item2prefix":"&title=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"components/com_biblestudy/images/delicious.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"Delicious"}', 1,0,0),
+			(4, 'MySpace', '{"mainlink":"http://www.myspace.com/index.cfm?","item1prefix":"fuseaction=postto&t=","item1":5,"item1custom":"","item2prefix":"&c=","item2":6,"item2custom":"","item3prefix":"&u=","item3":200,"item3custom":"","item4prefix":"&l=1","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"components/com_biblestudy/images/myspace.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"MySpace"}', 1,0,0);
 
 -- --------------------------------------------------------
 
@@ -530,6 +554,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
     				  `thumbwm` int(11) DEFAULT NULL,
     				  `params` text,
     				  `published` tinyint(1) NOT NULL DEFAULT '1',
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -538,7 +564,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
 --
 
 INSERT INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `booknumber`, `chapter_begin`, `verse_begin`, `chapter_end`, `verse_end`, `secondary_reference`, `booknumber2`, `chapter_begin2`, `verse_begin2`, `chapter_end2`, `verse_end2`, `prod_dvd`, `prod_cd`, `server_cd`, `server_dvd`, `image_cd`, `image_dvd`, `studytext2`, `comments`, `hits`, `user_id`, `user_name`, `show_level`, `location_id`, `studytitle`, `studyintro`, `media_hours`, `media_minutes`, `media_seconds`, `messagetype`, `series_id`, `topics_id`, `studytext`, `thumbnailm`, `thumbhm`, `thumbwm`, `params`, `published`) VALUES
-			(1, '2010-03-13 00:10:00', 1, '2010-001', 101, 1, 1, 1, 31, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, 1, 0, NULL, NULL, 0, NULL, 'Sample Study Title', 'Sample text you can use as an introduction to your study', NULL, NULL, NULL, '1', 0, 0, 'This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com', NULL, NULL, NULL, NULL, 1);
+			(1, '2010-03-13 00:10:00', 1, '2010-001', 101, 1, 1, 1, 31, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, 1, 0, NULL, NULL, 0, NULL, 'Sample Study Title', 'Sample text you can use as an introduction to your study', NULL, NULL, NULL, '1', 0, 0, 'This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com', NULL, NULL, NULL, NULL, 1,0,0);
 
 -- --------------------------------------------------------
 
@@ -550,6 +576,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
     				  `id` int(3) NOT NULL AUTO_INCREMENT,
     				  `study_id` int(3) NOT NULL DEFAULT '0',
     				  `topic_id` int(3) NOT NULL DEFAULT '0',
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`),
     				  UNIQUE KEY `id` (`id`),
     				  KEY `id_2` (`id`)
@@ -587,6 +615,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
     				  `catid` int(3) DEFAULT '1',
     				  `list_show` tinyint(1) NOT NULL DEFAULT '1',
     				  `published` tinyint(1) NOT NULL DEFAULT '1',
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -595,7 +625,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
 --
 
 INSERT INTO `#__bsms_teachers` (`id`, `teacher_image`, `teacher_thumbnail`, `teachername`, `title`, `phone`, `email`, `website`, `information`, `image`, `imageh`, `imagew`, `thumb`, `thumbw`, `thumbh`, `short`, `ordering`, `catid`, `list_show`, `published`) VALUES
-			(1, '', '', 'Billy Sunday', 'Pastor', '555-555-5555', 'billy@sunday.com', 'http://billysunday.com', 'William Ashley Sunday was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ', 'components/com_biblestudy/images/billy_sunday11.jpg', '276', '197', 'components/com_biblestudy/images/images.jpg', '101', '141', 'Billy Sunday: 1862-1935', 0, 1, 1, 1);
+			(1, '', '', 'Billy Sunday', 'Pastor', '555-555-5555', 'billy@sunday.com', 'http://billysunday.com', 'William Ashley Sunday was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ', 'components/com_biblestudy/images/billy_sunday11.jpg', '276', '197', 'components/com_biblestudy/images/images.jpg', '101', '141', 'Billy Sunday: 1862-1935', 0, 1, 1, 1,0,0);
 
 -- --------------------------------------------------------
 
@@ -612,6 +642,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
     				  `title` text,
     				  `text` text,
     				  `pdf` text,
+                      `asset_id` int(10),
+                      `access` int(10),
     				  PRIMARY KEY (`id`)
     				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
@@ -620,7 +652,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
 --
 
 INSERT INTO `#__bsms_templates` (`id`, `type`, `tmpl`, `published`, `params`, `title`, `text`, `pdf`) VALUES
-			(1, 'tmplList', '', 1, '{"studieslisttemplateid":"1","detailstemplateid":"1","teachertemplateid":"1","serieslisttemplateid":"1","seriesdetailtemplateid":"1","teacher_id":["-1"],"series_id":["-1"],"booknumber":["-1"],"topic_id":["-1"],"messagetype":["-1"],"locations":["-1"],"show_verses":"0","stylesheet":"","date_format":"2","custom_date_format":"","duration_type":"2","protocol":"http:\/\/","media_player":"0","popuptype":"window","internal_popup":"1","player_width":"400","player_height":"300","embedshare":"TRUE","backcolor":"0x287585","frontcolor":"0xFFFFFF","lightcolor":"0x000000","screencolor":"0x000000","popuptitle":"{{title}}","popupfooter":"{{filename}}","popupmargin":"50","popupbackground":"black","popupimage":"components\/com_biblestudy\/images\/speaker24.png","show_filesize":"1","store_page":"flypage.tpl","useexpert_list":"0","headercode":"","templatecode":"                                   {{teacher}}             {{title}}             {{date}}                                   {{studyintro}}             {{scripture}}                               ","wrapcode":"0","itemslimit":"5","default_order":"DESC","show_page_title":"1","page_title":"Bible Studies","use_headers_list":"1","list_intro":"","intro_show":"1","list_teacher_show":"1","listteachers":"","teacherlink":"1","details_text":"Study Details","show_book_search":"1","use_go_button":"1","booklist":"0","show_teacher_search":"1","show_series_search":"1","show_type_search":"1","show_year_search":"1","show_order_search":"1","show_topic_search":"1","show_locations_search":"1","show_popular":"1","row1col1":"0","r1c1custom":"","r1c1span":"1","linkr1c1":"0","row1col2":"0","r1c2custom":"","r1c2span":"1","linkr1c2":"0","row1col3":"0","r1c3custom":"","r1c3span":"1","linkr1c3":"0","row1col4":"0","r1c4custom":"","linkr1c4":"0","row2col1":"0","r2c1custom":"","r2c1span":"1","linkr2c1":"0","row2col2":"0","r2c2custom":"","r2c2span":"1","linkr2c2":"0","row2col3":"0","r2c3custom":"","r2c3span":"1","linkr2c3":"0","row2col4":"0","r2c4custom":"","linkr2c4":"0","row3col1":"0","r3c1custom":"","r3c1span":"1","linkr3c1":"0","row3col2":"0","r3c2custom":"","r3c2span":"1","linkr3c2":"0","row3col3":"0","r3c3custom":"","r3c3span":"1","linkr3c3":"0","row3col4":"0","r3c4custom":"","linkr3c4":"0","row4col1":"0","r4c1custom":"","r4c1span":"1","linkr4c1":"0","row4col2":"0","r4c2custom":"","r4c2span":"1","linkr4c2":"0","row4col3":"0","r4c3custom":"","r4c3span":"1","linkr4c3":"0","row4col4":"0","r4c4custom":"","linkr4c4":"0","show_print_view":"1","show_teacher_view":"0","show_passage_view":"1","use_headers_view":"1","list_items_view":"0","title_line_1":"1","customtitle1":"","title_line_2":"4","customtitle2":"","view_link":"1","link_text":"Return to Studies List","show_scripture_link":"0","show_comments":"1","link_comments":"0","comment_access":"1","comment_publish":"0","use_captcha":"1","public_key":"","private_key":"","email_comments":"1","recipient":"","subject":"Comments on studies","body":"Comments entered.","useexpert_details":"0","study_detailtemplate":"","teacher_title":"Our Teachers","show_teacher_studies":"1","studies":"","label_teacher":"Latest Messages","useexpert_teacherlist":"0","teacher_headercode":"","teacher_templatecode":"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       ","teacher_wrapcode":"0","useexpert_teacherdetail":"0","teacher_detailtemplate":"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       ","series_title":"Our Series","show_series_title":"1","show_page_image_series":"1","series_show_description":"1","series_characters":"","search_series":"1","series_limit":"5","series_list_order":"ASC","series_order_field":"series_text","serieselement1":"1","seriesislink1":"1","serieselement2":"6","seriesislink2":"1","serieselement3":"0","seriesislink3":"1","serieselement4":"0","seriesislink4":"1","useexpert_serieslist":"0","series_headercode":"","series_templatecode":"","series_wrapcode":"0","series_detail_sort":"studydate","series_detail_order":"DESC","series_detail_limit":"","series_list_return":"1","series_detail_listtype":"0","series_detail_1":"5","series_detail_islink1":"1","series_detail_2":"7","series_detail_islink2":"0","series_detail_3":"10","series_detail_islink3":"0","series_detail_4":"20","series_detail_islink4":"0","useexpert_seriesdetail":"0","series_detailcode":"","tip_title":"Sermon Information","tip_item1_title":"Title","tip_item1":"5","tip_item2_title":"Details","tip_item2":"6","tip_item3_title":"Teacher","tip_item3":"7","tip_item4_title":"Reference","tip_item4":"1","tip_item5_title":"Date","tip_item5":"10","drow1col1":"1","dr1c1custom":"","dr1c1span":"1","dlinkr1c1":"0","drow1col2":"5","dr1c2custom":"","dr1c2span":"1","dlinkr1c2":"0","drow1col3":"0","dr1c3custom":"","dr1c3span":"1","dlinkr1c3":"0","drow1col4":"0","dr1c4custom":"","dlinkr1c4":"0","drow2col1":"0","dr2c1custom":"","dr2c1span":"1","dlinkr2c1":"0","drow2col2":"0","dr2c2custom":"","dr2c2span":"1","dlinkr2c2":"0","drow2col3":"0","dr2c3custom":"","dr2c3span":"1","dlinkr2c3":"0","drow2col4":"0","dr2c4custom":"","dlinkr2c4":"0","drow3col1":"0","dr3c1custom":"","dr3c1span":"1","dlinkr3c1":"0","drow3col2":"0","dr3c2custom":"","dr3c2span":"1","dlinkr3c2":"0","drow3col3":"0","dr3c3custom":"","dr3c3span":"1","dlinkr3c3":"0","drow3col4":"0","dr3c4custom":"","dlinkr3c4":"0","drow4col1":"0","dr4c1custom":"","dr4c1span":"1","dlinkr4c1":"0","drow4col2":"0","dr4c2custom":"","dr4c2span":"1","dlinkr4c2":"0","drow4col3":"0","dr4c3custom":"","dr4c3span":"1","dlinkr4c3":"0","drow4col4":"0","dr4c4custom":"","dlinkr4c4":"0","landing_hide":"0","landing_hidelabel":"Show\/Hide All","headingorder_1":"teachers","headingorder_2":"series","headingorder_3":"books","headingorder_4":"topics","headingorder_5":"locations","headingorder_6":"messagetypes","headingorder_7":"years","showteachers":"1","landingteacherslimit":"","teacherslabel":"Speakers","linkto":"1","showseries":"1","landingserieslimit":"","serieslabel":"Series","series_linkto":"0","showbooks":"1","landingbookslimit":"","bookslabel":"Books","showtopics":"1","landingtopicslimit":"","topicslabel":"Topics","showlocations":"1","landinglocationslimit":"","locationslabel":"Locations","showmessagetypes":"1","landingmessagetypeslimit":"","messagetypeslabel":"Message Types","showyears":"1","landingyearslimit":"","yearslabel":"Years"}', 'Default', 'textfile24.png', 'pdf24.png');
+			(1, 'tmplList', '', 1, '{"studieslisttemplateid":"1","detailstemplateid":"1","teachertemplateid":"1","serieslisttemplateid":"1","seriesdetailtemplateid":"1","teacher_id":["-1"],"series_id":["-1"],"booknumber":["-1"],"topic_id":["-1"],"messagetype":["-1"],"locations":["-1"],"show_verses":"0","stylesheet":"","date_format":"2","custom_date_format":"","duration_type":"2","protocol":"http:\/\/","media_player":"0","popuptype":"window","internal_popup":"1","player_width":"400","player_height":"300","embedshare":"TRUE","backcolor":"0x287585","frontcolor":"0xFFFFFF","lightcolor":"0x000000","screencolor":"0x000000","popuptitle":"{{title}}","popupfooter":"{{filename}}","popupmargin":"50","popupbackground":"black","popupimage":"components\/com_biblestudy\/images\/speaker24.png","show_filesize":"1","store_page":"flypage.tpl","useexpert_list":"0","headercode":"","templatecode":"                                   {{teacher}}             {{title}}             {{date}}                                   {{studyintro}}             {{scripture}}                               ","wrapcode":"0","itemslimit":"5","default_order":"DESC","show_page_title":"1","page_title":"Bible Studies","use_headers_list":"1","list_intro":"","intro_show":"1","list_teacher_show":"1","listteachers":"","teacherlink":"1","details_text":"Study Details","show_book_search":"1","use_go_button":"1","booklist":"0","show_teacher_search":"1","show_series_search":"1","show_type_search":"1","show_year_search":"1","show_order_search":"1","show_topic_search":"1","show_locations_search":"1","show_popular":"1","row1col1":"0","r1c1custom":"","r1c1span":"1","linkr1c1":"0","row1col2":"0","r1c2custom":"","r1c2span":"1","linkr1c2":"0","row1col3":"0","r1c3custom":"","r1c3span":"1","linkr1c3":"0","row1col4":"0","r1c4custom":"","linkr1c4":"0","row2col1":"0","r2c1custom":"","r2c1span":"1","linkr2c1":"0","row2col2":"0","r2c2custom":"","r2c2span":"1","linkr2c2":"0","row2col3":"0","r2c3custom":"","r2c3span":"1","linkr2c3":"0","row2col4":"0","r2c4custom":"","linkr2c4":"0","row3col1":"0","r3c1custom":"","r3c1span":"1","linkr3c1":"0","row3col2":"0","r3c2custom":"","r3c2span":"1","linkr3c2":"0","row3col3":"0","r3c3custom":"","r3c3span":"1","linkr3c3":"0","row3col4":"0","r3c4custom":"","linkr3c4":"0","row4col1":"0","r4c1custom":"","r4c1span":"1","linkr4c1":"0","row4col2":"0","r4c2custom":"","r4c2span":"1","linkr4c2":"0","row4col3":"0","r4c3custom":"","r4c3span":"1","linkr4c3":"0","row4col4":"0","r4c4custom":"","linkr4c4":"0","show_print_view":"1","show_teacher_view":"0","show_passage_view":"1","use_headers_view":"1","list_items_view":"0","title_line_1":"1","customtitle1":"","title_line_2":"4","customtitle2":"","view_link":"1","link_text":"Return to Studies List","show_scripture_link":"0","show_comments":"1","link_comments":"0","comment_access":"1","comment_publish":"0","use_captcha":"1","public_key":"","private_key":"","email_comments":"1","recipient":"","subject":"Comments on studies","body":"Comments entered.","useexpert_details":"0","study_detailtemplate":"","teacher_title":"Our Teachers","show_teacher_studies":"1","studies":"","label_teacher":"Latest Messages","useexpert_teacherlist":"0","teacher_headercode":"","teacher_templatecode":"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       ","teacher_wrapcode":"0","useexpert_teacherdetail":"0","teacher_detailtemplate":"           {{teacher}}     {{title}}     {{teacher}}           {{short}}     {{information}}       ","series_title":"Our Series","show_series_title":"1","show_page_image_series":"1","series_show_description":"1","series_characters":"","search_series":"1","series_limit":"5","series_list_order":"ASC","series_order_field":"series_text","serieselement1":"1","seriesislink1":"1","serieselement2":"6","seriesislink2":"1","serieselement3":"0","seriesislink3":"1","serieselement4":"0","seriesislink4":"1","useexpert_serieslist":"0","series_headercode":"","series_templatecode":"","series_wrapcode":"0","series_detail_sort":"studydate","series_detail_order":"DESC","series_detail_limit":"","series_list_return":"1","series_detail_listtype":"0","series_detail_1":"5","series_detail_islink1":"1","series_detail_2":"7","series_detail_islink2":"0","series_detail_3":"10","series_detail_islink3":"0","series_detail_4":"20","series_detail_islink4":"0","useexpert_seriesdetail":"0","series_detailcode":"","tip_title":"Sermon Information","tip_item1_title":"Title","tip_item1":"5","tip_item2_title":"Details","tip_item2":"6","tip_item3_title":"Teacher","tip_item3":"7","tip_item4_title":"Reference","tip_item4":"1","tip_item5_title":"Date","tip_item5":"10","drow1col1":"1","dr1c1custom":"","dr1c1span":"1","dlinkr1c1":"0","drow1col2":"5","dr1c2custom":"","dr1c2span":"1","dlinkr1c2":"0","drow1col3":"0","dr1c3custom":"","dr1c3span":"1","dlinkr1c3":"0","drow1col4":"0","dr1c4custom":"","dlinkr1c4":"0","drow2col1":"0","dr2c1custom":"","dr2c1span":"1","dlinkr2c1":"0","drow2col2":"0","dr2c2custom":"","dr2c2span":"1","dlinkr2c2":"0","drow2col3":"0","dr2c3custom":"","dr2c3span":"1","dlinkr2c3":"0","drow2col4":"0","dr2c4custom":"","dlinkr2c4":"0","drow3col1":"0","dr3c1custom":"","dr3c1span":"1","dlinkr3c1":"0","drow3col2":"0","dr3c2custom":"","dr3c2span":"1","dlinkr3c2":"0","drow3col3":"0","dr3c3custom":"","dr3c3span":"1","dlinkr3c3":"0","drow3col4":"0","dr3c4custom":"","dlinkr3c4":"0","drow4col1":"0","dr4c1custom":"","dr4c1span":"1","dlinkr4c1":"0","drow4col2":"0","dr4c2custom":"","dr4c2span":"1","dlinkr4c2":"0","drow4col3":"0","dr4c3custom":"","dr4c3span":"1","dlinkr4c3":"0","drow4col4":"0","dr4c4custom":"","dlinkr4c4":"0","landing_hide":"0","landing_hidelabel":"Show\/Hide All","headingorder_1":"teachers","headingorder_2":"series","headingorder_3":"books","headingorder_4":"topics","headingorder_5":"locations","headingorder_6":"messagetypes","headingorder_7":"years","showteachers":"1","landingteacherslimit":"","teacherslabel":"Speakers","linkto":"1","showseries":"1","landingserieslimit":"","serieslabel":"Series","series_linkto":"0","showbooks":"1","landingbookslimit":"","bookslabel":"Books","showtopics":"1","landingtopicslimit":"","topicslabel":"Topics","showlocations":"1","landinglocationslimit":"","locationslabel":"Locations","showmessagetypes":"1","landingmessagetypeslimit":"","messagetypeslabel":"Message Types","showyears":"1","landingyearslimit":"","yearslabel":"Years"}', 'Default', 'textfile24.png', 
+            'pdf24.png',0,0);
 
 -- --------------------------------------------------------
 
@@ -651,6 +684,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic_text` text,
   `published` tinyint(1) NOT NULL DEFAULT '1',
+  `asset_id` int(10),
+  `access` int(10),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=114 ;
 
@@ -659,101 +694,101 @@ CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
 --
 
 INSERT INTO `#__bsms_topics` (`id`, `topic_text`, `published`) VALUES 
-     (1,'JBS_TOP_ABORTION',1) ,
-     (3,'JBS_TOP_ADDICTION',1) ,
-     (4,'JBS_TOP_AFTERLIFE',1) ,
-     (5,'JBS_TOP_APOLOGETICS',1) ,
-     (7,'JBS_TOP_BAPTISM',1) ,
-     (8,'JBS_TOP_BASICS_OF_CHRISTIANITY',1) ,
-     (9,'JBS_TOP_BECOMING_A_CHRISTIAN',1) ,
-     (10,'JBS_TOP_BIBLE',1) ,
-     (37,'JBS_TOP_BLENDED_FAMILY_RELATIONSHIPS',1) ,
-     (12,'JBS_TOP_CHILDREN',1) ,
-     (13,'JBS_TOP_CHRIST',1) ,
-     (14,'JBS_TOP_CHRISTIAN_CHARACTER_FRUITS',1) ,
-     (15,'JBS_TOP_CHRISTIAN_VALUES',1) ,
-     (16,'JBS_TOP_CHRISTMAS_SEASON',1) ,
-     (17,'JBS_TOP_CHURCH',1) ,
-     (18,'JBS_TOP_COMMUNICATION',1) ,
-     (19,'JBS_TOP_COMMUNION_LORDS_SUPPER',1) ,
-     (21,'JBS_TOP_CREATION',1) ,
-     (23,'JBS_TOP_CULTS',1) ,
-     (113,'JBS_TOP_DA_VINCI_CODE',1) ,
-     (24,'JBS_TOP_DEATH',1) ,
-     (26,'JBS_TOP_DESCRIPTIONS_OF_GOD',1) ,
-     (27,'JBS_TOP_DISCIPLES',1) ,
+     (1,'JBS_TOP_ABORTION',1,0,0) ,
+     (3,'JBS_TOP_ADDICTION',1,0,0) ,
+     (4,'JBS_TOP_AFTERLIFE',1,0,0) ,
+     (5,'JBS_TOP_APOLOGETICS',1,0,0) ,
+     (7,'JBS_TOP_BAPTISM',1,0,0) ,
+     (8,'JBS_TOP_BASICS_OF_CHRISTIANITY',1,0,0) ,
+     (9,'JBS_TOP_BECOMING_A_CHRISTIAN',1,0,0) ,
+     (10,'JBS_TOP_BIBLE',1,0,0) ,
+     (37,'JBS_TOP_BLENDED_FAMILY_RELATIONSHIPS',1,0,0) ,
+     (12,'JBS_TOP_CHILDREN',1,0,0) ,
+     (13,'JBS_TOP_CHRIST',1,0,0) ,
+     (14,'JBS_TOP_CHRISTIAN_CHARACTER_FRUITS',1,0,0) ,
+     (15,'JBS_TOP_CHRISTIAN_VALUES',1,0,0) ,
+     (16,'JBS_TOP_CHRISTMAS_SEASON',1,0,0) ,
+     (17,'JBS_TOP_CHURCH',1,0,0) ,
+     (18,'JBS_TOP_COMMUNICATION',1,0,0) ,
+     (19,'JBS_TOP_COMMUNION_LORDS_SUPPER',1,0,0) ,
+     (21,'JBS_TOP_CREATION',1,0,0) ,
+     (23,'JBS_TOP_CULTS',1,0,0) ,
+     (113,'JBS_TOP_DA_VINCI_CODE',1,0,0) ,
+     (24,'JBS_TOP_DEATH',1,0,0) ,
+     (26,'JBS_TOP_DESCRIPTIONS_OF_GOD',1,0,0) ,
+     (27,'JBS_TOP_DISCIPLES',1,0,0) ,
      (28,'JBS_TOP_DISCIPLESHIP',1) ,
-     (30,'JBS_TOP_DIVORCE',1) ,
-     (32,'JBS_TOP_EASTER_SEASON',1) ,
-     (33,'JBS_TOP_EMOTIONS',1) ,
-     (34,'JBS_TOP_ENTERTAINMENT',1) ,
-     (35,'JBS_TOP_EVANGELISM',1) ,
-     (36,'JBS_TOP_FAITH',1) ,
-     (103,'JBS_TOP_FAMILY',1) ,
-     (39,'JBS_TOP_FORGIVING_OTHERS',1) ,
-     (104,'JBS_TOP_FREEDOM',1) ,
-     (41,'JBS_TOP_FRIENDSHIP',1) ,
-     (42,'JBS_TOP_FULFILLMENT_IN_LIFE',1) ,
-     (43,'JBS_TOP_FUND_RAISING_RALLY',1) ,
-     (44,'JBS_TOP_FUNERALS',1) ,
-     (45,'JBS_TOP_GIVING',1) ,
-     (2,'JBS_TOP_GODS_ACTIVITY',1) ,
-     (6,'JBS_TOP_GODS_ATTRIBUTES',1) ,
-     (40,'JBS_TOP_GODS_FORGIVENESS',1) ,
-     (58,'JBS_TOP_GODS_LOVE',1) ,
-     (65,'JBS_TOP_GODS_NATURE',1) ,
-     (46,'JBS_TOP_GODS_WILL',1) ,
-     (47,'JBS_TOP_HARDSHIP_OF_LIFE',1) ,
-     (107,'JBS_TOP_HOLIDAYS',1) ,
-     (48,'JBS_TOP_HOLY_SPIRIT',1) ,
-     (111,'JBS_TOP_HOT_TOPICS',1) ,
-     (11,'JBS_TOP_JESUS_BIRTH',1) ,
-     (22,'JBS_TOP_JESUS_CROSS_FINAL_WEEK',1) ,
-     (29,'JBS_TOP_JESUS_DIVINITY',1) ,
-     (50,'JBS_TOP_JESUS_HUMANITY',1) ,
-     (56,'JBS_TOP_JESUS_LIFE',1) ,
-     (61,'JBS_TOP_JESUS_MIRACLES',1) ,
-     (84,'JBS_TOP_JESUS_RESURRECTION',1) ,
-     (93,'JBS_TOP_JESUS_TEACHING',1) ,
-     (52,'JBS_TOP_KINGDOM_OF_GOD',1) ,
-     (55,'JBS_TOP_LEADERSHIP_ESSENTIALS',1) ,
-     (57,'JBS_TOP_LOVE',1) ,
-     (59,'JBS_TOP_MARRIAGE',1) ,
-     (109,'JBS_TOP_MEN',1) ,
-     (82,'JBS_TOP_MESSIANIC_PROPHECIES',1) ,
-     (62,'JBS_TOP_MISCONCEPTIONS_OF_CHRISTIANITY',1) ,
-     (63,'JBS_TOP_MONEY',1) ,
-     (112,'JBS_TOP_NARNIA',1) ,
-     (66,'JBS_TOP_OUR_NEED_FOR_GOD',1) ,
-     (69,'JBS_TOP_PARABLES',1) ,
-     (70,'JBS_TOP_PARANORMAL',1) ,
-     (71,'JBS_TOP_PARENTING',1) ,
-     (73,'JBS_TOP_POVERTY',1) ,
-     (74,'JBS_TOP_PRAYER',1) ,
-     (76,'JBS_TOP_PROMINENT_NT_MEN',1) ,
-     (77,'JBS_TOP_PROMINENT_NT_WOMEN',1) ,
-     (78,'JBS_TOP_PROMINENT_OT_MEN',1) ,
-     (79,'JBS_TOP_PROMINENT_OT_WOMEN',1) ,
-     (83,'JBS_TOP_RACISM',1) ,
-     (85,'JBS_TOP_SECOND_COMING',1) ,
-     (86,'JBS_TOP_SEXUALITY',1) ,
-     (87,'JBS_TOP_SIN',1) ,
-     (88,'JBS_TOP_SINGLENESS',1) ,
-     (89,'JBS_TOP_SMALL_GROUPS',1) ,
-     (108,'JBS_TOP_SPECIAL_SERVICES',1) ,
-     (90,'JBS_TOP_SPIRITUAL_DISCIPLINES',1) ,
-     (91,'JBS_TOP_SPIRITUAL_GIFTS',1) ,
-     (105,'JBS_TOP_STEWARDSHIP',1) ,
-     (92,'JBS_TOP_SUPERNATURAL',1) ,
-     (94,'JBS_TOP_TEMPTATION',1) ,
-     (95,'JBS_TOP_TEN_COMMANDMENTS',1) ,
-     (97,'JBS_TOP_TRUTH',1) ,
-     (98,'JBS_TOP_TWELVE_APOSTLES',1) ,
-     (100,'JBS_TOP_WEDDINGS',1) ,
-     (110,'JBS_TOP_WOMEN',1) ,
-     (101,'JBS_TOP_WORKPLACE_ISSUES',1) ,
-     (102,'JBS_TOP_WORLD_RELIGIONS',1) ,
-     (106,'JBS_TOP_WORSHIP',1);
+     (30,'JBS_TOP_DIVORCE',1,0,0) ,
+     (32,'JBS_TOP_EASTER_SEASON',1,0,0) ,
+     (33,'JBS_TOP_EMOTIONS',1,0,0) ,
+     (34,'JBS_TOP_ENTERTAINMENT',1,0,0) ,
+     (35,'JBS_TOP_EVANGELISM',1,0,0) ,
+     (36,'JBS_TOP_FAITH',1,0,0) ,
+     (103,'JBS_TOP_FAMILY',1,0,0) ,
+     (39,'JBS_TOP_FORGIVING_OTHERS',1,0,0) ,
+     (104,'JBS_TOP_FREEDOM',1,0,0) ,
+     (41,'JBS_TOP_FRIENDSHIP',1,0,0) ,
+     (42,'JBS_TOP_FULFILLMENT_IN_LIFE',1,0,0) ,
+     (43,'JBS_TOP_FUND_RAISING_RALLY',1,0,0) ,
+     (44,'JBS_TOP_FUNERALS',1,0,0) ,
+     (45,'JBS_TOP_GIVING',1,0,0) ,
+     (2,'JBS_TOP_GODS_ACTIVITY',1,0,0) ,
+     (6,'JBS_TOP_GODS_ATTRIBUTES',1,0,0) ,
+     (40,'JBS_TOP_GODS_FORGIVENESS',1,0,0) ,
+     (58,'JBS_TOP_GODS_LOVE',1,0,0) ,
+     (65,'JBS_TOP_GODS_NATURE',1,0,0) ,
+     (46,'JBS_TOP_GODS_WILL',1,0,0) ,
+     (47,'JBS_TOP_HARDSHIP_OF_LIFE',1,0,0) ,
+     (107,'JBS_TOP_HOLIDAYS',1,0,0) ,
+     (48,'JBS_TOP_HOLY_SPIRIT',1,0,0) ,
+     (111,'JBS_TOP_HOT_TOPICS',1,0,0) ,
+     (11,'JBS_TOP_JESUS_BIRTH',1,0,0) ,
+     (22,'JBS_TOP_JESUS_CROSS_FINAL_WEEK',1,0,0) ,
+     (29,'JBS_TOP_JESUS_DIVINITY',1,0,0) ,
+     (50,'JBS_TOP_JESUS_HUMANITY',1,0,0) ,
+     (56,'JBS_TOP_JESUS_LIFE',1,0,0) ,
+     (61,'JBS_TOP_JESUS_MIRACLES',1,0,0) ,
+     (84,'JBS_TOP_JESUS_RESURRECTION',1,0,0) ,
+     (93,'JBS_TOP_JESUS_TEACHING',1,0,0) ,
+     (52,'JBS_TOP_KINGDOM_OF_GOD',1,0,0) ,
+     (55,'JBS_TOP_LEADERSHIP_ESSENTIALS',1,0,0) ,
+     (57,'JBS_TOP_LOVE',1,0,0) ,
+     (59,'JBS_TOP_MARRIAGE',1,0,0) ,
+     (109,'JBS_TOP_MEN',1,0,0) ,
+     (82,'JBS_TOP_MESSIANIC_PROPHECIES',1,0,0) ,
+     (62,'JBS_TOP_MISCONCEPTIONS_OF_CHRISTIANITY',1,0,0) ,
+     (63,'JBS_TOP_MONEY',1,0,0) ,
+     (112,'JBS_TOP_NARNIA',1,0,0) ,
+     (66,'JBS_TOP_OUR_NEED_FOR_GOD',1,0,0) ,
+     (69,'JBS_TOP_PARABLES',1,0,0) ,
+     (70,'JBS_TOP_PARANORMAL',1,0,0) ,
+     (71,'JBS_TOP_PARENTING',1,0,0) ,
+     (73,'JBS_TOP_POVERTY',1,0,0) ,
+     (74,'JBS_TOP_PRAYER',1,0,0) ,
+     (76,'JBS_TOP_PROMINENT_NT_MEN',1,0,0) ,
+     (77,'JBS_TOP_PROMINENT_NT_WOMEN',1,0,0) ,
+     (78,'JBS_TOP_PROMINENT_OT_MEN',1,0,0) ,
+     (79,'JBS_TOP_PROMINENT_OT_WOMEN',1,0,0) ,
+     (83,'JBS_TOP_RACISM',1,0,0) ,
+     (85,'JBS_TOP_SECOND_COMING',1,0,0) ,
+     (86,'JBS_TOP_SEXUALITY',1,0,0) ,
+     (87,'JBS_TOP_SIN',1,0,0) ,
+     (88,'JBS_TOP_SINGLENESS',1,0,0) ,
+     (89,'JBS_TOP_SMALL_GROUPS',1,0,0) ,
+     (108,'JBS_TOP_SPECIAL_SERVICES',1,0,0) ,
+     (90,'JBS_TOP_SPIRITUAL_DISCIPLINES',1,0,0) ,
+     (91,'JBS_TOP_SPIRITUAL_GIFTS',1,0,0) ,
+     (105,'JBS_TOP_STEWARDSHIP',1,0,0) ,
+     (92,'JBS_TOP_SUPERNATURAL',1,0,0) ,
+     (94,'JBS_TOP_TEMPTATION',1,0,0) ,
+     (95,'JBS_TOP_TEN_COMMANDMENTS',1,0,0) ,
+     (97,'JBS_TOP_TRUTH',1,0,0) ,
+     (98,'JBS_TOP_TWELVE_APOSTLES',1,0,0) ,
+     (100,'JBS_TOP_WEDDINGS',1,0,0) ,
+     (110,'JBS_TOP_WOMEN',1,0,0) ,
+     (101,'JBS_TOP_WORKPLACE_ISSUES',1,0,0) ,
+     (102,'JBS_TOP_WORLD_RELIGIONS',1,0,0) ,
+     (106,'JBS_TOP_WORSHIP',1,0,0);
 
 -- --------------------------------------------------------
 
@@ -768,6 +803,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_version` (
       `installdate` date NOT NULL,
       `build` varchar(20) NOT NULL,
       `versionname` varchar(40) DEFAULT NULL,
+      `asset_id` int(10),
+      `access` int(10),
       PRIMARY KEY (`id`)
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
@@ -776,7 +813,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_version` (
 --
 
 INSERT INTO `#__bsms_version` (`id`, `version`, `versiondate`, `installdate`, `build`, `versionname`) VALUES
-		(1, '7.0.0', '2011-02-15', '2011-02-12', '700', '1kings');
+		(1, '7.0.0', '2011-02-15', '2011-02-12', '700', '1kings',0,0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
