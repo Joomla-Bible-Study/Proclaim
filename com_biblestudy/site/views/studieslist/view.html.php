@@ -18,10 +18,7 @@ class biblestudyViewstudieslist extends JView {
      * */
     function display($tpl = null) {
 
-//attempt to change mysql for error in large select
-$db = JFactory::getDBO();
-$db->setQuery('SET SQL_BIG_SELECTS=1');
-$db->query();
+
         $this->state = $this->get('State');
         $items = $this->get('Items');
         $this->pagination = $this->get('Pagination');

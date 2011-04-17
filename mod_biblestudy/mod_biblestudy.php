@@ -15,7 +15,11 @@ require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.ph
 	$admin_params = new JParameter($admin[0]->params);
 	$items = modBiblestudyHelper::getLatest($params);
 
-
+//attempt to change mysql for error in large select
+        $db = JFactory::getDBO();
+        $db->setQuery('SET SQL_BIG_SELECTS=1');
+        $db->query();
+        
 //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups	= $user->getAuthorisedViewLevels(); 
