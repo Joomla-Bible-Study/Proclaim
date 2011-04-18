@@ -385,7 +385,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
 
                     $playercode =
                     "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=0&view=popup&Itemid=".$Itemid.
-                    "&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
+                    "&t=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
                     $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' border='0' width='".$width.
                     "' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
                 break;
@@ -415,7 +415,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
 
                     $playercode =
                     "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&Itemid=".$Itemid.
-                    "&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
+                    "&t=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
                     $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width.
                     "' title='".$mimetype." ".$duration." ".$filesize."' border='0' alt='".$src."'></a>";
                 break;
@@ -432,7 +432,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
             {
                 case 1: //This goes to the popup view
                	$playercode =
-                "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=3&template=".$template.
+                "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=3&t=".$template.
                 "&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".$player->playerheight."'); return false\"\">
                 <img src='".$src."' height='".$height."' width='".$width."' border='0' title='".$mimetype." ".$duration." ".$filesize.
                 "' alt='".$src."'></a>";
@@ -476,7 +476,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
             
                 case 1:
                 $playercode =
-                "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=7&template=".$template.
+                "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=7&t=".$template.
                 "&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".$player->playerheight."'); return false\"\">
                 <img src='".$src."' border='0' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize.
                 "' alt='".$src."'></a>";

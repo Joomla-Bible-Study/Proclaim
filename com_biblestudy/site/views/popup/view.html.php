@@ -18,7 +18,7 @@
             JRequest::setVar('tmpl', 'component');
             $mediaid  = JRequest::getInt('mediaid','','get');
 			$Itemid = JRequest::getInt('Itemid','1','get');
-            $templateid = JRequest::getInt('template','1','get'); 
+            $templateid = JRequest::getInt('t','1','get'); 
             $close = JRequest::getInt('close','0','get');
             $player = JRequest::getInt('player','1','get');
             
