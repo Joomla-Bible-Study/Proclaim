@@ -24,8 +24,11 @@
     <?php echo JText::_('JBS_EI_IMPORT_FROM_FOLDER');?>
     </td><td>
     <input type="text" id="install_directory" name="install_directory" class="input_box" size="70" value="<?php echo $this->tmp_dest .DS; ?>" />
-			<input type="submit" value="<?php echo JText::_( 'JBS_EI_SUBMIT' ); ?>" name="submit"  />
+			
     </td></tr>
+    <tr><td><td><td>
+    <input type="submit" value="<?php echo JText::_( 'JBS_EI_SUBMIT' ); ?>" name="submit"  />
+    </td></td><td></tr>
     <tr><td><td><td><?php echo JText::_('JBS_EI_UPLOAD_MAX').': '.ini_get('upload_max_filesize');?><br />
     <?php echo JText::_('JBS_EI_MAX_EXECUTION_TIME').': '.ini_get('max_execution_time');?>
     </td></td><td></tr>
