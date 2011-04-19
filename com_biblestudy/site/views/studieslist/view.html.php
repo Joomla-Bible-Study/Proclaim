@@ -20,7 +20,8 @@ class biblestudyViewstudieslist extends JView {
 
 
         $this->state = $this->get('State');
-        $items = $this->get('Items');
+      //  $items = $this->get('Items');
+        $items = $this->get('Data');
         $this->pagination = $this->get('Pagination');
 
         //Load the Admin settings and params from the template

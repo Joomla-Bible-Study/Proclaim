@@ -22,7 +22,8 @@ try {
 
 }
 
-class biblestudyModelstudieslist extends modelClass {
+//class biblestudyModelstudieslist extends modelClass {
+    class biblestudyModelstudieslist extends JModel {
 
 	var $_total = null;
 	var $_pagination = null;
