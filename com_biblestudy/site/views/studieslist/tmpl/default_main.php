@@ -123,7 +123,7 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
  ?>
  </tbody></table>
 <div class="listingfooter" >
-	<?php
+	<?php  
       echo $this->pagination->getPagesLinks();
 
 	  ?>
