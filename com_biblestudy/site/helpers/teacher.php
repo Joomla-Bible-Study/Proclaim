@@ -268,14 +268,19 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params)
 }
 
 function getTeacherStudiesExp($id, $params, $admin_params, $template)
-{
-    $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
-    include_once($path1.'listing.php');
-    $path2 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'models'.DS;
-    include_once($path2.'studieslist.php');
+{ 
     
+    $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+    
+    include_once($path1.'listing.php');
+    
+    $path2 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'models'.DS;
+   
+  //  include_once($path2.'studieslist.php');
+   //  print_r($params);
 	$limit = '';
 	$nolimit = JRequest::getVar('nolimit', 'int', 0);
+    
 	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
 	if ($nolimit == 1) {$limit = '';}
 	$db	= & JFactory::getDBO();
@@ -283,22 +288,7 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
 	$db->setQuery($query);
 	$allrows = $db->loadObjectList();
 	$rows = $db->getAffectedRows();
-    /*
-	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
-		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, #__bsms_series.series_thumbnail, #__bsms_message_type.id AS mid,'
-		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-		. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_locations.id AS lid, #__bsms_locations.location_text'
-		. ' FROM #__bsms_studies'
-		. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-		. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-		. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-		. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-		. '	LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
-		. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
-		. ' where #__bsms_teachers.id = ' .$id;
-	*/
-  //  $user =& JFactory::getUser();
-//	$userid = $userinfo->get('gid');
+    
 	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 	  . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
 	  . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
@@ -316,14 +306,29 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
 	  . $limit;
 	
 	$db->setQuery($query);
-	$results = $db->loadObjectList();
+	$items = $db->loadObjectList();
     
-    //Make sure we unset the rows the user isn't allowed to see
-    $admin = new JBSAdmin();
-    $result = $admin->showRows($results);
-	$numrows = $db->getAffectedRows(); 
+     //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+   
+  
+        $user = JFactory::getUser();
+        $groups	= $user->getAuthorisedViewLevels(); 
+        $count = count($items);
+        
+        for ($i = 0; $i < $count; $i++)
+        {
+            
+            if ($items[$i]->access > 1)
+            {
+               if (!in_array($items[$i]->access,$groups))
+               {
+                    unset($items[$i]); 
+               } 
+	        }
+        }
+        
 	$studieslimit = $params->get('studies',10);
-	//dump($studieslimit, 'numrows: ');
+
 	$studies = '';
 	
 	  switch ($params->get('wrapcode')) {
@@ -341,15 +346,15 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
       }
 	
 	$params->get('headercode');
-	$i = 0;
-	foreach ($result AS $row)
-	{
-	    if ($i > $studieslimit) 
+	$j = 0;
+	foreach ($items AS $row)
+	{ 
+	    if ($j > $studieslimit) 
 	    {
 	       	break;
 	    }
-		$studies .= getListingExp($row, $params, $params, $params->get('studieslisttemplateid'));	
-	    $i++;
+		$studies .= getListingExp($row, $params, $admin_params, $params->get('studieslisttemplateid'));	
+	    $j++;
 	}
 	
 	  switch ($params->get('wrapcode')) {

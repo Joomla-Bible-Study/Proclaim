@@ -192,7 +192,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                                     <tr class="row<?php echo $i % 2; ?>">
                                         <td align="center">
                                             <a href="<?php echo JRoute::_("index.php?option=com_biblestudy&task=mediafilesedit.edit&id=".(int)$item->id); ?>">
-                                                <?php echo $this->escape($item->filename); ?>
+                                                <?php echo ($this->escape($item->filename) ?  $this->escape($item->filename) : 'ID: '.$this->escape($item->id)); ?>
                                             </a>
                                         </td>
                                         <td align="center">

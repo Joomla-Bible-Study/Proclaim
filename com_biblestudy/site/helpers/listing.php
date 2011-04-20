@@ -530,7 +530,7 @@ return $listing;
 		   return $column;
 		}
 function getListingExp($row, $params, $admin_params, $template)
-{
+{ 
 	$Media = new jbsMedia();
     $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');

@@ -67,8 +67,27 @@ class biblestudyViewseriesdetail extends JView
        
 		$db->setQuery( $query );
 		$results = $db->loadObjectList();
-        $adminrows = new JBSAdmin();
-        $studies = $adminrows->showRows($results);
+        $items2 = $results;
+         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user = JFactory::getUser();
+        $groups	= $user->getAuthorisedViewLevels(); 
+        $count = count($items);
+        
+        for ($i = 0; $i < $count; $i++)
+        {
+            
+            if ($items2[$i]->access > 1)
+            {
+               if (!in_array($items2[$i]->access,$groups))
+               {
+                    unset($items2[$i]); 
+               } 
+	        }
+        }
+        $studies = $items2;
+        
+   //     $adminrows = new JBSAdmin();
+   //     $studies = $adminrows->showRows($results);
         JRequest::setVar('returnid',$items->id,'get',true);
 		//Passage link to BibleGateway
 		$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');

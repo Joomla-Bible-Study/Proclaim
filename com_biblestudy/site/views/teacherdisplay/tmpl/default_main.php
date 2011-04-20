@@ -85,11 +85,11 @@ switch ($this->params->get('show_teacher_studies'))
 <td class="bsm_titlescripture"> <?php echo JText::_('JBS_CMN_SCRIPTURE');?></td>
 <td class="bsm_titledate"> <?php echo JText::_('JBS_CMN_STUDY_DATE');?></td>
 </tr>
-<?php foreach ($this->studies as $study) { ?>
+<?php foreach ($this->items as $study) {?>
  <tr>
   <td class="bsm_studylink"> <a href="index.php?option=com_biblestudy&view=studydetails&id=<?php echo $study->id.'&t='.$studieslisttemplateid;?>"><?php echo $study->studytitle; ?></a></td>
-  <td class="bsm_scripture"> <?php if ($study->bookname) {echo $study->bookname.' '.$study->chapter_begin;}?></td>
-  <td class="bsm_date"> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC') , '$offset'); echo $date;?></td>
+  <td class="bsm_scripture"> <?php if ($study->bookname) {echo JText::_($study->bookname).' '.$study->chapter_begin;}?></td>
+  <td class="bsm_date"> <?php $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC')); echo $date;?></td>
  </tr>
 <?php } // end of foreach ?>
 
@@ -106,7 +106,7 @@ switch ($this->params->get('show_teacher_studies'))
 	$class1 = 'bsodd';
  	$class2 = 'bseven';
  	$oddeven = $class1;
-	 foreach ($this->studies as $row) { //Run through each row of the data result from the model
+	 foreach ($this->items as $row) { //Run through each row of the data result from the model
 		if($oddeven == $class1){ //Alternate the color background
 		$oddeven = $class2;
 		} else {
@@ -119,7 +119,8 @@ switch ($this->params->get('show_teacher_studies'))
 	break;
 	
 	case 3:
-	$studies = getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);
+    
+	$studies = getTeacherStudiesExp($teacher->id, $this->params, $admin_params, $this->template); 
 	echo $studies;
 	break;
 }

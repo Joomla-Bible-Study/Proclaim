@@ -274,9 +274,24 @@ function getSeriesstudies($id, $params, $admin_params, $template)
         $db->setQuery($query);
     	$results = $db->loadObjectList();
     //	$numrows = $db->getAffectedRows();
-    
-        $admin = new JBSAdmin();
-        $result = $admin->showRows($results);
+        $items = $results;
+         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user = JFactory::getUser();
+        $groups	= $user->getAuthorisedViewLevels(); 
+        $count = count($items);
+        
+        for ($i = 0; $i < $count; $i++)
+        {
+            
+            if ($items[$i]->access > 1)
+            {
+               if (!in_array($items[$i]->access,$groups))
+               {
+                    unset($items[$i]); 
+               } 
+	        }
+        }
+        $result = $items;
         $numrows = count($result);
         
     
@@ -505,7 +520,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
     $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
     include_once($path1.'listing.php');
     $path2 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'models'.DS;
-    include_once($path2.'studieslist.php');
+  //  include_once($path2.'studieslist.php');
     
 	$limit = '';
 	$nolimit = JRequest::getVar('nolimit', 'int', 0);

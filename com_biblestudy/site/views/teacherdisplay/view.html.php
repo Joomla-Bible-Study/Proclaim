@@ -39,7 +39,7 @@ class biblestudyViewteacherdisplay extends JView
         JRequest::setVar('t', $t, 'get');
         $template = $this->get('template');
         $params = new JParameter($template[0]->params);
-        
+       
 		
 		$url = $params->get('stylesheet');
 		if ($url) {$document->addStyleSheet($url);}
@@ -78,9 +78,28 @@ class biblestudyViewteacherdisplay extends JView
 '.$limit;
 		$database->setQuery( $query );
 		$results = $database->loadObjectList();
-    //Make sure we unset the rows the user isn't allowed to see
-    $admin = new JBSAdmin();
-    $studies = $admin->showRows($results);
+        
+   //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+   $items = $results;
+  
+        $user = JFactory::getUser();
+        $groups	= $user->getAuthorisedViewLevels(); 
+        $count = count($items);
+        
+        for ($i = 0; $i < $count; $i++)
+        {
+            
+            if ($items[$i]->access > 1)
+            {
+               if (!in_array($items[$i]->access,$groups))
+               {
+                    unset($items[$i]); 
+               } 
+	        }
+        }
+        $this->items = $items;
+        
+    
 		if($this->getLayout() == 'pagebreak') {
 			$this->_displayPagebreak($tpl);
 			return;
@@ -88,7 +107,7 @@ class biblestudyViewteacherdisplay extends JView
 		$print = JRequest::getBool('print');
 		// build the html select list for ordering
 		
-		$this->assignRef('studies', $studies);
+	//	$this->assignRef('studies', $studies);
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);
 		$this->assignRef('template', $template);

@@ -185,8 +185,7 @@ JHtml::_('behavior.formvalidation');
                             <tr>
                                 <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
                                 <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-                                <th align="center"><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></th>
-                                <th align="center"><?php echo JText::_('JBS_CMN_TEACHER'); ?></th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -197,14 +196,13 @@ JHtml::_('behavior.formvalidation');
                                     <tr class="row<?php echo $i % 2; ?>">
                                         <td align="center">
                                             <a href="<?php echo JRoute::_("index.php?option=com_biblestudy&task=mediafile.edit&id=".(int)$item->id); ?>">
-                                                <?php echo $this->escape($item->filename); ?>
+                                                <?php echo ($this->escape($item->filename) ?  $this->escape($item->filename) : 'ID: '.$this->escape($item->id)); ?>
                                             </a>
                                         </td>
                                         <td align="center">
                                             <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                                         </td>
-                                        <td>???</td>
-                                        <td>???</td>
+                                        
                                     </tr>
                     <?php
                                     endforeach;

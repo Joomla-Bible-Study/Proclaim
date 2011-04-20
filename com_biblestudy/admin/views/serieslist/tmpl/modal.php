@@ -30,7 +30,7 @@ $function = JRequest::getVar('function', 'jSelectStudy');
 				<?php echo $row->id; ?>
 			</td>
 			
-			 <td><a class="pointer" onclick="if (window.parent) window.parent.<?php echo $function;?>('<?php echo $row->id; ?>', '<?php echo $row->id; ?>');">
+			 <td><a class="pointer" onclick="if (window.parent) window.parent.<?php echo $function;?>('<?php echo $row->id; ?>', '<?php echo $row->series_text; ?>');">
 		<?php echo $row->series_text; ?></a></td>
 
 		</tr>
