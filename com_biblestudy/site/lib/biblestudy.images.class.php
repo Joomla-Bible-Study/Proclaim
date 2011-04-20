@@ -78,15 +78,15 @@ class jbsImages
 
 	function getMediaImageFolder()
 	{
-		$admin_params = $this->adminSettings();
-		if ($admin_params->get('media_imagefolder') == '- Use Default -' || !$admin_params->get('media_imagefolder'))    // santon 2011-04-08 no more media_imagefolder item
-		{
+//		$admin_params = $this->adminSettings();
+//		if ($admin_params->get('media_imagefolder') == '- Use Default -' || !$admin_params->get('media_imagefolder'))    // santon 2011-04-08 no more media_imagefolder item
+//		{
 			$mediaimagefolder = 'components/com_biblestudy/images';
-		}
-		else
-		{
-			$mediaimagefolder = 'images/'. $admin_params->get('media_imagefolder');
-		}
+//		}
+//		else
+//		{
+//			$mediaimagefolder = 'images/'. $admin_params->get('media_imagefolder');
+//		}
 //		$mediaimagefolder = ($admin_params->get('media_imagefolder') ? 'images' .DS. $admin_params->get('media_imagefolder') : 'components/com_biblestudy/images' );
 
 		return $mediaimagefolder;
@@ -94,30 +94,30 @@ class jbsImages
 	
 	function getSeriesImageFolder()
 	{
-		$admin_params = $this->adminSettings();
-		if ($admin_params->get('series_imagefolder') == '- Use Default -' || !$admin_params->get('series_imagefolder'))      // santon 2011-04-08 no more series_imagefolder item
-		{
+//		$admin_params = $this->adminSettings();
+//		if ($admin_params->get('series_imagefolder') == '- Use Default -' || !$admin_params->get('series_imagefolder'))      // santon 2011-04-08 no more series_imagefolder item
+//		{
 			$seriesimagefolder = 'images/stories';
-		}
-		else
-		{
-			$seriesimagefolder = 'images/'. $admin_params->get('series_imagefolder');
-		}
+//		}
+//		else
+//		{
+//			$seriesimagefolder = 'images/'. $admin_params->get('series_imagefolder');
+//		}
 	//	$seriesimagefolder = ($admin_params->get('series_imagefolder') ? 'images' .DS. $admin_params->get('series_imagefolder') : 'images/stories' );
 		return $seriesimagefolder;
 	}
 	
 	function getStudiesImageFolder()
 	{
-		$admin_params = $this->adminSettings();
-			if ($admin_params->get('study_images') == '- Use Default -' || !$admin_params->get('study_images'))      // santon 2011-04-08 no more study_image item
-		{
+//		$admin_params = $this->adminSettings();
+//			if ($admin_params->get('study_images') == '- Use Default -' || !$admin_params->get('study_images'))      // santon 2011-04-08 no more study_image item
+//		{
 			$studiesimagefolder = 'images/stories';
-		}
-		else
-		{
-			$studiesimagefolder = 'images/'. $admin_params->get('study_images');
-		}
+//		}
+//		else
+//		{
+//			$studiesimagefolder = 'images/'. $admin_params->get('study_images');
+//		}
 	//	$studiesimagefolder = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
 		//$studiesimagefolder = ($admin_params->get('study_images') ? 'images/stories' : 'images' .DS. $admin_params->get('study_images'));
 		return $studiesimagefolder;
@@ -125,15 +125,15 @@ class jbsImages
 	
 	function getTeacherImageFolder()
 	{
-		$admin_params = $this->adminSettings();
-			if ($admin_params->get('teachers_imagefolder') == '- Use Default -' || !$admin_params->get('teachers_imagefolder'))   // santon 2011-04-08 no more teachers_imagefolder item
-		{
+//		$admin_params = $this->adminSettings();
+//			if ($admin_params->get('teachers_imagefolder') == '- Use Default -' || !$admin_params->get('teachers_imagefolder'))   // santon 2011-04-08 no more teachers_imagefolder item
+//		{
 			$teacherimagefolder = 'images/stories';
-		}
-		else
-		{
-			$teacherimagefolder = 'images/'. $admin_params->get('teachers_imagefolder');
-		}
+//		}
+//		else
+//		{
+//			$teacherimagefolder = 'images/'. $admin_params->get('teachers_imagefolder');
+//		}
 //		$teacherimagefolder = ($admin_params->get('teacher_imagefolder') ? 'images' .DS. $admin_params->get('teacher_imagefolder') : 'images/stories');
 		return $teacherimagefolder;
 	}

@@ -30,10 +30,10 @@ if (!$row->id) {return FALSE;}
 	$admin = $database->loadObjectList();
 
 
-	$d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');
+	$d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');  // santon: $admin[0]->download is not available; correct to $admin[0]->params->default_download_image
 
 	$images = new jbsImages();
- 	$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);
+ 	$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);  // santon: $admin[0]->download is not available; correct to $admin[0]->params->default_download_image
 
     $download_image = $download_tmp->path;
     

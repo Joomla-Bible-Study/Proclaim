@@ -27,7 +27,7 @@ class jbsMedia
 
         //Here we get the administration row from the comnponent, and determine the download image to use
         $admin = $this->getAdmin();
-        $d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');
+        $d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');  // santon: $admin[0]->download is not available; correct to $admin[0]->params->default_download_image
 		$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);
         $download_image = $download_tmp->path;
         $compat_mode = $admin_params->get('compat_mode');

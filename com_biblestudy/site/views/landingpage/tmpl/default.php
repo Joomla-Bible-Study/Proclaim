@@ -18,7 +18,8 @@ $document->addStyleSheet($stylesheet);
 $params = $this->params;
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'image.php');
-$d_path1 = ($this->admin_params->get('media_imagefolder') ? 'images/'.$this->admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
+//$d_path1 = ($this->admin_params->get('media_imagefolder') ? 'images/'.$this->admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
+$d_path1 = 'components/com_biblestudy/images';
 
 
 $listingcall = JView::loadHelper('listing');
@@ -125,7 +126,7 @@ for ($i=1;$i<=7;$i++) {
   if ($params->get('landing'.$showIt.'limit'))
   {
 	$images = new jbsImages();
-	$showhide_tmp = $images->getShowHide($this->admin[0]->showhide);
+	$showhide_tmp = $images->getShowHide($this->admin[0]->showhide);  // santon: $admin[0]->showhide is not available; correct to $admin[0]->params->default_showHide_image
 
 	$showhideall = "      <div id='showhide'>";
 

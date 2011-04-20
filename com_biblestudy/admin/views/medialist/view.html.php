@@ -19,9 +19,10 @@ class biblestudyViewmedialist extends JView {
 
     function display($tpl = null) {
         
-        $admin = $this->get('Admin');
-		$admin_params = new JParameter($admin[0]->params);
-		$directory = ($admin_params->get('media_imagefolder') != '' ? '/images/'.$admin_params->get('media_imagefolder') : '/components/com_biblestudy/images');
+//        $admin = $this->get('Admin');
+//		$admin_params = new JParameter($admin[0]->params);
+//		$directory = ($admin_params->get('media_imagefolder') != '' ? '/images/'.$admin_params->get('media_imagefolder') : '/components/com_biblestudy/images'); // santon 2011-04-20 no more available
+		$directory = '/components/com_biblestudy/images';
         $this->assignRef('directory', $directory);
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
