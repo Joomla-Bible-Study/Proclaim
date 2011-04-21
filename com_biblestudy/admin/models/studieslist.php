@@ -458,14 +458,17 @@ class biblestudyModelstudieslist extends modelClass {
         return $year;
     }
     
-    public function getPlays() {
+    public function getPlays($id) {
         $db = $this->getDBO();
         $query = $db->getQuery(true);
         
         $query->select('SUM(plays) AS totalPlays');
         $query->from('#__bsms_studies');
         $query->group('study_id');
-        $query->where('study_id = ');
+        $query->where('study_id = '.$id);
+        $db->setQuery($query->__toString());
+        $plays = $db->loadResult();
+        return $plays;
         
     }
     
