@@ -80,15 +80,7 @@ class biblestudyModelstudieslist extends modelClass {
         return $result[0]->totalDownloads;
     }
 
-    function getPlays($id) {
-        $query = ' SELECT SUM(plays) AS totalPlays FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
-        $result = $this->_getList($query);
-        if (!$result) {
-            $result = '0';
-            return $result;
-        }
-        return $result[0]->totalPlays;
-    }
+   
 
     /**
      * Retrieves the data
@@ -369,7 +361,7 @@ class biblestudyModelstudieslist extends modelClass {
         $query->from('#__bsms_books AS book');
         $query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
         $query->group('book.id');
-        $query->order('book.bookname');
+        $query->order('book.booknumber');
 
         $db->setQuery($query->__toString());
         $books = getTranslated($db->loadObjectList());
@@ -464,6 +456,17 @@ class biblestudyModelstudieslist extends modelClass {
         $year = $db->loadObjectList();
       //  dump ($year);
         return $year;
+    }
+    
+    public function getPlays() {
+        $db = $this->getDBO();
+        $query = $db->getQuery(true);
+        
+        $query->select('SUM(plays) AS totalPlays');
+        $query->from('#__bsms_studies');
+        $query->group('study_id');
+        $query->where('study_id = ');
+        
     }
 }
 

@@ -223,9 +223,12 @@ class biblestudyModelMessages extends modelClass {
     /**
      * @since   7.0
      */
-    protected function  populateState() {
+     protected function  populateState() {
         $studytitle = $this->getUserStateFromRequest($this->context.'.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
+        
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
         $book = $this->getUserStateFromRequest($this->context.'.filter.book', 'filter_book');
         $this->setState('filter.book', $book);
@@ -354,7 +357,7 @@ class biblestudyModelMessages extends modelClass {
         $query->from('#__bsms_books AS book');
         $query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
         $query->group('book.id');
-        $query->order('book.bookname');
+        $query->order('book.booknumber');
 
         $db->setQuery($query->__toString());
         $books = getTranslated($db->loadObjectList());
