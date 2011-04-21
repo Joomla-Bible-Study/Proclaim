@@ -24,6 +24,11 @@ class biblestudyController extends JController
 	function display()
 	{
             
+        //attempt to change mysql for error in large select
+        $db = JFactory::getDBO();
+        $db->setQuery('SET SQL_BIG_SELECTS=1');
+        $db->query();
+        
         require_once(JPATH_COMPONENT .DS. 'helpers' .DS. 'biblestudy.php');
         BiblestudyHelper::addSubmenu(JRequest::getWord('view', 'cpanel'));
            

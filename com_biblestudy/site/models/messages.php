@@ -193,7 +193,7 @@ class biblestudyModelMessages extends modelClass {
             $where[] = ' #__bsms_studies.messagetype = ' . (int) $filter_messagetype;
         }
         if ($filter_year > 0) {
-            $where[] = " date_format(#__bsms_studies.studydate, '%Y')= " . (int) $filter_year;
+            $where[] = " YEAR(#__bsms_studies.studydate)= " . (int) $filter_year;
         }
 
         $where = ( count($where) ? ' WHERE ' . implode(' AND ', $where) : '' );
@@ -320,7 +320,7 @@ class biblestudyModelMessages extends modelClass {
         //Filter by Year?
         $year = $this->getState('filter.year');
         if (!empty($year))
-            $query->where('date_format(study.studydate, "%Y") = '.(int)$year );
+            $query->where('YEAR(study.studydate) = '.(int)$year );
             
         //Filter by topic
         $topic = $this->getState('filter.topic');

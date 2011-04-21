@@ -333,7 +333,7 @@ class biblestudyModelstudieslist extends modelClass {
         //Filter by Year?
         $year = $this->getState('filter.year');
         if (!empty($year))
-            $query->where('date_format(study.studydate, "%Y") = '.(int)$year );
+            $query->where('YEAR(study.studydate) = '.(int)$year );
             
         //Filter by topic
         $topic = $this->getState('filter.topic');
