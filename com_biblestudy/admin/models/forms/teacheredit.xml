@@ -20,10 +20,11 @@
     <field name="image" type="text" class="inputbox" size="60" label="JBS_TCH_LARGE_IMAGE_URL" description="JBS_TCH_LARGE_IMAGE_URL_DESC"/>
     <field name="phone" type="text" class="inputbox" size="60" label="JBS_TCH_PHONE" description="JBS_TCH_PHONE_DESC"/>
     <field name="website" type="text" class="inputbox" size="60" label="JBS_TCH_WEBSITE" description="JBS_TCH_WEBSITE_DESC"/>
-    <field name="short" type="textarea" class="inputbox" cols="70" rows="3" label="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE" description="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE_DESC"/>
+    <field name="short" type="editor" class="inputbox" label="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE" description="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE_DESC"
+            filter="BibleStudyHelper::filterText" buttons="true"/>
     <field name="thumb" type="text" class="inputbox" size="60" label="JBS_TCH_THUMBNAIL_URL" description="JBS_TCH_THUMBNAIL_URL_DESC"/>
     <field name="information" type="editor" class="inputbox" label="JBS_TCH_OTHER_INFORMATION" description="JBS_TCH_OTHER_INFORMATION_DESC"
-			filter="ContentHelper::filterText" buttons="true" />
+			filter="BibleStudyHelper::filterText" buttons="true" />
     <field name="asset_id" type="hidden" filter="unset" />
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 			translate_label="false" class="inputbox" filter="rules"

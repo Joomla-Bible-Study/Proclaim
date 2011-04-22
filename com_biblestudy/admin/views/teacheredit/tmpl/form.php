@@ -64,11 +64,14 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <?php echo $this->form->getInput('website'); ?>
                 </li>
                 <li>
-                    <?php echo $this->form->getLabel('short'); ?>
-                    <?php echo $this->form->getInput('short'); ?>
+                   
                 </li>
                 
             </ul>
+            <div class="clr"></div>
+             <?php echo $this->form->getLabel('short'); ?>
+             <div class="clr"></div>
+             <?php echo $this->form->getInput('short'); ?>
         </fieldset>
     </div>  
     <div>
