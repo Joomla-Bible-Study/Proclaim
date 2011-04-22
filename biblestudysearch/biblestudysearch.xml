@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install version="1.5" type="plugin" group="search">
+<extension version="1.6" type="plugin" group="search" method="upgrade">
 	<name>Bible Study Search </name>
-	<creationDate>August 2010</creationDate>
-	<author>Tom Fuller - JoomlaBibleStudy</author>
-	<authorEmail>TomFuller2@gmail.com</authorEmail>
+	<creationDate>April 2011</creationDate>
+	<author>Joomla Bible Study Team</author>
+	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
-	<copyright>2007-10 Joomla Bible Study</copyright>
+	<copyright>2007-11 Joomla Bible Study</copyright>
 	<license>GNU/GPL</license>
-	<version>Version 6.2.0</version>
-	<description>Joomla Bible Study System plugin that adds searching of Bible studies to standard Joomla search of site.</description>
+	<version>Version 7.0.0</version>
+	<description>JBS_PLG_SEARCH_PLUGIN_DESCRIPTION</description>
 	<files>
-		<filename plugin="biblestudysearch">biblestudysearch.php</filename>
+		<filename plugin="plg_search_biblestudy">biblestudysearch.php</filename>
+        <folder>language</folder>
 	</files>
-	<params>
-		<param name="search_limit" type="text" size="5" default="50" label="Search Limit" description="Number of Search items to return" />
-		<param name="show_description" type="radio" default="1" label="Hide/Show Description" description="Choose whether to hide or show the description on the search results page">
-			<option value="0">Hide</option>
-			<option value="1">Show</option>
-		</param>
-		<param name="set_title" type="radio" default="1" label="Choose Title" description="Choose whether the book or the study title is first">
-			<option value="0">Book First</option>
-			<option value="1">Study Title First</option>
-		</param>
-	</params>
-</install>
+    <languages>
+		<language tag="en-GB">en-GB.plg_search_biblestudy.ini</language>
+		<language tag="en-GB">en-GB.plg_search_biblestudy.sys.ini</language>
+	</languages>
+    <config>
+		<fields name="params">
+        <fieldset name="basic">
+		<field name="search_limit" type="text" size="5" default="50" label="JBS_PLG_SEARCH_LIMIT" description="JBS_PLG_SEARCH_LIMIT_DESC" />
+		<field name="show_description" type="radio" default="1" label="JBS_PLG_SEARCH_DESCRIPTION" description="JBS_PLG_SEARCH_DESCRIPTION_DESC">
+			<option value="0">JBS_PLG_SEARCH_HIDE</option>
+			<option value="1">JBS_PLG_SEARCH_SHOW</option>
+		</field>
+		<field name="set_title" type="radio" default="1" label="JBS_PLG_SEARCH_TITLE" description="JBS_PLG_SEARCH_TITLE_DESC">
+			<option value="0">JBS_PLG_SEARCH_BOOK_FIRST</option>
+			<option value="1">JBS_PLG_SEARCH_STUDY_FIRST</option>
+		</field>
+        </fieldset>
+    </fields>
+  </config>
+</extension>
