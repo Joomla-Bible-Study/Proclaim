@@ -29,6 +29,12 @@ class biblestudyViewstudiesedit extends JView {
         $this->admin = BsmHelper::getAdmin();
        	$this->canDo = BibleStudyHelper::getActions($type = 'studiesedit', $Itemid = $this->item->id);
         $this->addToolbar();
+        
+        $document = JFactory::getDocument();
+        $document->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js');
+        $document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.tokeninput.js');
+        $document->addStyleSheet(JURI::base().'components/com_biblestudy/css/token-input-facebook.css');
+        
         parent::display($tpl);
     }
 
