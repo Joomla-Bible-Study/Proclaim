@@ -293,15 +293,12 @@ class biblestudyModelstudieslist extends modelClass {
         $query->select('book.bookname');
         $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
         
-        //Join over Plays?
-        $query->select('media.SUM(plays) AS totalPlays');
-        $query->join('LEFT','#__bsms_mediafiles AS media ON media.study_id = study.id');
-        $query->group('study_id');
+        //Join over Plays/Downloads
+        $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+        $query->join('LEFT','#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
+        $query->group('study.id');
         
-        //Join over Downloads?
-        $query->select('media.SUM(downloads) AS totalDownloads');
-        $query->join('LEFT','#__bsms_mediafiles AS media ON media.study_id = study.id');
-        $query->group('study_id');
+      
         
         //Filter by studytitle
         $studytitle = $this->getState('filter.studytitle');

@@ -137,10 +137,10 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo $this->escape($item->hits); ?>
                     </td>
                     <td class="center">
-                <?php echo $this->escape($item->totalPlays); ?>        
+                <?php echo $this->escape($item->totalplays); ?>        
                     </td>
                     <td class="center">
-                <?php echo $this->escape($item->totalDownloads); ?> 
+                <?php echo $this->escape($item->totaldownloads); ?> 
                     </td>
                 </tr>
         <?php endforeach; ?>
