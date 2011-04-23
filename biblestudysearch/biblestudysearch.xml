@@ -10,12 +10,13 @@
 	<version>Version 7.0.0</version>
 	<description>JBS_PLG_SEARCH_PLUGIN_DESCRIPTION</description>
 	<files>
-		<filename plugin="plg_search_biblestudy">biblestudysearch.php</filename>
+		<filename plugin="biblestudysearch">biblestudysearch.php</filename>
+        <filename>index.html</filename>
         <folder>language</folder>
 	</files>
     <languages>
-		<language tag="en-GB">en-GB.plg_search_biblestudy.ini</language>
-		<language tag="en-GB">en-GB.plg_search_biblestudy.sys.ini</language>
+		<language tag="en-GB">language/en-GB.plg_search_biblestudy.ini</language>
+		<language tag="en-GB">language/en-GB.plg_search_biblestudy.sys.ini</language>
 	</languages>
     <config>
 		<fields name="params">
