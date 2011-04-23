@@ -126,7 +126,8 @@ for ($i=1;$i<=7;$i++) {
   if ($params->get('landing'.$showIt.'limit'))
   {
 	$images = new jbsImages();
-	$showhide_tmp = $images->getShowHide($this->admin[0]->showhide);  // santon: $admin[0]->showhide is not available; correct to $admin[0]->params->default_showHide_image
+//	$showhide_tmp = $images->getShowHide($this->admin[0]->showhide);  // santon: $admin[0]->showhide is not available; correct to $admin[0]->params->default_showHide_image
+	$showhide_tmp = $images->getShowHide();
 
 	$showhideall = "      <div id='showhide'>";
 

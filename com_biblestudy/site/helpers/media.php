@@ -95,9 +95,11 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 
          //   $d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
             //$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
-	        $d_image = ($admin[0]->download);
+//	        $d_image = ($admin[0]->download);
+	        $d_image = ($admin[0]->params->default_download_image);
 	        $images = new jbsImages();
-            $download_image = $images->getMediaImage($admin[0]->download, $media=NULL);
+//            $download_image = $images->getMediaImage($admin[0]->download, $media=NULL);
+            $download_image = $images->getMediaImage($admin[0]->params->default_download_image, $media=NULL);
 	    //    $d_path = $d_path1.$d_image;
 	    //    $download_tmp = getImage($d_path);
             $download_image = $download_tmp->path;
@@ -159,9 +161,11 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 
           //  $d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
             //$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
-	        $d_image = ($admin[0]->download);
+//	        $d_image = ($admin[0]->download);
+	        $d_image = ($admin[0]->params->default_download_image);
 	        $images = new jbsImages();
-            $download_image = $images->getMediaImage($admin[0]->download, $media=NULL);
+//            $download_image = $images->getMediaImage($admin[0]->download, $media=NULL);
+            $download_image = $images->getMediaImage($admin[0]->params->default_download_image, $media=NULL);
 	      //  $d_path = $d_path1.$d_image;
 	      //  $download_tmp = getImage($d_path);
             $download_image = $download_tmp->path;

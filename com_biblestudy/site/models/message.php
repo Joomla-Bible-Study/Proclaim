@@ -36,61 +36,62 @@ class biblestudyModelmessage extends modelClass {
     }
 
     function &getData() {
-        // Load the data
-        $admin = $this->getAdmin();
-        if (empty($this->_data)) {
-            $query = ' SELECT * FROM #__bsms_studies ' .
-                    '  WHERE id = ' . $this->_id;
-            $this->_db->setQuery($query);
-            $this->_data = $this->_db->loadObject();
-        }
-        if (!$this->_data) {
-            $this->_data = new stdClass();
-            $this->_data->id = 0;
-            //TF added these
-            $this->_data->published = 1;
-            $today = date("Y-m-d H:i:s");
-            $this->_data->studydate = $today;
-            $this->_data->teacher_id = ($this->_admin_params->get('teacher_id') > 0 ? $this->_admin_params->get('teacher_id') : null);
-            $this->_data->studynumber = null;
-            $this->_data->booknumber = ($this->_admin_params->get('booknumber') > 0 ? $this->_admin_params->get('booknumber') : null);
-            $this->_data->chapter_begin = null;
-            $this->_data->chapter_end = null;
-            $this->_data->verse_begin = null;
-            $this->_data->verse_end = null;
-            $this->_data->studytitle = null;
-            $this->_data->studyintro = null;
-            $this->_data->media_hours = null;
-            $this->_data->media_minutes = null;
-            $this->_data->media_seconds = null;
-            $this->_data->messagetype = ($this->_admin_params->get('messagetype') > 0 ? $this->_admin_params->get('messagetype') : null);
-            $this->_data->series_id = ($this->_admin_params->get('series_id') > 0 ? $this->_admin_params->get('series_id') : null);
-            $this->_data->studytext = null;
-            $this->_data->topics_id = ($this->_admin_params->get('topic_id') > 0 ? $this->_admin_params->get('topic_id') : null);
-            $this->_data->secondary_reference = null;
-            $this->_data->prod_cd = null;
-            $this->_data->prod_dvd = null;
-            $this->_data->server_cd = null;
-            $this->_data->server_dvd = null;
-            $this->_data->image_cd = null;
-            $this->_data->image_dvd = null;
-            $this->_data->booknumber2 = null;
-            $this->_data->chapter_begin2 = null;
-            $this->_data->chapter_end2 = null;
-            $this->_data->verse_begin2 = null;
-            $this->_data->verse_end2 = null;
-            $this->_data->comments = 1;
-            $this->_data->hits = null;
-            $this->_data->user_id = null;
-            $this->_data->user_name = null;
-            
-            $this->_data->location_id = ($this->_admin_params->get('location_id') > 0 ? $this->_admin_params->get('location_id') : null);
-            $this->_data->thumbnailm = ($admin[0]->study != '- JBS_CMN_NO_IMAGE -' ? $admin[0]->study : null);   // 2010-11-12 santon: need to be changed
-            $this->_data->thumbhm = null;
-            $this->_data->thumbwm = null;
-            $this->_data->params = null;
-        }
-        return $this->_data;
+        die ('biblestudyModelmessage.getData is no more used');
+//        // Load the data
+//        $admin = $this->getAdmin();
+//        if (empty($this->_data)) {
+//            $query = ' SELECT * FROM #__bsms_studies ' .
+//                    '  WHERE id = ' . $this->_id;
+//            $this->_db->setQuery($query);
+//            $this->_data = $this->_db->loadObject();
+//        }
+//        if (!$this->_data) {
+//            $this->_data = new stdClass();
+//            $this->_data->id = 0;
+//            //TF added these
+//            $this->_data->published = 1;
+//            $today = date("Y-m-d H:i:s");
+//            $this->_data->studydate = $today;
+//            $this->_data->teacher_id = ($this->_admin_params->get('teacher_id') > 0 ? $this->_admin_params->get('teacher_id') : null);
+//            $this->_data->studynumber = null;
+//            $this->_data->booknumber = ($this->_admin_params->get('booknumber') > 0 ? $this->_admin_params->get('booknumber') : null);
+//            $this->_data->chapter_begin = null;
+//            $this->_data->chapter_end = null;
+//            $this->_data->verse_begin = null;
+//            $this->_data->verse_end = null;
+//            $this->_data->studytitle = null;
+//            $this->_data->studyintro = null;
+//            $this->_data->media_hours = null;
+//            $this->_data->media_minutes = null;
+//            $this->_data->media_seconds = null;
+//            $this->_data->messagetype = ($this->_admin_params->get('messagetype') > 0 ? $this->_admin_params->get('messagetype') : null);
+//            $this->_data->series_id = ($this->_admin_params->get('series_id') > 0 ? $this->_admin_params->get('series_id') : null);
+//            $this->_data->studytext = null;
+//            $this->_data->topics_id = ($this->_admin_params->get('topic_id') > 0 ? $this->_admin_params->get('topic_id') : null);
+//            $this->_data->secondary_reference = null;
+//            $this->_data->prod_cd = null;
+//            $this->_data->prod_dvd = null;
+//            $this->_data->server_cd = null;
+//            $this->_data->server_dvd = null;
+//            $this->_data->image_cd = null;
+//            $this->_data->image_dvd = null;
+//            $this->_data->booknumber2 = null;
+//            $this->_data->chapter_begin2 = null;
+//            $this->_data->chapter_end2 = null;
+//            $this->_data->verse_begin2 = null;
+//            $this->_data->verse_end2 = null;
+//            $this->_data->comments = 1;
+//            $this->_data->hits = null;
+//            $this->_data->user_id = null;
+//            $this->_data->user_name = null;
+//            
+//            $this->_data->location_id = ($this->_admin_params->get('location_id') > 0 ? $this->_admin_params->get('location_id') : null);
+//            $this->_data->thumbnailm = ($admin[0]->study != '- JBS_CMN_NO_IMAGE -' ? $admin[0]->study : null);   // 2010-11-12 santon: need to be changed
+//            $this->_data->thumbhm = null;
+//            $this->_data->thumbwm = null;
+//            $this->_data->params = null;
+//        }
+//        return $this->_data;
     }
 
 /**

@@ -223,7 +223,7 @@ class jbsImages
 		return $imagepath;
 	}
 	
-	function getShowHide($image)
+	function getShowHide()
 	{
 		$database	= & JFactory::getDBO();
 		$database->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
