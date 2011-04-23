@@ -21,6 +21,7 @@ $listDirn = $this->state->get('list.direction');
             <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button" onclick="document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
         </div>
+        <div class="clr"></div>
         <div class="filter-select fltlft">
             <select name="filter_book" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
@@ -55,6 +56,7 @@ $listDirn = $this->state->get('list.direction');
    <div> 
    <h3> <?php echo $this->newlink; ?></h3></div>
     <div class="clr"></div>
+
     <table class="adminlist">
         <thead>
             <tr>

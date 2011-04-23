@@ -15,7 +15,7 @@ $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 $saveOrder = $listOrder == 'mediafile.ordering';
 ?>
-
+<h2><?php echo JText::_('JBS_CMN_MEDIA');?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-search fltlft">
@@ -27,7 +27,8 @@ $saveOrder = $listOrder == 'mediafile.ordering';
             <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button" onclick="document.id('filter_filename').value='';document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
         </div>
-        <div class="filter-select fltrt">
+      <div class="clr"></div>
+      <div class="filter-select fltrt">
             <select name="filter_mediatypeId" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_MED_SELECT_MEDIA_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->mediatypes, 'value', 'text', $this->state->get('filter.mediatypeId')); ?>
@@ -38,6 +39,8 @@ $saveOrder = $listOrder == 'mediafile.ordering';
             </select>
         </div>
     </fieldset>
+   <div> 
+   <h3> <?php echo $this->newlink; ?></h3></div>
     <div class="clr"></div>
 
     <table class="adminlist">

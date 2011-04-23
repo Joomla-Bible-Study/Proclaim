@@ -26,9 +26,9 @@ class biblestudyViewmediafiles extends JView {
 
     function display($tpl = null) {
          $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
+        $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
-        $this->state = $this->get('State');
         $this->mediatypes = $this->get('Mediatypes');
         $document = & JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'css' .DS.  'icons.css');
@@ -53,7 +53,7 @@ class biblestudyViewmediafiles extends JView {
       //Puts a new record link at the top of the form
       if ($this->canDo->get('core.create')) 
         { 
-            echo '<a href="index.php?option=com_biblestudy&view=mediafile&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';
+            $this->newlink = '<a href="index.php?option=com_biblestudy&view=mediafile&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';
         }
         parent::display($tpl);
     }
