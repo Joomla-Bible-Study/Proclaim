@@ -1,5 +1,6 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 <?php 
+jimport('joomla.plugin.plugin');
 class plgSearchBiblestudy extends JPlugin
 {
 
@@ -15,7 +16,7 @@ class plgSearchBiblestudy extends JPlugin
 	public function __construct(& $subject, $config)
 	{
 		parent::__construct($subject, $config);
-	//	$this->loadLanguage();
+		$this->loadLanguage();
 	}
 
 	/**
@@ -23,7 +24,7 @@ class plgSearchBiblestudy extends JPlugin
 	 */
 	function onContentSearchAreas() {
 		static $areas = array(
-			'biblestudy' => 'PLG_SEARCH_BIBLESTUDY'
+			'biblestudysearch' => 'PLG_SEARCH_BIBLESTUDYSEARCH_BIBLESTUDYSEARCH'
 			);
 			return $areas;
 	}
