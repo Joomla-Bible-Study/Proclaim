@@ -24,7 +24,7 @@ class plgSearchBiblestudy extends JPlugin
 	 */
 	function onContentSearchAreas() {
 		static $areas = array(
-			'biblestudysearch' => 'PLG_SEARCH_BIBLESTUDYSEARCH_BIBLESTUDYSEARCH'
+			'biblestudies' => 'PLG_SEARCH_BIBLESTUDYSEARCH_BIBLESTUDYSEARCH'
 			);
 			return $areas;
 	}
