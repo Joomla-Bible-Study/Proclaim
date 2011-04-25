@@ -50,6 +50,7 @@ class biblestudyViewlocationslist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('locationslist.publish');
         JToolBarHelper::unpublishList('locationslist.unpublish');
+         JToolBarHelper::archiveList('locationslist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('locationslist.trash');}

@@ -50,6 +50,7 @@ class biblestudyViewMessagetypelist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('messagetypelist.publish');
         JToolBarHelper::unpublishList('messagetypelist.unpublish');
+         JToolBarHelper::archiveList('messagetypelist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('messagetypelist.trash');}

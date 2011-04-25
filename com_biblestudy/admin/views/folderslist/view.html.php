@@ -51,6 +51,7 @@ class BibleStudyViewFolderslist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('folderslist.publish');
         JToolBarHelper::unpublishList('folderslist.unpublish');
+        JToolBarHelper::archiveList('folderslist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('folderslist.trash');}

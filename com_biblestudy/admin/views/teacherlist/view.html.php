@@ -46,6 +46,7 @@ class biblestudyViewteacherlist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('teacherlist.publish');
         JToolBarHelper::unpublishList('teacherlist.unpublish');
+         JToolBarHelper::archiveList('teacherlist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('teacherlist.trash');}

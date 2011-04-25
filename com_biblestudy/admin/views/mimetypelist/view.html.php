@@ -50,6 +50,7 @@ class biblestudyViewMimetypelist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('mimetypelist.publish');
         JToolBarHelper::unpublishList('mimetypelist.unpublish');
+         JToolBarHelper::archiveList('mimetypelist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('mimetypelist.trash');}

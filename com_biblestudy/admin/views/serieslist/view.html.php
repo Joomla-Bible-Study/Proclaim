@@ -49,6 +49,7 @@ class biblestudyViewserieslist extends JView
         JToolBarHelper::divider();
         JToolBarHelper::publishList('serieslist.publish');
         JToolBarHelper::unpublishList('serieslist.unpublish');
+         JToolBarHelper::archiveList('serieslist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('serieslist.trash');}

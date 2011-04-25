@@ -50,6 +50,7 @@ class biblestudyViewtopicslist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('topicslist.publish');
         JToolBarHelper::unpublishList('topicslist.unpublish');
+         JToolBarHelper::archiveList('topicslist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('topicslist.trash');

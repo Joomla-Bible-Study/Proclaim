@@ -53,6 +53,7 @@ class biblestudyViewmedialist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('medialist.publish');
         JToolBarHelper::unpublishList('medialist.unpublish');
+         JToolBarHelper::archiveList('medialist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('medialist.trash');}

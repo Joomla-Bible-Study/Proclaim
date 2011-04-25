@@ -46,6 +46,7 @@ class biblestudyViewsharelist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('sharelist.publish');
         JToolBarHelper::unpublishList('sharelist.unpublish');
+         JToolBarHelper::archiveList('sharelist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('sharelist.trash');}

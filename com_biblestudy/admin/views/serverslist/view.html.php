@@ -51,6 +51,7 @@ class biblestudyViewServerslist extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::publishList('serverslist.publish');
         JToolBarHelper::unpublishList('serverslist.unpublish');
+         JToolBarHelper::archiveList('serverslist.archive','JTOOLBAR_ARCHIVE');
         }
         if ($this->canDo->get('core.delete')) 
         {JToolBarHelper::trash('serverslist.trash');}
