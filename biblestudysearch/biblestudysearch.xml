@@ -15,8 +15,8 @@
         
   </files>
     <languages folder="administrator/language/en-GB">
-		<language tag="en-GB">en-GB.plg_search_biblestudy.ini</language>
-		<language tag="en-GB">en-GB.plg_search_biblestudy.sys.ini</language>
+		<language tag="en-GB">en-GB.plg_search_biblestudysearch.ini</language>
+		<language tag="en-GB">en-GB.plg_search_biblestudysearch.sys.ini</language>
 	</languages>
     <config>
 		<fields name="params">
@@ -30,6 +30,23 @@
     			<option value="0">JBS_PLG_SEARCH_BOOK_FIRST</option>
     			<option value="1">JBS_PLG_SEARCH_STUDY_FIRST</option>
     		</field>
+            <field name="search_content" type="radio"
+					default="1"
+					description="PLG_SEARCH_BIBLESTUDYSEARCH_FIELD_CONTENT_DESC"
+					label="PLG_SEARCH_BIBLESTUDYSEARCH_FIELD_CONTENT_LABEL"
+				>
+					<option value="0">JOFF</option>
+					<option value="1">JON</option>
+				</field>
+
+				<field name="search_archived" type="radio"
+					default="0"
+					description="PLG_SEARCH_BIBLESTUDYSEARCH_FIELD_ARCHIVED_DESC"
+					label="PLG_SEARCH_BIBLESTUDYSEARCH_FIELD_ARCHIVED_LABEL"
+				>
+					<option value="0">JOFF</option>
+					<option value="1">JON</option>
+				</field>
             </fieldset>
         </fields>
     </config>
