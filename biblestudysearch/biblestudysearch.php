@@ -148,7 +148,7 @@ switch ($set_title)
     $query->join('LEFT','#__bsms_series ON (#__bsms_series.id = a.series_id)');
     $query->join('LEFT','#__bsms_topics ON (#__bsms_topics.id = a.topics_id)');
     $query->join('LEFT','#__bsms_teachers ON (#__bsms_teachers.id = a.teacher_id)');
-    $query->where('('.$where.')' . ' AND a.published in ('.implode(',',$state).') AND  a.access IN ('.$groups.')');
+    $query->where('('.$where.')' . ' AND a.published in ('.implode(',',$state).') AND a.access IN ('.$groups.')');
     $query->order($order);
     
     $db->setQuery($query, 0, $limit);
