@@ -17,6 +17,7 @@ class plgSearchBiblestudysearch extends JPlugin
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
+        $this->loadLanguage('com_biblestudy',JPATH_ADMINISTRATOR);
 	}
 
 	/**
@@ -126,20 +127,20 @@ switch ($set_title)
 		case 0 :
 		 
 			if ($this->params->get('show_description') > 0){
-			$query->select( "CONCAT(#__bsms_books.bookname,' ',a.chapter_begin) AS title, CONCAT(a.studytitle,' - ',a.studyintro) AS text, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=".$template."') AS href, '2' AS browsernav");
+			$query->select( "#__bsms_books.bookname AS title, a.chapter_begin, CONCAT(a.studytitle,' - ',a.studyintro) AS text, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=".$template."') AS href, '2' AS browsernav");
 					
 			}
 			else {
-			$query->select( "CONCAT(#__bsms_books.bookname,' ',a.chapter_begin) AS title, a.studytitle AS text, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=".$template."') AS href, '2' AS browsernav");
+			$query->select( "#__bsms_books.bookname AS title, a.chapter_begin, a.studytitle AS text, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=".$template."') AS href, '2' AS browsernav");
 			}
 			break;
 		case 1 :
 		
 			if ($this->params->get('show_description') > 0){
-			$query->select("CONCAT(a.studytitle,' - ',a.studyintro) AS title, CONCAT(#__bsms_books.bookname,' ',a.chapter_begin) AS text, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=".$template."') AS href, '2' AS browsernav");
+			$query->select("a.studytitle AS title, a.studyintro, #__bsms_books.bookname AS text, a.chapter_begin, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=".$template."') AS href, '2' AS browsernav");
 			}
 			else {
-			$query->select("CONCAT(#__bsms_books.bookname,' ',a.chapter_begin) AS text, a.studytitle AS title, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=".$template."') AS href, '2' AS browsernav");
+			$query->select("#__bsms_books.bookname AS text, a.chapter_begin, a.studytitle AS title, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=".$template."') AS href, '2' AS browsernav");
 			}
 		break;
 		}
@@ -153,7 +154,28 @@ switch ($set_title)
     
     $db->setQuery($query, 0, $limit);
 	$rows = $db->loadObjectList();
-  //  dump ($rows);
+  
+    foreach ($rows AS $i => $row)
+    {
+        switch ($set_title )
+        {
+        case 0:
+            $rows[$i]->title = JText::_($rows[$i]->title).' '.$rows[$i]->chapter_begin;
+            break;
+        
+        case 1:
+            
+            if ($this->params->get('show_description') > 0)
+            {
+                $rows[$i]->text = JText::_($rows[$i]->text).' '.$rows[$i]->chapter_begin.' | '.$rows[$i]->studyintro;
+            }
+            else
+            {
+                $rows[$i]->text = JText::_($rows[$i]->text).' '.$rows[$i]->chapter_begin;
+            }
+            break;
+        }
+    }
   
     return $rows;
     
