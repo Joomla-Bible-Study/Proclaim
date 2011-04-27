@@ -557,6 +557,7 @@
             <field name="r1c1span"
            type="list"
            default="1"
+           size="4"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -581,11 +582,15 @@
            label="JBS_TPL_DETAILS_CREATE_CUSTOM"
            description="JBS_TPL_DETAILS_CREATE_CUSTOM_DESC" />
             <field name="r1c2span"
-           type="spanoptions"
+           type="list"
            default="1"
-           size="4"
+           size="3"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
-           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC" />
+           description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
+                <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
+                <option value="2">JBS_TPL_SPAN_COLUMNS2TO3</option>
+                <option value="3">JBS_TPL_SPAN_COLUMNS2TO4</option>
+            </field>
             <field name="linkr1c2"
            type="linkoptions"
            default="0"
@@ -605,7 +610,7 @@
             <field name="r1c3span"
            type="list"
            default="1"
-           size="4"
+           size="2"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -675,7 +680,7 @@
             <field name="r2c2span"
            type="list"
            default="1"
-           size="4"
+           size="3"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -701,7 +706,7 @@
             <field name="r2c3span"
            type="list"
            default="1"
-           size="4"
+           size="2"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -771,7 +776,7 @@
             <field name="r3c2span"
            type="list"
            default="1"
-           size="4"
+           size="3"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -797,7 +802,7 @@
             <field name="r3c3span"
            type="list"
            default="1"
-           size="4"
+           size="2"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -867,7 +872,7 @@
             <field name="r4c2span"
            type="list"
            default="1"
-           size="4"
+           size="3"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -893,7 +898,7 @@
             <field name="r4c3span"
            type="list"
            default="1"
-           size="4"
+           size="2"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -1715,7 +1720,7 @@
             <field name="dr1c2span"
            type="list"
            default="1"
-           size="4"
+           size="3"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -1741,7 +1746,7 @@
             <field name="dr1c3span"
            type="list"
            default="1"
-           size="4"
+           size="2"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -1811,7 +1816,7 @@
             <field name="dr2c2span"
            type="list"
            default="1"
-           size="4"
+           size="3"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -1837,7 +1842,7 @@
             <field name="dr2c3span"
            type="list"
            default="1"
-           size="4"
+           size="2"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -1907,7 +1912,7 @@
             <field name="dr3c2span"
            type="list"
            default="1"
-           size="4"
+           size="3"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -1933,7 +1938,7 @@
             <field name="dr3c3span"
            type="list"
            default="1"
-           size="4"
+           size="2"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -2003,7 +2008,7 @@
             <field name="dr4c2span"
            type="list"
            default="1"
-           size="4"
+           size="3"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>
@@ -2029,7 +2034,7 @@
             <field name="dr4c3span"
            type="list"
            default="1"
-           size="4"
+           size="2"
            label="JBS_TPL_DETAILS_SPAN_COLUMNS"
            description="JBS_TPL_DETAILS_SPAN_COLUMNS_DESC">
                 <option value="1">JBS_TPL_SPAN_THIS_CELL</option>

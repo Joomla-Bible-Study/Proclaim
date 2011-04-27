@@ -15,7 +15,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 <?php echo JHtml::_('tabs.start'); ?>
 <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_GENERAL'), 'general'); ?>
  <div class="width-100">
-    <div class="width-60 fltlft">
+    <div class="width-80 fltlft">
         <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_GENERAL'); ?></legend>
                  <ul class="adminformlist">
@@ -33,7 +33,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
  <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_CMN_MEDIA'), 'admin-system-defaults'); ?>
     <div class="width-100">
-        <div class="width-60 fltlft">
+        <div class="width-80 fltlft">
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_CMN_MEDIA'); ?></legend> 
                 <ul class="adminformlist">
@@ -47,7 +47,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 	<div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_LANDING_PAGE'), 'admin-system-defaults'); ?>
     <div class="width-100">
-        <div class="width-60 fltlft">
+        <div class="width-80 fltlft">
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_LANDING_PAGE'); ?></legend>      
                     	<ul class="adminformlist">
@@ -61,7 +61,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
  <div class="clr"></div>
  <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_STUDY_LIST_VIEW'), 'admin-system-defaults'); ?>
     <div class="width-100">
-        <div class="width-60 fltlft">
+        <div class="width-80 fltlft">
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_VIEW'); ?></legend>      
                     <?php echo JHtml::_('sliders.start','content-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
@@ -160,7 +160,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
  <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_STUDY_DETAILS_VIEW'), 'admin-system-defaults'); ?>
     <div class="width-100">
-        <div class="width-60 fltlft">
+        <div class="width-80 fltlft">
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_STUDY_DETAILS_VIEW'); ?></legend>      
 <?php echo JHtml::_('sliders.start','content-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
@@ -218,7 +218,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
     
  
     <div class="width-100">
-        <div class="width-60 fltlft">
+        <div class="width-80 fltlft">
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_TEACHER_VIEW'); ?></legend>      
                     
@@ -232,7 +232,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
      <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_CMN_SERIES'), 'admin-system-defaults'); ?>
     <div class="width-100">
-        <div class="width-60 fltlft">
+        <div class="width-80 fltlft">
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_CMN_SERIES'); ?></legend>      
                     <?php echo JHtml::_('sliders.start','content-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
