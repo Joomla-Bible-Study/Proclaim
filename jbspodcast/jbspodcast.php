@@ -2,22 +2,29 @@
 
 /**
  * @author Tom Fuller
- * @copyright 2010
+ * @copyright 2010-2011
  */
 
 defined('_JEXEC') or die('Restricted access');
 
 /* Import library dependencies */
 jimport('joomla.event.plugin');
-
+jimport('joomla.plugin.plugin');
 class plgSystemjbspodcast extends JPlugin {
+    
+    	public function __construct(& $subject, $config)
+	{
+		parent::__construct($subject, $config);
+		$this->loadLanguage();
+        $this->loadLanguage('com_biblestudy',JPATH_ADMINISTRATOR);
+	}
 
     function onAfterInitialise() {
 		
-
+                
 		$plugin =& JPluginHelper::getPlugin( 'system', 'jbspodcast' );
-		$params = new JParameter( $plugin->params );
-        
+	//	$params = new JParameter( $plugin->params );
+        $params = $this->params;
         
         //First check to see what method of updating the podcast we are using
         $method = $params->get('method','0');
