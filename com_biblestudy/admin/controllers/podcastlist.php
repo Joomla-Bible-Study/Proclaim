@@ -50,7 +50,7 @@ class biblestudyControllerpodcastlist extends controllerClass {
         $this->setRedirect('index.php?option=com_biblestudy&view=podcastlist', $msg);
     }
 
-    function writeXMLFile() {
+  /*  function writeXMLFile() {
 
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -61,15 +61,15 @@ class biblestudyControllerpodcastlist extends controllerClass {
         $result = writeXML();
         if ($result) {
 
-            // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_PDC_FILES_WRITTEN').': '.$result);
-            $mainframe->redirect('index.php?option=' . $option . '&view=podcastlist', JText::_('JBS_PDC_NO_ERROR_REPORTED'));
+           
+            $application = JFactory::getApplication();
+            $application->enqueueMessage( ''. JText::_('JBS_PDC_PODCAST_SAVED') .'' ) ;
+            
         } else {
-            // $mainframe->redirect('index.php?option='.$option.'&view=podcastlist', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').'.');
-
-            $mainframe->redirect('index.php?option=' . $option . '&view=podcastlist', JText::_('JBS_CMN_OPERATION_FAILED') . ': ' . JText::_('JBS_PDC_ERRORS_REPORTED'));
+            $application->enqueueMessage( ''. JText::_('JBS_PDC_ERROR_SAVING_PODCAST') .'' ) ;
         }
     }
-
+*/
     /**
      * Proxy for getModel
      *
