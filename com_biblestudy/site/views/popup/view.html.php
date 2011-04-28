@@ -25,6 +25,7 @@
 			$document =& JFactory::getDocument();
             $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
             $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+            $document->addScript(JURI::base().'components/com_biblestudy/assets/css/biblestudy.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
         
         // If this is a direct new window then all we need to do is perform hitPlay and close this window

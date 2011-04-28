@@ -19,6 +19,7 @@ class biblestudyViewstudydetails extends JView
 		$document =& JFactory::getDocument();
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         $document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
+        $document->addScript(JURI::base().'components/com_biblestudy/assets/css/biblestudy.js');
 		$pathway	   =& $mainframe->getPathWay();
 		$contentConfig = &JComponentHelper::getParams( 'com_biblestudy' );
 		$dispatcher	=& JDispatcher::getInstance();

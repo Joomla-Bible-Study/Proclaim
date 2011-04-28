@@ -85,6 +85,7 @@ class biblestudyViewstudieslist extends JView {
         $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/biblestudy.js');
         $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/views/studieslist.js');
         $document->addScript(JURI::base() . 'components/com_biblestudy/tooltip.js');
+        $document->addScript(JURI::base().'components/com_biblestudy/assets/css/biblestudy.js');
         //Styles from tooltip.css moved to assets/css/biblestudy.css
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'components/com_biblestudy/assets/css/general.css');

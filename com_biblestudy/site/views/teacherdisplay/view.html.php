@@ -23,6 +23,7 @@ class biblestudyViewteacherdisplay extends JView
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+        $document->addScript(JURI::base().'components/com_biblestudy/assets/css/biblestudy.js');
 		$pathway	   =& $mainframe->getPathWay();
 				
         
