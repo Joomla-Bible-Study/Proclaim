@@ -296,7 +296,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
         }
       
     //added because if you choose a direct player and popup the media file will play twice
-    if ($player->player == 0){$player->type = 0;}
+  //  if ($player->player == 1){$player->type = 1;}
   // dump ($player->type, 'player: ');
  //  if ($itemparams->get('internal_popup')== '') {$player->type = $params_playertype;}
     return $player;
