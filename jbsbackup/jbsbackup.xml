@@ -19,6 +19,10 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
+        <field name="includedb" type="list" default="1" label="PLG_JBSBACKUP_INCLUDEDB" description="PLG_JBSBACKUP_INCLUDEDB_DESC">
+            <option value="0">JNO</option>
+			<option value="1">JYES</option>
+        </field>
 		<field name="recipients" type="text" default="" size="80" label="PLG_JBSBACKUP_TO_EMAIL" description="PLG_JBSBACKUP_TO_EMAIL_DESC" />
 		<field name="subject" type="text" default="Joomla Bible Study Podcast(s) Published" size="60" label="PLG_JBSBACKUP_SUBJECT" description="" />
 		<field name="body" type="text" default="Podcast(s) publishing status:" size="60" label="PLG_JBSBACKUP_BODY" description="" />
