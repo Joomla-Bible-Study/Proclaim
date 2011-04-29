@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="1.6.0" method="upgrade" client="site">
-	<name>mod_biblestudy</name>
+	<name>biblestudy</name>
 	<author>Tom Fuller</author>
-	<creationDate>April 26, 2011</creationDate>
+	<creationDate>April 29, 2011</creationDate>
 	<copyright>(C) 2007-2011 Joomla Bible Study</copyright>
 	<license>GPL/GNU</license>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
@@ -20,6 +20,7 @@
 	</files>
     <languages>
         <language tag="en-GB">language/en-GB/en-GB.mod_biblestudy.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.mod_biblestudy.sys.ini</language>
     </languages>
     <config>
  
@@ -44,8 +45,8 @@
                 size="10"
            />
            <field name="show_link" type="radio" default="1" label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC">
-			<option value="1">Show</option>
-			<option value="0">Hide</option>
+			<option value="1">JSHOW</option>
+			<option value="0">JHIDE</option>
 		</field>
     <field name="pagetext" type="text" size="50" default="More Bible Studies" label="JBS_MDL_LINK_TEXT" description="JBS_MDL_LINK_TEXT_DESC" />
     <field name="show_verses"

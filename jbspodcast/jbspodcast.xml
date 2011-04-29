@@ -2,7 +2,7 @@
 <extension version="1.6" type="plugin" group="system" method="upgrade">
 	<name>PLG_JBSPODCAST</name>
 	<author>Tom Fuller</author>
-	<creationDate>April 27, 2011</creationDate>
+	<creationDate>April 29, 2011</creationDate>
 	<copyright>This component is released under the GNU/GPL License</copyright>
 	<authorEmail>tomfuller2@gmail.com</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
@@ -10,11 +10,8 @@
 	<description>PLG_JBSPODCAST_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="jbspodcast">jbspodcast.php</filename>
+        <folder>language</folder>
 	</files>
- <languages >
-		<language tag="en-GB">en-GB.plg_system_jbspodcast.ini</language>
-		<language tag="en-GB">en-GB.plg_system_jbspodcast.sys.ini</language>
-	</languages>
     <config> 
  <fields name="params">
             <fieldset name="basic">
