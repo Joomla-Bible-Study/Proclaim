@@ -21,13 +21,16 @@ class plgSystemjbspodcast extends JPlugin {
 	 * @since       1.5
      * based on plg_weblinks
 	 */
-	public function __construct(& $subject, $config)
-	{
-		parent::__construct($subject, $config);
-		$this->loadLanguage();
-        $this->loadLanguage('com_biblestudy',JPATH_ADMINISTRATOR);
-	}
 
+ public function __construct(& $subject, $config)
+        {
+ 
+                parent::__construct($subject, $config);
+ 
+                $this->loadLanguage();
+                $this->loadLanguage('com_biblestudy',JPATH_ADMINISTRATOR);
+ 
+        }
     function onAfterInitialise() {
 		
                 
