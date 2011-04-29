@@ -49,16 +49,22 @@
            query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
            key_field="booknumber"
            value_field="bookname"
-           description="JBS_CMN_FILTERS_BOOKS_DESC">
+           description="JBS_CMN_FILTERS_BOOKS_DESC"
+           default="-1">
         <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
-    
     <field name="mtopic_id"
-           type="topicslist"
+           type="sql"
+           extension="com_biblestudy"
            multiple="true"
            size="10"
            label="JBS_CMN_FILTERS_TOPICS"
            description="JBS_CMN_FILTERS_TOPICS_DESC"
+           translate="true"
+           class="inputbox"
+           query="SELECT id, topic_text FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC"
+           key_field="id"
+           value_field="topic_text"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
