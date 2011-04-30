@@ -187,11 +187,13 @@ function setSelect($string){
 	 */
 	function getTopics() {
 		if (empty($this->_Topics)) {
-            $query = 'SELECT DISTINCT #__bsms_studytopics.topic_id as id, #__bsms_studytopics.topic_id AS value, #__bsms_topics.topic_text AS text'
+       /*     $query = 'SELECT DISTINCT #__bsms_studytopics.topic_id as id, #__bsms_studytopics.topic_id AS value, #__bsms_topics.topic_text AS text'
             . ' FROM #__bsms_studytopics'
             . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
             . ' WHERE #__bsms_topics.published = 1'
             . ' ORDER BY #__bsms_topics.topic_text ASC';
+        */    
+            $query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text, #__bsms_topics.published FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.topic_id = #__bsms_studies.topics_id) WHERE #__bsms_topics.published = 1 ORDER BY #__bsms_topics.topic_text ASC';
 
 			$this->_Topics = $this->_getList($query);
 		} 
