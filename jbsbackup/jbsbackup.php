@@ -2,13 +2,13 @@
 
 /**
  * @author Tom Fuller
- * @copyright 2010-2011
+ * @copyright 2011
  */
 
 defined('_JEXEC') or die('Restricted access');
 
 /* Import library dependencies */
-//jimport('joomla.event.plugin');
+
 jimport('joomla.plugin.plugin');
 class plgSystemjbsbackup extends JPlugin {
     
@@ -18,8 +18,8 @@ class plgSystemjbsbackup extends JPlugin {
 	 * @access      protected
 	 * @param       object  $subject The object to observe
 	 * @param       array   $config  An array that holds the plugin configuration
-	 * @since       1.5
-     * based on plg_weblinks
+	 * @since       1.6
+     * 
 	 */
 
  public function __construct(& $subject, $config)
@@ -34,9 +34,7 @@ class plgSystemjbsbackup extends JPlugin {
     function onAfterInitialise() {
 		
                 
-		$plugin =& JPluginHelper::getPlugin( 'system', 'jbsbackup' );
-	
-        $params = $this->params;
+	    $params = $this->params;
         
         //First check to see what method of updating the backup we are using
         $method = $params->get('method','0');
@@ -56,11 +54,12 @@ class plgSystemjbsbackup extends JPlugin {
             //If we have run the backupcheck and it returned no errors then the last thing we do is reset the time we did it to current
             if ($dobackup)
             {
-                $updatetime = $this->updatetime(); 
+                $updatetime = $this->updatetime();
+                $updatefiles = $this->updatefiles($params); 
             }
             
             // Last we check to see if we need to email anything
-            if ($params->get('email')> 0)
+            if ($check && $params->get('email')> 0)
             {
                 $email = $this->doEmail($params, $dobackup);
             }
@@ -75,7 +74,7 @@ class plgSystemjbsbackup extends JPlugin {
         $db = JFactory::getDBO();
         $db->setQuery('SELECT `backup` FROM `#__bsms_timeset`', 0, 1);
         $result = $db->loadObject();
-        $lasttime = $result->timeset;
+        $lasttime = $result->backup;
         $frequency = $params->get('xhours','86400');
         $difference = $frequency * 3600;
         $checkit = $now - $lasttime;
@@ -182,14 +181,15 @@ class plgSystemjbsbackup extends JPlugin {
     
     function doBackup()
     {
+        $backupfolder = 'media'.DS.$this->params->get('backupfolder');
         $path1 = JPATH_SITE.DS.'plugins'.DS.'system'.DS.'jbsbackup'.DS;
         include_once($path1.'backup.php');
         $dbbackup = new JBSExport();
-        $backup = $dbbackup->exportdb();
+        $backup = $dbbackup->exportdb($backupfolder);
         return $backup; 
     }
     
-    function doEmail($params, $dopodcast)
+    function doEmail($params, $dobackup)
     {
             $livesite = JURI::root();
             $config = JFactory::getConfig();
@@ -197,31 +197,26 @@ class plgSystemjbsbackup extends JPlugin {
             $fromname   = $config->getValue('config.fromname');
     		jimport('joomla.filesystem.file');
     		
+            //Check for existence of backup file, then attach to email
+            $backupexists = JFile::exists($dobackup->serverfile);
+            if (!$backupexists){$msg = JText::_('PLG_JBSBACKUP_ERROR');}
+            else {$msg = JText::_('PLG_JBSBACKUP_SUCCESS');}
             $mail = JFactory::getMailer();
     	 	$mail->IsHTML(true);
             jimport('joomla.utilities.date');
     		$year = '('.date('Y').')';
     		$date = date('r');
-    	 	$Body   = $params->def( 'Body', '<strong>JBS Database backup for this website: '.$fromname.'</strong><br />' );
+    	 	$Body   = $params->def( 'Body', '<strong>'.JText::_('PLG_JBSBACKUP_HEADER'). ' '.$fromname.'</strong><br />' );
             $Body .= JText::_('Process run at: ').$date.'<br />';
             $Body2 = '';
-    	 	$db =& JFactory::getDBO();
-    		$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
-    		$db->setQuery($query);
-    		$podid = $db->loadObjectList();
-    		//Here we get links to the actual podcast files					
-    		if (count($podid)) 
-    		{
-    			foreach ($podid as $podids2) 
-    			{
-    				$file = JURI::root().$podids2->filename; 
-					$Body2 .= '<br><a href="'.$file.'">'.$podids2->title.'</a>';
-                    if (!$dopodcast){$Body2 .= ' - '.JText::_('There were errors reported. Please check files.');}
-                    if ($dopodcast){$Body2 .= ' - '.JText::_('There were no errors reported.');}
-    			}
-    		}
+    	 				
+    		
+					$Body2 .= '<br><a href="'.$dobackup->serverfile.'">'.$dobackup->localfile.'</a>';
+                    $Body2 .= ' - '.$msg;
+    			
+    		
     		$Body3 = $Body.$Body2;
-    		$Subject       = $params->def( 'subject', 'Podcast Publishing Update' );
+    		$Subject       = $params->def( 'subject', JText::_('PLG_JBSBACKUP_REPORT'));
     		$FromName       = $params->def( 'fromname', $fromname );
     		
     		$recipients = explode(",",$params->get('recipients'));
@@ -230,9 +225,37 @@ class plgSystemjbsbackup extends JPlugin {
                 $mail->addRecipient($recipient);
         		$mail->setSubject($Subject.' '.$livesite);
         		$mail->setBody($Body3);
+                $mail->addAttachment($dobackup->serverfile);
                 $mail->Send();
             }
     
+    }
+    
+    function updatefiles($params)
+    {
+        jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.file');
+        $path = JPATH_SITE.DS.'media'.DS.$params->get('backupfolder');
+        $exclude = array('.svn', 'CVS','.DS_Store','__MACOSX');
+        $excludefilter = array('^\..*','.*~');
+        $files = JFolder::files($path, '', '', 'false' , $exclude,$excludefilter);
+        foreach ($files as $i => $value)
+        {
+            if (!substr_count($value,'jbs-db-backup')){unset($files[$i]);};
+        }
+       $part = array();
+       $numfiles = count($files);
+       $totalnumber = $params->get('filestokeep','5');
+       foreach ($files as $file)
+       {
+            $part[] = array('number'=>substr($file,-14,10), 'filename'=>$file);
+       }
+       
+      for ($counter = $numfiles; $counter > $totalnumber; $counter --)
+      {
+        $sort = asort($part);
+        JFile::delete($part[0]['filename']);
+      }
     }
 }
 

@@ -2,7 +2,7 @@
 <extension version="1.6" type="plugin" group="system" method="upgrade">
 	<name>PLG_JBSBACKUP</name>
 	<author>Tom Fuller</author>
-	<creationDate>April 29, 2011</creationDate>
+	<creationDate>May 2, 2011</creationDate>
 	<copyright>This component is released under the GNU/GPL License</copyright>
 	<authorEmail>tomfuller2@gmail.com</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
@@ -10,6 +10,8 @@
 	<description>PLG_JBSBACKUP_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="jbsbackup">jbsbackup.php</filename>
+        <filename>backup.php</filename>
+        <filename>index.html</filename>
         <folder>language</folder>
 	</files>
     <config> 
@@ -24,12 +26,14 @@
 			<option value="1">JYES</option>
         </field>
 		<field name="recipients" type="text" default="" size="80" label="PLG_JBSBACKUP_TO_EMAIL" description="PLG_JBSBACKUP_TO_EMAIL_DESC" />
-		<field name="subject" type="text" default="Joomla Bible Study Podcast(s) Published" size="60" label="PLG_JBSBACKUP_SUBJECT" description="" />
-		<field name="body" type="text" default="Podcast(s) publishing status:" size="60" label="PLG_JBSBACKUP_BODY" description="" />
+		<field name="subject" type="text" default="Joomla Bible Study Backup" size="60" label="PLG_JBSBACKUP_SUBJECT" description="" />
+		<field name="body" type="text" default="Backup status:" size="60" label="PLG_JBSBACKUP_BODY" description="" />
+        <field name="backupfolder" type="folderlist" directory="media" filter="" exclude="" striptext="" label="PLG_JBSBACKUP_BACKUP_FOLDER" description="PLG_JBSBACKUP_BACKUP_FOLDER_DESC" />
         <field name="method" type="list" default="0" label="PLG_JBSBACKUP_PUBLISH_METHOD" description="PLG_JBSBACKUP_PUBLISH_METHOD_DESC">
             <option value="0">PLG_JBSBACKUP_HOURS</option>
             <option value="1">PLG_JBSBACKUP_SCHEDULE</option>
         </field>
+        <field name="filestokeep" type="text" default="5" size="3" label="PLG_JBSBACKUP_FILES" description="PLG_JBSBACKUP_FILES_DESC" />
 		<field name="xhours" type="text" default="24" size="3" label="PLG_JBSBACKUP_PUBLISH_EVERY" description="PLG_JBSBACKUP_PUBLISH_EVERY_DESC" />
         <field name="day1" type="list" default="0" label="PLG_JBSBACKUP_DAY1" description="PLG_JBSBACKUP_CHOOSE_DAY">
             <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>

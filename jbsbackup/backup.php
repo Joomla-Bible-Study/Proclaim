@@ -9,7 +9,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 class JBSExport{
 //backup_tables('localhost','username','password','blog');
 
- function exportdb()
+ function exportdb($backupfolder)
     {
         $result = false;
       
@@ -38,7 +38,7 @@ class JBSExport{
         }
         if (!$isjbs)
         {
-        JError::raiseNotice('SOME_ERROR_CODE', 'JBS_EI_NO_TABLES');
+            return false;
         }
         
        //Copy tables to a temp copy, changing TEXT to BLOB
@@ -46,10 +46,9 @@ class JBSExport{
      //  dump ($newbackuptables);
                   
        $dobackup = false;
-       $dobackup = $this->backup_tables($host,$user,$password,$dbname,$newbackuptables);
+       $dobackup = $this->backup_tables($host,$user,$password,$dbname,$newbackuptables, $backupfolder);
        //  dump ($newbackuptables);
-       //Now let's delete the backup tables
-    //   $deleteit = deletecopy($newbackuptables);
+      
        
       // JRequest::setVar('jbsmessages',$deleteit,'get','array');
     $errorfile = array();
@@ -61,19 +60,20 @@ class JBSExport{
         }  
        if (!$dobackup)
        {
-            JError::raiseNotice('SOME_ERROR_CODE', 'JBS_EI_NO_BACKUP');
+            return false;
        }
        else
        {
-            $downloadfile = $this->output_file($dobackup[0], $dobackup[1], $mime_type='');
+            return true;
        }
     
     }
 
 /* backup the db OR just a table */
-function backup_tables($host,$user,$pass,$name,$tables = '*')
+function backup_tables($host,$user,$pass,$name,$tables = '*',$backupfolder = 'media')
 {
-	$config =& JFactory::getConfig();
+	$return = '';
+    $config =& JFactory::getConfig();
     $dbprefix = $config->getValue('dbprefix');
     $prefixlength = strlen($dbprefix);
     $theresult = false;
@@ -126,9 +126,13 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 	}
 	
 	//save file
+    if (!JFolder::exists(JPATH_SITE.DS.'media'.DS.$backupfolder))
+    {
+        JFolder::create(JPATH_SITE.DS.'media'.DS.$backupfolder);
+    }
     $localfilename = 'jbs-db-backup-'.time().'.sql';
-    $serverfile = JPATH_SITE .DS. 'tmp' .DS. $localfilename;
-	$handle = fopen(JPATH_SITE .DS. 'tmp' .DS. $localfilename,'w+');
+    $serverfile = JPATH_SITE .DS. $backupfolder .DS. $localfilename;
+	$handle = fopen(JPATH_SITE .DS. $backupfolder .DS. $localfilename,'w+');
     $returnfile = array($serverfile,$localfilename);
     
 	fwrite($handle,$return);
