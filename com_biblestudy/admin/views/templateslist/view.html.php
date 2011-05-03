@@ -22,7 +22,7 @@ class biblestudyViewtemplateslist extends JView {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->types = $this->get('Types');
-        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'templateedit');
+        $this->canDo	= BibleStudyHelper::getActions($this->items[0]->id, 'templateedit');
         $this->addToolbar();
         parent::display($tpl);
     }

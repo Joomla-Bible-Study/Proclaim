@@ -26,7 +26,7 @@ class biblestudyViewmediafileslist extends JView {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->mediatypes = $this->get('Mediatypes');
-         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
+         $this->canDo	= BibleStudyHelper::getActions($this->items[0]->id, 'mediafilesedit');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));

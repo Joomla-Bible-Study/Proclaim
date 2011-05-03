@@ -480,7 +480,7 @@ class biblestudyModelmediafilesedit extends modelClass {
      */
     protected function loadFormData() {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafilesedit.data', array());
-        if (empty($data)) {
+        if (!empty($data)) {
             $data = $this->getItem();
             $data->podcast_id = explode(',', $data->podcast_id);
         }
