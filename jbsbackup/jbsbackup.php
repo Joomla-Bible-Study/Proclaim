@@ -198,7 +198,7 @@ class plgSystemjbsbackup extends JPlugin {
     		jimport('joomla.filesystem.file');
     		
             //Check for existence of backup file, then attach to email
-            $backupexists = JFile::exists($dobackup->serverfile);
+            $backupexists = JFile::exists($dobackup['serverfile']);
             if (!$backupexists){$msg = JText::_('PLG_JBSBACKUP_ERROR');}
             else {$msg = JText::_('PLG_JBSBACKUP_SUCCESS');}
             $mail = JFactory::getMailer();
@@ -211,7 +211,7 @@ class plgSystemjbsbackup extends JPlugin {
             $Body2 = '';
     	 				
     		
-					$Body2 .= '<br><a href="'.$dobackup->serverfile.'">'.$dobackup->localfile.'</a>';
+					$Body2 .= '<br><a href="'.JURI::root().'media'.DS.$dobackup['localfilename'].'">'.$dobackup['localfilename'].'</a>';
                     $Body2 .= ' - '.$msg;
     			
     		
@@ -225,7 +225,8 @@ class plgSystemjbsbackup extends JPlugin {
                 $mail->addRecipient($recipient);
         		$mail->setSubject($Subject.' '.$livesite);
         		$mail->setBody($Body3);
-                $mail->addAttachment($dobackup->serverfile);
+                if ($params->get('includedb')== 1)
+                {$mail->addAttachment($dobackup['serverfile']);}
                 $mail->Send();
             }
     

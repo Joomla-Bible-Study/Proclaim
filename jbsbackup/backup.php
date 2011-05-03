@@ -64,7 +64,7 @@ class JBSExport{
        }
        else
        {
-            return true;
+            return $dobackup;
        }
     
     }
@@ -133,7 +133,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*',$backupfolder = 'me
     $localfilename = 'jbs-db-backup-'.time().'.sql';
     $serverfile = JPATH_SITE .DS. $backupfolder .DS. $localfilename;
 	$handle = fopen(JPATH_SITE .DS. $backupfolder .DS. $localfilename,'w+');
-    $returnfile = array($serverfile,$localfilename);
+    $returnfile = array('serverfile'=>$serverfile,'localfilename'=>$localfilename);
     
 	fwrite($handle,$return);
 	fclose($handle);
@@ -250,65 +250,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*',$backupfolder = 'me
 die();
 unlink($file);
 }	
-/* This function is not used */
-function writefile($dobackup)
-    {
-        // Set FTP credentials, if given
-		jimport('joomla.client.helper');
-		jimport('joomla.filesystem.file');
-		JClientHelper::setCredentialsFromRequest('ftp');
-		$ftp = JClientHelper::getCredentials('ftp');
-		$client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
-		$localfilename = 'jbs-db-backup-'.time().'.sql';
-		$file = $client->path.DS.$localfilename;
-        $returnfile = array($file, $localfilename);
-		// Try to make the template file writeable
-		if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755')) {
-			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file writable');
-		}
 
-		$fileit = JFile::write($file, $dobackup);
-        if ($fileit){return $returnfile;}
-        else {return false;}
-		// Try to make the template file unwriteable
-		if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')) {
-			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
-		}
-    }
-/* This function is not used */        
-    function downloadfile($fname)
-    {
-        
-        $serverfile = $fname[0];
-        $localfile = $fname[1];
-        $user_agent = (isset($_SERVER["HTTP_USER_AGENT"]) ) ? $_SERVER["HTTP_USER_AGENT"] : $HTTP_USER_AGENT;
-        while (@ob_end_clean());
-        header("Cache-Control: public");
-        header("Content-Description: File Transfer");
-    	header("Content-Disposition: attachment; filename=".basename($localfile));
-        header("Content-Type: text/plain");
-        header("Content-Transfer-Encoding: binary");
-      	
-        readfile($serverfile);
-    	
-    	$url = $serverfile;
-    	$out_file_name = $localfile;
-    //    ini_set('memory_limit', '1000M');
-    
-    	$out = fopen($localfile,"wb");
-    	
-    	if($out){
-    		
-    		fwrite($out,file_get_contents($url));
-    	
-    	}else{
-    	   JError::raiseNotice('SOME_ERROR_CODE', 'Error : Set Permissions 777 to the current directory');
-    		
-    	}
-    	
-    	fclose($out);
-   		return true;
-    }
 
     function copytables($backuptables)
     {
