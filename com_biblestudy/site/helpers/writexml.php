@@ -51,7 +51,7 @@ defined('_JEXEC') or die('Restricted access');
 				//$addItemid = '';
 				//$addItemid = getItemidLink($isplugin=1, $admin_params);
 				if (!$detailstemplateid) {$detailstemplateid = 1;}
-		  		$detailstemplateid = '&amp;templatemenuid='.$detailstemplateid;
+		  		$detailstemplateid = '&amp;t='.$detailstemplateid;
 				$podhead = '<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>
@@ -76,7 +76,7 @@ defined('_JEXEC') or die('Restricted access');
 	<copyright>'.$year.' All rights reserved.</copyright>
 	<pubDate>'.$date.'</pubDate>
 	<lastBuildDate>'.$date.'</lastBuildDate>
-	<generator>Bible Study Message Management System</generator>
+	<generator>Joomla Bible Study</generator>
 	<managingEditor>'.$podinfo->editor_email.' ('.$podinfo->editor_name.')</managingEditor>
 	<webMaster>'.$podinfo->editor_email.' ('.$podinfo->editor_name.')</webMaster>
 	<itunes:owner>
@@ -95,7 +95,7 @@ defined('_JEXEC') or die('Restricted access');
 				else {$limit = '';}
 				
 				//here's where we look at each mediafile to see if they are connected to this podcast
-				$query = "SELECT id, params, podcast_id published FROM `#__bsms_mediafiles` WHERE published = '1'";
+				$query = "SELECT id, params, podcast_id, published FROM `#__bsms_mediafiles` WHERE published = '1'";
 				$db->setQuery($query);
 				$results = $db->loadObjectList();
 				$where = array();
