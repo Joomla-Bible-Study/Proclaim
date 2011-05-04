@@ -61,7 +61,12 @@ class Tablemediafilesedit extends JTable
     $array['params'] = (string)$registry;
     }
     
-      
+    //Bind the podcast_id
+    if (isset($array['podcast_id']) && is_array($array['podcast_id'])) {
+    $registry = new JRegistry();
+    $registry->loadArray($array['podcast_id']);
+    $array['podcast_id'] = (string)$registry;
+    }  
     // Bind the rules.
     if (isset($array['rules']) && is_array($array['rules'])) {
     $rules = new JRules($array['rules']);
