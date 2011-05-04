@@ -6,19 +6,19 @@
         behave like an install but upgrades will be treated appropriately even
         if the interface doesn't support it properly -->
   <!-- Generic Metadata -->
-  <name>jbsmigration</name>
+  <name>COM_JBSMIGRATION</name>
   <author>JoomlaBibleStudy Team</author>
   <authorEmail>info@joomlabiblestudy.org</authorEmail>
   <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
   <copyright>(C) 2011 Copyright Joomla Bible Study</copyright>
   <license>GNU/GPL</license>
-  <version>1.0.7</version>
-  <creationDate>April 2011</creationDate>
-  <description>Joomla Bible Study Migration Tool to Version 7</description>
+  <version>1.0.8</version>
+  <creationDate>May 4, 2011</creationDate>
+  <description>COM_JBSMIGRATION_DESCRIPTION</description>
   <files>jbsmigration.xml</files>
    <administration>
     <!-- Administration Menu Section -->
-    <menu>JBS Migration</menu>
+    <menu>COM_JBSMIGRATION_MENU</menu>
     <!-- Administration Main File Copy Section -->
     <files>
       <filename>index.html</filename>
@@ -31,9 +31,11 @@
       <folder>images</folder>
       <folder>help</folder>
       <folder>migration</folder>
+      <folder>languages</folder>
       </files>
       <languages folder="languages">
       <language tag="en-GB">en-GB/en-GB.com_jbsmigration.ini</language>
+      <language tag="en-GB">en-GB/en-GB.com_jbsmigration.sys.ini</language>
       </languages>
     </administration>
    <!--  Dependencies 	-->

@@ -443,6 +443,7 @@ class jbs700Install{
                 $params = new JParameter($result->params);
                 $player = $params->get('player');
                 $popup = $params->get('internal_popup');
+                $podcasts = $params->get('podcasts');
                 if ($player)
                 {
                     if ($player == 2)
@@ -458,6 +459,12 @@ class jbs700Install{
                     $query = "UPDATE #__bsms_mediafiles SET `popup` = '$popup' WHERE `id` = $result->id LIMIT 1";
                     $msg = $this->performdb($query);
                     
+                }
+                if ($podcasts)
+                {
+                    $podcasts = str_replace('|',',',$podcasts);
+                    $query = "UPDATE #__bsms_mediafiles SET `podcast_id` = '$podcasts' WHERE `id` = $result->id LIMIT 1";
+                    $msg = $this->performdb($query);
                 }
                 //Update the params to json
                 $params = new JParameter($result->params);
