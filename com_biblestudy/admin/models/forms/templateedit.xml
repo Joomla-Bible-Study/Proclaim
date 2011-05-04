@@ -905,7 +905,7 @@
                 <option value="2">JBS_TPL_SPAN_COLUMNS3TO4</option>
             </field>
             <field name="linkr4c3"
-           type="link"
+           type="linkoptions"
            default="0"
            label="JBS_TPL_TYPE_OF_LINK"
            description="JBS_TPL_TYPE_OF_LINK_DESC" />
