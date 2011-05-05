@@ -80,7 +80,7 @@ function doimport()
                 {
                     $application->enqueueMessage( ''. JText::_('JBS_EI_FAILURE') .'' ) ;
                 }
-                $application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS') .'' ) ;
+                $application->enqueueMessage( ''. JText::_('JBS_EI_SUCCESS_REVIEW_ADMIN_TEMPLATE') .'' ) ;
                 JRequest::setVar('migrationdone','1','get');
             }
             else

@@ -409,6 +409,17 @@ class jbs700Install{
                 $messages[] = $msg;
              }
         
+        $query = "ALTER TABLE `#__bsms_topics` ADD COLUMN `languages` varchar(511) DEFAULT NULL AFTER `published`";
+        $msg = $this->performdb($query);
+        if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
+
         $query = "ALTER Table `#__bsms_version` MODIFY id int(3) NOT NULL AUTO_INCREMENT";
         $msg = $this->performdb($query);
         if (!$msg)

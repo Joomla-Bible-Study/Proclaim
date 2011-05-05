@@ -84,43 +84,46 @@
  ?> 
 <div class="popupwindow">
 <?php
-$headertext = '';
-$footertext = ''; 
+			$headertext = '';
+			$footertext = ''; 
 
-// Need to add in template
-echo "<body bgcolor='".$params->get('popupbackground', 'black')."'>";
+			// Need to add in template
+			echo "<body bgcolor='".$params->get('popupbackground', 'black')."'>";
 
-$headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
-if ($itemparams->get('itempopuptitle')) {$headertext = $this->titles($itemparams->get('itempopuptitle'), $media, $scripture, $date, $length);}
-$footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
-if ($itemparams->get('itempopupfooter')) {$footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);}
-echo '<div class="popuptitle"><p class="popuptitle">'.$headertext.'</p></div>';
-//Here is where we choose whether to use the Internal Viewer or All Videos
-if ($itemparams->get('player') == 3 || $player == 3) {
-    $mediacode = $getMedia->getAVmediacode($media->mediacode);
-    echo JHTML::_('content.prepare', $mediacode);}  
-      
-            
-if ($itemparams->get('player')== 1 || $player == 1)
-{  
-  $embedshare = $params->get('embedshare','FALSE'); // Used for Embed Share replace with param
-	echo    "<script type='text/javascript'>
+			$headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
+			if ($itemparams->get('itempopuptitle')) 
+				{$headertext = $this->titles($itemparams->get('itempopuptitle'), $media, $scripture, $date, $length);}
+			$footertext = $this->titles($params->get('popupfooter'), $media, $scripture, $date, $length);
+			if ($itemparams->get('itempopupfooter')) 
+				{$footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);}
+			echo '<div class="popuptitle"><p class="popuptitle">'.$headertext.'</p></div>';
+			//Here is where we choose whether to use the Internal Viewer or All Videos
+			if ($itemparams->get('player') == 3 || $player == 3) {
+				$mediacode = $getMedia->getAVmediacode($media->mediacode);
+				echo JHTML::_('content.prepare', $mediacode);}  
+
+			if ($itemparams->get('player')== 1 || $player == 1)
+			{  
+				$embedshare = $params->get('embedshare','FALSE'); // Used for Embed Share replace with param
+				echo "<script type='text/javascript'>
 swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/player.swf', 'placeholder', '".$playerwidth."', '".$playerheight."', '9.0.0', false,{file:'".$path1."',title:'".$studytitle."',author:'".$media->teachername."',date:'".$media->studydate."',description:'".$studyintro."',link:'".JURI::base()."index.php?option=com_biblestudy&view=studieslist&t=".$templateid."',image:'".$params->get('popupimage', 'components/com_biblestudy/images/speaker24.png')."',autostart:'true',lightcolor:'".$lightcolor."',frontcolor:'".$frontcolor."',backcolor:'".$backcolor."',screencolor:'".$screencolor."',displayheight:'300',plugins:'viral-2','viral.onpause':'".$embedshare."','viral.oncomplete':'".$embedshare."','viral.allowmenu':'".$embedshare."'},{allowfullscreen:'true',allowscriptaccess:'always'},{id:'".$media->id."', name:'".$media->id."'});
 </script>
 <div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>".JText::_('JBS_MED_GET_FLASH')."</a> ".JText::_('JBS_MED_TO_SEE_PLAYER')."</div>";
-//TODO:Need to get difference between direct popup and not so can have popup use this script
-if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
-{
-  //  echo '<div id=\'direct\'><script type=text/javascript> window.location.href=\''.$path1.'\'</script></div>';
-  
-  
-    echo '<div class=\'direct\'><iframe src ="'.$path1.'" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>'.JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES').'</p>
+			}
+			
+			//TODO:Need to get difference between direct popup and not so can have popup use this script
+			if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
+			{
+  				//  echo '<div id=\'direct\'><script type=text/javascript> window.location.href=\''.$path1.'\'</script></div>';
+ 
+    			echo '<div class=\'direct\'><iframe src ="'.$path1.'" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>'.JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES').'</p>
 </iframe></div>';
-}
-//Legacy Player (since JBS 6.2.2)
-if ($player == 7)
-{
-    echo '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
+			}
+
+			//Legacy Player (since JBS 6.2.2)
+			if ($player == 7)
+			{
+    			echo '<script language="JavaScript" src="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
 		<object type="application/x-shockwave-flash" data="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer'.$media->id.'" height="24" width="'.$playerwidth.'">
 		<param name="movie" value="'.JURI::base().'components/com_biblestudy/assets/legacyplayer/player.swf">
 		<param name="FlashVars" value="playerID='.$media->id.'&amp;soundFile='.$path1.'">
@@ -128,7 +131,7 @@ if ($player == 7)
 		<param name="menu" value="false">
 		<param name="wmode" value="transparent">
 		</object> ';
-}
+			}
 ?>
 
 <?PHP

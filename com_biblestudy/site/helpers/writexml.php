@@ -86,8 +86,7 @@ defined('_JEXEC') or die('Restricted access');
 	<itunes:author>'.$podinfo->editor_name.'</itunes:author>
 	<itunes:explicit>no</itunes:explicit>
 	<ttl>1</ttl>
-	<atom:link href="http://'.$podinfo->website.'/'.$podinfo->filename.'" rel="self" type="application/rss+xml" />
-';
+	<atom:link href="http://'.$podinfo->website.'/'.$podinfo->filename.'" rel="self" type="application/rss+xml" />';
 				//Now let's get the podcast episodes
 				$limit = $podinfo->podcastlimit;
 				if ($limit > 0) 
@@ -201,7 +200,8 @@ defined('_JEXEC') or die('Restricted access');
 					$title = str_replace('&',"and",$title);
 					$description = str_replace('&',"and",$episode->studyintro);
 					$episodedetailtemp = '';
-					$episodedetailtemp = '	<item>
+					$episodedetailtemp = '
+	<item>
 		<title>'.$title.'</title>
 		<link>http://'.$podinfo->website.'/index.php?'.rawurlencode('option=com_biblestudy&view=studydetails&id=').$episode->sid.$detailstemplateid.'</link>
 		<comments>http://'.$podinfo->website.'/index.php?'.rawurlencode('option=com_biblestudy&view=studydetails&id=').$episode->sid.$detailstemplateid.'</comments>
@@ -239,11 +239,11 @@ defined('_JEXEC') or die('Restricted access');
 						}
 					$episodedetailtemp .= '
 		<itunes:explicit>no</itunes:explicit>
-		</item>
-	';
+	</item>';
 					$episodedetail = $episodedetail.$episodedetailtemp;
 				} //end of foreach for episode details
-				$podfoot = '</channel>
+				$podfoot = '
+</channel>
 </rss>';
 				$filecontent = $podhead.$episodedetail.$podfoot;
 		
