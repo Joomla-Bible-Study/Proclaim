@@ -368,9 +368,16 @@ class biblestudyModelstudieslist extends modelClass {
         $query->order('book.booknumber');
 
         $db->setQuery($query->__toString());
-        $books = getTranslated($db->loadObjectList());
-       // return $db->loadObjectList();
-       return $books;
+      //  $books = getTranslated($db->loadObjectList());
+      // return $db->loadAssocList();
+      //  return $db->loadObjectList();
+     //  return $books;
+       $db_result = $db->loadAssocList();
+        foreach($db_result as $i => $value)
+        {
+                 $db_result[$i]['text'] = JText::_($value['text']);
+        }
+        return $db_result;
     }
 
     /*

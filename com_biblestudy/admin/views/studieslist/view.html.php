@@ -30,7 +30,7 @@ class biblestudyViewstudieslist extends JView {
         $this->topics = $this->get('Topics');
         $this->addToolbar();
         
-      
+        
         parent::display($tpl);
 
     }
