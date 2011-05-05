@@ -6,7 +6,7 @@
     </field>
 
     <field name="studydate" type="calendar" label="JBS_CMN_STUDY_DATE"
-           description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
+           description="JBS_STYD_CREATE_DATE_DESC" class="inputbox" size="22"
            format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
     
     <field name="comments" type="radio" label="JBS_CMN_COMMENTS" description="JBS_STY_COMMENTS_DESC" class="inputbox" default="0">

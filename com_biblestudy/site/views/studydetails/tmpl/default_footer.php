@@ -9,7 +9,7 @@ defined('_JEXEC') or die();
 	<div class="listingfooter"><br />
     <?php $link_text = $this->params->get('link_text');
 			if (!$link_text) {
-				$link_text = JText::_('JBS_CMN_RETURN_STUDIES_LIST');
+				$link_text = JText::_('JBS_STY_RETURN_STUDIES_LIST');
 			}
 			if ($this->params->get('view_link') > 0){
 					$t = $this->params->get('studieslisttemplateid');
