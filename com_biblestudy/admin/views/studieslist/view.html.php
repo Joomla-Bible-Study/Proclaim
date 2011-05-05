@@ -17,7 +17,7 @@ class biblestudyViewstudieslist extends JView {
     protected $state;
 
     function display($tpl = null) {
-        $this->canDo	= BibleStudyHelper::getActions($this->items[0]->id, 'studiesedit');
+        $this->canDo	= BibleStudyHelper::getActions('', 'studiesedit');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');

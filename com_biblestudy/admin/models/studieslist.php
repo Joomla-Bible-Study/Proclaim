@@ -361,7 +361,7 @@ class biblestudyModelstudieslist extends modelClass {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
-        $query->select('book.booknumber AS value, book.bookname AS text');
+        $query->select('book.booknumber AS value, book.bookname AS text, book.id');
         $query->from('#__bsms_books AS book');
         $query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
         $query->group('book.id');

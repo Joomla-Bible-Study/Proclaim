@@ -20,7 +20,7 @@ class biblestudyViewteacherlist extends JView {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-        $this->canDo	= BibleStudyHelper::getActions($this->items[0]->id, 'teacheredit');
+        $this->canDo	= BibleStudyHelper::getActions('', 'teacheredit');
         //Check for errors
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));
