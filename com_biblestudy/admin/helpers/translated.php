@@ -20,9 +20,9 @@ function getTranslated($result)
 		$format = $value->text;
 		$text = JText::_($format);
 		$bookn = $value->value;
-		$id1 = $value->id;
+	//	$id1 = $value->id;
 		
-		$output2 = array('value'=>$bookn, 'text'=>$text, 'id'=>$id1);
+		$output2 = array('value'=>$bookn, 'text'=>$text);
 		$output[] = $output2;
     }
 return $output;
