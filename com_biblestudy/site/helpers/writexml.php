@@ -103,7 +103,7 @@ defined('_JEXEC') or die('Restricted access');
 					$params = new JParameter($result->params);
 					//dump ($params, 'params: ');
 					$podcasts = $result->podcast_id;
-					
+				$podcasts = explode(',',$result->podcast_id);
 					switch ($podcasts)
 					{
 						case is_array($podcasts) :
