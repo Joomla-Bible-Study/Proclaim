@@ -6,7 +6,7 @@
  */
 //No Direct Access
 defined('_JEXEC') or die();
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+//require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 
@@ -19,7 +19,7 @@ class biblestudyViewcommentslist extends JView
     protected $state;
 
     function display($tpl = null) {
-        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'commentsedit');
+        $this->canDo	= BibleStudyHelper::getActions('', 'commentsedit');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');

@@ -156,7 +156,7 @@ class biblestudyModelcommentslist extends modelClass {
 		}
 
         //Join over Studies
-        $query->select('study.studytitle AS studytitle');
+        $query->select('study.studytitle AS studytitle, study.chapter_begin, study.studydate');
         $query->join('LEFT', '#__bsms_studies AS study ON study.id = comment.study_id');
 
         //Join over books

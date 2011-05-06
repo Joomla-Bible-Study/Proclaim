@@ -4,7 +4,10 @@
 		<title>File Size Converter</title>
 		<!-- Script by hscripts.com -->
 		<script language="javascript">
+       
+
 			function decOnly(i) {
+			 
 				var t = i.value;
 				if(t.length>0) {
 					t = t.replace(/[^\d\.]+/g, ''); 
@@ -49,8 +52,10 @@
 				alert("Numbers only please.");
 				return false;
 			} else {
-				var objTB = window.opener.document.getElementById("size");
-				objTB.value = ss;
+				
+                
+               window.opener.document.getElementById('jform_size').value = ss;
+				
 				
 				window.close();
 				return true;

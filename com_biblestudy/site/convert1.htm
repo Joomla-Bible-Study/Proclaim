@@ -49,8 +49,7 @@
 				alert("Numbers only please.");
 				return false;
 			} else {
-				var objTB = window.opener.document.getElementById("size");
-				objTB.value = ss;
+				window.opener.document.getElementById('jform_size').value = ss;
 				
 				window.close();
 				return true;

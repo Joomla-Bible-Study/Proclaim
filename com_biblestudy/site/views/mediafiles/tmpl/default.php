@@ -7,7 +7,7 @@
 
 //No Direct Access
 defined('_JEXEC') or die();
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+//require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 JHtml::_('script', 'system/multiselect.js', false, true);
 
 

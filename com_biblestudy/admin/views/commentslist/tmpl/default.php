@@ -27,10 +27,10 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
       <thead>
         <tr> 
           <th width="1"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" /> </th>
-          <th width="20" align="center"> <?php echo JHTML::_('grid.sort',  'JBS_CMN_PUBLISHED', 'published', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
-          <th width="200"> <?php  echo JHTML::_('grid.sort',  'JBS_CMN_STUDY_TITLE', 's.studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+          <th width="20" align="center"> <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?> </th>
+          <th width="200"> <?php echo $this->escape($this->state->get('filter.studytitle')); ?></th>
           <th width = "100"><?php echo JText::_('JBS_CMT_FULL_NAME'); ?></th>
-          <th width = "100">  <?php echo JHTML::_('grid.sort',  'JBS_CMT_COMMENT_DATE', 'c.comment_date', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>       
+          <th width = "100">  <?php echo $this->escape($this->state->get('filter.studydate')); ?> </th>       
         </tr>
       </thead>
       <?php

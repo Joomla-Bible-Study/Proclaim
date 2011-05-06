@@ -120,6 +120,16 @@ class biblestudyModelcommentslist extends modelClass {
      * @since   7.0
      */
     protected function populateState() {
+        
+        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+
+        $studytitle = $this->getUserStateFromRequest($this->context.'.filter.studytitle', 'filter_studytitle');
+        $this->setState('filter.studytitle', $studytitle);
+        
+        $date = $this->getUserStateFromRequest($this->context.'.filter.studydate', 'filter_studydate', '');
+		$this->setState('filter.studydate', $date);
+        
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
 
@@ -148,7 +158,7 @@ class biblestudyModelcommentslist extends modelClass {
             $query->where('comment.published = ' . (int) $state);
 
         //Join over Studies
-        $query->select('study.studytitle AS studytitle');
+        $query->select('study.studytitle AS studytitle, study.chapter_begin, study.studydate');
         $query->join('LEFT', '#__bsms_studies AS study ON study.id = comment.study_id');
 
         //Join over books

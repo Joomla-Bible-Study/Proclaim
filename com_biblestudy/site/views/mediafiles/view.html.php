@@ -7,7 +7,7 @@
  */
 //No Direct Access
 defined('_JEXEC') or die();
-require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+//require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 jimport('joomla.application.component.view');
@@ -25,7 +25,7 @@ class biblestudyViewmediafiles extends JView {
     protected $state;
 
     function display($tpl = null) {
-         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
+         $this->canDo	= BibleStudyHelper::getActions('', 'mediafilesedit');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
