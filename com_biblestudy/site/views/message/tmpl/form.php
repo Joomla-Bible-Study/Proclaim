@@ -136,7 +136,7 @@ JHtml::_('behavior.formvalidation');
                         </div>
                <div class="formelm">
                     <?php echo $this->form->getLabel('thumbnailm'); ?>
-                    <?php echo $this->form->getInput('thumbnailm', null, $this->admin->params['default_study_image']); ?>
+                    <?php echo $this->form->getInput('thumbnailm', null, empty($this->item->studytitle) ? $this->admin->params['default_study_image'] : $this->item->thumbnailm) ?>
                    </div>
 </fieldset>
 <fieldset class="panelform">

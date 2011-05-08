@@ -368,16 +368,14 @@ class biblestudyModelstudieslist extends modelClass {
         $query->order('book.booknumber');
 
         $db->setQuery($query->__toString());
-      //  $books = getTranslated($db->loadObjectList());
-      // return $db->loadAssocList();
-      //  return $db->loadObjectList();
-     //  return $books;
+      
        $db_result = $db->loadAssocList();
         foreach($db_result as $i => $value)
         {
                  $db_result[$i]['text'] = JText::_($value['text']);
         }
         return $db_result;
+        
     }
 
     /*
@@ -483,15 +481,7 @@ class biblestudyModelstudieslist extends modelClass {
         
     }
     
-     function legacygetPlays($id) {
-        $query = ' SELECT SUM(plays) AS totalPlays FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
-        $result = $this->_getList($query);
-        if (!$result) {
-            $result = '0';
-            return $result;
-        }
-        return $result[0]->totalPlays;
-    }
+     
 }
 
 ?>

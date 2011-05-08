@@ -8,6 +8,8 @@
 //No Direct Access
 defined('_JEXEC') or die('Restricted access');
 require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+$listDirn = $this->state->get('list.direction');
+ $listOrder = $this->state->get('list.ordering');
  ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=commentslist'); ?>" method="post" name="adminForm" id="adminForm">
 
@@ -18,10 +20,10 @@ require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
       <thead>
         <tr> 
           <th width="1"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" /> </th>
-          <th width="20" align="center"> <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?> </th>
-          <th width="200"> <?php echo $this->escape($this->state->get('filter.studytitle')); ?> <?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?></th>
+          <th width="20" align="center"> <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?> </th>
+          <th width="250"> <?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?> </th>
           <th width = "100"><?php echo JText::_('JBS_CMT_FULL_NAME'); ?></th>
-          <th width = "100">  <?php echo $this->escape($this->state->get('filter.studydate')); ?> <?php echo JText::_('JBS_CMN_STUDY_DATE'); ?> </th>       
+          <th width = "100">  <?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?> </th>       
         </tr>
       </thead>
       <?php

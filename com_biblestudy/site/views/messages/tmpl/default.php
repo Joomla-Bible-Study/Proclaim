@@ -6,7 +6,7 @@
  */
 //No Direct Access
 defined('_JEXEC') or die();
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+//require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 JHtml::_('script', 'system/multiselect.js', false, true);
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
@@ -19,35 +19,35 @@ $listDirn = $this->state->get('list.direction');
             <input type="text" name="filter_studytitle" id="filter_studytitle" value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
 
             <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
-            <button type="button" onclick="document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+            <button type="button" onclick="document.id('filter_studytitle').value='';Joomla.submitbutton();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
         </div>
         <div class="clr"></div>
         <div class="filter-select fltlft">
-            <select name="filter_book" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_book" class="inputbox" onchange="Joomla.submitbutton()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
                 <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.book')); ?>
             </select>
-            <select name="filter_teacher" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_teacher" class="inputbox" onchange="Joomla.submitbutton()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_TEACHER'); ?></option>
                 <?php echo JHtml::_('select.options', $this->teachers, 'value', 'text', $this->state->get('filter.teacher')); ?>
             </select>
-            <select name="filter_series" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_series" class="inputbox" onchange="Joomla.submitbutton()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_SERIES'); ?></option>
                 <?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.series')); ?>
             </select>
-            <select name="filter_message_type" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_message_type" class="inputbox" onchange="Joomla.submitbutton()">
                 <option value=""><?php echo JText::_('JBS_CMN_MESSAGE_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
             </select>
-            <select name="filter_year" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_year" class="inputbox" onchange="Joomla.submitbutton()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
                 <?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
             </select>
-            <select name="filter_topic" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_topic" class="inputbox" onchange="Joomla.submitbutton()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_TOPIC'); ?></option>
                 <?php echo JHtml::_('select.options', $this->topics, 'value', 'text', $this->state->get('filter.topic')); ?>
             </select>
-            <select name="filter_state" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_state" class="inputbox" onchange="Joomla.submitbutton()">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.state'), true); ?>
             </select>

@@ -29,7 +29,7 @@ class biblestudyViewmessages extends JView {
         $this->years = $this->get('Years');
         $this->topics = $this->get('Topics');
               
-        
+       
    
         $user = JFactory::getUser();
       

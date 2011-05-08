@@ -46,7 +46,7 @@ class biblestudyModelMessages extends modelClass {
      * Returns the query
      * @return string The query to be used to retrieve the rows from the database
      */
-    function _buildQuery() {
+/*    function _buildQuery() {
         $where = $this->_buildContentWhere();
         $orderby = $this->_buildContentOrderBy();
         
@@ -68,7 +68,7 @@ class biblestudyModelMessages extends modelClass {
         ;
         return $query;
     }
-
+*/
     function getDownloads($id) {
         $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
         $result = $this->_getList($query);
@@ -93,6 +93,7 @@ class biblestudyModelMessages extends modelClass {
      * Retrieves the data
      * @return array Array of objects containing the data from the database
      */
+   /*
     function getData() {
         // Lets load the data if it doesn't already exist
         if (empty($this->_data)) {
@@ -101,7 +102,7 @@ class biblestudyModelMessages extends modelClass {
         }
         return $this->_data;
     }
-
+*/
     /**
      * Creates and executes a new query that retrieves the medifile information from the mediafiles table. 
      * It then adds to the dataObject the mediafiles associated with the sermon.
@@ -135,6 +136,7 @@ class biblestudyModelMessages extends modelClass {
      * @access public
      * @return integer
      */
+ /*
     function getTotal() {
         // Lets load the content if it doesn't already exist
         if (empty($this->_total)) {
@@ -144,7 +146,7 @@ class biblestudyModelMessages extends modelClass {
 
         return $this->_total;
     }
-
+*/
     /**
      * Method to get a pagination object for the studies
      *
@@ -360,8 +362,12 @@ class biblestudyModelMessages extends modelClass {
         $query->order('book.booknumber');
 
         $db->setQuery($query->__toString());
-        $books = getTranslated($db->loadObjectList());
-        return $books;
+        $db_result = $db->loadAssocList();
+        foreach($db_result as $i => $value)
+        {
+                 $db_result[$i]['text'] = JText::_($value['text']);
+        }
+        return $db_result;
     }
 
     /*
