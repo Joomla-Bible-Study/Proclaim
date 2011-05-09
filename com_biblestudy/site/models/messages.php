@@ -262,7 +262,7 @@ class biblestudyModelMessages extends modelClass {
      * @return  JDatabaseQuery
      * @since   7.0
      */
-    protected function getListQuery() {
+   protected function getListQuery() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
@@ -293,9 +293,13 @@ class biblestudyModelMessages extends modelClass {
         $query->select('book.bookname');
         $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
         
-        //Join over Plays?
-        //Join over Downloads?
-
+        //Join over Plays/Downloads
+        $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+        $query->join('LEFT','#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
+        $query->group('study.id');
+        
+      
+        
         //Filter by studytitle
         $studytitle = $this->getState('filter.studytitle');
         if(!empty($studytitle))
@@ -332,12 +336,14 @@ class biblestudyModelMessages extends modelClass {
         if(!empty($topic))
             $query->where('study.topics_id = '.(int)$topic);
 
-        //Filter by state
-        $state = $this->getState('filter.state');
-        if(empty($state))
-            $query->where('study.published = 0 OR study.published = 1');
-        else
-            $query->where('study.published = '.(int)$state);
+        // Filter by published state
+		$published = $this->getState('filter.published');
+		if (is_numeric($published)) {
+			$query->where('study.published = ' . (int) $published);
+		}
+		else if ($published === '') {
+			$query->where('(study.published = 0 OR study.published = 1)');
+		}
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
@@ -346,6 +352,7 @@ class biblestudyModelMessages extends modelClass {
         
         return $query;
     }
+
 
     /*
      * @since 7.0
