@@ -67,10 +67,10 @@
              value_field="bookname">
             <option value="-1">JBS_CMN_SELECT_BOOK</option>
         </field>
-        <field name="topic_id" type="sql" default="-1" label="JBS_CMN_TOPIC"
-             description="JBS_ADM_FILLIN_STUDY_TOPIC_ID_DESC" class="inputbox"
-             query="SELECT DISTINCT #__bsms_studies.topics_id, #__bsms_topics.topic_text, #__bsms_topics.id AS tid FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) WHERE #__bsms_topics.published = 1 ORDER BY #__bsms_topics.topic_text ASC"
-             key_field="tid"
+        <field name="topic_id" type="sql" extension="com_biblestudy"
+             label="JBS_CMN_TOPIC" description="JBS_ADM_FILLIN_STUDY_TOPIC_ID_DESC" translate="true" class="inputbox"
+             query="SELECT id, topic_text FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC"
+             key_field="id"
              value_field="topic_text">
             <option value="-1">JBS_CMN_SELECT_TOPIC</option>
         </field>

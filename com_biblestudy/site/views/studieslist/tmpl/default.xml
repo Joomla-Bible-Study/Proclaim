@@ -45,6 +45,7 @@
            class="inputbox"
            label="JBS_CMN_FILTERS_BOOKS"
            multiple="true"
+           size="10"
            translate="true"
            query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
            key_field="booknumber"

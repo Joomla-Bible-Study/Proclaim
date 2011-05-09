@@ -99,26 +99,27 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="booknumber"
-                   type="sql"
-                   query="SELECT DISTINCT #__bsms_studies.booknumber AS sbn, #__bsms_studies.published AS spub, #__bsms_books.booknumber AS bbn, #__bsms_books.bookname FROM #__bsms_books LEFT JOIN #__bsms_studies ON (#__bsms_studies.booknumber = #__bsms_books.booknumber) WHERE #__bsms_studies.published = 1 ORDER BY #__bsms_books.booknumber ASC"
-                   key_field="sbn"
+                   type="sql" 
+                   query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
+                   key_field="booknumber"
                    value_field="bookname"
                    default="-1"
                    multiple="true"
                    size="10"
-				   translate="true"
+                   translate="true"
                    label="JBS_CMN_FILTERS_BOOKS"
                    description="JBS_CMN_FILTERS_BOOKS_DESC">
-                <option value="-1">JBS_CMN_SHOW_ALL</option>
+                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="topic_id"
                    type="sql"
-                   query="SELECT DISTINCT #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_studies.topics_id, #__bsms_studytopics.topic_id, #__bsms_studytopics.study_id FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.id = #__bsms_studies.topics_id)"
-                   key_field="tid"
+                   query="SELECT id, topic_text FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC"
+                   key_field="topic_text"
                    value_field="topic_text"
                    default="-1"
                    multiple="true"
                    size="10"
+                   translate="true"
                    label="JBS_CMN_FILTERS_TOPICS"
                    description="JBS_CMN_FILTERS_TOPICS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
