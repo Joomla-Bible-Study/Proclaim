@@ -122,11 +122,12 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <?php echo $this->form->getLabel('topics_id'); ?>
                     <?php echo $this->form->getInput('topics_id', null, empty($this->item->studytitle) ? $this->admin->params['topic_id'] : $this->item->topics_id) ?>
                         </li>
-                        <li>
-                    <?php //echo $this->form->getLabel('topic_tags'); ?>
-                    <?php //echo $this->form->getInput('topic_tags'); ?>
-                    <input type="text" id="topic_tags" name="topic_tags" />
-                        </li>
+                       
+                        </ul>
+                        <?php echo $this->form->getLabel('topic_tags'); ?>
+                        <div class="clr"></div>
+                        <?php echo $this->form->getInput('topic_tags'); ?>
+                         <ul>
                         <li>
                     <?php echo $this->form->getLabel('messagetype'); ?>
                     <?php echo $this->form->getInput('messagetype', null, empty($this->item->studytitle) ? $this->admin->params['messagetype'] : $this->item->messagetype) ?>
@@ -250,13 +251,13 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
   $(document).ready(function() {
 
   //Get Prepopulate Tags here...
-  $.get("index.php?option=com_biblestudy&task=getTags&format=raw&q=<?php echo $this->studiesedit->id?>", function(data){
+  $.get("index.php?option=com_biblestudy&task=getTags&format=raw&q=<?php echo $this->item->id?>", function(data){
       vData = eval(data);
       run(vData);
     });
 
     function run(d) {
-      $("#topic_tags").tokenInput("index.php?option=com_biblestudy&task=AjaxTags&format=raw", {
+      $("#jform_topic_tags").tokenInput("index.php?option=com_biblestudy&task=AjaxTags&format=raw", {
           prePopulate: d,
           classes: {
           tokenList: "token-input-list-facebook",

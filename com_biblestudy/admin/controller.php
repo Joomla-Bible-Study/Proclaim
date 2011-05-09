@@ -219,11 +219,10 @@ function writeXMLFile() {
         if ($result) {
 
            $msg = JText::_('JBS_PDC_PODCAST_SAVED');
-           // $application = JFactory::getApplication();
-           // $application->enqueueMessage( ''. JText::_('JBS_PDC_PODCAST_SAVED') .'' ) ;
+           
             
         } else {
-          //  $application->enqueueMessage( ''. JText::_('JBS_PDC_ERROR_SAVING_PODCAST') .'' ) ;
+          
             $msg = JText::_('JBS_PDC_ERROR_SAVING_PODCAST');
         }
         $this->setRedirect('index.php?option=com_biblestudy&view=podcastlist', $msg);

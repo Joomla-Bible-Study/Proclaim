@@ -31,9 +31,13 @@ class biblestudyViewstudiesedit extends JView {
         $this->addToolbar();
         
         $document = JFactory::getDocument();
+        $document->addScript(JURI::base().'components/com_biblestudy/js/jquery.js');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js');
         $document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.tokeninput.js');
         $document->addStyleSheet(JURI::base().'components/com_biblestudy/css/token-input-facebook.css');
+        $document->addScript(JURI::base().'components/com_biblestudy/js/noconflict.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
         
         parent::display($tpl);
     }
