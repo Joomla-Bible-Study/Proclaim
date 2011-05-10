@@ -183,7 +183,7 @@ table.fbstat .col2 {
 	background-color: #FBFBFB;
 }
 </style>
-<?php $msg = JRequest::getVar('msg','','post'); if ($this->msg){echo $msg;} ?>
+<?php $msg = ''; $msg = JRequest::getVar('msg','','post'); if ($this->msg){echo $msg;} ?>
 <!-- Header -->
  <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>

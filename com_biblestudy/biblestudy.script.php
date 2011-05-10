@@ -61,6 +61,7 @@ class com_biblestudyInstallerScript {
    		$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'uninstall-dbtables.sql');
 		$db->setQuery($query);
 		$db->queryBatch();
+        $drop_result = '';
 		$drop_result .= '<p>db Error: '.$db->stderr().'</p>';
 		$drop_result .= '<H3>'. JText::_('JBS_INS_CUSTOM_UNINSTALL_SCRIPT') .'</H3>';
 	}
@@ -83,7 +84,7 @@ class com_biblestudyInstallerScript {
 	}
 
 	function postflight($type, $parent) {
-        //We see if one of the study records matches the parent_id, if not, we need to reset them
+        //We see if one of the records matches the parent_id, if not, we need to reset them
     	
         $db = JFactory::getDBO();
         $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
@@ -95,13 +96,13 @@ class com_biblestudyInstallerScript {
         $db->setQuery($query);
         $asset = $db->loadObject();
         
-        if ($parent_id != $asset->parent_id)
+        if ($parent_id != $asset->parent_id && $asset->asset_id)
         {
             $query = 'UPDATE #__assets SET parent_id = '.$parent_id.' WHERE parent_id = '.$asset->parent_id;
             $db->setQuery($query);
-            if ($result = $db->query()){return true;}else{return false;}
+            if ($result = $db->query()){echo 'Resetting assets';}else{echo 'Failure resetting assets';}
         }
-        elseif ( $asset_id == 0 || !$asset->asset_id)
+        else
         {
 			require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
 			$assetfix = new fixJBSAssets();
