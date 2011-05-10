@@ -19,9 +19,9 @@ class biblestudyViewcpanel extends JView
        //Version check
 		include_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/version.php');
 		$versioncheck = latestVersion();
-	//	dump ($versioncheck);
 		$this->assignRef('versioncheck', $versioncheck);
         
+      
         
         parent::display($tpl);
 	}

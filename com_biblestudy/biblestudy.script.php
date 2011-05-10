@@ -79,17 +79,29 @@ class com_biblestudyInstallerScript {
 	} // End Update
 
 	function preflight($type, $parent) {
-		echo '<p>'. JText::sprintf('JBS_INS_16_CUSTOM_PREFLIGHT', $type) .'</p>';
+	//	echo '<p>'. JText::sprintf('JBS_INS_16_CUSTOM_PREFLIGHT', $type) .'</p>';
 	}
 
 	function postflight($type, $parent) {
-
-	// Check to see if assets have been fixed
+        //We see if one of the study records matches the parent_id, if not, we need to reset them
+    	
         $db = JFactory::getDBO();
-        $query = 'SELECT asset_id FROM #__bsms_templates WHERE id = 1';
+        $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
         $db->setQuery($query);
-        $db->query();
-        if (!$db->loadResult())
+        $parent_id = $db->loadResult();
+        
+        // Check to see if assets have been fixed and if they match the parent_id
+        $query = 'SELECT t.asset_id, a.parent_id FROM #__bsms_templates AS t LEFT JOIN #__assets AS a ON (t.asset_id = a.id) WHERE t.id = 1';
+        $db->setQuery($query);
+        $asset = $db->loadObject();
+        
+        if ($parent_id != $asset->parent_id)
+        {
+            $query = 'UPDATE #__assets SET parent_id = '.$parent_id.' WHERE parent_id = '.$asset->parent_id;
+            $db->setQuery($query);
+            if ($result = $db->query()){return true;}else{return false;}
+        }
+        elseif ( $asset_id == 0 || !$asset->asset_id)
         {
 			require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
 			$assetfix = new fixJBSAssets();

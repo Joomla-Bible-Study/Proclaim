@@ -14,6 +14,18 @@ class fixJBSAssets
     public function AssetEntry()
     {
 		print '<p>'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
+        
+        //Check to see if there is already an asset_id and if so, does it match the parent_id in jos_assets. If not, reset it and in jos_asssets
+        $db = JFactory::getDBO();
+        $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
+        $db->setQuery($query);
+        $parent_id = $db->loadResult();
+        
+        $query = 'SELECT t.asset_id, a.id, a.parent_id FROM #__bsms_templates as r LEFT JOIN #__assets AS a ON (r.asset_id = t.id) WHERE t.id = 1';
+        $db->setQuery($query);
+        $asset = $db->loadObject();
+        
+        
         $objects = array(array('name'=>'#__bsms_servers','titlefield'=>'server_name','assetname'=>'serversedit'),
                         array('name'=>'#__bsms_folders','titlefield'=>'foldername','assetname'=>'foldersedit'),
                         array('name'=>'#__bsms_studies','titlefield'=>'studytitle','assetname'=>'studiesedit'),
@@ -39,6 +51,7 @@ class fixJBSAssets
             $doAsset = $this->JBSAsset($name, $titlefield, $assetname);
         }
         if ($doAsset){return true;}else{return false;}
+       
     }
     public function JBSAsset($name, $titlefield, $assetname)
     {
@@ -58,18 +71,18 @@ class fixJBSAssets
 	
         $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
         $db->setQuery($query);
-        $db->query();
         $parent_id = $db->loadResult();
         
         
         $query = 'SELECT id, '.$titlefield.' AS ta FROM '.$name;
         $db->setQuery($query);
-        $db->query();
         $oldtables = $db->loadObjectList(); 
         if ($oldtables)
         {
             foreach ($oldtables AS $oldtable)
             {
+                
+                
                 @set_time_limit(300);
                 $table = JTable::getInstance('Asset', 'JTable', array('dbo' => $this->db_new));
                 $table->name = 'com_biblestudy.'.$assetname.'.'.$oldtable->id;
@@ -93,6 +106,8 @@ class fixJBSAssets
         }
         else {return false;} 
         return true;
+        
+    
     }
 }
 
