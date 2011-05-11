@@ -25,7 +25,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 class com_biblestudyInstallerScript {
 
 	function install($parent) {
-		echo '<p>'. JText::_('JBS_INS_16_CUSTOM_INSTALL_SCRIPT') . '</p>';
+	//	echo '<p>'. JText::_('JBS_INS_16_CUSTOM_INSTALL_SCRIPT') . '</p>';
 			$db =& JFactory::getDBO();
 			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'jbs7.0.0.sql');
 			$db->setQuery($query);
@@ -100,7 +100,7 @@ class com_biblestudyInstallerScript {
         {
             $query = 'UPDATE #__assets SET parent_id = '.$parent_id.' WHERE parent_id = '.$asset->parent_id;
             $db->setQuery($query);
-            if ($result = $db->query()){echo 'Resetting assets';}else{echo 'Failure resetting assets';}
+            if ($result = $db->query()){echo '<p>'.JText::_('JBS_INS_16_ASSETFIX_SUCCESS').': '.$parent_id.'</p>';}else{echo '<p>'.JText::_('JBS_INS_16_ASSETFIX_FAILURE').': '.$parent_id.'</p>';}
         }
         else
         {
