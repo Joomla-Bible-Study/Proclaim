@@ -17,7 +17,7 @@ class jbsMedia
     function getMediaTable($row, $params, $admin_params)
     {
         //First we get some items from GET and instantiate the images class
-        $admin = new JBSAdmin();
+      
 
         $Itemid = JRequest::getInt('Itemid','1','get');
         $template = JRequest::getInt('t','1','get');
@@ -26,10 +26,16 @@ class jbsMedia
         include_once ($path1.'helper.php');
 
         //Here we get the administration row from the comnponent, and determine the download image to use
-        $admin = $this->getAdmin();
-//        $d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');  // santon: $admin[0]->download is not available; correct to $admin[0]->params->default_download_image
-        $d_image = ($admin[0]->params->default_download_image ? $admin[0]->params->default_download_image : 'download.png');
-//		$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);
+     
+        $db = JFactory::getDBO();
+        $db->setQuery('SELECT * FROM #__bsms_admin');
+        $admin = $db->loadObject();
+        $registry = new JRegistry;
+        $registry->loadJSON($admin->params);
+        $admin->params = $registry->toArray();
+        
+        $d_image = ($admin->params['default_download_image'] ? $admin->params['default_download_image'] : 'download.png' );
+      
 		$download_tmp = $images->getMediaImage($d_image, $media=NULL);
         $download_image = $download_tmp->path;
         $compat_mode = $admin_params->get('compat_mode');
