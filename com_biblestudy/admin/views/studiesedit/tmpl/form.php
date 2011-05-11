@@ -127,6 +127,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         <?php echo $this->form->getLabel('topic_tags'); ?>
                         <div class="clr"></div>
                         <?php echo $this->form->getInput('topic_tags'); ?>
+                      <!--  <input name="topic_tags" type="text" id="topic_tags" /> -->
                          <ul>
                         <li>
                     <?php echo $this->form->getLabel('messagetype'); ?>
@@ -251,13 +252,13 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
   $(document).ready(function() {
 
   //Get Prepopulate Tags here...
-  $.get("index.php?option=com_biblestudy&task=getTags&format=raw&q=<?php echo $this->item->id?>", function(data){
+  $.get("index.php?option=com_biblestudy&controller=controller&task=getTags&format=raw&q=<?php echo $this->item->id?>", function(data){
       vData = eval(data);
       run(vData);
     });
 
     function run(d) {
-      $("#jform_topic_tags").tokenInput("index.php?option=com_biblestudy&task=AjaxTags&format=raw", {
+      $("#jform_topic_tags").tokenInput("index.php?option=com_biblestudy&controller=controller&task=AjaxTags&format=raw", {
           prePopulate: d,
           classes: {
           tokenList: "token-input-list-facebook",

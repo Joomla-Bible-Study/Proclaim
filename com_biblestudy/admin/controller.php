@@ -96,6 +96,7 @@ class biblestudyController extends JController
                 }
              }
             echo json_encode($tresult);
+          //  dump ($tresult,'AjaxTags');
         }
         
     function getTags()
@@ -111,6 +112,7 @@ class biblestudyController extends JController
             $tresult = $db->loadObjectList();
                         
             echo json_encode($tresult);
+          //  dump ($tresult,'getTags');
             
         }	
         
