@@ -36,16 +36,13 @@ class jbStats {
 function top_score_site($item)
 	{
 	$t = JRequest::getInt('t',1,'get');
-   // $Itemid = JRequet::getInt('Itemid','get');
+   
 	$admin_params = getAdminsettings();
 	$limit = $admin_params->get('popular_limit','25');
 	$top = '<select onchange="goTo()" id="urlList"><option value="">'.JText::_('JBS_CMN_SELECT_POPULAR_STUDY').'</option>';
  	$final = array();
     $final2 = array();
-    $user =& JFactory::getUser();
-	$level_user = $user->get('gid');
-    //temporary
-    if (!$level_user){$level_user = '23';}
+  
 	$db = &JFactory::getDBO();
 	$db->setQuery('SELECT m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added FROM #__bsms_mediafiles AS m 
     LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id)
@@ -53,11 +50,27 @@ function top_score_site($item)
 	$format = $admin_params->get('format_popular','0');
 	
 	$db->query();
-	$rows = $db->loadObjectList(); 
-    $admin = new JBSAdmin();
-    $results = $admin->showRows($rows);
-    
-	foreach ($results as $result)
+
+    $items = $db->loadObjectList(); 
+  
+    //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user = JFactory::getUser();
+        $groups	= $user->getAuthorisedViewLevels(); 
+        $count = count($items);
+        
+        for ($i = 0; $i < $count; $i++)
+        {
+            
+            if ($items[$i]->access > 1)
+            {
+               if (!in_array($items[$i]->access,$groups))
+               {
+                    unset($items[$i]); 
+               } 
+	        }
+        }
+      
+	foreach ($items as $result)
 		{
 			$db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id, 
             #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id) 

@@ -145,6 +145,7 @@ class biblestudyViewstudieslist extends JView {
         $stats = new jbStats();
         $popular = $stats->top_score_site($item->id);
         $this->assignRef('popular', $popular);
+        
         //Get whether "Go" Button is used then turn off onchange if it is
         if ($params->get('use_go_button', 0) == 0) {
             $go = 'onchange="this.form.submit()"';

@@ -251,7 +251,7 @@ class jbs700Install{
                 $messages[] = $msg;
              }
 
-        $query = "ALTER Table `#__bsms_order` MODIFY text VARCHAR(20) DEFAULT ''";
+        $query = "ALTER Table `#__bsms_order` MODIFY text VARCHAR(50) DEFAULT ''";
         $msg = $this->performdb($query);
         if (!$msg)
              {
