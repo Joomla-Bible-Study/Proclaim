@@ -352,7 +352,7 @@ INSERT INTO `#__bsms_mimetype` (`id`, `mimetype`, `mimetext`, `published`, `asse
 CREATE TABLE IF NOT EXISTS `#__bsms_order` (
 	`id` int(3) NOT NULL AUTO_INCREMENT,
 	`value` varchar(15) DEFAULT '',
-	`text` varchar(20) DEFAULT '',
+	`text` varchar(50) DEFAULT '',
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
