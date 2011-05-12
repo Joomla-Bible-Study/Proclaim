@@ -124,9 +124,9 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         </li>
                        
                         </ul>
-                        <?php echo $this->form->getLabel('topic_tags'); ?>
+                        <?php //echo $this->form->getLabel('topic_tags'); ?>
                         <div class="clr"></div>
-                        <?php echo $this->form->getInput('topic_tags'); ?>
+                        <?php //echo $this->form->getInput('topic_tags'); ?>
                       <!--  <input name="topic_tags" type="text" id="topic_tags" /> -->
                          <ul>
                         <li>
@@ -225,7 +225,8 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         </fieldset>
                         
     </div>
-    	<div class="clr"></div>
+<div class="clr"></div>
+	
 	<?php if ($this->canDo->get('core.admin')): ?>
 		<div class="width-100 fltlft">
 			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
