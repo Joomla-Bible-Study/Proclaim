@@ -9,12 +9,18 @@ defined('_JEXEC') or die(); ?>
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 $message = JRequest::getVar('msg');
 $database = & JFactory::getDBO();
-$teacher_menu = $this->params->get('teacher_id');
-$topic_menu = $this->params->get('topic_id');
-$book_menu = $this->params->get('booknumber');
-$location_menu = $this->params->get('locations');
-$series_menu = $this->params->get('series_id');
-$messagetype_menu = $this->params->get('messagetype');
+$teacher_menu1 = $this->params->get('teacher_id');
+$teacher_menu = $teacher_menu1[0];
+$topic_menu1 = $this->params->get('topic_id');
+$topic_menu = $topic_menu1[0];
+$book_menu1 = $this->params->get('booknumber');
+$book_menu = $book_menu1[0];
+$location_menu1 = $this->params->get('locations');
+$location_menu = $location_menu1[0];
+$series_menu1 = $this->params->get('series_id');
+$series_menu = $series_menu1[0];
+$messagetype_menu1 = $this->params->get('messagetype');
+$messagetype_menu = $messagetype_menu1[0];
 $document =& JFactory::getDocument();
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
@@ -67,7 +73,7 @@ if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
     <?php }
 
 
-if (($this->params->get('show_locations_search') > 0 && !($location_menu)) || $this->params->get('show_locations_search') > 1) { echo $this->lists['locations'];}
+if (($this->params->get('show_locations_search') > 0 && ($location_menu == -1)) || $this->params->get('show_locations_search') > 1) { echo $this->lists['locations'];}
 if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1)
     {
         echo $this->lists['books'] .' ';

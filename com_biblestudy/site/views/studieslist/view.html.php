@@ -58,6 +58,7 @@ class biblestudyViewstudieslist extends JView {
         JRequest::setVar('t', $t, 'get');
         $template = $this->get('template');
         $params = new JParameter($template[0]->params);
+        
         $a_params = $this->get('Admin');
         $this->admin_params = new JParameter($a_params[0]->params);
         $mainframe = & JFactory::getApplication();
