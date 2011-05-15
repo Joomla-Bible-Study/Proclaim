@@ -72,7 +72,7 @@ class plgSystemjbsbackup extends JPlugin {
         
         $now = time();
         $db = JFactory::getDBO();
-        $db->setQuery('SELECT `backup` FROM `#__bsms_timeset`', 0, 1);
+        $db->setQuery('SELECT `backup` FROM `#__jbsbackup_timeset`', 0, 1);
         $result = $db->loadObject();
         $lasttime = $result->backup;
         $frequency = $params->get('xhours','86400');
@@ -90,7 +90,7 @@ class plgSystemjbsbackup extends JPlugin {
         
         $now = time();
         $db = JFactory::getDBO();
-        $db->setQuery('SELECT `backup` FROM `#__bsms_timeset`', 0, 1);
+        $db->setQuery('SELECT `backup` FROM `#__jbsbackup_timeset`', 0, 1);
         $result = $db->loadObject();
         $lasttime = $result->timeset;
         $difference = $now - $lasttime;
@@ -173,7 +173,7 @@ class plgSystemjbsbackup extends JPlugin {
     {
         $time = time();
         $db = JFactory::getDBO();
-        $db->setQuery('UPDATE `#__bsms_timeset` SET `backup` = '.$time);
+        $db->setQuery('UPDATE `#__jbsbackup_timeset` SET `backup` = '.$time);
         $db->query();
         $updateresult = $db->getAffectedRows();
         if ($updateresult > 0) {return true;} else {return false;}

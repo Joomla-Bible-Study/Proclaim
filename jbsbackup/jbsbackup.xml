@@ -2,17 +2,29 @@
 <extension version="1.6" type="plugin" group="system" method="upgrade">
 	<name>PLG_JBSBACKUP</name>
 	<author>Tom Fuller</author>
-	<creationDate>May 12, 2011</creationDate>
+	<creationDate>May 15, 2011</creationDate>
 	<copyright>This component is released under the GNU/GPL License</copyright>
 	<authorEmail>tomfuller2@gmail.com</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-	<version>1.0.0</version>
+	<version>7.0.0</version>
 	<description>PLG_JBSBACKUP_XML_DESCRIPTION</description>
+    <install> <!-- Runs on install -->
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+	<uninstall> <!-- Runs on uninstall -->
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+		</sql>
+	</uninstall>
+	
 	<files>
 		<filename plugin="jbsbackup">jbsbackup.php</filename>
         <filename>backup.php</filename>
         <filename>index.html</filename>
         <folder>language</folder>
+        <folder>sql</folder>
 	</files>
     <config> 
  <fields name="params">
@@ -412,4 +424,9 @@
   </fieldset>
   </fields>
   </config>
+  <!-- UPDATESERVER DEFINITION -->
+	<updateservers>
+		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+		<server type="extension" priority="1" name="Joomla Bible Study Update Site">http://www.JoomlaBibleStudy.org/update/jbsbackup-update.xml</server>
+	</updateservers>
 </extension>
