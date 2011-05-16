@@ -73,7 +73,7 @@ class plgSystemjbspodcast extends JPlugin {
         
         $now = time();
         $db = JFactory::getDBO();
-        $db->setQuery('SELECT `timeset` FROM `#__bsms_timeset`', 0, 1);
+        $db->setQuery('SELECT `timeset` FROM `#__jbspodcast_timeset`', 0, 1);
         $result = $db->loadObject();
         $lasttime = $result->timeset;
         $frequency = $params->get('xhours','86400');
@@ -91,7 +91,7 @@ class plgSystemjbspodcast extends JPlugin {
         
         $now = time();
         $db = JFactory::getDBO();
-        $db->setQuery('SELECT `timeset` FROM `#__bsms_timeset`', 0, 1);
+        $db->setQuery('SELECT `timeset` FROM `#__jbspodcast_timeset`', 0, 1);
         $result = $db->loadObject();
         $lasttime = $result->timeset;
         $difference = $now - $lasttime;
@@ -174,7 +174,7 @@ class plgSystemjbspodcast extends JPlugin {
     {
         $time = time();
         $db = JFactory::getDBO();
-        $db->setQuery('UPDATE `#__bsms_timeset` SET `timeset` = '.$time);
+        $db->setQuery('UPDATE `#__jbspodcast_timeset` SET `timeset` = '.$time);
         $db->query();
         $updateresult = $db->getAffectedRows();
         if ($updateresult > 0) {return true;} else {return false;}
@@ -201,7 +201,7 @@ class plgSystemjbspodcast extends JPlugin {
             jimport('joomla.utilities.date');
     		$year = '('.date('Y').')';
     		$date = date('r');
-    	 	$Body   = $params->def( 'Body', '<strong>Podcast Publishing Update for this website: '.$fromname.'</strong><br />' );
+    	 	$Body   = $params->def( 'Body', '<strong>'.JText::_('PLG_JBSPODCAST_TITLE').': '.$fromname.'</strong><br />' );
             $Body .= JText::_('Process run at: ').$date.'<br />';
             $Body2 = '';
     	 	$db =& JFactory::getDBO();
@@ -215,12 +215,12 @@ class plgSystemjbspodcast extends JPlugin {
     			{
     				$file = JURI::root().$podids2->filename; 
 					$Body2 .= '<br><a href="'.$file.'">'.$podids2->title.'</a>';
-                    if (!$dopodcast){$Body2 .= ' - '.JText::_('There were errors reported. Please check files.');}
-                    if ($dopodcast){$Body2 .= ' - '.JText::_('There were no errors reported.');}
+                    if (!$dopodcast){$Body2 .= ' - '.JText::_('PLG_JBSPODCAST_ERRORS');}
+                    if ($dopodcast){$Body2 .= ' - '.JText::_('PLG_JBSPODCAST_NO_ERRORS');}
     			}
     		}
     		$Body3 = $Body.$Body2;
-    		$Subject       = $params->def( 'subject', 'Podcast Publishing Update' );
+    		$Subject       = $params->def( 'subject', JText::_('PLG_JBSPODCAST_UPDATE') );
     		$FromName       = $params->def( 'fromname', $fromname );
     		
     		$recipients = explode(",",$params->get('recipients'));
