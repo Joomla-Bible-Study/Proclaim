@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="1.6" type="plugin" group="search" method="upgrade">
 	<name>PLG_SEARCH_BIBLESTUDYSEARCH</name>
-	<creationDate>April 29, 2011</creationDate>
+	<creationDate>May 17, 2011</creationDate>
 	<author>Joomla Bible Study Team</author>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
 	<copyright>2007-11 Joomla Bible Study</copyright>
 	<license>GNU/GPL</license>
-	<version>Version 7.0.0</version>
+	<version>Version 7.0.1</version>
 	<description>PLG_SEARCH_BIBLESTUDYSEARCH_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="biblestudysearch">biblestudysearch.php</filename>
@@ -46,4 +46,9 @@
             </fieldset>
         </fields>
     </config>
+    <!-- UPDATESERVER DEFINITION -->
+	<updateservers>
+		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+		<server type="extension" priority="1" name="Joomla Bible Study Update Site">http://www.JoomlaBibleStudy.org/update/jbssearch-update.xml</server>
+	</updateservers>
 </extension>
