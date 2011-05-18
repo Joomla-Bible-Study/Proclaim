@@ -410,7 +410,7 @@
                    width="500"
                    label="JBS_TPL_LISTITEMS_LIST_INTRO"
                    description="JBS_TPL_LISTITEMS_LIST_INTRO_DESC" 
-                   filter="ContentHelper::filterText" buttons="true" />
+                   filter="BibleStudyHelper::filterText" buttons="true" />
             <field name="intro_show"
                    type="list"
                    default="1"
