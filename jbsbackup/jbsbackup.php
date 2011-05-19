@@ -236,7 +236,7 @@ class plgSystemjbsbackup extends JPlugin {
     {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
-        $path = JPATH_SITE.DS.'media'.DS.$params->get('backupfolder');
+        $path = JPATH_SITE.DS.'media'.$params->get('backupfolder');
         $exclude = array('.svn', 'CVS','.DS_Store','__MACOSX');
         $excludefilter = array('^\..*','.*~');
         $files = JFolder::files($path, '', '', 'false' , $exclude,$excludefilter);
@@ -246,16 +246,22 @@ class plgSystemjbsbackup extends JPlugin {
         }
        $part = array();
        $numfiles = count($files);
-       $totalnumber = $params->get('filestokeep','5');
+       $totalnumber = $params->get('filestokeep','5'); 
        foreach ($files as $file)
        {
-            $part[] = array('number'=>substr($file,-14,10), 'filename'=>$file);
+            $part[] = array('filename'=>$file);
        }
-       
+       // dump ($part,'part1: ');
+     // $sort = asort($part); 
+     // dump ($sort, 'part2: ');
       for ($counter = $numfiles; $counter > $totalnumber; $counter --)
       {
-        $sort = asort($part);
-        JFile::delete($part[0]['filename']);
+        $pop = array_pop($part);
+        //JFile::delete($part[0]['filename']);
+      }
+      foreach ($part AS $key => $value)
+      {
+        JFile::delete($value);
       }
     }
 }

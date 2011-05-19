@@ -184,6 +184,17 @@ class jbs700Install{
              {
                 $messages[] = $msg;
              }
+      
+      $query = "INSERT INTO #__bsms_media SET `media_text` = 'Vimeo', `media_image_name`='Vimeo', `media_image_path`='', `path2`='vimeo24.png', `media_alttext`='Vimeo Video', `published`='1'";
+        $msg = $this->performdb($query);
+        if (!$msg)
+             {
+                $messages[] = '<font color="green">'.JText::_('JBS_EI_QUERY_SUCCESS').': '.$query.' </font><br /><br />';
+             } 
+             else
+             {
+                $messages[] = $msg;
+             }
         
         $query = "ALTER TABLE #__bsms_mediafiles ADD COLUMN `player` int(2) NULL";
         $msg = $this->performdb($query);
