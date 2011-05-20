@@ -251,13 +251,11 @@ class plgSystemjbsbackup extends JPlugin {
        {
             $part[] = array('filename'=>$file);
        }
-       // dump ($part,'part1: ');
-     // $sort = asort($part); 
-     // dump ($sort, 'part2: ');
+       
       for ($counter = $numfiles; $counter > $totalnumber; $counter --)
       {
         $pop = array_pop($part);
-        //JFile::delete($part[0]['filename']);
+        
       }
       foreach ($part AS $key => $value)
       {
