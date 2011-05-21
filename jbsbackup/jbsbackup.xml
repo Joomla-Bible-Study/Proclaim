@@ -429,6 +429,6 @@
   <!-- UPDATESERVER DEFINITION -->
 	<updateservers>
 		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-		<server type="extension" priority="1" name="Joomla Bible Study Update Site">http://www.JoomlaBibleStudy.org/updates/jbsbackup-update.xml</server>
+		<server type="plugin" priority="1" name="Joomla Bible Study Update Site">http://www.JoomlaBibleStudy.org/updates/jbsbackup-update.xml</server>
 	</updateservers>
 </extension>
