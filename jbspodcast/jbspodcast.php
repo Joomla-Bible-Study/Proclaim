@@ -234,5 +234,3 @@ class plgSystemjbspodcast extends JPlugin {
     
     }
 }
-
-?>
