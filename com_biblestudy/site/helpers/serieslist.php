@@ -1,4 +1,6 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php 
+
+defined('_JEXEC') or die('Restriced Access');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
@@ -134,7 +136,8 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			if ($islink > 0 && $view == 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' thumbnail image">'.$element.'</td>';
 			break;
-		case 3: //dump ($admin_params->get('series_imagefolder'), 'imagefolder: ');
+		case 3: 
+		//dump ($admin_params->get('series_imagefolder'), 'imagefolder: ');
 		//	if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
 		//	if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
 		//	$image = getImage($i_path); //dump ($image, 'image: ');
