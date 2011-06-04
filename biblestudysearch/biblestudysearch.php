@@ -1,5 +1,15 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
 <?php 
+/**
+ * @version $Id: biblestudy.install.php 1 $
+ * @name Bible Study Search Plugin
+ *
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * 
+ */
+
+defined('_JEXEC') or die('Restricted access'); 
 jimport('joomla.plugin.plugin');
 class plgSearchBiblestudysearch extends JPlugin
 {
