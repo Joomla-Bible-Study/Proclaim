@@ -35,23 +35,23 @@ class jbStats {
 
 function top_score_site($item)
 	{
-	$t = JRequest::getInt('t',1,'get');
+		$t = JRequest::getInt('t',1,'get');
    
-	$admin_params = getAdminsettings();
-	$limit = $admin_params->get('popular_limit','25');
-	$top = '<select onchange="goTo()" id="urlList"><option value="">'.JText::_('JBS_CMN_SELECT_POPULAR_STUDY').'</option>';
- 	$final = array();
-    $final2 = array();
+		$admin_params = getAdminsettings();
+		$limit = $admin_params->get('popular_limit','25');
+		$top = '<select onchange="goTo()" id="urlList"><option value="">'.JText::_('JBS_CMN_SELECT_POPULAR_STUDY').'</option>';
+		$final = array();
+		$final2 = array();
   
-	$db = &JFactory::getDBO();
-	$db->setQuery('SELECT m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added FROM #__bsms_mediafiles AS m 
-    LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id)
-     where m.published = 1 GROUP BY m.study_id');
-	$format = $admin_params->get('format_popular','0');
+		$db = &JFactory::getDBO();
+		$db->setQuery('SELECT m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added FROM #__bsms_mediafiles AS m 
+		LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id)
+			where m.published = 1 GROUP BY m.study_id');
+		$format = $admin_params->get('format_popular','0');
 	
-	$db->query();
+		$db->query();
 
-    $items = $db->loadObjectList(); 
+		$items = $db->loadObjectList(); 
   
     //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
@@ -89,15 +89,13 @@ function top_score_site($item)
 	array_splice($final,$limit);
 
 	foreach ($final as $topscore)
-	{
+		{
 
-		$top .= '<option value="'.$topscore['select'].'">'.$topscore['display'].'</option>';
+			$top .= '<option value="'.$topscore['select'].'">'.$topscore['display'].'</option>';
 
-	}
-$top .= '</select>';
+		}
+		$top .= '</select>';
 	return $top;
 
+	}
 }
-}
-
-?>

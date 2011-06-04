@@ -6,8 +6,7 @@
  * @copyright 2010
  */
 
-?>
-<?php defined('_JEXEC') or die();
+php defined('_JEXEC') or die();
 
 class JBSListing
 {
@@ -50,8 +49,5 @@ class JBSListing
         }
         return $link;
     }
-    
-    
-    
+       
 }
-?>

@@ -51,5 +51,3 @@ class biblestudyControllerserieslist extends JController
 	}
 		
 }
-
-?>
