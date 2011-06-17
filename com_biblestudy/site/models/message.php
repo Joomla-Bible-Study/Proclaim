@@ -23,7 +23,13 @@ class biblestudyModelmessage extends modelClass {
         parent::__construct();
         
         $admin = $this->getAdmin();
-        $this->_admin_params = new JParameter($admin[0]->params);
+     //   $this->_admin_params = new JParameter($admin[0]->params);
+        
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON(admin[0]->params);
+                $admin_params = $registry;
+        
         $array = JRequest::getVar('cid', 0, '', 'array');
         $this->setId((int) $array[0]);
     }

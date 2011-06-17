@@ -36,7 +36,13 @@ class biblestudyModelstudydetails extends JModel
         jimport('joomla.html.parameter');
 		$this->_id = $id;
 		$template = $this->getTemplate();
-		$params = new JParameter($template[0]->params);
+	//	$params = new JParameter($template[0]->params);
+        
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
+        
 		$this->hit();
 	}
 	

@@ -32,8 +32,11 @@ function __construct()
 		$params 			=& $mainframe->getPageParameters();
 		JRequest::setVar( 't', $params->get('t'), 'get');
 		$template = $this->getTemplate();
-		$params = new JParameter($template[0]->params);
-		
+	//	$params = new JParameter($template[0]->params);
+		  // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
 		$this->setState('limit',$params->get('itemslimit'),'limit',$params->get('itemslimit'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
 		// In case limit has been changed, adjust limitstart accordingly

@@ -44,7 +44,12 @@ class biblestudyControllerstudydetails extends JController
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
 		//$template = $model->get('Template');
-		$params = new JParameter($model->_template[0]->params); dump ($params, 'params: ');
+	//	$params = new JParameter($model->_template[0]->params); 
+        
+        // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
 		if ($params->get('useexpert_details') > 0)
 		{
 			JRequest::setVar('layout', 'custom');
@@ -91,8 +96,13 @@ class biblestudyControllerstudydetails extends JController
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
 		//$template = $model->get('Template');
-		$params = new JParameter($model->_template[0]->params);
-		//dump ($params);
+	//	$params = new JParameter($model->_template[0]->params);
+        
+        // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($model->_template[0]->params);
+                $params = $registry;
+		
 	$cap = 1;
 
 	if ($params->get('use_captcha') > 0)
@@ -142,7 +152,13 @@ class biblestudyControllerstudydetails extends JController
 	$return = false;
 	$row->text = JRequest::getVar('scripture1');
 	JPluginHelper::importPlugin('content', 'scripturelinks' );
-	$slparams 	= new JParameter( $plugin->params );
+//	$slparams 	= new JParameter( $plugin->params );
+    
+    // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($plugin->params);
+                $slparams = $registry;
+    
 	$dispatcher =& JDispatcher::getInstance();
 	$results = $mainframe->triggerEvent( 'onPrepareContent', array( &$row, &$params , 1));
 	//$results = $dispatcher->trigger( 'onPrepareContent', array( &$article, &$slparams, 0));

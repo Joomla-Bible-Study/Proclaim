@@ -68,8 +68,13 @@ if (!$row->id) {return FALSE;}
 
 	$row_count = $row_count + 1;
 	//Load the parameters
-	$itemparams = new JParameter ($media->params);
-	//$Itemid = $params->get('detailstemplateid', 1);
+ //   $itemparams = new JParameter ($media->params);
+            
+              // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($media->params);
+                $itemparams = $registry;
+                
     $Itemid = JRequest::getInt('Itemid','1','get');
     $template = JRequest::getInt('t','1','get');
 	$images = new jbsImages();

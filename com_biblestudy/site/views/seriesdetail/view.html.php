@@ -38,9 +38,17 @@ class biblestudyViewseriesdetail extends JView
         }
         JRequest::setVar('t', $t, 'get');
         $template = $this->get('template');
-        $params = new JParameter($template[0]->params);
+      //  $params = new JParameter($template[0]->params);
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
         $a_params = $this->get('Admin');
-        $this->admin_params = new JParameter($a_params[0]->params);
+     //   $this->admin_params = new JParameter($a_params[0]->params);
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($a_params[0]->params);
+                $this->admin_params = $registry;
 		$items		=& $this->get('Data');		
 		
 		//Get studies from this series
@@ -92,7 +100,11 @@ class biblestudyViewseriesdetail extends JView
         JRequest::setVar('returnid',$items->id,'get',true);
 		//Passage link to BibleGateway
 		$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');
- 		if ($plugin){$st_params 	= new JParameter( $plugin->params );
+ 		if ($plugin){//$st_params 	= new JParameter( $plugin->params );
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($plugin->params);
+                $st_params = $registry;
 		$version = $st_params->get('bible_version');}
 		$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 		

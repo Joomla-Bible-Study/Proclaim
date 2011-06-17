@@ -6,7 +6,7 @@
  * @copyright 2010
  */
 
-php defined('_JEXEC') or die();
+defined('_JEXEC') or die();
 
 class JBSListing
 {

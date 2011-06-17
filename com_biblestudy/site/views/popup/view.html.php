@@ -45,8 +45,16 @@
             $db->setQuery($query);
             $db->query();
             $template = $db->loadObject();
-            $params = new JParameter($template->params);
-            $itemparams = new JParameter($media->params);
+         //   $params = new JParameter($template->params);
+              // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template->params);
+                $params = $registry;
+          //  $itemparams = new JParameter($media->params);
+              // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($media->params);
+                $itemparams = $registry;
             $saveid = $media->id;
             $media->id = $media->study_id;
 			$scripture = getScripture($params, $media, $esv='0', $scripturerow='1');

@@ -56,8 +56,11 @@ class jbsMedia
 //dump ($media->impath);
             $image = $images->getMediaImage($media->impath, $media->path2);
 
-            $itemparams = new JParameter ($media->params);
-
+          //  $itemparams = new JParameter ($media->params);
+  // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($media->params);
+                $itemparams = $registry;
              //Get the attributes for the player used in this item
              $player = $this->getPlayerAttributes($admin_params, $params, $itemparams, $media); 
              $playercode = $this->getPlayerCode($params, $itemparams, $player, $image, $media);

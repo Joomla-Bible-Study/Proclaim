@@ -40,7 +40,13 @@ class biblestudyModellandingpage extends JModel
 		JRequest::setVar( 't', $t, 'get');
         jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
-		$params = new JParameter($template[0]->params);
+	//	$params = new JParameter($template[0]->params);
+        
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
+                
 		$config = JFactory::getConfig();
 		
 		$this->setState('limit',$params->get('itemslimit'),'limit',$params->get('itemslimit'),'int');

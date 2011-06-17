@@ -16,7 +16,13 @@ class Dump_File{
     $db->setQuery($query);
     $db->query();
     $template = $db->loadObject();
-    $params = new JParameter($template->params); 
+ //   $params = new JParameter($template->params); 
+    
+    // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template->params);
+                $params = $registry;
+                
     $protocol = $params->get('protocol','http://');
 	$query = 'SELECT #__bsms_mediafiles.*,'
 		. ' #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath,'

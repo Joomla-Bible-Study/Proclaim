@@ -31,8 +31,13 @@ class biblestudyViewstudieslist extends JView {
         
         $admin_parameters = $this->get('Admin');
         
-        $this->admin_params = new JParameter($admin_parameters[0]->params);
+      //  $this->admin_params = new JParameter($admin_parameters[0]->params);
         
+         // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($admin_parameters[0]->params);
+                $this->admin_params = $registry;
+                
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups	= $user->getAuthorisedViewLevels(); 
@@ -57,10 +62,21 @@ class biblestudyViewstudieslist extends JView {
         }
         JRequest::setVar('t', $t, 'get');
         $template = $this->get('template');
-        $params = new JParameter($template[0]->params);
+      //  $params = new JParameter($template[0]->params);
         
+         // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
+                
         $a_params = $this->get('Admin');
-        $this->admin_params = new JParameter($a_params[0]->params);
+    //    $this->admin_params = new JParameter($a_params[0]->params);
+        
+        // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($a_params[0]->params);
+                $this->admin_params = $registry;
+                
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $path1 = JPATH_SITE . DS . 'components' . DS . 'com_biblestudy' . DS . 'helpers' . DS;

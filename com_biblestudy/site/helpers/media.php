@@ -35,14 +35,17 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
 
-            $itemparams = new JParameter ($media->params);
+         //   $itemparams = new JParameter ($media->params);
+            
+              // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($media->params);
+                $itemparams = $registry;
+                
             $Itemid = $params->get('detailstemplateid', 1);
             $images = new jbsImages();
             $image = $images->getMediaImage($media->path2, $media->impath);
-     //      if (!$media->path2) { $i_path = $media->impath; }
-     //      if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-     //      if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
-     //      $image = getImage($i_path);
+     
 
             $idfield = '#__bsms_mediafiles.id';
             $filesize = getFilesize($media->size);
@@ -78,14 +81,16 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
 
-    	    $itemparams = new JParameter ($media->params);
+    	    //   $itemparams = new JParameter ($media->params);
+            
+              // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($media->params);
+                $itemparams = $registry;
     	    $Itemid = $params->get('detailstemplateid', 1);
     	    $images = new jbsImages();
             $image = $images->getMediaImage($media->path2, $media->impath);
-	   //     if (!$media->path2) { $i_path = $media->impath; }
-	   //     if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-	   //     if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images'.DS.$admin_params->get('media_imagefolder').DS.$media->path2;}
-	   //     $image = getImage($i_path);
+	  
 
 	        $database = & JFactory::getDBO();
 
@@ -93,15 +98,12 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 	        $database->query();
 	        $admin = $database->loadObjectList();
 
-         //   $d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
-            //$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
-//	        $d_image = ($admin[0]->download);
+        
 	        $d_image = ($admin[0]->params->default_download_image);
 	        $images = new jbsImages();
 //            $download_image = $images->getMediaImage($admin[0]->download, $media=NULL);
             $download_image = $images->getMediaImage($admin[0]->params->default_download_image, $media=NULL);
-	    //    $d_path = $d_path1.$d_image;
-	    //    $download_tmp = getImage($d_path);
+	    
             $download_image = $download_tmp->path;
 
             $idfield = '#__bsms_mediafiles.id';
@@ -146,12 +148,14 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'image.php');
             $images = new jbsImages();
             $image = $images->getMediaImage($media->path2, $media->impath);
-    	    $itemparams = new JParameter ($media->params);
+    	    //   $itemparams = new JParameter ($media->params);
+            
+              // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($media->params);
+                $itemparams = $registry;
     	    $Itemid = $params->get('detailstemplateid', 1);
-	 //       if (!$media->path2) { $i_path = $media->impath; }
-	 //       if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-	 //       if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$media->path2;}
-	 //       $image = getImage($i_path);
+	
 
 	        $database = & JFactory::getDBO();
 
@@ -159,15 +163,12 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 	        $database->query();
 	        $admin = $database->loadObjectList();
 
-          //  $d_path1 = ($admin_params->get('media_imagefolder') ? 'images/'.$admin_params->get('media_imagefolder') : 'components/com_biblestudy/images/');
-            //$d_image = ($admin[0]->download ? DS.$admin[0]->download : '/download.png');
-//	        $d_image = ($admin[0]->download);
+        
 	        $d_image = ($admin[0]->params->default_download_image);
 	        $images = new jbsImages();
-//            $download_image = $images->getMediaImage($admin[0]->download, $media=NULL);
+
             $download_image = $images->getMediaImage($admin[0]->params->default_download_image, $media=NULL);
-	      //  $d_path = $d_path1.$d_image;
-	      //  $download_tmp = getImage($d_path);
+	      
             $download_image = $download_tmp->path;
 
             $idfield = '#__bsms_mediafiles.id';
@@ -199,15 +200,17 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
 
-    	    $itemparams = new JParameter ($media->params);
+    	     //   $itemparams = new JParameter ($media->params);
+            
+              // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($media->params);
+                $itemparams = $registry;
+                
     	    $Itemid = $params->get('detailstemplateid', 1);
     	    $images = new jbsImages();
             $image = $images->getMediaImage($media->path2, $media->impath);
-	     //   if (!$media->path2) { $i_path = $media->impath; }
-	     //   if ($media->path2 && !$admin_params->get('media_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$media->path2; }
-	     //   if ($media->path2 && $admin_params->get('media_imagefolder')) { $i_path = 'images/'.$admin_params->get('media_imagefolder').'/'.$media->path2;}
-	     //   $image = getImage($i_path);
-
+	    
             $idfield = '#__bsms_mediafiles.id';
             $filesize = getFilesize($media->size);
             $duration = getDuration($params, $row);

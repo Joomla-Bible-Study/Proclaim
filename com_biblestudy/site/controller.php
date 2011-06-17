@@ -34,7 +34,12 @@ class biblestudyController extends JController {
 		$t = $params->get('t');
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
-		$params = new JParameter($model->_template[0]->params);
+	//	$params = new JParameter($model->_template[0]->params);
+        
+        // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
 	$cap = 1;
 
 	if ($params->get('use_captcha') > 0)

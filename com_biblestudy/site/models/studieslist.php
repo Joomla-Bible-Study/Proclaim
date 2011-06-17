@@ -58,7 +58,12 @@ try {
 		
 		$template = $this->getTemplate();
         jimport('joomla.html.parameter');
-		$params = new JParameter($template[0]->params);
+	//	$params = new JParameter($template[0]->params);
+                
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
         
 		$this->_params = $params;
 		$config = JFactory::getConfig();

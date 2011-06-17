@@ -36,9 +36,17 @@ class biblestudyViewstudydetails extends JView
         }
         JRequest::setVar('t', $t, 'get');
         $template = $this->get('template');
-        $params = new JParameter($template[0]->params);
+      //  $params = new JParameter($template[0]->params);
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
         $a_params = $this->get('Admin');
-        $this->admin_params = new JParameter($a_params[0]->params);
+      //  $this->admin_params = new JParameter($a_params[0]->params);
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($a_params[0]->params);
+                $this->admin_params = $registry;
         $adminrows = new JBSAdmin();
        
        //check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -59,7 +67,11 @@ class biblestudyViewstudydetails extends JView
 		if ($plugin)
 			{
  				$plugin =& JPluginHelper::getPlugin('content', 'scripturelinks');
-				$st_params 	= new JParameter( $plugin->params );
+			//	$st_params 	= new JParameter( $plugin->params );
+                  // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($plugin->params );
+                $st_params = $registry;
 				$version = $st_params->get('bible_version');
 				$windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 			}

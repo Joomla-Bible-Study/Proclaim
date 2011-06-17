@@ -44,7 +44,12 @@ class JBSAdmin
 		$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
 		$db->query();
 		$compat = $db->loadObject();
-		$admin_params = new JParameter($compat->params);
+	//	$admin_params = new JParameter($compat->params);
+        
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($compat->params);
+                $admin_params = $registry;
 		}
         else
         {
@@ -52,7 +57,12 @@ class JBSAdmin
 		$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
 		$db->query();
 		$compat = $db->loadObject();
-		$admin_params = new JParameter($compat->params);
+	//	$admin_params = new JParameter($compat->params);
+        
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($compat->params);
+                $admin_params = $registry;
         }			
 		return $admin_params;
 	}

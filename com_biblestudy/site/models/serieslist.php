@@ -39,8 +39,13 @@ class biblestudyModelserieslist extends JModel
 		JRequest::setVar( 't', $t, 'get');
     jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
-		$params = new JParameter($template[0]->params);
+	//	$params = new JParameter($template[0]->params);
 		
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
+        
 		$config = JFactory::getConfig();
 		$this->setState('limit',$params->get('series_limit'),'limit',$params->get('series_limit'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
@@ -239,7 +244,13 @@ function getTemplate() {
 	{
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
         $template = $this->getTemplate();
-		$params = new JParameter($template[0]->params);
+	//	$params = new JParameter($template[0]->params);
+        
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
+        
         $filter_orders		= $params->get('series_list_order','ASC');
         $filter_orders_field = $params->get('series_order_field','series_text');
 		

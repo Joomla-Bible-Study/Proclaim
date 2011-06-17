@@ -19,7 +19,7 @@ defined('_JEXEC') or die('Restricted access');
 		$lb_mailfrom   = $config->getValue('config.mailfrom');
 		$lb_fromname   = $config->getValue('config.fromname');
 		$lb_livesite   = JURI::root();
-		//$pluginParams = new JParameter( $plugin->params );
+		
 		$Body   = '<strong>Podcast Publishing Update confirmation.</strong><br><br> The following podcasts have been published:<br> '.$lb_fromname;
 		//$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params = &JComponentHelper::getParams('com_biblestudy');
@@ -100,10 +100,14 @@ defined('_JEXEC') or die('Restricted access');
 				$where = array();
 				foreach ($results as $result)
 				{
-					$params = new JParameter($result->params);
-					//dump ($params, 'params: ');
-					$podcasts = $result->podcast_id;
-				$podcasts = explode(',',$result->podcast_id);
+				//	$params = new JParameter($result->params);
+                    
+                      // Convert parameter fields to objects.
+    				$registry = new JRegistry;
+    				$registry->loadJSON($result->params);
+                    $params = $registry;
+                   	$podcasts = $result->podcast_id;
+				    $podcasts = explode(',',$result->podcast_id);
 					switch ($podcasts)
 					{
 						case is_array($podcasts) :

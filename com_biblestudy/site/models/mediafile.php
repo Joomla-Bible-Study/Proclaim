@@ -34,7 +34,13 @@ class biblestudyModelmediafile extends modelClass {
         
         jimport('joomla.html.parameter');
         $admin = $this->getLegacyAdmin();
-        $this->_admin_params = new JParameter($admin[0]->params);
+    //    $this->_admin_params = new JParameter($admin[0]->params);
+        
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($admin[0]->params);
+                $this->admin_params = $registry;
+        
         $array = JRequest::getVar('cid', 0, '', 'array');
         $this->setId((int) $array[0]);
     }

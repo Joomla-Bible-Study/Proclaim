@@ -26,7 +26,13 @@ class JBSPodcast
         $where = array();
         foreach ($results as $result)
         {
-        	$params = new JParameter($result->params);
+        //	$params = new JParameter($result->params);
+            
+              // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($result->params);
+                $params = $registry;
+                
         	$podcasts = $params->get('podcasts');
         	
         	switch ($podcasts)

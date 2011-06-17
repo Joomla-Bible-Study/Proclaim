@@ -39,7 +39,11 @@ class biblestudyViewteacherdisplay extends JView
         }
         JRequest::setVar('t', $t, 'get');
         $template = $this->get('template');
-        $params = new JParameter($template[0]->params);
+      //  $params = new JParameter($template[0]->params);
+         // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
        
 		
 		$url = $params->get('stylesheet');

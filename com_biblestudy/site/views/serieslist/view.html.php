@@ -26,9 +26,17 @@ class biblestudyViewserieslist extends JView {
         }
         JRequest::setVar('t', $t, 'get');
         $template = $this->get('template');
-        $params = new JParameter($template[0]->params);
+     //   $params = new JParameter($template[0]->params);
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($template[0]->params);
+                $params = $registry;
         $a_params = $this->get('Admin');
-        $this->admin_params = new JParameter($a_params[0]->params);
+      //  $this->admin_params = new JParameter($a_params[0]->params);
+          // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($a_params[0]->params);
+                $this->admin_params = $registry;
 		$document =& JFactory::getDocument();
 		$document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 	
