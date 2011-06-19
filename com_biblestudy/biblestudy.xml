@@ -11,8 +11,8 @@
   <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
   <copyright>(C) 2007-2011 Copyright Joomla Bible Study</copyright>
   <license>GNU/GPL</license>
-  <version>7.0.0_Beta1</version>
-  <creationDate>May 12, 2011</creationDate>
+  <version>7.0.0</version>
+  <creationDate>June 20, 2011</creationDate>
   <description>JBS_INS_16_XML_DESCRIPTION</description>
  	
 	<!-- Installer Hooks -->

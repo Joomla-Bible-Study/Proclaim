@@ -442,7 +442,7 @@ class jbs700Install{
                 $messages[] = $msg;
              }
 
-        $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-03-12', `build`='700', `versionname`='1Kings', `versiondate`='2011-03-15'";
+        $query = "INSERT INTO #__bsms_version SET `version` = '7.0.0', `installdate`='2011-06-19', `build`='700', `versionname`='1Kings', `versiondate`='2011-03-15'";
         $msg = $this->performdb($query);
         if (!$msg)
              {
