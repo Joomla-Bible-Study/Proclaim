@@ -56,7 +56,7 @@ try {
     $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
 	//	JRequest::setVar( 't', $t, 'get');
-		dump ($t);
+	//	dump ($t);
 		$template = $this->getTemplate();
         jimport('joomla.html.parameter');
 	//	$params = new JParameter($template[0]->params);
