@@ -55,12 +55,14 @@ class biblestudyViewstudieslist extends JView {
 	        }
         }
         $this->items = $items;
-      
- $t = JRequest::getInt('t','get',1);
+    
+ $t = JRequest::getInt('t','get');
         if (!$t) {
-            $t = 1;
+          //  $t = 1;
         }
-        JRequest::setVar('t', $t, 'get');
+ 
+      //  dump ($t);
+   //     JRequest::setVar('t', $t, 'get');
         $template = $this->get('template');
       //  $params = new JParameter($template[0]->params);
         

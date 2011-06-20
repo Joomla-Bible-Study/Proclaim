@@ -41,9 +41,10 @@ class biblestudyModelteacherdisplay extends JModel
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
         jimport('joomla.html.parameter');
 		$params 			=& $mainframe->getPageParameters();
-		$t = $params->get('t');
+	//	$t = $params->get('t');
+    $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-		JRequest::setVar( 't', $t, 'get');
+	//	JRequest::setVar( 't', $t, 'get');
 		$template = $this->getTemplate();
 	//	$params = new JParameter($template[0]->params);
           // Convert parameter fields to objects.

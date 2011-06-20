@@ -52,10 +52,11 @@ try {
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params 			=& $mainframe->getPageParameters();
         
-		$t = $params->get('t');
+	//	$t = $params->get('t');
+    $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-		JRequest::setVar( 't', $t, 'get');
-		
+	//	JRequest::setVar( 't', $t, 'get');
+		dump ($t);
 		$template = $this->getTemplate();
         jimport('joomla.html.parameter');
 	//	$params = new JParameter($template[0]->params);

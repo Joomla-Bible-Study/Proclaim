@@ -18,7 +18,11 @@ class biblestudyController extends JController {
         $db = JFactory::getDBO();
         $db->setQuery('SET SQL_BIG_SELECTS=1');
         $db->query();
-        
+        $t = JRequest::getInt('t','get');
+        if (!$t) {
+            $t = 1;
+        }
+        JRequest::setVar('t', $t, 'get');
         parent::display();
     }
 

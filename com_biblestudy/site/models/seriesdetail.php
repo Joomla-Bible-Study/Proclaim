@@ -30,9 +30,10 @@ class biblestudyModelseriesdetail extends JModel
 		 ////set the default view search path
         $this->addTablePath(JPATH_COMPONENT.DS.'tables');
         $params 			=& $mainframe->getPageParameters();
-		$t = $params->get('t');
+	//	$t = $params->get('t');
+    $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-		JRequest::setVar( 't', $t, 'get');
+	//	JRequest::setVar( 't', $t, 'get');
 		$this->_id = $id;
         jimport('joomla.html.parameter');
 		$template = $this->getTemplate();

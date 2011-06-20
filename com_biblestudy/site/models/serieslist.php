@@ -34,9 +34,10 @@ class biblestudyModelserieslist extends JModel
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params =& $mainframe->getPageParameters();
-		$t = $params->get('t');
+	//	$t = $params->get('t');
+    $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-		JRequest::setVar( 't', $t, 'get');
+	//	JRequest::setVar( 't', $t, 'get');
     jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
 	//	$params = new JParameter($template[0]->params);

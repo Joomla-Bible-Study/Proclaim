@@ -15,7 +15,7 @@
 	</state>
      <fields name="request">
         <fieldset name="request">
-            <field name="templatemenuid" type="sql"
+            <field name="t" type="sql"
                 description="JBS_MNU_SELECT_TEMPLATE_DESC"
                 label="JBS_MNU_SELECT_TEMPLATE"
                 default="1"

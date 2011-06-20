@@ -33,7 +33,7 @@ class biblestudyViewLandingpage extends JView {
         if (!$t) {
             $t = 1;
         }
-        JRequest::setVar('t', $t, 'get');
+    //    JRequest::setVar('t', $t, 'get');
         
         $template = $this->get('template');
      //   $params = new JParameter($template[0]->params);

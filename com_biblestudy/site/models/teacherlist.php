@@ -30,7 +30,8 @@ function __construct()
       //  require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
         jimport('joomla.html.parameter');
 		$params 			=& $mainframe->getPageParameters();
-		JRequest::setVar( 't', $params->get('t'), 'get');
+	//	JRequest::setVar( 't', $params->get('t'), 'get');
+    $t = JRequest::getInt('t','get');
 		$template = $this->getTemplate();
 	//	$params = new JParameter($template[0]->params);
 		  // Convert parameter fields to objects.
