@@ -42,34 +42,7 @@ class biblestudyModelMessages extends modelClass {
         $this->setState('limitstart', $limitstart);
     }
 
-    /**
-     * Returns the query
-     * @return string The query to be used to retrieve the rows from the database
-     */
-/*    function _buildQuery() {
-        $where = $this->_buildContentWhere();
-        $orderby = $this->_buildContentOrderBy();
-        
-        $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
-                . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
-                . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-                . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
-                . ' FROM #__bsms_studies'
-                . ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
-                . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-                . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-                . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-                . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-                . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-                . ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
-                . $where
-                . ' GROUP BY #__bsms_studies.id'
-                . $orderby
-        ;
-        return $query;
-    }
-*/
-    function getDownloads($id) {
+   function getDownloads($id) {
         $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
         $result = $this->_getList($query);
         if (!$result) {
@@ -89,27 +62,7 @@ class biblestudyModelMessages extends modelClass {
         return $result[0]->totalPlays;
     }
 
-    /**
-     * Retrieves the data
-     * @return array Array of objects containing the data from the database
-     */
-   /*
-    function getData() {
-        // Lets load the data if it doesn't already exist
-        if (empty($this->_data)) {
-            $query = $this->_buildQuery();
-            $this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
-        }
-        return $this->_data;
-    }
-*/
-    /**
-     * Creates and executes a new query that retrieves the medifile information from the mediafiles table. 
-     * It then adds to the dataObject the mediafiles associated with the sermon.
-     * @return unknown_type
-     */
-    /* Tom commented this out because it caused the query to fail - needs work. */
-    function getFiles() {
+   function getFiles() {
         $mediaFiles = null;
         $db = & JFactory::getDBO();
         $i = 0;
@@ -130,30 +83,7 @@ class biblestudyModelMessages extends modelClass {
         return $this->_files;
     }
 
-    /**
-     * Method to get the total number of studies items
-     *
-     * @access public
-     * @return integer
-     */
- /*
-    function getTotal() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_total)) {
-            $query = $this->_buildQuery();
-            $this->_total = $this->_getListCount($query);
-        }
-
-        return $this->_total;
-    }
-*/
-    /**
-     * Method to get a pagination object for the studies
-     *
-     * @access public
-     * @return integer
-     */
-    function legacyGetPagination() {
+   function legacyGetPagination() {
         // Lets load the content if it doesn't already exist
         if (empty($this->_pagination)) {
             jimport('joomla.html.pagination');
