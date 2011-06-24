@@ -9,27 +9,6 @@
 //No Direct Access
 defined('_JEXEC') or die('Restricted access'); 
 
-function getTranslated($result)
-
-{
-	
-    $output2 = array();
-    $output = array();
-	foreach ($result as $value)
-    {
-		
-		empty($output2);
-		$format = $value->text;
-		$text = JText::_($format);
-		$bookn = $value->value;
-	//	$id1 = $value->id;
-		
-		$output2 = array('value'=>$bookn, 'text'=>$text);
-		$output[] = $output2;
-    }
-return $output;
-}
-
 
 /*
    translate a topicItem to clear text
