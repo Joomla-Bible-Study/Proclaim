@@ -67,16 +67,12 @@
              value_field="bookname">
             <option value="-1">JBS_CMN_SELECT_BOOK</option>
         </field>
-        <field name="topic_id" type="sql" extension="com_biblestudy"
-             label="JBS_CMN_TOPIC" description="JBS_ADM_FILLIN_STUDY_TOPIC_ID_DESC" translate="true" class="inputbox"
-             query="SELECT id, topic_text FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC"
-             key_field="id"
-             value_field="topic_text">
+        <field name="topic_id" type="topicslist" default="-1"
+             label="JBS_CMN_TOPIC" description="JBS_ADM_FILLIN_STUDY_TOPIC_ID_DESC" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_TOPIC</option>
         </field>
         <field name="messagetype" type="messagetypelist" default="-1" label="JBS_CMN_MESSAGE_TYPE"
-             description="JBS_ADM_FILLIN_STUDY_MESSAGE_TYPE_DESC" class="inputbox"
-             query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER BY message_type ASC">
+             description="JBS_ADM_FILLIN_STUDY_MESSAGE_TYPE_DESC" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
         </field>
         <field name="default_study_image" type="media" size="50" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_DESC"/>        

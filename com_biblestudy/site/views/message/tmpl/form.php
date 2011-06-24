@@ -52,17 +52,19 @@ JHtml::_('behavior.formvalidation');
               <strong> <label><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></label></strong>
                         <div>
                             <?php echo $this->form->getLabel('booknumber'); ?>
-                            <?php echo $this->form->getInput('booknumber'); ?>
-                        
+                            <?php // studytitle is required; fill in default if empty and leave value otherwise
+                                  echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin->params['booknumber'] : $this->item->booknumber); ?>
+                        </div>
+                        <div>
                             <?php echo $this->form->getLabel('chapter_begin'); ?>
                             <?php echo $this->form->getInput('chapter_begin'); ?>
-                        
+
                             <?php echo $this->form->getLabel('verse_begin'); ?>
                             <?php echo $this->form->getInput('verse_begin'); ?>
-                        
+
                             <?php echo $this->form->getLabel('chapter_end'); ?>
                             <?php echo $this->form->getInput('chapter_end'); ?>
-                       
+
                             <?php echo $this->form->getLabel('verse_end'); ?>
                             <?php echo $this->form->getInput('verse_end'); ?>
                         </div>
@@ -73,16 +75,17 @@ JHtml::_('behavior.formvalidation');
                         <div>
                             <?php echo $this->form->getLabel('booknumber2'); ?>
                             <?php echo $this->form->getInput('booknumber2'); ?>
-                        
+                        </div>
+                        <div>
                             <?php echo $this->form->getLabel('chapter_begin2'); ?>
                             <?php echo $this->form->getInput('chapter_begin2'); ?>
-                        
+
                             <?php echo $this->form->getLabel('verse_begin2'); ?>
                             <?php echo $this->form->getInput('verse_begin2'); ?>
-                        
+
                             <?php echo $this->form->getLabel('chapter_end2'); ?>
                             <?php echo $this->form->getInput('chapter_end2'); ?>
-                        
+
                             <?php echo $this->form->getLabel('verse_end2'); ?>
                             <?php echo $this->form->getInput('verse_end2'); ?>
                         </div>
@@ -97,42 +100,37 @@ JHtml::_('behavior.formvalidation');
    <fieldset class="panelform">
               
                <legend><?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
-                     <div class="inlineFields">
               <strong> <label><?php echo JText::_('JBS_CMN_DURATION'); ?></label></strong><br />
               
-                 
-                    
-                                        <?php echo $this->form->getLabel('media_hours'); ?>
-                                        <?php echo $this->form->getInput('media_hours'); ?>
-                                   
-                                        <?php echo $this->form->getLabel('media_minutes'); ?>
-                                        <?php echo $this->form->getInput('media_minutes'); ?>
-                                    
-                                        <?php echo $this->form->getLabel('media_seconds'); ?>
-                                        <?php echo $this->form->getInput('media_seconds'); ?>
+                            <div class="inlineFields">
+                                    <?php echo $this->form->getLabel('media_hours'); ?>
+                                    <?php echo $this->form->getInput('media_hours'); ?>
 
-                  
-               </div>
+                                    <?php echo $this->form->getLabel('media_minutes'); ?>
+                                    <?php echo $this->form->getInput('media_minutes'); ?>
+                                    <?php echo $this->form->getLabel('media_seconds'); ?>
+                                    <?php echo $this->form->getInput('media_seconds'); ?>
+                            </div>
                <br />
                <div class="formelm">
                     <?php echo $this->form->getLabel('teacher_id'); ?>
-                    <?php echo $this->form->getInput('teacher_id', null, $this->admin->params['teacher_id']); ?>
+                    <?php echo $this->form->getInput('teacher_id', null, empty($this->item->studytitle) ? $this->admin->params['teacher_id'] : $this->item->teacher_id) ?>
                       </div>
                <div class="formelm">
                     <?php echo $this->form->getLabel('location_id'); ?>
-                    <?php echo $this->form->getInput('location_id', null, $this->admin->params['location_id']); ?>
+                    <?php echo $this->form->getInput('location_id', null, empty($this->item->studytitle) ? $this->admin->params['location_id'] : $this->item->location_id) ?>
                         </div>
                <div class="formelm">
                     <?php echo $this->form->getLabel('series_id'); ?>
-                    <?php echo $this->form->getInput('series_id', null, $this->admin->params['series_id']); ?>
+                    <?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin->params['series_id'] : $this->item->series_id) ?>
                        </div>
                <div class="formelm">
                     <?php echo $this->form->getLabel('topics_id'); ?>
-                    <?php echo $this->form->getInput('topics_id', null, $this->admin->params['topic_id']); ?>
+                    <?php echo $this->form->getInput('topics_id', null, empty($this->item->studytitle) ? $this->admin->params['topic_id'] : $this->item->topics_id) ?>
                         </div>
                <div class="formelm">
                     <?php echo $this->form->getLabel('messagetype'); ?>
-                    <?php echo $this->form->getInput('messagetype', null, $this->admin->params['messagetype']); ?>
+                    <?php echo $this->form->getInput('messagetype', null, empty($this->item->studytitle) ? $this->admin->params['messagetype'] : $this->item->messagetype) ?>
                         </div>
                <div class="formelm">
                     <?php echo $this->form->getLabel('thumbnailm'); ?>

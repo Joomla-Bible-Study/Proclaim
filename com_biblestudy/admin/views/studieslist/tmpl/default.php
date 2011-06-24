@@ -119,7 +119,7 @@ $listDirn = $this->state->get('list.direction');
                     </a>
                 </td>
                 <td class="center">
-                     <?php echo JText::_($this->escape($item->bookname)).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
+                     <?php echo $this->escape($item->bookname).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
                 </td>
                 <td class="center">
                 <?php echo $this->escape($item->teachername); ?>
@@ -131,7 +131,7 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo $this->escape($item->series_text); ?>
                     </td>
                     <td class="center">
-                <?php echo JText::_($this->escape($item->topic_text)); ?>
+                <?php echo $this->escape($item->topic_text); ?>
                     </td>
                     <td class="center">
                 <?php echo $this->escape($item->hits); ?>

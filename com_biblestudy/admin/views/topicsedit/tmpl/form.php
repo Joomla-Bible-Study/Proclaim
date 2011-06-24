@@ -13,19 +13,32 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 		<fieldset class="panelform">
 			<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
 			<ul class="adminformlist">
-                <li>
-                    <?php echo $this->form->getLabel('published'); ?>
+				<li>
+					<?php echo $this->form->getLabel('published'); ?>
 					<?php echo $this->form->getInput('published'); ?>
                 </li>
 				<li>
 					<?php echo $this->form->getLabel('topic_text'); ?>
-					<?php echo $this->form->getInput('topic_text'); ?>
+					<?php echo $this->form->getInput('topic_text'); 
+					// santon: check input for valid form: JBS_TOP_xxx  x is A-Z0-9_
+					// if a text is put in: Filter and prefix with JBS_TOP_
+					// if no text is put in: generate JBS_TOP_<id>
+					// im xml File kann das Schreiben gesperrt werden: class="readonly" readonly="true"
+					// new topic_text may be created automaticall. See 'create Joomla menu item': alias is created out of title
+					?> 
 				</li> 
-			</ul>
 
+				<?php foreach($this->form->getFieldset('params') as $field): ?>
+					<li>
+						<?php echo $field->label; ?>
+						<?php echo $field->input; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
 		</fieldset>
 	</div>
-     <div class="clr"></div>
+
+    <div class="clr"></div>
 	
 	<?php if ($this->canDo->get('core.admin')): ?>
 		<div class="width-100 fltlft">

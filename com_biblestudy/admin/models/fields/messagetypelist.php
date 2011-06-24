@@ -36,6 +36,7 @@ class JFormFieldMessagetypelist extends JFormFieldList
                 $query = $db->getQuery(true);
                 $query->select('id,message_type');
                 $query->from('#__bsms_message_type');
+                $query->where('published = 1');
                 $db->setQuery((string)$query);
                 $messages = $db->loadObjectList();
                 $options = array();

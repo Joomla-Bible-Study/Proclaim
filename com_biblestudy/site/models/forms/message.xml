@@ -64,9 +64,8 @@
         <option value="-1">JBS_CMN_SELECT_SERIES</option>
     </field>
 
-    <field name="topics_id" type="sql" extension="com_biblestudy"
-		label="JBS_CMN_TOPIC" description="JBS_STY_TOPIC_DESC" translate="true"
-                class="inputbox" query="SELECT id, topic_text FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC" key_field="id" value_field="topic_text">
+    <field name="topics_id" type="topicslist" default="-1"
+        label="JBS_CMN_TOPIC" description="JBS_STY_TOPIC_DESC" class="inputbox">
         <option value="-1">JBS_CMN_SELECT_TOPIC</option>
     </field>
 

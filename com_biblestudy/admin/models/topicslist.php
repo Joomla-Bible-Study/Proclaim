@@ -30,7 +30,7 @@ class biblestudyModeltopicslist extends modelClass
 	 */
 	function _buildQuery()
 	{
-		$query = ' SELECT * '
+		$query = ' SELECT params AS topic_params'
 			. ' FROM #__bsms_topics '
 		;
 
@@ -47,7 +47,8 @@ class biblestudyModeltopicslist extends modelClass
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
-			$this->_data = $this->_getList( $query );
+			$result = $this->_getList( $query );
+			$this->_data = getTopicItemsTranslated($result);
 		}
 
 		return $this->_data;
@@ -86,7 +87,7 @@ function getDeletes()
         $query->select(
                 $this->getState(
                         'list.select',
-                        'topic.id, topic.topic_text, topic.published'));
+                        'topic.id, topic.topic_text, topic.published, topic.params AS topic_params'));
         $query->from('#__bsms_topics AS topic');
 
         // Filter by published state

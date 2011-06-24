@@ -23,6 +23,7 @@ class Tabletopicsedit extends JTable
 	 * @var string
 	 */
 	var $topic_text = null;
+	var $params = null;
 	
 	/**
 	 * Constructor
@@ -33,7 +34,7 @@ class Tabletopicsedit extends JTable
 		parent::__construct('#__bsms_topics', 'id', $db);
 	}
     
-     public function bind($array, $ignore = '')
+    public function bind($array, $ignore = '')
     {
     if (isset($array['params']) && is_array($array['params'])) {
     $registry = new JRegistry();
@@ -87,6 +88,30 @@ class Tabletopicsedit extends JTable
                 $asset = JTable::getInstance('Asset');
                 $asset->loadByName('com_biblestudy');
                 return $asset->id;
+        }
+
+        /**
+         * Overloaded load function
+         *
+         * @param       int $pk primary key
+         * @param       boolean $reset reset data
+         * @return      boolean
+         * @see JTable:load
+         */
+        public function load($pk = null, $reset = true) 
+        {
+                if (parent::load($pk, $reset)) 
+                {
+                        // Convert the languages field to a registry.
+                        $params = new JRegistry;
+                        $params->loadJSON($this->params);
+                        $this->params = $params;
+                        return true;
+                }
+                else
+                {
+                        return false;
+                }
         }
 }
 ?>

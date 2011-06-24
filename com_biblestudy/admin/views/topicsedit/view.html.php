@@ -21,8 +21,9 @@ class biblestudyViewTopicsedit extends JView {
     function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
+        $this->assignRef('languages' , $languages);
         $this->state = $this->get("State");
-        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'topicsedit');
+        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'topicsedit');
         $this->setLayout("form");
         $this->addToolbar();
         parent::display($tpl);

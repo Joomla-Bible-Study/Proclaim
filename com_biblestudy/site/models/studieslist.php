@@ -2,6 +2,7 @@
 defined('_JEXEC') or die();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 jimport( 'joomla.application.component.model' );
+include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
 
 $params = &JComponentHelper::getParams($option);
 $default_order = $params->get('default_order');
@@ -96,14 +97,16 @@ function setSelect($string){
 			  . ' #__bsms_message_type.id AS mid,'
 			  . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
 			  . ' #__bsms_locations.id AS lid, #__bsms_locations.location_text,'
-			  . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
+//			  . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
+			  . ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text AS topic_text, #__bsms_topics.params AS topic_params, sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
 			  . ' FROM #__bsms_studies'
 			  . ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
 			  . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
 			  . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
 			  . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
 			  . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-			  . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+//			  . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+			  . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
 			  . ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
               . ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
 			  . $where
@@ -199,9 +202,17 @@ function setSelect($string){
             . ' WHERE #__bsms_topics.published = 1'
             . ' ORDER BY #__bsms_topics.topic_text ASC';
         */    
-            $query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text, #__bsms_topics.published FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.topic_id = #__bsms_studies.topics_id) WHERE #__bsms_topics.published = 1 ORDER BY #__bsms_topics.topic_text ASC';
+//			$query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text, #__bsms_topics.published, #__bsms_topics.params FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.topic_id = #__bsms_studies.topics_id) WHERE #__bsms_topics.published = 1 ORDER BY #__bsms_topics.topic_text ASC';
+			$query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text, #__bsms_topics.published, #__bsms_topics.params AS topic_params FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) WHERE #__bsms_topics.published = 1 ORDER BY #__bsms_topics.topic_text ASC';
 
-			$this->_Topics = $this->_getList($query);
+			$db_result = $this->_getList($query);
+			$output = array();
+			foreach($db_result as $i => $value)
+			{
+				$value->text = getTopicItemTranslated($value);
+				$output[] = $value;
+			}
+			$this->_Topics = $output;
 		} 
 		return $this->_Topics;
 	}
@@ -214,36 +225,52 @@ function setSelect($string){
 		if (empty($this->_Orders)) {
 			$query = ' SELECT * FROM #__bsms_order '
 			. ' ORDER BY id ';
-			$this->_Orders = $this->_getList($query);
+			$db_result = $this->_getList($query);
+
+			$output = array();
+			foreach($db_result as $i => $value)
+			{
+				$value->text = JText::_($value->text);
+				$output[] = $value;
+			}
+			$this->_Orders = $output;
 		}
 		return $this->_Orders;
 	}
 
-function getBooks() {
+	function getBooks() {
 		if (empty($this->_Books)) {
-		  //get parameters
-          $booklist = $this->_params->get('booklist'); 
-          if ($booklist == 1)
-          {
-            $query = 'SELECT DISTINCT s.booknumber AS value, s.published AS spublished, b.id, b.booknumber AS bbooknumber, b.bookname AS text FROM #__bsms_studies AS s LEFT JOIN #__bsms_books AS b ON ( b.booknumber = s.booknumber ) WHERE s.published =1 AND b.id IS NOT NULL ORDER BY bbooknumber';
-          }
-        else
-        {
-      		$query = 'SELECT id, booknumber AS value, bookname AS text, published'
-            . ' FROM #__bsms_books'
-            . ' WHERE published = 1'
-            . ' ORDER BY booknumber';
-        }	
-  
-			$this->_Books = $this->_getList($query);
+			//get parameters
+			$booklist = $this->_params->get('booklist'); 
+			if ($booklist == 1)
+			{
+				$query = 'SELECT DISTINCT s.booknumber AS value, s.published AS spublished, b.id, b.booknumber AS bbooknumber, b.bookname AS text FROM #__bsms_studies AS s LEFT JOIN #__bsms_books AS b ON ( b.booknumber = s.booknumber ) WHERE s.published =1 AND b.id IS NOT NULL ORDER BY bbooknumber';
+			}
+			else
+			{
+				$query = 'SELECT id, booknumber AS value, bookname AS text, published'
+				. ' FROM #__bsms_books'
+				. ' WHERE published = 1'
+				. ' ORDER BY booknumber';
+			}
+			$db_result = $this->_getList($query);
+
+			$output = array();
+			foreach($db_result as $i => $value)
+			{
+				$value->text = JText::_($value->text);
+				$output[] = $value;
+			}
+			$this->_Books = $output;
 		}
 		return $this->_Books;
 	}
+
 /**
 	 * @desc Returns the Template to display the list
 	 * @return Array
 	 */
-function getTemplate() {
+	function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
 			$query = 'SELECT *'
@@ -254,7 +281,7 @@ function getTemplate() {
 		return $this->_template;
 	}
 
-function getAdmin()
+	function getAdmin()
 	{
 		if (empty($this->_admin)) {
 			$query = 'SELECT *'
@@ -272,7 +299,13 @@ function getAdmin()
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
-			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
+            $result = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
+            foreach ($result AS $item) {
+            	$topic_text = getTopicItemTranslated($item);
+            	$item->topic_text = $topic_text;
+				$item->bookname = JText::_($item->bookname);
+            }
+            $this->_data = $result;
 		}
 
 		return $this->_data;
@@ -309,8 +342,6 @@ function getAdmin()
 		{
 			jimport('joomla.html.pagination');
 			$this->_pagination = new JPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
-
-
 
 		}
 

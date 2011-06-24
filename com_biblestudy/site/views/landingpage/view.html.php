@@ -23,11 +23,11 @@ class biblestudyViewLandingpage extends JView {
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		include_once($path1.'image.php');
+		 //Load the Admin settings and params from the template
 		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
 		$document =& JFactory::getDocument();
 		$model =& $this->getModel();
-		 //Load the Admin settings and params from the template
-        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
+//        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
         
          $t = JRequest::getInt('t','get',1);
         if (!$t) {
@@ -73,30 +73,30 @@ class biblestudyViewLandingpage extends JView {
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
 		$search				= JString::strtolower($mainframe->getUserStateFromRequest( $option.'search','search','','string'));
 
-		$results = $this->get('Data');
+//		$results = $this->get('Data');
         $adminrows = new JBSAdmin();
-        $items = $adminrows->showRows($results);
+//        $items = $adminrows->showRows($results);
 		$total = $this->get('Total');
 		
 		$pagination = $this->get('Pagination');
-		$teachers = $this->get('Teachers');
-		$series = $this->get('Series');
-		$messageTypes = $this->get('MessageTypes');
-		$studyYears = $this->get('StudyYears');
-		$locations = $this->get('Locations');
-		$topics = $this->get('Topics');
-		$orders = $this->get('Orders');
-		$books = $this->get('Books');
-        //This is the helper for scripture formatting
-        $scripture_call = Jview::loadHelper('scripture');
-		//end scripture helper
-		$translated_call = JView::loadHelper('translated');
-		$topics = getTranslated($topics);
-		$book = getTranslated($books);
-		$this->assignRef('template', $template);
-		$this->assignRef('pagination',	$pagination);
-		$this->assignRef('order', $orders);
-		$this->assignRef('topic', $topics);
+//		$teachers = $this->get('Teachers');
+//		$series = $this->get('Series');
+//		$messageTypes = $this->get('MessageTypes');
+//		$studyYears = $this->get('StudyYears');
+//		$locations = $this->get('Locations');
+//		$topics = $this->get('Topics');
+//		$orders = $this->get('Orders');
+//		$books = $this->get('Books');
+//        //This is the helper for scripture formatting
+//        $scripture_call = Jview::loadHelper('scripture');
+//		//end scripture helper
+////		$translated_call = JView::loadHelper('translated');
+////		$topics = getBooksTranslated($topics);
+////		$book = getBooksTranslated($books);
+//		$this->assignRef('template', $template);
+//		$this->assignRef('pagination',	$pagination);
+//		$this->assignRef('order', $orders);
+//		$this->assignRef('topic', $topics);
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		//Get the main study list image
@@ -104,10 +104,10 @@ class biblestudyViewLandingpage extends JView {
 		$main = $images->mainStudyImage();
 
 		
-	  	$this->assignRef('main', $main);
+//	  	$this->assignRef('main', $main);
 
 
-		$this->assignRef('items',		$items);
+//		$this->assignRef('items',		$items);
 
 		$this->assignRef('request_url',	$uri->toString());
 		$this->assignRef('params', $params);

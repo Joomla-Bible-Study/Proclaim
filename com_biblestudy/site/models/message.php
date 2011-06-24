@@ -27,7 +27,7 @@ class biblestudyModelmessage extends modelClass {
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
-				$registry->loadJSON(admin[0]->params);
+				$registry->loadJSON($admin[0]->params);
                 $admin_params = $registry;
         
         $array = JRequest::getVar('cid', 0, '', 'array');
@@ -279,12 +279,13 @@ class biblestudyModelmessage extends modelClass {
     }
 
     function getBooks() {
-        $query = 'SELECT booknumber AS value, bookname AS text'
-                . ' FROM #__bsms_books'
-                . ' WHERE published = 1'
-                . ' ORDER BY booknumber';
-        $this->_db->setQuery($query);
-        return $this->_getList($query);
+        die ('biblestudyModelmessage.getData is no more used');
+//        $query = 'SELECT booknumber AS value, bookname AS text'
+//                . ' FROM #__bsms_books'
+//                . ' WHERE published = 1'
+//                . ' ORDER BY booknumber';
+//        $this->_db->setQuery($query);
+//        return $this->_getList($query);
     }
 
     function getAdmin() {

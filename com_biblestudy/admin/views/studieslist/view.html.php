@@ -19,14 +19,15 @@ class biblestudyViewstudieslist extends JView {
     function display($tpl = null) {
         $this->canDo	= BibleStudyHelper::getActions('', 'studiesedit');
         $this->state = $this->get('State');
-        $this->items = $this->get('Items');
+        $items = $this->get('Items');
+        $modelView = $this->getModel();
+        $this->items = $modelView->getTranslated($items);
         $this->pagination = $this->get('Pagination');
         $this->books = $this->get('Books');
         $this->teachers = $this->get('Teachers');
         $this->series = $this->get('Series');
         $this->messageTypes = $this->get('MessageTypes');
         $this->years = $this->get('Years');
-      //  dump ($this->years);
         $this->topics = $this->get('Topics');
         $this->addToolbar();
         

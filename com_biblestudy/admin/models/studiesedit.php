@@ -291,13 +291,14 @@ class biblestudyModelstudiesedit extends modelClass {
     }
 
     function getBooks() {
-        $query = 'SELECT booknumber AS value, bookname AS text'
-                . ' FROM #__bsms_books'
-                . ' WHERE published = 1'
-                . ' ORDER BY booknumber';
-        $this->_db->setQuery($query);
-        $books = getTranslated($this->_getList($query));
-        return $books;
+        die ('biblestudyModelstudiesedit.getBooks is no more used');
+//        $query = 'SELECT booknumber AS value, bookname AS text'
+//                . ' FROM #__bsms_books'
+//                . ' WHERE published = 1'
+//                . ' ORDER BY booknumber';
+//        $this->_db->setQuery($query);
+//        $books = getTopicItemsTranslated($this->_getList($query));  // santon wrong call??
+//        return $books;
     }
 
     function getAdmin() {

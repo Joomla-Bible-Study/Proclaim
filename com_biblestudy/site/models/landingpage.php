@@ -58,9 +58,11 @@ class biblestudyModellandingpage extends JModel
 		// In case we are on more than page 1 of results and the total changes in one of the drop downs to a selection that has fewer in its total, we change limitstart
 		if ($this->getTotal() < $this->getState('limitstart')) {$this->setState('limitstart', 0,'','int');}
 	}
-function setSelect($string){
+
+	function setSelect($string){
 	
-}
+	}
+
 	/**
 	 * @desc Returns the query
 	 * @return string The query to be used to retrieve the rows from the database
@@ -69,10 +71,11 @@ function setSelect($string){
 	{
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
-		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
+//		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
+		$query = 'SELECT #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
 		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, #__bsms_series.series_thumbnail, #__bsms_message_type.id AS mid,'
 		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-		. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_locations.id AS lid, #__bsms_locations.location_text'
+		. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params,#__bsms_locations.id AS lid, #__bsms_locations.location_text'
 		. ' FROM #__bsms_studies'
 		. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
 		. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
@@ -175,12 +178,19 @@ function setSelect($string){
 	 */
 	function getTopics() {
 		if (empty($this->_Topics)) {
-			$query = 'SELECT DISTINCT #__bsms_studies.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text AS text, #__bsms_topics.published'
+			$query = 'SELECT DISTINCT #__bsms_studies.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params, #__bsms_topics.published'
 			. ' FROM #__bsms_studies'
 			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
 			. ' WHERE #__bsms_topics.published = 1'
 			. ' ORDER BY #__bsms_topics.topic_text ASC';
-			$this->_Topics = $this->_getList($query);
+			$db_result = $this->_getList($query);
+			$output = array();
+			foreach($db_result as $value)
+			{
+				$value->text = getTopicItemTranslated($value);
+				$output[] = $value;
+			}
+			$this->_Topics = $output;
 		} 
 		return $this->_Topics;
 	}
@@ -198,18 +208,25 @@ function setSelect($string){
 		return $this->_Orders;
 	}
 
-function getBooks() {
+	function getBooks() {
 		if (empty($this->_Books)) {
 			$query = 'SELECT id, booknumber AS value, bookname AS text, published'
-  . ' FROM #__bsms_books'
-  . ' WHERE published = 1'
-  . ' ORDER BY booknumber';
-			$this->_Books = getTranslated($this->_getList($query));
+			. ' FROM #__bsms_books'
+			. ' WHERE published = 1'
+			. ' ORDER BY booknumber';
+			$db_result = $this->_getList($query);
+			$output = array();
+			foreach($db_result as $i => $value)
+			{
+				$value->text = JText::_($value->text);
+				$output = $value;
+			}
+			$this->_Books = $output;
 		}
 		return $this->_Books;
 	}
 
-function getTemplate() {
+	function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
 			$query = 'SELECT *'
@@ -227,9 +244,15 @@ function getTemplate() {
 		if (empty( $this->_data ))
 		{
 			$query = $this->_buildQuery();
-			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
-		}
+			$db_result = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
 
+			// translate books and topics
+			foreach ($db_result as $item) {
+				$item->bookname = JText::_($item->bookname);
+				$item->topic_text = getTopicItemTranslated($item);
+			}
+			$this->_data = $db_result;
+		}
 		return $this->_data;
 	}
 	/**

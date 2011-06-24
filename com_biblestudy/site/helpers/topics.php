@@ -18,7 +18,8 @@ function getTopicsLandingPage($params, $id, $admin_params)
 
 		$topic = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
-		$query = 'select distinct a.* from #__bsms_topics a inner join #__bsms_studytopics b on a.id = b.topic_id';
+//		$query = 'select distinct a.* from #__bsms_topics a inner join #__bsms_studytopics b on a.id = b.topic_id';
+		$query = 'select distinct a.id, a.topic_text, a.published, a.params AS topic_params from #__bsms_topics a inner join #__bsms_studies b on a.id = b.topics_id';
 		
 		$db->setQuery($query);
 		
@@ -59,7 +60,7 @@ function getTopicsLandingPage($params, $id, $admin_params)
             $topic .= "\n\t\t" . '<td id="landing_td">';
 		    $topic .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_topic='.$b->id.'&filter_teacher=0&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$t.'">';
 		    
-		    $topic .= $b->topic_text;
+		    $topic .= getTopicItemTranslated($b);
     		
             $topic .='</a>';
             

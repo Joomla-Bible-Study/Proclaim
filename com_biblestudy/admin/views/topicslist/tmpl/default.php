@@ -9,6 +9,7 @@
 //No Direct Access
 defined('_JEXEC') or die('Restricted access'); 
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=topicslist'); ?>" method="post" name="adminForm" id="adminForm">
 <fieldset id="filter-bar">
@@ -58,7 +59,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                 <?php echo JHtml::_('jgrid.published', $item->published, $i, 'topicslist.', true, 'cb', '', ''); ?>
                     </td>
 			<td>
-				<a href="<?php echo $link; ?>"><?php echo JText::_($item->topic_text); ?></a>
+				<a href="<?php echo $link; ?>"><?php echo getTopicItemTranslated($item); ?></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>

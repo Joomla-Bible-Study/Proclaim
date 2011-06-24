@@ -87,13 +87,15 @@ class biblestudyModelstudieslist extends modelClass {
      * @return array Array of objects containing the data from the database
      */
     function getData() {
-        // Lets load the data if it doesn't already exist
-        if (empty($this->_data)) {
-            $query = $this->_buildQuery();
-            $this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
-        }
-        //$this->setState('limitstart', $limitstart);
-        return $this->_data;
+		die('biblestudyModelstudieslist.getData is no more used');
+//        // Lets load the data if it doesn't already exist
+//        if (empty($this->_data)) {
+//            $query = $this->_buildQuery();
+//            $result = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
+//            $this->_data = getTopicItemsTranslated($result);
+//        }
+//        //$this->setState('limitstart', $limitstart);
+//        return $this->_data;
     }
 
     /**
@@ -286,9 +288,9 @@ class biblestudyModelstudieslist extends modelClass {
         $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
 
         //Join over Topics
-        $query->select('topic.topic_text');
+        $query->select('topic.topic_text, topic.params AS topic_params');
         $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = study.topics_id');
-
+        
         //Join over Books
         $query->select('book.bookname');
         $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
@@ -326,7 +328,7 @@ class biblestudyModelstudieslist extends modelClass {
         if(!empty($messageType))
             $query->where('study.messageType = '.(int)$messageType);
 
-        //Filter by Year?
+        //Filter by Year
         $year = $this->getState('filter.year');
         if (!empty($year))
             $query->where('YEAR(study.studydate) = '.(int)$year );
@@ -355,6 +357,20 @@ class biblestudyModelstudieslist extends modelClass {
 
     /*
      * @since 7.0
+     * translate item entries: books, topics
+     */
+
+    public function getTranslated($items = array()) {
+		foreach ($items as $item) {
+			$item->bookname = JText::_($item->bookname);
+			$item->topic_text = getTopicItemTranslated($item);
+		}
+		return $items;
+	}
+
+
+    /*
+     * @since 7.0
      */
 
     public function getBooks() {
@@ -369,7 +385,7 @@ class biblestudyModelstudieslist extends modelClass {
 
         $db->setQuery($query->__toString());
       
-       $db_result = $db->loadAssocList();
+        $db_result = $db->loadAssocList();
         foreach($db_result as $i => $value)
         {
                  $db_result[$i]['text'] = JText::_($value['text']);
@@ -440,17 +456,21 @@ class biblestudyModelstudieslist extends modelClass {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
-        $query->select('topic.id AS value, topic.topic_text AS text');
+        $query->select('topic.id AS value, topic.topic_text AS topic_text, topic.params AS topic_params');
         $query->from('#__bsms_topics AS topic');
         $query->join('INNER', '#__bsms_studies AS study ON study.topics_id = topic.id');
         $query->group('topic.id');
         $query->order('topic.topic_text');
 
         $db->setQuery($query->__toString());
-        $topics = getTranslated($db->loadObjectList());
-       // return $db->loadObjectList();
-       return $topics;
-
+        $db_result = $db->loadObjectList();
+        $output = array();
+        foreach($db_result as $i => $value)
+        {
+                 $value->text = getTopicItemTranslated($value);
+                 $output[] = $value;
+        }
+        return $output;
     }
 
     public function getYears(){

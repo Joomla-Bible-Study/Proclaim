@@ -5,6 +5,7 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
+include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
 
 
 class biblestudyModelstudydetails extends JModel
@@ -81,7 +82,7 @@ class biblestudyModelstudydetails extends JModel
 			. ' #__bsms_series.id AS sid, #__bsms_series.series_text AS series_text, #__bsms_series.description AS sdescription, '
 			. ' #__bsms_message_type.id AS mid, #__bsms_message_type.message_type AS message_type, '
 			. ' #__bsms_books.bookname AS bname, #__bsms_locations.id as lid, #__bsms_locations.location_text,'
-			. ' #__bsms_topics.id AS tpid, #__bsms_topics.topic_text,'
+			. ' #__bsms_topics.id AS tpid, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params,'
             . ' sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
 			. ' FROM #__bsms_studies'
 			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
@@ -95,17 +96,22 @@ class biblestudyModelstudydetails extends JModel
             . ' GROUP BY #__bsms_studies.id';
 			//.$this->_id.;
 			$this->_db->setQuery( $query );
-			$this->_data = $this->_db->loadObject();
+			$result = $this->_db->loadObject();
+
+			$topic_text = getTopicItemTranslated($result);
+			$result->topic_text = $topic_text;
+			$result->bname = JText::_($result->bname);
+
+			$this->_data = $result;
 		}
 		return $this->_data;
 	}
 
-/*	*
+	/*
 	 * Method to store a record
 	 *
 	 * @access	public
 	 * @return	boolean	True on success*/
-	 
 	function storecomment()
 	{
 		$row =& $this->getTable('commentsedit');

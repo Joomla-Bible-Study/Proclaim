@@ -8,8 +8,8 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-     include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
-    jimport('joomla.application.component.modellist');
+jimport('joomla.application.component.modellist');
+include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
 
     abstract class modelClass extends JModelList {
         
@@ -42,7 +42,7 @@ class biblestudyModelMessages extends modelClass {
         $this->setState('limitstart', $limitstart);
     }
 
-   function getDownloads($id) {
+    function getDownloads($id) {
         $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
         $result = $this->_getList($query);
         if (!$result) {
@@ -62,7 +62,13 @@ class biblestudyModelMessages extends modelClass {
         return $result[0]->totalPlays;
     }
 
-   function getFiles() {
+    /**
+     * Creates and executes a new query that retrieves the medifile information from the mediafiles table. 
+     * It then adds to the dataObject the mediafiles associated with the sermon.
+     * @return unknown_type
+     */
+    /* Tom commented this out because it caused the query to fail - needs work. */
+    function getFiles() {
         $mediaFiles = null;
         $db = & JFactory::getDBO();
         $i = 0;
@@ -83,7 +89,13 @@ class biblestudyModelMessages extends modelClass {
         return $this->_files;
     }
 
-   function legacyGetPagination() {
+    /**
+     * Method to get a pagination object for the studies
+     *
+     * @access public
+     * @return integer
+     */
+    function legacyGetPagination() {
         // Lets load the content if it doesn't already exist
         if (empty($this->_pagination)) {
             jimport('joomla.html.pagination');
@@ -369,14 +381,22 @@ class biblestudyModelMessages extends modelClass {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
-        $query->select('topic.id AS value, topic.topic_text AS text');
+        $query->select('topic.id AS value, topic.topic_text AS topic_text, topic.params AS topic_params');
         $query->from('#__bsms_topics AS topic');
         $query->join('INNER', '#__bsms_studies AS study ON study.topics_id = topic.id');
         $query->group('topic.id');
         $query->order('topic.topic_text');
 
         $db->setQuery($query->__toString());
-        return $db->loadObjectList();
+        $db_result = $db->loadObjectList();
+
+        $output = array();
+        foreach($db_result as $i => $value)
+        {
+            $value->text = getTopicItemTranslated($value);
+            $output[] = $value;
+        }
+        return $output;
     }
 
 public function getYears(){

@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<form>
-    <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
-        <option value="0">JBS_CMN_NO</option>
-        <option value="1">JBS_CMN_YES</option>
-    </field>
-    <field name="topic_text" type="text" label="JBS_CMN_TOPIC" description="JBS_CMN_TOPIC_DESC" size="75" required="true" />
-    <field name="asset_id" type="hidden" filter="unset" />
-    <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-			translate_label="false" class="inputbox" filter="rules"
-			component="com_biblestudy" section="topicsedit" validate="rules"
-		/>
-</form>
+This is not used; the xml is set dynamically instead. See administrator/components/com_biblestudy/models/topicsedit.php function getForm()
