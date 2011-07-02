@@ -247,7 +247,7 @@ table.fbstat .col2 {
             <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=serverslist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_SERVERS');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-servers.png" align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_SERVERS'); ?> </a> </div>
           </div>
           <div style = "float:left;">
-            <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=folderslist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_FLD_FOLDERS');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-folder.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_FLD_FOLDERS'); ?> </a> </div>
+            <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=folderslist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_FOLDERS');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-folder.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_FOLDERS'); ?> </a> </div>
           </div>
           <div style = "float:left;">
             <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=podcastlist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_PODCASTS');?>"> <img src = "components/com_biblestudy/images/icons/icon-48-podcast.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_PODCASTS'); ?> </span></a> </div>

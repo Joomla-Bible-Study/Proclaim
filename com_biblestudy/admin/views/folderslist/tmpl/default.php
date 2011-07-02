@@ -21,7 +21,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         <?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
                     </th>
                     <th>
-                        <?php echo JText::_('JBS_FLD_FOLDERS'); ?>
+                        <?php echo JText::_('JBS_CMN_FOLDERS'); ?>
                     </th>
                     <th>
                         <?php echo JText::_('JBS_FLD_FOLDER_NAME'); ?>

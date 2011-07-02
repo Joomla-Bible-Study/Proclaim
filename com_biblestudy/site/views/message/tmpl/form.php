@@ -163,10 +163,9 @@ JHtml::_('behavior.formvalidation');
                     <?php echo $this->form->getInput('comments'); ?>
                <div class="formelm-area">     
                     <?php echo $this->form->getLabel('user_id'); ?>
-                    <?php echo $this->form->getInput('user_id', null, $this->admin->user_id); ?>
+                    <?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id); ?>
                </div>
                <div class="formelm-area">      
-              
                     <?php echo $this->form->getLabel('access'); ?>
                     <?php echo $this->form->getInput('access'); ?>
                </div>     

@@ -173,7 +173,7 @@ public static function getActions($Itemid = 0, $type = null)
                         $vName == 'Servers'
         );
         JSubMenuHelper::addEntry(
-                        JText::_('JBS_FLD_FOLDERS'),
+                        JText::_('JBS_CMN_FOLDERS'),
                         'index.php?option=com_biblestudy&view=folderslist',
                         $vName == 'Folders'
         );

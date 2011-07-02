@@ -14,7 +14,7 @@
             <option value="0">JBS_CMN_HIDE</option>
             <option value="1">JBS_CMN_SHOW</option>
         </field>
-        <field name="popular_limit" type="text" size="3" label="JBS_ADM_POPULAR_LIMIT" dscription="JBS_ADM_POPULAR_LIMIT_DESC" />
+        <field name="popular_limit" type="text" size="3" label="JBS_ADM_POPULAR_LIMIT" description="JBS_ADM_POPULAR_LIMIT_DESC" />
         <field name="character_filter" type="list" default="1" label="JBS_ADM_CHARACTER_FILTER" description="JBS_ADM_CHARACTER_FILTER_DESC">
             <option value="0">JBS_ADM_NO_FILTER</option>
             <option value="1">JBS_ADM_FILTER</option>
@@ -40,42 +40,42 @@
         </field>
 
         <field name="location_id" type="sql" extension="com_biblestudy" label="JBS_CMN_LOCATION"
-             description="JBS_ADM_FILLIN_STUDY_LOCATION_ID_DESC" class="inputbox"
+             description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
              query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER BY location_text ASC"
              key_field="id"
              value_field="location_text">
             <option value="-1">JBS_CMN_SELECT_LOCATION</option>
         </field>
         <field name="teacher_id" type="sql" class="inputbox" default="-1" label="JBS_CMN_TEACHER_NAME"
-             description="JBS_ADM_FILLIN_STUDY_TEACHER_ID_DESC"
+             description="JBS_ADM_FILLIN_STUDY_DESC"
              query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER BY teachername ASC"
              key_field="id"
              value_field="teachername">
             <option value="-1">JBS_CMN_SELECT_TEACHER</option>
         </field>
         <field name="series_id" type="sql" default="-1" label="JBS_CMN_SERIES"
-             description="JBS_ADM_FILLIN_STUDY_SERIES_ID_DESC" class="intputbox"
+             description="JBS_ADM_FILLIN_STUDY_DESC" class="intputbox"
              query="SELECT id, series_text FROM #__bsms_series WHERE published = 1"
              key_field="id"
              value_field="series_text">
             <option value="-1">JBS_CMN_SELECT_SERIES</option>
         </field>
         <field name="booknumber" type="sql" default="-1" label="JBS_CMN_BOOK" translate="true"
-             description="JBS_ADM_FILLIN_STUDY_BOOKNUMBER_DESC" class="inputbox"
+             description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
              query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
              key_field="booknumber"
              value_field="bookname">
             <option value="-1">JBS_CMN_SELECT_BOOK</option>
         </field>
         <field name="topic_id" type="topicslist" default="-1"
-             label="JBS_CMN_TOPIC" description="JBS_ADM_FILLIN_STUDY_TOPIC_ID_DESC" class="inputbox">
+             label="JBS_CMN_TOPIC" description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_TOPIC</option>
         </field>
         <field name="messagetype" type="messagetypelist" default="-1" label="JBS_CMN_MESSAGE_TYPE"
-             description="JBS_ADM_FILLIN_STUDY_MESSAGE_TYPE_DESC" class="inputbox">
+             description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
         </field>
-        <field name="default_study_image" type="media" size="50" label="JBS_ADM_DEFAULT_STUDY_IMAGE" description="JBS_ADM_DEFAULT_STUDY_IMAGE_DESC"/>        
+        <field name="default_study_image" type="media" size="50" label="JBS_ADM_FILLIN_STUDY_IMAGE" description="JBS_ADM_FILLIN_STUDY_DESC"/>        
 
         <field name="download" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC">
             <option value="0">JBS_CMN_NO</option>
@@ -88,29 +88,29 @@
             <option value="_parent">JBS_ADM_PARENT_WINDOW</option>
             <option value="_top">JBS_ADM_FULL_WINDOW</option>
         </field>
-        <field name="server" type="sql" class="inputbox" label="JBS_ADM_FILLIN_MEDIAFILE_SERVER"
-             description="JBS_ADM_FILLIN_MEDIAFILE_SERVER_DESC" default="-1"
+        <field name="server" type="sql" class="inputbox" label="JBS_CMN_SERVER"
+             description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
              query="SELECT id, server_name FROM #__bsms_servers WHERE published = 1 ORDER BY server_name ASC"
              key_field="id"
              value_field="server_name">
             <option value="-1">JBS_CMN_SELECT_SERVER</option>
         </field>
-        <field name="path" type="sql" class="inputbox" label="JBS_ADM_FILLIN_MEDIAFILE_PATH"
-             description="JBS_ADM_FILLIN_MEDIAFILE_PATH_DESC" default="-1"
+        <field name="path" type="sql" class="inputbox" label="JBS_CMN_FOLDERS"
+             description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
              query="SELECT id, foldername FROM #__bsms_folders WHERE published = 1 ORDER BY id ASC"
              key_field="id"
              value_field="foldername">
             <option value="-1">JBS_CMN_SELECT_FOLDER</option>
         </field>
-        <field name="podcast" type="sql" class="inputbox" label="JBS_ADM_FILLIN_MEDIAFILE_PODCAST"
-             description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC" default="-1"
+        <field name="podcast" type="sql" class="inputbox" label="JBS_CMN_PODCAST"
+             description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
              query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
              key_field="id"
              value_field="title">
             <option value="-1">JBS_CMN_SELECT_PODCAST</option>
         </field>
-        <field name="mime" type="sql" class="inputbox" label="JBS_ADM_FILLIN_MEDIAFILE_MIME"
-             description="JBS_ADM_FILLIN_MEDIAFILE_MIME_DESC" default="-1"
+        <field name="mime" type="sql" class="inputbox" label="JBS_CMN_MIME_TYPE"
+             description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
              query="SELECT id, mimetext FROM #__bsms_mimetype WHERE published = 1 ORDER BY mimetext ASC"
              key_field="id"
              value_field="mimetext">
