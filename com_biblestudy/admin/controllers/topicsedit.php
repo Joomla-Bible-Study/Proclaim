@@ -27,9 +27,40 @@ class biblestudyControllertopicsedit extends controllerClass
 		parent::__construct();
 
 		// Register Extra tasks
-	//	$this->registerTask( 'add'  , 	'edit' );
+
 	}
 
+	/**
+	 * Method to save a topic item.
+	 *
+	 * @return	void
+	 * @since	1.6
+	 */
+	public function save($key = null, $urlVar = null)
+	{
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// get the model and check alias
+		$app = JFactory::getApplication();
+		$model = $this->getModel();
+		$table = $model->getTable();
+		$data = JRequest::getVar('jform', array(), 'post', 'array');
+		// Determine the name of the primary key for the data.
+		if (empty($key)) {
+			$key = $table->getKeyName();
+		}
+		// The urlVar may be different from the primary key to avoid data collisions.
+		if (empty($urlVar)) {
+			$urlVar = $key;
+		}
+		$recordId = JRequest::getInt($urlVar);
+		$data = $table->checkAlias($data, $recordId);
+		// push back to JRequest
+		JRequest::setVar('jform', $data, 'post', true);
+
+		parent::save($key, $urlVar);
+	}
 
 }
 ?>

@@ -59,39 +59,6 @@ class biblestudyModeltopicsedit extends modelClass
 	}
 
 	/**
-	 * Method to store a record
-	 *
-	 * @access	public
-	 * @return	boolean	True on success
-	 */
-	function store()
-	{
-		$row =& $this->getTable();
-
-		$data = JRequest::get( 'post' );
-
-		// Bind the form fields to the series table
-		if (!$row->bind($data)) {
-			$this->setError($this->_db->getErrorMsg());
-			return false;
-		}
-
-		// Make sure the hello record is valid
-		if (!$row->check()) {
-			$this->setError($this->_db->getErrorMsg());
-			return false;
-		}
-		
-		// Store the web link table to the database
-		if (!$row->store()) {
-			$this->setError($this->_db->getErrorMsg());
-//			$this->setError( $row->getErrorMsg() );
-			return false;
-		}
-
-		return true;
-	}
-	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
 	 * @param	type	The table type to instantiate
@@ -105,49 +72,6 @@ class biblestudyModeltopicsedit extends modelClass
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	/**
-	 * Method to delete record(s)
-	 *
-	 * @access	public
-	 * @return	boolean	True on success
-	 */
-/*	function delete()
-	{
-		$cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
-
-		$row =& $this->getTable();
-
-		if (count( $cids ))
-		{
-			foreach($cids as $cid) {
-				if (!$row->delete( $cid )) {
-					$this->setError( $row->getErrorMsg() );
-					return false;
-				}
-			}						
-		}
-		return true;
-	}
-*/ 
-function legacypublish($cid = array(), $publish = 1)
-	{
-		
-		if (count( $cid ))
-		{
-			$cids = implode( ',', $cid );
-
-			$query = 'UPDATE #__bsms_topics'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
-				
-			;
-			$this->_db->setQuery( $query );
-			if (!$this->_db->query()) {
-				$this->setError($this->_db->getErrorMsg());
-				return false;
-			}
-		}		
-	}			
 
     /**
      * Get the form data

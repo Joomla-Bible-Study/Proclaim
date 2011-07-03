@@ -1,8 +1,9 @@
 <?php
 /**
  * CSS Edit Controller for Bible Study Component
- *
-
+ * @version     $Id: cssedit.php 1466 2011-01-31 23:13:03Z bcordis $
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
 
 // Check to ensure this file is included in Joomla!
