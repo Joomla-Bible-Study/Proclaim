@@ -26,4 +26,3 @@ class biblestudyViewcpanel extends JView
         parent::display($tpl);
 	}
 }
-?>

@@ -229,6 +229,6 @@ $params = $this->form->getFieldsets();
     <input type="hidden" name="tooltype" value="" />
     <?php echo JHtml::_('form.token'); ?>
 </form>
-    <?php echo JHtml::_('tabs.end'); ?>
+    <?php echo JHtml::_('tabs.end');
                        
 

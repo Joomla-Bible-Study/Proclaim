@@ -334,8 +334,6 @@ table.fbstat .col2 {
 	 	<td> <?php echo JText::_('JBS_CPL_TOP_STUDIES_HITS_PLAYS_DOWNLOADS'); ?></td><td><strong><?php echo jbStats::top_score() ; ?></strong></td>
  		<td></td><td></td>
 	</tr>
-		<?php 
-	?>
           </tbody>
         </table>
      </div>   

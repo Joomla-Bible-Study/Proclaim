@@ -1,5 +1,9 @@
 <?php defined('_JEXEC') or die('Restricted access');
-
+/**
+ * @version     $Id
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 class Dump_File{
   var $pathname = NULL;
   var $filename = NULL;

@@ -50,4 +50,3 @@ class biblestudyViewcommentsedit extends JView {
     }
 
 }
-?>
