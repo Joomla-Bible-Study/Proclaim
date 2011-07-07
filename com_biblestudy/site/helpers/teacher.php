@@ -97,13 +97,13 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$teacher = null;
 	$teacherid = null;
-	$t = $params->get('t');
-	//$t = $params->get('teachertemplateid');
+	//$t = $params->get('t');
+	$template = $params->get('teachertemplateid',1);
 	$limit = $params->get('landingteacherlimit');
 	if (!$limit) {$limit = 10000;}
 	$menu =& JSite::getMenu();
 	
-	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
+//	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 		$teacher = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
@@ -147,10 +147,10 @@ function getTeacherLandingPage($params, $id, $admin_params)
             $teacher .= "\n\t\t" . '<td id="landing_td">';
             
             if ($params->get('linkto') == 0) {
-		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t='.$t.'">';
+		        $teacher .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
             } else {
 		    
-		        $teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&t='.$t.$addItemid.'">';
+		        $teacher .= '<a href="index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&t='.$template.'">';
 		    };
 		    $teacher .= $b->teachername;
     		
