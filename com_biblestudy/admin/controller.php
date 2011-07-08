@@ -229,4 +229,63 @@ function writeXMLFile() {
         }
         $this->setRedirect('index.php?option=com_biblestudy&view=podcastlist', $msg);
     }
+    
+    function resetHits() {
+        $msg = null;
+        $id = JRequest::getInt('id', 0, 'get'); //dump ($cid, 'cid: ');
+        $db = JFactory::getDBO();
+        $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
+        $reset = $db->query();
+        if ($db->getErrorNum() > 0) {
+            $error = $db->getErrorMsg();
+            $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
+            $this->setRedirect('index.php?option=com_biblestudy&view=studiesedit&layout=edit&id=' . $id, $msg);
+        } else {
+            $updated = $db->getAffectedRows();
+            $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
+            $this->setRedirect('index.php?option=com_biblestudy&view=studiesedit&layout=edit&id=' . $id, $msg);
+        }
+    }
+    
+    	function resetDownloads()
+	{
+		$msg = null;
+		$id 	= JRequest::getInt( 'id', 0, 'get'); //dump ($cid, 'cid: ');
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = ".$id);
+		$reset = $db->query();
+        if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS').' '.$error;
+					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&layout=edit&id='.$id, $msg );
+				}
+		else
+			{
+				$updated = $db->getAffectedRows();
+                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
+				$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&layout=edit&id='.$id, $msg );
+			}
+	}
+
+function resetPlays()
+	{
+		$msg = null;
+		$id 	= JRequest::getInt( 'id', 0, 'get'); //dump ($cid, 'cid: ');
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = ".$id);
+		$reset = $db->query();
+        if ($db->getErrorNum() > 0)
+				{
+					$error = $db->getErrorMsg();
+                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS').' '.$error;
+					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&layout=edit&id='.$id, $msg );
+				}
+		else
+			{
+				$updated = $db->getAffectedRows();
+                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
+                $this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&layout=edit&id='.$id, $msg );
+			}
+	}
 }

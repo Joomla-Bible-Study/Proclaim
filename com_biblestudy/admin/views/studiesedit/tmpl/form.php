@@ -13,6 +13,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_STY_DETAILS'); ?></legend>
             <ul>
+            
                 <li>
                     <?php echo $this->form->getLabel('studytitle'); ?>
                     <?php echo $this->form->getInput('studytitle'); ?>
@@ -149,6 +150,10 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         <fieldset class="panelform">
                             <legend><?php echo JText::_('JBS_CMN_PUBLISHING_OPTIONS'); ?></legend>
                             <ul>
+                            <li>
+                    <?php echo JText::_('JBS_STY_HITS'); ?>
+                    <?php echo $this->item->hits; ?>
+                    </li>
                                 <li>
                     <?php echo $this->form->getLabel('published'); ?>
                     <?php echo $this->form->getInput('published'); ?>
@@ -161,6 +166,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <?php echo $this->form->getLabel('comments'); ?>
                     <?php echo $this->form->getInput('comments'); ?>
                         </li>
+                    
                         <li>
                     <?php echo $this->form->getLabel('user_id'); ?>
                     <?php // fill in actual user if empty
