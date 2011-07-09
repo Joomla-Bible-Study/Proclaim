@@ -27,18 +27,20 @@ $mainframe = & JFactory::getApplication();
                         <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
                     </th>
                     <th width="20" align="center">
-<?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
+                        <?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
                     </th>
-                    <th><?php echo JText::_('JBS_CMN_IMAGE'); ?></th>
                     <th>
-<?php echo JText::_('JBS_SHR_SOCIAL_NETWORK'); ?>
+                    	<?php echo JText::_('JBS_CMN_IMAGE'); ?>
+                    </th>
+                    <th>
+                        <?php echo JText::_('JBS_SHR_SOCIAL_NETWORK'); ?>
                     </th>
                 </tr>
             </thead>
 <?php
 foreach ($this->items as $i =>
     $item) :
-$params = new JParameter($row->params);
+$params = new JParameter($item->params);
 $link = JRoute::_( 'index.php?option=com_biblestudy&task=shareedit.edit&id='. (int) $item->id );
 ?>
             <tr class="row<?php echo $i % 2; ?>">
@@ -49,17 +51,11 @@ $link = JRoute::_( 'index.php?option=com_biblestudy&task=shareedit.edit&id='. (i
                     <?php echo JHtml::_('jgrid.published', $item->published, $i, 'sharelist.', true, 'cb', '', ''); ?>
                 </td>
                 <td width="60" align="left">
-                    <?php
-                    $isweb = stristr($params->get('shareimage'), 'http');
-                    if ($isweb) { echo '<img src="'.$params->get('shareimage').'">';
-                    }
-                    else {echo '<img src="'.$mainframe->getCfg('live_site').'/'.$params->get('shareimage').'">';
-                    }
-                    ?>
+                    <?php echo '<img src="'.JURI::root().$params->get('shareimage').'">'; ?>
                 </td>
                 <td>
                     <a href="<?php echo $link; ?>"><?php echo $item->name; ?></a>
-                </td
+                </td>
             </tr>
             <?php endforeach; ?>
                     <tfoot>

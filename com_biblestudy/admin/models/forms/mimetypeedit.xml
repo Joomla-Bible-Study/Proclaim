@@ -4,7 +4,7 @@
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
-    <field name="mimetext" type="text" label="JBS_MMT_MIME_TYPE" description="JBS_MMT_MIME_TYPE_DESC" size="50" required="true" />
+    <field name="mimetext" type="text" label="JBS_CMN_MIME_TYPE" description="JBS_MMT_MIME_TYPE_DESC" size="50" required="true" />
     <field name="mimetype" type="text" label="JBS_MMT_MIME_TYPE_CODE" description="JBS_MMT_MIME_TYPE_CODE_DESC" size="75" required="true" />
     <field name="asset_id" type="hidden" filter="unset" />
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"

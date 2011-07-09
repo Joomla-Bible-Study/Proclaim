@@ -9,36 +9,11 @@
 defined('_JEXEC') or die('Restricted access');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
  ?>
-<script language="javascript" type="text/javascript">
-		<!--
-		function submitbutton(pressbutton)
-		{
-			var form = document.adminForm;
-			if (pressbutton == 'cancel')
-			{
-				submitform( pressbutton );
-				return;
-			}
-			// do field validation
-			if (form.media_image_name.value == "")
-			{
-				alert( "<?php echo JText::_( 'JBS_MDI_ENTER_IMAGE_NAME', true ); ?>" );
-			}
-			else
-			{
-				submitform( pressbutton );
-			}
-		}
-        </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
 <div class="col100">
 	<fieldset class="panelform">
 		<legend><?php echo JText::_( 'JBS_CMN_DETAILS' ); ?></legend>
 			<ul>
-				<li>
-					<label for="media"><strong> <?php echo JText::_( 'JBS_MDI_EXTENSIONS_IMAGES' ); ?> </strong>
-					</label>
-				</li>
 				<li>
                     <?php echo $this->form->getLabel('published'); ?>
                     <?php echo $this->form->getInput('published'); ?>

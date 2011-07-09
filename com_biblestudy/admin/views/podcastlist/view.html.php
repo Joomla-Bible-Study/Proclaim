@@ -26,7 +26,7 @@ class biblestudyViewpodcastlist extends JView {
     }
     
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_PDC_PODCAST_MANAGER'), 'podcast.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_PODCASTS'), 'podcast.png');
          if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('podcastedit.add'); }
         if ($this->canDo->get('core.edit')) 

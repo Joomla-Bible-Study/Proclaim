@@ -41,7 +41,7 @@ class biblestudyViewMessagetypelist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_MST_MESSAGE_TYPE_MANAGER'), 'messagetype.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_MESSAGE_TYPES'), 'messagetype.png');
         if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('messagetypeedit.add'); }
         if ($this->canDo->get('core.edit')) 

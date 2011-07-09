@@ -32,7 +32,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
 				<?php echo JText::_( 'JBS_MMT_MIME_TEXT' ); ?>
 			</th>
                         <th>
-				<?php echo JText::_( 'JBS_MMT_MIME_TYPE' ); ?>
+				<?php echo JText::_( 'JBS_CMN_MIME_TYPE' ); ?>
 			</th>
 		</tr>			
 	</thead>

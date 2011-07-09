@@ -28,7 +28,7 @@ class biblestudyViewtemplateslist extends JView {
     }
 
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_TPL_TEMPLATES_MANAGER'), 'templates.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATES'), 'templates.png');
         if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('templateedit.add'); }
         if ($this->canDo->get('core.edit')) 

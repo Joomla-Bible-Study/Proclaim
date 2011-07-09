@@ -5,16 +5,16 @@
         <option value="1">JBS_CMN_YES</option>
     </field>
 	
-	<field name="media_image_name" type="text" class="inputbox" size="60" label="JBS_MDI_NAME_IMAGE" description="JBS_MDI_NAME_IMAGE_DESC" required="true"/>
-    
-    <field name="path2" type="media" directory="/" class="inputbox" size="60" label="JBS_MDI_PATH2_IMAGE" description="JBS_MDI_PATH2_IMAGE_DESC"/>
-	
-	<field name="media_text" type="text" class="inputbox" size="60" label="JBS_CMN_DESCRIPTION" description="JBS_MDI_DESCRIPTION_DESC"/>
-	
+	<field name="media_image_name" type="text" class="inputbox" size="60" label="JBS_MDI_NAME_IMAGE" required="true"/>
+
+	<field name="media_text" type="text" class="inputbox" size="60" label="JBS_CMN_DESCRIPTION" />
+
+    <field name="path2" type="media" directory="/" class="inputbox" size="60" label="JBS_MDI_PATH2_IMAGE" />
+
 	<field name="media_image_path" type="text" class="inputbox" size="60" label="JBS_MDI_PATH_IMAGE" description="JBS_MDI_PATH_IMAGE_DESC"/>
-	
-	<field name="media_alttext" type="text" class="inputbox" size="60" label="JBS_MDI_ALT_TEXT_IMAGE" description="JBS_MDI_ALT_TEXT_IMAGE_DESC"/>
-    
+
+	<field name="media_alttext" type="text" class="inputbox" size="60" label="JBS_MDI_ALT_TEXT_IMAGE"/>
+
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 			translate_label="false" class="inputbox" filter="rules"
 			component="com_biblestudy" section="mediaedit" validate="rules"

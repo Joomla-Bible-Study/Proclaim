@@ -43,7 +43,7 @@ class biblestudyViewmediafileslist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_MED_MEDIA_FILES_MANAGER'), 'mp3.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES'), 'mp3.png');
         if ($this->canDo->get('core.create')) 
         {JToolBarHelper::addNew('mediafilesedit.add');}
         if ($this->canDo->get('core.edit')) 

@@ -5,9 +5,7 @@
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-    <field name="name" type="text" label="JBS_SHR_NAME"
-			class="inputbox" size="26"  required="true"/>
-	<field name="shareimage" type="media" label="JBS_CMN_IMAGE" description="JBS_CMN_IMAGE_DESC" />
+    <field name="name" type="text" label="JBS_SHR_NAME" class="inputbox" size="26"  required="true"/>
 	<field name="asset_id" type="hidden" filter="unset" />
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 			translate_label="false" class="inputbox" filter="rules"
@@ -120,7 +118,7 @@
     </field>
     <field name="username" type="text" size="100" default="" label="JBS_SHR_USERNAME" description="JBS_SHR_USERNAME_DESC" />
     <field name="api" size="200" type="text" default="" label="JBS_SHR_API" description="JBS_SHR_API_DESC" />
-    <field name="shareimage" type="media" size="46" default="" label="JBS_SHR_SHAREIMAGE" description="JBS_SHR_SHAREIMAGE_DESC" />
+    <field name="shareimage" type="media" size="46" default="" label="JBS_SHR_SHAREIMAGE" />
     <field name="shareimageh" type="text" size="5" default="" label="JBS_SHR_SHAREIMAGEH" description="JBS_SHR_SHAREIMAGEHW_DESC" />
     <field name="shareimagew" type="text" size="5" default="" label="JBS_SHR_SHAREIMAGEW" description="JBS_SHR_SHAREIMAGEHW_DESC" />
     <field name="totalcharacters" type="text" default="" label="JBS_SHR_TOTALCHARACTERS" description="JBS_SHR_TOTALCHARACTERS_DESC" />

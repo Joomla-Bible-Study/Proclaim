@@ -43,7 +43,7 @@ class biblestudyViewmediaedit extends JView
        
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_MDI_MEDIA_IMAGES_MANAGER') . ': <small><small>[' . $title . ']</small></small>', 'mediaimages.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_MEDIAIMAGES') . ': <small><small>[' . $title . ']</small></small>', 'mediaimages.png');
 
         if ($this->canDo->get('core.edit','com_biblestudy'))
         {

@@ -41,7 +41,7 @@ class biblestudyViewtopicslist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_TPC_TOPICS_MANAGER'), 'topics.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_TOPICS'), 'topics.png');
         if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('topicsedit.add'); }
         if ($this->canDo->get('core.edit')) 

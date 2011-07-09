@@ -10,8 +10,7 @@
                     type="text"
                     size="50"
                     label="JBS_TPL_TEMPLATE_NAME"
-                    required="true"
-                    description="JBS_TPL_TEMPLATE_NAME_DESC" />
+                    required="true" />
         <field name="text"
                     type="media"
                     directory="/"
@@ -82,8 +81,8 @@
                    default="-1"
                    multiple="true"
                    size="10"
-                   label="JBS_CMN_FILTERS_TEACHER"
-                   description="JBS_CMN_FILTERS_TEACHER_DESC">
+                   label="JBS_TPL_FILTERS_TEACHER"
+                   description="JBS_TPL_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="series_id"
@@ -94,8 +93,8 @@
                    default="-1"
                    multiple="true"
                    size="10"
-                   label="JBS_CMN_FILTERS_SERIES"
-                   description="JBS_CMN_FILTERS_SERIES_DESC">
+                   label="JBS_TPL_FILTERS_SERIES"
+                   description="JBS_TPL_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="booknumber"
@@ -107,12 +106,14 @@
                    multiple="true"
                    size="10"
                    translate="true"
-                   label="JBS_CMN_FILTERS_BOOKS"
-                   description="JBS_CMN_FILTERS_BOOKS_DESC">
+                   label="JBS_TPL_FILTERS_BOOKS"
+                   description="JBS_TPL_FILTERS_DESC">
                  <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="topic_id" type="topicslist" default="-1"  multiple="true"  size="10"
-                   label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_TOPICS_DESC" class="inputbox">
+                   label="JBS_TPL_FILTERS_TOPICS" 
+                   description="JBS_TPL_FILTERS_DESC" 
+                   class="inputbox">
                  <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="messagetype"
@@ -123,8 +124,8 @@
                    default="-1"
                    multiple="true"
                    size="5"
-                   label="JBS_CMN_FILTERS_MESSAGE_TYPES"
-                   description="JBS_CMN_FILTERS_MESSAGE_TYPES_DESC">
+                   label="JBS_TPL_FILTERS_MESSAGE_TYPES"
+                   description="JBS_TPL_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="locations"
@@ -135,8 +136,8 @@
                    default="-1"
                    multiple="true"
                    size="5"
-                   label="JBS_CMN_FILTERS_LOCATIONS"
-                   description="JBS_CMN_FILTERS_LOCATIONS_DESC">
+                   label="JBS_TPL_FILTERS_LOCATIONS"
+                   description="JBS_TPL_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             
@@ -355,8 +356,7 @@
                    type="text"
                    size="2"
                    default="5"
-                   label="JBS_TPL_ITEMSLIMIT"
-                   description="JBS_TPL_ITEMSLIMIT_DESC" />
+                   label="JBS_TPL_ITEMSLIMIT" />
             <field name="default_order"
                    type="list"
                    default="DESC"
@@ -368,16 +368,14 @@
             <field name="show_page_title"
                    type="list"
                    default="1"
-                   label="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE"
-                   description="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE_DESC">
+                   label="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
             <field name="show_page_image"
                    type="list"
                    default="1"
-                   label="JBS_TPL_FP_SHOW_PAGE_IMAGE"
-                   description="JBS_TPL_FP_SHOW_PAGE_IMAGE_DESC">
+                   label="JBS_TPL_FP_SHOW_PAGE_IMAGE">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
@@ -385,8 +383,7 @@
             <field name="page_title"
                    type="text"
                    default="Bible Studies"
-                   label="JBS_TPL_LISTITEMS_PAGE_TITLE"
-                   description="JBS_TPL_LISTITEMS_PAGE_TITLE_DESC" />
+                   label="JBS_TPL_PAGE_TITLE" />
             <field name="use_headers_list"
                    type="list"
                    default="1"
@@ -400,7 +397,6 @@
                    height="300"
                    width="500"
                    label="JBS_TPL_LISTITEMS_LIST_INTRO"
-                   description="JBS_TPL_LISTITEMS_LIST_INTRO_DESC" 
                    filter="BibleStudyHelper::filterText" buttons="true" />
             <field name="intro_show"
                    type="list"
@@ -922,16 +918,14 @@
             <field name="show_print_view"
            type="list"
            default="1"
-           label="JBS_TPL_DETAILS_SHOW_PRINT_VIEW"
-           description="JBS_TPL_DETAILS_SHOW_PRINT_VIEW_DESC">
+           label="JBS_TPL_DETAILS_SHOW_PRINT_VIEW">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
             <field name="show_teacher_view"
            type="list"
            default="0"
-           label="JBS_TPL_DETAILS_SHOW_TEACHER_VIEW"
-           description="JBS_TPL_DETAILS_SHOW_TEACHER_VIEW_DESC">
+           label="JBS_TPL_DETAILS_SHOW_TEACHER_VIEW">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
@@ -1218,8 +1212,7 @@
             <field name="series_title"
            default="Our Series"
            type="text"
-           label="JBS_TPL_SERIES_SERIES_TITLE"
-           description="JBS_TPL_SERIES_SERIES_TITLE_DESC" />
+           label="JBS_TPL_PAGE_TITLE" />
             <field name="show_series_title"
            default="1"
            type="list"
@@ -1282,7 +1275,7 @@
             <field name="serieselement1"
            type="list"
            default="1"
-           label="JBS_TPL_SERIES_SERIESELEMENT1"
+           label="JBS_TPL_CHOOSE_ITEM_COL1"
            description="JBS_TPL_SERIES_SERIESELEMENT_DESC">
                 <option value="0">JBS_CMN_NOTHING</option>
                 <option value="1">JBS_TPL_SERIES_TITLE_BRACE</option>
@@ -1306,7 +1299,7 @@
             <field name="serieselement2"
            type="list"
            default="6"
-           label="JBS_TPL_SERIES_SERIESELEMENT2"
+           label="JBS_TPL_CHOOSE_ITEM_COL2"
            description="JBS_TPL_SERIES_SERIESELEMENT_DESC">
                 <option value="0">JBS_CMN_NOTHING</option>
                 <option value="1">JBS_TPL_SERIES_TITLE_BRACE</option>
@@ -1329,7 +1322,7 @@
             <field name="serieselement3"
            type="list"
            default="0"
-           label="JBS_TPL_SERIES_SERIESELEMENT3"
+           label="JBS_TPL_CHOOSE_ITEM_COL3"
            description="JBS_TPL_SERIES_SERIESELEMENT_DESC">
                 <option value="0">JBS_CMN_NOTHING</option>
                 <option value="1">JBS_TPL_SERIES_TITLE_BRACE</option>
@@ -1352,7 +1345,7 @@
             <field name="serieselement4"
            type="list"
            default="0"
-           label="JBS_TPL_SERIES_SERIESELEMENT4"
+           label="JBS_TPL_CHOOSE_ITEM_COL4"
            description="JBS_TPL_SERIES_SERIESELEMENT_DESC">
                 <option value="0">JBS_CMN_NOTHING</option>
                 <option value="1">JBS_TPL_SERIES_TITLE_BRACE</option>
@@ -1446,7 +1439,7 @@
             <field name="series_detail_1"
            type="seriesoptions"
            default="5"
-           label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_1"
+           label="JBS_TPL_CHOOSE_ITEM_COL1"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC" />
             <field name="series_detail_islink1"
            type="list"
@@ -1459,7 +1452,7 @@
             <field name="series_detail_2"
            type="seriesoptions"
            default="7"
-           label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_2"
+           label="JBS_TPL_CHOOSE_ITEM_COL2"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC" />
             <field name="series_detail_islink2"
            type="list"
@@ -1472,7 +1465,7 @@
             <field name="series_detail_3"
            type="seriesoptions"
            default="10"
-           label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_3"
+           label="JBS_TPL_CHOOSE_ITEM_COL3"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC" />
             <field name="series_detail_islink3"
            type="list"
@@ -1485,7 +1478,7 @@
             <field name="series_detail_4"
            type="seriesoptions"
            default="20"
-           label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_4"
+           label="JBS_TPL_CHOOSE_ITEM_COL4"
            description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_DESC" />
             <field name="series_detail_islink4"
            type="list"
@@ -1514,8 +1507,7 @@
            type="text"
            default="Sermon Information"
            size="100"
-           label="JBS_TPL_TOOLTIP_TIP_TITLE"
-           description="JBS_TPL_TOOLTIP_TIP_TITLE_DESC" />
+           label="JBS_TPL_TOOLTIP_TIP_TITLE" />
            <field name="tooltip"
                    type="list"
                    default="1"

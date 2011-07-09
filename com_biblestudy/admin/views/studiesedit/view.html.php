@@ -45,7 +45,7 @@ class biblestudyViewstudiesedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_STY_STUDIES_MANAGER') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');
 
         $canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
         if ($this->canDo->get('core.edit','com_biblestudy'))

@@ -41,7 +41,7 @@ class biblestudyViewcommentslist extends JView
      */
     protected function addToolbar() {
         $canDo = BibleStudyHelper::getActions('', 'commentsedit');
-        JToolBarHelper::title(JText::_('JBS_CMT_COMMENTS_MANAGER'), 'comments.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS'), 'comments.png');
         if ($canDo->get('core.create')) 
         { JToolBarHelper::addNew('commentsedit.add'); }
         if ($canDo->get('core.edit')) 

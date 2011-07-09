@@ -37,7 +37,7 @@ class biblestudyViewteacherlist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_TCH_TEACHER_MANAGER'), 'teachers.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_TEACHERS'), 'teachers.png');
          if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('teacheredit.add'); }
         if ($this->canDo->get('core.edit')) 

@@ -40,7 +40,7 @@ class biblestudyViewserieslist extends JView
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_SER_SERIES_MANAGER'), 'series.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_SERIES'), 'series.png');
          if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('seriesedit.add'); }
         if ($this->canDo->get('core.edit')) 

@@ -41,7 +41,7 @@ class biblestudyViewMimetypelist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_MMT_MIME_TYPE_MANAGER'), 'mimetype.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_MIME_TYPES'), 'mimetype.png');
         if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('mimetypeedit.add'); }
         if ($this->canDo->get('core.edit')) 

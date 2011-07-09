@@ -41,7 +41,7 @@ class biblestudyViewlocationslist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_LOC_LOCATIONS_MANAGER'), 'locations.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_LOCATIONS'), 'locations.png');
         if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('locationsedit.add');}
         if ($this->canDo->get('core.edit')) 

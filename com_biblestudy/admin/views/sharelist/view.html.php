@@ -37,7 +37,7 @@ class biblestudyViewsharelist extends JView {
      * @since 7.0
      */
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_SHR_SOCIAL_NETWORK_MANAGER'), 'social.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'), 'social.png');
         if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('shareedit.add'); }
         if ($this->canDo->get('core.edit')) 

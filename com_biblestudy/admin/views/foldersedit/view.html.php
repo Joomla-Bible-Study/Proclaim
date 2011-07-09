@@ -36,7 +36,7 @@ class BibleStudyViewFoldersedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_FLD_FOLDERS_MANAGER') . ': <small><small>[' . $title . ']</small></small>', 'folder.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_FOLDERS') . ': <small><small>[' . $title . ']</small></small>', 'folder.png');
 
         if ($this->canDo->get('core.edit','com_biblestudy'))
         {

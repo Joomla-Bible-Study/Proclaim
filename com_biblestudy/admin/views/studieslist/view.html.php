@@ -37,7 +37,7 @@ class biblestudyViewstudieslist extends JView {
     }
 
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('JBS_STY_STUDIES_MANAGER'), 'studies.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_STUDIES'), 'studies.png');
         if ($this->canDo->get('core.create')) 
         { JToolBarHelper::addNew('studiesedit.add'); }
         if ($this->canDo->get('core.edit')) 

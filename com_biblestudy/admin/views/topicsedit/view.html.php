@@ -31,7 +31,7 @@ class biblestudyViewTopicsedit extends JView {
     protected function addToolbar() {
         $isNew = ($this->item->id < 1);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_TPC_TOPICS_MANAGER') . ': <small><small>[' . $title . ']</small></small>', 'topics.png');
+        JToolBarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'topics.png');
 
         if ($this->canDo->get('core.edit','com_biblestudy'))
         {

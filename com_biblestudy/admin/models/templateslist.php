@@ -85,7 +85,7 @@ class biblestudyModelTemplateslist extends modelClass {
         // Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
-			$query->where('temmplate.published = ' . (int) $published);
+			$query->where('template.published = ' . (int) $published);
 		}
 		else if ($published === '') {
 			$query->where('(template.published = 0 OR template.published = 1)');
