@@ -158,7 +158,7 @@ class biblestudyController extends JController
             
         }
 
- function changePlayers() {
+    function changePlayers() {
 
         $db = JFactory::getDBO();
         $msg = null;
@@ -209,7 +209,7 @@ class biblestudyController extends JController
         return $msg;
     }
 
-function writeXMLFile() {
+    function writeXMLFile() {
 
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -220,12 +220,12 @@ function writeXMLFile() {
         $result = writeXML();
         if ($result) {
 
-           $msg = JText::_('JBS_PDC_PODCAST_SAVED');
+           $msg = JText::_('JBS_PDC_XML_FILES_WRITTEN');
            
             
         } else {
           
-            $msg = JText::_('JBS_PDC_ERROR_SAVING_PODCAST');
+            $msg = JText::_('JBS_PDC_XML_FILES_ERROR');
         }
         $this->setRedirect('index.php?option=com_biblestudy&view=podcastlist', $msg);
     }
@@ -268,7 +268,7 @@ function writeXMLFile() {
 			}
 	}
 
-function resetPlays()
+	function resetPlays()
 	{
 		$msg = null;
 		$id 	= JRequest::getInt( 'id', 0, 'get'); //dump ($cid, 'cid: ');

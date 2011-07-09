@@ -36,7 +36,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			break;
 		case 3:
 			$elementid->id = 'secondary';
-			$elementid->headertext = JText::_('JBS_CMN_SCRIPTURE');
+			$elementid->headertext = JText::_('JBS_CMN_SECONDARY_REFERENCES');
 			$elementid->element = $row->secondary_reference;
 			break;
 		case 4:

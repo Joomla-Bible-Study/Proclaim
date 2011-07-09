@@ -32,7 +32,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
           <th width="20" align="center"> <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?> </th>
           <th width="200"> <?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?></th>
           <th width = "100"><?php echo JText::_('JBS_CMT_FULL_NAME'); ?></th>
-          <th width = "100">   <?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?> </th>       
+          <th width = "100">   <?php echo JHtml::_('grid.sort', 'JBS_CMT_CREATE_DATE', 'study.studydate', $listDirn, $listOrder); ?> </th>       
         </tr>
       </thead>
       <?php

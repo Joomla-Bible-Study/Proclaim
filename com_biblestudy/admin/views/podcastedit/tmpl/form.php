@@ -26,6 +26,10 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <?php echo $this->form->getInput('description'); ?>
                 </li>
                 <li>
+                    <?php echo $this->form->getLabel('website'); ?>
+                    <?php echo $this->form->getInput('website'); ?>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('author'); ?>
                     <?php echo $this->form->getInput('author'); ?>
                 </li>                
@@ -87,8 +91,8 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <?php echo $this->form->getInput('podcastlimit'); ?>
                 </li>
                 <li>
-                    <?php echo $this->form->getLabel('episodestitle'); ?>
-                    <?php echo $this->form->getInput('episodestitle'); ?>
+                    <?php echo $this->form->getLabel('episodetitle'); ?>
+                    <?php echo $this->form->getInput('episodetitle'); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('custom'); ?>

@@ -18,15 +18,12 @@
         required="true"/>
     <field name="full_name"  type="text"
         label="JBS_CMT_FULL_NAME"
-        description ="JBS_CMT_FULL_NAME_DESC"
         size="30"/>
     <field name="user_email"  type="text"
         label="JBS_CMT_EMAIL"
-        description ="JBS_CMT_EMAIL_DESC"
         size="40"/>
     <field name="comment_text"  type="textarea"
         label="JBS_CMN_COMMENT"
-        description ="JBS_CMN_COMMENT_DESC"
         rows="10" cols="50"/>
      <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 			translate_label="false" class="inputbox" filter="rules"

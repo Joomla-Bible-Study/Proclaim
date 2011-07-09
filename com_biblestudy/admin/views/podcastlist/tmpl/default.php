@@ -32,10 +32,10 @@ $listDirn = $this->state->get('list.direction');
                     <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'podcast.published', $listDirn, $listOrder); ?>
                 </th>
                 <th align="center">
-                    <?php echo JHtml::_('grid.sort', 'JBS_PDC_PODCAST', 'podcast.title', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_PODCAST', 'podcast.title', $listDirn, $listOrder); ?>
                 </th>
                 <th align="center">
-                    <?php echo(JText::_('JBS_PDC_DESCRIPTION')); ?>
+                    <?php echo(JText::_('JBS_CMN_DESCRIPTION')); ?>
                 </th>
             </tr>
         </thead>
