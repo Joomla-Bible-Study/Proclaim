@@ -81,8 +81,8 @@
                    default="-1"
                    multiple="true"
                    size="10"
-                   label="JBS_TPL_FILTERS_TEACHER"
-                   description="JBS_TPL_FILTERS_DESC">
+                   label="JBS_CMN_FILTERS_TEACHER"
+                   description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="series_id"
@@ -93,8 +93,8 @@
                    default="-1"
                    multiple="true"
                    size="10"
-                   label="JBS_TPL_FILTERS_SERIES"
-                   description="JBS_TPL_FILTERS_DESC">
+                   label="JBS_CMN_FILTERS_SERIES"
+                   description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="booknumber"
@@ -106,13 +106,13 @@
                    multiple="true"
                    size="10"
                    translate="true"
-                   label="JBS_TPL_FILTERS_BOOKS"
-                   description="JBS_TPL_FILTERS_DESC">
+                   label="JBS_CMN_FILTERS_BOOKS"
+                   description="JBS_CMN_FILTERS_DESC">
                  <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="topic_id" type="topicslist" default="-1"  multiple="true"  size="10"
-                   label="JBS_TPL_FILTERS_TOPICS" 
-                   description="JBS_TPL_FILTERS_DESC" 
+                   label="JBS_CMN_FILTERS_TOPICS" 
+                   description="JBS_CMN_FILTERS_DESC" 
                    class="inputbox">
                  <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
@@ -124,8 +124,8 @@
                    default="-1"
                    multiple="true"
                    size="5"
-                   label="JBS_TPL_FILTERS_MESSAGE_TYPES"
-                   description="JBS_TPL_FILTERS_DESC">
+                   label="JBS_CMN_FILTERS_MESSAGE_TYPES"
+                   description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="locations"
@@ -136,8 +136,8 @@
                    default="-1"
                    multiple="true"
                    size="5"
-                   label="JBS_TPL_FILTERS_LOCATIONS"
-                   description="JBS_TPL_FILTERS_DESC">
+                   label="JBS_CMN_FILTERS_LOCATIONS"
+                   description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             

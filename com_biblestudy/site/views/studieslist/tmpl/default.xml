@@ -26,7 +26,7 @@
      <field name="mteacher_id"
            type="teacherlist"
            label="JBS_CMN_FILTERS_TEACHER"
-           description="JBS_CMN_FILTERS_TEACHER_DESC"
+           description="JBS_CMN_FILTERS_DESC"
            multiple="true"
            default="-1"
            >
@@ -36,7 +36,7 @@
            type="serieslist"
            multiple="true"
            label="JBS_CMN_FILTERS_SERIES"
-           description="JBS_CMN_FILTERS_SERIES_DESC"
+           description="JBS_CMN_FILTERS_DESC"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
@@ -50,19 +50,21 @@
            query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
            key_field="booknumber"
            value_field="bookname"
-           description="JBS_CMN_FILTERS_BOOKS_DESC"
+           description="JBS_CMN_FILTERS_DESC"
            default="-1">
         <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
     <field name="mtopic_id" type="topicslist" default="-1"  multiple="true"  size="10"
-           label="JBS_CMN_FILTERS_TOPICS" description="JBS_CMN_FILTERS_TOPICS_DESC" class="inputbox">
+           label="JBS_CMN_FILTERS_TOPICS"
+           description="JBS_CMN_FILTERS_DESC"
+           class="inputbox">
            <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
     <field name="mmessagetype"
            type="messagetypelist"
            multiple="true"
            label="JBS_CMN_FILTERS_MESSAGE_TYPES"
-           description="JBS_CMN_FILTERS_MESSAGE_TYPES_DESC"
+           description="JBS_CMN_FILTERS_DESC"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
@@ -70,7 +72,7 @@
            type="locationslist"
            multiple="true"
            label="JBS_CMN_FILTERS_LOCATIONS"
-           description="JBS_CMN_FILTERS_LOCATIONS_DESC"
+           description="JBS_CMN_FILTERS_DESC"
            default="-1">
       <option value="-1">JBS_CMN_SHOW_ALL</option>
     </field>
