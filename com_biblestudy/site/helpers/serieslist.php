@@ -358,9 +358,9 @@ function getSeriesLandingPage($params, $id, $admin_params)
 //	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$series = null;
 	$seriesid = null;
-	$t = $params->get('t');
+	$template = $params->get('serieslisttemplateid',1);
 	//$t = $params->get('teachertemplateid');
-	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
+//	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 	$limit = $params->get('landingserieslimit');
 	if (!$limit) {$limit = 10000;}
 	
@@ -406,9 +406,9 @@ function getSeriesLandingPage($params, $id, $admin_params)
             $series .= "\n\t\t" . '<td id="landing_td">';
 		
             if ($params->get('series_linkto') == '0') {
-                $series .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_series='.$b->id.'&filter_book=0&filter_teacher=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t='.$t.'">';
+                $series .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_series='.$b->id.'&filter_book=0&filter_teacher=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
             } else {
-                $series .= '<a href="index.php?option=com_biblestudy&view=seriesdetail&id='.$b->id.'&t='.$t.$addItemid.'">';    
+                $series .= '<a href="index.php?option=com_biblestudy&view=seriesdetail&id='.$b->id.'&t='.$template.'">';    
             }
 		    
 		    $series .= $numRows;
@@ -473,7 +473,7 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 	$label = str_replace('{{thumbnail}}', '<img src="'. $image->path .'" width="' .$image->width .'" height="' . $image->height . '" />', $label);
 	//$label = str_replace('{{thumbh}}', $row->thumbh, $label);
 	//$label = str_replace('{{thumbw}}', $row->thumbw, $label);
-	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&t='.$t.'&id='.$row->id, $label);
+	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&t='.$template.'&id='.$row->id, $label);
     
 	return $label;
 }
@@ -627,7 +627,7 @@ return $studies;
 
     function getSeriesFooter($t, $id)
     {
-        $seriesfooter = '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_series='.$id.'&t='.$t).'">'.JText::_('JBS_CMN_SHOW_ALL').' '.JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES').' >></a></td></tr>';
+        $seriesfooter = '<tr class="seriesreturnlink"><td><a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_series='.$id.'&t='.$template).'">'.JText::_('JBS_CMN_SHOW_ALL').' '.JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES').' >></a></td></tr>';
         return $seriesfooter;
     }
 }

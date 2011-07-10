@@ -10,7 +10,7 @@ function getTopicsLandingPage($params, $id, $admin_params)
 	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$topic = null;
 	$teacherid = null;
-	$t = $params->get('t');
+	$template = $params->get('studieslisttemplateid');
 	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landingtopicslimit');
 	if (!$limit) {$limit = 10000;}
@@ -19,8 +19,8 @@ function getTopicsLandingPage($params, $id, $admin_params)
 		$topic = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
 //		$query = 'select distinct a.* from #__bsms_topics a inner join #__bsms_studytopics b on a.id = b.topic_id';
-		$query = 'select distinct a.id, a.topic_text, a.published, a.params AS topic_params from #__bsms_topics a inner join #__bsms_studies b on a.id = b.topics_id';
-		
+	//	$query = 'select distinct a.id, a.topic_text, a.published, a.params AS topic_params from #__bsms_topics a inner join #__bsms_studies b on a.id = b.topics_id';
+		$query = 'select distinct a.id, a.topic_text, a.published from #__bsms_topics a inner join #__bsms_studies b on a.id = b.topics_id';
 		$db->setQuery($query);
 		
         $tresult = $db->loadObjectList();
@@ -58,7 +58,7 @@ function getTopicsLandingPage($params, $id, $admin_params)
                 $topic .= "\n\t" . '<tr>';
             }
             $topic .= "\n\t\t" . '<td id="landing_td">';
-		    $topic .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_topic='.$b->id.'&filter_teacher=0&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$t.'">';
+		    $topic .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_topic='.$b->id.'&filter_teacher=0&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
 		    
 		    $topic .= getTopicItemTranslated($b);
     		

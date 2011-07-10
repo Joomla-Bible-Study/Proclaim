@@ -18,12 +18,12 @@ defined('_JEXEC') or die('Restricted access');
 function getTopicItemTranslated($topicItem)
 {
 	if ($topicItem) {
-		$itemparams = new JParameter($topicItem->topic_params);
+	//	$itemparams = new JParameter($topicItem->topic_params);
 		$currentLanguage = & JFactory::getLanguage()->getTag();
 		if ($currentLanguage) {
-			if ($itemparams->get($currentLanguage)) {
-				return ($itemparams->get($currentLanguage));
-			}
+		//	if ($itemparams->get($currentLanguage)) {
+		//		return ($itemparams->get($currentLanguage));
+		//	}
 		}
 		return (JText::_($topicItem->topic_text));
 	}

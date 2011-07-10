@@ -10,7 +10,7 @@ function getLocationsLandingPage($params, $id, $admin_params)
 	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$location = null;
 	$teacherid = null;
-	$t = $params->get('t');
+	$template = $params->get('studieslisttemplateid',1);
 	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landinglocationslimit');
 	if (!$limit) {$limit = 10000;}
@@ -55,7 +55,7 @@ function getLocationsLandingPage($params, $id, $admin_params)
                 $location .= "\n\t" . '<tr>';
             }
             $location .= "\n\t\t" . '<td id="landing_td">';
-		    $location .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_location='.$b->id.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$t.'">';
+		    $location .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_location='.$b->id.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
 		    
 		    $location .= $b->location_text;
     		

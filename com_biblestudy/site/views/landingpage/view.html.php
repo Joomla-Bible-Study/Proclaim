@@ -79,24 +79,7 @@ class biblestudyViewLandingpage extends JView {
 		$total = $this->get('Total');
 		
 		$pagination = $this->get('Pagination');
-//		$teachers = $this->get('Teachers');
-//		$series = $this->get('Series');
-//		$messageTypes = $this->get('MessageTypes');
-//		$studyYears = $this->get('StudyYears');
-//		$locations = $this->get('Locations');
-//		$topics = $this->get('Topics');
-//		$orders = $this->get('Orders');
-//		$books = $this->get('Books');
-//        //This is the helper for scripture formatting
-//        $scripture_call = Jview::loadHelper('scripture');
-//		//end scripture helper
-////		$translated_call = JView::loadHelper('translated');
-////		$topics = getBooksTranslated($topics);
-////		$book = getBooksTranslated($books);
-//		$this->assignRef('template', $template);
-//		$this->assignRef('pagination',	$pagination);
-//		$this->assignRef('order', $orders);
-//		$this->assignRef('topic', $topics);
+
 		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		//Get the main study list image

@@ -178,6 +178,8 @@ class biblestudyModellandingpage extends JModel
 	 */
 	function getTopics() {
 		if (empty($this->_Topics)) {
+		  $path1 = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	include_once($path1.'translated.php');
 			$query = 'SELECT DISTINCT #__bsms_studies.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params, #__bsms_topics.published'
 			. ' FROM #__bsms_studies'
 			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'

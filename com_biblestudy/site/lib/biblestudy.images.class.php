@@ -72,7 +72,7 @@ class jbsImages
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
-				$registry->loadJSON($compat->params);
+				$registry->loadJSON($admin->params);
                 $admin_params = $registry;
                 
 		if (!$admin_params->get('default_main_image') )   
