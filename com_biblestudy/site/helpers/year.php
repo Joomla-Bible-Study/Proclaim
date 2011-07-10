@@ -10,12 +10,12 @@ function getYearsLandingPage($params, $id, $admin_params)
 	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$year = null;
 	$teacherid = null;
-	$t = $params->get('t');
+	$template = $params->get('studieslisttemplateid');
 	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landingyearslimit');
 	if (!$limit) {$limit = 10000;}
 
-	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
+//	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 		
 		$year = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
@@ -58,7 +58,7 @@ function getYearsLandingPage($params, $id, $admin_params)
             }
             $year .= "\n\t\t" . '<td id="landing_td">';
 
-		    $year .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_year='.$b->theYear.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_book=0&filter_messagetype=0&t='.$t.'">';
+		    $year .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_year='.$b->theYear.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_book=0&filter_messagetype=0&t='.$template.'">';
 		    
 		    $year .= $numRows;
 		    $year .= $b->theYear;
