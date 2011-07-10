@@ -3,27 +3,11 @@
 defined('_JEXEC') or die();
 $mainframe = & JFactory::getApplication();
 $option = JRequest::getCmd('option');
-jimport('joomla.application.component.model');
+jimport('joomla.application.component.modellist');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers' . DS . 'translated.php');
 
 $params = &JComponentHelper::getParams($option);
 $default_order = $params->get('default_order');
-//Joomla 1.6 <-> 1.5 Branch
-try {
-    jimport('joomla.application.component.modellist');
-
-    abstract class modelClass extends JModelList {
-        
-    }
-
-} catch (Exception $e) {
-    jimport('joomla.application.component.model');
-
-    abstract class modelClass extends JModel {
-        
-    }
-
-}
 
 //class biblestudyModelstudieslist extends modelClass {
 class biblestudyModelstudieslist extends JModelList {
@@ -153,7 +137,7 @@ class biblestudyModelstudieslist extends JModelList {
         $query->join('LEFT', '#__bsms_locations AS location ON location.id = study.location_id');        
         
         //Join over Topics
-        $query->select('topic.topic_text, topic.params AS topic_params');
+        $query->select('topic.topic_text');
         $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = study.topics_id');        
    
         //Join over Books
@@ -172,7 +156,7 @@ class biblestudyModelstudieslist extends JModelList {
         $query->join('LEFT', '#__bsms_books AS books ON books.booknumber = study.booknumber');        
         
         
-        //Filter by chapter 
+//        //Filter by chapter 
         /**
          * @todo FIX ME -- I don't work!
          */
@@ -219,38 +203,6 @@ class biblestudyModelstudieslist extends JModelList {
         
     }
 
-    /**
-     * @desc Returns the query
-     * @return string The query to be used to retrieve the rows from the database
-     */
-    function _buildQuery() {
-        $where = $this->_buildContentWhere();
-        $orderby = $this->_buildContentOrderBy();
-
-
-        $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
-                . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, '
-                . ' #__bsms_message_type.id AS mid,'
-                . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-                . ' #__bsms_locations.id AS lid, #__bsms_locations.location_text,'
-//			  . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
-                . ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text AS topic_text, #__bsms_topics.params AS topic_params, sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
-                . ' FROM #__bsms_studies'
-                . ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
-                . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-                . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-                . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-                . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-//			  . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-                . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
-                . ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
-                . ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
-                . $where
-                . ' GROUP BY #__bsms_studies.id'
-                . $orderby
-        ;
-        return $query;
-    }
 
     /**
      * @desc Returns teachers
@@ -322,32 +274,6 @@ class biblestudyModelstudieslist extends JModelList {
             $this->_Locations = $this->_getList($query);
         }
         return $this->_Locations;
-    }
-
-    /**
-     * @desc Returns message types
-     * @return Array
-     */
-    function getTopics() {
-        if (empty($this->_Topics)) {
-            /*     $query = 'SELECT DISTINCT #__bsms_studytopics.topic_id as id, #__bsms_studytopics.topic_id AS value, #__bsms_topics.topic_text AS text'
-              . ' FROM #__bsms_studytopics'
-              . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-              . ' WHERE #__bsms_topics.published = 1'
-              . ' ORDER BY #__bsms_topics.topic_text ASC';
-             */
-//			$query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text, #__bsms_topics.published, #__bsms_topics.params FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.topic_id = #__bsms_studies.topics_id) WHERE #__bsms_topics.published = 1 ORDER BY #__bsms_topics.topic_text ASC';
-            $query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text, #__bsms_topics.published, #__bsms_topics.params AS topic_params FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) WHERE #__bsms_topics.published = 1 ORDER BY #__bsms_topics.topic_text ASC';
-
-            $db_result = $this->_getList($query);
-            $output = array();
-            foreach ($db_result as $i => $value) {
-                $value->text = getTopicItemTranslated($value);
-                $output[] = $value;
-            }
-            $this->_Topics = $output;
-        }
-        return $this->_Topics;
     }
 
     /**
@@ -437,22 +363,6 @@ class biblestudyModelstudieslist extends JModelList {
     }
 
     /**
-     * Method to get the total number of studies items
-     *
-     * @access public
-     * @return integer
-     */
-    function getTotal() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_total)) {
-            $query = $this->_buildQuery();
-            $this->_total = $this->_getListCount($query);
-        }
-
-        return $this->_total;
-    }
-
-    /**
      * Method to get a pagination object for the studies
      *
      * @access public
@@ -467,291 +377,4 @@ class biblestudyModelstudieslist extends JModelList {
 
         return $this->_pagination;
     }
-
-    function _buildContentWhere() {
-        $mainframe = & JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-        $params = &JComponentHelper::getParams($option); //dump ($params, 'params: ');
-        $params = $this->_params;
-
-        $default_order = $params->get('default_order');
-        $filter_topic = $mainframe->getUserStateFromRequest($option . 'filter_topic', 'filter_topic', 0, 'int');
-        $filter_book = $mainframe->getUserStateFromRequest($option . 'filter_book', 'filter_book', 0, 'int');
-        $filter_chapter = $mainframe->getUserStateFromRequest($option . 'filter_chapter', 'filter_chapter', 0, 'int');
-        $filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
-        $filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-        $filter_messagetype = $mainframe->getUserStateFromRequest($option . 'filter_messagetype', 'filter_messagetype', 0, 'int');
-        $filter_year = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
-        $filter_location = $mainframe->getUserStateFromRequest($option . 'filter_location', 'filter_location', 0, 'int');
-        $teacher_menu = $params->get('teacher_id', -1);
-        $topic_menu = $params->get('topic_id', 1);
-        $book_menu = $params->get('booknumber', 101);
-        $series_menu = $params->get('series_id', 1);
-        $messagetype_menu = $params->get('messagetype', 1);
-        $location_menu = $params->get('locations', 1);
-        $chapter_menu = $params->get('chapter', 1);
-        $where = array();
-        $rightnow = date('Y-m-d H:i:s');
-        $where[] = ' #__bsms_studies.published = 1';
-        $where[] = " date_format(#__bsms_studies.studydate, '%Y-%m-%d %T') <= " . (int) $rightnow;
-
-        if ($filter_topic > 0) {
-            $where[] = ' #__bsms_studytopics.topic_id = ' . (int) $filter_topic;
-        }
-        if ($filter_location > 0) {
-            $where[] = ' #__bsms_studies.location_id = ' . (int) $filter_location;
-        }
-        if ($filter_book > 0) {
-            $chb = JRequest::getInt('minChapt', '', 'post');
-            $che = JRequest::getInt('maxChapt', '', 'post');
-            if ($chb && $che) {
-                $where[] = ' (#__bsms_studies.booknumber = ' . (int) $filter_book . ' AND ((#__bsms_studies.chapter_begin <=' . $che . ' AND #__bsms_studies.chapter_end >= ' . $chb . ')))';
-            } elseif ($chb) {
-                $where[] = ' (#__bsms_studies.booknumber = ' . (int) $filter_book . ' AND ((#__bsms_studies.chapter_end >= ' . $chb . ')))';
-            } elseif ($che) {
-                $where[] = ' (#__bsms_studies.booknumber = ' . (int) $filter_book . ' AND ((#__bsms_studies.chapter_begin <=' . $che . ')))';
-            } else {
-                $where[] = ' #__bsms_studies.booknumber = ' . (int) $filter_book;
-            }
-        }
-        if ($filter_chapter > 0) {
-            $where[] = ' #__bsms_studies.chapter_begin = ' . (int) $filter_chapter;
-        }
-        if ($filter_teacher > 0) {
-            $where[] = ' #__bsms_studies.teacher_id = ' . (int) $filter_teacher;
-        }
-        if ($filter_series > 0) {
-            $where[] = ' #__bsms_studies.series_id = ' . (int) $filter_series;
-        }
-        if ($filter_messagetype > 0) {
-            $where[] = ' #__bsms_studies.messagetype = ' . (int) $filter_messagetype;
-        }
-        if ($filter_year > 0) {
-            $where[] = " date_format(#__bsms_studies.studydate, '%Y')= " . (int) $filter_year;
-        }
-
-        //Check for authorization to view the study
-        $user = JFactory::getUser();
-        $groups = implode(',', $user->getAuthorisedViewLevels());
-
-        $where = ( count($where) ? ' WHERE ' . implode(' AND ', $where) : '' );
-
-        //These params are the filters set by the menu item, not in the JBS template
-        $menubooks = null;
-        $menuteacher = null;
-        $menulocations = null;
-        $menubooks = null;
-        $menumessagetype = null;
-        $menutopics = null;
-        $menuseries = null;
-        $menuitemid = JRequest::getInt('Itemid');
-        if ($menuitemid) {
-
-            $menu = JSite::getMenu();
-            $menuparams = $menu->getParams($menuitemid);
-            $menuteacher = $menuparams->get('mteacher_id');
-            $menulocations = $menuparams->get('mlocations');
-            $menubooks = $menuparams->get('mbooknumber');
-            $menuseries = $menuparams->get('mseries_id');
-            $menutopics = $menuparams->get('mtopic_id');
-            $menumessagetype = $menuparams->get('mmessagetype');
-            ;
-        }
-
-
-        $where2 = array();
-        $continue = 0;
-        if (($params->get('teacher_id') || $menuteacher ) && !$filter_teacher) {
-            if ($menuteacher) {
-                $filters = $menuteacher;
-            } else {
-                $filters = $params->get('teacher_id');
-            }
-            switch ($filters) {
-                case is_array($filters) :
-                    foreach ($filters AS $filter) {
-                        if ($filter == -1) {
-                            break;
-                        } {
-                            $continue = 1;
-                            $where2[] = '#__bsms_studies.teacher_id = ' . (int) $filter;
-                        }
-                    }
-                    break;
-
-                case -1:
-                    break;
-
-                default:
-                    $continue = 1;
-                    $where2[] = '#__bsms_studies.teacher_id = ' . (int) $filters;
-                    break;
-            }
-        }
-        if (($params->get('locations') || $menulocations) && !$filter_location) {
-            if ($menulocations) {
-                $filters = $menulocations;
-            } else {
-                $filters = $params->get('locations');
-            }
-            switch ($filters) {
-                case is_array($filters) :
-                    foreach ($filters AS $filter) {
-                        if ($filter == -1) {
-                            break;
-                        } {
-                            $continue = 1;
-                            $where2[] = '#__bsms_studies.location_id = ' . (int) $filter;
-                        }
-                    }
-                    break;
-
-                case -1:
-                    break;
-
-                default:
-                    $continue = 1;
-                    $where2[] = '#__bsms_studies.location_id = ' . (int) $filters;
-                    break;
-            }
-        }
-        if (($params->get('booknumber') || $menubooks) && !$filter_book) {
-            if ($menubooks) {
-                $filters = $menubooks;
-            } else {
-                $filters = $params->get('booknumber');
-            }
-            switch ($filters) {
-                case is_array($filters) :
-                    foreach ($filters AS $filter) {
-                        if ($filter == -1) {
-                            break;
-                        } {
-                            $continue = 1;
-                            $where2[] = '#__bsms_studies.booknumber = ' . (int) $filter;
-                        }
-                    }
-                    break;
-
-                case -1:
-                    break;
-
-                default:
-                    $continue = 1;
-                    $where2[] = '#__bsms_studies.booknumber = ' . (int) $filters;
-                    break;
-            }
-        }
-        if (($params->get('series_id') || $menuseries) && !$filter_series) {
-            if ($menuseries) {
-                $filters = $menuseries;
-            } else {
-                $filters = $params->get('series_id');
-            }
-            switch ($filters) {
-                case is_array($filters) :
-                    foreach ($filters AS $filter) {
-                        if ($filter == -1) {
-                            break;
-                        } {
-                            $continue = 1;
-                            $where2[] = '#__bsms_studies.series_id = ' . (int) $filter;
-                        }
-                    }
-                    break;
-
-                case -1:
-                    break;
-
-                default:
-                    $continue = 1;
-                    $where2[] = '#__bsms_studies.series_id = ' . (int) $filters;
-                    break;
-            }
-        }
-        if (($params->get('topic_id') || $menutopics) && !$filter_topic) {
-            if ($menutopics) {
-                $filters = $menutopics;
-            } else {
-                $filters = $params->get('topic_id');
-            }
-            switch ($filters) {
-                case is_array($filters) :
-                    foreach ($filters AS $filter) {
-                        if ($filter == -1) {
-                            break;
-                        } {
-                            $continue = 1;
-                            $where2[] = '#__bsms_studytopics.topic_id = ' . (int) $filter;
-                            $where2[] = '#__bsms_studies.topics_id = ' . (int) $filter;
-                        }
-                    }
-                    break;
-
-                case -1:
-                    break;
-
-                default:
-                    $continue = 1;
-                    $where2[] = '#__bsms_studytopics.topic_id = ' . (int) $filters;
-                    $where2[] = '#__bsms_studies.topics_id = ' . (int) $filters;
-                    break;
-            }
-        }
-        if (($params->get('messagetype') || $menumessagetype) && !$filter_messagetype) {
-            if ($menumessagetype) {
-                $filters = $menumessagetype;
-            } else {
-                $filters = $params->get('messagetype');
-            }
-            switch ($filters) {
-                case is_array($filters) :
-                    foreach ($filters AS $filter) {
-                        if ($filter == -1) {
-                            break;
-                        } {
-                            $continue = 1;
-                            $where2[] = '#__bsms_studies.messagetype = ' . (int) $filter;
-                        }
-                    }
-                    break;
-
-                case -1:
-                    //$continue = 0;
-                    break;
-
-                default:
-                    $continue = 1;
-                    $where2[] = '#__bsms_studies.messagetype = ' . (int) $filters;
-                    break;
-            }
-        }
-
-        $where2 = ( count($where2) ? ' ' . implode(' OR ', $where2) : '' );
-        if ($continue > 0) {
-            $where = $where . ' AND ( ' . $where2 . ')';
-        }
-        return $where;
-    }
-
-    function _buildContentOrderBy() {
-        $mainframe = & JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-        $params = &JComponentHelper::getParams($option);
-        $filter_orders = '';
-
-        if (!empty($_POST)) {
-            $filter_orders = $_POST['filter_orders'];
-            if ($filter_orders) {
-                $orderby = ' ORDER BY studydate ' . $filter_orders . ' ';
-            } else {
-                $orderby = ' ORDER BY studydate ' . $this->_params->get('default_order', 'DESC') . ' ';
-            }
-        } else {
-            $orderby = ' ORDER BY studydate ' . $this->_params->get('default_order', 'DESC') . ' ';
-        }
-        return $orderby;
-    }
-
-
 }

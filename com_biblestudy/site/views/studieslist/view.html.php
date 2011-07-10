@@ -437,7 +437,7 @@ class biblestudyViewstudieslist extends JView {
         $lists['search'] = $search;
 
         $this->assignRef('lists', $lists);
-        $this->assignRef('items', $items);
+        $this->assignRef('items', $this->items);
 
         $this->assignRef('request_url', $uri->toString());
         $this->assignRef('params', $params);
