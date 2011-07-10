@@ -138,14 +138,14 @@ for ($i=1;$i<=7;$i++) {
 	{
 		case 0:         // image only
 		$showhideall .= $buttonlink;
-                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" title="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
+                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_tmp->path.'" alt="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" title="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
 		$showhideall .= ' '; // spacer
 		$showhideall .= "\n\t".'</a>';
 		break;
 
 		case 1:         // image and label
 		$showhideall .= $buttonlink;
-                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_image.'" alt="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" title="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
+                $showhideall .= "\n\t\t".'<img src="'.JURI::base().$showhide_tmp->path.'" alt="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" title="'.JText::_('JBS_CMN_SHOW_HIDE_ALL').' '.$showIt_phrase.'" border="0" width="'.$showhide_tmp->width.'" height="'.$showhide_tmp->height.'">';
 		$showhideall .= ' '; // spacer
 		$showhideall .= "\n\t".'</a>';
 		$showhideall .= $labellink;
