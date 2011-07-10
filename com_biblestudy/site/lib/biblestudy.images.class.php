@@ -224,7 +224,7 @@ class jbsImages
 		else
 		{
 			$path = $admin_params->get('default_showHide_image');
-		}
+   		}
 		
 		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
 		return $imagepath;
