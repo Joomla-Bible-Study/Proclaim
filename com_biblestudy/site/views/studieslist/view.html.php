@@ -20,8 +20,7 @@ class biblestudyViewstudieslist extends JView {
 
 
         $this->state = $this->get('State');
-      //  $items = $this->get('Items');
-        $items = $this->get('Data');
+        $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
 
         //Load the Admin settings and params from the template
@@ -41,20 +40,20 @@ class biblestudyViewstudieslist extends JView {
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups	= $user->getAuthorisedViewLevels(); 
-        $count = count($items);
+        //$count = count($items);
         
-        for ($i = 0; $i < $count; $i++)
-        {
-            
-            if ($items[$i]->access > 1)
-            {
-               if (!in_array($items[$i]->access,$groups))
-               {
-                    unset($items[$i]); 
-               } 
-	        }
-        }
-        $this->items = $items;
+//        for ($i = 0; $i < $count; $i++)
+//        {
+//            
+//            if ($items[$i]->access > 1)
+//            {
+//               if (!in_array($items[$i]->access,$groups))
+//               {
+//                    unset($items[$i]); 
+//               } 
+//	        }
+//        }
+        //$this->items = $items;
     
  $t = JRequest::getInt('t','get');
         if (!$t) {
