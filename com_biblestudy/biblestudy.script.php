@@ -84,6 +84,13 @@ class com_biblestudyInstallerScript {
 	}
 
 	function postflight($type, $parent) {
+        
+         //We need to check on the topics table. There were changes made between the migration component 1.08 and 1.011 that might differ so it is best to address here
+        require_once(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'updates'. DS. 'update701.php');
+        $update = new updatejbs701();
+        $update701 = $updatejbs701->do701update();
+        if (!$update701) {echo JText::_('JBS_INS_701_FAILURE');}  else {echo JText::_('JBS_INS_701_SUCCESS');} 
+        
         //We see if one of the records matches the parent_id, if not, we need to reset them
     	
         $db = JFactory::getDBO();

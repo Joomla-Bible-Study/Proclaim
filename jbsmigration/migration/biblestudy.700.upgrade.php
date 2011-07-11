@@ -420,7 +420,7 @@ class jbs700Install{
                 $messages[] = $msg;
              }
         
-        $query = "ALTER TABLE `#__bsms_topics` ADD COLUMN `languages` varchar(511) DEFAULT NULL AFTER `published`";
+        $query = "ALTER TABLE `#__bsms_topics` ADD COLUMN `params` varchar(511) DEFAULT NULL AFTER `published`";
         $msg = $this->performdb($query);
         if (!$msg)
              {
