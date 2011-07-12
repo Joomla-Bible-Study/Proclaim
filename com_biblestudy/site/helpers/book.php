@@ -12,7 +12,7 @@ function getBooksLandingPage($params, $id, $admin_params)
 	$teacherid = null;
 	$template = $params->get('studieslisttemplateid');
 	//$t = $params->get('teachertemplateid');
-	$limit = $params->get('landingbooklimit');
+	$limit = $params->get('landingbookslimit');
 	if (!$limit) {$limit = 10000;}
 //	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
@@ -45,7 +45,7 @@ function getBooksLandingPage($params, $id, $admin_params)
 
 
 			$book .= "\n" .'</table>';
-			$book .= "\n\t" . '<div id="showhidebook" style="display:none;"> <!-- start show/hide book div-->';
+			$book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
 			$book .= "\n" . '<table width = "100%" id="landing_table">';
 			
 			$i = 0;

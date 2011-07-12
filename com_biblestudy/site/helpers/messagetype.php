@@ -12,7 +12,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
 	$teacherid = null;
 	$template = $params->get('studieslisttemplateid',1);
 	//$t = $params->get('teachertemplateid');
-	$limit = $params->get('landingmessagetypelimit');
+	$limit = $params->get('landingmessagetypeslimit');
 	if (!$limit) {$limit = 10000;}
 	
 	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
@@ -45,7 +45,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
 	        	};
 			
 			$messagetype .= "\n" .'</table>';
-			$messagetype .= "\n\t" . '<div id="showhidemessagetype" style="display:none;"> <!-- start show/hide messagetype div-->';
+			$messagetype .= "\n\t" . '<div id="showhidemessagetypes" style="display:none;"> <!-- start show/hide messagetype div-->';
 			$messagetype .= "\n" .'<table width = "100%" id="landing_table">';
 		
             $i = 0;

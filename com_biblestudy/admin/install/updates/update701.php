@@ -24,7 +24,7 @@ class updatejbs701
                     if (substr_count($key,'languages'))
                     {
                        $languagetag = 1;
-                       $query = 'ALTER #__bsms_topics CHANGE `languages` `params`';
+                       $query = 'ALTER TABLE #__bsms_topics CHANGE `languages` `params`';
                        $db->setQuery($query);
                        $db->query();
                        $error = $db->getErrorNum();

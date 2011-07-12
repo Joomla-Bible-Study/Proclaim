@@ -81,7 +81,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	$teacherid = null;
 
 	$template = $params->get('teachertemplateid',1);
-	$limit = $params->get('landingteacherlimit');
+	$limit = $params->get('landingteacherslimit');
 	if (!$limit) {$limit = 10000;}
 	$menu =& JSite::getMenu();
 	
@@ -114,7 +114,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	        	};
 			
 			$teacher .= "\n" .'</table>';
-			$teacher .= "\n\t" . '<div id="showhideteacher" style="display:none;"> <!-- start show/hide teacher div-->';
+			$teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
 			$teacher .= "\n" .'<table width = "100%" id="landing_table">';
 		
             $i = 0;
