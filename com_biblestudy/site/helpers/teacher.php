@@ -23,12 +23,9 @@ function getTeacher($params, $id, $admin_params)
 			}
 		if ($viewtype == 'studydetails')
 			{$teacherids->id = $id;}
-	//if ($teacherid > 0) {$teacherids['id'] = $teacherid;}
-	//if ($params->get('mult_teachers')) { $teacherids = explode(",", $params->get('mult_teachers'));}
-	//if ($params->get('listteachers') && $teacherid) {$teacherids = explode(",", $params->get('mult_teachers')); $teacherids[] = $teacherid;}
-	//if ($id) {$teacherids[] = $id;}	
 		
-		//dump ($teacherids['id'], 'tresult: ');
+		
+		
 		$teacher = '<table id = "teacher"><tr>';
 		if (!isset($teacherids)) {return $teacher;}
 		foreach ($teacherids as $teachers)
@@ -37,29 +34,15 @@ function getTeacher($params, $id, $admin_params)
 			$database	= & JFactory::getDBO();
 			$query = 'SELECT * FROM #__bsms_teachers'.
 					'  WHERE id = '.$teachers;
-			//dump ($teachers, 'teachers: ');		
+				
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			$i_path = null;
-			//dump ($tresult, 'tresult: ');
+			
 			//Check to see if there is a teacher image, if not, skip this step
 			$images = new jbsImages();
 			$image = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
-		//	if ($tresult->teacher_thumbnail == '- Select Image -' || !$tresult->teacher_thumbnail) 
-		//		{ 
-		//			$image->path = $tresult->thumb; $image->height = $tresult->thumbh; $image->width = $tresult->thumbw;
-		//		}
-		//	else
-		//	{
-		//		if ($tresult->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) 
-		//			{ 
-		//				$i_path = 'images/stories/'.$tresult->teacher_thumbnail; 
-		//			}
-		//		if ($tresult->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) 
-		//			{
-		//				$i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$tresult->teacher_thumbnail;
-		//			}
-		//	$image = getImage($i_path);
+		
 				if (!$image) 
 					{
 						$image->path = ''; $image->width=0; $image->height=0;
@@ -93,17 +76,15 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-	//$addItemid = '';
-	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
+
 	$teacher = null;
 	$teacherid = null;
-	//$t = $params->get('t');
+
 	$template = $params->get('teachertemplateid',1);
 	$limit = $params->get('landingteacherlimit');
 	if (!$limit) {$limit = 10000;}
 	$menu =& JSite::getMenu();
 	
-//	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 		$teacher = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
@@ -193,22 +174,7 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	include_once($path1.'image.php');
 	$images = new jbsImages();
 	$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
-//	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
-//	else
-//	{
-//		if ($row->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_image; }
-//		if ($row->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
-//		$imagelarge = getImage($i_path);
-//	}
-	
-//	if (!$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw; }
-//	else
-//	{
-//		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_thumbnail; }
-//		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
-		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
-//		$imagesmall = getImage($i_path);
-//	}
+
 	
 	$label = $params->get('teacher_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -236,21 +202,9 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params)
     //Get the image folders and images
     $images = new jbsImages();
 	$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
-   //	if (!$row->teacher_image) { $image->path = $row->image; $image->height = $row->imageh; $image->width = $row->imagew; }
-//	else
-//	{
-//		if ($row->teacher_image && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_image; }
-//		if ($row->teacher_image && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_image;}
-//		$imagelarge = getImage($i_path);
-//	}
+ 
 	$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
-//	if (!$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw; }
-//	else
-//	{
-//		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'images/stories/'.$row->teacher_thumbnail; }
-//		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder/').$teacher->teacher_thumbnail;}
-//		$imagesmall = getImage($i_path);
-//	}
+
 	
     $label = $params->get('teacher_detailtemplate');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -261,9 +215,7 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params)
 	$label = str_replace('{{image}}', '<img src="'. $imagelarge->path.'" width="'.$imagelarge->width.'" height="'.$imagelarge->height.'" />', $label);
 	$label = str_replace('{{short}}', $row->short, $label);
 	$label = str_replace('{{thumbnail}}', '<img src="'. $imagesmall->path.'" width="'.$imagesmall->width.'" height="'.$imagesmall->height.'" />', $label);
-    //$label = str_replace('{{information}}', $row->information, $label);
-    //$label = str_replace('{{short}}', $row->short, $label);
-    
+
 	return $label;
 }
 
@@ -276,8 +228,7 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
     
     $path2 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'models'.DS;
    
-  //  include_once($path2.'studieslist.php');
-   //  print_r($params);
+ 
 	$limit = '';
 	$nolimit = JRequest::getVar('nolimit', 'int', 0);
     

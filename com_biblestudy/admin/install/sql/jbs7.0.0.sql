@@ -675,7 +675,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
 	`id` int(10) NOT NULL AUTO_INCREMENT,
 	`topic_text` text,
 	`published` tinyint(1) NOT NULL DEFAULT '1',
-	`languages` varchar(511) DEFAULT NULL,
+	`params` varchar(511) DEFAULT NULL,
 	`asset_id` int(10) DEFAULT NULL,
 	`access` int(10) DEFAULT NULL,
 	PRIMARY KEY (`id`)
