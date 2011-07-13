@@ -127,7 +127,7 @@ class Tabletopicsedit extends JTable
 		if ($topic == null || strlen($topic)==0) {
 			if (isset($data['params']) && is_array($data['params'])) {
 				foreach ($data[params] AS $language) {
-					if (strlen($language)>0) {    // santon
+					if (strlen($language)>0) {
 						$topic = $language;
 						break;
 					}

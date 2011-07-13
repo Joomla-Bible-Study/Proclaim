@@ -36,13 +36,13 @@ class biblestudyViewLandingpage extends JView {
     //    JRequest::setVar('t', $t, 'get');
         
         $template = $this->get('template');
-     //   $params = new JParameter($template[0]->params);
+    
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
 				$registry->loadJSON($template[0]->params);
                 $params = $registry;
         $admin = $this->get('Admin');
-     //   $this->admin_params = new JParameter($admin[0]->params);
+     
 		  // Convert parameter fields to objects.
 				$registry = new JRegistry;
 				$registry->loadJSON($admin[0]->params);

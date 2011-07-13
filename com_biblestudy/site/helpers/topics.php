@@ -19,8 +19,7 @@ function getTopicsLandingPage($params, $id, $admin_params)
 		$topic = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
 //		$query = 'select distinct a.* from #__bsms_topics a inner join #__bsms_studytopics b on a.id = b.topic_id';
-	//	$query = 'select distinct a.id, a.topic_text, a.published, a.params AS topic_params from #__bsms_topics a inner join #__bsms_studies b on a.id = b.topics_id';
-		$query = 'select distinct a.id, a.topic_text, a.published from #__bsms_topics a inner join #__bsms_studies b on a.id = b.topics_id';
+		$query = 'select distinct a.id, a.topic_text, a.published, a.params AS topic_params from #__bsms_topics a inner join #__bsms_studies b on a.id = b.topics_id';
 		$db->setQuery($query);
 		
         $tresult = $db->loadObjectList();

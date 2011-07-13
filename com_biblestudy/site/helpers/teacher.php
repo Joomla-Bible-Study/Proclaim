@@ -23,9 +23,9 @@ function getTeacher($params, $id, $admin_params)
 			}
 		if ($viewtype == 'studydetails')
 			{$teacherids->id = $id;}
+	
 		
-		
-		
+		//dump ($teacherids['id'], 'tresult: ');
 		$teacher = '<table id = "teacher"><tr>';
 		if (!isset($teacherids)) {return $teacher;}
 		foreach ($teacherids as $teachers)
@@ -34,11 +34,11 @@ function getTeacher($params, $id, $admin_params)
 			$database	= & JFactory::getDBO();
 			$query = 'SELECT * FROM #__bsms_teachers'.
 					'  WHERE id = '.$teachers;
-				
+			//dump ($teachers, 'teachers: ');		
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			$i_path = null;
-			
+			//dump ($tresult, 'tresult: ');
 			//Check to see if there is a teacher image, if not, skip this step
 			$images = new jbsImages();
 			$image = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
@@ -76,15 +76,16 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-
+	
 	$teacher = null;
 	$teacherid = null;
-
+	
 	$template = $params->get('teachertemplateid',1);
 	$limit = $params->get('landingteacherslimit');
 	if (!$limit) {$limit = 10000;}
 	$menu =& JSite::getMenu();
 	
+
 
 		$teacher = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
@@ -175,7 +176,8 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	$images = new jbsImages();
 	$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
 
-	
+		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+
 	$label = $params->get('teacher_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->title, $label);
@@ -197,12 +199,12 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params)
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
-	//dump ($row);
+	
     
     //Get the image folders and images
     $images = new jbsImages();
 	$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
- 
+  
 	$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 
 	
@@ -215,7 +217,7 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params)
 	$label = str_replace('{{image}}', '<img src="'. $imagelarge->path.'" width="'.$imagelarge->width.'" height="'.$imagelarge->height.'" />', $label);
 	$label = str_replace('{{short}}', $row->short, $label);
 	$label = str_replace('{{thumbnail}}', '<img src="'. $imagesmall->path.'" width="'.$imagesmall->width.'" height="'.$imagesmall->height.'" />', $label);
-
+    
 	return $label;
 }
 

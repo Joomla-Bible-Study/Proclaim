@@ -129,18 +129,12 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 		case 2:
 			$images = new jbsImages(); 
 			$image = $images->getSeriesThumbnail($row->series_thumbnail);
-	//		if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-	//		if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
-	//		$image = getImage($i_path);
+
 			$element = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
 			if ($islink > 0 && $view == 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' thumbnail image">'.$element.'</td>';
 			break;
 		case 3: 
-		//dump ($admin_params->get('series_imagefolder'), 'imagefolder: ');
-		//	if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) { $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-		//	if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) { $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
-		//	$image = getImage($i_path); //dump ($image, 'image: ');
 			$images = new jbsImages(); 
 			$image = $images->getSeriesThumbnail($row->series_thumbnail);
 			$element1 = '<td class="'.$r.' thumbnail"> <table id="seriestable" cellspacing="0"><tr class="noborder"><td>';
@@ -160,10 +154,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 		case 5:
 			$images = new jbsImages();
 			$image = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
-	//		if ($row->teacher_thumbnail == '- Select Image -' || !$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw;}
-	//		if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$row->teacher_thumbnail; }
-	//		if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$row->teacher_thumbnail;}
-	//		$image = getImage($i_path);
+
 			$element = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->teachername.'">';
 			if ($islink > 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' teacher image">'.$element.'</td>';
@@ -172,13 +163,6 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			$element1 = '<table id="seriestable" cellspacing="0"><tr class="noborder"><td class="'.$r.' teacher">';
 			$images = new jbsImages();
 			$image = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
-	//	if ($row->teacher_thumbnail == '- Select Image -' || !$row->teacher_thumbnail) { $image->path = $row->thumb; $image->height = $row->thumbh; $image->width = $row->thumbw;}
-	//		else 
-	//		{
-	//			if ($row->teacher_thumbnail && !$admin_params->get('teachers_imagefolder')) { $i_path = 'components/com_biblestudy/images/stories/'.$row->teacher_thumbnail; }
-	//			if ($row->teacher_thumbnail && $admin_params->get('teachers_imagefolder')) { $i_path = 'images/'.$admin_params->get('teachers_imagefolder').'/'.$row->teacher_thumbnail;}
-	//			$image = getImage($i_path);
-	//		}
 			$element2 = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->teachername.'">';
 			$element3 = '</td></tr><tr class="noborder"><td class="'.$r.' teacher">';
 			$element4 = $row->teachertitle.' - '.$row->teachername;
@@ -249,10 +233,6 @@ function getseriesElementnumber($subcustom)
 function getSeriesstudies($id, $params, $admin_params, $template)
 {
 	$studies = '';
-//	$limit = '';
-//	$nolimit = JRequest::getVar('nolimit', 'int', 0);
-//	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
-//	if ($nolimit == 1) {$limit = '';}
 	$db	= & JFactory::getDBO();
 	$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = '.$id;
 	$db->setQuery($query);
@@ -333,17 +313,9 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 		$numrows = $numrows - 1;
 		
 	}
-	//dump ($result, 'result: ');
-	//$studies = '<tr class="lastrow bsodd">';
-	//$studies .= '<td class="studies">';
 	$t = $params->get('serieslisttemplateid');
 					if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 	$studies .= '</tr>';
-//	if ($params->get('series_list_return') > 0) 
-//		{
-//			
-//			$studies .= getSeriesFooter($templatementid, $id).'</table>';
-//		}
         
 return $studies;
 }
@@ -354,13 +326,9 @@ function getSeriesLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-//	$addItemid = '';
-//	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$series = null;
 	$seriesid = null;
 	$template = $params->get('serieslisttemplateid',1);
-	//$t = $params->get('teachertemplateid');
-//	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 	$limit = $params->get('landingserieslimit');
 	if (!$limit) {$limit = 10000;}
 	
