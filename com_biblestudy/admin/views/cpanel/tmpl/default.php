@@ -202,6 +202,24 @@ table.fbstat .col2 {
 <tr><td><div><?php echo JText::_('JBS_CPL_LATEST_VERSION').': '.$this->versioncheck;?></td></tr>
 <tr><td><?php echo '<a href="http://www.JoomlaBibleStudy.org">'.JText::_('JBS_CPL_GET_LATEST_VERSION').'</a>';?></div></td></tr>
 </table> 
+<table>
+<tr><td>
+<strong><?php echo JText::_('JBS_CPL_ASSETID_CHECK');?></strong>
+</td></tr>
+<tr><td><?php echo JText::_('JBS_CPL_JBS_ASSETID');?></td>
+<td><?php echo $this->jbs_asset_id;?></td></tr>
+<td><?php echo JText::_('JBS_CPL_JOOMLA_ASSETID');?></td>
+<td><?php echo $this->joomla_asset_id;?></td></tr>
+<tr><td>
+<?php if ($this->jbs_asset_id != $this->joomla_asset_id)
+    {
+    echo '<p style=color:red;><a href="index.php?option=com_biblestudy&view=cpanel&function=fixassetid">'.JText::_('JBS_CPL_FIX_ASSETID_LINK').'</a></p>';
+    }
+    else echo '<p style=color:green;>'.JText::_('JBS_CPL_ASSETID_OKAY').'</p>';
+    ?>
+</td></tr>
+ 
+</table>
  </div>
  </td><td>
 <div class="fbwelcome">

@@ -64,6 +64,11 @@ class biblestudyController extends JController
 		{
 			$model =& $this->getModel('studydetails');
 		}
+        $fixassets = JRequest::getWord('fixassetid','','get');
+        if ($fixassets == 'fixassetid')
+        {
+            $dofix = $this->fixAsset_id();
+        }
 		parent::display();
 	}
 
@@ -288,4 +293,32 @@ class biblestudyController extends JController
                 $this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&layout=edit&id='.$id, $msg );
 			}
 	}
+    
+    function fixAsset_id()
+    {
+         $db = JFactory::getDBO();
+         //We see if one of the records matches the parent_id, if not, we need to reset them
+        $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
+        $db->setQuery($query);
+        $parent_id = $db->loadResult();
+        
+        // Check to see if assets have been fixed and if they match the parent_id
+        $query = 'SELECT t.asset_id, a.parent_id FROM #__bsms_templates AS t LEFT JOIN #__assets AS a ON (t.asset_id = a.id) WHERE t.id = 1';
+        $db->setQuery($query);
+        $asset = $db->loadObject();
+        
+        if ($parent_id != $asset->parent_id && $asset->asset_id)
+        {
+            $query = 'UPDATE #__assets SET parent_id = '.$parent_id.' WHERE parent_id = '.$asset->parent_id;
+            $db->setQuery($query);
+            if ($result = $db->query()){return true;}else {return false;}
+        }
+        else
+        {
+			require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
+			$assetfix = new fixJBSAssets();
+            $assetdofix = $assetfix->AssetEntry();
+            if ($assetdofix){return true;}else {return false;} 
+        }
+    }
 }
