@@ -19,7 +19,7 @@ class biblestudyControllermediaedit extends controllerClass
     /*
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
      *
-     * @todo    We should rename this controler to "mediafile" and the list view controller
+     * @todo  BCC  We should rename this controler to "mediafile" and the list view controller
      * to "mediafiles" so that the pluralization in 1.6 would work properly
      *
      * @since 7.0
@@ -41,4 +41,3 @@ class biblestudyControllermediaedit extends controllerClass
 
 	
 }
-?>

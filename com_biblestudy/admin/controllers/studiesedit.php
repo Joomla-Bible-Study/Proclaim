@@ -18,7 +18,7 @@ class biblestudyControllerstudiesedit extends controllerClass {
     /*
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
      *
-     * @todo    We should rename this controler to "study" and the list view controller
+     * @todo  bcc  We should rename this controler to "study" and the list view controller
      * to "studies" so that the pluralization in 1.6 would work properly
      *
      * @since 7.0
@@ -32,9 +32,7 @@ class biblestudyControllerstudiesedit extends controllerClass {
      */
     function __construct() {
         parent::__construct();
-
-        // Register Extra tasks
-      //  $this->registerTask('add', 'edit');
+        
     }
 
        function resetHits() {
@@ -55,5 +53,3 @@ class biblestudyControllerstudiesedit extends controllerClass {
     }
 
 }
-
-?>

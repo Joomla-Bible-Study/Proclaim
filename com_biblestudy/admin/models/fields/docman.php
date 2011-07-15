@@ -32,7 +32,7 @@ class JFormFieldDocman extends JFormField
 			return "DOCman is not installed";
 		}
 		$db = JFactory::getDBO();
-		//@todo Query neds to be modified to reflect the DOCman database.
+		//@todo Tom needs to look into the Query to be modified to reflect the DOCman database.
 		$db->setQuery("SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%Y-%m-%d'), ' - ', studynumber) AS text FROM #__bsms_studies WHERE published = 1 ORDER BY studydate DESC");
 		$html[] = JHTML::_('select.option', '0', '- '. JText::_( 'JBS_MED_SELECT_DOCMAN' ) .' -' );
 		$html = array_merge($html, $db->loadObjectList());
