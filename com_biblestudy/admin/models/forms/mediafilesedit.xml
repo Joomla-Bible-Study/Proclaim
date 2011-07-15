@@ -5,7 +5,15 @@
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-	
+	<field name="id"
+			type="text"
+			label="JGLOBAL_FIELD_ID_LABEL"
+			description="JGLOBAL_FIELD_ID_DESC"
+			size="10"
+			default="0"
+			readonly="true"
+			class="readonly"
+		/>
         <field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
 			description="JBS_MED_CREATE_DATE_DESC" class="inputbox" size="22"
 			format="%Y-%m-%d %H:%M:%S" filter="user_utc" required="true"/>
@@ -37,11 +45,8 @@
 			readonly="true"  />
     <field name="spacer" type="spacer" hr="true"/>
 	
-    <field name="ordering" type="list" label="JBS_CMN_ORDERING"
-			description="JBS_CMN_ORDERING_DESC" class="inputbox" size="1"
-			default="0">
-        <option value="0">0</option>
-    </field>
+    <field name="ordering" type="mediaOrdering" label="JBS_CMN_ORDERING"
+			description="JBS_CMN_ORDERING_DESC" class="inputbox" />
 	
     <field name="comment" type="text" size="50" label="JBS_CMN_COMMENT"
 				description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox" />

@@ -12,7 +12,7 @@ JHtml::_('script', 'system/multiselect.js', false, true);
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templateslist'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teacherlist'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
             <select name="filter_published" class="inputbox" onchange="this.form.submit()">
@@ -62,11 +62,11 @@ $listDirn = $this->state->get('list.direction');
                 </td>
                 <td class="center">
                 <?php if($listDirn == 'asc') : ?>
-                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->studytitle == @$this->items[$i-1]->studytitle), 'teacherlist.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->teachername == @$this->items[$i-1]->teachername), 'teacherlist.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->catid == @$this->items[$i-1]->catid), 'teacherlist.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->catid == @$this->items[$i-1]->catid), 'teacherlist.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
                 <?php elseif ($listDirn == 'desc') : ?>
-                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->studytitle == @$this->items[$i-1]->studytitle), 'teacherlist.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->teachername == @$this->items[$i-1]->teachername), 'teacherlist.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->catid == @$this->items[$i-1]->catid), 'teacherlist.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->catid == @$this->items[$i-1]->catid), 'teacherlist.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
                 <?php endif; ?>
                 <?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
 		<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />

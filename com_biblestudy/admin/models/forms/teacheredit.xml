@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+<field name="id"
+			type="text"
+			label="JGLOBAL_FIELD_ID_LABEL"
+			description="JGLOBAL_FIELD_ID_DESC"
+			size="10"
+			default="0"
+			readonly="true"
+			class="readonly"
+		/>
     <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
@@ -8,11 +17,8 @@
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
-    <field name="ordering" type="list" label="JBS_CMN_ORDERING"
-			description="JBS_CMN_ORDERING_DESC" class="inputbox" size="1"
-			default="0">
-        <option value="0">0</option>
-    </field>
+    <field name="ordering" type="teacherOrdering" label="JBS_CMN_ORDERING"
+			description="JBS_CMN_ORDERING_DESC" class="inputbox" />
     <field name="teachername" type="text" class="inputbox" size="60" label="JBS_CMN_TEACHER" required="true"/>
     <field name="title" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
     <field name="teacher_image" type="media" label="JBS_TCH_TEACHER_IMAGE" />

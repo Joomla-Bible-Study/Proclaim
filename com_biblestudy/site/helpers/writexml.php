@@ -219,7 +219,7 @@ defined('_JEXEC') or die('Restricted access');
 		<itunes:keywords>'.$podinfo->podcastsearch.'</itunes:keywords>
 		<itunes:duration>'.$hours.':'.sprintf("%02d", $episode->media_minutes).':'.sprintf("%02d", $episode->media_seconds).'</itunes:duration>';
 					//Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
-					if ($episode->article_id)
+					if ($episode->article_id > 1)
 						{
 							$episodedetailtemp .=
 							'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_content&amp;view=article&amp;id='.$episode->article_id.'" length="'.$episode->size.'" type="'
@@ -227,7 +227,7 @@ defined('_JEXEC') or die('Restricted access');
 			<guid>http://'.$episode->server_path.'/index.php?option=com_content&amp;view=article&amp;id='.$episode->article_id.'</guid>';	
 							
 						}
-					if ($episode->docMan_id)
+					if ($episode->docMan_id > 1)
 						{
 							$episodedetailtemp .=
 							'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_docman&amp;task=doc_download&amp;gid='.$episode->docMan_id.'" length="'.$episode->size.'" type="'
