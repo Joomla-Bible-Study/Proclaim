@@ -8,11 +8,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.modellist');
+jimport('joomla.application.component.modellist');
 
-    abstract class modelClass extends JModelList {
-        
-    }
+abstract class modelClass extends JModelList {
+    
+}
 
 class biblestudyModelmediafileslist extends modelClass {
 
@@ -21,8 +21,21 @@ class biblestudyModelmediafileslist extends modelClass {
     var $_pagination = null;
     var $_allow_deletes = null;
 
-    function __construct() {
-        parent::__construct();
+    function __construct($config = array()) {
+        if(empty($config['filter_fields'])) {
+            $config['filter_fields'] = array(
+              'mediafile.published',
+              'mediafile.ordering',
+              'mediafile.filename',
+              'study.studytitle',
+              'mediatype.media_text',
+              'mediafile.createdate',
+              'mediafile.plays',
+              'mediafile.downloads'         
+            );
+        }
+        
+        parent::__construct($config);
 
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -141,9 +154,9 @@ class biblestudyModelmediafileslist extends modelClass {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
 
-        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
-        
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+        $this->setState('filter.published', $published);
+
         $study = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $study);
 
@@ -195,8 +208,7 @@ class biblestudyModelmediafileslist extends modelClass {
 
         $query->select(
                 $this->getState(
-                        'list.select',
-                        'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename,
+                        'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename,
                         mediafile.createdate, mediafile.plays, mediafile.downloads'));
 
         $query->from('`#__bsms_mediafiles` AS mediafile');
@@ -210,13 +222,12 @@ class biblestudyModelmediafileslist extends modelClass {
         $query->join('LEFT', '`#__bsms_media` AS mediatype ON mediatype.id = mediafile.media_image');
 
         // Filter by published state
-		$published = $this->getState('filter.published');
-		if (is_numeric($published)) {
-			$query->where('mediafile.published = ' . (int) $published);
-		}
-		else if ($published === '') {
-			$query->where('(mediafile.published = 0 OR mediafile.published = 1)');
-		}
+        $published = $this->getState('filter.published');
+        if (is_numeric($published)) {
+            $query->where('mediafile.published = ' . (int) $published);
+        } else if ($published === '') {
+            $query->where('(mediafile.published = 0 OR mediafile.published = 1)');
+        }
 
         //Filter by filename
         $filename = $this->getState('filter.filename');
