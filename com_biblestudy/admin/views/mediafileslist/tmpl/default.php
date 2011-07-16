@@ -60,7 +60,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
                 </th>
                 <th width="20%">
-                    <?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediaType.media_text', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort', 'JBS_MED_MEDIA_TYPE', 'mediatype.media_text', $listDirn, $listOrder); ?>
                 </th>
                 <th width="15%">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
