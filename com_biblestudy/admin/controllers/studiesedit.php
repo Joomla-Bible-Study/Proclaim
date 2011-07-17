@@ -8,13 +8,9 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controllerform');
 
-    abstract class controllerClass extends JControllerForm {
-
-    }
-
-class biblestudyControllerstudiesedit extends controllerClass {
+class biblestudyControllerstudiesedit extends JControllerForm {
     /*
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
      *
@@ -32,10 +28,9 @@ class biblestudyControllerstudiesedit extends controllerClass {
      */
     function __construct() {
         parent::__construct();
-        
     }
 
-       function resetHits() {
+    function resetHits() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'post'); //dump ($cid, 'cid: ');
         $db = JFactory::getDBO();
@@ -50,6 +45,10 @@ class biblestudyControllerstudiesedit extends controllerClass {
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
             $this->setRedirect('index.php?option=com_biblestudy&view=studiesedit&controller=studiesedit&layout=form&cid[]=' . $id, $msg);
         }
+    }
+    
+    function topics() {
+        die('test');
     }
 
 }
