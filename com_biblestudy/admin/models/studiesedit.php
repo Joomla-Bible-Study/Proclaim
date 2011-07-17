@@ -8,37 +8,32 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.modeladmin');
-    
-    require_once JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'biblestudy.php';
-    include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
+jimport('joomla.application.component.modeladmin');
 
-    abstract class modelClass extends JModelAdmin {
-        
-    }
+require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers' . DS . 'biblestudy.php';
+include_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers' . DS . 'translated.php');
 
-class biblestudyModelstudiesedit extends modelClass {
+class biblestudyModelstudiesedit extends JModelAdmin {
 
     var $_admin;
 
-/**
-         * Method override to check if you can edit an existing record.
-         *
-         * @param       array   $data   An array of input data.
-         * @param       string  $key    The name of the key for the primary key.
-         *
-         * @return      boolean
-         * @since       1.6
-         */
-        protected function allowEdit($data = array(), $key = 'id')
-        {
-                // Check specific edit permission then general edit permission.
-                return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.studiesedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-        }
-        
+    /**
+     * Method override to check if you can edit an existing record.
+     *
+     * @param       array   $data   An array of input data.
+     * @param       string  $key    The name of the key for the primary key.
+     *
+     * @return      boolean
+     * @since       1.6
+     */
+    protected function allowEdit($data = array(), $key = 'id') {
+        // Check specific edit permission then general edit permission.
+        return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.studiesedit.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+    }
+
     function __construct() {
         parent::__construct();
-        
+
         $admin = $this->getAdmin();
         $this->_admin_params = new JParameter($admin[0]->params);
         $array = JRequest::getVar('cid', 0, '', 'array');
@@ -50,68 +45,6 @@ class biblestudyModelstudiesedit extends modelClass {
         $this->_id = $id;
         $this->_data = null;
         $this->_admin = null;
-    }
-
-    function &getData() {
-        die ('biblestudyModelstudiesedit.getData is no more used');
-
-//        // Load the data
-//        $admin = $this->getAdmin();
-//        //dump ($admin, 'admin: ');
-//        if (empty($this->_data)) {
-//            $query = ' SELECT * FROM #__bsms_studies ' .
-//                    '  WHERE id = ' . $this->_id;
-//            $this->_db->setQuery($query);
-//            $this->_data = $this->_db->loadObject();
-//        }
-//        if (!$this->_data) {
-//            $this->_data = new stdClass();
-//            $this->_data->id = 0;
-//            //TF added these
-//            $this->_data->published = 1;
-//            $today = date("Y-m-d H:i:s");
-//            $this->_data->studydate = $today;
-//            $this->_data->teacher_id = ($this->_admin_params->get('teacher_id') > 0 ? $this->_admin_params->get('teacher_id') : null);
-//            $this->_data->studynumber = null;
-//            $this->_data->booknumber = ($this->_admin_params->get('booknumber') > 0 ? $this->_admin_params->get('booknumber') : null);
-//            $this->_data->chapter_begin = null;
-//            $this->_data->chapter_end = null;
-//            $this->_data->verse_begin = null;
-//            $this->_data->verse_end = null;
-//            $this->_data->studytitle = null;
-//            $this->_data->studyintro = null;
-//            $this->_data->media_hours = null;
-//            $this->_data->media_minutes = null;
-//            $this->_data->media_seconds = null;
-//            $this->_data->messagetype = ($this->_admin_params->get('messagetype') > 0 ? $this->_admin_params->get('messagetype') : null);
-//            $this->_data->series_id = ($this->_admin_params->get('series_id') > 0 ? $this->_admin_params->get('series_id') : null);
-//            $this->_data->studytext = null;
-//            $this->_data->topics_id = ($this->_admin_params->get('topic_id') > 0 ? $this->_admin_params->get('topic_id') : null);
-//            $this->_data->secondary_reference = null;
-//            $this->_data->prod_cd = null;
-//            $this->_data->prod_dvd = null;
-//            $this->_data->server_cd = null;
-//            $this->_data->server_dvd = null;
-//            $this->_data->image_cd = null;
-//            $this->_data->image_dvd = null;
-//            $this->_data->booknumber2 = null;
-//            $this->_data->chapter_begin2 = null;
-//            $this->_data->chapter_end2 = null;
-//            $this->_data->verse_begin2 = null;
-//            $this->_data->verse_end2 = null;
-//            $this->_data->comments = 1;
-//            $this->_data->hits = null;
-//            $this->_data->user_id = null;
-//            $this->_data->user_name = null;
-//            $this->_data->show_level = null;
-//            $this->_data->location_id = ($this->_admin_params->get('location_id') > 0 ? $this->_admin_params->get('location_id') : null);
-//            $this->_data->thumbnailm = $this->_admin_params->get('default_study_image');
-//            $this->_data->thumbhm = null;
-//            $this->_data->thumbwm = null;
-//            $this->_data->params = null;
-//            //dump ($this->_data);
-//        }
-//        return $this->_data;
     }
 
     /**
@@ -133,8 +66,7 @@ class biblestudyModelstudiesedit extends modelClass {
         $data['studyintro'] = str_replace('"', "'", $data['studyintro']);
         $data['studynumber'] = str_replace('"', "'", $data['studynumber']);
         $data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
-      //  $data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
-
+        //  $data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
         //	$msg = $data['show_level'];
 
         foreach ($data['scripture'] as $scripture) {
@@ -146,8 +78,7 @@ class biblestudyModelstudiesedit extends modelClass {
         $data['scripture'] = implode(';', $scriptures);
         // Added since Joomla 1.6 to implode show_level if array
         if (is_array($data['show_level'])) {
-           // $data['show_level'] = implode(",", $data['show_level']);
-          
+            // $data['show_level'] = implode(",", $data['show_level']);
         }
         // Bind the form fields to the table
         if (!$row->bind($data)) {
@@ -272,26 +203,8 @@ class biblestudyModelstudiesedit extends modelClass {
         return true;
     }
 
-    function legacyPublish($cid = array(), $publish = 1) {
-
-        if (count($cid)) {
-            $cids = implode(',', $cid);
-
-            $query = 'UPDATE #__bsms_studies'
-                    . ' SET published = ' . intval($publish)
-                    . ' WHERE id IN ( ' . $cids . ' )'
-
-            ;
-            $this->_db->setQuery($query);
-            if (!$this->_db->query()) {
-                $this->setError($this->_db->getErrorMsg());
-                return false;
-            }
-        }
-    }
-
     function getBooks() {
-        die ('biblestudyModelstudiesedit.getBooks is no more used');
+        die('biblestudyModelstudiesedit.getBooks is no more used');
 //        $query = 'SELECT booknumber AS value, bookname AS text'
 //                . ' FROM #__bsms_books'
 //                . ' WHERE published = 1'
@@ -322,11 +235,27 @@ class biblestudyModelstudiesedit extends modelClass {
 
         $query->select('mediafile.id, mediafile.filename, mediafile.createdate');
         $query->from('#__bsms_mediafiles AS mediafile');
-        $query->where('mediafile.study_id = '.(int)$this->getItem()->id);
+        $query->where('mediafile.study_id = ' . (int) $this->getItem()->id);
         $query->order('mediafile.createdate DESC');
 
         $db->setQuery($query->__toString());
         return $db->loadObjectList();
+    }
+    
+    /**
+     * Overrides the JModelAdmin save routine to save the topics(tags)
+     * @param type $data
+     * @since 7.0.1
+     */
+    public function save($data) {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        
+        $topics = json_encode($data['topics']);
+        
+        $query->insert('#__bsms_studytopics');
+        
+        return parent::save($data);
     }
 
     /**
@@ -347,18 +276,6 @@ class biblestudyModelstudiesedit extends modelClass {
         return $form;
     }
 
-    /**
-     * Overloads the JModelAdmin save routine in order to impload the user show level
-     *
-     * @param array $data
-     * @return <Boolean> True on sucessfull save
-     * @since   7.0
-     */
-    public function save($data) {
-        //Implode only if they selected at least one user level. Otherwise just clear the the user_level field
-       // $data['show_level'] = empty($data['show_level']) ? '' : implode(',', $data['show_level']);
-        return parent::save($data);
-    }
 
     /**
      *
@@ -369,25 +286,24 @@ class biblestudyModelstudiesedit extends modelClass {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.studiesedit.data', array());
         if (empty($data))
             $data = $this->getItem();
-          //  $data->show_level = explode(',', $data->show_level);
+        //  $data->show_level = explode(',', $data->show_level);
 
         return $data;
     }
 
-	/**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
-	 * @return	JTable	A database object
-	 * @since	1.6
-	 */
+    /**
+     * Returns a reference to the a Table object, always creating it.
+     *
+     * @param	type	The table type to instantiate
+     * @param	string	A prefix for the table class name. Optional.
+     * @param	array	Configuration array for model. Optional.
+     * @return	JTable	A database object
+     * @since	1.6
+     */
+    public function getTable($type = 'studiesedit', $prefix = 'Table', $config = array()) {
+        return JTable::getInstance($type, $prefix, $config);
+    }
 
-	public function getTable($type = 'studiesedit', $prefix = 'Table', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
 }
 
 ?>
