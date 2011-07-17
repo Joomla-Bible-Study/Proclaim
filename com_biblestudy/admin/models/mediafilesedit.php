@@ -8,13 +8,9 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.modeladmin');
+jimport('joomla.application.component.modeladmin');
 
-    abstract class modelClass extends JModelAdmin {
-        
-    }
-
-class biblestudyModelmediafilesedit extends modelClass {
+class biblestudyModelmediafilesedit extends JModelAdmin {
 
     /**
      * Constructor that retrieves the ID from the request
@@ -37,20 +33,19 @@ class biblestudyModelmediafilesedit extends modelClass {
         $this->setId((int) $array[0]);
     }
 
-/**
-         * Method override to check if you can edit an existing record.
-         *
-         * @param       array   $data   An array of input data.
-         * @param       string  $key    The name of the key for the primary key.
-         *
-         * @return      boolean
-         * @since       1.6
-         */
-        protected function allowEdit($data = array(), $key = 'id')
-        {
-                // Check specific edit permission then general edit permission.
-                return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediafilesedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-        }
+    /**
+     * Method override to check if you can edit an existing record.
+     *
+     * @param       array   $data   An array of input data.
+     * @param       string  $key    The name of the key for the primary key.
+     *
+     * @return      boolean
+     * @since       1.6
+     */
+    protected function allowEdit($data = array(), $key = 'id') {
+        // Check specific edit permission then general edit permission.
+        return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediafilesedit.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+    }
 
     function setId($id) {
         // Set id and wipe data
@@ -97,120 +92,6 @@ class biblestudyModelmediafilesedit extends modelClass {
             $this->_data->popup = null;
         }
         return $this->_data;
-    }
-
-    /**
-     * Method to store a record
-     *
-     * @access	public
-     * @return	boolean	True on success
-     * @todo Need to check the current order of the studies for that particular
-     * study, so that it doesn't default to 0, buecause that will break the
-     * ordering functionality.
-     */
-    function store() {
-        $row = & $this->getTable();
-
-        $data = JRequest::get('post'); //dump ($data, 'data: ');
-        //This checks to see if the user has uploaded a file instead of just entered one in the box. It replaces the filename with the name of the uploaded file
-
-        $file = JRequest::getVar('file', null, 'files', 'array');
-        //	$filename_upload = strtolower($file['name']);
-        $filename_upload = $file['name'];
-        if (isset($filename_upload)) {
-            $name_bak = $data['filename'];
-            $data['filename'] = $filename_upload;
-        }
-        if ($filename_upload == '') {
-            $data['filename'] = $name_bak;
-        }
-        //$data['filename'] = str_replace(' ','_',$data['filename']);
-
-        if ($this->_admin_params->get('character_filter') > 0) {
-            $badchars = array(' ', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';');
-            $data['filename'] = str_replace($badchars, '_', $data['filename']);
-        }
-        $data['filename'] = str_replace('&', '_and_', $data['filename']);
-        $data['mediacode'] = str_replace('"', "'", $data['mediacode']);
-        //$data['mediacode'] = JRequest::getVar( 'mediacode', '', 'post', 'string', JREQUEST_ALLOWRAW );
-        // Bind the form fields to the  table
-        if ($data['docManItem'] == null) {
-            $data['docMan_id'] = 0;
-        } else {
-            $data['docMan_id'] = $data['docManItem'];
-        }
-        if ($data['virtueMartItem'] == null) {
-            $data['virtueMart_id'] = 0;
-        } else {
-            $data['virtueMart_id'] = $data['virtueMartItem'];
-        }
-        if ($data['categoryItem'] == null) {
-            $data['article_id'] = 0;
-        } else {
-            $data['article_id'] = $data['categoryItem'];
-        }
-        if (is_array($data['podcast_id'])) {
-            $data['podcast_id'] = implode(',', $data['podcast_id']);
-        }
-
-        if (!$row->bind($data)) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
-
-        // Make sure the  record is valid
-        if (!$row->check()) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
-
-        // Store the table to the database
-        if (!$row->store()) {
-            $this->setError($this->_db->getErrorMsg());
-            //			$this->setError( $row->getErrorMsg() );
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Method to delete record(s)
-     *
-     * @access	public
-     * @return	boolean	True on success
-     */
-    function delete() {
-        $cids = JRequest::getVar('cid', array(0), 'post', 'array');
-
-        $row = & $this->getTable();
-
-        if (count($cids)) {
-            foreach ($cids as $cid) {
-                if (!$row->delete($cid)) {
-                    $this->setError($row->getErrorMsg());
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    function legacyPublish($cid = array(), $publish = 1) {
-
-        if (count($cid)) {
-            $cids = implode(',', $cid);
-
-            $query = 'UPDATE #__bsms_mediafiles'
-                    . ' SET published = ' . intval($publish)
-                    . ' WHERE id IN ( ' . $cids . ' )'
-
-            ;
-            $this->_db->setQuery($query);
-            if (!$this->_db->query()) {
-                $this->setError($this->_db->getErrorMsg());
-                return false;
-            }
-        }
     }
 
     /**
@@ -437,7 +318,7 @@ class biblestudyModelmediafilesedit extends modelClass {
     }
 
     /**
-     * Overloads the JModelAdmin save routine in order to impload the podcast_id
+     * Overrides the JModelAdmin save routine in order to implode the podcast_id
      *
      * @param array $data
      * @return <Boolean> True on sucessfull save
@@ -482,7 +363,7 @@ class biblestudyModelmediafilesedit extends modelClass {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafilesedit.data', array());
         if (empty($data)) {
             $data = $this->getItem();
-           
+
             $data->podcast_id = explode(',', $data->podcast_id);
             // dump ($data->podcast_id);
         }
@@ -490,6 +371,7 @@ class biblestudyModelmediafilesedit extends modelClass {
 
         return $data;
     }
+
 }
 
 ?>
