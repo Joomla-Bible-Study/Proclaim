@@ -125,9 +125,9 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         </li>
                        
                         </ul>
-                        <?php //echo $this->form->getLabel('topic_tags'); ?>
+                        <?php echo $this->form->getLabel('topics'); ?>
                         <div class="clr"></div>
-                        <?php //echo $this->form->getInput('topic_tags'); ?>
+                        <?php echo $this->form->getInput('topics'); ?>
                       <!--  <input name="topic_tags" type="text" id="topic_tags" /> -->
                          <ul>
                         <li>
@@ -251,36 +251,3 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
  
         <?php echo JHtml::_('form.token'); ?>
 </form>
-<script>
-
-  var vData;
-
-
-  $(document).ready(function() {
-
-  //Get Prepopulate Tags here...
-  $.get("index.php?option=com_biblestudy&controller=controller&task=getTags&format=raw&q=<?php echo $this->item->id?>", function(data){
-      vData = eval(data);
-      run(vData);
-    });
-
-    function run(d) {
-      $("#jform_topic_tags").tokenInput("index.php?option=com_biblestudy&controller=controller&task=AjaxTags&format=raw", {
-          prePopulate: d,
-          classes: {
-          tokenList: "token-input-list-facebook",
-          token: "token-input-token-facebook",
-          tokenDelete: "token-input-delete-token-facebook",
-          selectedToken: "token-input-selected-token-facebook",
-          highlightedToken: "token-input-highlighted-token-facebook",
-          dropdown: "token-input-dropdown-facebook",
-          dropdownItem: "token-input-dropdown-item-facebook",
-          dropdownItem2: "token-input-dropdown-item2-facebook",
-          selectedDropdownItem: "token-input-selected-dropdown-item-facebook",
-          inputToken: "token-input-input-token-facebook"
-          }
-      });
-    }
-
-  });
-</script>
