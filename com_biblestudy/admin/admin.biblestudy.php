@@ -28,7 +28,7 @@ define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
 addLoadingDiv();
 addCSS();
-addJS();
+//addJS();
 
 jimport('joomla.application.component.controller');
 $controller = JController::getInstance('biblestudy');
@@ -70,5 +70,4 @@ function addJS() {
     $doc = & JFactory::getDocument();
     $doc->addScript(JURI::base() . 'components/com_biblestudy/js/jquery.js');
     $doc->addScript(JURI::base() . 'components/com_biblestudy/js/noconflict.js');
-    $doc->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 }
