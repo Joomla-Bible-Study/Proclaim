@@ -40,7 +40,7 @@ class updatejbs701
                 }
                  if (!$languagetag && !$paramstag)
                  {
-                    $query = 'ALTER #__bsms_topics ADD `params` varchar(511)';
+                    $query = 'ALTER #__bsms_topics ADD `params` varchar(511) null';
                     $db->setQuery($query);
                     $db->query();
                     $error = $db->getErrorNum();
