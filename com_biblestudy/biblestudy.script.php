@@ -84,16 +84,15 @@ class com_biblestudyInstallerScript {
 	}
 
 	function postflight($type, $parent) {
-        
-         //We need to check on the topics table. There were changes made between the migration component 1.08 and 1.011 that might differ so it is best to address here
+	   $db = JFactory::getDBO();
+       
+       //We need to check on the topics table. There were changes made between the migration component 1.08 and 1.011 that might differ so it is best to address here
         require_once(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'updates'. DS. 'update701.php');
         $update = new updatejbs701();
         $update701 = $update->do701update();
         if (!$update701) {echo JText::_('JBS_INS_701_FAILURE');}  else {echo JText::_('JBS_INS_701_SUCCESS');} 
-        
+           
         //We see if one of the records matches the parent_id, if not, we need to reset them
-    	
-        $db = JFactory::getDBO();
         $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
         $db->setQuery($query);
         $parent_id = $db->loadResult();
@@ -102,14 +101,14 @@ class com_biblestudyInstallerScript {
         $query = 'SELECT t.asset_id, a.parent_id FROM #__bsms_templates AS t LEFT JOIN #__assets AS a ON (t.asset_id = a.id) WHERE t.id = 1';
         $db->setQuery($query);
         $asset = $db->loadObject();
-        
-        if ($parent_id != $asset->parent_id && $asset->asset_id)
+        //This query is for if asset_ids have been set, but the main parent_id of com_biblestudy has changed.
+        if (($parent_id != $asset->parent_id) && $asset->asset_id)
         {
             $query = 'UPDATE #__assets SET parent_id = '.$parent_id.' WHERE parent_id = '.$asset->parent_id;
             $db->setQuery($query);
             if ($result = $db->query()){echo '<p>'.JText::_('JBS_INS_16_ASSETFIX_SUCCESS').': '.$parent_id.'</p>';}else{echo '<p>'.JText::_('JBS_INS_16_ASSETFIX_FAILURE').': '.$parent_id.'</p>';}
         }
-        else
+        elseif (!$asset->asset_id)
         {
 			require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
 			$assetfix = new fixJBSAssets();
