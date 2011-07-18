@@ -31,31 +31,24 @@ class biblestudyViewstudiesedit extends JView {
         $this->addToolbar();
 
         $document = JFactory::getDocument();
-        $document->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/js/noconflict.js');
-        $document->addScript('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.tag-it.js');
+        $document->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.tokeninput.js');
+        $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/token-input-jbs.css');
 
-        $document->addScriptDeclaration("
+        $script = "
             \$j(document).ready(function() {                              
-                var sampleTags = ['c++', 'java', 'php', 'coldfusion', 'javascript', 'asp', 'ruby', 'python', 'c', 'scala', 'groovy', 'haskell', 'perl', 'erlang', 'apl', 'cobol', 'go', 'lua'];
-                sampleTags[0] = 1;
-                sampleTags[1] = 2;
-                \$j('#topics').tagit({
-                    itemName: 'jform',
-                    fieldName: 'topics',
-                    allowSpaces: true,
-                    tagSource: function(search, showChoices) {
-                        //Search for the topic
-                        \$j.getJSON('index.php?option=com_biblestudy&view=studiesdit.topic_lookup', function() {
-                            
-                        });
-                    }
+                \$j('#topics').tokenInput('index.php?option=com_biblestudy&task=lookup_topic&format=raw', {
+                    theme: 'jbs',
+                    hintText: 'Enter a topic...',
+                    animateDropdown: false,
+                    preventDuplicates: true,
+                    prePopulate: " . $this->get('topics') . "
                 });
              });    
-        ");
-        
-        
+             ";
+
+        $document->addScriptDeclaration($script);
+
+
         //$document->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.tokeninput.js');
         $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/js/ui/theme/ui.all.css');
         $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/jquery.tagit.css');
@@ -66,7 +59,7 @@ class biblestudyViewstudiesedit extends JView {
         $document->addScript(JURI::base() . 'components/com_biblestudy/js/biblestudy.js');
         //$document->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
 
-        
+
 
 
 
