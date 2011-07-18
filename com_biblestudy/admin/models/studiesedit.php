@@ -203,6 +203,25 @@ class biblestudyModelstudiesedit extends JModelAdmin {
         return true;
     }
 
+    /**
+     * Gets all the topics associated with a particular study
+     *  
+     * @return type JSON Object containinng the topics
+     * @since 7.0.1
+     */
+    function getTopics() {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        
+        $query->select('topic.id, topic.topic_text AS name');
+        $query->from('#__bsms_studytopics AS studytopics');
+
+        $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
+        $query->where('studytopics.study_id = '.JRequest::getVar('id', 0, null, 'int'));
+        
+        $db->setQuery($query->__toString());
+        return json_encode($db->loadAssocList());
+    }
     function getBooks() {
         die('biblestudyModelstudiesedit.getBooks is no more used');
 //        $query = 'SELECT booknumber AS value, bookname AS text'
@@ -246,15 +265,30 @@ class biblestudyModelstudiesedit extends JModelAdmin {
      * Overrides the JModelAdmin save routine to save the topics(tags)
      * @param type $data
      * @since 7.0.1
+     * @todo This may need to be optimized
      */
     public function save($data) {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
         
-        $topics = json_encode($data['topics']);
+        //Clear the tags first
+        $query->delete();
+        $query->from('#__bsms_studytopics');
+        $query->where('study_id = '.JRequest::getInt('id', 0));
+        $db->setQuery($query->__toString());
+        $db->query();
+        $query->clear();
         
-        $query->insert('#__bsms_studytopics');
+        //Add all the tags back
+        $topics = explode(",", $data['topics']);
+        $topics_sql = array();
+        foreach ($topics as $topic)
+            $topics_sql[] = '('.$topic.', '.  JRequest::getInt ('id', 0).')';
         
+        $query->insert('#__bsms_studytopics (topic_id, study_id) VALUES '.  implode(',', $topics_sql));
+        
+        $db->setQuery($query->__toString());
+        $db->query();
         return parent::save($data);
     }
 
