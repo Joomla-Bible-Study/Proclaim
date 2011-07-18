@@ -26,29 +26,13 @@ if (!version_compare($version, '5.0.0', '>=')) {
 
 define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
-addLoadingDiv();
 addCSS();
-//addJS();
+addJS();
 
 jimport('joomla.application.component.controller');
 $controller = JController::getInstance('biblestudy');
 $controller->execute(JRequest::getCmd('task'));
 $controller->redirect();
-
-/**
- * Adds a loading div for any ajax requests via JQuery
- * This will become obsolete if we move away from JQuery
- * 
- * @since   7.0
- */
-function addLoadingDiv() {
-    echo '
-                <div id="loading">
-                    <img src="' . JURI::base() . 'components/com_biblestudy/images/loading.gif."/>
-                    <span id="loadingMsg">Loading...</span>
-                </div>
-                ';
-}
 
 /**
  * Global css
@@ -70,4 +54,5 @@ function addJS() {
     $doc = & JFactory::getDocument();
     $doc->addScript(JURI::base() . 'components/com_biblestudy/js/jquery.js');
     $doc->addScript(JURI::base() . 'components/com_biblestudy/js/noconflict.js');
+    $doc->addScript(JURI::base() . 'components/com_biblestudy/js/ui/jquery-ui.js');
 }
