@@ -4,12 +4,13 @@
 <table>
 
     <tr>
-    <td><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/export.jpg';?>" alt="Export" height="48" width="48" /></td>
+    <td width="10%"><a href="index.php?option=com_jbsmigration&task=export&run=1"><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/export.jpg';?>" alt="Export" height="48" width="48" /></a></td>
         <td>
            <a href="index.php?option=com_jbsmigration&task=export&run=1"> <?php echo JText::_('JBS_EI_EXPORT'); ?></a>
         </td><td></td><td></td>
     </tr>
-   <?php if (substr_count(JVERSION,'1.6') > 0)
+   <?php  
+   if (substr_count(JVERSION,'1.5') == 0)
    { ?> 
     <tr>
         <td><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/import.jpg';?>" alt="Import" height="48" width="48" /></td>
@@ -34,6 +35,7 @@
     </td></td><td></tr>
     <tr><td><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/migrate.jpg';?>" alt="Import" height="48" width="48" /></td><td><a href="index.php?option=com_jbsmigration&task=migrate&run=1"><?php echo JText::_('JBS_EI_MIGRATE_ONLY');?></a></td><td></td></tr>
     <?php } ?>
+    <?php $ver = JVERSION; echo '<tr><td colspan="2"><strong> Current Joomla Version: </strong>'.$ver.'</td></tr>'; ?>
 </table>
 
 <input type="hidden" name="option" value="com_jbsmigration" />
