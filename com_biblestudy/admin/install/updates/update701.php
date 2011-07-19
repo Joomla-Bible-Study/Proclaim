@@ -24,7 +24,7 @@ class updatejbs701
                     if (substr_count($key,'languages'))
                     {
                        $languagetag = 1;
-                       $query = 'ALTER TABLE #__bsms_topics CHANGE `languages` `params` varchar(511) null';
+                       $query = 'ALTER TABLE #__bsms_topics CHANGE `languages` `params` varchar(511) NULL';
                        $db->setQuery($query);
                        $db->query();
                        $error = $db->getErrorNum();
@@ -40,7 +40,7 @@ class updatejbs701
                 }
                  if (!$languagetag && !$paramstag)
                  {
-                    $query = 'ALTER #__bsms_topics ADD `params` varchar(511) null';
+                    $query = 'ALTER TABLE #__bsms_topics ADD `params` varchar(511) NULL';
                     $db->setQuery($query);
                     $db->query();
                     $error = $db->getErrorNum();
