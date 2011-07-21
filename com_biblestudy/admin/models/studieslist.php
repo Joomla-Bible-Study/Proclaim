@@ -12,11 +12,7 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers' . DS . 'translated.
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
-    
-}
-
-class biblestudyModelstudieslist extends modelClass {
+class biblestudyModelstudieslist extends JModelList {
 
     /**
      *
