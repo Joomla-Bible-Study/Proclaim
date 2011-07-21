@@ -14,12 +14,6 @@ jimport('joomla.application.component.modellist');
 
 class biblestudyModelstudieslist extends JModelList {
 
-    /**
-     *
-     * @var array
-     */
-    var $_data;
-    var $_total = null;
     var $_files = null;
 
     function __construct($config = array()) {
