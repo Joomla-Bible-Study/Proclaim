@@ -10,11 +10,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
-    
-}
-
-class biblestudyModelmediafileslist extends modelClass {
+class biblestudyModelmediafileslist extends JModelList {
 
     var $_data;
     var $_total = null;
@@ -37,24 +33,6 @@ class biblestudyModelmediafileslist extends modelClass {
         
         parent::__construct($config);
     }
-
-
-    /**
-     * Method to get a pagination object for the studies
-     *
-     * @access public
-     * @return integer
-     */
-    function getPagination() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_pagination)) {
-            jimport('joomla.html.pagination');
-            $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
-        }
-
-        return $this->_pagination;
-    }
-
 
     function getDeletes() {
         if (empty($this->_deletes)) {
