@@ -23,11 +23,44 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 // Bible Study wide defines
 
 class com_biblestudyInstallerScript {
+    	/*
+	 * The release value would ideally be extracted from <version> in the manifest file,
+	 * but at preflight, the manifest file exists only in the uploaded temp folder.
+	 */
+	private $release = '7.1.0';
+
+	/*
+	 * $parent is the class calling this method.
+	 * $type is the type of change (install, update or discover_install, not uninstall).
+	 * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
+	 * If preflight returns false, Joomla will abort the update and undo everything already done.
+	 */
+	function preflight( $type, $parent ) {
+		// this component does not work with Joomla releases prior to 1.6
+		// abort if the current Joomla release is older
+		$jversion = new JVersion();
+		if( version_compare( $jversion->getShortVersion(), '1.6', 'lt' ) ) {
+			Jerror::raiseWarning(null, 'Cannot install com_democompupdate in a Joomla release prior to 1.6');
+			return false;
+		}
+
+		// abort if the release being installed is not newer than the currently installed version
+		if ( $type == 'update' ) {
+			$oldRelease = $this->getParam('version');
+			$rel = $oldRelease . ' to ' . $this->release;
+			if ( version_compare( $this->release, $oldRelease, 'le' ) ) {
+				Jerror::raiseWarning(null, 'Incorrect version sequence. Cannot upgrade ' . $rel);
+				return false;
+			}
+		}
+		else { $rel = $this->release; }
+		
+	}
+        
 
 	function install($parent) {
-	//	echo '<p>'. JText::_('JBS_INS_16_CUSTOM_INSTALL_SCRIPT') . '</p>';
-			$db =& JFactory::getDBO();
-			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'jbs7.0.0.sql');
+            		$db =& JFactory::getDBO();
+			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'install-defaults.sql');
 			$db->setQuery($query);
 			$db->queryBatch();
 			echo JHtml::_('sliders.panel', JText::_('JBS_INS_16_INSTALLING_VERSION_700') , 'publishing-details');
@@ -36,8 +69,6 @@ class com_biblestudyInstallerScript {
 	function uninstall($parent) {
 		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 		require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'params.php');
-
-        
         
 		$db =& JFactory::getDBO();
 				$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
@@ -79,13 +110,11 @@ class com_biblestudyInstallerScript {
  
 	} // End Update
 
-	function preflight($type, $parent) {
-	//	echo '<p>'. JText::sprintf('JBS_INS_16_CUSTOM_PREFLIGHT', $type) .'</p>';
-	}
 
 	function postflight($type, $parent) {
         
          //We need to check on the topics table. There were changes made between the migration component 1.08 and 1.011 that might differ so it is best to address here
+        // @todo looking at removing this to do it under the admin panel to do fix ups insted of in the installer or have some more way to not run it or display it if there is no need to run it.
         require_once(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'updates'. DS. 'update701.php');
         $update = new updatejbs701();
         $update701 = $update->do701update();
@@ -168,10 +197,8 @@ class com_biblestudyInstallerScript {
 				echo '<br />' . JText::_('JBS_INS_16_COPYING_PROBLEM_FOLDER1') . '/components/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_16_COPYING_PROBLEM_FOLDER2');
 			}
 		}
-	?>
-        
-	
-		<?php echo JHtml::_('sliders.end'); ?>
+                
+                echo JHtml::_('sliders.end'); ?>
 		</fieldset>
 		</div> <!--end of div for panelform -->
 

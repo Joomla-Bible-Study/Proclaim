@@ -14,29 +14,6 @@
   <version>7.0.1</version>
   <creationDate>August 1, 2011</creationDate>
   <description>JBS_INS_16_XML_DESCRIPTION</description>
- 	
-	<!-- Installer Hooks -->
-	<!-- <installfile>biblestudy.install.php</installfile>  Deprecated in 1.6 -->
-	<!-- <uninstallfile>biblestudy.uninstall.php</uninstallfile>  Deprecated in 1.6 -->
-	<scriptfile>biblestudy.script.php</scriptfile>
-	  
-  	<!-- SQL Files -->
-	<!-- Note: The Joomla! 1.0 query method is not supported in 1.6 -->
-	<install> <!-- Runs on install -->
-		<sql>
-			<file driver="mysql" charset="utf8">install/sql/install.sql</file>
-		</sql>
-	</install>
-	<uninstall> <!-- Runs on uninstall -->
-		<sql>
-			<file driver="mysql" charset="utf8" folder="sql">install/sql/uninstall.sql</file>
-		</sql>
-	</uninstall>
-	<update> <!-- Runs on update; New in 1.6 -->
-		<schemas>
-			<schemapath type="mysql">install/sql/updates/mysql</schemapath>
-		</schemas>
-	</update>
 	
   <!-- Front end file, media and language specification -->
   <!-- <filename>biblestudy.xml</filename> -->
@@ -76,6 +53,27 @@
     <language tag="nl-NL">nl-NL/nl-NL.com_biblestudy.ini</language>
     <language tag="no-NO">no-NO/no-NO.com_biblestudy.ini</language>
   </languages>
+  
+    	<!-- SQL Files -->
+	<!-- Note: The Joomla! 1.0 query method is not supported in 1.6 -->
+	<install> <!-- Runs on install -->
+		<sql>
+			<file charset="utf8" driver="mysql">install/sql/install.sql</file>
+                        <file charset="utf8" driver="mysqli">install/sql/install.sql</file>
+		</sql>
+	</install>
+	<uninstall> <!-- Runs on uninstall -->
+		<sql>
+			<file driver="mysql" charset="utf8" folder="sql">install/sql/uninstall.sql</file>
+                        <file driver="mysqli" charset="utf8" folder="sql">install/sql/uninstall.sql</file>
+		</sql>
+	</uninstall>
+	<update> <!-- Runs on update; New in 1.6 -->
+		<schemas>
+			<schemapath type="mysql">install/sql/updates/mysql</schemapath>
+                        <schemapath type="mysqli">install/sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
   
   	<!-- Media files -->
 	<media destination="com_biblestudy" folder="media">
@@ -129,7 +127,7 @@
       <folder>lib</folder>
       <folder>install</folder>
       <folder>images</folder>
-	</files>
+    </files>
   
   <!--  Legacy 1.5 Language Support -->
   <!-- Note: Replace this with the actual path to the language file -->
@@ -149,16 +147,43 @@
       <language tag="no-NO">no-NO/no-NO.com_biblestudy.sys.ini</language>
     </languages>
 	
-  </administration>
-  
+  </administration>	
+	<!-- Installer Hooks -->
+	<scriptfile>biblestudy.script.php</scriptfile>
+  <!-- new server call 
+        @todo BCC finish Server address 
+  -->        
+        
     <updateservers>
-		<server type="extension" priority="1" name="Extension Update Site">http://www.joomlabiblestudy.com/updates/jbs.xml</server>
+		<server type="extension" priority="1" name="Extension Update Site">http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1</server>
   </updateservers>
   
   	<!-- Tables -->
 	<!-- These are used for backups to determine which tables to backup; ones marked optional are only backed up if they exist -->
 	<tables>
 		<table>#__bsms_install</table>
+                <table>#__bsms_admin</table>
+                <table>#__bsms_books</table>
+                <table>#__bsms_comments</table>
+                <table>#__bsms_folders</table>
+                <table>#__bsms_locations</table>
+                <table>#__bsms_media</table>
+                <table>#__bsms_mediafiles</table>
+                <table>#__bsms_message_type</table>
+                <table>#__bsms_mimetype</table>
+                <table>#__bsms_order</table>
+                <table>#__bsms_podcast</table>
+                <table>#__bsms_search</table>
+                <table>#__bsms_series</table>
+                <table>#__bsms_servers</table>
+                <table>#__bsms_share</table>
+                <table>#__bsms_studies</table>
+                <table>#__bsms_studytopics</table>
+                <table>#__bsms_teachers</table>
+                <table>#__bsms_templates</table>
+                <table>#__bsms_timeset</table>
+                <table>#__bsms_topics</table>
+                <table>#__bsms_version</table>
 		<table type="optional">#__bsms_update</table>
 	</tables>
   
