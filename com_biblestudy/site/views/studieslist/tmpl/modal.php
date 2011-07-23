@@ -13,8 +13,8 @@ $function = JRequest::getCmd('function', 'jSelectStudy');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages&layout=modal16&tmpl=component&function=' . $function); ?>" method="post" name="adminForm" id="adminForm">
-    <fieldset id="filter-bar">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=studieslist&layout=modal&tmpl=component&function=' . $function); ?>" method="post" name="adminForm" id="adminForm">
+    <fieldset id="filter">
         <div class="filter-search fltlft">
             <label class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>: </label>
             <input type="text" name="filter_studytitle" id="filter_studytitle" value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
@@ -36,12 +36,12 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.series')); ?>
             </select>
             <select name="filter_message_type" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JBS_CMN_MESSAGE_TYPE'); ?></option>
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
             </select>
-            <select name="filter_years" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_year" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
-                <?php //echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageTypeId')); ?>
+                <?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
             </select>
             <select name="filter_topic" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_TOPIC'); ?></option>
@@ -54,6 +54,7 @@ $listDirn = $this->state->get('list.direction');
         </div>
     </fieldset>
     <div class="clr"></div>
+        
     <table class="adminlist">
         <thead>
             <tr>

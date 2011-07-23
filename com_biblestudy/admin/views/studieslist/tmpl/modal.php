@@ -1,168 +1,135 @@
 <?php
 /**
- * @version		$Id: modal.php 1284 2011-01-04 07:57:59Z genu $
- * @package		Joomla.Administrator
- * @subpackage	com_biblestudy
- * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * @version     $Id: default_16.php 1336 2011-01-06 22:29:39Z genu $
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
+//No Direct Access
+defined('_JEXEC') or die();
 
-// no direct access
-defined('_JEXEC') or die;
+JHtml::_('script', 'system/multiselect.js', false, true);
 
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.tooltip');
-
-$function = JRequest::getVar('function', 'jSelectStudy');
+$function = JRequest::getCmd('function', 'jSelectStudy');
+$listOrder = $this->state->get('list.ordering');
+$listDirn = $this->state->get('list.direction');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=studieslist&layout=modal&tmpl=component'); ?>" method="post" name="adminForm">
-<table>
-<tr>
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=studieslist&layout=modal&tmpl=component&function=' . $function); ?>" method="post" name="adminForm" id="adminForm">
+    <fieldset id="filter">
+        <div class="filter-search fltlft">
+            <label class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>: </label>
+            <input type="text" name="filter_studytitle" id="filter_studytitle" value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
 
-<td>	<?php //echo $this->lists['bookid'];?>
-<?php $database	= & JFactory::getDBO();
-$mainframe = JFactory::getApplication('com_biblestudy');
-$option = JRequest::getCmd('option');
-$query2 = 'SELECT booknumber AS value, bookname AS text, published'
-                        . ' FROM #__bsms_books'
-                        . ' WHERE published = 1'
-                        . ' ORDER BY booknumber';
-						$database->setQuery( $query2 );
-						$bookid = $database->loadAssocList();
-						$filter_book		= $mainframe->getUserStateFromRequest( $option.'filter_book', 'filter_book',0,'int' );
-						
-						echo '<select name="filter_book" id="filter_book" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
-						if (!$filter_book ) {
-						echo 'selected="selected"';}
-						echo '>'.JText::_('JBS_CMN_SELECT_BOOK').'</option>';
-                        foreach ($bookid as $bookid2) {
-	                        $format = $bookid2['text'];
-	                        $output = JText::sprintf($format);
-	                        $bookvalue = $bookid2['value'];
-							if ($bookvalue == $filter_book){
-		                        echo '<option value="'.$bookvalue.'" selected="selected">'.$output.'</option>';
-							}else{
-								echo '<option value="'.$bookvalue.'">'.$output.'</option>';
-							}
-                        };
-                         echo '</select>';?>
-		<?php echo $this->lists['teacher_id'];?>
-		<?php echo $this->lists['seriesid'];?>
-		<?php echo $this->lists['messagetypeid'];?>
- 		<?php echo $this->lists['studyyear'];?>
-		<?php //echo $this->lists['sorting'];?>
-         
-                          <?php 
-						$query8 = 'SELECT DISTINCT #__bsms_studytopics.topic_id AS value, #__bsms_topics.topic_text AS text'
-						. ' FROM #__bsms_studytopics'
-						. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-						. ' WHERE #__bsms_topics.published = 1'
-						. ' ORDER BY #__bsms_topics.topic_text ASC';
-						$database->setQuery( $query8 );
-						$topicsid = $database->loadAssocList();
-						$filter_topic		= $mainframe->getUserStateFromRequest( $option.'filter_topic', 'filter_topic',0,'int' );
-						echo '<select name="filter_topic" id="filter_topic" class="inputbox" size="1" onchange="this.form.submit()"><option value="0"';
-						if (!$filter_topic ) {
-						echo 'selected="selected"';}
-						echo '>'.JText::_('JBS_CMN_SELECT_TOPIC').'</option>';
-                        foreach ($topicsid as $topicsid2) {
-	                        $format = $topicsid2['text'];
-	                        $output = JText::sprintf($format);
-	                        $topicsvalue = $topicsid2['value'];
-							if ($topicsvalue == $filter_topic){
-								$selected = 'selected="selected"';
-	                        	echo '<option value="'.$topicsvalue.'" selected="selected">'.$output.'</option>';
-							}else{
-								echo '<option value="'.$topicsvalue.'">'.$output.'</option>';
-							}
-                        };
-                         echo '</select>';?>
-		<?php //echo $this->lists['topics'];?></td>
+            <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+            <button type="button" onclick="document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+        </div>
+        <div class="filter-select fltrt">
+            <select name="filter_book" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
+                <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.book')); ?>
+            </select>
+            <select name="filter_teacher" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_TEACHER'); ?></option>
+                <?php echo JHtml::_('select.options', $this->teachers, 'value', 'text', $this->state->get('filter.teacher')); ?>
+            </select>
+            <select name="filter_series" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_SERIES'); ?></option>
+                <?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.series')); ?>
+            </select>
+            <select name="filter_message_type" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'); ?></option>
+                <?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
+            </select>
+            <select name="filter_year" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
+                <?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
+            </select>
+            <select name="filter_topic" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_TOPIC'); ?></option>
+                <?php echo JHtml::_('select.options', $this->topics, 'value', 'text', $this->state->get('filter.topic')); ?>
+            </select>
+            <select name="filter_state" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.state'), true); ?>
+            </select>
+        </div>
+    </fieldset>
+    <div class="clr"></div>
+        
+    <table class="adminlist">
+        <thead>
+            <tr>
+                <th>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
+                </th>
+                <th>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?>
+                </th>
+                <th width="8%">
+                    <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
+                </th>                             
+                <th>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_SCRIPTURE', 'book.bookname', $listDirn, $listOrder); ?>
+                </th>
+                <th>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
+                </th>
+                <th>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
+                </th>
+                <th>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
+                </th>
+                <th>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_TOPIC', 'topic.topic_text', $listDirn, $listOrder); ?>
+                </th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="12">
+                    <?php echo $this->pagination->getListFooter(); ?>
+                </td>
+            </tr>
+        </tfoot>
+        <?php
+                    foreach ($this->items as $i => $item) :
+        ?>
+                        <tr class="row<?php echo $i % 2; ?>">
+                            <td class="center">
+                                <a class="pointer" onclick="if(window.parent) window.parent.<?php echo $function; ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->studytitle)); ?>');">
+                    <?php echo $this->escape($item->studytitle); ?>
+                    </a>
+                </td>    
+                <td class="center">
+                <?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
+                    </td>
 
-</tr>
-<!--<tr><td>Pagination: <?php //print_r($this->pagination);?></td></tr>-->
-</table>
-<div id="editcell">
-	<table class="adminlist">
-      <thead>
-        <tr> 
-          <th width="5"> <?php echo JHTML::_( 'grid.sort','JBS_CMN_ID','id', $this->lists['order_Dir'], $this->lists['order'] ); ?> </th>
-          <th width="20"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->rows ); ?>);" /> 
-		  <!-- changed $this->items to rows in above -->
-          </th>
-          <th width="20" align="center"><?php echo JHTML::_('grid.sort','JBS_CMN_PUBLISHED','published',$this->lists['order_Dir'],$this->lists['order']); ?></th>
-		  <th><?php echo JHTML::_('grid.sort','JBS_CMN_STUDY_DATE','studydate',$this->lists['order_Dir'],$this->lists['order']); ?></th>
-          <th><?php echo JHTML::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messagetype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-          <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_SCRIPTURE', 'booknumber', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-          <th><?php echo JHTML::_( 'grid.sort','JBS_CMN_TEACHER' , 'teacher_id', $this->lists['order_Dir'], $this->lists['order']); ?></th>
-		  <th><?php echo JHTML::_( 'grid.sort', 'JBS_CMN_TITLE', 'studytitle', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-          
-        </tr>
-      </thead>
-      <?php 
-      //Checks Url if its Valid
-      function checkUrl($url) {
-		  $return_val = FALSE; 
-		  $status_codes        = array("200","302"); // see function header for code details
-		  $url_info=parse_url($url); 
-		  $port=isset($url_info['port']) ? $url_info['port'] : 80;
-		  $fp=fsockopen($url_info['host'], $port, $errno, $errstr, 10);
-		  if(!$fp) return FALSE;
-		  stream_set_timeout($fp, 10);
-		  $head = "HEAD ".@$url_info['path']."?".@$url_info['query'];
-		  $head .= " HTTP/1.0\r\nHost: ".@$url_info['host']."\r\n\r\n";
-		  fputs($fp, $head);
-		  if($header=trim(fgets($fp, 1024))) {
-		    $header_array = explode(': ',$header);
-		    while((list(, $status_code)= each($status_codes)) && $return_val==FALSE) {
-		      if( strstr($header_array[0], $status_code)) {
-		        $return_val = TRUE;
-		      }
-		    }
-		  }
-		  fclose($fp);
-		  return $return_val;
-		}
-		
-	$k = 0;
-	for ($i=0, $n=count( $this->rows ); $i < $n; $i++)
-	
-	{
-		$row = &$this->rows[$i];
-		$checked 	= JHTML::_('grid.id',   $i, $row->id );
-		       
-		$published 	= JHTML::_('grid.published', $row, $i );
-	//	$date	= JHTML::_('date',  $row->studydate, JText::_('DATE_FORMAT_LC3'),'$offset' );
-        $date	= JHTML::_('date',  $row->studydate );
-		?>
-      <tr class="<?php echo "row$k"; ?>"> 
-        <td> <?php echo $this->pagination->getRowOffset( $i ); ?> </td>
-        <td> <?php echo $checked; ?> </td>
-        <td align="center"> <?php echo $published; ?> </td>
-        <td><a class="pointer" onclick="if (window.parent) window.parent.<?php echo $function;?>('<?php echo $row->id; ?>', '<?php echo $row->studytitle; ?>');">
-		<?php echo $row->studytitle; ?></a></td>
-
-        <td><?php echo $row->message_type; ?></td>
-        <td><?php echo JText::sprintf($row->bookname); echo ' '; echo $row->chapter_begin; echo ':'; echo $row->verse_begin; echo '-'; echo $row->chapter_end; echo ':'; echo $row->verse_end;?></td>
-        <td><?php echo $row->teachername; ?></td>
-		<td><?php echo $row->studytitle; ?></td>
-       
-      </tr>
-      <?php
-		$k = 1 - $k;
-		unset($brokenLink);
-	}
-	?>
-      <tfoot><tr>
-      <td colspan="12"> <?php echo $this->pagination->getListFooter(); ?> </td></tr></tfoot>
-    </table>
-</div>
-
-
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="boxchecked" value="0" />
-
-<input type="hidden" name="filter_order" value="<?php echo $this->lists['order']; ?>" />
-<input type="hidden" name="filter_order_Dir" value="<?php echo $this->lists['order_Dir']; ?>" />
-<?php echo JHtml::_('form.token'); ?>
+                    <td class="center">
+                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'studieslist.', true, 'cb', '', ''); ?>
+                    </td>
+                    <td class="center">
+                <?php echo $this->escape($item->bookname).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
+                    </td>
+                    <td class="center">
+                <?php echo $this->escape($item->teachername); ?>
+                    </td>
+                    <td class="center">
+                <?php echo $this->escape($item->messageType); ?>
+                    </td>
+                    <td class="center">
+                <?php echo $this->escape($item->series_text); ?>
+                    </td>
+                    <td class="center">
+                <?php echo $this->escape($item->topic_text); ?>
+                    </td>
+                </tr>
+        <?php endforeach; ?>
+                    </table>
+                    <div>
+                        <input type="hidden" name="task" value=""/>
+                        <input type="hidden" name="boxchecked" value="0"/>
+                        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
+                        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
+        <?php echo JHtml::_('form.token'); ?>
+    </div>
 </form>

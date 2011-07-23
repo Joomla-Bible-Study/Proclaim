@@ -31,10 +31,7 @@ $listingcall = JView::loadHelper('listing');
 
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=studieslist'); ?>" method="post">
-    <fieldset id="filter">
-        Filters here
-    </fieldset>
-<!--<tbody><tr>-->
+
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
     <div id="bsheader">

@@ -39,7 +39,6 @@ $menuitemid = JRequest::getInt( 'Itemid' );
 ?>
 <form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
 
-<!--<tbody><tr>-->
   <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
     <div id="bsms_header">

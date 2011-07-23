@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @author Tom Fuller
- * @copyright 2010
- * Displays a topics list of all published topics
+ * @version     $Id: studiesedit.php 1466 2011-01-31 23:13:03Z bcordis $
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
 
 // No direct access to this file
@@ -16,6 +16,7 @@ include_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. '
 
 /**
  * Topics List Form Field class for the Joomla Bible Study component
+ * Displays a topics list of ALL published topics
  */
 class JFormFieldTopicslist extends JFormFieldList
 {
@@ -34,7 +35,6 @@ class JFormFieldTopicslist extends JFormFieldList
 	protected function getOptions() 
 	{
 		$db = JFactory::getDBO();
-//                $query = "SELECT DISTINCT #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_studies.topics_id, #__bsms_studytopics.topic_id, #__bsms_studytopics.study_id FROM #__bsms_studies LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id) LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.id = #__bsms_studies.topics_id)";
 		$query = "SELECT id, topic_text, params AS topic_params FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC";
 		$db->setQuery((string)$query);
 		$topics = $db->loadObjectList();
@@ -49,6 +49,3 @@ class JFormFieldTopicslist extends JFormFieldList
 		return $options;
 	}
 }
-
-
-?>

@@ -222,16 +222,6 @@ class biblestudyModelstudiesedit extends JModelAdmin {
         $db->setQuery($query->__toString());
         return json_encode($db->loadAssocList());
     }
-    function getBooks() {
-        die('biblestudyModelstudiesedit.getBooks is no more used');
-//        $query = 'SELECT booknumber AS value, bookname AS text'
-//                . ' FROM #__bsms_books'
-//                . ' WHERE published = 1'
-//                . ' ORDER BY booknumber';
-//        $this->_db->setQuery($query);
-//        $books = getTopicItemsTranslated($this->_getList($query));  // santon wrong call??
-//        return $books;
-    }
 
     function getAdmin() {
         if (empty($this->_admin)) {
