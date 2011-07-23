@@ -155,7 +155,7 @@
   -->        
         
     <updateservers>
-		<server type="extension" priority="1" name="Extension Update Site">http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1</server>
+		<server type="extension" priority="1" name="Joomla Bible Study">http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1</server>
   </updateservers>
   
   	<!-- Tables -->

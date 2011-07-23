@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <extension type="package" version="1.6">
 	<name>Joomla Bible Study Package</name>
-	<packagename>joomlabiblestudysystem</packagename>
-	<version>7.0.0</version>
+	<packagename>com_biblestudy-pkg</packagename>
+	<version>7.1.0</version>
 	<url>http://www.joomlabiblestudy.org</url>
 	<packager>Tom Fuller</packager>
 	<packagerurl>http://www.joomlabiblestudy.org</packagerurl>
 	<description>Joomla Bible Study Everything package</description>
-	<update>http://www.joomlabiblestudy.com/updates/jbs.xml</update>
+	<update>http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1</update>
 	<files folder="packages">
 		<file type="component" 	id="com_biblestudy"                   >com_biblestudy.zip</file>
 		<file type="module" 	id="mod_biblestudy" 	client="site" >mod_biblestudy.zip</file>
-		<file type="plugin"	id="biblestudysearch" 	group="search">biblestudysearch.zip</file>
-		<file type="plugin"	id="jbspodcast"		group="system">jbspodcast.zip</file>        
+		<file type="plugin"	id="biblestudysearch" 	group="search">plg_biblestudy_search.zip</file>
+		<file type="plugin"	id="jbspodcast"		group="system">plg_biblestudy_podcast.zip</file>        
 	</files>
-        <updateservers>
-                <!-- @todo bcc updateservers address need to fix -->
-		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-		<server type="package" priority="1" name="Joomla Bible Study Update Site">http://www.JoomlaBibleStudy.org/update/update.xml</server>
-	</updateservers>
 </extension>

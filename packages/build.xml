@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="package_jbs" default="build">
+<project name="package_biblestudy" default="build">
 	<target name="clean">
 		<echo msg="Cleaning directories" />
 		<delete dir="packages" includeemptydirs="true" />
