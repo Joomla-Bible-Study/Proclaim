@@ -425,4 +425,17 @@
 		<!-- Note: No spaces or linebreaks allowed between the server tags -->
 		<server type="extension" priority="1" name="Joomla Bible Study Update Site">http://www.JoomlaBibleStudy.org/update/jbspodcast-update.xml</server>
 	</updateservers>
+        
+        <!-- Tables -->
+	<!-- These are used for backups to determine which tables to backup; ones marked optional are only backed up if they exist -->
+	<tables>
+		<table>#__jbspodcast_install</table>
+                <table>#__jbspodcast_timeset</table>
+		<table type="optional">#__jbspodcast_update</table>
+	</tables>
+  
+  	<!--  Dependencies 	-->
+	<dependencies>
+		<dependency type="platform" name="joomla" operator="=" version="1.6" />
+	</dependencies>
 </extension>

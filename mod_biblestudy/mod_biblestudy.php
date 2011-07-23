@@ -1,4 +1,11 @@
-<?php defined('_JEXEC') or die('Restriced Access'); ?>
+<?php
+
+/**
+ * @author Tom Fuller
+ * @copyright 2010-2011
+ */
+
+defined('_JEXEC') or die('Restriced Access'); ?>
 <script type="text/javascript" src="components/com_biblestudy/tooltip.js"></script>
 <?php
 
@@ -50,8 +57,8 @@ require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.ph
 	if ($url) {$document->addStyleSheet($url);}
 	$pageclass_sfx = $params->get('pageclass_sfx');
 	if ($params->get('useexpert_module')> 0)
-     {
-     	$layout = 'default_custom';
+        {
+            $layout = 'default_custom';
 	 }
 	else
 	{

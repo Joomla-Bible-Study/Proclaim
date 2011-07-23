@@ -8,7 +8,6 @@
 defined('_JEXEC') or die('Restricted access');
 
 /* Import library dependencies */
-//jimport('joomla.event.plugin');
 jimport('joomla.plugin.plugin');
 class plgSystemjbspodcast extends JPlugin {
     
@@ -34,8 +33,7 @@ class plgSystemjbspodcast extends JPlugin {
     function onAfterInitialise() {
 		
                 
-		$plugin =& JPluginHelper::getPlugin( 'system', 'jbspodcast' );
-	//	$params = new JParameter( $plugin->params );
+	$plugin =& JPluginHelper::getPlugin( 'system', 'jbspodcast' );
         $params = $this->params;
         
         //First check to see what method of updating the podcast we are using

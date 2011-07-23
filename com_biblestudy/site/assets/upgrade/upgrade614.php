@@ -22,7 +22,7 @@ function biblestudyUpgrade614($schema)
 
 
 //end of the function
-	$messagetable .= '</table>'
+	$messagetable = '</table>';
 	return $messagetable;
 }
 

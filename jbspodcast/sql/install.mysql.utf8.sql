@@ -1,3 +1,4 @@
+CREATE TABLE IF NOT EXISTS #__jbspodcast_install ( fielda int(10) );
 CREATE TABLE IF NOT EXISTS `#__jbspodcast_timeset` (
 	`timeset` varchar(14) NOT NULL DEFAULT '',
 	`backup` varchar(14) DEFAULT NULL,

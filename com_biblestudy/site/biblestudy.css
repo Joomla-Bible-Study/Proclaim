@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
-a[title]:after{
+a[title]:after{}
 a[title]:hover:after{
 /*Shows the generated content*/
 	content: attr(title) " (" attr(href) ")";

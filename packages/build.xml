@@ -5,7 +5,6 @@
 		<delete dir="packages" includeemptydirs="true" />
 		<delete file="pkg_joomlabiblestudy.zip" />
 	</target>
-
 	<target name="build">
 		<echo msg="Building package" />
 		<mkdir dir="packages" />

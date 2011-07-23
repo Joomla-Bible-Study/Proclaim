@@ -1,5 +1,11 @@
-<?php defined('_JEXEC') or die('Restriced Access'); ?>
-<?php
+<?php 
+/**
+ * @author Tom Fuller
+ * @copyright 2010-2011
+ */
+
+defined('_JEXEC') or die('Restriced Access');
+
 if(class_exists('modbiblestudyhelper')){return;}
 		
 class modBiblestudyHelper

@@ -50,6 +50,3 @@ class updatejbs701
             return true;
         }
 }
-
-
-?>
