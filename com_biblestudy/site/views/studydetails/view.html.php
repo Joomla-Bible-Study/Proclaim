@@ -52,7 +52,7 @@ class biblestudyViewstudydetails extends JView
        //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups	= $user->getAuthorisedViewLevels(); 
-   //     $count = count($items);
+     //   $count = count($items);
             if ($studydetails->access > 1)
             {
                if (!in_array($studydetails->access,$groups))

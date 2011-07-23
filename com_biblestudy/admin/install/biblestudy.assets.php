@@ -21,7 +21,7 @@ class fixJBSAssets
         $db->setQuery($query);
         $parent_id = $db->loadResult();
         
-        $query = 'SELECT t.asset_id, a.id, a.parent_id FROM #__bsms_templates as r LEFT JOIN #__assets AS a ON (r.asset_id = t.id) WHERE t.id = 1';
+        $query = 'SELECT t.asset_id, a.id, a.parent_id FROM #__bsms_templates as t LEFT JOIN #__assets AS a ON (t.asset_id = t.id) WHERE t.id = 1';
         $db->setQuery($query);
         $asset = $db->loadObject();
         

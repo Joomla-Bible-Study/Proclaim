@@ -204,7 +204,7 @@ class biblestudyModelteacheredit extends modelClass {
         for ($i = 0; $i < count($cid); $i++) {
             $row->load((int) $cid[$i]);
             // track categories
-            $groupings[] = $row->catid;
+            $groupings[] = $row->teachername;
 
             if ($row->ordering != $order[$i]) {
                 $row->ordering = $order[$i];
@@ -218,7 +218,7 @@ class biblestudyModelteacheredit extends modelClass {
         // execute updateOrder for each parent group
         $groupings = array_unique($groupings);
         foreach ($groupings as $group) {
-            $row->reorder('catid = ' . (int) $group);
+            $row->reorder('teachername = ' . (int) $group);
         }
 
         return true;
@@ -255,6 +255,19 @@ class biblestudyModelteacheredit extends modelClass {
         return $data;
     }
 
+/**
+	 * A protected method to get a set of ordering conditions.
+	 *
+	 * @param	object	A record object.
+	 * @return	array	An array of conditions to add to add to ordering queries.
+	 * @since	1.6
+	 */
+	protected function getReorderConditions($table)
+	{
+		$condition = array();
+		$condition[] = 'teachername = '.(int) $table->teachername;
+		return $condition;
+	}
 }
 
 ?>

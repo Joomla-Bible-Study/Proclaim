@@ -9,7 +9,7 @@
             class="inputbox" query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC" key_field="id" value_field="teachername">
         <option value="-1">JBS_CMN_SELECT_TEACHER</option>
     </field>
-    <field name="description" type="editor" class="inputbox" label="JBS_CMN_DESCRIPTION" description="JBS_CMN_DESCRIPTION_DESC" 
+    <field name="description" type="editor" class="inputbox" label="JBS_CMN_DESCRIPTION"
             filter="BibleStudyHelper::filterText" buttons="true"/>
     <field name="series_thumbnail" type="media" size="46" label="JBS_SER_SERIES_THUMBNAIL_IMAGE" />
     <field name="asset_id" type="hidden" filter="unset" />

@@ -75,13 +75,16 @@
              description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
         </field>
-        <field name="default_study_image" type="media" size="50" label="JBS_ADM_FILLIN_STUDY_IMAGE" description="JBS_ADM_FILLIN_STUDY_DESC"/>        
+        <field name="default_study_image" type="media" size="50" 
+        	 label="JBS_ADM_FILLIN_STUDY_IMAGE" description="JBS_ADM_FILLIN_STUDY_DESC"/>        
 
-        <field name="download" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC">
+        <field name="download" type="list" default="0" 
+        	 label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-        <field name="target" type="list" default="0" label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_DESC">
+        <field name="target" type="list" default="0" 
+        	 label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_DESC">
             <option value=" ">JBS_ADM_NO_DEFAULT</option>
             <option value="_blank">JBS_ADM_NEW_WINDOW</option>
             <option value="_self">JBS_ADM_SAME_WINDOW</option>
@@ -102,12 +105,12 @@
              value_field="foldername">
             <option value="-1">JBS_CMN_SELECT_FOLDER</option>
         </field>
-        <field name="podcast" type="sql" class="inputbox" label="JBS_CMN_PODCAST"
-             description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
+        <field name="podcast" type="sql" class="inputbox" multiple="true" label="JBS_CMN_PODCAST"
+             description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC" default="-1"
              query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
              key_field="id"
              value_field="title">
-            <option value="-1">JBS_CMN_SELECT_PODCAST</option>
+            <option value="-1">JBS_ADM_NO_PODCAST</option>
         </field>
         <field name="mime" type="sql" class="inputbox" label="JBS_CMN_MIME_TYPE"
              description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
