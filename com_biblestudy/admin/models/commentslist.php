@@ -2,9 +2,12 @@
 
 /**
  * @version     $Id: commentslist.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -59,7 +62,6 @@ class biblestudyModelcommentslist extends modelClass {
             $query = $this->_buildQuery();
             $this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
         }
-        //$this->setState('limitstart', $limitstart);
         return $this->_data;
     }
 
@@ -93,8 +95,6 @@ class biblestudyModelcommentslist extends modelClass {
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $where = array();
-        //$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'ordering',	'cmd' );
-        //$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );
         $filter_studyid = $mainframe->getUserStateFromRequest($option . 'filter_studyid', 'filter_studyid', 0, 'int');
         if ($filter_studyid > 0) {
             $where[] = 'c.study_id = ' . (int) $filter_studyid;
@@ -125,10 +125,8 @@ class biblestudyModelcommentslist extends modelClass {
     protected function populateState() {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
-        
         $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
-        
+	$this->setState('filter.published', $published);
         parent::populateState('comment.comment_date', 'DESC');
     }
 
@@ -139,7 +137,6 @@ class biblestudyModelcommentslist extends modelClass {
     protected function getListQuery() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
-
         $query->select(
                 $this->getState(
                         'list.select',
@@ -172,5 +169,3 @@ class biblestudyModelcommentslist extends modelClass {
     }
 
 }
-
-?>

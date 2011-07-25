@@ -1,9 +1,12 @@
 <?php
 /**
  * Bible Study Foldersedit table class
- * 
- * 
- */
+ * @version $Id: foldersedit.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
@@ -11,7 +14,7 @@ defined('_JEXEC') or die('Restricted access');
 
 
 class Tablefoldersedit extends JTable
-{
+        {
 	/**
 	 * Primary Key
 	 *
@@ -90,4 +93,3 @@ class Tablefoldersedit extends JTable
                 return $asset->id;
         }
 }
-?>

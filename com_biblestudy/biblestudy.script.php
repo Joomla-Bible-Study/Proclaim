@@ -1,17 +1,12 @@
 <?php
 /**
- * @version $Id: biblestudy.install.php 1 $
- * Bible Study Component
- * @package Bible Study
- *
+ * @version $Id: biblestudy.script.php 1 $
+ * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- *
- * Install Based on Kunena Component
- * Reference http://svn.joomla.org/project/cms/development/trunk/tests/_data/installer_packages/
  **/
- //
+
  // Dont allow direct linking
  defined( '_JEXEC' ) or die('Restricted access');
  ?>
@@ -100,7 +95,7 @@ class com_biblestudyInstallerScript {
 	{
 		$drop_result = '<H3>'.JText::_('JBS_INS_NO_DATABASE_REMOVED').'</H3>';
 	}
-  echo '<h2>'. JText::_('JBS_INS_UNINSTALLED').'</h2> <div>'.$drop_result.'</div>';
+        echo '<h2>'. JText::_('JBS_INS_UNINSTALLED').'</h2> <div>'.$drop_result.'</div>';
 	
  
 	} //end of function uninstall()
@@ -142,8 +137,8 @@ class com_biblestudyInstallerScript {
         {
 			require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
 			$assetfix = new fixJBSAssets();
-            $assetdofix = $assetfix->AssetEntry();
-            if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
+                        $assetdofix = $assetfix->AssetEntry();
+                        if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
         }
 ?>
 		<fieldset class="panelform">

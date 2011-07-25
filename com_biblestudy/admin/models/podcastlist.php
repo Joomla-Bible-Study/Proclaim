@@ -2,8 +2,10 @@
 
 /**
  * @version     $Id: podcastlist.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
  */
 //No Direct Access
 defined('_JEXEC') or die();
@@ -34,14 +36,7 @@ class biblestudyModelpodcastlist extends modelClass {
 
         // Get the pagination request variables
         $limit = $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 0);
-        //$limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0 );
         $limitstart = $mainframe->getUserStateFromRequest('com_biblestudy&view=podcastlist.limitstart', 'limitstart', 0, 'int');
-
-        /* $testview 	= JRequest::getVar( 'view' );
-          if ($testview != 'podcastlist')
-          {
-          $limitstart = 0;
-          } */
         $this->setState('limit', $limit);
         $this->setState('limitstart', $limitstart);
     }
@@ -56,9 +51,6 @@ class biblestudyModelpodcastlist extends modelClass {
             $query = $this->_buildQuery();
             $this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
         }
-
-        //
-        //$this->setState('limitstart', $limitstart);
         return $this->_data;
     }
 
@@ -149,5 +141,3 @@ class biblestudyModelpodcastlist extends modelClass {
     }
 
 }
-
-?>

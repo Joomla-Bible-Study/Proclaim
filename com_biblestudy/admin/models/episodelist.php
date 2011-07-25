@@ -2,9 +2,12 @@
 
 /**
  * @version     $Id: episodelist.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -27,10 +30,9 @@ class biblestudyModelepisodelist extends modelClass
 
 		// Get the pagination request variables
 		$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 0);
-		//$limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0 );
 		$limitstart = $mainframe->getUserStateFromRequest( 'com_biblestudy&view=episodelist.limitstart', 'limitstart', 0, 'int' );
 
-$testview 	= JRequest::getVar( 'view' );
+                $testview 	= JRequest::getVar( 'view' );
 			if ($testview != 'episodelist') 
 				{
 					$limitstart = 0;
@@ -73,11 +75,10 @@ $testview 	= JRequest::getVar( 'view' );
 			$query = $this->_buildQuery();
 			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
 		}
-		
-			//$this->setState('limitstart', $limitstart);
+                
 		return $this->_data;
 	}
-/**
+        /**
 	 * Method to get the total number of episode items
 	 *
 	 * @access public
@@ -115,7 +116,6 @@ $testview 	= JRequest::getVar( 'view' );
 function _buildContentWhere()
 	{
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-
 		$filter_podcast		= $mainframe->getUserStateFromRequest( $option.'filter_podcast',		'filter_podcast',		0,				'int' );
 		$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'DESC',				'word' );
 		$filter_study		= $mainframe->getUserStateFromRequest( $option.'filter_study', 'filter_study', 'DESC', 'int' );
@@ -153,8 +153,6 @@ function _buildContentOrderBy()
 		} else {
 			$orderby 	= ' ORDER BY mf.createdate DESC, mf.ordering ASC ';
 		}
-		//$orderby 	= ' ORDER BY p.title ASC ';
 		return $orderby;
 	}
 }
-?>

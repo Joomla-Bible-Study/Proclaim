@@ -1,8 +1,10 @@
 <?php
 /**
  * @version     $Id: templateedit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
  */
 
 //No Direct Access
@@ -25,7 +27,7 @@ class biblestudyModeltemplateedit extends modelClass {
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
-    /**
+        /**
          * Method override to check if you can edit an existing record.
          *
          * @param       array   $data   An array of input data.
@@ -82,7 +84,7 @@ class biblestudyModeltemplateedit extends modelClass {
 			$data = JRequest::get('post');
 		}
 		$data['tmpl'] = JRequest::getVar( 'tmpl', '', 'post', 'string', JREQUEST_ALLOWRAW );
-//dump ($data, 'data: ');
+
 		// Bind the form fields to the hello table
 		if (!$row->bind($data)) {
 			$this->setError($this->_db->getErrorMsg());
@@ -156,7 +158,7 @@ class biblestudyModeltemplateedit extends modelClass {
 			}
 		}
 	}
- /**
+    /**
      * Get the form data
      *
      * @param <Array> $data
@@ -190,7 +192,7 @@ class biblestudyModeltemplateedit extends modelClass {
         return $data;
     }
     
-     /**
+        /**
          * Returns a reference to the a Table object, always creating it.
          *
          * @param       type    The table type to instantiate
@@ -204,4 +206,3 @@ class biblestudyModeltemplateedit extends modelClass {
                 return JTable::getInstance($type, $prefix, $config);
         }
 }
-?>

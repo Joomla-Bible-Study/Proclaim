@@ -2,8 +2,10 @@
 
 /**
  * @version     $Id: mimetypelist.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
  */
 //No Direct Access
 defined('_JEXEC') or die();
@@ -34,12 +36,7 @@ function __construct()
 
 		// Get the pagination request variables
 		$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 0);
-		//$limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0 );
 		$limitstart = $mainframe->getUserStateFromRequest( 'com_biblestudy&view=mimetypelist.limitstart', 'limitstart', 0, 'int' );
-
-		
-		//$this->setState('limit', $limit);
-		//$this->setState('limitstart', $limitstart);
 	}
 	/**
 	 * Returns the query
@@ -66,12 +63,6 @@ function __construct()
 			$query = $this->_buildQuery();
 			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
 		}
-		/*$testview 	= JRequest::getVar( 'view' );
-			if ($testview != 'mimetypelist') 
-				{
-					$limitstart = 0;
-				}*/
-			//$this->setState('limitstart', $limitstart);
 		return $this->_data;
 	}
 	
@@ -145,4 +136,3 @@ function getDeletes()
         return $query;
     }
 }
-?>

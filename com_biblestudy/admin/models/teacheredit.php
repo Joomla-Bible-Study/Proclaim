@@ -2,8 +2,10 @@
 
 /**
  * @version     $Id: teacheredit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
  */
 //No Direct Access
 defined('_JEXEC') or die();
@@ -29,9 +31,8 @@ class biblestudyModelteacheredit extends modelClass {
         $admin = $this->getAdmin();
         $array = JRequest::getVar('cid', 0, '', 'array');
         $this->setId((int) $array[0]);
-        //$admin = $this->getAdmin();
     }
-/**
+        /**
          * Method override to check if you can edit an existing record.
          *
          * @param       array   $data   An array of input data.
@@ -127,7 +128,6 @@ class biblestudyModelteacheredit extends modelClass {
         // Store the web link table to the database
         if (!$row->store()) {
             $this->setError($this->_db->getErrorMsg());
-//			$this->setError( $row->getErrorMsg() );
             return false;
         }
 
@@ -255,7 +255,7 @@ class biblestudyModelteacheredit extends modelClass {
         return $data;
     }
 
-/**
+        /**
 	 * A protected method to get a set of ordering conditions.
 	 *
 	 * @param	object	A record object.
@@ -269,5 +269,3 @@ class biblestudyModelteacheredit extends modelClass {
 		return $condition;
 	}
 }
-
-?>

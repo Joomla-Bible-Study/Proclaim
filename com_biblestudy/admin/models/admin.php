@@ -2,9 +2,12 @@
 
 /**
  * @version     $Id: admin.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -16,8 +19,6 @@ defined('_JEXEC') or die();
 
 class biblestudyModeladmin extends adminClass {
 
-//class biblestudyModeladmin extends JModelAdmin
-//{
     /**
      * Constructor that retrieves the ID from the request
      *
@@ -61,7 +62,6 @@ class biblestudyModeladmin extends adminClass {
 
 
         $data = JRequest::get('post');
-        //dump ($data, 'post: ');
         // Bind the form fields to the hello table
         if (!$row->bind($data)) {
             $this->setError($this->_db->getErrorMsg());
@@ -77,7 +77,6 @@ class biblestudyModeladmin extends adminClass {
         // Store the web link table to the database
         if (!$row->store()) {
             $this->setError($this->_db->getErrorMsg());
-//			$this->setError( $row->getErrorMsg() );
             return false;
         }
 
@@ -85,7 +84,7 @@ class biblestudyModeladmin extends adminClass {
     }
 
 
-/**
+        /**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
 	 * @param	type	The table type to instantiate
@@ -119,7 +118,7 @@ class biblestudyModeladmin extends adminClass {
         return parent::getItem(1);
     }
 
-public function getItem2($pk = 1)
+    public function getItem2($pk = 1)
 	{
 		if ($item = parent::getItem($pk)) {
 			// Convert the params field to an array.
@@ -146,19 +145,5 @@ public function getItem2($pk = 1)
      * @return	mixed	Object on success, false on failure.
      * @since	1.6
      */
-    /* 	public function getItem($pk = null)
-      {
-      if ($item = parent::getItem($pk)) {
-      // Convert the params field to an array.
-      $registry = new JRegistry;
-      $registry->loadJSON($item->params);
-      $item->params = $registry->toArray();
-      }
-
-      return $item;
-      }
-     */
 
 }
-
-?>

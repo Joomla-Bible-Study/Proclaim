@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @version $Id: studiesedit.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
@@ -20,9 +26,9 @@ class Tablestudiesedit extends JTable
 	 */
 	var $published = 1;
 	var $teacher_id = null;
-	var	$studydate = null;
+	var $studydate = null;
 	var $studynumber = null;
-	var	$booknumber = null;
+	var $booknumber = null;
 	var $scripture = null;
 	var $chapter_begin = null;
 	var $chapter_end = null;
@@ -44,7 +50,7 @@ class Tablestudiesedit extends JTable
 	var $server_dvd = null;
 	var $image_cd = null;
 	var $image_dvd = null;
-	var	$booknumber2 = null;
+	var $booknumber2 = null;
 	var $chapter_begin2 = null;
 	var $chapter_end2 = null;
 	var $verse_begin2 = null;
@@ -60,7 +66,7 @@ class Tablestudiesedit extends JTable
 	var $thumbwm = null;
 	var $params = null;
     
-    /**
+        /**
 	 * The rules associated with this record.
 	 *
 	 * @var	JRules	A JRules object.
@@ -77,26 +83,25 @@ class Tablestudiesedit extends JTable
 	}
 	
 	function bind($array, $ignore = '')
-{ 
-        if (key_exists( 'params', $array ) && is_array( $array['params'] ))
-        {
-                $registry = new JRegistry();
-                $registry->loadArray($array['params']);
-                $array['params'] = $registry->toString();
-        }
-        
-        // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
-        $rules = new JRules($array['rules']);
-        $this->setRules($rules);
-        }
+            { 
+                if (key_exists( 'params', $array ) && is_array( $array['params'] ))
+                    {
+                        $registry = new JRegistry();
+                        $registry->loadArray($array['params']);
+                        $array['params'] = $registry->toString();
+                    }
 
-        return parent::bind($array, $ignore);
-}
+                // Bind the rules.
+                if (isset($array['rules']) && is_array($array['rules'])) 
+                    {
+                        $rules = new JRules($array['rules']);
+                        $this->setRules($rules);
+                    }
 
+                return parent::bind($array, $ignore);
+            }
 
-
-  /**
+        /**
          * Method to compute the default name of the asset.
          * The default name is in the form `table_name.id`
          * where id is the value of the primary key of the table.
@@ -136,4 +141,3 @@ class Tablestudiesedit extends JTable
         }
         
 }
-?>

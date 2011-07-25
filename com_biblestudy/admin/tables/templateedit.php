@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * @version $Id: templateedit.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 defined('_JEXEC') or die('Restricted Access');
 
 class Tabletemplateedit extends JTable {
@@ -71,16 +80,15 @@ public function bind($array, $ignore = '')
                 return $asset->id;
         }
 
-public function store($updateNulls = false)
+        public function store($updateNulls = false)
 	{
 
-		// Attempt to store the user data.
-        $oldrow = JTable::getInstance('templateedit', 'Table');
-			if (!$oldrow->load($this->id) && $oldrow->getError())
+                // Attempt to store the user data.
+                $oldrow = JTable::getInstance('templateedit', 'Table');
+                if (!$oldrow->load($this->id) && $oldrow->getError())
 			{
 				$this->setError($oldrow->getError());
 			}
 		return parent::store($updateNulls);
 	}
 }
-?>

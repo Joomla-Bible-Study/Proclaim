@@ -2,8 +2,10 @@
 
 /**
  * @version     $Id: studieslist.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
  */
 //No Direct Access
 defined('_JEXEC') or die();
@@ -67,10 +69,6 @@ class biblestudyModelstudieslist extends JModelList {
                     . $sermon_id
             ;
             $db->setQuery($query);
-            //var_dump ($db->loadAssocList()).'<hr>';
-            //$files = array($i => $db->loadAssocList($sermon->id));
-            //var_dump ($files);
-            //var_dump ($db->loadAssocList());
             $mediaFiles[$sermon->id] = $db->loadAssocList();
         }
         $this->_files = $mediaFiles;
@@ -331,7 +329,6 @@ class biblestudyModelstudieslist extends JModelList {
 
         $db->setQuery($query->__toString());
         $year = $db->loadObjectList();
-        //  dump ($year);
         return $year;
     }
 
@@ -349,5 +346,3 @@ class biblestudyModelstudieslist extends JModelList {
     }
 
 }
-
-?>

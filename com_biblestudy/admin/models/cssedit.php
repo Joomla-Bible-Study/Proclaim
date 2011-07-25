@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @version $Id: cssedit.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
@@ -13,8 +19,6 @@ function __construct()
 	{
 		parent::__construct();
 
-		//$array = JRequest::getVar('cid',  0, '', 'array');
-		//$this->setId((int)$array[0]);
 	}
 
 function &getData()
@@ -23,9 +27,6 @@ function &getData()
 		$csscontents=fopen($filename,"rb");
 		$this->_data->filecontent = fread($csscontents,filesize($filename));
 		fclose($csscontents);
-		//$this->assignRef('lists',		$lists);
-		
-		
 		return $this->_data;
 	}
 

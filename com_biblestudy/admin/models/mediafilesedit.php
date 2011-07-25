@@ -2,9 +2,12 @@
 
 /**
  * @version     $Id: mediafilesedit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -165,8 +168,6 @@ class biblestudyModelmediafilesedit extends JModelAdmin {
      * @desc Functions to satisfy the ajax requests
      */
     function getdocManCategories() {
-        //	$query = "SELECT id, title FROM #__categories
-        //			  WHERE `section` = 'com_docman' AND `published`=1";
         $query = "SELECT id, title FROM #__categories
 				  WHERE `extension` = 'com_content' AND `published`=1";
         return $this->_getList($query);
@@ -196,8 +197,6 @@ class biblestudyModelmediafilesedit extends JModelAdmin {
     }
 
     function getdocManCategoryItems($catId) {
-        //	$query = "SELECT id, dmname as name FROM #__docman
-        //		  WHERE `catid`='$catId' AND `published`=1";
         $query = "SELECT id, title as name FROM #__content
 				  WHERE `catid`='$catId' AND `published`=1";
         return json_encode($this->_getList($query));
@@ -236,7 +235,6 @@ class biblestudyModelmediafilesedit extends JModelAdmin {
     }
 
     function getDocManItem($id) {
-        //	$query = "SELECT dmname FROM #__docman WHERE `id` = '$id'";
         $query = "SELECT title FROM #__content WHERE `id` = '$id'";
         $this->_db->setQuery($query);
         $data = $this->_db->loadRow();
@@ -331,7 +329,6 @@ class biblestudyModelmediafilesedit extends JModelAdmin {
     }
 
     protected function preprocessForm(JForm $form, $data, $group = 'content') {
-        //$form->addFieldPath(JPATH_ADMINISTRATOR . '/com_content/models/fields/modal');
         parent::preprocessForm($form, $data, $group);
     }
 
@@ -365,7 +362,6 @@ class biblestudyModelmediafilesedit extends JModelAdmin {
             $data = $this->getItem();
 
             $data->podcast_id = explode(',', $data->podcast_id);
-            // dump ($data->podcast_id);
         }
 
 
@@ -373,5 +369,3 @@ class biblestudyModelmediafilesedit extends JModelAdmin {
     }
 
 }
-
-?>

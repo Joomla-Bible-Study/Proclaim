@@ -1,7 +1,12 @@
 <?php
-/**
-Locations Tables for BibleStudy
- */
+ /**
+ * Locations Tables for BibleStudy
+ * @version $Id: admin.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
@@ -16,7 +21,6 @@ class TableAdmin extends JTable
 	 * @var int
 	 */
 	var $id = null;
-	//var $published = null;
 
 	/**
 	 * @var string
@@ -30,7 +34,7 @@ class TableAdmin extends JTable
 	var $download = null;
 	var $main = null;
 	var $showhide = null;
-    var $drop_tables = null;
+        var $drop_tables = null;
 
 	 public function bind($array, $ignore = '') 
         {
@@ -83,15 +87,8 @@ class TableAdmin extends JTable
         {
             return false;
         }
-		// Attempt to store the user data.
-   //     $oldrow = JTable::getInstance('admin', 'Table');
-	//		if (!$oldrow->load($this->id) && $oldrow->getError())
-	//		{
-	//			$this->setError($oldrow->getError());
-	//		}
 		return parent::store($updateNulls);
 	}
 
 
 }
-?>

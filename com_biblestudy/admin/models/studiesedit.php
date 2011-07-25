@@ -2,8 +2,10 @@
 
 /**
  * @version     $Id: studiesedit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
  */
 //No Direct Access
 defined('_JEXEC') or die();
@@ -54,7 +56,6 @@ class biblestudyModelstudiesedit extends JModelAdmin {
      * @return	boolean	True on success
      */
     function store() {
-        //$post           = JRequest::get( 'post' );
         // fix up special html fields
 
         $row = & $this->getTable();
@@ -66,9 +67,7 @@ class biblestudyModelstudiesedit extends JModelAdmin {
         $data['studyintro'] = str_replace('"', "'", $data['studyintro']);
         $data['studynumber'] = str_replace('"', "'", $data['studynumber']);
         $data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
-        //  $data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
-        //	$msg = $data['show_level'];
-
+        
         foreach ($data['scripture'] as $scripture) {
             if (!$data['text'][key($data['scripture'])] == '') {
                 $scriptures[] = $scripture . ' ' . $data['text'][key($data['scripture'])];
@@ -78,7 +77,6 @@ class biblestudyModelstudiesedit extends JModelAdmin {
         $data['scripture'] = implode(';', $scriptures);
         // Added since Joomla 1.6 to implode show_level if array
         if (is_array($data['show_level'])) {
-            // $data['show_level'] = implode(",", $data['show_level']);
         }
         // Bind the form fields to the table
         if (!$row->bind($data)) {
@@ -97,12 +95,9 @@ class biblestudyModelstudiesedit extends JModelAdmin {
         //Checks to make sure a valid date field has been entered
         if (!$row->studydate)
             $row->studydate = date('Y-m-d H:i:s');
-        //if ($row->description) { $row->description = str_replace('"',"'",$row->description); }
         if (!$row->store()) {
             $this->setError($this->_db->getErrorMsg());
             return false;
-            //$this->setError( $row->getErrorMsg() );
-            //return false;
         }
 
         //Get Tags
@@ -119,8 +114,6 @@ class biblestudyModelstudiesedit extends JModelAdmin {
                 if ($aTag != "") {
 
                     $tagRow = & JTable::getInstance('studytopics', 'Table');
-
-                    //dump ($isDup, "D");
 
                     $isDup = $this->isDuplicate($row->id, $aTag);
 
@@ -310,7 +303,6 @@ class biblestudyModelstudiesedit extends JModelAdmin {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.studiesedit.data', array());
         if (empty($data))
             $data = $this->getItem();
-        //  $data->show_level = explode(',', $data->show_level);
 
         return $data;
     }
@@ -329,5 +321,3 @@ class biblestudyModelstudiesedit extends JModelAdmin {
     }
 
 }
-
-?>

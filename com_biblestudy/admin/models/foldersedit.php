@@ -2,9 +2,12 @@
 
 /**
  * @version     $Id: foldersedit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -17,7 +20,7 @@ defined('_JEXEC') or die();
 class biblestudyModelfoldersedit extends modelClass {
 
 
-/**
+        /**
          * Method override to check if you can edit an existing record.
          *
          * @param       array   $data   An array of input data.
@@ -89,7 +92,6 @@ class biblestudyModelfoldersedit extends modelClass {
         if ($slash_ending != '/') {
             $folderpath = $folderpath . '/';
         }
-        //dump ($folderpath, '$folderpath: ');
         $data['folderpath'] = $folderpath;
         // Bind the form fields to the series table
         if (!$row->bind($data)) {
@@ -185,5 +187,3 @@ class biblestudyModelfoldersedit extends modelClass {
     }
 
 }
-
-?>

@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @version $Id: teacheredit.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
@@ -37,6 +43,7 @@ class Tableteacheredit extends JTable
 	var $list_show = 1;
 	var $teacher_thumbnail = null;
 	var $teacher_image = null;
+        
 	/**
 	 * Constructor
 	 *
@@ -102,4 +109,3 @@ class Tableteacheredit extends JTable
                 return $asset->id;
         }
 }
-?>
