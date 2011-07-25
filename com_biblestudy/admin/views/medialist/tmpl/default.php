@@ -38,7 +38,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                         echo JText::_('JBS_CMN_IMAGE');
                     ?>
                 </th>
-                <th width=77%">
+                <th width="77%">
                     <?php
                         echo JText::_('JBS_CMN_MEDIA');
                     ?>
