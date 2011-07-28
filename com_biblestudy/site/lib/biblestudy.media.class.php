@@ -81,7 +81,7 @@ class jbsMedia
         	      if($compat_mode == 0)
         		  {
         	      		$downloadlink ='<a href="index.php?option=com_biblestudy&id='.
-                          $media->id.'&view=studieslist&controller=studieslist&task=download">';
+                          $media->id.'&view=studieslist&task=download">';
         		  }
         		  else
         		  {
