@@ -19,7 +19,7 @@ class jbsMedia
         //First we get some items from GET and instantiate the images class
       
 
-        $Itemid = JRequest::getInt('Itemid','1','get');
+        
         $template = JRequest::getInt('t','1','get');
 	    $images = new jbsImages();
         $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
@@ -233,14 +233,14 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
  * player 0 = direct, 1 = internal, 2 = AVR, 3 = AV 7 = legacy internal player (from JBS 6.2.2)
  * internal_popup 0 = inline, 1 = popup, 2 = global settings
  *
- * Get the $player->player: 0 = direct, 1 = internal, 2 = AVR, 3 = AV, 4 = Docman, 5 = article, 6 = Virtuemart, 7 = legacy player
+ * Get the $player->player: 0 = direct, 1 = internal, 2 = AVR, 3 = AV, 4 = Docman, 5 = article, 6 = Virtuemart, 7 = legacy player, 8 = embed code
  * $player->type 0 = inline, 1 = popup/new window 3 = Use Global Settings (from params)
  * In 6.2.3 we changed inline = 2
 */
      $player->player = 0;
      $params_mediaplayer = $params->get('media_player');
   //   $item_mediaplayer = $itemparams->get('player');
-     $item_mediaplayer = $media->player;
+     $item_mediaplayer = $media->player; 
     if ($params_mediaplayer > 0) {$player->player = $params_mediaplayer;}
     if ($item_mediaplayer == 0)
     {
@@ -272,6 +272,7 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
 			$player->player = 6;
 		}
     if ($item_mediaplayer == 7) {$player->player = 7;}
+    if ($item_mediaplayer == 8) {$player->player = 8; }
     
     //Get the popup or inline - 1 = popup, 2 = inline
     
@@ -379,6 +380,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
     					$protocol = $params->get('protocol','http://');
                         $path = $protocol.$path;
     				}
+                    
     switch ($player->player)
     {
         case 0: //Direct
@@ -396,8 +398,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                 case 1: //Popup window
 
                     $playercode =
-                    "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=0&view=popup&Itemid=".$Itemid.
-                    "&t=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
+                    "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=0&view=popup&t=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
                     $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' border='0' width='".$width.
                     "' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
                 break;
@@ -426,8 +427,7 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
 					$player->playerheight = $player->playerheight + $params->get('popupmargin','50');
 
                     $playercode =
-                    "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&Itemid=".$Itemid.
-                    "&t=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
+                    "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&t=".$template."&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".
                     $player->playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width.
                     "' title='".$mimetype." ".$duration." ".$filesize."' border='0' alt='".$src."'></a>";
                 break;
@@ -494,7 +494,18 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
                 "' alt='".$src."'></a>";
                 break;
             }
-        break;
+        case 8: //Embed code
+        
+          
+           $playercode =
+            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=8&t=".$template.
+            "&mediaid=".$media->id."', 'newwindow','width=".$player->playerwidth.",height=".$player->playerheight."'); return false\"\">
+            <img src='".$src."' height='".$height."' width='".$width."' border='0' title='".$mimetype." ".$duration." ".$filesize.
+            "' alt='".$src."'></a>";
+            
+          break;
+        
+        
         
     }
      //  dump ($playercode, 'playercode: ');
@@ -513,7 +524,7 @@ function hitPlay($id)
 function getAVRLink($media, $params, $image)
 	{
 
-        $Itemid = JRequest::getInt('Itemid','1','get');
+        
         $src = JURI::base().$image->path;
         $height = $image->height;
         $width = $image->width;

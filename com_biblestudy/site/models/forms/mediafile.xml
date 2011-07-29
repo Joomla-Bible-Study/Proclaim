@@ -105,8 +105,8 @@
         <option value="2">JBS_CMN_INLINE</option>
     </field>
 	
-    <field name="mediacode" type="textarea" label="JBS_CMN_AVR"
-			description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="2" />
+   <field name="mediacode" type="textarea" label="JBS_CMN_AVR"
+			description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5" filter="raw"/>
 			
     <field name="virtuemart_categories" type="sql" label="JBS_MED_CATEGORY" default="-1">
         <option value="-1">JBS_MED_SELECT_CATEGORY</option>

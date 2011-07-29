@@ -17,7 +17,7 @@
 		//	$getMedia = new jbsMedia();
             JRequest::setVar('tmpl', 'component');
             $mediaid  = JRequest::getInt('mediaid','','get');
-			$Itemid = JRequest::getInt('Itemid','1','get');
+		
             $templateid = JRequest::getInt('t','1','get'); 
             $close = JRequest::getInt('close','0','get');
             $player = JRequest::getInt('player','1','get');
@@ -45,12 +45,12 @@
             $db->setQuery($query);
             $db->query();
             $template = $db->loadObject();
-         //   $params = new JParameter($template->params);
+        
               // Convert parameter fields to objects.
 				$registry = new JRegistry;
 				$registry->loadJSON($template->params);
                 $params = $registry;
-          //  $itemparams = new JParameter($media->params);
+          
               // Convert parameter fields to objects.
 				$registry = new JRegistry;
 				$registry->loadJSON($media->params);
@@ -120,7 +120,7 @@ swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/play
 			}
 			
 			//TODO:Need to get difference between direct popup and not so can have popup use this script
-			if ($itemparams->get('player')== 0 || JRequest::getInt('player','','get') == 0)
+			if (!$player )
 			{
   				//  echo '<div id=\'direct\'><script type=text/javascript> window.location.href=\''.$path1.'\'</script></div>';
  
@@ -140,6 +140,10 @@ swfobject.embedSWF('".JURI::base()."components/com_biblestudy/assets/player/play
 		<param name="wmode" value="transparent">
 		</object> ';
 			}
+            if ($player == 8)
+            {
+                echo $media->mediacode;
+            }
 ?>
 
 <?PHP
