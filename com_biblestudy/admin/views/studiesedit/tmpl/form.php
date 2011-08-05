@@ -119,10 +119,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     <?php echo $this->form->getLabel('series_id'); ?>
                     <?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin->params['series_id'] : $this->item->series_id) ?>
                         </li>
-                        <li>
-                    <?php echo $this->form->getLabel('topics_id'); ?>
-                    <?php echo $this->form->getInput('topics_id', null, empty($this->item->studytitle) ? $this->admin->params['topic_id'] : $this->item->topics_id) ?>
-                        </li>
+                        
                        
                         </ul>
                         <?php echo $this->form->getLabel('topics'); ?>

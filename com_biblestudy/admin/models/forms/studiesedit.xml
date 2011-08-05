@@ -61,9 +61,7 @@
         <option value="-1">JBS_CMN_SELECT_SERIES</option>
     </field>
 
-    <field name="topics_id" type="topicslist" default="-1" label="JBS_CMN_TOPIC" class="inputbox">
-        <option value="-1">JBS_CMN_SELECT_TOPIC</option>
-    </field>
+   
 
     <field name="topics" type="topics" class="inputbox" size="30" label="JBS_CMN_TOPIC_TAG" description="JBS_CMN_TOPIC_TAG_DESC" />
     

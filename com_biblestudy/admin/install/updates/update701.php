@@ -47,6 +47,21 @@ class updatejbs701
                     if ($error){return false;}
                  }   
             }
+            
+            $fixtopics = $this->updatetopics();
+            if (!$fixtopics){return false;}
+            
+            return true;
+        }
+        
+        function updatetopics()
+        {
+            $db = JFactory::getDBO(); 
+            $query = 'INSERT INTO #__bsms_studytopics (study_id, topic_id) SELECT #__bsms_studies.id, #__bsms_studies.topics_id FROM #__bsms_studies WHERE #__bsms_studies.topics_id > 0';
+            $db->setQuery($query);
+            $db->query();
+            if ($db->getErrorNum() != 0)
+					{return false;}
             return true;
         }
 }

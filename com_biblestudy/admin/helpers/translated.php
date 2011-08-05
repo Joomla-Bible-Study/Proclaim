@@ -20,13 +20,26 @@ function getTopicItemTranslated($topicItem)
 	if ($topicItem) {
 		$itemparams = new JRegistry;
 		$itemparams->loadJSON($topicItem->topic_params);
-		$currentLanguage = & JFactory::getLanguage()->getTag();
+		$currentLanguage = JFactory::getLanguage()->getTag();
+		// first choice: string in current language
 		if ($currentLanguage) {
 			if ($itemparams->get($currentLanguage)) {
 				return ($itemparams->get($currentLanguage));
 			}
 		}
-		return (JText::_($topicItem->topic_text));
+		// second choice: language file
+		$jtextString = JText::_($topicItem->topic_text);
+		if (strncmp($jtextString, 'JBS_TOP_', 8) == 0 || strncmp($jtextString, '??JBS_TOP_', 10) == 0 || strlen($jtextString) == 0 || strcmp($jtextString, '????') == 0) {
+			// third choice: string in default language selected for site
+			$defaultLanguage = JComponentHelper::getParams('com_languages')->get('site');
+			if ($defaultLanguage) {
+				if ($itemparams->get($defaultLanguage)) {
+					return ($itemparams->get($defaultLanguage));
+				}
+			}
+		}
+		// fallback: second choice
+		return ($jtextString);
 	}
 	return (null);
 }
@@ -48,29 +61,3 @@ function getTopicItemsTranslated($topicItems = array())
 	}
 	return $output;
 }
-
-
-/*
-   translate a topic given topic_text and params to clear text
-   topic_text: string topic_text out of db
-   params: string params out of db
-   return: translated string
-*/
-function getTopicTranslated($topic_text, $topic_params)
-{
-	if ($params) {
-		$itemparams = new JRegistry;
-		$itemparams->loadJSON($topic_params);
-		$currentLanguage = & JFactory::getLanguage()->getTag();
-		if ($currentLanguage) {
-			if ($itemparams->get($currentLanguage)) {
-				return ($itemparams->get($currentLanguage));
-			}
-		}
-	}
-	return (JText::_($topic_text));
-}
-
-
-
-

@@ -39,7 +39,7 @@ $saveOrder = $listOrder == 'teacher.ordering';
                         echo JHtml::_('grid.order', $this->items, 'filesave.png', 'teacherlist.saveorer');
                     ?>
                 </th>
-                <th alicn="center">
+                <th align="center">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
                 </th>
             </tr>
