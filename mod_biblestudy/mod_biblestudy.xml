@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="1.6.0" method="upgrade" client="site">
-	<name>biblestudy</name>
+	<name>mod_biblestudy</name>
 	<author>Tom Fuller</author>
 	<creationDate>April 29, 2011</creationDate>
 	<copyright>(C) 2007-2011 Joomla Bible Study</copyright>
 	<license>GPL/GNU</license>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-	<version>7.0.1</version>
+	<version>7.0.2</version>
 	<description>JBS_MDL_DESCRIPTION</description>
     <files>
 		<filename module="mod_biblestudy">mod_biblestudy.php</filename>
@@ -23,7 +23,7 @@
         <language tag="en-GB">language/en-GB/en-GB.mod_biblestudy.sys.ini</language>
     </languages>
     <config>
- 
+ <!-- @todo: look at new params for j1.7+ -->
      <fields name="params">
      <fieldset name="basic" 
      label="JBS_MDL_LIST_LAYOUT" addfieldpath="/administrator/components/com_biblestudy/models/fields" >

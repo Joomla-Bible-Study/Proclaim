@@ -3,9 +3,10 @@
  * User SEF extension for Joomla!
  *
  * @author      $Author: Nick Fossen $
- * @copyright   Joomla Bible Study (www.joomlabiblestudy.com)
- * @package     JoomSEF
- */
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access.');

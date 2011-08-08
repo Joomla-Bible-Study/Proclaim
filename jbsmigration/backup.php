@@ -1,13 +1,15 @@
 <?php
 
 /**
- * @author Tom Fuller
- * @copyright 2011
- */
+ * @version $Id: backup.php 1 $
+ * @package COM_JBSMIGRATION
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 defined( '_JEXEC' ) or die( 'Restricted access' ); 
 
 class JBSExport{
-//backup_tables('localhost','username','password','blog');
 
  function exportdb()
     {
@@ -43,15 +45,9 @@ class JBSExport{
         
        //Copy tables to a temp copy, changing TEXT to BLOB
        $newbackuptables = $this->copytables($backuptables);
-     //  dump ($newbackuptables);
                   
        $dobackup = false;
        $dobackup = $this->backup_tables($host,$user,$password,$dbname,$newbackuptables);
-       //  dump ($newbackuptables);
-       //Now let's delete the backup tables
-    //   $deleteit = deletecopy($newbackuptables);
-       
-      // JRequest::setVar('jbsmessages',$deleteit,'get','array');
     $errorfile = array();
     foreach ($newbackuptables AS $newbackuptable)
         {
@@ -289,7 +285,6 @@ function writefile($dobackup)
     	
     	$url = $serverfile;
     	$out_file_name = $localfile;
-    //    ini_set('memory_limit', '1000M');
     
     	$out = fopen($localfile,"wb");
     	
@@ -313,7 +308,6 @@ function writefile($dobackup)
         foreach ($backuptables AS $backuptable)
         {
             $query = 'CREATE TABLE '.$backuptable.'_genesis SELECT * FROM '.$backuptable;
-           // print_r ($query);
             $db->setQuery($query);
             $db->query();
             $newbackuptables[] = $backuptable.'_genesis';

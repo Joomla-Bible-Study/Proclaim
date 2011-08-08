@@ -1,6 +1,6 @@
 <?php 
 /**
- * @version $Id: biblestudy.install.php 1 $
+ * @version $Id: biblestudysearch.php 1 $
  * @name Bible Study Search Plugin
  *
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -40,7 +40,7 @@ class plgSearchBiblestudysearch extends JPlugin
 			return $areas;
 	}
 
-/**
+        /**
 	 * Biblestudy Search method
 	 *
 	 * The sql must return the following fields that are used in a common display

@@ -1,9 +1,12 @@
 <?php
 
 /**
- * @author Tom Fuller
- * @copyright 2010-2011
- */
+ * @version $Id: jbspodcast.php 1 $
+ * @package PLG_JBSPODCAST
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined('_JEXEC') or die('Restricted access');
 
@@ -11,14 +14,14 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.plugin.plugin');
 class plgSystemjbspodcast extends JPlugin {
     
-    /**
+        /**
 	 * Constructor
 	 *
 	 * @access      protected
 	 * @param       object  $subject The object to observe
 	 * @param       array   $config  An array that holds the plugin configuration
 	 * @since       1.5
-     * based on plg_weblinks
+         * based on plg_weblinks
 	 */
 
  public function __construct(& $subject, $config)

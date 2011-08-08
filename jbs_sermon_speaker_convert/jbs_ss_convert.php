@@ -1,10 +1,13 @@
 <?php
-
 /**
+ * @version $Id: jbs_ss_convert.php 1 $
+ * @package BibleStudy SermonSpeaker Converter
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
  * @desc script to convert SermonSpeaker 3.4 to Joomla Bible Study
- * @author Joomla Bible Study
- * @copyright 2010
  */
+
 defined('_JEXEC') or die();
 
 class JBSConvert
@@ -217,9 +220,6 @@ function convertSS()
   
    
     } //End of foreach $teachers as $teacher
-    
-    
-
     
     
     }

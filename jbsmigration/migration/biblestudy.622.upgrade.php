@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @author Joomla Bible Study
- * @copyright 2010
- * @desc Updates the CSS .media to .jbsmedia because some templates had media as a tag
- */
+ * @version $Id: biblestudy.622.upgrade.php 1 $
+ * @package COM_JBSMIGRATION
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 defined( '_JEXEC' ) or die('Restricted access');
 
 class jbs622Install{  

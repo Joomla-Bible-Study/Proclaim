@@ -1,8 +1,11 @@
 <?php 
 /**
- * @author Tom Fuller
- * @copyright 2010-2011
- */
+ * @version $Id: helper.php 1 $
+ * @package mod_biblestudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined('_JEXEC') or die('Restriced Access');
 

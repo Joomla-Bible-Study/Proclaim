@@ -29,6 +29,7 @@
         <folder>sql</folder>
 	</files>
     <config> 
+    <!-- @todo: look into new params system for this -->
  <fields name="params">
             <fieldset name="basic">
         <field name="email" type="list" default="1" label="PLG_JBSPODCAST_SEND_EMAIL" description="PLG_JBSPODCAST_SEND_EMAIL_DESC">
@@ -423,6 +424,7 @@
    <!-- UPDATESERVER DEFINITION -->
 	<updateservers>
 		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+                <!-- @todo: fix link to com_ars -->
 		<server type="extension" priority="1" name="Joomla Bible Study Update Site">http://www.JoomlaBibleStudy.org/update/jbspodcast-update.xml</server>
 	</updateservers>
         

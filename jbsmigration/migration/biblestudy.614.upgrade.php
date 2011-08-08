@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @author Joomla Bible Study
- * @copyright 2010
- * @desc Updates the media files table to reflect new way of associating podcasts and adds Landing Page CSS
- */
+ * @version $Id: biblestudy.614.upgrade.php 1 $
+ * @package COM_JBSMIGRATION
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 defined( '_JEXEC' ) or die('Restricted access');
 
 class jbs614Install{
@@ -127,9 +129,7 @@ $db = JFactory::getDBO();
              else
              {
                 $messages[] = $msg;
-             }             
-//$application = JFactory::getApplication();
-//$application->enqueueMessage( ''. JText::_('Upgrading from build 614') .'' ) ;
+             }    
 $results = array('build'=>'614','messages'=>$messages);
     
     return $results;
