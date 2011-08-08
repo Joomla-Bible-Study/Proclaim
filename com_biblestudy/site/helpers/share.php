@@ -1,9 +1,13 @@
 <?php
 
 /**
- * @author Joomla Bible Study
- * @copyright 2009
- */
+ * @version $Id: share.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 defined('_JEXEC') or die();
 //Share Helper file
 function getShare($link, $row, $params, $admin_params)
@@ -38,7 +42,6 @@ function getShare($link, $row, $params, $admin_params)
 	$db->setQuery($query);
 	$rows = $db->loadObjectList();
 	$sharerows = count($rows);
-	//dump ($sharerows);
 	if ($sharerows < 1) { $share = null; return $share; }
 	
 	//Begin to form the table
@@ -63,7 +66,6 @@ function getShare($link, $row, $params, $admin_params)
 		$mainlink = $share_params->get('mainlink');
 		$appkey = $share_params->get('api','R_dc86635ad2d1e883cab8fad316ca12f6');
 		$login = $share_params->get('username','joomlabiblestudy');
-		//dump ($share_params);
 		if ($use_bitly == 1)
 		{
 		$url = make_bitly_url($link, $login, $appkey, 'json', '2.0.1');
@@ -77,10 +79,6 @@ function getShare($link, $row, $params, $admin_params)
 	$element3->element = '';
 	$element4 = new stdClass;
 	$element4->element = '';
-//	$element1 = '';
-//	$element2 = '';
-//	$element3 = '';
-//	$element4 = '';
 	
 	if ($share_params->get('item1'))
 	{
@@ -152,13 +150,11 @@ function getShare($link, $row, $params, $admin_params)
 			$linkextract = substr($sharelink,$linkstartposition,$linkendposition);
 			$linklength = strlen($linkextract);
 			$sharelink = substr_replace($sharelink,'',$linkstartposition,$linkendposition);
-			//$sharelink = substr($sharelink,0,$share_params->get('totalcharacters'));
 			$newsharelinklength = $share_params->get('totalcharacters') - $linklength - 1;
 			$sharelink = substr($sharelink,0,$newsharelinklength);
 			$sharelink = $sharelink.' '.$linkextract;
 		}
 	}
-	//dump($element1);
 	$shareit .= '
 	
 	<td id="bsmsshareicons">
@@ -198,7 +194,3 @@ function make_bitly_url($url,$login,$appkey,$format = 'xml',$version = '2.0.1')
 	}
 return $short;
 }
-
-
-
-?>

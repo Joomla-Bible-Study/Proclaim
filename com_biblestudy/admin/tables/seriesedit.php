@@ -56,7 +56,7 @@ class Tableseriesedit extends JTable
     
     return parent::bind($array, $ignore);
     }
-     /**
+        /**
          * Method to compute the default name of the asset.
          * The default name is in the form `table_name.id`
          * where id is the value of the primary key of the table.

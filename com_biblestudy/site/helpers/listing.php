@@ -1,4 +1,14 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php 
+
+/**
+ * @version $Id: listing.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restriced Access');
 //Helper file - master list creater for study lists
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
@@ -125,7 +135,6 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 		if ($params->get('row1col1') < 1) {$params->set('row1col1', 100);}
 		if ($params->get('row1col1') == 24) {$elementid = getCustom($params->get('row1col1'), $params->get('r1c1custom'), $row, $params, $admin_params, $template);}
 		else {$elementid = getElementid($params->get('row1col1'), $row, $params, $admin_params, $template);}
-		//dump ($params->get('row1col1'), 'elementid: ');
  		$colspan = $params->get('r1c1span');
  		$rowspan = $params->get('rowspanr1c1');
 		 $lastcol = 0;
@@ -203,7 +212,6 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 		 if (isset($elementid)) {
 		 $listing .= getCell($elementid->id, $elementid->element, $rowcolid, $colspan, $rowspan, $lastcol, $params->get('linkr2c1'), $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template);
 		 }
- 	//dump ($elementid, 'elementid: ');
 	if ($columns > 1  && $params->get('r2c1span') < 2)
 	{
  		$rowcolid = 'row2col2';
@@ -225,7 +233,6 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 		 if ($params->get('row2col3') < 1) {$params->set('row2col3', 100);}
 		 if ($params->get('row2col3') == 24) {$elementid = getCustom($params->get('row2col3'), $params->get('r2c3custom'), $row, $params, $admin_params, $template);}
 		 else {$elementid = getElementid($params->get('row2col3'), $row, $params, $admin_params, $template);}
-		 //if (!$elementid->id){$element->id = ''; $element->element = '';}
 		 $colspan = $params->get('r2c3span');
 		 $rowspan = $params->get('rowspanr2c3');
 		 $lastcol = 0;
@@ -324,7 +331,6 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 	//end of row 3
 
 	//beginning of row 4
-//	$row4colspan = $params->get('r4c1span') + $params->get('r4c2span') + $params->get('r4c3span') + $params->get('r4c4span');
 	$lastrow = 0;
  	if ($rows == 4) {$lastrow = 1;}
 	$listing .= '
@@ -405,7 +411,6 @@ return $listing;
 						if ($lastcol == 1) {$cell .= ' lastcol';}
 						$cell .= '" ';
 						if ($colspan > 1) {$cell .= 'colspan="'.$colspan.'" ';}
-						//if ($rowspan > 1){$cell .='rowspan="'.$rowspan.'"';}
 						$cell .= '>';
 						
 						if ($islink > 0){$cell .= getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template);}
@@ -413,7 +418,6 @@ return $listing;
 						switch ($islink)
 						{
 							case 0:
-							//	$cell .= '</a>';
 							break;
 
 							case 1:
@@ -445,7 +449,6 @@ return $listing;
                             break;
 
 						}
-						//if ($islink > 0){$cell .= '</a>';}
 						$cell .='</td>';
 			return $cell;
 		}
@@ -456,9 +459,7 @@ return $listing;
             $Itemid = JRequest::getVar('Itemid');
 			$column = '';
 			$mime = ' AND #__bsms_mediafiles.mime_type = 1';
-			//$Itemid = '';
 			$itemlink = $params->get('itemidlinktype');
-			//dump ($islink,  'islink: ');
 			switch ($islink) {
 
 			case 1 :
@@ -488,7 +489,6 @@ return $listing;
 
 			case 4 :
 				//Case 4 is a details link with tooltip
-				//$addItemid = getItemidLink($isplugin=0, $admin_params);
 				if (!$Itemid)
 					{
 				 	$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $id3.'&t='.$params->get('detailstemplateid'));//.$addItemid;
@@ -506,7 +506,6 @@ return $listing;
   				//Case 5 is a file link with Tooltip
  				$filepath = getFilepath($id3, 'study_id',$mime);
 				$link = JRoute::_($filepath);
-				//$column .= '<a href="'.$link.'">';
 				$column = getTooltip($row->id, $row, $params, $admin_params, $template);
 			   	$column .= '<a href="'.$link.'">';
 
@@ -541,14 +540,8 @@ function getListingExp($row, $params, $admin_params, $template)
 	include_once($path1.'mediatable.php');
 	include_once($path1.'duration.php');
 	include_once($path1.'image.php');
-    //dump ($row, 'row: ');
-    //dump ($admin_params, 'admin_params: ');
     $images = new jbsImages();
 	$image = $images->getStudyThumbnail($row->thumbnailm);
-  // 	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
-//	$i_image = $row->thumbnailm;
-//	$i_path = $i_path.'/'.$i_image;
-//	$image = getImage($i_path);
     $label = $params->get('templatecode'); //dump ($label, 'label: ');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->studytitle, $label);
@@ -557,9 +550,7 @@ function getListingExp($row, $params, $admin_params, $template)
 	$label = str_replace('{{scripture}}', getScripture($params, $row, 0, 1), $label);
 	$label = str_replace('{{topics}}', $row->topic_text, $label);
     $label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=studydetails&id='.$row->id .'&t='.$template, $label);
-    //$label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
     $label = str_replace('{{mediatime}}', getDuration($params, $row), $label);
-//	$label = str_replace('{{thumbnail}}', '<img src="images/'.$admin_params->get('study_images')."/".$row->thumbnailm.'" width="'.$row->thumbwm.'" height="'.$row->thumbhm.'" id="bsms_studyThumbnail" />', $label);
 	$label = str_replace('{{thumbnail}}', '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" id="bsms_studyThumbnail" />', $label);
     $label = str_replace('{{seriestext}}', $row->series_text, $label);
     $label = str_replace('{{messagetype}}', $row->message_type, $label);
@@ -569,19 +560,8 @@ function getListingExp($row, $params, $admin_params, $template)
     $label = str_replace('{{location}}',$row->location_text, $label);
     $label = str_replace('{{plays}}', $row->totalplays, $label);
     $label = str_replace('{{downloads}}', $row->totaldownloads, $label);
-    //    		$social = getShare($this->detailslink, $row, $params, $this->admin_params);
-//		echo $social;
-    /*$media = getMedia($row->id);
-
-    $mediaTable = "<table id='bsms_mediatable'><TR>";
-    foreach ($media as $item) {
-        //Loop through the media items and see what each is.
-        $mediaTable .= "<td>".getDownloadLink ($item, $params, $admin_params)."</td>";
-    }
-    $mediaTable .= "<td>".getPdf($row, $params, $admin_params)."</td>";
-    $mediaTable .= "</TR></table>";*/
     //For now we need to use the existing mediatable function to get all the media
-    $mediaTable = $Media->getMediaTable($row, $params, $admin_params); //dump ($mediaTable, 'mediatable: ');
+    $mediaTable = $Media->getMediaTable($row, $params, $admin_params);
     $label = str_replace('{{media}}', $mediaTable, $label);
     //Need to add template items for media...
 
@@ -600,17 +580,11 @@ function getStudyExp($row, $params, $admin_params, $template)
 	//This will eventually replace mediatable in this context.  Just for clarity.
 	include_once($path1.'media.php');
     include_once($path1.'share.php');
-  //  include_once($path1.'comments.php');
     include_once($path1.'date.php');
     include_once($path1.'duration.php');
     include_once($path1.'image.php');
     $images = new jbsImages();
     $image = $images->getStudyThumbnail($row->thumbnailm);
-  // 	$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
-//	$i_image = $row->thumbnailm;
-//	$i_path = $i_path.'/'.$i_image;
-//	$image = getImage($i_path);
-        //dump ($row, 'row: ');
     $label = $params->get('study_detailtemplate');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
 	$label = str_replace('{{title}}', $row->studytitle, $label);
@@ -618,7 +592,6 @@ function getStudyExp($row, $params, $admin_params, $template)
 	$label = str_replace('{{studyintro}}', $row->studyintro, $label);
 	$label = str_replace('{{scripture}}', getScripture($params, $row, 0, 1), $label);
 	$label = str_replace('{{topics}}', $row->topic_text, $label);
-    //$label = str_replace('{{mediatime}}', $row->media_hours.':'.$row->media_minutes.':'.$row->media_seconds, $label);
     $label = str_replace('{{mediatime}}', getDuration($params, $row), $label);
     $label = str_replace('{{thumbnail}}', '<img src="'.$image->path.'" width="'.$image->width.'" height="'.$image->height.'" id="bsms_studyThumbnail" />', $label);
     $label = str_replace('{{seriestext}}', $row->stext, $label);
@@ -646,9 +619,7 @@ function getStudyExp($row, $params, $admin_params, $template)
 	$u =& JURI::getInstance();
 	$detailslink = htmlspecialchars($u->toString());
 	$detailslink = JRoute::_($detailslink);
-	//$this->assignRef('detailslink', $detailslink);
 	//End social networking
-    //$label = str_replace('{{media}}', $mt, $label);
     $share = getShare($detailslink, $row, $params, $admin_params);
     $label = str_replace('{{share}}', $share, $label);
 
@@ -670,8 +641,6 @@ function getStudyExp($row, $params, $admin_params, $template)
     $label = str_replace('{{pdfview}}', $link, $label);
 
     //Comments
-  //  $comments = getComments($params, $row, $row->id);
-//	$label = str_replace('{{comments}}', $comments, $label);
 
     return $label;
 }

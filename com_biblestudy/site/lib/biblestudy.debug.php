@@ -1,16 +1,11 @@
 <?php
 /**
-* @version $Id: biblestudy.debug.php v1 $
-* Bible Study Component
-* @package Bible Study
-*
-* @Copyright (C) 2008 - 2010 Joomla Bible Study Team
-* @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
-*
-* Install based on Kunena Component
-*
-* @link http://www.JoomlaBibleStudy.org
-**/
+ * @version $Id: biblestudy.debug.php v1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined( '_JEXEC' ) or die('Restricted access');
 
@@ -149,4 +144,3 @@ function biblestudy_error($message, $level=E_USER_NOTICE, $back=1) {
 	$caller = $trace[$back];
 	trigger_error($message.' in <strong>'.$caller['function'].'()</strong> called from <strong>'.$caller['file'].'</strong> on line <strong>'.$caller['line'].'</strong>'."\n<br /><br />Error reported", $level);
 }
-?>

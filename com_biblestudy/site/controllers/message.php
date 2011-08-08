@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @version     $Id: studiesedit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @version     $Id: message.php 1466 2011-01-31 23:13:03Z bcordis $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -22,24 +24,16 @@ class biblestudyControllermessage extends controllerClass {
      * to "studies" so that the pluralization in 1.6 would work properly
      *
      * @since 7.0
-     */
-
-  //  protected $view_list = 'studieslist';
-
-    /**
      * constructor (registers additional tasks to methods)
      * @return void
      */
     function __construct() {
         parent::__construct();
-
-        // Register Extra tasks
-      //  $this->registerTask('add', 'edit');
     }
 
       function resetHits() {
         $msg = null;
-        $id = JRequest::getInt('id', 0, 'post'); //dump ($cid, 'cid: ');
+        $id = JRequest::getInt('id', 0, 'post');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
         $reset = $db->query();
@@ -55,5 +49,3 @@ class biblestudyControllermessage extends controllerClass {
     }
 
 }
-
-?>

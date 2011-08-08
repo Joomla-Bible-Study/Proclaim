@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * @version $Id: teacher.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
@@ -11,11 +20,9 @@ function getTeacher($params, $id, $admin_params)
 	include_once($path1.'image.php');
 	$teacher = null;
 	$teacherid = null;
-	//$t = $params->get('t');
 	$t = $params->get('teachertemplateid');
 	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 	$viewtype = JRequest::getVar('view');
-	//dump ($viewtype, 'view: ');
 		if ($viewtype == 'studieslist')
 			{
 				$teacherid = $params->get('listteachers');
@@ -25,7 +32,6 @@ function getTeacher($params, $id, $admin_params)
 			{$teacherids->id = $id;}
 	
 		
-		//dump ($teacherids['id'], 'tresult: ');
 		$teacher = '<table id = "teacher"><tr>';
 		if (!isset($teacherids)) {return $teacher;}
 		foreach ($teacherids as $teachers)
@@ -33,12 +39,10 @@ function getTeacher($params, $id, $admin_params)
 		{
 			$database	= & JFactory::getDBO();
 			$query = 'SELECT * FROM #__bsms_teachers'.
-					'  WHERE id = '.$teachers;
-			//dump ($teachers, 'teachers: ');		
+					'  WHERE id = '.$teachers;		
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			$i_path = null;
-			//dump ($tresult, 'tresult: ');
 			//Check to see if there is a teacher image, if not, skip this step
 			$images = new jbsImages();
 			$image = $images->getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
@@ -140,7 +144,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
             
             $teacher .= '</td>';
             $i++;
-            $t++; //dump ($t, 't: ');
+            $t++;
             if ($i == 3) {
                 $teacher .= "\n\t" . '</tr>';
                 $i = 0;
@@ -325,4 +329,3 @@ function getTeacherStudiesExp($id, $params, $admin_params, $template)
       }
 return $studies;
 }
-?>

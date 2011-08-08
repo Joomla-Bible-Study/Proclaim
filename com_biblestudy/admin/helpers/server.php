@@ -1,15 +1,17 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php 
+
+/**
+ * @version $Id: server.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restriced Access');
 
     function getServer($serverid) {
         $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-        
-        //$book = null;
-        
-        //$templatemenuid = $params->get('templatemenuid');
-        
-        //if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}
-
-        //$book = '<table id="bsm_books" width=100%><tr>';
         $db	=& JFactory::getDBO();
         $query = 'select distinct * from #__bsms_servers where id = ' . $serverid;
 
@@ -36,5 +38,3 @@
 
         return $tresult;
     }
-  
-?>

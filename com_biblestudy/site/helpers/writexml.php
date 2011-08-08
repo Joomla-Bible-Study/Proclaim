@@ -1,11 +1,14 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 /**
- * @author Joomla Bible Study
- * @copyright 2009
- */
+ * @version $Id: writexml.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
  function writeXML()
-	{ //dump($plugin, 'plugin: ');
+	{
 		$return = TRUE;
 		$podcastresults = array();
 		$files = array();
@@ -21,18 +24,14 @@ defined('_JEXEC') or die('Restricted access');
 		$lb_livesite   = JURI::root();
 		
 		$Body   = '<strong>Podcast Publishing Update confirmation.</strong><br><br> The following podcasts have been published:<br> '.$lb_fromname;
-		//$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params = &JComponentHelper::getParams('com_biblestudy');
 		jimport('joomla.utilities.date');
 		$year = '('.date('Y').')';
 		$date = date('r');
-		//$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		//$cid	= JRequest::getVar('cid', 0,'GET','INT');
 		$db =& JFactory::getDBO();
 		$query = 'SELECT id, title FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
 		$db->setQuery($query);
 		$podid = $db->loadObjectList();
-		//$nrows = $db->getNumRows($query);
 		if (count($podid))
 		{
 			$podcastresult = array();
@@ -48,8 +47,6 @@ defined('_JEXEC') or die('Restricted access');
 				$podinfo = $db->loadObject();
 				$description = str_replace("&","and",$podinfo->description);
 				$detailstemplateid = $podinfo->detailstemplateid;
-				//$addItemid = '';
-				//$addItemid = getItemidLink($isplugin=1, $admin_params);
 				if (!$detailstemplateid) {$detailstemplateid = 1;}
 		  		$detailstemplateid = '&amp;t='.$detailstemplateid;
 				$podhead = '<?xml version="1.0" encoding="utf-8"?>
@@ -100,7 +97,6 @@ defined('_JEXEC') or die('Restricted access');
 				$where = array();
 				foreach ($results as $result)
 				{
-				//	$params = new JParameter($result->params);
                     
                       // Convert parameter fields to objects.
     				$registry = new JRegistry;
@@ -136,7 +132,6 @@ defined('_JEXEC') or die('Restricted access');
 				if ($where)
 				{$where = ' WHERE '.$where.' AND ';}
 				else {return $msg= ' No media files were associated with a podcast. ';}
-				//dump ($where, 'where: ');
 				$query = 'SELECT p.id AS pid, p.podcastlimit,'
 					. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate, mf.params,'
 		   			. ' mf.docMan_id, mf.article_id,'
@@ -156,7 +151,6 @@ defined('_JEXEC') or die('Restricted access');
 					. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
 					. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
 					. $where.'s.published = 1 AND mf.published = 1 ORDER BY createdate DESC '.$limit;
-				//	. ' WHERE mf.podcast_id = '.$podids->id.' AND s.published = 1 AND mf.published = 1 ORDER BY createdate DESC '.$limit;
 				$db->setQuery( $query );
 				$episodes = $db->loadObjectList();
 				$episodedetail = '';
@@ -169,7 +163,6 @@ defined('_JEXEC') or die('Restricted access');
 					if ($hours > 0) { $hours = $hours; }
 					else { $hours = '00'; }
 					if (!$episode->media_seconds) {$episode->media_seconds = 1;}
-					//$podcast_title = 1;
 			        $params->set('show_verses', '1');
 			        $esv = 0;
 					$scripturerow = 1;
@@ -196,7 +189,6 @@ defined('_JEXEC') or die('Restricted access');
 							break;
 						case 5:
 							$element = getCustom($rowid='row1col1', $podinfo->custom, $episode, $params, $admin_params, $detailstemplateid);
-							//dump ($episode->custom, 'custom: ');
 							$title = $element->element;
 							break;
 					}
@@ -257,10 +249,8 @@ defined('_JEXEC') or die('Restricted access');
 				JClientHelper::setCredentialsFromRequest('ftp');
 				$ftp = JClientHelper::getCredentials('ftp');
 				$client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
-				//$file = $client->path.DS.'templates'.DS.$template.DS.'index.php';
 				$file = $client->path.DS.$podinfo->filename;
 				$files[] = $file;
-				//dump ($file, 'file: ');
 				// Try to make the template file writeable
 				if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755')) 
 				{
@@ -269,25 +259,16 @@ defined('_JEXEC') or die('Restricted access');
 		
 				$fileit = JFile::write($file, $filecontent);
 		        if ($fileit){$podcastresults[] = TRUE;}
-				//dump ($return, 'return: ');
 				// Try to make the template file unwriteable
 				if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')) 
 				{
 					JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
 				}
-				//$Body = $Body.' '.$pod_title;
 		
 			} // end of foreach $podid
 			
-			//	$output = $Body.'<br><br> At: ' . strftime('%A  %d  %B  %Y    - %T  ') . ' <br>';
-			//	return array('output'=>$output);
-			//	$output = implode(' - ',$files);
-			//	return $output;
-			//	} // end of if $nrows > 0
-			//	else { $return = 'No podcasts were set as published on the site, so no files were written.';
-			//  return $return;
+	
 		} // end if (count($podid))
-		//	$return = $output;
 
 		foreach ($podcastresults AS $podcastresult)
 		{
@@ -295,7 +276,3 @@ defined('_JEXEC') or die('Restricted access');
 		} 
 		return $return;
 	} // end of function
-
-
-
-?>

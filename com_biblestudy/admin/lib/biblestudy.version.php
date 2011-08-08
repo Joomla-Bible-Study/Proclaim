@@ -109,4 +109,3 @@ class CBiblestudyVersion {
 		return phpversion();
 	}
 }
-?>

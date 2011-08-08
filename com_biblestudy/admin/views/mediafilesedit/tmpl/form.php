@@ -1,9 +1,11 @@
 <?php
 /**
  * @version     $Id: form.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 //No Direct Access
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
@@ -151,10 +153,10 @@ $params = $this->form->getFieldsets('params');
     </div>
     <div class="width-35 fltrt">
         <?php foreach ($params as $name => $fieldset):
-									if (isset($fieldset->description) && trim($fieldset->description)): ?>
-											<p class="tip">
-											<?php echo $this->escape(JText::_($fieldset->description)); ?>
-											</p>
+                if (isset($fieldset->description) && trim($fieldset->description)): ?>
+                                <p class="tip">
+                                <?php echo $this->escape(JText::_($fieldset->description)); ?>
+                                </p>
         		<?php endif; ?>
 				<fieldset class="panelform" >
 						<legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
@@ -186,4 +188,3 @@ $params = $this->form->getFieldsets('params');
 		<input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>
 </form>
-

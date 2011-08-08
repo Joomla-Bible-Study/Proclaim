@@ -2,9 +2,11 @@
 /**
  * CSS Edit Controller for Bible Study Component
  * @version     $Id: cssedit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
@@ -22,9 +24,6 @@ class biblestudyControllercssedit extends JController
 	function __construct()
 	{
 		parent::__construct();
-
-		// Register Extra tasks
-		//$this->registerTask( 'save'  , 	'apply' );
 	}
 
 function cancel()
@@ -68,7 +67,6 @@ if ($return)
 		{
             $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$filename);
 		}
- // mosRedirect( "index2.php?option=$option&task=manage_css", "CSS has been reset to default settings." );
 }
 
 function save()

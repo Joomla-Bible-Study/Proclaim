@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @version $Id: studydetails.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
@@ -31,14 +37,11 @@ class biblestudyModelstudydetails extends JModel
 		 ////set the default view search path
         $this->addTablePath(JPATH_COMPONENT.DS.'tables');
         $params 			=& $mainframe->getPageParameters();
-	//	$t = $params->get('t');
-    $t = JRequest::getInt('t','get');
+        $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-//		JRequest::setVar( 't', $t, 'get');
         jimport('joomla.html.parameter');
 		$this->_id = $id;
 		$template = $this->getTemplate();
-	//	$params = new JParameter($template[0]->params);
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -55,7 +58,7 @@ class biblestudyModelstudydetails extends JModel
 		$this->_data	= null;
 	}
 
-/**
+        /**
 	 * Method to increment the hit counter for the study
 	 *
 	 * @access	public

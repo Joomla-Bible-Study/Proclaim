@@ -1,25 +1,19 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php 
+
+defined('_JEXEC') or die('Restriced Access');
 require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 /**
- * @author Joomla Bible Study
- * @copyright 2009
- * @desc This is a general helper file. In the future we should bring lots of small functions into this file
- */
+ * @version $Id: helper.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 
 function getAdminsettings()
 	{
 			$db =& JFactory::getDBO();
-		//	$query = 'SELECT *'
-		//	. ' FROM #__bsms_admin'
-		//	. ' WHERE id = 1';
-		//	$adminsettings = $db->loadAssoc();
-		//	$admin_params = null;
-		//	$admin_params = new JParameter($adminsettings['params']); 
-		
-	//	ToDo: A better way to access parameters. maybe use the model/table from admin?
-	//	jimport( 'joomla.application.component.view' );
-	//	jimport( 'joomla.application.component.model' );
 	
 		$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
 		$db->query();
@@ -41,11 +35,7 @@ function getTooltip($rowid, $row, $params, $admin_params, $template)
  		{duration: 500, wait: false}).start(0,1)}", 
 		'onHide'=>"function(tip) {tip.effect('opacity', 
 		{duration: 500, wait: false}).start(1,0)}");
-		JHTML::_('behavior.tooltip', '.hasTip', $toolTipArray); 
-
-		//$toolTipArray = array('className'=>'custom');
-		//JHTML::_('behavior.mootools');
-		//JHTML::_('behavior.tooltip', '.zoomTip', $toolTipArray);
+		JHTML::_('behavior.tooltip', '.hasTip', $toolTipArray);
 
         $linktext = '<span class="zoomTip" title="<strong>'.$params->get('tip_title').'  :: ';
        	$tip1 = getElementid($params->get('tip_item1'), $row, $params, $admin_params, $template);  
@@ -54,7 +44,6 @@ function getTooltip($rowid, $row, $params, $admin_params, $template)
 		$tip4 = getElementid($params->get('tip_item4'), $row, $params, $admin_params, $template);
 		$tip5 = getElementid($params->get('tip_item5'), $row, $params, $admin_params, $template);
 		$test = $params->get('tip_item1');
-		//dump ($test, 'tip1: ');
 		$linktext .= '<strong>'.$params->get('tip_item1_title').'</strong>: '.$tip1->element.'<br />';
 		$linktext .= '<strong>'.$params->get('tip_item2_title').'</strong>: '.$tip2->element.'<br /><br />';
 		$linktext .= '<strong>'.$params->get('tip_item3_title').'</strong>: '.$tip3->element.'<br />';
@@ -81,5 +70,3 @@ else { document.getElementById(d).style.display = "none"; }
 
 		return $showhide;
 	}
-
-?>

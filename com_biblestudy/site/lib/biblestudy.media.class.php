@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @author Tom Fuller - Joomla Bible Study
- * @copyright 2010
- * @desc Class file to create the mediatable
- */
+ * @version $Id: biblestudy.media.class.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 defined('_JEXEC') or die();
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
@@ -53,11 +55,8 @@ class jbsMedia
         foreach ($mediaids AS $media)
         {
             //Step 1 is to get the media file
-//dump ($media->impath);
             $image = $images->getMediaImage($media->impath, $media->path2);
-
-          //  $itemparams = new JParameter ($media->params);
-  // Convert parameter fields to objects.
+            // Convert parameter fields to objects.
 				$registry = new JRegistry;
 				$registry->loadJSON($media->params);
                 $itemparams = $registry;
@@ -276,15 +275,12 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
     
     //Get the popup or inline - 1 = popup, 2 = inline
     
-      $player->type = 1; //dump ($player->type, 'type: ');
+      $player->type = 1;
       //This is the global parameter set in Template Display settings
       $param_playertype = $params->get('internal_popup');
       if (!$param_playertype){$param_playertype = 1;}
-  //    dump ($param_playertype, 'param: ');
       //This is the media item specific parameter
-   //   $item_playertype = $itemparams->get('internal_popup');
       $item_playertype = $media->popup;
-   //   dump ($item_playertype, 'item: ');
       if ($param_playertype)
       {
         $player->type = $param_playertype;
@@ -306,9 +302,6 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
         }
       
     //added because if you choose a direct player and popup the media file will play twice
-  //  if ($player->player == 1){$player->type = 1;}
-  // dump ($player->type, 'player: ');
- //  if ($itemparams->get('internal_popup')== '') {$player->type = $params_playertype;}
     return $player;
 }
 

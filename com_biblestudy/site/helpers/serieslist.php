@@ -1,14 +1,20 @@
 <?php 
 
+/**
+ * @version $Id: serieslist.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 defined('_JEXEC') or die('Restriced Access');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
-{ //dump ($row->series_thumbnail, 'series: ');
-	//dump ($row);
+{ 
 	$listing = '';
-	//$listing = '<table id="bslisttable" cellspacing="0">';
 	$path1 = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
@@ -18,11 +24,9 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	else {$listing .= '<tr class="firstrow firstcol '.$oddeven.'">';}
 	
 	$custom = $params->get('seriescustom1');
-	$listelementid = $params->get('serieselement1'); //dump ($listelementid, 'listelementid: ');
+	$listelementid = $params->get('serieselement1');
 	$islink = $params->get('seriesislink1');
 	$r = 'firstcol';
-	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
-	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);} 
 	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
 	$listing .= $listelement;
 	if (!$listelementid)
@@ -35,9 +39,6 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	$listelementid = $params->get('serieselement2');
 	$islink = $params->get('seriesislink2');
 	$r = '';
-	//dump ($row);
-	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
-	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
 	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view); 
 		$listing .= $listelement;
 	if (!$listelementid)
@@ -49,8 +50,6 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	$listelementid = $params->get('serieselement3');
 	$islink = $params->get('seriesislink3');
 	$r = '';
-	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
-	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
 	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view); 
 	$listing .= $listelement;
 	if (!$listelementid)
@@ -63,12 +62,8 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	$listelementid = $params->get('serieselement4');
 	$islink = $params->get('seriesislink4');
 	$r = 'lastcol';
-	//if (!$custom){$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params);}
-	//if ($custom){$listelement = seriesGetcustom($r, $row, $listelementid, $custom, $islink, $admin_params, $params);} 
-	//dump ($listelement, 'listelement: ');
 	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
-	$listing .= $listelement; 
-	//dump ($listelement);
+	$listing .= $listelement;
 		if (!$listelementid)
 		{
 			$listing .= '<td class="lastcol"></td>'; 
@@ -86,11 +81,8 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 				$listing .= ' - '.'<a href="index.php?option=com_biblestudy&view=seriesdetail&t='.$params->get('seriesdetailtemplateid', 1).'&id='.$row->id.'">'.JText::_('JBS_CMN_READ_MORE').'</a>';
 			}
 			else {$listing .= $row->description;}
-			//elseif ($view == 1) {$listing .= getSeriesstudies($row, $params, $admin_params);}
 			$listing .= '</td></tr>';
 		}
-	//dump ($listing, 'listing: ');
-	//$listing .= '</table>';
 	return $listing;
 }
 
@@ -116,8 +108,7 @@ function getStudieslink($islink, $row, $element, $params, $admin_params)
 }
 
 function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view)
-{//dump ($admin_params->get('teachers_imagefolder'), 'listelementidcheck: ');
-	//dump ($r);
+{
 	$element = '';
 	switch ($listelementid)
 	{ 
@@ -175,7 +166,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 			if ($islink > 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' description"><p>'.$element.'</p></td>';
 			break;
-	}//dump ($element, 'element: ');
+	}
 	return $element;
 }	
 	function seriesGetcustom($r, $row, $customelement, $custom, $islink, $admin_params, $params)
@@ -256,7 +247,6 @@ function getSeriesstudies($id, $params, $admin_params, $template)
     	.' WHERE s.series_id = '.$id.' AND s.published = 1 ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC');
         $db->setQuery($query);
     	$results = $db->loadObjectList();
-    //	$numrows = $db->getAffectedRows();
         $items = $results;
          //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
@@ -277,9 +267,6 @@ function getSeriesstudies($id, $params, $admin_params, $template)
         $result = $items;
         $numrows = count($result);
         
-    
-	
-	//dump ($rows, 'rows: ');
 	$class1 = 'bsodd';
  	$class2 = 'bseven';
  	$oddeven = $class1;
@@ -414,7 +401,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 }
 
 function getSerieslistExp($row, $params, $admin_params, $template)
-{ //dump ($row->series_thumbnail, 'series: ');
+{
 	
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
@@ -423,24 +410,15 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 	include_once($path1.'helper.php');
 	$t = $params->get('serieslisttemplateid');
 	include_once($path1.'image.php');
-	//dump ($t, "Template");
-	//dump ($row, "Row - SeriesList.php");
 	$images = new jbsImages();
 	$image = $images->getSeriesThumbnail($row->series_thumbnail);
-//if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
-//	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-//if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 
-//	{ $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
-//$image = getImage($i_path);
 			
 	$label = $params->get('series_templatecode');
-    $label = str_replace('{{teacher}}', $row->teachername, $label);
-    $label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
+        $label = str_replace('{{teacher}}', $row->teachername, $label);
+        $label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
 	$label = str_replace('{{title}}', $row->series_text, $label);
 	$label = str_replace('{{description}}', $row->description, $label);
 	$label = str_replace('{{thumbnail}}', '<img src="'. $image->path .'" width="' .$image->width .'" height="' . $image->height . '" />', $label);
-	//$label = str_replace('{{thumbh}}', $row->thumbh, $label);
-	//$label = str_replace('{{thumbw}}', $row->thumbw, $label);
 	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&t='.$template.'&id='.$row->id, $label);
     
 	return $label;
@@ -448,14 +426,11 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 
 function getSeriesDetailsExp($row, $params, $admin_params, $template)
     {
-        //dump ($admin_params, 'admin_params: ');
-		//seriesdesc_template
         $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	    include_once($path1.'elements.php');
 	    include_once($path1.'scripture.php');
 	    include_once($path1.'custom.php');
 	    include_once($path1.'passage.php');
-	    //include_once($path1.'mediatable.php');
 	    //This will eventually replace mediatable in this context.  Just for clarity.
 	    include_once($path1.'media.php');
         include_once($path1.'share.php');
@@ -464,11 +439,6 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
         include_once($path1.'image.php');    
         $images = new jbsImages();
 		$image = $images->getSeriesThumbnail($row->series_thumbnail);
-//if ($row->series_thumbnail && !$admin_params->get('series_imagefolder')) 
-//	{ $i_path = 'components/com_biblestudy/images/'.$row->series_thumbnail; }
-//if ($row->series_thumbnail && $admin_params->get('series_imagefolder')) 
-//	{ $i_path = 'images/'.$admin_params->get('series_imagefolder').'/'.$row->series_thumbnail;}
-//$image = getImage($i_path);
 
         $label = $params->get('series_detailcode');
         $label = str_replace('{{teacher}}', $row->teachername, $label);
@@ -483,15 +453,12 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
 	
     }
 
-/*
 
-*/
 function getSeriesstudiesExp($id, $params, $admin_params, $template)
 {
     $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
     include_once($path1.'listing.php');
     $path2 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'models'.DS;
-  //  include_once($path2.'studieslist.php');
     
 	$limit = '';
 	$nolimit = JRequest::getVar('nolimit', 'int', 0);
@@ -581,15 +548,6 @@ switch ($params->get('series_wrapcode')) {
         break;
       }
   echo $params->get('series_headercode');
-
-
-
-			
-//	if ($params->get('series_list_return') > 0) 
-//		{		
-//			$studies .= getSeriesFooter($templatementid, $id).'</table>';
-//		}
-		
 	
 return $studies;
 

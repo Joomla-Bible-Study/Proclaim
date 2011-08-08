@@ -1,4 +1,14 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php 
+
+/**
+ * @version $Id: elements.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restriced Access');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
 function getElementid($rowid, $row, $params, $admin_params, $template)
@@ -150,14 +160,10 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			$elementid->id = 'thumbnail';
 			$elementid->headertext = JText::_('JBS_CMN_THUMBNAIL');
 			
-			//$i_path = ($admin_params->get('study_images') ? 'images/'.$admin_params->get('study_images') : 'images/'.'stories');
 			if ($row->thumbnailm) 
 			{
 				$images = new jbsImages(); 
 				$image = $images->getStudyThumbnail($row->thumbnailm);
-			//	$i_image = $row->thumbnailm;
-			//	$i_path = $i_path.'/'.$i_image;
-			//	$image = getImage($i_path);
     			$elementid->element = '<img src="'.JURI::base().$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->studytitle.'">';
 			}
 			else {$elementid->element = '';}
@@ -165,14 +171,10 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 26:
 			$elementid->id = 'series_thumbnail';
 			$elementid->headertext = JText::_('JBS_CMN_THUMBNAIL');
-		//	$i_path = ($admin_params->get('series_imagefolder') ? 'images/'.$admin_params->get('series_imagefolder') : 'images/stories');
 			if ($row->series_thumbnail) 
 			{
 				$images = new jbsImages(); 
-				$image = $images->getSeriesThumbnail($row->series_thumbnail); // dump ($image, 'image: ');
-			//	$i_image = $row->series_thumbnail;
-			//	$i_path = $i_path.'/'.$i_image;
-			//	$image = getImage($i_path);
+				$image = $images->getSeriesThumbnail($row->series_thumbnail);
     			$elementid->element = '<img src="'.JURI::base().$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->series_text.'">';
 			}
 			else {$elementid->element = '';}
@@ -180,8 +182,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 27:
 			$elementid->id = 'series_description';
 			$elementid->headertext = JText::_('JBS_CMN_DESCRIPTION');
-			$elementid->element = $row->sdescription; //dump ($row->sdescription, 'sdescription: ');
-			//dump ($element->element, 'element: ');
+			$elementid->element = $row->sdescription;
 			break;
         case 28:
             $elementid->id = 'plays';
@@ -207,6 +208,5 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			$elementid->element = '';
 			break;
 		}
-		//dump ($elementid, 'elementid: ');
 		return $elementid;
 	}

@@ -1,4 +1,11 @@
 <?php
+/**
+ * @version $Id: studieslist.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined('_JEXEC') or die();
 $mainframe = & JFactory::getApplication();
@@ -38,16 +45,12 @@ class biblestudyModelstudieslist extends JModelList {
         $option = JRequest::getCmd('option');
         $params = & $mainframe->getPageParameters();
 
-        //	$t = $params->get('t');
         $t = JRequest::getInt('t', 'get');
         if (!$t) {
             $t = 1;
         }
-        //	JRequest::setVar( 't', $t, 'get');
-        //	dump ($t);
         $template = $this->getTemplate();
         jimport('joomla.html.parameter');
-        //	$params = new JParameter($template[0]->params);
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($template[0]->params);

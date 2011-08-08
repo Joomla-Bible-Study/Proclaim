@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @desc This class gets podcast episodes and writes xml files of podcasts
- * @author Tom Fuller
- * @copyright 2010
- */
+ * @version $Id: biblestudy.podcast.class.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 defined('_JEXEC') or die();
 jimport('joomla.html.parameter');
 class JBSPodcast

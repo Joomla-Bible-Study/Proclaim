@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @version $Id: teacherdisplay.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
@@ -40,13 +46,10 @@ class biblestudyModelteacherdisplay extends JModel
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
         jimport('joomla.html.parameter');
-		$params 			=& $mainframe->getPageParameters();
-	//	$t = $params->get('t');
+		$params =& $mainframe->getPageParameters();
     $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-	//	JRequest::setVar( 't', $t, 'get');
 		$template = $this->getTemplate();
-	//	$params = new JParameter($template[0]->params);
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
 				$registry->loadJSON($template[0]->params);

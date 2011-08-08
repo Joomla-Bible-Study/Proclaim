@@ -1,16 +1,15 @@
 <?php
 /**
- * Series Detail Controller for Bible Study Component
- * 
- 
- */
+ * @version $Id: seriesdetail.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted Access');
-//jimport('joomla.application.componet.controller');
-/**
- *
- */
+
 class biblestudyControllerseriesdetail extends JController
 {
 	/**
@@ -29,10 +28,5 @@ class biblestudyControllerseriesdetail extends JController
 	 * display the edit form
 	 * @return void
 	 */
-
-
 	
 }
-	
-
-?>

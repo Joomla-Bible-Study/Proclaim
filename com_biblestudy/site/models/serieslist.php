@@ -1,4 +1,12 @@
 <?php
+/**
+ * @version $Id: serieslist.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 defined('_JEXEC') or die();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 jimport( 'joomla.application.component.model' );
@@ -11,7 +19,6 @@ class biblestudyModelserieslist extends JModel
 
 	var $_total = null;
 	var $_pagination = null;
-	
 	/**
 	 * @desc From database
 	 */
@@ -34,13 +41,10 @@ class biblestudyModelserieslist extends JModel
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params =& $mainframe->getPageParameters();
-	//	$t = $params->get('t');
     $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-	//	JRequest::setVar( 't', $t, 'get');
     jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
-	//	$params = new JParameter($template[0]->params);
 		
           // Convert parameter fields to objects.
 				$registry = new JRegistry;

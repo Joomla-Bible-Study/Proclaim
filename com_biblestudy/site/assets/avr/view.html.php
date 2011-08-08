@@ -12,7 +12,6 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
-//jimport('joomla.plugin.plugin');
 
 /**
  * Popup View
@@ -80,8 +79,6 @@ class AvReloadedViewPopup extends JView
             $data =& $db->loadObject();  
             // Cleanup record older than 1 day
             // TODO: Investigate caching problem
-            // $db->setQuery('DELETE FROM #__avr_popup WHERE wtime < SUBDATE(NOW(), 1)');
-            // $db->query();
             if (empty($data) || empty($data->code)) {
                 $ret = '<span style="color:red"><b>'.
                     JText::_('AVR_ERR_POPUP_DATABASE').'</b></span>';

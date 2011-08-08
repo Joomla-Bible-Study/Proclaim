@@ -1,10 +1,15 @@
-<?php defined('_JEXEC') or die('Restriced Access');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+<?php
+
 /**
- * @author Joomla Bible Study
- * @copyright 2009
- * @desc This is a general helper file. In the future we should bring lots of small functions into this file
- */
+ * @version $Id: helper.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restriced Access');
+require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 //This function is designed to extract an Itemid for the component if none exists in the GET variable. Mainly to address problems with 
 // All Videos Reloaded
  function getItemidLink(){
@@ -56,7 +61,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 			   	
 			   	case 1:
    				//Look for an itemid in the com_menu table from the /helpers/helper.php file
-   				$itemid = $itemid; //dump($itemid, 'itemid: ');
+   				$itemid = $itemid;
    				break;
    				
 			   	case 2:
@@ -75,7 +80,6 @@ function getAdminsettings()
 		$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
 		$db->query();
 		$compat = $db->loadObject();
-	//	$admin_params = new JParameter($compat->params);
 			
             // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -99,10 +103,6 @@ function getTooltip($rowid, $row, $params, $admin_params, $template)
 		{duration: 500, wait: false}).start(1,0)}");
 		JHTML::_('behavior.tooltip', '.hasTip', $toolTipArray); 
 
-		//$toolTipArray = array('className'=>'custom');
-		//JHTML::_('behavior.mootools');
-		//JHTML::_('behavior.tooltip', '.zoomTip', $toolTipArray);
-
         $linktext = '<span class="zoomTip" title="<strong>'.$params->get('tip_title').'  :: ';
        	$tip1 = getElementid($params->get('tip_item1'), $row, $params, $admin_params, $template);  
 		$tip2 = getElementid($params->get('tip_item2'), $row, $params, $admin_params, $template);
@@ -110,7 +110,6 @@ function getTooltip($rowid, $row, $params, $admin_params, $template)
 		$tip4 = getElementid($params->get('tip_item4'), $row, $params, $admin_params, $template);
 		$tip5 = getElementid($params->get('tip_item5'), $row, $params, $admin_params, $template);
 		$test = $params->get('tip_item1');
-		//dump ($test, 'tip1: ');
 		$linktext .= '<strong>'.$params->get('tip_item1_title').'</strong>: '.$tip1->element.'<br />';
 		$linktext .= '<strong>'.$params->get('tip_item2_title').'</strong>: '.$tip2->element.'<br /><br />';
 		$linktext .= '<strong>'.$params->get('tip_item3_title').'</strong>: '.$tip3->element.'<br />';
@@ -137,4 +136,3 @@ else { document.getElementById(d).style.display = "none"; }
 
 		return $showhide;
 	}
-?>

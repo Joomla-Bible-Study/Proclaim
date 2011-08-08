@@ -81,7 +81,7 @@ class Tablemediafilesedit extends JTable
     
     return parent::bind($array, $ignore);
     }
-     /**
+        /**
          * Method to compute the default name of the asset.
          * The default name is in the form `table_name.id`
          * where id is the value of the primary key of the table.
@@ -119,7 +119,7 @@ class Tablemediafilesedit extends JTable
                 $asset->loadByName('com_biblestudy');
                 return $asset->id;
         }
-/**
+        /**
          * Overloaded load function
          *
          * @param       int $pk primary key

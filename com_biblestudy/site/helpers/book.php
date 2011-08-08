@@ -1,4 +1,14 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php 
+
+/**
+ * @version $Id: book.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restriced Access');
 
 function getBooksLandingPage($params, $id, $admin_params)
 {
@@ -6,15 +16,11 @@ function getBooksLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-//	$addItemid = '';
-//	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$book = null;
 	$teacherid = null;
 	$template = $params->get('studieslisttemplateid');
-	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landingbookslimit');
 	if (!$limit) {$limit = 10000;}
-//	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 		$book = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
@@ -92,4 +98,3 @@ function getBooksLandingPage($params, $id, $admin_params)
         
 	return $book;
 }
-?>

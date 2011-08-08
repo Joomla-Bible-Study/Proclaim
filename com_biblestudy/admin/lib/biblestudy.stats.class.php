@@ -100,7 +100,6 @@ class jbStats {
 		{
 			$top_studies .= $result->hits.' '.JText::_('JBS_CMN_HITS').' - <a href="index.php?option=com_biblestudy&view=studiesedit&task=edit&layout=form&cid[]='.$result->id.'">'.$result->studytitle.'</a> - '.date('Y-m-d', strtotime($result->studydate)).'<br>';
 		}
-		//return count($results) > 0 ? $results : array();
 		return  $top_studies;
 	}
 
@@ -357,5 +356,3 @@ function popups()
     return $popups;
 }
 }
-
-?>

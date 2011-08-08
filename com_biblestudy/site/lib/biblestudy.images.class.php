@@ -1,13 +1,14 @@
 <?php
 
 /**
- * @author Joomla Bible Study
- * @copyright 2010
- * @desc Provides paths to image folders and correct path to image
- */
+ * @version $Id: biblestudy.images.class.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined('_JEXEC') or die('Restricted access');
-//require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 jimport('joomla.html.parameter');
 class jbsImages 
 {
@@ -18,7 +19,6 @@ class jbsImages
 		$database->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
 		$database->query();
 		$compat = $database->loadObject();
-	//	$admin_params = new JParameter($compat->params);
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -56,7 +56,7 @@ class jbsImages
 				$tmp->mime		= @$info['mime'];
 				if (!$tmp->width) {$tmp->width=0;}
 				if (!$tmp->height) {$tmp->height=0;}
-		} //dump ($tmp, 'image: ');
+                }
 	return $tmp;
 	}
 
@@ -67,8 +67,7 @@ class jbsImages
 		$image = null;
 		$database	= & JFactory::getDBO();
 		$database->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
-		$admin = $database->loadObject(); //print_r($admin);
-		//	$admin_params = new JParameter($compat->params);
+		$admin = $database->loadObject();
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -84,7 +83,7 @@ class jbsImages
                 $path = $admin_params->get('default_main_image');
             }
 		
-		$mainimage = $this->getImagePath($path);	//dump ($mainimage, 'mainimage: ');
+		$mainimage = $this->getImagePath($path);
 		return $mainimage;	
 	}	
 
@@ -137,7 +136,7 @@ class jbsImages
 		$folder = $this->getSeriesImageFolder();
 		$path = $folder .'/'. $image;
         if (substr_count($image,'/')) {$path = $image;}
-		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
 	
@@ -158,7 +157,7 @@ class jbsImages
             {$path = $image1;}
 		}
 		
-		$imagepath = $this->getImagePath($path); //dump ($folder, 'folder: '); dump ($path, 'path: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
 	
@@ -166,8 +165,6 @@ class jbsImages
 	{
 		$imagepath = array();
         $folder = $this->getTeacherImageFolder();
-		//$image1 is teacher->teacher_image, $image2 is teacher->image
-		//compatibility check: test for '0' or '- no image -' or similar
 		if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0)
 		{
 			$path = $image2;
@@ -179,7 +176,7 @@ class jbsImages
             if (substr_count($media1,'/') > 0)
             {$path = $image1;}
 		}
-		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
 	
@@ -187,8 +184,6 @@ class jbsImages
 	{
 		$imagepath = array();
         $folder = $this->getMediaImageFolder();
-		//$media1 is the new, $media2 is the old full path
-		//compatibility check: test for '0' or '- no image -' or similar
 		if (!$media1 || $media1 == '0' || strncmp($media1, '- ', 2) == 0)
 		{
 			$path = $media2;
@@ -199,9 +194,8 @@ class jbsImages
 			$path = $folder .'/'. $media1;
             if (substr_count($media1,'/') > 0)
             {$path = $media1;}
-//dump ($folder); dump($path);
 		}
-		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
 	
@@ -209,8 +203,7 @@ class jbsImages
 	{
 		$database	= & JFactory::getDBO();
 		$database->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
-		$admin = $database->loadObject(); //print_r($admin);
-	//	$admin_params = new JParameter($admin->params);
+		$admin = $database->loadObject();
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -226,11 +219,9 @@ class jbsImages
 			$path = $admin_params->get('default_showHide_image');
    		}
 		
-		$imagepath = $this->getImagePath($path); //dump ($imagepath, 'imagepath: ');
+		$imagepath = $this->getImagePath($path);
 		return $imagepath;
 	}
 	
 	
 } // End of class
-	
-?>

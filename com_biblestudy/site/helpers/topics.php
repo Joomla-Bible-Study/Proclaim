@@ -1,4 +1,12 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php 
+/**
+ * @version $Id: topics.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+defined('_JEXEC') or die('Restriced Access');
 
 function getTopicsLandingPage($params, $id, $admin_params)
 {
@@ -6,19 +14,15 @@ function getTopicsLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-	//$addItemid = '';
-	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$topic = null;
 	$teacherid = null;
 	$template = $params->get('studieslisttemplateid');
-	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landingtopicslimit');
 	if (!$limit) {$limit = 10000;}
 	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 
 		$topic = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
-//		$query = 'select distinct a.* from #__bsms_topics a inner join #__bsms_studytopics b on a.id = b.topic_id';
 		$query = 'select distinct a.id, a.topic_text, a.published, a.params AS topic_params from #__bsms_topics a inner join #__bsms_studies b on a.id = b.topics_id';
 		$db->setQuery($query);
 		
@@ -65,7 +69,7 @@ function getTopicsLandingPage($params, $id, $admin_params)
             
             $topic .= '</td>';
             $i++;
-            $t++; //dump ($t, 't: ');
+            $t++;
             if ($i == 3) {
                 $topic .= "\n\t" . '</tr>';
                 $i = 0;
@@ -90,4 +94,3 @@ function getTopicsLandingPage($params, $id, $admin_params)
         
 	return $topic;
 }
-?>

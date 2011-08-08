@@ -1,4 +1,13 @@
-<?php defined('_JEXEC') or die();
+<?php
+/**
+ * @version $Id: scripture.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die();
 
 function getScripture($params, $row, $esv, $scripturerow) {
 	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
@@ -31,7 +40,6 @@ function getScripture($params, $row, $esv, $scripturerow) {
 	$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
 	$db->setQuery($query);
 	$booknameresults = $db->loadObject();
-	//dump ($show_verses, 'show_verses ');
 	if (!isset($booknameresults)){$scripture = ''; return $scripture;}
 	if ($booknameresults->bookname) {$book = JText::_($booknameresults->bookname);} else {$book = '';}
 	$b1 = ' ';
@@ -115,5 +123,3 @@ function getScripture($params, $row, $esv, $scripturerow) {
 		
 	return $scripture;
 }
-
-?>

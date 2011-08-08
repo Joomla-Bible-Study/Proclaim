@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @version $Id: seriesdetail.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
@@ -29,15 +35,12 @@ class biblestudyModelseriesdetail extends JModel
 		
 		 ////set the default view search path
         $this->addTablePath(JPATH_COMPONENT.DS.'tables');
-        $params 			=& $mainframe->getPageParameters();
-	//	$t = $params->get('t');
+        $params =& $mainframe->getPageParameters();
     $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-	//	JRequest::setVar( 't', $t, 'get');
 		$this->_id = $id;
         jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
-	//	$params = new JParameter($template[0]->params);
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -49,12 +52,12 @@ class biblestudyModelseriesdetail extends JModel
 	function setId($id)
 	{
 		// Set id and wipe data
-        if (!$id ){$id = JRequest::getInt('returnid','get');} //dump ($id, 'id: ');
+        if (!$id ){$id = JRequest::getInt('returnid','get');}
 		$this->_id		= $id;
 		$this->_data	= null;
 	}
 
-/**
+        /**
 	 * Method to increment the hit counter for the study
 	 *
 	 * @access	public
@@ -80,11 +83,12 @@ class biblestudyModelseriesdetail extends JModel
 		return $this->_data;
 	}
 
-/*	*
+        /**
 	 * Method to store a record
 	 *
 	 * @access	public
-	 * @return	boolean	True on success*/
+	 * @return	boolean	True on success
+         */
 	 
 	
 

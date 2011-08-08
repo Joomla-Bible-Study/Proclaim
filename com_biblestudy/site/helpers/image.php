@@ -1,16 +1,22 @@
-<?php defined( '_JEXEC' ) or die( 'Restricted access' );
+<?php 
+
+/**
+ * @version $Id: image.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined( '_JEXEC' ) or die( 'Restricted access' );
 
 function getImage($path)
 {
 	error_reporting(0);
 	jimport('joomla.filesystem.folder');
 	jimport('joomla.filesystem.file');
-	//dump ($path, 'ppath: ');
-	//dump ($file, 'file: ');
 	$tmp = new JObject();
-	//$tmp->name = $file;
 	$tmp->path = $path;
-	//dump ($path, 'path: ');
 
 	$tmp->size = filesize($tmp->path);	
 	$ext = strtolower(JFile::getExt($path));

@@ -1,9 +1,11 @@
 <?php
 /**
  * @version     $Id: view.html.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 //No Direct Access
 defined('_JEXEC') or die();
@@ -27,11 +29,7 @@ class biblestudyViewmediaedit extends JView
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
         $this->setLayout('form');
-		
-//		$admin = $this->get('Admin');
-//		$admin_params = new JParameter($admin[0]->params);
-//		$directory = ($admin_params->get('media_imagefolder') != '' ? '/images/'.$admin_params->get('media_imagefolder') : '/components/com_biblestudy/images'); // santon 2011-04-20 no more available
-		$directory = '/components/com_biblestudy/images';
+	$directory = '/components/com_biblestudy/images';
         $this->assignRef('directory', $directory);
        
         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mediaedit' );
@@ -56,4 +54,3 @@ class biblestudyViewmediaedit extends JView
         JToolBarHelper::help('biblestudy', true);
     }
 }
-?>

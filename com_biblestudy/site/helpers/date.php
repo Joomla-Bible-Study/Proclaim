@@ -1,9 +1,17 @@
-<?php defined('_JEXEC') or die('Restricted access');
+<?php 
+
+/**
+ * @version $Id: date.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restricted access');
 
 function getstudyDate($params, $studydate) {
-	//dump ($params, 'params: ');
 switch ($params->get('date_format'))
-//switch ($params->date_format)
 	{
 	 case 0:
 		$date	= date('M j, Y', strtotime($studydate));

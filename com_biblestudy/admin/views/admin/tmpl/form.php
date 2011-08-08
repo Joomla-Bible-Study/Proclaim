@@ -1,9 +1,11 @@
 <?php
 /**
  * @version     $Id: form.php 1467 2011-01-31 23:20:10Z tomfuller2 $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -230,5 +232,3 @@ $params = $this->form->getFieldsets();
     <?php echo JHtml::_('form.token'); ?>
 </form>
     <?php echo JHtml::_('tabs.end');
-                       
-

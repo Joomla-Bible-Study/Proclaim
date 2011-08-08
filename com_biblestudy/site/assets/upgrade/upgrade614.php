@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @author Joomla Bible Study
- * @copyright 2010
- * @desc This routine is designed to be the upgrade from database version 613 to 614. This corresponds with version 6.2 of com_biblestudy
- */
+ * @version $Id: upgrade614.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined('_JEXEC') or die();
 
@@ -33,4 +35,3 @@ function updateTemplate()
 	$db->query();
 	$rows = $db->loadObjectList();
 }
-?>

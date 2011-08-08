@@ -1,9 +1,12 @@
 <?php
 
 /**
- * @author Tom Fuller
- * @copyright 2010
- */
+ * @version $Id: mediatable.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined('_JEXEC') or die();
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
@@ -12,10 +15,8 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 function getMediatable($params, $row, $admin_params)
 {
       jimport('joomla.html.parameter');
-//dump ($row, 'row: ');
 	$getMedia = new jbsMedia();
 jimport ('joomla.application.component.helper');
-//dump ($admin_params, 'admin_params: ');
 if (!$row->id) {return FALSE;}
     $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 	$database = & JFactory::getDBO();
@@ -29,12 +30,10 @@ if (!$row->id) {return FALSE;}
 	$database->query();
 	$admin = $database->loadObjectList();
 
-
-//	$d_image = ($admin[0]->download ? '/'.$admin[0]->download : '/download.png');  // santon: $admin[0]->download is not available; correct to $admin[0]->params->default_download_image
 	$d_image = ($admin[0]->params->default_download_image ? '/'.$admin[0]->params->default_download_image : '/download.png');
 
 	$images = new jbsImages();
-// 	$download_tmp = $images->getMediaImage($admin[0]->download, $media=NULL);  // santon: $admin[0]->download is not available; correct to $admin[0]->params->default_download_image
+
  	$download_tmp = $images->getMediaImage($admin[0]->params->default_download_image, $media=NULL);
 
     $download_image = $download_tmp->path;
@@ -68,7 +67,6 @@ if (!$row->id) {return FALSE;}
 
 	$row_count = $row_count + 1;
 	//Load the parameters
- //   $itemparams = new JParameter ($media->params);
             
               // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -88,28 +86,23 @@ if (!$row->id) {return FALSE;}
 	 $idfield = '#__bsms_mediafiles.id';
 	  $filesize = getFilesize($media->size);
 	  $duration = getDuration($params, $row); //This one IS needed
-	  //dump ($duration, 'duration: ');
-	  //dump ($params);
       $mimetype = $media->mimetext;
       $src = JURI::base().$image->path;
 	  $height = $image->height;
 	  $width = $image->width;
       $ispath = 0;
 	  $mime = '';
-//	  $path1 = getFilepath($media->id, $idfield, $mime);
       $path1 = $media->spath.$media->fpath.$media->filename;
  if(!eregi('http://', $path1))
 				{
 					$path1 = 'http://'.$path1;
 				}
-	//  dump ($itemparams, 'items: ');
        $playerwidth = $params->get('player_width');
        $playerheight = $params->get('player_height');
        if ($itemparams->get('playerheight')) {$playerheight = $itemparams->get('playerheight');}
        if ($itemparams->get('playerwidth')) {$playerwidth = $itemparams->get('playerwidth');}
        $playerwidth = $playerwidth + 20;
        $playerheight = $playerheight + $params->get('popupmargin','50');
-     //dump ($playerwidth, 'width: '); dump ($playerheight, 'height: ');
 
      // Players - from Template:
      // media_player = internal player for all files
@@ -135,7 +128,6 @@ if (!$row->id) {return FALSE;}
 	  {
 	  	$playertype = 3;
 	  }
-//dump ($playertype, 'playertype: ');
 //$type = 1 is popup
 //$item comes from the individual media file 0 = inline, 1 = popup, 3 = use global settings
         $item = $itemparams->get('internal_popup');
@@ -143,14 +135,12 @@ if (!$row->id) {return FALSE;}
 
         if ($item < 3){$type = $internal_popup;}
         else {$type = $item;}
-        //if ($type == 1)
       switch ($playertype)
       {
       	case 0:
 
         if ($params->get('direct_internal', 0) == 1 )
         {
-                //$media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
                 	$media1_link =
                 "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&Itemid=".$Itemid."&template=".$template."&mediaid=".$media->id."', 'newwindow','width=".$playerwidth.",height=".$playerheight."'); return false\"\"><img src='".$src."' height='".$height."' width='".$width."' title='".$mimetype." ".$duration." ".$filesize."' alt='".$src."'></a>";
 
@@ -159,7 +149,6 @@ if (!$row->id) {return FALSE;}
              {
                 $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
              }
-                // 	$play = $getMedia->hitPlay($media->id);
          }
          else
          {
@@ -167,15 +156,12 @@ if (!$row->id) {return FALSE;}
        .$filesize.'" target="'.$media->special.'"><img src="'.$src
        .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
        .'" height="'.$height.'" border="0" /></a>';}
-          //  $media1_link = getDirectLink($media, $width, $height, $duration, $src, $path1, $filesize);
 
 	   $media1_link .= '<a href="'.$path1.'" onclick="window.open(\'index.php?option=com_biblestudy&view=popup&close=1&mediaid='.$media->id.'\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\'); return false;" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '.$filesize.'" target="'.$media->special.'"><img src="'.$src.'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width.'" height="'.$height.'" border="0" /></a>';
 
         break;
 
         case 1:
-    	//	$play = $getMedia->hitPlay($media->id);
-        //    $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
 
         if ($type == 1)
         {
@@ -216,16 +202,6 @@ if (!$row->id) {return FALSE;}
        /**
         * @desc: I hope to in the future load media files using this method
         */
-       /*  echo ('<div class="inlinePlayer" id="media-'.$media->id.'"></div>');
-        echo ('<a href="'.$path1.'" class="btnPlay" alt="'.$media->id.'">Play</a>');*/
-
-
-       /*$abspath    = JPATH_SITE;
-        require_once($abspath.'/components/com_biblestudy/classes/class.biblestudymediadisplay.php');
-        $inputtype = 0;
-        $media_display = new biblestudymediadisplay($row->id, $inputtype);
-        $media_display->id = $row->id;
-        $media_display->inputtype = 0;*/
 
        // Here is where we begin to build the mediatable variable
 
@@ -348,5 +324,3 @@ function getVirtuemart($media, $width, $height, $src, $params)
     $mediaRows = $database->loadObjectList();
     return $mediaRows;
     }
-
-?>

@@ -1,9 +1,12 @@
 <?php
 
 /**
- * @author Tom Fuller
- * @copyright 2011
- */
+ * @version $Id: biblestudy.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 defined('_JEXEC') or die('Restriced Access');
 
 class BibleStudyHelper
@@ -98,7 +101,6 @@ public static function getActions($Itemid = 0, $type = null)
                     }
                     
                 }
-// dump ($assetName);
                 $actions = array(
                         'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete'
                 );
@@ -331,5 +333,3 @@ public static function getActions($Itemid = 0, $type = null)
 		return $text;
 	}
  }
-
-?>

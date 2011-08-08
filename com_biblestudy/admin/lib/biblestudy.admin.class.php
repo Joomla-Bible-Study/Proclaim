@@ -1,9 +1,12 @@
 <?php
 
 /**
- * @author Tom Fuller
- * @copyright 2010
- */
+ * @version $Id: biblestudy.admin.class.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 require_once ( JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
@@ -232,14 +235,7 @@ function commentsPermission($params)
 
 function getShowLevel($row)
 {
-    $show = null;
-  /*
-    $database = JFactory::getDBO();
-    $query = "SELECT id, title FROM #__usergroups";
-    $database->setQuery($query);
-    $database->query();
-    $groupids = $database->loadObjectList();
-  */  
+    $show = null; 
     $user =& JFactory::getUser();
     $usrid = $user->get('id');
     $getGroups = JAccess::getGroupsByUser($usrid);
@@ -291,5 +287,3 @@ function showRows($results)
         return $groupids;
     }
 } // End of class
-
-?>

@@ -1,10 +1,12 @@
 <?php
 defined('_JEXEC') or die('Restriced Access');
 /**
-* @author Joomla Bible Study
-* @copyright 2010
-* Need to have sh404SEF version 1.5.5 or greater
-*/
+ * @version $Id: updatesef.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 function updateSEF()
 {
@@ -170,11 +172,6 @@ else
 	$messagetable = 'UpdateSEF was successful';
 }
 
-	//$msg = implode('|',$msg);
 	return $messagetable;
-//	$msg = implode('|',$msg);
-	//return $msg;
 	
 }
-
-?>

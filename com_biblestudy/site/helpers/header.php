@@ -1,14 +1,20 @@
 <?php
+
+/**
+ * @version $Id: header.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 defined('_JEXEC') or die();
 
 function getHeader($row, $params, $admin_params, $template, $showheader, $ismodule)
 { 
-//print_r($row);
-//dump ($template, 'Header - Template: ');
 	//$nh checks to see if there is a header in use, otherwise it puts a line at the top of the listing
 	$nh = FALSE;
 	if  ($showheader < 1){$nh = TRUE;}
-	//dump ($params->get('use_headers_list'), 'nh: ');
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'elements.php');
 	
@@ -117,7 +123,6 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
 	else {
 	//here we go through each position to see if it has a positive value, get the cell using getHeadercell and return the final header
  	$lastrow = 0;
- 	//if ($rows == 1) {$lastrow = 1;}
  	$listing = '<thead><tr';
 	if ($rows == 1) {$listing .= ' class = "lastrow"';}
 	$listing .='>
@@ -274,8 +279,6 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
 		 if ($params->get('row4col1') < 1) {$params->set('row4col1', 100);}
 		$listing .= getHeadercell($params->get('row4col1'), $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template);
  	
- 	
-	
  	if ($columns > 1 && $params->get('r4c1span') < 2)
  	{
 	 	$colspan = $params->get('r4c2span');
@@ -315,7 +318,6 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
 
 function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template)
 {
-		//print_r($row);
 	 	$headercell = '<th id="';
         if ($rowid == '20'){$elementid = null; $elementid->headertext = JText::_('JBS_CMN_MEDIA'); $elementid->id = 'jbsmedia';}
         else
@@ -329,12 +331,9 @@ function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $row
 		if ($colspan > 1) {$headercell .= 'colspan="'.$colspan.'" ';}
 		if ($rowspan > 1){$headercell .='rowspan="'.$rowspan.'"';}
 		$headercell .= '>';
-		//if (!$elementid->headertext) {$headercell .= JText::_('Study Information');}
 	 	if (isset($elementid)) {$headercell .= $elementid->headertext;}
 	 	$headercell .= '</th>
 		';
  	return $headercell;
 		
 }
-        
-

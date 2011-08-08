@@ -1,4 +1,14 @@
-<?php defined('_JEXEC') or die();
+<?php
+
+/**
+ * @version $Id: filepath.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die();
 
 function getFilepath($id3, $idfield, $mime) 
 {
@@ -19,7 +29,6 @@ function getFilepath($id3, $idfield, $mime)
 	  if ($filepathresults)
 		  {
 			$filepath = $filepathresults->spath.$filepathresults->fpath.$filepathresults->filename;
-			//dump ($filepath, 'filepath: ');
 			//Check url for "http://" prefix, and add it if it doesn't exist
 			if(!eregi('http://', $filepath)) 
 				{

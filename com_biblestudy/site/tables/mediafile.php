@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @version $Id: mediafile.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
@@ -37,7 +43,7 @@ class Tablemediafile extends JTable
         }	
 
 
-/**
+        /**
          * Overloaded load function
          *
          * @param       int $pk primary key
@@ -61,7 +67,7 @@ class Tablemediafile extends JTable
                 }
         }
 
-/**
+        /**
          * Method to compute the default name of the asset.
          * The default name is in the form `table_name.id`
          * where id is the value of the primary key of the table.

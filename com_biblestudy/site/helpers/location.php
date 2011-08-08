@@ -1,4 +1,13 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php
+/**
+ * @version $Id: location.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restriced Access');
 
 function getLocationsLandingPage($params, $id, $admin_params)
 {
@@ -6,12 +15,9 @@ function getLocationsLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-	//$addItemid = '';
-	//$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
 	$location = null;
 	$teacherid = null;
 	$template = $params->get('studieslisttemplateid',1);
-	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landinglocationslimit');
 	if (!$limit) {$limit = 10000;}
 	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
@@ -88,4 +94,3 @@ function getLocationsLandingPage($params, $id, $admin_params)
         
 	return $location;
 }
-?>

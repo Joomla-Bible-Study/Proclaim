@@ -1,4 +1,14 @@
-<?php defined('_JEXEC') or die('Restricted access');
+<?php 
+
+/**
+ * @version $Id: default.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restricted access');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php'); ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=folderslist'); ?>" method="post" name="adminForm" id="adminForm">
 <fieldset id="filter-bar">

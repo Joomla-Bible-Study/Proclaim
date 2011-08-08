@@ -1,10 +1,13 @@
 <?php
 
 /**
- * @author Joomla Bible Study
- * @copyright 2011
- * @desc This class performs an update to the database from version 7.0.0 to 7.0.1
- */
+ * @version $Id: update701.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
 class updatejbs701
 {
     

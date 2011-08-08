@@ -1,4 +1,13 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php 
+/**
+ * @version $Id: messagetype.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restriced Access');
 
 function getMessageTypesLandingPage($params, $id, $admin_params)
 {
@@ -7,11 +16,10 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
 	$addItemid = '';
-	$addItemid = getItemidLink($isplugin=0, $admin_params); //dump ($addItemid, 'AddItemid: ');
+	$addItemid = getItemidLink($isplugin=0, $admin_params);
 	$messagetype = null;
 	$teacherid = null;
 	$template = $params->get('studieslisttemplateid',1);
-	//$t = $params->get('teachertemplateid');
 	$limit = $params->get('landingmessagetypeslimit');
 	if (!$limit) {$limit = 10000;}
 	
@@ -67,7 +75,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
             $messagetype .= '</td>';
             
             $i++;
-            $t++; //dump ($t, 't: ');
+            $t++;
             if ($i == 3) {
                 $messagetype .= "\n\t" . '</tr>';
                 $i = 0;
@@ -92,4 +100,3 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
         
 	return $messagetype;
 }
-?>

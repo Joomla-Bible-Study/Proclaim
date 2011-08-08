@@ -101,7 +101,6 @@ class com_biblestudyInstallerScript {
 	} //end of function uninstall()
 
 	function update($parent) {
-	//	echo '<p>'. JText::_('JBS_INS_16_CUSTOM_UPDATE_SCRIPT') .'</p>';
  
 	} // End Update
 
@@ -222,7 +221,6 @@ class com_biblestudyInstallerScript {
 		</div>
 		<?php
 		// An example of setting a redirect to a new location after the install is completed
-		//$parent-&gt;getParent()-&gt;set('redirect_url', 'http://www.google.com');
 	}
   
 } // end of class

@@ -1,13 +1,14 @@
 <?php
 /**
- * studies Edit Controller for Bible Study Component
- *
-
- */
+ * @version $Id: studydetails.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted Access');
-//jimport('joomla.application.componet.controller');
 /**
  * studies Edit Controller
  *
@@ -23,7 +24,6 @@ class biblestudyControllerstudydetails extends JController
 		parent::__construct();
 
 		// Register Extra tasks
-		//$this->registerTask( 'view' );
 	}
 
 	/**
@@ -43,8 +43,6 @@ class biblestudyControllerstudydetails extends JController
 		$t = $params->get('t');
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
-		//$template = $model->get('Template');
-	//	$params = new JParameter($model->_template[0]->params); 
         
         // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -59,13 +57,6 @@ class biblestudyControllerstudydetails extends JController
 			JRequest::setVar( 'layout', 'default'  );
 		}
 		JRequest::setVar( 'view', 'studydetails' );
-
-		//JRequest::setVar('hidemainmenu', 1);
-		//update the hit count for the study
-		//if(JRequest::getCmd('view') == 'studydetails')
-		//{
-			//$model =& $this->getModel('studydetails');
-		//$table =& $this->getTable('studydetails');
 			$model->hit();
 		//}
 
@@ -78,16 +69,6 @@ class biblestudyControllerstudydetails extends JController
 	{
 
 	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-/*	$menuitemid = JRequest::getInt( 'Itemid' );
-  if ($menuitemid)
-  {
-    $menu = JSite::getMenu();
-    $menuparams = $menu->getParams( $menuitemid );
-  }
-
-	$params =& $mainframe->getPageParameters();
-	$returnmenu = JRequest::getVar('Itemid', '0', 'POST', 'INT');
-	*/
 	$model = $this->getModel('studydetails');
 	$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
@@ -95,8 +76,6 @@ class biblestudyControllerstudydetails extends JController
 		$t = $params->get('t');
 		if (!$t){$t = 1;}
 		JRequest::setVar( 't', $t, 'get');
-		//$template = $model->get('Template');
-	//	$params = new JParameter($model->_template[0]->params);
         
         // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -119,12 +98,9 @@ class biblestudyControllerstudydetails extends JController
     // What happens when the CAPTCHA was entered incorrectly
     $mess = JText::_('JBS_STY_INCORRECT_KEY');
     echo "<script language='javascript' type='text/javascript'>alert('" . $mess ."')</script>";
-    //echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
     echo "<script language='javascript' type='text/javascript'>window.parent.location.reload()";
     return;
     $cap = 0;
-  //  die ("The reCAPTCHA wasn't entered correctly. Go back and try it again." .
-  //       "(reCAPTCHA said: " . $resp->error . ")");
   } else {
     $cap = 1;
   }
@@ -152,7 +128,6 @@ class biblestudyControllerstudydetails extends JController
 	$return = false;
 	$row->text = JRequest::getVar('scripture1');
 	JPluginHelper::importPlugin('content', 'scripturelinks' );
-//	$slparams 	= new JParameter( $plugin->params );
     
     // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -161,8 +136,6 @@ class biblestudyControllerstudydetails extends JController
     
 	$dispatcher =& JDispatcher::getInstance();
 	$results = $mainframe->triggerEvent( 'onPrepareContent', array( &$row, &$params , 1));
-	//$results = $dispatcher->trigger( 'onPrepareContent', array( &$article, &$slparams, 0));
-	//$results = $dispatcher->trigger( 'onPrepareContent', array( &$article, &$slparams, 0));
 	}
 	//End of scripture links plugin function
 
@@ -266,10 +239,8 @@ function commentsEmail($params) {
     $menu = JSite::getMenu();
     $menuparams = $menu->getParams( $menuitemid );
   }
-		//$params =& $mainframe->getPageParameters();
 		$comment_author = JRequest::getVar('full_name', 'Anonymous', 'POST', 'WORD');
 		$comment_study_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
-		//$comment_study_id = $this->thestudy;
 		$comment_email = JRequest::getVar('user_email', 'No Email', 'POST', 'WORD');
 		$comment_text = JRequest::getVar('comment_text', 'None', 'POST', 'WORD');
 		$comment_published = JRequest::getVar('published', 0, 'POST', 'INT');
@@ -300,4 +271,3 @@ function commentsEmail($params) {
 		$mail->Send();
 	}
 }
-?>

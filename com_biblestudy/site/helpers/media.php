@@ -1,4 +1,13 @@
-<?php defined('_JEXEC') or die('Restriced Access');
+<?php
+/**
+ * @version $Id: media.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die('Restriced Access');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
     function getMedia ($id)
         {
@@ -18,14 +27,12 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             . ' WHERE #__bsms_mediafiles.study_id = '.$id.' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
 
             $database->setQuery( $query_media );
-            //$media = $database->loadObjectList('id');
             $media = $database->loadObjectList('id');
 
 	        return $media;
 
         }
 
-    //
 
 	function getInternalPlayer($media, $params, $admin_params)
 		{
@@ -35,7 +42,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
 
-         //   $itemparams = new JParameter ($media->params);
             
               // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -81,7 +87,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
 
-    	    //   $itemparams = new JParameter ($media->params);
             
               // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -101,7 +106,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
         
 	        $d_image = ($admin[0]->params->default_download_image);
 	        $images = new jbsImages();
-//            $download_image = $images->getMediaImage($admin[0]->download, $media=NULL);
             $download_image = $images->getMediaImage($admin[0]->params->default_download_image, $media=NULL);
 	    
             $download_image = $download_tmp->path;
@@ -118,7 +122,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             $path1 = getFilepath($media->id, $idfield, $mime);
 
             $link_type = $media->link_type;
-            if ($link_type > 0){ //$src = JURI::base().$download_image;
+            if ($link_type > 0){ 
             $width=$download_tmp->width;
             $height=$download_tmp->height;
 
@@ -148,7 +152,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'image.php');
             $images = new jbsImages();
             $image = $images->getMediaImage($media->path2, $media->impath);
-    	    //   $itemparams = new JParameter ($media->params);
             
               // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -183,7 +186,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             $path1 = getFilepath($media->id, $idfield, $mime);
 
             $media_link = '<div class="bsms_mediafile"><a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
-            .$filesize.'" target="'.$media->special.'"><img src="'.$d_path //.$src
+            .$filesize.'" target="'.$media->special.'"><img src="'.$d_path 
             .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
             .'" height="'.$height.'" border="0" /></a></div>';
 
@@ -199,8 +202,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'filepath.php');
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
-
-    	     //   $itemparams = new JParameter ($media->params);
             
               // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -248,4 +249,3 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
         {
             
         }
-?>

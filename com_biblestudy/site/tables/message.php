@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @version $Id: message.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
@@ -20,9 +26,9 @@ class Tablemessage extends JTable
 	 */
 	var $published = 1;
 	var $teacher_id = null;
-	var	$studydate = null;
+	var $studydate = null;
 	var $studynumber = null;
-	var	$booknumber = null;
+	var $booknumber = null;
 	var $scripture = null;
 	var $chapter_begin = null;
 	var $chapter_end = null;
@@ -44,7 +50,7 @@ class Tablemessage extends JTable
 	var $server_dvd = null;
 	var $image_cd = null;
 	var $image_dvd = null;
-	var	$booknumber2 = null;
+	var $booknumber2 = null;
 	var $chapter_begin2 = null;
 	var $chapter_end2 = null;
 	var $verse_begin2 = null;

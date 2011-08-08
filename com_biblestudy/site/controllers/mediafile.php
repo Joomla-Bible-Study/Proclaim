@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @version     $Id: mediafilesedit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @version     $Id: mediafile.php 1466 2011-01-31 23:13:03Z bcordis $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -23,10 +25,6 @@ class biblestudyControllermediafile extends controllerClass {
      * to "mediafiles" so that the pluralization in 1.6 would work properly
      *
      * @since 7.0
-     */
-//    protected $view_list = 'mediafileslist';
-
-    /**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
@@ -96,7 +94,7 @@ class biblestudyControllermediafile extends controllerClass {
 	function resetDownloads()
 	{
 		$msg = null;
-		$id 	= JRequest::getInt( 'id', 0, 'post'); //dump ($cid, 'cid: ');
+		$id 	= JRequest::getInt( 'id', 0, 'post');
 		$db = JFactory::getDBO();
 		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = ".$id);
 		$reset = $db->query();
@@ -117,7 +115,7 @@ class biblestudyControllermediafile extends controllerClass {
 function resetPlays()
 	{
 		$msg = null;
-		$id 	= JRequest::getInt( 'id', 0, 'post'); //dump ($cid, 'cid: ');
+		$id 	= JRequest::getInt( 'id', 0, 'post');
 		$db = JFactory::getDBO();
 		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = ".$id);
 		$reset = $db->query();
@@ -150,8 +148,7 @@ function getSizeFile ($url){
 	}
 	$port = intval($url_p["port"]); 
 	if(!$port) $port=80;
-	$path = $url_p["path"]; 
-	//echo "Getting " . $host . ":" . $port . $path . " ...";
+	$path = $url_p["path"];
 
 	$fp = fsockopen($host, $port, $errno, $errstr, 20); 
 	if(!$fp) { 
@@ -166,14 +163,10 @@ function getSizeFile ($url){
 			$headers .= fgets ($fp, 128); 
 			} 
 		} 
-	fclose ($fp); 
-	//echo $errno .": " . $errstr . "<br />";
+	fclose ($fp);
 	$return = -2; 
 	$arr_headers = explode("\n", $headers); 
-	// echo "HTTP headers for <a href='" . $url . "'>..." . substr($url,strlen($url)-20). "</a>:";
-	// echo "<div class='http_headers'>";
 	foreach($arr_headers as $header) { 
-		// if (trim($header)) echo trim($header) . "<br />";
 		$s1 = "HTTP/1.1"; 
 		$s2 = "Content-Length: "; 
 		$s3 = "Location: "; 
@@ -181,17 +174,14 @@ function getSizeFile ($url){
 		if(substr(strtolower ($header), 0, strlen($s2)) == strtolower($s2)) $size   = substr($header, strlen($s2));  
 		if(substr(strtolower ($header), 0, strlen($s3)) == strtolower($s3)) $newurl = substr($header, strlen($s3));  
 		} 
-	// echo "</div>";
 	if(intval($size) > 0) {
 		$return=strval($size);
 	} else {
 		$return=$status;
 	}
-	// echo intval($status) .": [" . $newurl . "]<br />";
 	if (intval($status)==302 && strlen($newurl) > 0) {
 		// 302 redirect: get HTTP HEAD of new URL
 		$return=getSizeFile($newurl);
 	}
 	return $return; 
-} 
-?>
+}

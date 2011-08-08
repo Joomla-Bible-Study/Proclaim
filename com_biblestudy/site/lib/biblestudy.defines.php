@@ -1,15 +1,13 @@
 <?php
 /**
-* @version $Id: biblestudy.defines.php 1 $
-* Bible Study Component
-* @package Bible Study
-* @Copyright (C) 2010 Joomla Bible Study All rights reserved
-* @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
-* @link http://www.JoomlaBibleStudy.org
-**/
+ * @version $Id: biblestudy.defines.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 
-//require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
 define ('BIBLESTUDY_VERSION', '7.0.0');
@@ -34,10 +32,6 @@ else
 {
     define('JOOMLA_VERSION','6');
 }
-//$language =& JFactory::getLanguage();
-//$lang = $language->getBackwardLang();
-
-//define('BIBLESTUDY_LANGUAGE', $lang);
 
 // File system paths
 define('BIBLESTUDY_COMPONENT_RELPATH', 'components' .DS. BIBLESTUDY_COMPONENT_NAME);

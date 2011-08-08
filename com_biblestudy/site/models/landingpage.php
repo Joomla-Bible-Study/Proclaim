@@ -1,4 +1,11 @@
 <?php
+/**
+ * @version $Id: landingpage.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 defined('_JEXEC') or die();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 jimport( 'joomla.application.component.model' );
@@ -34,14 +41,11 @@ class biblestudyModellandingpage extends JModel
 	{
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		$params 			=& $mainframe->getPageParameters();
-	//	$t = $params->get('t');
-    $t = JRequest::getInt('t','get');
+		$params =& $mainframe->getPageParameters();
+        $t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-	//	JRequest::setVar( 't', $t, 'get');
         jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
-	//	$params = new JParameter($template[0]->params);
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -71,7 +75,6 @@ class biblestudyModellandingpage extends JModel
 	{
 		$where		= $this->_buildContentWhere();
 		$orderby	= $this->_buildContentOrderBy();
-//		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
 		$query = 'SELECT #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
 		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, #__bsms_series.series_thumbnail, #__bsms_message_type.id AS mid,'
 		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'

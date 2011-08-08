@@ -1,8 +1,16 @@
-<?php defined('_JEXEC') or die();
+<?php 
+/**
+ * @version $Id: passage.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+
+defined('_JEXEC') or die();
 
 function getPassage($params, $row)
 {
-//$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 $esv = 1;
 $scripturerow = 1;
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;

@@ -1,9 +1,11 @@
 <?php
-
 /**
- * @author Tom Fuller
- * @copyright 2010
- */
+ * @version $Id: biblestudy.admin.class.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 require_once ( JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
@@ -33,7 +35,7 @@ class JBSAdmin
     $num_rows = $db->getNumRows();
     $isav = $db->loadObject($query);
     if ($num_rows && $isav->published == 1){$player = 'av';}
-    return $player; //dump ($player, 'player: ');
+    return $player;
  }
  
  function getAdminsettings()
@@ -44,7 +46,6 @@ class JBSAdmin
 		$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
 		$db->query();
 		$compat = $db->loadObject();
-	//	$admin_params = new JParameter($compat->params);
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -57,7 +58,6 @@ class JBSAdmin
 		$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
 		$db->query();
 		$compat = $db->loadObject();
-	//	$admin_params = new JParameter($compat->params);
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -309,5 +309,3 @@ function showRows($results)
         return $results;
 }
 } // End of class
-
-?>
