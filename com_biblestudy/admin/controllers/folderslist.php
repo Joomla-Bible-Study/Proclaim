@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     $Id: locationslist.php 1362 2011-01-12 08:42:00Z genu $
+ * @version     $Id: folderslist.php 1362 2011-01-12 08:42:00Z genu $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -17,7 +17,7 @@ defined('_JEXEC') or die();
     }
 
 class biblestudyControllerfolderslist extends controllerClass {
-/**
+    /**
      * Proxy for getModel
      *
      * @param <String> $name    The name of the model

@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
+
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -28,7 +29,6 @@ class biblestudyControllerteacheredit extends controllerClass {
         parent::__construct();
 
         // Register Extra tasks
-      //  $this->registerTask('add', 'edit');
     }
-  
+
 }

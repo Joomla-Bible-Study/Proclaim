@@ -34,7 +34,6 @@ class biblestudyControllermediafilesedit extends controllerClass {
 	 */
 	function __construct()
 	{
-            //$this->getModel("Admin");
 		parent::__construct();
 		// Register Extra tasks
 	}
@@ -80,7 +79,7 @@ class biblestudyControllermediafilesedit extends controllerClass {
 	function resetDownloads()
 	{
 		$msg = null;
-		$id 	= JRequest::getInt( 'id', 0, 'post'); //dump ($cid, 'cid: ');
+		$id 	= JRequest::getInt( 'id', 0, 'post');
 		$db = JFactory::getDBO();
 		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = ".$id);
 		$reset = $db->query();
@@ -101,7 +100,7 @@ class biblestudyControllermediafilesedit extends controllerClass {
 	function resetPlays()
 	{
 		$msg = null;
-		$id 	= JRequest::getInt( 'id', 0, 'post'); //dump ($cid, 'cid: ');
+		$id 	= JRequest::getInt( 'id', 0, 'post');
 		$db = JFactory::getDBO();
 		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = ".$id);
 		$reset = $db->query();
@@ -135,7 +134,7 @@ class biblestudyControllermediafilesedit extends controllerClass {
 	}
 	$port = intval($url_p["port"]); 
 	if(!$port) $port=80;
-	$path = $url_p["path"]; 
+	$path = $url_p["path"];
 
 	$fp = fsockopen($host, $port, $errno, $errstr, 20); 
 	if(!$fp) { 
@@ -150,17 +149,17 @@ class biblestudyControllermediafilesedit extends controllerClass {
 			$headers .= fgets ($fp, 128); 
 			} 
 		} 
-	fclose ($fp); 
+	fclose ($fp);
 	$return = -2; 
-	$arr_headers = explode("\n", $headers); 
-	foreach($arr_headers as $header) { 
+	$arr_headers = explode("\n", $headers);
+	foreach($arr_headers as $header) {
 		$s1 = "HTTP/1.1"; 
 		$s2 = "Content-Length: "; 
 		$s3 = "Location: "; 
 		if(substr(strtolower ($header), 0, strlen($s1)) == strtolower($s1)) $status = substr($header, strlen($s1)); 
 		if(substr(strtolower ($header), 0, strlen($s2)) == strtolower($s2)) $size   = substr($header, strlen($s2));  
 		if(substr(strtolower ($header), 0, strlen($s3)) == strtolower($s3)) $newurl = substr($header, strlen($s3));  
-		} 
+		}
 	if(intval($size) > 0) {
 		$return=strval($size);
 	} else {

@@ -57,5 +57,5 @@ class biblestudyControllertemplateedit extends controllerClass {
 
         $this->setRedirect('index.php?option=com_biblestudy&view=templateslist');
     }
-   
+  
 }

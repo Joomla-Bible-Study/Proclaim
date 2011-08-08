@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     $Id: studistlist.php 1362 2011-01-12 08:42:00Z genu $
+ * @version     $Id: studieslist.php 1362 2011-01-12 08:42:00Z genu $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
