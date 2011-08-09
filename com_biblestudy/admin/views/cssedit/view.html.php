@@ -1,12 +1,10 @@
 <?php
 
 /**
- * @version $Id: view.html.php 1 $
- * @package BibleStudy
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- **/
+ * @version     $Id
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
@@ -40,6 +38,7 @@ class biblestudyViewcssedit extends JView
         JToolBarHelper::cancel('cssedit.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::divider();
 		JToolBarHelper::custom('cssedit.backup','archive','Backup CSS', 'JBS_CSS_BACKUP_CSS',false, false);
+        JToolBarHelper::custom('cssedit.restorecss','save','Restore Backup','JBS_CSS_RESTORE_CSS',false,false);
 		JToolBarHelper::custom( 'cssedit.resetcss', 'save', 'Reset CSS', 'JBS_CSS_RESET_CSS', false, false );
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true );

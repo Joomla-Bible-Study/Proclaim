@@ -49,8 +49,30 @@ function cancel()
 	 * @return void
 	 */
 
-function resetcss() {
-	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
+function resetcss() 
+{
+    $mainframe =& JFactory::getApplication();
+    // Set FTP credentials, if given
+	jimport('joomla.client.helper');
+	JClientHelper::setCredentialsFromRequest('ftp');
+	$ftp = JClientHelper::getCredentials('ftp');
+    $filename		= 'biblestudy.css.dist';
+	$src = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
+    $dest = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
+
+	// Try to make the css file writeable
+
+	jimport('joomla.filesystem.file');
+    $return = JFile::copy($src, $dest);
+	if ($return)
+	{
+	$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSS_RESET'));
+	}
+	else {
+			$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE'));
+	}
+    
+/*	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$savfilename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.sav';
 		$savcssfilein=fopen($savfilename,"r") or die("Can't open file $savfilename");
 		$savfilecontent=fread($savcssfilein,filesize($savfilename));
@@ -67,6 +89,7 @@ if ($return)
 		{
             $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$filename);
 		}
+  */
 }
 
 function save()
@@ -109,6 +132,18 @@ function save()
 function backup()
     {
         	$mainframe =& JFactory::getApplication();
+            //Check for existence of com_biblestudy folder in media and create if it doesn't exist
+            jimport('joomla.filesystem.folder');
+            $mediafolderpath = JFolder::exists(JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup');
+            if (!$mediafolderpath)
+            {
+                $createmediafolder = JFolder::create(JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup');
+                if (!$createmediafolder)
+                {
+                    $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_CREATE_FOLDER'));
+                }
+            }
+            
             // Set FTP credentials, if given
     		jimport('joomla.client.helper');
     		JClientHelper::setCredentialsFromRequest('ftp');
@@ -152,5 +187,30 @@ function copycss()
     		else {
 					$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
     		}
+    }
+function restorecss()
+    {
+        $mainframe =& JFactory::getApplication();
+        jimport('joomla.client.helper');
+		JClientHelper::setCredentialsFromRequest('ftp');
+		$ftp = JClientHelper::getCredentials('ftp');
+        $filename		= 'biblestudy.css';
+		$dest = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
+        $src = JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup'.DS.'biblestudy.css';
+        jimport('joomla.filesystem.file');
+        $backupexists = JFile::exists($src);
+        if (!$backupexists)
+        {
+            $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED'));
+        }
+        $return = JFile::copy($src, $dest);
+		if ($return)
+		{
+		$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel',  JText::_('JBS_CSS_BACKUP_RESTORED'));
+		}
+		else {
+				$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$file);
+		}
+        
     }
 }
