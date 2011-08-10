@@ -129,11 +129,11 @@ class biblestudyControlleradmin extends controllerClass {
         if ($db->getErrorNum() > 0) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg);
         }
     }
 
@@ -161,11 +161,11 @@ class biblestudyControlleradmin extends controllerClass {
         if ($db->getErrorNum() > 0) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=admin&controller=admin&layout=form', $msg);
         }
     }
 

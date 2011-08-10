@@ -30,30 +30,28 @@ class biblestudyViewstudieslist extends JView {
         $this->series = $this->get('Series');
         $this->messageTypes = $this->get('MessageTypes');
         $this->years = $this->get('Years');
-        $this->topics = $this->get('Topics');
         $this->addToolbar();
-        
-        
+
         parent::display($tpl);
 
     }
 
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_CMN_STUDIES'), 'studies.png');
-        if ($this->canDo->get('core.create')) 
-        { JToolBarHelper::addNew('studiesedit.add'); }
-        if ($this->canDo->get('core.edit')) 
-        {JToolBarHelper::editList('studiesedit.edit');}
+        if ($this->canDo->get('core.create')) {
+        	JToolBarHelper::addNew('studiesedit.add'); }
+        if ($this->canDo->get('core.edit')) {
+        	JToolBarHelper::editList('studiesedit.edit');}
         if ($this->canDo->get('core.edit.state')) {
-        JToolBarHelper::divider();
-        JToolBarHelper::publishList('studieslist.publish');
-        JToolBarHelper::unpublishList('studieslist.unpublish');
-        JToolBarHelper::archiveList('studieslist.archive','JTOOLBAR_ARCHIVE');
+            JToolBarHelper::divider();
+            JToolBarHelper::publishList('studieslist.publish');
+            JToolBarHelper::unpublishList('studieslist.unpublish');
+            JToolBarHelper::archiveList('studieslist.archive','JTOOLBAR_ARCHIVE');
         }
-        if ($this->canDo->get('core.delete')) 
-        {JToolBarHelper::trash('studieslist.trash');}
+        if ($this->canDo->get('core.delete')) {
+        	JToolBarHelper::trash('studieslist.trash');}
         if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
-        JToolBarHelper::deleteList('', 'studieslist.delete','JTOOLBAR_EMPTY_TRASH');}
+            JToolBarHelper::deleteList('', 'studieslist.delete','JTOOLBAR_EMPTY_TRASH');}
     }
 
 }

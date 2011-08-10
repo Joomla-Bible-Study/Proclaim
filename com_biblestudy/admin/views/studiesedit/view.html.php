@@ -38,15 +38,18 @@ class biblestudyViewstudiesedit extends JView {
         $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/token-input-jbs.css');
 
         $script = "
-            \$j(document).ready(function() {                              
-                \$j('#topics').tokenInput('index.php?option=com_biblestudy&task=lookup_topic&format=raw', {
+            \$j(document).ready(function() {
+                \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
+                {
                     theme: 'jbs',
-                    hintText: 'Enter a topic...',
+                    hintText: '" . JText::_('JBS_CMN_TOPIC_TAG') . "',
+                    noResultsText: '" . JText::_('JBS_CMN_NOT_FOUND') . "',
+                    searchingText: '" . JText::_('JBS_CMN_SEARCHING') . "',
                     animateDropdown: false,
                     preventDuplicates: true,
                     prePopulate: " . $this->get('topics') . "
                 });
-             });    
+            });
              ";
 
         $document->addScriptDeclaration($script);

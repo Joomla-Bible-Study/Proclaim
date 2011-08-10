@@ -25,8 +25,7 @@ class biblestudyViewtemplateslist extends JView {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
-        $this->types = $this->get('Types');
-        $this->canDo	= BibleStudyHelper::getActions('', 'templateedit');
+        $this->canDo = BibleStudyHelper::getActions('', 'templateedit');
         $this->addToolbar();
         parent::display($tpl);
     }

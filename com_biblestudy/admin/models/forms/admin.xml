@@ -67,10 +67,6 @@
              value_field="bookname">
             <option value="-1">JBS_CMN_SELECT_BOOK</option>
         </field>
-        <field name="topic_id" type="topicslist" default="-1"
-             label="JBS_CMN_TOPIC" description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox">
-            <option value="-1">JBS_CMN_SELECT_TOPIC</option>
-        </field>
         <field name="messagetype" type="messagetypelist" default="-1" label="JBS_CMN_MESSAGE_TYPE"
              description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>

@@ -127,7 +127,6 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                         <?php echo $this->form->getLabel('topics'); ?>
                         <div class="clr"></div>
                         <?php echo $this->form->getInput('topics'); ?>
-                      <!--  <input name="topic_tags" type="text" id="topic_tags" /> -->
                          <ul>
                         <li>
                     <?php echo $this->form->getLabel('messagetype'); ?>
@@ -221,11 +220,13 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                                     </tr>
                     <?php endif; ?>
                                 </tbody>
+                    <?php if (! empty($this->item->studytitle)) : ?>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileslist').'>'.JText::_('JBS_STY_VIEW_ALL_MEDIAFILES'); ?>"></a></td>
+                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafilesedit&layout=edit').'">'.JText::_('JBS_STY_NEW_MEDIAFILE'); ?></a></td>
                                     </tr>
                                 </tfoot>
+                    <?php endif; ?>
                             </table>
                         </fieldset>
                         

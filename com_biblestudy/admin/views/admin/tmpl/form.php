@@ -133,10 +133,6 @@ $params = $this->form->getFieldsets();
                         <?php echo $this->form->getInput('booknumber', 'params'); ?>
                     </li>
                     <li>
-                        <?php echo $this->form->getLabel('topic_id', 'params'); ?>
-                        <?php echo $this->form->getInput('topic_id', 'params'); ?>
-                    </li>
-                    <li>
                         <?php echo $this->form->getLabel('messagetype', 'params'); ?>
                         <?php echo $this->form->getInput('messagetype', 'params'); ?>
                     </li>

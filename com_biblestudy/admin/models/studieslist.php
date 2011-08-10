@@ -28,7 +28,6 @@ class biblestudyModelstudieslist extends JModelList {
               'teacher.teachername',
               'messageType.message_type',
               'series.series_text',
-              'topic.topic_text',
               'study.hits',
               'mediafile.plays',
               'mediafile.downloads'
@@ -100,9 +99,6 @@ class biblestudyModelstudieslist extends JModelList {
 
         $year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
         $this->setState('filter.year', $year);
-
-        $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
-        $this->setState('filter.topic', $topic);
 
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
@@ -184,11 +180,6 @@ class biblestudyModelstudieslist extends JModelList {
         if (!empty($year))
             $query->where('YEAR(study.studydate) = ' . (int) $year);
 
-        //Filter by topic
-        $topic = $this->getState('filter.topic');
-        if (!empty($topic))
-            $query->where('study.topics_id = ' . (int) $topic);
-
         // Filter by published state
         $published = $this->getState('filter.published');
         if (is_numeric($published)) {
@@ -209,7 +200,6 @@ class biblestudyModelstudieslist extends JModelList {
      * @since 7.0
      * translate item entries: books, topics
      */
-
     public function getTranslated($items = array()) {
         foreach ($items as $item) {
             $item->bookname = JText::_($item->bookname);
@@ -220,8 +210,8 @@ class biblestudyModelstudieslist extends JModelList {
 
     /*
      * @since 7.0
+     * get a list of all used books
      */
-
     public function getBooks() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -243,8 +233,8 @@ class biblestudyModelstudieslist extends JModelList {
 
     /*
      * @since 7.0
+     * get a list of all used teachers
      */
-
     public function getTeachers() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -261,8 +251,8 @@ class biblestudyModelstudieslist extends JModelList {
 
     /*
      * @since 7.0
+     * get a list of all used series
      */
-
     public function getSeries() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -279,8 +269,8 @@ class biblestudyModelstudieslist extends JModelList {
 
     /*
      * @since 7.0
+     * get a list of all used message types
      */
-
     public function getMessageTypes() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -297,28 +287,8 @@ class biblestudyModelstudieslist extends JModelList {
 
     /*
      * @since 7.0
+     * get a list of all used years
      */
-
-    public function getTopics() {
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
-
-        $query->select('topic.id AS value, topic.topic_text AS topic_text, topic.params AS topic_params');
-        $query->from('#__bsms_topics AS topic');
-        $query->join('INNER', '#__bsms_studies AS study ON study.topics_id = topic.id');
-        $query->group('topic.id');
-        $query->order('topic.topic_text');
-
-        $db->setQuery($query->__toString());
-        $db_result = $db->loadObjectList();
-        $output = array();
-        foreach ($db_result as $i => $value) {
-            $value->text = getTopicItemTranslated($value);
-            $output[] = $value;
-        }
-        return $output;
-    }
-
     public function getYears() {
         $db = $this->getDBO();
         $query = $db->getQuery(true);
@@ -332,6 +302,10 @@ class biblestudyModelstudieslist extends JModelList {
         return $year;
     }
 
+    /*
+     * @since 7.0
+     * get the number of plays of this study
+     */
     public function getPlays($id) {
         $db = $this->getDBO();
         $query = $db->getQuery(true);

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     $Id: studiesedit.php 1466 2011-01-31 23:13:03Z bcordis $
+ * @version     $Id: topicslist.php 1466 2011-01-31 23:13:03Z bcordis $
  * @package     com_biblestudy
  * @license     GNU/GPL
  */

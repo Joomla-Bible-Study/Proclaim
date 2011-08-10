@@ -18,11 +18,7 @@ $listDirn = $this->state->get('list.direction');
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templateslist'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
-            <select name="filter_type" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JBS_TPL_SELECT_TMPL_TYPE'); ?></option>
-                <?php echo JHtml::_('select.options', $this->types, 'text', 'text', $this->state->get('filter.type')); ?>
-            </select>
-            	<select name="filter_published" class="inputbox" onchange="this.form.submit()">
+			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
 				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
 				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
 			</select>
@@ -40,9 +36,6 @@ $listDirn = $this->state->get('list.direction');
                 </th>
                 <th alicn="center">
                     <?php echo JHtml::_('grid.sort', 'JBS_TPL_TEMPLATE_ID', 'template.title', $listDirn, $listOrder); ?>
-                </th>
-                <th alicn="center">
-                    <?php echo JHtml::_('grid.sort', 'JBS_TPL_TEMPLATE_TYPE', 'template.type', $listDirn, $listOrder); ?>
                 </th>
             </tr>
         </thead>
@@ -68,9 +61,6 @@ $listDirn = $this->state->get('list.direction');
                     <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=templateedit.edit&id='.(int)$item->id); ?>">
                         <?php echo $this->escape($item->title); ?>
                     </a>
-                </td>
-                <td class="center">
-                    <?php echo $this->escape($item->type); ?>
                 </td>
             </tr>
             <?php endforeach; ?>

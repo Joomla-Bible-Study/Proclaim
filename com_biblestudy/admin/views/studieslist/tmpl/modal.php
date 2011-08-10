@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: default_16.php 1336 2011-01-06 22:29:39Z genu $
+ * @version     $Id: modal.php 1336 2011-01-06 22:29:39Z genu $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -45,10 +45,6 @@ $listDirn = $this->state->get('list.direction');
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
                 <?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
             </select>
-            <select name="filter_topic" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JBS_CMN_SELECT_TOPIC'); ?></option>
-                <?php echo JHtml::_('select.options', $this->topics, 'value', 'text', $this->state->get('filter.topic')); ?>
-            </select>
             <select name="filter_state" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.state'), true); ?>
@@ -80,9 +76,6 @@ $listDirn = $this->state->get('list.direction');
                 </th>
                 <th>
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
-                </th>
-                <th>
-                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_TOPIC', 'topic.topic_text', $listDirn, $listOrder); ?>
                 </th>
             </tr>
         </thead>
@@ -120,9 +113,6 @@ $listDirn = $this->state->get('list.direction');
                     </td>
                     <td class="center">
                 <?php echo $this->escape($item->series_text); ?>
-                    </td>
-                    <td class="center">
-                <?php echo $this->escape($item->topic_text); ?>
                     </td>
                 </tr>
         <?php endforeach; ?>

@@ -70,31 +70,7 @@ class biblestudyController extends JController {
     }
 
     function AjaxTags() {
-        header('Content-type: text/javascript');
-        $q = JRequest::getVar('q');
-
-        $db = & JFactory::getDBO();
-        $query = "select '0_" . $q . "' as id, '" . $q . "' as 'name' from dual union select distinct id, cast(topic_text as char) as 'name' from #__bsms_topics where topic_text like '%" . $q . "%' order by 'name' desc limit 10";
-        $db->setQuery($query);
-
-        $tresult = $db->loadObjectList();
-
-        if (empty($tresult)) {
-
-            $query = "select distinct '0_" . $q . "' as id, '" . $q . "' as 'name' from dual";
-
-            $db->setQuery($query);
-
-            $tresult = $db->loadObjectList();
-        }
-
-        foreach ($tresult as $item) {
-            if ($tresult[0]->name == $item->name && $tresult[0]->id != $item->id) {
-                unset($tresult[0]);
-            }
-        }
-        echo json_encode($tresult);
-        //  dump ($tresult,'AjaxTags');
+die();
     }
 
     /**
@@ -103,16 +79,7 @@ class biblestudyController extends JController {
      * @return JSON object containing the results
      */
     function lookup_topic() {
-        $search = JRequest::getVar('q');
-
-        $db = & JFactory::getDBO();
-        $query = "SELECT topic.id, topic.topic_text AS name FROM #__bsms_topics AS topic WHERE topic.topic_text LIKE '%" . $search . "%'";
-
-        $db->setQuery($query);
-
-        $result = $db->loadObjectList();
-
-        echo json_encode($result);
+die();
     }
 
     function getFileList() {

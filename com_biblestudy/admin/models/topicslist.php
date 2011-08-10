@@ -52,7 +52,6 @@ class biblestudyModeltopicslist extends modelClass
 			$result = $this->_getList( $query );
 			$this->_data = getTopicItemsTranslated($result);
 		}
-
 		return $this->_data;
 	}
 function getDeletes()

@@ -72,24 +72,7 @@ function resetcss()
 			$mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE'));
 	}
     
-/*	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		$savfilename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.sav';
-		$savcssfilein=fopen($savfilename,"r") or die("Can't open file $savfilename");
-		$savfilecontent=fread($savcssfilein,filesize($savfilename));
-		$replacecss=str_replace("[CR][NL]","\n",$savfilecontent);
-		$replacecss=str_replace("[ES][SQ]","'",$replacecss);
-		$replacecss=nl2br($replacecss);
-		$replacecss=str_replace("<br />"," ",$replacecss);
-		$filename=JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
-		$cssfilein=fopen($filename,"w+") or die("Can't open file $filename");
-		$return = $cssfileout=fwrite($cssfilein,$replacecss);
-		fclose($cssfilein);
-		fclose($savcssfilein);
-if ($return)
-		{
-            $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_OPEN_FOR_WRITE').': '.$filename);
-		}
-  */
+
 }
 
 function save()
