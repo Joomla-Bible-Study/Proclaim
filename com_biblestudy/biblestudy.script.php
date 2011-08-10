@@ -1,12 +1,17 @@
 <?php
 /**
- * @version $Id: biblestudy.script.php 1 $
- * @package BibleStudy
+ * @version $Id: biblestudy.install.php 1 $
+ * Bible Study Component
+ * @package Bible Study
+ *
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
+ *
+ * Install Based on Kunena Component
+ * Reference http://svn.joomla.org/project/cms/development/trunk/tests/_data/installer_packages/
  **/
-
+ //
  // Dont allow direct linking
  defined( '_JEXEC' ) or die('Restricted access');
  ?>
@@ -18,40 +23,6 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 // Bible Study wide defines
 
 class com_biblestudyInstallerScript {
-    	/*
-	 * The release value would ideally be extracted from <version> in the manifest file,
-	 * but at preflight, the manifest file exists only in the uploaded temp folder.
-	 */
-	private $release = '7.1.0';
-
-	/*
-	 * $parent is the class calling this method.
-	 * $type is the type of change (install, update or discover_install, not uninstall).
-	 * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
-	 * If preflight returns false, Joomla will abort the update and undo everything already done.
-	 */
-	function preflight( $type, $parent ) {
-		// this component does not work with Joomla releases prior to 1.6
-		// abort if the current Joomla release is older
-		$jversion = new JVersion();
-		if( version_compare( $jversion->getShortVersion(), '1.6', 'lt' ) ) {
-			Jerror::raiseWarning(null, 'Cannot install com_democompupdate in a Joomla release prior to 1.6');
-			return false;
-		}
-
-		// abort if the release being installed is not newer than the currently installed version
-		if ( $type == 'update' ) {
-			$oldRelease = $this->getParam('version');
-			$rel = $oldRelease . ' to ' . $this->release;
-			if ( version_compare( $this->release, $oldRelease, 'le' ) ) {
-				Jerror::raiseWarning(null, 'Incorrect version sequence. Cannot upgrade ' . $rel);
-				return false;
-			}
-		}
-		else { $rel = $this->release; }
-		
-	}
-        
 
 	function install($parent) {
             		$db =& JFactory::getDBO();
@@ -95,15 +66,19 @@ class com_biblestudyInstallerScript {
 	{
 		$drop_result = '<H3>'.JText::_('JBS_INS_NO_DATABASE_REMOVED').'</H3>';
 	}
-        echo '<h2>'. JText::_('JBS_INS_UNINSTALLED').'</h2> <div>'.$drop_result.'</div>';
+  echo '<h2>'. JText::_('JBS_INS_UNINSTALLED').'</h2> <div>'.$drop_result.'</div>';
 	
  
 	} //end of function uninstall()
 
 	function update($parent) {
+	//	echo '<p>'. JText::_('JBS_INS_16_CUSTOM_UPDATE_SCRIPT') .'</p>';
  
 	} // End Update
 
+	function preflight($type, $parent) {
+	//	echo '<p>'. JText::sprintf('JBS_INS_16_CUSTOM_PREFLIGHT', $type) .'</p>';
+	}
 
 	function postflight($type, $parent) {
         
@@ -136,8 +111,8 @@ class com_biblestudyInstallerScript {
         {
 			require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
 			$assetfix = new fixJBSAssets();
-                        $assetdofix = $assetfix->AssetEntry();
-                        if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
+            $assetdofix = $assetfix->AssetEntry();
+            if ($assetdofix){echo '<font color="green">'.JText::_('JBS_INS_16_ASSET_SUCCESS').'</font>';}else{echo '<font color="red">'.JText::_('JBS_INS_16_ASSET_FAILURE').'</font>';} 
         }
 ?>
 		<fieldset class="panelform">
@@ -157,13 +132,7 @@ class com_biblestudyInstallerScript {
 		if (!$cssexists)
 		{
 			echo '<p><font color="red"><strong>'.JText::_('JBS_INS_16_CSS_FILE_NOT_FOUND').'</strong> </font></p>';
-			if ($backupexists)
-			{
-				echo '<p>' . JText::_('JBS_INS_16_BACKUPCSS') .' /images/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=copycss">'. JText::_('JBS_INS_16_CSS_BACKUP') . '</a></p>';
-			}
-			else
-			{
-				$copysuccess = JFile::copy($src, $dest);
+            $copysuccess = JFile::copy($src, $dest);
 				if ($copysuccess)
 				{
 					echo '<p>'. JText::_('JBS_INS_16_CSS_COPIED_SOURCE') . '</p>';
@@ -172,7 +141,14 @@ class com_biblestudyInstallerScript {
 				{
 					echo '<P>'. JText::_('JBS_INS_16_CSS_COPIED_DISCRIPTION1') . '&frasl;components&frasl;com_biblestudy&frasl;assets&frasl;css&frasl;biblestudy.css.dist' . JText::_('JBS_INS_16_CSS_COPIED_DISCRIPTION2') . '</p>';
 				}
+			if ($backupexists)
+			{
+				echo '<p>' . JText::_('JBS_INS_16_BACKUPCSS') .' /media/com_biblestudy/backup/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=restorecss">'. JText::_('JBS_INS_16_CSS_BACKUP') . '</a></p>';
 			}
+			
+			
+				
+			
 		}    
 		
 		//Check for default details text link image and copy if not present
@@ -221,6 +197,7 @@ class com_biblestudyInstallerScript {
 		</div>
 		<?php
 		// An example of setting a redirect to a new location after the install is completed
+		//$parent-&gt;getParent()-&gt;set('redirect_url', 'http://www.google.com');
 	}
   
 } // end of class
