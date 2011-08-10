@@ -26,7 +26,7 @@ $j(document).ready( function() {
 		$j(".referenceDelete").bind('click', function() {
 			$j(this).parent("#reference").remove();
 			return false;
-		})
+		});
 		return false;
 	});
 	$j(".referenceDelete").click(function() {

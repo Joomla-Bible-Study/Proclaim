@@ -223,7 +223,7 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileslist').'>'.JText::_('JBS_STY_VIEW_ALL_MEDIAFILES'); ?>"</a></td>
+                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafileslist').'>'.JText::_('JBS_STY_VIEW_ALL_MEDIAFILES'); ?>"></a></td>
                                     </tr>
                                 </tfoot>
                             </table>

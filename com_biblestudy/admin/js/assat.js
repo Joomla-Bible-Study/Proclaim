@@ -48,8 +48,8 @@ function done(event){
 			mySlideDone.hide();
 			$('done').setStyle('display', 'block');
 			mySlideDone.toggle();
-			echo '<p>'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
-    }
+			echo {'<p>'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>'};
+    };
   }).request();
 
 };

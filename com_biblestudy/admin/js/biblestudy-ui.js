@@ -64,7 +64,7 @@ $j(document).ready( function() {
 	});
 	
 	$j('#cursorInsertBottom').click(function() {
-		var newRow = '<li class="canvasRow"></li>'
+		var newRow = '<li class="canvasRow"></li>';
 		$j(this).parent().parent().parent().append(newRow);
 	});
 	

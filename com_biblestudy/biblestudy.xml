@@ -149,13 +149,10 @@
 	
   </administration>	
 	<!-- Installer Hooks -->
-	<scriptfile>biblestudy.script.php</scriptfile>
-  <!-- new server call 
-        @todo BCC finish Server address 
-  -->        
+	<scriptfile>biblestudy.script.php</scriptfile>      
         
     <updateservers>
-		<server type="extension" priority="1" name="Joomla Bible Study">http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1</server>
+		<server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=1]]></server>
   </updateservers>
   
   	<!-- Tables -->

@@ -212,7 +212,7 @@ JHtml::_('behavior.formvalidation');
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile').'>'.JText::_('JBS_STY_VIEW_ALL_MEDIAFILES'); ?>"</a></td>
+                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile').'>'.JText::_('JBS_STY_VIEW_ALL_MEDIAFILES'); ?>"></a></td>
                                     </tr>
                                 </tfoot>
                             </table>
