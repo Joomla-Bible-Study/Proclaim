@@ -38,6 +38,9 @@
       <language tag="en-GB">en-GB/en-GB.com_jbsmigration.sys.ini</language>
       </languages>
     </administration>
+        <updateservers>
+		<server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=6]]></server>
+  </updateservers>
    <!--  Dependencies 	-->
 	<dependencies>
 		<dependency type="platform" name="joomla" operator="=" version="1.5" />

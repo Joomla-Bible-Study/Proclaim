@@ -915,7 +915,6 @@
  </config>
  <!-- UPDATESERVER DEFINITION -->
 	<updateservers>
-                <!-- @todo bcc updateservers address need to fix -->
 		<!-- Note: No spaces or linebreaks allowed between the server tags -->
 		<server type="extension" priority="1" name="Joomla Bible Study Module"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3]]></server>
 	</updateservers>
