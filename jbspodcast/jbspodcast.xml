@@ -424,7 +424,7 @@
    <!-- UPDATESERVER DEFINITION -->
 	<updateservers>
 		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-		<server type="extension" priority="1" name="Joomla Bible Study Update Site"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8]]></server>
+		<server type="extension" priority="1" name="Joomla Bible Study Podcast Plg"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8]]></server>
 	</updateservers>
         
         <!-- Tables -->

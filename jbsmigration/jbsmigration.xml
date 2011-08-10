@@ -39,7 +39,7 @@
       </languages>
     </administration>
         <updateservers>
-		<server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=6]]></server>
+		<server type="extension" priority="1" name="Joomla Bible Study Migration"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=6]]></server>
   </updateservers>
    <!--  Dependencies 	-->
 	<dependencies>
