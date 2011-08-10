@@ -45,28 +45,14 @@ class CBiblestudyVersion {
 	function versionArray()
 	{
 		static $biblestudyversion;
-
-		if (!$biblestudyversion)
-		{
-			$biblestudy_db = &JFactory::getDBO();
-			$versionTable = '#__bsms_version';
-			$biblestudy_db->setQuery("SELECT version, versiondate, installdate, build, versionname FROM `{$versionTable}` ORDER BY id DESC", 0, 1);
-			$biblestudyversion = $biblestudy_db->loadObject();
-			if(!$biblestudyversion) {
-				$biblestudyversion = new StdClass();
-				$biblestudyversion->version = CBiblestudyVersion::versionXML();
-				$biblestudyversion->versiondate = JText::_('JBS_CMN_UNKNOWN');
-				$biblestudyversion->installdate = '0000-00-00';
-				$biblestudyversion->build = '0000';
-				$biblestudyversion->versionname = JText::_('JBS_CMN_NOT_INSTALLED');
-			}
-			$xmlversion = CBiblestudyVersion::versionXML();
-			if($biblestudyversion->version != $xmlversion) {
-				$biblestudyversion->version = CBiblestudyVersion::versionXML();
-				$biblestudyversion->versionname = JText::_('JBS_CMN_NOT_UPGRADED');
-			}
-			$biblestudyversion->version = strtoupper($biblestudyversion->version);
-		}
+         $db = JFactory::getDBO();
+         $query = 'SELECT * FROM #__extensions WHERE element = "com_biblestudy" LIMIT 1';
+         $db->setQuery($query);
+         $extension = $db->loadObject();
+         $manifestvariable = json_decode($extension->manifest_cache);
+         $biblestudyversion->version = $manifestvariable->version; 
+         $biblestudyversion->versiondate = $manifestvariable->creationDate;
+           
 		return $biblestudyversion;
 	}
 
@@ -78,7 +64,7 @@ class CBiblestudyVersion {
 	function version()
 	{
 		$version = CBiblestudyVersion::versionArray();
-		return '<table><tr><td><strong>'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</strong></td></tr><tr><td>'.JText::_('JBS_CPL_CURRENT_VERSION').': '.$version->version.'</td></tr><tr><td>'.JText::_('JBS_CPL_DATE').': '.$version->versiondate.'</td></tr><tr><td>'.JText::_('JBS_CPL_BUILD').': '.$version->build.'</td></tr><tr><td>'.JText::_('JBS_CPL_VERSION_NAME').': '.$version->versionname.'</td></tr></table>';
+		return '<table><tr><td><strong>'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</strong></td></tr><tr><td>'.JText::_('JBS_CPL_CURRENT_VERSION').': '.$version->version.'</td></tr><tr><td>'.JText::_('JBS_CPL_DATE').': '.$version->versiondate.'</td></tr></table>';
 	}
 
 	/** 
@@ -109,3 +95,4 @@ class CBiblestudyVersion {
 		return phpversion();
 	}
 }
+?>

@@ -1,12 +1,9 @@
 <?php
 
 /**
- * @version $Id: default.php 1 $
- * @package BibleStudy
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link http://www.JoomlaBibleStudy.org
- **/
+ * @author Joomla Bible Study
+ * @copyright 2010
+ */
 defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.debug.php');
@@ -202,7 +199,7 @@ table.fbstat .col2 {
 <?php require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.version.php');?>
 <div class="fbmainmenu"><?php echo CBiblestudyVersion::version(); ?></div>
 </td></tr>
-<tr><td><div><?php echo JText::_('JBS_CPL_LATEST_VERSION').': '.$this->versioncheck;?></td></tr>
+<tr><td><div><?php echo JText::_('JBS_CPL_LATEST_VERSION').':<br /> '.$this->versioncheck;?></td></tr>
 <tr><td><?php echo '<a href="http://www.JoomlaBibleStudy.org">'.JText::_('JBS_CPL_GET_LATEST_VERSION').'</a>';?></div></td></tr>
 </table> 
 <table>
@@ -357,4 +354,4 @@ table.fbstat .col2 {
 	</tr>
           </tbody>
         </table>
-     </div>
+     </div>   
