@@ -1,9 +1,11 @@
 <?php
 /**
  * @version		$Id: studydetails.php 2010-12-22 Based on com_newsfeeds
- * @copyright	Copyright (C) 2007 - 2010 Joomla Bible Study, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined('JPATH_BASE') or die;
 

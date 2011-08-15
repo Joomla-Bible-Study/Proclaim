@@ -1,10 +1,12 @@
 <?php
 
 /**
- * @version     $Id
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @version $Id: study.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -33,7 +35,7 @@ class JFormFieldModal_Study extends JFormField
 
 		// Setup variables for display.
 		$html	= array();
-		$link	= 'index.php?option=com_biblestudy&amp;view=studieslist&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_'.$this->id;
+		$link	= 'index.php?option=com_biblestudy&amp;view=messages&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_'.$this->id;
 
 		$db	= JFactory::getDBO();
 		$db->setQuery(

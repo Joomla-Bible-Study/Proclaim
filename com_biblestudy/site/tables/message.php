@@ -65,6 +65,14 @@ class Tablemessage extends JTable
 	var $thumbhm = null;
 	var $thumbwm = null;
 	var $params = null;
+    
+        /**
+	 * The rules associated with this record.
+	 *
+	 * @var	JRules	A JRules object.
+	 */
+	protected $_rules;
+    
 	/**
 	 * Constructor
 	 *
@@ -75,23 +83,25 @@ class Tablemessage extends JTable
 	}
 	
 	function bind($array, $ignore = '')
-{ 
-        if (key_exists( 'params', $array ) && is_array( $array['params'] ))
-        {
-                $registry = new JRegistry();
-                $registry->loadArray($array['params']);
-                $array['params'] = $registry->toString();
-        }
-        
-        // Bind the rules.
-    if (isset($array['rules']) && is_array($array['rules'])) {
-    $rules = new JRules($array['rules']);
-    $this->setRules($rules);
-    }
-        return parent::bind($array, $ignore);
-}
+            { 
+                if (key_exists( 'params', $array ) && is_array( $array['params'] ))
+                    {
+                        $registry = new JRegistry();
+                        $registry->loadArray($array['params']);
+                        $array['params'] = $registry->toString();
+                    }
 
-/**
+                // Bind the rules.
+                if (isset($array['rules']) && is_array($array['rules'])) 
+                    {
+                        $rules = new JRules($array['rules']);
+                        $this->setRules($rules);
+                    }
+
+                return parent::bind($array, $ignore);
+            }
+
+        /**
          * Method to compute the default name of the asset.
          * The default name is in the form `table_name.id`
          * where id is the value of the primary key of the table.
@@ -113,7 +123,8 @@ class Tablemessage extends JTable
          */
         protected function _getAssetTitle()
         {
-                return $this->studytitle;
+                $title = 'JBS Study: '.$this->studytitle;
+                return $title;
         }
  
         /**
@@ -121,12 +132,12 @@ class Tablemessage extends JTable
          *
          * @return      int
          * @since       1.6
-         */
+        */ 
         protected function _getAssetParentId()
         {
                 $asset = JTable::getInstance('Asset');
-                $asset->loadByName('com_biblestudy');
+                $asset->loadByName('com_biblestudy'); 
                 return $asset->id;
         }
-
+        
 }

@@ -25,22 +25,54 @@ class biblestudyViewmessage extends JView {
         $this->item = $this->get("Item");
         $this->mediafiles = $this->get('MediaFiles');
         $this->setLayout('form');
-        $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'studiesedit');
+        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin($isSite = true);
-        
-                
+
         $user = JFactory::getUser();
-      
-      
-      $canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
-    
-      if (!$canDo->get('core.edit'))
-      {
+
+
+        $canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
+
+        if (!$canDo->get('core.edit'))
+        {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
             return false; 
-      }
-      
+        }
+
+        $document = JFactory::getDocument();
+        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/jquery.js');
+        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/noconflict.js');
+        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/ui/jquery-ui.js');
+        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/plugins/jquery.tokeninput.js');
+        $document->addStyleSheet(JURI::base() . 'administrator/components/com_biblestudy/css/token-input-jbs.css');
+
+        $script = "
+            \$j(document).ready(function() {
+                \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
+                {
+                    theme: 'jbs',
+                    hintText: '" . JText::_('JBS_CMN_TOPIC_TAG') . "',
+                    noResultsText: '" . JText::_('JBS_CMN_NOT_FOUND') . "',
+                    searchingText: '" . JText::_('JBS_CMN_SEARCHING') . "',
+                    animateDropdown: false,
+                    preventDuplicates: true,
+                    prePopulate: " . $this->get('topics') . "
+                });
+            });
+             ";
+
+        $document->addScriptDeclaration($script);
+
+        //$document->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.tokeninput.js');
+        $document->addStyleSheet(JURI::base() . 'administrator/components/com_biblestudy/js/ui/theme/ui.all.css');
+        $document->addStyleSheet(JURI::base() . 'administrator/components/com_biblestudy/css/jquery.tagit.css');
+
+        //$document->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/token-input-facebook.css');
+
+        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/biblestudy.js');
+        //$document->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.selectboxes.js');
+    
         parent::display($tpl);
     }
 }

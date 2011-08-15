@@ -18,6 +18,7 @@ include_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. '
 
 /**
  * Topics List Form Field class for the Joomla Bible Study component
+ * Displays a topics list of ALL published topics
  */
 class JFormFieldTopicslist extends JFormFieldList
 {

@@ -43,10 +43,6 @@ $listDirn = $this->state->get('list.direction');
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
                 <?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
             </select>
-            <select name="filter_topic" class="inputbox" onchange="Joomla.submitbutton()">
-                <option value=""><?php echo JText::_('JBS_CMN_SELECT_TOPIC'); ?></option>
-                <?php echo JHtml::_('select.options', $this->topics, 'value', 'text', $this->state->get('filter.topic')); ?>
-            </select>
            <select name="filter_published" class="inputbox" onchange="this.form.submit()">
 				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
 				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>

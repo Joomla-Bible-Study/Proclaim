@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version $Id: studydetails.php 1 $
  * @package BibleStudy
@@ -78,30 +79,32 @@ class biblestudyModelstudydetails extends JModel
 		if (empty( $this->_data )) {
 		  	
 			$id = JRequest::getVar('id', 0,'GET','INT');
-		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS teachername, '
-			. ' #__bsms_teachers.title AS teachertitle, '
-			. ' #__bsms_teachers.image, #__bsms_teachers.imagew, #__bsms_teachers.imageh, #__bsms_teachers.thumb, '
-			. ' #__bsms_teachers.thumbw, #__bsms_teachers.thumbh,'
-			. ' #__bsms_series.id AS sid, #__bsms_series.series_text AS series_text, #__bsms_series.description AS sdescription, '
-			. ' #__bsms_message_type.id AS mid, #__bsms_message_type.message_type AS message_type, '
-			. ' #__bsms_books.bookname AS bname, #__bsms_locations.id as lid, #__bsms_locations.location_text,'
-			. ' #__bsms_topics.id AS tpid, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params,'
-            . ' sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
-			. ' FROM #__bsms_studies'
-			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-			. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-			. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-			. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-			. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
-			. ' LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
-            . ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
-			. '  WHERE #__bsms_studies.id = '.$id 
-            . ' GROUP BY #__bsms_studies.id';
-			//.$this->_id.;
+			$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS teachername, '
+				. ' #__bsms_teachers.title AS teachertitle, '
+				. ' #__bsms_teachers.image, #__bsms_teachers.imagew, #__bsms_teachers.imageh, #__bsms_teachers.thumb, '
+				. ' #__bsms_teachers.thumbw, #__bsms_teachers.thumbh,'
+				. ' #__bsms_series.id AS sid, #__bsms_series.series_text AS series_text, #__bsms_series.description AS sdescription, '
+				. ' #__bsms_message_type.id AS mid, #__bsms_message_type.message_type AS message_type, '
+				. ' #__bsms_books.bookname AS bname, #__bsms_locations.id as lid, #__bsms_locations.location_text,'
+				. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params,'
+				. ' sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
+				. ' FROM #__bsms_studies'
+				. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
+				. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
+				. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
+				. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
+				. ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
+				. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+				. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
+				. ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
+				. '  WHERE #__bsms_studies.id = '.$id 
+				. ' GROUP BY #__bsms_studies.id';
+				//.$this->_id.;
 			$this->_db->setQuery( $query );
 			$result = $this->_db->loadObject();
 
-			$topic_text = getTopicItemTranslated($result);
+			// concat topic_text and concat topic_params do not fit, so translate individually
+			$topic_text = getConcatTopicItemTranslated($result);
 			$result->topic_text = $topic_text;
 			$result->bname = JText::_($result->bname);
 

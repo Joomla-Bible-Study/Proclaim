@@ -114,7 +114,6 @@ function getTemplate()
 				. ' FROM #__bsms_templates'
 				. ' WHERE published = 1 AND id = '.$templateid;
 				$this->_template = $this->_getList($query);
-				//dump ($this->_template, 'this->_template');
 		}
 		return $this->_template;
 	}

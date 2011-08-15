@@ -1,10 +1,13 @@
 <?php
 
 /**
- * @version     $Id
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @version $Id: controller.php 1 $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
+ 
 //No Direct Access
 defined('_JEXEC') or die();
 

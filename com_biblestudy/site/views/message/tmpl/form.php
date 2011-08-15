@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: form_16.php 1396 2011-01-17 23:12:12Z genu $
+ * @version     $Id: form.php 1396 2011-01-17 23:12:12Z genu $
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
@@ -125,8 +125,9 @@ JHtml::_('behavior.formvalidation');
                     <?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin->params['series_id'] : $this->item->series_id) ?>
                        </div>
                <div class="formelm">
-                    <?php echo $this->form->getLabel('topics_id'); ?>
-                    <?php echo $this->form->getInput('topics_id', null, empty($this->item->studytitle) ? $this->admin->params['topic_id'] : $this->item->topics_id) ?>
+                        <?php echo $this->form->getLabel('topics'); ?>
+                        <div class="clr"></div>
+                        <?php echo $this->form->getInput('topics'); ?>
                         </div>
                <div class="formelm">
                     <?php echo $this->form->getLabel('messagetype'); ?>
@@ -210,11 +211,13 @@ JHtml::_('behavior.formvalidation');
                                     </tr>
                     <?php endif; ?>
                                 </tbody>
+                    <?php if (! empty($this->item->studytitle)) : ?>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile').'>'.JText::_('JBS_STY_VIEW_ALL_MEDIAFILES'); ?>"></a></td>
+                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&layout=form').'">'.JText::_('JBS_STY_NEW_MEDIAFILE'); ?></a></td>
                                     </tr>
                                 </tfoot>
+                    <?php endif; ?>
                             </table>
                         </fieldset>
  <div class="clr"></div>

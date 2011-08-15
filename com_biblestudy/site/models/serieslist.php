@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version $Id: serieslist.php 1 $
  * @package BibleStudy
@@ -19,6 +20,7 @@ class biblestudyModelserieslist extends JModel
 
 	var $_total = null;
 	var $_pagination = null;
+	
 	/**
 	 * @desc From database
 	 */
@@ -249,7 +251,6 @@ function getTemplate() {
 	{
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
         $template = $this->getTemplate();
-	//	$params = new JParameter($template[0]->params);
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;

@@ -18,7 +18,7 @@ class biblestudyViewmessages extends JView {
     protected $state;
 
     function display($tpl = null) {
-        $this->canDo	= BibleStudyHelper::getActions('', 'studiesedit');
+        $this->canDo = BibleStudyHelper::getActions('', 'studiesedit');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
@@ -27,12 +27,8 @@ class biblestudyViewmessages extends JView {
         $this->series = $this->get('Series');
         $this->messageTypes = $this->get('MessageTypes');
         $this->years = $this->get('Years');
-        $this->topics = $this->get('Topics');
-              
-       
    
         $user = JFactory::getUser();
-      
         
         if (!$this->canDo->get('core.edit')) 
         {

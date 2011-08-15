@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version $Id: teacherdisplay.php 1 $
  * @package BibleStudy

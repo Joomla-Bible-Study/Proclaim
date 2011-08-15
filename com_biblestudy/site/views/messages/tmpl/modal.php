@@ -14,7 +14,7 @@ $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages&layout=modal&tmpl=component&function=' . $function); ?>" method="post" name="adminForm" id="adminForm">
-    <fieldset id="filter-bar">
+    <fieldset id="filter">
         <div class="filter-search fltlft">
             <label class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>: </label>
             <input type="text" name="filter_studytitle" id="filter_studytitle" value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
@@ -36,16 +36,12 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.series')); ?>
             </select>
             <select name="filter_message_type" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JBS_CMN_MESSAGE_TYPE'); ?></option>
+                <option value=""><?php echo JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
             </select>
-            <select name="filter_years" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_year" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
-                <?php //echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageTypeId')); ?>
-            </select>
-            <select name="filter_topic" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JBS_CMN_SELECT_TOPIC'); ?></option>
-                <?php echo JHtml::_('select.options', $this->topics, 'value', 'text', $this->state->get('filter.topic')); ?>
+                <?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
             </select>
             <select name="filter_state" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
@@ -54,6 +50,7 @@ $listDirn = $this->state->get('list.direction');
         </div>
     </fieldset>
     <div class="clr"></div>
+        
     <table class="adminlist">
         <thead>
             <tr>
@@ -77,9 +74,6 @@ $listDirn = $this->state->get('list.direction');
                 </th>
                 <th>
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
-                </th>
-                <th>
-                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_TOPIC', 'topic.topic_text', $listDirn, $listOrder); ?>
                 </th>
             </tr>
         </thead>
@@ -107,7 +101,7 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo JHtml::_('jgrid.published', $item->published, $i, 'studieslist.', true, 'cb', '', ''); ?>
                     </td>
                     <td class="center">
-                <?php echo $this->escape($item->bookname).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
+                <?php echo JText::sprintf($item->bookname).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
                     </td>
                     <td class="center">
                 <?php echo $this->escape($item->teachername); ?>
@@ -117,9 +111,6 @@ $listDirn = $this->state->get('list.direction');
                     </td>
                     <td class="center">
                 <?php echo $this->escape($item->series_text); ?>
-                    </td>
-                    <td class="center">
-                <?php echo $this->escape($item->topic_text); ?>
                     </td>
                 </tr>
         <?php endforeach; ?>

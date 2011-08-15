@@ -111,7 +111,6 @@ class biblestudyModelMessages extends modelClass {
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
 
-        $filter_topic = $mainframe->getUserStateFromRequest($option . 'filter_topic', 'filter_topic', 0, 'int');
         $filter_book = $mainframe->getUserStateFromRequest($option . 'filter_book', 'filter_book', 0, 'int');
         $filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
         $filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
@@ -123,9 +122,6 @@ class biblestudyModelMessages extends modelClass {
 
         $where = array();
 
-        if ($filter_topic > 0) {
-            $where[] = ' #__bsms_studytopics.topic_id = ' . (int) $filter_topic;
-        }
         if ($filter_book > 0) {
             $where[] = ' #__bsms_studies.booknumber = ' . (int) $filter_book;
         }
@@ -151,7 +147,7 @@ class biblestudyModelMessages extends modelClass {
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
 
-        $orders = array('id', 'published', 'studydate', 'messagetype', 'teacher_id', 'studytitle', 'series_id', 'topics_id', 'hits', 'totalplays', 'totaldownloads');
+        $orders = array('id', 'published', 'studydate', 'messagetype', 'teacher_id', 'studytitle', 'series_id');
         $filter_order = $mainframe->getUserStateFromRequest($option . 'filter_order', 'filter_order', 'ordering', 'cmd');
         $filter_order_Dir = strtoupper($mainframe->getUserStateFromRequest($option . 'filter_order_Dir', 'filter_order_Dir', 'ASC'));
         if ($filter_order_Dir != 'ASC' && $filter_order_Dir != 'DESC') {
@@ -229,10 +225,6 @@ class biblestudyModelMessages extends modelClass {
         $query->select('series.series_text');
         $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
 
-        //Join over Topics
-        $query->select('topic.topic_text');
-        $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = study.topics_id');
-
         //Join over Books
         $query->select('book.bookname');
         $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
@@ -275,11 +267,6 @@ class biblestudyModelMessages extends modelClass {
         if (!empty($year))
             $query->where('YEAR(study.studydate) = '.(int)$year );
             
-        //Filter by topic
-        $topic = $this->getState('filter.topic');
-        if(!empty($topic))
-            $query->where('study.topics_id = '.(int)$topic);
-
         // Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
@@ -300,8 +287,8 @@ class biblestudyModelMessages extends modelClass {
 
     /*
      * @since 7.0
+     * get a list of all used books
      */
-
     public function getBooks() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -323,8 +310,8 @@ class biblestudyModelMessages extends modelClass {
 
     /*
      * @since 7.0
+     * get a list of all used teachers
      */
-
     public function getTeachers() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -341,8 +328,8 @@ class biblestudyModelMessages extends modelClass {
 
     /*
      * @since 7.0
+     * get a list of all used series
      */
-
     public function getSeries() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -359,8 +346,8 @@ class biblestudyModelMessages extends modelClass {
 
     /*
      * @since 7.0
+     * get a list of all used message types
      */
-
     public function getMessageTypes() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -377,31 +364,9 @@ class biblestudyModelMessages extends modelClass {
 
     /*
      * @since 7.0
+     * get a list of all used years
      */
-
-    public function getTopics() {
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
-
-        $query->select('topic.id AS value, topic.topic_text AS topic_text, topic.params AS topic_params');
-        $query->from('#__bsms_topics AS topic');
-        $query->join('INNER', '#__bsms_studies AS study ON study.topics_id = topic.id');
-        $query->group('topic.id');
-        $query->order('topic.topic_text');
-
-        $db->setQuery($query->__toString());
-        $db_result = $db->loadObjectList();
-
-        $output = array();
-        foreach($db_result as $i => $value)
-        {
-            $value->text = getTopicItemTranslated($value);
-            $output[] = $value;
-        }
-        return $output;
-    }
-
-public function getYears(){
+    public function getYears(){
         $db = $this->getDBO();
         $query = $db->getQuery(true);
         
