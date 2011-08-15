@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
+
 defined('_JEXEC') or die();
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
@@ -44,7 +45,6 @@ class jbsMedia
 
         //Here we get a list of the media ids associated with the study we got from $row
         $mediaids = $this->getMediaRows($row->id);
-        //$mediaids = '';
         $rowcount = count($mediaids); // echo $rowcount; return true;
         if ($rowcount < 1) {$table = null; return $table;}
 
@@ -157,7 +157,6 @@ class jbsMedia
 
     function getMediaRows($id)
 {
-	//$media = 'returned media'; return $media;
     $db = JFactory::getDBO();
 	$query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,
      #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname,
@@ -238,7 +237,6 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
 */
      $player->player = 0;
      $params_mediaplayer = $params->get('media_player');
-  //   $item_mediaplayer = $itemparams->get('player');
      $item_mediaplayer = $media->player; 
     if ($params_mediaplayer > 0) {$player->player = $params_mediaplayer;}
     if ($item_mediaplayer == 0)
@@ -279,7 +277,6 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
       //This is the global parameter set in Template Display settings
       $param_playertype = $params->get('internal_popup');
       if (!$param_playertype){$param_playertype = 1;}
-      //This is the media item specific parameter
       $item_playertype = $media->popup;
       if ($param_playertype)
       {
@@ -300,8 +297,6 @@ function getPlayerAttributes($admin_params, $params, $itemparams, $media)
             $player->type = 1;
             break;
         }
-      
-    //added because if you choose a direct player and popup the media file will play twice
     return $player;
 }
 
@@ -350,7 +345,7 @@ function getVirtuemart($media, $params, $image)
 	}
 
 function getPlayerCode($params, $itemparams, $player, $image, $media)
-{ //dump ($player, 'player: ');
+{
     $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
     include_once($path1.'filesize.php');
 	include_once($path1.'duration.php');
@@ -501,7 +496,6 @@ function getPlayerCode($params, $itemparams, $player, $image, $media)
         
         
     }
-     //  dump ($playercode, 'playercode: ');
     return $playercode;
 }
 

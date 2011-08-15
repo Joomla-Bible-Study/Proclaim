@@ -28,7 +28,6 @@ class JBSPodcast
         $where = array();
         foreach ($results as $result)
         {
-        //	$params = new JParameter($result->params);
             
               // Convert parameter fields to objects.
 				$registry = new JRegistry;

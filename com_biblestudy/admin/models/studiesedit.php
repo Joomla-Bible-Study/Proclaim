@@ -67,7 +67,7 @@ class biblestudyModelstudiesedit extends JModelAdmin {
         $data['studyintro'] = str_replace('"', "'", $data['studyintro']);
         $data['studynumber'] = str_replace('"', "'", $data['studynumber']);
         $data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
-        
+
         foreach ($data['scripture'] as $scripture) {
             if (!$data['text'][key($data['scripture'])] == '') {
                 $scriptures[] = $scripture . ' ' . $data['text'][key($data['scripture'])];
@@ -75,9 +75,7 @@ class biblestudyModelstudiesedit extends JModelAdmin {
             next($data['scripture']);
         }
         $data['scripture'] = implode(';', $scriptures);
-        // Added since Joomla 1.6 to implode show_level if array
-        if (is_array($data['show_level'])) {
-        }
+
         // Bind the form fields to the table
         if (!$row->bind($data)) {
             $this->setError($this->_db->getErrorMsg());
@@ -93,8 +91,8 @@ class biblestudyModelstudiesedit extends JModelAdmin {
 
         // Store the table to the database
         //Checks to make sure a valid date field has been entered
-        if (!$row->studydate)
-            $row->studydate = date('Y-m-d H:i:s');
+        if (!$row->studydate) {
+            $row->studydate = date('Y-m-d H:i:s'); }
         if (!$row->store()) {
             $this->setError($this->_db->getErrorMsg());
             return false;
@@ -105,8 +103,6 @@ class biblestudyModelstudiesedit extends JModelAdmin {
         $iTags = explode(",", $vTags);
 
         JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'tables');
-
-        //$tagRow->load( 1 );
 
         foreach ($iTags as $aTag) {
             if (is_numeric($aTag)) {
@@ -199,21 +195,57 @@ class biblestudyModelstudiesedit extends JModelAdmin {
     /**
      * Gets all the topics associated with a particular study
      *  
-     * @return type JSON Object containinng the topics
+     * @return type JSON Object containing the topics
      * @since 7.0.1
      */
     function getTopics() {
+        // do search in case of present study only, suppress otherwise 
+        $translatedList = array();
+    	if (JRequest::getVar('id', 0, null, 'int') > 0) {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            
+            $query->select('topic.id, topic.topic_text, topic.params AS topic_params');
+            $query->from('#__bsms_studytopics AS studytopics');
+          
+            $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
+            $query->where('studytopics.study_id = '.JRequest::getVar('id', 0, null, 'int'));
+            
+            $db->setQuery($query->__toString());
+            $topics = $db->loadObjectList();
+            if ($topics) {
+                foreach($topics as $topic) {
+                    $text = getTopicItemTranslated($topic);
+                    $translatedList[] = array('id' => $topic->id, 'name' => $text);
+                }
+            }
+    	}
+        return json_encode($translatedList);
+    }
+
+    /**
+     * Gets all topics available
+     *  
+     * @return type JSON Object containing the topics
+     * @since 7.0.1
+     */
+    function getAlltopics() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
         
-        $query->select('topic.id, topic.topic_text AS name');
-        $query->from('#__bsms_studytopics AS studytopics');
+        $query->select('topic.id, topic.topic_text, topic.params AS topic_params');
+        $query->from('#__bsms_topics AS topic');
 
-        $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
-        $query->where('studytopics.study_id = '.JRequest::getVar('id', 0, null, 'int'));
-        
         $db->setQuery($query->__toString());
-        return json_encode($db->loadAssocList());
+        $topics = $db->loadObjectList();
+        $translatedList = array();
+        if ($topics) {
+            foreach($topics as $topic) {
+                $text = getTopicItemTranslated($topic);
+                $translatedList[] = array('id' => $topic->id, 'name' => $text);
+            }
+        }
+        return json_encode($translatedList);
     }
 
     function getAdmin() {

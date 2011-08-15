@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
+
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -24,6 +25,9 @@ class biblestudyControllermessage extends controllerClass {
      * to "studies" so that the pluralization in 1.6 would work properly
      *
      * @since 7.0
+     */
+
+    /**
      * constructor (registers additional tasks to methods)
      * @return void
      */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version $Id: biblestudy.admin.class.php 1 $
  * @package BibleStudy
@@ -273,7 +274,6 @@ function getShowLevel($row)
         $sum2 = count($getGroups); 
         if (substr_count($row->show_level,','))
         {$showvar = explode(',',$row->show_level);}
-         //dump ($row->show_level, 'showvar: ');
         else {$showvar = $row->show_level;}
         $sum3 = count($showvar);
         for ($i = 0; $i<$sum3; $i++)

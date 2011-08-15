@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 /**
  * @version $Id: duration.php 1 $

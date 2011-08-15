@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version $Id: media.php 1 $
  * @package BibleStudy
@@ -33,7 +34,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 
         }
 
-
 	function getInternalPlayer($media, $params, $admin_params)
 		{
 
@@ -41,7 +41,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'filepath.php');
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
-
             
               // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -86,7 +85,6 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             include_once($path1.'filepath.php');
             include_once($path1.'duration.php');
             include_once($path1.'image.php');
-
             
               // Convert parameter fields to objects.
 				$registry = new JRegistry;
@@ -122,7 +120,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             $path1 = getFilepath($media->id, $idfield, $mime);
 
             $link_type = $media->link_type;
-            if ($link_type > 0){ 
+            if ($link_type > 0){
             $width=$download_tmp->width;
             $height=$download_tmp->height;
 
@@ -186,7 +184,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
             $path1 = getFilepath($media->id, $idfield, $mime);
 
             $media_link = '<div class="bsms_mediafile"><a href="'.$path1.'" title="'.$media->malttext.' - '.$media->comment.' '.$duration.' '
-            .$filesize.'" target="'.$media->special.'"><img src="'.$d_path 
+            .$filesize.'" target="'.$media->special.'"><img src="'.$d_path
             .'" alt="'.$media->malttext.' - '.$media->comment.' - '.$duration.' '.$filesize.'" width="'.$width
             .'" height="'.$height.'" border="0" /></a></div>';
 

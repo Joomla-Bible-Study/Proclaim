@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @version $Id: image.php 1 $

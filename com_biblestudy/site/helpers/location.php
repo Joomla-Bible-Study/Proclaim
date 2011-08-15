@@ -1,4 +1,5 @@
-<?php
+<?php 
+
 /**
  * @version $Id: location.php 1 $
  * @package BibleStudy
@@ -69,7 +70,7 @@ function getLocationsLandingPage($params, $id, $admin_params)
             
             $location .= '</td>';
             $i++;
-            $t++; //dump ($t, 't: ');
+            $t++;
             if ($i == 3) {
                 $location .= "\n\t" . '</tr>';
                 $i = 0;

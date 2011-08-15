@@ -1,4 +1,5 @@
 <?php 
+
 /**
  * @version $Id: passage.php 1 $
  * @package BibleStudy

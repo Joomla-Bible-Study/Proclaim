@@ -1,6 +1,4 @@
-<?php 
-
-defined('_JEXEC') or die('Restriced Access');
+<?php defined('_JEXEC') or die('Restriced Access');
 
 /**
  * @version $Id: custom.php 1 $

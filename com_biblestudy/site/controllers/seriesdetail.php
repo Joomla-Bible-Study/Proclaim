@@ -18,15 +18,9 @@ class biblestudyControllerseriesdetail extends JController
 	 */
 	function __construct()
 	{
-		
-		
-		
+			
 		parent::__construct();
 	}
 
-	/**
-	 * display the edit form
-	 * @return void
-	 */
 	
 }

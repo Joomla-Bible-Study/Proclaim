@@ -17,7 +17,7 @@ defined('_JEXEC') or die();
     }
 
 class biblestudyControllerCommentsList extends controllerClass {
-/**
+    /**
      * Proxy for getModel
      *
      * @param <String> $name    The name of the model

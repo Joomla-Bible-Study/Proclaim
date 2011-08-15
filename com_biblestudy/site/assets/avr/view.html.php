@@ -6,7 +6,7 @@
 * @uses			This file was edited by Tom Fuller from JoomlaBibleStudy to accomodate problems AVR was having with com_biblestudy. Version 2
 * @desc			Version 1 added a method to create an Itemid when one was not passed to AVR
 * 				Version 2 pulls the id of the media file being played from the $divid variable then increments the hit counter for plays
- */
+*/
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
@@ -53,7 +53,6 @@ class AvReloadedViewPopup extends JView
 				include_once($path1.'helper.php');
 				$admin_params = getAdminsettings();
 				$itemid = getItemidLink();
-				//$itemid = substr($itemid, -1);
 				
 	        }
         }

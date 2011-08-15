@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
+
 //No Direct Access
 defined('_JEXEC') or die();
 
@@ -25,12 +26,14 @@ class biblestudyControllermediafile extends controllerClass {
      * to "mediafiles" so that the pluralization in 1.6 would work properly
      *
      * @since 7.0
+     */
+
+        /**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
 	function __construct()
 	{
-            //$this->getModel("Admin");
 		parent::__construct();
 		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
@@ -165,15 +168,15 @@ function getSizeFile ($url){
 		} 
 	fclose ($fp);
 	$return = -2; 
-	$arr_headers = explode("\n", $headers); 
-	foreach($arr_headers as $header) { 
+	$arr_headers = explode("\n", $headers);
+	foreach($arr_headers as $header) {
 		$s1 = "HTTP/1.1"; 
 		$s2 = "Content-Length: "; 
 		$s3 = "Location: "; 
 		if(substr(strtolower ($header), 0, strlen($s1)) == strtolower($s1)) $status = substr($header, strlen($s1)); 
 		if(substr(strtolower ($header), 0, strlen($s2)) == strtolower($s2)) $size   = substr($header, strlen($s2));  
 		if(substr(strtolower ($header), 0, strlen($s3)) == strtolower($s3)) $newurl = substr($header, strlen($s3));  
-		} 
+		}
 	if(intval($size) > 0) {
 		$return=strval($size);
 	} else {

@@ -22,8 +22,7 @@ function getStore($params, $row)
                         LEFT JOIN #__bsms_servers AS sr ON ( sr.id = s.server_cd )
                         WHERE s.id ='.$row->id;
     $database->setQuery($query);
-    $cd = $database->loadObject(); 
-	//dump ($rowid, '$cd: ');
+    $cd = $database->loadObject();
 	$query = 'SELECT m.media_image_name, m.media_alttext, m.media_image_path, m.id AS mid, s.id AS sid,'
     .' s.image_dvd, s.prod_dvd, s.server_dvd, sr.id AS srid, sr.server_path
                         FROM #__bsms_studies AS s

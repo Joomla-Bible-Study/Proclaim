@@ -22,10 +22,6 @@
 // Dont allow direct linking
 defined( '_JEXEC' ) or die('Restricted access');
 
-/**
-* Bible Study stats support class
-* @package com_biblestudy
-*/
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once ($path1.'helper.php');

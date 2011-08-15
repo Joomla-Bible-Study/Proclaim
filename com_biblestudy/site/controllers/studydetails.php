@@ -57,8 +57,8 @@ class biblestudyControllerstudydetails extends JController
 			JRequest::setVar( 'layout', 'default'  );
 		}
 		JRequest::setVar( 'view', 'studydetails' );
+                
 			$model->hit();
-		//}
 
 		parent::display();
 	}

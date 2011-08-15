@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @version $Id: teacherlist.php 1 $
  * @package BibleStudy
@@ -7,7 +6,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
-
 defined('_JEXEC') or die();
 jimport('joomla.application.component.controller');
 

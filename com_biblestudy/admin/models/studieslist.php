@@ -134,10 +134,6 @@ class biblestudyModelstudieslist extends JModelList {
         $query->select('series.series_text');
         $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
 
-        //Join over Topics
-        $query->select('topic.topic_text, topic.params AS topic_params');
-        $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = study.topics_id');
-
         //Join over Books
         $query->select('book.bookname');
         $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');

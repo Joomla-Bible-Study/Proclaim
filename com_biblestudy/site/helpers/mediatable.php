@@ -33,7 +33,6 @@ if (!$row->id) {return FALSE;}
 	$d_image = ($admin[0]->params->default_download_image ? '/'.$admin[0]->params->default_download_image : '/download.png');
 
 	$images = new jbsImages();
-
  	$download_tmp = $images->getMediaImage($admin[0]->params->default_download_image, $media=NULL);
 
     $download_image = $download_tmp->path;
@@ -128,7 +127,6 @@ if (!$row->id) {return FALSE;}
 	  {
 	  	$playertype = 3;
 	  }
-//$type = 1 is popup
 //$item comes from the individual media file 0 = inline, 1 = popup, 3 = use global settings
         $item = $itemparams->get('internal_popup');
         $internal_popup = $params->get('internal_popup',0);
@@ -197,11 +195,6 @@ if (!$row->id) {return FALSE;}
 		{
 			$media1_link = getVirtuemart($media, $width, $height, $src, $params);
 		}
-
-
-       /**
-        * @desc: I hope to in the future load media files using this method
-        */
 
        // Here is where we begin to build the mediatable variable
 

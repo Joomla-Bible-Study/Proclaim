@@ -1,4 +1,5 @@
 <?php 
+
 /**
  * @version $Id: messagetype.php 1 $
  * @package BibleStudy

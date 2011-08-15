@@ -8,7 +8,7 @@ defined('_JEXEC') or die('Restricted access');
  * @link http://www.JoomlaBibleStudy.org
  **/
  function writeXML()
-	{
+	{ 
 		$return = TRUE;
 		$podcastresults = array();
 		$files = array();
@@ -189,6 +189,7 @@ defined('_JEXEC') or die('Restricted access');
 							break;
 						case 5:
 							$element = getCustom($rowid='row1col1', $podinfo->custom, $episode, $params, $admin_params, $detailstemplateid);
+							
 							$title = $element->element;
 							break;
 					}
@@ -266,8 +267,7 @@ defined('_JEXEC') or die('Restricted access');
 				}
 		
 			} // end of foreach $podid
-			
-	
+
 		} // end if (count($podid))
 
 		foreach ($podcastresults AS $podcastresult)

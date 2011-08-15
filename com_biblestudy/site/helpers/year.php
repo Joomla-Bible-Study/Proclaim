@@ -1,4 +1,5 @@
 <?php 
+
 /**
  * @version $Id: year.php 1 $
  * @package BibleStudy
@@ -6,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
+
 defined('_JEXEC') or die('Restriced Access');
 
 function getYearsLandingPage($params, $id, $admin_params)
@@ -70,7 +72,7 @@ function getYearsLandingPage($params, $id, $admin_params)
             
             $year .= '</td>';
             $i++;
-            $t++; //dump ($t, 't: ');
+            $t++;
             if ($i == 3) {
                 $year .= "\n\t" . '</tr>';
                 $i = 0;

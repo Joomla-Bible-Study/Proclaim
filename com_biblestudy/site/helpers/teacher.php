@@ -30,8 +30,6 @@ function getTeacher($params, $id, $admin_params)
 			}
 		if ($viewtype == 'studydetails')
 			{$teacherids->id = $id;}
-	
-		
 		$teacher = '<table id = "teacher"><tr>';
 		if (!isset($teacherids)) {return $teacher;}
 		foreach ($teacherids as $teachers)
@@ -39,7 +37,7 @@ function getTeacher($params, $id, $admin_params)
 		{
 			$database	= & JFactory::getDBO();
 			$query = 'SELECT * FROM #__bsms_teachers'.
-					'  WHERE id = '.$teachers;		
+					'  WHERE id = '.$teachers;	
 			$database->setQuery($query);
 			$tresult = $database->loadObject();
 			$i_path = null;
@@ -51,7 +49,6 @@ function getTeacher($params, $id, $admin_params)
 					{
 						$image->path = ''; $image->width=0; $image->height=0;
 					}
-		//	}
 				$teacher .= '<td><table cellspacing ="0"><tr><td><img src="'.$image->path.'" border="1" width="'.$image->width.'" height="'.$image->height.'" ></td></tr>';
 			
 		$teacher .= '<tr><td>';
@@ -180,7 +177,7 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 	$images = new jbsImages();
 	$imagelarge = $images->getTeacherThumbnail($row->teacher_image, $row->image);
 
-		$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+	$imagesmall = $images->getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
 
 	$label = $params->get('teacher_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);

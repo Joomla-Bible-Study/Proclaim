@@ -1,4 +1,5 @@
 <?php 
+
 /**
  * @version $Id: topics.php 1 $
  * @package BibleStudy
@@ -6,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
+
 defined('_JEXEC') or die('Restriced Access');
 
 function getTopicsLandingPage($params, $id, $admin_params)
@@ -23,7 +25,12 @@ function getTopicsLandingPage($params, $id, $admin_params)
 
 		$topic = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
-		$query = 'select distinct a.id, a.topic_text, a.published, a.params AS topic_params from #__bsms_topics a inner join #__bsms_studies b on a.id = b.topics_id';
+		$query = 'SELECT DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params '
+				. 'FROM #__bsms_studies '
+				. 'LEFT JOIN #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id) '
+				. 'LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id) '
+				. 'WHERE #__bsms_topics.published = 1 '
+				. 'ORDER BY #__bsms_topics.topic_text ASC';
 		$db->setQuery($query);
 		
         $tresult = $db->loadObjectList();
@@ -69,7 +76,7 @@ function getTopicsLandingPage($params, $id, $admin_params)
             
             $topic .= '</td>';
             $i++;
-            $t++;
+            $t++; //dump ($t, 't: ');
             if ($i == 3) {
                 $topic .= "\n\t" . '</tr>';
                 $i = 0;

@@ -1,4 +1,5 @@
 <?php 
+
 /**
  * @version $Id: title.php 1 $
  * @package BibleStudy
@@ -92,3 +93,4 @@ if ($params->get('title_line_1') > 0)
 	$title .= '</table>';
 return $title;
 }
+

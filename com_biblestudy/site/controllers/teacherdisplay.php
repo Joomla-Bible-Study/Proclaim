@@ -36,7 +36,6 @@ class biblestudyControllerteacherdisplay extends JController
 	{
 		JRequest::setVar( 'view', 'teacherdisplay' );
 		JRequest::setVar( 'layout', 'default'  );
-		//JRequest::setVar('hidemainmenu', 1);
 
 		parent::display();
 	}

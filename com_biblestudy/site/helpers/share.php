@@ -51,7 +51,6 @@ function getShare($link, $row, $params, $admin_params)
 	<tbody><tr class="bsmsshareiconrow">';
 	foreach ($rows as $sharerow)
 	{
-	//	$share_params = new JParameter($sharerow->params);
         
           // Convert parameter fields to objects.
 				$registry = new JRegistry;

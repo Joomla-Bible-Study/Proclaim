@@ -1,4 +1,5 @@
-<?php
+<?php 
+
 /**
  * @version $Id: scripture.php 1 $
  * @package BibleStudy

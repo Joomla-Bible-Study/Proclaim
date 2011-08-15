@@ -17,8 +17,6 @@ class JBSListing
     {
         $link = '';
         $db	= JFactory::getDBO();
-        
-      //  $numrows = $db->getNumRows(); 
         $query = 'SELECT #__bsms_mediafiles.* FROM #__bsms_mediafiles WHERE study_id = '.$id3.' AND #__bsms_mediafiles.published = 1';
         $db->setQuery( $query ); 
         $db->query();

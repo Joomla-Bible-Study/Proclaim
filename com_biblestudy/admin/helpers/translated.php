@@ -20,6 +20,7 @@ defined('_JEXEC') or die('Restricted access');
 function getTopicItemTranslated($topicItem)
 {
 	if ($topicItem) {
+		// first choice: evaluate language strings
 		$itemparams = new JRegistry;
 		$itemparams->loadJSON($topicItem->topic_params);
 		$currentLanguage = JFactory::getLanguage()->getTag();
@@ -62,4 +63,36 @@ function getTopicItemsTranslated($topicItems = array())
 		$output[] = $topicItem;
 	}
 	return $output;
+}
+
+
+/*
+   translate a concatenated list of topics to clear text
+   topicItem: stdClass containing the studies id and tp_id (i.e. concatenated topic ids)
+   return: translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
+*/
+function getConcatTopicItemTranslated($topicItem)
+{
+	if ($topicItem) {
+		// Check if there should be topics at all to save time
+		if ($topicItem->tp_id) {
+			$db = & JFactory::getDBO();
+			$query = 'SELECT #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params '
+					.'FROM #__bsms_topics '
+					.'LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = ' . $topicItem->id . ') '
+					.'WHERE published = 1 and #__bsms_topics.id = #__bsms_studytopics.topic_id';
+			$db->setQuery($query);
+			$results = $db->loadObjectList();
+    	
+			$output = '';
+			$count = count($results);
+			for ($i = 0; $i < $count; $i++)
+			{
+				if ($i > 0) {$output .= ', ';}
+				$output .= getTopicItemTranslated($results[$i]);
+			}
+			return $output;
+		}
+	}
+	return (null);
 }

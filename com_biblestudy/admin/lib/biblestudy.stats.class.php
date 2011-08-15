@@ -78,7 +78,11 @@ class jbStats {
 			$where[]='time > UNIX_TIMESTAMP(\'' . $start. '\')';
 		if (!empty($end))
 			$where[]='time < UNIX_TIMESTAMP(\'' . $end . '\')';
-		$query='SELECT COUNT(*) FROM #__bsms_studies WHERE published = "1" and topics_id > 0';
+		$query = 'SELECT COUNT(*) '
+				.'FROM #__bsms_studies '
+				.'LEFT JOIN #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id) '
+				.'LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id) '
+				.'WHERE #__bsms_topics.published = "1"';
 		if (count($where)>0)
 			$query.=' AND '.implode(' AND ',$where);
 		$biblestudy_db->setQuery($query);
