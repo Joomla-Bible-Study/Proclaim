@@ -3,46 +3,68 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die(); ?>
 
-<?php 
+<?php
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 $document =& JFactory::getDocument();
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $url = $this->params->get('stylesheet');
-if ($url) {$document->addStyleSheet($url);}	
+if ($url) {
+	$document->addStyleSheet($url);
+}
 $listingcall = JView::loadHelper('serieslist');
 $studylistcall = JView::loadHelper('listing');
 $t = $this->params->get('serieslisttemplateid');
-if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
+if (!$t) {
+	$t = JRequest::getVar('t',1,'get','int');
+}
 
 ?>
-<form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
+<form
+	action="<?php echo str_replace("&","&amp;",$this->request_url); ?>"
+	method="post" name="adminForm">
 
-<!--<tbody><tr>-->
-  <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+	<!--<tbody><tr>-->
+	<div id="biblestudy" class="noRefTagger">
+		<!-- This div is the container for the whole page -->
 
-<!--header-->
-     <table id="seriestable" cellspacing="0">
-      <tbody>
+		<!--header-->
+		<table id="seriestable" cellspacing="0">
+			<tbody>
 
-        <?php 
- 
-	$listing = getSerieslist($this->items, $this->params, $oddeven = 'bsodd', $this->admin_params, $this->template, $view = 1);
-	echo $listing;
- 
- ?>
 
- 
- <?php
- switch ($this->params->get('series_detail_listtype'))
-{
 
-	case 0:
-		?></tbody></table><table id="seriesstudytable" cellspacing="0"><tbody>
-		<?php 
-		$studies = getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
-		echo $studies;
-		?>  </tbody></table>
+			<?php
+
+			$listing = getSerieslist($this->items, $this->params, $oddeven = 'bsodd', $this->admin_params, $this->template, $view = 1);
+			echo $listing;
+
+			?>
+
+
+
+
+			<?php
+			switch ($this->params->get('series_detail_listtype'))
+			{
+
+				case 0:
+					?></tbody>
+		</table>
+		<table id="seriesstudytable" cellspacing="0">
+			<tbody>
+
+
+			<?php
+			$studies = getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
+			echo $studies;
+			?>
+			</tbody>
+		</table>
+		
+		
+		
+		
 		<?php
 		break;
 		
@@ -84,10 +106,11 @@ if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
         }
 ?>
 
-  </div><!--end of bspagecontainer div-->
-  <input name="option" value="com_biblestudy" type="hidden">
-  <input name="task" value="" type="hidden">
-  <input name="boxchecked" value="0" type="hidden">
-  <input name="controller" value="seriesdetail" type="hidden">
-  
+  </div>
+	<!--end of bspagecontainer div-->
+	<input name="option" value="com_biblestudy" type="hidden"> <input
+		name="task" value="" type="hidden"> <input name="boxchecked" value="0"
+		type="hidden"> <input name="controller" value="seriesdetail"
+		type="hidden">
+
 </form>

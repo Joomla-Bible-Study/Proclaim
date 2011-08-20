@@ -10,11 +10,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controllerform');
 
-    abstract class controllerClass extends JControllerForm {
+abstract class controllerClass extends JControllerForm {
 
-    }
+}
 
 
 class biblestudyControllershareedit extends controllerClass
@@ -23,10 +23,10 @@ class biblestudyControllershareedit extends controllerClass
 	 * constructor (registers additional tasks to methods)
 	 * @return void
 	 */
-	 protected $view_list = 'sharelist';
-	 
+	protected $view_list = 'sharelist';
+
 	function __construct()
 	{
 		parent::__construct();
-	}	
+	}
 }

@@ -36,23 +36,25 @@ class biblestudyModelserieslist extends JModel
 	var $_books;
 	var $_template;
 	var $_admin;
-	
+
 
 	function __construct()
 	{
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params =& $mainframe->getPageParameters();
-    $t = JRequest::getInt('t','get');
-		if (!$t){$t = 1;}
-    jimport('joomla.html.parameter');
+		$t = JRequest::getInt('t','get');
+		if (!$t){
+			$t = 1;
+		}
+		jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
-		
-          // Convert parameter fields to objects.
-				$registry = new JRegistry;
-				$registry->loadJSON($template[0]->params);
-                $params = $registry;
-        
+
+		// Convert parameter fields to objects.
+		$registry = new JRegistry;
+		$registry->loadJSON($template[0]->params);
+		$params = $registry;
+
 		$config = JFactory::getConfig();
 		$this->setState('limit',$params->get('series_limit'),'limit',$params->get('series_limit'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
@@ -60,11 +62,13 @@ class biblestudyModelserieslist extends JModel
 		// In case limit has been changed, adjust limitstart accordingly
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		// In case we are on more than page 1 of results and the total changes in one of the drop downs to a selection that has fewer in its total, we change limitstart
-		if ($this->getTotal() < $this->getState('limitstart')) {$this->setState('limitstart', 0,'','int');}
+		if ($this->getTotal() < $this->getState('limitstart')) {
+			$this->setState('limitstart', 0,'','int');
+		}
 	}
-function setSelect($string){
-	
-}
+	function setSelect($string){
+
+	}
 	/**
 	 * @desc Returns the query
 	 * @return string The query to be used to retrieve the rows from the database
@@ -86,8 +90,8 @@ function setSelect($string){
 	 * @desc Returns teachers
 	 * @return Array
 	 */
-	 
-	 function getSeries() {
+
+	function getSeries() {
 		if(empty($this->_series)) {
 			$query = 'SELECT id AS value, series_text AS text, published'
 			. ' FROM #__bsms_series'
@@ -97,7 +101,7 @@ function setSelect($string){
 		}
 		return $this->_series;
 	}
-	 function getAdmin()
+	function getAdmin()
 	{
 		if (empty($this->_admin)) {
 			$query = 'SELECT *'
@@ -107,7 +111,7 @@ function setSelect($string){
 		}
 		return $this->_admin;
 	}
-	
+
 	function getStudyYears() {
 		if (empty($this->_StudyYears)) {
 			$query = " SELECT DISTINCT date_format(studydate, '%Y') AS value, date_format(studydate, '%Y') AS text "
@@ -117,7 +121,7 @@ function setSelect($string){
 		}
 		return $this->_StudyYears;
 	}
-	
+
 	function getOrders() {
 		if (empty($this->_Orders)) {
 			$query = ' SELECT * FROM #__bsms_order '
@@ -129,7 +133,7 @@ function setSelect($string){
 
 
 
-function getTemplate() {
+	function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
 			$query = 'SELECT *'
@@ -139,7 +143,7 @@ function getTemplate() {
 		}
 		return $this->_template;
 	}
-		
+
 	function getData()
 	{
 		$mainframe =& JFactory::getApplication();
@@ -203,50 +207,52 @@ function getTemplate() {
 		if ($filter_series > 0) {
 			$where[] = ' se.id = '.(int) $filter_series;
 		}
-        
-        
-        	
+
+
+		 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 
 		$where2 = array();
 		$continue = 0;
-		if ($params->get('series_id')&& !$filter_series) 
-			{ 
-				
-					$filters = $params->get('series_id');
-					switch ($filters)
+		if ($params->get('series_id')&& !$filter_series)
+		{
+
+			$filters = $params->get('series_id');
+			switch ($filters)
+			{
+				case is_array($filters) :
+					foreach ($filters AS $filter)
 					{
-						case is_array($filters) :
-							foreach ($filters AS $filter)
-								{
-									if ($filter == -1)
-										{
-											break;
-										}
-									{
-										$continue = 1;
-										$where2[] = 'se.id = '.(int)$filter;
-									}
-								}
+						if ($filter == -1)
+						{
 							break;
-							
-						case -1:
-						break;
-						
-						default:
+						}
+						{
 							$continue = 1;
-							$where2[] = 'se.id = '.(int)$filters;
-							break;
+							$where2[] = 'se.id = '.(int)$filter;
+						}
 					}
-				}
+					break;
+						
+				case -1:
+					break;
+
+				default:
+					$continue = 1;
+				$where2[] = 'se.id = '.(int)$filters;
+				break;
+			}
+		}
 		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
 
-		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}
+		if ($continue > 0) {
+			$where = $where.' AND ( '.$where2.')';
+		}
 		return $where;
 	}
-	
-	
-	
+
+
+
 	function _buildContentOrderBy()
 	{
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
@@ -261,7 +267,7 @@ function getTemplate() {
         $filter_orders_field = $params->get('series_order_field','series_text');
 		
 		$orderby 	= ' ORDER BY '.$filter_orders_field.' '.$filter_orders.' ';
-	
+
 
 		return $orderby;
 	}

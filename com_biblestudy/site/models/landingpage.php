@@ -9,8 +9,8 @@
 defined('_JEXEC') or die();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 jimport( 'joomla.application.component.model' );
- include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
- 
+include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
+
 $params = &JComponentHelper::getParams($option);
 $default_order = $params->get('default_order');
 
@@ -19,7 +19,7 @@ class biblestudyModellandingpage extends JModel
 
 	var $_total = null;
 	var $_pagination = null;
-	
+
 	/**
 	 * @desc From database
 	 */
@@ -35,36 +35,40 @@ class biblestudyModellandingpage extends JModel
 	var $_books;
 	var $_template;
 	var $_admin;
-	
+
 
 	function __construct()
 	{
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$params =& $mainframe->getPageParameters();
-        $t = JRequest::getInt('t','get');
-		if (!$t){$t = 1;}
-        jimport('joomla.html.parameter');
+		$t = JRequest::getInt('t','get');
+		if (!$t){
+			$t = 1;
+		}
+		jimport('joomla.html.parameter');
 		$template = $this->getTemplate();
-        
-          // Convert parameter fields to objects.
-				$registry = new JRegistry;
-				$registry->loadJSON($template[0]->params);
-                $params = $registry;
-                
+
+		// Convert parameter fields to objects.
+		$registry = new JRegistry;
+		$registry->loadJSON($template[0]->params);
+		$params = $registry;
+
 		$config = JFactory::getConfig();
-		
+
 		$this->setState('limit',$params->get('itemslimit'),'limit',$params->get('itemslimit'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
 
 		// In case limit has been changed, adjust limitstart accordingly
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		// In case we are on more than page 1 of results and the total changes in one of the drop downs to a selection that has fewer in its total, we change limitstart
-		if ($this->getTotal() < $this->getState('limitstart')) {$this->setState('limitstart', 0,'','int');}
+		if ($this->getTotal() < $this->getState('limitstart')) {
+			$this->setState('limitstart', 0,'','int');
+		}
 	}
 
 	function setSelect($string){
-	
+
 	}
 
 	/**
@@ -96,7 +100,7 @@ class biblestudyModellandingpage extends JModel
 	 * @desc Returns teachers
 	 * @return Array
 	 */
-	 function getAdmin()
+	function getAdmin()
 	{
 		if (empty($this->_admin)) {
 			$query = 'SELECT *'
@@ -106,7 +110,7 @@ class biblestudyModellandingpage extends JModel
 		}
 		return $this->_admin;
 	}
-	
+
 	function getTeachers() {
 		if (empty($this->_teachers)) {
 			$query = 'SELECT id AS value, teachername AS text, published'
@@ -181,8 +185,8 @@ class biblestudyModellandingpage extends JModel
 	 */
 	function getTopics() {
 		if (empty($this->_Topics)) {
-		  $path1 = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
-	include_once($path1.'translated.php');
+			$path1 = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+			include_once($path1.'translated.php');
 			$query = 'SELECT DISTINCT #__bsms_studies.id, #__bsms_studies.topics_id AS value, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params, #__bsms_topics.published'
 			. ' FROM #__bsms_studies'
 			. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
@@ -196,7 +200,7 @@ class biblestudyModellandingpage extends JModel
 				$output[] = $value;
 			}
 			$this->_Topics = $output;
-		} 
+		}
 		return $this->_Topics;
 	}
 
@@ -241,7 +245,7 @@ class biblestudyModellandingpage extends JModel
 		}
 		return $this->_template;
 	}
-		
+
 	function getData()
 	{
 		$mainframe =& JFactory::getApplication();
@@ -272,7 +276,7 @@ class biblestudyModellandingpage extends JModel
 		if (empty($this->_total))
 		{
 			$query = $this->_buildQuery();
-			$this->_total = $this->_getListCount($query);			
+			$this->_total = $this->_getListCount($query);
 		}
 
 		return $this->_total;
@@ -345,112 +349,126 @@ class biblestudyModellandingpage extends JModel
 		if ($filter_year > 0) {
 			$where[] = " date_format(#__bsms_studies.studydate, '%Y')= ".(int) $filter_year;
 		}
-		
-	
+
+
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
 
 		$where2 = array();
 		$continue = 0;
-		if ($params->get('mult_teachers') || $params->get('teacher_id')) 
-			{ 
-				if (!$filter_teacher)
+		if ($params->get('mult_teachers') || $params->get('teacher_id'))
+		{
+			if (!$filter_teacher)
+			{
+				$continue = 1;
+				$filters = explode(",", $params->get('mult_teachers'));
+				foreach ($filters AS $filter)
 				{
-					$continue = 1;
-					$filters = explode(",", $params->get('mult_teachers'));
-					foreach ($filters AS $filter)
-						{
-							$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
-						}
-					if ($params->get('teacher_id')) {$where2[] = '#__bsms_studies.teacher_id = '.$params->get('teacher_id');}
+					$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
+				}
+				if ($params->get('teacher_id')) {
+					$where2[] = '#__bsms_studies.teacher_id = '.$params->get('teacher_id');
 				}
 			}
-		
-		if ($params->get('mult_locations') || $params->get('locations')) 
-			{ 
-				if (!$filter_location)
+		}
+
+		if ($params->get('mult_locations') || $params->get('locations'))
+		{
+			if (!$filter_location)
+			{
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_locations'));
+				foreach ($filters AS $filter)
 				{
-					$continue = 1;
-					$filters = null;
-					$filters = explode(",", $params->get('mult_locations'));
-					foreach ($filters AS $filter)
-						{
-							$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
-						}
-					if ($params->get('locations')) {$where2[] = '#__bsms_studies.location_id = '.$params->get('locations');}
+					$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
+				}
+				if ($params->get('locations')) {
+					$where2[] = '#__bsms_studies.location_id = '.$params->get('locations');
 				}
 			}
+		}
 			
-		if ($params->get('mult_books') || $params->get('booknumber')) 
-			{ 
-				if (!$filter_book)
+		if ($params->get('mult_books') || $params->get('booknumber'))
+		{
+			if (!$filter_book)
+			{
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_books'));
+				foreach ($filters AS $filter)
 				{
-					$continue = 1;
-					$filters = null;
-					$filters = explode(",", $params->get('mult_books'));
-					foreach ($filters AS $filter)
-						{
-							$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
-						}
-					if ($params->get('booknumber')) {$where2[] = '#__bsms_studies.booknumber = '.$params->get('booknumber');}
+					$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
+				}
+				if ($params->get('booknumber')) {
+					$where2[] = '#__bsms_studies.booknumber = '.$params->get('booknumber');
 				}
 			}
-		
-		if ($params->get('mult_series') || $params->get('series_id')) 
-			{ 
-				if (!$filter_series)
+		}
+
+		if ($params->get('mult_series') || $params->get('series_id'))
+		{
+			if (!$filter_series)
+			{
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_series'));
+				//dump ($filters, 'filters: ');
+				foreach ($filters AS $filter)
 				{
-					$continue = 1;
-					$filters = null;
-					$filters = explode(",", $params->get('mult_series'));
-					//dump ($filters, 'filters: ');
-					foreach ($filters AS $filter)
-						{
-							$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
-							//dump ($where2, 'where2: ');
-						}
-					if ($params->get('series_id')) {$where2[] = '#__bsms_studies.series_id = '.$params->get('series_id');}
+					$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
+					//dump ($where2, 'where2: ');
+				}
+				if ($params->get('series_id')) {
+					$where2[] = '#__bsms_studies.series_id = '.$params->get('series_id');
 				}
 			}
+		}
 			
-		if ($params->get('mult_topics') || $params->get('topic_id')) 
-			{ 
-				if (!$filter_topic) 
+		if ($params->get('mult_topics') || $params->get('topic_id'))
+		{
+			if (!$filter_topic)
+			{
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_topics'));
+				foreach ($filters AS $filter)
 				{
-					$continue = 1;
-					$filters = null;
-					$filters = explode(",", $params->get('mult_topics'));
-					foreach ($filters AS $filter)
-						{
-							$where2[] = '#__bsms_studies.topics_id = '.(int)$filter;
-						}
-					if ($params->get('topic_id')) {$where2[] = '#__bsms_studies.topics_id = '.$params->get('topic_id');}
+					$where2[] = '#__bsms_studies.topics_id = '.(int)$filter;
+				}
+				if ($params->get('topic_id')) {
+					$where2[] = '#__bsms_studies.topics_id = '.$params->get('topic_id');
 				}
 			}
+		}
 			
-		if ($params->get('mult_messagetype') || $params->get('messagetype')) 
-			{ 
-				if (!$filter_messagetype)
+		if ($params->get('mult_messagetype') || $params->get('messagetype'))
+		{
+			if (!$filter_messagetype)
+			{
+				$continue = 1;
+				$filters = null;
+				$filters = explode(",", $params->get('mult_messagetype'));
+				foreach ($filters AS $filter)
 				{
-					$continue = 1;
-					$filters = null;
-					$filters = explode(",", $params->get('mult_messagetype'));
-					foreach ($filters AS $filter)
-						{
-							$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
-						}
-					if ($params->get('messagetype')) {$where2[] = '#__bsms_studies.messagetype = '.$params->get('messagetype');}
+					$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
+				}
+				if ($params->get('messagetype')) {
+					$where2[] = '#__bsms_studies.messagetype = '.$params->get('messagetype');
 				}
 			}
+		}
 			
 		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
 
-		if ($continue > 0) {$where = $where.' AND ( '.$where2.')';}
+		if ($continue > 0) {
+			$where = $where.' AND ( '.$where2.')';
+		}
 		return $where;
 	}
-	
-	
-	
+
+
+
 	function _buildContentOrderBy()
 	{
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');

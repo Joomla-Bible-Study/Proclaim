@@ -26,7 +26,7 @@ class Tabletopicsedit extends JTable
 	 */
 	var $topic_text = null;
 	var $params = null;
-	
+
 	/**
 	 * Constructor
 	 *
@@ -43,14 +43,14 @@ class Tabletopicsedit extends JTable
 			$registry->loadArray($array['params']);
 			$array['params'] = (string)$registry;
 		}
-		
+
 		// Bind the rules.
 		if (isset($array['rules']) && is_array($array['rules'])) {
 			$rules = new JRules($array['rules']);
 			$this->setRules($rules);
 		}
 
-	return parent::bind($array, $ignore);
+		return parent::bind($array, $ignore);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Tabletopicsedit extends JTable
 		$k = $this->_tbl_key;
 		return 'com_biblestudy.topicsedit.'.(int) $this->$k;
 	}
-	
+
 	/**
 	 * Method to return the title to use for the asset table.
 	 *
@@ -78,7 +78,7 @@ class Tabletopicsedit extends JTable
 		$title = 'JBS Topic: '.$this->topic_text;
 		return $title;
 	}
-	
+
 	/**
 	 * Get the parent asset id for the record
 	 *
@@ -91,7 +91,7 @@ class Tabletopicsedit extends JTable
 		$asset->loadByName('com_biblestudy');
 		return $asset->id;
 	}
-	
+
 	/**
 	 * Overloaded load function
 	 *
@@ -100,15 +100,15 @@ class Tabletopicsedit extends JTable
 	 * @return      boolean
 	 * @see JTable:load
 	 */
-	public function load($pk = null, $reset = true) 
+	public function load($pk = null, $reset = true)
 	{
-		if (parent::load($pk, $reset)) 
+		if (parent::load($pk, $reset))
 		{
-		 	// Convert the languages field to a registry.
-		 	$params = new JRegistry;
-		 	$params->loadJSON($this->params);
-		 	$this->params = $params;
-		 	return true;
+			// Convert the languages field to a registry.
+			$params = new JRegistry;
+			$params->loadJSON($this->params);
+			$this->params = $params;
+			return true;
 		}
 		else
 		{
@@ -121,7 +121,7 @@ class Tabletopicsedit extends JTable
 	 *
 	 * @return      boolean true on success
 	 */
-	public function checkAlias($data = array(), $recordId) 
+	public function checkAlias($data = array(), $recordId)
 	{
 		$topic = $data[topic_text];
 

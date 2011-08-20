@@ -15,13 +15,13 @@ jimport('joomla.application.component.model');
 
 class biblestudyModelcssedit extends JModel
 {
-function __construct()
+	function __construct()
 	{
 		parent::__construct();
 
 	}
 
-function &getData()
+	function &getData()
 	{
 		$filename = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
 		$csscontents=fopen($filename,"rb");

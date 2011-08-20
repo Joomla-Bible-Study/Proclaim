@@ -22,14 +22,14 @@ require_once (JPATH_COMPONENT.DS.'controller.php');
 
 $controller = JRequest::getVar( 'controller' );
 
-		
-		$classname	= 'jbsmigrationController'.$controller;
-		
-		$controller = new $classname( );
-		
 
-		// Perform the Request task 
-		$controller->execute( JRequest::getWord('task'));
-		//Redirect if set by the controller 
-		
-		$controller->redirect();
+$classname	= 'jbsmigrationController'.$controller;
+
+$controller = new $classname( );
+
+
+// Perform the Request task
+$controller->execute( JRequest::getWord('task'));
+//Redirect if set by the controller
+
+$controller->redirect();

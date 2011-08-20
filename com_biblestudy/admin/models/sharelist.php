@@ -10,11 +10,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.modellist');
+jimport('joomla.application.component.modellist');
 
-    abstract class modelClass extends JModelList {
+abstract class modelClass extends JModelList {
 
-    }
+}
 
 class biblestudyModelsharelist extends modelClass
 {
@@ -27,7 +27,7 @@ class biblestudyModelsharelist extends modelClass
 	var $_total = null;
 	var $_pagination = null;
 	var $allow_deletes = null;
-	
+
 	function __construct()
 	{
 		parent::__construct();
@@ -45,7 +45,7 @@ class biblestudyModelsharelist extends modelClass
 		$this->setState('limit', $limit);
 		$this->setState('limitstart', $limitstart);
 	}
-	
+
 
 	function _buildQuery()
 	{
@@ -54,7 +54,7 @@ class biblestudyModelsharelist extends modelClass
 		. ' FROM #__bsms_share AS s'
 		. $where
 		;
-		
+
 		return $query;
 	}
 
@@ -70,10 +70,10 @@ class biblestudyModelsharelist extends modelClass
 			$query = $this->_buildQuery();
 			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
 		}
-			//$this->setState('limitstart', $limitstart);
+		//$this->setState('limitstart', $limitstart);
 		return $this->_data;
 	}
-function getTotal()
+	function getTotal()
 	{
 		// Lets load the content if it doesn't already exist
 		if (empty($this->_total))
@@ -102,16 +102,16 @@ function getTotal()
 
 		return $this->_pagination;
 	}
-function _buildContentWhere()
+	function _buildContentWhere()
 	{
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$where = array();
-	$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
-		
-	return $where;
+		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
+
+		return $where;
 	}
 
-function getDeletes()
+	function getDeletes()
 	{
 		if (empty($this->_deletes)) {
 			$query = 'SELECT allow_deletes'
@@ -122,33 +122,33 @@ function getDeletes()
 		return $this->_deletes;
 	}
 
-    /**
-     * @since   7.0
-     */
-    protected function  populateState() {
-        $state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
-        $this->setState('filter.state', $state);
-        
-         $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+	/**
+	 * @since   7.0
+	 */
+	protected function  populateState() {
+		$state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
+		$this->setState('filter.state', $state);
+
+		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
 
-        parent::populateState('share.name', 'ASC');
-    }
-    /**
-     *
-     * @since   7.0
-     */
-    protected function getListQuery() {
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
+		parent::populateState('share.name', 'ASC');
+	}
+	/**
+	 *
+	 * @since   7.0
+	 */
+	protected function getListQuery() {
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
 
-        $query->select(
-                $this->getState(
+		$query->select(
+		$this->getState(
                         'list.select',
                         'share.id, share.name, share.params, share.published'));
-        $query->from('#__bsms_share AS share');
+		$query->from('#__bsms_share AS share');
 
-        // Filter by published state
+		// Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
 			$query->where('share.published = ' . (int) $published);
@@ -157,10 +157,10 @@ function getDeletes()
 			$query->where('(share.published = 0 OR share.published = 1)');
 		}
 
-        //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
-        return $query;
-    }
+		//Add the list ordering clause
+		$orderCol = $this->state->get('list.ordering');
+		$orderDirn = $this->state->get('list.direction');
+		$query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+		return $query;
+	}
 }

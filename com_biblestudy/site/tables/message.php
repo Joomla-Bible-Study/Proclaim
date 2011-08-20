@@ -54,12 +54,12 @@ class Tablemessage extends JTable
 	var $chapter_begin2 = null;
 	var $chapter_end2 = null;
 	var $verse_begin2 = null;
-	var $verse_end2 = null;	
+	var $verse_end2 = null;
 	var $comments = 1;
 	var $hits = 0;
 	var $user_id = null;
 	var $user_name = null;
-	var $show_level = null;	
+	var $show_level = null;
 	var $location_id = null;
 	var $thumbnailm = null;
 	var $thumbhm = null;
@@ -81,7 +81,7 @@ class Tablemessage extends JTable
 	function TableMessage(& $db) {
 		parent::__construct('#__bsms_studies', 'id', $db);
 	}
-	
+
 	function bind($array, $ignore = '')
             { 
                 if (key_exists( 'params', $array ) && is_array( $array['params'] ))
@@ -91,7 +91,7 @@ class Tablemessage extends JTable
                         $array['params'] = $registry->toString();
                     }
 
-                // Bind the rules.
+		// Bind the rules.
                 if (isset($array['rules']) && is_array($array['rules'])) 
                     {
                         $rules = new JRules($array['rules']);
@@ -140,4 +140,4 @@ class Tablemessage extends JTable
                 return $asset->id;
         }
         
-}
+	}

@@ -11,11 +11,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.modellist');
+jimport('joomla.application.component.modellist');
 
-    abstract class modelClass extends JModelList {
+abstract class modelClass extends JModelList {
 
-    }
+}
 
 class biblestudyModelepisodelist extends modelClass
 {
@@ -32,11 +32,11 @@ class biblestudyModelepisodelist extends modelClass
 		$limit	   = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 0);
 		$limitstart = $mainframe->getUserStateFromRequest( 'com_biblestudy&view=episodelist.limitstart', 'limitstart', 0, 'int' );
 
-                $testview 	= JRequest::getVar( 'view' );
-			if ($testview != 'episodelist') 
-				{
-					$limitstart = 0;
-				}
+		$testview 	= JRequest::getVar( 'view' );
+		if ($testview != 'episodelist')
+		{
+			$limitstart = 0;
+		}
 		$this->setState('limit', $limit);
 		$this->setState('limitstart', $limitstart);
 	}
@@ -59,7 +59,7 @@ class biblestudyModelepisodelist extends modelClass
 		. ' LEFT JOIN #__bsms_books AS b ON (s.booknumber = b.booknumber)'
 		. $where
 		. $orderby
-			;
+		;
 		return $query;
 	}
 
@@ -75,10 +75,10 @@ class biblestudyModelepisodelist extends modelClass
 			$query = $this->_buildQuery();
 			$this->_data = $this->_getList( $query, $this->getState('limitstart'), $this->getState('limit') );
 		}
-                
+
 		return $this->_data;
 	}
-        /**
+	/**
 	 * Method to get the total number of episode items
 	 *
 	 * @access public
@@ -113,7 +113,7 @@ class biblestudyModelepisodelist extends modelClass
 
 		return $this->_pagination;
 	}
-function _buildContentWhere()
+	function _buildContentWhere()
 	{
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 		$filter_podcast		= $mainframe->getUserStateFromRequest( $option.'filter_podcast',		'filter_podcast',		0,				'int' );
@@ -121,33 +121,34 @@ function _buildContentWhere()
 		$filter_study		= $mainframe->getUserStateFromRequest( $option.'filter_study', 'filter_study', 'DESC', 'int' );
 		$where = array();
 
-	if ($filter_study > 0) {
+		if ($filter_study > 0) {
 			$where[] = ' mf.study_id = '.(int) $filter_study;
-			}
-			else {
-			$where[] = ' mf.study_id > 0';
-			}
-			
-	if ($filter_podcast > 0) {
-			$where[] = ' mf.podcast_id = '.(int) $filter_podcast;
-			
 		}
-	else {
-			$where[] = ' (mf.podcast_id >0 AND mf.published = 1)';
+		else {
+			$where[] = ' mf.study_id > 0';
+		}
 			
-		} 
+		if ($filter_podcast > 0) {
+			$where[] = ' mf.podcast_id = '.(int) $filter_podcast;
+				
+		}
+		else {
+			$where[] = ' (mf.podcast_id >0 AND mf.published = 1)';
+				
+		}
 
 		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
-		
+
 		return $where;
 	}
-function _buildContentOrderBy()
+	function _buildContentOrderBy()
 	{
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 		$filter_order		= $mainframe->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'DESC',	'word' );
 		if (!$filter_order){
-			$orderby	= ' ORDER BY mf.createdate DESC, mf.ordering ASC '; }
+			$orderby	= ' ORDER BY mf.createdate DESC, mf.ordering ASC ';
+		}
 		if ($filter_order == 'ASC'){
 			$orderby 	= ' ORDER BY mf.createdate ASC, mf.ordering ASC ';
 		} else {

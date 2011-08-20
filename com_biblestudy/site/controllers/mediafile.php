@@ -11,11 +11,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controllerform');
 
-    abstract class controllerClass extends JControllerForm {
+abstract class controllerClass extends JControllerForm {
 
-    }
+}
 
 class biblestudyControllermediafile extends controllerClass {
 
@@ -38,14 +38,14 @@ class biblestudyControllermediafile extends controllerClass {
 		// Register Extra tasks
 		$this->registerTask( 'add'  , 	'edit' );
 		$this->registerTask( 'upload'  ,     'upload' );
-                
 
-                
+
+
 	}
-     public function &getModel($name = 'mediafile', $prefix = 'biblestudyModel') {
-        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
-        return $model;
-    }
+	public function &getModel($name = 'mediafile', $prefix = 'biblestudyModel') {
+		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
+		return $model;
+	}
 	function upload()
 	{
 		die ('biblestudyControllermediafile.upload is no more used');
@@ -92,7 +92,7 @@ class biblestudyControllermediafile extends controllerClass {
 		$items =& $model->getVirtueMartItems($catId);
 		echo $items;
 	}
-	
+
 
 	function resetDownloads()
 	{
@@ -101,46 +101,46 @@ class biblestudyControllermediafile extends controllerClass {
 		$db = JFactory::getDBO();
 		$db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = ".$id);
 		$reset = $db->query();
-        if ($db->getErrorNum() > 0)
-				{
-					$error = $db->getErrorMsg();
-                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS').' '.$error;
-					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]='.$id, $msg );
-				}
+		if ($db->getErrorNum() > 0)
+		{
+			$error = $db->getErrorMsg();
+			$msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS').' '.$error;
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]='.$id, $msg );
+		}
 		else
-			{
-				$updated = $db->getAffectedRows();
-                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
-				$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
-			}
+		{
+			$updated = $db->getAffectedRows();
+			$msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
+		}
 	}
 
-function resetPlays()
+	function resetPlays()
 	{
 		$msg = null;
 		$id 	= JRequest::getInt( 'id', 0, 'post');
 		$db = JFactory::getDBO();
 		$db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = ".$id);
 		$reset = $db->query();
-        if ($db->getErrorNum() > 0)
-				{
-					$error = $db->getErrorMsg();
-                    $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS').' '.$error;
-					$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]='.$id, $msg );
-				}
+		if ($db->getErrorNum() > 0)
+		{
+			$error = $db->getErrorMsg();
+			$msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS').' '.$error;
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=admin&layout=form&cid[]='.$id, $msg );
+		}
 		else
-			{
-				$updated = $db->getAffectedRows();
-                $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
-                $this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
-			}
+		{
+			$updated = $db->getAffectedRows();
+			$msg = JText::_('JBS_CMN_RESET_SUCCESSFUL').' '.$updated.' '.JText::_('JBS_CMN_ROWS_RESET');
+			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]='.$id, $msg );
+		}
 	}
 }
 //New File Size System Should work on all server now.
-function getSizeFile ($url){ 
-	$head = ""; 
-	$url_p = @parse_url($url); 
-	$host = $url_p["host"]; 
+function getSizeFile ($url){
+	$head = "";
+	$url_p = @parse_url($url);
+	$host = $url_p["host"];
 	if(!preg_match("/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/",$host)){
 		// a domain name was given, not an IP
 		$ip=gethostbyname($host);
@@ -149,23 +149,23 @@ function getSizeFile ($url){
 			return -1;
 		}
 	}
-	$port = intval($url_p["port"]); 
+	$port = intval($url_p["port"]);
 	if(!$port) $port=80;
 	$path = $url_p["path"];
 
-	$fp = fsockopen($host, $port, $errno, $errstr, 20); 
-	if(!$fp) { 
-		return false; 
-		} else { 
-		fputs($fp, "HEAD "  . $url  . " HTTP/1.1\r\n"); 
-		fputs($fp, "HOST: " . $host . "\r\n"); 
+	$fp = fsockopen($host, $port, $errno, $errstr, 20);
+	if(!$fp) {
+		return false;
+	} else {
+		fputs($fp, "HEAD "  . $url  . " HTTP/1.1\r\n");
+		fputs($fp, "HOST: " . $host . "\r\n");
 		fputs($fp, "User-Agent: http://www.example.com/my_application\r\n");
-		fputs($fp, "Connection: close\r\n\r\n"); 
-		$headers = ""; 
-		while (!feof($fp)) { 
-			$headers .= fgets ($fp, 128); 
-			} 
-		} 
+		fputs($fp, "Connection: close\r\n\r\n");
+		$headers = "";
+		while (!feof($fp)) {
+			$headers .= fgets ($fp, 128);
+		}
+	}
 	fclose ($fp);
 	$return = -2; 
 	$arr_headers = explode("\n", $headers);
@@ -186,5 +186,5 @@ function getSizeFile ($url){
 		// 302 redirect: get HTTP HEAD of new URL
 		$return=getSizeFile($newurl);
 	}
-	return $return; 
+	return $return;
 }

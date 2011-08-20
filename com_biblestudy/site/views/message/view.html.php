@@ -14,10 +14,10 @@ jimport('joomla.application.component.view');
 
 class biblestudyViewmessage extends JView {
 
-    protected $form;
-    protected $item;
-    protected $state;
-    protected $admin;
+	protected $form;
+	protected $item;
+	protected $state;
+	protected $admin;
 
     function display($tpl = null) {
         

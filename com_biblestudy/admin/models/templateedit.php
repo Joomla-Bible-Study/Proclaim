@@ -10,11 +10,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.modeladmin');
+jimport('joomla.application.component.modeladmin');
 require_once JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'biblestudy.php';
-    abstract class modelClass extends JModelAdmin {
-        
-    }
+abstract class modelClass extends JModelAdmin {
+
+}
 
 class biblestudyModeltemplateedit extends modelClass {
 	var $_id;
@@ -27,21 +27,21 @@ class biblestudyModeltemplateedit extends modelClass {
 		$array = JRequest::getVar('cid',  0, '', 'array');
 		$this->setId((int)$array[0]);
 	}
-        /**
-         * Method override to check if you can edit an existing record.
-         *
-         * @param       array   $data   An array of input data.
-         * @param       string  $key    The name of the key for the primary key.
-         *
-         * @return      boolean
-         * @since       1.6
-         */
-        protected function allowEdit($data = array(), $key = 'id')
-        {
-                // Check specific edit permission then general edit permission.
-                return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.templateedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-        }
-    
+	/**
+	 * Method override to check if you can edit an existing record.
+	 *
+	 * @param       array   $data   An array of input data.
+	 * @param       string  $key    The name of the key for the primary key.
+	 *
+	 * @return      boolean
+	 * @since       1.6
+	 */
+	protected function allowEdit($data = array(), $key = 'id')
+	{
+		// Check specific edit permission then general edit permission.
+		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.templateedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+	}
+
 	/**
 	 * @desc Sets the id, and the _tmpl variable
 	 * @param $id
@@ -129,13 +129,17 @@ class biblestudyModeltemplateedit extends modelClass {
 		{
 			foreach($cids as $cid) {
 				if ($cid == 1)
-				{$this->setError('You cannot delete the default template');
-				return false;
+				{
+					$this->setError('You cannot delete the default template');
+					return false;
 				}
 				if (!$row->delete( $cid )) {
 					if($cid == 1)
-					{$this->setError('You cannot delete the default template');}
-					else {$this->setError( $row->getErrorMsg() );}
+					{
+						$this->setError('You cannot delete the default template');
+					}
+					else {$this->setError( $row->getErrorMsg() );
+					}
 					return false;
 				}
 			}
@@ -158,51 +162,51 @@ class biblestudyModeltemplateedit extends modelClass {
 			}
 		}
 	}
-    /**
-     * Get the form data
-     *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
-     * @since 7.0
-     */
-    public function getForm($data = array(), $loadData = true) {
-        // Get the form.
-        $form = $this->loadForm('com_biblestudy.templateedit', 'templateedit', array('control' => 'jform', 'load_data' => $loadData));
-        if (empty($form)) {
-            return false;
-        }
+	/**
+	 * Get the form data
+	 *
+	 * @param <Array> $data
+	 * @param <Boolean> $loadData
+	 * @return <type>
+	 * @since 7.0
+	 */
+	public function getForm($data = array(), $loadData = true) {
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.templateedit', 'templateedit', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
 
-        return $form;
-    }
+		return $form;
+	}
 
- public function getItem($pk = null) {
-        return parent::getItem($pk);
-    }
-    /**
-     *
-     * @return <type>
-     * @since   7.0
-     */
-    protected function loadFormData() {
-        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.templateedit.data', array());
-        if (empty($data))
-            $data = $this->getItem();
+	public function getItem($pk = null) {
+		return parent::getItem($pk);
+	}
+	/**
+	 *
+	 * @return <type>
+	 * @since   7.0
+	 */
+	protected function loadFormData() {
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.templateedit.data', array());
+		if (empty($data))
+		$data = $this->getItem();
 
-        return $data;
-    }
-    
-        /**
-         * Returns a reference to the a Table object, always creating it.
-         *
-         * @param       type    The table type to instantiate
-         * @param       string  A prefix for the table class name. Optional.
-         * @param       array   Configuration array for model. Optional.
-         * @return      JTable  A database object
-         * @since       1.6
-         */
-        public function getTable($type = 'templateedit', $prefix = 'Table', $config = array()) 
-        {
-                return JTable::getInstance($type, $prefix, $config);
-        }
+		return $data;
+	}
+
+	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param       type    The table type to instantiate
+	 * @param       string  A prefix for the table class name. Optional.
+	 * @param       array   Configuration array for model. Optional.
+	 * @return      JTable  A database object
+	 * @since       1.6
+	 */
+	public function getTable($type = 'templateedit', $prefix = 'Table', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
 }

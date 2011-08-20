@@ -5,13 +5,13 @@
  * Contact : nfossen@gmail
  * Home URL : http://www.newhorizoncf.org
  * {shSourceVersionTag: Version 6.2 - 2010-07-06}
- *    
+ *
  */
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
 // ------------------  standard plugin initialize function - don't change ---------------------------
 global $sh_LANG;
-$sefConfig = & shRouter::shGetConfig();  
+$sefConfig = & shRouter::shGetConfig();
 $shLangName = '';
 $shLangIso = '';
 $title = array();
@@ -24,11 +24,11 @@ if ($dosef == false) return;
 shRemoveFromGETVarsList('option');
 shRemoveFromGETVarsList('lang');
 if (!empty($Itemid))
-  shRemoveFromGETVarsList('Itemid');
-if (!empty($limit))  
+shRemoveFromGETVarsList('Itemid');
+if (!empty($limit))
 shRemoveFromGETVarsList('limit');
-if (isset($limitstart)) 
-  shRemoveFromGETVarsList('limitstart'); // limitstart can be zero
+if (isset($limitstart))
+shRemoveFromGETVarsList('limitstart'); // limitstart can be zero
 
 // All urls will start with Biblestudy.  The "B" need to be uppercase
 $title[] = "Biblestudy";
@@ -43,15 +43,15 @@ switch ($view) {
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
-	break;
-		case 'serieslist':
+		break;
+	case 'serieslist':
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
-	break;
+		break;
 	case 'seriesdetail':
 		$title[] = $view;
-		
+
 		$query_name = 'SELECT series_text FROM #__bsms_series WHERE #__bsms_series.id = ' . $id;
 		$database->setQuery($query_name);
 		$series = $database->loadResult();
@@ -59,15 +59,15 @@ switch ($view) {
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		shRemoveFromGETVarsList('id');
-	break;
+		break;
 	case 'teacherlist':
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
-	break;
+		break;
 	case 'teacherdisplay':
 		$title[] = $view;
-		 
+			
 		$query_name = 'SELECT teachername FROM #__bsms_teachers WHERE #__bsms_teachers.id = ' . $id;
 		$database->setQuery($query_name);
 		$teacher = $database->loadResult();
@@ -75,43 +75,43 @@ switch ($view) {
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		shRemoveFromGETVarsList('id');
-	break;
+		break;
 	case 'landingpage':
 		$title[] = $view;
-	
+
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		shRemoveFromGETVarsList('id');
-	break;
+		break;
 	case 'popup':
 		$title[] = $view;
-		
+
 		shRemoveFromGETVarsList('player');
 		shRemoveFromGETVarsList('template');
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		shRemoveFromGETVarsList('id');
-	break;
+		break;
 }
 
 // Change the URL for downloading file
- if(isset($task)){
-	 if($task == 'download')
-	 {
-		 $title[] = 'download';
-		 shRemoveFromGETVarsList('controller');
-		 shRemoveFromGETVarsList('task');
-	 }
- }
- 
- // remove biblestudy URL from GET vars list, so that they don't show up as query string in the URL
- shRemoveFromGETVarsList('t');
- 
- 
-// ------------------  standard plugin finalize function - don't change ---------------------------  
+if(isset($task)){
+	if($task == 'download')
+	{
+		$title[] = 'download';
+		shRemoveFromGETVarsList('controller');
+		shRemoveFromGETVarsList('task');
+	}
+}
+
+// remove biblestudy URL from GET vars list, so that they don't show up as query string in the URL
+shRemoveFromGETVarsList('t');
+
+
+// ------------------  standard plugin finalize function - don't change ---------------------------
 if ($dosef){
-   $string = shFinalizePlugin( $string, $title, $shAppendString, $shItemidString, 
-      (isset($limit) ? @$limit : null), (isset($limitstart) ? @$limitstart : null), 
-      (isset($shLangName) ? @$shLangName : null));
-}      
+	$string = shFinalizePlugin( $string, $title, $shAppendString, $shItemidString,
+	(isset($limit) ? @$limit : null), (isset($limitstart) ? @$limitstart : null),
+	(isset($shLangName) ? @$shLangName : null));
+}
 // ------------------  standard plugin finalize function - don't change ---------------------------

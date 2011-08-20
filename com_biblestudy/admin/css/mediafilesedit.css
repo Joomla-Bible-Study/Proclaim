@@ -7,20 +7,24 @@
 	position: absolute;
 	right: 50px;
 }
+
 .selectContainer {
-	float: left;	
+	float: left;
 	margin-left: 5px;
 }
+
 #docManItemsContainer {
-	display:none;	
+	display: none;
 }
 
 #articlesCategoriesContainer {
 	display: none;
 }
+
 #articlesItemsContainer {
 	display: none;
 }
-#virtueMartItemsContainer{
+
+#virtueMartItemsContainer {
 	display: none;
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @version $Id: default_main.php 1 $
@@ -10,15 +10,25 @@
 
 defined('_JEXEC') or die('Restricted access'); ?>
 
-<form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
-<table>
+<form enctype="multipart/form-data" action="index.php" method="post"
+	name="adminForm">
+	<table>
 
-    <tr>
-    <td width="10%"><a href="index.php?option=com_jbsmigration&task=export&run=1"><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/export.jpg';?>" alt="Export" height="48" width="48" /></a></td>
-        <td>
-           <a href="index.php?option=com_jbsmigration&task=export&run=1"> <?php echo JText::_('JBS_EI_EXPORT'); ?></a>
-        </td><td></td><td></td>
-    </tr>
+		<tr>
+			<td width="10%"><a
+				href="index.php?option=com_jbsmigration&task=export&run=1"><img
+					src="<?php echo JURI::base().'/components/com_jbsmigration/images/export.jpg';?>"
+					alt="Export" height="48" width="48" /> </a></td>
+			<td><a href="index.php?option=com_jbsmigration&task=export&run=1"> <?php echo JText::_('JBS_EI_EXPORT'); ?>
+			</a>
+			</td>
+			<td></td>
+			<td></td>
+		</tr>
+		
+		
+		
+		
    <?php  
    if (substr_count(JVERSION,'1.5') == 0)
    { ?> 
@@ -48,11 +58,11 @@ defined('_JEXEC') or die('Restricted access'); ?>
     <?php $ver = JVERSION; echo '<tr><td colspan="2"><strong> Current Joomla Version: </strong>'.$ver.'</td></tr>'; ?>
 </table>
 
-<input type="hidden" name="option" value="com_jbsmigration" />
-
-<input type="hidden" name="task" value="doimport" />
+	<input type="hidden" name="option" value="com_jbsmigration" /> <input
+		type="hidden" name="task" value="doimport" />
 
 
 </form>
-</td></tr>
+</td>
+</tr>
 </table>

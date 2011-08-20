@@ -6,7 +6,12 @@
  */
 defined('_JEXEC') or die();
 ?>
-	<div class="listingfooter"><br />
+<div class="listingfooter">
+	<br />
+	
+	
+	
+	
     <?php $link_text = $this->params->get('link_text');
 			if (!$link_text) {
 				$link_text = JText::_('JBS_STY_RETURN_STUDIES_LIST');
@@ -24,4 +29,5 @@ defined('_JEXEC') or die();
 			 $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t='.$t);	
 			 }?>
 			<a href="<?php echo $link;?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>
-    </div><!--end of footer div-->
+    </div>
+<!--end of footer div-->

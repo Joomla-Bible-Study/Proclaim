@@ -7,49 +7,49 @@ defined('_JEXEC') or die('Restricted access');
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
- function writeXML()
+function writeXML()
+{
+	$return = TRUE;
+	$podcastresults = array();
+	$files = array();
+	$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
+	include_once($path1.'custom.php');
+	include_once($path1.'helper.php');
+	include_once($path1.'scripture.php');
+	$admin_params = getAdminsettings();
+	$config =& JFactory::getConfig();
+	$lb_abspath    = JPATH_SITE;
+	$lb_mailfrom   = $config->getValue('config.mailfrom');
+	$lb_fromname   = $config->getValue('config.fromname');
+	$lb_livesite   = JURI::root();
+
+	$Body   = '<strong>Podcast Publishing Update confirmation.</strong><br><br> The following podcasts have been published:<br> '.$lb_fromname;
+	$params = &JComponentHelper::getParams('com_biblestudy');
+	jimport('joomla.utilities.date');
+	$year = '('.date('Y').')';
+	$date = date('r');
+	$db =& JFactory::getDBO();
+	$query = 'SELECT id, title FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
+	$db->setQuery($query);
+	$podid = $db->loadObjectList();
+	if (count($podid))
 	{ 
-		$return = TRUE;
-		$podcastresults = array();
-		$files = array();
-		$path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
-		include_once($path1.'custom.php');
-		include_once($path1.'helper.php');
-		include_once($path1.'scripture.php');
-		$admin_params = getAdminsettings();
-		$config =& JFactory::getConfig();
-		$lb_abspath    = JPATH_SITE;
-		$lb_mailfrom   = $config->getValue('config.mailfrom');
-		$lb_fromname   = $config->getValue('config.fromname');
-		$lb_livesite   = JURI::root();
-		
-		$Body   = '<strong>Podcast Publishing Update confirmation.</strong><br><br> The following podcasts have been published:<br> '.$lb_fromname;
-		$params = &JComponentHelper::getParams('com_biblestudy');
-		jimport('joomla.utilities.date');
-		$year = '('.date('Y').')';
-		$date = date('r');
-		$db =& JFactory::getDBO();
-		$query = 'SELECT id, title FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
-		$db->setQuery($query);
-		$podid = $db->loadObjectList();
-		if (count($podid))
+		$podcastresult = array();
+		foreach ($podid as $podids2)
 		{
-			$podcastresult = array();
-			foreach ($podid as $podids2)
-			{
-				$Body = $Body.'<br> '.$podids2->title;
-			}
-			foreach ($podid as $podids)
-			{
-				//Let's get the data from the podcast
-				$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.id = '.$podids->id;
-				$db->setQuery($query);
-				$podinfo = $db->loadObject();
-				$description = str_replace("&","and",$podinfo->description);
-				$detailstemplateid = $podinfo->detailstemplateid;
+			$Body = $Body.'<br> '.$podids2->title;
+		}
+		foreach ($podid as $podids)
+		{
+			//Let's get the data from the podcast
+			$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.id = '.$podids->id;
+			$db->setQuery($query);
+			$podinfo = $db->loadObject();
+			$description = str_replace("&","and",$podinfo->description);
+			$detailstemplateid = $podinfo->detailstemplateid;
 				if (!$detailstemplateid) {$detailstemplateid = 1;}
-		  		$detailstemplateid = '&amp;t='.$detailstemplateid;
-				$podhead = '<?xml version="1.0" encoding="utf-8"?>
+			$detailstemplateid = '&amp;t='.$detailstemplateid;
+			$podhead = '<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>
 	<title>'.$podinfo->title.'</title>
@@ -84,80 +84,80 @@ defined('_JEXEC') or die('Restricted access');
 	<itunes:explicit>no</itunes:explicit>
 	<ttl>1</ttl>
 	<atom:link href="http://'.$podinfo->website.'/'.$podinfo->filename.'" rel="self" type="application/rss+xml" />';
-				//Now let's get the podcast episodes
-				$limit = $podinfo->podcastlimit;
-				if ($limit > 0) 
+			//Now let's get the podcast episodes
+			$limit = $podinfo->podcastlimit;
+			if ($limit > 0)
 				{$limit = 'LIMIT '.$limit;}
 				else {$limit = '';}
-				
-				//here's where we look at each mediafile to see if they are connected to this podcast
-				$query = "SELECT id, params, podcast_id, published FROM `#__bsms_mediafiles` WHERE published = '1'";
-				$db->setQuery($query);
-				$results = $db->loadObjectList();
-				$where = array();
-				foreach ($results as $result)
+
+			//here's where we look at each mediafile to see if they are connected to this podcast
+			$query = "SELECT id, params, podcast_id, published FROM `#__bsms_mediafiles` WHERE published = '1'";
+			$db->setQuery($query);
+			$results = $db->loadObjectList();
+			$where = array();
+			foreach ($results as $result)
+			{
+
+				// Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($result->params);
+				$params = $registry;
+				$podcasts = $result->podcast_id;
+				$podcasts = explode(',',$result->podcast_id);
+				switch ($podcasts)
 				{
-                    
-                      // Convert parameter fields to objects.
-    				$registry = new JRegistry;
-    				$registry->loadJSON($result->params);
-                    $params = $registry;
-                   	$podcasts = $result->podcast_id;
-				    $podcasts = explode(',',$result->podcast_id);
-					switch ($podcasts)
+					case is_array($podcasts) :
+						foreach ($podcasts as $podcast)
+						{
+							if ($podids->id == $podcast)
+							{
+								$where[] = 'mf.id = '.$result->id;
+							}
+						}
+						break;
+					case -1 :
+						break;
+					case 0 :
+						break;
+
+					default :
+						if ($podcasts == $podids->id)
 					{
-						case is_array($podcasts) :
-							foreach ($podcasts as $podcast)
-							{
-								if ($podids->id == $podcast)
-								{
-									$where[] = 'mf.id = '.$result->id;
-								}
-							}
-							break;
-						case -1 :
-							break;
-						case 0 :
-							break;
-						
-						default :
-							if ($podcasts == $podids->id)
-							{
-								$where[] = 'mf.id = '.$result->id; 
-								break;
-							}
+						$where[] = 'mf.id = '.$result->id;
+						break;
 					}
 				}
-				$where = ( count( $where ) ? ' '. implode( ' OR ', $where ) : '' );
-				if ($where)
+			}
+			$where = ( count( $where ) ? ' '. implode( ' OR ', $where ) : '' );
+			if ($where)
 				{$where = ' WHERE '.$where.' AND ';}
 				else {return $msg= ' No media files were associated with a podcast. ';}
-				$query = 'SELECT p.id AS pid, p.podcastlimit,'
-					. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate, mf.params,'
-		   			. ' mf.docMan_id, mf.article_id,'
-					. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin, s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-					. ' s.media_hours, s.media_minutes, s.media_seconds,'
-					. ' sr.id AS srid, sr.server_path,'
-					. ' f.id AS fid, f.folderpath,'
-					. ' t.id AS tid, t.teachername,'
-					. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
-					. ' mt.id AS mtid, mt.mimetype'
-					. ' FROM #__bsms_mediafiles AS mf'
-					. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
-					. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
-					. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
-					. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
-					. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
-					. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
-					. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
-					. $where.'s.published = 1 AND mf.published = 1 ORDER BY createdate DESC '.$limit;
-				$db->setQuery( $query );
-				$episodes = $db->loadObjectList();
-				$episodedetail = '';
-				foreach ($episodes as $episode)
-				{
-					$episodedate = date("r",strtotime($episode->createdate));
-					$hours = $episode->media_hours;
+			$query = 'SELECT p.id AS pid, p.podcastlimit,'
+			. ' mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate, mf.params,'
+			. ' mf.docMan_id, mf.article_id,'
+			. ' s.id AS sid, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin, s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
+			. ' s.media_hours, s.media_minutes, s.media_seconds,'
+			. ' sr.id AS srid, sr.server_path,'
+			. ' f.id AS fid, f.folderpath,'
+			. ' t.id AS tid, t.teachername,'
+			. ' b.id AS bid, b.booknumber AS bnumber, b.bookname,'
+			. ' mt.id AS mtid, mt.mimetype'
+			. ' FROM #__bsms_mediafiles AS mf'
+			. ' LEFT JOIN #__bsms_studies AS s ON (s.id = mf.study_id)'
+			. ' LEFT JOIN #__bsms_servers AS sr ON (sr.id = mf.server)'
+			. ' LEFT JOIN #__bsms_folders AS f ON (f.id = mf.path)'
+			. ' LEFT JOIN #__bsms_books AS b ON (b.booknumber = s.booknumber)'
+			. ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
+			. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
+			. ' LEFT JOIN #__bsms_podcast AS p ON (p.id = mf.podcast_id)'
+			. $where.'s.published = 1 AND mf.published = 1 ORDER BY createdate DESC '.$limit;
+			$db->setQuery( $query );
+			$episodes = $db->loadObjectList();
+			$episodedetail = '';
+			foreach ($episodes as $episode)
+			{
+				$episodedate = date("r",strtotime($episode->createdate));
+				$hours = $episode->media_hours;
 					if (!$hours) { $hours = '00'; }
 					if ($hours < 1) { $hours = '00'; }
 					if ($hours > 0) { $hours = $hours; }
@@ -211,68 +211,68 @@ defined('_JEXEC') or die('Restricted access');
 		<itunes:summary>'.$description.'</itunes:summary>
 		<itunes:keywords>'.$podinfo->podcastsearch.'</itunes:keywords>
 		<itunes:duration>'.$hours.':'.sprintf("%02d", $episode->media_minutes).':'.sprintf("%02d", $episode->media_seconds).'</itunes:duration>';
-					//Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
-					if ($episode->article_id > 1)
-						{
-							$episodedetailtemp .=
+				//Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
+				if ($episode->article_id > 1)
+				{
+					$episodedetailtemp .=
 							'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_content&amp;view=article&amp;id='.$episode->article_id.'" length="'.$episode->size.'" type="'
-							.$episode->mimetype.'" />
+					.$episode->mimetype.'" />
 			<guid>http://'.$episode->server_path.'/index.php?option=com_content&amp;view=article&amp;id='.$episode->article_id.'</guid>';	
-							
-						}
-					if ($episode->docMan_id > 1)
-						{
-							$episodedetailtemp .=
+						
+				}
+				if ($episode->docMan_id > 1)
+				{
+					$episodedetailtemp .=
 							'<enclosure url="http://'.$episode->server_path.'/index.php?option=com_docman&amp;task=doc_download&amp;gid='.$episode->docMan_id.'" length="'.$episode->size.'" type="'
-							.$episode->mimetype.'" />
+					.$episode->mimetype.'" />
 			<guid>http://'.$episode->server_path.'/index.php?option=com_docman&amp;task=doc_download&amp;gid='.$episode->docMan_id.'</guid>';
-						}
-					else
-						{
-							$episodedetailtemp .=
+				}
+				else
+				{
+					$episodedetailtemp .=
 							'<enclosure url="http://'.$episode->server_path.$episode->folderpath.str_replace(' ',"%20",$episode->filename).'" length="'.$episode->size.'" type="'
-							.$episode->mimetype.'" />
+					.$episode->mimetype.'" />
 			<guid>http://'.$episode->server_path.$episode->folderpath.str_replace(' ',"%20",$episode->filename).'</guid>';
-						}
-					$episodedetailtemp .= '
+				}
+				$episodedetailtemp .= '
 		<itunes:explicit>no</itunes:explicit>
 	</item>';
-					$episodedetail = $episodedetail.$episodedetailtemp;
-				} //end of foreach for episode details
-				$podfoot = '
+				$episodedetail = $episodedetail.$episodedetailtemp;
+			} //end of foreach for episode details
+			$podfoot = '
 </channel>
 </rss>';
-				$filecontent = $podhead.$episodedetail.$podfoot;
-		
-				// Set FTP credentials, if given
-				jimport('joomla.client.helper');
-				jimport('joomla.filesystem.file');
-				JClientHelper::setCredentialsFromRequest('ftp');
-				$ftp = JClientHelper::getCredentials('ftp');
-				$client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
-				$file = $client->path.DS.$podinfo->filename;
-				$files[] = $file;
-				// Try to make the template file writeable
-				if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755')) 
-				{
-					JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file writable');
-				}
-		
-				$fileit = JFile::write($file, $filecontent);
-		        if ($fileit){$podcastresults[] = TRUE;}
-				// Try to make the template file unwriteable
-				if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')) 
-				{
-					JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
-				}
-		
-			} // end of foreach $podid
+			$filecontent = $podhead.$episodedetail.$podfoot;
 
+			// Set FTP credentials, if given
+			jimport('joomla.client.helper');
+			jimport('joomla.filesystem.file');
+			JClientHelper::setCredentialsFromRequest('ftp');
+			$ftp = JClientHelper::getCredentials('ftp');
+			$client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+			$file = $client->path.DS.$podinfo->filename;
+			$files[] = $file;
+			// Try to make the template file writeable
+			if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755'))
+			{
+				JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file writable');
+			}
+
+			$fileit = JFile::write($file, $filecontent);
+		        if ($fileit){$podcastresults[] = TRUE;}
+			// Try to make the template file unwriteable
+			if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555'))
+			{
+				JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
+			}
+
+		} // end of foreach $podid
+			
 		} // end if (count($podid))
 
-		foreach ($podcastresults AS $podcastresult)
-		{
+	foreach ($podcastresults AS $podcastresult)
+	{
 			if (!$podcastresult){$return = FALSE;}
-		} 
-		return $return;
-	} // end of function
+		}
+	return $return;
+} // end of function

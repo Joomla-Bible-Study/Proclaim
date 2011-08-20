@@ -20,30 +20,32 @@ class biblestudyModelteacherlist extends JModel
 	 *
 	 * @var array
 	 */
-	 var $_admin;
+	var $_admin;
 	var $_total = null;
 	var $_pagination = null;
 	var $_data;
 	var $_template;
 
-function __construct()
+	function __construct()
 	{
 		parent::__construct();
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-        jimport('joomla.html.parameter');
+		jimport('joomla.html.parameter');
 		$params =& $mainframe->getPageParameters();
-        $t = JRequest::getInt('t','get');
+		$t = JRequest::getInt('t','get');
 		$template = $this->getTemplate();
-		  // Convert parameter fields to objects.
-				$registry = new JRegistry;
-				$registry->loadJSON($template[0]->params);
-                $params = $registry;
+		// Convert parameter fields to objects.
+		$registry = new JRegistry;
+		$registry->loadJSON($template[0]->params);
+		$params = $registry;
 		$this->setState('limit',$params->get('itemslimit'),'limit',$params->get('itemslimit'),'int');
 		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
 		// In case limit has been changed, adjust limitstart accordingly
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		// In case we are on more than page 1 of results and the total changes in one of the drop downs to a selection that has fewer in its total, we change limitstart
-		if ($this->getTotal() < $this->getState('limitstart')) {$this->setState('limitstart', 0,'','int');}
+		if ($this->getTotal() < $this->getState('limitstart')) {
+			$this->setState('limitstart', 0,'','int');
+		}
 
 	}
 	/**
@@ -53,7 +55,7 @@ function __construct()
 	function _buildQuery()
 	{
 		$query = ' SELECT * '
-			. ' FROM #__bsms_teachers WHERE #__bsms_teachers.published = 1 AND list_show = 1 ORDER BY ordering ASC'
+		. ' FROM #__bsms_teachers WHERE #__bsms_teachers.published = 1 AND list_show = 1 ORDER BY ordering ASC'
 		;
 
 		return $query;
@@ -75,7 +77,7 @@ function __construct()
 		return $this->_data;
 	}
 
-function getTotal()
+	function getTotal()
 	{
 		// Lets load the content if it doesn't already exist
 		if (empty($this->_total))
@@ -118,7 +120,7 @@ function getTemplate()
 		return $this->_template;
 	}
 
-function getAdmin()
+	function getAdmin()
 	{
 		if (empty($this->_admin)) {
 			$query = 'SELECT params'

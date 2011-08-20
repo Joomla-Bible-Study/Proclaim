@@ -31,7 +31,7 @@ class Tablecommentsedit extends JTable
 	var $published = 1;
 	var $comment_text = null;
 	var $user_email = null;
-	
+
 
 	/**
 	 * Constructor

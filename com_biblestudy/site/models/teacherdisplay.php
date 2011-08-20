@@ -22,66 +22,70 @@ class biblestudyModelteacherdisplay extends JModel
 	 * @access	public
 	 * @return	void
 	 */
-	 var $_data;
-	 var $_template;
-	 var $_admin;
+	var $_data;
+	var $_template;
+	var $_admin;
 	function __construct()
 	{
 		parent::__construct();
 		//added for single study view off of menu
 		$menu	=& JSite::getMenu();
 		$item    = $menu->getActive();
-		if ($item) 
+		if ($item)
 		{
 			$params	=& $menu->getParams($item->id);
 			$id = $params->get('id', 0);
 		}
 		else
-			{
-				$id = JRequest::getVar('id','GET','INT'); //dump($id, 'id: ');
-                
-			}
-            
+		{
+			$id = JRequest::getVar('id','GET','INT'); //dump($id, 'id: ');
+
+		}
+
 		$this->_id = $id;
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-        jimport('joomla.html.parameter');
+		jimport('joomla.html.parameter');
 		$params =& $mainframe->getPageParameters();
-    $t = JRequest::getInt('t','get');
-		if (!$t){$t = 1;}
+		$t = JRequest::getInt('t','get');
+		if (!$t){
+			$t = 1;
+		}
 		$template = $this->getTemplate();
-          // Convert parameter fields to objects.
-				$registry = new JRegistry;
-				$registry->loadJSON($template[0]->params);
-                $params = $registry;
-        
+		// Convert parameter fields to objects.
+		$registry = new JRegistry;
+		$registry->loadJSON($template[0]->params);
+		$params = $registry;
+
 		$this->setId((int)$array[0]);
 	}
 
-	
+
 	function setId($id)
 	{
 		// Set id and wipe data
-        if (!$id ){$id = JRequest::getInt('returnid','get');}
+		if (!$id ){
+			$id = JRequest::getInt('returnid','get');
+		}
 		$this->_id		= $id;
 		$this->_data	= null;
 	}
 
 
-	
+
 	function &getData()
 	{
 		// Load the data
 		if (empty( $this->_data )) {
-		$query = 'SELECT t.* FROM #__bsms_teachers AS t WHERE t.published = 1 AND t.id = '.$this->_id.' ORDER BY t.teachername ASC';
+			$query = 'SELECT t.* FROM #__bsms_teachers AS t WHERE t.published = 1 AND t.id = '.$this->_id.' ORDER BY t.teachername ASC';
 			$this->_db->setQuery( $query );
 			$this->_data = $this->_db->loadObject();
 		}
 		return $this->_data;
 	}
 
-function getTemplate() {
+	function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
 			$query = 'SELECT *'
@@ -91,8 +95,8 @@ function getTemplate() {
 		}
 		return $this->_template;
 	}
-	
-function getAdmin()
+
+	function getAdmin()
 	{
 		if (empty($this->_admin)) {
 			$query = 'SELECT params'
@@ -102,6 +106,6 @@ function getAdmin()
 		}
 		return $this->_admin;
 	}
-	
-//end class
+
+	//end class
 }

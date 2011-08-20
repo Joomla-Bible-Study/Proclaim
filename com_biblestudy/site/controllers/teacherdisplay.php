@@ -25,7 +25,7 @@ class biblestudyControllerteacherdisplay extends JController
 		parent::__construct();
 
 		// Register Extra tasks
-		
+
 	}
 
 	/**
@@ -39,5 +39,5 @@ class biblestudyControllerteacherdisplay extends JController
 
 		parent::display();
 	}
-	
+
 }

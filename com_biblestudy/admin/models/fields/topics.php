@@ -22,14 +22,14 @@ jimport('joomla.form.formfield');
  */
 class JFormFieldTopics extends JFormField {
 
-    public $type = 'Topics';
+	public $type = 'Topics';
 
-    protected function getInput() {
+	protected function getInput() {
 
-        return '
+		return '
             <input type="hidden" id="topics" name="jform[topics]"/>
             ';
-    }
+	}
 
 }
 

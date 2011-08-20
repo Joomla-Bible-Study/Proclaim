@@ -10,24 +10,24 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controllerform');
 
-    abstract class controllerClass extends JControllerForm {
+abstract class controllerClass extends JControllerForm {
 
-    }
+}
 
 class biblestudyControllermediaedit extends controllerClass
 {
-    /*
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
-     *
-     * @todo  BCC  We should rename this controler to "mediafile" and the list view controller
-     * to "mediafiles" so that the pluralization in 1.6 would work properly
-     *
-     * @since 7.0
-     */
-    protected $view_list = 'medialist';
-	
+	/*
+	 * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+	*
+	* @todo  BCC  We should rename this controler to "mediafile" and the list view controller
+	* to "mediafiles" so that the pluralization in 1.6 would work properly
+	*
+	* @since 7.0
+	*/
+	protected $view_list = 'medialist';
+
 	/**
 	 * constructor (registers additional tasks to methods)
 	 * @return void
@@ -39,5 +39,5 @@ class biblestudyControllermediaedit extends controllerClass
 	}
 
 
-	
+
 }

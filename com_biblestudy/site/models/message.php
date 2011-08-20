@@ -20,7 +20,7 @@ abstract class modelClass extends JModelAdmin {
 
 class biblestudyModelmessage extends modelClass {
 
-    var $_admin;
+	var $_admin;
 
     /**
      * Method override to check if you can edit an existing record.
@@ -50,126 +50,126 @@ class biblestudyModelmessage extends modelClass {
         $this->setId((int) $array[0]);
     }
 
-    function setId($id) {
-        // Set id and wipe data
-        $this->_id = $id;
-        $this->_data = null;
-        $this->_admin = null;
-    }
+	function setId($id) {
+		// Set id and wipe data
+		$this->_id = $id;
+		$this->_data = null;
+		$this->_admin = null;
+	}
 
-    /**
-     * Method to store a record
-     *
-     * @access	public
-     * @return	boolean	True on success
-     */
-    function store() {
-        // fix up special html fields
+	/**
+	 * Method to store a record
+	 *
+	 * @access	public
+	 * @return	boolean	True on success
+	 */
+	function store() {
+		// fix up special html fields
 
-        $row = & $this->getTable();
+		$row = & $this->getTable();
 
-        $data = JRequest::get('post');
+		$data = JRequest::get('post');
 
-        //Allows HTML content to come through to the database row
-        $data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
-        $data['studyintro'] = str_replace('"', "'", $data['studyintro']);
-        $data['studynumber'] = str_replace('"', "'", $data['studynumber']);
-        $data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
+		//Allows HTML content to come through to the database row
+		$data['studytext'] = JRequest::getVar('studytext', '', 'post', 'string', JREQUEST_ALLOWRAW);
+		$data['studyintro'] = str_replace('"', "'", $data['studyintro']);
+		$data['studynumber'] = str_replace('"', "'", $data['studynumber']);
+		$data['secondary_reference'] = str_replace('"', "'", $data['secondary_reference']);
 
-        foreach ($data['scripture'] as $scripture) {
-            if (!$data['text'][key($data['scripture'])] == '') {
-                $scriptures[] = $scripture . ' ' . $data['text'][key($data['scripture'])];
-            }
-            next($data['scripture']);
-        }
-        $data['scripture'] = implode(';', $scriptures);
+		foreach ($data['scripture'] as $scripture) {
+			if (!$data['text'][key($data['scripture'])] == '') {
+				$scriptures[] = $scripture . ' ' . $data['text'][key($data['scripture'])];
+			}
+			next($data['scripture']);
+		}
+		$data['scripture'] = implode(';', $scriptures);
 
-        // Bind the form fields to the table
-        if (!$row->bind($data)) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
+		// Bind the form fields to the table
+		if (!$row->bind($data)) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
 
 
-        // Make sure the record is valid
-        if (!$row->check()) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
+		// Make sure the record is valid
+		if (!$row->check()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
 
-        // Store the table to the database
-        //Checks to make sure a valid date field has been entered
-        if (!$row->studydate) {
+		// Store the table to the database
+		//Checks to make sure a valid date field has been entered
+		if (!$row->studydate) {
             $row->studydate = date('Y-m-d H:i:s'); }
-        if (!$row->store()) {
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
+		if (!$row->store()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
 
-        //Get Tags
-        $vTags = JRequest::getVar('topic_tags', '', 'post', 'string', JREQUEST_ALLOWRAW);
-        $iTags = explode(",", $vTags);
+		//Get Tags
+		$vTags = JRequest::getVar('topic_tags', '', 'post', 'string', JREQUEST_ALLOWRAW);
+		$iTags = explode(",", $vTags);
 
-        JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'tables');
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'tables');
 
-        foreach ($iTags as $aTag) {
-            if (is_numeric($aTag)) {
-                //It's an existing tag.  Add it
-                if ($aTag != "") {
+		foreach ($iTags as $aTag) {
+			if (is_numeric($aTag)) {
+				//It's an existing tag.  Add it
+				if ($aTag != "") {
 
-                    $tagRow = & JTable::getInstance('studytopics', 'Table');
+					$tagRow = & JTable::getInstance('studytopics', 'Table');
 
-                    $isDup = $this->isDuplicate($row->id, $aTag);
+					$isDup = $this->isDuplicate($row->id, $aTag);
 
-                    if (!$isDup) {
-                        $tagRow->study_id = $row->id;
-                        $tagRow->topic_id = $aTag;
+					if (!$isDup) {
+						$tagRow->study_id = $row->id;
+						$tagRow->topic_id = $aTag;
 
-                        if (!$tagRow->store()) {
-                            $this->setError($this->_db->getErrorMsg());
-                            return false;
-                        }
-                    }
-                }
-            } else {
-                //It's a new tag.  Gotta insert it into the Topics table.
-                if ($aTag != "") {
-                    $topicRow = & JTable::getInstance('topicsedit', 'Table');
-                    $tempText = $aTag;
-                    $tempText = str_replace("0_", "", $tempText);
-                    $topicRow->topic_text = $tempText;
-                    $topicRow->published = 1;
-                    if (!$topicRow->store()) {
-                        $this->setError($this->_db->getErrorMsg());
-                        return false;
-                    }
+						if (!$tagRow->store()) {
+							$this->setError($this->_db->getErrorMsg());
+							return false;
+						}
+					}
+				}
+			} else {
+				//It's a new tag.  Gotta insert it into the Topics table.
+				if ($aTag != "") {
+					$topicRow = & JTable::getInstance('topicsedit', 'Table');
+					$tempText = $aTag;
+					$tempText = str_replace("0_", "", $tempText);
+					$topicRow->topic_text = $tempText;
+					$topicRow->published = 1;
+					if (!$topicRow->store()) {
+						$this->setError($this->_db->getErrorMsg());
+						return false;
+					}
 
-                    //Gotta somehow make sure this isn't a duplicate...
-                    $tagRow = & JTable::getInstance('studytopics', 'Table');
-                    $tagRow->study_id = $row->id;
-                    $tagRow->topic_id = $topicRow->id;
+					//Gotta somehow make sure this isn't a duplicate...
+					$tagRow = & JTable::getInstance('studytopics', 'Table');
+					$tagRow->study_id = $row->id;
+					$tagRow->topic_id = $topicRow->id;
 
-                    $isDup = $this->isDuplicate($row->id, $aTag);
+					$isDup = $this->isDuplicate($row->id, $aTag);
 
-                    if (!$isDup) {
-                        if (!$tagRow->store()) {
-                            $this->setError($this->_db->getErrorMsg());
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        return true;
-    }
+					if (!$isDup) {
+						if (!$tagRow->store()) {
+							$this->setError($this->_db->getErrorMsg());
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
 
-    function isDuplicate($study_id, $topic_id) {
-        $db = & JFactory::getDBO();
-        $query = 'select * from #__bsms_studytopics where study_id = ' . $study_id . ' and topic_id = ' . $topic_id;
+	function isDuplicate($study_id, $topic_id) {
+		$db = & JFactory::getDBO();
+		$query = 'select * from #__bsms_studytopics where study_id = ' . $study_id . ' and topic_id = ' . $topic_id;
 
-        $db->setQuery($query);
+		$db->setQuery($query);
 
-        $tresult = $db->loadObject();
+		$tresult = $db->loadObject();
 
         if (empty($tresult)) {
             return false;
@@ -262,9 +262,9 @@ class biblestudyModelmessage extends modelClass {
                     . ' FROM #__bsms_admin'
                     . ' WHERE id = 1';
             $this->_admin = $this->_getList($query);
-        }
+				}
         return $this->_admin;
-    }
+			}
 
     /**
      * Returns a list of mediafiles associated with this study
@@ -282,7 +282,7 @@ class biblestudyModelmessage extends modelClass {
 
         $db->setQuery($query->__toString());
         return $db->loadObjectList();
-    }
+			}
     
     /**
      * Overrides the JModelAdmin save routine to save the topics(tags)
@@ -315,37 +315,37 @@ class biblestudyModelmessage extends modelClass {
         return parent::save($data);
     }
 
-    /**
-     * Get the form data
-     *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
-     * @since 7.0
-     */
-    public function getForm($data = array(), $loadData = true) {
-        // Get the form.
-        $form = $this->loadForm('com_biblestudy.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
-        if (empty($form)) {
-            return false;
-        }
+	/**
+	 * Get the form data
+	 *
+	 * @param <Array> $data
+	 * @param <Boolean> $loadData
+	 * @return <type>
+	 * @since 7.0
+	 */
+	public function getForm($data = array(), $loadData = true) {
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.message', 'message', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
 
-        return $form;
-    }
+		return $form;
+	}
 
 
-    /**
-     *
-     * @return <type>
-     * @since   7.0
-     */
-    protected function loadFormData() {
-        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
-        if (empty($data))
-            $data = $this->getItem();
+	/**
+	 *
+	 * @return <type>
+	 * @since   7.0
+	 */
+	protected function loadFormData() {
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.message.data', array());
+		if (empty($data))
+		$data = $this->getItem();
 
-        return $data;
-    }
+		return $data;
+	}
 
 	/**
 	 * Returns a reference to the a Table object, always creating it.
@@ -360,6 +360,6 @@ class biblestudyModelmessage extends modelClass {
 	public function getTable($type = 'Message', $prefix = 'Table', $config = array())
 	{
 		JTable::addIncludePath(JPATH_COMPONENT.DS.'tables');
-        return JTable::getInstance($type, $prefix, $config);
+		return JTable::getInstance($type, $prefix, $config);
 	}
 }

@@ -9,13 +9,13 @@
 
 
 //No Direct Access
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 
 
 /*
-   translate a topicItem to clear text
-   topicItem: stdClass containing topic_text and topic_params
-   return: translated string or null if topicItem is not initialised
+ translate a topicItem to clear text
+topicItem: stdClass containing topic_text and topic_params
+return: translated string or null if topicItem is not initialised
 */
 function getTopicItemTranslated($topicItem)
 {
@@ -49,9 +49,9 @@ function getTopicItemTranslated($topicItem)
 
 
 /*
-   translate a list of topicItems to clear text each
-   topicItems: array of stdClass containing topic_text and topic_params
-   return: list of topicItems containing translated strings in topic_text
+ translate a list of topicItems to clear text each
+topicItems: array of stdClass containing topic_text and topic_params
+return: list of topicItems containing translated strings in topic_text
 */
 function getTopicItemsTranslated($topicItems = array())
 {

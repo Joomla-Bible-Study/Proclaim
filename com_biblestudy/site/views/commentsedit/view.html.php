@@ -14,29 +14,29 @@ jimport('joomla.application.component.view');
 
 class biblestudyViewcommentsedit extends JView {
 
-    protected $form;
-    protected $item;
-    protected $state;
+	protected $form;
+	protected $item;
+	protected $state;
 
-    function display($tpl = null) {
-         $this->canDo	= BibleStudyHelper::getActions($this->item->id, 'commentsedit');
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
-        $this->state = $this->get("State");
+	function display($tpl = null) {
+		$this->canDo	= BibleStudyHelper::getActions($this->item->id, 'commentsedit');
+		$this->form = $this->get("Form");
+		$this->item = $this->get("Item");
+		$this->state = $this->get("State");
 
- //Load the Admin settings
-        $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin($issite = true);
-//check permissions to enter studies
-       //check permissions to enter studies
-       if (!$this->canDo->get('core.edit')) 
-        {
-            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-            return false;
-        }    
-        $this->setLayout('form');
-        
-        
-        parent::display($tpl);
-    } 
+		//Load the Admin settings
+		$this->loadHelper('params');
+		$this->admin = BsmHelper::getAdmin($issite = true);
+		//check permissions to enter studies
+		//check permissions to enter studies
+		if (!$this->canDo->get('core.edit'))
+		{
+			JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+			return false;
+		}
+		$this->setLayout('form');
+
+
+		parent::display($tpl);
+	}
 }

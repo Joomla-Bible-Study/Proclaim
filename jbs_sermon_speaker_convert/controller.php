@@ -23,9 +23,9 @@ class ss2jbsController extends JController
 	{
 
 		function convert()
-        {
-            //do the conversion
-        }
+		{
+			//do the conversion
+		}
 		parent::display();
 	}
 }

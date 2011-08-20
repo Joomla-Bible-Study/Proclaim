@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @version $Id: image.php 1 $
@@ -18,7 +18,7 @@ function getImage($path)
 	$tmp = new JObject();
 	$tmp->path = $path;
 
-	$tmp->size = filesize($tmp->path);	
+	$tmp->size = filesize($tmp->path);
 	$ext = strtolower(JFile::getExt($path));
 	switch ($ext)
 	{
@@ -35,8 +35,12 @@ function getImage($path)
 			$tmp->height	= @$info[1];
 			$tmp->type		= @$info[2];
 			$tmp->mime		= @$info['mime'];
-			if (!$tmp->width) {$tmp->width=0;}
-			if (!$tmp->height) {$tmp->height=0;}
+			if (!$tmp->width) {
+				$tmp->width=0;
+			}
+			if (!$tmp->height) {
+				$tmp->height=0;
+			}
 	}
-return $tmp;
+	return $tmp;
 }

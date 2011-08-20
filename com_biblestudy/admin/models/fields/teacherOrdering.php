@@ -59,8 +59,8 @@ class JFormFieldteacherOrdering extends JFormField
 		// Get some field values from the form.
 		$weblinkId	= (int) $this->form->getValue('id');
 		$categoryId	= (int) $this->form->getValue('catid');
-        $teacher = $this->form->getValue('teachername');
-//dump ($teacher);
+		$teacher = $this->form->getValue('teachername');
+		//dump ($teacher);
 		// Build the query for the ordering list.
 		$query = 'SELECT ordering AS value, teachername AS text' .
 				' FROM #__bsms_teachers' .

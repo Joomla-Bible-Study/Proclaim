@@ -12,7 +12,9 @@ defined('_JEXEC') or die();
 
 function getScripture($params, $row, $esv, $scripturerow) {
 	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-	if (!isset($row->id)) {return;}
+	if (!isset($row->id)) {
+		return;
+	}
 	if ($scripturerow == 2) {
 		$booknumber = $row->booknumber2;
 		$ch_b = $row->chapter_begin2;
@@ -21,28 +23,37 @@ function getScripture($params, $row, $esv, $scripturerow) {
 		$v_e = $row->verse_end2;
 	}
 	else {
-	$booknumber = $row->booknumber;
-	$ch_b = $row->chapter_begin;
-	$ch_e = $row->chapter_end;
-	$v_b = $row->verse_begin;
-	$v_e = $row->verse_end;
+		$booknumber = $row->booknumber;
+		$ch_b = $row->chapter_begin;
+		$ch_e = $row->chapter_end;
+		$v_b = $row->verse_begin;
+		$v_e = $row->verse_end;
 	}
-    if (!$booknumber){$scripture = ''; return $scripture;}
-	$show_verses = $params->get('show_verses'); 
+	if (!$booknumber){
+		$scripture = ''; return $scripture;
+	}
+	$show_verses = $params->get('show_verses');
 	$db	= & JFactory::getDBO();
 	$query = 'SELECT #__bsms_studies.*, #__bsms_books.bookname, #__bsms_books.id as bid '
-			. ' FROM #__bsms_studies'
-			. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-			. '  WHERE #__bsms_studies.id = '.$row->id; 
+	. ' FROM #__bsms_studies'
+	. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
+	. '  WHERE #__bsms_studies.id = '.$row->id;
 	$db->setQuery($query);
 	$bookresults = $db->loadObject();
 	$affectedrows = count($bookresults);
-	if ($affectedrows < 1) { return; }
+	if ($affectedrows < 1) {
+		return;
+	}
 	$query = 'SELECT bookname, booknumber FROM #__bsms_books WHERE booknumber = '.$booknumber;
 	$db->setQuery($query);
 	$booknameresults = $db->loadObject();
-	if (!isset($booknameresults)){$scripture = ''; return $scripture;}
-	if ($booknameresults->bookname) {$book = JText::_($booknameresults->bookname);} else {$book = '';}
+	if (!isset($booknameresults)){
+		$scripture = ''; return $scripture;
+	}
+	if ($booknameresults->bookname) {
+		$book = JText::_($booknameresults->bookname);
+	} else {$book = '';
+	}
 	$b1 = ' ';
 	$b2 = ':';
 	$b2a = ':';
@@ -55,13 +66,13 @@ function getScripture($params, $row, $esv, $scripturerow) {
 			$ch_e = '';
 			$b2a = '';
 		}
-		if ($ch_e == $ch_b && $v_b == $v_e) 
-		{ 
-		    $b3 = ''; 
-		    $ch_e = ''; 
-		    $b2a = ''; 
-		    $v_e = ''; 
-		} 
+		if ($ch_e == $ch_b && $v_b == $v_e)
+		{
+			$b3 = '';
+			$ch_e = '';
+			$b2a = '';
+			$v_e = '';
+		}
 		if ($v_b == 0){
 			$v_b = '';
 			$v_e = '';
@@ -80,7 +91,7 @@ function getScripture($params, $row, $esv, $scripturerow) {
 			}
 		}
 		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-		
+
 
 	}
 	//else
@@ -117,10 +128,12 @@ function getScripture($params, $row, $esv, $scripturerow) {
 			}
 		}
 		$scripture = $book.$b1.$ch_b.$b2.$v_b.$b3.$ch_e.$b2a.$v_e;
-		
+
 	}
-	
-		if ($row->booknumber > 166) {$scripture = $book;}
-		
+
+	if ($row->booknumber > 166) {
+		$scripture = $book;
+	}
+
 	return $scripture;
 }

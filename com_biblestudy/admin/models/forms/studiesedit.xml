@@ -65,20 +65,18 @@
     
     <field name="messagetype" type="sql" extension="com_biblestudy"
 		label="JBS_CMN_MESSAGE_TYPE" description="JBS_STY_MESSAGE_TYPE_DESC"
-                class="inputbox" query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC" key_field="id" value_field="message_type">
-        <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
-    </field>
-
-    <field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE" />
-
-   	<field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
-			filter="BibleStudyHelper::filterText" buttons="true" />
-
+		class="inputbox"
+		query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC"
+		key_field="id" value_field="message_type">
+		<option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
+	</field>
+	<field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE" />
+	<field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
+		filter="BibleStudyHelper::filterText" buttons="true" />
 	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-			translate_label="false" class="inputbox" filter="rules"
-			component="com_biblestudy" section="studiesedit" validate="rules"
-		/>
+		translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+		section="studiesedit" validate="rules" />
 	<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
-	        description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
-    <field name="asset_id" type="hidden" filter="unset" />
+		description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+	<field name="asset_id" type="hidden" filter="unset" />
 </form>

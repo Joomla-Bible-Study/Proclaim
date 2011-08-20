@@ -26,11 +26,11 @@ $j16 = '1.6';
 $is16 = substr_count(JVERSION,'1.6');
 if (!$is16)
 {
-    define('JOOMLA_VERSION','5');
+	define('JOOMLA_VERSION','5');
 }
 else
 {
-    define('JOOMLA_VERSION','6');
+	define('JOOMLA_VERSION','6');
 }
 
 // File system paths

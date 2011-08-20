@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @version $Id: topics.php 1 $
@@ -46,23 +46,23 @@ function getTopicsLandingPage($params, $id, $admin_params)
 			if ($showdiv < 1)
 			{
 				if ($i == 1) {
-    	      		$topic .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
-    	      		$topic .= "\n\t" . '</tr>';
-    	    	};
-    	    	if ($i == 2) {
-    	        	$topic .= "\n\t\t" . '<td  id="landing_td"></td>';
-    	      		$topic .= "\n\t" . '</tr>';
-	        	};
-	        	
-	        				
-			$topic .= "\n" .'</table>';
-			$topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
-			$topic .= "\n" . '<table width = "100%" id="landing_table">';
-		
-			$i = 0;
-			$showdiv = 1;
+					$topic .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
+					$topic .= "\n\t" . '</tr>';
+				};
+				if ($i == 2) {
+					$topic .= "\n\t\t" . '<td  id="landing_td"></td>';
+					$topic .= "\n\t" . '</tr>';
+				};
+
+				 
+				$topic .= "\n" .'</table>';
+				$topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
+				$topic .= "\n" . '<table width = "100%" id="landing_table">';
+
+				$i = 0;
+				$showdiv = 1;
 			}
-		}   
+		}
 		
             if ($i == 0) {
                 $topic .= "\n\t" . '<tr>';
@@ -89,15 +89,15 @@ function getTopicsLandingPage($params, $id, $admin_params)
             $topic .= "\n\t\t" . '<td  id="landing_td"></td>';
         };
 
-		$topic .= "\n". '</table>' ."\n";
+	$topic .= "\n". '</table>' ."\n";
 
-        if ($showdiv == 1)
-			{	
+	if ($showdiv == 1)
+	{
 
-			$topic .= "\n\t". '</div> <!-- close show/hide topics div-->';
-			$showdiv = 2;
-			}
-  $topic .= '<div id="landing_separator"></div>';
-        
+		$topic .= "\n\t". '</div> <!-- close show/hide topics div-->';
+		$showdiv = 2;
+	}
+	$topic .= '<div id="landing_separator"></div>';
+
 	return $topic;
 }

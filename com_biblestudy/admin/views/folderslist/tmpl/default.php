@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @version $Id: default.php 1 $
@@ -10,41 +10,54 @@
 
 defined('_JEXEC') or die('Restricted access');
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php'); ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=folderslist'); ?>" method="post" name="adminForm" id="adminForm">
-<fieldset id="filter-bar">
-    <div class="filter-select fltrt">
+<form
+	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=folderslist'); ?>"
+	method="post" name="adminForm" id="adminForm">
+	<fieldset id="filter-bar">
+		<div class="filter-select fltrt">
 
-			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+			<select name="filter_published" class="inputbox"
+				onchange="this.form.submit()">
+				<option value="">
+					
+				<?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+				
+				
+				
+				
 				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
 			</select>
-   </div>
-</fieldset>
-    <div id="editcell">
-        <table class="adminlist">
-            <thead>
-                <tr>
-                    <th width="1%">
-                        <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
-                    </th>
-                    <th width="8%" align="center">
-                        <?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
-                    </th>
-                    <th>
-                        <?php echo JText::_('JBS_CMN_FOLDERS'); ?>
-                    </th>
-                    <th>
-                        <?php echo JText::_('JBS_FLD_FOLDER_NAME'); ?>
-                    </th>
-                </tr>
-            </thead>
-            	<tfoot>
-			<tr>
-				<td colspan="10">
+		</div>
+	</fieldset>
+	<div id="editcell">
+		<table class="adminlist">
+			<thead>
+				<tr>
+					<th width="1%"><input type="checkbox" name="toggle" value=""
+						onclick="checkAll(<?php echo count($this->items); ?>);" />
+					</th>
+					<th width="8%" align="center">
+					<?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
+					</th>
+					<th>
+					<?php echo JText::_('JBS_CMN_FOLDERS'); ?>
+					</th>
+					<th>
+					<?php echo JText::_('JBS_FLD_FOLDER_NAME'); ?>
+					</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<td colspan="10">
 					<?php echo $this->pagination->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
+					</td>
+				</tr>
+			</tfoot>
+			
+			
+			
+			
             <?php
                         foreach ($this->items as $i => $item) :
                             $link = JRoute::_('index.php?option=com_biblestudy&task=foldersedit.edit&id=' . (int) $item->id);
@@ -65,10 +78,14 @@ require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 
                     </tr>
             <?php endforeach; ?>
                         </table>
-                    </div>
-                    <input type="hidden" name="task" value=""/>
-                    <input type="hidden" name="boxchecked" value="0"/>
-                    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-                    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
+	</div>
+	<input type="hidden" name="task" value="" /> <input type="hidden"
+		name="boxchecked" value="0" /> <input type="hidden"
+		name="filter_order" value="<?php echo $listOrder; ?>" /> <input
+		type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+	
+	
+	
+	
     <?php echo JHtml::_('form.token'); ?>
 </form>

@@ -22,5 +22,5 @@ class biblestudyControllerseriesdetail extends JController
 		parent::__construct();
 	}
 
-	
+
 }

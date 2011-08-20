@@ -18,15 +18,22 @@ if(document.getElementById(d).style.display == "none") { document.getElementById
 else { document.getElementById(d).style.display = "none"; }
 }
 </script>
+
 <?php
 
-$commentjava = "javascript:ReverseDisplay('comments')";	
- switch ($this->params->get('link_comments',0))
-        {
-            case 0:
-            echo '<strong><a class="heading'.$pageclass_sfx.'" href="'.$commentjava.'">>>'
-            .JText::_('JBS_CMT_SHOW_HIDE_COMMENTS').'<<</a></strong>';
-            ?> <div id="comments" style="display:none;"><br /> <?php
+$commentjava = "javascript:ReverseDisplay('comments')";
+switch ($this->params->get('link_comments',0))
+{
+	case 0:
+		echo '<strong><a class="heading'.$pageclass_sfx.'" href="'.$commentjava.'">>>'
+		.JText::_('JBS_CMT_SHOW_HIDE_COMMENTS').'<<</a></strong>';
+		?>
+<div id="comments" style="display: none;">
+	<br />
+	
+	
+	
+	 <?php
             break;
             
             case 1:

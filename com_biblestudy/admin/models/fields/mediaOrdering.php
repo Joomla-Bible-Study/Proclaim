@@ -59,7 +59,7 @@ class JFormFieldmediaOrdering extends JFormField
 		// Get some field values from the form.
 		$weblinkId	= (int) $this->form->getValue('id');
 		$studyId	= (int) $this->form->getValue('study_id');
-  
+
 
 		// Build the query for the ordering list.
 		$query = 'SELECT ordering AS value, filename AS text' .

@@ -14,7 +14,7 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 jimport( 'joomla.application.component.view' );
 
 class biblestudyViewLandingpage extends JView {
-	
+
 	/**
 	 * Landing Page view display method
 	 * @return void
@@ -72,9 +72,9 @@ class biblestudyViewLandingpage extends JView {
 		$filter_orders		= $mainframe->getUserStateFromRequest( $option.'filter_orders','filter_orders','DESC','word' );
 		$search				= JString::strtolower($mainframe->getUserStateFromRequest( $option.'search','search','','string'));
 
-//		$results = $this->get('Data');
+		//		$results = $this->get('Data');
 		$adminrows = new JBSAdmin();
-//        $items = $adminrows->showRows($results);
+		//        $items = $adminrows->showRows($results);
 		$total = $this->get('Total');
 
 		$pagination = $this->get('Pagination');

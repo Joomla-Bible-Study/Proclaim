@@ -2,6 +2,6 @@
 <!-- $Id: default.xml tf 5-23-2008 TF $ -->
 <metadata>
 	<layout title="JBS_MNU_MEDIAFILES_LIST_LAYOUT">
-    <message>JBS_MNU_MEDIAFILES_LIST_LAYOUT_DESC</message>
+		<message>JBS_MNU_MEDIAFILES_LIST_LAYOUT_DESC</message>
 	</layout>
 </metadata>

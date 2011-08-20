@@ -12,27 +12,45 @@ defined('_JEXEC') or die();
 require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
+<form
+	action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
+	method="post" name="adminForm" id="adminForm">
 
-<?php echo JHtml::_('tabs.start'); ?>
-<?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_GENERAL'), 'general'); ?>
- <div class="width-100">
-    <div class="width-80 fltlft">
-        <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_TPL_GENERAL'); ?></legend>
-                 <ul class="adminformlist">
-                <?php foreach($this->form->getFieldset('GENERAL') as $field): ?>
-                        <li><?php echo $field->label;echo $field->input;?></li>
+
+
+	<?php echo JHtml::_('tabs.start'); ?>
+
+
+	<?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_GENERAL'), 'general'); ?>
+	<div class="width-100">
+		<div class="width-80 fltlft">
+			<fieldset class="panelform">
+				<legend>
+					
+				<?php echo JText::_('JBS_TPL_GENERAL'); ?></legend>
+				<ul class="adminformlist">
+					
+					
+				<?php foreach($this->form->getFieldset('GENERAL') as $field): ?>
+					<li><?php echo $field->label;echo $field->input;?></li>
+					
+					
+					
+					
                     <?php endforeach; ?>
                 <?php foreach($this->form->getFieldset('TEMPLATES') as $field): ?>
                         <li><?php echo $field->label;echo $field->input;?></li>
                     <?php endforeach; ?>
                 </ul>
-        </fieldset>
-    </div>
- </div>
+			</fieldset>
+		</div>
+	</div>
 
- <div class="clr"></div>
+	<div class="clr"></div>
+	
+	
+	
+	
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_CMN_MEDIA'), 'admin-system-defaults'); ?>
     <div class="width-100">
         <div class="width-80 fltlft">

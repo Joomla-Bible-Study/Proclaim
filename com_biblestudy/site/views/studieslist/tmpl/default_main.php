@@ -30,17 +30,29 @@ $teachers = $params->get('teacher_id');
 $listingcall = JView::loadHelper('listing');
 
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=studieslist'); ?>" method="post">
+<form
+	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=studieslist'); ?>"
+	method="post">
 
-  <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+	<div id="biblestudy" class="noRefTagger">
+		<!-- This div is the container for the whole page -->
 
-    <div id="bsheader">
-      <h1 class="componentheading">
-<?php
-     if ($this->params->get( 'show_page_image' ) >0) {
+		<div id="bsheader">
+			<h1 class="componentheading">
 
-     ?>
-      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" alt="Bible Study" />
+
+			<?php
+			if ($this->params->get( 'show_page_image' ) >0) {
+
+				?>
+				<img src="<?php echo JURI::base().$this->main->path;?>"
+					alt="<?php echo $this->main->path; ?>"
+					width="<?php echo $this->main->width;?>"
+					height="<?php echo $this->main->height;?>" alt="Bible Study" />
+				
+				
+				
+				
     <?php //End of column for logo
     }
     ?>
@@ -50,6 +62,10 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     }
 	?>
       </h1>
+			
+			
+			
+			
 <?php
 
 if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
@@ -60,15 +76,34 @@ if ($params->get('listteachers') && $params->get('list_teacher_show') > 0)
 	}
 
 	?>
-    </div><!--header-->
+    </div>
+		<!--header-->
 
-    <div id="listintro"><table id="listintro"><tr><td><p>
-    <?php if ($params->get('intro_show') == 1) { echo $params->get('list_intro');}?>
-   </p></td></tr></table> </div>
-    <div id="bsdropdownmenu">
-    <?php if ($this->params->get('use_go_button') > 0)
-        {
-            ?><span id="gobutton"><input type="submit" value="<?php echo JText::_('JBS_STY_GO_BUTTON'); ?>" /></span>
+		<div id="listintro">
+			<table id="listintro">
+				<tr>
+					<td><p>
+						
+
+					<?php if ($params->get('intro_show') == 1) {
+						echo $params->get('list_intro');
+					}?>
+						</p></td>
+				</tr>
+			</table>
+		</div>
+		<div id="bsdropdownmenu">
+			
+			
+		<?php if ($this->params->get('use_go_button') > 0)
+		{
+			?>
+			<span id="gobutton"><input type="submit"
+				value="<?php echo JText::_('JBS_STY_GO_BUTTON'); ?>" /> </span>
+			
+			
+			
+			
     <?php }
 
 
@@ -98,45 +133,56 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
 ?>
 
 
-    </div><!--dropdownmenu-->
-     <table id="bslisttable" cellspacing="0">
-     <?php
+    </div>
+		<!--dropdownmenu-->
+		<table id="bslisttable" cellspacing="0">
+			
+			
+		<?php
 
-     $headerCall = JView::loadHelper('header');
-     $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule=0);
+		$headerCall = JView::loadHelper('header');
+		$header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule=0);
 	 echo $header;
-     ?>
-      <tbody>
+	 ?>
+			<tbody>
 
-        <?php
- //This sets the alternativing colors for the background of the table cells
- $class1 = 'bsodd';
- $class2 = 'bseven';
- $oddeven = $class1;
 
- foreach ($this->items as $row) { //Run through each row of the data result from the model
-	if($oddeven == $class1){ //Alternate the color background
-	$oddeven = $class2;
-	} else {
-	$oddeven = $class1;
-	}
 
-	$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
- 	echo $listing;
-   
- }
- ?>
- </tbody></table>
-<div class="listingfooter" >
-	<?php  
-      echo $this->pagination->getPagesLinks();
+			<?php
+			//This sets the alternativing colors for the background of the table cells
+			$class1 = 'bsodd';
+			$class2 = 'bseven';
+			$oddeven = $class1;
 
-	  ?>
-</div> <!--end of bsfooter div-->
-  </div><!--end of bspagecontainer div-->
-  <input name="option" value="com_biblestudy" type="hidden">
+			foreach ($this->items as $row) {
+				//Run through each row of the data result from the model
+				if($oddeven == $class1){
+					//Alternate the color background
+					$oddeven = $class2;
+				} else {
+					$oddeven = $class1;
+				}
 
-  <input name="task" value="" type="hidden">
-  <input name="boxchecked" value="0" type="hidden">
-  <input name="controller" value="studieslist" type="hidden">
+				$listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule=0);
+				echo $listing;
+					
+			}
+			?>
+			</tbody>
+		</table>
+		<div class="listingfooter">
+			
+			
+		<?php
+		echo $this->pagination->getPagesLinks();
+
+		?>
+		</div>
+		<!--end of bsfooter div-->
+	</div>
+	<!--end of bspagecontainer div-->
+	<input name="option" value="com_biblestudy" type="hidden"> <input
+		name="task" value="" type="hidden"> <input name="boxchecked" value="0"
+		type="hidden"> <input name="controller" value="studieslist"
+		type="hidden">
 </form>

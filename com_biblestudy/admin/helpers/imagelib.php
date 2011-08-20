@@ -15,7 +15,7 @@ defined('_JEXEC') or die();
  * params
  */
 class ImageLib {
-    //public abstract static function resize($img);
+	//public abstract static function resize($img);
 }
 
 /**
@@ -25,19 +25,19 @@ class ImageLib {
  */
 class ImageMagickLib extends ImageLib {
 
-    public static function resize($image) {
-        try {
-            /*             * * a file that does not exist ** */
-            $image = '$image';
+	public static function resize($image) {
+		try {
+			/*             * * a file that does not exist ** */
+			$image = '$image';
 
-            /*             * * a new imagick object ** */
-            $im = new Imagick($image);
+			/*             * * a new imagick object ** */
+			$im = new Imagick($image);
 
-            var_dump( $im->getImageGeometry());
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
+			var_dump( $im->getImageGeometry());
+		} catch (Exception $e) {
+			echo $e->getMessage();
+		}
+	}
 
 }
 
@@ -48,10 +48,10 @@ class ImageMagickLib extends ImageLib {
  */
 class GDLib extends ImageLib {
 
-    public function __construct() {
-        //Check that the library exists
-        if (!function_exists("gd_info"))
-            die("GD is not found");
-    }
+	public function __construct() {
+		//Check that the library exists
+		if (!function_exists("gd_info"))
+		die("GD is not found");
+	}
 
 }

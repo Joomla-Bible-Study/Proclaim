@@ -1,23 +1,22 @@
 <?php
 /**
- * @version     $Id: default.php 1466 2011-01-31 23:13:03Z bcordis $
+ * @version     $Id: default_16.php 1336 2011-01-06 22:29:39Z genu $
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
 //No Direct Access
 defined('_JEXEC') or die();
-//require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+
 JHtml::_('script', 'system/multiselect.js', false, true);
+
+$function = JRequest::getCmd('function', 'jSelectStudy');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
-<h2>
-
-<?php echo JText::_('JBS_CMN_MESSAGES_LIST');?></h2>
 <form
-	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages'); ?>"
+	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=studieslist&layout=modal&tmpl=component&function=' . $function); ?>"
 	method="post" name="adminForm" id="adminForm">
-	<fieldset id="filter-bar">
+	<fieldset id="filter">
 		<div class="filter-search fltlft">
 			<label class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>:
 			</label> <input type="text" name="filter_studytitle"
@@ -29,14 +28,13 @@ $listDirn = $this->state->get('list.direction');
 
 			<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
 			<button type="button"
-				onclick="document.id('filter_studytitle').value='';Joomla.submitbutton();">
+				onclick="document.id('filter_studytitle').value='';this.form.submit();">
 
 				<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 		</div>
-		<div class="clr"></div>
-		<div class="filter-select fltlft">
+		<div class="filter-select fltrt">
 			<select name="filter_book" class="inputbox"
-				onchange="Joomla.submitbutton()">
+				onchange="this.form.submit()">
 				<option value="">
 					
 				<?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
@@ -46,7 +44,7 @@ $listDirn = $this->state->get('list.direction');
 				
                 <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.book')); ?>
             </select> <select name="filter_teacher" class="inputbox"
-				onchange="Joomla.submitbutton()">
+				onchange="this.form.submit()">
 				<option value="">
 					
 				<?php echo JText::_('JBS_CMN_SELECT_TEACHER'); ?></option>
@@ -56,7 +54,7 @@ $listDirn = $this->state->get('list.direction');
 				
                 <?php echo JHtml::_('select.options', $this->teachers, 'value', 'text', $this->state->get('filter.teacher')); ?>
             </select> <select name="filter_series" class="inputbox"
-				onchange="Joomla.submitbutton()">
+				onchange="this.form.submit()">
 				<option value="">
 					
 				<?php echo JText::_('JBS_CMN_SELECT_SERIES'); ?></option>
@@ -66,17 +64,17 @@ $listDirn = $this->state->get('list.direction');
 				
                 <?php echo JHtml::_('select.options', $this->series, 'value', 'text', $this->state->get('filter.series')); ?>
             </select> <select name="filter_message_type"
-				class="inputbox" onchange="Joomla.submitbutton()">
+				class="inputbox" onchange="this.form.submit()">
 				<option value="">
 					
-				<?php echo JText::_('JBS_CMN_MESSAGE_TYPE'); ?></option>
+				<?php echo JText::_('JBS_CMN_SELECT_MESSAGE_TYPE'); ?></option>
 				
 				
 				
 				
                 <?php echo JHtml::_('select.options', $this->messageTypes, 'value', 'text', $this->state->get('filter.messageType')); ?>
             </select> <select name="filter_year" class="inputbox"
-				onchange="Joomla.submitbutton()">
+				onchange="this.form.submit()">
 				<option value="">
 					
 				<?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
@@ -85,34 +83,42 @@ $listDirn = $this->state->get('list.direction');
 				
 				
                 <?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
+            </select> <select name="filter_topic" class="inputbox"
+				onchange="this.form.submit()">
+				<option value="">
+					
+				<?php echo JText::_('JBS_CMN_SELECT_TOPIC'); ?></option>
+				
+				
+				
+				
+                <?php echo JHtml::_('select.options', $this->topics, 'value', 'text', $this->state->get('filter.topic')); ?>
+            </select> <select name="filter_state" class="inputbox"
+				onchange="this.form.submit()">
+				<option value="">
+					
+				<?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+				
+				
+				
+				
+                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.state'), true); ?>
             </select>
-           <select name="filter_published" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
-			</select>
 		</div>
 	</fieldset>
-	<div>
-		<h3>
-			
-		<?php echo $this->newlink; ?></h3>
-	</div>
 	<div class="clr"></div>
 
 	<table class="adminlist">
 		<thead>
 			<tr>
-				<th width="1%"><input type="checkbox" name="checkall-toggle"
-					value="" onclick="checkAll(this)" />
-				</th>
-				<th width="8%">
-				<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
+				<th>
+				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
 				</th>
 				<th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?>
 				</th>
-				<th>
-				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
+				<th width="8%">
+				<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
 				</th>
 				<th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_SCRIPTURE', 'book.bookname', $listDirn, $listOrder); ?>
@@ -123,9 +129,12 @@ $listDirn = $this->state->get('list.direction');
 				<th>
 				<?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
 				</th>
-
-
-
+				<th>
+				<?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
+				</th>
+				<th>
+				<?php echo JHtml::_('grid.sort', 'JBS_CMN_TOPIC', 'topic.topic_text', $listDirn, $listOrder); ?>
+				</th>
 			</tr>
 		</thead>
 		<tfoot>
@@ -144,31 +153,32 @@ $listDirn = $this->state->get('list.direction');
         ?>
                         <tr class="row<?php echo $i % 2; ?>">
                             <td class="center">
-                <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-                    </td>
-                    <td class="center">
-                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', true, 'cb', '', ''); ?>
-                    </td>
-                    <td class="center">
-                <?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
-                    </td>
-                    <td class="center">
-                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=message.edit&id=' . (int) $item->id); ?>">
+                                <a class="pointer" onclick="if(window.parent) window.parent.<?php echo $function; ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->studytitle)); ?>');">
                     <?php echo $this->escape($item->studytitle); ?>
                     </a>
-                </td>
+                </td>    
                 <td class="center">
-                     <?php echo JText::_($this->escape($item->bookname)).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
-                </td>
-                <td class="center">
+                <?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
+                    </td>
+
+                    <td class="center">
+                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'studieslist.', true, 'cb', '', ''); ?>
+                    </td>
+                    <td class="center">
+                <?php echo $this->escape($item->bookname).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
+                    </td>
+                    <td class="center">
                 <?php echo $this->escape($item->teachername); ?>
                     </td>
                     <td class="center">
                 <?php echo $this->escape($item->messageType); ?>
                     </td>
-                    
-                    
-                    
+                    <td class="center">
+                <?php echo $this->escape($item->series_text); ?>
+                    </td>
+                    <td class="center">
+                <?php echo $this->escape($item->topic_text); ?>
+                    </td>
                 </tr>
         <?php endforeach; ?>
                     </table>

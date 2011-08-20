@@ -1,5 +1,5 @@
 .icon-48-openbible {
-background-image:url(openbible.gif);
+	background-image: url(openbible.gif);
 }
 
 .inlinePlayer {
@@ -8,6 +8,6 @@ background-image:url(openbible.gif);
 	width: 290px;
 	margin-left: -293px;
 	height: 24px;
-	display:none;
-	background-color:  #ffffff;
+	display: none;
+	background-color: #ffffff;
 }

@@ -16,28 +16,28 @@ jimport('joomla.application.component.view');
 
 class biblestudyViewstudiesedit extends JView {
 
-    protected $form;
-    protected $item;
-    protected $state;
-    protected $admin;
+	protected $form;
+	protected $item;
+	protected $state;
+	protected $admin;
 
-    function display($tpl = null) {
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
+	function display($tpl = null) {
+		$this->form = $this->get("Form");
+		$this->item = $this->get("Item");
 
-        $this->mediafiles = $this->get('MediaFiles');
-        $this->setLayout('form');
+		$this->mediafiles = $this->get('MediaFiles');
+		$this->setLayout('form');
 
-        $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin();
-        $this->canDo = BibleStudyHelper::getActions($type = 'studiesedit', $Itemid = $this->item->id);
-        $this->addToolbar();
+		$this->loadHelper('params');
+		$this->admin = BsmHelper::getAdmin();
+		$this->canDo = BibleStudyHelper::getActions($type = 'studiesedit', $Itemid = $this->item->id);
+		$this->addToolbar();
 
-        $document = JFactory::getDocument();
-        $document->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.tokeninput.js');
-        $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/token-input-jbs.css');
+		$document = JFactory::getDocument();
+		$document->addScript(JURI::base() . 'components/com_biblestudy/js/plugins/jquery.tokeninput.js');
+		$document->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/token-input-jbs.css');
 
-        $script = "
+		$script = "
             \$j(document).ready(function() {
                 \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
                 {
@@ -52,40 +52,40 @@ class biblestudyViewstudiesedit extends JView {
             });
              ";
 
-        $document->addScriptDeclaration($script);
+		$document->addScriptDeclaration($script);
 
 
-        $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/js/ui/theme/ui.all.css');
-        $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/jquery.tagit.css');
+		$document->addStyleSheet(JURI::base() . 'components/com_biblestudy/js/ui/theme/ui.all.css');
+		$document->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/jquery.tagit.css');
 
 
-        $document->addScript(JURI::base() . 'components/com_biblestudy/js/biblestudy.js');
+		$document->addScript(JURI::base() . 'components/com_biblestudy/js/biblestudy.js');
 
 
 
 
 
-        parent::display($tpl);
-    }
+		parent::display($tpl);
+	}
 
-    protected function addToolbar() {
-        $isNew = ($this->item->id < 1);
-        $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-        JToolBarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');
+	protected function addToolbar() {
+		$isNew = ($this->item->id < 1);
+		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
+		JToolBarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');
 
-        $canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
-        if ($this->canDo->get('core.edit', 'com_biblestudy')) {
-            JToolBarHelper::save('studiesedit.save');
-            JToolBarHelper::apply('studiesedit.apply');
-        }
-        JToolBarHelper::cancel('studiesedit.cancel', 'JTOOLBAR_CANCEL');
-        if ($this->canDo->get('core.edit', 'com_biblestudy') && !$isNew) {
-            JToolBarHelper::divider();
-            JToolBarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
-        }
+		$canDo = BibleStudyHelper::getActions($this->item->id, 'studiesedit');
+		if ($this->canDo->get('core.edit', 'com_biblestudy')) {
+			JToolBarHelper::save('studiesedit.save');
+			JToolBarHelper::apply('studiesedit.apply');
+		}
+		JToolBarHelper::cancel('studiesedit.cancel', 'JTOOLBAR_CANCEL');
+		if ($this->canDo->get('core.edit', 'com_biblestudy') && !$isNew) {
+			JToolBarHelper::divider();
+			JToolBarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
+		}
 
-        JToolBarHelper::divider();
-        JToolBarHelper::help('biblestudy', true);
-    }
+		JToolBarHelper::divider();
+		JToolBarHelper::help('biblestudy', true);
+	}
 
 }

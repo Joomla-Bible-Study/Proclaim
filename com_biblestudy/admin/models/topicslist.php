@@ -10,12 +10,12 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.modellist');
+jimport('joomla.application.component.modellist');
 
-    abstract class modelClass extends JModelList {
+abstract class modelClass extends JModelList {
 
-    }
- 
+}
+
 class biblestudyModeltopicslist extends modelClass
 {
 	/**
@@ -33,7 +33,7 @@ class biblestudyModeltopicslist extends modelClass
 	function _buildQuery()
 	{
 		$query = ' SELECT params AS topic_params'
-			. ' FROM #__bsms_topics '
+		. ' FROM #__bsms_topics '
 		;
 
 		return $query;
@@ -54,7 +54,7 @@ class biblestudyModeltopicslist extends modelClass
 		}
 		return $this->_data;
 	}
-function getDeletes()
+	function getDeletes()
 	{
 		if (empty($this->_deletes)) {
 			$query = 'SELECT allow_deletes'
@@ -65,33 +65,33 @@ function getDeletes()
 		return $this->_deletes;
 	}
 
-    /**
-     * @since   7.0
-     */
-    protected function  populateState() {
-        $state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
-        $this->setState('filter.state', $state);
-        
-        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
-        
-        parent::populateState('topic.topic_text', 'ASC');
-    }
-    /**
-     *
-     * @since   7.0
-     */
-    protected function getListQuery() {
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
+	/**
+	 * @since   7.0
+	 */
+	protected function  populateState() {
+		$state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
+		$this->setState('filter.state', $state);
 
-        $query->select(
-                $this->getState(
+		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
+
+		parent::populateState('topic.topic_text', 'ASC');
+	}
+	/**
+	 *
+	 * @since   7.0
+	 */
+	protected function getListQuery() {
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select(
+		$this->getState(
                         'list.select',
                         'topic.id, topic.topic_text, topic.published, topic.params AS topic_params'));
-        $query->from('#__bsms_topics AS topic');
+		$query->from('#__bsms_topics AS topic');
 
-        // Filter by published state
+		// Filter by published state
 		$published = $this->getState('filter.published');
 		if (is_numeric($published)) {
 			$query->where('topic.published = ' . (int) $published);
@@ -99,11 +99,11 @@ function getDeletes()
 		else if ($published === '') {
 			$query->where('(topic.published = 0 OR topic.published = 1)');
 		}
-       
-        //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
-        return $query;
-    }
+		 
+		//Add the list ordering clause
+		$orderCol = $this->state->get('list.ordering');
+		$orderDirn = $this->state->get('list.direction');
+		$query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+		return $query;
+	}
 }

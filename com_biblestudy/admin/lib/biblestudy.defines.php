@@ -1,12 +1,12 @@
 <?php
 /**
-* @version $Id: biblestudy.defines.php 1339 2011-01-07 04:42:20Z bcordis $
-* Bible Study Component
-* @package Bible Study
-* @Copyright (C) 2010 Joomla Bible Study All rights reserved
-* @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
-* @link http://www.JoomlaBibleStudy.org
-**/
+ * @version $Id: biblestudy.defines.php 1339 2011-01-07 04:42:20Z bcordis $
+ * Bible Study Component
+ * @package Bible Study
+ * @Copyright (C) 2010 Joomla Bible Study All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
 define ('BIBLESTUDY_VERSION', '7.0.0');
@@ -25,11 +25,11 @@ $j16 = '1.6';
 $is16 = substr_count(JVERSION,'1.6');
 if (!$is16)
 {
-    define('JOOMLA_VERSION','5');
+	define('JOOMLA_VERSION','5');
 }
 else
 {
-    define('JOOMLA_VERSION','6');
+	define('JOOMLA_VERSION','6');
 }
 
 // File system paths

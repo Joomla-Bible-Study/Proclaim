@@ -14,53 +14,92 @@ $admin_params = $this->admin_params;
 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 include_once($path1.'image.php');
 $t = JRequest::getVar('t', 1,'get', 'int');
-if (!$t) {$t = 1;}
+if (!$t) {
+	$t = 1;
+}
 $t = $this->params->get('teachertemplateid');
-	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
+if (!$t) {
+	$t = JRequest::getVar('t',1,'get','int');
+}
 $studieslisttemplateid = $this->params->get('studieslisttemplateid');
-	$images = new jbsImages();
+$images = new jbsImages();
 
-	if (!$studieslisttemplateid) {$studieslisttemplateid = JRequest::getVar('t',1,'get','int');}
+if (!$studieslisttemplateid) {
+	$studieslisttemplateid = JRequest::getVar('t',1,'get','int');
+}
 
 ?>
 <div id="biblestudy" class="noRefTagger">
-<table id="bsm_teachertable" cellspacing="0">
+	<table id="bsm_teachertable" cellspacing="0">
 
-<tr>
-<td class="bsm_teacherthumbnail">
-<?php 
-$image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thumb);
-	//{ 
-	if ($teacher->title) {$teacherdisplay = $teacher->teachername.' - '.$teacher->title;}else {$teacherdisplay = $teacher->teachername;}?>
-        <img src="<?php echo JURI::base().$image->path;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" border="1" alt="<?php echo $teacherdisplay;?>" />
+		<tr>
+			<td class="bsm_teacherthumbnail">
+			<?php
+			$image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thumb);
+			//{
+			if ($teacher->title) {
+				$teacherdisplay = $teacher->teachername.' - '.$teacher->title;
+			}else {$teacherdisplay = $teacher->teachername;
+			}?> <img src="<?php echo JURI::base().$image->path;?>"
+				width="<?php echo $image->width;?>"
+				height="<?php echo $image->height;?>" border="1"
+				alt="<?php echo $teacherdisplay;?>" />
+			
+			
+			
+			
         <?php 
 //		}?>
      
 </td>
-<td class="bsm_teachername">
-<table id="bsm_teachertable" cellspacing="0">
-<tr><td class="bsm_teachername">
-<?php echo $teacherdisplay;?>
-     </td></tr>
-     <tr> <td class="bsm_teacherphone">
-<?php echo $teacher->phone;?></td></tr>
-<tr><td class="bsm_teacheremail">
-<?php if ($teacher->email) {
-		if (!stristr($teacher->email,'@') ) { ?>
-		<a href="<?php echo $teacher->email;?>"><?php echo JText::_('JBS_TCH_EMAIL_CONTACT');?></a>
+			<td class="bsm_teachername">
+				<table id="bsm_teachertable" cellspacing="0">
+					<tr>
+						<td class="bsm_teachername">
+						<?php echo $teacherdisplay;?>
+						</td>
+					</tr>
+					<tr>
+						<td class="bsm_teacherphone">
+						<?php echo $teacher->phone;?>
+						</td>
+					</tr>
+					<tr>
+						<td class="bsm_teacheremail">
+						<?php if ($teacher->email) {
+							if (!stristr($teacher->email,'@') ) { ?> <a
+							href="<?php echo $teacher->email;?>"><?php echo JText::_('JBS_TCH_EMAIL_CONTACT');?>
+						</a>
+						
+						
+						
+						
     <?php }
     else { ?>
     	<a href=mailto:"<?php echo $teacher->email;?>"><?php echo JText::_('JBS_TCH_EMAIL_CONTACT');?></a>
         <?php } 
 	} //end if $teacher->email?>
-    </td></tr>
-    <tr><td class="bsm_teacherwebsite">
-<?php if ($teacher->website) { ?>
-	<a href="<?php echo $teacher->website;?>"><?php echo JText::_('JBS_TCH_WEBSITE');?></a>
+    </td>
+					</tr>
+					<tr>
+						<td class="bsm_teacherwebsite">
+						<?php if ($teacher->website) { ?> <a
+							href="<?php echo $teacher->website;?>"><?php echo JText::_('JBS_TCH_WEBSITE');?>
+						</a>
+						
+						
+						
+						
     <?php } ?>
-    </td></tr></table>
-	</td>
-</tr>
+    </td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		
+		
+		
+		
 
 <?php if ($teacher->information) { ?>
 
@@ -71,6 +110,10 @@ $image = $images->getTeacherThumbnail($teacher->teacher_thumbnail, $teacher->thu
 </tr>
 <?php } // end of if for teacher->information?>
 </table>
+	
+	
+	
+	
 <?php 
 
 ?> <table id="bslisttable" cellspacing="0"><tr><td> <?php

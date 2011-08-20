@@ -38,9 +38,9 @@ class JFormFieldFilesize extends JFormField
 
 		return '<input type="text" name="'.$this->name.'" id="'.$this->id.'"' .
 				' value="'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'"' .
-				$class.$size.$disabled.$readonly.$onchange.$maxLength.'/>'.$this->sizeConverter();
+		$class.$size.$disabled.$readonly.$onchange.$maxLength.'/>'.$this->sizeConverter();
 	}
-	
+
 	private function sizeConverter() {
 		$document =& JFactory::getDocument();
 		$document->addScriptDeclaration('function openConverter1()

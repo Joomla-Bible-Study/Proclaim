@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @version $Id: modal.php 1 $
@@ -8,25 +8,31 @@
  * @link http://www.JoomlaBibleStudy.org
  **/
 
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('behavior.tooltip');
 $function = JRequest::getVar('function', 'jSelectStudy');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=serieslist&layout=modal&tmpl=component'); ?>" method="post" name="adminForm">
-<div id="editcell">
-	<table class="adminlist">
-	<thead>
-		<tr>
-			<th width="5">
-				<?php echo JText::_( 'JBS_CMN_ID' ); ?>
-			</th>
-				
-			<th>
-				<?php echo JText::_( 'JBS_CMN_SERIES' ); ?>
-			</th>
-		</tr>			
-	</thead>
+<form
+	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=serieslist&layout=modal&tmpl=component'); ?>"
+	method="post" name="adminForm">
+	<div id="editcell">
+		<table class="adminlist">
+			<thead>
+				<tr>
+					<th width="5">
+					<?php echo JText::_( 'JBS_CMN_ID' ); ?>
+					</th>
+
+					<th>
+					<?php echo JText::_( 'JBS_CMN_SERIES' ); ?>
+					</th>
+				</tr>
+			</thead>
+			
+			
+			
+			
 	<?php
 	$k = 0;
 	for ($i=0, $n=count( $this->items ); $i < $n; $i++)
@@ -49,9 +55,13 @@ $function = JRequest::getVar('function', 'jSelectStudy');
 	}
 	?>
 	</table>
-</div>
+	</div>
 
 
-<input type="hidden" name="task" value="" />
+	<input type="hidden" name="task" value="" />
+	
+	
+	
+	
 <?php echo JHtml::_('form.token'); ?>
 </form>

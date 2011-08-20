@@ -13,56 +13,60 @@ $uri 		=& JFactory::getURI();
 
 class biblestudyViewteacherdisplay extends JView
 {
-	
+
 	function display($tpl = null)
 	{
-		
+
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		
-        
+
+
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 		$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-        $document->addScript(JURI::base().'components/com_biblestudy/assets/css/biblestudy.js');
+		$document->addScript(JURI::base().'components/com_biblestudy/assets/css/biblestudy.js');
 		$pathway	   =& $mainframe->getPathWay();
-				
-        
-         //Load the Admin settings and params from the template
-        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
-        $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin(true);
-        $this->admin_params = $this->admin;
-        
-         $t = JRequest::getInt('t','get',1);
-        if (!$t) {
-            $t = 1;
-        }
-     //   JRequest::setVar('t', $t, 'get');
-        $template = $this->get('template');
-      //  $params = new JParameter($template[0]->params);
-         // Convert parameter fields to objects.
-				$registry = new JRegistry;
-				$registry->loadJSON($template[0]->params);
-                $params = $registry;
-       
-		
+
+
+		//Load the Admin settings and params from the template
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
+		$this->loadHelper('params');
+		$this->admin = BsmHelper::getAdmin(true);
+		$this->admin_params = $this->admin;
+
+		$t = JRequest::getInt('t','get',1);
+		if (!$t) {
+			$t = 1;
+		}
+		//   JRequest::setVar('t', $t, 'get');
+		$template = $this->get('template');
+		//  $params = new JParameter($template[0]->params);
+		// Convert parameter fields to objects.
+		$registry = new JRegistry;
+		$registry->loadJSON($template[0]->params);
+		$params = $registry;
+		 
+
 		$url = $params->get('stylesheet');
-		if ($url) {$document->addStyleSheet($url);}
-		
+		if ($url) {
+			$document->addStyleSheet($url);
+		}
+
 		$teacher		=& $this->get('Data');
-        $id = JRequest::getInt('id', 'get');
-        if ($id) {$teacher->id=$id;}
+		$id = JRequest::getInt('id', 'get');
+		if ($id) {
+			$teacher->id=$id;
+		}
 		$this->assignRef('teacher',		$teacher);
-		
+
 		$studies_param = $params->get('studies');
-			if ($studies_param > 0) {
-				$limit = ' LIMIT '.$studies_param;
-				}
-				else {
-				$limit = '';
-				}
+		if ($studies_param > 0) {
+			$limit = ' LIMIT '.$studies_param;
+		}
+		else {
+			$limit = '';
+		}
 		$database	= & JFactory::getDBO();
-		
+
 
 		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,
  #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription,
@@ -83,36 +87,36 @@ class biblestudyViewteacherdisplay extends JView
 '.$limit;
 		$database->setQuery( $query );
 		$results = $database->loadObjectList();
-        
-   //check permissions for this view by running through the records and removing those the user doesn't have permission to see
-   $items = $results;
-  
-        $user = JFactory::getUser();
-        $groups	= $user->getAuthorisedViewLevels(); 
-        $count = count($items);
-        
-        for ($i = 0; $i < $count; $i++)
-        {
-            
-            if ($items[$i]->access > 1)
-            {
-               if (!in_array($items[$i]->access,$groups))
-               {
-                    unset($items[$i]); 
-               } 
-	        }
-        }
-        $this->items = $items;
-        
-    
+
+		//check permissions for this view by running through the records and removing those the user doesn't have permission to see
+		$items = $results;
+
+		$user = JFactory::getUser();
+		$groups	= $user->getAuthorisedViewLevels();
+		$count = count($items);
+
+		for ($i = 0; $i < $count; $i++)
+		{
+
+			if ($items[$i]->access > 1)
+			{
+				if (!in_array($items[$i]->access,$groups))
+				{
+					unset($items[$i]);
+				}
+			}
+		}
+		$this->items = $items;
+
+
 		if($this->getLayout() == 'pagebreak') {
 			$this->_displayPagebreak($tpl);
 			return;
 		}
 		$print = JRequest::getBool('print');
 		// build the html select list for ordering
-		
-	//	$this->assignRef('studies', $studies);
+
+		//	$this->assignRef('studies', $studies);
 		$this->assignRef('print', $print);
 		$this->assignRef('params' , $params);
 		$this->assignRef('template', $template);

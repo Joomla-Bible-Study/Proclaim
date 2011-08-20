@@ -23,8 +23,8 @@ class biblestudyModelstudydetails extends JModel
 	 * @access	public
 	 * @return	void
 	 */
-	 var $_template;
-	 var $_admin;
+	var $_template;
+	var $_admin;
 	function __construct()
 	{
 		parent::__construct();
@@ -34,24 +34,24 @@ class biblestudyModelstudydetails extends JModel
 		//end added from single view off of menu
 		$array = JRequest::getVar('id',  0, '', 'array');
 		$this->setId((int)$array[0]);
-		
-		 ////set the default view search path
-        $this->addTablePath(JPATH_COMPONENT.DS.'tables');
-        $params 			=& $mainframe->getPageParameters();
-        $t = JRequest::getInt('t','get');
+
+		////set the default view search path
+		$this->addTablePath(JPATH_COMPONENT.DS.'tables');
+		$params 			=& $mainframe->getPageParameters();
+		$t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}
-        jimport('joomla.html.parameter');
+		jimport('joomla.html.parameter');
 		$this->_id = $id;
 		$template = $this->getTemplate();
-        
-          // Convert parameter fields to objects.
-				$registry = new JRegistry;
-				$registry->loadJSON($template[0]->params);
-                $params = $registry;
-        
+
+		// Convert parameter fields to objects.
+		$registry = new JRegistry;
+		$registry->loadJSON($template[0]->params);
+		$params = $registry;
+
 		$this->hit();
 	}
-	
+
 	function setId($id)
 	{
 		// Set id and wipe data
@@ -59,7 +59,7 @@ class biblestudyModelstudydetails extends JModel
 		$this->_data	= null;
 	}
 
-        /**
+	/**
 	 * Method to increment the hit counter for the study
 	 *
 	 * @access	public
@@ -77,15 +77,15 @@ class biblestudyModelstudydetails extends JModel
 	{
 		// Load the data
 		if (empty( $this->_data )) {
-		  	
+			 
 			$id = JRequest::getVar('id', 0,'GET','INT');
 			$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS teachername, '
-				. ' #__bsms_teachers.title AS teachertitle, '
-				. ' #__bsms_teachers.image, #__bsms_teachers.imagew, #__bsms_teachers.imageh, #__bsms_teachers.thumb, '
-				. ' #__bsms_teachers.thumbw, #__bsms_teachers.thumbh,'
-				. ' #__bsms_series.id AS sid, #__bsms_series.series_text AS series_text, #__bsms_series.description AS sdescription, '
-				. ' #__bsms_message_type.id AS mid, #__bsms_message_type.message_type AS message_type, '
-				. ' #__bsms_books.bookname AS bname, #__bsms_locations.id as lid, #__bsms_locations.location_text,'
+			. ' #__bsms_teachers.title AS teachertitle, '
+			. ' #__bsms_teachers.image, #__bsms_teachers.imagew, #__bsms_teachers.imageh, #__bsms_teachers.thumb, '
+			. ' #__bsms_teachers.thumbw, #__bsms_teachers.thumbh,'
+			. ' #__bsms_series.id AS sid, #__bsms_series.series_text AS series_text, #__bsms_series.description AS sdescription, '
+			. ' #__bsms_message_type.id AS mid, #__bsms_message_type.message_type AS message_type, '
+			. ' #__bsms_books.bookname AS bname, #__bsms_locations.id as lid, #__bsms_locations.location_text,'
 				. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params,'
 				. ' sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
 				. ' FROM #__bsms_studies'
@@ -115,9 +115,9 @@ class biblestudyModelstudydetails extends JModel
 
 	/*
 	 * Method to store a record
-	 *
-	 * @access	public
-	 * @return	boolean	True on success*/
+	*
+	* @access	public
+	* @return	boolean	True on success*/
 	function storecomment()
 	{
 		$row =& $this->getTable('commentsedit');
@@ -135,7 +135,7 @@ class biblestudyModelstudydetails extends JModel
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Store the table to the database
 		if (!$row->store()) {
 			$this->setError( $row->getErrorMsg() );
@@ -145,7 +145,7 @@ class biblestudyModelstudydetails extends JModel
 		return true;
 	}
 
-function getTemplate() {
+	function getTemplate() {
 		if(empty($this->_template)) {
 			$templateid = JRequest::getVar('t',1,'get', 'int');
 			$query = 'SELECT *'
@@ -155,7 +155,7 @@ function getTemplate() {
 		}
 		return $this->_template;
 	}
- function getAdmin()
+	function getAdmin()
 	{
 		if (empty($this->_admin)) {
 			$query = 'SELECT *'
@@ -164,7 +164,7 @@ function getTemplate() {
 			$this->_admin = $this->_getList($query);
 		}
 		return $this->_admin;
-	}	
-	
-//end class
+	}
+
+	//end class
 }

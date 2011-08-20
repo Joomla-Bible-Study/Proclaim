@@ -11,11 +11,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controllerform');
 
-    abstract class controllerClass extends JControllerForm {
+abstract class controllerClass extends JControllerForm {
 
-    }
+}
 
 class biblestudyControllermessage extends controllerClass {
     /*
@@ -35,21 +35,21 @@ class biblestudyControllermessage extends controllerClass {
         parent::__construct();
     }
 
-      function resetHits() {
-        $msg = null;
-        $id = JRequest::getInt('id', 0, 'post');
-        $db = JFactory::getDBO();
-        $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
-        $reset = $db->query();
-        if ($db->getErrorNum() > 0) {
-            $error = $db->getErrorMsg();
-            $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=studiesedit&controller=admin&layout=form&cid[]=' . $id, $msg);
-        } else {
-            $updated = $db->getAffectedRows();
-            $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=studiesedit&controller=studiesedit&layout=form&cid[]=' . $id, $msg);
-        }
-    }
+	function resetHits() {
+		$msg = null;
+		$id = JRequest::getInt('id', 0, 'post');
+		$db = JFactory::getDBO();
+		$db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
+		$reset = $db->query();
+		if ($db->getErrorNum() > 0) {
+			$error = $db->getErrorMsg();
+			$msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
+			$this->setRedirect('index.php?option=com_biblestudy&view=studiesedit&controller=admin&layout=form&cid[]=' . $id, $msg);
+		} else {
+			$updated = $db->getAffectedRows();
+			$msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
+			$this->setRedirect('index.php?option=com_biblestudy&view=studiesedit&controller=studiesedit&layout=form&cid[]=' . $id, $msg);
+		}
+	}
 
 }

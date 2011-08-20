@@ -162,7 +162,7 @@ class bibleStudyTemplate extends JObject {
 		}
 		return implode(', ', $SELECT);
 	}
-	
+
 	function studyDate() {
 		return 'Some date';
 	}

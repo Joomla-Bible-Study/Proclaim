@@ -22,12 +22,12 @@ assert_options(ASSERT_CALLBACK, 'debug_assert_callback');
 // Default assert call back funtion
 // If certain things fail hard we MUST know about it
 function debug_assert_callback($script, $line, $message) {
-    echo "<h1>Assertion failed!</h1><br />
+	echo "<h1>Assertion failed!</h1><br />
         Script: <strong>$script</strong><br />
         Line: <strong>$line</strong><br />
         Condition: <br /><pre>$message</pre>";
-    // Now display the call stack
-    echo debug_callstackinfo();
+	// Now display the call stack
+	echo debug_callstackinfo();
 }
 
 // Production error handling
@@ -41,15 +41,21 @@ function trigger_dberror($text = '', $back=0)
 	$biblestudyVersion = CBiblestudyVersion::version();
 	$biblestudyPHPVersion = CBiblestudyVersion::PHPVersion();
 	$biblestudyMySQLVersion = CBiblestudyVersion::MySQLVersion();
-?>
- <!-- Version Info -->
+	?>
+<!-- Version Info -->
 <div class="fbfooter">
-Installed version:  <?php echo $biblestudyVersion; ?> | php <?php echo $biblestudyPHPVersion; ?> | mysql <?php echo $biblestudyMySQLVersion; ?>
+	Installed version:
+	<?php echo $biblestudyVersion; ?>
+	| php
+	<?php echo $biblestudyPHPVersion; ?>
+	| mysql
+	<?php echo $biblestudyMySQLVersion; ?>
 </div>
 <!-- /Version Info -->
+
 <?php
 
-	biblestudy_error($text.'<br /><br />'.$dberror, E_USER_ERROR, $back+1);
+biblestudy_error($text.'<br /><br />'.$dberror, E_USER_ERROR, $back+1);
 }
 
 function check_dberror($text='', $back=0)
@@ -83,49 +89,49 @@ function debug_vars($varlist)
 
 	foreach( $varlist as $key => $value)
 	{
-	    if (is_array ($value) )
-	    {
-	        $output .= '<tr><td>$'.$key .'</td><td>';
-	        if ( sizeof($value)>0 )
-	        {
-		        $output .= '"<table border=1><tr> <th>key</th> <th>value</th> </tr>';
-		        foreach ($value as $skey => $svalue)
-		        {
-		        	if (is_array ($svalue) )
-		        	{
-		        		$output .= '<tr><td>[' . $skey .']</td><td>Nested Array</td></tr>';
-		        	}
-				    else if (is_object($svalue))
-				    {
-				    	$objvarlist = get_object_vars($svalue);
+		if (is_array ($value) )
+		{
+			$output .= '<tr><td>$'.$key .'</td><td>';
+			if ( sizeof($value)>0 )
+			{
+				$output .= '"<table border=1><tr> <th>key</th> <th>value</th> </tr>';
+				foreach ($value as $skey => $svalue)
+				{
+					if (is_array ($svalue) )
+					{
+						$output .= '<tr><td>[' . $skey .']</td><td>Nested Array</td></tr>';
+					}
+					else if (is_object($svalue))
+					{
+						$objvarlist = get_object_vars($svalue);
 
-				    	// recursive function call
-				    	debug_vars($objvarlist);
-				    }
-				    else
-				    {
-				    	$output .= '<tr><td>$' . $skey .'</td><td>"'. $svalue .'"</td></tr>';
-				    }
-		        }
-		        $output .= '</table>"';
-	        }
-	        else
-	        {
-	            $output .= 'EMPTY';
-	        }
-	        $output .= '</td></tr>';
-	    }
-	    else if (is_object($value))
-	    {
-	    	$objvarlist = get_object_vars($value);
+						// recursive function call
+						debug_vars($objvarlist);
+					}
+					else
+					{
+						$output .= '<tr><td>$' . $skey .'</td><td>"'. $svalue .'"</td></tr>';
+					}
+				}
+				$output .= '</table>"';
+			}
+			else
+			{
+				$output .= 'EMPTY';
+			}
+			$output .= '</td></tr>';
+		}
+		else if (is_object($value))
+		{
+			$objvarlist = get_object_vars($value);
 
-	    	// recursive function call
-	    	debug_vars($objvarlist);
-	    }
-	    else
-	    {
-	    	$output .= '<tr><td>$' . $key .'</td><td>"'. $value .'"</td></tr>';
-	    }
+			// recursive function call
+			debug_vars($objvarlist);
+		}
+		else
+		{
+			$output .= '<tr><td>$' . $key .'</td><td>"'. $value .'"</td></tr>';
+		}
 	}
 	$output .= '</table>';
 

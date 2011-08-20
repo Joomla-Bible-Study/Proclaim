@@ -1,16 +1,16 @@
 <?php
 /**
-* @version $Id: biblestudy.version.php 1339 2011-01-07 04:42:20Z bcordis $
-* Bible Studey Component
-* @package BibleStudy
-*
-* @Copyright (C) 2008 - 2010 Joomla Bible Study Team All rights reserved
-* @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
-* @link http://www.JoomlaBibleStudy.org
-*
-* Install Based on Kunena Component
-* 
-**/
+ * @version $Id: biblestudy.version.php 1339 2011-01-07 04:42:20Z bcordis $
+ * Bible Studey Component
+ * @package BibleStudy
+ *
+ * @Copyright (C) 2008 - 2010 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ *
+ * Install Based on Kunena Component
+ *
+ **/
 
 // no direct access
 defined( '_JEXEC' ) or die('Restricted access');
@@ -25,10 +25,10 @@ if (!defined('_BIBLESTUDY_LICENSE')) DEFINE('_BIBLESTUDY_LICENSE', 'License');
 
 class CBiblestudyVersion {
 	/**
-	* Retrieve Bible Study version from manifest.xml
-	*
-	* @return string version
-	*/	
+	 * Retrieve Bible Study version from manifest.xml
+	 *
+	 * @return string version
+	 */
 	function versionXML()
 	{
 		if ($data = JApplicationHelper::parseXMLInstallFile(BIBLESTUDY_FILE_INSTALL)) {
@@ -36,42 +36,42 @@ class CBiblestudyVersion {
 		}
 		return 'ERROR';
 	}
-	
+
 	/**
-	* Retrieve installed Biblestudy version as array.
-	*
-	* @return array Contains fields: version, versiondate, build, versionname
-	*/
+	 * Retrieve installed Biblestudy version as array.
+	 *
+	 * @return array Contains fields: version, versiondate, build, versionname
+	 */
 	function versionArray()
 	{
 		static $biblestudyversion;
-         $db = JFactory::getDBO();
-         $query = 'SELECT * FROM #__extensions WHERE element = "com_biblestudy" LIMIT 1';
-         $db->setQuery($query);
-         $extension = $db->loadObject();
-         $manifestvariable = json_decode($extension->manifest_cache);
-         $biblestudyversion->version = $manifestvariable->version; 
-         $biblestudyversion->versiondate = $manifestvariable->creationDate;
-           
+		$db = JFactory::getDBO();
+		$query = 'SELECT * FROM #__extensions WHERE element = "com_biblestudy" LIMIT 1';
+		$db->setQuery($query);
+		$extension = $db->loadObject();
+		$manifestvariable = json_decode($extension->manifest_cache);
+		$biblestudyversion->version = $manifestvariable->version;
+		$biblestudyversion->versiondate = $manifestvariable->creationDate;
+		 
 		return $biblestudyversion;
 	}
 
-	/** 
-	* Retrieve installed Bible Study version as string.
-	*
-	* @return string "X.Y.Z | YYYY-MM-DD | BUILDNUMBER [versionname]"
-	*/
+	/**
+	 * Retrieve installed Bible Study version as string.
+	 *
+	 * @return string "X.Y.Z | YYYY-MM-DD | BUILDNUMBER [versionname]"
+	 */
 	function version()
 	{
 		$version = CBiblestudyVersion::versionArray();
 		return '<table><tr><td><strong>'.JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY').'</strong></td></tr><tr><td>'.JText::_('JBS_CPL_CURRENT_VERSION').': '.$version->version.'</td></tr><tr><td>'.JText::_('JBS_CPL_DATE').': '.$version->versiondate.'</td></tr></table>';
 	}
 
-	/** 
-	* Retrieve MySQL Server version.
-	*
-	* @return string MySQL version
-	*/
+	/**
+	 * Retrieve MySQL Server version.
+	 *
+	 * @return string MySQL version
+	 */
 	function MySQLVersion()
 	{
 		static $mysqlversion;
@@ -86,10 +86,10 @@ class CBiblestudyVersion {
 	}
 
 	/**
-	* Retrieve PHP Server version.
-	*
-	* @return string PHP version
-	*/
+	 * Retrieve PHP Server version.
+	 *
+	 * @return string PHP version
+	 */
 	function PHPVersion()
 	{
 		return phpversion();

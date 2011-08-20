@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @version $Id: serieslist.php 1 $
@@ -20,10 +20,10 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
-	
+
 	if ($params->get('series_show_description') == 0) {$listing .= '<tr class="onlyrow '.$oddeven.'">';}
 	else {$listing .= '<tr class="firstrow firstcol '.$oddeven.'">';}
-	
+
 	$custom = $params->get('seriescustom1');
 	$listelementid = $params->get('serieselement1');
 	$islink = $params->get('seriesislink1');
@@ -49,7 +49,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	$listelementid = $params->get('serieselement3');
 	$islink = $params->get('seriesislink3');
 	$r = '';
-	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view); 
+	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
 	$listing .= $listelement;
 	if (!$listelementid) {
 		$listing .= '<td >';
@@ -66,7 +66,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 		$listing .= '<td class="lastcol"></td>'; 
 	}
 	$listing .= '</tr>';
-	
+
 	//add if last row to above
 	
 	if ($params->get('series_show_description') > 0 ) {
@@ -94,7 +94,7 @@ function getSerieslink($islink, $row, $element, $params, $admin_params)
 	}
 	else
 	{
-		$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&t='.$params->get('teachertemplateid', 1).'&id='.$row->id).'">'.$element.'</a>';	
+		$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&t='.$params->get('teachertemplateid', 1).'&id='.$row->id).'">'.$element.'</a>';
 	}
 	return $link;
 }
@@ -109,22 +109,22 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 {
 	$element = '';
 	switch ($listelementid)
-	{ 
+	{
 		case 1:
 			$element = $row->series_text;
 			if ($islink > 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' title">'.$element.'</td>';
 			break;
 		case 2:
-			$images = new jbsImages(); 
+			$images = new jbsImages();
 			$image = $images->getSeriesThumbnail($row->series_thumbnail);
 
 			$element = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
 			if ($islink > 0 && $view == 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' thumbnail image">'.$element.'</td>';
 			break;
-		case 3: 
-			$images = new jbsImages(); 
+		case 3:
+			$images = new jbsImages();
 			$image = $images->getSeriesThumbnail($row->series_thumbnail);
 			$element1 = '<td class="'.$r.' thumbnail"> <table id="seriestable" cellspacing="0"><tr class="noborder"><td>';
 			$element2 = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
@@ -182,7 +182,7 @@ function seriesGetcustom($r, $row, $customelement, $custom, $islink, $admin_para
 		$custom = substr_replace($custom,$element,$bracebegin,(($braceend - $bracebegin) + 1));
 		$countbraces = $countbraces - 1;
 	}
-	
+
 	return $custom;
 }
 
@@ -191,32 +191,32 @@ function getseriesElementnumber($subcustom)
 	switch ($subcustom)
 	{
 		case 'title':
-		$customelement = 1;
-		break;
-		
+			$customelement = 1;
+			break;
+
 		case 'thumbnail':
-		$customelement = 2;
-		break;
-		
+			$customelement = 2;
+			break;
+
 		case 'thumbnail-title':
-		$customelement = 3;
-		break;
-		
+			$customelement = 3;
+			break;
+
 		case 'teacher':
-		$customelement = 4;
-		break;
-		
+			$customelement = 4;
+			break;
+
 		case 'teacherimage':
-		$customelement = 5;
-		break;
-		
+			$customelement = 5;
+			break;
+
 		case 'teacher-title':
-		$customelement = 6;
-		break;
-		
+			$customelement = 6;
+			break;
+
 		case 'description':
-		$customelement = 7;
-		break;
+			$customelement = 7;
+			break;
 	}
 	return $customelement;
 }
@@ -306,13 +306,13 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>
 		';
 		$numrows = $numrows - 1;
-		
+
 	}
 	$t = $params->get('serieslisttemplateid');
 					if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 	$studies .= '</tr>';
-        
-return $studies;
+
+	return $studies;
 }
 
 function getSeriesLandingPage($params, $id, $admin_params)
@@ -416,7 +416,7 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 	include_once($path1.'image.php');
 	$images = new jbsImages();
 	$image = $images->getSeriesThumbnail($row->series_thumbnail);
-			
+		
 	$label = $params->get('series_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
     $label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
@@ -424,7 +424,7 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 	$label = str_replace('{{description}}', $row->description, $label);
 	$label = str_replace('{{thumbnail}}', '<img src="'. $image->path .'" width="' .$image->width .'" height="' . $image->height . '" />', $label);
 	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&t='.$template.'&id='.$row->id, $label);
-    
+
 	return $label;
 }
 
@@ -472,7 +472,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	$db->setQuery($query);
 	$allrows = $db->loadObjectList();
 	$rows = $db->getAffectedRows();
-   
+	 
 	// 6.2
 	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
 		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
@@ -519,23 +519,23 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 
 	switch ($params->get('series_wrapcode')) {
 		case '0':
-		  //Do Nothing
-		  break;
+			//Do Nothing
+			break;
 		case 'T':
-		  //Table
-		  $studies .= '<table id="bsms_seriestable" width="100%">'; 
-		  break;
+			//Table
+			$studies .= '<table id="bsms_seriestable" width="100%">';
+			break;
 		case 'D':
-		  //DIV
-		  $studies .= '<div>';
-		  break;
-		}
+			//DIV
+			$studies .= '<div>';
+			break;
+	}
 	echo $params->get('series_headercode');
 
 	foreach ($result AS $row)
 	{
-	    $oddeven = 0;
-		$studies .= getListingExp($row, $params, $params, $params->get('seriesdetailtemplateid'));	
+		$oddeven = 0;
+		$studies .= getListingExp($row, $params, $params, $params->get('seriesdetailtemplateid'));
 	}
 	
 	switch ($params->get('series_wrapcode')) {
@@ -554,7 +554,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	echo $params->get('series_headercode');
 
 	return $studies;
-}
+	}
 
 function getSeriesFooter($t, $id)
 {

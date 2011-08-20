@@ -53,13 +53,13 @@ class Tablestudydetails extends JTable
 	var $chapter_begin2 = null;
 	var $chapter_end2 = null;
 	var $verse_begin2 = null;
-	var $verse_end2 = null;	
+	var $verse_end2 = null;
 	var $comments = null;
 	var $hits = null;
 	var $user_id = null;
-	var $user_name = null;	
-	
-			
+	var $user_name = null;
+
+		
 	/**
 	 * Constructor
 	 *

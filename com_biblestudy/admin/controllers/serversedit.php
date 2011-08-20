@@ -10,11 +10,11 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controllerform');
 
-    abstract class controllerClass extends JControllerForm {
+abstract class controllerClass extends JControllerForm {
 
-    }
+}
 
 class biblestudyControllerserversedit extends controllerClass
 {
@@ -23,7 +23,7 @@ class biblestudyControllerserversedit extends controllerClass
 	 * @return void
 	 */
 
-protected $view_list = 'serverslist';
+	protected $view_list = 'serverslist';
 
 	function __construct()
 	{

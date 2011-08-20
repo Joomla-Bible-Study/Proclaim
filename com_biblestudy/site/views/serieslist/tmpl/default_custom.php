@@ -3,7 +3,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die(); ?>
 
-<?php 
+<?php
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
@@ -12,22 +12,36 @@ $document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
 $url = $params->get('stylesheet');
-if ($url) {$document->addStyleSheet($url);}	
+if ($url) {
+	$document->addStyleSheet($url);
+}
 $listingcall = JView::loadHelper('serieslist');
 
 ?>
-<form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
+<form
+	action="<?php echo str_replace("&","&amp;",$this->request_url); ?>"
+	method="post" name="adminForm">
 
-<!--<tbody><tr>-->
-  <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-  
-    <div id="bsmHeader">
-      <h1 class="componentheading">
-<?php
-     if ($this->params->get( 'show_page_image_series' ) >0) {
-     
-     ?>
-      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" />
+	<!--<tbody><tr>-->
+	<div id="biblestudy" class="noRefTagger">
+		<!-- This div is the container for the whole page -->
+
+		<div id="bsmHeader">
+			<h1 class="componentheading">
+
+
+			<?php
+			if ($this->params->get( 'show_page_image_series' ) >0) {
+					
+				?>
+				<img src="<?php echo JURI::base().$this->main->path;?>"
+					alt="<?php echo $this->main->path; ?>"
+					width="<?php echo $this->main->width;?>"
+					height="<?php echo $this->main->height;?>" />
+				
+				
+				
+				
     <?php //End of column for logo
     }
     ?>
@@ -37,19 +51,26 @@ if ( $this->params->get( 'show_series_title' ) >0 ) {
     }
 	?>
       </h1>
-<!--header-->
-    
-    
-    <div id="bsdropdownmenu">
-
-<?php 
-
-	
-if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }  
-?>
+			<!--header-->
 
 
-    </div><!--dropdownmenu-->
+			<div id="bsdropdownmenu">
+
+
+
+			<?php
+
+
+			if ($this->params->get('search_series') > 0 ){
+				echo $this->lists['seriesid'];
+			}
+			?>
+
+
+			</div>
+			<!--dropdownmenu-->
+			
+			
       <?php
   switch ($params->get('series_wrapcode')) {
       case '0':
@@ -93,10 +114,11 @@ if ($this->params->get('search_series') > 0 ){ echo $this->lists['seriesid']; }
       echo $this->pagination->getPagesCounter();
       //echo $this->pagination->getListFooter(); ?>
 </div> <!--end of bsfooter div-->
-  </div><!--end of bspagecontainer div-->
-  <input name="option" value="com_biblestudy" type="hidden">
-  <input name="task" value="" type="hidden">
-  <input name="boxchecked" value="0" type="hidden">
-  <input name="controller" value="serieslist" type="hidden">
   </div>
+		<!--end of bspagecontainer div-->
+		<input name="option" value="com_biblestudy" type="hidden"> <input
+			name="task" value="" type="hidden"> <input name="boxchecked"
+			value="0" type="hidden"> <input name="controller" value="serieslist"
+			type="hidden">
+	</div>
 </form>

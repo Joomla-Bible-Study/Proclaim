@@ -14,35 +14,35 @@ jimport('joomla.application.component.view');
 
 class biblestudyViewcommentslist extends JView
 {
-    protected $items;
-    protected $pagination;
-    protected $state;
+	protected $items;
+	protected $pagination;
+	protected $state;
 
-    function display($tpl = null) {
-        $this->canDo	= BibleStudyHelper::getActions('', 'commentsedit');
-        $this->items = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state = $this->get('State');
+	function display($tpl = null) {
+		$this->canDo	= BibleStudyHelper::getActions('', 'commentsedit');
+		$this->items = $this->get('Items');
+		$this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
 
-        //Check for errors
-        if (count($errors = $this->get('Errors'))) {
-            JError::raiseError(500, implode("\n", $errors));
-            return false;
-        }
-        //Load the Admin settings
-        $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin($issite = true);
-        
-        //check permissions to enter studies
-       if (!$this->canDo->get('core.edit')) 
-        {
-            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-            return false;
-        }
-        $this->setLayout('form');
-        
-        parent::display($tpl);
-    }
+		//Check for errors
+		if (count($errors = $this->get('Errors'))) {
+			JError::raiseError(500, implode("\n", $errors));
+			return false;
+		}
+		//Load the Admin settings
+		$this->loadHelper('params');
+		$this->admin = BsmHelper::getAdmin($issite = true);
 
-   
+		//check permissions to enter studies
+		if (!$this->canDo->get('core.edit'))
+		{
+			JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+			return false;
+		}
+		$this->setLayout('form');
+
+		parent::display($tpl);
+	}
+
+	 
 }

@@ -10,24 +10,24 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-    jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controllerform');
 
-    abstract class controllerClass extends JControllerForm {
+abstract class controllerClass extends JControllerForm {
 
-    }
+}
 
 class biblestudyControllerpodcastedit extends controllerClass
 {
-    protected $view_list = 'podcastlist';
+	protected $view_list = 'podcastlist';
 
-    /**
- * constructor (registers additional tasks to methods)
- * @return void
- */
- function __construct()
- {
-  parent::__construct();
+	/**
+	 * constructor (registers additional tasks to methods)
+	 * @return void
+	 */
+	function __construct()
+	{
+		parent::__construct();
 
- }
+	}
 
 }

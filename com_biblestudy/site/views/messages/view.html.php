@@ -13,9 +13,9 @@ require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS
 jimport('joomla.application.component.view');
 
 class biblestudyViewmessages extends JView {
-    protected $items;
-    protected $pagination;
-    protected $state;
+	protected $items;
+	protected $pagination;
+	protected $state;
 
     function display($tpl = null) {
         $this->canDo = BibleStudyHelper::getActions('', 'studiesedit');
@@ -42,6 +42,23 @@ class biblestudyViewmessages extends JView {
      }  
         parent::display($tpl);
 
-    }
+		 
+		 
+		$user = JFactory::getUser();
+
+
+		if (!$this->canDo->get('core.edit'))
+		{
+			JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+			return false;
+		}
+		//Puts a new record link at the top of the form
+		if ($this->canDo->get('core.create'))
+		{
+			$this->newlink = '<a href="index.php?option=com_biblestudy&view=message&layout=form">'.JText::_('JBS_CMN_NEW').'</a>';
+		}
+		parent::display($tpl);
+
+	}
 
 }

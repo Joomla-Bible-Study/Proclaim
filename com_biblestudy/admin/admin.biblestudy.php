@@ -14,17 +14,17 @@ defined('_JEXEC') or die();
 
 // Check for PHP4
 if (defined('PHP_VERSION')) {
-    $version = PHP_VERSION;
+	$version = PHP_VERSION;
 } elseif (function_exists('phpversion')) {
-    $version = phpversion();
+	$version = phpversion();
 } else {
-    // No version info. I'll lie and hope for the best.
-    $version = '5.0.0';
+	// No version info. I'll lie and hope for the best.
+	$version = '5.0.0';
 }
 
 // Old PHP version detected. EJECT! EJECT! EJECT!
 if (!version_compare($version, '5.0.0', '>=')) {
-    return JError::raise(E_ERROR, 500, 'PHP 4 is not supported by Joomla Bible Study');
+	return JError::raise(E_ERROR, 500, 'PHP 4 is not supported by Joomla Bible Study');
 }
 
 define('JSTART', '$j(document).ready( function() {');
@@ -43,19 +43,19 @@ $controller->redirect();
  * @since   7.0
  */
 function addCSS() {
-    $doc = & JFactory::getDocument();
-    $doc->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/general.css');
-    $doc->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/icons.css');
+	$doc = & JFactory::getDocument();
+	$doc->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/general.css');
+	$doc->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/icons.css');
 }
 
 /**
  * Global JS
- * 
+ *
  * @since   7.0
  */
 function addJS() {
-    $doc = & JFactory::getDocument();
-    $doc->addScript(JURI::base() . 'components/com_biblestudy/js/jquery.js');
-    $doc->addScript(JURI::base() . 'components/com_biblestudy/js/noconflict.js');
-    $doc->addScript(JURI::base() . 'components/com_biblestudy/js/ui/jquery-ui.js');
+	$doc = & JFactory::getDocument();
+	$doc->addScript(JURI::base() . 'components/com_biblestudy/js/jquery.js');
+	$doc->addScript(JURI::base() . 'components/com_biblestudy/js/noconflict.js');
+	$doc->addScript(JURI::base() . 'components/com_biblestudy/js/ui/jquery-ui.js');
 }

@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 
 $params = $this->form->getFieldsets();
 ?>
- <script type="text/javascript">
+<script type="text/javascript">
 	Joomla.submitbutton3 = function(pressbutton) {
 		var form = document.getElementById('adminForm');
 			form.tooltype.value = 'players';
@@ -27,62 +27,62 @@ $params = $this->form->getFieldsets();
 	   }
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
-   <?php echo JHtml::_('tabs.start'); ?>
-    
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PARAMS'), 'admin-settings'); ?>
-    <div class="width-100">
-        <div class="width-60 fltlft">
-            <fieldset class="panelform">
+	<?php echo JHtml::_('tabs.start'); ?>
+
+	<?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PARAMS'), 'admin-settings'); ?>
+	<div class="width-100">
+		<div class="width-60 fltlft">
+			<fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_ADM_COMPONENT_SETTINGS'); ?></legend>
-                <ul>
-                    
-                    <li>
-                        <?php echo $this->form->getLabel('compat_mode', 'params'); ?>
+				<ul>
+
+					<li>
+					<?php echo $this->form->getLabel('compat_mode', 'params'); ?>
                         <?php echo $this->form->getInput('compat_mode', 'params'); ?>
                     </li>
-                    <li>
-                        <?php echo $this->form->getLabel('drop_tables'); ?>
+					<li>
+					<?php echo $this->form->getLabel('drop_tables'); ?>
                         <?php echo $this->form->getInput('drop_tables'); ?>
                     </li>
-                    <li>
-                        <?php echo $this->form->getLabel('admin_store', 'params'); ?>
+					<li>
+					<?php echo $this->form->getLabel('admin_store', 'params'); ?>
                         <?php echo $this->form->getInput('admin_store', 'params'); ?>
                     </li>
-                    <li>
-                        <?php echo $this->form->getLabel('studylistlimit', 'params'); ?>
+					<li>
+					<?php echo $this->form->getLabel('studylistlimit', 'params'); ?>
                         <?php echo $this->form->getInput('studylistlimit', 'params'); ?>
                     </li>
-                    <li>
-                        <?php echo $this->form->getLabel('show_location_media', 'params'); ?>
-                        <?php echo $this->form->getInput('show_location_media', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('popular_limit', 'params'); ?>
+					<li>
+					<?php echo $this->form->getLabel('show_location_media', 'params'); ?>
+					<?php echo $this->form->getInput('show_location_media', 'params'); ?>
+					</li>
+					<li>
+					<?php echo $this->form->getLabel('popular_limit', 'params'); ?>
                         <?php echo $this->form->getInput('popular_limit', 'params'); ?>
                     </li>
-                    <li>
-                        <?php echo $this->form->getLabel('character_filter', 'params'); ?>
-                        <?php echo $this->form->getInput('character_filter', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('format_popular', 'params'); ?>
+					<li>
+					<?php echo $this->form->getLabel('character_filter', 'params'); ?>
+					<?php echo $this->form->getInput('character_filter', 'params'); ?>
+					</li>
+					<li>
+					<?php echo $this->form->getLabel('format_popular', 'params'); ?>
                         <?php echo $this->form->getInput('format_popular', 'params'); ?>
                     </li>
-                    <li>
-                        <?php echo $this->form->getLabel('socialnetworking', 'params'); ?>
-                        <?php echo $this->form->getInput('socialnetworking', 'params'); ?>
-                    </li>
-                    <li>
-                        <?php echo $this->form->getLabel('sharetype', 'params'); ?>
+					<li>
+					<?php echo $this->form->getLabel('socialnetworking', 'params'); ?>
+					<?php echo $this->form->getInput('socialnetworking', 'params'); ?>
+					</li>
+					<li>
+					<?php echo $this->form->getLabel('sharetype', 'params'); ?>
                         <?php echo $this->form->getInput('sharetype', 'params'); ?>
                     </li>
-                </ul>
-            </fieldset>
+				</ul>
+			</fieldset>
 
-        </div>
-              
-    </div>
-    <div class="clr"></div>
+		</div>
+
+	</div>
+	<div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_SYSTEM_DEFAULTS'), 'admin-system-defaults'); ?>
 		<div class="width-100">
         <div class="width-60 fltlft">

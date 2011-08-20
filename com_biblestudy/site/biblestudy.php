@@ -26,7 +26,7 @@ $controller->redirect();
 //The Below is not required anymore, because joomla will handle this for us
 //This is here because of a security flaw and was added as an extra measure of security
 if ($controller = JRequest::getWord('controller')) {
-$approvedControllers = array(
+	$approvedControllers = array(
 'studieslist',
 'studydetails',
 'serieslist',
@@ -41,12 +41,12 @@ $approvedControllers = array(
 'podcastedit', 
 'studiesedit',
 'landingpage'
-);
+	);
 
-if ( ! in_array($controller, $approvedControllers)) {
-$controller = 'studieslist';
+	if ( ! in_array($controller, $approvedControllers)) {
+		$controller = 'studieslist';
 
-}
+	}
 
-require_once JPATH_COMPONENT . DS . 'controllers' . DS . $controller . '.php';
+	require_once JPATH_COMPONENT . DS . 'controllers' . DS . $controller . '.php';
 }

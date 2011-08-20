@@ -1,24 +1,24 @@
-body{
-	background-color: #F0F0EE; 
+body {
+	background-color: #F0F0EE;
 	font: 12px monospace, sans-serif;
 }
 
-select{
+select {
 	background-color: #F9F9F9;
 	border: solid 1px #888888;
 }
 
-h1, h2, h3, h4, h5, h6{
+h1,h2,h3,h4,h5,h6 {
 	margin: 0;
 	padding: 0;
 	color: #2B6FB6;
 }
 
-h1{
+h1 {
 	font-size: 1.5em;
 }
 
-div#char_list{
+div#char_list {
 	height: 200px;
 	overflow: auto;
 	padding: 1px;
@@ -28,7 +28,7 @@ div#char_list{
 	margin-top: 5px;
 }
 
-a.char{
+a.char {
 	display: block;
 	float: left;
 	width: 20px;
@@ -40,17 +40,17 @@ a.char{
 	cursor: pointer;
 }
 
-a.char:hover{
+a.char:hover {
 	background-color: #CCCCCC;
 }
 
-.preview{
+.preview {
 	border: solid 1px #888888;
 	width: 50px;
 	padding: 2px 5px;
 	height: 35px;
 	line-height: 35px;
-	text-align:center;	 
+	text-align: center;
 	background-color: #CCCCCC;
 	font-size: 2em;
 	float: right;
@@ -58,7 +58,7 @@ a.char:hover{
 	margin: 0 0 5px 5px;
 }
 
-#preview_code{
+#preview_code {
 	font-size: 1.1em;
 	width: 70px;
 }

@@ -10,8 +10,8 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-	jimport('joomla.application.component.modeladmin');
-	abstract class modelClass extends JModelAdmin{}
+jimport('joomla.application.component.modeladmin');
+abstract class modelClass extends JModelAdmin{}
 
 class biblestudyModelmessagetypeedit extends modelClass
 {
@@ -30,19 +30,19 @@ class biblestudyModelmessagetypeedit extends modelClass
 	}
 
 	/**
-         * Method override to check if you can edit an existing record.
-         *
-         * @param       array   $data   An array of input data.
-         * @param       string  $key    The name of the key for the primary key.
-         *
-         * @return      boolean
-         * @since       1.6
-         */
-        protected function allowEdit($data = array(), $key = 'id')
-        {
-                // Check specific edit permission then general edit permission.
-                return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.messagetypeedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-        }
+	 * Method override to check if you can edit an existing record.
+	 *
+	 * @param       array   $data   An array of input data.
+	 * @param       string  $key    The name of the key for the primary key.
+	 *
+	 * @return      boolean
+	 * @since       1.6
+	 */
+	protected function allowEdit($data = array(), $key = 'id')
+	{
+		// Check specific edit permission then general edit permission.
+		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.messagetypeedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+	}
 	function setId($id)
 	{
 		// Set id and wipe data
@@ -51,7 +51,7 @@ class biblestudyModelmessagetypeedit extends modelClass
 	}
 
 
-	
+
 	function &getData()
 	{
 		// Load the data
@@ -94,11 +94,11 @@ class biblestudyModelmessagetypeedit extends modelClass
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Store the table to the database
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
-//			$this->setError( $row->getErrorMsg() );
+			//			$this->setError( $row->getErrorMsg() );
 			return false;
 		}
 
@@ -124,20 +124,20 @@ class biblestudyModelmessagetypeedit extends modelClass
 					$this->setError( $row->getErrorMsg() );
 					return false;
 				}
-			}						
+			}
 		}
 		return true;
 	}
 	function legacyPublish($cid = array(), $publish = 1)
 	{
-		
+
 		if (count( $cid ))
 		{
 			$cids = implode( ',', $cid );
 
 			$query = 'UPDATE #__bsms_message_type'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
+			. ' SET published = ' . intval( $publish )
+			. ' WHERE id IN ( '.$cids.' )'
 				
 			;
 			$this->_db->setQuery( $query );
@@ -145,38 +145,38 @@ class biblestudyModelmessagetypeedit extends modelClass
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
-		}		
+		}
 	}
-    
-     /**
-     * Get the form data
-     *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
-     * @since 7.0
-     */
-    public function getForm($data = array(), $loadData = true) {
-        // Get the form.
-        $form = $this->loadForm('com_biblestudy.messagetypeedit', 'messagetypeedit', array('control' => 'jform', 'load_data' => $loadData));
 
-        if (empty($form)) {
-            return false;
-        }
+	/**
+	 * Get the form data
+	 *
+	 * @param <Array> $data
+	 * @param <Boolean> $loadData
+	 * @return <type>
+	 * @since 7.0
+	 */
+	public function getForm($data = array(), $loadData = true) {
+		// Get the form.
+		$form = $this->loadForm('com_biblestudy.messagetypeedit', 'messagetypeedit', array('control' => 'jform', 'load_data' => $loadData));
 
-        return $form;
-    }
+		if (empty($form)) {
+			return false;
+		}
 
-    /**
-     *
-     * @return <type>
-     * @since   7.0
-     */
-    protected function loadFormData() {
-        $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.messagetypeedit.data', array());
-        if (empty($data)) 
-            $data = $this->getItem();
+		return $form;
+	}
 
-        return $data;
-    }
+	/**
+	 *
+	 * @return <type>
+	 * @since   7.0
+	 */
+	protected function loadFormData() {
+		$data = JFactory::getApplication()->getUserState('com_biblestudy.edit.messagetypeedit.data', array());
+		if (empty($data))
+		$data = $this->getItem();
+
+		return $data;
+	}
 }

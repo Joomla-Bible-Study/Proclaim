@@ -14,87 +14,92 @@ defined('_JEXEC') or die();
 jimport("joomla.application.component.controller");
 
 class biblestudyController extends JController {
-    
-    function display()
-    {
-        //attempt to change mysql for error in large select
-        $db = JFactory::getDBO();
-        $db->setQuery('SET SQL_BIG_SELECTS=1');
-        $db->query();
-        $t = JRequest::getInt('t','get');
-        if (!$t) {
-            $t = 1;
-        }
-        JRequest::setVar('t', $t, 'get');
-        parent::display();
-    }
+
+	function display()
+	{
+		//attempt to change mysql for error in large select
+		$db = JFactory::getDBO();
+		$db->setQuery('SET SQL_BIG_SELECTS=1');
+		$db->query();
+		$t = JRequest::getInt('t','get');
+		if (!$t) {
+			$t = 1;
+		}
+		JRequest::setVar('t', $t, 'get');
+		parent::display();
+	}
 
 	function comment()
 	{
 
-	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
+		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 
-	$model = $this->getModel('studydetails');
-	$menu =& JSite::getMenu();
+		$model = $this->getModel('studydetails');
+		$menu =& JSite::getMenu();
 		$item =& $menu->getActive();
 		$params 			=& $mainframe->getPageParameters();
 		$t = $params->get('t');
-		if (!$t){$t = 1;}
-		JRequest::setVar( 't', $t, 'get');
-	//	$params = new JParameter($model->_template[0]->params);
-        
-        // Convert parameter fields to objects.
-				$registry = new JRegistry;
-				$registry->loadJSON($template[0]->params);
-                $params = $registry;
-	$cap = 1;
-
-	if ($params->get('use_captcha') > 0)
-	{
-	//Begin reCaptcha 
-	  require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
-        $privatekey = $params->get('private_key');
-        $challenge = JRequest::getVar('recaptcha_challenge_field','','post');
-        $response =  JRequest::getVar('recaptcha_response_field','','post');
-  $resp = recaptcha_check_answer ($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
-  if (!$resp->is_valid) {
-    // What happens when the CAPTCHA was entered incorrectly
-    $mess = JText::_('JBS_STY_INCORRECT_KEY');
-    echo "<script language='javascript' type='text/javascript'>alert('" . $mess ."')</script>";
-    echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
-    return;
-    $cap = 0;
-  } else {
-    $cap = 1;
-  }
-
-	}
-
-	if ($cap == 1) {
-	   if (JRequest::getInt('published','','post')== 0) {$msg = JText::_('JBS_STY_COMMENT_UNPUBLISHED');}
-       else {$msg = JText::_('JBS_STY_COMMENT_SUBMITTED');}
-		if (!$model->storecomment()  ) 
-		  {
-			$msg = JText::_( 'JBS_STY_ERROR_SUBMITTING_COMMENT' );
-		  }
-
-		if ($params->get('email_comments') > 0){
-		$EmailResult=$this->commentsEmail($params);
+		if (!$t){
+			$t = 1;
 		}
-		$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
+		JRequest::setVar( 't', $t, 'get');
+		//	$params = new JParameter($model->_template[0]->params);
 
-		$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&t='.$t, $msg);
-	} // End of $cap
+		// Convert parameter fields to objects.
+		$registry = new JRegistry;
+		$registry->loadJSON($template[0]->params);
+		$params = $registry;
+		$cap = 1;
+
+		if ($params->get('use_captcha') > 0)
+		{
+			//Begin reCaptcha
+	  require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
+	  $privatekey = $params->get('private_key');
+	  $challenge = JRequest::getVar('recaptcha_challenge_field','','post');
+	  $response =  JRequest::getVar('recaptcha_response_field','','post');
+	  $resp = recaptcha_check_answer ($privatekey, $_SERVER["REMOTE_ADDR"], $challenge, $response);
+	  if (!$resp->is_valid) {
+	  	// What happens when the CAPTCHA was entered incorrectly
+	  	$mess = JText::_('JBS_STY_INCORRECT_KEY');
+	  	echo "<script language='javascript' type='text/javascript'>alert('" . $mess ."')</script>";
+	  	echo "<script language='javascript' type='text/javascript'>window.history.back()</script>";
+	  	return;
+	  	$cap = 0;
+	  } else {
+	  	$cap = 1;
+	  }
+
+		}
+
+		if ($cap == 1) {
+			if (JRequest::getInt('published','','post')== 0) {
+				$msg = JText::_('JBS_STY_COMMENT_UNPUBLISHED');
+			}
+			else {$msg = JText::_('JBS_STY_COMMENT_SUBMITTED');
+			}
+			if (!$model->storecomment()  )
+			{
+				$msg = JText::_( 'JBS_STY_ERROR_SUBMITTING_COMMENT' );
+			}
+
+			if ($params->get('email_comments') > 0){
+				$EmailResult=$this->commentsEmail($params);
+			}
+			$study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
+
+			$mainframe->redirect ('index.php?option=com_biblestudy&id='.$study_detail_id.'&view=studydetails&t='.$t, $msg);
+		} // End of $cap
 	}
-    
- function commentsEmail($params) {
+
+	function commentsEmail($params) {
 		$mainframe =& JFactory::getApplication();
 		$menuitemid = JRequest::getInt( 'Itemid' );
-  if ($menuitemid)
-  {
-    $menu = JSite::getMenu();
-    $menuparams = $menu->getParams( $menuitemid );
-  }
+		if ($menuitemid)
+		{
+			$menu = JSite::getMenu();
+			$menuparams = $menu->getParams( $menuitemid );
+		}
 		$comment_author = JRequest::getVar('full_name', 'Anonymous', 'POST', 'WORD');
 		$comment_study_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
 		$comment_email = JRequest::getVar('user_email', 'No Email', 'POST', 'WORD');
@@ -118,16 +123,19 @@ class biblestudyController extends JController {
 		$Subject       = $params->get( 'subject', 'Comments' );
 		$FromName       = $params->get( 'fromname', $comment_fromname );
 		if (empty($ToEmail) ) $ToEmail=$comment_mailfrom;
-                $Body = $comment_author.' '.JText::_('JBS_STY_HAS_ENTERED_COMMENT').': '.$comment_title.' - '.$comment_study_date.' '.JText::_('JBS_STY_ON').': '.$comment_date;
-                if ($comment_published > 0){$Body = $Body.' '.JText::_('JBS_STY_COMMENT_PUBLISHED');}else{$Body=$Body.' '.JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');}
-                $Body = $Body.' '.JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN').': '.$comment_livesite;
+		$Body = $comment_author.' '.JText::_('JBS_STY_HAS_ENTERED_COMMENT').': '.$comment_title.' - '.$comment_study_date.' '.JText::_('JBS_STY_ON').': '.$comment_date;
+		if ($comment_published > 0){
+			$Body = $Body.' '.JText::_('JBS_STY_COMMENT_PUBLISHED');
+		}else{$Body=$Body.' '.JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');
+		}
+		$Body = $Body.' '.JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN').': '.$comment_livesite;
 		$mail->addRecipient($ToEmail);
 		$mail->setSubject($Subject.' '.$comment_livesite);
 		$mail->setBody($Body);
 		$mail->Send();
 	}
-    
-    	function download() {
+
+	function download() {
 		$abspath    = JPATH_SITE;
 		require_once($abspath.DS.'components/com_biblestudy/class.biblestudydownload.php');
 		$task = JRequest::getVar('task');

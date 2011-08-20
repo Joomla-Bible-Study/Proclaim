@@ -29,7 +29,7 @@ class biblestudyModelmediaplayer extends JModel
 		$this->setId((int)$array[0]);
 	}
 
-	
+
 	function setId($id)
 	{
 		// Set id and wipe data
@@ -38,7 +38,7 @@ class biblestudyModelmediaplayer extends JModel
 	}
 
 
-	
+
 	function &getData()
 	{
 		// Load the data
@@ -61,7 +61,7 @@ class biblestudyModelmediaplayer extends JModel
 			. ' LEFT JOIN #__bsms_mimetype AS mt ON (mt.id = mf.mime_type)'
 			. ' LEFT JOIN #__bsms_series AS st ON (st.id = s.series_id)'
 			. ' WHERE mf.id = '.$this->_id;
-			
+				
 			$this->_db->setQuery( $query );
 			$this->_data = $this->_db->loadObject();
 		}
@@ -109,11 +109,11 @@ class biblestudyModelmediaplayer extends JModel
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		// Store the table to the database
 		if (!$row->store()) {
 			$this->setError($this->_db->getErrorMsg());
-//			$this->setError( $row->getErrorMsg() );
+			//			$this->setError( $row->getErrorMsg() );
 			return false;
 		}
 
@@ -139,20 +139,20 @@ class biblestudyModelmediaplayer extends JModel
 					$this->setError( $row->getErrorMsg() );
 					return false;
 				}
-			}						
+			}
 		}
 		return true;
 	}
-function publish($cid = array(), $publish = 1)
+	function publish($cid = array(), $publish = 1)
 	{
-		
+
 		if (count( $cid ))
 		{
 			$cids = implode( ',', $cid );
 
 			$query = 'UPDATE #__bsms_mediafiles'
-				. ' SET published = ' . intval( $publish )
-				. ' WHERE id IN ( '.$cids.' )'
+			. ' SET published = ' . intval( $publish )
+			. ' WHERE id IN ( '.$cids.' )'
 				
 			;
 			$this->_db->setQuery( $query );
@@ -160,9 +160,9 @@ function publish($cid = array(), $publish = 1)
 				$this->setError($this->_db->getErrorMsg());
 				return false;
 			}
-		}		
-	}			
-        /**
+		}
+	}
+	/**
 	 * Method to move a mediafile listing
 	 *
 	 * @access	public

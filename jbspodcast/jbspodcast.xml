@@ -8,7 +8,7 @@
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
 	<version>7.0.1</version>
 	<description>PLG_JBSPODCAST_XML_DESCRIPTION</description>
-     <install> <!-- Runs on install -->
+	<install> <!-- Runs on install -->
 		<sql>
 			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
 		</sql>
@@ -25,418 +25,447 @@
 	</update>
 	<files>
 		<filename plugin="jbspodcast">jbspodcast.php</filename>
-        <folder>language</folder>
-        <folder>sql</folder>
+		<folder>language</folder>
+		<folder>sql</folder>
 	</files>
-    <config> 
-    <!-- @todo: look into new params system for this -->
- <fields name="params">
-            <fieldset name="basic">
-        <field name="email" type="list" default="1" label="PLG_JBSPODCAST_SEND_EMAIL" description="PLG_JBSPODCAST_SEND_EMAIL_DESC">
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-		<field name="recipients" type="text" default="" size="80" label="PLG_JBSPODCAST_TO_EMAIL" description="PLG_JBSPODCAST_TO_EMAIL_DESC" />
-		<field name="subject" type="text" default="Joomla Bible Study Podcast(s) Published" size="60" label="PLG_JBSPODCAST_SUBJECT" description="" />
-		<field name="body" type="text" default="Podcast(s) publishing status:" size="60" label="PLG_JBSPODCAST_BODY" description="" />
-        <field name="method" type="list" default="0" label="PLG_JBSPODCAST_PUBLISH_METHOD" description="PLG_JBSPODCAST_PUBLISH_METHOD_DESC">
-            <option value="0">PLG_JBSPODCAST_HOURS</option>
-            <option value="1">PLG_JBSPODCAST_SCHEDULE</option>
-        </field>
-		<field name="xhours" type="text" default="24" size="3" label="PLG_JBSPODCAST_PUBLISH_EVERY" description="PLG_JBSPODCAST_PUBLISH_EVERY_DESC" />
-        <field name="day1" type="list" default="0" label="PLG_JBSPODCAST_DAY1" description="PLG_JBSPODCAST_CHOOSE_DAY">
-            <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour1" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY1" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="day2" type="list" default="0" label="PLG_JBSPODCAST_DAY2" description="PLG_JBSPODCAST_CHOOSE_DAY">
-            <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour2" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY2" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="day3" type="list" default="0" label="PLG_JBSPODCAST_DAY3" description="PLG_JBSPODCAST_CHOOSE_DAY">
-            <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour3" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY3" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="day4" type="list" default="0" label="PLG_JBSPODCAST_DAY4" description="PLG_JBSPODCAST_CHOOSE_DAY">
-           <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour4" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY4" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="day5" type="list" default="0" label="PLG_JBSPODCAST_DAY5" description="PLG_JBSPODCAST_CHOOSE_DAY">
-           <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour5" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY5" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="day6" type="list" default="0" label="PLG_JBSPODCAST_DAY6" description="PLG_JBSPODCAST_CHOOSE_DAY">
-            <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour6" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY6" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="day7" type="list" default="0" label="PLG_JBSPODCAST_DAY7" description="PLG_JBSPODCAST_CHOOSE_DAY">
-            <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour7" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY7" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="day8" type="list" default="0" label="PLG_JBSPODCAST_DAY8" description="PLG_JBSPODCAST_CHOOSE_DAY">
-            <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour8" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY8" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="day9" type="list" default="0" label="PLG_JBSPODCAST_DAY9" description="PLG_JBSPODCAST_CHOOSE_DAY">
-            <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour9" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY9" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="day10" type="list" default="0" label="PLG_JBSPODCAST_DAY10" description="PLG_JBSPODCAST_CHOOSE_DAY">
-            <option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
-            <option value="0">PLG_JBSPODCAST_SUNDAY</option>
-            <option value="1">PLG_JBSPODCAST_MONDAY</option>
-            <option value="2">PLG_JBSPODCAST_TUESDAY</option>
-            <option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
-            <option value="4">PLG_JBSPODCAST_THURSDAY</option>
-            <option value="5">PLG_JBSPODCAST_FRIDAY</option>
-            <option value="6">PLG_JBSPODCAST_SATURDAY</option>
-        </field>
-        <field name="hour10" type="list" default="0" label="PLG_JBSPODCAST_HOUR_DAY10" description="PLG_JBSPODCAST_CHOOSE_HOUR">
-            <option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
-            <option value="1">1:00</option>
-            <option value="2">2:00</option>
-            <option value="3">3:00</option>
-            <option value="4">4:00</option>
-            <option value="5">5:00</option>
-            <option value="6">6:00</option>
-            <option value="7">7:00</option>
-            <option value="8">8:00</option>
-            <option value="9">9:00</option>
-            <option value="10">10:00</option>
-            <option value="11">11:00</option>
-            <option value="12">12:00</option>
-            <option value="13">13:00 (1PM)</option>
-            <option value="14">14:00 (2PM)</option>
-            <option value="15">15:00 (3PM)</option>
-            <option value="16">16:00 (4PM)</option>
-            <option value="17">17:00 (5PM)</option>
-            <option value="18">18:00 (6PM)</option>
-            <option value="19">19:00 (7PM)</option>
-            <option value="20">20:00 (8PM)</option>
-            <option value="21">21:00 (9PM)</option>
-            <option value="22">22:00 (10PM)</option>
-            <option value="23">23:00 (11PM)</option>
-            <option value="24">24:00 (12AM)</option>
-        </field>
-        <field name="offset" type="list" label="PLG_JBSPODCAST_SERVER_OFFSET" default="0" description="PLG_JBSPODCAST_SERVER_OFFSET_DESC">
-            <option value="0">PLG_JBSPODCAST_NO_OFFSET</option>
-            <option value="1">PLG_JBSPODCAST_USE_OFFSET</option>
-        </field>
-  </fieldset>
-  </fields>
-  </config>
-   <!-- UPDATESERVER DEFINITION -->
+	<config>
+		<!-- @todo: look into new params system for this -->
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="email" type="list" default="1"
+					label="PLG_JBSPODCAST_SEND_EMAIL" description="PLG_JBSPODCAST_SEND_EMAIL_DESC">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="recipients" type="text" default="" size="80"
+					label="PLG_JBSPODCAST_TO_EMAIL" description="PLG_JBSPODCAST_TO_EMAIL_DESC" />
+				<field name="subject" type="text"
+					default="Joomla Bible Study Podcast(s) Published" size="60"
+					label="PLG_JBSPODCAST_SUBJECT" description="" />
+				<field name="body" type="text" default="Podcast(s) publishing status:"
+					size="60" label="PLG_JBSPODCAST_BODY" description="" />
+				<field name="method" type="list" default="0"
+					label="PLG_JBSPODCAST_PUBLISH_METHOD" description="PLG_JBSPODCAST_PUBLISH_METHOD_DESC">
+					<option value="0">PLG_JBSPODCAST_HOURS</option>
+					<option value="1">PLG_JBSPODCAST_SCHEDULE</option>
+				</field>
+				<field name="xhours" type="text" default="24" size="3"
+					label="PLG_JBSPODCAST_PUBLISH_EVERY" description="PLG_JBSPODCAST_PUBLISH_EVERY_DESC" />
+				<field name="day1" type="list" default="0" label="PLG_JBSPODCAST_DAY1"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour1" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY1" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="day2" type="list" default="0" label="PLG_JBSPODCAST_DAY2"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour2" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY2" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="day3" type="list" default="0" label="PLG_JBSPODCAST_DAY3"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour3" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY3" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="day4" type="list" default="0" label="PLG_JBSPODCAST_DAY4"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour4" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY4" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="day5" type="list" default="0" label="PLG_JBSPODCAST_DAY5"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour5" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY5" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="day6" type="list" default="0" label="PLG_JBSPODCAST_DAY6"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour6" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY6" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="day7" type="list" default="0" label="PLG_JBSPODCAST_DAY7"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour7" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY7" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="day8" type="list" default="0" label="PLG_JBSPODCAST_DAY8"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour8" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY8" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="day9" type="list" default="0" label="PLG_JBSPODCAST_DAY9"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour9" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY9" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="day10" type="list" default="0" label="PLG_JBSPODCAST_DAY10"
+					description="PLG_JBSPODCAST_CHOOSE_DAY">
+					<option value="-1">PLG_JBSPODCAST_CHOOSE_DAY</option>
+					<option value="0">PLG_JBSPODCAST_SUNDAY</option>
+					<option value="1">PLG_JBSPODCAST_MONDAY</option>
+					<option value="2">PLG_JBSPODCAST_TUESDAY</option>
+					<option value="3">PLG_JBSPODCAST_WEDNESDAY</option>
+					<option value="4">PLG_JBSPODCAST_THURSDAY</option>
+					<option value="5">PLG_JBSPODCAST_FRIDAY</option>
+					<option value="6">PLG_JBSPODCAST_SATURDAY</option>
+				</field>
+				<field name="hour10" type="list" default="0"
+					label="PLG_JBSPODCAST_HOUR_DAY10" description="PLG_JBSPODCAST_CHOOSE_HOUR">
+					<option value="0">PLG_JBSPODCAST_CHOOSE_HOUR</option>
+					<option value="1">1:00</option>
+					<option value="2">2:00</option>
+					<option value="3">3:00</option>
+					<option value="4">4:00</option>
+					<option value="5">5:00</option>
+					<option value="6">6:00</option>
+					<option value="7">7:00</option>
+					<option value="8">8:00</option>
+					<option value="9">9:00</option>
+					<option value="10">10:00</option>
+					<option value="11">11:00</option>
+					<option value="12">12:00</option>
+					<option value="13">13:00 (1PM)</option>
+					<option value="14">14:00 (2PM)</option>
+					<option value="15">15:00 (3PM)</option>
+					<option value="16">16:00 (4PM)</option>
+					<option value="17">17:00 (5PM)</option>
+					<option value="18">18:00 (6PM)</option>
+					<option value="19">19:00 (7PM)</option>
+					<option value="20">20:00 (8PM)</option>
+					<option value="21">21:00 (9PM)</option>
+					<option value="22">22:00 (10PM)</option>
+					<option value="23">23:00 (11PM)</option>
+					<option value="24">24:00 (12AM)</option>
+				</field>
+				<field name="offset" type="list" label="PLG_JBSPODCAST_SERVER_OFFSET"
+					default="0" description="PLG_JBSPODCAST_SERVER_OFFSET_DESC">
+					<option value="0">PLG_JBSPODCAST_NO_OFFSET</option>
+					<option value="1">PLG_JBSPODCAST_USE_OFFSET</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+	<!-- UPDATESERVER DEFINITION -->
 	<updateservers>
 		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-		<server type="extension" priority="1" name="Joomla Bible Study Podcast Plg"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8]]></server>
+		<server type="extension" priority="1"
+			name="Joomla Bible Study Podcast Plg"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=8]]></server>
 	</updateservers>
-        
-        <!-- Tables -->
-	<!-- These are used for backups to determine which tables to backup; ones marked optional are only backed up if they exist -->
+	<!-- Tables -->
+	<!-- These are used for backups to determine which tables to backup; ones 
+		marked optional are only backed up if they exist -->
 	<tables>
 		<table>#__jbspodcast_install</table>
-                <table>#__jbspodcast_timeset</table>
+		<table>#__jbspodcast_timeset</table>
 		<table type="optional">#__jbspodcast_update</table>
 	</tables>
-  
-  	<!--  Dependencies 	-->
+	<!-- Dependencies -->
 	<dependencies>
-		<dependency type="platform" name="joomla" operator="=" version="1.6" />
+		<dependency type="platform" name="joomla" operator="="
+			version="1.6" />
 	</dependencies>
 </extension>

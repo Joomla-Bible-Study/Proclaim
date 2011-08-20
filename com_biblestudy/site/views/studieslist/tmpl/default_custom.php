@@ -16,38 +16,55 @@ $messagetype_menu = $this->params->get('messagetype');
 $document =& JFactory::getDocument();
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
 $params = $this->params;
-    
- 	if ($this->allow)
-			{?>
-			<table><tr><td align="center"><?php echo '<h2>'.$message.'</h2>';?></td></tr></table>
-			<?php
-			$studiesedit_call = JView::loadHelper('studiesedit');
-			$studiesedit = getStudiesedit($row, $params);
-			echo $studiesedit;
-			}
+
+if ($this->allow)
+{?>
+<table>
+	<tr>
+		<td align="center"><?php echo '<h2>'.$message.'</h2>';?></td>
+	</tr>
+</table>
+
+<?php
+$studiesedit_call = JView::loadHelper('studiesedit');
+$studiesedit = getStudiesedit($row, $params);
+echo $studiesedit;
+}
 
 $listingcall = JView::loadHelper('listing');
 
 $menuitemid = JRequest::getInt( 'Itemid' );
-  if ($menuitemid)
-  {
-    $menu = JSite::getMenu();
-    $menuparams = $menu->getParams( $menuitemid );
-  }
+if ($menuitemid)
+{
+	$menu = JSite::getMenu();
+	$menuparams = $menu->getParams( $menuitemid );
+}
 
 
 ?>
-<form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
+<form
+	action="<?php echo str_replace("&","&amp;",$this->request_url); ?>"
+	method="post" name="adminForm">
 
-  <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+	<div id="biblestudy" class="noRefTagger">
+		<!-- This div is the container for the whole page -->
 
-    <div id="bsms_header">
-      <h1 class="componentheading">
-<?php
-     if ($this->params->get( 'show_page_image' ) >0) {
+		<div id="bsms_header">
+			<h1 class="componentheading">
 
-     ?>
-      <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" alt="Bible Study" />
+
+			<?php
+			if ($this->params->get( 'show_page_image' ) >0) {
+
+				?>
+				<img src="<?php echo JURI::base().$this->main->path;?>"
+					alt="<?php echo $this->main->path; ?>"
+					width="<?php echo $this->main->width;?>"
+					height="<?php echo $this->main->height;?>" alt="Bible Study" />
+				
+				
+				
+				
     <?php //End of column for logo
     }
     ?>
@@ -57,6 +74,10 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     }
 	?>
     </h1>
+			
+			
+			
+			
 <?php if ($params->get('listteachers') )
 	{
 	$teacher_call = JView::loadHelper('teacher');
@@ -64,15 +85,28 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
 	}
 
 	?>
-    </div><!--header-->
-
-    <div id="listintro">
-    <?php if ($params->get('intro_show') > 0) { echo $params->get('list_intro');}?>
     </div>
-    <div id="bsdropdownmenu">
- <?php if ($this->params->get('use_go_button') > 0)
-        {
-            ?><span id="gobutton"><input type="submit" value="<?php echo JText::_('JBS_STY_GO_BUTTON'); ?>" /></span>
+		<!--header-->
+
+		<div id="listintro">
+			
+			
+		<?php if ($params->get('intro_show') > 0) {
+			echo $params->get('list_intro');
+		}?>
+		</div>
+		<div id="bsdropdownmenu">
+			
+			
+		<?php if ($this->params->get('use_go_button') > 0)
+		{
+			?>
+			<span id="gobutton"><input type="submit"
+				value="<?php echo JText::_('JBS_STY_GO_BUTTON'); ?>" /> </span>
+			
+			
+			
+			
     <?php }
 
 
@@ -102,7 +136,10 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
 ?>
 
 
-    </div><!--dropdownmenu-->
+    </div>
+		<!--dropdownmenu-->
+		
+		
 <?php
 
   switch ($params->get('wrapcode')) {
@@ -165,10 +202,10 @@ if ($this->params->get('show_popular') > 0 ) {  echo $this->popular;}
 
 	  ?>
 </div> <!--end of bsfooter div-->
-  </div><!--end of bspagecontainer div-->
-  <input name="option" value="com_biblestudy" type="hidden">
-
-  <input name="task" value="" type="hidden">
-  <input name="boxchecked" value="0" type="hidden">
-  <input name="controller" value="studieslist" type="hidden">
+  </div>
+	<!--end of bspagecontainer div-->
+	<input name="option" value="com_biblestudy" type="hidden"> <input
+		name="task" value="" type="hidden"> <input name="boxchecked" value="0"
+		type="hidden"> <input name="controller" value="studieslist"
+		type="hidden">
 </form>

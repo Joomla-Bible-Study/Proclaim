@@ -9,33 +9,25 @@
 	<state>
 		<name>JBS_MNU_SINGLE_SERIES_LAYOUT</name>
 		<url addpath="/administrator/components/com_biblestudy/elements">
-			<param name="id" type="series" default="" label="JBS_CMN_SELECT_SERIES" description="JBS_MNU_SELECT_SERIES_DESC" />
+			<param name="id" type="series" default="" label="JBS_CMN_SELECT_SERIES"
+				description="JBS_MNU_SELECT_SERIES_DESC" />
 		</url>
 		<params addpath="/components/com_biblestudy/elements">
 			<param name="type" type="hidden" default="" />
-			<param name="templatemenuid" type="templatemenuid" default="" label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_DESC" />
-		</params>	
+			<param name="templatemenuid" type="templatemenuid" default=""
+				label="JBS_MNU_SELECT_TEMPLATE" description="JBS_MNU_SELECT_TEMPLATE_DESC" />
+		</params>
 	</state>
-     <fields name="request">
-        <fieldset name="request"
-            addfieldpath="/administrator/components/com_biblestudy/models/fields"
-        >
-            <field name="id" type="modal_seriesdetail"
-				description="JBS_MNU_SELECT_SERIES_DESC"
-				label="JBS_CMN_SELECT_SERIES"
-				required="true"
-			/>
-            <field name="templatemenuid" type="sql"
-                description="JBS_MNU_SELECT_TEMPLATE_DESC"
-                label="JBS_MNU_SELECT_TEMPLATE"
-                default="1"
-                query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-                key_field="id"
-                value_field="title"
-                required="true"
-            />
-        </fieldset>
-    
-    </fields>
+	<fields name="request">
+		<fieldset name="request"
+			addfieldpath="/administrator/components/com_biblestudy/models/fields">
+			<field name="id" type="modal_seriesdetail" description="JBS_MNU_SELECT_SERIES_DESC"
+				label="JBS_CMN_SELECT_SERIES" required="true" />
+			<field name="templatemenuid" type="sql"
+				description="JBS_MNU_SELECT_TEMPLATE_DESC" label="JBS_MNU_SELECT_TEMPLATE"
+				default="1"
+				query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+				key_field="id" value_field="title" required="true" />
+		</fieldset>
+	</fields>
 </metadata>
-

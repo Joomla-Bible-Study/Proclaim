@@ -25,16 +25,28 @@ $d_path1 = 'components/com_biblestudy/images';
 $listingcall = JView::loadHelper('listing');
 
 ?>
-<form action="<?php echo str_replace("&","&amp;",$this->request_url); ?>" method="post" name="adminForm">
-  <div id="biblestudy_landing" class="noRefTagger"> <!-- This div is the container for the whole page -->
+<form
+	action="<?php echo str_replace("&","&amp;",$this->request_url); ?>"
+	method="post" name="adminForm">
+	<div id="biblestudy_landing" class="noRefTagger">
+		<!-- This div is the container for the whole page -->
 
-    <div id="bsms_header">
-      <h1 class="componentheading">
-<?php
-     if ($this->params->get( 'show_page_image' ) >0) {
+		<div id="bsms_header">
+			<h1 class="componentheading">
 
-     ?>
-       <img src="<?php echo JURI::base().$this->main->path;?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width;?>" height="<?php echo $this->main->height;?>" />
+
+			<?php
+			if ($this->params->get( 'show_page_image' ) >0) {
+
+				?>
+				<img src="<?php echo JURI::base().$this->main->path;?>"
+					alt="<?php echo $this->main->path; ?>"
+					width="<?php echo $this->main->width;?>"
+					height="<?php echo $this->main->height;?>" />
+				
+				
+				
+				
     <?php //End of column for logo
     }
     ?>
@@ -44,7 +56,10 @@ if ( $this->params->get( 'show_page_title' ) >0 ) {
     }
 	echo "\n";?>
       </h1>
-    </div> <!-- End div id="bsms_header" -->
+		</div>
+		<!-- End div id="bsms_header" -->
+		
+		
 
 <?php
 
@@ -185,4 +200,8 @@ for ($i=1;$i<=7;$i++) {
   <input name="task" value="" type="hidden">
   <input name="boxchecked" value="0" type="hidden">
   <input name="controller" value="studieslist" type="hidden">
+
+
+
+
 </form>

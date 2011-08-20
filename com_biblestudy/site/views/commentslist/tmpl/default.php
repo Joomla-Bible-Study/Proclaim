@@ -9,23 +9,36 @@
 defined('_JEXEC') or die('Restricted access');
 require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
 $listDirn = $this->state->get('list.direction');
- $listOrder = $this->state->get('list.ordering');
- ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=commentslist'); ?>" method="post" name="adminForm" id="adminForm">
+$listOrder = $this->state->get('list.ordering');
+?>
+<form
+	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=commentslist'); ?>"
+	method="post" name="adminForm" id="adminForm">
 
-<?php //echo $this->lists['studyid']; ?>
-<div id="editcell">
-	<table class="adminlist">
 
-      <thead>
-        <tr> 
-          <th width="1"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->items ); ?>);" /> </th>
-          <th width="20" align="center"> <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?> </th>
-          <th width="250"> <?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?> </th>
-          <th width = "100"><?php echo JText::_('JBS_CMT_FULL_NAME'); ?></th>
-          <th width = "100">  <?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?> </th>       
-        </tr>
-      </thead>
+
+	<?php //echo $this->lists['studyid']; ?>
+	<div id="editcell">
+		<table class="adminlist">
+
+			<thead>
+				<tr>
+					<th width="1"><input type="checkbox" name="toggle" value=""
+						onclick="checkAll(<?php echo count( $this->items ); ?>);" />
+					</th>
+					<th width="20" align="center"> <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
+					</th>
+					<th width="250"> <?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
+					</th>
+					<th width="100"><?php echo JText::_('JBS_CMT_FULL_NAME'); ?></th>
+					<th width="100">  <?php echo JHtml::_('grid.sort', 'JBS_CMN_STUDY_DATE', 'study.studydate', $listDirn, $listOrder); ?>
+					</th>
+				</tr>
+			</thead>
+			
+			
+			
+			
       <?php
 foreach ($this->items as $i => $item) :
 		$link 		= JRoute::_( 'index.php?option=com_biblestudy&task=commentsedit.edit&id='. (int) $item->id );
@@ -53,10 +66,14 @@ foreach ($this->items as $i => $item) :
     </table>
 
 
-</div>
-<input type="hidden" name="task" value=""/>
-                    <input type="hidden" name="boxchecked" value="0"/>
-                    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-                    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
+	</div>
+	<input type="hidden" name="task" value="" /> <input type="hidden"
+		name="boxchecked" value="0" /> <input type="hidden"
+		name="filter_order" value="<?php echo $listOrder; ?>" /> <input
+		type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+	
+	
+	
+	
     <?php echo JHtml::_('form.token'); ?>
 </form>

@@ -1,1 +1,1 @@
--- Blank Base Line
+INSERT INTO #__bsms_update VALUES(1,7.0.0);

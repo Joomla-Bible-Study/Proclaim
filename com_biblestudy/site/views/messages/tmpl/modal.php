@@ -21,8 +21,8 @@ $listDirn = $this->state->get('list.direction');
 
             <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button" onclick="document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
-        </div>
-        <div class="filter-select fltrt">
+		</div>
+		<div class="filter-select fltrt">
             <select name="filter_book" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
                 <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.book')); ?>
@@ -47,10 +47,10 @@ $listDirn = $this->state->get('list.direction');
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.state'), true); ?>
             </select>
-        </div>
-    </fieldset>
-    <div class="clr"></div>
-        
+		</div>
+	</fieldset>
+	<div class="clr"></div>
+		
     <table class="adminlist">
         <thead>
             <tr>
@@ -115,7 +115,7 @@ $listDirn = $this->state->get('list.direction');
                 </tr>
         <?php endforeach; ?>
                     </table>
-                    <div>
+	<div>
                         <input type="hidden" name="task" value=""/>
                         <input type="hidden" name="boxchecked" value="0"/>
                         <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>

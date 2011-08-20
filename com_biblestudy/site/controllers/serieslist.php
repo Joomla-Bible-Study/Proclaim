@@ -14,7 +14,7 @@ jimport('joomla.application.component.controller');
 class biblestudyControllerserieslist extends JController
 {
 	var $mediaCode;
-	
+
 	/**
 	 *@desc Method to display the view
 	 *@access public
@@ -47,7 +47,7 @@ class biblestudyControllerserieslist extends JController
 			return;
 		}
 	}
-	
+
 	/**
 	 * @desc: This function is supposed to generate the Media Player that is requested via AJAX
 	 * from the studiesList view "default.php". It has not been implemented yet, so its not used.
@@ -56,5 +56,5 @@ class biblestudyControllerserieslist extends JController
 	function inlinePlayer() {
 		echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
 	}
-		
+
 }

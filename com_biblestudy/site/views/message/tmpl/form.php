@@ -11,92 +11,92 @@ JHtml::_('behavior.formvalidation');
 ?>
 <div class="edit">
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
-	<div class="formelm-buttons">
+		<div class="formelm-buttons">
 			<button type="button" onclick="Joomla.submitbutton('message.save')">
-				<?php echo JText::_('JSAVE') ?>
+			<?php echo JText::_('JSAVE') ?>
 			</button>
 			<button type="button" onclick="Joomla.submitbutton('message.cancel')">
-				<?php echo JText::_('JCANCEL') ?>
+			<?php echo JText::_('JCANCEL') ?>
 			</button>
-			</div>
-   
-        <fieldset class="panelform">
+		</div>
+
+		<fieldset class="panelform">
             <legend><?php echo JText::_('JBS_STY_DETAILS'); ?></legend>
-            <div class="formelm">
-                    <?php echo $this->form->getLabel('studytitle'); ?>
-                    <?php echo $this->form->getInput('studytitle'); ?>
-            </div>
-            <div class="formelm">
-                    <?php echo $this->form->getLabel('studynumber'); ?>
-                    <?php echo $this->form->getInput('studynumber'); ?>
-             </div>
-             <div class="formelm">
-                    <?php echo $this->form->getLabel('studyintro'); ?>
-                    <div class="clr"></div>
+			<div class="formelm">
+			<?php echo $this->form->getLabel('studytitle'); ?>
+			<?php echo $this->form->getInput('studytitle'); ?>
+			</div>
+			<div class="formelm">
+			<?php echo $this->form->getLabel('studynumber'); ?>
+			<?php echo $this->form->getInput('studynumber'); ?>
+			</div>
+			<div class="formelm">
+			<?php echo $this->form->getLabel('studyintro'); ?>
+				<div class="clr"></div>
                     <?php echo $this->form->getInput('studyintro'); ?>
                </div>
-               <div class="formelm">
-                    <?php echo $this->form->getLabel('script1'); ?>
-                    <?php echo $this->form->getInput('script1'); ?>
-               </div>
-               <div class="formelm">
-                    <?php echo $this->form->getLabel('script2'); ?>
-                    <?php echo $this->form->getInput('script1'); ?>
-               </div>
-  
-   </fieldset>
-   <fieldset class="panelform">
-               <div class="inlineFields">
+			<div class="formelm">
+			<?php echo $this->form->getLabel('script1'); ?>
+			<?php echo $this->form->getInput('script1'); ?>
+			</div>
+			<div class="formelm">
+			<?php echo $this->form->getLabel('script2'); ?>
+			<?php echo $this->form->getInput('script1'); ?>
+			</div>
+
+		</fieldset>
+		<fieldset class="panelform">
+			<div class="inlineFields">
                <legend><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></legend>
-                    
+					
               <strong> <label><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></label></strong>
-                        <div>
-                            <?php echo $this->form->getLabel('booknumber'); ?>
-                            <?php // studytitle is required; fill in default if empty and leave value otherwise
-                                  echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin->params['booknumber'] : $this->item->booknumber); ?>
-                        </div>
-                        <div>
-                            <?php echo $this->form->getLabel('chapter_begin'); ?>
-                            <?php echo $this->form->getInput('chapter_begin'); ?>
-
-                            <?php echo $this->form->getLabel('verse_begin'); ?>
-                            <?php echo $this->form->getInput('verse_begin'); ?>
-
-                            <?php echo $this->form->getLabel('chapter_end'); ?>
-                            <?php echo $this->form->getInput('chapter_end'); ?>
-
-                            <?php echo $this->form->getLabel('verse_end'); ?>
-                            <?php echo $this->form->getInput('verse_end'); ?>
-                        </div>
+				<div>
+				<?php echo $this->form->getLabel('booknumber'); ?>
+				<?php // studytitle is required; fill in default if empty and leave value otherwise
+				echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin->params['booknumber'] : $this->item->booknumber); ?>
+				</div>
+				<div>
+				<?php echo $this->form->getLabel('chapter_begin'); ?>
+				<?php echo $this->form->getInput('chapter_begin'); ?>
+					
+				<?php echo $this->form->getLabel('verse_begin'); ?>
+				<?php echo $this->form->getInput('verse_begin'); ?>
+					
+				<?php echo $this->form->getLabel('chapter_end'); ?>
+				<?php echo $this->form->getInput('chapter_end'); ?>
+					
+				<?php echo $this->form->getLabel('verse_end'); ?>
+				<?php echo $this->form->getInput('verse_end'); ?>
+				</div>
                   <br />
                
                   <strong>  <label><?php echo JText::_('JBS_CMN_SCRIPTURE2'); ?></label></strong>
-                    <div class="inlineFields">
-                        <div>
-                            <?php echo $this->form->getLabel('booknumber2'); ?>
-                            <?php echo $this->form->getInput('booknumber2'); ?>
-                        </div>
-                        <div>
-                            <?php echo $this->form->getLabel('chapter_begin2'); ?>
-                            <?php echo $this->form->getInput('chapter_begin2'); ?>
+				<div class="inlineFields">
+					<div>
+					<?php echo $this->form->getLabel('booknumber2'); ?>
+					<?php echo $this->form->getInput('booknumber2'); ?>
+					</div>
+					<div>
+					<?php echo $this->form->getLabel('chapter_begin2'); ?>
+					<?php echo $this->form->getInput('chapter_begin2'); ?>
 
-                            <?php echo $this->form->getLabel('verse_begin2'); ?>
-                            <?php echo $this->form->getInput('verse_begin2'); ?>
+					<?php echo $this->form->getLabel('verse_begin2'); ?>
+					<?php echo $this->form->getInput('verse_begin2'); ?>
 
-                            <?php echo $this->form->getLabel('chapter_end2'); ?>
-                            <?php echo $this->form->getInput('chapter_end2'); ?>
+					<?php echo $this->form->getLabel('chapter_end2'); ?>
+					<?php echo $this->form->getInput('chapter_end2'); ?>
 
-                            <?php echo $this->form->getLabel('verse_end2'); ?>
-                            <?php echo $this->form->getInput('verse_end2'); ?>
-                        </div>
-                    </div>
-               <div class="formelm">
-               <br />
+					<?php echo $this->form->getLabel('verse_end2'); ?>
+					<?php echo $this->form->getInput('verse_end2'); ?>
+					</div>
+				</div>
+				<div class="formelm">
+					<br />
                     <?php echo $this->form->getLabel('secondary_reference'); ?>
                     <?php echo $this->form->getInput('secondary_reference'); ?>
                         </div>
-   </fieldset>
-   
+		</fieldset>
+
    <fieldset class="panelform">
               
                <legend><?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
@@ -238,6 +238,6 @@ JHtml::_('behavior.formvalidation');
 	<?php endif; ?>
                         <input type="hidden" name="task" value=""/>
         <?php echo JHtml::_('form.token'); ?>
-    </div>
+</div>
 </form>
 </div>

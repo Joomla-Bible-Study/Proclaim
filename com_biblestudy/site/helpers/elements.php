@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @version $Id: elements.php 1 $
@@ -12,9 +12,9 @@ defined('_JEXEC') or die('Restriced Access');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
 require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
 function getElementid($rowid, $row, $params, $admin_params, $template)
-	{
+{
 	$elementid = null;
-	 $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 	include_once($path1.'scripture.php');
 	include_once($path1.'duration.php');
 	include_once($path1.'date.php');
@@ -28,9 +28,9 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 	include_once($path1.'image.php');
 	$mainframe =& JFactory::getApplication();
 	$db	= & JFactory::getDBO();
-		switch ($rowid)
-			{
-		 case 1:
+	switch ($rowid)
+	{
+		case 1:
 			$elementid->id = 'scripture1';
 			$elementid->headertext = JText::_('JBS_CMN_SCRIPTURE');
 			$esv = 0;
@@ -57,7 +57,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 5:
 			$elementid->id = 'title';
 			$elementid->headertext = JText::_('JBS_CMN_TITLE');
-			$elementid->element = $row->studytitle; 
+			$elementid->element = $row->studytitle;
 			break;
 		case 6:
 			$elementid->id = 'studyintro';
@@ -136,11 +136,11 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 			$elementid->element = getTextlink($params, $row, $textorpdf, $admin_params, $template);
 			break;
 		case 20:
-            $mediaclass = new jbsMedia(); 
+			$mediaclass = new jbsMedia();
 			$elementid->id = 'jbsmedia';
 			$elementid->headertext = JText::_('JBS_CMN_MEDIA');
-            $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
-            break;
+			$elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
+			break;
 		case 22:
 			$elementid->id = 'store';
 			$elementid->headertext = JText::_('JBS_CMN_STORE');
@@ -159,54 +159,56 @@ function getElementid($rowid, $row, $params, $admin_params, $template)
 		case 25:
 			$elementid->id = 'thumbnail';
 			$elementid->headertext = JText::_('JBS_CMN_THUMBNAIL');
-			
-			if ($row->thumbnailm) 
+				
+			if ($row->thumbnailm)
 			{
-				$images = new jbsImages(); 
+				$images = new jbsImages();
 				$image = $images->getStudyThumbnail($row->thumbnailm);
-    			$elementid->element = '<img src="'.JURI::base().$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->studytitle.'">';
+				$elementid->element = '<img src="'.JURI::base().$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->studytitle.'">';
 			}
-			else {$elementid->element = '';}
+			else {$elementid->element = '';
+			}
 			break;
 		case 26:
 			$elementid->id = 'series_thumbnail';
 			$elementid->headertext = JText::_('JBS_CMN_THUMBNAIL');
-			if ($row->series_thumbnail) 
+			if ($row->series_thumbnail)
 			{
-				$images = new jbsImages(); 
+				$images = new jbsImages();
 				$image = $images->getSeriesThumbnail($row->series_thumbnail);
-    			$elementid->element = '<img src="'.JURI::base().$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->series_text.'">';
+				$elementid->element = '<img src="'.JURI::base().$image->path.'" width="'.$image->width.'" height="'.$image->height.'" alt="'.$row->series_text.'">';
 			}
-			else {$elementid->element = '';}
+			else {$elementid->element = '';
+			}
 			break;
 		case 27:
 			$elementid->id = 'series_description';
 			$elementid->headertext = JText::_('JBS_CMN_DESCRIPTION');
 			$elementid->element = $row->sdescription;
 			break;
-        case 28:
-            $elementid->id = 'plays';
-            $elementid->headertext = JText::_('JBS_CMN_PLAYS');
-            $elementid->element = $row->totalplays;
-            break;
-        case 29:
-            $elementid->id = 'downloads';
-            $elementid->headertext = JText::_('JBS_CMN_DOWNLOADS');
-            $elementid->element = $row->totaldownloads;
-            break;
-        case 30:
-        	$elemntid->id = 'teacher-image';
-        	$elemtnid->headetext = JText::_('JBS_CMN_TEACHER_IMAGE');
-        	$query = "SELECT thumb FROM #__bsms_teachers WHERE id = $row->id";
-        	$db->setQuery($query);
-   			$thumb = $db->loadObject();
-        	$elementid->element = '<img src="'.$thumb->thumb.'"/>';
-        	break;
+		case 28:
+			$elementid->id = 'plays';
+			$elementid->headertext = JText::_('JBS_CMN_PLAYS');
+			$elementid->element = $row->totalplays;
+			break;
+		case 29:
+			$elementid->id = 'downloads';
+			$elementid->headertext = JText::_('JBS_CMN_DOWNLOADS');
+			$elementid->element = $row->totaldownloads;
+			break;
+		case 30:
+			$elemntid->id = 'teacher-image';
+			$elemtnid->headetext = JText::_('JBS_CMN_TEACHER_IMAGE');
+			$query = "SELECT thumb FROM #__bsms_teachers WHERE id = $row->id";
+			$db->setQuery($query);
+			$thumb = $db->loadObject();
+			$elementid->element = '<img src="'.$thumb->thumb.'"/>';
+			break;
 		case 100:
 			$elementid->id = '';
 			$elementid->headertext = '';
 			$elementid->element = '';
 			break;
-		}
-		return $elementid;
 	}
+	return $elementid;
+}

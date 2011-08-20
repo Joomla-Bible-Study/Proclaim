@@ -19,11 +19,11 @@ function biblestudyUpgrade614($schema)
 		return $messagetable;
 	}
 
-//Other function calls go here
+	//Other function calls go here
 
 
 
-//end of the function
+	//end of the function
 	$messagetable = '</table>';
 	return $messagetable;
 }

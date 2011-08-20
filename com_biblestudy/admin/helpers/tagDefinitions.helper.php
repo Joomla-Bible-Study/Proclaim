@@ -16,10 +16,10 @@ $BsmTmplTags = array(
 		'method' => 'studyDate',
 		'type' => 'data',
 		'db' => 'studydate'
-	),
+),
 	'[filterBook]' => array(
 		'method' => 'filterBook',
 		'type' => 'generic',
 		'db' => null
-	)
+)
 );

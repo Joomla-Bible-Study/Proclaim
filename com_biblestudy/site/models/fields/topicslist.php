@@ -10,7 +10,7 @@
 
 // No direct access to this file
 defined('_JEXEC') or die;
- 
+
 // import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
@@ -28,13 +28,13 @@ class JFormFieldTopicslist extends JFormFieldList
 	 * @var         string
 	 */
 	protected $type = 'Topicslist';
-	
+
 	/**
 	 * Method to get a list of options for a list input.
 	 *
 	 * @return      array           An array of JHtml options.
 	 */
-	protected function getOptions() 
+	protected function getOptions()
 	{
 		$db = JFactory::getDBO();
 		$query = "SELECT id, topic_text, params AS topic_params FROM #__bsms_topics WHERE published = 1 ORDER by topic_text ASC";
