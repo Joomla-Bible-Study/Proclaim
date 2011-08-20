@@ -149,14 +149,26 @@ class biblestudyModelstudieslist extends JModelList {
         
         //Filter by topic
         $topic = $this->getState('filter.topic');
-        if (!empty($topic))
+        if (is_numeric($topic))
             $query->where('study.topics_id = ' . (int) $topic);
+        elseif (is_array($topic) && count($topic) > 0) {
+            JArrayHelper::toInteger($topic);
+            $topic = implode(',', $topic);
+            if(!empty($topic))
+                $query->where('study.topics_id IN ('.$topic.')');            
+        }
         
         //Filter by book
         $book = $this->getState('filter.book');
-        if (!empty($book))
-            $query->where('study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book);
-        $query->join('LEFT', '#__bsms_books AS books ON books.booknumber = study.booknumber');        
+        if (is_numeric($book))
+            $query->where('( study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book.')');
+        elseif (is_array($book) && count($book) > 0) {
+            JArrayHelper::toInteger($book);
+            $book = implode(',', $book);
+            if(!empty($book))
+                $query->where('(study.booknumber IN ('.$book.') OR study.booknumber2 IN ('.$book.'))');
+            
+        }       
         
         
 //        //Filter by chapter 
@@ -169,18 +181,36 @@ class biblestudyModelstudieslist extends JModelList {
         
         //Filter by teacher
         $teacher = $this->getState('filter.teacher');
-        if (!empty($teacher))
+        if (is_numeric($teacher))
             $query->where('study.teacher_id = ' . (int) $teacher);
+        elseif (is_array($teacher) && count($teacher) > 0) {
+            JArrayHelper::toInteger($teacher);
+            $teacher = implode(',', $teacher);
+            if(!empty($teacher))
+                $query->where('study.teacher_id IN ('.$teacher.')');
+        }
 
         //Filter by series
         $series = $this->getState('filter.series');
-        if (!empty($series))
+        if (is_numeric($series))
             $query->where('study.series_id = ' . (int) $series);
+        elseif (is_array($series) && count($series) > 0) {
+            JArrayHelper::toInteger($series);
+            $series = implode(',', $series);
+            if(!empty ($series))
+                $query->where('study.series_id IN ('.$series.')');
+        }
 
         //Filter by message type
         $messageType = $this->getState('filter.messageType');
-        if (!empty($messageType))
+        if (is_numeric($messageType))
             $query->where('study.messageType = ' . (int) $messageType);
+        elseif(is_array($messageType) && count($messageType) > 0) {
+            JArrayHelper::toInteger($messageType);
+            $messageType = implode(',', $messageType);
+            if(!empty($messageType))
+                $query->where('study.messageType IN ('.$messageType.')');
+        }
 
         //Filter by Year
         $year = $this->getState('filter.year');
@@ -189,8 +219,14 @@ class biblestudyModelstudieslist extends JModelList {
         
         //Filter by Location
         $location = $this->getState('filter.location');
-        if (!empty($messageType))
-            $query->where('study.location = ' . (int) $location);        
+        if (!is_numeric($messageType))
+            $query->where('study.location_id = ' . (int) $location); 
+        elseif(is_array($location) && count($location) > 0) {
+            JArrayHelper::toInteger ($location);
+            $location = implode(',', $location);
+            if(!empty($location))
+                $query->where('study.location_id IN ('.$location.')');
+        }
         
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
