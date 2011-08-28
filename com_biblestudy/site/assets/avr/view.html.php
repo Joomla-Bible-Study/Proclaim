@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: view.html.php 1027 2008-07-06 22:46:07Z Fritz Elfert $
+ * @version		$Id$
  * @copyright	Copyright (C) 2008 Fritz Elfert. All rights reserved.
  * @license		GNU/GPLv2
  * @uses			This file was edited by Tom Fuller from JoomlaBibleStudy to accomodate problems AVR was having with com_biblestudy. Version 2

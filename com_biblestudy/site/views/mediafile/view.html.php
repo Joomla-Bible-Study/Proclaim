@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     $Id: viewj16.html.php 1394 2011-01-17 21:39:05Z genu $
+ * @version     $Id$
  * @package     com_biblestudy
  * @license     GNU/GPL
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: form.php 1396 2011-01-17 23:12:12Z genu $
+ * @version     $Id$
  * @package     com_biblestudy
  * @license     GNU/GPL
  */

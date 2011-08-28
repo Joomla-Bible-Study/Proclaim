@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: view.html.php 1330 2011-01-06 08:01:38Z genu $
+ * @version     $Id$
  * @package     com_biblestudy
  * @license     GNU/GPL
  */

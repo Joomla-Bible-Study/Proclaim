@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: default_16.php 1336 2011-01-06 22:29:39Z genu $
+ * @version     $Id$
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
