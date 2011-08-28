@@ -1,7 +1,7 @@
 /**
  * Handles js for mediafilesedit view. Uses JQuery
  * 
- * @version     $Id: mediafilesedit.js 1319 2011-01-05 08:54:01Z genu $
+ * @version     $Id$
  * @package     JoomlaBibleStudy
  */
 $j(document).ready( function() {

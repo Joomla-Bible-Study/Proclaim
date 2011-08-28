@@ -1,7 +1,7 @@
 /**
  * jUpgrade
  *
- * @version			$Id: mtwProgressBar.js 20605 2011-02-08 00:25:11Z eddieajau $
+ * @version			$Id$
  * @package			MatWare
  * @subpackage	com_jupgrade
  * @author      Matias Aguirre <maguirre@matware.com.ar>

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: form.php 1467 2011-01-31 23:20:10Z tomfuller2 $
+ * @version     $Id$
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL

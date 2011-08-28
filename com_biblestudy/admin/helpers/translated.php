@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: translated.php 1 $
+ * @version $Id$
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,7 +19,7 @@ return: translated string or null if topicItem is not initialised
 */
 function getTopicItemTranslated($topicItem)
 {
-	if ($topicItem) {
+	if (isset($topicItem->topic_param)) {
 		// first choice: evaluate language strings
 		$itemparams = new JRegistry;
 		$itemparams->loadJSON($topicItem->topic_params);

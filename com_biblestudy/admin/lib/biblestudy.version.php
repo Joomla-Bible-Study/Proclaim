@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: biblestudy.version.php 1339 2011-01-07 04:42:20Z bcordis $
+ * @version $Id$
  * Bible Studey Component
  * @package BibleStudy
  *

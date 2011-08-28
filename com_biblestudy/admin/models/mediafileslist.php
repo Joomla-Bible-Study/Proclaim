@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     $Id: mediafileslist.php 1466 2011-01-31 23:13:03Z bcordis $
+ * @version     $Id$
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL

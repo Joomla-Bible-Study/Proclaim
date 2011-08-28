@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: biblestudy.debug.php 1284 2011-01-04 07:57:59Z genu $
+ * @version $Id$
  * Bible Study Component
  * @package Bible Study
  *

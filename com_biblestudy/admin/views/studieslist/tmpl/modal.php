@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: modal.php 1336 2011-01-06 22:29:39Z genu $
+ * @version     $Id$
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL

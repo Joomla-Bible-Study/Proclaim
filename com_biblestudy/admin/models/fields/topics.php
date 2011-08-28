@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version		$Id: docman.php 1284 2011-01-04 07:57:59Z genu $
+ * @version		$Id$
  * @package		Joomla.Framework
  * @subpackage	Form
  * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.

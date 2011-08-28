@@ -1,7 +1,7 @@
 <?php
 /**
  * Locations Tables for BibleStudy
- * @version $Id: admin.php 1 $
+ * @version $Id$
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
