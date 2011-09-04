@@ -1,8 +1,8 @@
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
-DROP TABLE IF EXISTS #__bsms_install ( fielda int(10) );
+DROP TABLE IF EXISTS `#__bsms_install`;
 
-DROP TABLE IF EXISTS #__bsms_update;
+DROP TABLE IF EXISTS `#__bsms_update`;
 
 CREATE TABLE `#__bsms_update` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
