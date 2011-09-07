@@ -20,7 +20,8 @@ class biblestudyViewstudieslist extends JView {
 
 
 		$this->state = $this->get('State');
-		$this->items = $this->get('Items');
+
+        $items = $this->get('Data');
 		$this->pagination = $this->get('Pagination');
 
 		//Load the Admin settings and params from the template
@@ -30,7 +31,6 @@ class biblestudyViewstudieslist extends JView {
 
 		$admin_parameters = $this->get('Admin');
 
-		//  $this->admin_params = new JParameter($admin_parameters[0]->params);
 
 		// Convert parameter fields to objects.
 		$registry = new JRegistry;
@@ -63,16 +63,16 @@ class biblestudyViewstudieslist extends JView {
 		//  dump ($t);
 		//     JRequest::setVar('t', $t, 'get');
 		$template = $this->get('template');
-		//  $params = new JParameter($template[0]->params);
 
+        
 		// Convert parameter fields to objects.
 		$registry = new JRegistry;
 		$registry->loadJSON($template[0]->params);
 		$params = $registry;
 
 		$a_params = $this->get('Admin');
-		//    $this->admin_params = new JParameter($a_params[0]->params);
 
+        
 		// Convert parameter fields to objects.
 		$registry = new JRegistry;
 		$registry->loadJSON($a_params[0]->params);
