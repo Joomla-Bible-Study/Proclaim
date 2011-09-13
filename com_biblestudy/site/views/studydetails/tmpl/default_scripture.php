@@ -25,7 +25,7 @@ switch ($this->params->get('show_passage_view', '0'))
 <?php
 
 $passage_call = JView::loadHelper('passage');
-$response = getPassage($params, $row);
+$response = getPassage($this->params, $this->studydetails);
 echo $response;
 echo '</div>';
 break;
@@ -33,7 +33,7 @@ break;
 case 2:
 	echo '<div id="scripture">';
 	$passage_call = JView::loadHelper('passage');
-	$response = getPassage($params, $row);
+	$response = getPassage($this->params, $this->studydetails);
 	echo $response;
 	echo '</div>';
 	break;
