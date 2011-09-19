@@ -55,7 +55,9 @@ static function prepareMenuItem($node,$params)
             return;
         }
 	
-    
+    $lang = JFactory::getLanguage();
+    $lang->load('com_biblestudy', JPATH_ADMINISTRATOR);
+  
     parse_str(html_entity_decode($link_query['query']), $link_vars);
     $view = JArrayHelper::getValue($link_vars, 'view', '');
     $id = intval(JArrayHelper::getValue($link_vars, 'id', ''));
@@ -108,12 +110,14 @@ static function prepareMenuItem($node,$params)
         
         case 2:
             $query = 'select distinct s.booknumber, b.bookname, b.booknumber as bnumber from #__bsms_studies '
-            .' as s LEFT JOIN #__bsms_books on (s.booknumber = b.booknumber) where s.published = 1 order by s.booknumber asc';
+            .' as s LEFT JOIN #__bsms_books as b on (s.booknumber = b.booknumber) where s.published = 1 order by s.booknumber asc';
             $db->setQuery($query);
         	$results = $db->loadObjectList();
             $node->expandable = true;
             foreach ($results AS $result)
             {
+                $field = 'booknumber';
+                $record = $result->booknumber;
                 $node = new stdclass;
         		$node->id   = $parent->id;
         		$node->uid=$parent->uid.'a'.$result->bookname;
@@ -128,13 +132,8 @@ static function prepareMenuItem($node,$params)
         		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_book=' .$result->booknumber;
         		$xmap->printNode($node);
                 $xmap->changeLevel(1);
-                $query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE booknumber = '.$result->booknumber;
-                $db->setQuery($query);
-                $studies = $db->loadObjectList();
-                foreach ($studies AS $study)
-                {
-                    self::showStudies($study, $xmap, $t, $limit, $order, $params);
-                }
+                self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record);
+                
                 $xmap->changeLevel(-1);
             }
         break;
@@ -146,8 +145,10 @@ static function prepareMenuItem($node,$params)
             $node->expandable = true;
             foreach ($results AS $result)
             {
+                $field = 'teacher_id';
+                $record = $result->id;
                 $node = new stdclass;
-        		$node->id   = $parent->id;
+        		$node->id   = $parent->teachername;
         		$node->uid=$parent->uid.'a'.$result->teachername;
         		$node->name = $result->teachername;
         		$node->parent=1;
@@ -160,13 +161,8 @@ static function prepareMenuItem($node,$params)
         		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_teacher=' .$result->id;
         		$xmap->printNode($node);
                 $xmap->changeLevel(1);
-                $query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE teacher_id = '.$result->id;
-                $db->setQuery($query);
-                $studies = $db->loadObjectList();
-                foreach ($studies AS $study)
-                {
-                    self::showStudies($study, $xmap, $t, $limit, $order, $params);
-                }
+                self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record);
+                
                 $xmap->changeLevel(-1);
             }
         break;
@@ -176,10 +172,15 @@ static function prepareMenuItem($node,$params)
             $db->setQuery($query);
         	$results = $db->loadObjectList();
             $node->expandable = true;
+          //  $xmap->changeLevel(1);
             foreach ($results AS $result)
             {
+                $field = 'location_id';
+                $record = $result->id;
+                
+                
                 $node = new stdclass;
-        		$node->id   = $parent->id;
+        		$node->id   = $parent->location_text;
         		$node->uid=$parent->uid.'a'.$result->location_text;
         		$node->name = $result->location_text;
         		$node->parent=1;
@@ -192,14 +193,10 @@ static function prepareMenuItem($node,$params)
         		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_location =' .$result->id;
         		$xmap->printNode($node);
                 $xmap->changeLevel(1);
-                $query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE location_id = '.$result->id;
-                $db->setQuery($query);
-                $studies = $db->loadObjectList();
-                foreach ($studies AS $study)
-                {
-                    self::showStudies($study, $xmap, $t, $limit, $order, $params);
-                }
+                self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record);
+                
                 $xmap->changeLevel(-1);
+                
             }
         break;
     }
@@ -210,7 +207,8 @@ static function prepareMenuItem($node,$params)
     function showMediaFiles($id, $xmap, $limit, $order, $params)
     {
          $t = $params['t'];
-         $showmedia = 1;
+         $showmedia = $params['showmedia'];
+        // $showmedia = 1;
          if ($showmedia == 1)
         {
             $xmap->changeLevel(1);
@@ -283,8 +281,38 @@ static function prepareMenuItem($node,$params)
 		$node->menutype='mainmenu';
 		$node->link ='index.php?option=com_biblestudy&amp;view=studydetails&amp;id=' .$study->id.'&amp;t='.$t;
 		$xmap->printNode($node);
-        $xmap->changeLevel(1);
+      //  $xmap->changeLevel(1);
         self::showMediaFiles($study->id, $xmap, $limit, $order, $params);
+       // $xmap->changeLevel(-1);
+    }
+    
+    function showYears($result, $xmap, $t, $limit, $order, $params, $field, $record)
+    {
+        $db = JFactory::getDBO();
+        $query = 'select distinct year(studydate) as theYear from #__bsms_studies where published = 1 AND '.$field.' = '.$record.' LIMIT 1';
+       	$db->setQuery($query);
+    	$year = $db->loadObject();
+        $node = new stdclass;
+		$node->id   = $parent->id;
+		$node->uid=$parent->uid.'a'.$year->theYear;
+		$node->name = $year->theYear;
+		$node->parent=1;
+		$node->browsNav=1;//open new window
+		$node->ordering=2;
+		$node->priority=$parent->priority;
+		$node->changefreq=$parent->changefreq;
+		$node->type='component';
+		$node->menutype='mainmenu';
+		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_year=' .$year->theYear;
+		$xmap->printNode($node);
+        $xmap->changeLevel(1);
+        $query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE year(studydate) = '.$year->theYear.' and '.$field. ' = '.$record;
+        $db->setQuery($query);
+        $studies = $db->loadObjectList();
+        foreach ($studies AS $study)
+        {
+            self::showStudies($study, $xmap, $t, $limit, $order, $params);
+        }
         $xmap->changeLevel(-1);
     }
 }

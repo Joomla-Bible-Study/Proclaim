@@ -35,7 +35,7 @@
         <field  name="displaytype"
                 type="list"
                 label="Type of List"
-                description="Choose how you want the list displayed, by book, year, teacher, or location. Then it will break by year and month"
+                description="Choose how you want the list displayed, by book, year, teacher, or location. Then it will break by year."
                 default="1">
         <option value="1">Year</option>
         <option value="2">Book</option>
