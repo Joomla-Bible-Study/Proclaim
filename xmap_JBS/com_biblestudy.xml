@@ -11,14 +11,20 @@
         <description>Xmap plugin for Bible Study component.</description>
   <files>
 		<filename plugin="com_biblestudy">com_biblestudy.php</filename>
+        <filename>index.html</filename>
   </files>
-  
+  <languages folder="language">
+        <!--
+        these files will be installed in the administrator/language folder.
+        -->
+        <language tag="en-GB">en-GB.plg_xmap_com_biblestudy.ini</language>
+  </languages>
     <config>
       <fields name="params" >
         <fieldset name="advanced" addfieldpath="/administrator/components/com_biblestudy/models/fields">
          <field name="t" type="sql"
-                description="Choose which display template to apply to the links"
-                label="Display Template"
+                description="XMAP_JBS_DISPLAY_TEMPLATE_DESC"
+                label="XMAP_JBS_DISPLAY_TEMPLATE"
                 default="1"
                 query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
                 key_field="id"
@@ -26,48 +32,45 @@
                 required="true"
             />
         <field name="order" type="list"
-                description="Choose descending or ascending order for studies"
-                label="Display order"
+                description="XMAP_JBS_DISPLAY_ORDER_DESC"
+                label="XMAP_JBS_DISPLAY_ORDER"
                 default="desc">
-        <option value="desc">Descending</option>
-        <option value="asc">Ascending</option>
+        <option value="desc">XMAP_JBS_DESCENDING</option>
+        <option value="asc">XMAP_JBS_ASCENDING</option>
         </field>
         <field  name="displaytype"
                 type="list"
-                label="Type of List"
-                description="Choose how you want the list displayed, by book, year, teacher, or location. Then it will break by year."
+                label="XMAP_JBS_TYPE_OF_LIST"
+                description="XMAP_JBS_TYPE_OF_LIST_DESC"
                 default="1">
-        <option value="1">Year</option>
-        <option value="2">Book</option>
-        <option value="3">Teacher</option>
-        <option value="4">Location</option>
+        <option value="1">XMAP_JBS_YEAR</option>
+        <option value="2">XMAP_JBS_BOOK</option>
+        <option value="3">XMAP_JBS_TEACHER</option>
+        <option value="4">XMAP_JBS_LOCATION</option>
         </field>
         <field name="showmedia"
                 type="list"
-                label="Show Media Files"
-                description="Include links to media files (direct links only will show)"
+                label="XMAP_JBS_SHOW_MEDIA_FILES"
+                description="XMAP_JBS_SHOW_MEDIA_FILES_DESC"
                 default="1">
-            <option value="1">Yes</option>
-            <option value="2">No</option>
+            <option value="1">XMAP_JBS_YES</option>
+            <option value="2">XMAP_JBS_NO</option>
         </field>    
         <field name="limit" 
                 type="text" default="" 
-                label="Study/Media File Limit" 
-                description="Number of studies and media files to include. Leave blank for all" 
-                size="10" />
-        <field name="expand"
-                type="list"
-                label="Expand studies"
-                description="Yes allows expansion, no presents all rows"
-                default="1">
-           <option value="1">Yes</option>
-           <option value="2">No</option>
-        </field>
+                label="XMAP_JBS_MEDIA_FILE_LIMIT" 
+                description="XMAP_JBS_MEDIA_FILE_LIMIT_DESC" 
+                size="10"
+                />
+        <field name="nofilename"
+                type="text"
+                default="Media File"
+                label="XMAP_JBS_NO_FILE_NAME"
+                description="XMAP_JBS_NO_FILE_NAME_DESC"
+                size="50"
+                />
         </fieldset>
-        <fieldset addpath="/administrator/components/com_xmap/elements">
-                <field name="sitemap" type="sitemap" default="0" label="Select Site Map" description="Select the Sitemap to use with this plugin" />
-            </fieldset>
-      </fields>
+    </fields>
     </config>
   
 

@@ -57,6 +57,7 @@ static function prepareMenuItem($node,$params)
 	
     $lang = JFactory::getLanguage();
     $lang->load('com_biblestudy', JPATH_ADMINISTRATOR);
+    $lang->load('plg_xmap_com_biblestudy', JPATH_ADMINISTRATOR);
   
     parse_str(html_entity_decode($link_query['query']), $link_vars);
     $view = JArrayHelper::getValue($link_vars, 'view', '');
@@ -120,8 +121,8 @@ static function prepareMenuItem($node,$params)
                 $record = $result->booknumber;
                 $node = new stdclass;
         		$node->id   = $parent->id;
-        		$node->uid=$parent->uid.'a'.$result->bookname;
-        		$node->name = $result->bookname;
+        		$node->uid=$parent->uid.'a'.JText::_($result->bookname);
+        		$node->name = JText::_($result->bookname);
         		$node->parent=1;
         		$node->browsNav=1;//open new window
         		$node->ordering=2;
@@ -139,7 +140,7 @@ static function prepareMenuItem($node,$params)
         break;
         
         case 3:
-            $query = 'select id, teachername from #__bsms_teachers where published = 1 order by ordering';
+            $query = 'select id, teachername from #__bsms_teachers where published = 1 order by ordering asc';
             $db->setQuery($query);
         	$results = $db->loadObjectList();
             $node->expandable = true;
@@ -224,11 +225,9 @@ static function prepareMenuItem($node,$params)
             $db = JFactory::getDBO();
             $db->setQuery($query);
             $medias = $db->loadObjectList();
-            //todo - unset where no filename
-            //todo - is there a way to connect the media files to the study?
+           
             foreach ($medias AS $media)
             {
-               
                     $node = new stdclass;
             		$node->id   = $parent->id;
             		$node->uid=$parent->uid.'a'.$media->id;
@@ -238,26 +237,32 @@ static function prepareMenuItem($node,$params)
             		$node->ordering=2;
             		$node->priority=$parent->priority;
             		$node->changefreq=$parent->changefreq;
-            	//	$node->type='component';
-            	//	$node->menutype='mainmenu';
+                    if ($media->filename)
+                      {
+                        $node->name = $media->filename;
+                        $node->link ='index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;mediaid='.$media->id.'&amp;t='.$t;
+                      }
                  if (!$media->filename)
                     {
-                      //$node->link ='index.php?option=com_biblestudy&amp;player='.$media->player.'&amp;view=popup&amp;mediaid='.$media->id.'&amp;t='.$t;
                       $node->link ='index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;mediaid='.$media->id.'&amp;t='.$t;
+                      
                       if ($media->mimetext)
                       {
                         $node->name = $media->mimetext;
                       }
                       else
                       {
-                        $node->name = 'Media File';
+                        $node->name = $params['nofilename'];
                       } 
                     }
+                    /*
                     else
                     {
-            		  $node->link =$media->server_path.$media->folderpath.$media->filename;
-                      $node->name = $media->filename;                        
+            		  $node->link = $media->server_path.$media->folderpath.$media->filename;
+                      $node->name = $media->filename;     
+                      //var_dump ($node);                   
                     }  
+                    */
 
             		$xmap->printNode($node);
                          
@@ -289,30 +294,33 @@ static function prepareMenuItem($node,$params)
     function showYears($result, $xmap, $t, $limit, $order, $params, $field, $record)
     {
         $db = JFactory::getDBO();
-        $query = 'select distinct year(studydate) as theYear from #__bsms_studies where published = 1 AND '.$field.' = '.$record.' LIMIT 1';
+        $query = 'select distinct year(studydate) as theYear from #__bsms_studies where published = 1 AND '.$field.' = '.$record.' order by theYear '.$order;
        	$db->setQuery($query);
-    	$year = $db->loadObject();
-        $node = new stdclass;
-		$node->id   = $parent->id;
-		$node->uid=$parent->uid.'a'.$year->theYear;
-		$node->name = $year->theYear;
-		$node->parent=1;
-		$node->browsNav=1;//open new window
-		$node->ordering=2;
-		$node->priority=$parent->priority;
-		$node->changefreq=$parent->changefreq;
-		$node->type='component';
-		$node->menutype='mainmenu';
-		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_year=' .$year->theYear;
-		$xmap->printNode($node);
-        $xmap->changeLevel(1);
-        $query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE year(studydate) = '.$year->theYear.' and '.$field. ' = '.$record;
-        $db->setQuery($query);
-        $studies = $db->loadObjectList();
-        foreach ($studies AS $study)
+    	$years = $db->loadObjectList();
+        foreach ($years as $year)
         {
-            self::showStudies($study, $xmap, $t, $limit, $order, $params);
-        }
-        $xmap->changeLevel(-1);
+            $node = new stdclass;
+    		$node->id   = $parent->id;
+    		$node->uid=$parent->uid.'a'.$year->theYear;
+    		$node->name = $year->theYear;
+    		$node->parent=1;
+    		$node->browsNav=1;//open new window
+    		$node->ordering=2;
+    		$node->priority=$parent->priority;
+    		$node->changefreq=$parent->changefreq;
+    		$node->type='component';
+    		$node->menutype='mainmenu';
+    		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_year=' .$year->theYear;
+    		$xmap->printNode($node);
+            $xmap->changeLevel(1);
+            $query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE year(studydate) = '.$year->theYear.' and '.$field. ' = '.$record;
+            $db->setQuery($query);
+            $studies = $db->loadObjectList();
+            foreach ($studies AS $study)
+            {
+                self::showStudies($study, $xmap, $t, $limit, $order, $params);
+            }
+            $xmap->changeLevel(-1);
+       }
     }
 }
