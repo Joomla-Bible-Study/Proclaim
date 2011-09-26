@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install version="1.6" type="plugin" group="xmap" method="upgrade">
+<extension version="1.6" type="plugin" group="xmap" method="upgrade">
         <name>Xmap plugin for Joomla Bible Study</name>
         <author>Joomla Bible Study - Tom Fuller</author>
         <creationDate>September 2011</creationDate>
@@ -7,7 +7,7 @@
         <license>http://www.gnu.org/copyright/gpl.html GNU/GPL</license>
         <authorEmail>info@joomlabiblestudy.org</authorEmail>
         <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
-        <version>1.0</version>
+        <version>1.1</version>
         <description>Xmap plugin for Bible Study component.</description>
   <files>
 		<filename plugin="com_biblestudy">com_biblestudy.php</filename>
@@ -55,6 +55,14 @@
                 default="1">
             <option value="1">XMAP_JBS_YES</option>
             <option value="2">XMAP_JBS_NO</option>
+        </field>
+        <field name="filelink"
+                type="list"
+                label="XMAP_JBS_FILELINK"
+                description="XMAP_JBS_FILELINK_DESC"
+                default="2">
+            <option value="1">XMAP_JBS_YES</option>
+            <option value="2">XMAP_JBS_NO</option>
         </field>    
         <field name="limit" 
                 type="text" default="" 
@@ -72,6 +80,10 @@
         </fieldset>
     </fields>
     </config>
-  
+  	<!-- UPDATESERVER DEFINITION -->
+	<updateservers>
+		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+		<server type="plugin" priority="1" name="Joomla Bible Study Xmap Plugin"><![CDATA[http://www.joomlabiblestudy.org/updates/xmap.xml]]></server>
+	</updateservers>
 
-</install>
+</extension>

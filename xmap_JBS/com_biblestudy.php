@@ -240,7 +240,12 @@ static function prepareMenuItem($node,$params)
                     if ($media->filename)
                       {
                         $node->name = $media->filename;
-                        $node->link ='index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;mediaid='.$media->id.'&amp;t='.$t;
+                        if ($params['filelink'] == 1)
+                        {
+                            $node->link = $media->folderpath.$media->filename;
+                        }
+                        else
+                        {$node->link ='index.php?option=com_biblestudy&amp;player=1&amp;view=popup&amp;mediaid='.$media->id.'&amp;t='.$t;}
                       }
                  if (!$media->filename)
                     {
