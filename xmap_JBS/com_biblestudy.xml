@@ -83,7 +83,7 @@
   	<!-- UPDATESERVER DEFINITION -->
 	<updateservers>
 		<!-- Note: No spaces or linebreaks allowed between the server tags -->
-		<server type="plugin" priority="1" name="Joomla Bible Study Xmap Plugin"><![CDATA[http://www.joomlabiblestudy.org/updates/xmap.xml]]></server>
+		<server type="extension" priority="1" name="Joomla Bible Study Xmap Plugin">http://www.joomlabiblestudy.org/updates/xmap.xml</server>
 	</updateservers>
 
 </extension>
