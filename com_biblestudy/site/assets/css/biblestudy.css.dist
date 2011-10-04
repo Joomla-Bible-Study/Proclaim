@@ -4,7 +4,15 @@
 	font-weight: bold; 
 	color: black; 
 } 
- 
+
+#listingfooter li, #listingfooter ul
+{
+    display: inline;
+}
+#main ul, #main li 
+{
+    display: inline;
+}
 #bsdropdownmenu { 
   margin-bottom: 10px; 
 } 
