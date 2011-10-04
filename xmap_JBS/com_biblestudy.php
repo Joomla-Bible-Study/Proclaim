@@ -47,7 +47,7 @@ static function prepareMenuItem($node,$params)
 	function &getTree( $xmap, $parent, &$params ) {
 		$db = JFactory::getDBO();
         $app = JFactory::getApplication();
-      //  global $mosConfig_absolute_path;
+      
 		$list = array();
 		
 		 $link_query = parse_url($parent->link);
@@ -98,7 +98,7 @@ static function prepareMenuItem($node,$params)
         		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_year=' .$result->theYear;
         		$xmap->printNode($node);
                 $xmap->changeLevel(1);
-                $query = 'SELECT id, studytitle, studydate FROM #__bsms_studies WHERE year(studydate) = '.$result->theYear;
+                $query = 'SELECT id, studytitle, studydate, studyintro FROM #__bsms_studies WHERE year(studydate) = '.$result->theYear;
                 $db->setQuery($query);
                 $studies = $db->loadObjectList();
                 foreach ($studies AS $study)
@@ -110,7 +110,7 @@ static function prepareMenuItem($node,$params)
         break;
         
         case 2:
-            $query = 'select distinct s.booknumber, b.bookname, b.booknumber as bnumber from #__bsms_studies '
+            $query = 'select distinct s.booknumber, b.bookname, b.booknumber as bnumber, s.studyintro from #__bsms_studies '
             .' as s LEFT JOIN #__bsms_books as b on (s.booknumber = b.booknumber) where s.published = 1 order by s.booknumber asc';
             $db->setQuery($query);
         	$results = $db->loadObjectList();
@@ -173,7 +173,7 @@ static function prepareMenuItem($node,$params)
             $db->setQuery($query);
         	$results = $db->loadObjectList();
             $node->expandable = true;
-          //  $xmap->changeLevel(1);
+          
             foreach ($results AS $result)
             {
                 $field = 'location_id';
@@ -260,15 +260,7 @@ static function prepareMenuItem($node,$params)
                         $node->name = $params['nofilename'];
                       } 
                     }
-                    /*
-                    else
-                    {
-            		  $node->link = $media->server_path.$media->folderpath.$media->filename;
-                      $node->name = $media->filename;     
-                      //var_dump ($node);                   
-                    }  
-                    */
-
+                    
             		$xmap->printNode($node);
                          
             }
@@ -290,10 +282,12 @@ static function prepareMenuItem($node,$params)
 		$node->type='component';
 		$node->menutype='mainmenu';
 		$node->link ='index.php?option=com_biblestudy&amp;view=studydetails&amp;id=' .$study->id.'&amp;t='.$t;
+        if ($params['description'] == 1)
+        {
+            $node->name .= ' - '.$study->studyintro;
+        }
 		$xmap->printNode($node);
-      //  $xmap->changeLevel(1);
         self::showMediaFiles($study->id, $xmap, $limit, $order, $params);
-       // $xmap->changeLevel(-1);
     }
     
     function showYears($result, $xmap, $t, $limit, $order, $params, $field, $record)

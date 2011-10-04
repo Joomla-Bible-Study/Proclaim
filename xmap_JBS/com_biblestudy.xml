@@ -2,12 +2,12 @@
 <extension version="1.6" type="plugin" group="xmap" method="upgrade">
         <name>Xmap plugin for Joomla Bible Study</name>
         <author>Joomla Bible Study - Tom Fuller</author>
-        <creationDate>September 2011</creationDate>
+        <creationDate>October 3 2011</creationDate>
         <copyright>(C) 2011 Joomla Bible Study - Tom Fuller</copyright>
         <license>http://www.gnu.org/copyright/gpl.html GNU/GPL</license>
         <authorEmail>info@joomlabiblestudy.org</authorEmail>
         <authorUrl>http://www.JoomlaBibleStudy.org</authorUrl>
-        <version>1.1</version>
+        <version>1.2</version>
         <description>Xmap plugin for Bible Study component.</description>
   <files>
 		<filename plugin="com_biblestudy">com_biblestudy.php</filename>
@@ -70,6 +70,14 @@
                 description="XMAP_JBS_MEDIA_FILE_LIMIT_DESC" 
                 size="10"
                 />
+        <field name="description"
+                type="list"
+                label="XMAP_JBS_DESCRIPTION"
+                description="XMAP_JBS_DESCRIPTION_DESC"
+                default="1">
+        <option value="1">XMAP_JBS_YES</option>
+        <option value="2">XMAP_JBS_NO</option>
+                </field>
         <field name="nofilename"
                 type="text"
                 default="Media File"
