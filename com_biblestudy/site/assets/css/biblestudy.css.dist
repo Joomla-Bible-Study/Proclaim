@@ -165,6 +165,22 @@
   font-size:0.6em; 
   position:relative; bottom: 7px; 
 } 
+
+.component-content ul
+{
+text-align: center;
+}
+
+.component-content li
+{
+display: inline;
+}
+
+.pagenav
+{
+margin-left: 10px;
+margin-right: 10px;
+}
  
 /* Study Details CSS */ 
  
@@ -343,6 +359,10 @@
 	font-size:20px; 
 	font-weight:bold; 
 } 
+
+#recaptcha_widget_div {
+  position:static !important;
+}
 /* Module Style Settings */ 
  
 #bsmsmoduletable { 
