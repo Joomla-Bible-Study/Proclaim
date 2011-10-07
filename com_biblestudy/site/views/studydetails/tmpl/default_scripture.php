@@ -18,9 +18,9 @@ switch ($this->params->get('show_passage_view', '0'))
 		?>
 <strong><a class="heading" href="javascript:ReverseDisplay('scripture')">>>
 <?php echo JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE');?><<</a>
-	<div id="scripture" style="display: none;">
+</strong>	<div id="scripture" style="display: none;">
 
-</strong>
+
 
 <?php
 
