@@ -185,7 +185,8 @@
           &lt;/tr&gt;
           &lt;/tbody&gt;
         &lt;/table&gt;"
-				label="JBS_TPL_TEMPLATECODE" description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_DESC" />
+				label="JBS_TPL_TEMPLATECODE" description="JBS_TPL_STUDIESVIEW_TEMPLATECODE_DESC" 
+                filter="raw" />
 			<field name="wrapcode" type="radio" default="0"
 				label="JBS_TPL_TABLE_OR_DIV">
 				<option value="0">JBS_CMN_NO</option>
@@ -219,7 +220,7 @@
 				<option value="1">JBS_TPL_USE_HEADER_ROW</option>
 			</field>
 			<field name="list_intro" type="editor" height="300" width="500"
-				label="JBS_TPL_LISTITEMS_LIST_INTRO" filter="BibleStudyHelper::filterText"
+				label="JBS_TPL_LISTITEMS_LIST_INTRO" filter="raw"
 				buttons="true" />
 			<field name="intro_show" type="list" default="1"
 				label="JBS_TPL_LISTITEMS_INTRO_SHOW" description="JBS_TPL_LISTITEMS_INTRO_SHOW_DESC">
@@ -594,7 +595,7 @@
 				<option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
 			</field>
 			<field name="study_detailtemplate" type="textarea" rows="10"
-				cols="100" label="JBS_TPL_DETAILS_STUDY_DETAILTEMPLATE" description="JBS_TPL_DETAILS_TEMPLATECODE_DESC" />
+				cols="100" label="JBS_TPL_DETAILS_STUDY_DETAILTEMPLATE" description="JBS_TPL_DETAILS_TEMPLATECODE_DESC" filter="raw"/>
 		</fieldset>
 		<fieldset name="TEACHER">
 			<field name="teacher_title" type="text" default="Our Teachers"
@@ -637,7 +638,8 @@
   &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;"
-				label="JBS_TPL_TEACHERLIST_TEMPLATECODE" description="JBS_TPL_TEACHER_TEMPLATECODE_DESC" />
+				label="JBS_TPL_TEACHERLIST_TEMPLATECODE" description="JBS_TPL_TEACHER_TEMPLATECODE_DESC" 
+                filter="raw" />
 			<field name="teacher_wrapcode" type="radio" default="0"
 				label="JBS_TPL_TABLE_OR_DIV">
 				<option value="0">JBS_CMN_NO</option>
@@ -664,7 +666,8 @@
   &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;"
-				label="JBS_TPL_TEACHERDETAIL_TEMPLATECODE" description="JBS_TPL_TEACHER_TEMPLATECODE_DESC" />
+				label="JBS_TPL_TEACHERDETAIL_TEMPLATECODE" description="JBS_TPL_TEACHER_TEMPLATECODE_DESC" 
+                filter="raw" />
 		</fieldset>
 		<fieldset name="SERIES">
 			<field name="series_title" default="Our Series" type="text"
