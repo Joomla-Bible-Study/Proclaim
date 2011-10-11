@@ -374,7 +374,7 @@ class jbsMedia
 			case 0: //Direct
 				switch ($player->type)
 				{
-					case 0: //new window
+					case 2: //new window
 						$playercode =
                     '<a href="'.$path.'" onclick="window.open(\'index.php?option=com_biblestudy&view=popup&close=1&mediaid='.
 						$media->id.'\',\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
