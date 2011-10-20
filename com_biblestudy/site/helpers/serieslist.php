@@ -246,7 +246,8 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
 // 	. '	LEFT JOIN #__bsms_topics ON (s.topics_id = #__bsms_topics.id)'
 	. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)'
-	.' WHERE s.series_id = '.$id.' AND s.published = 1 ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC');
+	. ' WHERE s.series_id = '.$id.' AND s.published = 1 '
+	. ' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC');
 	$db->setQuery($query);
 	$results = $db->loadObjectList();
 	$items = $results;

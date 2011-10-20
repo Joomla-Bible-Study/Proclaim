@@ -17,9 +17,9 @@ defined('_JEXEC') or die('Restricted access');
 topicItem: stdClass containing topic_text and topic_params
 return: translated string or null if topicItem is not initialised
 */
-function getTopicItemTranslated($topicItem)
-{
-	if (isset($topicItem->topic_param)) {
+function getTopicItemTranslated($topicItem) {
+	//If there is no topic to translate, just return
+	if ($topicItem) {
 		// first choice: evaluate language strings
 		$itemparams = new JRegistry;
 		$itemparams->loadJSON($topicItem->topic_params);
@@ -49,15 +49,13 @@ function getTopicItemTranslated($topicItem)
 
 
 /*
- translate a list of topicItems to clear text each
-topicItems: array of stdClass containing topic_text and topic_params
-return: list of topicItems containing translated strings in topic_text
-*/
-function getTopicItemsTranslated($topicItems = array())
-{
+  translate a list of topicItems to clear text each
+  topicItems: array of stdClass containing topic_text and topic_params
+  return: list of topicItems containing translated strings in topic_text
+ */
+function getTopicItemsTranslated($topicItems = array()) {
 	$output = array();
-	foreach ($topicItems as $topicItem)
-	{
+	foreach ($topicItems as $topicItem) {
 		$text = getTopicItemTranslated($topicItem);
 		$topicItem->topic_text = $text;
 		$output[] = $topicItem;
@@ -71,8 +69,7 @@ function getTopicItemsTranslated($topicItems = array())
    topicItem: stdClass containing the studies id and tp_id (i.e. concatenated topic ids)
    return: translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
 */
-function getConcatTopicItemTranslated($topicItem)
-{
+function getConcatTopicItemTranslated($topicItem) {
 	if ($topicItem) {
 		// Check if there should be topics at all to save time
 		if ($topicItem->tp_id) {
@@ -83,12 +80,13 @@ function getConcatTopicItemTranslated($topicItem)
 					.'WHERE published = 1 and #__bsms_topics.id = #__bsms_studytopics.topic_id';
 			$db->setQuery($query);
 			$results = $db->loadObjectList();
-    	
+
 			$output = '';
 			$count = count($results);
-			for ($i = 0; $i < $count; $i++)
-			{
-				if ($i > 0) {$output .= ', ';}
+			for ($i = 0; $i < $count; $i++) {
+				if ($i > 0) {
+					$output .= ', ';
+				}
 				$output .= getTopicItemTranslated($results[$i]);
 			}
 			return $output;

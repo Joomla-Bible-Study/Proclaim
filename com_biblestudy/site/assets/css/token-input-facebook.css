@@ -98,13 +98,11 @@ div.token-input-dropdown-facebook ul li {
 	padding: 3px;
 }
 
-div.token-input-dropdown-facebook ul li.token-input-dropdown-item-facebook
-	{
+div.token-input-dropdown-facebook ul li.token-input-dropdown-item-facebook {
 	background-color: #fff;
 }
 
-div.token-input-dropdown-facebook ul li.token-input-dropdown-item2-facebook
-	{
+div.token-input-dropdown-facebook ul li.token-input-dropdown-item2-facebook {
 	background-color: #fff;
 }
 
@@ -113,8 +111,7 @@ div.token-input-dropdown-facebook ul li em {
 	font-style: none;
 }
 
-div.token-input-dropdown-facebook ul li.token-input-selected-dropdown-item-facebook
-	{
+div.token-input-dropdown-facebook ul li.token-input-selected-dropdown-item-facebook {
 	background-color: #3b5998;
 	color: #fff;
 }

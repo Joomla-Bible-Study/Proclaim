@@ -142,7 +142,8 @@ function getMediatable($params, $row, $admin_params)
 	 if ($item < 3){
 	 	$type = $internal_popup;
 	 }
-	 else {$type = $item;
+	 else {
+	 	$type = $item;
 	 }
 	 switch ($playertype)
 	 {
