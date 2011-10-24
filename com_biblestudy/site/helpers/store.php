@@ -39,11 +39,13 @@ function getStore($params, $row)
 			$src = JURI::base().$cd->media_image_path;
 			if ($imagew) {
 				$width = $imagew;
-			} else {$width = 24;
+			} else {
+				$width = 24;
 			}
 			if ($imageh) {
 				$height = $imageh;
-			} else {$height= 24;
+			} else {
+				$height= 24;
 			}
 			$store .='<a href="'.$cd->server_path.$cd->prod_cd.'" title="'.$cd->media_alttext.'"><img src="'.JURI::base().$cd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$cd->media_alttext.' "border="0" /></a></td>';
 		}
@@ -53,11 +55,13 @@ function getStore($params, $row)
 			$src = JURI::base().$dvd->media_image_path;
 			if ($imagew) {
 				$width = $imagew;
-			} else {$width = 24;
+			} else {
+				$width = 24;
 			}
 			if ($imageh) {
 				$height = $imageh;
-			} else {$height= 24;
+			} else {
+				$height= 24;
 			}
 			$store .='<td><a href="'.$dvd->server_path.$dvd->prod_dvd.'" title="'.$dvd->media_alttext.'"><img src="'.JURI::base().$dvd->media_image_path.'" width="'.$width.'" height="'.$height.'" alt="'.$dvd->media_alttext.' "border="0" /></a></td></tr><tr><td colspan="2" align="center"><span'.$params->get('store_span').$params->get('store_name').'</span></td>';
 		}

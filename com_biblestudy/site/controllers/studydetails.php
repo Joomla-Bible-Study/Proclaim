@@ -269,7 +269,8 @@ class biblestudyControllerstudydetails extends JController
 		$Body = $comment_author.' '.JText::_('JBS_STY_HAS_ENTERED_COMMENT').': '.$comment_title.' - '.$comment_study_date.' '.JText::_('JBS_STY_ON').': '.$comment_date;
 		if ($comment_published > 0){
 			$Body = $Body.' '.JText::_('JBS_STY_COMMENT_PUBLISHED');
-		}else{$Body=$Body.' '.JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');
+		}else{
+			$Body=$Body.' '.JText::_('JBS_STY_COMMENT_NOT_PUBLISHED');
 		}
 		$Body = $Body.' '.JText::_('JBS_STY_REVIEW_COMMENTS_LOGIN').': '.$comment_livesite;
 		$mail->addRecipient($ToEmail);

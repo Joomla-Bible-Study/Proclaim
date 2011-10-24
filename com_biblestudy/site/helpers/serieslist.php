@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 /**
  * @version $Id$
@@ -20,10 +20,10 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
-
+	
 	if ($params->get('series_show_description') == 0) {$listing .= '<tr class="onlyrow '.$oddeven.'">';}
 	else {$listing .= '<tr class="firstrow firstcol '.$oddeven.'">';}
-
+	
 	$custom = $params->get('seriescustom1');
 	$listelementid = $params->get('serieselement1');
 	$islink = $params->get('seriesislink1');
@@ -49,7 +49,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 	$listelementid = $params->get('serieselement3');
 	$islink = $params->get('seriesislink3');
 	$r = '';
-	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view);
+	$listelement = seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view); 
 	$listing .= $listelement;
 	if (!$listelementid) {
 		$listing .= '<td >';
@@ -66,7 +66,7 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 		$listing .= '<td class="lastcol"></td>'; 
 	}
 	$listing .= '</tr>';
-
+	
 	//add if last row to above
 	
 	if ($params->get('series_show_description') > 0 ) {
@@ -94,7 +94,7 @@ function getSerieslink($islink, $row, $element, $params, $admin_params)
 	}
 	else
 	{
-		$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&t='.$params->get('teachertemplateid', 1).'&id='.$row->id).'">'.$element.'</a>';
+		$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&t='.$params->get('teachertemplateid', 1).'&id='.$row->id).'">'.$element.'</a>';	
 	}
 	return $link;
 }
@@ -109,22 +109,22 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 {
 	$element = '';
 	switch ($listelementid)
-	{
+	{ 
 		case 1:
 			$element = $row->series_text;
 			if ($islink > 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' title">'.$element.'</td>';
 			break;
 		case 2:
-			$images = new jbsImages();
+			$images = new jbsImages(); 
 			$image = $images->getSeriesThumbnail($row->series_thumbnail);
 
 			$element = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
 			if ($islink > 0 && $view == 0) {$element = getSerieslink($islink, $row, $element, $params, $admin_params);}
 			$element = '<td class="'.$r.' thumbnail image">'.$element.'</td>';
 			break;
-		case 3:
-			$images = new jbsImages();
+		case 3: 
+			$images = new jbsImages(); 
 			$image = $images->getSeriesThumbnail($row->series_thumbnail);
 			$element1 = '<td class="'.$r.' thumbnail"> <table id="seriestable" cellspacing="0"><tr class="noborder"><td>';
 			$element2 = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'" alt="'.$row->series_text.'">';
@@ -182,7 +182,7 @@ function seriesGetcustom($r, $row, $customelement, $custom, $islink, $admin_para
 		$custom = substr_replace($custom,$element,$bracebegin,(($braceend - $bracebegin) + 1));
 		$countbraces = $countbraces - 1;
 	}
-
+	
 	return $custom;
 }
 
@@ -191,39 +191,38 @@ function getseriesElementnumber($subcustom)
 	switch ($subcustom)
 	{
 		case 'title':
-			$customelement = 1;
-			break;
-
+		$customelement = 1;
+		break;
+		
 		case 'thumbnail':
-			$customelement = 2;
-			break;
-
+		$customelement = 2;
+		break;
+		
 		case 'thumbnail-title':
-			$customelement = 3;
-			break;
-
+		$customelement = 3;
+		break;
+		
 		case 'teacher':
-			$customelement = 4;
-			break;
-
+		$customelement = 4;
+		break;
+		
 		case 'teacherimage':
-			$customelement = 5;
-			break;
-
+		$customelement = 5;
+		break;
+		
 		case 'teacher-title':
-			$customelement = 6;
-			break;
-
+		$customelement = 6;
+		break;
+		
 		case 'description':
-			$customelement = 7;
-			break;
+		$customelement = 7;
+		break;
 	}
 	return $customelement;
 }
 
-function getSeriesstudies($id, $params, $admin_params, $template)
+function getSeriesstudiesDBO($id, $params, $limit = '')
 {
-	$studies = '';
 	$db	= & JFactory::getDBO();
 	$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = '.$id;
 	$db->setQuery($query);
@@ -231,26 +230,29 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 	$rows = $db->getAffectedRows();
 
 	$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
-	. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
-	. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
-	. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-	. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
-//	. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, '
-	. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text '
-	. ' FROM #__bsms_studies AS s'
-	. ' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
-	. ' LEFT JOIN #__bsms_teachers AS t ON (s.teacher_id = t.id)'
-	. ' LEFT JOIN #__bsms_books ON (s.booknumber = #__bsms_books.booknumber)'
-	. ' LEFT JOIN #__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)'
-	. ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)'
-	. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-// 	. '	LEFT JOIN #__bsms_topics ON (s.topics_id = #__bsms_topics.id)'
-	. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)'
-	. ' WHERE s.series_id = '.$id.' AND s.published = 1 '
-	. ' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC');
+		. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
+		. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
+		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
+		. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
+//		. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, '
+		. ' #__bsms_locations.id AS lid, #__bsms_locations.location_text '
+		. ' FROM #__bsms_studies AS s'
+		. ' LEFT JOIN #__bsms_series AS se ON (s.series_id = se.id)'
+		. ' LEFT JOIN #__bsms_teachers AS t ON (s.teacher_id = t.id)'
+		. ' LEFT JOIN #__bsms_books ON (s.booknumber = #__bsms_books.booknumber)'
+		. ' LEFT JOIN #__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)'
+		. ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)'
+		. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
+// 		. '	LEFT JOIN #__bsms_topics ON (s.topics_id = #__bsms_topics.id)'
+		. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)'
+		. ' WHERE s.series_id = '.$id.' AND s.published = 1 '
+		. ' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC')
+//		. ' GROUP BY s.id'
+		. $limit;	
 	$db->setQuery($query);
 	$results = $db->loadObjectList();
 	$items = $results;
+
 	 //check permissions for this view by running through the records and removing those the user doesn't have permission to see
 	$user = JFactory::getUser();
 	$groups	= $user->getAuthorisedViewLevels(); 
@@ -273,7 +275,14 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 		$item->topic_text = $topic_text;
 	}
 	
-	$result = $items;
+	return $items;
+}
+
+function getSeriesstudies($id, $params, $admin_params, $template)
+{
+	$result = getSeriesstudiesDBO ($id, $params);
+
+	$studies = '';
 	$numrows = count($result);
 
 	$class1 = 'bsodd';
@@ -307,13 +316,13 @@ function getSeriesstudies($id, $params, $admin_params, $template)
 		$studies .= '<td class="'.$element->id.'">'.$element->element.'</td>
 		';
 		$numrows = $numrows - 1;
-
+		
 	}
 	$t = $params->get('serieslisttemplateid');
 					if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 	$studies .= '</tr>';
-
-	return $studies;
+        
+return $studies;
 }
 
 function getSeriesLandingPage($params, $id, $admin_params)
@@ -417,7 +426,7 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 	include_once($path1.'image.php');
 	$images = new jbsImages();
 	$image = $images->getSeriesThumbnail($row->series_thumbnail);
-		
+			
 	$label = $params->get('series_templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
     $label = str_replace('{{teachertitle}}', $row->teachertitle, $label);
@@ -425,7 +434,7 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 	$label = str_replace('{{description}}', $row->description, $label);
 	$label = str_replace('{{thumbnail}}', '<img src="'. $image->path .'" width="' .$image->width .'" height="' . $image->height . '" />', $label);
 	$label = str_replace('{{url}}', 'index.php?option=com_biblestudy&view=seriesdetail&t='.$template.'&id='.$row->id, $label);
-
+    
 	return $label;
 }
 
@@ -441,7 +450,7 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
 	//This will eventually replace mediatable in this context.  Just for clarity.
 	include_once($path1.'media.php');
 	include_once($path1.'share.php');
-	include_once($path1.'comments.php');
+	//include_once($path1.'comments.php');
 	include_once($path1.'date.php');
 	include_once($path1.'image.php');    
 	$images = new jbsImages();
@@ -468,75 +477,31 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	$nolimit = JRequest::getVar('nolimit', 'int', 0);
 	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
 	if ($nolimit == 1) {$limit = '';}
-	$db	= & JFactory::getDBO();
-	$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = '.$id;
-	$db->setQuery($query);
-	$allrows = $db->loadObjectList();
-	$rows = $db->getAffectedRows();
-	 
-	// 6.2
-	$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
-		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
-		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-		. ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
-		. ' FROM #__bsms_studies'
-		. ' left join #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
-		. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-		. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-		. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-		. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-		. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-		. ' where #__bsms_series.id = ' .$id
-		. ' GROUP BY #__bsms_studies.id'
-		. ' order by studydate desc'
-		. $limit;	
-	$db->setQuery($query);
-	$result = $db->loadObjectList();
-	$numrows = $db->getAffectedRows();
 
-	//check permissions for this view by running through the records and removing those the user doesn't have permission to see
-	$user = JFactory::getUser();
-	$groups	= $user->getAuthorisedViewLevels(); 
-	$count = count($result);
-
-	for ($i = 0; $i < $count; $i++)
-	{
-	    if ($result[$i]->access > 1)
-	    {
-	       if (!in_array($result[$i]->access,$groups))
-	       {
-	            unset($result[$i]); 
-	       } 
-	    }
-
-// santon tobedone translation
-
-
-	}
-	
+	$result = getSeriesstudiesDBO ($id, $params, $limit);
 	$numrows = count($result);
 
 	$studies = '';
 
 	switch ($params->get('series_wrapcode')) {
 		case '0':
-			//Do Nothing
-			break;
+		  //Do Nothing
+		  break;
 		case 'T':
-			//Table
-			$studies .= '<table id="bsms_seriestable" width="100%">';
-			break;
+		  //Table
+		  $studies .= '<table id="bsms_seriestable" width="100%">'; 
+		  break;
 		case 'D':
-			//DIV
-			$studies .= '<div>';
-			break;
-	}
+		  //DIV
+		  $studies .= '<div>';
+		  break;
+		}
 	echo $params->get('series_headercode');
 
 	foreach ($result AS $row)
 	{
-		$oddeven = 0;
-		$studies .= getListingExp($row, $params, $params, $params->get('seriesdetailtemplateid'));
+	    $oddeven = 0;
+		$studies .= getListingExp($row, $params, $params, $params->get('seriesdetailtemplateid'));	
 	}
 	
 	switch ($params->get('series_wrapcode')) {
@@ -555,7 +520,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	echo $params->get('series_headercode');
 
 	return $studies;
-	}
+}
 
 function getSeriesFooter($t, $id)
 {

@@ -12,59 +12,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
-
-}
-
-class biblestudyModeltopicslist extends modelClass
-{
-	/**
-	 *
-	 * @var array
-	 */
-	var $_data;
-	var $allow_deletes = null;
-
-
-	/**
-	 * Returns the query
-	 * @return string The query to be used to retrieve the rows from the database
-	 */
-	function _buildQuery()
-	{
-		$query = ' SELECT params AS topic_params'
-		. ' FROM #__bsms_topics '
-		;
-
-		return $query;
-	}
-
-	/**
-	 * Retrieves the data
-	 * @return array Array of objects containing the data from the database
-	 */
-	function getData()
-	{
-		// Lets load the data if it doesn't already exist
-		if (empty( $this->_data ))
-		{
-			$query = $this->_buildQuery();
-			$result = $this->_getList( $query );
-			$this->_data = getTopicItemsTranslated($result);
-		}
-		return $this->_data;
-	}
-	function getDeletes()
-	{
-		if (empty($this->_deletes)) {
-			$query = 'SELECT allow_deletes'
-			. ' FROM #__bsms_admin'
-			. ' WHERE id = 1';
-			$this->_deletes = $this->_getList($query);
-		}
-		return $this->_deletes;
-	}
-
+class biblestudyModeltopicslist extends JModelList {
 	/**
 	 * @since   7.0
 	 */

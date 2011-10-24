@@ -75,7 +75,8 @@ class jbStats {
 			$hits = $db->loadObject();
 			if (!$hits->studytitle){
 				$name = $hits->id;
-			}else{$name = $hits->studytitle;
+			}else{
+				$name = $hits->studytitle;
 			}
 			if ($format < 1){
 				$total = $result->added + $hits->hits;
