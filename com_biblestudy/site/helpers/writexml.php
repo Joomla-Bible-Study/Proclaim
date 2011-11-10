@@ -169,7 +169,7 @@ function writeXML()
 			        $episode->id = $episode->study_id;
 			        $scripture = getScripture($params, $episode, $esv, $scripturerow); 
 					$pod_title = $podinfo->episodetitle;
-			
+			          if (!$episode->size){$episode->size = '1024';}
 					switch ($pod_title)
 					{
 						case 0:
