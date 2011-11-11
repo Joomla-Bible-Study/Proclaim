@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS #__jbspodcast_install ( fielda int(10) );
+DROP TABLE IF EXISTS #__jbspodcast_install;
 
 DROP TABLE IF EXISTS #__jbspodcast_update;
 
