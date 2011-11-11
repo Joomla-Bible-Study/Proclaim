@@ -2,7 +2,7 @@
 <extension type="module" version="1.6.0" method="upgrade"
 	client="site">
 	<name>mod_biblestudy</name>
-	<author>Tom Fuller</author>
+	<author>Joomla Bible Study Team</author>
 	<creationDate>April 29, 2011</creationDate>
 	<copyright>(C) 2007-2011 Joomla Bible Study</copyright>
 	<license>GPL/GNU</license>
