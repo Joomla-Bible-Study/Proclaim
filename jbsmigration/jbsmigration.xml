@@ -12,15 +12,15 @@
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
 	<copyright>(C) 2011 Copyright Joomla Bible Study</copyright>
 	<license>GNU/GPL</license>
-	<version>1.0.13</version>
-	<creationDate>July 19, 2011</creationDate>
+	<version>1.0.14</version>
+	<creationDate>November 11, 2011</creationDate>
 	<description>COM_JBSMIGRATION_DESCRIPTION</description>
 	<files>jbsmigration.xml</files>
 	<administration>
 		<!-- Administration Menu Section -->
 		<menu>COM_JBSMIGRATION_MENU</menu>
 		<!-- Administration Main File Copy Section -->
-		<files>
+		<files folder="admin">
 			<filename>index.html</filename>
 			<filename>admin.jbsmigration.php</filename>
 			<filename>controller.php</filename>
@@ -38,13 +38,5 @@
 			<language tag="en-GB">en-GB/en-GB.com_jbsmigration.sys.ini</language>
 		</languages>
 	</administration>
-	<updateservers>
-		<server type="extension" priority="1"
-			name="Joomla Bible Study Migration"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=6]]></server>
-	</updateservers>
-	<!-- Dependencies -->
-	<dependencies>
-		<dependency type="platform" name="joomla" operator="="
-			version="1.5" />
-	</dependencies>
+
 </install>
