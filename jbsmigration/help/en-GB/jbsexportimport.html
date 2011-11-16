@@ -32,6 +32,14 @@
 		we cannot. If you consistently get a timeout error you will want to
 		consult your web host on how to edit the php.ini to adjust the
 		max_execution_time.</p>
+    <br />
+    <p>If you have used JUpgrade this is the simplest option to Copy/Migrate.
+    JUpgrade uses the same database for the old and new installation. 
+    This function copies the old JBS database tables into tables with the new prefix.
+    You MUST enter your old Joomla 1.5 database prefix with the underline after.
+    You can find out the prefix by going to the Global Configuration.
+    Once the tables have been copied the migration will occur. Any error messages will be displayed.
+    Remember: if this fails, you can manuualy delete the JBS new tables and start again.</p>
 	<br />
 	<p>
 		<strong>Migrate in place: </strong>Click on this link if you simply
