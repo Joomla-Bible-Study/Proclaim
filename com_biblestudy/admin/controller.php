@@ -176,21 +176,12 @@ die();
 
     function writeXMLFile() {
 
-        $mainframe = & JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-        $path1 = JPATH_SITE . '/components/com_biblestudy/helpers/';
-        include_once($path1 . 'writexml.php');
-
-
-        $result = writeXML();
-        if ($result) {
-
-            $msg = JText::_('JBS_PDC_XML_FILES_WRITTEN');
-        } else {
-
-            $msg = JText::_('JBS_PDC_XML_FILES_ERROR');
-        }
-        $this->setRedirect('index.php?option=com_biblestudy&view=podcastlist', $msg);
+        $path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
+        require_once($path1.'biblestudy.podcast.class.php');
+        $podcasts = new JBSPodcast();
+        $result = $podcasts->makePodcasts();
+       
+        $this->setRedirect('index.php?option=com_biblestudy&view=podcastlist', $result);
     }
 
     function resetHits() {
