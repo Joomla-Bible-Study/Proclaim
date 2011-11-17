@@ -55,10 +55,10 @@ class plgSystemjbspodcast extends JPlugin {
 			$dopodcast = $this->doPodcast();
 
 			//If we have run the podcastcheck and it returned no errors then the last thing we do is reset the time we did it to current
-			if ($dopodcast)
-			{
+		//	if ($dopodcast)
+		//	{
 				$updatetime = $this->updatetime();
-			}
+		//	}
 
 			// Last we check to see if we need to email anything
 			if ($params->get('email')> 0)
@@ -192,10 +192,17 @@ class plgSystemjbspodcast extends JPlugin {
 
 	function doPodcast()
 	{
-		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		$path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
+        require_once($path1.'biblestudy.podcast.class.php');
+        $podcasts = new JBSPodcast();
+        $result = $podcasts->makePodcasts();
+        return $result;
+        /*
+        $path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
 		include_once($path1.'writexml.php');
 		$podcast = writeXML();
 		return $podcast;
+        */
 	}
 
 	function doEmail($params, $dopodcast)
@@ -214,6 +221,8 @@ class plgSystemjbspodcast extends JPlugin {
 		$Body   = $params->def( 'Body', '<strong>'.JText::_('PLG_JBSPODCAST_TITLE').': '.$fromname.'</strong><br />' );
 		$Body .= JText::_('Process run at: ').$date.'<br />';
 		$Body2 = '';
+        $Body2 = $dopodcast;
+        /*
 		$db =& JFactory::getDBO();
 		$query = 'SELECT * FROM #__bsms_podcast WHERE #__bsms_podcast.published = 1';
 		$db->setQuery($query);
@@ -233,6 +242,7 @@ class plgSystemjbspodcast extends JPlugin {
 				}
 			}
 		}
+        */
 		$Body3 = $Body.$Body2;
 		$Subject       = $params->def( 'subject', JText::_('PLG_JBSPODCAST_UPDATE') );
 		$FromName       = $params->def( 'fromname', $fromname );
