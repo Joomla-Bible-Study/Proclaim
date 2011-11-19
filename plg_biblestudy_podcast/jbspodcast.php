@@ -63,7 +63,16 @@ class plgSystemjbspodcast extends JPlugin {
 			// Last we check to see if we need to email anything
 			if ($params->get('email')> 0)
 			{
-				$email = $this->doEmail($params, $dopodcast);
+				if ($params->get('email') > 1)
+                {
+                    $iserror = substr_count($dopodcast,'not');
+                    if ($iserror)
+                    {
+                        $email = $this->doEmail($params, $dopodcast);
+                    }
+                }
+                else
+                {$email = $this->doEmail($params, $dopodcast);}
 			}
 		}
 
@@ -192,7 +201,7 @@ class plgSystemjbspodcast extends JPlugin {
 
 	function doPodcast()
 	{
-		$path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
+		$path1 = JPATH_SITE . '/plugins/system/jbspodcast/';
         require_once($path1.'biblestudy.podcast.class.php');
         $podcasts = new JBSPodcast();
         $result = $podcasts->makePodcasts();
@@ -207,7 +216,8 @@ class plgSystemjbspodcast extends JPlugin {
 
 	function doEmail($params, $dopodcast)
 	{
-		$livesite = JURI::root();
+		
+        $livesite = JURI::root();
 		$config = JFactory::getConfig();
 		$mailfrom   = $config->getValue('config.mailfrom');
 		$fromname   = $config->getValue('config.fromname');
