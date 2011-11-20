@@ -43,19 +43,8 @@ class JBSAdmin
 
 	function getAdminsettings()
 	{
-		if (JOOMLA_VERSION == '5')
-		{
-			$db =& JFactory::getDBO();
-			$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
-			$db->query();
-			$compat = $db->loadObject();
-			$admin_params = new JParameter($compat->params);
-		}
-		else
-		{
-			include_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'params.php');
-			$admin_params = BsmHelper::getAdmin(true);
-		}
+		include_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'params.php');
+		$admin_params = BsmHelper::getAdmin(true);
 		return $admin_params;
 	}
 
@@ -150,97 +139,66 @@ class JBSAdmin
 		$database->query();
 		$groupids = $database->loadObjectList();
 		$user =& JFactory::getUser();
-		if (JOOMLA_VERSION == '5')
+
+		$usrid = $user->get('id');
+		$getGroups = JAccess::getGroupsByUser($usrid);
+		$sum2 = count($getGroups);
+		foreach($show_comments AS $entry)
 		{
-			$comments_user    = $user->get('gid');
-			if (!$comments_user) {
-				$comments_user = 0;
-			}
-			if ($comments_user < $show_comments ){
-				return FALSE;
-			}
-			$usertype = $user->get('gid');
-			if ($usertype >= $show_comments)
+
+			foreach ($getGroups AS $newgrpid)
 			{
-				$results[] = 1;
-			}
-			if ($usertype >= $enter_comments)
-			{
-				$results[] = 2;
-			}
-			if (in_array('2',$results))
-			{
-				$comments = 11;
-			}
-			else
-			{
-				$comments = 10;
-			}
-			return $comments;
+
+				if ($newgrpid == $entry)
+				{
+					$results[] = 2;
+				}
+				else
+				{
+					$results[] = 3;
+				}
+			} //end of for group ids
+		} //end of foreach $entry_access as $entry
+
+		//Check $results to see if any are true. A 2 means they are found in the list, a 3 means they are not
+		if (in_array(2,$results))
+		{
+			$comments = 10;
 		}
 		else
 		{
-			$usrid = $user->get('id');
-			$getGroups = JAccess::getGroupsByUser($usrid);
-			$sum2 = count($getGroups);
-			foreach($show_comments AS $entry)
+			$comments = 0;
+		}
+		if (!$comments) {
+			return false;
+		}
+		//Now we check to see if they can add comments
+		foreach($enter_comments AS $entry)
+		{
+
+			foreach ($getGroups AS $newgrpid)
 			{
 
-				foreach ($getGroups AS $newgrpid)
+				if ($newgrpid == $entry)
 				{
-
-
-					if ($newgrpid == $entry)
-					{
-						$results[] = 2;
-					}
-					else
-					{
-						$results[] = 3;
-					}
-				} //end of for group ids
-			} //end of foreach $entry_access as $entry
-
-			//Check $results to see if any are true. A 2 means they are found in the list, a 3 means they are not
-			if (in_array(2,$results))
-			{
-				$comments = 10;
-			}
-			else
-			{
-				$comments = 0;
-			}
-			if (!$comments) {
-				return false;
-			}
-			//Now we check to see if they can add comments
-			foreach($enter_comments AS $entry)
-			{
-
-				foreach ($getGroups AS $newgrpid)
+					$results[] = 2;
+				}
+				else
 				{
-					 
+					$results[] = 3;
+				}
+			} //end of for group ids
+		} //end of foreach $entry_access as $entry
+		if (in_array(2,$results))
+		{
+			$comments = 11;
+		}
+		else
+		{
+			$comments = 10;
+		}
 
-					if ($newgrpid == $entry)
-					{
-						$results[] = 2;
-					}
-					else
-					{
-						$results[] = 3;
-					}
-				} //end of for group ids
-			} //end of foreach $entry_access as $entry
-			if (in_array(2,$results))
-			{
-				$comments = 11;
-			}
-			else
-			{
-				$comments = 10;
-			}
-			return $comments;
-		} // end of if Joomla 1.6
+		return $comments;
 	}
 
 	function getShowLevel($row)

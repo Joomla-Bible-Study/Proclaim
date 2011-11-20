@@ -150,7 +150,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 		if (!$cssexists)
 		{
 			echo '<p><font color="red"><strong>'.JText::_('JBS_INS_16_CSS_FILE_NOT_FOUND').'</strong> </font></p>';
-            $copysuccess = JFile::copy($src, $dest);
+			$copysuccess = JFile::copy($src, $dest);
 				if ($copysuccess)
 				{
 					echo '<p>'. JText::_('JBS_INS_16_CSS_COPIED_SOURCE') . '</p>';
@@ -163,11 +163,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 			{
 				echo '<p>' . JText::_('JBS_INS_16_BACKUPCSS') .' /media/com_biblestudy/backup/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=restorecss">'. JText::_('JBS_INS_16_CSS_BACKUP') . '</a></p>';
 			}
-			
-			
-				
-			
-		}    
+		}
 		
 		//Check for default details text link image and copy if not present
 		$src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'images'.DS.'textfile24.png';
