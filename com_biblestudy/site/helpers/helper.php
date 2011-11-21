@@ -24,22 +24,12 @@ function getItemidLink(){
 	//Get the correct componentid from #__menu
 	$db	= & JFactory::getDBO();
 
-	$jversion = JOOMLA_VERSION;
-	if ($jversion == '5')
-	{
-		$query = "SELECT id, componentid, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
-		$db->setQuery($query);
-		$db->query();
-		$component = $db->loadObject();
-		$items  = $menus->getItems('componentid', $component->componentid);
-	}
-	else {
-		$query = "SELECT id, component_id, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
-		$db->setQuery($query);
-		$db->query();
-		$component = $db->loadObject();
-		$items  = $menus->getItems('component_id', $component->componentid);
-	}
+	$query = "SELECT id, component_id, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
+	$db->setQuery($query);
+	$db->query();
+	$component = $db->loadObject();
+	$items  = $menus->getItems('component_id', $component->componentid);
+
 	if (is_array($items))
 	{
 		foreach ($items as $menu) {

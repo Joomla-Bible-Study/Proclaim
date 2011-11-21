@@ -191,7 +191,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 <div
 	style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
 	<img src="components/com_biblestudy/images/openbible.png"
-		alt="Bible Study" border="0" class="flote: left" /> <strong><?php echo JText::_('JBS_INS_16_THANK_YOU'); ?>
+		alt="Bible Study" border="0" class="float: left" /> <strong><?php echo JText::_('JBS_INS_16_THANK_YOU'); ?>
 	</strong> <br />
 	
 	

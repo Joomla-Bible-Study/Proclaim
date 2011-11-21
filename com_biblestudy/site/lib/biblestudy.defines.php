@@ -20,19 +20,6 @@ define('BIBLESTUDY_COMPONENT_NAME', 'com_biblestudy');
 define('BIBLESTUDY_LANGUAGE_DEFAULT', 'english');
 define('BIBLESTUDY_TEMPLATE_DEFAULT', 'default');
 
-//Joomla Version
-$joomlaversion = JVERSION;
-$j16 = '1.6';
-$is16 = substr_count(JVERSION,'1.6');
-if (!$is16)
-{
-	define('JOOMLA_VERSION','5');
-}
-else
-{
-	define('JOOMLA_VERSION','6');
-}
-
 // File system paths
 define('BIBLESTUDY_COMPONENT_RELPATH', 'components' .DS. BIBLESTUDY_COMPONENT_NAME);
 
