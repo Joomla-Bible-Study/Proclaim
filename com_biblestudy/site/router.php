@@ -1,28 +1,28 @@
-<?php defined('_JEXEC') or die ('Restricted Access');
+<?php defined('_JEXEC') or die;
 
 
 function biblestudyBuildRoute(&$query)
 {
 	$segments = array();
 
-	if(isset($query['view'])) 
+	if(isset($query['view']))
 	{
 		if(empty($query['Itemid'])) {
 			$segments[] = $query['view'];
 		}
-		else { 
+		else {
 		$segments[] = $query['view'];
 		}
 		unset($query['view']);
 	};
-	
+
 	if(isset($query['id']))
 	{
 		$segments[] = $query['id'];
 		unset($query['id']);
 	};
-	
-	
+
+
 	return $segments;
 }
 
@@ -36,15 +36,15 @@ function biblestudyParseRoute($segments)
 
 	// Count route segments
 	//$count = count($segments);
-	
+
 	//Standard routing for articles
-	if(!isset($item)) 
+	if(!isset($item))
 	{
 		$vars['view'] = $segments[0];
-		
+
 		$vars['id'] = $segments[1];
-		
-		
+
+
 
 		return $vars;
 	}
@@ -54,15 +54,15 @@ function biblestudyParseRoute($segments)
 	{
 		case 'studydetails'   :
 		{
-			
-			
+
+
 			$vars['id']  = $segments[1];
 			$vars['view'] = 'studydetails';
 
 		} break;
 		case 'studieslist' :
 		{
-			
+
 			$vars['id']   = $segments[1];
 			$vars['view'] = 'studieslist';
 		} break;
