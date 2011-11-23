@@ -3,12 +3,12 @@
 	client="site">
 	<name>mod_biblestudy</name>
 	<author>Joomla Bible Study Team</author>
-	<creationDate>April 29, 2011</creationDate>
+	<creationDate>November 23, 2011</creationDate>
 	<copyright>(C) 2007-2011 Joomla Bible Study</copyright>
 	<license>GPL/GNU</license>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
 	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-	<version>7.0.2</version>
+	<version>7.0.3</version>
 	<description>JBS_MDL_DESCRIPTION</description>
 	<files>
 		<filename module="mod_biblestudy">mod_biblestudy.php</filename>
@@ -49,6 +49,19 @@
 			</fieldset>
 			<fieldset name="JBS_MDL_FILTERS" label="JBS_MDL_FILTERS"
 				addfieldpath="/administrator/components/com_biblestudy/models/fields">
+   	            <field name="condition" type="radio" default="1" label="JBS_MDL_AND_OR"
+					description="JBS_MDL_AND_OR_DESC">
+					<option value="0">OR</option>
+					<option value="1">AND</option>
+				</field>
+                <field name="order"
+                type="list"
+                label="JBS_CMN_ORDER"
+                description="JBS_CMN_ORDER_DESC"
+                default="1">
+                    <option value="1">DESC</option>
+                    <option value="2">ASC</option>
+                </field>
 				<field name="teacher_id" type="teacherlist" label="JBS_CMN_FILTERS_TEACHER"
 					description="JBS_CMN_FILTERS_TEACHER_DESC" multiple="true" default="-1">
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
@@ -80,7 +93,17 @@
 					default="-1">
 					<option value="-1">JBS_CMN_SHOW_ALL</option>
 				</field>
-				<field name="studieslisttemplateid" type="sql" default=""
+                <field name="year" 
+                type="sql"
+                default="-1"
+                label="JBS_CMN_SELECT_YEARS"
+                description="JBS_CMN_SELECT_YEARS_DESC"
+                multiple="true"
+                query="SELECT DISTINCT(YEAR(studydate)) as date FROM #__bsms_studies ORDER BY studydate DESC"
+                key_field="date" value_field="date">
+                    <option value="-1">JBS_CMN_SHOW_ALL</option>
+                 </field>
+                <field name="studieslisttemplateid" type="sql" default=""
 					label="JBS_TPL_TEMPLATE_STUDIES_LIST" description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC"
 					query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
 					key_field="id" value_field="title" required="true" />
@@ -288,11 +311,6 @@
 				</field>
 				<field name="details_text" type="text" default="Study Details"
 					size="50" label="JBS_TPL_LISTITEMS_DETAILS_TEXT" description="JBS_TPL_LISTITEMS_DETAILS_TEXT_DESC" />
-				<field name="condition" type="radio" default="1" label="JBS_MDL_AND_OR"
-					description="JBS_MDL_AND_OR_DESC">
-					<option value="0">OR</option>
-					<opion value="1">AND</opion>
-				</field>
 				<field name="stylesheet" type="text" size="50" default=""
 					label="JBS_TPL_VERSES_STYLESHEET" description="JBS_TPL_VERSES_STYLESHEET_DESC" />
 				<field name="date_format" type="list" default="2"

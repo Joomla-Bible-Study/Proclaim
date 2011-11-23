@@ -26,6 +26,7 @@ defined('_JEXEC') or die('Restriced Access'); ?>
 	$admin = modBiblestudyHelper::getAdmin();
 	$admin_params = new JParameter($admin[0]->params);
 	$items = modBiblestudyHelper::getLatest($params);
+//    $items = modBiblestudyHelper::getList($params);
 
 	//attempt to change mysql for error in large select
 	$db = JFactory::getDBO();

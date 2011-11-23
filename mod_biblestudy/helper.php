@@ -15,159 +15,236 @@ if(class_exists('modbiblestudyhelper')){
 
 class modBiblestudyHelper
 {
+
 	var $_template;
 	var $_admin;
+
 	function getLatest($params)
 	{
-		$items = $params->get('moduleitems', 1);
+		
+      //  jimport('joomla.application.component.model');
+        $items = $params->get('locations', 1);
+//print_r ($params->get('teacher_id'));
 
-		$db =& JFactory::getDBO();
-		$teacher = $params->get('teacher_id', 1);
-		$topic = $params->get('topic_id', 1);
-		$book = $params->get('booknumber', 101);
-		$series = $params->get('series_id', 1);
+		$db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+		$teacher = $params->get('teacher_id');
+		$topic = $params->get('topic_id');
+		$book = $params->get('booknumber');
+		$series = $params->get('series_id');
 		$locations = $params->get('locations');
-		$condition = $params->get('condition', 'OR');
+		$condition = $params->get('condition');
 		$messagetype_menu = $params->get('messagetype');
+        $year = $params->get('year');
+        $orderparam = $params->get('order','1');
+        if ($orderparam == 2)
+        {
+            $order = "ASC";
+        }
+        else
+        {
+            $order = "DESC";
+        }
 		if($condition > 0){
 			$condition = ' AND ';
 		}
 		else {
 			$condition = ' OR ';
 		}
-		$where = array();
+        
+        $query->from('#__bsms_studies AS study');
+        
+        $query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
+                        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.access, study.studyintro');
+        
+        //Join over Message Types
+        $query->select('messageType.message_type AS messageType');
+        $query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
 
-		$where[] = ' #__bsms_studies.published = 1';
+        //Join over Teachers
+        $query->select('teacher.teachername AS teachername, teacher.id AS tid');
+        $query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
-		if ($teacher > 0) {
-			$where[] = ' #__bsms_studies.teacher_id = '.(int) $teacher;
-		}
-		if ($book > 0) {
-			$where[] = ' #__bsms_studies.booknumber = '.(int) $book;
-		}
-		if ($series > 0) {
-			$where[] = ' #__bsms_studies.series_id = '.(int) $series;
-		}
-		if ($topic > 0) {
-			$where[] = ' #__bsms_studies.topics_id = '.(int) $topic;
-		}
-		if ($locations > 0) {
-			$where[] = ' #__bsms_studies.location_id = '.(int) $locations;
-		}
-		if ($messagetype_menu > 0) {
-			$where[] = ' #__bsms_studies.messagetype = '.(int) $messagetype_menu;
-		}
+        //Join over Series
+        $query->select('series.series_text');
+        $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
 
+        //Join over Books
+        $query->select('book.bookname');
+        $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
 
-		$where 		= ( count( $where ) ? ' WHERE '. implode( $condition, $where ) : '' );
-
-		$where2 = array();
-		$continue = 0;
-		if (is_array($teacher))
-		{
-			if (!$filter_teacher)
-			{
-				$continue = 1;
-				$filters = $teacher;
-				foreach ($filters AS $filter)
-				{
-					$where2[] = '#__bsms_studies.teacher_id = '.(int)$filter;
-				}
-			}
-		}
-
-		if (is_array($locations))
-		{
-			if (!$filter_location)
-			{
-				$continue = 1;
-				$filters = null;
-				$filters = $locations;
-				foreach ($filters AS $filter)
-				{
-					$where2[] = '#__bsms_studies.location_id = '.(int)$filter;
-				}
-			}
-		}
-			
-		if (is_array($books))
-		{
-			if (!$filter_book)
-			{
-				$continue = 1;
-				$filters = null;
-				$filters = $books;
-				foreach ($filters AS $filter)
-				{
-					$where2[] = '#__bsms_studies.booknumber = '.(int)$filter;
-				}
-			}
-		}
-
-		if (is_array($series))
-		{
-			if (!$filter_series)
-			{
-				$continue = 1;
-				$filters = null;
-				$filters = $series;
-				foreach ($filters AS $filter)
-				{
-					$where2[] = '#__bsms_studies.series_id = '.(int)$filter;
-				}
-			}
-		}
-			
-		if (is_array($topics))
-		{
-			if (!$filter_topic)
-			{
-				$continue = 1;
-				$filters = null;
-				$filters = $topics;
-				foreach ($filters AS $filter)
-				{
-					$where2[] = '#__bsms_studies.topics_id = '.(int)$filter;
-				}
-			}
-		}
-			
-		if (is_array($messagetype_menu))
-		{
-			if (!$filter_messagetype)
-			{
-				$continue = 1;
-				$filters = $messagetype_menu;
-				foreach ($filters AS $filter)
-				{
-					$where2[] = '#__bsms_studies.messagetype = '.(int)$filter;
-				}
-			}
-		}
-			
-		$where2 		= ( count( $where2 ) ? ' '. implode( ' OR ', $where2 ) : '' );
-
-		if ($continue > 0) {
-			$where = $where.' AND ( '.$where2.')';
-		}
-
-		$query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
-		. ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
-		. ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname AS bname,'
-		. ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_locations.id AS lid, #__bsms_locations.location_text'
-		. ' FROM #__bsms_studies'
-		. ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-		. ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-		. ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-		. ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-		. '	LEFT JOIN #__bsms_topics ON (#__bsms_studies.topics_id = #__bsms_topics.id)'
-		. ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
-		. $where
-		. ' ORDER BY #__bsms_studies.studydate DESC ';
-		$db->setQuery( $query, 0, $items );
-		$rows = $db->loadObjectList();
-		return $rows;
+        //Join over Plays/Downloads
+        $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+        $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
+        $query->group('study.id');
+        
+        //filter over teazchers
+        $filters = $teacher;
+        if (count($filters) > 1)
+        {
+            $where2 = array();
+            $subquery = '(';
+            foreach ($filters as $filter)
+            {
+                $where2[] = 'study.teacher_id = '. (int)$filter;
+            }
+            $subquery .= implode(' OR ',$where2);
+            $subquery .= ')';
+          
+          $query->where($subquery);
+        }
+        else
+        {
+            foreach ($filters as $filter)
+            {
+                if ($filter != -1)
+                {
+                    $query->where('study.teacher_id = '. (int)$filter, $condition);
+                }
+            }
+        }
+        //filter locations
+        $filters = $locations;
+        if (count($filters) > 1)
+        {
+            $where2 = array();
+            $subquery = '(';
+            foreach ($filters as $filter)
+            {
+                $where2[] = 'study.location_id = '. (int)$filter;
+            }
+            $subquery .= implode(' OR ',$where2);
+            $subquery .= ')';
+          
+          $query->where($subquery);
+        }
+        else
+        {
+    		foreach ($filters AS $filter)
+    		{
+    			if ($filter != -1)
+                {$query->where('study.location_id = '.(int)$filter, $condition); }
+    		}
+        }
+        //filter over books
+        $filters = $book;
+        if (count($filters) > 1)
+        {
+            $where2 = array();
+            $subquery = '(';
+            foreach ($filters as $filter)
+            {
+                $where2[] = 'study.booknumber = '. (int)$filter;
+            }
+            $subquery .= implode(' OR ',$where2);
+            $subquery .= ')';
+          
+          $query->where($subquery);
+        }
+        else
+        {
+    		foreach ($filters AS $filter)
+    		{
+    			if ($filter != -1)
+                {$query->where('study.booknumber = '.(int)$filter, $condition);}
+    		}
+        }
+        $filters = $series;
+        if (count($filters) > 1)
+        {
+            $where2 = array();
+            $subquery = '(';
+            foreach ($filters as $filter)
+            {
+                $where2[] = 'study.series_id = '. (int)$filter;
+            }
+            $subquery .= implode(' OR ',$where2);
+            $subquery .= ')';
+          
+          $query->where($subquery);
+        }
+        else
+        {
+    		foreach ($filters AS $filter)
+    		{
+    			if ($filter != -1)
+                {$query->where('study.series_id = '.(int)$filter, $condition);}
+    		}
+        }
+        $filters = $topic;
+        if (count($filters) > 1)
+        {
+            $where2 = array();
+            $subquery = '(';
+            foreach ($filters as $filter)
+            {
+                $where2[] = 'study.topics_id = '. (int)$filter;
+            }
+            $subquery .= implode(' OR ',$where2);
+            $subquery .= ')';
+          
+          $query->where($subquery);
+        }
+        else
+        {
+    		foreach ($filters AS $filter)
+    		{
+    			if ($filter != -1)
+                {$query->where('study.topics_id = '.(int)$filter, $condition);}
+    		}
+        }
+        $filters = $messagetype_menu;
+        if (count($filters) > 1)
+        {
+            $where2 = array();
+            $subquery = '(';
+            foreach ($filters as $filter)
+            {
+                $where2[] = 'study.messagetype = '. (int)$filter;
+            }
+            $subquery .= implode(' OR ',$where2);
+            $subquery .= ')';
+          
+          $query->where($subquery);
+        }
+        else
+        {
+    		foreach ($filters AS $filter)
+    		{
+    			if ($filter != -1)
+                {$query->where('study.messagetype = '.(int)$filter, $condition);}
+    		}
+        }
+        $filters = $year;
+        if (count($filters) > 1)
+        {
+            $where2 = array();
+            $subquery = '(';
+            foreach ($filters as $filter)
+            {
+                $where2[] = 'YEAR(study.studydate) = '.(int)$filter;
+            }
+            $subquery .= implode(' OR ',$where2);
+            $subquery .= ')';
+          
+          $query->where($subquery);
+        }
+        else
+        {
+    		foreach ($filters AS $filter)
+    		{
+    			if ($filter != -1)
+                {$query->where('YEAR(study.studydate) = '.(int)$filter, $condition);}
+    		}
+        }
+        $query->order('studydate '.$order);
+        $db->setQuery((string)$query, 0, $params->get('moduleitems', '5') );
+        $rows = $db->loadObjectList();
+       return $rows;
+       
+       
 	}
+    
 	function _buildContentWhere()
 	{
 
