@@ -16,7 +16,7 @@
 defined('_JEXEC') or die();
 $document =& JFactory::getDocument();
 $document->addStyleSheet(JURI::base().'components/com_biblestudy/assets/css/biblestudy.css');
-$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 include_once($path1.'listing.php');
 ?>
 <div id="biblestudy" class="noRefTagger">

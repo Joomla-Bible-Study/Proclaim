@@ -128,8 +128,8 @@ class JBSExport{
 
 		//save file
 		$localfilename = 'jbs-db-backup-'.time().'.sql';
-		$serverfile = JPATH_SITE .DS. 'tmp' .DS. $localfilename;
-		$handle = fopen(JPATH_SITE .DS. 'tmp' .DS. $localfilename,'w+');
+		$serverfile = JPATH_SITE .DIRECTORY_SEPARATOR. 'tmp' .DIRECTORY_SEPARATOR. $localfilename;
+		$handle = fopen(JPATH_SITE .DIRECTORY_SEPARATOR. 'tmp' .DIRECTORY_SEPARATOR. $localfilename,'w+');
 		$returnfile = array($serverfile,$localfilename);
 
 		fwrite($handle,$return);
@@ -257,7 +257,7 @@ class JBSExport{
 		$ftp = JClientHelper::getCredentials('ftp');
 		$client =& JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
 		$localfilename = 'jbs-db-backup-'.time().'.sql';
-		$file = $client->path.DS.$localfilename;
+		$file = $client->path.DIRECTORY_SEPARATOR.$localfilename;
 		$returnfile = array($file, $localfilename);
 		// Try to make the template file writeable
 		if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755')) {

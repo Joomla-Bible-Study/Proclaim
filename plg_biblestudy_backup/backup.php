@@ -128,13 +128,13 @@ class JBSExport{
 		}
 
 		//save file
-		if (!JFolder::exists(JPATH_SITE.DS.'media'.DS.$backupfolder))
+		if (!JFolder::exists(JPATH_SITE.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.$backupfolder))
 		{
-			JFolder::create(JPATH_SITE.DS.'media'.DS.$backupfolder);
+			JFolder::create(JPATH_SITE.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.$backupfolder);
 		}
 		$localfilename = 'jbs-db-backup-'.time().'.sql';
-		$serverfile = JPATH_SITE .DS. $backupfolder .DS. $localfilename;
-		$handle = fopen(JPATH_SITE .DS. $backupfolder .DS. $localfilename,'w+');
+		$serverfile = JPATH_SITE .DIRECTORY_SEPARATOR. $backupfolder .DIRECTORY_SEPARATOR. $localfilename;
+		$handle = fopen(JPATH_SITE .DIRECTORY_SEPARATOR. $backupfolder .DIRECTORY_SEPARATOR. $localfilename,'w+');
 		$returnfile = array('serverfile'=>$serverfile,'localfilename'=>$localfilename);
 
 		fwrite($handle,$return);

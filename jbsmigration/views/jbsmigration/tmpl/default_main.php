@@ -44,7 +44,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
     <tr><td><img src="<?php echo JURI::base().'/components/com_jbsmigration/images/folder.png';?>" alt="Tmp Folder" height="48" width="48" /></td><td>
     <strong><?php echo JText::_('JBS_EI_IMPORT_FROM_FOLDER');?></strong>
     </td><td>
-    <input type="text" id="install_directory" name="install_directory" class="input_box" size="70" value="<?php echo $this->tmp_dest .DS; ?>" />
+    <input type="text" id="install_directory" name="install_directory" class="input_box" size="70" value="<?php echo $this->tmp_dest .DIRECTORY_SEPARATOR; ?>" />
 			
     </td></tr>
     <tr>

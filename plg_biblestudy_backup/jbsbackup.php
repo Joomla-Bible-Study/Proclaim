@@ -193,8 +193,8 @@ class plgSystemjbsbackup extends JPlugin {
 
 	function doBackup()
 	{
-		$backupfolder = 'media'.DS.$this->params->get('backupfolder');
-		$path1 = JPATH_SITE.DS.'plugins'.DS.'system'.DS.'jbsbackup'.DS;
+		$backupfolder = 'media'.DIRECTORY_SEPARATOR.$this->params->get('backupfolder');
+		$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.'system'.DIRECTORY_SEPARATOR.'jbsbackup'.DIRECTORY_SEPARATOR;
 		include_once($path1.'backup.php');
 		$dbbackup = new JBSExport();
 		$backup = $dbbackup->exportdb($backupfolder);
@@ -226,7 +226,7 @@ class plgSystemjbsbackup extends JPlugin {
 		$Body2 = '';
 
 
-		$Body2 .= '<br><a href="'.JURI::root().'media'.DS.$dobackup['localfilename'].'">'.$dobackup['localfilename'].'</a>';
+		$Body2 .= '<br><a href="'.JURI::root().'media'.DIRECTORY_SEPARATOR.$dobackup['localfilename'].'">'.$dobackup['localfilename'].'</a>';
 		$Body2 .= ' - '.$msg;
 		 
 
@@ -253,7 +253,7 @@ class plgSystemjbsbackup extends JPlugin {
 	{
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
-		$path = JPATH_SITE.DS.'media'.$params->get('backupfolder');
+		$path = JPATH_SITE.DIRECTORY_SEPARATOR.'media'.$params->get('backupfolder');
 		$exclude = array('.svn', 'CVS','.DS_Store','__MACOSX');
 		$excludefilter = array('^\..*','.*~');
 		$files = JFolder::files($path, '', '', 'false' , $exclude,$excludefilter);

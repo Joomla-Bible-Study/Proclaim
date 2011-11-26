@@ -16,7 +16,7 @@ define('JSTOP', '});');
 
 
 // Require the base controller
-require_once (JPATH_COMPONENT.DS.'controller.php');
+require_once (JPATH_COMPONENT.DIRECTORY_SEPARATOR.'controller.php');
 
 
 

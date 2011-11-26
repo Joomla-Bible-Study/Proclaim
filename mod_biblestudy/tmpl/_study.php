@@ -13,7 +13,7 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+$path1 = JPATH_BASE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy/helpers/';
 $row = $study;
 include_once($path1.'listing.php');
 $listing = getListing($row, $params, $oddeven);

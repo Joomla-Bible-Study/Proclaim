@@ -14,8 +14,8 @@ defined('_JEXEC') or die('Restriced Access'); ?>
 
 	<?php
 
-	require(dirname(__FILE__).DS.'helper.php');
-	require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+	require(dirname(__FILE__).DIRECTORY_SEPARATOR.'helper.php');
+	require_once ( JPATH_ROOT .DIRECTORY_SEPARATOR.'libraries'.DIRECTORY_SEPARATOR.'joomla'.DIRECTORY_SEPARATOR.'html'.DIRECTORY_SEPARATOR.'parameter.php' );
 	// Need for inline player
 	$document =& JFactory::getDocument();
 	$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
@@ -58,7 +58,7 @@ defined('_JEXEC') or die('Restriced Access'); ?>
 	$language->load('com_biblestudy');
 	$config =& JComponentHelper::getParams( 'com_biblestudy' );
 	//we need to load the path to the helper files
-	$path1 = JPATH_BASE.DS.'components'.DS.'com_biblestudy/helpers/';
+	$path1 = JPATH_BASE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy/helpers/';
 	$url = $params->get('stylesheet');
 	if ($url) {
 		$document->addStyleSheet($url);

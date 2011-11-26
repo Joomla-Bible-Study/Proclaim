@@ -31,7 +31,7 @@ if ($url) {
 
 
 	<?php
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy/helpers/';
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy/helpers/';
 	include_once($path1.'header.php');
 	include_once($path1.'helper.php');
 	include_once($path1.'listing.php');

@@ -71,7 +71,7 @@ class JBSImport
 
 		// Build the appropriate paths
 		$config =& JFactory::getConfig();
-		$tmp_dest 	= $config->getValue('config.tmp_path').DS.$userfile['name'];
+		$tmp_dest 	= $config->getValue('config.tmp_path').DIRECTORY_SEPARATOR.$userfile['name'];
 		$tmp_src	= $userfile['tmp_name'];
 
 		// Move uploaded file
@@ -91,7 +91,7 @@ class JBSImport
 		$result = false;
 		$userfile = JRequest::getVar('importdb', null, 'files', 'array' );
 		$db = JFactory::getDBO();
-		$query = file_get_contents(JPATH_SITE .DS. 'tmp' .DS. $userfile['name']);
+		$query = file_get_contents(JPATH_SITE .DIRECTORY_SEPARATOR. 'tmp' .DIRECTORY_SEPARATOR. $userfile['name']);
 
 		$db->setQuery($query);
 		$db->queryBatch();

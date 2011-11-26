@@ -43,7 +43,7 @@ class ss2jbsViewss2jbs extends JView {
 		switch ($component)
 		{
 			case 'sermonspeaker':
-				if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DS.'administrator'.DS.'components'.DS.'com_sermonspeaker'.DS.'sermonspeaker.xml'))
+				if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_sermonspeaker'.DIRECTORY_SEPARATOR.'sermonspeaker.xml'))
 				{
 					return $data['version'];
 				}
@@ -52,7 +52,7 @@ class ss2jbsViewss2jbs extends JView {
 				break;
 
 			case 'jbs':
-				if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DS.'administrator'.DS.'components'.DS.'com_biblestudy'.DS.'manifest.xml'))
+				if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'manifest.xml'))
 				{
 					return $data['version'];
 				}

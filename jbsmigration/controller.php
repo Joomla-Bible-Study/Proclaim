@@ -9,9 +9,9 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
-include_once(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_jbsmigration' .DS. 'restore.php');
-include_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_jbsmigration'.DS.'backup.php');
-include_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_jbsmigration'.DS.'migrate.php');
+include_once(JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'restore.php');
+include_once(JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_jbsmigration'.DIRECTORY_SEPARATOR.'backup.php');
+include_once(JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_jbsmigration'.DIRECTORY_SEPARATOR.'migrate.php');
 /**
  * JBS Export Migration Controller
  *

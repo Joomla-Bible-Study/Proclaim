@@ -9,7 +9,7 @@
  **/
 
 defined('_JEXEC') or die('Restricted access');
-require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_ss2jbs'.DS.'jbs_ss_convert.php');
+require_once(JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_ss2jbs'.DIRECTORY_SEPARATOR.'jbs_ss_convert.php');
 
 ?>
 
