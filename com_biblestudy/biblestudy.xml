@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="1.6.0" method="upgrade">
-	<!-- Note: we can use method="upgrade" to ensure an upgrade regardless of 
-		if it is a new install or an actual upgrade; Normal installs will behave 
-		like an install but upgrades will be treated appropriately even if the interface 
+	<!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
+		if it is a new install or an actual upgrade; Normal installs will behave
+		like an install but upgrades will be treated appropriately even if the interface
 		doesn't support it properly -->
 	<!-- Generic Metadata -->
 	<name>com_biblestudy</name>
@@ -34,7 +34,7 @@
 		<folder>helpers</folder>
 		<folder>lib</folder>
 	</files>
-	<!-- Need to start using this <media destination="com_biblestudy"> <filename>com_beta.jpg</filename> 
+	<!-- Need to start using this <media destination="com_biblestudy"> <filename>com_beta.jpg</filename>
 		</media> -->
 	<!-- Legacy 1.5 Language Support -->
 	<!-- Note: Replace this with the actual path to the language file -->
@@ -74,47 +74,47 @@
 		<!-- <folder>backup</folder> -->
 	</media>
 	<administration>
-		<menu view="cpanel" img="../components/com_biblestudy/images/biblemenu.png"
+		<menu view="cpanel" img="class:biblemenu"
 			alt="JBS_CMN_COM_BIBLESTUDY">JBS_CMN_COM_BIBLESTUDY</menu>
 		<submenu>
-			<!-- Note that all & must be escaped to &amp; for the file to be valid 
+			<!-- Note that all & must be escaped to &amp; for the file to be valid
 				XML and be parsed by the installer -->
 			<menu link="option=com_biblestudy&amp;view=cpanel" view="cpanel"
-				alt="JBS_MNU_CONTROL_PANEL">JBS_MNU_CONTROL_PANEL</menu>
+				img="class:biblemenu"alt="JBS_MNU_CONTROL_PANEL">JBS_MNU_CONTROL_PANEL</menu>
 			<menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1"
-				view="admin" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
+				view="admin" img="class:administration" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
 			<menu link="option=com_biblestudy&amp;view=studieslist" view="studieslist"
-				alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
+				img="class:studies"alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
 			<menu link="option=com_biblestudy&amp;view=mediafileslist" view="mediafileslist"
 				alt="JBS_MNU_MEDIA_FILES">JBS_MNU_MEDIA_FILES</menu>
 			<menu link="option=com_biblestudy&amp;view=teacherlist" view="teacherlist"
-				alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
+				img="class:teachers"alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
 			<menu link="option=com_biblestudy&amp;view=serieslist" view="serieslist"
-				alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
+				img="class:series"alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
 			<menu link="option=com_biblestudy&amp;view=messagetypelist"
-				view="messagetypelist" alt="JBS_MNU_MESSAGE_TYPES">JBS_MNU_MESSAGE_TYPES</menu>
+				view="messagetypelist" img="class:messagetype" alt="JBS_MNU_MESSAGE_TYPES">JBS_MNU_MESSAGE_TYPES</menu>
 			<menu link="option=com_biblestudy&amp;view=locationslist" view="locationslist"
-				alt="JBS_MNU_LOCATIONS">JBS_MNU_LOCATIONS</menu>
+				img="class:locations" alt="JBS_MNU_LOCATIONS">JBS_MNU_LOCATIONS</menu>
 			<menu link="option=com_biblestudy&amp;view=topicslist" view="topicslist"
-				alt="JBS_MNU_TOPICS">JBS_MNU_TOPICS</menu>
+				img="class:topics" alt="JBS_MNU_TOPICS">JBS_MNU_TOPICS</menu>
 			<menu link="option=com_biblestudy&amp;view=commentslist" view="commentslist"
-				alt="JBS_MNU_STUDY_COMMENTS">JBS_MNU_STUDY_COMMENTS</menu>
+				img="class:comments" alt="JBS_MNU_STUDY_COMMENTS">JBS_MNU_STUDY_COMMENTS</menu>
 			<menu link="option=com_biblestudy&amp;view=serverslist" view="serverslist"
-				alt="JBS_MNU_SERVERS">JBS_MNU_SERVERS</menu>
+				img="class:servers" alt="JBS_MNU_SERVERS">JBS_MNU_SERVERS</menu>
 			<menu link="option=com_biblestudy&amp;view=folderslist" view="folderslist"
-				alt="JBS_MNU_SERVER_FOLDERS">JBS_MNU_SERVER_FOLDERS</menu>
+				img="class:folders" alt="JBS_MNU_SERVER_FOLDERS">JBS_MNU_SERVER_FOLDERS</menu>
 			<menu link="option=com_biblestudy&amp;view=podcastlist" view="podcastlist"
-				alt="JBS_MNU_PODCASTS">JBS_MNU_PODCASTS</menu>
+				img="class:podcast" alt="JBS_MNU_PODCASTS">JBS_MNU_PODCASTS</menu>
 			<menu link="option=com_biblestudy&amp;view=sharelist" view="sharelist"
-				alt="JBS_MNU_SOCIAL_NETWORK_LINKS">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
+				img="class:sharelist" alt="JBS_MNU_SOCIAL_NETWORK_LINKS">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
 			<menu link="option=com_biblestudy&amp;view=templateslist" view="templateslist"
-				alt="JBS_MNU_TEMPLATE_DISPLAY">JBS_MNU_TEMPLATE_DISPLAY</menu>
+				img="class:templates" alt="JBS_MNU_TEMPLATE_DISPLAY">JBS_MNU_TEMPLATE_DISPLAY</menu>
 			<menu link="option=com_biblestudy&amp;view=medialist" view="medialist"
-				alt="JBS_MNU_MEDIA_IMAGES">JBS_MNU_MEDIA_IMAGES</menu>
+				img="class:mp3" alt="JBS_MNU_MEDIA_IMAGES">JBS_MNU_MEDIA_IMAGES</menu>
 			<menu link="option=com_biblestudy&amp;view=mimetypelist" view="mimetypelist"
-				alt="JBS_MNU_MIME_TYPES">JBS_MNU_MIME_TYPES</menu>
+				img="class:mimetype" alt="JBS_MNU_MIME_TYPES">JBS_MNU_MIME_TYPES</menu>
 			<menu link="option=com_biblestudy&amp;view=cssedit" view="cssedit"
-				alt="JBS_MNU_CSS_EDIT">JBS_MNU_CSS_EDIT</menu>
+				img="class:css" alt="JBS_MNU_CSS_EDIT">JBS_MNU_CSS_EDIT</menu>
 			<!-- Instead of link you can specify individual link attributes -->
 		</submenu>
 		<!-- Administration Main File Copy Section -->
@@ -162,7 +162,7 @@
 		<server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=1]]></server>
 	</updateservers>
 	<!-- Tables -->
-	<!-- These are used for backups to determine which tables to backup; ones 
+	<!-- These are used for backups to determine which tables to backup; ones
 		marked optional are only backed up if they exist -->
 	<tables>
 		<table>#__bsms_install</table>
