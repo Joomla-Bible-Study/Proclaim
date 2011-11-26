@@ -9,7 +9,7 @@
  **/
 
 defined('_JEXEC') or die('Restriced Access');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
 function getMedia ($id)
 {
 	$database = & JFactory::getDBO();
@@ -80,7 +80,7 @@ function getInternalPlayer($media, $params, $admin_params)
 
 function getDownloadLink ($media, $params, $admin_params)
 {
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'filesize.php');
 	include_once($path1.'filepath.php');
 	include_once($path1.'duration.php');
@@ -143,7 +143,7 @@ function getDownloadLink ($media, $params, $admin_params)
 function getMediaFile ($media, $params, $admin_params)
 {
 
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'filesize.php');
 	include_once($path1.'filepath.php');
 	include_once($path1.'duration.php');
@@ -195,7 +195,7 @@ function getMediaFile ($media, $params, $admin_params)
 function getTypeIcon ($media, $params, $admin_params)
 {
 
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'filesize.php');
 	include_once($path1.'filepath.php');
 	include_once($path1.'duration.php');

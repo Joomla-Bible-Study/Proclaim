@@ -13,9 +13,9 @@ defined('_JEXEC') or die('Restricted access');
 define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
 
-require_once(JPATH_ADMINISTRATOR.DS.'includes'.DS.'toolbar.php');
+require_once(JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'includes'.DIRECTORY_SEPARATOR.'toolbar.php');
 $doc =& JFactory::getDocument();
-$doc->addScript("includes" .DS. "js" .DS. "joomla.javascript.js");
+$doc->addScript("includes" .DIRECTORY_SEPARATOR. "js" .DIRECTORY_SEPARATOR. "joomla.javascript.js");
 
 // Require the base controller
 jimport("joomla.application.component.controller");
@@ -48,5 +48,5 @@ if ($controller = JRequest::getWord('controller')) {
 
 	}
 
-	require_once JPATH_COMPONENT . DS . 'controllers' . DS . $controller . '.php';
+	require_once JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . $controller . '.php';
 }

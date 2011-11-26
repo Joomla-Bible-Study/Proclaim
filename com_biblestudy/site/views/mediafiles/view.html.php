@@ -7,9 +7,9 @@
  */
 //No Direct Access
 defined('_JEXEC') or die();
-//require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+//require_once (JPATH_SITE  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'biblestudy.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
 jimport('joomla.application.component.view');
 jimport('joomla.application.component.helper');
 jimport('joomla.html.toolbar');
@@ -31,7 +31,7 @@ class biblestudyViewmediafiles extends JView {
 		$this->pagination = $this->get('Pagination');
 		$this->mediatypes = $this->get('Mediatypes');
 		$document = & JFactory::getDocument();
-		$document->addStyleSheet(JURI::base() . 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'css' .DS.  'icons.css');
+		$document->addStyleSheet(JURI::base() . 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'assets' .DIRECTORY_SEPARATOR. 'css' .DIRECTORY_SEPARATOR.  'icons.css');
 		//Check for errors
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
@@ -45,7 +45,7 @@ class biblestudyViewmediafiles extends JView {
 			return false;
 		}
 		// Load the toolbar helper
-		require_once( JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'toolbar.php' );
+		require_once( JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'toolbar.php' );
 
 
 		// render the toolbar on the page. rendering it here means that it is displayed on every view of your component.

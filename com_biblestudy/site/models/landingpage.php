@@ -11,7 +11,7 @@
 defined('_JEXEC') or die();
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 jimport( 'joomla.application.component.model' );
-include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
+include_once (JPATH_COMPONENT_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'translated.php');
 
 $params = &JComponentHelper::getParams($option);
 $default_order = $params->get('default_order');

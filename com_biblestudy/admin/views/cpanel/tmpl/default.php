@@ -5,8 +5,8 @@
  * @copyright 2010
  */
 defined('_JEXEC') or die();
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.debug.php');
+require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
+require_once (BIBLESTUDY_PATH_ADMIN_LIB .DIRECTORY_SEPARATOR. 'biblestudy.debug.php');
 ?>
 <style>
 #fbadmin {
@@ -227,7 +227,7 @@ table.fbstat .col2 {
  <div id="fbmenu">
 <table><tr><td><strong><?php echo JText::_('JBS_CPL_VERSION_INFORMATION'); ?></strong></td></tr>
 <tr><td>
-<?php require_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.version.php');?>
+<?php require_once (BIBLESTUDY_PATH_ADMIN_LIB .DIRECTORY_SEPARATOR. 'biblestudy.version.php');?>
 <div class="fbmainmenu"><?php echo CBiblestudyVersion::version(); ?></div>
 </td></tr>
 <tr><td><div><?php echo JText::_('JBS_CPL_LATEST_VERSION').':<br /> '.$this->versioncheck;?></td></tr>
@@ -325,7 +325,7 @@ table.fbstat .col2 {
   <?php 
    
 
-   include_once (BIBLESTUDY_PATH_ADMIN_LIB .DS. 'biblestudy.stats.class.php');
+   include_once (BIBLESTUDY_PATH_ADMIN_LIB .DIRECTORY_SEPARATOR. 'biblestudy.stats.class.php');
 
     ?>
   <table cellspacing="1"  border="0" width="100%" class="fbstat">

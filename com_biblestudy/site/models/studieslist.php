@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 $mainframe = & JFactory::getApplication();
 $option = JRequest::getCmd('option');
 jimport('joomla.application.component.modellist');
-include_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers' . DS . 'translated.php');
+include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
 $params = &JComponentHelper::getParams($option);
 $default_order = $params->get('default_order');
@@ -39,7 +39,7 @@ class biblestudyModelstudieslist extends JModelList {
     var $_admin;
 
     function __construct() {
-        $config['table_path'] = JPATH_COMPONENT . DS . 'tables';    // use site tables
+        $config['table_path'] = JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'tables';    // use site tables
         parent::__construct($config);
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');

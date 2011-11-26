@@ -26,7 +26,7 @@ class biblestudyControllerserieslist extends JController
 
 	function download() {
 		$abspath    = JPATH_SITE;
-		require_once($abspath.DS.'components/com_biblestudy/class.biblestudydownload.php');
+		require_once($abspath.DIRECTORY_SEPARATOR.'components/com_biblestudy/class.biblestudydownload.php');
 		$task = JRequest::getVar('task');
 		if ($task == 'download')
 		{

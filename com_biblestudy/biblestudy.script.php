@@ -27,15 +27,15 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 
  	function install($parent) {
  		$db =& JFactory::getDBO();
- 		$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'install-defaults.sql');
+ 		$query = file_get_contents(JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'install' .DIRECTORY_SEPARATOR. 'sql' .DIRECTORY_SEPARATOR. 'install-defaults.sql');
  		$db->setQuery($query);
  		$db->queryBatch();
  		echo JHtml::_('sliders.panel', JText::_('JBS_INS_16_INSTALLING_VERSION_700') , 'publishing-details');
  	}
 
  	function uninstall($parent) {
- 		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
- 		require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'params.php');
+ 		require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
+ 		require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'params.php');
 
  		$db =& JFactory::getDBO();
  		$db->setQuery ("SELECT * FROM #__bsms_admin WHERE id = 1");
@@ -56,7 +56,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
  			$query = "DELETE FROM #__assets WHERE parent_id = ".$parent_id;
  			$db->setQuery($query);
  			$db->query();
- 			$query = file_get_contents(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'sql' .DS. 'uninstall-dbtables.sql');
+ 			$query = file_get_contents(JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'install' .DIRECTORY_SEPARATOR. 'sql' .DIRECTORY_SEPARATOR. 'uninstall-dbtables.sql');
  			$db->setQuery($query);
  			$db->queryBatch();
  			$drop_result = '';
@@ -85,7 +85,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 
  		//We need to check on the topics table. There were changes made between the migration component 1.08 and 1.011 that might differ so it is best to address here
  		// @todo looking at removing this to do it under the admin panel to do fix ups insted of in the installer or have some more way to not run it or display it if there is no need to run it.
- 		require_once(JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'updates'. DS. 'update701.php');
+ 		require_once(JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'install' .DIRECTORY_SEPARATOR. 'updates'. DIRECTORY_SEPARATOR. 'update701.php');
  		$update = new updatejbs701();
  		$update701 = $update->do701update();
  		if (!$update701) {
@@ -118,7 +118,7 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
  		}
  		elseif (!$asset->asset_id)
  		{
- 			require_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'install' .DS. 'biblestudy.assets.php');
+ 			require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'install' .DIRECTORY_SEPARATOR. 'biblestudy.assets.php');
  			$assetfix = new fixJBSAssets();
  			$assetdofix = $assetfix->AssetEntry();
  			if ($assetdofix){
@@ -142,9 +142,9 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 	
 		//Check for presence of css or backup
 		jimport('joomla.filesystem.file');
-		$src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css.dist';
-		$dest = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
-		$backup = JPATH_SITE.DS.'media'.DS.'com_biblestudy'.DS.'backup'.DS.'biblestudy.css';
+		$src = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'biblestudy.css.dist';
+		$dest = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'biblestudy.css';
+		$backup = JPATH_SITE.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'backup'.DIRECTORY_SEPARATOR.'biblestudy.css';
 		$cssexists = JFile::exists($dest);  
 		$backupexists = JFile::exists($backup);
 		if (!$cssexists)
@@ -166,8 +166,8 @@ window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.
 		}
 		
 		//Check for default details text link image and copy if not present
-		$src = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'images'.DS.'textfile24.png';
-		$dest = JPATH_SITE.DS.'images'.DS.'textfile24.png';
+		$src = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'textfile24.png';
+		$dest = JPATH_SITE.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'textfile24.png';
 		$imageexists = JFile::exists($dest);
 		if (!$imageexists)
 		{

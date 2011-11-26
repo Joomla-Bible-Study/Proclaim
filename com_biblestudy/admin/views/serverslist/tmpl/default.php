@@ -8,7 +8,7 @@
  **/
 //No Direct Access
 defined('_JEXEC') or die('Restricted access');
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
 ?>
 <form
 	action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=serverslist'); ?>"

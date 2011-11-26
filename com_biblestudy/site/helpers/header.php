@@ -17,7 +17,7 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
 	if  ($showheader < 1){
 		$nh = TRUE;
 	}
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'elements.php');
 
 	//Here we test to see if this is a studydetails or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.

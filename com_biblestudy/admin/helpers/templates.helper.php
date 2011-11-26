@@ -29,7 +29,7 @@ class bibleStudyTemplate extends JObject {
 	 * @return null
 	 */
 	function __construct() {
-		include(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'tagDefinitions.helper.php');
+		include(JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'tagDefinitions.helper.php');
 		//Creates array of all the tags and their associated field names
 		$tagsStudy = array(
 			'[studyDate]' => array('fieldName' => 'studydate'), 

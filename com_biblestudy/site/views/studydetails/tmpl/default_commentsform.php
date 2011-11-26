@@ -118,7 +118,7 @@ switch ($this->params->get('link_comments',0))
  };
  </script>
  <?php
-        require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
+        require_once(JPATH_SITE .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'assets' .DIRECTORY_SEPARATOR. 'captcha' .DIRECTORY_SEPARATOR. 'recaptchalib.php');
         $publickey = $this->params->get('public_key'); // you got this from the signup page
         if ($this->params->get('public_key'))
         {echo recaptcha_get_html($publickey);}

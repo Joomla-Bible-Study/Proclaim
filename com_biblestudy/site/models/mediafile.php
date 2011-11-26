@@ -63,7 +63,7 @@ class biblestudyModelmediafile extends modelClass {
 
 	public function getTable($type = 'mediafile', $prefix = 'Table', $config = array())
 	{
-		JTable::addIncludePath(JPATH_COMPONENT.DS.'tables');
+		JTable::addIncludePath(JPATH_COMPONENT.DIRECTORY_SEPARATOR.'tables');
 		return JTable::getInstance($type, $prefix, $config);
 	}
 

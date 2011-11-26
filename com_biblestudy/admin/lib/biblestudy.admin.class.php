@@ -9,8 +9,8 @@
  **/
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
-require_once ( JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-require_once ( JPATH_ROOT .DS.'libraries'.DS.'joomla'.DS.'html'.DS.'parameter.php' );
+require_once ( JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
+require_once ( JPATH_ROOT .DIRECTORY_SEPARATOR.'libraries'.DIRECTORY_SEPARATOR.'joomla'.DIRECTORY_SEPARATOR.'html'.DIRECTORY_SEPARATOR.'parameter.php' );
 
 class JBSAdmin
 {
@@ -43,7 +43,7 @@ class JBSAdmin
 
 	function getAdminsettings()
 	{
-		include_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'params.php');
+		include_once(JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'params.php');
 		$admin_params = BsmHelper::getAdmin(true);
 		return $admin_params;
 	}

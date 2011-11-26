@@ -10,13 +10,13 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
 function getTeacher($params, $id, $admin_params)
 {
 
 	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'image.php');
 	$teacher = null;
 	$teacherid = null;
@@ -74,7 +74,7 @@ function getTeacher($params, $id, $admin_params)
 function getTeacherLandingPage($params, $id, $admin_params)
 {
 	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
 
@@ -169,7 +169,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
 
 function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 {
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'elements.php');
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
@@ -195,7 +195,7 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template)
 
 function getTeacherDetailsExp($row, $params, $template, $admin_params)
 {
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'elements.php');
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
@@ -225,11 +225,11 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params)
 function getTeacherStudiesExp($id, $params, $admin_params, $template)
 {
 
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 
 	include_once($path1.'listing.php');
 
-	$path2 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'models'.DS;
+	$path2 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR;
 	 
 
 	$limit = '';

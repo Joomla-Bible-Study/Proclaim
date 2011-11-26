@@ -26,7 +26,7 @@ class BsmHelper extends JComponentHelper {
 	 */
 	public function getAdmin($isSite = false) {
 		if($isSite)
-		JModel::addIncludePath (JPATH_COMPONENT_ADMINISTRATOR.DS.'models');
+		JModel::addIncludePath (JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'models');
 		$admin = JModel::getInstance('Admin', 'biblestudyModel');
 		$admin = $admin->getItem(1);
 
@@ -38,7 +38,7 @@ class BsmHelper extends JComponentHelper {
 
 	public function getTemplateparams($isSite = false){
 		if ($isSite)
-		JModel::addIncludePath (JPATH_COMPONENT_ADMINISTRATOR.DS.'models');
+		JModel::addIncludePath (JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'models');
 		$pk = JRequest::getInt('t','get','1');
 		$template = JModel::getInstance('Templateedit', 'biblestudyModel');
 		$template = $template->getItem($pk);

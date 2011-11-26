@@ -55,7 +55,7 @@ class biblestudyController extends JController {
 		if ($params->get('use_captcha') > 0)
 		{
 			//Begin reCaptcha
-	  require_once(JPATH_SITE .DS. 'components' .DS. 'com_biblestudy' .DS. 'assets' .DS. 'captcha' .DS. 'recaptchalib.php');
+	  require_once(JPATH_SITE .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'assets' .DIRECTORY_SEPARATOR. 'captcha' .DIRECTORY_SEPARATOR. 'recaptchalib.php');
 	  $privatekey = $params->get('private_key');
 	  $challenge = JRequest::getVar('recaptcha_challenge_field','','post');
 	  $response =  JRequest::getVar('recaptcha_response_field','','post');
@@ -138,7 +138,7 @@ class biblestudyController extends JController {
 
 	function download() {
 		$abspath    = JPATH_SITE;
-		require_once($abspath.DS.'components/com_biblestudy/class.biblestudydownload.php');
+		require_once($abspath.DIRECTORY_SEPARATOR.'components/com_biblestudy/class.biblestudydownload.php');
 		$task = JRequest::getVar('task');
 		if ($task == 'download')
 		{
@@ -162,7 +162,7 @@ class biblestudyController extends JController {
 	}
 
 	function playHit() {
-		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+		require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.media.class.php');
 		$getMedia = new jbsMedia();
 		$getMedia->hitPlay(JRequest::getInt('id'));
 	}

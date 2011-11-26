@@ -26,8 +26,8 @@ JHTML::_('behavior.tooltip');
 $params = $this->params;
 $admin_params = $this->admin_params;
 $document =& JFactory::getDocument();
-$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
-$document->addStyleSheet(JURI::base().'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css');
+$document->addScript(JURI::base().'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'tooltip.js');
+$document->addStyleSheet(JURI::base().'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'biblestudy.css');
 $url = $params->get('stylesheet');
 if ($url) {
 	$document->addStyleSheet($url);

@@ -110,7 +110,7 @@ class biblestudyControlleradmin extends controllerClass {
     }
 
     function updatesef() {
-        $path1 = JPATH_SITE . DS . 'components' . DS . 'com_biblestudy' . DS . 'helpers' . DS;
+        $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'updatesef.php');
         $update = updateSEF();
         if ($update) {

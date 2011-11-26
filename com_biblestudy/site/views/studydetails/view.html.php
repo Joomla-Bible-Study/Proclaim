@@ -5,7 +5,7 @@
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view' );
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
 
 $uri 		=& JFactory::getURI();
 
@@ -27,7 +27,7 @@ class biblestudyViewstudydetails extends JView
 
 		$studydetails  =& $this->get('Data');
 		//Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'helpers');
 		$this->loadHelper('params');
 
 		$t = JRequest::getInt('t','get',1);

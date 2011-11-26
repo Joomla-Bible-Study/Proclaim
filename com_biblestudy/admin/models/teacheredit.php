@@ -11,7 +11,7 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modeladmin');
-require_once JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'biblestudy.php';
+require_once JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'biblestudy.php';
 abstract class modelClass extends JModelAdmin {
 
 }

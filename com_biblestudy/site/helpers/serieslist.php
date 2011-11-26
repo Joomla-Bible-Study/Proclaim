@@ -9,14 +9,14 @@
  **/
 
 defined('_JEXEC') or die('Restriced Access');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
 
 function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 {
 	$listing = '';
-	$path1 = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_ROOT.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
@@ -328,7 +328,7 @@ return $studies;
 function getSeriesLandingPage($params, $id, $admin_params)
 {
 	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
 	$series = null;
@@ -417,7 +417,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 
 function getSerieslistExp($row, $params, $admin_params, $template)
 {
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');
@@ -441,7 +441,7 @@ function getSerieslistExp($row, $params, $admin_params, $template)
 function getSeriesDetailsExp($row, $params, $admin_params, $template)
 {
 	//seriesdesc_template
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'elements.php');
 	include_once($path1.'scripture.php');
 	include_once($path1.'custom.php');
@@ -469,9 +469,9 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template)
 
 function getSeriesstudiesExp($id, $params, $admin_params, $template)
 {
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'listing.php');
-	$path2 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'models'.DS;
+	$path2 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR;
 
 	$limit = '';
 	$nolimit = JRequest::getVar('nolimit', 'int', 0);

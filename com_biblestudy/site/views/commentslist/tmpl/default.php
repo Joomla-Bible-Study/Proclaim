@@ -7,7 +7,7 @@
 
 //No Direct Access
 defined('_JEXEC') or die('Restricted access');
-require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_SITE  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
 $listDirn = $this->state->get('list.direction');
 $listOrder = $this->state->get('list.ordering');
 ?>

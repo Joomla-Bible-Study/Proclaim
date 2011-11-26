@@ -12,7 +12,7 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
-include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
+include_once (JPATH_COMPONENT_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'translated.php');
 
 
 class biblestudyModelstudydetails extends JModel
@@ -36,7 +36,7 @@ class biblestudyModelstudydetails extends JModel
 		$this->setId((int)$array[0]);
 
 		////set the default view search path
-		$this->addTablePath(JPATH_COMPONENT.DS.'tables');
+		$this->addTablePath(JPATH_COMPONENT.DIRECTORY_SEPARATOR.'tables');
 		$params 			=& $mainframe->getPageParameters();
 		$t = JRequest::getInt('t','get');
 		if (!$t){$t = 1;}

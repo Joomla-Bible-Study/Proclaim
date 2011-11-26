@@ -28,7 +28,7 @@ class JFormFieldDocman extends JFormField
 	{
 		//Check to see if Docman is installed
 		jimport('joomla.filesystem.folder');
-		if(!JFolder::exists(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_docman')){
+		if(!JFolder::exists(JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_docman')){
 			return "DOCman is not installed";
 		}
 		$db = JFactory::getDBO();

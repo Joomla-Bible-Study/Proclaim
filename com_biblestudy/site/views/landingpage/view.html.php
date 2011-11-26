@@ -8,9 +8,9 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_SITE  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
 jimport( 'joomla.application.component.view' );
 
 class biblestudyViewLandingpage extends JView {
@@ -21,10 +21,10 @@ class biblestudyViewLandingpage extends JView {
 	 **/
 	function display($tpl = null) {
 		$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 		include_once($path1.'image.php');
 		//Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'helpers');
 		$document =& JFactory::getDocument();
 		$model =& $this->getModel();
 
@@ -47,7 +47,7 @@ class biblestudyViewLandingpage extends JView {
 		$this->admin_params = $registry;
 
 		$document =& JFactory::getDocument();
-		$document->addScript(JURI::base().'components'.DS.'com_biblestudy'.DS.'tooltip.js');
+		$document->addScript(JURI::base().'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'tooltip.js');
 		$stylesheet = JURI::base().'components/com_biblestudy/assets/css/biblestudy.css';
 		$document->addStyleSheet($stylesheet);
 

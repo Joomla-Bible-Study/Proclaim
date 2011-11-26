@@ -1,6 +1,6 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
 <?php
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 $params = $this->params;
@@ -93,7 +93,7 @@ if ($this->admin_params->get('socialnetworking')> 0)
 		if ($this->params->get('list_items_view') == 1)
 		{
 			echo '<tr class="bseven"><td class="media">';
-			require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+			require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.media.class.php');
 			$media = new jbsMedia();
 			$listing = $media->getMediaTable($row, $this->params, $this->admin_params);
 			echo $listing;

@@ -9,8 +9,8 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
-require_once (JPATH_ADMINISTRATOR  .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'biblestudy.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
+require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'biblestudy.php');
 
 class biblestudyViewmediafile extends JView {
 
@@ -31,7 +31,7 @@ class biblestudyViewmediafile extends JView {
 
 		//Needed to load the article field type for the article selector
 		jimport('joomla.form.helper');
-		JFormHelper::addFieldPath(JPATH_SITE.DS.'components'.DS.'com_content'.DS.'models'.DS.'fields'.DS.'modal');
+		JFormHelper::addFieldPath(JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_content'.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.'fields'.DIRECTORY_SEPARATOR.'modal');
 		 
 		$user = JFactory::getUser();
 
@@ -43,7 +43,7 @@ class biblestudyViewmediafile extends JView {
 		}
 		$this->setLayout('form');
 
-		require_once( JPATH_COMPONENT_SITE.DS.'helpers'.DS.'toolbar.php' );
+		require_once( JPATH_COMPONENT_SITE.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'toolbar.php' );
 		$toolbar = biblestudyHelperToolbar::getToolbar();
 		$this->assignRef('toolbar', $toolbar);
 		$isNew		= ($mediafilesedit->id < 1);

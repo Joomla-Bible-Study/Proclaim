@@ -13,7 +13,7 @@ defined('_JEXEC') or die('Restriced Access');
 function getYearsLandingPage($params, $id, $admin_params)
 {
 	$mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
 	$year = null;

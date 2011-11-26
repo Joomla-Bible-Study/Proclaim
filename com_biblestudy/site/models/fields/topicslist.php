@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 // import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
-include_once (JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_biblestudy' .DS. 'helpers' .DS. 'translated.php');
+include_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'translated.php');
 
 /**
  * Topics List Form Field class for the Joomla Bible Study component

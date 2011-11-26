@@ -8,7 +8,7 @@
 //No Direct Access
 defined('_JEXEC') or die();
 
-require_once (JPATH_SITE  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.defines.php');
+require_once (JPATH_SITE  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
 jimport( 'joomla.application.component.view' );
 
 
@@ -22,7 +22,7 @@ class biblestudyViewteacherlist extends JView
 	{
 
 		//Load the Admin settings and params from the template
-		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers');
+		$this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'helpers');
 		$this->loadHelper('params');
 		$this->admin = BsmHelper::getAdmin(true);
 

@@ -57,8 +57,8 @@ function resetcss()
 	JClientHelper::setCredentialsFromRequest('ftp');
 	$ftp = JClientHelper::getCredentials('ftp');
     $filename		= 'biblestudy.css.dist';
-	$src = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
-    $dest = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.'biblestudy.css';
+	$src = JPATH_ROOT.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$filename;
+    $dest = JPATH_ROOT.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'biblestudy.css';
 
 	// Try to make the css file writeable
 
@@ -95,7 +95,7 @@ function save()
 		JClientHelper::setCredentialsFromRequest('ftp');
 		$ftp = JClientHelper::getCredentials('ftp');
 
-		$file = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
+		$file = JPATH_ROOT.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$filename;
 		// Try to make the css file writeable
 
 		jimport('joomla.filesystem.file');
@@ -117,10 +117,10 @@ function backup()
         	$mainframe =& JFactory::getApplication();
             //Check for existence of com_biblestudy folder in media and create if it doesn't exist
             jimport('joomla.filesystem.folder');
-            $mediafolderpath = JFolder::exists(JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup');
+            $mediafolderpath = JFolder::exists(JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'backup');
             if (!$mediafolderpath)
             {
-                $createmediafolder = JFolder::create(JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup');
+                $createmediafolder = JFolder::create(JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'backup');
                 if (!$createmediafolder)
                 {
                     $mainframe->redirect('index.php?option=com_biblestudy&view=cpanel', JText::_('JBS_CMN_OPERATION_FAILED').': '.JText::_('JBS_CMN_FAILED_CREATE_FOLDER'));
@@ -132,8 +132,8 @@ function backup()
     		JClientHelper::setCredentialsFromRequest('ftp');
     		$ftp = JClientHelper::getCredentials('ftp');
             $filename		= 'biblestudy.css';
-    		$src = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
-            $dest = JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup'.DS.'biblestudy.css';
+    		$src = JPATH_ROOT.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$filename;
+            $dest = JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'backup'.DIRECTORY_SEPARATOR.'biblestudy.css';
 
     		// Try to make the css file writeable
 
@@ -156,8 +156,8 @@ function copycss()
     		JClientHelper::setCredentialsFromRequest('ftp');
     		$ftp = JClientHelper::getCredentials('ftp');
             $filename		= 'biblestudy.css';
-    		$dest = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
-            $src = JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup'.DS.'biblestudy.css';
+    		$dest = JPATH_ROOT.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$filename;
+            $src = JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'backup'.DIRECTORY_SEPARATOR.'biblestudy.css';
 
     		// Try to make the css file writeable
 
@@ -178,8 +178,8 @@ function restorecss()
 		JClientHelper::setCredentialsFromRequest('ftp');
 		$ftp = JClientHelper::getCredentials('ftp');
         $filename		= 'biblestudy.css';
-		$dest = JPATH_ROOT.DS.'components'.DS.'com_biblestudy'.DS.'assets'.DS.'css'.DS.$filename;
-        $src = JPATH_ROOT.DS.'media'.DS.'com_biblestudy'.DS.'backup'.DS.'biblestudy.css';
+		$dest = JPATH_ROOT.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$filename;
+        $src = JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'backup'.DIRECTORY_SEPARATOR.'biblestudy.css';
         jimport('joomla.filesystem.file');
         $backupexists = JFile::exists($src);
         if (!$backupexists)

@@ -10,7 +10,7 @@
 
 function getCustom($rowid, $custom, $row, $params, $admin_params, $template)
 {
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'elements.php');
 	$countbraces = substr_count($custom, '{');
 	$braceend = 0;

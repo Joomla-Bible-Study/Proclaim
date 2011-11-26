@@ -18,7 +18,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
 
 
 jimport('joomla.application.component.controller');
-require_once (JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'lib' . DS . 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 
 class biblestudyController extends JController {
 
@@ -31,7 +31,7 @@ class biblestudyController extends JController {
         $db->setQuery('SET SQL_BIG_SELECTS=1');
         $db->query();
 
-        require_once(JPATH_COMPONENT . DS . 'helpers' . DS . 'biblestudy.php');
+        require_once(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
         BiblestudyHelper::addSubmenu(JRequest::getWord('view', 'cpanel'));
 
         $view = JRequest::getWord('view', 'cpanel');
@@ -87,7 +87,7 @@ die();
         $serverId = JRequest::getVar('server');
         $folderId = JRequest::getVar('path');
 
-        $path1 = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'helpers' . DS;
+        $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'server.php');
 
         $server = getServer($serverId);
@@ -256,7 +256,7 @@ die();
                 return false;
             }
         } else {
-            require_once (JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'install' . DS . 'biblestudy.assets.php');
+            require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
             $assetfix = new fixJBSAssets();
             $assetdofix = $assetfix->AssetEntry();
             if ($assetdofix) {

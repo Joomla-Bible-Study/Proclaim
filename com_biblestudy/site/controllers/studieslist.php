@@ -33,7 +33,7 @@ class biblestudyControllerstudieslist extends JController
 
 	function download() {
 		$abspath    = JPATH_SITE;
-		require_once($abspath.DS.'components/com_biblestudy/class.biblestudydownload.php');
+		require_once($abspath.DIRECTORY_SEPARATOR.'components/com_biblestudy/class.biblestudydownload.php');
 		$task = JRequest::getVar('task');
 		if ($task == 'download')
 		{
@@ -57,7 +57,7 @@ class biblestudyControllerstudieslist extends JController
 	}
 
 	function playHit() {
-		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+		require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.media.class.php');
 		$getMedia = new jbsMedia();
 		$getMedia->hitPlay(JRequest::getInt('id'));
 	}

@@ -11,7 +11,7 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
-include_once (JPATH_COMPONENT_ADMINISTRATOR .DS. 'helpers' .DS. 'translated.php');
+include_once (JPATH_COMPONENT_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'translated.php');
 
 abstract class modelClass extends JModelList {
 

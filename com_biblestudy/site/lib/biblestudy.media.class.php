@@ -9,8 +9,8 @@
  **/
 
 defined('_JEXEC') or die();
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.admin.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
 jimport('joomla.html.parameter');
 
 
@@ -25,7 +25,7 @@ class jbsMedia
 
 		$template = JRequest::getInt('t','1','get');
 		$images = new jbsImages();
-		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 		include_once ($path1.'helper.php');
 
 		//Here we get the administration row from the comnponent, and determine the download image to use
@@ -305,7 +305,7 @@ class jbsMedia
 		$src = JURI::base().$image->path;
 		$height = $image->height;
 		$width = $image->width;
-		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 		include_once($path1.'filesize.php');
 		include_once($path1.'duration.php');
 		$filesize = getFilesize($media->size);
@@ -346,7 +346,7 @@ class jbsMedia
 
 	function getPlayerCode($params, $itemparams, $player, $image, $media)
 	{
-		$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+		$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 		include_once($path1.'filesize.php');
 		include_once($path1.'duration.php');
 		$src = JURI::base().$image->path;

@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 function getShare($link, $row, $params, $admin_params)
 {
 	jimport('joomla.html.parameter');
-	$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'elements.php');
 	include_once($path1.'custom.php');
 	include_once($path1.'image.php');

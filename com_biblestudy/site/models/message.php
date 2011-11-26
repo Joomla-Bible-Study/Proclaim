@@ -12,8 +12,8 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modeladmin');
 jimport('joomla.html.parameter');
-require_once JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'biblestudy.php';
-include_once (JPATH_COMPONENT_ADMINISTRATOR . DS . 'helpers' . DS . 'translated.php');
+require_once JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'biblestudy.php';
+include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
 abstract class modelClass extends JModelAdmin {
 }
@@ -110,7 +110,7 @@ class biblestudyModelmessage extends modelClass {
 		$vTags = JRequest::getVar('topic_tags', '', 'post', 'string', JREQUEST_ALLOWRAW);
 		$iTags = explode(",", $vTags);
 
-		JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'tables');
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'tables');
 
 		foreach ($iTags as $aTag) {
 			if (is_numeric($aTag)) {
@@ -359,7 +359,7 @@ class biblestudyModelmessage extends modelClass {
 
 	public function getTable($type = 'Message', $prefix = 'Table', $config = array())
 	{
-		JTable::addIncludePath(JPATH_COMPONENT.DS.'tables');
+		JTable::addIncludePath(JPATH_COMPONENT.DIRECTORY_SEPARATOR.'tables');
 		return JTable::getInstance($type, $prefix, $config);
 	}
 }

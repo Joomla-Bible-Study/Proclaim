@@ -1,5 +1,5 @@
 <?php
-require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.images.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die(); ?>
 
@@ -7,7 +7,7 @@ defined('_JEXEC') or die(); ?>
 $mainframe =& JFactory::getApplication(); $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 $database = & JFactory::getDBO();
-$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 include_once($path1.'helper.php');
 $document =& JFactory::getDocument();
 $document->addScript(JURI::base().'components/com_biblestudy/tooltip.js');
@@ -16,7 +16,7 @@ $document->addScriptDeclaration($showhide);
 $stylesheet = JURI::base().'components/com_biblestudy/assets/css/biblestudy.css';
 $document->addStyleSheet($stylesheet);
 $params = $this->params;
-$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 include_once($path1.'image.php');
 //$d_path1 = ($this->admin_params->get('media_imagefolder') ? 'images/'.$this->admin_params->get('media_imagefolder') : 'components/com_biblestudy/images');
 $d_path1 = 'components/com_biblestudy/images';

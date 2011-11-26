@@ -37,7 +37,7 @@ class AvReloadedViewPopup extends JView
 		 
 		//JoomlaBibleStudy added this to handle problems with not finding itemid JoomlaBibleStudy 6.1.0
 		jimport('joomla.filesystem.file');
-		$bsms = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'biblestudy.php';
+		$bsms = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'biblestudy.php';
 		$biblestudyinstalled = JFile::getName($bsms);
 		if (!$biblestudyinstalled)
 		{
@@ -49,7 +49,7 @@ class AvReloadedViewPopup extends JView
 			$itemid = JRequest::getInt('Itemid');
 			if (!$itemid)
 			{
-				$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+				$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 				include_once($path1.'helper.php');
 				$admin_params = getAdminsettings();
 				$itemid = getItemidLink();
@@ -61,7 +61,7 @@ class AvReloadedViewPopup extends JView
 		$divid = JRequest::getString('divid', null);
 
 		//code added JoomlaBibleStudy 6.2.0
-		require_once (JPATH_ROOT  .DS. 'components' .DS. 'com_biblestudy' .DS. 'lib' .DS. 'biblestudy.media.class.php');
+		require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.media.class.php');
 		$media = new jbsMedia();
 		$play = $media->hitPlay($divid);
 		//code to determine user browser and add code to force IE8 into IE7 mode

@@ -8,7 +8,7 @@ $t = $params->get('teachertemplateid');
 if (!$t) {
 	$t = JRequest::getVar('t', 1, 'get', 'int');
 }
-$path1 = JPATH_SITE.DS.'components'.DS.'com_biblestudy'.DS.'helpers'.DS;
+$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 $admin_params = $this->admin_params;
 include_once($path1.'image.php');
 

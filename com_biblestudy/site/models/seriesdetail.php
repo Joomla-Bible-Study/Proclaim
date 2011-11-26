@@ -34,7 +34,7 @@ class biblestudyModelseriesdetail extends JModel
 		$this->setId((int)$array[0]);
 
 		////set the default view search path
-		$this->addTablePath(JPATH_COMPONENT.DS.'tables');
+		$this->addTablePath(JPATH_COMPONENT.DIRECTORY_SEPARATOR.'tables');
 		$params =& $mainframe->getPageParameters();
 		$t = JRequest::getInt('t','get');
 		if (!$t){
