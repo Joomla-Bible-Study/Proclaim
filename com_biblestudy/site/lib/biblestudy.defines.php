@@ -6,14 +6,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
-
-
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
-define ('BIBLESTUDY_VERSION', '7.0.0');
-define ('BIBLESTUDY_VERSION_DATE', '2010-12-22');
-define ('BIBLESTUDY_VERSION_NAME', '2Samuel');
-define ('BIBLESTUDY_VERSION_BUILD', '700');
+define ('BIBLESTUDY_VERSION', '7.0.2');
+define ('BIBLESTUDY_VERSION_DATE', '2011-12-01');
+define ('BIBLESTUDY_VERSION_BUILD', '702');
 
 // Default values
 define('BIBLESTUDY_COMPONENT_NAME', 'com_biblestudy');

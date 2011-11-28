@@ -3,16 +3,15 @@
  * @version $Id$
  * Bible Study Component
  * @package Bible Study
- * @Copyright (C) 2010 Joomla Bible Study All rights reserved
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  **/
 defined( '_JEXEC' ) or die( 'Restricted access' );
 // Version information
-define ('BIBLESTUDY_VERSION', '7.0.0');
-define ('BIBLESTUDY_VERSION_DATE', '2010-08-04');
-define ('BIBLESTUDY_VERSION_NAME', '2Samuel');
-define ('BIBLESTUDY_VERSION_BUILD', '700');
+define ('BIBLESTUDY_VERSION', '7.0.2');
+define ('BIBLESTUDY_VERSION_DATE', '2011-12-01');
+define ('BIBLESTUDY_VERSION_BUILD', '702');
 
 // Default values
 define('BIBLESTUDY_COMPONENT_NAME', 'com_biblestudy');

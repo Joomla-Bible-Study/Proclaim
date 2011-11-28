@@ -13,7 +13,7 @@
 	<license>GNU/GPL</license>
 	<version>7.0.1</version>
 	<creationDate>August 1, 2011</creationDate>
-	<description>JBS_INS_16_XML_DESCRIPTION</description>
+	<description>JBS_INS_XML_DESCRIPTION</description>
 	<!-- Front end file, media and language specification -->
 	<!-- <filename>biblestudy.xml</filename> -->
 	<files folder="site">
@@ -80,19 +80,19 @@
 			<!-- Note that all & must be escaped to &amp; for the file to be valid
 				XML and be parsed by the installer -->
 			<menu link="option=com_biblestudy&amp;view=cpanel" view="cpanel"
-				img="class:biblemenu"alt="JBS_MNU_CONTROL_PANEL">JBS_MNU_CONTROL_PANEL</menu>
-			<menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1"
-				view="admin" img="class:administration" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
+				img="class:biblemenu" alt="JBS_MNU_CONTROL_PANEL">JBS_MNU_CONTROL_PANEL</menu>
+			<menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" view="admin"
+				img="class:administration" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
 			<menu link="option=com_biblestudy&amp;view=studieslist" view="studieslist"
-				img="class:studies"alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
+				img="class:studies" alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
 			<menu link="option=com_biblestudy&amp;view=mediafileslist" view="mediafileslist"
 				alt="JBS_MNU_MEDIA_FILES">JBS_MNU_MEDIA_FILES</menu>
 			<menu link="option=com_biblestudy&amp;view=teacherlist" view="teacherlist"
-				img="class:teachers"alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
+				img="class:teachers" alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
 			<menu link="option=com_biblestudy&amp;view=serieslist" view="serieslist"
-				img="class:series"alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
-			<menu link="option=com_biblestudy&amp;view=messagetypelist"
-				view="messagetypelist" img="class:messagetype" alt="JBS_MNU_MESSAGE_TYPES">JBS_MNU_MESSAGE_TYPES</menu>
+				img="class:series" alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
+			<menu link="option=com_biblestudy&amp;view=messagetypelist" view="messagetypelist"
+				img="class:messagetype" alt="JBS_MNU_MESSAGE_TYPES">JBS_MNU_MESSAGE_TYPES</menu>
 			<menu link="option=com_biblestudy&amp;view=locationslist" view="locationslist"
 				img="class:locations" alt="JBS_MNU_LOCATIONS">JBS_MNU_LOCATIONS</menu>
 			<menu link="option=com_biblestudy&amp;view=topicslist" view="topicslist"
