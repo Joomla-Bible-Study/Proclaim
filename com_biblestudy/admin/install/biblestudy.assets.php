@@ -14,7 +14,7 @@ class fixJBSAssets
 {
 	public function AssetEntry()
 	{
-		print '<p>'.JText::_('JBS_INS_16_ASSET_IN_PROCESS').'</p>';
+		print '<p>'.JText::_('JBS_INS_ASSET_IN_PROCESS').'</p>';
 
 		//Check to see if there is already an asset_id and if so, does it match the parent_id in jos_assets. If not, reset it and in jos_asssets
 		$db = JFactory::getDBO();

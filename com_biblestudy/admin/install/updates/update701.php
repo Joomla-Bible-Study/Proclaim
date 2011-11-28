@@ -12,10 +12,131 @@ class updatejbs701
 {
 
 	function do701update()
-
 	{
 
 		$db = JFactory::getDBO();
+
+		$query = "ALTER Table `#__bsms_admin` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_books` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_comments` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_folders` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_locations` MODIFY id int(10) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_media` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_mediafiles` MODIFY id int(10) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_message_type` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_mimetype` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_podcast` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_search` MODIFY id int(10) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_series` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_servers` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_share` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_studies` MODIFY id int(10) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_studytopics` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_teachers` MODIFY id int(10) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_templates` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_topics` MODIFY id int(10) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		$query = "ALTER Table `#__bsms_version` MODIFY id int(3) unsigned NOT NULL AUTO_INCREMENT";
+		$result = $this->performdb($query);
+		if (!$result){
+			return false;
+		}
+
+		// modify table topics
 		$tables = $db->getTableFields('#__bsms_topics');
 		$languagetag = 0;
 		$paramstag = 0;
@@ -75,4 +196,18 @@ class updatejbs701
 		}
 		return true;
 	}
+
+	function performdb($query)
+	{
+		$db = JFactory::getDBO();
+		$results = false;
+		$db->setQuery($query);
+		$db->query();
+		if ($db->getErrorNum() != 0)
+		{
+			return false;
+		}
+		return true;
+	}
+
 }

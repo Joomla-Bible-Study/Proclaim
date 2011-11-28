@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS `#__bsms_install`;
 DROP TABLE IF EXISTS `#__bsms_update`;
 
 CREATE TABLE `#__bsms_update` (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   version VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8;
@@ -13,10 +13,11 @@ CREATE TABLE `#__bsms_update` (
 INSERT INTO `#__bsms_update` (id,version) VALUES
 (1,'7.0.0'),
 (2,'7.0.1'),
-(3,'7.1.0');
+(3,'7.0.1.1'),
+(4,'7.0.2');
 
 CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
-	`id` int(3) NOT NULL,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`drop_tables` int(3) DEFAULT '0',
 	`params` text,
 	`asset_id` int(10) DEFAULT NULL,
@@ -24,14 +25,14 @@ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 	 PRIMARY KEY (`id`)
 	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 CREATE TABLE IF NOT EXISTS `#__bsms_books` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`bookname` varchar(250) DEFAULT NULL,
 	`booknumber` int(5) DEFAULT NULL,
 	`published` tinyint(1) NOT NULL DEFAULT '1',
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`published` tinyint(1) NOT NULL DEFAULT '0',
 	`study_id` int(11) NOT NULL DEFAULT '0',
 	`user_id` int(11) NOT NULL DEFAULT '0',
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`foldername` varchar(250) NOT NULL DEFAULT '',
 	`folderpath` varchar(250) NOT NULL DEFAULT '',
 	`published` tinyint(1) NOT NULL DEFAULT '1',
@@ -53,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
-	`id` int(10) NOT NULL AUTO_INCREMENT,
+	`id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`location_text` varchar(250) DEFAULT NULL,
 	`published` tinyint(1) NOT NULL DEFAULT '1',
 	`asset_id` int(10) DEFAULT NULL,
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_media` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`media_text` text,
 	`media_image_name` varchar(250) NOT NULL DEFAULT '',
 	`media_image_path` varchar(250) NOT NULL DEFAULT '',
@@ -73,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_media` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
-	`id` int(10) NOT NULL AUTO_INCREMENT,
+	`id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`study_id` int(5) DEFAULT NULL,
 	`media_image` int(3) DEFAULT NULL,
 	`server` varchar(250) DEFAULT NULL,
@@ -104,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`message_type` text NOT NULL,
 	`published` tinyint(1) NOT NULL DEFAULT '1',
 	`asset_id` int(10) DEFAULT NULL,
@@ -112,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`mimetype` varchar(50) DEFAULT NULL,
 	`mimetext` varchar(50) DEFAULT NULL,
 	`published` tinyint(1) NOT NULL DEFAULT '1',
@@ -127,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_order` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`title` varchar(100) DEFAULT NULL,
 	`website` varchar(100) DEFAULT NULL,
 	`description` text,
@@ -151,13 +152,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_search` (
-	`id` int(10) NOT NULL AUTO_INCREMENT,
+	`id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`value` varchar(15) DEFAULT '',
 	`text` varchar(15) DEFAULT '',
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_series` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`series_text` text,
 	`teacher` int(3) DEFAULT NULL,
 	`description` text,
@@ -168,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`server_name` varchar(250) NOT NULL DEFAULT '',
 	`server_path` varchar(250) NOT NULL DEFAULT '',
 	`published` tinyint(1) NOT NULL DEFAULT '1',
@@ -180,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_share` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` varchar(250) DEFAULT NULL,
 	`params` text,
 	`published` tinyint(1) NOT NULL DEFAULT '1',
@@ -189,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_share` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
-	`id` int(10) NOT NULL AUTO_INCREMENT,
+	`id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`studydate` datetime DEFAULT NULL,
 	`teacher_id` int(11) DEFAULT '1',
 	`studynumber` varchar(100) DEFAULT '',
@@ -236,7 +237,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`study_id` int(3) NOT NULL DEFAULT '0',
 	`topic_id` int(3) NOT NULL DEFAULT '0',
 	`asset_id` int(10) DEFAULT NULL,
@@ -244,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
-	`id` int(10) NOT NULL AUTO_INCREMENT,
+	`id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`teacher_image` text,
 	`teacher_thumbnail` text,
 	`teachername` varchar(250) NOT NULL DEFAULT '',
@@ -269,7 +270,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`type` varchar(255) NOT NULL,
 	`tmpl` longtext NOT NULL,
 	`published` int(1) NOT NULL DEFAULT '1',
@@ -280,14 +281,14 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
 	`asset_id` int(10) DEFAULT NULL,
 	`access` int(10) DEFAULT NULL,
 	PRIMARY KEY (`id`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
 	`timeset` varchar(14) NOT NULL DEFAULT '',
 	`backup` varchar(14) DEFAULT NULL,
 	PRIMARY KEY (`timeset`)
 	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
-	`id` int(10) NOT NULL AUTO_INCREMENT,
+	`id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`topic_text` text,
 	`published` tinyint(1) NOT NULL DEFAULT '1',
 	`params` varchar(511) DEFAULT NULL,
@@ -296,7 +297,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
 	PRIMARY KEY (`id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=114 ;
 CREATE TABLE IF NOT EXISTS `#__bsms_version` (
-	`id` int(3) NOT NULL AUTO_INCREMENT,
+	`id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`version` varchar(20) NOT NULL,
 	`versiondate` date NOT NULL,
 	`installdate` date NOT NULL,
@@ -305,4 +306,4 @@ CREATE TABLE IF NOT EXISTS `#__bsms_version` (
 	`asset_id` int(10) DEFAULT NULL,
 	`access` int(10) DEFAULT NULL,
 	PRIMARY KEY (`id`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
