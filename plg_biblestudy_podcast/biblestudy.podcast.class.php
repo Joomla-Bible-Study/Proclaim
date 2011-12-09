@@ -13,12 +13,32 @@ $path1 = JPATH_SITE.'/components/com_biblestudy/helpers/';
 include_once($path1.'custom.php');
 include_once($path1.'helper.php');
 include_once($path1.'scripture.php');
-$this->admin_params = getAdminsettings();
+
 
 class JBSPodcast
 {
+    
+    function getAdminsettings()
+	{
+			$db =& JFactory::getDBO();
+
+
+		$db->setQuery ("SELECT params FROM #__bsms_admin WHERE id = 1");
+		$db->query();
+		$compat = $db->loadObject();
+
+            // Convert parameter fields to objects.
+				$registry = new JRegistry;
+				$registry->loadJSON($compat->params);
+                $admin_params = $registry;
+
+		return $admin_params;
+	}
+    
     function makePodcasts()
     {
+        $params = null;
+        $admin_params = $this->getAdminsettings();
         $msg = array();
         $db = JFactory::getDBO();
         jimport('joomla.utilities.date');
@@ -82,12 +102,14 @@ class JBSPodcast
                 	<ttl>1</ttl>
                 	<atom:link href="http://'.$podinfo->website.'/'.$podinfo->filename.'" rel="self" type="application/rss+xml" />';
     				//Now let's get the podcast episodes
+                    
     				$limit = $podinfo->podcastlimit;
     				if ($limit > 0) 
     				{$limit = 'LIMIT '.$limit;}
     				else {$limit = '';}
     				$episodes = $this->getEpisodes($podinfo->id, $limit);
                     $registry = new JRegistry;
+                    $podinfo->params = array('{"show_verses":"1"}');
     				$registry->loadJSON($podinfo->params);
                     $params = $registry;
                     $params->set('show_verses', '1');
