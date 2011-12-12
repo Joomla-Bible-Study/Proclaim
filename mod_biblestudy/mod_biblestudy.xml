@@ -329,14 +329,15 @@
 			</fieldset>
 			<fieldset name="JBS_MDL_EXPERT_MODE" label="JBS_MDL_EXPERT_MODE">
 				<field name="useexpert_module" type="list" label="JBS_MDL_CUSTOM_VIEW"
-					default="0" description="JBS_MDL_CUSTOM_VIEW_DESC">
+					default="0" description="JBS_MDL_CUSTOM_VIEW_DESC" >
 					<option value="0">JBS_CMN_DONT_USE</option>
 					<option value="1">JBS_TPL_USE_CUSTOM_VIEW</option>
 				</field>
 				<field name="module_headercode" type="textarea" rows="10"
-					cols="100" label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC"></field>
+					cols="100" label="JBS_TPL_HEADERCODE" description="JBS_TPL_HEADERCODE_DESC" filter="raw"></field>
 				<field name="templatecode" type="textarea" rows="10" cols="100"
 					label="JBS_TPL_TEMPLATECODE"
+                    filter="raw"
 					default="&lt;table width=&quot;100%&quot; border=&quot;0&quot; style=&quot;margin-bottom:3px;&quot;&gt;&#13;  &lt;tbody&gt;&#13;  &lt;tr&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{teacher}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{title}}&lt;/td&gt;&#13;    &lt;td width=&quot;33%&quot; valign=&quot;top&quot;&gt;{{date}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;tr&gt;&#13;    &lt;td colspan=&quot;2&quot; valign=&quot;top&quot;&gt;{{studyintro}}&lt;/td&gt;&#13;    &lt;td valign=&quot;top&quot;&gt;{{scripture}}&lt;/td&gt;&#13;  &lt;/tr&gt;&#13;  &lt;/tbody&gt;&#13;&lt;/table&gt;"
 					description="JBS_TPL_TEACHER_TEMPLATECODE_DESC" />
 				<field name="module_wrapcode" type="radio" label="JBS_TPL_TABLE_OR_DIV"
