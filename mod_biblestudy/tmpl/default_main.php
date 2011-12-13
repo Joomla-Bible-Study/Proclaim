@@ -24,14 +24,14 @@ if ($url) {
 	$document->addStyleSheet($url);
 }
 ?>
-<div
-	id="biblestudy" class="noRefTagger">
+<div id="biblestudy" class="noRefTagger">
+<div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
 	<!-- This div is the container for the whole page -->
 	<table id="bsmsmoduletable" cellspacing="0">
 
 
 	<?php
-    echo $params->get('pageheader');
+    
 	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy/helpers/';
 	include_once($path1.'header.php');
 	include_once($path1.'helper.php');
