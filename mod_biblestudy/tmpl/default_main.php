@@ -31,6 +31,7 @@ if ($url) {
 
 
 	<?php
+    echo $params->get('pageheader');
 	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy/helpers/';
 	include_once($path1.'header.php');
 	include_once($path1.'helper.php');

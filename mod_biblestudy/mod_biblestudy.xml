@@ -301,6 +301,8 @@
 					label="JBS_TPL_MEDIA_PROTOCOL" description="JBS_TPL_MEDIA_PROTOCOL_DESC" />
 			</fieldset>
 			<fieldset name="JBS_MDL_MORE_SETTINGS" label="JBS_MDL_MORE_SETTINGS">
+                <field name="pageheader" filter="raw" type="editor" rows="10" buttons="true"
+					cols="75" label="JBS_TPL_HEADER" description="JBS_TPL_HEADER_DESC" />
 				<field name="store_page" type="text" default="flypage.tpl"
 					label="JBS_TPL_MEDIA_STORE_PAGE" description="JBS_TPL_MEDIA_STORE_PAGE_DESC"
 					size="60" />
