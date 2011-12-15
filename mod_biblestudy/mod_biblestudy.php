@@ -49,6 +49,10 @@ defined('_JEXEC') or die('Restriced Access'); ?>
 			}
 		}
 	}
+    foreach ($items AS $item)
+        {
+            $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' .str_replace(' ','-',htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
+        }
 	$list = $items;
 	 
 	global $mainframe;
