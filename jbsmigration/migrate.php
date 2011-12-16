@@ -125,11 +125,25 @@ class JBSMigrate
 						$msg2 = $msg2.$message;
 						//echo $message;
 						break;
+                        
+                        require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'update701.php');
+						$install = new updatejbs701();
+						$message[] = $install->do701update();
+						$msg2 = $msg2.$message;
+						//echo $message;
+						break;
 
 					case '624':
 						require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'biblestudy.700.upgrade.php');
 						$install = new jbs700Install();
 						$message[] = $install->upgrade700();
+						$msg2 = $msg2.$message;
+						//echo $message;
+						break;
+                        
+                        require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'update701.php');
+						$install = new updatejbs701();
+						$message[] = $install->do701update();
 						$msg2 = $msg2.$message;
 						//echo $message;
 						break;
@@ -144,6 +158,13 @@ class JBSMigrate
 						require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'biblestudy.700.upgrade.php');
 						$install = new jbs700Install();
 						$message[] = $install->upgrade700();
+						$msg2 = $msg2.$message;
+						//echo $message;
+						break;
+                        
+                        require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'update701.php');
+						$install = new updatejbs701();
+						$message[] = $install->do701update();
 						$msg2 = $msg2.$message;
 						//echo $message;
 						break;
@@ -167,6 +188,13 @@ class JBSMigrate
 						$msg2 = $msg2.$message;
 						//echo $message;
 						break;
+                        
+                        require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'update701.php');
+						$install = new updatejbs701();
+						$message[] = $install->do701update();
+						$msg2 = $msg2.$message;
+						//echo $message;
+						break;
 
 					case '615':
 
@@ -186,6 +214,13 @@ class JBSMigrate
 						require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'biblestudy.700.upgrade.php');
 						$install = new jbs700Install();
 						$message[] = $install->upgrade700();
+						$msg2 = $msg2.$message;
+						//echo $message;
+						break;
+                        
+                        require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'update701.php');
+						$install = new updatejbs701();
+						$message[] = $install->do701update();
 						$msg2 = $msg2.$message;
 						//echo $message;
 						break;
@@ -213,6 +248,13 @@ class JBSMigrate
 						require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'biblestudy.700.upgrade.php');
 						$install = new jbs700Install();
 						$message[] = $install->upgrade700();
+						$msg2 = $msg2.$message;
+						//echo $message;
+						break;
+                        
+                        require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'update701.php');
+						$install = new updatejbs701();
+						$message[] = $install->do701update();
 						$msg2 = $msg2.$message;
 						//echo $message;
 						break;
@@ -276,6 +318,13 @@ class JBSMigrate
 						$msg2 = $msg2.$message;
 						//echo $message;
 						break;
+                        
+                        require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'update701.php');
+						$install = new updatejbs701();
+						$message[] = $install->do701update();
+						$msg2 = $msg2.$message;
+						//echo $message;
+						break;
 
 					case '611':
 
@@ -306,6 +355,13 @@ class JBSMigrate
 						require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'biblestudy.700.upgrade.php');
 						$install = new jbs700Install();
 						$message[] = $install->upgrade700();
+						$msg2 = $msg2.$message;
+						//echo $message;
+						break;
+                        
+                        require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'update701.php');
+						$install = new updatejbs701();
+						$message[] = $install->do701update();
 						$msg2 = $msg2.$message;
 						//echo $message;
 						break;
@@ -341,6 +397,13 @@ class JBSMigrate
 						require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'biblestudy.700.upgrade.php');
 						$install = new jbs700Install();
 						$message[] = $install->upgrade700();
+						$msg2 = $msg2.$message;
+						//echo $message;
+						break;
+                        
+                        require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_jbsmigration' .DIRECTORY_SEPARATOR. 'migration' .DIRECTORY_SEPARATOR. 'update701.php');
+						$install = new updatejbs701();
+						$message[] = $install->do701update();
 						$msg2 = $msg2.$message;
 						//echo $message;
 						break;
