@@ -9,27 +9,29 @@
  **/
 
 // no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
+addCSS();
 
 
 // Require the base controller
-require_once (JPATH_COMPONENT.DIRECTORY_SEPARATOR.'controller.php');
-
-
-
-$controller = JRequest::getVar( 'controller' );
-
-
-$classname	= 'jbsmigrationController'.$controller;
-
-$controller = new $classname( );
-
+jimport('joomla.application.component.controller');
+$controller = JController::getInstance('jbsmigration');
 
 // Perform the Request task
 $controller->execute( JRequest::getWord('task'));
 //Redirect if set by the controller
 
 $controller->redirect();
+
+/**
+ * Global css
+ *
+ * @since   7.0
+ */
+function addCSS() {
+	$doc = & JFactory::getDocument();
+	$doc->addStyleSheet(JURI::base() . 'components/com_jbsmigration/css/icons.css');
+}

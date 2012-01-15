@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install type="component" version="1.5.0" method="upgrade">
-	<!-- Note: we can use method="upgrade" to ensure an upgrade regardless of 
-		if it is a new install or an actual upgrade; Normal installs will behave 
-		like an install but upgrades will be treated appropriately even if the interface 
+	<!-- Note: we can use method="upgrade" to ensure an upgrade regardless of
+		if it is a new install or an actual upgrade; Normal installs will behave
+		like an install but upgrades will be treated appropriately even if the interface
 		doesn't support it properly -->
 	<!-- Generic Metadata -->
-	<name>COM_JBSMIGRATION</name>
-	<author>JoomlaBibleStudy Team</author>
-	<authorEmail>info@joomlabiblestudy.org</authorEmail>
-	<authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-	<copyright>(C) 2011 Copyright Joomla Bible Study</copyright>
-	<license>GNU/GPL</license>
-	<version>1.3.0</version>
-	<creationDate>January 8, 2012</creationDate>
-	<description>COM_JBSMIGRATION_DESCRIPTION</description>
-	<files>jbsmigration.xml</files>
-	<administration>
+    <name>COM_JBSMIGRATION</name>
+    <author>JoomlaBibleStudy Team</author>
+    <authorEmail>info@joomlabiblestudy.org</authorEmail>
+    <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
+    <copyright>(C) 2011 Copyright Joomla Bible Study</copyright>
+    <license>GNU/GPL</license>
+    <version>1.3.1</version>
+    <creationDate>January 8, 2012</creationDate>
+    <description>COM_JBSMIGRATION_DESCRIPTION</description>
+	<!--<files>jbsmigration.xml</files> -->
+    <administration>
 		<!-- Administration Menu Section -->
-		<menu>COM_JBSMIGRATION_MENU</menu>
+        <menu>COM_JBSMIGRATION_MENU</menu>
 		<!-- Administration Main File Copy Section -->
-		<files folder="admin">
-			<filename>index.html</filename>
-			<filename>admin.jbsmigration.php</filename>
-			<filename>controller.php</filename>
-			<filename>restore.php</filename>
-			<filename>backup.php</filename>
-			<filesname>migrate.php</filesname>
-			<folder>views</folder>
-			<folder>images</folder>
-			<folder>help</folder>
-			<folder>migration</folder>
-			<folder>languages</folder>
-		</files>
-		<languages folder="languages">
-			<language tag="en-GB">en-GB/en-GB.com_jbsmigration.ini</language>
-			<language tag="en-GB">en-GB/en-GB.com_jbsmigration.sys.ini</language>
-		</languages>
-	</administration>
-
+        <files folder="admin">
+            <filename>index.html</filename>
+            <filename>admin.jbsmigration.php</filename>
+            <filename>controller.php</filename>
+            <filename>restore.php</filename>
+            <filename>backup.php</filename>
+            <filesname>migrate.php</filesname>
+            <folder>views</folder>
+            <folder>images</folder>
+            <folder>help</folder>
+            <folder>migration</folder>
+        </files>
+        <languages folder="languages">
+            <language tag="en-GB">en-GB/en-GB.com_jbsmigration.ini</language>
+            <language tag="en-GB">en-GB/en-GB.com_jbsmigration.sys.ini</language>
+        </languages>
+    </administration>
 </install>
