@@ -40,6 +40,8 @@ class JBSExport {
     }
 
     function getExportTable($table, $localfilename) {
+        //Change some tables TEXT fields to BLOB so they will restore okay
+        $changetoblob = $this->TablestoBlob();
         $data = array();
         $export = '';
         $return = array();
@@ -66,7 +68,8 @@ class JBSExport {
             fwrite($handle,$export);
             fclose($handle);
             }
-        
+        //Change the BLOB fields back to TEXT
+        $backtotext = $this->TablestoText();
         return true;
     }
 
@@ -200,55 +203,115 @@ class JBSExport {
         return $objects;
     }
 
-    function copytables($backuptables) {
-        $newbackuptables = array();
+    function TablestoBlob() {
+        $backuptables = $this->getObjects();
+        
         $db = JFactory::getDBO();
         foreach ($backuptables AS $backuptable) {
-            $query = 'CREATE TABLE ' . $backuptable . '_genesis SELECT * FROM ' . $backuptable;
-            $db->setQuery($query);
-            $db->query();
-            $newbackuptables[] = $backuptable . '_genesis';
+            
             if (substr_count($backuptable, 'studies')) {
-                $query = 'ALTER TABLE ' . $backuptable . '_genesis MODIFY studytext BLOB';
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext BLOB';
                 $db->setQuery($query);
                 $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
 
-                $query = 'ALTER TABLE ' . $backuptable . '_genesis MODIFY studytext2 BLOB';
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 BLOB';
                 $db->setQuery($query);
                 $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
             }
             if (substr_count($backuptable, 'podcast')) {
-                $query = 'ALTER TABLE ' . $backuptable . '_genesis MODIFY description BLOB';
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
                 $db->setQuery($query);
                 $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
             }
             if (substr_count($backuptable, 'series')) {
-                $query = 'ALTER TABLE ' . $backuptable . '_genesis MODIFY description BLOB';
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
                 $db->setQuery($query);
                 $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
             }
             if (substr_count($backuptable, 'teachers')) {
-                $query = 'ALTER TABLE ' . $backuptable . '_genesis MODIFY information BLOB';
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information BLOB';
                 $db->setQuery($query);
                 $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
             }
         }
-        return $newbackuptables;
+        return true;
     }
 
-    function deletecopy($backuptables) {
-        $errorfile = array();
+ function TablestoText() {
+        $backuptables = $this->getObjects();
+        
         $db = JFactory::getDBO();
         foreach ($backuptables AS $backuptable) {
-            $query = 'DROP TABLE IF EXISTS ' . $backuptable;
-            $db->setQuery($query);
-            $db->query();
-            if ($db->getErrorNum() != 0) {
-                $errorfile[] = $db->stderr(true);
+            
+            if (substr_count($backuptable['name'], 'studies')) {
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext TEXT';
+                $db->setQuery($query);
+                $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
+
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 TEXT';
+                $db->setQuery($query);
+                $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
+            }
+            if (substr_count($backuptable['name'], 'podcast')) {
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
+                $db->setQuery($query);
+                $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
+            }
+            if (substr_count($backuptable['name'], 'series')) {
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
+                $db->setQuery($query);
+                $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
+            }
+            if (substr_count($backuptable['name'], 'teachers')) {
+                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information TEXT';
+                $db->setQuery($query);
+                $db->query();
+                if ($db->getErrorNum() != 0)
+                {
+                    print_r($db->stderr(true));
+                }
             }
         }
-        return $errorfile;
+        return true;
     }
+    
+    
 
 }
 
