@@ -3,123 +3,71 @@
 /**
  * @version $Id: backup.php 1 $
  * @package COM_JBSMIGRATION
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
+ * @since 7.0.2
  * */
 defined('_JEXEC') or die;
 
 class JBSExport {
 
     function exportdb() {
-        $result = false;
+        $return = false;
 
-        $db = & JFactory::getDBO();
-        $config = & JFactory::getConfig();
-        $abspath = JPATH_SITE;
-        $host = $config->getValue('config.host');
-        $user = $config->getValue('config.user');
-        $password = $config->getValue('config.password');
-        $dbname = $config->getValue('config.db');
-        $dbprefix = $config->getValue('dbprefix');
-        $tables = $db->getTableList();
-        $prefix = $db->getPrefix();
+        $localfilename = 'jbs-db-backup-' . time() . '.sql';
+        $mainframe = JFactory::getApplication();
+        if (!$outputDB = $this->createBackup($localfilename)) {
+            $mainframe->redirect('index.php?option=com_biblestudy&view=admin', JText::_('JBS_EI_NO_BACKUP'));
+        }
+        
+        $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
 
-        $backuptables = array();
-        $isjbs = false;
-        foreach ($tables AS $table) {
-            $jbs = $prefix . 'bsms_';
-            $jbstables = substr_count($table, $jbs);
-            if ($jbstables) {
-                $isjbs = true;
-                $backuptables[] = $table;
-            }
+        if (!$downloadfile = $this->output_file($serverfile, $localfilename, $mime_type = 'text/x-sql')) {
+            $mainframe->redirect('index.php?option=com_biblestudy&view=admin', JText::_('JBS_CMN_OPERATION_FAILED'));
         }
-        if (!$isjbs) {
-            JError::raiseNotice('SOME_ERROR_CODE', 'JBS_EI_NO_TABLES');
-        }
-
-        //Copy tables to a temp copy, changing TEXT to BLOB
-        $newbackuptables = $this->copytables($backuptables);
-
-        $dobackup = false;
-        $dobackup = $this->backup_tables($host, $user, $password, $dbname, $newbackuptables);
-        $errorfile = array();
-        foreach ($newbackuptables AS $newbackuptable) {
-            $query = 'DROP TABLE IF EXISTS ' . $newbackuptable;
-            $db->setQuery($query);
-            $db->query();
-        }
-        if (!$dobackup) {
-            JError::raiseNotice('SOME_ERROR_CODE', 'JBS_EI_NO_BACKUP');
-        } else {
-            $downloadfile = $this->output_file($dobackup[0], $dobackup[1], $mime_type = '');
-        }
-        unlink($dobackup[0]);
     }
 
-    /* backup the db OR just a table */
-
-    function backup_tables($host, $user, $pass, $name, $tables = '*') {
-        $config = & JFactory::getConfig();
-        $dbprefix = $config->getValue('dbprefix');
-        $prefixlength = strlen($dbprefix);
-        $theresult = false;
-        $link = mysql_connect($host, $user, $pass);
-        mysql_select_db($name, $link);
-
-        //get all of the tables
-        if ($tables == '*') {
-            $tables = array();
-            $result = mysql_query('SHOW TABLES');
-            while ($row = mysql_fetch_row($result)) {
-                $tables[] = $row[0];
-            }
-        } else {
-            $tables = is_array($tables) ? $tables : explode(',', $tables);
-        }
-
-        //cycle through
-        foreach ($tables as $table) {
-            $result = mysql_query('SELECT * FROM ' . $table);
-            $num_fields = mysql_num_fields($result);
-            $table2 = substr_replace($table, '#__', 0, $prefixlength);
-            $return.= 'DROP TABLE IF EXISTS ' . $table2 . ';';
-            $row2 = mysql_fetch_row(mysql_query('SHOW CREATE TABLE ' . $table));
-            $prefixposition = strpos($row2[1], $dbprefix);
-            $row2[1] = substr_replace($row2[1], '#__', $prefixposition, $prefixlength);
-            $return.= "\n\n" . $row2[1] . ";\n\n";
-
-            for ($i = 0; $i < $num_fields; $i++) {
-                while ($row = mysql_fetch_row($result)) {
-                    $return.= 'INSERT INTO ' . $table2 . ' VALUES(';
-                    for ($j = 0; $j < $num_fields; $j++) {
-                        $row[$j] = addslashes($row[$j]);
-                        $row[$j] = perg_replace("\n", "\\n", $row[$j]);
-                        if (isset($row[$j])) {
-                            $return.= '"' . $row[$j] . '"';
-                        } else {
-                            $return.= '""';
-                        }
-                        if ($j < ($num_fields - 1)) {
-                            $return.= ',';
-                        }
-                    }
-                    $return.= ");\n";
-                }
-            }
-            $return.="\n\n\n";
-        }
-
-        //save file
-        $localfilename = 'jbs-db-backup-' . time() . '.sql';
+    function createBackup($localfilename) {
+        $objects = $this->getObjects();
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
-        $handle = fopen(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename, 'w+');
-        $returnfile = array($serverfile, $localfilename);
+        $export = '';
+        foreach ($objects as $object) 
+        {
+            $tables = $this->getExportTable($object['name'], $localfilename);
+        }
+        return true;
+    }
 
-        fwrite($handle, $return);
-        fclose($handle);
-        return $returnfile;
+    function getExportTable($table, $localfilename) {
+        $data = array();
+        $export = '';
+        $return = array();
+        $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
+        $db = JFactory::getDBO();
+        $query = 'SELECT * FROM ' . $table;
+        $db->setQuery($query);
+        $db->query();
+        $results = $db->loadObjectList();
+        
+        foreach ($results as $result) 
+        {
+            $data = array();
+            $export = '';
+            $export = 'INSERT INTO ' . $table . ' SET ';
+            foreach ($result as $key => $value) 
+            {
+                $data[] = "`" . $key . "`='" . $value . "'";
+            }
+            $export .= implode(',', $data);
+            //$export .= ')';
+            $export .= ";\n";
+            $handle = fopen($serverfile,'a');
+            fwrite($handle,$export);
+            fclose($handle);
+            }
+        
+        return true;
     }
 
     function output_file($file, $name, $mime_type = '') {
@@ -226,65 +174,30 @@ class JBSExport {
         unlink($file);
     }
 
-    /* This function is not used */
-
-    function writefile($dobackup) {
-        // Set FTP credentials, if given
-        jimport('joomla.client.helper');
-        jimport('joomla.filesystem.file');
-        JClientHelper::setCredentialsFromRequest('ftp');
-        $ftp = JClientHelper::getCredentials('ftp');
-        $client = & JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
-        $localfilename = 'jbs-db-backup-' . time() . '.sql';
-        $file = $client->path . DIRECTORY_SEPARATOR . $localfilename;
-        $returnfile = array($file, $localfilename);
-        // Try to make the template file writeable
-        if (JFile::exists($file) && !$ftp['enabled'] && !JPath::setPermissions($file, '0755')) {
-            JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file writable');
-        }
-
-        $fileit = JFile::write($file, $dobackup);
-        if ($fileit) {
-            return $returnfile;
-        } else {
-            return false;
-        }
-        // Try to make the template file unwriteable
-        if (!$ftp['enabled'] && !JPath::setPermissions($file, '0555')) {
-            JError::raiseNotice('SOME_ERROR_CODE', 'Could not make the file unwritable');
-        }
-    }
-
-    /* This function is not used */
-
-    function downloadfile($fname) {
-
-        $serverfile = $fname[0];
-        $localfile = $fname[1];
-        $user_agent = (isset($_SERVER["HTTP_USER_AGENT"]) ) ? $_SERVER["HTTP_USER_AGENT"] : $HTTP_USER_AGENT;
-        while (@ob_end_clean());
-        header("Cache-Control: public");
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename=" . basename($localfile));
-        header("Content-Type: text/plain");
-        header("Content-Transfer-Encoding: binary");
-
-        readfile($serverfile);
-
-        $url = $serverfile;
-        $out_file_name = $localfile;
-
-        $out = fopen($localfile, "wb");
-
-        if ($out) {
-
-            fwrite($out, file_get_contents($url));
-        } else {
-            JError::raiseNotice('SOME_ERROR_CODE', 'Error : Set Permissions 777 to the current directory');
-        }
-
-        fclose($out);
-        return true;
+    function getObjects() {
+        $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'serversedit', 'realname' => 'JBS_CMN_SERVERS'),
+            array('name' => '#__bsms_folders', 'titlefield' => 'foldername', 'assetname' => 'foldersedit', 'realname' => 'JBS_CMN_FOLDERS'),
+            array('name' => '#__bsms_studies', 'titlefield' => 'studytitle', 'assetname' => 'studiesedit', 'realname' => 'JBS_CMN_STUDIES'),
+            array('name' => '#__bsms_comments', 'titlefield' => 'comment_date', 'assetname' => 'commentsedit', 'realname' => 'JBS_CMN_COMMENTS'),
+            array('name' => '#__bsms_locations', 'titlefield' => 'location_text', 'assetname' => 'locationsedit', 'realname' => 'JBS_CMN_LOCATIONS'),
+            array('name' => '#__bsms_media', 'titlefield' => 'media_text', 'assetname' => 'mediaedit', 'realname' => 'JBS_CMN_MEDIAIMAGES'),
+            array('name' => '#__bsms_mediafiles', 'titlefield' => 'filename', 'assetname' => 'mediafilesedit', 'realname' => 'JBS_CMN_MEDIA_FILES'),
+            array('name' => '#__bsms_message_type', 'titlefield' => 'message_type', 'assetname' => 'messagetypeedit', 'realname' => 'JBS_CMN_MESSAGE_TYPES'),
+            array('name' => '#__bsms_mimetype', 'titlefield' => 'mimetext', 'assetname' => 'mimetypeedit', 'realname' => 'JBS_CMN_MIME_TYPES'),
+            array('name' => '#__bsms_podcast', 'titlefield' => 'title', 'assetname' => 'podcastedit', 'realname' => 'JBS_CMN_PODCASTS'),
+            array('name' => '#__bsms_series', 'titlefield' => 'series_text', 'assetname' => 'seriesedit', 'realname' => 'JBS_CMN_SERIES'),
+            array('name' => '#__bsms_share', 'titlefield' => 'name', 'assetname' => 'shareedit', 'realname' => 'JBS_CMN_SOCIAL_NETWORKING_LINKS'),
+            array('name' => '#__bsms_teachers', 'titlefield' => 'teachername', 'assetname' => 'teacheredit', 'realname' => 'JBS_CMN_TEACHERS'),
+            array('name' => '#__bsms_templates', 'titlefield' => 'title', 'assetname' => 'templateedit', 'realname' => 'JBS_CMN_TEMPLATES'),
+            array('name' => '#__bsms_topics', 'titlefield' => 'topic_text', 'assetname' => 'topicsedit', 'realname' => 'JBS_CMN_TOPICS'),
+            array('name' => '#__bsms_admin', 'titlefield' => 'id', 'assetname' => 'admin', 'realname' => 'JBS_CMN_ADMINISTRATION'),
+            array('name' => '#__bsms_studytopics', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
+            array('name' => '#__bsms_timeset', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
+            array('name' => '#__bsms_search', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
+            array('name' => '#__bsms_books', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
+            array('name' => '#__bsms_order', 'titlefield' => '', 'assetname' => '', 'realname' => '')
+        );
+        return $objects;
     }
 
     function copytables($backuptables) {
