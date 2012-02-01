@@ -48,6 +48,8 @@ class JBSExport {
         $return = array();
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
         $db = JFactory::getDBO();
+        //Get the prefix
+        $prefix = $db->getPrefix();
         //Drop the existing table
         $export = 'DROP TABLE '.$table.";\n";
         //Create a new table defintion based on the incoming database
@@ -65,6 +67,7 @@ class JBSExport {
                 }
             }
         }
+        $export = substr_replace($prefix,'#__');
         $export .= ';';
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
