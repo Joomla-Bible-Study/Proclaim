@@ -59,7 +59,7 @@ class JBSExport {
             $export = 'INSERT INTO ' . $table . ' SET ';
             foreach ($result as $key => $value) 
             {
-                $data[] = "`" . $key . "`='" . $value . "'";
+                $data[] = "`" . $key . "`='" . mysql_real_escape_string($value) . "'";
             }
             $export .= implode(',', $data);
             //$export .= ')';
