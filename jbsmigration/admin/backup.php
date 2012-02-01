@@ -20,7 +20,7 @@ class JBSExport {
         if (!$outputDB = $this->createBackup($localfilename)) {
             $mainframe->redirect('index.php?option=com_biblestudy&view=admin', JText::_('JBS_EI_NO_BACKUP'));
         }
-        
+
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
 
         if (!$downloadfile = $this->output_file($serverfile, $localfilename, $mime_type = 'text/x-sql')) {
@@ -32,8 +32,7 @@ class JBSExport {
         $objects = $this->getObjects();
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
         $export = '';
-        foreach ($objects as $object) 
-        {
+        foreach ($objects as $object) {
             $tables = $this->getExportTable($object['name'], $localfilename);
         }
         return true;
@@ -42,7 +41,7 @@ class JBSExport {
     function getExportTable($table, $localfilename) {
         @set_time_limit(300);
         //Change some tables TEXT fields to BLOB so they will restore okay
-       // $changetoblob = $this->TablestoBlob();
+        // $changetoblob = $this->TablestoBlob();
         $data = array();
         $export = '';
         $return = array();
@@ -50,43 +49,41 @@ class JBSExport {
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
+        $export = "---\n --- Teble " . $table . "\n ---\n";
         //Drop the existing table
-        $export = 'DROP TABLE '.$table.";\n";
+        $export .= 'DROP TABLE ' . $table . ";\n";
         //Create a new table defintion based on the incoming database
-        $query = 'SHOW CREATE TABLE '.$table;
+        $query = 'SHOW CREATE TABLE ' . $table;
         $db->setQuery($query);
         $db->query();
         $table_def = $db->loadObject();
-        foreach ($table_def as $key=>$value)
-            {
-                if (substr_count($value,'CREATE'))
-                {
-                    $export .= str_replace($prefix,'#__',$value)."\n;";
-                }
+        foreach ($table_def as $key => $value) {
+            if (substr_count($value, 'CREATE')) {
+                $export .= str_replace($prefix, '#__', $value) . ";\n";
             }
-        
+        }
+
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
         $db->setQuery($query);
         $db->query();
         $results = $db->loadObjectList();
-        foreach ($results as $result) 
-        {
+        foreach ($results as $result) {
             $data = array();
             $export .= 'INSERT INTO ' . $table . ' SET ';
-            foreach ($result as $key => $value) 
-            {
+            foreach ($result as $key => $value) {
                 $data[] = "`" . $key . "`='" . mysql_real_escape_string($value) . "'";
             }
             $export .= implode(',', $data);
             $export .= ";\n";
-            $handle = fopen($serverfile,'a');
-            fwrite($handle,$export);
-            fclose($handle);
-            }
-           // echo $export;
+        }
+        $export .= "\n\n";
+        $handle = fopen($serverfile, 'a');
+        fwrite($handle, $export);
+        fclose($handle);
+        // echo $export;
         //Change the BLOB fields back to TEXT
-       // $backtotext = $this->TablestoText();
+        // $backtotext = $this->TablestoText();
         return true;
     }
 
@@ -222,24 +219,22 @@ class JBSExport {
 
     function TablestoBlob() {
         $backuptables = $this->getObjects();
-        
+
         $db = JFactory::getDBO();
         foreach ($backuptables AS $backuptable) {
-            
+
             if (substr_count($backuptable, 'studies')) {
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext BLOB';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
 
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 BLOB';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
             }
@@ -247,8 +242,7 @@ class JBSExport {
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
             }
@@ -256,8 +250,7 @@ class JBSExport {
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
             }
@@ -265,8 +258,7 @@ class JBSExport {
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information BLOB';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
             }
@@ -274,26 +266,24 @@ class JBSExport {
         return true;
     }
 
- function TablestoText() {
+    function TablestoText() {
         $backuptables = $this->getObjects();
-        
+
         $db = JFactory::getDBO();
         foreach ($backuptables AS $backuptable) {
-            
+
             if (substr_count($backuptable['name'], 'studies')) {
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext TEXT';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
 
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 TEXT';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
             }
@@ -301,8 +291,7 @@ class JBSExport {
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
             }
@@ -310,8 +299,7 @@ class JBSExport {
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
             }
@@ -319,16 +307,13 @@ class JBSExport {
                 $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information TEXT';
                 $db->setQuery($query);
                 $db->query();
-                if ($db->getErrorNum() != 0)
-                {
+                if ($db->getErrorNum() != 0) {
                     print_r($db->stderr(true));
                 }
             }
         }
         return true;
     }
-    
-    
 
 }
 
