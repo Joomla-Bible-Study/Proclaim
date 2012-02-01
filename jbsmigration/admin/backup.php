@@ -57,16 +57,13 @@ class JBSExport {
         $db->setQuery($query);
         $db->query();
         $table_def = $db->loadObjectList();
-         foreach ($table_def as $tabled)
-        {
-            foreach ($tabled as $key=>$value)
+        foreach ($table_def as $key=>$value)
             {
                 if (substr_count($value,'CREATE'))
                 {
                     $export .= str_replace($prefix,'#__',$value)."\n;";
                 }
             }
-        }
         
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
