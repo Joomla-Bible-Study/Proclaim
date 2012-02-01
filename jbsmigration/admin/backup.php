@@ -40,36 +40,54 @@ class JBSExport {
     }
 
     function getExportTable($table, $localfilename) {
+        @set_time_limit(300);
         //Change some tables TEXT fields to BLOB so they will restore okay
-        $changetoblob = $this->TablestoBlob();
+       // $changetoblob = $this->TablestoBlob();
         $data = array();
         $export = '';
         $return = array();
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
         $db = JFactory::getDBO();
+        //Drop the existing table
+        $export = 'DROP TABLE '.$table.";\n";
+        //Create a new table defintion based on the incoming database
+        $query = 'SHOW CREATE TABLE '.$table;
+        $db->setQuery($query);
+        $db->query();
+        $table_def = $db->loadObjectList();
+        foreach ($table_def as $tabled)
+        {
+            foreach ($tabled as $key=>$value)
+            {
+                if (substr_count($value,'CREATE'))
+                {
+                    $export .= $value."\n";
+                }
+            }
+        }
+        $export .= ';';
+        //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
         $db->setQuery($query);
         $db->query();
         $results = $db->loadObjectList();
-        
         foreach ($results as $result) 
         {
             $data = array();
-            $export = '';
-            $export = 'INSERT INTO ' . $table . ' SET ';
+            $export .= 'INSERT INTO ' . $table . ' SET ';
             foreach ($result as $key => $value) 
             {
                 $data[] = "`" . $key . "`='" . mysql_real_escape_string($value) . "'";
             }
             $export .= implode(',', $data);
-            //$export .= ')';
             $export .= ";\n";
             $handle = fopen($serverfile,'a');
             fwrite($handle,$export);
             fclose($handle);
             }
+           // echo $export;
         //Change the BLOB fields back to TEXT
-        $backtotext = $this->TablestoText();
+       // $backtotext = $this->TablestoText();
         return true;
     }
 
@@ -130,7 +148,7 @@ class JBSExport {
           download non-cacheable */
         header("Cache-control: private");
         header('Pragma: private');
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Expires: Mon, 26 Jul 2014 05:00:00 GMT");
 
         // multipart-download and download resuming support
         if (isset($_SERVER['HTTP_RANGE'])) {
