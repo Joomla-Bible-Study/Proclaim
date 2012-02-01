@@ -49,7 +49,7 @@ class JBSExport {
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
-        $export = "---\n --- Teble " . $table . "\n ---\n";
+        $export = "---\n --- Table " . $table . "\n ---\n";
         //Drop the existing table
         $export .= 'DROP TABLE ' . $table . ";\n";
         //Create a new table defintion based on the incoming database
