@@ -67,7 +67,7 @@ class JBSExport {
                 }
             }
         }
-        $export .= substr_replace($prefix,'#__');
+        $export .= str_replace($prefix,'#__',$export);
         $export .= ';';
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
