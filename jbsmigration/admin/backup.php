@@ -56,7 +56,7 @@ class JBSExport {
         $query = 'SHOW CREATE TABLE '.$table;
         $db->setQuery($query);
         $db->query();
-        $table_def = $db->loadObjectList();
+        $table_def = $db->loadObject();
         foreach ($table_def as $key=>$value)
             {
                 if (substr_count($value,'CREATE'))
