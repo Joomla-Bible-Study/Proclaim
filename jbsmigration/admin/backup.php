@@ -49,7 +49,7 @@ class JBSExport {
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
-        $export = "---\n --- Table " . $table . "\n ---\n";
+     //  $export = "---\n --- Table " . $table . "\n ---\n";
         //Drop the existing table
         $export .= 'DROP TABLE ' . $table . ";\n";
         //Create a new table defintion based on the incoming database
@@ -60,6 +60,7 @@ class JBSExport {
         foreach ($table_def as $key => $value) {
             if (substr_count($value, 'CREATE')) {
                 $export .= str_replace($prefix, '#__', $value) . ";\n";
+                $export = str_replace('TYPE=','ENGINE=',$export);
             }
         }
 
