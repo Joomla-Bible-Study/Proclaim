@@ -49,11 +49,11 @@ class JBSExport {
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
-        $export = "--\n-- Table structure for table `" . $table . "`\n--\n";
+        $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
-        $export .= 'DROP TABLE ' . $table . ";\n";
+        $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
         //Create a new table defintion based on the incoming database
-        $query = 'SHOW CREATE TABLE ' . $table;
+        $query = 'SHOW CREATE TABLE `' . $table . '`';
         $db->setQuery($query);
         $db->query();
         $table_def = $db->loadObject();
@@ -63,22 +63,23 @@ class JBSExport {
                 $export = str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
-
+        $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
         $db->setQuery($query);
         $db->query();
         $results = $db->loadObjectList();
+        $valueescaped = $db->getEscaped();
         foreach ($results as $result) {
             $data = array();
             $export .= 'INSERT INTO ' . $table . ' SET ';
             foreach ($result as $key => $value) {
-                $data[] = "`" . $key . "`='" . mysql_real_escape_string($value) . "'";
+                $data[] = "`" . $key . "`='" . $this->escape($value) . "'";
             }
             $export .= implode(',', $data);
             $export .= ";\n";
         }
-        $export .= "\n\n";
+        $export .= "\n-- --------------------------------------------------------\n\n";
         $handle = fopen($serverfile, 'a');
         fwrite($handle, $export);
         fclose($handle);
@@ -86,6 +87,20 @@ class JBSExport {
         //Change the BLOB fields back to TEXT
         // $backtotext = $this->TablestoText();
         return true;
+    }
+
+    // replace any non-ascii character with its hex code.
+    function escape($value) {
+        $return = '';
+        for ($i = 0; $i < strlen($value); ++$i) {
+            $char = $value[$i];
+            $ord = ord($char);
+            if ($char !== "'" && $char !== "\"" && $char !== '\\' && $ord >= 32 && $ord <= 126)
+                $return .= $char;
+            else
+                $return .= '\\x' . dechex($ord);
+        }
+        return $return;
     }
 
     function output_file($file, $name, $mime_type = '') {
