@@ -13,7 +13,7 @@
     <copyright>(C) 2011 Copyright Joomla Bible Study</copyright>
     <license>GNU/GPL</license>
     <version>2.0.0</version>
-    <creationDate>February 1, 2012</creationDate>
+    <creationDate>February 6, 2012</creationDate>
     <description>COM_JBSMIGRATION_DESCRIPTION</description>
     <scriptfile>script.php</scriptfile>
     <!-- Public front end files -->
@@ -33,13 +33,10 @@
             <filename>index.html</filename>
             <filename>jbsmigration.php</filename>
             <filename>controller.php</filename>
-            <filename>restore.php</filename>
             <filename>backup.php</filename>
-            <filesname>migrate.php</filesname>
             <folder>views</folder>
             <folder>images</folder>
             <folder>help</folder>
-            <folder>migration</folder>
             <folder>language</folder>
             <folder>css</folder>
         </files>
