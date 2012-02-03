@@ -60,7 +60,7 @@ class JBSExport {
         foreach ($table_def as $key => $value) {
             if (substr_count($value, 'CREATE')) {
                 $export .= str_replace($prefix, '#__', $value) . ";\n";
-                $export = str_replace('TYPE=','ENGINE=',$export);
+                $export = str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
 
@@ -213,7 +213,7 @@ class JBSExport {
             array('name' => '#__bsms_timeset', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_search', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_books', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-             array('name' => '#__bsms_version', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
+            array('name' => '#__bsms_version', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_order', 'titlefield' => '', 'assetname' => '', 'realname' => '')
         );
         return $objects;
