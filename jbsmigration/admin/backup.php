@@ -69,12 +69,11 @@ class JBSExport {
         $db->setQuery($query);
         $db->query();
         $results = $db->loadObjectList();
-        $valueescaped = $db->getEscaped();
         foreach ($results as $result) {
             $data = array();
             $export .= 'INSERT INTO ' . $table . ' SET ';
             foreach ($result as $key => $value) {
-                $data[] = "`" . $key . "`='" . $this->escape($value) . "'";
+                $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
             }
             $export .= implode(',', $data);
             $export .= ";\n";
@@ -87,20 +86,6 @@ class JBSExport {
         //Change the BLOB fields back to TEXT
         // $backtotext = $this->TablestoText();
         return true;
-    }
-
-    // replace any non-ascii character with its hex code.
-    function escape($value) {
-        $return = '';
-        for ($i = 0; $i < strlen($value); ++$i) {
-            $char = $value[$i];
-            $ord = ord($char);
-            if ($char !== "'" && $char !== "\"" && $char !== '\\' && $ord >= 32 && $ord <= 126)
-                $return .= $char;
-            else
-                $return .= '\\x' . dechex($ord);
-        }
-        return $return;
     }
 
     function output_file($file, $name, $mime_type = '') {
