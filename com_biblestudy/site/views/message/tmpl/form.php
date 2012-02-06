@@ -48,7 +48,7 @@ JHtml::_('behavior.formvalidation');
 		<fieldset class="panelform">
 			<div class="inlineFields">
                <legend><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></legend>
-					
+
               <strong> <label><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></label></strong>
 				<div>
 				<?php echo $this->form->getLabel('booknumber'); ?>
@@ -58,18 +58,18 @@ JHtml::_('behavior.formvalidation');
 				<div>
 				<?php echo $this->form->getLabel('chapter_begin'); ?>
 				<?php echo $this->form->getInput('chapter_begin'); ?>
-					
+
 				<?php echo $this->form->getLabel('verse_begin'); ?>
 				<?php echo $this->form->getInput('verse_begin'); ?>
-					
+
 				<?php echo $this->form->getLabel('chapter_end'); ?>
 				<?php echo $this->form->getInput('chapter_end'); ?>
-					
+
 				<?php echo $this->form->getLabel('verse_end'); ?>
 				<?php echo $this->form->getInput('verse_end'); ?>
 				</div>
                   <br />
-               
+
                   <strong>  <label><?php echo JText::_('JBS_CMN_SCRIPTURE2'); ?></label></strong>
 				<div class="inlineFields">
 					<div>
@@ -98,10 +98,10 @@ JHtml::_('behavior.formvalidation');
 		</fieldset>
 
    <fieldset class="panelform">
-              
+
                <legend><?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
               <strong> <label><?php echo JText::_('JBS_CMN_DURATION'); ?></label></strong><br />
-              
+
                             <div class="inlineFields">
                                     <?php echo $this->form->getLabel('media_hours'); ?>
                                     <?php echo $this->form->getInput('media_hours'); ?>
@@ -146,44 +146,44 @@ JHtml::_('behavior.formvalidation');
             <?php echo $this->form->getInput('studytext'); ?>
         </div>
 </fieldset>
-                    
+
 <fieldset class="panelform">
-        
+
             <legend><?php echo JText::_('JBS_CMN_PUBLISHING_OPTIONS'); ?></legend>
-                           
+
                <div class="formelm-area">
                     <?php echo $this->form->getLabel('published'); ?>
                     <?php echo $this->form->getInput('published'); ?>
                 </div>
-                <div class="formelm-area">    
+                <div class="formelm-area">
                     <?php echo $this->form->getLabel('studydate'); ?>
                     <?php echo $this->form->getInput('studydate'); ?>
                </div>
                <div class="formelm-area">
                     <?php echo $this->form->getLabel('comments'); ?>
                     <?php echo $this->form->getInput('comments'); ?>
-               <div class="formelm-area">     
+               <div class="formelm-area">
                     <?php echo $this->form->getLabel('user_id'); ?>
                     <?php echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id); ?>
                </div>
-               <div class="formelm-area">      
+               <div class="formelm-area">
                     <?php echo $this->form->getLabel('access'); ?>
                     <?php echo $this->form->getInput('access'); ?>
-               </div>     
-              
-        
+               </div>
+
+
 </fieldset>
 <fieldset class="panelform">
-          
+
             <div >
-                
+
                     <legend><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></legend>
                     <table class="adminlist" width="100%">
                         <thead>
                             <tr>
                                 <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
                                 <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-                                
+
                             </tr>
                         </thead>
                         <tbody>
@@ -200,7 +200,7 @@ JHtml::_('behavior.formvalidation');
                                         <td align="center">
                                             <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                                         </td>
-                                        
+
                                     </tr>
                     <?php
                                     endforeach;
@@ -214,14 +214,14 @@ JHtml::_('behavior.formvalidation');
                     <?php if (! empty($this->item->studytitle)) : ?>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&layout=form').'">'.JText::_('JBS_STY_NEW_MEDIAFILE'); ?></a></td>
+                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&layout=form').'">'.JText::_('JBS_STY_NEW_MEDIAFILE'); ?> "></a></td>
                                     </tr>
                                 </tfoot>
                     <?php endif; ?>
                             </table>
                         </fieldset>
  <div class="clr"></div>
-	
+
 	<?php if ($this->canDo->get('core.admin')): ?>
 		<div class="width-100 fltlft">
 			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
@@ -238,6 +238,5 @@ JHtml::_('behavior.formvalidation');
 	<?php endif; ?>
                         <input type="hidden" name="task" value=""/>
         <?php echo JHtml::_('form.token'); ?>
-</div>
 </form>
 </div>

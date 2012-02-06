@@ -15,7 +15,7 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_STY_DETAILS'); ?></legend>
             <ul>
-            
+
                 <li>
                     <?php echo $this->form->getLabel('studytitle'); ?>
                     <?php echo $this->form->getInput('studytitle'); ?>
@@ -121,8 +121,8 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
                     <?php echo $this->form->getLabel('series_id'); ?>
                     <?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin->params['series_id'] : $this->item->series_id) ?>
                         </li>
-                        
-                       
+
+
                         </ul>
                         <?php echo $this->form->getLabel('topics'); ?>
                         <div class="clr"></div>
@@ -164,7 +164,7 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
                     <?php echo $this->form->getLabel('comments'); ?>
                     <?php echo $this->form->getInput('comments'); ?>
                         </li>
-                    
+
                         <li>
                     <?php echo $this->form->getLabel('user_id'); ?>
                     <?php // fill in actual user if empty
@@ -180,7 +180,7 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
 							         </button>
 						</div></div>
 					</li>
-				<?php endif; ?>   
+				<?php endif; ?>
                     </ul>
                 </fieldset>
             </div>
@@ -192,7 +192,7 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
                             <tr>
                                 <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
                                 <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-                                
+
                             </tr>
                         </thead>
                         <tbody>
@@ -209,7 +209,7 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
                                         <td align="center">
                                             <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                                         </td>
-                                        
+
                                     </tr>
                     <?php
                                     endforeach;
@@ -223,16 +223,16 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
                     <?php if (! empty($this->item->studytitle)) : ?>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafilesedit&layout=edit').'">'.JText::_('JBS_STY_NEW_MEDIAFILE'); ?></a></td>
+                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafilesedit&layout=edit').'">'.JText::_('JBS_STY_NEW_MEDIAFILE'); ?> "></a></td>
                                     </tr>
                                 </tfoot>
                     <?php endif; ?>
                             </table>
                         </fieldset>
-                        
+
     </div>
 <div class="clr"></div>
-	
+
 	<?php if ($this->canDo->get('core.admin')): ?>
 		<div class="width-100 fltlft">
 			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
@@ -248,6 +248,6 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
 		</div>
 	<?php endif; ?>
  <input type="hidden" name="task" value=""/>
- 
+
         <?php echo JHtml::_('form.token'); ?>
 </form>
