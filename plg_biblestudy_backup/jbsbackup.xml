@@ -53,9 +53,6 @@
                        size="60" label="PLG_JBSBACKUP_SUBJECT" description="" />
                 <field name="body" type="text" default="Backup status:" size="60"
                        label="PLG_JBSBACKUP_BODY" description="" />
-                <field name="backupfolder" type="folderlist" directory="media"
-                       filter="" exclude="" striptext="" label="PLG_JBSBACKUP_BACKUP_FOLDER"
-                       description="PLG_JBSBACKUP_BACKUP_FOLDER_DESC" />
                 <field name="method" type="list" default="0"
                        label="PLG_JBSBACKUP_PUBLISH_METHOD" description="PLG_JBSBACKUP_PUBLISH_METHOD_DESC">
                     <option value="0">PLG_JBSBACKUP_HOURS</option>
