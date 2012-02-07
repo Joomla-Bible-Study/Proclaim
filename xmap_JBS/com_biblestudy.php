@@ -45,6 +45,7 @@ static function prepareMenuItem($node,$params)
     }
 
 	function &getTree( $xmap, $parent, &$params ) {
+	    @set_time_limit(300);
 		$db = JFactory::getDBO();
         $app = JFactory::getApplication();
       
@@ -65,7 +66,8 @@ static function prepareMenuItem($node,$params)
     $t = $params['t'];
     $order = $params['order'];
     $displaytype = $params['displaytype'];
-    $expand = $params['expand'];
+  //  $expand = $params['expand'];
+    $node->expandible = true;
     if (!$order){$order = 'desc';}
     $limit = $params['limit'];
     if ($limit > 0)
@@ -98,12 +100,12 @@ static function prepareMenuItem($node,$params)
         		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_year=' .$result->theYear;
         		$xmap->printNode($node);
                 $xmap->changeLevel(1);
-                $query = 'SELECT id, studytitle, studydate, studyintro FROM #__bsms_studies WHERE year(studydate) = '.$result->theYear;
+                $query = 'SELECT id, studytitle, alias, studydate, studyintro FROM #__bsms_studies WHERE year(studydate) = '.$result->theYear;
                 $db->setQuery($query);
                 $studies = $db->loadObjectList();
                 foreach ($studies AS $study)
                 {
-                    self::showStudies($study, $xmap, $t, $limit, $order, $params);
+                    self::showStudies($study, $xmap, $t, $limit, $order, $params, $parent);
                 }
                 $xmap->changeLevel(-1);
             }
@@ -133,7 +135,7 @@ static function prepareMenuItem($node,$params)
         		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_book=' .$result->booknumber;
         		$xmap->printNode($node);
                 $xmap->changeLevel(1);
-                self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record);
+                self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent);
                 
                 $xmap->changeLevel(-1);
             }
@@ -162,7 +164,7 @@ static function prepareMenuItem($node,$params)
         		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_teacher=' .$result->id;
         		$xmap->printNode($node);
                 $xmap->changeLevel(1);
-                self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record);
+                self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent);
                 
                 $xmap->changeLevel(-1);
             }
@@ -194,7 +196,7 @@ static function prepareMenuItem($node,$params)
         		$node->link ='index.php?option=com_biblestudy&amp;view=studieslist&amp;filter_location =' .$result->id;
         		$xmap->printNode($node);
                 $xmap->changeLevel(1);
-                self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record);
+                self::showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent);
                 
                 $xmap->changeLevel(-1);
                 
@@ -205,7 +207,7 @@ static function prepareMenuItem($node,$params)
 	return $list;
 	}
 
-    function showMediaFiles($id, $xmap, $limit, $order, $params)
+    function showMediaFiles($id, $xmap, $limit, $order, $params, $parent)
     {
          $t = $params['t'];
          $showmedia = $params['showmedia'];
@@ -268,12 +270,13 @@ static function prepareMenuItem($node,$params)
         }        
     }
     
-    function showStudies($study, $xmap, $t, $limit, $order, $params)
+    function showStudies($study, $xmap, $t, $limit, $order, $params, $parent)
     {
         $node = new stdclass;
 		$node->id   = $parent->id;
 		$node->uid=$parent->uid.'a'.$study->id;
-		$node->name = $study->studytitle;
+        $study->name = $study->alias ? ($study->alias) : str_replace(' ', '-', htmlspecialchars_decode($study->studytitle, ENT_QUOTES));
+		$node->name = $study->name;
 		$node->parent=1;
 		$node->browsNav=1;//open new window
 		$node->ordering=2;
@@ -287,10 +290,10 @@ static function prepareMenuItem($node,$params)
             $node->name .= ' - '.$study->studyintro;
         }
 		$xmap->printNode($node);
-        self::showMediaFiles($study->id, $xmap, $limit, $order, $params);
+        self::showMediaFiles($study->id, $xmap, $limit, $order, $params, $parent);
     }
     
-    function showYears($result, $xmap, $t, $limit, $order, $params, $field, $record)
+    function showYears($result, $xmap, $t, $limit, $order, $params, $field, $record, $parent)
     {
         $db = JFactory::getDBO();
         $query = 'select distinct year(studydate) as theYear from #__bsms_studies where published = 1 AND '.$field.' = '.$record.' order by theYear '.$order;
@@ -317,7 +320,7 @@ static function prepareMenuItem($node,$params)
             $studies = $db->loadObjectList();
             foreach ($studies AS $study)
             {
-                self::showStudies($study, $xmap, $t, $limit, $order, $params);
+                self::showStudies($study, $xmap, $t, $limit, $order, $params, $parent);
             }
             $xmap->changeLevel(-1);
        }
