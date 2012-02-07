@@ -22,23 +22,16 @@ class JBSExport {
         }
         $export = implode('\n', $tables);
 
-        //   if(!JFolder::exists(JPATH_SITE.DIRECTORY_SEPARATOR.$backupfolder))
-//    		{
-//    			JFolder::create(JPATH_SITE.DIRECTORY_SEPARATOR.$backupfolder);
-//    		}
-
         jimport('joomla.filesystem.file');
-        JFile::write(JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename, $export);
-       // $handle = fopen(JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename, 'w+');
-//        fwrite($handle, $export);
-//        fclose($handle);
+        $file = JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename;
+        JFile::write($file, $export);
         // $outputDB = $this->createBackup($localfilename, $backupfolder);
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename;
         $returnfile = array('serverfile' => $serverfile, 'localfilename' => $localfilename);
         return $returnfile;
     }
 
-    function getExportTable($table) { 
+    function getExportTable($table) {
         if (!$table){return false;}
         @set_time_limit(300);
 
