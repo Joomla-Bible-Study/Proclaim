@@ -12,7 +12,7 @@
  */
 
 // Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 
 class JElementtopic extends JElement
@@ -27,8 +27,8 @@ class JElementtopic extends JElement
 
 	function fetchElement($name, $value, &$node, $control_name)
 	{
-		$db = &JFactory::getDBO();
-		$language =& JFactory::getLanguage();
+		$db = JFactory::getDBO();
+		$language = JFactory::getLanguage();
 		$language->load('com_biblestudy');
 
 		$query = 'SELECT DISTINCT #__bsms_studies.topics_id, #__bsms_topics.topic_text, #__bsms_topics.id AS tid' .

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version		$Id: locations.php 8591 2007-08-27 21:09:32Z Tom Fuller $
  * @package		mod_biblestudy
@@ -10,32 +11,31 @@
  * other free or open source software licenses.
  * See COPYRIGHT.php for copyright notices and details.
  */
-
 // Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
-class JElementlocations extends JElement
-{
-	/**
-	 * Element name
-	 *
-	 * @access	protected
-	 * @var		string
-	 */
-	var	$_name = 'location_text';
+class JElementlocations extends JElement {
 
-	function fetchElement($name, $value, &$node, $control_name)
-	{
-		$db = &JFactory::getDBO();
+    /**
+     * Element name
+     *
+     * @access	protected
+     * @var		string
+     */
+    var $_name = 'location_text';
 
-		$query = "SELECT l.id, l.location_text AS text"
-		. "\n FROM #__bsms_locations AS l"
-		. "\n WHERE l.published = 1"
-		. "\n ORDER BY l.location_text ASC"
-		;
-		$db->setQuery( $query );
-		$options = $db->loadObjectList( );
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a Location').' -', 'id', 'text'));
-		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'id', 'text', $value, $control_name.$name );
-	}
+    function fetchElement($name, $value, &$node, $control_name) {
+        $db = JFactory::getDBO();
+
+        $query = "SELECT l.id, l.location_text AS text"
+                . "\n FROM #__bsms_locations AS l"
+                . "\n WHERE l.published = 1"
+                . "\n ORDER BY l.location_text ASC"
+        ;
+        $db->setQuery($query);
+        $options = $db->loadObjectList();
+        array_unshift($options, JHTML::_('select.option', '0', '- ' . JText::_('Select a Location') . ' -', 'id', 'text'));
+        return JHTML::_('select.genericlist', $options, '' . $control_name . '[' . $name . ']', 'class="inputbox"', 'id', 'text', $value, $control_name . $name);
+    }
+
 }

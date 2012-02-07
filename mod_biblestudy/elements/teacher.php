@@ -12,7 +12,7 @@
  */
 
 // Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 
 class JElementteacher extends JElement
@@ -27,8 +27,8 @@ class JElementteacher extends JElement
 
 	function fetchElement($name, $value, &$node, $control_name)
 	{
-		$db = &JFactory::getDBO();
-		$language =& JFactory::getLanguage();
+		$db = JFactory::getDBO();
+		$language = JFactory::getLanguage();
 		$language->load('com_biblestudy');
 
 		$query = 'SELECT DISTINCT #__bsms_studies.teacher_id, #__bsms_teachers.teachername, #__bsms_teachers.id AS tid' .

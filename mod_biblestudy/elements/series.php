@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version		$Id: series.php 8591 2007-08-27 21:09:32Z Tom Fuller $
  * @package		mod_biblestudy
@@ -10,36 +11,34 @@
  * other free or open source software licenses.
  * See COPYRIGHT.php for copyright notices and details.
  */
-
 // Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
+class JElementseries extends JElement {
 
-class JElementseries extends JElement
-{
-	/**
-	 * Element name
-	 *
-	 * @access	protected
-	 * @var		string
-	 */
-	var	$_name = 'series';
+    /**
+     * Element name
+     *
+     * @access	protected
+     * @var		string
+     */
+    var $_name = 'series';
 
-	function fetchElement($name, $value, &$node, $control_name)
-	{
-		$db = &JFactory::getDBO();
-		$language =& JFactory::getLanguage();
-		$language->load('com_biblestudy');
+    function fetchElement($name, $value, &$node, $control_name) {
+        $db = JFactory::getDBO();
+        $language = JFactory::getLanguage();
+        $language->load('com_biblestudy');
 
-		$query = 'SELECT DISTINCT #__bsms_studies.series_id, #__bsms_series.series_text, #__bsms_series.id AS sid' .
-				' FROM #__bsms_studies' .
-				' LEFT JOIN #__bsms_series ON (#__bsms_series.id = #__bsms_studies.series_id)' .
-				' WHERE #__bsms_series.published = 1' .
-				' ORDER BY #__bsms_series.series_text ASC';
-		$db->setQuery($query);
-		$options = $db->loadObjectList();
-		array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a Series').' -', 'series_id', 'series_text'));
+        $query = 'SELECT DISTINCT #__bsms_studies.series_id, #__bsms_series.series_text, #__bsms_series.id AS sid' .
+                ' FROM #__bsms_studies' .
+                ' LEFT JOIN #__bsms_series ON (#__bsms_series.id = #__bsms_studies.series_id)' .
+                ' WHERE #__bsms_series.published = 1' .
+                ' ORDER BY #__bsms_series.series_text ASC';
+        $db->setQuery($query);
+        $options = $db->loadObjectList();
+        array_unshift($options, JHTML::_('select.option', '0', '- ' . JText::_('Select a Series') . ' -', 'series_id', 'series_text'));
 
-		return JHTML::_('select.genericlist',  $options, ''.$control_name.'['.$name.']', 'class="inputbox"', 'series_id', 'series_text', $value, $control_name.$name );
-	}
+        return JHTML::_('select.genericlist', $options, '' . $control_name . '[' . $name . ']', 'class="inputbox"', 'series_id', 'series_text', $value, $control_name . $name);
+    }
+
 }
