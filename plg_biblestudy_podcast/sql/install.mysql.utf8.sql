@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS #__jbspodcast_install;
+DROP TABLE IF EXISTS `#__jbspodcast_install`;
 
-DROP TABLE IF EXISTS #__jbspodcast_update;
+DROP TABLE IF EXISTS `#__jbspodcast_update`;
 
 CREATE TABLE `#__jbspodcast_update` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -23,5 +23,5 @@ CREATE TABLE IF NOT EXISTS `#__jbspodcast_timeset` (
 -- Dumping data for table `#__jbspodcast_timeset`
 --
 
-INSERT INTO `#__jbspodcast_timeset` (`timeset`, `backup`) VALUES 
+INSERT INTO `#__jbspodcast_timeset` (`timeset`, `backup`) VALUES
 	( '1281646339', '1281646339');

@@ -8,6 +8,10 @@
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <version>7.0.2</version>
     <description>PLG_JBSPODCAST_XML_DESCRIPTION</description>
+
+    <!-- Runs on install/uninstall/update; New in 1.7 -->
+    <scriptfile>script.php</scriptfile>
+
     <install> <!-- Runs on install -->
         <sql>
             <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>

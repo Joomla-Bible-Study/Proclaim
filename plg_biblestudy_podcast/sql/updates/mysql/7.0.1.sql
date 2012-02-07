@@ -1,1 +1,1 @@
-INSERT INTO #__jbspodcast_install VALUES(7.0.1);
+INSERT INTO `#__jbspodcast_update` (id,version) VALUES(2,7.0.1);
