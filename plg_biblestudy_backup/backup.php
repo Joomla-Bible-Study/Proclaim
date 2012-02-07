@@ -20,32 +20,30 @@ class JBSExport {
         foreach ($objects as $object) {
             $tables[] = $this->getExportTable($object['name'], $localfilename, $backupfolder);
         }
-        $export = implode('\n',$tables);
-        
-      //   if(!JFolder::exists(JPATH_SITE.DIRECTORY_SEPARATOR.$backupfolder))
+        $export = implode('\n', $tables);
+
+        //   if(!JFolder::exists(JPATH_SITE.DIRECTORY_SEPARATOR.$backupfolder))
 //    		{
 //    			JFolder::create(JPATH_SITE.DIRECTORY_SEPARATOR.$backupfolder);
 //    		}
-		
-	
-		$handle = fopen(JPATH_SITE .DIRECTORY_SEPARATOR. $backupfolder .DIRECTORY_SEPARATOR. $localfilename,'w+');
-		fwrite($handle,$export);
-		fclose($handle);
-       // $outputDB = $this->createBackup($localfilename, $backupfolder); 
-       	$serverfile = JPATH_SITE .DIRECTORY_SEPARATOR. $backupfolder .DIRECTORY_SEPARATOR. $localfilename;
-        $returnfile = array('serverfile'=>$serverfile,'localfilename'=>$localfilename);
+
+
+        $handle = fopen(JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename, 'w+');
+        fwrite($handle, $export);
+        fclose($handle);
+        // $outputDB = $this->createBackup($localfilename, $backupfolder);
+        $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename;
+        $returnfile = array('serverfile' => $serverfile, 'localfilename' => $localfilename);
         return $returnfile;
     }
 
-    
-
     function getExportTable($table, $localfilename, $backupfolder) {
         @set_time_limit(300);
-        
+
         $data = array();
         $export = '';
         $return = array();
-       
+
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
@@ -79,12 +77,10 @@ class JBSExport {
             $export .= ";\n";
         }
         $export .= "\n-- --------------------------------------------------------\n\n";
-        
+
         return $export;
-        
     }
 
-    
     function getObjects() {
         $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'serversedit', 'realname' => 'JBS_CMN_SERVERS'),
             array('name' => '#__bsms_folders', 'titlefield' => 'foldername', 'assetname' => 'foldersedit', 'realname' => 'JBS_CMN_FOLDERS'),
@@ -112,7 +108,6 @@ class JBSExport {
         return $objects;
     }
 
-   
 }
 
 // end of class
