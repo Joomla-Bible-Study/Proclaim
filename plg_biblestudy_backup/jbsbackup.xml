@@ -8,6 +8,10 @@
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
     <version>7.0.3</version>
     <description>PLG_JBSBACKUP_XML_DESCRIPTION</description>
+
+    <!-- Runs on install/uninstall/update; New in 1.7 -->
+    <scriptfile>script.php</scriptfile>
+
     <install> <!-- Runs on install -->
         <sql>
             <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
@@ -34,35 +38,35 @@
         <fields name="params">
             <fieldset name="basic">
                 <field name="email" type="list" default="1"
-                                       label="PLG_JBSBACKUP_SEND_EMAIL" description="PLG_JBSBACKUP_SEND_EMAIL_DESC">
+                       label="PLG_JBSBACKUP_SEND_EMAIL" description="PLG_JBSBACKUP_SEND_EMAIL_DESC">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
                 <field name="includedb" type="list" default="1"
-                                       label="PLG_JBSBACKUP_INCLUDEDB" description="PLG_JBSBACKUP_INCLUDEDB_DESC">
+                       label="PLG_JBSBACKUP_INCLUDEDB" description="PLG_JBSBACKUP_INCLUDEDB_DESC">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
                 <field name="recipients" type="text" default="" size="80"
-                                       label="PLG_JBSBACKUP_TO_EMAIL" description="PLG_JBSBACKUP_TO_EMAIL_DESC" />
+                       label="PLG_JBSBACKUP_TO_EMAIL" description="PLG_JBSBACKUP_TO_EMAIL_DESC" />
                 <field name="subject" type="text" default="Joomla Bible Study Backup"
-                                       size="60" label="PLG_JBSBACKUP_SUBJECT" description="" />
+                       size="60" label="PLG_JBSBACKUP_SUBJECT" description="" />
                 <field name="body" type="text" default="Backup status:" size="60"
-                                       label="PLG_JBSBACKUP_BODY" description="" />
+                       label="PLG_JBSBACKUP_BODY" description="" />
                 <field name="backupfolder" type="folderlist" directory="media"
-                                       filter="" exclude="" striptext="" label="PLG_JBSBACKUP_BACKUP_FOLDER"
-                                       description="PLG_JBSBACKUP_BACKUP_FOLDER_DESC" />
+                       filter="" exclude="" striptext="" label="PLG_JBSBACKUP_BACKUP_FOLDER"
+                       description="PLG_JBSBACKUP_BACKUP_FOLDER_DESC" />
                 <field name="method" type="list" default="0"
-                                       label="PLG_JBSBACKUP_PUBLISH_METHOD" description="PLG_JBSBACKUP_PUBLISH_METHOD_DESC">
+                       label="PLG_JBSBACKUP_PUBLISH_METHOD" description="PLG_JBSBACKUP_PUBLISH_METHOD_DESC">
                     <option value="0">PLG_JBSBACKUP_HOURS</option>
                     <option value="1">PLG_JBSBACKUP_SCHEDULE</option>
                 </field>
                 <field name="filestokeep" type="text" default="5" size="3"
-                                       label="PLG_JBSBACKUP_FILES" description="PLG_JBSBACKUP_FILES_DESC" />
+                       label="PLG_JBSBACKUP_FILES" description="PLG_JBSBACKUP_FILES_DESC" />
                 <field name="xhours" type="text" default="24" size="3"
-                                       label="PLG_JBSBACKUP_PUBLISH_EVERY" description="PLG_JBSBACKUP_PUBLISH_EVERY_DESC" />
+                       label="PLG_JBSBACKUP_PUBLISH_EVERY" description="PLG_JBSBACKUP_PUBLISH_EVERY_DESC" />
                 <field name="day1" type="list" default="0" label="PLG_JBSBACKUP_DAY1"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -73,7 +77,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour1" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY1" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY1" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -101,7 +105,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="day2" type="list" default="0" label="PLG_JBSBACKUP_DAY2"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -112,7 +116,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour2" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY2" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY2" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -140,7 +144,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="day3" type="list" default="0" label="PLG_JBSBACKUP_DAY3"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -151,7 +155,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour3" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY3" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY3" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -179,7 +183,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="day4" type="list" default="0" label="PLG_JBSBACKUP_DAY4"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -190,7 +194,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour4" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY4" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY4" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -218,7 +222,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="day5" type="list" default="0" label="PLG_JBSBACKUP_DAY5"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -229,7 +233,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour5" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY5" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY5" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -257,7 +261,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="day6" type="list" default="0" label="PLG_JBSBACKUP_DAY6"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -268,7 +272,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour6" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY6" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY6" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -296,7 +300,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="day7" type="list" default="0" label="PLG_JBSBACKUP_DAY7"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -307,7 +311,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour7" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY7" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY7" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -335,7 +339,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="day8" type="list" default="0" label="PLG_JBSBACKUP_DAY8"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -346,7 +350,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour8" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY8" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY8" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -374,7 +378,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="day9" type="list" default="0" label="PLG_JBSBACKUP_DAY9"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -385,7 +389,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour9" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY9" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY9" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -413,7 +417,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="day10" type="list" default="0" label="PLG_JBSBACKUP_DAY10"
-                                       description="PLG_JBSBACKUP_CHOOSE_DAY">
+                       description="PLG_JBSBACKUP_CHOOSE_DAY">
                     <option value="-1">PLG_JBSBACKUP_CHOOSE_DAY</option>
                     <option value="0">PLG_JBSBACKUP_SUNDAY</option>
                     <option value="1">PLG_JBSBACKUP_MONDAY</option>
@@ -424,7 +428,7 @@
                     <option value="6">PLG_JBSBACKUP_SATURDAY</option>
                 </field>
                 <field name="hour10" type="list" default="0"
-                                       label="PLG_JBSBACKUP_HOUR_DAY10" description="PLG_JBSBACKUP_CHOOSE_HOUR">
+                       label="PLG_JBSBACKUP_HOUR_DAY10" description="PLG_JBSBACKUP_CHOOSE_HOUR">
                     <option value="0">PLG_JBSBACKUP_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -452,7 +456,7 @@
                     <option value="24">24:00 (12AM)</option>
                 </field>
                 <field name="offset" type="list" label="PLG_JBSBACKUP_SERVER_OFFSET"
-                                       default="0" description="PLG_JBSBACKUP_SERVER_OFFSET_DESC">
+                       default="0" description="PLG_JBSBACKUP_SERVER_OFFSET_DESC">
                     <option value="0">PLG_JBSBACKUP_NO_OFFSET</option>
                     <option value="1">PLG_JBSBACKUP_USE_OFFSET</option>
                 </field>
