@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 class JBSExport {
 
     function exportdb($backupfolder) {
+        jimport('joomla.filesystem.folder');
         $return = false;
         $localfilename = 'jbs-db-backup-' . time() . '.sql';
         $objects = $this->getObjects();
@@ -20,15 +21,14 @@ class JBSExport {
             $tables[] = $this->getExportTable($object['name'], $localfilename, $backupfolder);
         }
         $export = implode('\n',$tables);
-        if (!JFolder::exists(JPATH_SITE.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.$backupfolder))
-		{
-			JFolder::create(JPATH_SITE.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.$backupfolder);
-		}
+        
+      //   if(!JFolder::exists(JPATH_SITE.DIRECTORY_SEPARATOR.$backupfolder))
+//    		{
+//    			JFolder::create(JPATH_SITE.DIRECTORY_SEPARATOR.$backupfolder);
+//    		}
 		
 	
 		$handle = fopen(JPATH_SITE .DIRECTORY_SEPARATOR. $backupfolder .DIRECTORY_SEPARATOR. $localfilename,'w+');
-		
-
 		fwrite($handle,$export);
 		fclose($handle);
        // $outputDB = $this->createBackup($localfilename, $backupfolder); 
@@ -41,12 +41,11 @@ class JBSExport {
 
     function getExportTable($table, $localfilename, $backupfolder) {
         @set_time_limit(300);
-        //Change some tables TEXT fields to BLOB so they will restore okay
-        // $changetoblob = $this->TablestoBlob();
+        
         $data = array();
         $export = '';
         $return = array();
-        //$serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
+       
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
@@ -80,8 +79,7 @@ class JBSExport {
             $export .= ";\n";
         }
         $export .= "\n-- --------------------------------------------------------\n\n";
-        //save file
-		
+        
         return $export;
         
     }
