@@ -28,7 +28,7 @@ class JBSExport {
 //    		}
 
         jimport('joomla.filesystem.file');
-        JFile::write(JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename);
+        JFile::write(JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename, $export);
        // $handle = fopen(JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename, 'w+');
 //        fwrite($handle, $export);
 //        fclose($handle);
