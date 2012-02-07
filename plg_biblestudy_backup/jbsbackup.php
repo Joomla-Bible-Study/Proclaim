@@ -220,8 +220,8 @@ class plgSystemjbsbackup extends JPlugin {
     function updatefiles($params) {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
-        $backupfolder = 'media' . DIRECTORY_SEPARATOR . $this->params->get('backupfolder', ''); 
-        $path = JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder;
+       // $backupfolder = 'media' . DIRECTORY_SEPARATOR . $this->params->get('backupfolder', ''); 
+        $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database ' . DIRECTORY_SEPARATOR;
         $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
         $excludefilter = array('^\..*', '.*~');
         $files = JFolder::files($path, '', '', 'false', $exclude, $excludefilter);

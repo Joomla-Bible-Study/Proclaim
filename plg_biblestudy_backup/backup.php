@@ -23,11 +23,11 @@ class JBSExport {
         $export = implode('\n', $tables);
 
         jimport('joomla.filesystem.file');
-        $file = JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename;
+        $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database ' . DIRECTORY_SEPARATOR . $localfilename;
         JFile::write($file, $export);
         // $outputDB = $this->createBackup($localfilename, $backupfolder);
-        $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename;
-        $returnfile = array('serverfile' => $serverfile, 'localfilename' => $localfilename);
+        //$serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename;
+        $returnfile = array('serverfile' => $file, 'localfilename' => $localfilename);
         return $returnfile;
     }
 
