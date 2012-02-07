@@ -24,7 +24,7 @@
     </uninstall>
     <update> <!-- Runs on update; New in 1.6 -->
         <schemas>
-            <schemapath type="mysql">install/sql/updates/mysql</schemapath>
+            <schemapath type="mysql">sql/updates/mysql</schemapath>
         </schemas>
     </update>
     <files>
