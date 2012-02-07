@@ -18,7 +18,7 @@ class JBSExport {
         $localfilename = 'jbs-db-backup-' . time() . '.sql';
         $objects = $this->getObjects();
         foreach ($objects as $object) {
-            $tables[] = $this->getExportTable($object['name'], $localfilename, $backupfolder);
+            $tables[] = $this->getExportTable($object['name']);
         }
         $export = implode('\n', $tables);
 
@@ -27,17 +27,19 @@ class JBSExport {
 //    			JFolder::create(JPATH_SITE.DIRECTORY_SEPARATOR.$backupfolder);
 //    		}
 
-
-        $handle = fopen(JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename, 'w+');
-        fwrite($handle, $export);
-        fclose($handle);
+        jimport('joomla.filesystem.file');
+        JFile::write(JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename);
+       // $handle = fopen(JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename, 'w+');
+//        fwrite($handle, $export);
+//        fclose($handle);
         // $outputDB = $this->createBackup($localfilename, $backupfolder);
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename;
         $returnfile = array('serverfile' => $serverfile, 'localfilename' => $localfilename);
         return $returnfile;
     }
 
-    function getExportTable($table, $localfilename, $backupfolder) {
+    function getExportTable($table) { 
+        if (!$table){return false;}
         @set_time_limit(300);
 
         $data = array();

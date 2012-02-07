@@ -36,6 +36,7 @@ class plgSystemjbsbackup extends JPlugin {
 
 
         $params = $this->params;
+        
 
         //First check to see what method of updating the backup we are using
         $method = $params->get('method', '0');
@@ -164,7 +165,7 @@ class plgSystemjbsbackup extends JPlugin {
     }
 
     function doBackup() {
-        $backupfolder = 'media' . DIRECTORY_SEPARATOR . $this->params->get('backupfolder', '');
+        $backupfolder = 'media' . DIRECTORY_SEPARATOR . $this->params->get('backupfolder', ''); 
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . 'jbsbackup' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'backup.php');
         $dbbackup = new JBSExport();
