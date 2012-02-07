@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `#__jbsbackup_update` (
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8;
 
-INSERT INTO `#__bsms_update` (id,version) VALUES
+INSERT INTO `#__jbsbackup_update` (id,version) VALUES
 (1,'7.0.7');
 
 CREATE TABLE IF NOT EXISTS `#__jbsbackup_timeset` (
