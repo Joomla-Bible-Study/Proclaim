@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 /* Import library dependencies */
 
@@ -36,7 +36,7 @@ class plgSystemjbsbackup extends JPlugin {
 
 
         $params = $this->params;
-        
+
 
         //First check to see what method of updating the backup we are using
         $method = $params->get('method', '0');
@@ -59,7 +59,7 @@ class plgSystemjbsbackup extends JPlugin {
                 $updatefiles = $this->updatefiles($params);
             }
 
-           
+
         }
     }
 
@@ -82,7 +82,7 @@ class plgSystemjbsbackup extends JPlugin {
 
     function checkdays($params) {
         $checkdays = FALSE;
-        $config = & JFactory::getConfig();
+        $config = JFactory::getConfig();
         $offset = $config->getValue('config.offset');
 
         $now = time();
@@ -197,7 +197,7 @@ class plgSystemjbsbackup extends JPlugin {
         $Body2 = '';
 
 
-        $Body2 .= '<br><a href="' . JURI::root() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR .'database' . DIRECTORY_SEPARATOR .$dobackup['localfilename'] . '">' . $dobackup['localfilename'] . '</a>';
+        $Body2 .= '<br><a href="' . JURI::root() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $dobackup['localfilename'] . '">' . $dobackup['localfilename'] . '</a>';
         $Body2 .= ' - ' . $msg;
 
 
@@ -220,15 +220,10 @@ class plgSystemjbsbackup extends JPlugin {
     function updatefiles($params) {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
-        $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database';
+        $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
         $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
         $excludefilter = array('^\..*', '.*~');
-        $files = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter); 
-        //foreach ($files as $i => $value) {
-//            if (!substr_count($value, 'jbs-db-backup')) {
-//                unset($files[$i]);
-//            };
-//        }
+        $files = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);
         $part = array();
         $numfiles = count($files);
         $totalnumber = $params->get('filestokeep', '5');
@@ -239,7 +234,7 @@ class plgSystemjbsbackup extends JPlugin {
         for ($counter = $numfiles; $counter > $totalnumber; $counter--) {
             $pop = array_pop($part);
         }
-        foreach ($part AS $key => $value) {
+        foreach ($pop AS $key => $value) {
             JFile::delete($value);
         }
     }
