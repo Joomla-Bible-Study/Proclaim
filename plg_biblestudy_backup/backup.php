@@ -15,22 +15,21 @@ class JBSExport {
     function exportdb() {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
-        //$return = false;
+        
         $localfilename = 'jbs-db-backup-' . time() . '.sql';
         $objects = $this->getObjects();
         foreach ($objects as $object) {
             $tables[] = $this->getExportTable($object['name']);
         }
-        $export = implode('\n', $tables); 
-       
+        $export = implode('\n', $tables);
+
         $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $localfilename;
-        //dump ($file);
-        
+
         JFile::write($file, $export);
-       
+
         $returnfile = array('serverfile' => $file, 'localfilename' => $localfilename);
         return $returnfile;
-        
+
     }
 
     function getExportTable($table) {
