@@ -165,11 +165,10 @@ class plgSystemjbsbackup extends JPlugin {
     }
 
     function doBackup() {
-        $backupfolder = 'media' . DIRECTORY_SEPARATOR . $this->params->get('backupfolder', ''); 
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . 'jbsbackup' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'backup.php');
         $dbbackup = new JBSExport();
-        $backup = $dbbackup->exportdb($backupfolder);
+        $backup = $dbbackup->exportdb();
         return $backup;
     }
 
@@ -197,7 +196,7 @@ class plgSystemjbsbackup extends JPlugin {
         $Body2 = '';
 
 
-        $Body2 .= '<br><a href="' . JURI::root() . 'media' . DIRECTORY_SEPARATOR . $dobackup['localfilename'] . '">' . $dobackup['localfilename'] . '</a>';
+        $Body2 .= '<br><a href="' . JURI::root() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR .'database' . DIRECTORY_SEPARATOR .$dobackup['localfilename'] . '">' . $dobackup['localfilename'] . '</a>';
         $Body2 .= ' - ' . $msg;
 
 
@@ -220,11 +219,10 @@ class plgSystemjbsbackup extends JPlugin {
     function updatefiles($params) {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
-       // $backupfolder = 'media' . DIRECTORY_SEPARATOR . $this->params->get('backupfolder', ''); 
-        $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database ' . DIRECTORY_SEPARATOR;
+        $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database';
         $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
         $excludefilter = array('^\..*', '.*~');
-        $files = JFolder::files($path, '', '', 'false', $exclude, $excludefilter);
+        $files = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter); 
         foreach ($files as $i => $value) {
             if (!substr_count($value, 'jbs-db-backup')) {
                 unset($files[$i]);

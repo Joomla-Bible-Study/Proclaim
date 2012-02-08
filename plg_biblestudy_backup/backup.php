@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 class JBSExport {
 
-    function exportdb($backupfolder) {
+    function exportdb() {
         jimport('joomla.filesystem.folder');
         $return = false;
         $localfilename = 'jbs-db-backup-' . time() . '.sql';
@@ -23,10 +23,13 @@ class JBSExport {
         $export = implode('\n', $tables);
 
         jimport('joomla.filesystem.file');
-        $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database ' . DIRECTORY_SEPARATOR . $localfilename;
-        JFile::write($file, $export);
-        // $outputDB = $this->createBackup($localfilename, $backupfolder);
-        //$serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . $backupfolder . DIRECTORY_SEPARATOR . $localfilename;
+        $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $localfilename;
+        
+        if (!JFile::write($file, $export))
+        {
+            JError::raiseError(500,JText::_('There was a problem with the '));
+			return false;
+        }
         $returnfile = array('serverfile' => $file, 'localfilename' => $localfilename);
         return $returnfile;
     }
@@ -61,7 +64,7 @@ class JBSExport {
         $query = 'SELECT * FROM ' . $table;
         $db->setQuery($query);
         $db->query();
-        $results = $db->loadObjectList();
+        $results = $db->loadObjectList(); if (!$results){return false;}
         foreach ($results as $result) {
             $data = array();
             $export .= 'INSERT INTO ' . $table . ' SET ';
@@ -97,11 +100,12 @@ class JBSExport {
             array('name' => '#__bsms_timeset', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_search', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_books', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-            array('name' => '#__bsms_version', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
+            array('name' => '#__bsms_update', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_order', 'titlefield' => '', 'assetname' => '', 'realname' => '')
         );
         return $objects;
     }
+
 
 }
 
