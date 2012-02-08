@@ -9,7 +9,7 @@
 	<packager>Tom Fuller</packager>
 	<packagerurl>http://www.joomlabiblestudy.org</packagerurl>
 	<description>Joomla Bible Study Everything package</description>
-	<update><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1]]></update>
+	<update><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&dummy=extension.xml]]></update>
 	<files folder="packages">
 		<file type="component" id="com_biblestudy">com_biblestudy-7.1.0.zip</file>
 		<file type="module" id="mod_biblestudy" client="site">mod_biblestudy-7.1.0.zip</file>
