@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="1.6.0" method="upgrade"
-           client="site">
+<extension type="module" version="1.7.0" method="upgrade" client="site">
     <name>mod_biblestudy</name>
     <author>Joomla Bible Study Team</author>
-    <creationDate>February 6, 2012</creationDate>
+    <creationDate>February 8, 2012</creationDate>
     <copyright>(C) 2007-2011 Joomla Bible Study</copyright>
     <license>GPL/GNU</license>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>7.0.3</version>
+    <version>7.0.4</version>
     <description>JBS_MDL_DESCRIPTION</description>
     <files>
         <filename module="mod_biblestudy">mod_biblestudy.php</filename>

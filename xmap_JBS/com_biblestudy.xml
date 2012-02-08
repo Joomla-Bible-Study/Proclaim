@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.6" type="plugin" group="xmap" method="upgrade">
+<extension version="1.7.0" type="plugin" group="xmap" method="upgrade">
     <name>Xmap plugin for Joomla Bible Study</name>
     <author>Joomla Bible Study - Tom Fuller</author>
-    <creationDate>February 6 2012</creationDate>
+    <creationDate>February 8, 2012</creationDate>
     <copyright>(C) 2011 Joomla Bible Study - Tom Fuller</copyright>
     <license>http://www.gnu.org/copyright/gpl.html GNU/GPL</license>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
