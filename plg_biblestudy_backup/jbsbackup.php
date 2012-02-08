@@ -218,24 +218,24 @@ class plgSystemjbsbackup extends JPlugin {
     }
 
     function updatefiles($params) {
-        jimport('joomla.filesystem.folder');
+       jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
         $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
         $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
         $excludefilter = array('^\..*', '.*~');
-        $files = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);
-        $part = array();
-        $numfiles = count($files);
-        $totalnumber = $params->get('filestokeep', '5');
-        foreach ($files as $file) {
-            $part[] = array('filename' => $file);
+        $files = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);// print_r($files);
+        asort($files,SORT_STRING);
+        $parts = array();
+        $numfiles = count($files); 
+        $totalnumber = $params->get('filestokeep','5');
+        
+        for ($counter = $numfiles; $counter > $totalnumber; $counter--) 
+        {
+            $parts[] = array_pop($files);
         }
-
-        for ($counter = $numfiles; $counter > $totalnumber; $counter--) {
-            $pop = array_pop($part);
-        }
-        foreach ($pop AS $key => $value) {
-            JFile::delete($value);
+        foreach ($parts as $part)
+        {
+            JFile::delete($part);
         }
     }
 

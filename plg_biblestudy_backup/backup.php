@@ -26,12 +26,8 @@ class JBSExport {
         $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $localfilename;
         //dump ($file);
         
-        if (!JFile::write($file, $export)){JError::raiseWarning('', 'There was a problem with the writing of the file');}
-        if (!JFile::exists($file))
-        {
-            JError::raiseWarning('', 'There was a problem with the writing of the file');
-			return false;
-        }
+        JFile::write($file, $export);
+       
         $returnfile = array('serverfile' => $file, 'localfilename' => $localfilename);
         return $returnfile;
         
