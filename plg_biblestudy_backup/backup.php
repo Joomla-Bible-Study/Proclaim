@@ -14,7 +14,7 @@ class JBSExport {
 
     function exportdb() {
         jimport('joomla.filesystem.folder');
-        $return = false;
+        //$return = false;
         $localfilename = 'jbs-db-backup-' . time() . '.sql';
         $objects = $this->getObjects();
         foreach ($objects as $object) {
@@ -24,10 +24,10 @@ class JBSExport {
 
         jimport('joomla.filesystem.file');
         $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $localfilename;
-        
-        if (!JFile::write($file, $export))
+        JFile::write($file, $export);
+        if (!JFile::exist($file))
         {
-            JError::raiseError(500,JText::_('There was a problem with the '));
+            JError::raiseError(500, 'There was a problem with the ');
 			return false;
         }
         $returnfile = array('serverfile' => $file, 'localfilename' => $localfilename);
