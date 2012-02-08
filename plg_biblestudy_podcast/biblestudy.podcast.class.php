@@ -23,10 +23,10 @@ class JBSPodcast {
         $db->setQuery("SELECT params FROM #__bsms_admin WHERE id = 1");
         $db->query();
         $compat = $db->loadObject();
-
+        $p = (string)$compat->params;
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($compat->params);
+        $registry->loadJSON($p);
         $admin_params = $registry;
 
         return $admin_params;
@@ -34,7 +34,7 @@ class JBSPodcast {
 
     function makePodcasts() {
         $params = null;
-        $admin_params = $this->getAdminsettings();
+     //   $admin_params = $this->getAdminsettings();
         $msg = array();
         $db = JFactory::getDBO();
         jimport('joomla.utilities.date');
@@ -106,7 +106,7 @@ class JBSPodcast {
                     }
                     $episodes = $this->getEpisodes($podinfo->id, $limit);
                     $registry = new JRegistry;
-                    $podinfo->params = array('{"show_verses":"1"}');
+                    $podinfo->params = '{"show_verses":"1"}';
                     $registry->loadJSON($podinfo->params);
                     $params = $registry;
                     $params->set('show_verses', '1');
@@ -159,7 +159,7 @@ class JBSPodcast {
                                 $title = $episodedate . ' - ' . $scripture . ' - ' . $episode->studytitle;
                                 break;
                             case 5:
-                                $element = getCustom($rowid = 'row1col1', $podinfo->custom, $episode, $params, $admin_params, $detailstemplateid);
+                                $element = getCustom($rowid = 'row1col1', $podinfo->custom, $episode, $params, $admin_params='null', $detailstemplateid);
 
                                 $title = $element->element;
                                 break;
