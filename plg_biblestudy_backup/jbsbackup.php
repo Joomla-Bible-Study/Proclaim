@@ -52,13 +52,14 @@ class plgSystemjbsbackup extends JPlugin {
             //If we have run the backupcheck and it returned no errors then the last thing we do is reset the time we did it to current
             if ($dobackup) {
                 $updatetime = $this->updatetime();
+                 // check to see if we need to email anything
+                if ($check && $params->get('email') > 0) {
+                    $email = $this->doEmail($params, $dobackup);
+                }
                 $updatefiles = $this->updatefiles($params);
             }
 
-            // Last we check to see if we need to email anything
-            if ($check && $params->get('email') > 0) {
-                $email = $this->doEmail($params, $dobackup);
-            }
+           
         }
     }
 
@@ -223,11 +224,11 @@ class plgSystemjbsbackup extends JPlugin {
         $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
         $excludefilter = array('^\..*', '.*~');
         $files = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter); 
-        foreach ($files as $i => $value) {
-            if (!substr_count($value, 'jbs-db-backup')) {
-                unset($files[$i]);
-            };
-        }
+        //foreach ($files as $i => $value) {
+//            if (!substr_count($value, 'jbs-db-backup')) {
+//                unset($files[$i]);
+//            };
+//        }
         $part = array();
         $numfiles = count($files);
         $totalnumber = $params->get('filestokeep', '5');

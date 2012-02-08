@@ -14,28 +14,27 @@ class JBSExport {
 
     function exportdb() {
         jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.file');
         //$return = false;
         $localfilename = 'jbs-db-backup-' . time() . '.sql';
         $objects = $this->getObjects();
         foreach ($objects as $object) {
             $tables[] = $this->getExportTable($object['name']);
         }
-        $export = implode('\n', $tables);
-        if(!empty($export)){
-        jimport('joomla.filesystem.file');
-        $file = JPATH_SITE . DS . 'media'. DS . 'com_biblestudy'. DS . 'database' . DS . $localfilename;
-        JFile::write($file, $export);
+        $export = implode('\n', $tables); 
+       
+        $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $localfilename;
+        //dump ($file);
+        
+        if (!JFile::write($file, $export)){JError::raiseWarning('', 'There was a problem with the writing of the file');}
         if (!JFile::exists($file))
         {
-            JError::raiseError(500, 'There was a problem with the ');
+            JError::raiseWarning('', 'There was a problem with the writing of the file');
 			return false;
         }
         $returnfile = array('serverfile' => $file, 'localfilename' => $localfilename);
         return $returnfile;
-        } else {
-           JError::raiseWorning('', 'There was a problem with the Export');
-			return false;
-        }
+        
     }
 
     function getExportTable($table) {
