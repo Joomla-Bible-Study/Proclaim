@@ -140,9 +140,9 @@ class plgSearchBiblestudysearch extends JPlugin {
                 case 1 :
 
                     if ($this->params->get('show_description') > 0) {
-                        $query->select("a.studytitle AS title, a.studyintro, #__bsms_books.bookname AS text, a.chapter_begin, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
+                        $query->select("a.studytitle AS title, a.studyintro, #__bsms_books.bookname AS book, a.chapter_begin, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
                     } else {
-                        $query->select("#__bsms_books.bookname AS text, a.chapter_begin, a.studytitle AS title, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
+                        $query->select("#__bsms_books.bookname AS book, a.chapter_begin, a.studytitle AS title, a.studydate AS created, #__bsms_books.id AS bid, #__bsms_books.bookname, a.id AS sid, a.published AS spub, #__bsms_books.published AS bpub, #__bsms_series.id AS seriesid, #__bsms_series.series_text, #__bsms_topics.id AS tid, #__bsms_topics.topic_text, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, a.id as id, 'Bible Studies' AS section, CONCAT('index.php?option=com_biblestudy&view=studydetails&id=', a.id,'&t=" . $template . "') AS href, '2' AS browsernav");
                     }
                     break;
             }
@@ -166,9 +166,9 @@ class plgSearchBiblestudysearch extends JPlugin {
                     case 1:
 
                         if ($this->params->get('show_description') > 0) {
-                            $rows[$i]->text = JText::_($rows[$i]->text) . ' ' . $rows[$i]->chapter_begin . ' | ' . $rows[$i]->studyintro;
+                            $rows[$i]->text = JText::_($rows[$i]->book) . ' ' . $rows[$i]->chapter_begin . ' | ' . $rows[$i]->studyintro;
                         } else {
-                            $rows[$i]->text = JText::_($rows[$i]->text) . ' ' . $rows[$i]->chapter_begin;
+                            $rows[$i]->text = JText::_($rows[$i]->book) . ' ' . $rows[$i]->chapter_begin;
                         }
                         break;
                 }
