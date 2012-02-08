@@ -25,7 +25,7 @@ class JBSExport {
         jimport('joomla.filesystem.file');
         $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $localfilename;
         JFile::write($file, $export);
-        if (!JFile::exist($file))
+        if (!JFile::exists($file))
         {
             JError::raiseError(500, 'There was a problem with the ');
 			return false;
