@@ -21,9 +21,9 @@ class JBSExport {
             $tables[] = $this->getExportTable($object['name']);
         }
         $export = implode('\n', $tables);
-
+        if(!empty($export)){
         jimport('joomla.filesystem.file');
-        $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'media'. DIRECTORY_SEPARATOR . 'com_biblestudy'. DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $localfilename;
+        $file = JPATH_SITE . DS . 'media'. DS . 'com_biblestudy'. DS . 'database' . DS . $localfilename;
         JFile::write($file, $export);
         if (!JFile::exists($file))
         {
@@ -32,6 +32,10 @@ class JBSExport {
         }
         $returnfile = array('serverfile' => $file, 'localfilename' => $localfilename);
         return $returnfile;
+        } else {
+           JError::raiseWorning('', 'There was a problem with the Export');
+			return false;
+        }
     }
 
     function getExportTable($table) {
