@@ -102,13 +102,14 @@ class com_biblestudyInstallerScript {
 
         // abort if the component being installed is not newer than the currently installed version
         if ($type == 'update') {
-            $oldRelease = $this->getParam('version');
-            $rel = $oldRelease . ' to ' . $this->release;
-            if (version_compare($this->release, $oldRelease, 'le')) {
-                Jerror::raiseWarning(null, 'Incorrect version sequence. Cannot upgrade ' . $rel);
-                return false;
-            }
-        } else {
+            // @todo need to fix
+//            $oldRelease = $this->getParam('version');
+//            $rel = $oldRelease . ' to ' . $this->release;
+//            if (version_compare($this->release, $oldRelease, 'le')) {
+//                Jerror::raiseWarning(null, 'Incorrect version sequence. Cannot upgrade ' . $rel);
+//                return false;
+//            }
+//        } else {
             $rel = $this->release;
         }
     }
