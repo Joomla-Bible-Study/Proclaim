@@ -1,1 +1,0 @@
-INSERT INTO #__bsms_update VALUES(2,7.0.1);
