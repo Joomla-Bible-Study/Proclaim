@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="1" >
+        <option value="0">JBS_CMN_NO</option>
+        <option value="1">JBS_CMN_YES</option>
+    </field>
+    <field name="study_id" type="Modal_Study"
+	label="JBS_CMN_STUDY"
+        description="JBS_CMT_CHOOSE_STUDY_DESC"
+        class="inputbox"
+        readonly="true"/>
+    <field name="comment_date" type="calendar" 
+        label="JBS_CMT_CREATE_DATE"
+        description="JBS_CMT_CREATE_DATE_DESC"
+        class="inputbox" size="22"
+        format="%Y-%m-%d %H:%M:%S"
+        filter="user_utc"
+        />
+    <field name="full_name"  type="text"
+        label="JBS_CMT_FULL_NAME"
+        size="30"/>
+    <field name="user_email"  type="text"
+        label="JBS_CMT_EMAIL"
+        size="40"/>
+    <field name="comment_text"  type="textarea"
+        label="JBS_CMN_COMMENT"
+        rows="10" cols="50"/>
+</form>
