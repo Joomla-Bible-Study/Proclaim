@@ -234,19 +234,19 @@ class com_biblestudyInstallerScript {
                 JFile::delete(JPATH_ADMINISTRATOR . '/language/cs-CZ/cs-CZ.com_biblestudy.sys.ini');
             endif;
             if (JFile::exists(JPATH_ADMINISTRATOR . '/language/de-DE/de-DE.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . 'administrator/language/de-DE/de-DE.com_biblestudy.ini');
+                JFile::delete(JPATH_ADMINISTRATOR . '/language/de-DE/de-DE.com_biblestudy.ini');
             endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . 'administrator/language/de-DE/de-DE.com_biblestudy.sys.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . 'administrator/language/de-DE/de-DE.com_biblestudy.sys.ini');
+            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/de-DE/de-DE.com_biblestudy.sys.ini') == TRUE):
+                JFile::delete(JPATH_ADMINISTRATOR . '/language/de-DE/de-DE.com_biblestudy.sys.ini');
             endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . 'administrator/language/es-ES/es-ES.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . 'administrator/language/es-ES/es-ES.com_biblestudy.ini');
+            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/es-ES/es-ES.com_biblestudy.ini') == TRUE):
+                JFile::delete(JPATH_ADMINISTRATOR . '/language/es-ES/es-ES.com_biblestudy.ini');
             endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . 'administrator/language/es-ES/es-ES.com_biblestudy.sys.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . 'administrator/language/es-ES/es-ES.com_biblestudy.sys.ini');
+            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/es-ES/es-ES.com_biblestudy.sys.ini') == TRUE):
+                JFile::delete(JPATH_ADMINISTRATOR . '/language/es-ES/es-ES.com_biblestudy.sys.ini');
             endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . 'administrator/language/hu-HU/hu-HU.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . 'administrator/language/hu-HU/hu-HU.com_biblestudy.ini');
+            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/hu-HU/hu-HU.com_biblestudy.ini') == TRUE):
+                JFile::delete(JPATH_ADMINISTRATOR . '/language/hu-HU/hu-HU.com_biblestudy.ini');
             endif;
             if (JFile::exists(JPATH_ADMINISTRATOR . '/language/hu-HU/hu-HU.com_biblestudy.sys.ini') == TRUE):
                 JFile::delete(JPATH_ADMINISTRATOR . '/language/hu-HU/hu-HU.com_biblestudy.sys.ini');
@@ -262,26 +262,26 @@ class com_biblestudyInstallerScript {
             endif;
 
             // Language files for Site
-            if (JFile::exists('language/en-GB/en-GB.com_biblestudy.ini') == TRUE):
-                JFile::delete('language/en-GB/en-GB.com_biblestudy.ini');
+            if (JFile::exists(JPATH_ROOT . '/language/en-GB/en-GB.com_biblestudy.ini') == TRUE):
+                JFile::delete(JPATH_ROOT . '/language/en-GB/en-GB.com_biblestudy.ini');
             endif;
-            if (JFile::exists('language/cs-CZ/cs-CZ.com_biblestudy.ini') == TRUE):
-                JFile::delete('language/cs-CZ/cs-CZ.com_biblestudy.ini');
+            if (JFile::exists(JPATH_ROOT . '/language/cs-CZ/cs-CZ.com_biblestudy.ini') == TRUE):
+                JFile::delete(JPATH_ROOT . '/language/cs-CZ/cs-CZ.com_biblestudy.ini');
             endif;
-            if (JFile::exists('language/de-DE/de-DE.com_biblestudy.ini') == TRUE):
-                JFile::delete('language/de-DE/de-DE.com_biblestudy.ini');
+            if (JFile::exists(JPATH_ROOT . '/language/de-DE/de-DE.com_biblestudy.ini') == TRUE):
+                JFile::delete(JPATH_ROOT . '/language/de-DE/de-DE.com_biblestudy.ini');
             endif;
-            if (JFile::exists('language/es-ES/es-ES.com_biblestudy.ini') == TRUE):
-                JFile::delete('language/es-ES/es-ES.com_biblestudy.ini');
+            if (JFile::exists(JPATH_ROOT . '/language/es-ES/es-ES.com_biblestudy.ini') == TRUE):
+                JFile::delete(JPATH_ROOT . '/language/es-ES/es-ES.com_biblestudy.ini');
             endif;
-            if (JFile::exists('language/hu-HU/hu-HU.com_biblestudy.ini') == TRUE):
-                JFile::delete('language/hu-HU/hu-HU.com_biblestudy.ini');
+            if (JFile::exists(JPATH_ROOT . '/language/hu-HU/hu-HU.com_biblestudy.ini') == TRUE):
+                JFile::delete(JPATH_ROOT . '/language/hu-HU/hu-HU.com_biblestudy.ini');
             endif;
-            if (JFile::exists('language/nl-NL/nl-NL.com_biblestudy.ini') == TRUE):
-                JFile::delete('language/nl-NL/nl-NL.com_biblestudy.ini');
+            if (JFile::exists(JPATH_ROOT . '/language/nl-NL/nl-NL.com_biblestudy.ini') == TRUE):
+                JFile::delete(JPATH_ROOT . '/language/nl-NL/nl-NL.com_biblestudy.ini');
             endif;
-            if (JFile::exists('language/no-NO/no-NO.com_biblestudy.ini') == TRUE):
-                JFile::delete('language/no-NO/no-NO.com_biblestudy.ini');
+            if (JFile::exists(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini') == TRUE):
+                JFile::delete(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini');
             endif;
             //create an index.html file in the media folders if not there already
             $index = '<html><body bgcolor="#FFFFFF"></body></html>';
