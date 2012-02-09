@@ -102,7 +102,7 @@ class com_biblestudyInstallerScript {
 
         // abort if the component being installed is not newer than the currently installed version
         if ($type == 'update') {
-            // @todo need to fix
+            // @todo need to fix will need to find out whey this is not working on packages upgrades.
 //            $oldRelease = $this->getParam('version');
 //            $rel = $oldRelease . ' to ' . $this->release;
 //            if (version_compare($this->release, $oldRelease, 'le')) {
