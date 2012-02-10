@@ -15,7 +15,7 @@
     <update><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&dummy=extension.xml]]>
     </update>
     <files folder="packages">
-        <file type="component" id="com_biblestudy">com_biblestudy-7.0.2.zip</file>
+        <file type="component" id="com_biblestudy">com_biblestudy-7.0.3.zip</file>
         <file type="module" id="mod_biblestudy" client="site">mod_biblestudy-7.0.4.zip</file>
         <file type="plugin" id="biblestudysearch" group="search">plg_biblestudy_search-7.0.2.zip</file>
         <file type="plugin" id="jbspodcast" group="system">plg_biblestudy_podcast-7.0.3.zip</file>
