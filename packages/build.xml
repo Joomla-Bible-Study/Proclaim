@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="biblestudy_package" default="build">
-	<target name="clean">
-		<delete dir="packages" includeemptydirs="true" />
-	</target>
 	<target name="build">
 		<mkdir dir="packages" />
 		<zip destfile="packages/com_biblestudy-7.0.2.zip" basedir="../com_biblestudy" />
