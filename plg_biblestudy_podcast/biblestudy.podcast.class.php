@@ -214,9 +214,9 @@ class JBSPodcast {
                     $filecontent = $podhead . $episodedetail . $podfoot;
                     $filewritten = $this->writeFile($file, $filecontent);
                     if (!$filewritten) {
-                        $msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_FAILURE');
+                        $msg[] = $podinfo->filename . ' - ' . JText::_('JBS_CMN_FILES_FAILURE');
                     } else {
-                        $msg[] = $file . ' - ' . JText::_('JBS_CMN_FILES_SUCCESS');
+                        $msg[] = $podinfo->filename . ' - ' . JText::_('JBS_CMN_FILES_SUCCESS');
                     }
                 } // end if $checkresult if positive
             }//end foreach podids as podinfo
