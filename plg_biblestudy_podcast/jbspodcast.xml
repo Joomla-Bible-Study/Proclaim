@@ -30,6 +30,7 @@
     <files>
         <filename plugin="jbspodcast">jbspodcast.php</filename>
         <filename>biblestudy.podcast.class.php</filename>
+        <filename>script.php</filename>
         <folder>language</folder>
         <folder>sql</folder>
     </files>
