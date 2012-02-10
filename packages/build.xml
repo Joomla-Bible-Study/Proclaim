@@ -2,7 +2,7 @@
 <project name="biblestudy_package" default="build">
 	<target name="build">
 		<mkdir dir="packages" />
-		<zip destfile="packages/com_biblestudy-7.0.2.zip" basedir="../com_biblestudy" />
+		<zip destfile="packages/com_biblestudy-7.0.3.zip" basedir="../com_biblestudy" />
 		<zip destfile="packages/mod_biblestudy-7.0.4.zip" basedir="../mod_biblestudy" />
 		<zip destfile="packages/plg_biblestudy_search-7.0.2.zip" basedir="../plg_biblestudy_search" />
 		<zip destfile="packages/plg_biblestudy_podcast-7.0.3.zip" basedir="../plg_biblestudy_podcast" />
