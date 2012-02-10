@@ -220,7 +220,7 @@ function getMediatable($params, $row, $admin_params) {
                 break;
 
             case 2:
-                $mediatable = '<div><table class="mediatable"><tbody><tr><td>' . $downloadlink;
+                $mediatable = '<div><table class="mediatable"><tbody><tr><td>' . $downloadlink .'</td></tr></tbody></table></div>';
                 break;
         }
         $mediatable .= '</td>';
@@ -249,7 +249,7 @@ function getMediatable($params, $row, $admin_params) {
         $mediatable .= '</tr>';
     } // end of if show_filesize
 
-    $mediatable .='</table>';
+    $mediatable .='</td></tr></tbody></table></div>';
     return $mediatable;
 }
 
