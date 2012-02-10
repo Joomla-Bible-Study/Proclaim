@@ -1,6 +1,1 @@
 -- Start Place Holder
-CREATE TABLE IF NOT EXISTS `#__jbspodcast_update` (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  version VARCHAR(255) DEFAULT NULL,
-  PRIMARY KEY (id)
-) DEFAULT CHARSET=utf8;
