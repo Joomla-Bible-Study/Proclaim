@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `#__jbsbackup_update` (
 
 INSERT INTO `#__jbsbackup_update` (id,version) VALUES
 (1,'7.0.3'),
-(1,'7.0.4');
+(2,'7.0.4');
 
 CREATE TABLE IF NOT EXISTS `#__jbsbackup_timeset` (
 	`timeset` varchar(14) NOT NULL DEFAULT '',

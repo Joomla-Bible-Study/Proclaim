@@ -47,18 +47,23 @@ class biblestudyViewadmin extends JView {
         $backedupfiles = array();
         jimport('joomla.filesystem.folder');
         $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
-        $files = JFolder::files($path, '.sql');
-        asort($files, SORT_STRING);
-        $filelist = array();
-        foreach ($files as $i => $value) {
-            $filelisttemp = array('value' => $value, 'text' => $value);
-            $filelist[] = $filelisttemp;
+        
+        if (!$files = JFolder::files($path, '.sql')){$this->lists['backedupfiles']= JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');}
+        else
+        {
+            asort($files, SORT_STRING);
+            $filelist = array();
+            foreach ($files as $i => $value) {
+                $filelisttemp = array('value' => $value, 'text' => $value);
+                $filelist[] = $filelisttemp;
+            }
+    
+            $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_DB'));
+            $types = array_merge($types, $filelist);
+            $this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
+
         }
-
-        $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_DB'));
-        $types = array_merge($types, $filelist);
-        $this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
-
+        
         parent::display($tpl);
     }
 

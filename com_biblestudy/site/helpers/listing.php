@@ -642,7 +642,7 @@ function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $r
 	switch ($islink) {
 
 		case 1 :
-			$addItemid = getItemidLink($isplugin=0, $admin_params);
+			$Itemid = JRequest::getInt('Itemid','','');
 			if (!$Itemid)
 			{
 				$link = JRoute::_('index.php?option=com_biblestudy&view=studydetails&id='.$row->slug.'&t='.$params->get('detailstemplateid'));

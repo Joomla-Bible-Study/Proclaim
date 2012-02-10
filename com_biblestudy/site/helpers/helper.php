@@ -11,57 +11,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
-//This function is designed to extract an Itemid for the component if none exists in the GET variable. Mainly to address problems with
-// All Videos Reloaded
-	function getItemidLink(){
-		$itemid = null;
 
-		$admin_params = getAdminsettings();
-		$itemidlinktype = $admin_params->get('itemidlinktype', 1);
-		$itemidlinkview = $admin_params->get('itemidlinkview', 'studieslist');
-		$itemidlinknumber = $admin_params->get('itemidlinknumber',1);
-		$menus  = &JApplication::getMenu('site', array());
-
-		//Get the correct componentid from #__menu
-		$db	= & JFactory::getDBO();
-
-		$query = "SELECT id, component_id, link, params FROM #__menu WHERE link LIKE '%com_biblestudy%';";
-		$db->setQuery($query);
-		$db->query();
-		$component = $db->loadObject();
-		$items  = $menus->getItems('component_id', $component->componentid);
-
-		if (is_array($items)) {
-			foreach ($items as $menu) {
-				if (@$menu->query['view'] == $itemidlinkview) {
-					$itemid = $menu->id;
-					break;
-				}
-			}
-		}
-		if (!isset($itemid) && count($items)) {
-		 $itemid = $items[0]->id;
-		}
-
-		switch ($itemidlinktype)
-		{
-			case 0:
-			$itemid = '';
-			break;
-
-			case 1:
-			//Look for an itemid in the com_menu table from the /helpers/helper.php file
-			$itemid = $itemid;
-			break;
-
-			case 2:
-			//Add in an Itemid from the parameter
-			$itemid = $itemidlinknumber;
-			break;
-		}
-
-		return($itemid);
-	}
 function getAdminsettings()
 	{
 			$db =& JFactory::getDBO();

@@ -16,8 +16,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-	$addItemid = '';
-	$addItemid = getItemidLink($isplugin=0, $admin_params);
+	$addItemid = JRequest::getInt('Itemid','','');
 	$messagetype = null;
 	$teacherid = null;
 	$template = $params->get('studieslisttemplateid',1);
