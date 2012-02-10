@@ -4,9 +4,9 @@
 defined('_JEXEC') or die;
 
 /**
- * Script file of JBSBACKUP component
+ * Script file of jbspodcast component
  */
-class PLG_PODCASTInstallerScript {
+class plgSystemjbspodcastInstallerScript {
 
     /**
      * method to install the component
