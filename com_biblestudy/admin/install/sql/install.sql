@@ -14,7 +14,8 @@ INSERT INTO `#__bsms_update` (id,version) VALUES
 (1,'7.0.0'),
 (2,'7.0.1'),
 (3,'7.0.1.1'),
-(4,'7.0.2');
+(4,'7.0.2'),
+(5,'7.0.3');
 
 CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
 	`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT,
