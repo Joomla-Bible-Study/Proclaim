@@ -125,7 +125,7 @@ class jbsMedia {
         } // end of if show_filesize
 
 
-        $table .='</table>';
+        $table .='</tbody></table></div>';
 
         return $table;
     }
