@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `#__jbspodcast_install`;
 
 DROP TABLE IF EXISTS `#__jbspodcast_update`;
 
-CREATE TABLE `#__jbspodcast_update` (
+CREATE TABLE IF NOT EXISTS `#__jbspodcast_update` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   version VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (id)
