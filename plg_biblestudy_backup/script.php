@@ -6,7 +6,7 @@ defined('_JEXEC') or die;
 /**
  * Script file of JBSBACKUP component
  */
-class PLG_JBSBACKUPInstallerScript {
+class plgSystemjbsbackupInstallerScript {
 
     /**
      * method to install the component
@@ -45,7 +45,7 @@ class PLG_JBSBACKUPInstallerScript {
     function preflight($type, $parent) {
         // $parent is the class calling this method
         // $type is the type of change (install, update or discover_install)
-        echo '<p>' . JText::_('PLG_JBSBACKUP_PREFLIGHT_' . $type . '_TEXT') . '</p>';
+        //echo '<p>' . JText::_('PLG_JBSBACKUP_PREFLIGHT_' . $type . '_TEXT') . '</p>';
     }
 
     /**
@@ -56,7 +56,7 @@ class PLG_JBSBACKUPInstallerScript {
     function postflight($type, $parent) {
         // $parent is the class calling this method
         // $type is the type of change (install, update or discover_install)
-        echo '<p>' . JText::_('PLG_JBSBACKUP_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+        //echo '<p>' . JText::_('PLG_JBSBACKUP_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
     }
 
 }

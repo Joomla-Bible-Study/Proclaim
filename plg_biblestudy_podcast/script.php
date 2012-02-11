@@ -33,6 +33,7 @@ class plgSystemjbspodcastInstallerScript {
      * @return void
      */
     function update($parent) {
+        // $parent is the class calling this method
         // check to see if we are dealing with version 7.0.0 and create the update table if needed
         $db = JFactory::getDBO();
         // First see if there is an update table
@@ -60,7 +61,6 @@ class plgSystemjbspodcastInstallerScript {
             $db->setQuery($query);
             $db->query();
         }
-        // $parent is the class calling this method
         echo '<p>' . JText::_('PLG_PODCAST_UPDATE_TEXT') . '</p>';
     }
 
@@ -70,6 +70,9 @@ class plgSystemjbspodcastInstallerScript {
      * @return void
      */
     function preflight($type, $parent) {
+        // $parent is the class calling this method
+        // $type is the type of change (install, update or discover_install)
+        //
         // check to see if we are dealing with version 7.0.0 and create the update table if needed
         $db = JFactory::getDBO();
         // First see if there is an update table
@@ -96,9 +99,7 @@ class plgSystemjbspodcastInstallerScript {
             $db->setQuery($query);
             $db->query();
         }
-        // $parent is the class calling this method
-        // $type is the type of change (install, update or discover_install)
-        echo '<p>' . JText::_('PLG_PODCAST_PREFLIGHT_' . $type . '_TEXT') . '</p>';
+
     }
 
     /**
@@ -109,7 +110,6 @@ class plgSystemjbspodcastInstallerScript {
     function postflight($type, $parent) {
         // $parent is the class calling this method
         // $type is the type of change (install, update or discover_install)
-        echo '<p>' . JText::_('PLG_PODCAST_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
     }
 
 }
