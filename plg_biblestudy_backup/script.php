@@ -90,9 +90,10 @@ class plgSystemjbsbackupInstallerScript {
                         version VARCHAR(255) DEFAULT NULL,
                         PRIMARY KEY (id)
                         ) DEFAULT CHARSET=utf8';
-            $db->setQuery($query);
-            $db->query();
-            $query = "INSERT INTO `#__jbsbackup_update` (id,version) VALUES (1,'7.0.3'),(2,'7.0.4')";
+            $query .= "INSERT INTO `#__jbsbackup_update` (id,version) VALUES(1,'7.0.3')
+                        ON DUPLICATE KEY UPDATE version= '7.0.3'";
+            $query .="INSERT INTO `#__jbsbackup_update` (id,version) VALUES(2,'7.0.4')
+                        ON DUPLICATE KEY UPDATE version= '7.0.4';";
             $db->setQuery($query);
             $db->query();
         }
