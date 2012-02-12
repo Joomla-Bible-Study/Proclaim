@@ -32,8 +32,8 @@ class biblestudyViewseriesdetail extends JView {
         $option = JRequest::getCmd('option');
         $document = JFactory::getDocument();
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/biblestudy.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/player/jwplayer.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
         $pathway = $mainframe->getPathWay();
         $contentConfig = JComponentHelper::getParams('com_biblestudy');
         $dispatcher = JDispatcher::getInstance();

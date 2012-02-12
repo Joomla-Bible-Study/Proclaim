@@ -21,14 +21,14 @@ defined('_JEXEC') or die;
 
 
 <?php
-$mainframe = & JFactory::getApplication();
+$mainframe = JFactory::getApplication();
 $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 $params = $this->params;
 $admin_params = $this->admin_params;
-$document = & JFactory::getDocument();
-$document->addScript(JURI::base() . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
-$document->addStyleSheet(JURI::base() . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css');
+$document = JFactory::getDocument();
+$document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
+$document->addStyleSheet(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css');
 $url = $params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);
@@ -50,20 +50,26 @@ $listingcall = JView::loadHelper('listing');
             <strong><a class="heading" href="javascript:ReverseDisplay('scripture')">>>
                     <?php echo JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE'); ?><<</a>
                 <div id="scripture" style="display:none;"></strong>
-                <?php
-                $passage_call = JView::loadHelper('passage');
-                $response = getPassage($params, $row);
-                echo $response;
-                echo '</div>';
-                break;
+            <?php
+            $passage_call = JView::loadHelper('passage');
+            $response = getPassage($params, $row);
+            echo $response;
+            ?>
+        </div>
+        <?php
+        break;
 
-            case 2:
-                echo '<div id="scripture">';
-                $passage_call = JView::loadHelper('passage');
-                $response = getPassage($params, $row);
-                echo $response;
-                echo '</div>';
-                break;
-        }
+    case 2:
         ?>
+        <div id="scripture">
+            <?php
+            $passage_call = JView::loadHelper('passage');
+            $response = getPassage($params, $row);
+            echo $response;
+            ?>
+        </div>
+        <?php
+        break;
+}
+?>
 </div><!--End of page container div-->

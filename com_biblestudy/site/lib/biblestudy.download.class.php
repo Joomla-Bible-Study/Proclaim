@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version $Id: class.biblestudydownload.php 7.0.2 $
+ * @version $Id: biblestudy.download.class.php 7.0.3 $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL

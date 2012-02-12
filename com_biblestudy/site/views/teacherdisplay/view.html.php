@@ -20,10 +20,10 @@ class biblestudyViewteacherdisplay extends JView {
 
 
         $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/biblestudy.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/player/jwplayer.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
         $pathway = $mainframe->getPathWay();
 
 
@@ -80,7 +80,7 @@ class biblestudyViewteacherdisplay extends JView {
         }
         $database = JFactory::getDBO();
 
-
+        // @todo need to move this out of hear but will leave ti for now.
         $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,
  #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription,
  #__bsms_message_type.id AS mid,

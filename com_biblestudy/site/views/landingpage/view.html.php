@@ -28,7 +28,7 @@ class biblestudyViewLandingpage extends JView {
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $document = JFactory::getDocument();
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/player/jwplayer.js');
+        $document->addScript(JURI::base() . 'components/com_biblestudy/player/jwplayer.js');
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $itemparams = $mainframe->getPageParameters();
@@ -71,16 +71,16 @@ class biblestudyViewLandingpage extends JView {
         $this->admin_params = $registry;
 
         $document = JFactory::getDocument();
-        $document->addScript(JURI::base() . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
-        $stylesheet = JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css';
+        $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
+        $stylesheet = JURI::base() . 'media/com_biblestudy/css/biblestudy.css';
         $document->addStyleSheet($stylesheet);
 
         //Import Scripts
-        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/jquery.js');
-        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/biblestudy.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 
         //Import Stylesheets
-        $document->addStylesheet(JURI::base() . 'administrator/components/com_biblestudy/css/general.css');
+        $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
 
         $url = $params->get('stylesheet');
         if ($url) {

@@ -4,22 +4,22 @@ defined('_JEXEC') or die;
 
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 
-$mainframe = & JFactory::getApplication();
+$mainframe = JFactory::getApplication();
 $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
-$database = & JFactory::getDBO();
+$database = JFactory::getDBO();
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 include_once($path1 . 'helper.php');
-$document = & JFactory::getDocument();
-$document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/tooltip.js');
+$document = JFactory::getDocument();
+$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 $showhide = getShowhide();
 $document->addScriptDeclaration($showhide);
-$stylesheet = JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css';
+$stylesheet = JURI::base() . 'media/com_biblestudy/css/biblestudy.css';
 $document->addStyleSheet($stylesheet);
 $params = $this->params;
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 include_once($path1 . 'image.php');
-$d_path1 = 'components/com_biblestudy/images';
+$d_path1 = 'media/com_biblestudy/images';
 
 
 $listingcall = JView::loadHelper('listing');
@@ -61,8 +61,10 @@ $listingcall = JView::loadHelper('listing');
 
                 <div id="landing_item">
                     <div id="landing_title">
-        <?php echo $params->get($showIt . 'label');
-        echo "\n"; ?>
+                        <?php
+                        echo $params->get($showIt . 'label');
+                        echo "\n";
+                        ?>
                     </div> <!-- end div id="landing_title" -->
                     <?php
                     $heading_call = null;
@@ -161,22 +163,23 @@ $listingcall = JView::loadHelper('listing');
                     ?>
                     <div id="landinglist">
 
-                    <?php
-                    if ($heading) {
-                        echo $heading;
-                    }
-                    echo "\n" . '      </div> <!-- end div id="landinglist" ' . $i . " -->";
-                    echo "\n";
-                    ?>
-                    </div> <!-- end div id="landing_item" <?php echo $i; ?> -->
                         <?php
-                    }
-                } // End Loop for the landing items
-                ?>
-        </div> <!-- end div id="biblestudy_landing" -->
-        <input name="option" value="com_biblestudy" type="hidden">
+                        if ($heading) {
+                            echo $heading;
+                        }
+                        echo "\n" . '      </div> <!-- end div id="landinglist" ' . $i . " -->";
+                        echo "\n";
+                        ?>
+                    </div> <!-- end div id="landing_item" <?php echo $i; ?> -->
+                    <?php
+                }
+            } // End Loop for the landing items
+            ?>
+        </div>
+    </div> <!-- end div id="biblestudy_landing" -->
+    <input name="option" value="com_biblestudy" type="hidden">
 
-        <input name="task" value="" type="hidden">
-        <input name="boxchecked" value="0" type="hidden">
-        <input name="controller" value="studieslist" type="hidden">
-        </form>
+    <input name="task" value="" type="hidden">
+    <input name="boxchecked" value="0" type="hidden">
+    <input name="controller" value="studieslist" type="hidden">
+</form>

@@ -54,16 +54,16 @@ class biblestudyViewserieslist extends JView {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
 
-        $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 
         //Import Scripts
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/jquery.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/biblestudy.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/tooltip.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/jwplayer.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/jwplayer.js');
         //Import Stylesheets
-        $document->addStylesheet(JURI::base() . 'components/com_biblestudy/assets/css/general.css');
+        $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
 
         $url = $params->get('stylesheet');
         if ($url) {

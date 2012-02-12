@@ -43,16 +43,13 @@
         <filename>biblestudy.php</filename>
         <filename>controller.php</filename>
         <filename>convert1.htm</filename>
-        <filename>class.biblestudydownload.php</filename>
         <filename>router.php</filename>
         <folder>sef_ext</folder>
-        <folder>assets</folder>
         <folder>views</folder>
         <folder>models</folder>
         <folder>language</folder>
         <folder>tables</folder>
         <folder>controllers</folder>
-        <folder>images</folder>
         <folder>helpers</folder>
         <folder>lib</folder>
 
@@ -66,9 +63,14 @@
 
   	<!-- Media files -->
     <media destination="com_biblestudy" folder="media">
-	<!--	<folder>media</folder> -->
-	<!--	<folder>js</folder> -->
-	<!--	<folder>backup</folder> -->
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>backup</folder>
+                <folder>captcha</folder>
+                <folder>css</folder>
+                <folder>legacyplayer</folder>
+                <folder>player</folder>
+                <filename>index.html</filename>
     </media>
 
     <administration>
@@ -105,8 +107,6 @@
             <filename>convert1.htm</filename>
             <filename>config.xml</filename>
             <filename>access.xml</filename>
-            <folder>js</folder>
-            <folder>css</folder>
             <folder>help</folder>
             <folder>tables</folder>
             <folder>views</folder>
@@ -116,7 +116,6 @@
             <folder>lib</folder>
             <folder>language</folder>
             <folder>install</folder>
-            <folder>images</folder>
             <folder>migration</folder>
         </files>
 

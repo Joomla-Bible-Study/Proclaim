@@ -115,19 +115,19 @@ class biblestudyViewstudieslist extends JView {
 
 //        $document =  JFactory::getDocument();
         JHTML::_('behavior.mootools');
-        $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
         //Import Scripts
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/jquery.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/noconflict.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/biblestudy.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/views/studieslist.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/tooltip.js');
-        $document->addScript(JURI::base() . 'components/com_biblestudy/assets/player/jwplayer.js');
-        //Styles from tooltip.css moved to assets/css/biblestudy.css
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/views/studieslist.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+        //Styles from tooltip.css moved to css/biblestudy.css
         //Import Stylesheets
-        $document->addStylesheet(JURI::base() . 'components/com_biblestudy/assets/css/general.css');
+        $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
 
         $url = $params->get('stylesheet');
         if ($url) {

@@ -34,12 +34,6 @@
         <folder>language</folder>
         <folder>sql</folder>
     </files>
-    	<!-- Media files -->
-    <media destination="com_biblestudy" folder="media">
-		<filename>index.html</filename>
-		<folder>database</folder>
-		<folder>backup</folder>
-    </media>
     <config>
         <fields name="params">
             <fieldset name="basic">

@@ -10,8 +10,8 @@ $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 $params = $this->params;
 $document = JFactory::getDocument();
-$document->addScript(JURI::base() . 'components/com_biblestudy/assets/js/tooltip.js');
-$document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');
+$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
+$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 $url = $params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);

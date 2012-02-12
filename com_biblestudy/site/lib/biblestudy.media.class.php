@@ -370,7 +370,7 @@ class jbsMedia {
 			<script type='text/javascript'>
 			jwplayer('placeholder').setup({
 			stretching: 'fill',
-			flashplayer: '" . JURI::base() . "components/com_biblestudy/assets/player/player.swf',
+			flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
 			width: " . $player->playerwidth . ",
 			height:" . $player->playerheight . ",
 			displayheight:'300',
@@ -380,7 +380,7 @@ class jbsMedia {
 			description:'" . $studyintro . "',
 			controlbar:'bottom',
 			link:'" . JURI::base() . "index.php?option=com_biblestudy&view=studieslist&templatemenuid=" . $templateid . "',
-			image:'" . $params->get('popupimage', 'components/com_biblestudy/images/speaker24.png') . "',
+			image:'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
 			autostart:'true',
 			lightcolor:'" . $lightcolor . "',frontcolor:'" . $frontcolor . "',backcolor:'" . $backcolor . "',screencolor:'" . $screencolor . "',
 			'plugins': {
@@ -391,7 +391,7 @@ class jbsMedia {
                         ],
 			'modes': [
 			{type: 'html5'},
-			{type: 'flash', src: '" . JURI::base() . "components/com_biblestudy/assets/player/player.swf'},
+			{type: 'flash', src: '" . JURI::base() . "media/com_biblestudy/player/player.swf'},
 			]})
 			</script>";
                         break;
@@ -447,9 +447,9 @@ class jbsMedia {
             case 7: //Legacy internal player
                 switch ($player->type) {
                     case 2:
-                        $playercode = '<script language="JavaScript" src="' . JURI::base() . 'components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
-        		<object type="application/x-shockwave-flash" data="' . JURI::base() . 'components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer' . $media->id . '" border="0" height="24" width="' . $player->playerwidth . '">
-        		<param name="movie" value="' . JURI::base() . 'components/com_biblestudy/assets/legacyplayer/player.swf">
+                        $playercode = '<script language="JavaScript" src="' . JURI::base() . 'media/com_biblestudy/legacyplayer/audio-player.js"></script>
+        		<object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" id="audioplayer' . $media->id . '" border="0" height="24" width="' . $player->playerwidth . '">
+        		<param name="movie" value="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf">
         		<param name="FlashVars" value="playerID=' . $media->id . '&amp;soundFile=' . $path . '">
         		<param name="quality" value="high">
         		<param name="menu" value="false">

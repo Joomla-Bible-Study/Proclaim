@@ -2,10 +2,10 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe = & JFactory::getApplication();
+$mainframe = JFactory::getApplication();
 $option = JRequest::getCmd('option');
 $message = JRequest::getVar('msg');
-$database = & JFactory::getDBO();
+$database = JFactory::getDBO();
 $teacher_menu1 = $this->params->get('teacher_id');
 $teacher_menu = $teacher_menu1[0];
 $topic_menu1 = $this->params->get('topic_id');
@@ -18,9 +18,10 @@ $series_menu1 = $this->params->get('series_id');
 $series_menu = $series_menu1[0];
 $messagetype_menu1 = $this->params->get('messagetype');
 $messagetype_menu = $messagetype_menu1[0];
-$document = & JFactory::getDocument();
-$document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');
+$document = JFactory::getDocument();
+$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 $params = $this->params;
+// @todo are we using these $teachers & $listingcall
 $teachers = $params->get('teacher_id');
 
 
@@ -32,9 +33,9 @@ $listingcall = JView::loadHelper('listing');
 
         <div id="bsheader">
             <h1 class="componentheading">
-<?php
-if ($this->params->get('show_page_image') > 0) {
-    ?>
+                <?php
+                if ($this->params->get('show_page_image') > 0) {
+                    ?>
                     <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" alt="Bible Study" />
                     <?php
                     //End of column for logo
@@ -46,28 +47,32 @@ if ($this->params->get('show_page_image') > 0) {
                 }
                 ?>
             </h1>
-                <?php
-                if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
-                    $teacher_call = JView::loadHelper('teacher');
-                    $teacher = getTeacher($params, $id = null, $this->admin_params);
-                    if ($teacher) {
-                        echo $teacher;
-                    }
+            <?php
+            if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
+                // @todo $teacher_call look like it is not used?
+                $teacher_call = JView::loadHelper('teacher');
+                $teacher = getTeacher($params, $id = null, $this->admin_params);
+                if ($teacher) {
+                    echo $teacher;
                 }
-                ?>
+            }
+            ?>
         </div><!--header-->
 
         <div id="listintro"><table id="listintro"><tr><td><p>
-<?php if ($params->get('intro_show') == 1) {
-    echo $params->get('list_intro');
-} ?>
+                            <?php
+                            if ($params->get('intro_show') == 1) {
+                                echo $params->get('list_intro');
+                            }
+                            ?>
                         </p></td></tr></table> </div>
 
         <div id="bsdropdownmenu">
             <?php
             if ($this->params->get('use_go_button') > 0) {
                 ?><span id="gobutton"><input type="submit" value="<?php echo JText::_('JBS_STY_GO_BUTTON'); ?>" /></span>
-            <?php }
+            <?php
+            }
 
             if ($this->params->get('show_pagination') == 1) {
                 echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM');
@@ -119,11 +124,12 @@ if ($this->params->get('show_page_image') > 0) {
 
         </div><!--dropdownmenu-->
         <table id="bslisttable" cellspacing="0">
-                <?php
-                $headerCall = JView::loadHelper('header');
-                $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
-                echo $header;
-                ?>
+            <?php
+            // @todo $headerCall seams not to be used?
+            $headerCall = JView::loadHelper('header');
+            $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
+            echo $header;
+            ?>
             <tbody>
 
                 <?php
@@ -131,7 +137,6 @@ if ($this->params->get('show_page_image') > 0) {
                 $class1 = 'bsodd';
                 $class2 = 'bseven';
                 $oddeven = $class1;
-//print_r ($this->items);
                 foreach ($this->items as $row) { //Run through each row of the data result from the model
                     if ($oddeven == $class1) { //Alternate the color background
                         $oddeven = $class2;
@@ -145,13 +150,13 @@ if ($this->params->get('show_page_image') > 0) {
                 ?>
             </tbody></table>
         <div class="listingfooter" >
-<?php
-if ($this->params->get('show_pagination') == 2) {
-    echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM');
-    echo $this->pagination->getLimitBox() . '</span>';
-}
-echo $this->pagination->getPagesLinks();
-?>
+            <?php
+            if ($this->params->get('show_pagination') == 2) {
+                echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM');
+                echo $this->pagination->getLimitBox() . '</span>';
+            }
+            echo $this->pagination->getPagesLinks();
+            ?>
         </div> <!--end of bsfooter div-->
     </div><!--end of bspagecontainer div-->
     <input name="option" value="com_biblestudy" type="hidden">

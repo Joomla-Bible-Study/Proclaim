@@ -9,7 +9,7 @@
  * */
 defined('_JEXEC') or die;
 ?>
-<script type="text/javascript" src="components/com_biblestudy/assets/js/tooltip.js"></script>
+<script type="text/javascript" src="media/com_biblestudy/js/tooltip.js"></script>
 
 <?php
 
@@ -51,10 +51,10 @@ $list = $items;
 
 global $mainframe;
 
-$document = & JFactory::getDocument();
-$language = & JFactory::getLanguage();
+$document = JFactory::getDocument();
+$language = JFactory::getLanguage();
 $language->load('com_biblestudy');
-$config = & JComponentHelper::getParams('com_biblestudy');
+$config = JComponentHelper::getParams('com_biblestudy');
 //we need to load the path to the helper files
 $path1 = JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
 $url = $params->get('stylesheet');

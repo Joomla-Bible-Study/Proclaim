@@ -2,10 +2,10 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe = & JFactory::getApplication();
+$mainframe = JFactory::getApplication();
 $option = JRequest::getCmd('option');
 $message = JRequest::getVar('msg');
-$database = & JFactory::getDBO();
+$database = JFactory::getDBO();
 $teacher_menu1 = $this->params->get('teacher_id');
 $teacher_menu = $teacher_menu1[0];
 $topic_menu1 = $this->params->get('topic_id');
@@ -18,12 +18,12 @@ $series_menu1 = $this->params->get('series_id');
 $series_menu = $series_menu1[0];
 $messagetype_menu1 = $this->params->get('messagetype');
 $messagetype_menu = $messagetype_menu1[0];
-$document = & JFactory::getDocument();
-$document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');
+$document = JFactory::getDocument();
+$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 $params = $this->params;
 $teachers = $params->get('teacher_id');
 
-
+// @todo need to rework to be proper php and html outside php
 $listingcall = JView::loadHelper('listing');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=studieslist&t=' . JRequest::getInt('t', '1')); ?>" method="post">
@@ -32,9 +32,9 @@ $listingcall = JView::loadHelper('listing');
 
         <div id="bsheader">
             <h1 class="componentheading">
-<?php
-if ($this->params->get('show_page_image') > 0) {
-    ?>
+                <?php
+                if ($this->params->get('show_page_image') > 0) {
+                    ?>
                     <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" alt="Bible Study" />
                     <?php
                     //End of column for logo
@@ -46,28 +46,31 @@ if ($this->params->get('show_page_image') > 0) {
                 }
                 ?>
             </h1>
-                <?php
-                if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
-                    $teacher_call = JView::loadHelper('teacher');
-                    $teacher = getTeacher($params, $id = null, $this->admin_params);
-                    if ($teacher) {
-                        echo $teacher;
-                    }
+            <?php
+            if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
+                $teacher_call = JView::loadHelper('teacher');
+                $teacher = getTeacher($params, $id = null, $this->admin_params);
+                if ($teacher) {
+                    echo $teacher;
                 }
-                ?>
+            }
+            ?>
         </div><!--header-->
 
         <div id="listintro"><table id="listintro"><tr><td><p>
-<?php if ($params->get('intro_show') == 1) {
-    echo $params->get('list_intro');
-} ?>
+                            <?php
+                            if ($params->get('intro_show') == 1) {
+                                echo $params->get('list_intro');
+                            }
+                            ?>
                         </p></td></tr></table> </div>
 
         <div id="bsdropdownmenu">
             <?php
             if ($this->params->get('use_go_button') > 0) {
                 ?><span id="gobutton"><input type="submit" value="<?php echo JText::_('JBS_STY_GO_BUTTON'); ?>" /></span>
-            <?php }
+            <?php
+            }
 
             if ($this->params->get('show_pagination') == 1) {
                 echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM');
@@ -155,10 +158,10 @@ if ($this->params->get('show_page_image') > 0) {
 
 
         <div class="listingfooter" >
-<?php
-echo $this->pagination->getPagesLinks();
-echo $this->pagination->getPagesCounter();
-?>
+            <?php
+            echo $this->pagination->getPagesLinks();
+            echo $this->pagination->getPagesCounter();
+            ?>
         </div> <!--end of bsfooter div-->
     </div><!--end of bspagecontainer div-->
     <input name="option" value="com_biblestudy" type="hidden">

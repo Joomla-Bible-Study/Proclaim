@@ -284,16 +284,11 @@ class com_biblestudyInstallerScript {
             if (JFile::exists(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini') == TRUE):
                 JFile::delete(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini');
             endif;
-            //create an index.html file in the media folders if not there already
-            $index = '<html><body bgcolor="#FFFFFF"></body></html>';
-            JFile::write('media/com_biblestudy/index.html',$index);
-            JFile::write('media/com_biblestudy/backup/index.html',$index);
-            JFile::write('media/com_biblestudy/database/index.html',$index);
 
             //Check for presence of css or backup
 
-            $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css.dist';
-            $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+            $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css.dist';
+            $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
             $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
             $cssexists = JFile::exists($dest);
             $backupexists = JFile::exists($backup);
