@@ -1,0 +1,136 @@
+#templateTagsContainer {
+	float: right;
+	width: 22%;
+}
+
+#templateTagsContainer h3 {
+	height: 9px;
+	padding-top: 4px;
+	padding-left: 20px;
+	padding-bottom: 12px;
+}
+
+.tmplTag {
+	background-color: #ffffff;
+	border: 1px solid black;
+	display: block;
+	margin: 3px;
+	padding: 2px 2px 2px 20px;
+	width: 86%;
+}
+
+.tmplTagSelected {
+	background: #ffffff url(images/move.png);
+	background-repeat: no-repeat;
+	background-position: 2px;
+}
+
+#tmplDesignSide {
+	float: left;
+	width: 77%;
+}
+
+/* Canvas CSS */
+.canvasItemName {
+	text-align: center;
+	margin: 15px;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+#tmplCanvas {
+	background: #ffffff url(images/grid.jpg);
+	background-attachemnt: fixed;
+	background-position: 5px 5px;
+	border: 2px dashed #375E6F;
+	height: 600px;
+	width: 100%;
+}
+
+#cursor {
+	width: 46px;
+	float: left;
+}
+
+#cursorLabel {
+	background-color: #FFFFEF;
+	float: left;
+	height: 15px;
+	padding: 5px 2px 2px;
+	text-align: center;
+	width: 24px;
+}
+
+#cursorInsertRight {
+	background: #EFF7FF url(images/arrowRight.png) no-repeat;
+	background-position: center;
+	border: 1px solid #5B95C9;
+	width: 16px;
+	height: 21px;
+	float: right;
+}
+
+#cursorInsertBottom {
+	background: #EFF7FF url(images/arrowDown.png) no-repeat scroll center
+		center;
+	border: 1px solid #5B95C9;
+	float: right;
+	height: 16px;
+	margin-top: 0;
+	width: 26px;
+}
+
+#tmplTagCanvas {
+	list-style-image: none;
+	list-style-position: outside;
+}
+
+.canvasRow {
+	
+}
+
+#tmplCanvas li {
+	
+}
+
+.canvasElement {
+	border: 1px solid;
+	float: left;
+	height: 20px;
+	margin-right: 1px;
+	width: 100px;
+}
+
+.drophover {
+	background-color: white;
+}
+
+#canvasListItem {
+	background-color: #FEFFBF;
+	border: 2px dashed black;
+	height: 50px;
+}
+
+#canvasItemOptions {
+	background: #ffffff url(images/options.jpg);
+	border: 1px solid black;
+	float: left;
+	height: 15px;
+	width: 15px;
+}
+
+#canvasMoveItem {
+	background: #ffffff url(images/move.jpg);
+	border: 1px solid black;
+	float: left;
+	height: 15px;
+	width: 15px;
+}
+
+#canvasDeleteItem {
+	background: #ffffff url(images/delete.jpg);
+	border: 1px solid black;
+	float: right;
+	height: 15px;
+	width: 15px;
+}
