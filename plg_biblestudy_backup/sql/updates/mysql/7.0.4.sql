@@ -5,4 +5,7 @@ CREATE TABLE IF NOT EXISTS `#__jbsbackup_update` (
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8;
 
-INSERT INTO `#__jbsbackup_update` (id,version) VALUES(1,'7.0.3'),(2,'7.0.4');
+INSERT INTO `#__jbsbackup_update` (id,version) VALUES(1,'7.0.3')
+ON DUPLICATE KEY UPDATE version= '7.0.3';
+INSERT INTO `#__jbsbackup_update` (id,version) VALUES(2,'7.0.4')
+ON DUPLICATE KEY UPDATE version= '7.0.4';
