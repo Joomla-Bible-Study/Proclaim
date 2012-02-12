@@ -19,7 +19,7 @@ class biblestudyModelcssedit extends JModel {
     }
 
     function &getData() {
-        $filename = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+        $filename = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         $csscontents = fopen($filename, "rb");
         $this->_data = new stdClass();
         $this->_data->filecontent = fread($csscontents, filesize($filename));

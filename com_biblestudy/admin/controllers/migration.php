@@ -184,11 +184,9 @@ class BiblestudyControllerMigration extends JController {
     }
 
     function fixAssets() {
-        // @todo 7.1 Fix and remove applicatoin and change $fixassets = $asset->fixAssets(); to $asset->fixAssets();
-        $application = JFactory::getApplication();
         require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
         $asset = new fixJBSAssets();
-        $fixassets = $asset->fixAssets();
+        $asset->fixAssets();
         return true;
     }
 

@@ -46,14 +46,14 @@ class biblestudyControllercssedit extends JController {
      * @return void
      */
     function resetcss() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         // Set FTP credentials, if given
         jimport('joomla.client.helper');
         JClientHelper::setCredentialsFromRequest('ftp');
         $ftp = JClientHelper::getCredentials('ftp');
         $filename = 'biblestudy.css.dist';
-        $src = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
-        $dest = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
+        $src = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
+        $dest = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css';
 
         // Try to make the css file writeable
 
@@ -67,12 +67,12 @@ class biblestudyControllercssedit extends JController {
     }
 
     function save() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
 
 
         // Initialize some variables
         $option = JRequest::getCmd('option');
-        $client = & JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+        $client = JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
         $filename = 'biblestudy.css';
         $filecontent = JRequest::getVar('filecontent', '', '', 'string', JREQUEST_ALLOWRAW);
 
@@ -83,7 +83,7 @@ class biblestudyControllercssedit extends JController {
         JClientHelper::setCredentialsFromRequest('ftp');
         $ftp = JClientHelper::getCredentials('ftp');
 
-        $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
+        $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
         // Try to make the css file writeable
 
         jimport('joomla.filesystem.file');
@@ -102,7 +102,7 @@ class biblestudyControllercssedit extends JController {
     }
 
     function backup() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         //Check for existence of com_biblestudy folder in media and create if it doesn't exist
         jimport('joomla.filesystem.folder');
         $mediafolderpath = JFolder::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup');
@@ -118,7 +118,7 @@ class biblestudyControllercssedit extends JController {
         JClientHelper::setCredentialsFromRequest('ftp');
         $ftp = JClientHelper::getCredentials('ftp');
         $filename = 'biblestudy.css';
-        $src = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
+        $src = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
         $dest = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
 
         // Try to make the css file writeable
@@ -133,13 +133,13 @@ class biblestudyControllercssedit extends JController {
     }
 
     function copycss() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         // Set FTP credentials, if given
         jimport('joomla.client.helper');
         JClientHelper::setCredentialsFromRequest('ftp');
         $ftp = JClientHelper::getCredentials('ftp');
         $filename = 'biblestudy.css';
-        $dest = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
+        $dest = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
         $src = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
 
         // Try to make the css file writeable
@@ -154,12 +154,12 @@ class biblestudyControllercssedit extends JController {
     }
 
     function restorecss() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         jimport('joomla.client.helper');
         JClientHelper::setCredentialsFromRequest('ftp');
         $ftp = JClientHelper::getCredentials('ftp');
         $filename = 'biblestudy.css';
-        $dest = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
+        $dest = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $filename;
         $src = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         jimport('joomla.filesystem.file');
         $backupexists = JFile::exists($src);

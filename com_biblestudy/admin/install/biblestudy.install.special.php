@@ -14,8 +14,8 @@ $result_table = '<table><tr><td>' . JText::_('JBS_INS_CHECK_INSTALLED_CSS') . '<
 
 //Check to see if the css file exists. If it does, don't do anything. If not, install the css file
 
-$src = JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/assets/css/biblestudy.css.dist';
-$dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'components/com_biblestudy/assets/css/biblestudy.css';
+$src = JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/css/biblestudy.css.dist';
+$dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'media/com_biblestudy/css/biblestudy.css';
 $cssexists = JFile::exists($dest);
 if (!$cssexists) {
     if (!JFile::copy($src, $dest)) {

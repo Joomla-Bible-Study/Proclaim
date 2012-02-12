@@ -59,7 +59,7 @@ class biblestudyController extends JController {
         }
 
         if (JRequest::getCmd('view') == 'studydetails') {
-            $model = & $this->getModel('studydetails');
+            $model = $this->getModel('studydetails');
         }
         $fixassets = JRequest::getWord('task', '', 'get');
         if ($fixassets == 'fixassetid') {
@@ -238,6 +238,5 @@ class biblestudyController extends JController {
             $this->setRedirect('index.php?option=com_biblestudy&view=mediafilesedit&layout=edit&id=' . $id, $msg);
         }
     }
-
 
 }
