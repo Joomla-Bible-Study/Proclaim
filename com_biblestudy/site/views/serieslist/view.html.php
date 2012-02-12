@@ -53,7 +53,6 @@ class biblestudyViewserieslist extends JView {
         } elseif (!$itemparams->get('metadesc')) {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
-        $document->addScript(JURI::base() . 'components/com_biblestudy/tooltip.js');
 
         $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');
 
