@@ -1,4 +1,5 @@
-INSERT INTO `#__bsms_update` (id,version) VALUES (4,'7.0.2');
+INSERT INTO `#__bsms_update` (id,version) VALUES (4,'7.0.2')
+ON DUPLICATE KEY UPDATE version= '7.0.2';
 
 --
 -- Old Talbes No longer used.
