@@ -73,7 +73,7 @@ function getConcatTopicItemTranslated($topicItem) {
     if ($topicItem) {
         // Check if there should be topics at all to save time
         if ($topicItem->tp_id) {
-            $db = & JFactory::getDBO();
+            $db = JFactory::getDBO();
             $query = 'SELECT #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params '
                     . 'FROM #__bsms_topics '
                     . 'LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = ' . $topicItem->id . ') '
