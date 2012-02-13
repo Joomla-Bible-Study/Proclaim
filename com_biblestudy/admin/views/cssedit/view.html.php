@@ -19,7 +19,7 @@ class biblestudyViewcssedit extends JView {
             return false;
         }
 
-        JHTML::_('stylesheet', 'icons.css', JURI::base() . 'components/com_biblestudy/css/');
+        JHTML::_('stylesheet', 'icons.css', JURI::base() . 'media/com_biblestudy/css/');
         $lists = $this->get('Data');
         $text = JText::_('JBS_CSS_CSS_EDIT');
 

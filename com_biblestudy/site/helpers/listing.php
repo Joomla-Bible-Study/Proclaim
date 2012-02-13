@@ -788,7 +788,7 @@ function getStudyExp($row, $params, $admin_params, $template) {
     //PDF View
     $url = 'index.php?option=com_biblestudy&view=studydetails&id=' . $row->id . '&format=pdf';
     $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
-    $text = JHTML::_('image.site', 'pdf24.png', '/components/com_biblestudy/images/', NULL, NULL, JText::_('JBS_MED_PDF'), JText::_('JBS_MED_PDF'));
+    $text = JHTML::_('image.site', 'pdf24.png', '/media/com_biblestudy/images/', NULL, NULL, JText::_('JBS_MED_PDF'), JText::_('JBS_MED_PDF'));
     $attribs['title'] = JText::_('JBS_MED_PDF');
     $attribs['onclick'] = "window.open(this.href,'win2','" . $status . "'); return false;";
     $attribs['rel'] = 'nofollow';

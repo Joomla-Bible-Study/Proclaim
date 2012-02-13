@@ -20,7 +20,7 @@ class biblestudyViewmedialist extends JView {
 	protected $state;
 
 	function display($tpl = null) {
-		$directory = '/components/com_biblestudy/images';
+		$directory = '/media/com_biblestudy/images';
 		$this->assignRef('directory', $directory);
 		$this->items = $this->get('Items');
 		$this->pagination = $this->get('Pagination');

@@ -29,7 +29,7 @@ class biblestudyViewmediaedit extends JView
 		$this->item = $this->get("Item");
 		$this->state = $this->get("State");
 		$this->setLayout('form');
-		$directory = '/components/com_biblestudy/images';
+		$directory = '/media/com_biblestudy/images';
 		$this->assignRef('directory', $directory);
 
 		$this->canDo	= BibleStudyHelper::getActions($this->item->id, 'mediaedit' );

@@ -8,8 +8,8 @@ $listingcall = JView::loadHelper('serieslist');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
 $document = JFactory::getDocument();
-$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-$document->addStyleSheet(JURI::base() . 'components/com_biblestudy/css/biblestudy.css');
+$document->addScript(JURI::base() . '../media/com_biblestudy/js/tooltip.js');
+$document->addStyleSheet(JURI::base() . '../media/com_biblestudy/css/biblestudy.css');
 $params = $this->params;
 $url = $params->get('stylesheet');
 if ($url) {

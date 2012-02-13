@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
         </tr>
         <tr>
             <td width="48px">
-                <img src="<?php echo JURI::base() . '/components/com_biblestudy/images/icons/export.png'; ?>" alt="Export" height="48" width="48" /></td>
+                <img src="<?php echo JURI::base() . '/media/com_biblestudy/images/icons/export.png'; ?>" alt="Export" height="48" width="48" /></td>
             <td align="left">
                 <a href="index.php?option=com_biblestudy&task=migration.export&run=1"> <?php echo JText::_('JBS_IBM_EXPORT'); ?></a>
                 <?php echo '<br /><br />'; ?>
@@ -42,7 +42,7 @@ defined('_JEXEC') or die;
         </tr>
         <tr>
             <td>
-                <img src="<?php echo JURI::base() . '/components/com_biblestudy/images/icons/import.png'; ?>" alt="Import" height="48" width="48" />
+                <img src="<?php echo JURI::base() . '/media/com_biblestudy/images/icons/import.png'; ?>" alt="Import" height="48" width="48" />
             </td>
             <td>
                 <input class="input_box" id="importdb" name="importdb" type="file" size="57" />
@@ -51,7 +51,7 @@ defined('_JEXEC') or die;
         </tr>
         <tr>
             <td>
-                <img src="<?php echo JURI::base() . '/components/com_biblestudy/images/icons/backuprestore.png'; ?>" alt="Backup Folder" height="48" width="48" />
+                <img src="<?php echo JURI::base() . '/media/com_biblestudy/images/icons/backuprestore.png'; ?>" alt="Backup Folder" height="48" width="48" />
 
             </td>
             <td>
@@ -60,7 +60,7 @@ defined('_JEXEC') or die;
         </tr>
         <tr>
             <td>
-                <img src="<?php echo JURI::base() . '/components/com_biblestudy/images/icons/folder.png'; ?>" alt="Tmp Folder" height="48" width="48" />
+                <img src="<?php echo JURI::base() . '/media/com_biblestudy/images/icons/folder.png'; ?>" alt="Tmp Folder" height="48" width="48" />
             </td>
             <td>
                 <?php echo ' - ' . JText::_('JBS_IBM_IMPORT_FROM_FOLDER_ONLY'); ?>

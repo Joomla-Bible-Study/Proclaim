@@ -27,9 +27,9 @@ $images = new jbsImages();
 
 
 
-		if (!$template->text || !substr_count($template->text,'/') ) 
+		if (!$template->text || !substr_count($template->text,'/') )
         {
-			$i_path = 'components/com_biblestudy/images/textfile24.png';
+			$i_path = 'media/com_biblestudy/images/textfile24.png';
             $textimage = $images->getImagePath($i_path);
             $src = JURI::base().$textimage->path;
     		$height = $textimage->height;
@@ -41,7 +41,7 @@ $images = new jbsImages();
             $height = '24';
             $width = '24';
         }
-        
+
     	else
     	{
             $i_path = $template->text;
@@ -54,7 +54,7 @@ $images = new jbsImages();
 
        $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&t='.$t ).JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
-	
+
 
 	if ($params->get('tooltip') >0)
 		{

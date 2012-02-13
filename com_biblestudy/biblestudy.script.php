@@ -299,10 +299,10 @@ class com_biblestudyInstallerScript {
                 if ($copysuccess) {
                     echo '<p>' . JText::_('JBS_INS_CSS_COPIED_SOURCE') . '</p>';
                 } else {
-                    echo '<P>' . JText::_('JBS_INS_CSS_COPIED_DISCRIPTION1') . '&frasl;components&frasl;com_biblestudy&frasl;assets&frasl;css&frasl;biblestudy.css.dist' . JText::_('JBS_INS_CSS_COPIED_DISCRIPTION2') . '</p>';
+                    echo '<P>' . JText::_('JBS_INS_CSS_COPIED_DISCRIPTION1') . '&frasl;media&frasl;com_biblestudy&frasl;css&frasl;biblestudy.css.dist' . JText::_('JBS_INS_CSS_COPIED_DISCRIPTION2') . '</p>';
                 }
                 if ($backupexists) {
-                    echo '<p>' . JText::_('JBS_INS_BACKUPCSS') . ' /media/com_biblestudy/backup/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=restorecss">' . JText::_('JBS_INS_CSS_BACKUP') . '</a></p>';
+                    echo '<p>' . JText::_('JBS_INS_BACKUPCSS') . ' ../media/com_biblestudy/backup/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=restorecss">' . JText::_('JBS_INS_CSS_BACKUP') . '</a></p>';
                 }
             }
             //fix some css
@@ -313,7 +313,7 @@ class com_biblestudyInstallerScript {
                 echo JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.0.2 CSS');
             }
             //Check for default details text link image and copy if not present
-            $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
+            $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
             $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
             $imageexists = JFile::exists($dest);
             if (!$imageexists) {
@@ -323,7 +323,7 @@ class com_biblestudyInstallerScript {
                 if ($imagesuccess = JFile::copy($src, $dest)) {
                     echo '<br />' . JText::_('JBS_INS_COPYING_SUCCESS');
                 } else {
-                    echo '<br />' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER1') . '/components/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER2');
+                    echo '<br />' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER1') . '../media/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER2');
                 }
             }
 
@@ -336,7 +336,7 @@ class com_biblestudyInstallerScript {
         <!-- Rest of footer -->
         <p>
         <div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
-            <img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left" />
+            <img src="media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left" />
             <strong><?php echo JText::_('JBS_INS_THANK_YOU'); ?></strong>
         </p>
 

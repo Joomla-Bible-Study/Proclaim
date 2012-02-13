@@ -148,7 +148,7 @@
 			<field name="popupbackground" type="text" default="black"
 				label="JBS_TPL_MEDIA_POPUPBACKGROUND" description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC" />
 			<field name="popupimage" type="text" size="150"
-				default="components/com_biblestudy/images/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
+				default="media/com_biblestudy/images/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
 				description="JBS_TPL_MEDIA_POPUPIMAGE_DESC" />
 			<field name="show_filesize" type="list" default="1"
 				label="JBS_TPL_MEDIA_SHOW_FILESIZE" description="JBS_TPL_MEDIA_SHOW_FILESIZE_DESC">

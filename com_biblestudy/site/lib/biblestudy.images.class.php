@@ -73,7 +73,7 @@ class jbsImages {
         $admin_params = $registry;
 
         if (!$admin_params->get('default_main_image')) {
-            $path = 'components/com_biblestudy/images/openbible.png';
+            $path = '../media/com_biblestudy/images/openbible.png';
         } else {
             $path = $admin_params->get('default_main_image');
         }
@@ -84,7 +84,7 @@ class jbsImages {
 
     function getMediaImageFolder() {
 
-        $mediaimagefolder = 'components/com_biblestudy/images';
+        $mediaimagefolder = '../media/com_biblestudy/images';
 
 
         return $mediaimagefolder;
@@ -200,7 +200,7 @@ class jbsImages {
         $admin_params = $registry;
 
         if (!$admin_params->get('default_showHide_image')) {
-            $path = 'components/com_biblestudy/images/showhide.gif';
+            $path = '../media/com_biblestudy/images/showhide.gif';
         } else {
             $path = $admin_params->get('default_showHide_image');
         }

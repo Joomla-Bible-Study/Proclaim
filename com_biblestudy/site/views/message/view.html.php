@@ -40,11 +40,11 @@ class biblestudyViewmessage extends JView {
         }
 
         $document = JFactory::getDocument();
-        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/jquery.js');
-        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/noconflict.js');
-        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/ui/jquery-ui.js');
-        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/plugins/jquery.tokeninput.js');
-        $document->addStyleSheet(JURI::base() . 'administrator/components/com_biblestudy/css/token-input-jbs.css');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/ui/jquery-ui.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
 
         $script = "
             \$j(document).ready(function() {
@@ -63,10 +63,10 @@ class biblestudyViewmessage extends JView {
 
         $document->addScriptDeclaration($script);
 
-        $document->addStyleSheet(JURI::base() . 'administrator/components/com_biblestudy/js/ui/theme/ui.all.css');
-        $document->addStyleSheet(JURI::base() . 'administrator/components/com_biblestudy/css/jquery.tagit.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/js/ui/theme/ui.all.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/jquery.tagit.css');
 
-        $document->addScript(JURI::base() . 'administrator/components/com_biblestudy/js/biblestudy.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
 
         parent::display($tpl);
     }
