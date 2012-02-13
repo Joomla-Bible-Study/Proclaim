@@ -17,9 +17,9 @@ defined('_JEXEC') or die;
                 <legend><?php echo JText::_('JBS_ADM_ASSET_CHECK'); ?></legend>
                 <div>
                     <table ><tr><td >
-                                <a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets"><img src="<?php echo JURI::base() . '/media/com_biblestudy/images/icons/import.png'; ?>" alt="Check Assets" height="48" width="48" /></a>
+                                <a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets"><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>" alt="Check Assets" height="48" width="48" /></a>
                             </td><td >
-                                <a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.fixAssets"><img src="<?php echo JURI::base() . '/media/com_biblestudy/images/icons/export.png'; ?>" alt="Fix Assets" height="48" width="48" /></a>
+                                <a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.fixAssets"><img src="<?php echo JURI::base() . '..//media/com_biblestudy/images/icons/export.png'; ?>" alt="Fix Assets" height="48" width="48" /></a>
                             </td></tr>
                         <tr><td align="center"><a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets"><?php echo JText::_('JBS_ADM_CHECK_ASSETS'); ?></a></td><td align="center"><a href="index.php?option=com_biblestudy&view=admin&task=admin.fixAssets"><?php echo JText::_('JBS_ADM_FIX'); ?></a></td></tr>
                     </table>
