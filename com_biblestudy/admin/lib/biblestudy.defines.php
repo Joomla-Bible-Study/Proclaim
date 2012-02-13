@@ -10,8 +10,8 @@
 //No Direct Access
 defined('_JEXEC') or die;
 // Version information
-define ('BIBLESTUDY_VERSION', '7.0.2');
-define ('BIBLESTUDY_VERSION_DATE', '2012-02-01');
+define ('BIBLESTUDY_VERSION', '7.0.3');
+define ('BIBLESTUDY_VERSION_DATE', '2012-02-12');
 define ('BIBLESTUDY_VERSION_BUILD', '702');
 
 // Default values
