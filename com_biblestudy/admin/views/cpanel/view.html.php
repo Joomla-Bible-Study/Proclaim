@@ -24,7 +24,7 @@ class biblestudyViewcpanel extends JView
 		$versioncheck = latestVersion();
 		$this->assignRef('versioncheck', $versioncheck);
 
-		JHTML::stylesheet('cpanel.css', JURI::base() . 'media/com_biblestudy/css/');
+		JHTML::stylesheet('cpanel.css', JURI::base() . '../media/com_biblestudy/css/');
 
                 $this->addToolbar();
 
