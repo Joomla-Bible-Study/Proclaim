@@ -23,7 +23,11 @@ class biblestudyViewcpanel extends JView
 		include_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/version.php');
 		$versioncheck = latestVersion();
 		$this->assignRef('versioncheck', $versioncheck);
-
+                
+                //Get installed version
+                $versiondata = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'biblestudy.xml');
+                $jbsversion = $versiondata['version'];
+                $this->assignRef('jbsversion',$jbsversion);
 		JHTML::stylesheet('cpanel.css', JURI::base() . '../media/com_biblestudy/css/');
 
                 $this->addToolbar();

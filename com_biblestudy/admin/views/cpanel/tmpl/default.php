@@ -30,7 +30,7 @@ require_once (BIBLESTUDY_PATH_ADMIN_LIB .DIRECTORY_SEPARATOR. 'biblestudy.debug.
                 </td></tr>
                 <tr><td>
                     <?php ?>
-                    <div class="fbmainmenu"><?php echo BIBLESTUDY_VERSION.' ('.BIBLESTUDY_VERSION_DATE.')'; ?></div>
+                    <div class="fbmainmenu"><?php echo $this->jbsversion; ?></div>
                 </td></tr>
                 <tr><td>
                         <?php echo JText::_('JBS_CPL_LATEST_VERSION').':<br /> '.$this->versioncheck;?>
