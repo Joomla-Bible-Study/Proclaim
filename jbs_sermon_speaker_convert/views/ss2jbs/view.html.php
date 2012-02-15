@@ -52,7 +52,7 @@ class ss2jbsViewss2jbs extends JView {
 				break;
 
 			case 'jbs':
-				if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'manifest.xml'))
+				if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'biblestudy.xml'))
 				{
 					return $data['version'];
 				}
