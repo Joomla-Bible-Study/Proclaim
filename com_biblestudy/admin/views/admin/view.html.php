@@ -47,21 +47,44 @@ class biblestudyViewadmin extends JView {
         $backedupfiles = array();
         jimport('joomla.filesystem.folder');
         $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
+        if (JFolder::exists($path))
+        {
+            if (!$files = JFolder::files($path, '.sql')){$this->lists['backedupfiles']= JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');}
+            else
+            {
+                asort($files, SORT_STRING);
+                $filelist = array();
+                foreach ($files as $i => $value) {
+                    $filelisttemp = array('value' => $value, 'text' => $value);
+                    $filelist[] = $filelisttemp;
+                }
         
-        if (!$files = JFolder::files($path, '.sql')){$this->lists['backedupfiles']= JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');}
+                $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_DB'));
+                $types = array_merge($types, $filelist);
+                $this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
+    
+            }
+        }
         else
         {
-            asort($files, SORT_STRING);
-            $filelist = array();
-            foreach ($files as $i => $value) {
-                $filelisttemp = array('value' => $value, 'text' => $value);
-                $filelist[] = $filelisttemp;
-            }
-    
-            $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_DB'));
-            $types = array_merge($types, $filelist);
-            $this->lists['backedupfiles'] = JHTML::_('select.genericlist', $types, 'backuprestore', 'class="inputbox" size="1" ', 'value', 'text', '');
-
+            $this->lists['backedupfiles']= JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
+        }
+        //Check for presenc of Sermon Speaker
+        $ssversion = $this->versionXML($component='sermonspeaker');
+		if (!$ssversion){
+			$this->ss = JText::_('JBS_ADM_NO_SERMON_SPEAKER_FOUND');
+		}
+        else
+        {
+            $this->ss = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertSermonSpeaker">'.JText::_('JBS_ADM_CONVERT_SERMON_SPEAKER').'</a>';
+        }
+        $piversion = $this->versionXML($component='preachit');
+        if (!$piversion){
+			$this->pi = JText::_('JBS_ADM_NO_PREACHIT_FOUND');
+		}
+        else
+        {
+            $this->pi = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertPreachIt">'.JText::_('JBS_ADM_CONVERT_PREACH_IT').'</a>';
         }
         
         parent::display($tpl);
@@ -84,4 +107,27 @@ class biblestudyViewadmin extends JView {
         JToolBarHelper::help('biblestudy', true);
     }
 
+function versionXML($component)
+	{
+		switch ($component)
+		{
+			case 'sermonspeaker':
+				if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_sermonspeaker'.DIRECTORY_SEPARATOR.'sermonspeaker.xml'))
+				{
+					return $data['version'];
+				}
+				else {return FALSE;
+				}
+				break;
+
+			case 'preachit':
+				if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_preachit'.DIRECTORY_SEPARATOR.'preachit.xml'))
+				{
+					return $data['version'];
+				}
+				else {return FALSE;
+				}
+				break;
+		}
+	}
 }

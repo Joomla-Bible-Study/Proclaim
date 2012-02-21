@@ -261,4 +261,14 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
 
 <?php endif ?>
 <div class="clr"></div>
+<?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_CONVERSION'), 'admin-conversion-settings'); ?>
+<div class="width-100">
+        <div class="width-60 fltlft">
+            <fieldset class="panelform">
+                <legend><?php echo JText::_('JBS_ADM_CONVERT'); ?></legend>
+               <div> <?php echo $this->ss;?> </div>
+               <div> <?php echo $this->pi; ?> </div>
+            </fieldset>
+        </div>
+    </div>
 <?php echo JHtml::_('tabs.end'); ?>

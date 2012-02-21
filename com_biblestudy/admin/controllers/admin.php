@@ -229,5 +229,22 @@ class biblestudyControlleradmin extends controllerClass {
         JRequest::setVar('messages', $fixassets, 'get', 'true');
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&task=admin.checkassets', $fixassets);
     }
+    
+    function convertSermonSpeaker()
+    {
+        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.sermonspeakerconvert.class.php');
+        $convert = new JBSconvert();
+        $ssconversion = $convert->convertSS(); 
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin', $ssconversion);
+    }
+    
+    function convertPreachIt()
+    {
+        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.preachitconvert.class.php');
+        $convert = new JBSPIconvert();
+        $piconversion = $convert->convertPI();
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin', $piconversion);
+    }
+        
 
 }
