@@ -110,11 +110,11 @@ class JBSPIconvert
                         if ($folder['oldid'] == $folderlarge){$folderlarge = $folder['newid'];}
                     }
                     //look up folders to use in teacher images
-                    $query = 'SELECT id, folder FROM #__pifolders WHERE id = '.$foldersmall;
+                    $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$foldersmall;
                     $db->setQuery();
                     $object = $db->loadObject();
                     $newfoldersmall = $bject->folder;
-                    $query = 'SELECT id, folder FROM #__pifolders WHERE id = '.$folderlarge;
+                    $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folderlarge;
                     $db->setQuery();
                     $object = $db->loadObject();
                     $newfolderlarge = $object->folder;
@@ -168,7 +168,7 @@ class JBSPIconvert
                         if ($folder['oldid'] == $folderlarge){$folderlarge = $folder['newid'];}
                     }
                     //look up folders to use in series images
-                    $query = 'SELECT id, folder FROM #__pifolders WHERE id = '.$foldersmall;
+                    $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$foldersmall;
                     $db->setQuery();
                     $object = $db->loadObject();
                     $newfoldersmall = $bject->folder;
@@ -431,7 +431,7 @@ class JBSPIconvert
         $size = '';
         $mime_type = '';
         $podcast_id = '';
-        if ($type == 'audio'){$player = $pi->audio_type;}
+        if ($type == 'audio'){$player = $pi->audio_type; $media_image = '2'; $mime_type = '1';}
         if ($type == 'video')
             {
                 switch ($pi->player)
@@ -440,6 +440,8 @@ class JBSPIconvert
                     //bliptv
                     $mediacode = '<embed src="http://blip.tv/play/'.$pi->video_link.'" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent" allowscriptaccess="always" allowfullscreen="true" ></embed>';
                     $player = '8';
+                    $media_image = '7';
+                    $mime_type = '15';
                     break;
                     
                     case 7:
@@ -449,7 +451,7 @@ class JBSPIconvert
                         if ($pi->video_folder == $folder['oldid'])
                         {
                             //look up the text to put here for $folder.
-                            $query = 'SELECT id, folder FROM #__pifolders WHERE id = '.$folder['newid'];
+                            $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folder['newid'];
                             $db->setQuery();
                             $object = $db->loadObject();
                             $folder = $object->server.'/'.$object->folder;
@@ -457,6 +459,8 @@ class JBSPIconvert
                         }
                     }
                     $player = '1';
+                    $media_image = '7';
+                    $mime_type = '15';
                     break;
                     
                     case 1:
@@ -466,7 +470,7 @@ class JBSPIconvert
                         if ($pi->video_folder == $folder['oldid'])
                         {
                             //look up the text to put here for $folder.
-                            $query = 'SELECT id, folder FROM #__pifolders WHERE id = '.$folder['newid'];
+                            $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folder['newid'];
                             $db->setQuery();
                             $object = $db->loadObject();
                             $folder = $object->server.'/'.$object->folder;
@@ -474,31 +478,74 @@ class JBSPIconvert
                         }
                     }
                     $player = '1';
+                    $media_image = '7';
+                    $mime_type = '15';
                     break;
                     
                     case 2:
                     //Vimeo
                     $mediacode = '<iframe src="http://player.vimeo.com/video/'.$pi->video_link.'" width="500" height="500" frameborder="0"></iframe> ';
                     $player = '8';
+                    $media_image = '7';
+                    $mime_type = '15';
                     break;
                     
                     case 3:
                     //Youtube
                     $mediacode = '<iframe width="500" height="500" src="http://www.youtube.com/embed/'.$pi->video_link.'" frameborder="0" allowfullscreen></iframe>';
                     $player = '8';
+                    $media_image = '14';
+                    $mime_type = '15';
                     break;
                 }
             }
-        $createdate = '';
-        $download = '';
+        $createdate = $pi->publish_up;
+        if ($type == 'audio'){$download = $pi->audio_download;}
+        if ($type == 'video'){$download = $pi->video_download;}
+        if ($type == 'slides'){$download = '1';}
+        if ($type == 'notes')
+            {
+                $download = '1'; 
+                $player='0'; 
+                $media_image = '13'; 
+                $mime_type = '6';
+                foreach ($this->foldersids as $folder)
+                {
+                    if ($pi->notes_folder == $folder['oldid'])
+                    {
+                    $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folder['newid'];
+                    $db->setQuery();
+                    $object = $db->loadObject();
+                    $folder = $object->server.'/'.$object->folder;
+                    $filename = $folder.$pi->notes_link;
+                    }
+                }
+            }
         $hits = $pi->hits;
         $downloads = $pi->downloads;
         $published = $pi->published;
         $params = '{"playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50"}';
-        $player = '';
-        $popup = '';
-        $access = '';
         
+        $popup = '1';
+        $access = $pi->access;
+        if ($type == 'slides')
+            {
+                $player = '0'; 
+                $filename = $pi->slides_link;
+                foreach ($this->foldersids as $folder)
+                {
+                    if ($pi->slides_folder == $folder['oldid'])
+                    {
+                        $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folder['newid'];
+                        $db->setQuery();
+                        $object = $db->loadObject();
+                        $folder = $object->server.'/'.$object->folder;
+                        $filename = $folder.$pi->slides_link;
+                        $media_image = '13';
+                        $mime_type = '6';
+                    }
+                }
+            }
         return $results;
     }
    

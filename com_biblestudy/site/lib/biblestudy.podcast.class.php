@@ -93,10 +93,10 @@ class JBSPodcast
                     $params = $registry;
                     $params->set('show_verses', '1');
     				if (!$episodes){return false;}
-
+                    $episodedetail = '';
                     foreach ($episodes as $episode)
 				        {
-        					$episodedetail = '';
+        					
                             $episodedate = date("r",strtotime($episode->createdate));
         					$hours = $episode->media_hours;
         					if (!$hours) { $hours = '00'; }
