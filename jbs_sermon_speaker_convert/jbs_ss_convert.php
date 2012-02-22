@@ -32,7 +32,7 @@ class JBSConvert
 		{
 			$result_table .= '<tr><td>'.JText::_('Server record added').'</td></tr>';
 		}
-		$query = 'SELECT * FROM #__bsms_servers ORDER BY `id` DESC LIMIT 1';
+		$query = 'SELECT * FROM #__bsms_servers WHERE published = 1 ORDER BY `id` DESC LIMIT 1 ';
 		$db->setQuery($query);
 		$db->query();
 		$server = $db->loadAssoc();
@@ -40,7 +40,7 @@ class JBSConvert
 
 
 		//Series Records
-		$query = 'SELECT * FROM #__sermon_series';
+		$query = 'SELECT * FROM #__sermon_series WHERE state = 1';
 		$db->setQuery($query);
 		$db->query();
 		$num_rows = $db->getNumRows();if ($num_rows < 1)
@@ -56,11 +56,12 @@ class JBSConvert
 				$id = $single->id;
 				$series_text = $single->series_title;
 				$description = $single->series_description;
-				$published = $single->published;
+				$published = $single->state;
+                if (!$published){$published = 1;}
 				$series_thumbnail = $single->avatar;
-
+                $series_alias = $single->alias;
 				$query = 'INSERT INTO #__bsms_series SET `series_text` = "'.$series_text.'", `description` = "'.$description.'", `published` = '.$published.
-            ', `series_thumbnail` = "'.$series_thumbnail.'", `teacher` = '.$id;
+            ', `series_thumbnail` = "'.$series_thumbnail.'", `teacher` = '.$id.', `alias` = "'.$single->alias.'"';
 				$db->setQuery($query);
 				$db->query();
 				if ($db->getErrorNum() > 0)
@@ -98,17 +99,18 @@ class JBSConvert
 			$id = $teacher->id;
 			$teachername = $teacher->name;
 			$website = $teacher->website;
-			$information = $teacher->bio;
+			$information = $db->getEscaped($teacher->bio);
 			$image = $teacher->pic;
 			$thumb = $teacher->pic;
-			$published = $teacher->published;
+			$published = $teacher->state;
 			$ordering = $teacher->ordering;
 			$catid = $teacher->catid;
-			$short = $teacher->bio;
+			$short = $db->getEscaped($teacher->bio);
+            $alias = $teacher->alias;
 
 			$query = 'INSERT INTO #__bsms_teachers SET `teachername` = "'.$teachername.'", `website` = "'.$website.'", `information` = "'.$information.
         '", `image` = "'.$image.'", `thumb` = "'.$thumb.'", `published` = "'.$published.'", `ordering` = "'.$ordering.'", `catid` = "'.$catid.
-        '", `list_show` = "1", `short` = "'.$short.'"';
+        '", `list_show` = "1", `short` = "'.$short.'", `alias` = "'.$teacher->alias.'"';
 			$db->setQuery($query);
 			$db->query();
 			if ($db->getErrorNum() > 0)
@@ -122,7 +124,7 @@ class JBSConvert
 				$updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
 				$add = $add + $updated;
 			}
-			$query = 'SELECT `id` FROM #__bsms_teachers ORDER BY `id` DESC LIMIT 1';
+			$query = 'SELECT `id` FROM #__bsms_teachers WHERE published = 1 ORDER BY `id` DESC LIMIT 1 ';
 			$db->setQuery($query);
 			$db->query();
 			$lastteacher = $db->loadAssoc();
@@ -152,7 +154,7 @@ class JBSConvert
 					// $teacher_id = $sermon->speaker_id;
 					// $series_id = $sermon->series_id;
 					$series_id = $sermon->sid;
-					$studytitle = $sermon->sermon_title;
+					$studytitle = $db->getEscaped($sermon->sermon_title);
 					$studynumber = $sermon->sermon_number;
 
 					$scripture = $this->getVerses($sermon->sermon_scripture);
@@ -168,18 +170,19 @@ class JBSConvert
 					$media_hours = $time->media_hours;
 					$media_minutes = $time->media_minutes;
 					$media_seconds = $time->media_seconds;
-					$studytext = $sermon->notes;
+					$studytext = $db->getEscaped($sermon->notes);
 					$user_id = $sermon->created_by;
 					$hits = $sermon->hits; if (!$hits){
 						$hits = 0;
 					}
-					$published = $sermon->published;
+					$published = $sermon->state;
+                    $alias = $sermon->alias;
 
 					//Study record
 					$query = 'INSERT INTO #__bsms_studies SET `studydate` = "'.$studydate.'", `teacher_id` = "'.$teacher_id.'", `studynumber` = "'.$id.'", `booknumber` = "'
 					.$booknumber.'", `chapter_begin` = "'.$chapter_begin.'", `chapter_end` = "'.$chapter_end.'", `verse_begin` = "'.$verse_begin.'", `verse_end` = "'.$verse_end
 					.'", `hits` = '.$hits.', `user_id` = "'.$user_id.'", `studytitle` = "'.$studytitle.'", `media_hours` = "'.$media_hours.'", `media_minutes` = "'.$media_minutes
-					.'", `media_seconds` = "'.$media_seconds.'", `series_id` = "'.$series_id.'",`studytext` = "'.$studytext.'", `published` = '.$published;
+					.'", `media_seconds` = "'.$media_seconds.'", `series_id` = "'.$series_id.'",`studytext` = "'.$studytext.'", `published` = '.$published.', `alias` = "'.$sermon->alias.'"';
 					$db->setQuery($query);
 					$db->query();
 
@@ -195,16 +198,34 @@ class JBSConvert
 						$adds = $adds + $updateds;
 					}
 
-					$query = 'SELECT id from #__bsms_studies ORDER BY id DESC LIMIT 1';
+					$query = 'SELECT id from #__bsms_studies WHERE published = 1 ORDER BY id DESC LIMIT 1 ';
 					$db->setQuery($query);
 					$db->query();
 					$study = $db->loadAssoc();
 					$laststudy = $study['id'];
-					$query = 'INSERT INTO #__bsms_mediafiles SET `study_id` = '.$laststudy.', `server` = '.$serverid.', `filename` = "'.$sermon->sermon_path.
-            '", `published` = 1, `createdate` = "'.$studydate.'", `media_image` = 2, `downloads` = 0, `plays` = 0';
+					$query = 'INSERT INTO #__bsms_mediafiles SET `study_id` = '.$laststudy.', `server` = '.$serverid.', `filename` = "'.$sermon->audiofile.
+            '", `published` = 1, `createdate` = "'.$studydate.'", `media_image` = 1, `downloads` = 0, `plays` = 0';
 					$db->setQuery($query);
 					$db->query();
 					if ($db->getErrorNum() > 0)
+					{
+						$error = $db->getErrorMsg();
+						$result_table .= '<tr><td>'.JText::_('An error occured while creating mediafile records').': '.$error.'</td></tr>';
+					}
+					else
+					{
+						$updated2 = 0;
+						$updated2 = $db->getAffectedRows(); //echo 'affected: '.$updated;
+						$add2 = $add2 + $updated2;
+					}
+                    if ($sermon->videofile)
+                    {
+                        $query = 'INSERT INTO #__bsms_mediafiles SET `study_id` = '.$laststudy.', `server` = '.$serverid.', `filename` = "'.$sermon->videofile.
+            '", `published` = 1, `createdate` = "'.$studydate.'", `media_image` = 5, `downloads` = 0, `plays` = 0';
+					$db->setQuery($query);
+					$db->query();
+                    }
+                    if ($db->getErrorNum() > 0)
 					{
 						$error = $db->getErrorMsg();
 						$result_table .= '<tr><td>'.JText::_('An error occured while creating mediafile records').': '.$error.'</td></tr>';
@@ -234,6 +255,13 @@ class JBSConvert
 	function getVerses ($sermon)
 	{
 		$sermonscripture->booknumber = '101';
+        if (!$sermon)
+        {
+            $sermonscripture->chapter_begin = '';
+            $sermonscripture->chapter_end = '';
+            $sermonscripture->verse_begin = '';
+            $sermonscripture->verse_end = '';
+        }
 		$bookname = substr_count(strtolower($sermon),'genesis'); if ($bookname > 0){
 			$sermonscripture->booknumber = '101';
 		}
@@ -433,32 +461,32 @@ class JBSConvert
 			$sermonscripture->booknumber = '166';
 		}
 
-		$firstspace = strpos($sermon,' ',2);
-		$firstcolon = strpos($sermon,':');
-		$firstdash = strpos($sermon,'-');
+		$firstspace = @strpos($sermon,' ',2);
+		$firstcolon = @strpos($sermon,':');
+		$firstdash = @strpos($sermon,'-');
 
-		$issecondcolon = substr_count($sermon,':',$firstcolon + 1);
+		$issecondcolon = @substr_count($sermon,':',$firstcolon + 1);
 		if ($issecondcolon) {
-			$secondcolon = strpos($sermon, ':', $firstcolon + 1);
+			$secondcolon = @strpos($sermon, ':', $firstcolon + 1);
 		}
-		$sermonscripture->chapter_begin = substr($sermon,$firstspace + 1,($firstcolon - $firstspace) - 1);
+		$sermonscripture->chapter_begin = @substr($sermon,$firstspace + 1,($firstcolon - $firstspace) - 1);
 
 		if (!$firstdash) {
-			$sermonscripture->verse_begin = substr($sermon,$firstcolon + 1);
+			$sermonscripture->verse_begin = @substr($sermon,$firstcolon + 1);
 		}
-		else {$sermonscripture->verse_begin = substr($sermon,$firstcolon + 1,$firstdash - ($firstcolon + 1));
+		else {$sermonscripture->verse_begin = @substr($sermon,$firstcolon + 1,$firstdash - ($firstcolon + 1));
 		}
 		if (!$issecondcolon) {
 			$sermonscripture->chapter_end = '';
 		}
 		else
 		{
-			$sermonscripture->chapter_end = substr($sermon, $firstdash + 1,($secondcolon - $firstdash) - 1);
-			$sermonscripture->verse_end = substr($sermon,$secondcolon + 1);
+			$sermonscripture->chapter_end = @substr($sermon, $firstdash + 1,($secondcolon - $firstdash) - 1);
+			$sermonscripture->verse_end = @substr($sermon,$secondcolon + 1);
 		}
 		if (!$issecondcolon && $firstdash)
 		{
-			$sermonscripture->verse_end = substr($sermon, $firstdash + 1);
+			$sermonscripture->verse_end = @substr($sermon, $firstdash + 1);
 		}
 		return $sermonscripture;
 	}
@@ -470,9 +498,9 @@ class JBSConvert
 		$secondcolon = strpos($time, ':', $firstcolon + 1);
 		if ($secondcolon)
 		{
-			$sermontime->media_hours = substr($time,0,$firstcolon);
-			$sermontime->media_seconds = substr($time, $secondcolon + 1, 2);
-			$sermontime->media_minutes = substr($time, $firstcolon + 1, 2);
+			$sermontime->media_hours = @substr($time,0,$firstcolon);
+			$sermontime->media_seconds = @substr($time, $secondcolon + 1, 2);
+			$sermontime->media_minutes = @substr($time, $firstcolon + 1, 2);
 		}
 		else
 		{
@@ -480,8 +508,8 @@ class JBSConvert
 				$minuteslength = '1';
 			} else {$minuteslength = '2';
 			}
-			$sermontime->media_seconds = substr($time, $firstcolon + 1, 2);
-			$sermontime->media_minutes = substr($time, 0,$minuteslength);
+			$sermontime->media_seconds = @substr($time, $firstcolon + 1, 2);
+			$sermontime->media_minutes = @substr($time, 0,$minuteslength);
 		}
 		 
 		 
