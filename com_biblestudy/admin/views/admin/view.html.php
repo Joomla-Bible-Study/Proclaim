@@ -69,23 +69,32 @@ class biblestudyViewadmin extends JView {
         {
             $this->lists['backedupfiles']= JText::_('JBS_CMN_NO_FILES_TO_DISPLAY');
         }
-        //Check for presenc of Sermon Speaker
-        $ssversion = $this->versionXML($component='sermonspeaker');
-		if (!$ssversion){
-			$this->ss = JText::_('JBS_ADM_NO_SERMON_SPEAKER_FOUND');
-		}
-        else
+        //Check for SermonSpeaker and PreachIt
+        $db = JFactory::getDBO();
+        $query = 'SELECT extension_id, name, element FROM #__extensions';
+        $db->setQuery($query);
+        $db->query();
+        $extensions = $db->loadObjectList();
+        foreach ($extensions as $extension)
         {
-            $this->ss = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertSermonSpeaker">'.JText::_('JBS_ADM_CONVERT_SERMON_SPEAKER').'</a>';
+            if ($extension->element == 'com_sermonspeaker')
+            {
+                $this->ss = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertSermonSpeaker">'.JText::_('JBS_ADM_CONVERT_SERMON_SPEAKER').'</a>';
+            }
+            else
+            {
+                $this->ss = JText::_('JBS_ADM_NO_SERMON_SPEAKER_FOUND');
+            }
+            if ($extension->element == 'com_preachit')
+            {
+                $this->pi = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertPreachIt">'.JText::_('JBS_ADM_CONVERT_PREACH_IT').'</a>';
+            }
+            else
+            {
+                $this->pi = JText::_('JBS_ADM_NO_PREACHIT_FOUND');
+            }
         }
-        $piversion = $this->versionXML($component='preachit');
-        if (!$piversion){
-			$this->pi = JText::_('JBS_ADM_NO_PREACHIT_FOUND');
-		}
-        else
-        {
-            $this->pi = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertPreachIt">'.JText::_('JBS_ADM_CONVERT_PREACH_IT').'</a>';
-        }
+        
         
         parent::display($tpl);
     }
