@@ -163,13 +163,7 @@ class biblestudyViewpopup extends JView {
 </iframe></div>';
             }
 
-            //TODO:Need to get difference between direct popup and not so can have popup use this script
-            if (!$player) {
-                //  echo '<div id=\'direct\'><script type=text/javascript> window.location.href=\''.$path1.'\'</script></div>';
-
-                echo '<div class=\'direct\'><iframe src ="' . $path1 . '" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>' . JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') . '</p>
-</iframe></div>';
-            }
+          
 
             //Legacy Player (since JBS 6.2.2)
             if ($player == 7) {
