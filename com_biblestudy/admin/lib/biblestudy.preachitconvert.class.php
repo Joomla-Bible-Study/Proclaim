@@ -22,8 +22,24 @@ class JBSPIconvert
         $this->seriesids = array();
         $this->podcastids = array();
         $this->locations = array();
-        $piconversion = '<table>';
-    
+        $this->cnoadd = 0;
+        $this->cadd = 0;
+        $svadd = 0;
+        $svnoadd = 0;
+        $fnoadd = 0;
+        $fadd = 0;
+        $tnoadd = 0;
+        $tadd = 0;
+        $srnoadd = 0;
+        $sradd = 0;
+        $pnoadd = 0;
+        $padd = 0;
+        $lnoadd = 0;
+        $ladd = 0;
+        $snoadd = 0;
+        $sadd = 0;
+        $mnoadd = 0;
+        $madd = 0;
         $db = JFactory::getDBO();
         $query = 'SELECT * FROM #__picomments';
         $db->setQuery($query);
@@ -37,7 +53,7 @@ class JBSPIconvert
         $piservers = $db->loadObjectList();
         if (!$piservers)
         {
-            $piconversion .= '<tr><td>'.JText::_('JBS_ADM_NO_SERVERS').'</td></tr>';
+            $svnoadd ++;
         }
         else
         {
@@ -48,14 +64,16 @@ class JBSPIconvert
                 $db->query();
                 if ($db->getErrorNum() > 0)
         			{
-        				$error = $db->getErrorMsg();
-        				$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_SERVERS').' id: '.$pi->id.' - '.$error.'</td></tr>';
+        				$svnoadd ++;
+                        //$error = $db->getErrorMsg();
+        				//$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_SERVERS').' id: '.$pi->id.' - '.$error.'</td></tr>';
         			}
         			else
         			{
-        				$supdated = 0;
-        				$supdated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-        				$sadd = $sadd + $supdated;
+        				$svadd ++;
+                        //$supdated = 0;
+//        				$supdated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+//        				$sadd = $sadd + $supdated;
                          //get the new serverid so we can later connect it to a study
                         $query = 'SELECT id FROM #__bsms_servers ORDER BY `id` DESC LIMIT 1';
                         $db->setQuery($query);
@@ -64,7 +82,8 @@ class JBSPIconvert
                         $oldid = $pi->id;
                         $this->serversids[] = array('newid'=>$newid,'oldid'=>$oldid);
         			}
-                $query = 'INSERT INTO #__bsms_folders SET `folder_name` = "'.$pi->server.'/'.$pi->folder.'/", `folder_path` = "'.$pi->server.'/'.$pi->folder.'/", `published` = "'.$pi->published.'"';
+                $query = 'INSERT INTO #__bsms_folders SET `foldername` = "'.$pi->name.'", `folderpath` = "'.$pi->server.'/'.$pi->folder.'/", `published` = "'.$pi->published.'"';
+                $db->setQuery($query);
                 $db->query();
                 if ($db->getErrorNum() > 0)
         			{
@@ -95,7 +114,7 @@ class JBSPIconvert
             $piteachers = $db->loadObjectList();
             if (!$piteachers)
             {
-                $piconversion .= '<tr><td>'.JText::_('JBS_ADM_NO_TEACHERS').'</td></tr>';
+                $tnoadd ++;
             }
             else
             {
@@ -110,17 +129,17 @@ class JBSPIconvert
                         if ($folder['oldid'] == $folderlarge){$folderlarge = $folder['newid'];}
                     }
                     //look up folders to use in teacher images
-                    $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$foldersmall;
-                    $db->setQuery();
+                    $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$foldersmall;
+                    $db->setQuery($query);
                     $object = $db->loadObject();
-                    $newfoldersmall = $bject->folder;
-                    $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folderlarge;
-                    $db->setQuery();
+                    $newfoldersmall = $object->folderpath;
+                     $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$folderlarge;
+                    $db->setQuery($query);
                     $object = $db->loadObject();
-                    $newfolderlarge = $object->folder;
+                    $newfolderlarge = $object->folderpath;
                     $query = 'INSERT INTO #__bsms_teachers SET `teachername` = "'.$pi->teacher_name.'", `alias` = "'.$pi->alias
-                    .'", `title` = "'.$pi->teacher_role.'", `image` = "'.$newfolderlarge.'/'.$pi->teacher_image_lrg.'", `thumb` = "'
-                    .$newfoldersmall.'/'.$pi->teacher_image_sm.'", `email` = "'.$pi->teacher_email.'", `website` = "'.$pi->teacher_website.'", 
+                    .'", `title` = "'.$pi->teacher_role.'", `image` = "'.$newfolderlarge.$pi->teacher_image_lrg.'", `thumb` = "'
+                    .$newfoldersmall.$pi->teacher_image_sm.'", `email` = "'.$pi->teacher_email.'", `website` = "'.$pi->teacher_website.'", 
                     `short` = "'.$db->getEscaped($pi->teacher_description).'", `list_show` = "'.$pi->teacher_view.'", `published` = "'.$pi->published.'"';
                     $db->setQuery($query);
                     $db->query();
@@ -143,6 +162,45 @@ class JBSPIconvert
                             $newid = $db->loadResult();
                             $oldid = $pi->id;
                             $this->teachersids[] = array('newid'=>$newid,'oldid'=>$oldid);
+            			}
+                }
+            }
+            //Convert Ministries
+            $query = 'SELECT * FROM #__piministry';
+            $db->setQuery($query);
+            $db->query();
+            $ministries = $db->loadObjectList();
+            if (!$ministries)
+            {
+                $piconversion .= '<tr><td>'.JText::_('JBS_ADM_NO_MINISTRIES').'</td></tr>';
+            }
+            else
+            {
+                foreach ($ministries as $pi)
+                {
+                    $query = 'INSERT INTO #__bsms_locations SET `published` = "'.$pi->published.'", `location_text` = "'.$pi->ministry_name.'", 
+                    `access` = "'.$pi->access.'", `ordering` = "'.$pi->ordering.'"';
+                    $db->setQuery($query);
+                    $db->query();
+                    if ($db->getErrorNum() > 0)
+            			{
+            				$lnoadd ++;
+                            //$error = $db->getErrorMsg();
+            			//	$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_MINSTRY').' id: '.$pi->id.' - '.$error.'</td></tr>';
+            			}
+            			else
+            			{
+            				$ladd ++;
+                            //$mupdated = 0;
+//            				$mupdated = $db->getAffectedRows(); //echo 'affected: '.$updated;
+//            				$madd = $madd + $mupdated;
+                             //get the new teacherid so we can later connect it to a study
+                            $query = 'SELECT id FROM #__bsms_locations ORDER BY `id` DESC LIMIT 1';
+                            $db->setQuery($query);
+                            $db->query();
+                            $newid = $db->loadResult();
+                            $oldid = $pi->id;
+                            $this->locations[] = array('newid'=>$newid,'oldid'=>$oldid);
             			}
                 }
             } 
@@ -168,27 +226,27 @@ class JBSPIconvert
                         if ($folder['oldid'] == $folderlarge){$folderlarge = $folder['newid'];}
                     }
                     //look up folders to use in series images
-                    $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$foldersmall;
-                    $db->setQuery();
+                     $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$foldersmall;
+                    $db->setQuery($query);
                     $object = $db->loadObject();
-                    $newfoldersmall = $bject->folder;
-                    $query = 'SELECT id, folder FROM #__pifolders WHERE id = '.$folderlarge;
-                    $db->setQuery();
+                    $newfoldersmall = $object->folderpath;
+                     $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$foldersmall;
+                    $db->setQuery($query);
                     $object = $db->loadObject();
-                    $newfolderlarge = $object->folder;
+                    $newfolderlarge = $object->folderpath;
                     $query = 'INSERT INTO #__bsms_series SET `series_text` = "'.$pi->series_name.'", `alias` = "'.$pi->series_alias.'", 
-                    `description` = "'.$pi->series_description.'", `series_thumbnail` = "'.$newfoldersmall.'/'.$pi->series_image_sm.'", `published` = "'.$pi->published.'"';
+                    `description` = "'.$pi->series_description.'", `series_thumbnail` = "'.$newfoldersmall.$pi->series_image_sm.'", `published` = "'.$pi->published.'"';
                     $db->setQuery($query);
                     $db->query();
                     if ($db->getErrorNum() > 0)
             			{
-            				$tnoadd ++;
+            				$srnoadd ++;
                             //$error = $db->getErrorMsg();
             				//$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_SERIES').' id: '.$pi->id.' - '.$error.'</td></tr>';
             			}
             			else
             			{
-            				$tadd ++;
+            				$sradd ++;
                            // $tupdated = 0;
 //            				$tupdated = $db->getAffectedRows(); //echo 'affected: '.$updated;
 //            				$tadd = $tadd + $tupdated;
@@ -215,11 +273,11 @@ class JBSPIconvert
             {
                 foreach ($podcasts AS $pi)
                 {
-                    $query = 'INSERT INTO #__bsms_podcasts SET `title` = "'.$pi->name.'", `website` = "'.$pi->website.'", 
+                    $query = 'INSERT INTO #__bsms_podcast SET `title` = "'.$pi->name.'", `website` = "'.$pi->website.'", 
                     `description` = "'.$pi->description.'", `image` = "'.$pi->image.'", `imageh` = "'.$pi->imagehgt.'", `imagew` = "'
                     .$pi->imagewth.'", `author` = "'.$pi->author.'", `filename` = "'.$pi->filename.'", `language` = "'.$pi->language.'", 
                     `editor_name` = "'.$pi->editor.'", `editor_email` = "'.$pi->email.'", `podcastlimit` = "'.$pi->records.'", 
-                    `eposidetitle` = "'.$pi->itunestitle.'", `detailstemplateid` = "1", `published` = "'.$pi->published.'"';
+                    `episodetitle` = "'.$pi->itunestitle.'", `detailstemplateid` = "1", `published` = "'.$pi->published.'", `podcastsearch = "'.$pi->search.'"';
                     $db->setQuery($query);
                     $db->query();
                     if ($db->getErrorNum() > 0)
@@ -235,7 +293,7 @@ class JBSPIconvert
 //            				$pupdated = $db->getAffectedRows(); //echo 'affected: '.$updated;
 //            				$padd = $padd + $pupdated;
                              //get the new teacherid so we can later connect it to a study
-                            $query = 'SELECT id FROM #__bsms_podcasts ORDER BY `id` DESC LIMIT 1';
+                            $query = 'SELECT id FROM #__bsms_podcast ORDER BY `id` DESC LIMIT 1';
                             $db->setQuery($query);
                             $db->query();
                             $newid = $db->loadResult();
@@ -244,45 +302,7 @@ class JBSPIconvert
             			}
                 }
             }
-            //Convert Ministries
-            $query = 'SELECT * FROM #__piministry';
-            $db->setQuery($query);
-            $db->query();
-            $ministries = $db->loadObjectList();
-            if (!$ministries)
-            {
-                $piconversion .= '<tr><td>'.JText::_('JBS_ADM_NO_MINISTRIES').'</td></tr>';
-            }
-            else
-            {
-                foreach ($ministries as $pi)
-                {
-                    $query = 'INSERT INTO #__bsms_locations SET `published` = "'.$pi->published.'", `location_text` = "'.$pi->minstry_name.'", 
-                    `access` = "'.$pi->access.'", `ordering` = "'.$pi->ordering.'"';
-                    $db->setQuery($query);
-                    $db->query();
-                    if ($db->getErrorNum() > 0)
-            			{
-            				$lnoadd ++;
-                            //$error = $db->getErrorMsg();
-            			//	$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_MINSTRY').' id: '.$pi->id.' - '.$error.'</td></tr>';
-            			}
-            			else
-            			{
-            				$ladd ++;
-                            //$mupdated = 0;
-//            				$mupdated = $db->getAffectedRows(); //echo 'affected: '.$updated;
-//            				$madd = $madd + $mupdated;
-                             //get the new teacherid so we can later connect it to a study
-                            $query = 'SELECT id FROM #__bsms_locations ORDER BY `id` DESC LIMIT 1';
-                            $db->setQuery($query);
-                            $db->query();
-                            $newid = $db->loadResult();
-                            $oldid = $pi->id;
-                            $this->locations[] = array('newid'=>$newid,'oldid'=>$oldid);
-            			}
-                }
-            }
+            
             //Convert studies and media files
             $books = $this->getBooks();
             $query = 'SELECT * FROM #__pistudies';
@@ -326,7 +346,7 @@ class JBSPIconvert
                     $verse_begin = $pi->ref_vs_beg;
                     $verse_end = $pi->ref_vs_end;
                     $chapter_begin2 = $pi->ref_ch_beg2;
-                    $chpater_end2 = $pi->ref_ch_end2;
+                    $chapter_end2 = $pi->ref_ch_end2;
                     $verse_begin2 = $pi->ref_vs_beg2;
                     $verse_end2 = $pi->ref_vs_end2;
                     $comments = $pi->comments;
@@ -345,9 +365,9 @@ class JBSPIconvert
                     $media_hours = $pi->dur_hrs;
                     $media_minutes = $pi->dur_mins;
                     $media_seconds = $pi->dur_secs;
-                    foreach ($seriesids as $series)
+                    foreach ($this->seriesids as $series)
                     {
-                        if ($this->series['oldid'] == $pi->series)
+                        if ($series['oldid'] == $pi->series)
                         {
                             $series_id = $series['newid'];
                         }
@@ -359,9 +379,14 @@ class JBSPIconvert
                         if ($folder['oldid'] == $pi->image_foldermed){$imagefolder = $folder['newid']; $image = $pi->imagemed;}
                         if ($folder['oldid'] == $pi->image_folderlrg){$imagefolder = $folder['newid']; $image = $pi->imagelrg;}
                     }
-                    $thumnbnailm = $imagefolder.'/'.$folder;
+                     $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$foldersmall;
+                    $db->setQuery($query);
+                    $object = $db->loadObject();
+                    $newfolder = $object->folderpath;
+                    $thumnbnailm = $newfolder.$image;
                     $published = $pi->published;
                     $params = '{"metakey":"'.$pi->tags.'","metadesc":""}';
+                    $params = $db->getEscaped($params);
                     $access = $pi->saccess;
                     //Create the study then get the id to create the media file and comments
                     $query = 'INSERT INTO #__bsms_studies SET `published` = "'.$published.'", `studydate` = "'.$studydate.'",
@@ -399,31 +424,42 @@ class JBSPIconvert
                     //Create the mediafiles
                     if ($pi->audio_link)
                     {
-                        $audio = $this->insertMedia($pi, $type = 'audio', $newid);
+                        if (!$audio = $this->insertMedia($pi, $type = 'audio', $newid)){$mnoadd ++;}else{$madd ++;}
                     }
                     if ($pi->video_link)
                     {
-                        $video = $this->insertMedia($pi, $type = 'video', $newid);
+                        if (!$video = $this->insertMedia($pi, $type = 'video', $newid)){$mnoadd ++;}else{$madd ++;}
                     }
                     if ($pi->slides_link)
                     {
-                        $slides = $this->insertMedia($pi, $type = 'slides', $newid);
+                        if (!$slides = $this->insertMedia($pi, $type = 'slides', $newid)){$mnoadd ++;}else{$madd ++;}
                     }
                     if ($pi->notes_link)
                     {
-                        $notes = $this->insertMedia($pi, $type = 'notes', $newid);
+                        if (!$notes = $this->insertMedia($pi, $type = 'notes', $newid)){$mnoadd ++;}else{$madd ++;}
                     }
                     $comments = $this->insertComments($oldid, $newid);
-                    if ($comments){$cadd ++;}
+                    
                 } //endforeach study
             }
         
-        $piconversion .= '</table>';
+        $piconversion = '<table><tr><td><h3>'.JText::_('JBS_ADM_PREACHIT_RESULTS').'</h3></td></tr>'
+        .'<tr><td>'.JText::_('JBS_ADM_PI_SERVERS').'<strong>'.$svadd.'</strong> - '.JText::_('JBS_ADM_NOT_CONVERTED').$svnoadd.'</td></tr>'
+        .'<tr><td>'.JText::_('JBS_ADM_PI_FOLDERS').'<strong>'.$fadd.'</strong> - '.JText::_('JBS_ADM_NOT_CONVERTED').$fnoadd.'</td></tr>'
+        .'<tr><td>'.JText::_('JBS_ADM_PI_TEACHERS').'<strong>'.$tadd.'</strong> - '.JText::_('JBS_ADM_NOT_CONVERTED').$tnoadd.'</td></tr>'
+        .'<tr><td>'.JText::_('JBS_ADM_PI_SERIES').'<strong>'.$sradd.'</strong> - '.JText::_('JBS_ADM_NOT_CONVERTED').$srnoadd.'</td></tr>'
+        .'<tr><td>'.JText::_('JBS_ADM_PI_PODCAST').'<strong>'.$padd.'</strong> - '.JText::_('JBS_ADM_NOT_CONVERTED').$pnoadd.'</td></tr>'
+        .'<tr><td>'.JText::_('JBS_ADM_PI_STUDIES').'<strong>'.$sadd.'</strong> - '.JText::_('JBS_ADM_NOT_CONVERTED').$snoadd.'</td></tr>'
+        .'<tr><td>'.JText::_('JBS_ADM_PI_MEDIA').'<strong>'.$madd.'</strong> - '.JText::_('JBS_ADM_NOT_CONVERTED').$mnoadd.'</td></tr>'
+        .'<tr><td>'.JText::_('JBS_ADM_PI_COMMENTS').'<strong>'.$this->cadd.'</strong> - '.JText::_('JBS_ADM_NOT_CONVERTED').$this->cnoadd.'</td></tr>'
+        .'</table>';
         return $piconversion;
     }
  
     function insertMedia($pi, $type, $newid)
     {
+        $db = JFactory::getDBO();
+        $podcast_id = '-1';
         $study_id = $newid;
         $media_image = '';
         $path = '';
@@ -431,14 +467,30 @@ class JBSPIconvert
         $size = '';
         $mime_type = '';
         $podcast_id = '';
-        if ($type == 'audio'){$player = $pi->audio_type; $media_image = '2'; $mime_type = '1';}
+        if ($type == 'audio')
+            {
+                $player = $pi->audio_type; 
+                $media_image = '2'; 
+                $mime_type = '1'; 
+                $filesize = $pi->audiofs;
+                foreach ($this->podcastids as $pod)
+                {
+                    if ($pod['oldid'] == $pi->podcastaud){$podcast_id = $pod['newid'];}
+                }
+            }
         if ($type == 'video')
             {
-                switch ($pi->player)
+                foreach ($this->podcastids as $pod)
+                {
+                    if ($pod['oldid'] == $pi->podcastvid){$podcast_id = $pod['newid'];}
+                }
+                $filesize = $pi->videofs;
+                switch ($pi->video_type)
                 {
                     case 4:
                     //bliptv
                     $mediacode = '<embed src="http://blip.tv/play/'.$pi->video_link.'" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent" allowscriptaccess="always" allowfullscreen="true" ></embed>';
+                    $mediacode = $db->getEscaped($mediacode);
                     $player = '8';
                     $media_image = '7';
                     $mime_type = '15';
@@ -451,16 +503,17 @@ class JBSPIconvert
                         if ($pi->video_folder == $folder['oldid'])
                         {
                             //look up the text to put here for $folder.
-                            $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folder['newid'];
-                            $db->setQuery();
+                            $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$folder['newid'];
+                            $db->setQuery($query);
                             $object = $db->loadObject();
-                            $folder = $object->server.'/'.$object->folder;
-                            $filename = $folder.$pi->video_link;
+                            $path = $object->folderpath;
+                            $filename = $path.$pi->video_link;
                         }
                     }
                     $player = '1';
                     $media_image = '7';
                     $mime_type = '15';
+                    $server = '-1';
                     break;
                     
                     case 1:
@@ -470,41 +523,49 @@ class JBSPIconvert
                         if ($pi->video_folder == $folder['oldid'])
                         {
                             //look up the text to put here for $folder.
-                            $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folder['newid'];
-                            $db->setQuery();
+                            $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$folder['newid'];
+                            $db->setQuery($query);
                             $object = $db->loadObject();
-                            $folder = $object->server.'/'.$object->folder;
-                            $filename = $folder.$pi->video_link;
+                            $path = $object->folderpath;
+                            $filename = $path.$pi->video_link;
                         }
                     }
                     $player = '1';
                     $media_image = '7';
                     $mime_type = '15';
+                    $server = '-1';
                     break;
                     
                     case 2:
                     //Vimeo
                     $mediacode = '<iframe src="http://player.vimeo.com/video/'.$pi->video_link.'" width="500" height="500" frameborder="0"></iframe> ';
+                    $mediacode = $db->getEscaped($mediacode);
                     $player = '8';
                     $media_image = '7';
                     $mime_type = '15';
+                    $path = '-1';
+                    $server = '-1';
                     break;
                     
                     case 3:
                     //Youtube
                     $mediacode = '<iframe width="500" height="500" src="http://www.youtube.com/embed/'.$pi->video_link.'" frameborder="0" allowfullscreen></iframe>';
+                    $mediacode = $db->getEscaped($mediacode);
                     $player = '8';
                     $media_image = '14';
                     $mime_type = '15';
+                    $path = '-1';
+                    $server = '-1';
                     break;
                 }
             }
-        $createdate = $pi->publish_up;
-        if ($type == 'audio'){$download = $pi->audio_download;}
-        if ($type == 'video'){$download = $pi->video_download;}
-        if ($type == 'slides'){$download = '1';}
+        $createdate = $pi->study_date;
+        if ($type == 'audio'){$link_type = $pi->audio_download;}
+        if ($type == 'video'){$link_type = $pi->video_download;}
+        
         if ($type == 'notes')
             {
+                $filesize = $pi->notesfs;
                 $download = '1'; 
                 $player='0'; 
                 $media_image = '13'; 
@@ -513,11 +574,12 @@ class JBSPIconvert
                 {
                     if ($pi->notes_folder == $folder['oldid'])
                     {
-                    $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folder['newid'];
-                    $db->setQuery();
+                    $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$folder['newid'];
+                    $db->setQuery($query);
                     $object = $db->loadObject();
-                    $folder = $object->server.'/'.$object->folder;
-                    $filename = $folder.$pi->notes_link;
+                    $path = $object->folderpath;
+                    $filename = $path.$pi->notes_link;
+                    $server = '-1';
                     }
                 }
             }
@@ -525,28 +587,41 @@ class JBSPIconvert
         $downloads = $pi->downloads;
         $published = $pi->published;
         $params = '{"playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50"}';
-        
+        $params = $db->getEscaped($params);
         $popup = '1';
         $access = $pi->access;
         if ($type == 'slides')
             {
+                $download = '1'; 
+                $filesize = $pi->slidesfs;
                 $player = '0'; 
                 $filename = $pi->slides_link;
                 foreach ($this->foldersids as $folder)
                 {
                     if ($pi->slides_folder == $folder['oldid'])
                     {
-                        $query = 'SELECT id, folder, server FROM #__pifolders WHERE id = '.$folder['newid'];
-                        $db->setQuery();
+                        $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$folder['newid'];
+                        $db->setQuery($query);
                         $object = $db->loadObject();
-                        $folder = $object->server.'/'.$object->folder;
-                        $filename = $folder.$pi->slides_link;
+                        $path = $object->folderpath;
+                        $server = '-1';
+                        $filename = $path.$pi->slides_link;
                         $media_image = '13';
                         $mime_type = '6';
                     }
                 }
             }
-        return $results;
+            $query = 'INSERT INTO #__bsms_mediafiles SET 
+            `published` = "'.$published.'", `study_id` = "'.$newid.'", `path` = "'.$path.'", `filename` = "'.$filename.'", 
+            `size` = "'.$filesize.'", `mime_type` = "'.$mime_type.'", `podcast_id` = "'.$podcast_id.'", 
+            `mediacode` = "'.$mediacode.'", `createdate` = "'.$createdate.'", `link_type` = "'.$link_type.'", 
+            `hits` = "'.$pi->hits.'", `params` = "'.$params.'", `player` = "'.$player.'", `popup` = "1", `access` = "'.$pi->access.'", 
+            `media_image` = "'.$media_image.'"';
+            $db->setQuery($query);
+            $db->query();
+            if ($db->getErrorNum() > 0)
+            {return false;}
+        return true;
     }
    
     function getBooks()
@@ -639,16 +714,16 @@ class JBSPIconvert
         			$db->query();
         			if ($db->getErrorNum() > 0)
         			{
-        				return false;
+        				$this->cnoadd ++;
         			}
         			else
         			{
-        				return true;
+        				$this->cadd ++;
         			}
                 }
             }
         }
-       // return true;
+        return true;
     }
 }
 
