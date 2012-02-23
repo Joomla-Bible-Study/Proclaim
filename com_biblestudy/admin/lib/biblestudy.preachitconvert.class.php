@@ -103,7 +103,7 @@ class JBSPIconvert
                         $db->query();
                         $newid = $db->loadResult();
                         $oldid = $pi->id;
-                        $this->foldersids[] = array('newid'=>$newid,'oldid'=>$oldid);
+                        $this->foldersids[] = array('newid'=>$newid,'oldid'=>$oldid); 
         			}
                 }
            }
@@ -277,7 +277,7 @@ class JBSPIconvert
                     `description` = "'.$pi->description.'", `image` = "'.$pi->image.'", `imageh` = "'.$pi->imagehgt.'", `imagew` = "'
                     .$pi->imagewth.'", `author` = "'.$pi->author.'", `filename` = "'.$pi->filename.'", `language` = "'.$pi->language.'", 
                     `editor_name` = "'.$pi->editor.'", `editor_email` = "'.$pi->email.'", `podcastlimit` = "'.$pi->records.'", 
-                    `episodetitle` = "'.$pi->itunestitle.'", `detailstemplateid` = "1", `published` = "'.$pi->published.'", `podcastsearch = "'.$pi->search.'"';
+                    `episodetitle` = "'.$pi->itunestitle.'", `detailstemplateid` = "1", `published` = "'.$pi->published.'", `podcastsearch` = "'.$pi->search.'"';
                     $db->setQuery($query);
                     $db->query();
                     if ($db->getErrorNum() > 0)
@@ -342,7 +342,7 @@ class JBSPIconvert
                         }
                     }
                     $chapter_begin = $pi->ref_ch_beg;
-                    $chpater_end = $pi->ref_ch_end;
+                    $chapter_end = $pi->ref_ch_end;
                     $verse_begin = $pi->ref_vs_beg;
                     $verse_end = $pi->ref_vs_end;
                     $chapter_begin2 = $pi->ref_ch_beg2;
@@ -372,18 +372,25 @@ class JBSPIconvert
                             $series_id = $series['newid'];
                         }
                     }
-                    $studytext = $db->getEscaped($pi->study_text);
+                    $studytext = $db->getEscaped($pi->study_text); 
+                    $imagefolder = 0;
+                    $newfolder = 0;
+                    $thumbnailm = '';
+
                     foreach ($this->foldersids as $folder)
                     {
                         if ($folder['oldid'] == $pi->image_folder){$imagefolder = $folder['newid']; $image = $pi->imagesm;}
                         if ($folder['oldid'] == $pi->image_foldermed){$imagefolder = $folder['newid']; $image = $pi->imagemed;}
                         if ($folder['oldid'] == $pi->image_folderlrg){$imagefolder = $folder['newid']; $image = $pi->imagelrg;}
                     }
-                     $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$foldersmall;
-                    $db->setQuery($query);
-                    $object = $db->loadObject();
-                    $newfolder = $object->folderpath;
-                    $thumnbnailm = $newfolder.$image;
+                    if ($imagefolder)
+                    {
+                        $query = 'SELECT folderpath FROM #__bsms_folders WHERE id = '.$imagefolder;
+                        $db->setQuery($query);
+                        $object = $db->loadObject();
+                        $newfolder = $object->folderpath;
+                        $thumbnailm = $newfolder.$image; 
+                    }
                     $published = $pi->published;
                     $params = '{"metakey":"'.$pi->tags.'","metadesc":""}';
                     $params = $db->getEscaped($params);
@@ -424,19 +431,19 @@ class JBSPIconvert
                     //Create the mediafiles
                     if ($pi->audio_link)
                     {
-                        if (!$audio = $this->insertMedia($pi, $type = 'audio', $newid)){$mnoadd ++;}else{$madd ++;}
+                        if (!$audio = $this->insertMedia($pi, $type = 'audio', $newid, $oldid)){$mnoadd ++;}else{$madd ++;}
                     }
                     if ($pi->video_link)
                     {
-                        if (!$video = $this->insertMedia($pi, $type = 'video', $newid)){$mnoadd ++;}else{$madd ++;}
+                        if (!$video = $this->insertMedia($pi, $type = 'video', $newid, $oldid)){$mnoadd ++;}else{$madd ++;}
                     }
                     if ($pi->slides_link)
                     {
-                        if (!$slides = $this->insertMedia($pi, $type = 'slides', $newid)){$mnoadd ++;}else{$madd ++;}
+                        if (!$slides = $this->insertMedia($pi, $type = 'slides', $newid, $oldid)){$mnoadd ++;}else{$madd ++;}
                     }
                     if ($pi->notes_link)
                     {
-                        if (!$notes = $this->insertMedia($pi, $type = 'notes', $newid)){$mnoadd ++;}else{$madd ++;}
+                        if (!$notes = $this->insertMedia($pi, $type = 'notes', $newid, $oldid)){$mnoadd ++;}else{$madd ++;}
                     }
                     $comments = $this->insertComments($oldid, $newid);
                     
@@ -456,7 +463,7 @@ class JBSPIconvert
         return $piconversion;
     }
  
-    function insertMedia($pi, $type, $newid)
+    function insertMedia($pi, $type, $newid, $oldid)
     {
         $db = JFactory::getDBO();
         $podcast_id = '-1';
@@ -467,22 +474,50 @@ class JBSPIconvert
         $size = '';
         $mime_type = '';
         $podcast_id = '';
+        $query = 'SELECT * FROM #__pipodmes';
+        $db->setQuery($query);
+        $db->query();
+        $podcasts = $db->loadObjectList();
         if ($type == 'audio')
             {
                 $player = $pi->audio_type; 
-                $media_image = '2'; 
+                $media_image = '1'; 
                 $mime_type = '1'; 
                 $filesize = $pi->audiofs;
-                foreach ($this->podcastids as $pod)
+                $player = '1';
+                $filename = $pi->audio_link;
+                
+                if ($podcasts)
                 {
-                    if ($pod['oldid'] == $pi->podcastaud){$podcast_id = $pod['newid'];}
+                    foreach ($podcasts as $podcast)
+                    {
+                        if ($podcast->mesid == $oldid)
+                        {
+                            $oldpodid = $podcast->podaudid;
+                            if ($pod['oldid'] == $oldpodid)
+                            {
+                                $podcast_id = $pod['newid'];
+                            }
+                        }
+                    }
                 }
+                
             }
         if ($type == 'video')
             {
-                foreach ($this->podcastids as $pod)
+                if ($podcasts)
                 {
-                    if ($pod['oldid'] == $pi->podcastvid){$podcast_id = $pod['newid'];}
+                    foreach ($podcasts as $podcast)
+                    {
+                        if ($podcast->mesid == $oldid)
+                        {
+                            $oldpodid = $podcast->podvidid;
+                            if ($pod['oldid'] == $oldpodid)
+                            {
+                                $podcast_id = $pod['newid'];
+                            }
+                        }
+                    }
                 }
                 $filesize = $pi->videofs;
                 switch ($pi->video_type)
@@ -492,7 +527,7 @@ class JBSPIconvert
                     $mediacode = '<embed src="http://blip.tv/play/'.$pi->video_link.'" type="application/x-shockwave-flash" width="500" height="500" wmode="transparent" allowscriptaccess="always" allowfullscreen="true" ></embed>';
                     $mediacode = $db->getEscaped($mediacode);
                     $player = '8';
-                    $media_image = '7';
+                    $media_image = '5';
                     $mime_type = '15';
                     break;
                     
@@ -511,7 +546,7 @@ class JBSPIconvert
                         }
                     }
                     $player = '1';
-                    $media_image = '7';
+                    $media_image = '5';
                     $mime_type = '15';
                     $server = '-1';
                     break;
@@ -531,7 +566,7 @@ class JBSPIconvert
                         }
                     }
                     $player = '1';
-                    $media_image = '7';
+                    $media_image = '5';
                     $mime_type = '15';
                     $server = '-1';
                     break;
@@ -541,7 +576,7 @@ class JBSPIconvert
                     $mediacode = '<iframe src="http://player.vimeo.com/video/'.$pi->video_link.'" width="500" height="500" frameborder="0"></iframe> ';
                     $mediacode = $db->getEscaped($mediacode);
                     $player = '8';
-                    $media_image = '7';
+                    $media_image = '5';
                     $mime_type = '15';
                     $path = '-1';
                     $server = '-1';
@@ -552,7 +587,7 @@ class JBSPIconvert
                     $mediacode = '<iframe width="500" height="500" src="http://www.youtube.com/embed/'.$pi->video_link.'" frameborder="0" allowfullscreen></iframe>';
                     $mediacode = $db->getEscaped($mediacode);
                     $player = '8';
-                    $media_image = '14';
+                    $media_image = '13';
                     $mime_type = '15';
                     $path = '-1';
                     $server = '-1';
@@ -568,7 +603,7 @@ class JBSPIconvert
                 $filesize = $pi->notesfs;
                 $download = '1'; 
                 $player='0'; 
-                $media_image = '13'; 
+                $media_image = '12'; 
                 $mime_type = '6';
                 foreach ($this->foldersids as $folder)
                 {
@@ -606,7 +641,7 @@ class JBSPIconvert
                         $path = $object->folderpath;
                         $server = '-1';
                         $filename = $path.$pi->slides_link;
-                        $media_image = '13';
+                        $media_image = '12';
                         $mime_type = '6';
                     }
                 }
@@ -709,7 +744,7 @@ class JBSPIconvert
                 if ($pi->id == $oldid)
                 {
                     $query = 'INSERT INTO #__bsms_comments SET `published` = "'.$pi->published.'", `study_id` = "'.$newid.
-                    '", `user_id` = "'.$pi->user_id.'", `full_name` = "'.$pi->full_name.'", `comment_date` = "'.$pi->comment_date.'", `comment_text` = "'.$db->getEscaped($pi->comment_text).'", `published` = "'.$pi->published.'"';
+                    '", `user_id` = "'.$pi->user_id.'", `full_name` = "'.$pi->full_name.'", `comment_date` = "'.$pi->comment_date.'", `comment_text` = "'.$db->getEscaped($pi->comment_text).'"';
                    	$db->setQuery($query);
         			$db->query();
         			if ($db->getErrorNum() > 0)
