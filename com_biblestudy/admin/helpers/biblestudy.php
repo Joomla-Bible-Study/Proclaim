@@ -97,7 +97,11 @@ class BibleStudyHelper {
                 case 'mediafile':
                     $assetName = 'com_biblestudy.mediafile.' . (int) $Itemid;
                     break;
-
+                
+                case 'style':
+                    $assetName = 'com_biblestudy.style' . (int) $Itemid;
+                    break;
+                
                 default:
                     $assetName = 'com_biblestudy.studiesedit.' . (int) $Itemid;
                     break;
