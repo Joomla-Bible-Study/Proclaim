@@ -24,9 +24,9 @@ class biblestudyViewpopup extends JView {
         $player = JRequest::getInt('player', '1', 'get');
 
         $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . '/com_biblestudy/css/biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-        $document->addScript(JURI::base() . '/com_biblestudy/player/jwplayer.js');
+        $document->addScript(JURI::base() . 'com_biblestudy/assets/player/jwplayer.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
         // If this is a direct new window then all we need to do is perform hitPlay and close this window
         if ($close == 1) {
@@ -123,7 +123,7 @@ class biblestudyViewpopup extends JView {
                 echo "<script type='text/javascript'>
 							jwplayer('placeholder').setup({
 								stretching: 'fill',
-								flashplayer: '" . JURI::base() . "/com_biblestudy/player/player.swf',
+								flashplayer: '" . JURI::base() . "components/com_biblestudy/assets/player/player.swf',
 								width: " . $playerwidth . ",
 								height:" . $playerheight . ",
 								displayheight:'300',
@@ -133,8 +133,8 @@ class biblestudyViewpopup extends JView {
 								description:'" . $studyintro . "',
 								controlbar:'bottom',
 								link:'" . JURI::base() . "index.php?option=com_biblestudy&view=studieslist&templatemenuid=" . $templateid . "',
-								image:'" . $params->get('popupimage', '/com_biblestudy/images/speaker24.png') . "',
-								autostart:'true',
+								image:'" . JURI::base() .$params->get('popupimage', '/com_biblestudy/images/speaker24.png') . "',
+								autostart:'false',
 								lightcolor:'" . $lightcolor . "',frontcolor:'" . $frontcolor . "',backcolor:'" . $backcolor . "',screencolor:'" . $screencolor . "',
 								'plugins': {
 								'viral-2': {'onpause':'" . $embedshare . "','oncomplete':'" . $embedshare . "','allowmenu':'" . $embedshare . "'},
@@ -144,7 +144,7 @@ class biblestudyViewpopup extends JView {
 											],
 								'modes': [
 								{type: 'html5'},
-								{type: 'flash', src: '" . JURI::base() . "/com_biblestudy/player/player.swf'},
+								{type: 'flash', src: '" . JURI::base() . "components/com_biblestudy/assets/player/player.swf'},
 								]
 
 							})
@@ -167,9 +167,9 @@ class biblestudyViewpopup extends JView {
 
             //Legacy Player (since JBS 6.2.2)
             if ($player == 7) {
-                echo '<script language="JavaScript" src="' . JURI::base() . '/com_biblestudy/legacyplayer/audio-player.js"></script>
-		<object type="application/x-shockwave-flash" data="' . JURI::base() . '/com_biblestudy/legacyplayer/player.swf" id="audioplayer' . $media->id . '" height="24" width="' . $playerwidth . '">
-		<param name="movie" value="' . JURI::base() . '/com_biblestudy/legacyplayer/player.swf">
+                echo '<script language="JavaScript" src="' . JURI::base() . '/components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
+		<object type="application/x-shockwave-flash" data="' . JURI::base() . '/components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer' . $media->id . '" height="24" width="' . $playerwidth . '">
+		<param name="movie" value="' . JURI::base() . 'components/com_biblestudy/assets/legacyplayer/player.swf">
 		<param name="FlashVars" value="playerID=' . $media->id . '&amp;soundFile=' . $path1 . '">
 		<param name="quality" value="high">
 		<param name="menu" value="false">
