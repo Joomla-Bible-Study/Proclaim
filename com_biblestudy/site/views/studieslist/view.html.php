@@ -68,7 +68,7 @@ class biblestudyViewstudieslist extends JView {
         $registry = new JRegistry;
         $registry->loadJSON($template->params);
         $params = $registry;
-
+        
         $a_params = $this->get('Admin');
 
 
@@ -115,7 +115,8 @@ class biblestudyViewstudieslist extends JView {
 
 //        $document =  JFactory::getDocument();
         JHTML::_('behavior.mootools');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+        $css = $params->get('css','biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
         //Import Scripts

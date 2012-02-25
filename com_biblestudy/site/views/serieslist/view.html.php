@@ -54,7 +54,9 @@ class biblestudyViewserieslist extends JView {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
 
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+        $css = $params->get('css','biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+
 
         //Import Scripts
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');

@@ -18,13 +18,17 @@ class biblestudyViewpopup extends JView {
         //	$getMedia = new jbsMedia();
         JRequest::setVar('tmpl', 'component');
         $mediaid = JRequest::getInt('mediaid', '', 'get');
-
+// Convert parameter fields to objects.
+        $registry = new JRegistry;
+        $registry->loadJSON($template->params);
+        $params = $registry;
         $templateid = JRequest::getInt('t', '1', 'get');
         $close = JRequest::getInt('close', '0', 'get');
         $player = JRequest::getInt('player', '1', 'get');
 
         $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . 'components/com_biblestudy/assets/css/biblestudy.css');
+        $css = $params->get('css','biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         $document->addScript(JURI::base() . 'com_biblestudy/assets/player/jwplayer.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
@@ -44,10 +48,7 @@ class biblestudyViewpopup extends JView {
         $db->query();
         $template = $db->loadObject();
 
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($template->params);
-        $params = $registry;
+        
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;

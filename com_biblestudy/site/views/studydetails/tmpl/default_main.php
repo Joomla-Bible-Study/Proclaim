@@ -11,7 +11,8 @@ JHTML::_('behavior.tooltip');
 $params = $this->params;
 $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
+$css = $params->get('css','biblestudy.css');
+$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
 $url = $params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);

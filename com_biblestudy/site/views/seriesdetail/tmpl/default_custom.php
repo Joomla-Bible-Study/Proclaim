@@ -6,8 +6,11 @@ defined('_JEXEC') or die;
 $mainframe = JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 $document = JFactory::getDocument();
-$document->addStyleSheet(JURI::base().'media/com_biblestudy/css/biblestudy.css');
 $params = $this->params;
+$css = $params->get('css','biblestudy.css');
+$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+
+
 $url = $this->params->get('stylesheet');
 if ($url) {$document->addStyleSheet($url);}
 $listingcall = JView::loadHelper('serieslist');
