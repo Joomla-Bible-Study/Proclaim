@@ -94,7 +94,7 @@
             <menu link="option=com_biblestudy&amp;view=templateslist" view="templateslist" img="../media/com_biblestudy/images/menu/icon-16-templates.png" alt="JBS_MNU_TEMPLATE_DISPLAY">JBS_MNU_TEMPLATE_DISPLAY</menu>
             <menu link="option=com_biblestudy&amp;view=medialist" view="medialist" img="../media/com_biblestudy/images/menu/icon-16-mediaimages.png" alt="JBS_MNU_MEDIA_IMAGES">JBS_MNU_MEDIA_IMAGES</menu>
             <menu link="option=com_biblestudy&amp;view=mimetypelist" view="mimetypelist" img="../media/com_biblestudy/images/menu/icon-16-mimetype.png" alt="JBS_MNU_MIME_TYPES">JBS_MNU_MIME_TYPES</menu>
-            <menu link="option=com_biblestudy&amp;view=cssedit" view="cssedit" img="../media/com_biblestudy/images/menu/icon-16-css.png" alt="JBS_MNU_CSS_EDIT">JBS_MNU_CSS_EDIT</menu>
+            <menu link="option=com_biblestudy&amp;view=styles" view="cssedit" img="../media/com_biblestudy/images/menu/icon-16-css.png" alt="JBS_MNU_CSS_EDIT">JBS_MNU_CSS_EDIT</menu>
       <!-- Instead of link you can specify individual link attributes -->
         </submenu>
 
