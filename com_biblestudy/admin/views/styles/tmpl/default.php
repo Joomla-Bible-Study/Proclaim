@@ -63,7 +63,7 @@ $saveOrder = $listOrder == 'location.ordering';
                         <?php echo JHtml::_('jgrid.published', $item->published, $i, 'styles.', true, 'cb', '', ''); ?>
                     </td>
                     <td>
-                        <a href="<?php echo $link; ?>"><?php echo $item->location_text; ?></a>
+                        <a href="<?php echo $link; ?>"><?php echo $item->filename; ?></a>
                     </td>
                 </tr>
             <?php endforeach; ?>

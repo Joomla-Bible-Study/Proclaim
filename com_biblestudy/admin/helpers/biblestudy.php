@@ -177,7 +177,7 @@ class BibleStudyHelper {
                 JText::_('JBS_CMN_MIME_TYPES'), 'index.php?option=com_biblestudy&view=mimetypelist', $vName == 'mimetypelist'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CSS_CSS_EDIT'), 'index.php?option=com_biblestudy&view=cssedit', $vName == 'cssedit'
+                JText::_('JBS_CSS_CSS_EDIT'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'
         );
     }
 

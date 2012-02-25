@@ -341,3 +341,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=114 ;
+CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `published` int(3) NOT NULL,
+  `filename` text NOT NULL,
+  `stylecode` longtext NOT NULL,
+  `asset_id` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+    KEY `idx_state` (`published`)
+   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;

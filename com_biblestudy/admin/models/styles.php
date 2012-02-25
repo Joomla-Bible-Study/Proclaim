@@ -17,7 +17,7 @@ abstract class modelClass extends JModelList {
 
 }
 
-class biblestudyModelstyles extends modelClass {
+class BiblestudyModelstyles extends modelClass {
 
     /**
      * locationslist data array

@@ -11,14 +11,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-jimport('joomla.application.component.controlleradmin');
+jimport('joomla.application.component.controllerform');
 
-abstract class controllerClass extends JControllerAdmin {
 
-}
 
-class BiblestudyControllerStyles extends controllerClass {
+class BiblestudyControllerStyle extends JControllerForm {
 
+    protected $view_list = 'styles';
 	/**
 	 * Proxy for getModel
 	 *
@@ -28,9 +27,9 @@ class BiblestudyControllerStyles extends controllerClass {
 	 *
 	 * @since 7.1.0
 	 */
-	public function getModel($name = 'Style', $prefix = 'BiblestudyModel') {
+	/*public function getModel($name = 'Style', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
-	}
+	}*/
 
 }

@@ -115,7 +115,8 @@ class fixJBSAssets
 		array('name'=>'#__bsms_teachers','titlefield'=>'teachername','assetname'=>'teacheredit','realname'=>'JBS_CMN_TEACHERS'),
 		array('name'=>'#__bsms_templates','titlefield'=>'title','assetname'=>'templateedit','realname'=>'JBS_CMN_TEMPLATES'),
 		array('name'=>'#__bsms_topics','titlefield'=>'topic_text','assetname'=>'topicsedit','realname'=>'JBS_CMN_TOPICS'),
-        array('name'=>'#__bsms_admin','titlefield'=>'id','assetname'=>'admin','realname'=>'JBS_CMN_ADMINISTRATION')
+                array('name'=>'#__bsms_styles','titlefield'=>'filename','assetname'=>'style','realname'=>'JBS_CMN_CSS'),
+                array('name'=>'#__bsms_admin','titlefield'=>'id','assetname'=>'admin','realname'=>'JBS_CMN_ADMINISTRATION')
 		);
         return $objects;
     }

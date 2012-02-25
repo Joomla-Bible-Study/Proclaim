@@ -22,9 +22,8 @@ class BiblestudyViewStyles extends JView
 	function display($tpl = null) {
             $this->canDo	= BibleStudyHelper::getActions('', 'style');
             $this->state = $this->get('State');
-            $items = $this->get('Items');
+            $this->items = $this->get('Items');
             $modelView = $this->getModel();
-            $this->items = $modelView->getTranslated($items);
             $this->pagination = $this->get('Pagination');
             // Set the toolbar
             $this->addToolBar();

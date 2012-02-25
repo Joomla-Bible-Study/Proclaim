@@ -174,6 +174,7 @@ class JBSImport {
             array('name' => '#__bsms_timeset', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_search', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_books', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
+            array('name' => '#__bsms_styles', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_order', 'titlefield' => '', 'assetname' => '', 'realname' => '')
         );
         return $objects;
