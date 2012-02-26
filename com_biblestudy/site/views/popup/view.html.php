@@ -18,10 +18,6 @@ class biblestudyViewpopup extends JView {
         //	$getMedia = new jbsMedia();
         JRequest::setVar('tmpl', 'component');
         $mediaid = JRequest::getInt('mediaid', '', 'get');
-// Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($template->params);
-        $params = $registry;
         $templateid = JRequest::getInt('t', '1', 'get');
         $close = JRequest::getInt('close', '0', 'get');
         $player = JRequest::getInt('player', '1', 'get');
@@ -48,7 +44,11 @@ class biblestudyViewpopup extends JView {
         $db->query();
         $template = $db->loadObject();
 
-        
+        // Convert parameter fields to objects.
+        $registry = new JRegistry;
+        $registry->loadJSON($template->params);
+        $params = $registry;
+
 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
