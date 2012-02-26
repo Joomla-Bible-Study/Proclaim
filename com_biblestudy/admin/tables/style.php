@@ -28,7 +28,9 @@ class BiblestudyTableStyle extends JTable
 		parent::__construct('#__bsms_styles', 'id', $db);
 	}
         
-	
+	 public function getItem($pk = null) {
+        return parent::getItem($pk);
+    }
 
 	public function bind($array, $ignore = '')
 	{
@@ -90,7 +92,7 @@ class BiblestudyTableStyle extends JTable
         public function store($updateNulls = false)
         {
             $table = JTable::getInstance('Style', 'BiblestudyTable');
-		if ($table->load(array('filename'=>$this->filename)) && ($table->id != $this->id || $this->id==0)) {
+            if ($table->load(array('filename'=>$this->filename)) && ($table->id != $this->id || $this->id==0)) {
 			$this->setError(JText::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
 			return false;
 		}
@@ -107,7 +109,7 @@ class BiblestudyTableStyle extends JTable
                     $this->setError(JText::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
 			return false;
                 }
-                              
+                             
                 
 		return parent::store($updateNulls);
         }
@@ -123,7 +125,10 @@ class BiblestudyTableStyle extends JTable
                 if (!$delete = JFile::delete($file))
                 {$this->setError(JText::_('JBS_STYLE_FILENAME_NOT_DELETED'));
 			return false;}
-                        
+                if ($this->filename == 'biblestudy'){
+                    $this->setError(JText::_('JBS_STYLE_CANNOT_DELETE_DEFAULT'));
+                    return false;
+                }        
                  return parent::delete($pk);
                 
         }

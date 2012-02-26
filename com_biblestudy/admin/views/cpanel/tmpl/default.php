@@ -102,7 +102,7 @@ require_once (BIBLESTUDY_PATH_ADMIN_LIB .DIRECTORY_SEPARATOR. 'biblestudy.debug.
                     <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=mimetypelist" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CMN_MIME_TYPES');?>"> <img src = "../media/com_biblestudy/images/icons/icon-48-mimetype.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CMN_MIME_TYPES'); ?> </a> </div>
                   </div>
                   <div style = "float:left;">
-                    <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=cssedit" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CSS_CSS_EDIT');?>"> <img src = "../media/com_biblestudy/images/icons/icon-48-css.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CSS_CSS_EDIT'); ?> </span></a> </div>
+                    <div class = "icon"> <a href = "index.php?option=com_biblestudy&amp;view=styles" style = "text-decoration:none;" title = "<?php echo JText::_('JBS_CSS_CSS_EDIT');?>"> <img src = "../media/com_biblestudy/images/icons/icon-48-css.png"  align = "middle" border = "0"/> <span> <?php echo JText::_('JBS_CSS_CSS_EDIT'); ?> </span></a> </div>
                   </div>
                 </div></td>
             </tr>

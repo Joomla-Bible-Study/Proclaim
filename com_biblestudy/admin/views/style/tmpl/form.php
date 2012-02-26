@@ -34,7 +34,7 @@ require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTO
                         </li>
                     </ul>
                     <div class="clr"></div>
-            <?php echo $this->form->getInput('stylecode', null, empty($this->item->stylecode) ? $this->defaultstyle : $this->item->stylcode); ?>
+            <?php echo $this->form->getInput('stylecode', null, empty($this->item->stylecode) ? $this->defaultstyle : $this->item->stylecode); ?>
                        
 
         </fieldset>

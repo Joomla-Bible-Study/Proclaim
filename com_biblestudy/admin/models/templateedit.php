@@ -117,22 +117,7 @@ class biblestudyModeltemplateedit extends modelClass {
         return true;
     }
 
-    function legacyPublish($cid = array(), $publish = 1) {
-        if (count($cid)) {
-            $cids = implode(',', $cid);
 
-            $query = 'UPDATE #__bsms_templates'
-                    . ' SET published = ' . intval($publish)
-                    . ' WHERE id IN (' . $cids . ')'
-
-            ;
-            $this->_db->setQuery($query);
-            if (!$this->_db->query()) {
-                $this->setError($this->_db->getErrorMsg());
-                return false;
-            }
-        }
-    }
 
     /**
      * Get the form data

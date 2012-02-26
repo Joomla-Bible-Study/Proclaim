@@ -43,7 +43,12 @@ class biblestudyViewTemplateedit extends JView {
 		{
 			JToolBarHelper::save('templateedit.save');
 			JToolBarHelper::apply('templateedit.apply');
+                        JToolBarHelper::save2copy('templateedit.save2copy');
 		}
+                if ($this->canDo->get('core.create'))
+                {
+                    JToolbarHelper::save2new('templateedit.save2new');
+                }
 		JToolBarHelper::cancel('templateedit.cancel', 'JTOOLBAR_CANCEL');
 
 		JToolBarHelper::divider();
