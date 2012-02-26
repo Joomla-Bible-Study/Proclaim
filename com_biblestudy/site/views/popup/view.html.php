@@ -30,7 +30,7 @@ class biblestudyViewpopup extends JView {
         $css = $params->get('css','biblestudy.css');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-        $document->addScript(JURI::base() . 'com_biblestudy/assets/player/jwplayer.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
         // If this is a direct new window then all we need to do is perform hitPlay and close this window
         if ($close == 1) {
@@ -124,7 +124,7 @@ class biblestudyViewpopup extends JView {
                 echo "<script type='text/javascript'>
 							jwplayer('placeholder').setup({
 								stretching: 'fill',
-								flashplayer: '" . JURI::base() . "components/com_biblestudy/assets/player/player.swf',
+								flashplayer: '" . JURI::base() . "media/com_biblestudy/js/player/player.swf',
 								width: " . $playerwidth . ",
 								height:" . $playerheight . ",
 								displayheight:'300',
@@ -133,19 +133,18 @@ class biblestudyViewpopup extends JView {
 								date:'" . $media->studydate . "',
 								description:'" . $studyintro . "',
 								controlbar:'bottom',
+                                                                file: '" . $path1 . "',
 								link:'" . JURI::base() . "index.php?option=com_biblestudy&view=studieslist&templatemenuid=" . $templateid . "',
-								image:'" . JURI::base() .$params->get('popupimage', '/com_biblestudy/images/speaker24.png') . "',
+								image: '" . JURI::base() . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
 								autostart:'false',
-								lightcolor:'" . $lightcolor . "',frontcolor:'" . $frontcolor . "',backcolor:'" . $backcolor . "',screencolor:'" . $screencolor . "',
+								lightcolor: '" . $lightcolor . "',frontcolor:'" . $frontcolor . "',backcolor:'" . $backcolor . "',screencolor:'" . $screencolor . "',
 								'plugins': {
-								'viral-2': {'onpause':'" . $embedshare . "','oncomplete':'" . $embedshare . "','allowmenu':'" . $embedshare . "'},
+                                                                    'viral-2': {'onpause':'" . $embedshare . "','oncomplete':'" . $embedshare . "','allowmenu':'" . $embedshare . "'},
 								},
-								levels: [
-								   {file: '" . $path1 . "'}
-											],
 								'modes': [
-								{type: 'html5'},
-								{type: 'flash', src: '" . JURI::base() . "components/com_biblestudy/assets/player/player.swf'},
+                                                                        {type: 'html5'},
+                                                                        {type: 'flash', src: '" . JURI::base() . "media/com_biblestudy/player/player.swf'},
+                                                                        {type: 'download'}
 								]
 
 							})
@@ -164,13 +163,13 @@ class biblestudyViewpopup extends JView {
 </iframe></div>';
             }
 
-          
+
 
             //Legacy Player (since JBS 6.2.2)
             if ($player == 7) {
-                echo '<script language="JavaScript" src="' . JURI::base() . '/components/com_biblestudy/assets/legacyplayer/audio-player.js"></script>
-		<object type="application/x-shockwave-flash" data="' . JURI::base() . '/components/com_biblestudy/assets/legacyplayer/player.swf" id="audioplayer' . $media->id . '" height="24" width="' . $playerwidth . '">
-		<param name="movie" value="' . JURI::base() . 'components/com_biblestudy/assets/legacyplayer/player.swf">
+                echo '<script language="JavaScript" src="' . JURI::base() . 'media/com_biblestudy/legacyplayer/audio-player.js"></script>
+		<object type="application/x-shockwave-flash" data="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf" id="audioplayer' . $media->id . '" height="24" width="' . $playerwidth . '">
+		<param name="movie" value="' . JURI::base() . 'media/com_biblestudy/legacyplayer/player.swf">
 		<param name="FlashVars" value="playerID=' . $media->id . '&amp;soundFile=' . $path1 . '">
 		<param name="quality" value="high">
 		<param name="menu" value="false">
