@@ -122,6 +122,10 @@ class com_biblestudyInstallerScript {
             $db->setQuery($querie);
             $db->query();
         }
+        require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'biblestudy.install.special.php');
+        $fresh = new JBSFreshInstall();
+        if (!$freshcss = $fresh->installCSS()){echo '<br />'. JText::_('JBS_CSS_FAILURE');}
+            else {echo '<br />' . JText::_('JBS_CSS_SUCCESS');}
         require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
         echo JHtml::_('sliders.panel', JText::_('JBS_INS_INSTALLING_VERSION_TO_') . ' ' . $this->release, 'publishing-details');
     }
