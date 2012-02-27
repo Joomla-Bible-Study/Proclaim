@@ -284,36 +284,20 @@ class com_biblestudyInstallerScript {
             if (JFile::exists(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini') == TRUE):
                 JFile::delete(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini');
             endif;
+            //create an index.html file in the media folders if not there already
+            $index = '<html><body bgcolor="#FFFFFF"></body></html>';
+            JFile::write('media/com_biblestudy/index.html',$index);
+            JFile::write('media/com_biblestudy/backup/index.html',$index);
+            JFile::write('media/com_biblestudy/database/index.html',$index);
 
-            //Check for presence of css or backup
-
-            $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'biblestudy.css.dist';
-            $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . 'biblestudy.css';
-            $backup = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR . 'biblestudy.css';
-            $cssexists = JFile::exists($dest);
-            $backupexists = JFile::exists($backup);
-            if (!$cssexists) {
-                echo JHtml::_('sliders.panel', 'CSS', 'publishing-details');
-                echo '<p><font color="red"><strong>' . JText::_('JBS_INS_CSS_FILE_NOT_FOUND') . '</strong> </font></p>';
-                $copysuccess = JFile::copy($src, $dest);
-                if ($copysuccess) {
-                    echo '<p>' . JText::_('JBS_INS_CSS_COPIED_SOURCE') . '</p>';
-                } else {
-                    echo '<P>' . JText::_('JBS_INS_CSS_COPIED_DISCRIPTION1') . '&frasl;media&frasl;com_biblestudy&frasl;css&frasl;biblestudy.css.dist' . JText::_('JBS_INS_CSS_COPIED_DISCRIPTION2') . '</p>';
-                }
-                if ($backupexists) {
-                    echo '<p>' . JText::_('JBS_INS_BACKUPCSS') . ' ../media/com_biblestudy/backup/biblestudy.css <a href="index.php?option=com_biblestudy&view=cssedit&controller=cssedit&task=restorecss">' . JText::_('JBS_INS_CSS_BACKUP') . '</a></p>';
-                }
-            }
-            //fix some css
-            require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update702.php');
-            $update702 = new JBS702Update();
-            $update702css = $update702->css702();
-            if (!$update702css) {
-                echo JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.0.2 CSS');
-            }
+            //Check for presence of css or backup or other things for upgrade to 7.1.0
+            require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
+            $JBS710 = JBS710Update::update710();
+            if (!$JBS710){echo '<br />'. JText::_('JBS_CSS_FAILURE');}
+            else {echo '<br />' . JText::_('JBS_CSS_SUCCESS');}
+            
             //Check for default details text link image and copy if not present
-            $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
+            $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
             $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
             $imageexists = JFile::exists($dest);
             if (!$imageexists) {
@@ -323,7 +307,7 @@ class com_biblestudyInstallerScript {
                 if ($imagesuccess = JFile::copy($src, $dest)) {
                     echo '<br />' . JText::_('JBS_INS_COPYING_SUCCESS');
                 } else {
-                    echo '<br />' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER1') . '../media/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER2');
+                    echo '<br />' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER1') . '/components/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER2');
                 }
             }
 
@@ -336,7 +320,7 @@ class com_biblestudyInstallerScript {
         <!-- Rest of footer -->
         <p>
         <div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
-            <img src="media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left" />
+            <img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left" />
             <strong><?php echo JText::_('JBS_INS_THANK_YOU'); ?></strong>
         </p>
 
