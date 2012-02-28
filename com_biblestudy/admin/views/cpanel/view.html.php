@@ -6,38 +6,25 @@
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- **/
-
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
-jimport( 'joomla.application.component.view' );
+require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
+jimport('joomla.application.component.view');
 
-class biblestudyViewcpanel extends JView
-{
+class biblestudyViewcpanel extends JView {
 
-	function display($tpl = null)
-	{
+    function display($tpl = null) {
+        JHTML::stylesheet('cpanel.css', JURI::base() . '../media/com_biblestudy/css/');
 
-		//Version check
-		include_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/version.php');
-		$versioncheck = latestVersion();
-		$this->assignRef('versioncheck', $versioncheck);
-                
-                //Get installed version
-                $versiondata = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'biblestudy.xml');
-                $jbsversion = $versiondata['version'];
-                $this->assignRef('jbsversion',$jbsversion);
-		JHTML::stylesheet('cpanel.css', JURI::base() . '../media/com_biblestudy/css/');
-
-                $this->addToolbar();
+        $this->addToolbar();
 
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 
-    protected function addToolbar()
-        {
-            JToolBarHelper::title(JText::_('JBS_CMN_CONTROL_PANEL') , 'administration.png');
-        }
+    protected function addToolbar() {
+        JToolBarHelper::title(JText::_('JBS_CMN_CONTROL_PANEL'), 'administration');
+    }
+
 }

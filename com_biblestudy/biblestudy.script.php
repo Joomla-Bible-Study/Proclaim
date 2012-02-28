@@ -124,8 +124,11 @@ class com_biblestudyInstallerScript {
         }
         require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'biblestudy.install.special.php');
         $fresh = new JBSFreshInstall();
-        if (!$freshcss = $fresh->installCSS()){echo '<br />'. JText::_('JBS_CSS_FAILURE');}
-            else {echo '<br />' . JText::_('JBS_CSS_SUCCESS');}
+        if (!$freshcss = $fresh->installCSS()) {
+            echo '<br />' . JText::_('JBS_CSS_FAILURE');
+        } else {
+            echo '<br />' . JText::_('JBS_CSS_SUCCESS');
+        }
         require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
         echo JHtml::_('sliders.panel', JText::_('JBS_INS_INSTALLING_VERSION_TO_') . ' ' . $this->release, 'publishing-details');
     }
@@ -197,7 +200,7 @@ class com_biblestudyInstallerScript {
             }
         }
         $params = null;
-        $fixassets = null;
+        //@tobo Need to move this out $fixassets = null;
         $imagesuccess = null;
 
         // set initial values for component parameters
@@ -220,88 +223,23 @@ class com_biblestudyInstallerScript {
         ?>
         <fieldset class="panelform">
             <legend>
-            <?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type . '_TEXT'); ?></legend>
-
+                <?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type . '_TEXT'); ?></legend>
             <?php
-            //Import filesystem libraries. Perhaps not necessary, but does not hurt
-            // jimport('joomla.filesystem.file');
-            //Remove Old Language Files Administrator
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/en-GB/en-GB.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/en-GB/en-GB.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/en-GB/en-GB.com_biblestudy.sys.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/en-GB/en-GB.com_biblestudy.sys.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/cs-CZ/cs-CZ.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/cs-CZ/cs-CZ.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/cs-CZ/cs-CZ.com_biblestudy.sys.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/cs-CZ/cs-CZ.com_biblestudy.sys.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/de-DE/de-DE.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/de-DE/de-DE.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/de-DE/de-DE.com_biblestudy.sys.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/de-DE/de-DE.com_biblestudy.sys.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/es-ES/es-ES.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/es-ES/es-ES.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/es-ES/es-ES.com_biblestudy.sys.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/es-ES/es-ES.com_biblestudy.sys.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/hu-HU/hu-HU.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/hu-HU/hu-HU.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/hu-HU/hu-HU.com_biblestudy.sys.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/hu-HU/hu-HU.com_biblestudy.sys.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/nl-NL/nl-NL.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/nl-NL/nl-NL.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/nl-NL/no-NO.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/nl-NL/no-NO.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ADMINISTRATOR . '/language/no-NO/no-NO.com_biblestudy.sys.ini') == TRUE):
-                JFile::delete(JPATH_ADMINISTRATOR . '/language/no-NO/no-NO.com_biblestudy.sys.ini');
-            endif;
 
-            // Language files for Site
-            if (JFile::exists(JPATH_ROOT . '/language/en-GB/en-GB.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ROOT . '/language/en-GB/en-GB.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ROOT . '/language/cs-CZ/cs-CZ.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ROOT . '/language/cs-CZ/cs-CZ.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ROOT . '/language/de-DE/de-DE.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ROOT . '/language/de-DE/de-DE.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ROOT . '/language/es-ES/es-ES.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ROOT . '/language/es-ES/es-ES.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ROOT . '/language/hu-HU/hu-HU.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ROOT . '/language/hu-HU/hu-HU.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ROOT . '/language/nl-NL/nl-NL.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ROOT . '/language/nl-NL/nl-NL.com_biblestudy.ini');
-            endif;
-            if (JFile::exists(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini') == TRUE):
-                JFile::delete(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini');
-            endif;
-            //create an index.html file in the media folders if not there already
-            $index = '<html><body bgcolor="#FFFFFF"></body></html>';
-            JFile::write('media/com_biblestudy/index.html',$index);
-            JFile::write('media/com_biblestudy/backup/index.html',$index);
-            JFile::write('media/com_biblestudy/database/index.html',$index);
+            //changes
+            require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'updateAll.php');
 
             //Check for presence of css or backup or other things for upgrade to 7.1.0
             require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
             $JBS710 = JBS710Update::update710();
-            if (!$JBS710){echo '<br />'. JText::_('JBS_CSS_FAILURE');}
-            else {echo '<br />' . JText::_('JBS_CSS_SUCCESS');}
-            
+            if (!$JBS710) {
+                echo '<br />' . JText::_('JBS_CSS_FAILURE');
+            } else {
+                echo '<br />' . JText::_('JBS_CSS_SUCCESS');
+            }
+
             //Check for default details text link image and copy if not present
-            $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
+            $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
             $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
             $imageexists = JFile::exists($dest);
             if (!$imageexists) {
@@ -311,7 +249,7 @@ class com_biblestudyInstallerScript {
                 if ($imagesuccess = JFile::copy($src, $dest)) {
                     echo '<br />' . JText::_('JBS_INS_COPYING_SUCCESS');
                 } else {
-                    echo '<br />' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER1') . '/components/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER2');
+                    echo '<br />' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER1') . '/media/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER2');
                 }
             }
 
@@ -324,7 +262,7 @@ class com_biblestudyInstallerScript {
         <!-- Rest of footer -->
         <p>
         <div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
-            <img src="components/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left" />
+            <img src="media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left" />
             <strong><?php echo JText::_('JBS_INS_THANK_YOU'); ?></strong>
         </p>
 
@@ -337,7 +275,7 @@ class com_biblestudyInstallerScript {
 
         <p><a href="http://www.joomlabiblestudy.org/forum.html" target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
         <p><a href="http://www.joomlabiblestudy.org" target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
-        <p><a href="http://www.joomlabiblestudy.org/jbs-documentation/user-guide-7-0.html" target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
+        <p><a href="http://www.joomlabiblestudy.org/jbs-documentation.html" target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
         <p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a
                 href="http://www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a>.
             All rights reserved.</p>
