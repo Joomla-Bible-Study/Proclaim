@@ -59,8 +59,9 @@ class Dump_File {
         //dump($mimeType, 'meme');
 
         if ($fileSize == Null) {
-            die(JText::_('COM_BIBLESTUDY_FILE_SIZE_EMPTY'));
-            exit;
+            if (!$fileSize = getRemoteFileSize($download_file))
+            {die(JText::_('COM_BIBLESTUDY_FILE_SIZE_EMPTY'));
+            exit;}
         }
 
         // Clean the output buffer
@@ -157,6 +158,40 @@ class Dump_File {
         exit;
     }
 
+    function getRemoteFileSize($url)
+    {
+        $parsed = parse_url($url);
+        $host = $parsed["host"];
+        $fp = @fsockopen($host, 80, $errno, $errstr, 20);
+        if(!$fp)return false;
+        else {
+            @fputs($fp, "HEAD $url HTTP/1.1\r\n");
+            @fputs($fp, "HOST: $host\r\n");
+            @fputs($fp, "Connection: close\r\n\r\n");
+            $headers = "";
+            while(!@feof($fp))$headers .= @fgets ($fp, 128);
+        }
+        @fclose ($fp);
+        $return = false;
+        $arr_headers = explode("\n", $headers);
+        foreach($arr_headers as $header) {
+            $s = "Content-Length: ";
+            if(substr(strtolower ($header), 0, strlen($s)) == strtolower($s)) {
+            $return = trim(substr($header, strlen($s)));
+            break;
+            }
+        }
+        if($return){
+            $size = round($return / 1024, 2);
+            $sz = "KB"; // Size In KB
+            if ($size > 1024) {
+            $size = round($size / 1024, 2);
+            $sz = "MB"; // Size in MB
+        }
+        $return = "$size $sz";
+        }
+        return $return;
+    }
 }
 
 //end of class
