@@ -16,7 +16,7 @@
     <description>JBS_INS_XML_DESCRIPTION</description>
 
     <!-- Runs on install/uninstall/update; New in 1.7 -->
-	<scriptfile>biblestudy.script.php</scriptfile>
+    <scriptfile>biblestudy.script.php</scriptfile>
 
     	<!-- SQL Files -->
     <install> <!-- Runs on install -->
@@ -35,9 +35,6 @@
         </schemas>
     </update>
 
-  <!-- Front end file, media and language specification -->
-  <!-- <filename>biblestudy.xml</filename> -->
-
     <files folder="site">
         <filename>index.html</filename>
         <filename>biblestudy.php</filename>
@@ -52,25 +49,18 @@
         <folder>controllers</folder>
         <folder>helpers</folder>
         <folder>lib</folder>
-
     </files>
-
-  <!-- Need to start using this move to this on version 7.1.0
-  	<media destination="com_biblestudy">
-		<filename>com_beta.jpg</filename>
-	</media>
-	-->
 
   	<!-- Media files -->
     <media destination="com_biblestudy" folder="media">
-		<folder>images</folder>
-		<folder>js</folder>
-		<folder>backup</folder>
-                <folder>captcha</folder>
-                <folder>css</folder>
-                <folder>legacyplayer</folder>
-                <folder>player</folder>
-                <filename>index.html</filename>
+        <folder>images</folder>
+        <folder>js</folder>
+        <folder>backup</folder>
+        <folder>captcha</folder>
+        <folder>css</folder>
+        <folder>legacyplayer</folder>
+        <folder>player</folder>
+        <filename>index.html</filename>
     </media>
 
     <administration>
@@ -123,7 +113,8 @@
 
   <!-- new server call -->
     <updateservers>
-        <server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2&dummy=extension.xml]]></server>
+        <server type="extension" priority="1" name="Joomla Bible Study"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=2&dummy=extension.xml]]>
+        </server>
     </updateservers>
 
 </extension>

@@ -11,6 +11,11 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+require_once JPATH_COMPONENT_ADMINISTRATOR.DS.'liveupdate'.DS.'liveupdate.php';
+if(JRequest::getCmd('view','') == 'liveupdate') {
+    LiveUpdate::handleRequest();
+    return;
+}
 
 // Check for PHP4
 if (defined('PHP_VERSION')) {
