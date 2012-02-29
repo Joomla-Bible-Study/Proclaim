@@ -226,7 +226,7 @@ class com_biblestudyInstallerScript {
                 <?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type . '_TEXT'); ?></legend>
             <?php
 
-            //changes
+            //changes after 7.0.2
             require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'updateAll.php');
 
             //Check for presence of css or backup or other things for upgrade to 7.1.0

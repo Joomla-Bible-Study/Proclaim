@@ -70,17 +70,3 @@ $index = '<html><body bgcolor="#FFFFFF"></body></html>';
 JFile::write('media/com_biblestudy/index.html', $index);
 JFile::write('media/com_biblestudy/backup/index.html', $index);
 JFile::write('media/com_biblestudy/database/index.html', $index);
-
-
-/*
- * Updates to the Menu image location change to sql.
- * @version 7.1.0
- */
-
-$db = JFactory::getDBO();
-$query = file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'updates'. DIRECTORY_SEPARATOR . 'menucorrection.sql');
-$queries = $db->splitSql($query);
-foreach ($queries as $querie) {
-    $db->setQuery($querie);
-    $db->query();
-}

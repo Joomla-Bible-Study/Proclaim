@@ -15,6 +15,7 @@ jimport('joomla.application.component.view');
 class biblestudyViewcpanel extends JView {
 
     function display($tpl = null) {
+
         JHTML::stylesheet('cpanel.css', JURI::base() . '../media/com_biblestudy/css/');
 
         $this->addToolbar();

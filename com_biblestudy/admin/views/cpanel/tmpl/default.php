@@ -25,6 +25,9 @@ if ($msg) {
         <a href = "index.php?option=com_biblestudy&view=cpanel"><img src = "../media/com_biblestudy/images/logo.png"  border="0" alt = "<?php echo JText::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?>"/></a>
         <!-- Here is where the version information will go -->
     </div>
+    <div id="fbmenu">
+        <div class="fbmainmenu"><?php echo BIBLESTUDY_VERSION.' ('.BIBLESTUDY_VERSION_DATE.')'; ?></div>
+    </div>
 </div>
 
 <div class="fltrt" style="width: 87%">
