@@ -26,7 +26,7 @@ if ($msg) {
         <!-- Here is where the version information will go -->
     </div>
     <div id="fbmenu">
-        <div class="fbmainmenu"><?php echo BIBLESTUDY_VERSION.' ('.BIBLESTUDY_VERSION_DATE.')'; ?></div>
+        <div class="fbmainmenu"><?php echo $this->version.' ('.$this->versiondate.')'; ?></div>
     </div>
 </div>
 

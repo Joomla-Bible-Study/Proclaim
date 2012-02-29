@@ -17,7 +17,22 @@ class biblestudyViewcpanel extends JView {
     function display($tpl = null) {
 
         JHTML::stylesheet('cpanel.css', JURI::base() . '../media/com_biblestudy/css/');
-
+        //get version information
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*');
+	$query->from('#__extensions');
+        $query->where('element = "com_biblestudy"');
+        $db->setQuery($query);
+	$data = $db->loadObject();
+        // Convert parameter fields to objects.
+        $registry = new JRegistry;
+        $registry->loadJSON($data->manifest_cache);
+        if ($data)
+            {
+                $this->version = $registry->get('version'); 
+                $this->versiondate = $registry->get('creationDate');
+            }
         $this->addToolbar();
 
 
