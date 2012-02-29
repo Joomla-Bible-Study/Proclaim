@@ -60,7 +60,6 @@ class biblestudyModelserieslist extends JModelList {
         $query->select('t.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail');
         $query->join('LEFT','#__bsms_teachers as t on se.teacher = t.id');
         $where = $this->_buildContentWhere();
-       // $orderby = $this->_buildContentOrderBy();
         $query->where($where);
          $orderparam = $params->get('default_order');
         if (empty($orderparam)) {
@@ -76,7 +75,7 @@ class biblestudyModelserieslist extends JModelList {
             $order = $orderstate;
 
         $query->order('series_text ' . $order);
-       // $query->order($orderby);
+       
         return $query;
         
     }

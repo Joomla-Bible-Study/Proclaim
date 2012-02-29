@@ -11,12 +11,7 @@ JHTML::_('behavior.tooltip');
 $params = $this->params;
 $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-$css = $params->get('css','biblestudy.css');
-$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
-$url = $params->get('stylesheet');
-if ($url) {
-    $document->addStyleSheet($url);
-}
+
 $row = $this->studydetails;
 $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');

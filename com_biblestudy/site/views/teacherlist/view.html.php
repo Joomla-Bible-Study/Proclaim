@@ -13,6 +13,9 @@ jimport('joomla.application.component.view');
 
 class biblestudyViewteacherlist extends JView {
 
+    protected $items;
+    protected $pagination;
+    protected $state;
     /**
      * teacherlist view display method
      * @return void
@@ -24,14 +27,11 @@ class biblestudyViewteacherlist extends JView {
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
 
-        $t = JRequest::getInt('t', 'get', 1);
-        if (!$t) {
-            $t = 1;
-        }
+       
         $template = $this->get('template');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
+        $registry->loadJSON($template->params);
         $params = $registry;
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
@@ -39,16 +39,9 @@ class biblestudyViewteacherlist extends JView {
         $registry->loadJSON($a_params[0]->params);
         $this->admin_params = $registry;
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-
-
-        $db = JFactory::getDBO();
-        $uri = JFactory::getURI();
-
         $document = JFactory::getDocument();
-
         $itemparams = $mainframe->getPageParameters();
-
+        $uri = JFactory::getURI();
         //Prepare meta information (under development)
         if ($itemparams->get('metakey')) {
             $document->setMetadata('keywords', $itemparams->get('metakey'));
@@ -69,14 +62,11 @@ class biblestudyViewteacherlist extends JView {
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/studieslist.css');
-        $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-        $url = $params->get('stylesheet');
-        if ($url) {
-            $document->addStyleSheet($url);
-        }
+        $css = $params->get('css','biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
 
         // Get data from the model
-        $items = & $this->get('Data');
+        $items = & $this->get('Items');
 
         //Adjust the slug if there is no alias in the row
 

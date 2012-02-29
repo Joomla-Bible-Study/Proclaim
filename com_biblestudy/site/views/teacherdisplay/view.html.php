@@ -57,11 +57,8 @@ class biblestudyViewteacherdisplay extends JView {
         $registry->loadJSON($template[0]->params);
         $params = $registry;
 
-
-        $url = $params->get('stylesheet');
-        if ($url) {
-            $document->addStyleSheet($url);
-        }
+        $css = $params->get('css','biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
 
         $teacher = $this->get('Item');
         //add the slug

@@ -28,12 +28,7 @@ $params = $this->params;
 $admin_params = $this->admin_params;
 $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
-$css = $params->get('css','biblestudy.css');
-$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
-$url = $params->get('stylesheet');
-if ($url) {
-    $document->addStyleSheet($url);
-}
+
 $row = $this->studydetails;
 $listingcall = JView::loadHelper('listing');
 ?>

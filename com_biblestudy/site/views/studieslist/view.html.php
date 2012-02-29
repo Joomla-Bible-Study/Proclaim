@@ -130,9 +130,9 @@ class biblestudyViewstudieslist extends JView {
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
 
-        $url = $params->get('stylesheet');
+       $url = $params->get('css','biblestudy.css');
         if ($url) {
-            $document->addStyleSheet($url);
+            $document->addStyleSheet(JURI::base().'media/com_biblestudy/css/site/'.$url);
         }
 
         $uri = JFactory::getURI();

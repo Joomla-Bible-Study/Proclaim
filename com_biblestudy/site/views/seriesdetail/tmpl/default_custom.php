@@ -7,8 +7,7 @@ $mainframe = JFactory::getApplication(); $option = JRequest::getCmd('option');
 
 $document = JFactory::getDocument();
 $params = $this->params;
-$css = $params->get('css','biblestudy.css');
-$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+
 
 
 $url = $this->params->get('stylesheet');

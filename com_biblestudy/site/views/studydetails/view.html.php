@@ -14,33 +14,10 @@ class biblestudyViewstudydetails extends JView {
 
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
-        $document = JFactory::getDocument();
-        $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-        $document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
-        $pathway = $mainframe->getPathWay();
-        $contentConfig = JComponentHelper::getParams('com_biblestudy');
-        $dispatcher = JDispatcher::getInstance();
-        // Get the menu item object
-
-      
-        $studydetails = $this->get('Item');
-        //Adjust the slug if there is no alias in the row
-        //Set the slug
-        $studydetails->slug = $studydetails->alias ? ($studydetails->id . ':' . $studydetails->alias) : str_replace(' ', '-', htmlspecialchars_decode($studydetails->studytitle, ENT_QUOTES)) . ':' . $studydetails->id;
-
-
-        //Load the Admin settings and params from the template
-        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-        $this->loadHelper('params');
-
-        $t = JRequest::getInt('t', 'get', 1);
-        if (!$t) {
-            $t = 1;
-        }
+         $studydetails = $this->get('Item');
+        // Convert parameter fields to objects.
         $template = $this->get('template');
 
-        // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($template[0]->params);
         $params = $registry;
@@ -56,6 +33,33 @@ class biblestudyViewstudydetails extends JView {
         $registry->loadJSON($studydetails->params);
         $itemparams = $registry;
         $adminrows = new JBSAdmin();
+        $document = JFactory::getDocument();
+        $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+        $document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+        $url = $params->get('css','biblestudy.css');
+        if ($url) {
+            $document->addStyleSheet(JURI::base().'media/com_biblestudy/css/site/'.$url);
+        }
+        $pathway = $mainframe->getPathWay();
+        $contentConfig = JComponentHelper::getParams('com_biblestudy');
+        $dispatcher = JDispatcher::getInstance();
+        // Get the menu item object
+
+      
+       
+        //Adjust the slug if there is no alias in the row
+        //Set the slug
+        $studydetails->slug = $studydetails->alias ? ($studydetails->id . ':' . $studydetails->alias) : str_replace(' ', '-', htmlspecialchars_decode($studydetails->studytitle, ENT_QUOTES)) . ':' . $studydetails->id;
+
+
+        //Load the Admin settings and params from the template
+        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
+        $this->loadHelper('params');
+
+       
+        
+        
 
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
