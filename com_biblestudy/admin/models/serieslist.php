@@ -28,7 +28,7 @@ class biblestudyModelserieslist extends modelClass {
     function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'series.published',
+                'series.id',
                 'series.series_text',
                 'series.alias'
             );
@@ -93,7 +93,7 @@ class biblestudyModelserieslist extends modelClass {
     /**
      * Build and SQL query to load the list data
      * @return  JDatabaseQuery
-     * @since   7.0
+     * @since   7.1.0
      */
     protected function getListQuery() {
         $db = $this->getDbo();
