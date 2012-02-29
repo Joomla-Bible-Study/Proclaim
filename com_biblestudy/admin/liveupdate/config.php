@@ -16,7 +16,7 @@ class LiveUpdateConfig extends LiveUpdateAbstractConfig {
     var $_extensionTitle = 'Joomla Bible Study Component';
     var $_updateURL = 'http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&format=ini&id=2';
     var $_requiresAuthorization = false;
-    var $_versionStrategy = 'different';
+    var $_versionStrategy = 'vcompare';
 
     function __construct() {
         $this->_cacerts = dirname(__FILE__) . '/../assets/cacert.pem';
