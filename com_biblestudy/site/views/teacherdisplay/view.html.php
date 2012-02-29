@@ -63,7 +63,7 @@ class biblestudyViewteacherdisplay extends JView {
             $document->addStyleSheet($url);
         }
 
-        $teacher = $this->get('Data');
+        $teacher = $this->get('Item');
         //add the slug
         $teacher->slug = $teacher->alias ? ($teacher->id . ':' . $teacher->alias) : str_replace(' ', '-', htmlspecialchars_decode($teacher->teachername, ENT_QUOTES)) . ':' . $teacher->id;
         $id = JRequest::getInt('id', 'get');

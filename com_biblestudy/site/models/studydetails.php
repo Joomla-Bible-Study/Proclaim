@@ -31,38 +31,11 @@ class biblestudyModelstudydetails extends JModelItem {
 
     function __construct() {
         parent::__construct();
-        $mainframe = JFactory::getApplication();
-        $id = JRequest::getVar('id', 0, 'GET', 'INT');
-
-        //end added from single view off of menu
-        $array = JRequest::getVar('id', 0, '', 'array');
-        $this->setId((int) $array[0]);
-
-        ////set the default view search path
-        $this->addTablePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'tables');
-        $params = $mainframe->getPageParameters();
-        $t = JRequest::getInt('t', 'get');
-        if (!$t) {
-            $t = 1;
-        }
-        jimport('joomla.html.parameter');
-        $this->_id = $id;
-        $template = $this->getTemplate();
-
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
-        $params = $registry;
-
-        $this->hit();
+    
+        $this->hit($pk = 0);
     }
 
-    function setId($id) {
-        // Set id and wipe data
-        $this->_id = $id;
-        $this->_data = null;
-    }
-
+  
     /**
      * Method to increment the hit counter for the study
      *
@@ -70,9 +43,10 @@ class biblestudyModelstudydetails extends JModelItem {
      * @return	boolean	True on success
      * @since	1.5
      */
-    function hit() {
+    function hit($pk = null) {
+        $pk = (!empty($pk)) ? $pk : (int) $this->getState('study.id');
         $db = JFactory::getDBO();
-        $db->setQuery('UPDATE ' . $db->nameQuote('#__bsms_studies') . 'SET ' . $db->nameQuote('hits') . ' = ' . $db->nameQuote('hits') . ' + 1 ' . ' WHERE id = ' . $this->_id);
+        $db->setQuery('UPDATE ' . $db->nameQuote('#__bsms_studies') . 'SET ' . $db->nameQuote('hits') . ' = ' . $db->nameQuote('hits') . ' + 1 ' . ' WHERE id = ' . (int)$pk);
         $db->query();
         return true;
     }
@@ -123,7 +97,7 @@ class biblestudyModelstudydetails extends JModelItem {
                     $db = $this->getDbo();
                     $query = $db->getQuery(true);
                     	$query->select($this->getState(
-				'item.select', 's.*,CASE WHEN CHAR_LENGTH(#__bsms_studies.alias) THEN CONCAT_WS(\':\', s.id, s.alias) ELSE s.id END as slug, ')
+				'item.select', 's.*,CASE WHEN CHAR_LENGTH(s.alias) THEN CONCAT_WS(\':\', s.id, s.alias) ELSE s.id END as slug')
                                 );
                         $query->from('#__bsms_studies AS s');
                         //join over teachers
@@ -131,13 +105,13 @@ class biblestudyModelstudydetails extends JModelItem {
                         $query->join('LEFT','#__bsms_teachers as t on s.teacher_id = t.id');
                         //join over series
                         $query->select('se.id AS sid, se.series_text, se.description as sdescription');
-                        $query->join('LEFT','s.series_id = se.id');
+                        $query->join('LEFT','#__bsms_series as se on s.series_id = se.id');
                         //join over message type
                         $query->select('mt.id as mid, mt.message_type');
-                        $query->join('LEFT','#__bsms_messagetype as mt on s.messagetype = mt.id');
+                        $query->join('LEFT','#__bsms_message_type as mt on s.messagetype = mt.id');
                         //join over books
                         $query->select('b.bookname as bname');
-                        $query->join('LEFT','#__bsms_books s.booknumber = b.booknumber' );
+                        $query->join('LEFT','#__bsms_books as b on s.booknumber = b.booknumber' );
                         //join over locations
                         $query->select('l.id as lid, l.location_text');
                         $query->join('LEFT','#__bsms_locations as l on s.location_id = l.id');
@@ -159,7 +133,11 @@ class biblestudyModelstudydetails extends JModelItem {
                             if (empty($data)) {
                                     return JError::raiseError(404, JText::_('JBS_CMN_STUDY_NOT_FOUND'));
                             }
-                       $this->_item[$pk] = $data;
+                             // concat topic_text and concat topic_params do not fit, so translate individually
+                        $topic_text = getConcatTopicItemTranslated($data);
+                        $data->topic_text = $topic_text;
+                        $data->bname = JText::_($data->bname);
+                        $this->_item[$pk] = $data;
                     }
                 catch (JException $e)
 			{
@@ -177,46 +155,7 @@ class biblestudyModelstudydetails extends JModelItem {
         return $this->_item[$pk];
     }
     
-    function &getData() {
-        // Load the data
-        if (empty($this->_data)) {
-
-            $id = JRequest::getVar('id', 0, 'GET', 'INT');
-            $query = 'SELECT #__bsms_studies.*, CASE WHEN CHAR_LENGTH(#__bsms_studies.alias) THEN CONCAT_WS(\':\', #__bsms_studies.id, #__bsms_studies.alias) ELSE #__bsms_studies.id END as slug, '
-                    . ' #__bsms_teachers.id AS tid, #__bsms_teachers.teachername AS teachername, '
-                    . ' #__bsms_teachers.title AS teachertitle, '
-                    . ' #__bsms_teachers.image, #__bsms_teachers.imagew, #__bsms_teachers.imageh, #__bsms_teachers.thumb, '
-                    . ' #__bsms_teachers.thumbw, #__bsms_teachers.thumbh,'
-                    . ' #__bsms_series.id AS sid, #__bsms_series.series_text AS series_text, #__bsms_series.description AS sdescription, '
-                    . ' #__bsms_message_type.id AS mid, #__bsms_message_type.message_type AS message_type, '
-                    . ' #__bsms_books.bookname AS bname, #__bsms_locations.id as lid, #__bsms_locations.location_text,'
-                    . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params,'
-                    . ' sum(#__bsms_mediafiles.plays) AS totalplays, sum(#__bsms_mediafiles.downloads) AS totaldownloads, #__bsms_mediafiles.study_id'
-                    . ' FROM #__bsms_studies'
-                    . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-                    . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-                    . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-                    . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-                    . ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
-                    . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-                    . ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
-                    . ' LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)'
-                    . '  WHERE #__bsms_studies.id = ' . $id
-                    . ' GROUP BY #__bsms_studies.id';
-            //.$this->_id.;
-            $this->_db->setQuery($query);
-            $result = $this->_db->loadObject();
-
-            // concat topic_text and concat topic_params do not fit, so translate individually
-            $topic_text = getConcatTopicItemTranslated($result);
-            $result->topic_text = $topic_text;
-            $result->bname = JText::_($result->bname);
-
-            $this->_data = $result;
-        }
-        return $this->_data;
-    }
-
+   
     /*
      * Method to store a record
      *

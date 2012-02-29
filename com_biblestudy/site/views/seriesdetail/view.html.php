@@ -57,8 +57,7 @@ class biblestudyViewseriesdetail extends JView {
         $registry = new JRegistry;
         $registry->loadJSON($a_params[0]->params);
         $this->admin_params = $registry;
-        $items = $this->get('Data');
-
+        $items = $this->get('Item');
         $items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES)) . ':' . $items->id;
         $itemparams = $mainframe->getPageParameters();
 

@@ -9,83 +9,75 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-$mainframe = JFactory::getApplication();
-$option = JRequest::getCmd('option');
-jimport('joomla.application.component.model');
+
+jimport('joomla.application.component.modellist');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
-$params = JComponentHelper::getParams($option);
-$default_order = $params->get('default_order');
 
-class biblestudyModellandingpage extends JModel {
 
-    var $_total = null;
-    var $_pagination = null;
+class biblestudyModellandingpage extends JModelList {
 
     /**
-     * @desc From database
+     * @since   7.0
      */
-    var $_template;
-    var $_admin;
+    protected function populateState($ordering=null, $direction=null) {
+        $order = $this->getUserStateFromRequest($this->context . '.filter.order', 'filter_orders');
+        $this->setState('filter.order', $order);
 
-    function __construct() {
-        parent::__construct();
-        $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-        $params = $mainframe->getPageParameters();
-        $t = JRequest::getInt('t', 'get');
-        if (!$t) {
-            $t = 1;
-        }
-        jimport('joomla.html.parameter');
-        $template = $this->getTemplate();
-
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
-        $params = $registry;
-
-        $config = JFactory::getConfig();
-
-        $this->setState('limit', $params->get('itemslimit'), 'limit', $params->get('itemslimit'), 'int');
-        $this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
-
-        // In case limit has been changed, adjust limitstart accordingly
-        $this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
-        // In case we are on more than page 1 of results and the total changes in one of the drop downs to a selection that has fewer in its total, we change limitstart
-        if ($this->getTotal() < $this->getState('limitstart')) {
-            $this->setState('limitstart', 0, '', 'int');
-        }
+        parent::populateState('s.studydate', 'DESC');
     }
+   
+     protected function getListQuery() {
+         $db = $this->getDbo();
+         $query = $db->getQuery(true);
+         $template_params = $this->getTemplate();
+         $registry = new JRegistry;
+         $registry->loadJSON($template_params->params);
+         $t_params = $registry;
+         // Load the parameters. Merge Global and Menu Item params into new object
+         $app = JFactory::getApplication('site');
+         $params = $app->getParams();
+         $menuparams = new JRegistry;
 
-    function setSelect($string) {
+        if ($menu = $app->getMenu()->getActive()) {
+            $menuparams->loadString($menu->params);
+        }
+         $query->select('list.select','s.id');
+         $query->from('#__bsms_studies as s');
+         $query->select('t.id as tid, t.teachername, t.title as teachertitle');
+         $query->join('LEFT','#__bsms_teachers as t on s.teacher_id = t.id');
+         $query->select('se.id as sid, se.series_text, se.description as sdescription, se.series_thumbnail');
+         $query->join('LEFT','#__bsms_series as se on s.series_id = se.id');
+         $query->select('m.id as mid, m.message_type');
+         $query->join('LEFT','#__bsms_message_type as m on s.messagetype = m.id');
+         $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
+         $query->join('LEFT', '#__bsms_studytopics AS st ON s.id = st.study_id');
+         $query->select('GROUP_CONCAT(DISTINCT tp.id), GROUP_CONCAT(DISTINCT tp.topic_text) as topics_text, GROUP_CONCAT(DISTINCT tp.params)');
+         $query->join('LEFT', '#__bsms_topics AS tp ON tp.id = st.topic_id');
+         $query->select('l.id as lid, l.location_text');
+         $query->join('LEFT','#__bsms_locations as l on s.location_id = l.id');
+         $rightnow = date('Y-m-d H:i:s');
+         $query->where('s.published = 1');
+         $query->where("date_format(s.studydate, %Y-%m-%d %T') <= " . (int) $rightnow);
+         //Order by order filter
+        $orderparam = $params->get('default_order');
+        if (empty($orderparam)) {
+            $orderparam = $t_params->get('default_order', '1');
+        }
+        if ($orderparam == 2) {
+            $order = "ASC";
+        } else {
+            $order = "DESC";
+        }
+        $orderstate = $this->getState('filter.order');
+        if (!empty($orderstate))
+            $order = $orderstate;
 
-    }
-
-    /**
-     * @desc Returns the query
-     * @return string The query to be used to retrieve the rows from the database
-     */
-    function _buildQuery() {
-        $where = $this->_buildContentWhere();
-        $orderby = $this->_buildContentOrderBy();
-        $query = 'SELECT #__bsms_teachers.id AS tid, #__bsms_teachers.teachername, #__bsms_teachers.title AS teachertitle,'
-                . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription, #__bsms_series.series_thumbnail, #__bsms_message_type.id AS mid,'
-                . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-                . ' #__bsms_topics.id AS tp_id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params,#__bsms_locations.id AS lid, #__bsms_locations.location_text'
-                . ' FROM #__bsms_studies'
-                . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-                . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-                . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-                . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-                . ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)'
-                . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-                . ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
-                . $where
-                . $orderby
-        ;
+        $query->order('studydate ' . $order);
         return $query;
-    }
+     }
+
+   
 
     /**
      * @desc Returns teachers
@@ -112,67 +104,9 @@ class biblestudyModellandingpage extends JModel {
         return $this->_template;
     }
 
-    /**
-     * Method to get the total number of studies items
-     *
-     * @access public
-     * @return integer
-     */
-    function getTotal() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_total)) {
-            $query = $this->_buildQuery();
-            $this->_total = $this->_getListCount($query);
-        }
+   
 
-        return $this->_total;
-    }
-
-    /**
-     * Method to get a pagination object for the studies
-     *
-     * @access public
-     * @return integer
-     */
-    function getPagination() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_pagination)) {
-            jimport('joomla.html.pagination');
-            $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
-        }
-
-        return $this->_pagination;
-    }
-
-    function _buildContentWhere() {
-        $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-        $params = JComponentHelper::getParams($option);
-        $default_order = $params->get('default_order');
-
-        $where = array();
-        $rightnow = date('Y-m-d H:i:s');
-        $where[] = ' #__bsms_studies.published = 1';
-        $where[] = " date_format(#__bsms_studies.studydate, '%Y-%m-%d %T') <= " . (int) $rightnow;
-
-        $where = ( count($where) ? ' WHERE ' . implode(' AND ', $where) : '' );
-
-        return $where;
-    }
-
-    function _buildContentOrderBy() {
-        $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-
-        $filter_orders = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
-
-        if ($filter_orders == 'ASC') {
-            $orderby = ' ORDER BY studydate ASC ';
-        } else {
-            $orderby = ' ORDER BY studydate DESC ';
-        }
-
-        return $orderby;
-    }
+   
+   
 
 }

@@ -10,87 +10,100 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.model');
+jimport('joomla.application.component.modelitem');
 
 
-class biblestudyModelseriesdetail extends JModel
+class biblestudyModelseriesdetail extends JModelItem
 {
-	/**
-	 * Constructor that retrieves the ID from the request
+    /**
+	 * Model context string.
 	 *
-	 * @access	public
-	 * @return	void
+	 * @var		string
 	 */
-	 var $_template;
-	 var $_admin;
-	function __construct()
-	{
-		parent::__construct();
-		$mainframe = JFactory::getApplication();
-
-				$id = JRequest::getVar('id','GET','INT');
-		//end added from single view off of menu
-		$array = JRequest::getVar('id',  0, '', 'array');
-		$this->setId((int)$array[0]);
-
-		 ////set the default view search path
-        $this->addTablePath(JPATH_COMPONENT.DIRECTORY_SEPARATOR.'tables');
-        $params = $mainframe->getPageParameters();
-    $t = JRequest::getInt('t','get');
-		if (!$t){
-			$t = 1;
-		}
-		$this->_id = $id;
-        jimport('joomla.html.parameter');
-		$template = $this->getTemplate();
-
-          // Convert parameter fields to objects.
-				$registry = new JRegistry;
-				$registry->loadJSON($template[0]->params);
-                $params = $registry;
-
-	}
-
-	function setId($id)
-	{
-		// Set id and wipe data
-		if (!$id ){
-			$id = JRequest::getInt('returnid','get');
-		}
-		$this->_id		= $id;
-		$this->_data	= null;
-	}
-
+	protected $_context = 'com_biblestudy.seriesdetail';
+	
         /**
-	 * Method to increment the hit counter for the study
+	 * Method to auto-populate the model state.
 	 *
-	 * @access	public
-	 * @return	boolean	True on success
-	 * @since	1.5
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @since	1.6
 	 */
-
-	function getData()
+	protected function populateState()
 	{
-		// Load the data
-		if (empty( $this->_data )) {
-			$id = JRequest::getVar('id', 0,'GET','INT');
-		 if (!$id ){
-		 	$id = JRequest::getInt('returnid','get');
-		 } //dump ($id, 'id: ');
-		$query = 'SELECT se.*,'
-        . ' CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug,'
-        . ' t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
-		. ' FROM #__bsms_series AS se'
-		. ' LEFT JOIN #__bsms_teachers AS t ON (se.teacher = t.id)'
-		. ' WHERE se.id = '.$id;
+		$app = JFactory::getApplication('site');
 
+		// Load state from the request.
+		$pk = JRequest::getInt('id');
+		$this->setState('series.id', $pk);
 
-			$this->_db->setQuery( $query );
-			$this->_data = $this->_db->loadObject();
+		$offset = JRequest::getUInt('limitstart');
+		$this->setState('list.offset', $offset);
+
+		// Load the parameters.
+		$params = $app->getParams();
+		$this->setState('params', $params);
+
+		// TODO: Tune these values based on other permissions.
+		$user		= JFactory::getUser();
+		if ((!$user->authorise('core.edit.state', 'com_biblestudy')) &&  (!$user->authorise('core.edit', 'com_biblestudy'))){
+			$this->setState('filter.published', 1);
+			$this->setState('filter.archived', 2);
 		}
-		return $this->_data;
 	}
 
+       
+        /**
+	 * Method to get study data.
+	 *
+	 * @param	integer	The id of the study.
+	 * @since 7.1.0
+	 * @return	mixed	Menu item data object on success, false on failure.
+	 */
+    function &getItem($pk = null)
+    {
+        // Initialise variables.
+	$pk = (!empty($pk)) ? $pk : (int) $this->getState('series.id');
+        if (!isset($this->_item[$pk])) {
+
+            try {
+                    $db = $this->getDbo();
+                    $query = $db->getQuery(true);
+                    	$query->select($this->getState(
+				'item.select', 'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug')
+                                );
+                        $query->from('#__bsms_series AS se');
+                        //join over teachers
+                        $query->select('t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail');
+                        $query->join('LEFT','#__bsms_teachers as t on se.teacher = t.id');
+                        $query->where('se.id = ' . (int) $pk);
+                        $db->setQuery($query);
+			$data = $db->loadObject();
+                        if ($error = $db->getErrorMsg()) {
+                            throw new Exception($error);
+                            }
+
+                            if (empty($data)) {
+                                    return JError::raiseError(404, JText::_('JBS_CMN_SERIES_NOT_FOUND'));
+                            }
+                             
+                        $this->_item[$pk] = $data;
+                    }
+                catch (JException $e)
+			{
+				if ($e->getCode() == 404) {
+					// Need to go thru the error handler to allow Redirect to work.
+					JError::raiseError(404, $e->getMessage());
+				}
+				else {
+					$this->setError($e);
+					$this->_item[$pk] = false;
+				}
+			}
+                    
+            }
+        return $this->_item[$pk];
+    }
         /**
 	 * Method to store a record
 	 *

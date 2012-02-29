@@ -23,7 +23,8 @@ class biblestudyViewstudydetails extends JView {
         $dispatcher = JDispatcher::getInstance();
         // Get the menu item object
 
-        $studydetails = $this->get('Data');
+      
+        $studydetails = $this->get('Item');
         //Adjust the slug if there is no alias in the row
         //Set the slug
         $studydetails->slug = $studydetails->alias ? ($studydetails->id . ':' . $studydetails->alias) : str_replace(' ', '-', htmlspecialchars_decode($studydetails->studytitle, ENT_QUOTES)) . ':' . $studydetails->id;

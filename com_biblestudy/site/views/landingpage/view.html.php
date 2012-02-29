@@ -99,9 +99,9 @@ class biblestudyViewLandingpage extends JView {
         $search = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
 
         $adminrows = new JBSAdmin();
-        $total = $this->get('Total');
+       // $total = $this->get('Total');
 
-        $pagination = $this->get('Pagination');
+       // $pagination = $this->get('Pagination');
         //@todo need to find a Diffente way to do this
         $menu = JSite::getMenu();
         $item = $menu->getActive();
