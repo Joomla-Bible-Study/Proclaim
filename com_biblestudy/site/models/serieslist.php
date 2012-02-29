@@ -99,7 +99,21 @@ class biblestudyModelserieslist extends JModelList {
         ;
         return $query;
     }
-
+/**
+     * Build an SQL query to load the list data
+     *
+     * @return  JDatabaseQuery
+     * @since   7.0
+     */
+    protected function getListQuery() {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->select('se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug');
+        $query->from('#__bsms_series as se');
+        $query->select('t.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbg, t.thumbw, t.teacher__thumnbnail');
+        $query->join('LEFT','#__bsms_teachers as t on se.teacher = t.id');
+        
+    }
     /**
      * @desc Returns teachers
      * @return Array
