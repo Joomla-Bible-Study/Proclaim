@@ -3,70 +3,21 @@
 /**
  * @version $Id: serieslist.php 1 $
  * @package BibleStudy
+ * @since 7.1.0
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-$mainframe = JFactory::getApplication();
-$option = JRequest::getCmd('option');
+
 jimport('joomla.application.component.modellist');
 
-$params = JComponentHelper::getParams($option);
-$default_order = $params->get('default_order');
 
 class biblestudyModelserieslist extends JModelList {
 
-    var $_total = null;
-    var $_pagination = null;
-
-    /**
-     * @desc From database
-     */
-    var $_data;
-    var $_teachers;
-    var $_series;
-    var $_messageTypes;
-    var $_studyYears;
-    var $_locations;
-    var $_topics;
-    var $_orders;
-    var $_select;
-    var $_books;
-    var $_template;
-    var $_admin;
-
-     
-    function __construct() {
-        parent::__construct();
-        $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-        $params = $mainframe->getPageParameters();
-        $t = JRequest::getInt('t', 'get');
-        if (!$t) {
-            $t = 1;
-        }
-        jimport('joomla.html.parameter');
-        $template = $this->getTemplate();
-
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
-        $params = $registry;
-
-        $config = JFactory::getConfig();
-        $this->setState('limit', $params->get('series_limit'), 'limit', $params->get('series_limit'), 'int');
-        $this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
-
-        // In case limit has been changed, adjust limitstart accordingly
-        $this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
-        // In case we are on more than page 1 of results and the total changes in one of the drop downs to a selection that has fewer in its total, we change limitstart
-        if ($this->getTotal() < $this->getState('limitstart')) {
-            $this->setState('limitstart', 0, '', 'int');
-        }
-    }
-
+   
+   
     /**
      * @since   7.0
      */
@@ -83,22 +34,7 @@ class biblestudyModelserieslist extends JModelList {
     }
 
 
-    /**
-     * @desc Returns the query
-     * @return string The query to be used to retrieve the rows from the database
-     */
-    function _buildQuery() {
-        $where = $this->_buildContentWhere();
-        $orderby = $this->_buildContentOrderBy();
-        $query = 'SELECT se.*, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail,'
-                . ' CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug'
-                . ' FROM #__bsms_series AS se'
-                . ' LEFT JOIN #__bsms_teachers AS t ON (se.teacher = t.id)'
-                . $where
-                . $orderby
-        ;
-        return $query;
-    }
+   
 /**
      * Build an SQL query to load the list data
      *
@@ -107,27 +43,44 @@ class biblestudyModelserieslist extends JModelList {
      */
     protected function getListQuery() {
         $db = $this->getDbo();
+        $template_params = $this->getTemplate();
+        $registry = new JRegistry;
+        $registry->loadJSON($template_params->params);
+        $t_params = $registry;
+        $app = JFactory::getApplication('site');
+        $params = $app->getParams();
+        $menuparams = new JRegistry;
+
+        if ($menu = $app->getMenu()->getActive()) {
+            $menuparams->loadString($menu->params);
+        }
         $query = $db->getQuery(true);
         $query->select('se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug');
         $query->from('#__bsms_series as se');
-        $query->select('t.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbg, t.thumbw, t.teacher__thumnbnail');
+        $query->select('t.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail');
         $query->join('LEFT','#__bsms_teachers as t on se.teacher = t.id');
+        $where = $this->_buildContentWhere();
+       // $orderby = $this->_buildContentOrderBy();
+        $query->where($where);
+         $orderparam = $params->get('default_order');
+        if (empty($orderparam)) {
+            $orderparam = $t_params->get('default_order', '1');
+        }
+        if ($orderparam == 2) {
+            $order = "ASC";
+        } else {
+            $order = "DESC";
+        }
+        $orderstate = $this->getState('filter.order');
+        if (!empty($orderstate))
+            $order = $orderstate;
+
+        $query->order('series_text ' . $order);
+       // $query->order($orderby);
+        return $query;
         
     }
-    /**
-     * @desc Returns teachers
-     * @return Array
-     */
-    function getSeries() {
-        if (empty($this->_series)) {
-            $query = 'SELECT id AS value, series_text AS text, published'
-                    . ' FROM #__bsms_series'
-                    . ' WHERE published = 1'
-                    . ' ORDER BY series_text ASC';
-            $this->_series = $this->_getList($query);
-        }
-        return $this->_series;
-    }
+ 
 
     function getAdmin() {
         if (empty($this->_admin)) {
@@ -139,79 +92,28 @@ class biblestudyModelserieslist extends JModelList {
         return $this->_admin;
     }
 
-    function getStudyYears() {
-        if (empty($this->_StudyYears)) {
-            $query = " SELECT DISTINCT date_format(studydate, '%Y') AS value, date_format(studydate, '%Y') AS text "
-                    . ' FROM #__bsms_studies '
-                    . ' ORDER BY value DESC';
-            $this->_StudyYears = $this->_getList($query);
-        }
-        return $this->_StudyYears;
-    }
 
-    function getOrders() {
-        if (empty($this->_Orders)) {
-            $query = ' SELECT * FROM #__bsms_order '
-                    . ' ORDER BY id ';
-            $this->_Orders = $this->_getList($query);
-        }
-        return $this->_Orders;
-    }
-
+    
+     /**
+     * @desc Returns the Template to display the list
+     * @return Array
+     * @since 7.0.2
+     */
     function getTemplate() {
         if (empty($this->_template)) {
             $templateid = JRequest::getVar('t', 1, 'get', 'int');
-            $query = 'SELECT *'
-                    . ' FROM #__bsms_templates'
-                    . ' WHERE published = 1 AND id = ' . $templateid;
-            $this->_template = $this->_getList($query);
+            $db = $this->getDBO();
+            $query = $db->getQuery(true);
+            $query->select('*');
+            $query->from('#__bsms_templates');
+            $query->where('published = 1 AND id = ' . $templateid);
+            $db->setQuery($query->__toString());
+            $this->_template = $db->loadObject();
         }
         return $this->_template;
     }
 
-    function getData() {
-        $mainframe = JFactory::getApplication();
-        // Lets load the data if it doesn't already exist
-        if (empty($this->_data)) {
-            $query = $this->_buildQuery();
-            $this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
-        }
-
-        return $this->_data;
-    }
-
-    /**
-     * Method to get the total number of studies items
-     *
-     * @access public
-     * @return integer
-     */
-    function getTotal() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_total)) {
-            $query = $this->_buildQuery();
-            $this->_total = $this->_getListCount($query);
-        }
-
-        return $this->_total;
-    }
-
-    /**
-     * Method to get a pagination object for the studies
-     *
-     * @access public
-     * @return integer
-     */
-    function getPagination() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_pagination)) {
-            jimport('joomla.html.pagination');
-            $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
-        }
-
-        return $this->_pagination;
-    }
-
+   
     function _buildContentWhere() {
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -228,7 +130,7 @@ class biblestudyModelserieslist extends JModelList {
 
 
 
-        $where = ( count($where) ? ' WHERE ' . implode(' AND ', $where) : '' );
+        $where = ( count($where) ? implode(' AND ', $where) : '' );
 
         $where2 = array();
         $continue = 0;
@@ -262,25 +164,6 @@ class biblestudyModelserieslist extends JModelList {
             $where = $where . ' AND ( ' . $where2 . ')';
         }
         return $where;
-    }
-
-    function _buildContentOrderBy() {
-        $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-        $template = $this->getTemplate();
-
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
-        $params = $registry;
-
-        $filter_orders = $params->get('series_list_order', 'ASC');
-        $filter_orders_field = $params->get('series_order_field', 'series_text');
-
-        $orderby = ' ORDER BY ' . $filter_orders_field . ' ' . $filter_orders . ' ';
-
-
-        return $orderby;
     }
 
 }

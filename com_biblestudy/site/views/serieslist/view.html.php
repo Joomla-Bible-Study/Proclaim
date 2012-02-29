@@ -18,7 +18,7 @@ class biblestudyViewserieslist extends JView {
         include_once($path1 . 'image.php');
 
         $document = JFactory::getDocument();
-        $model = $this->getModel();
+      //  $model = $this->getModel();
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
@@ -31,7 +31,7 @@ class biblestudyViewserieslist extends JView {
         $template = $this->get('template');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
-        $registry->loadJSON($template[0]->params);
+        $registry->loadJSON($template->params);
         $params = $registry;
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
@@ -78,7 +78,8 @@ class biblestudyViewserieslist extends JView {
         $filter_orders = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
 
 
-        $items = $this->get('Data');
+       // $items = $this->get('Data');
+        $items = $this->get('Items');
 
         //Adjust the slug if there is no alias in the row
 
