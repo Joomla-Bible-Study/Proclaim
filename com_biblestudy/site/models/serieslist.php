@@ -11,12 +11,12 @@
 defined('_JEXEC') or die;
 $mainframe = JFactory::getApplication();
 $option = JRequest::getCmd('option');
-jimport('joomla.application.component.model');
+jimport('joomla.application.component.modellist');
 
 $params = JComponentHelper::getParams($option);
 $default_order = $params->get('default_order');
 
-class biblestudyModelserieslist extends JModel {
+class biblestudyModelserieslist extends JModelList {
 
     var $_total = null;
     var $_pagination = null;
@@ -37,6 +37,7 @@ class biblestudyModelserieslist extends JModel {
     var $_template;
     var $_admin;
 
+     
     function __construct() {
         parent::__construct();
         $mainframe = JFactory::getApplication();
@@ -66,9 +67,21 @@ class biblestudyModelserieslist extends JModel {
         }
     }
 
-    function setSelect($string) {
-
+    /**
+     * @since   7.0
+     */
+    protected function populateState($ordering = null, $direction = null) {
+        // Adjust the context to support modal layouts.
+        if ($layout = JRequest::getVar('layout')) {
+            $this->context .= '.' . $layout;
+        }
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+        $this->setState('filter.published', $published);
+        $series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
+        $this->setState('filter.series', $series);
+        parent::populateState('study.studydate', 'DESC');
     }
+
 
     /**
      * @desc Returns the query
