@@ -77,14 +77,8 @@ class biblestudyModelTemplateslist extends modelClass {
 
         $query->select(
                 $this->getState(
-                        'list.select', 'template.id, template.type, template.published, template.title'));
+                        'list.select', 'template.id, template.published, template.title'));
         $query->from('#__bsms_templates AS template');
-
-        //Filter by type
-        $type = $this->getState('filter.type');
-        if (!empty($type))
-            $query->where('template.type = ' . $type); //@todo  $type should be escaped to prevent sql injection
-
 
 // Filter by published state
         $published = $this->getState('filter.published');
