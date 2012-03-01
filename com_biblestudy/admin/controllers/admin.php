@@ -59,55 +59,8 @@ class biblestudyControlleradmin extends controllerClass {
         }
     }
 
-    /**
-     * display the edit form
-     * @return void
-     */
-    function legacyEdit() {
-        JRequest::setVar('view', 'admin');
-        JRequest::setVar('layout', 'form');
-        JRequest::setVar('hidemainmenu', 1);
-
-        parent::display();
-    }
-
-    /**
-     * save a record (and redirect to main page)
-     * @return void
-     */
-    function legacySave() {
-        $model = $this->getModel('admin');
-
-        if ($model->store($post)) {
-            $msg = JText::_('JBS_CMN_SAVED');
-        } else {
-            $msg = JText::_('JBS_CMN_ERROR_SAVING');
-        }
-
-        switch ($this->_task) {
-            case 'apply':
-                $msg = JText::_('JBS_ADM_CHANGES_UPDATED');
-                $cid = JRequest::getVar('id', 1, 'post', 'int');
-                $link = 'index.php?option=com_biblestudy&view=admin&layout=edit&id=1';
-                break;
-
-            case 'save':
-            default:
-                $msg = JText::_('JBS_CMN_DATA_SAVED');
-                // Check the table in so it can be edited.... we are done with it anyway
-                $link = 'index.php?option=com_biblestudy&view=cpanel';
-                break;
-        }
-
-        // Check the table in so it can be edited.... we are done with it anyway
-        $this->setRedirect($link, $msg);
-    }
-
-    function legacyCancel() {
-        $msg = JText::_('JBS_CMN_OPERATION_CANCELLED');
-        $this->setRedirect('index.php?option=com_biblestudy&view=cpanel', $msg);
-    }
-
+   
+  
     function updatesef() {
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'updatesef.php');
