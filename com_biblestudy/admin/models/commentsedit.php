@@ -33,48 +33,7 @@ class biblestudyModelcommentsedit extends modelClass {
 		// Check specific edit permission then general edit permission.
 		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.commentsedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
 	}
-	/**
-	 * Constructor that retrieves the ID from the request
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	function __construct() {
-		parent::__construct();
-
-		$array = JRequest::getVar('cid', 0, '', 'array');
-		$this->setId((int) $array[0]);
-	}
-
-	function setId($id) {
-		// Set id and wipe data
-		$this->_id = $id;
-		$this->_data = null;
-	}
-
-	function &getData() {
-		// Load the data
-		if (empty($this->_data)) {
-			$query = ' SELECT * FROM #__bsms_comments ' .
-                    '  WHERE id = ' . $this->_id;
-			$this->_db->setQuery($query);
-			$this->_data = $this->_db->loadObject();
-		}
-		if (!$this->_data) {
-			$this->_data = new stdClass();
-			$this->_data->id = 0;
-			//TF added these
-			$this->_data->published = 0;
-			$this->_data->user_id = 0;
-			$this->_data->user_email = null;
-			$this->_data->full_name = null;
-			$this->_data->comment_date = null;
-			$this->_data->comment_text = null;
-			$this->_data->study_id = 0;
-		}
-		return $this->_data;
-	}
-
+	
 	/**
 	 * Method to store a record
 	 *

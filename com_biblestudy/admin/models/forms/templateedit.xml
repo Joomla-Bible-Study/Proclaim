@@ -12,7 +12,9 @@
 		<field name="text" type="media" directory="/" size="75"
 			label="JBS_TPL_DETAILS_LINK_IMAGE" description="JBS_TPL_DETAILS_LINK_IMAGE_DESC" />
                 
-                        
+                <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
+                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+                class="readonly" />        
 	</fieldset>
 	<fields name="params">
 		<fieldset name="TEMPLATES">

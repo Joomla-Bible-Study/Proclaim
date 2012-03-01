@@ -18,65 +18,7 @@ abstract class modelClass extends JModelList {
 
 class biblestudyModelmimetypelist extends modelClass {
 
-    /**
-     * mime Type data array
-     *
-     * @var array
-     */
-    var $_data;
-    var $_total = null;
-    var $_pagination = null;
-    var $allow_deletes = null;
-
-    function __construct() {
-        parent::__construct();
-    }
-
-    /**
-     * Returns the query
-     * @return string The query to be used to retrieve the rows from the database
-     */
-    function _buildQuery() {
-        $query = ' SELECT * '
-                . ' FROM #__bsms_mimetype '
-        ;
-
-        return $query;
-    }
-
-    /**
-     * Retrieves the data
-     * @return array Array of objects containing the data from the database
-     */
-    function getData() {
-        // Lets load the data if it doesn't already exist
-        if (empty($this->_data)) {
-            $query = $this->_buildQuery();
-            $this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
-        }
-        return $this->_data;
-    }
-
-    function getTotal() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_total)) {
-            $query = $this->_buildQuery();
-            $this->_total = $this->_getListCount($query);
-        }
-
-        return $this->_total;
-    }
-
-    function getPagination() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_pagination)) {
-            jimport('joomla.html.pagination');
-            $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
-        }
-
-        return $this->_pagination;
-    }
-
+   
     function getDeletes() {
         if (empty($this->_deletes)) {
             $query = 'SELECT allow_deletes'

@@ -33,21 +33,7 @@ class biblestudyModelstudiesedit extends JModelAdmin {
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.studiesedit.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
-    function __construct() {
-        parent::__construct();
-
-        $admin = $this->getAdmin();
-        $this->_admin_params = new JParameter($admin[0]->params);
-        $array = JRequest::getVar('cid', 0, '', 'array');
-        $this->setId((int) $array[0]);
-    }
-
-    function setId($id) {
-        // Set id and wipe data
-        $this->_id = $id;
-        $this->_data = null;
-        $this->_admin = null;
-    }
+    
 
     /**
      * Method to store a record

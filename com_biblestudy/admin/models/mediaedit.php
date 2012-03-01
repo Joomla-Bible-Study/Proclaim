@@ -19,20 +19,7 @@ abstract class modelClass extends JModelAdmin {
 
 class biblestudyModelmediaedit extends modelClass {
 
-	/**
-	 * Constructor that retrieves the ID from the request
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	var $_admin;
 
-	function __construct() {
-		parent::__construct();
-		$admin = $this->getAdmin();
-		$array = JRequest::getVar('cid', 0, '', 'array');
-		$this->setId((int) $array[0]);
-	}
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
@@ -48,35 +35,7 @@ class biblestudyModelmediaedit extends modelClass {
 		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediaedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
 	}
 
-	function setId($id) {
-		// Set id and wipe data
-		$this->_id = $id;
-		$this->_data = null;
-	}
-
-	function &getData() {
-		// Load the data
-		if (empty($this->_data)) {
-			$query = ' SELECT * FROM #__bsms_media ' .
-                    '  WHERE id = ' . $this->_id;
-			$this->_db->setQuery($query);
-			$this->_data = $this->_db->loadObject();
-		}
-		if (!$this->_data) {
-			$this->_data = new stdClass();
-			$this->_data->id = 0;
-			//TF added these
-			$this->_data->published = 1;
-			$this->_data->media_text = null;
-			$this->_data->media_image_name = null;
-			$this->_data->media_extension = null;
-			$this->_data->media_image_path = null;
-			$this->_data->media_alttext = null;
-			$this->_data->path2 = null;
-		}
-		return $this->_data;
-	}
-
+	
 	/**
 	 * Method to store a record
 	 *

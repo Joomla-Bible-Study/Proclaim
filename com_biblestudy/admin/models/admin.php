@@ -111,23 +111,7 @@ class biblestudyModeladmin extends adminClass {
         return $form;
     }
 
-    /*
-      public function getItem($pk = null) {
-      return parent::getItem(1);
-      }
-
-      public function getItem2($pk = 1)
-      {
-      if ($item = parent::getItem($pk)) {
-      // Convert the params field to an array.
-      $registry = new JRegistry;
-      $registry->loadJSON($item->params);
-      $item->params = $registry->toArray();
-      }
-
-      return $item;
-      }
-     */
+   
 
     protected function loadFormData() {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.admin.data', array());

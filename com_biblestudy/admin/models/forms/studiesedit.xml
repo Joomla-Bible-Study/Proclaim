@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
+                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+                class="readonly" />
     <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>

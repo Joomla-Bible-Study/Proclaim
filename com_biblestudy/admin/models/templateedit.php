@@ -19,15 +19,7 @@ abstract class modelClass extends JModelAdmin {
 
 class biblestudyModeltemplateedit extends modelClass {
 
-    var $_id;
-    var $_template;
-
-    function __construct() {
-        parent::__construct();
-
-        $array = JRequest::getVar('cid', 0, '', 'array');
-        $this->setId((int) $array[0]);
-    }
+   
 
     /**
      * Method override to check if you can edit an existing record.
@@ -43,39 +35,7 @@ class biblestudyModeltemplateedit extends modelClass {
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.templateedit.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
-    /**
-     * @desc Sets the id, and the _tmpl variable
-     * @param $id
-     * @return null
-     */
-    function setId($id) {
-        // Set id and wipe data
-        $this->_id = $id;
-        $this->_tmpl = null;
-    }
-
-    function getTemplate() {
-        if (empty($this->_template)) {
-
-            $query = ' SELECT * FROM #__bsms_templates ' .
-                    '  WHERE id = ' . $this->_id;
-            $this->_db->setQuery($query);
-            $this->_template = $this->_db->loadObject();
-        }
-
-        if (!$this->_template) {
-            $this->_template = new stdClass();
-            $this->_template->id = 0;
-            $this->_template->type = null;
-            $this->_template->published = 1;
-            $this->_template->params = null;
-            $this->_template->title = null;
-            $this->_template->text = null;
-            $this->_template->pdf = null;
-        }
-        return $this->_template;
-    }
-
+   
     function store($data = null, $tmpl = null) {
         $row = & $this->getTable();
         //@todo Clean this up

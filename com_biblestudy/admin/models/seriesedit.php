@@ -18,24 +18,7 @@ abstract class modelClass extends JModelAdmin {
 
 class biblestudyModelseriesedit extends modelClass {
 
-	/**
-	 * Constructor that retrieves the ID from the request
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	var $_teacher;
-	var $_admin;
-
-	//$teacher = $this->getTeacher();
-	function __construct() {
-		parent::__construct();
-		$teacher = $this->getTeacher();
-		$admin = $this->getAdmin();
-		$array = JRequest::getVar('cid', 0, '', 'array');
-		$this->setId((int) $array[0]);
-	}
-
+	
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
@@ -51,34 +34,7 @@ class biblestudyModelseriesedit extends modelClass {
 		return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.seriesedit.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
 	}
 
-	function setId($id) {
-		// Set id and wipe data
-		$this->_id = $id;
-		$this->_data = null;
-	}
-
-	function &getData() {
-		// Load the data
-		$admin = $this->getAdmin();
-		if (empty($this->_data)) {
-			$query = ' SELECT * FROM #__bsms_series ' .
-                    '  WHERE id = ' . $this->_id;
-			$this->_db->setQuery($query);
-			$this->_data = $this->_db->loadObject();
-		}
-		if (!$this->_data) {
-			$this->_data = new stdClass();
-			$this->_data->id = 0;
-			//TF added these
-			$this->_data->published = 0;
-			$this->_data->series_text = null;
-			$this->_data->series_thumbnail = ($admin[0]->series ? $admin[0]->series : null);
-			$this->_data->description = null;
-			$this->_data->teacher = null;
-		}
-		return $this->_data;
-	}
-
+	
 	function getTeacher() {
 		if (empty($this->_teacher)) {
 			$query = 'SELECT id AS value, teachername AS text'
@@ -132,23 +88,7 @@ class biblestudyModelseriesedit extends modelClass {
 		return true;
 	}
 
-	function legacyPublish($cid = array(), $publish = 1) {
-
-		if (count($cid)) {
-			$cids = implode(',', $cid);
-
-			$query = 'UPDATE #__bsms_series'
-			. ' SET published = ' . intval($publish)
-			. ' WHERE id IN ( ' . $cids . ' )'
-
-			;
-			$this->_db->setQuery($query);
-			if (!$this->_db->query()) {
-				$this->setError($this->_db->getErrorMsg());
-				return false;
-			}
-		}
-	}
+	
 	/**
 	 * Get the form data
 	 *
