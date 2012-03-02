@@ -2,7 +2,7 @@
 /**
  * Bible Study Style table class
  * @since 7.1.0
- * @version $Id: foldersedit.php 2025 2011-08-28 04:08:06Z genu $
+ * @version $Id: style.php 2025 2011-08-28 04:08:06Z genu $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL

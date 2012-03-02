@@ -23,7 +23,7 @@ class JFormFieldMessagetypelist extends JFormFieldList
 	 *
 	 * @var         string
 	 */
-	protected $type = 'Messagetypelist';
+	protected $type = 'Messagetypes';
 
 	/**
 	 * Method to get a list of options for a list input.

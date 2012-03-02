@@ -41,7 +41,7 @@ class BsmHelper extends JComponentHelper {
 		if ($isSite)
 		JModel::addIncludePath (JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'models');
 		$pk = JRequest::getInt('t','get','1');
-		$template = JModel::getInstance('Templateedit', 'biblestudyModel');
+		$template = JModel::getInstance('Template', 'BiblestudyModel');
 		$template = $template->getItem($pk);
 		return $template;
 	}

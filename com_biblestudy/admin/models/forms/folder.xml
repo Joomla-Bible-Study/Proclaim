@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<field name="published" type="radio" label="JBS_CMN_PUBLISHED"
+		description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0"
+		required="true">
+		<option value="0">JBS_CMN_NO</option>
+		<option value="1">JBS_CMN_YES</option>
+	</field>
+	<field name="foldername" type="text" label="JBS_FLD_FOLDER_NAME"
+		description="JBS_FLD_FOLDER_NAME_DESC" size="50" required="true" />
+	<field name="folderpath" type="text" label="JBS_FLD_FOLDER_PATH"
+		description="JBS_FLD_FOLDER_PATH_DESC" size="75" required="true" />
+	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+		translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+		section="folder" validate="rules" />
+	<field name="asset_id" type="hidden" filter="unset" />
+        <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
+                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+                class="readonly" />
+</form>

@@ -26,11 +26,11 @@ class BibleStudyHelper {
                     $assetName = 'com_biblestudy.admin.' . (int) $Itemid;
                     break;
 
-                case 'foldersedit':
+                case 'folder':
                     $assetName = 'com_biblestudy.foldersedit.' . (int) $Itemid;
                     break;
 
-                case 'commentsedit':
+                case 'comments':
                     $assetName = 'com_biblestudy.commentsedit.' . (int) $Itemid;
                     break;
 
@@ -38,55 +38,55 @@ class BibleStudyHelper {
                     $assetName = 'com_biblestudy.cssedit.' . (int) $Itemid;
                     break;
 
-                case 'locationsedit':
+                case 'location':
                     $assetName = 'com_biblestudy.locationsedit.' . (int) $Itemid;
                     break;
 
-                case 'mediaedit':
+                case 'mediaimage':
                     $assetName = 'com_biblestudy.mediaedit.' . (int) $Itemid;
                     break;
 
-                case 'mediafilesedit':
+                case 'mediafile':
                     $assetName = 'com_biblestudy.mediafilesedit.' . (int) $Itemid;
                     break;
 
-                case 'messagetypeedit':
+                case 'messagetype':
                     $assetName = 'com_biblestudy.messagetypeedit.' . (int) $Itemid;
                     break;
 
-                case 'mimetypeedit':
+                case 'mimetype':
                     $assetName = 'com_biblestudy.mimetypeedit.' . (int) $Itemid;
                     break;
 
-                case 'podcastedit':
+                case 'podcast':
                     $assetName = 'com_biblestudy.podcastedit.' . (int) $Itemid;
                     break;
 
-                case 'seriesedit':
-                    $assetName = 'com_biblestudy.seriesedit.' . (int) $Itemid;
+                case 'serie':
+                    $assetName = 'com_biblestudy.serie.' . (int) $Itemid;
                     break;
 
-                case 'serversedit':
+                case 'server':
                     $assetName = 'com_biblestudy.serversedit.' . (int) $Itemid;
                     break;
 
-                case 'shareedit':
+                case 'share':
                     $assetName = 'com_biblestudy.shareedit.' . (int) $Itemid;
                     break;
 
-                case 'studiesedit':
+                case 'message':
                     $assetName = 'com_biblestudy.studiesedit.' . (int) $Itemid;
                     break;
 
-                case 'teacheredit':
+                case 'teacher':
                     $assetName = 'com_biblestudy.teacheredit.' . (int) $Itemid;
                     break;
 
-                case 'templateedit':
+                case 'template':
                     $assetName = 'com_biblestudy.templateedit.' . (int) $Itemid;
                     break;
 
-                case 'topicsedit':
+                case 'topic':
                     $assetName = 'com_biblestudy.topicsedit.' . (int) $Itemid;
                     break;
 
@@ -132,49 +132,49 @@ class BibleStudyHelper {
                 JText::_('JBS_CMN_ADMINISTRATION'), 'index.php?option=com_biblestudy&task=admin.edit&id=1', $vName == 'admin'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_STUDIES'), 'index.php?option=com_biblestudy&view=studieslist', $vName == 'studieslist'
+                JText::_('JBS_CMN_STUDIES'), 'index.php?option=com_biblestudy&view=messages', $vName == 'messages'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_MEDIA_FILES'), 'index.php?option=com_biblestudy&view=mediafileslist', $vName == 'mediafileslist'
+                JText::_('JBS_CMN_MEDIA_FILES'), 'index.php?option=com_biblestudy&view=mediafiles', $vName == 'mediafiles'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_TEACHERS'), 'index.php?option=com_biblestudy&view=teacherlist', $vName == 'teacherlist'
+                JText::_('JBS_CMN_TEACHERS'), 'index.php?option=com_biblestudy&view=teachers', $vName == 'teachers'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=serieslist', $vName == 'serieslist'
+                JText::_('JBS_CMN_SERIES'), 'index.php?option=com_biblestudy&view=series', $vName == 'series'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_MESSAGE_TYPES'), 'index.php?option=com_biblestudy&view=messagetypelist', $vName == 'messagetypelist'
+                JText::_('JBS_CMN_MESSAGE_TYPES'), 'index.php?option=com_biblestudy&view=messagetypes', $vName == 'messagetypes'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_biblestudy&view=locationslist', $vName == 'locationslist'
+                JText::_('JBS_CMN_LOCATIONS'), 'index.php?option=com_biblestudy&view=locations', $vName == 'locations'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_TOPICS'), 'index.php?option=com_biblestudy&view=topicslist', $vName == 'topicslist'
+                JText::_('JBS_CMN_TOPICS'), 'index.php?option=com_biblestudy&view=topics', $vName == 'topics'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_COMMENTS'), 'index.php?option=com_biblestudy&view=commentslist', $vName == 'commentslist'
+                JText::_('JBS_CMN_COMMENTS'), 'index.php?option=com_biblestudy&view=comments', $vName == 'comments'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_SERVERS'), 'index.php?option=com_biblestudy&view=serverslist', $vName == 'serverslist'
+                JText::_('JBS_CMN_SERVERS'), 'index.php?option=com_biblestudy&view=servers', $vName == 'servers'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_FOLDERS'), 'index.php?option=com_biblestudy&view=folderslist', $vName == 'folderslist'
+                JText::_('JBS_CMN_FOLDERS'), 'index.php?option=com_biblestudy&view=folders', $vName == 'folders'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcastlist', $vName == 'podcastlist'
+                JText::_('JBS_CMN_PODCASTS'), 'index.php?option=com_biblestudy&view=podcasts', $vName == 'podcasts'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'), 'index.php?option=com_biblestudy&view=sharelist', $vName == 'sharelist'
+                JText::_('JBS_CMN_SOCIAL_NETWORKING_LINKS'), 'index.php?option=com_biblestudy&view=shares', $vName == 'shares'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templateslist', $vName == 'templateslist'
+                JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_MEDIAIMAGES'), 'index.php?option=com_biblestudy&view=medialist', $vName == 'medialist'
+                JText::_('JBS_CMN_MEDIAIMAGES'), 'index.php?option=com_biblestudy&view=mediaimages', $vName == 'mediaimages'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CMN_MIME_TYPES'), 'index.php?option=com_biblestudy&view=mimetypelist', $vName == 'mimetypelist'
+                JText::_('JBS_CMN_MIME_TYPES'), 'index.php?option=com_biblestudy&view=mimetypes', $vName == 'mimetypes'
         );
         JSubMenuHelper::addEntry(
                 JText::_('JBS_CSS_CSS_EDIT'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'

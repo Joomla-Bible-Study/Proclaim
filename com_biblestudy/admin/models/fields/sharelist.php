@@ -23,7 +23,7 @@ class JFormFieldSharelist extends JFormFieldList
 	 *
 	 * @var         string
 	 */
-	protected $type = 'Sharelist';
+	protected $type = 'Shares';
 
 	/**
 	 * Method to get a list of options for a list input.

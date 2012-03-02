@@ -25,7 +25,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="studiesedit">
+	<section name="message">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -36,7 +36,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="teacheredit">
+	<section name="teacher">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -47,7 +47,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="locationsedit">
+	<section name="location">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -58,7 +58,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="seriesedit">
+	<section name="serie">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -69,7 +69,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="topicsedit">
+	<section name="topic">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -80,7 +80,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="podcastedit">
+	<section name="podcast">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -91,7 +91,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="shareedit">
+	<section name="share">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -102,7 +102,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="commentsedit">
+	<section name="comment">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -124,7 +124,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="mediafilesedit">
+	<section name="mediafile">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -135,7 +135,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="mediaedit">
+	<section name="mediaimage">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -146,7 +146,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="messagetypeedit">
+	<section name="messagetype">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -157,7 +157,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="mimetypeedit">
+	<section name="mimetype">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -168,7 +168,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="serversedit">
+	<section name="server">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -179,7 +179,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="foldersedit">
+	<section name="folder">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -190,7 +190,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="templateedit">
+	<section name="template">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -201,17 +201,7 @@
 		<action name="core.edit.own" title="JACTION_EDITOWN"
 			description="JACTION_EDITOWN_COMPONENT_DESC" />
 	</section>
-	<section name="topicsedit">
-		<action name="core.delete" title="JACTION_DELETE"
-			description="JACTION_DELETE_COMPONENT_DESC" />
-		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
-		<action name="core.create" title="JACTION_CREATE"
-			description="JACTION_CREATE_COMPONENT_DESC" />
-		<action name="core.edit.state" title="JACTION_EDITSTATE"
-			description="JACTION_EDITSTATE_COMPONENT_DESC" />
-		<action name="core.edit.own" title="JACTION_EDITOWN"
-			description="JACTION_EDITOWN_COMPONENT_DESC" />
-	</section>
+	
 	<section name="cssedit">
 		<action name="core.delete" title="JACTION_DELETE"
 			description="JACTION_DELETE_COMPONENT_DESC" />

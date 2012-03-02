@@ -25,7 +25,7 @@ class JFormFieldTopicslist extends JFormFieldList
 	 *
 	 * @var         string
 	 */
-	protected $type = 'Topicslist';
+	protected $type = 'Topics';
 
 	/**
 	 * Method to get a list of options for a list input.

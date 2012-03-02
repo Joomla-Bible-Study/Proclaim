@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+<!-- This is not used; the xml is set dynamically instead. See administrator/components/com_biblestudy/models/topic.php function getForm() -->
+</form>

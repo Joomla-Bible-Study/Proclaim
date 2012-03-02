@@ -23,7 +23,7 @@ class JFormFieldTeacherlist extends JFormFieldList
 	 *
 	 * @var         string
 	 */
-	protected $type = 'Teacherlist';
+	protected $type = 'Teachers';
 
 	/**
 	 * Method to get a list of options for a list input.

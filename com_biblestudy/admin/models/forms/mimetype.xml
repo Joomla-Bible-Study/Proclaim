@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<field name="published" type="radio" label="JBS_CMN_PUBLISHED"
+		description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0"
+		required="true">
+		<option value="0">JBS_CMN_NO</option>
+		<option value="1">JBS_CMN_YES</option>
+	</field>
+	<field name="mimetext" type="text" label="JBS_CMN_MIME_TYPE"
+		description="JBS_MMT_MIME_TYPE_DESC" size="50" required="true" />
+	<field name="mimetype" type="text" label="JBS_MMT_MIME_TYPE_CODE"
+		description="JBS_MMT_MIME_TYPE_CODE_DESC" size="75" required="true" />
+	<field name="asset_id" type="hidden" filter="unset" />
+	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+		translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+		section="mimetype" validate="rules" />
+        <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
+                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+                class="readonly" />
+</form>

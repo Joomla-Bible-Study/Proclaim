@@ -33,7 +33,7 @@ class JFormFieldModal_Study extends JFormField
 
 		// Setup variables for display.
 		$html	= array();
-		$link	= 'index.php?option=com_biblestudy&amp;view=studieslist&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_'.$this->id;
+		$link	= 'index.php?option=com_biblestudy&amp;view=messages&amp;layout=modal&amp;tmpl=component&amp;function=jSelectStudy_'.$this->id;
 
 		$db	= JFactory::getDBO();
 		$db->setQuery(

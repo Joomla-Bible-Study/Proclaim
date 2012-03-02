@@ -23,7 +23,7 @@ class JFormFieldSerieslist extends JFormFieldList
 	 *
 	 * @var         string
 	 */
-	protected $type = 'Serieslist';
+	protected $type = 'Series';
 
 	/**
 	 * Method to get a list of options for a list input.
