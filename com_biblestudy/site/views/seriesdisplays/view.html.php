@@ -5,7 +5,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 
-class biblestudyViewserieslist extends JView {
+class BiblestudyViewSeriesdisplays extends JView {
 
     /**
      * studieslist view display method

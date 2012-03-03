@@ -7,14 +7,14 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 
-class biblestudyViewstudieslist extends JView {
+class BiblestudyViewSermons extends JView {
 
     protected $items;
     protected $pagination;
     protected $state;
 
     /**
-     * studieslist view display method
+     * sermons view display method
      * @return void
      * */
     function display($tpl = null) {

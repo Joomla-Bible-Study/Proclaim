@@ -34,7 +34,7 @@ abstract class BiblestudyHelperRoute
 			'article'  => array((int) $id)
 		); //dump ($needles);
 		//Create the link
-		$link = 'index.php?option=com_biblestudy&view=studydetails&id='. $id;
+		$link = 'index.php?option=com_biblestudy&view=sermon&id='. $id;
         
 		return $link;
 	}
@@ -59,7 +59,7 @@ abstract class BiblestudyHelperRoute
 			'article'  => array((int) $id)
 		);
 		//Create the link
-		$link = 'index.php?option=com_biblestudy&view=seriesdetail&id='. $id;
+		$link = 'index.php?option=com_biblestudy&view=seriesdisplay&id='. $id;
         
 		return $link;
 	}

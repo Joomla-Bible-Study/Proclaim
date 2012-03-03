@@ -68,7 +68,7 @@ function getTopicsLandingPage($params, $id, $admin_params)
                 $topic .= "\n\t" . '<tr>';
             }
             $topic .= "\n\t\t" . '<td id="landing_td">';
-		    $topic .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_topic='.$b->id.'&filter_teacher=0&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
+		    $topic .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_topic='.$b->id.'&filter_teacher=0&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
 
 		    $topic .= getTopicItemTranslated($b);
 

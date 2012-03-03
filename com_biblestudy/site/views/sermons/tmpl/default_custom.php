@@ -21,13 +21,12 @@ $messagetype_menu = $messagetype_menu1[0];
 $document = JFactory::getDocument();
 $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 $params = $this->params;
-// @todo are we using these $teachers & $listingcall
 $teachers = $params->get('teacher_id');
 
-
+// @todo need to rework to be proper php and html outside php
 $listingcall = JView::loadHelper('listing');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=studieslist&t=' . JRequest::getInt('t', '1')); ?>" method="post">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . JRequest::getInt('t', '1')); ?>" method="post">
 
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
@@ -49,7 +48,6 @@ $listingcall = JView::loadHelper('listing');
             </h1>
             <?php
             if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
-                // @todo $teacher_call look like it is not used?
                 $teacher_call = JView::loadHelper('teacher');
                 $teacher = getTeacher($params, $id = null, $this->admin_params);
                 if ($teacher) {
@@ -120,42 +118,49 @@ $listingcall = JView::loadHelper('listing');
             ?>
 
 
-
-
         </div><!--dropdownmenu-->
-        <table id="bslisttable" cellspacing="0">
-            <?php
-            // @todo $headerCall seams not to be used?
-            $headerCall = JView::loadHelper('header');
-            $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
-            echo $header;
-            ?>
-            <tbody>
+        <?php
+        switch ($params->get('wrapcode')) {
+            case '0':
+                //Do Nothing
+                break;
+            case 'T':
+                //Table
+                echo '<table id="bsms_studytable" width="100%">';
+                break;
+            case 'D':
+                //DIV
+                echo '<div>';
+                break;
+        }
+        echo $params->get('headercode');
 
-                <?php
-                //This sets the alternativing colors for the background of the table cells
-                $class1 = 'bsodd';
-                $class2 = 'bseven';
-                $oddeven = $class1;
-                foreach ($this->items as $row) { //Run through each row of the data result from the model
-                    if ($oddeven == $class1) { //Alternate the color background
-                        $oddeven = $class2;
-                    } else {
-                        $oddeven = $class1;
-                    }
 
-                    $listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
-                    echo $listing;
-                }
-                ?>
-            </tbody></table>
+        foreach ($this->items as $row) { //Run through each row of the data result from the model
+            $listing = getListingExp($row, $params, $this->admin_params, $this->template);
+            echo $listing;
+        }
+
+        switch ($params->get('wrapcode')) {
+            case '0':
+                //Do Nothing
+                break;
+            case 'T':
+                //Table
+                echo '</table>';
+                break;
+            case 'D':
+                //DIV
+                echo '</div>';
+                break;
+        }
+        ?>
+
+
         <div class="listingfooter" >
             <?php
-            if ($this->params->get('show_pagination') == 2) {
-                echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM');
-                echo $this->pagination->getLimitBox() . '</span>';
-            }
             echo $this->pagination->getPagesLinks();
+            echo $this->pagination->getPagesCounter();
             ?>
         </div> <!--end of bsfooter div-->
     </div><!--end of bspagecontainer div-->
@@ -163,5 +168,5 @@ $listingcall = JView::loadHelper('listing');
 
     <input name="task" value="" type="hidden">
     <input name="boxchecked" value="0" type="hidden">
-    <input name="controller" value="studieslist" type="hidden">
+    <input name="controller" value="sermons" type="hidden">
 </form>

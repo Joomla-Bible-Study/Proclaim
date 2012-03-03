@@ -14,7 +14,7 @@ $uri = JFactory::getURI();
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
-class biblestudyViewseriesdetail extends JView {
+class BiblestudyViewSeriesdisplay extends JView {
 
     protected $state = null;
     protected $item = null;

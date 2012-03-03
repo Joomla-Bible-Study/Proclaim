@@ -56,7 +56,7 @@ class biblestudyController extends JController {
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
 
-        $model = $this->getModel('studydetails');
+        $model = $this->getModel('sermon');
         $menu = JSite::getMenu();
         $item = $menu->getActive();
         $params = $mainframe->getPageParameters();
@@ -106,7 +106,7 @@ class biblestudyController extends JController {
             }
             $study_detail_id = JRequest::getVar('study_detail_id', 0, 'POST', 'INT');
 
-            $mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=studydetails&t=' . $t, $msg);
+            $mainframe->redirect('index.php?option=com_biblestudy&id=' . $study_detail_id . '&view=sermon&t=' . $t, $msg);
         } // End of $cap
     }
 
@@ -186,7 +186,7 @@ class biblestudyController extends JController {
 
     /**
      * @desc: This function is supposed to generate the Media Player that is requested via AJAX
-     * from the studiesList view "default.php". It has not been implemented yet, so its not used.
+     * from the sermons view "default.php". It has not been implemented yet, so its not used.
      * @return unknown_type
      */
     function inlinePlayer() {

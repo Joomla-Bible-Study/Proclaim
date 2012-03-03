@@ -8,7 +8,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 
 $uri = JFactory::getURI();
 
-class biblestudyViewstudydetails extends JView {
+class BiblestudyViewSermon extends JView {
 
     function display($tpl = null) {
 
@@ -100,7 +100,7 @@ class biblestudyViewstudydetails extends JView {
         $database = JFactory::getDBO();
         $query = "SELECT id"
                 . "\nFROM #__menu"
-                . "\nWHERE link ='index.php?option=com_biblestudy&view=studieslist' and published = 1";
+                . "\nWHERE link ='index.php?option=com_biblestudy&view=sermons' and published = 1";
         $database->setQuery($query);
         $menuid = $database->loadResult();
         $this->assignRef('menuid', $menuid);

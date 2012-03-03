@@ -52,7 +52,7 @@ $images = new jbsImages();
     	}
 
 
-       $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails' . '&id=' . $row->id.'&t='.$t ).JHTML::_('behavior.tooltip');
+       $link = JRoute::_('index.php?option=com_biblestudy&view=sermon' . '&id=' . $row->id.'&t='.$t ).JHTML::_('behavior.tooltip');
 	   $details_text = $params->get('details_text');
 
 

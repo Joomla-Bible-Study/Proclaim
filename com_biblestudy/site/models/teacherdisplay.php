@@ -18,7 +18,7 @@ class biblestudyModelteacherdisplay extends JModelItem {
 	 *
 	 * @var		string
 	 */
-	protected $_context = 'com_biblestudy.seriesdetail';
+	protected $_context = 'com_biblestudy.teacher';
 	
         /**
 	 * Method to auto-populate the model state.

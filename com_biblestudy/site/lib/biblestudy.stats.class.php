@@ -82,7 +82,7 @@ function top_score_site($item)
 				$total = $result->added + $hits->hits;
 			}
             else $total = $result->added;
-			$selectvalue = JRoute::_('index.php?option=com_biblestudy&view=studydetails&id='.$hits->id.'&t='.$t);
+			$selectvalue = JRoute::_('index.php?option=com_biblestudy&view=sermon&id='.$hits->id.'&t='.$t);
 			$selectdisplay = '<strong>'.$name.'</strong> - '.JText::_('JBS_CMN_SCORE').': '.$total;
 			$final2 = array('score'=>$total,'select'=> $selectvalue, 'display'=> $selectdisplay);
 			$final[] = $final2;

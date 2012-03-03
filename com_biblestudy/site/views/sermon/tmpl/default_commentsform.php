@@ -132,7 +132,7 @@ switch ($this->params->get('link_comments', 0)) {
                                     <input type="hidden" name="task" value="comment" />
                                     <input type="hidden" name="option" value="com_biblestudy" />
                                     <input type="hidden" name="published" id="published" value="<?php echo $this->params->get('comment_publish') ?>"  />
-                                    <input type="hidden" name="view" value="studydetails" />
+                                    <input type="hidden" name="view" value="sermon" />
 
                                     <input type="hidden" name="comment_date" id="comment_date" value="<?php echo date('Y-m-d H:i:s') ?>"  />
                                     <input type="hidden" name="study_detail_id" id="study_detail_id" value="<?php echo $this->studydetails->id ?>"  />

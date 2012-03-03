@@ -204,7 +204,7 @@ function getMediatable($params, $row, $admin_params) {
             $height = $download_tmp->height;
 
             if ($compat_mode == 0) {
-                $downloadlink = '<a href="index.php?option=com_biblestudy&id=' . $media->id . '&view=studieslist&controller=studieslist&task=download">';
+                $downloadlink = '<a href="index.php?option=com_biblestudy&id=' . $media->id . '&view=sermons&controller=sermons&task=download">';
             } else {
                 $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
             }

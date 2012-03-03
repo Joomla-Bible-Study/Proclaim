@@ -25,10 +25,10 @@ $controller->redirect();
 //This is here because of a security flaw and was added as an extra measure of security
 if ($controller = JRequest::getWord('controller')) {
     $approvedControllers = array(
-        'studieslist',
-        'studydetails',
-        'serieslist',
-        'seriesdetail',
+        'sermons',
+        'sermon',
+        'seriesdisplays',
+        'seriesdisplay',
         'teacherlist',
         'teacheredit',
         'teacherdisplay',
@@ -44,7 +44,7 @@ if ($controller = JRequest::getWord('controller')) {
     );
 
     if (!in_array($controller, $approvedControllers)) {
-        $controller = 'studieslist';
+        $controller = 'sermons';
     }
 
     require_once JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . $controller . '.php';

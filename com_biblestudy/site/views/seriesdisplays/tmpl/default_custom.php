@@ -2,19 +2,19 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe = JFactory::getApplication();
+$mainframe = & JFactory::getApplication();
 $option = JRequest::getCmd('option');
-$listingcall = JView::loadHelper('serieslist');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
-$document = JFactory::getDocument();
-$document->addScript(JURI::base() . '../media/com_biblestudy/js/tooltip.js');
-$document->addStyleSheet(JURI::base() . '../media/com_biblestudy/css/biblestudy.css');
+$document = & JFactory::getDocument();
+$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
+$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 $params = $this->params;
 $url = $params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);
 }
+$listingcall = JView::loadHelper('serieslist');
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
 
@@ -38,6 +38,8 @@ if ($url) {
                 ?>
             </h1>
             <!--header-->
+
+
             <div id="bsdropdownmenu">
 
                 <?php
@@ -48,35 +50,52 @@ if ($url) {
 
 
             </div><!--dropdownmenu-->
-            <table id="seriestable" cellspacing="0">
-                <tbody>
+            <?php
+            switch ($params->get('series_wrapcode')) {
+                case '0':
+                    //Do Nothing
+                    break;
+                case 'T':
+                    //Table
+                    echo '<table id="bsms_studytable" width="100%">';
+                    break;
+                case 'D':
+                    //DIV
+                    echo '<div>';
+                    break;
+            }
+            echo $params->get('series_headercode');
 
-                    <?php
-                    //This sets the alternativing colors for the background of the table cells
-                    $class1 = 'bsodd';
-                    $class2 = 'bseven';
-                    $oddeven = $class1;
+            foreach ($this->items as $row) { //Run through each row of the data result from the model
+                $listing = getSerieslistExp($row, $params, $this->admin_params, $this->template);
+                echo $listing;
+            }
 
-                    foreach ($this->items as $row) { //Run through each row of the data result from the model
-                        if ($oddeven == $class1) { //Alternate the color background
-                            $oddeven = $class2;
-                        } else {
-                            $oddeven = $class1;
-                        }
-
-                        $listing = getSerieslist($row, $params, $oddeven, $this->admin_params, $this->template, $view = 0);
-                        echo $listing;
-
-                        //echo '</table>';
-                    }
-                    ?>
-                </tbody></table>
+            switch ($params->get('series_wrapcode')) {
+                case '0':
+                    //Do Nothing
+                    break;
+                case 'T':
+                    //Table
+                    echo '</table>';
+                    break;
+                case 'D':
+                    //DIV
+                    echo '</div>';
+                    break;
+            }
+            ?>
             <div class="listingfooter" >
+                <?php
+                echo $this->pagination->getPagesLinks();
+                echo $this->pagination->getPagesCounter();
+                //echo $this->pagination->getListFooter();
+                ?>
             </div> <!--end of bsfooter div-->
         </div><!--end of bspagecontainer div-->
         <input name="option" value="com_biblestudy" type="hidden">
         <input name="task" value="" type="hidden">
         <input name="boxchecked" value="0" type="hidden">
-        <input name="controller" value="serieslist" type="hidden">
+        <input name="controller" value="seriesdisplays" type="hidden">
     </div>
 </form>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version $Id: studydetails.php 1 $
+ * @version $Id: sermon.php 1 $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -146,7 +146,7 @@ class biblestudyControllerstudydetails extends JController {
         }
 
         // Check the table in so it can be edited.... we are done with it anyway
-        $link = 'index.php?option=com_biblestudy&view=studieslist';
+        $link = 'index.php?option=com_biblestudy&view=sermons';
         $this->setRedirect($link, $msg);
     }
 
@@ -162,7 +162,7 @@ class biblestudyControllerstudydetails extends JController {
             $msg = JText::_('JBS_STY_STUDY_DELETED');
         }
 
-        $this->setRedirect('index.php?option=com_biblestudy&view=studieslist', $msg);
+        $this->setRedirect('index.php?option=com_biblestudy&view=sermons', $msg);
     }
 
     function publish() {
@@ -179,7 +179,7 @@ class biblestudyControllerstudydetails extends JController {
             echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
         }
 
-        $this->setRedirect('index.php?option=com_biblestudy&view=studieslist');
+        $this->setRedirect('index.php?option=com_biblestudy&view=sermons');
     }
 
     function unpublish() {
@@ -196,7 +196,7 @@ class biblestudyControllerstudydetails extends JController {
             echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
         }
 
-        $this->setRedirect('index.php?option=com_biblestudy&view=studieslist');
+        $this->setRedirect('index.php?option=com_biblestudy&view=sermons');
     }
 
     /**
@@ -205,7 +205,7 @@ class biblestudyControllerstudydetails extends JController {
      */
     function cancel() {
         $msg = JText::_('JBS_CMN_OPERATION_CANCELLED');
-        $this->setRedirect('index.php?option=com_biblestudy&view=studieslist', $msg);
+        $this->setRedirect('index.php?option=com_biblestudy&view=sermons', $msg);
     }
 
     function download() {

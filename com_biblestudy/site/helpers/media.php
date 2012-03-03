@@ -122,7 +122,7 @@ function getDownloadLink($media, $params, $admin_params) {
 
         $out = '';
         if ($compat_mode == 0) {
-            $out .='<a href="index.php?option=com_biblestudy&id=' . $media->id . '&view=studieslist&controller=studieslist&task=download">';
+            $out .='<a href="index.php?option=com_biblestudy&id=' . $media->id . '&view=sermons&controller=sermons&task=download">';
         } else {
             $out .='<a href="http://joomlabiblestudy.org/router.php?file=' . $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
         }
@@ -220,7 +220,7 @@ function getTypeIcon($media, $params, $admin_params) {
 
 function getPDF($row, $params, $admin_params) {
     //PDF View
-    $url = 'index.php?option=com_biblestudy&view=studydetails&id=' . $row->id . '&format=pdf';
+    $url = 'index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&format=pdf';
     $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
     $text = JHTML::_('image.site', 'pdf24.png', '/media/com_biblestudy/images/', NULL, NULL, JText::_('JBS_MED_PDF'), 'border=0');
     $attribs['title'] = JText::_('JBS_MED_PDF');

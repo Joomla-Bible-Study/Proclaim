@@ -19,10 +19,10 @@ defined('_JEXEC') or die;
 			$Itemid = JRequest::getVar('Itemid','','get');
 			if (!$Itemid)
 				{
-		 	$link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t='.$t);}
+		 	$link = JRoute::_('index.php?option=com_biblestudy&view=sermons&t='.$t);}
 			 else
 			 {
-			 $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t='.$t);
+			 $link = JRoute::_('index.php?option=com_biblestudy&view=sermons&t='.$t);
 			 }?>
 			<a href="<?php echo $link;?>"> <?php echo $link_text; ?> </a> <?php } //End of if view_link not 0?>
     </div><!--end of footer div-->

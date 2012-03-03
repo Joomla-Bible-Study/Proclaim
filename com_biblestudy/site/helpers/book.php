@@ -63,7 +63,7 @@ function getBooksLandingPage($params, $id, $admin_params) {
             $book .= "\n\t" . '<tr>';
         }
         $book .= "\n\t\t" . '<td id="landing_td">';
-        $book .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_book=' . $b->booknumber . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+        $book .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_book=' . $b->booknumber . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
         ##$book .= '<a href="dummy">'; ## can uncomment this line and use instead of above line when bug-fixing for simpler code
 
         $book .= $numRows;

@@ -62,7 +62,7 @@ if ($this->params->get('show_teacher_studies') > 0) {
     echo $studies;
 }
 
-echo '<table><tr><td id="bsmsteacherstudyfooter"><a href="' . JRoute::_('index.php?option=com_biblestudy&view=studieslist&filter_teacher=' . $teacher->id) . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
+echo '<table><tr><td id="bsmsteacherstudyfooter"><a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . $teacher->id) . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
 ?>
         <tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist<?php echo '&t=' . $t; ?>"><?php echo '<--' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></a>
     </table>

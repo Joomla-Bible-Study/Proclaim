@@ -23,12 +23,12 @@ function getTeacher($params, $id, $admin_params)
 	$t = $params->get('teachertemplateid');
 	if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 	$viewtype = JRequest::getVar('view');
-		if ($viewtype == 'studieslist')
+		if ($viewtype == 'sermons')
 			{
 				$teacherid = $params->get('listteachers');
 				$teacherids = explode(",", $params->get('listteachers'));
 			}
-		if ($viewtype == 'studydetails')
+		if ($viewtype == 'sermon')
 			{$teacherids->id = $id;}
 		$teacher = '<table id = "teacher"><tr>';
 		if (!isset($teacherids)) {return $teacher;}
@@ -63,7 +63,7 @@ function getTeacher($params, $id, $admin_params)
 			}
 		$teacher .= '</td></tr></table></td>';
 		}
-	if ($params->get('intro_show') == 2 && $viewtype == 'studieslist')
+	if ($params->get('intro_show') == 2 && $viewtype == 'sermons')
 		{
 			$teacher .= '<td><div id="listintro"><table id="listintro"><tr><td><p>'.$params->get('list_intro').'</p></td></tr></table> </div></td>';
 		}
@@ -130,7 +130,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
             $teacher .= "\n\t\t" . '<td id="landing_td">';
 
             if ($params->get('linkto') == 0) {
-		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=studieslist&t='.$template).'&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0">';
+		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=sermons&t='.$template).'&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0">';
             } else {
 
 		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&t='.$template).'">';

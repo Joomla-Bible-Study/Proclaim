@@ -21,9 +21,9 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
     include_once($path1 . 'custom.php');
     include_once($path1 . 'helper.php');
 
-    //Here we test to see if this is a studydetails or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.
+    //Here we test to see if this is a sermon or list view. If details, we reset the params to the details. this keeps us from having to rewrite all this code.
     $view = JRequest::getVar('view', 'get');
-    if ($view == 'studydetails' && $ismodule < 1) {
+    if ($view == 'sermon' && $ismodule < 1) {
 
         $params->set('row1col1', $params->get('drow1col1'));
         $params->set('r1c1custom', $params->get('dr1c1custom'));
@@ -625,9 +625,9 @@ function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $r
         case 1 :
             $Itemid = JRequest::getInt('Itemid', '', '');
             if (!$Itemid) {
-                $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+                $link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
             } else {
-                $link = JRoute::_('index.php?option=com_biblestudy&view=studydetails&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
+                $link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->slug . '&t=' . $params->get('detailstemplateid'));
             }
             $column = '<a href="' . $link . '">';
             break;
@@ -706,7 +706,7 @@ function getListingExp($row, $params, $admin_params, $template) {
     $label = str_replace('{{studyintro}}', $row->studyintro, $label);
     $label = str_replace('{{scripture}}', getScripture($params, $row, 0, 1), $label);
     $label = str_replace('{{topics}}', $row->topic_text, $label);
-    $label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=studydetails&id=' . $row->id . '&t=' . $template->id), $label);
+    $label = str_replace('{{url}}', JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&t=' . $template->id), $label);
     $label = str_replace('{{mediatime}}', getDuration($params, $row), $label);
     $label = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" id="bsms_studyThumbnail" />', $label);
     $label = str_replace('{{seriestext}}', $row->series_text, $label);
@@ -786,7 +786,7 @@ function getStudyExp($row, $params, $admin_params, $template) {
     $label = str_replace('{{printview}}', $printview, $label);
 
     //PDF View
-    $url = 'index.php?option=com_biblestudy&view=studydetails&id=' . $row->id . '&format=pdf';
+    $url = 'index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&format=pdf';
     $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
     $text = JHTML::_('image.site', 'pdf24.png', '/media/com_biblestudy/images/', NULL, NULL, JText::_('JBS_MED_PDF'), JText::_('JBS_MED_PDF'));
     $attribs['title'] = JText::_('JBS_MED_PDF');

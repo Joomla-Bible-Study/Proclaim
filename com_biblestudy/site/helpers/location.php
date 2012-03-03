@@ -66,7 +66,7 @@ function getLocationsLandingPage($params, $id, $admin_params)
                 $location .= "\n\t" . '<tr>';
             }
             $location .= "\n\t\t" . '<td id="landing_td">';
-		    $location .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_location='.$b->id.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
+		    $location .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_location='.$b->id.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
 
 		    $location .= $b->location_text;
 

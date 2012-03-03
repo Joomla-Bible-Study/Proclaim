@@ -181,5 +181,5 @@ $listingcall = JView::loadHelper('listing');
 
     <input name="task" value="" type="hidden">
     <input name="boxchecked" value="0" type="hidden">
-    <input name="controller" value="studieslist" type="hidden">
+    <input name="controller" value="sermons" type="hidden">
 </form>

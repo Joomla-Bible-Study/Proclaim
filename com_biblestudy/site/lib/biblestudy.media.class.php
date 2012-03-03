@@ -75,7 +75,7 @@ class jbsMedia {
 
                 if ($compat_mode == 0) {
                     $downloadlink = '<a href="index.php?option=com_biblestudy&mid=' .
-                            $media->id . '&view=studieslist&task=download">';
+                            $media->id . '&view=sermons&task=download">';
                 } else {
                     $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
                             $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
@@ -379,7 +379,7 @@ class jbsMedia {
 			date:'" . $media->studydate . "',
 			description:'" . $studyintro . "',
 			controlbar:'bottom',
-			link:'" . JURI::base() . "index.php?option=com_biblestudy&view=studieslist&templatemenuid=" . $templateid . "',
+			link:'" . JURI::base() . "index.php?option=com_biblestudy&view=sermons&templatemenuid=" . $templateid . "',
 			image:'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
 			autostart:'true',
 			lightcolor:'" . $lightcolor . "',frontcolor:'" . $frontcolor . "',backcolor:'" . $backcolor . "',screencolor:'" . $screencolor . "',

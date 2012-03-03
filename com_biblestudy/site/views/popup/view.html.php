@@ -134,7 +134,7 @@ class biblestudyViewpopup extends JView {
 								description:'" . $studyintro . "',
 								controlbar:'bottom',
                                                                 file: '" . $path1 . "',
-								link:'" . JURI::base() . "index.php?option=com_biblestudy&view=studieslist&templatemenuid=" . $templateid . "',
+								link:'" . JURI::base() . "index.php?option=com_biblestudy&view=sermons&templatemenuid=" . $templateid . "',
 								image: '" . JURI::base() . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
 								autostart:'false',
 								lightcolor: '" . $lightcolor . "',frontcolor:'" . $frontcolor . "',backcolor:'" . $backcolor . "',screencolor:'" . $screencolor . "',

@@ -69,7 +69,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
             }
             $messagetype .= "\n\t\t" . '<td id="landing_td">';
 
-		    $messagetype .= '<a href="index.php?option=com_biblestudy&view=studieslist&filter_messagetype='.$b->id.'&filter_book=0&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&t='.$template.'">';
+		    $messagetype .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_messagetype='.$b->id.'&filter_book=0&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&t='.$template.'">';
 
 		    $messagetype .= $b->message_type;
 

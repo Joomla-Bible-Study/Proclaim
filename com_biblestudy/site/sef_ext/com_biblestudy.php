@@ -35,22 +35,22 @@ if (isset($limitstart))
 $title[] = "Biblestudy";
 
 switch ($view) {
-	case 'studieslist':
+	case 'sermons':
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 		break;
-	case 'studydetails':  // Need to keep the id because of the number of teachings
+	case 'sermon':  // Need to keep the id because of the number of teachings
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 	break;
-		case 'serieslist':
+		case 'seriesdisplays':
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 	break;
-	case 'seriesdetail':
+	case 'seriesdisplay':
 		$title[] = $view;
 
 		$query_name = 'SELECT series_text FROM #__bsms_series WHERE #__bsms_series.id = ' . $id;
