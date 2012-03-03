@@ -15,7 +15,7 @@ require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTO
 <form
     action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
     method="post" name="adminForm" id="adminForm">
-    <div class="width-60 fltlft">
+    <div class="width-100">
         <fieldset class="panelform">
             <legend>
 
