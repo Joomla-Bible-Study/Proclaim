@@ -61,12 +61,12 @@ switch ($view) {
 		shRemoveFromGETVarsList('Itemid');
 		shRemoveFromGETVarsList('id');
 	break;
-	case 'teacherlist':
+	case 'teachers':
 		$title[] = $view;
 		shRemoveFromGETVarsList('view');
 		shRemoveFromGETVarsList('Itemid');
 	break;
-	case 'teacherdisplay':
+	case 'teacher':
 		$title[] = $view;
 
 		$query_name = 'SELECT teachername FROM #__bsms_teachers WHERE #__bsms_teachers.id = ' . $id;

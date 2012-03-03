@@ -145,7 +145,7 @@ if (!$studieslisttemplateid) {
             }
                 ?> </td></tr>
 <?php ?>
-        <tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacherlist&t=<?php echo $t; ?>"><?php echo '<-- ' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></a> <?php
+        <tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacher&t=<?php echo $t; ?>"><?php echo '<-- ' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></a> <?php
 if ($this->params->get('teacherlink', '1') > 0) {
     echo ' | <a href="index.php?option=com_biblestudy&view=sermons&filter_teacher=' . (int) $teacher->id . '&t=' . $t . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a>';
 }

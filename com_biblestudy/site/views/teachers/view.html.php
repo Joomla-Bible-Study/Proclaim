@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 jimport('joomla.application.component.view');
 
-class biblestudyViewteacherlist extends JView {
+class BiblestudyViewTeachers extends JView {
 
     protected $items;
     protected $pagination;

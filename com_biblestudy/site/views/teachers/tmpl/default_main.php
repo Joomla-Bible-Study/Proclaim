@@ -43,7 +43,7 @@ $class1 = 'bsodd';
         	<img src="<?php echo $image->path;?>" border="1" title="<?php echo $item->teachername;?>" alt="<?php echo $item->teachername;?>" width="<?php echo $image->width;?>" height="<?php echo $image->height;?>" /><?php } ?>
         </td>
         <td class="bsm_teachername">
-            <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&id='.$item->slug.'&t='.$t);?>"><?php echo $teacherdisplay;?></a>
+            <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teacher&id='.$item->slug.'&t='.$t);?>"><?php echo $teacherdisplay;?></a>
         </td>
 
         <td align="left" class="bsm_short">

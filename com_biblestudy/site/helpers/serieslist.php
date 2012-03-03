@@ -97,7 +97,7 @@ function getSerieslink($islink, $row, $element, $params, $admin_params)
 	}
 	else
 	{
-		$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&id='.$row->id.'&t='.$params->get('teachertemplateid', 1)).'">'.$element.'</a>';
+		$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacher&id='.$row->id.'&t='.$params->get('teachertemplateid', 1)).'">'.$element.'</a>';
 	}
 	return $link;
 }

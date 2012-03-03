@@ -54,7 +54,7 @@ function getTeacher($params, $id, $admin_params)
 		$teacher .= '<tr><td>';
 		if ($params->get('teacherlink') > 0)
 			{
-				$teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&amp;id='.$tresult->id.'&t='.$t).'">';
+				$teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacher&amp;id='.$tresult->id.'&t='.$t).'">';
 			}
 		$teacher .= $tresult->teachername;
 		if ($params->get('teacherlink') > 0)
@@ -133,7 +133,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
 		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=sermons&t='.$template).'&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0">';
             } else {
 
-		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacherdisplay&id='.$b->id.'&t='.$template).'">';
+		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacher&id='.$b->id.'&t='.$template).'">';
 		    };
 		    $teacher .= $b->teachername;
 

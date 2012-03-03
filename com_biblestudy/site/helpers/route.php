@@ -48,7 +48,7 @@ abstract class BiblestudyHelperRoute
 			'article'  => array((int) $id)
 		);
 		//Create the link
-		$link = 'index.php?option=com_biblestudy&view=teacherdisplay&id='. $id;
+		$link = 'index.php?option=com_biblestudy&view=teacher&id='. $id;
         
 		return $link;
 	}

@@ -11,7 +11,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 jimport('joomla.application.component.view');
 $uri = JFactory::getURI();
 
-class biblestudyViewteacherdisplay extends JView {
+class BiblestudyViewTeacher extends JView {
 
     function display($tpl = null) {
 
