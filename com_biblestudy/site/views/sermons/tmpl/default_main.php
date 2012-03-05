@@ -2,10 +2,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe = JFactory::getApplication();
-$option = JRequest::getCmd('option');
-$message = JRequest::getVar('msg');
-$database = JFactory::getDBO();
 $teacher_menu1 = $this->params->get('teacher_id');
 $teacher_menu = $teacher_menu1[0];
 $topic_menu1 = $this->params->get('topic_id');
@@ -27,7 +23,7 @@ $teachers = $params->get('teacher_id');
 
 $listingcall = JView::loadHelper('listing');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . JRequest::getInt('t', '1')); ?>" method="post">
+
 
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
@@ -70,52 +66,49 @@ $listingcall = JView::loadHelper('listing');
         <div id="bsdropdownmenu">
             <?php
             if ($this->params->get('use_go_button') > 0) {
-                ?><span id="gobutton"><input type="submit" value="<?php echo JText::_('JBS_STY_GO_BUTTON'); ?>" /></span>
-            <?php
+                echo $this->page->gobutton;
             }
 
             if ($this->params->get('show_pagination') == 1) {
-                echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM');
-                ?>
-                <?php
-                echo $this->pagination->getLimitBox() . '</span>';
+                echo $this->page->limitbox;
+                
             }
             if (($this->params->get('show_locations_search') > 0 && ($location_menu == -1)) || $this->params->get('show_locations_search') > 1) {
-                echo $this->lists['locations'];
+                //echo $this->lists['locations'];
+                echo $this->page->locations;
             }
             if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1) {
-                echo $this->lists['books'] . ' ';
-                echo JText::_('JBS_STY_FROM_CHAPTER') . ' <input type="text" id="minChapt" name="minChapt" size="3"';
-                if (JRequest::getInt('minChapt', '', 'post')) {
-                    echo 'value="' . JRequest::getInt('minChapt', '', 'post') . '"';
-                }
-                echo '> ';
-                echo JText::_('JBS_STY_TO_CHAPTER') . ' <input type="text" id=maxChapt" name="maxChapt" size="3"';
-                if (JRequest::getInt('maxChapt', '', 'post')) {
-                    echo 'value="' . JRequest::getInt('maxChapt', '', 'post') . '"';
-                }
-                echo '> ';
+                //echo $this->lists['books'] . ' ';
+                echo $this->page->books;
+                
             }
             if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1) {
-                echo $this->lists['teacher_id'];
+                //echo $this->lists['teacher_id'];
+                echo $this->page->teachers;
             }
             if (($this->params->get('show_series_search') > 0 && ($series_menu == -1)) || $this->params->get('show_series_search') > 1) {
-                echo $this->lists['seriesid'];
+                //echo $this->lists['seriesid'];
+                echo $this->page->series;
             }
             if (($this->params->get('show_type_search') > 0 && ($messagetype_menu == -1)) || $this->params->get('show_type_search') > 1) {
-                echo $this->lists['messagetypeid'];
+                //echo $this->lists['messagetypeid'];
+                echo $this->page->messagetypes;
             }
             if ($this->params->get('show_year_search') > 0) {
-                echo $this->lists['studyyear'];
+                //echo $this->lists['studyyear'];
+                echo $this->page->years;
             }
             if ($this->params->get('show_order_search') > 0) {
-                echo $this->lists['orders'];
+                //echo $this->lists['orders'];
+                echo $this->page->order;
             }
             if (($this->params->get('show_topic_search') > 0 && ($topic_menu == -1)) || $this->params->get('show_topic_search') > 1) {
-                echo $this->lists['topics'];
+               // echo $this->lists['topics'];
+                echo $this->page->topics;
             }
             if ($this->params->get('show_popular') > 0) {
-                echo $this->popular;
+                //echo $this->popular;
+                echo $this->page->popular;
             }
             ?>
 
@@ -152,16 +145,10 @@ $listingcall = JView::loadHelper('listing');
         <div class="listingfooter" >
             <?php
             if ($this->params->get('show_pagination') == 2) {
-                echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM');
-                echo $this->pagination->getLimitBox() . '</span>';
+                echo $this->page->limitbox;
             }
-            echo $this->pagination->getPagesLinks();
+            echo $this->page->pagelinks;
             ?>
         </div> <!--end of bsfooter div-->
     </div><!--end of bspagecontainer div-->
-    <input name="option" value="com_biblestudy" type="hidden">
-
-    <input name="task" value="" type="hidden">
-    <input name="boxchecked" value="0" type="hidden">
-    <input name="controller" value="sermons" type="hidden">
-</form>
+    
