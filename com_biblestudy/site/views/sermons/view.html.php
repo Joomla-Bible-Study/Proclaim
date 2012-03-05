@@ -74,18 +74,19 @@ class BiblestudyViewSermons extends JView {
         $registry->loadJSON($template->params);
         $params = $registry;
 
-        $pagebuilder = new JBSPagebuilder();
-        foreach ($items as $item)
-            {
-            $media = $pagebuilder->mediaBuilder($item->mids, $params);
-            
-            }
+       
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($a_params->params);
         $this->admin_params = $registry;
-
+        
+        $pagebuilder = new JBSPagebuilder();
+        foreach ($items as $item)
+            {
+            $media = $pagebuilder->mediaBuilder($item->mids, $params, $this->admin_params);
+            
+            }
         //Adjust the slug if there is no alias in the row
 
         foreach ($items AS $item) {

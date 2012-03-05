@@ -7,12 +7,15 @@
  */
 //No Direct Access
 defined('_JEXEC') or die;
-
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+jimport('joomla.html.parameter');
 class JBSPagebuilder
 {
-    function mediaBuilder($media, $params)
+    function mediaBuilder($mediaids, $params, $admin_params)
     {
-        //$mediaarray = explode(',',$media);
+        $images = new jbsImages();
+        $mediaelements = new jbsMedia();
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('media.*');
@@ -21,35 +24,73 @@ class JBSPagebuilder
         $query->join('LEFT','#__bsms_servers AS server ON server.id = media.server');
         $query->select('folder.folderpath');
         $query->join('LEFT','#__bsms_folders as folder ON folder.id = media.path');
-        $query->select('image.media_image_path AS impath, image.media_image_name as imname');
+        $query->select('image.media_image_path AS impath, image.media_image_name as imname, image.path2');
         $query->join('LEFT','#__bsms_media as image ON image.id = media.media_image');
         $query->select('study.media_hours, study.media_minutes, study.media_seconds');
         $query->join('LEFT','#__bsms_studies AS study ON study.id = media.study_id');
         $query->select('mime.mimetext');
         $query->join('LEFT','#__bsms_mimetype as mime ON mime.id = media.mime_type');
-        
-        $query->where('media.id IN ('.$media.')');
+        $query->where('media.id IN ('.$mediaids.')');
         $query->where('media.published = 1');
-        $query->order('media.ordering, media.media_image_name ASC');
+        $query->order('media.ordering, image.media_image_name ASC');
         $db->setQuery($query);
-	$results = $db->loadObject();
-        $query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
-        . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname,'
-        . ' #__bsms_media.path2 AS path2, s.studytitle, s.studydate, s.studyintro, s.media_hours, s.media_minutes, s.media_seconds, s.teacher_id,'
-        . ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,'
-        . ' #__bsms_media.media_alttext AS malttext, #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext FROM #__bsms_mediafiles'
-        . ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image) LEFT JOIN #__bsms_servers'
-        . ' ON (#__bsms_servers.id = #__bsms_mediafiles.server) LEFT JOIN #__bsms_folders ON (#__bsms_folders.id = #__bsms_mediafiles.path)'
-        . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type) LEFT JOIN #__bsms_studies AS s'
-        . ' ON (s.id = #__bsms_mediafiles.study_id) LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
-        . ' WHERE #__bsms_mediafiles.study_id = ' . $id . ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_media.media_image_name ASC';
-
-        //$mediaids = implode(' OR ',$mediaarray);
-        foreach ($results as $result)
+	$results = $db->loadObjectList();
+       // $mediareturn = array();
+        foreach ($results as $media)
         {
+            $link_type = $media->link_type;
+            $registry = new JRegistry;
+            $registry->loadJSON($media->params);
+            $itemparams = $registry;
             
+            //set the download image
+            $d_image = ($admin_params->get('default_download_image') ? $admin_params->get('default_download_image') : 'download.png' );
+            $download_tmp = $images->getMediaImage($d_image, $media = NULL);
+            $download_image = $download_tmp->path;
+            $compat_mode = $admin_params->get('compat_mode');
+            if ($link_type > 0) 
+                {
+                    $width = $download_tmp->width;
+                    $height = $download_tmp->height;
+
+                    if ($compat_mode == 0) {
+                        $downloadlink = '<a href="index.php?option=com_biblestudy&mid=' .
+                                $media->id . '&view=sermons&task=download">';
+                    } else {
+                        $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+                                $media->server_path . $media->folder_path . $media->filename . '&size=' . $media->size . '">';
+                    }
+                    $downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
+                    $height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+                }
+            
+            $image = $images->getMediaImage($media->impath, $media->path2);
+            $player = $mediaelements->getPlayerAttributes($admin_params, $params, $itemparams, $media);
+            $playercode = $mediaelements->getPlayerCode($params, $itemparams, $player, $image, $media);
+             print_r($playercode); 
+            switch ($link_type) 
+            {
+                case 0:
+                    $mediareturn = $playercode;
+                    break;
+
+                case 1:
+                    $mediareturn = $playercode . $downloadlink;
+                    break;
+
+                case 2:
+                    $mediareturn = $downloadlink;
+                    break;
+            }
+            //echo $player;
+            //print_r($playercode);
+          //  echo $result->params;
+           
+           
         }
-        print_r($results);
+      //  print_r($results);
     }
+    
+    
 }
 ?>
