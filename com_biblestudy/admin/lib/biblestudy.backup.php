@@ -90,8 +90,7 @@ class JBSExport {
             $export .= implode(',', $data);
             $export .= ";\n";
         }
-        $export .= "\n-- --------------------------------------------------------\n\n";
-
+        
         return $export;
     }
 
