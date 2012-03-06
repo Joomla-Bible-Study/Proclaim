@@ -9,9 +9,57 @@
 defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+    include_once($path1 . 'scripture.php');
+    include_once($path1 . 'duration.php');
+    include_once($path1 . 'date.php');
+    include_once($path1 . 'filesize.php');
+    include_once($path1 . 'image.php');
 jimport('joomla.html.parameter');
 class JBSPagebuilder
 {
+    
+    function buildPage($item, $params, $admin_params)
+    {
+        $images = new jbsImages();
+        //media files image, links, download
+        $mids = $item->mids;
+        $page->media = $this->mediaBuilder($mids, $params, $admin_params);
+        //scripture1
+        $esv = 0;
+        $scripturerow = 1;
+        $page->scripture1 = getScripture($params, $item, $esv, $scripturerow); 
+        //scripture 2
+        $esv = 0;
+        $scripturerow = 2;
+        $page->scripture2 = getScripture($params, $item, $esv, $scripturerow);
+        //duration
+        $page->duration = getDuration($params, $item);
+        $page->studydate = getstudyDate($params, $item->studydate);
+        if (substr_count($item->topics_text, ',')) 
+                {
+                $topics = explode(',', $item->topics_text);
+                foreach ($topics as $key => $value) 
+                    {
+                    $topics[$key] = JText::_($value);
+                    }
+                $page->topics = implode(', ', $topics);
+                } 
+        else {$page->topics = JText::_($item->topics_text);}
+        if ($item->thumbnailm)
+        {
+            $image = $images->getStudyThumbnail($item->thumbnailm);
+            $page->study_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->studytitle . '">';
+        }
+        if ($item->series_thumbnail) 
+            {
+              $image = $images->getSeriesThumbnail($row->series_thumbnail);
+              $page->series_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->series_text . '">';
+            }
+        $page->detailslink = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));    
+        return $page;
+    }
+    
     function mediaBuilder($mediaids, $params, $admin_params)
     {
         $images = new jbsImages();
@@ -20,9 +68,9 @@ class JBSPagebuilder
         $query = $db->getQuery(true);
         $query->select('media.*');
         $query->from('#__bsms_mediafiles as media');
-        $query->select('server.id as serverid, server.server_path');
+        $query->select('server.id as serverid, server.server_path as spath');
         $query->join('LEFT','#__bsms_servers AS server ON server.id = media.server');
-        $query->select('folder.folderpath');
+        $query->select('folder.folderpath as fpath');
         $query->join('LEFT','#__bsms_folders as folder ON folder.id = media.path');
         $query->select('image.media_image_path AS impath, image.media_image_name as imname, image.path2');
         $query->join('LEFT','#__bsms_media as image ON image.id = media.media_image');
@@ -35,14 +83,17 @@ class JBSPagebuilder
         $query->order('media.ordering, image.media_image_name ASC');
         $db->setQuery($query);
 	$results = $db->loadObjectList();
-       // $mediareturn = array();
+        $mediareturns = array();
         foreach ($results as $media)
-        {
+        { 
             $link_type = $media->link_type;
             $registry = new JRegistry;
             $registry->loadJSON($media->params);
             $itemparams = $registry;
-            
+            $mediaid = $media->id;
+            $image = $images->getMediaImage($media->impath, $media->path2);
+            $player = $mediaelements->getPlayerAttributes($admin_params, $params, $itemparams, $media);
+            $playercode = $mediaelements->getPlayerCode($params, $itemparams, $player, $image, $media);
             //set the download image
             $d_image = ($admin_params->get('default_download_image') ? $admin_params->get('default_download_image') : 'download.png' );
             $download_tmp = $images->getMediaImage($d_image, $media = NULL);
@@ -55,40 +106,31 @@ class JBSPagebuilder
 
                     if ($compat_mode == 0) {
                         $downloadlink = '<a href="index.php?option=com_biblestudy&mid=' .
-                                $media->id . '&view=sermons&task=download">';
+                              (int)$mediaid . '&view=sermons&task=download">';
                     } else {
                         $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-                                $media->server_path . $media->folder_path . $media->filename . '&size=' . $media->size . '">';
+                                $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
                     }
                     $downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
                     $height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
                 }
-            
-            $image = $images->getMediaImage($media->impath, $media->path2);
-            $player = $mediaelements->getPlayerAttributes($admin_params, $params, $itemparams, $media);
-            $playercode = $mediaelements->getPlayerCode($params, $itemparams, $player, $image, $media);
-             print_r($playercode); 
             switch ($link_type) 
             {
                 case 0:
-                    $mediareturn = $playercode;
+                    $mediareturns[] = $playercode;
                     break;
 
                 case 1:
-                    $mediareturn = $playercode . $downloadlink;
+                    $mediareturns[] = $playercode . $downloadlink;echo $mediareturn;
                     break;
 
                 case 2:
-                    $mediareturn = $downloadlink;
+                    $mediareturns[] = $downloadlink;
                     break;
             }
-            //echo $player;
-            //print_r($playercode);
-          //  echo $result->params;
-           
-           
-        }
-      //  print_r($results);
+      }
+       $mediareturn = implode('',$mediareturns);
+       return $mediareturn;
     }
     
     

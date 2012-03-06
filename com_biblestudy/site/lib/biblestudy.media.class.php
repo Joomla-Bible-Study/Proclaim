@@ -330,6 +330,9 @@ class jbsMedia {
         $template = JRequest::getInt('t', '1', 'get');
         //Here we get more information about the particular media file
         $filesize = getFilesize($media->size);
+        /**
+         * @todo There is no $row referenced to this function so this will fail
+         */
         $duration = getDuration($params, $row); //This one IS needed
         $mimetype = $media->mimetext;
         $path = $media->spath . $media->fpath . $media->filename;
@@ -477,6 +480,7 @@ class jbsMedia {
                         "&mediaid=" . $media->id . "', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
             <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
                         "' alt='" . $src . "'></a>";
+                
                 return $playercode;
                 break;
         }

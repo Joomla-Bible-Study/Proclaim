@@ -8,6 +8,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 
+
 class BiblestudyViewSermons extends JView {
 
     protected $items;
@@ -25,7 +26,7 @@ class BiblestudyViewSermons extends JView {
         $document = JFactory::getDocument();
 
         $items = $this->get('Items');
-//dump($items);
+        //dump($items);
         
         $pagination = $this->get('Pagination');
         $this->page->pagelinks = $pagination->getPagesLinks();
@@ -38,8 +39,6 @@ class BiblestudyViewSermons extends JView {
         $this->admin = BsmHelper::getAdmin(true);
 
         $admin_parameters = $this->get('Admin');
-
-
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($admin_parameters->params);
@@ -58,40 +57,41 @@ class BiblestudyViewSermons extends JView {
                 }
             }
         }
-        //   $this->items = $items;
-
-        $t = JRequest::getInt('t', 'get');
-        if (!$t) {
-
-        }
-
-
         $template = $this->get('template');
-
-
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($template->params);
         $params = $registry;
-
        
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($a_params->params);
         $this->admin_params = $registry;
-        
-        $pagebuilder = new JBSPagebuilder();
-        foreach ($items as $item)
-            {
-            $media = $pagebuilder->mediaBuilder($item->mids, $params, $this->admin_params);
-            
-            }
-        //Adjust the slug if there is no alias in the row
-
         foreach ($items AS $item) {
             $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
         }
+        //Build the elements so they can be accessed through the $this->page array in the template
+        $studies = $items;
+        $pagebuilder = new JBSPagebuilder();
+        foreach ($studies as $i=>$study)
+            {
+                $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
+                $studies[$i]->scripture1 = $pelements->scripture1;
+                $studies[$i]->scripture2 = $pelements->scripture2;
+                $studies[$i]->media = $pelements->media;
+                $studies[$i]->duration = $pelements->duration;
+                $studies[$i]->studydate = $pelements->studydate;
+                $studies[$i]->topics = $pelements->topics;
+                $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
+                $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
+                $studies[$i]->detailslink = $pelements->detailslink;
+                
+            }
+           $this->study = $studies;
+        //Adjust the slug if there is no alias in the row
+
+        
         $this->items = $items;
 
         $mainframe = JFactory::getApplication();
@@ -116,14 +116,7 @@ class BiblestudyViewSermons extends JView {
 
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $document = JFactory::getDocument();
-        $model = $this->getModel();
-
-        //See if user has permission to edit and whether admin params are set to allow front end editing of studies
-        $admin = new JBSAdmin();
-        $allow = $admin->getPermission();
-        $this->assignRef('allow', $allow);
-
-//        $document =  JFactory::getDocument();
+       
         JHTML::_('behavior.mootools');
         $css = $params->get('css','biblestudy.css');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
@@ -139,12 +132,6 @@ class BiblestudyViewSermons extends JView {
         //Styles from tooltip.css moved to css/biblestudy.css
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
-
-       $url = $params->get('css','biblestudy.css');
-        if ($url) {
-            $document->addStyleSheet(JURI::base().'media/com_biblestudy/css/site/'.$url);
-        }
-
         $uri = JFactory::getURI();
         $filter_topic = $mainframe->getUserStateFromRequest($option . 'filter_topic', 'filter_topic', 0, 'int');
         $filter_book = $mainframe->getUserStateFromRequest($option . 'filter_book', 'filter_book', 0, 'int');
@@ -161,8 +148,7 @@ class BiblestudyViewSermons extends JView {
         //$search = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
         $total = $this->get('Total');
         //Remove the studies the user is not allowed to see
-
-        
+       
         $this->teachers = $this->get('Teachers');
         $this->series = $this->get('Series');
         $this->messageTypes = $this->get('MessageTypes');
@@ -175,7 +161,7 @@ class BiblestudyViewSermons extends JView {
         //This is the helper for scripture formatting
         $scripture_call = Jview::loadHelper('scripture');
         //end scripture helper
-
+        //Get the data for the drop down boxes
         $this->assignRef('template', $template);
         $this->assignRef('pagination', $pagination);
         $this->assignRef('order', $this->orders);
@@ -184,7 +170,6 @@ class BiblestudyViewSermons extends JView {
         $item = $menu->getActive();
         $images = new jbsImages();
         $main = $images->mainStudyImage();
-
         $this->assignRef('main', $main);
 
         //Get the Popular stats
@@ -195,9 +180,7 @@ class BiblestudyViewSermons extends JView {
         
         //Get whether "Go" Button is used then turn off onchange if it is
         if ($params->get('use_go_button', 0) == 0) {
-            $go = 'onchange="this.form.submit()"';
-        }
-        
+            $go = 'onchange="this.form.submit()"';}
         //Build go button
         $this->page->gobutton = '<span id="gobutton"><input type="submit" value="'.JText::_('JBS_STY_GO_BUTTON').'" /></span>';
         

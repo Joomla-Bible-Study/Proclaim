@@ -23,8 +23,7 @@ class biblestudyViewpopup extends JView {
         $player = JRequest::getInt('player', '1', 'get');
 
         $document = JFactory::getDocument();
-        $css = $params->get('css','biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+        
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
@@ -49,7 +48,8 @@ class biblestudyViewpopup extends JView {
         $registry->loadJSON($template->params);
         $params = $registry;
 
-
+        $css = $params->get('css','biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($media->params);

@@ -9,7 +9,7 @@ defined('_JEXEC') or die;
 ?>
 <table><tr><td>This is the header</td></tr></table>
 <?php 
-foreach ($this->items as $study)
+foreach ($this->study as $study)
 {
-    echo $study->studytitle.'<br />';
+    echo $study->studydate.' - <a href="'.$study->detailslink.'">'.$study->studytitle.'</a>'.$study->media.'<br />';
 }

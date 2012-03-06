@@ -639,7 +639,6 @@ function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $r
             break;
 
         case 3 :
-            //	$link = JRoute::_(BiblestudyHelperRoute::getTeacherRoute($tid).'&t='.$params->get('teachertemplateid'));
             $link = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $tid . '&t=' . $params->get('teachertemplateid'));
             if ($tmenu > 0) {
                 $link .= '&Itemid=' . $tmenu;
