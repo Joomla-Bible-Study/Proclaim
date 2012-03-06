@@ -42,7 +42,7 @@
 				key_field="id" value_field="title" required="true" />
 		</fieldset>
 		<fieldset name="FILTERS">
-            <field name="teacher_id" type="sql"
+                        <field name="teacher_id" type="sql"
 				query="SELECT * FROM #__bsms_teachers WHERE published = 1"
 				key_field="id" value_field="teachername" default="-1" multiple="true"
 				size="10" label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
