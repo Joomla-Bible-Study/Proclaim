@@ -190,8 +190,22 @@ class JBSPagebuilder
         $query->where('study.published = 1');
         $query->where($wherefield.' = '. $whereitem);
         $query->order('studydate DESC');
-        $db->setQuery($query);
+        $studies_limit = $params->get('studies', '20');
+        
+        $db->setQuery($query,0,$studies_limit);
 	$studies = $db->loadObjectList();
+        //Remove items user is not authorized to see
+        $user = JFactory::getUser();
+        $groups = $user->getAuthorisedViewLevels();
+        $count = count($items);
+        for ($i = 0; $i < $count; $i++) {
+
+            if ($studies[$i]->access > 1) {
+                if (!in_array($studies[$i]->access, $groups)) {
+                    unset($studies[$i]);
+                }
+            }
+        } 
         foreach($studies as $study)    
         {$pelements = $this->buildPage($study, $params, $admin_params);
             $study->scripture1 = $pelements->scripture1;
