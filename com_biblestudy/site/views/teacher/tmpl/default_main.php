@@ -92,7 +92,7 @@ if (!$studieslisttemplateid) {
                                 <td class="bsm_titlescripture"> <?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></td>
                                 <td class="bsm_titledate"> <?php echo JText::_('JBS_CMN_STUDY_DATE'); ?></td>
                             </tr>
-        <?php foreach ($this->item->teacherstudies as $study) { ?>
+        <?php foreach ($this->teacherstudies as $study) { ?>
                                 <tr>
                                     <td class="bsm_studylink"> <a href="index.php?option=com_biblestudy&view=sermon&id=<?php echo $study->id . '&t=' . $studieslisttemplateid; ?>"><?php echo $study->studytitle; ?></a></td>
                                     <td class="bsm_scripture"> <?php
@@ -133,8 +133,8 @@ if (!$studieslisttemplateid) {
                     break;
 
                 case 3:
-
-                    $studies = getTeacherStudiesExp($this->item->id, $this->params, $admin_params, $this->template);
+                    
+                $studies = getTeacherStudiesExp($this->item->id, $this->params, $admin_params, $this->template);
                     echo $studies;
                     break;
             }
