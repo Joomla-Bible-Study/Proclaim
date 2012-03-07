@@ -7,17 +7,22 @@
  */
 //No Direct Access
 defined('_JEXEC') or die;
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
+require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
+$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
+include_once($path1 . 'teacher.php');
+include_once($path1 . 'listing.php');
+include_once($path1.'image.php');
 jimport('joomla.application.component.view');
-$uri = JFactory::getURI();
 
 class BiblestudyViewTeacher extends JView {
 
     function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-
+        $pagebuilder = new JBSPagebuilder();
 
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
@@ -25,7 +30,7 @@ class BiblestudyViewTeacher extends JView {
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
         $pathway = $mainframe->getPathWay();
-
+        $images = new jbsImages();
 
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
@@ -60,14 +65,15 @@ class BiblestudyViewTeacher extends JView {
         $css = $params->get('css','biblestudy.css');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
 
-        $teacher = $this->get('Item');
+        $item = $this->get('Item');
         //add the slug
-        $teacher->slug = $teacher->alias ? ($teacher->id . ':' . $teacher->alias) : str_replace(' ', '-', htmlspecialchars_decode($teacher->teachername, ENT_QUOTES)) . ':' . $teacher->id;
+        $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES)) . ':' . $item->id;
         $id = JRequest::getInt('id', 'get');
         if ($id) {
-            $teacher->id = $id;
+            $item->id = $id;
         }
-        $this->assignRef('teacher', $teacher);
+        $item->image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+        $this->assignRef('item', $item);
 
         $studies_param = $params->get('studies');
         if ($studies_param > 0) {
@@ -76,9 +82,12 @@ class BiblestudyViewTeacher extends JView {
             $limit = '';
         }
         $database = JFactory::getDBO();
-
+        $whereitem = $item->id;
+        $wherefield = 'study.teacher_id';
+        $this->teacherstudies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params);
+      //  dump ($this->studies);
         // @todo need to move this out of hear but will leave ti for now.
-        $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,
+   /*     $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,
  #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription,
  #__bsms_message_type.id AS mid,
  #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,
@@ -93,7 +102,7 @@ class BiblestudyViewTeacher extends JView {
  LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)
  LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)
  LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)
- WHERE #__bsms_studies.teacher_id = ' . $teacher->id . ' AND #__bsms_studies.published = 1 GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
+ WHERE #__bsms_studies.teacher_id = ' . $item->id . ' AND #__bsms_studies.published = 1 GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate DESC
 ' . $limit;
         $database->setQuery($query);
         $results = $database->loadObjectList();
@@ -112,9 +121,9 @@ class BiblestudyViewTeacher extends JView {
                     unset($items[$i]);
                 }
             }
-        }
+        } 
         $this->items = $items;
-
+*/
 
         if ($this->getLayout() == 'pagebreak') {
             $this->_displayPagebreak($tpl);

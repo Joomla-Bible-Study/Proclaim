@@ -21,9 +21,9 @@ class JBSPagebuilder
     
     function buildPage($item, $params, $admin_params)
     {
-        $images = new jbsImages();
+        $images = new jbsImages(); 
         //media files image, links, download
-        $mids = $item->mids;
+        $mids = $item->mids; 
         $page->media = $this->mediaBuilder($mids, $params, $admin_params);
         //scripture1
         $esv = 0;
@@ -43,7 +43,7 @@ class JBSPagebuilder
                     {
                     $topics[$key] = JText::_($value);
                     }
-                $page->topics = implode(', ', $topics);
+              //  $page->topics = implode(', ', $topics);
                 } 
         else {$page->topics = JText::_($item->topics_text);}
         if ($item->thumbnailm)
@@ -53,7 +53,7 @@ class JBSPagebuilder
         }
         if ($item->series_thumbnail) 
             {
-              $image = $images->getSeriesThumbnail($row->series_thumbnail);
+              $image = $images->getSeriesThumbnail($item->series_thumbnail);
               $page->series_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->series_text . '">';
             }
         $page->detailslink = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));    
@@ -133,6 +133,78 @@ class JBSPagebuilder
        return $mediareturn;
     }
     
-    
+    function studyBuilder($whereitem, $wherefield, $params, $admin_params)
+    {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
+		        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.topics_id, study.studyintro,
+		        study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
+		        study.media_seconds, study.series_id, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name, 
+                        study.user_id, study.studynumber, CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', 
+                        study.id, study.alias) ELSE study.id END as slug ');
+        $query->from('#__bsms_studies AS study');
+
+        //Join over Message Types
+        $query->select('messageType.message_type AS message_type');
+        $query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
+
+        //Join over Teachers
+        $query->select('teacher.teachername AS teachername, teacher.title as teachertitle, teacher.thumb, teacher.thumbh, teacher.thumbw');
+        $query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
+
+        //Join over Series
+        $query->select('series.series_text, series.series_thumbnail, series.description as sdescription');
+        $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
+
+        //Join over Books
+        $query->select('book.bookname');
+        $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
+
+        //Join over Plays/Downloads
+        $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
+        $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
+
+        //Join over Locations
+        $query->select('locations.location_text');
+        $query->join('LEFT', '#__bsms_locations AS locations ON study.location_id = locations.id');
+
+        //Join over topics
+
+        $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
+        $query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
+        $query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topics_text, GROUP_CONCAT(DISTINCT t.params)');
+        $query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
+
+        //Join over users
+        $query->select('users.name as submitted');
+        $query->join('LEFT', '#__users as users on study.user_id = users.id');
+
+        $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
+        $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');
+        
+        $query->group('study.id');
+
+        $query->select('GROUP_CONCAT(DISTINCT media.id) as mids');
+        $query->join('LEFT','#__bsms_mediafiles as media ON study.id = media.study_id');
+        $query->where('study.published = 1');
+        $query->where($wherefield.' = '. $whereitem);
+        $query->order('studydate DESC');
+        $db->setQuery($query);
+	$studies = $db->loadObjectList();
+        foreach($studies as $study)    
+        {$pelements = $this->buildPage($study, $params, $admin_params);
+            $study->scripture1 = $pelements->scripture1;
+            $study->scripture2 = $pelements->scripture2;
+            $study->media = $pelements->media;
+            $study->duration = $pelements->duration;
+            $study->studydate = $pelements->studydate;
+            $study->topics = $pelements->topics;
+            $study->study_thumbnail = $pelements->study_thumbnail;
+            $study->series_thumbnail = $pelements->series_thumbnail;
+            $study->detailslink = $pelements->detailslink; }
+        
+        return $studies;
+    }
 }
 ?>

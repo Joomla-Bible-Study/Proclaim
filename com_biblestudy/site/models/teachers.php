@@ -31,9 +31,9 @@ class BiblestudyModelTeachers extends JModelList
         $query->from('#__bsms_teachers as teachers');
         $query->select('s.id as sid');
         $query->join('LEFT','#__bsms_studies as s on teachers.id = s.teacher_id');
-        $query->where('teachers.published = 1 AND list_show = 1');
-        $query->order('teachername, ordering ASC');
-       
+        $query->where('teachers.published = 1 AND teachers.list_show = 1');
+        $query->order('teachers.teachername, teachers.ordering ASC');
+        $query->group('teachers.id');
         return $query;
         
     }

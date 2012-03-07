@@ -188,7 +188,6 @@ class BiblestudyModelSermons extends JModelList {
 
         $query->group('study.id');
 
-        //filter over media files - saved for future development - not complete
           //$query->select('GROUP_CONCAT(DISTINCT m.id), GROUP_CONCAT(DISTINCT m.filename), GROUP_CONCAT(DISTINCT m.server), GROUP_CONCAT(DISTINCT m.path), GROUP_CONCAT(DISTINCT m.params)');
           $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
           $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');

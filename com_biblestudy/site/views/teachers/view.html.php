@@ -9,6 +9,9 @@
 defined('_JEXEC') or die;
 
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
+$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
+include_once($path1.'image.php');
 jimport('joomla.application.component.view');
 
 class BiblestudyViewTeachers extends JView {
@@ -33,6 +36,8 @@ class BiblestudyViewTeachers extends JView {
         $registry = new JRegistry;
         $registry->loadJSON($template->params);
         $params = $registry;
+        $t = $params->get('teachertemplateid');
+        if (!$t) {$t = JRequest::getVar('t', 1, 'get', 'int');}
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
@@ -64,19 +69,23 @@ class BiblestudyViewTeachers extends JView {
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/studieslist.css');
         $css = $params->get('css','biblestudy.css');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
-
+        $images = new jbsImages();
         // Get data from the model
         $items = & $this->get('Items');
-
-        //Adjust the slug if there is no alias in the row
-
-        foreach ($items AS $item) {
-            $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
+        
+        foreach ($items as $i=>$item)
+        {
+            $items[$i]->image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+            $items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id='.$item->slug.'&t='.$t);
+            $items[$i]->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
         }
+                
         $menu = & JSite::getMenu();
         //	$item =& $menu->getActive();
 
         $pagination = $this->get('Pagination');
+        $this->page->pagelinks = $pagination->getPagesLinks();
+        $this->page->counter = $pagination->getPagesCounter();
         $this->assignRef('pagination', $pagination);
         $this->assignRef('items', $items);
 
