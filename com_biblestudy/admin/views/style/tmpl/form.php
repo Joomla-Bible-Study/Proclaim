@@ -9,7 +9,7 @@
  * @link http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
-defined('_JEXEC') or die; 
+defined('_JEXEC') or die;
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 ?>
 <form
@@ -29,13 +29,15 @@ require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTO
                     <?php echo $this->form->getLabel('filename'); ?>
 
                     <?php echo $this->form->getInput('filename'); ?></li>
-                 <li>
+                <li>
                     <?php echo $this->form->getLabel('stylecode'); ?>
-                        </li>
-                    </ul>
-                    <div class="clr"></div>
-            <?php echo $this->form->getInput('stylecode', null, empty($this->item->stylecode) ? $this->defaultstyle : $this->item->stylecode); ?>
-                       
+                </li>
+            </ul>
+            <div class="clr"></div>
+            <div>
+                <?php echo $this->form->getInput('stylecode', null, empty($this->item->stylecode) ? $this->defaultstyle : $this->item->stylecode); ?>
+            </div>
+
 
         </fieldset>
     </div>
