@@ -24,7 +24,9 @@ class JBSPagebuilder
         $images = new jbsImages(); 
         //media files image, links, download
         $mids = $item->mids; 
-        $page->media = $this->mediaBuilder($mids, $params, $admin_params);
+       if ($mids){ $page->media = $this->mediaBuilder($mids, $params, $admin_params);
+           }
+       
         //scripture1
         $esv = 0;
         $scripturerow = 1;
@@ -64,6 +66,7 @@ class JBSPagebuilder
     {
         $images = new jbsImages();
         $mediaelements = new jbsMedia();
+        
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('media.*');
@@ -81,10 +84,10 @@ class JBSPagebuilder
         $query->where('media.id IN ('.$mediaids.')');
         $query->where('media.published = 1');
         $query->order('media.ordering, image.media_image_name ASC');
-        $db->setQuery($query);
-	$results = $db->loadObjectList();
+        $db->setQuery($query); //print_r($querym);
+	$medias = $db->loadObjectList();
         $mediareturns = array();
-        foreach ($results as $media)
+        foreach ($medias as $media)
         { 
             $link_type = $media->link_type;
             $registry = new JRegistry;
@@ -94,7 +97,6 @@ class JBSPagebuilder
             $image = $images->getMediaImage($media->impath, $media->path2);
             $player = $mediaelements->getPlayerAttributes($admin_params, $params, $itemparams, $media);
             $playercode = $mediaelements->getPlayerCode($params, $itemparams, $player, $image, $media);
-            //set the download image
             $d_image = ($admin_params->get('default_download_image') ? $admin_params->get('default_download_image') : 'download.png' );
             $download_tmp = $images->getMediaImage($d_image, $media = NULL);
             $download_image = $download_tmp->path;
@@ -131,9 +133,10 @@ class JBSPagebuilder
       }
        $mediareturn = implode('',$mediareturns);
        return $mediareturn;
+       
     }
     
-    function studyBuilder($whereitem, $wherefield, $params, $admin_params)
+    function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order)
     {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
@@ -189,15 +192,18 @@ class JBSPagebuilder
         $query->join('LEFT','#__bsms_mediafiles as media ON study.id = media.study_id');
         $query->where('study.published = 1');
         $query->where($wherefield.' = '. $whereitem);
-        $query->order('studydate DESC');
-        $studies_limit = $params->get('studies', '20');
-        
-        $db->setQuery($query,0,$studies_limit);
-	$studies = $db->loadObjectList();
+        if (!$order){$order = 'DESC';}
+        $query->order('studydate '.$order);
+        if (!$limit){$limit = 10;}
+        $db->setQuery($query,0,$limit);
+      //  $db->setQuery($query->__toString());
+     //   print_r ($query);
+	//$studies = $db->loadObjectList();
+        $studies = $db->loadObjectList();
         //Remove items user is not authorized to see
-        $user = JFactory::getUser();
+     /*   $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();
-        $count = count($items);
+        $count = count($studies);
         for ($i = 0; $i < $count; $i++) {
 
             if ($studies[$i]->access > 1) {
@@ -205,7 +211,7 @@ class JBSPagebuilder
                     unset($studies[$i]);
                 }
             }
-        } 
+        } */
         foreach($studies as $study)    
         {$pelements = $this->buildPage($study, $params, $admin_params);
             $study->scripture1 = $pelements->scripture1;

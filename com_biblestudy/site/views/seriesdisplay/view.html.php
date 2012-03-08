@@ -10,7 +10,6 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 jimport('joomla.application.component.view');
-$uri = JFactory::getURI();
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
@@ -65,9 +64,18 @@ class BiblestudyViewSeriesdisplay extends JView {
 
         //get studies associated with the series
         $pagebuilder = new JBSPagebuilder();
-        $whereitem = $items->id;
+        $whereitem = $items->id; 
         $wherefield = 'study.series_id';
-        $results = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $a_params);
+      //  $wherefield = 'study.teacher_id';
+        $limit = $params->get('series_detail_limit', 10);
+        $seriesorder = $params->get('series_detail_order', 'DESC');
+        $results = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $seriesorder);
+        foreach ($results AS $study) {
+            $topic_text = getTopicItemTranslated($study);
+            $study->topic_text = $topic_text;
+        }
+        $this->seriesstudies = $results;
+        $this->page = $items; 
         //Prepare meta information (under development)
         if ($itemparams->get('metakey')) {
             $document->setMetadata('keywords', $itemparams->get('metakey'));
@@ -81,7 +89,7 @@ class BiblestudyViewSeriesdisplay extends JView {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
         //Get studies from this series
-        $seriesorder = $params->get('series_detail_order', 'DESC');
+       
 
         $limit = ' LIMIT ' . $params->get('series_detail_limit', 10);
         $db = JFactory::getDBO();
@@ -104,10 +112,7 @@ class BiblestudyViewSeriesdisplay extends JView {
         $db->setQuery($query);
       //  $results = $db->loadObjectList();
 
-        foreach ($results AS $study) {
-            $topic_text = getTopicItemTranslated($study);
-            $study->topic_text = $topic_text;
-        }
+        
 
      //   $items2 = $results;
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -132,13 +137,7 @@ class BiblestudyViewSeriesdisplay extends JView {
         }
         $windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
 
-        if ($this->getLayout() == 'pagebreak') {
-            $this->_displayPagebreak($tpl);
-            return;
-        }
-        $print = JRequest::getBool('print');
-        // build the html select list for ordering
-        // Process the prepare content plugins
+       
         $limitstart = 0;
         $article->text = $items->description;
         $linkit = $params->get('show_scripture_link');
@@ -158,7 +157,6 @@ class BiblestudyViewSeriesdisplay extends JView {
         } //end if $linkit
         // End process prepare content plugins
         $this->assignRef('template', $template);
-        $this->assignRef('print', $print);
         $this->assignRef('params', $params);
         $this->assignRef('items', $items);
         $this->assignRef('article', $article);

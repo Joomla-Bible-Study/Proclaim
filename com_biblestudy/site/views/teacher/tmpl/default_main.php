@@ -115,6 +115,7 @@ if (!$studieslisttemplateid) {
                                     $oddeven = $class1;
                                 }
                                 $studies = getListing($row, $this->params, $oddeven, $admin_params, $this->template, $ismodule = 0);
+                                 
                                 echo $studies;
                                 }?>
                              </td>

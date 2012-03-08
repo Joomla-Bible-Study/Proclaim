@@ -77,7 +77,9 @@ class BiblestudyViewTeacher extends JView {
       
         $whereitem = $item->id;
         $wherefield = 'study.teacher_id';
-        $this->teacherstudies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params);
+        $limit = $params->get('studies','20');
+        $order = 'DESC';
+        $this->teacherstudies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $order);
       
         $this->item = $item;
         $print = JRequest::getBool('print');

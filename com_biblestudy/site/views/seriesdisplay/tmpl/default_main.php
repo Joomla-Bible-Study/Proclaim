@@ -33,7 +33,7 @@ if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 		?></tbody></table><table id="seriesstudytable" cellspacing="0"><tbody>
 		<?php
 		$studies = getSeriesstudies($this->items->id, $this->params, $this->admin_params, $this->template);
-		echo $studies;
+                echo $studies;
 		?>  </tbody></table>
 		<?php
 		break;
@@ -41,14 +41,14 @@ if (!$t) {$t = JRequest::getVar('t',1,'get','int');}
 	case 1:
     ?></tbody></table> <table id="bslisttable" cellspacing="0"><tr><td><?php
      $headerCall = JView::loadHelper('header');
-     $header = getHeader($this->studies[0], $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule=0);
+     $header = getHeader($this->seriesstudies, $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule=0);
 	 echo $header;
 
 		$class1 = 'bsodd';
 		$class2 = 'bseven';
 		$oddeven = $class1;
 
-		foreach ($this->studies as $row)
+		foreach ($this->seriesstudies as $row)
 		{ //Run through each row of the data result from the model
 			if($oddeven == $class1){ //Alternate the color background
 			$oddeven = $class2;
