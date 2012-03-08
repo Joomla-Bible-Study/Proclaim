@@ -26,6 +26,7 @@ if ($msg) {
         <!-- Here is where the version information will go -->
     </div>
     <div id="fbmenu">
+        <strong><?php echo JText::_('JBS_CPL_VERSION_INFORMATION'); ?></strong>
         <div class="fbmainmenu"><?php echo $this->version.' ('.$this->versiondate.')'; ?></div>
     </div>
 </div>
