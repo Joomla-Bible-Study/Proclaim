@@ -2,14 +2,6 @@
 
 //No Direct Access
 defined('_JEXEC') or die;
-
-$mainframe = JFactory::getApplication(); $option = JRequest::getCmd('option');
-
-$document = JFactory::getDocument();
-
-
-$url = $this->params->get('stylesheet');
-if ($url) {$document->addStyleSheet($url);}
 $listingcall = JView::loadHelper('serieslist');
 $studylistcall = JView::loadHelper('listing');
 $t = $this->params->get('serieslisttemplateid');

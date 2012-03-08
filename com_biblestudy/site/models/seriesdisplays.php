@@ -165,4 +165,21 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         return $where;
     }
 
+    /**
+     * @since 7.0
+     * get a list of all used series
+     */
+    public function getSeries() {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select('series.id AS value, series.series_text AS text');
+        $query->from('#__bsms_series AS series');
+        $query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
+        $query->group('series.id');
+        $query->order('series.series_text');
+
+        $db->setQuery($query->__toString());
+        return $db->loadObjectList();
+    }
 }

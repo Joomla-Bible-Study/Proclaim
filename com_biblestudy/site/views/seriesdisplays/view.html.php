@@ -4,7 +4,7 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
-
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 class BiblestudyViewSeriesdisplays extends JView {
 
     /**
@@ -18,6 +18,7 @@ class BiblestudyViewSeriesdisplays extends JView {
         include_once($path1 . 'image.php');
 
         $document = JFactory::getDocument();
+        
       //  $model = $this->getModel();
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
@@ -74,11 +75,7 @@ class BiblestudyViewSeriesdisplays extends JView {
 
         $uri = JFactory::getURI();
         $filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-        $filter_year = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
-        $filter_orders = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
-
-
-       // $items = $this->get('Data');
+       
         $items = $this->get('Items');
 
         //Adjust the slug if there is no alias in the row
@@ -103,39 +100,26 @@ class BiblestudyViewSeriesdisplays extends JView {
         $total = $this->get('Total');
         $pagination = $this->get('Pagination');
         $series = $this->get('Series');
-        $orders = $this->get('Orders');
-
+        
         //This is the helper for scripture formatting
         $scripture_call = Jview::loadHelper('scripture');
         //end scripture helper
         $this->assignRef('template', $template);
         $this->assignRef('pagination', $pagination);
-        $this->assignRef('order', $orders);
-
-        $menu = JSite::getMenu();
-        $item = $menu->getActive();
+        
+       
         //Get the main study list image
         $images = new jbsImages();
-        $main = $images->mainStudyImage();
+        $this->page->main = $images->mainStudyImage();
 
         $this->assignRef('main', $main);
 
         //Build Series List for drop down menu
         $types3[] = JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_SERIES'));
         $types3 = array_merge($types3, $series);
-        $lists['seriesid'] = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series");
+        $this->page->series = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series");
 
-        //build orders
-        $ord[] = JHTML::_('select.option', '0', JText::_('JBS_CMN_SELECT_ORDER'));
-        $orders = array_merge($ord, $orders);
-        $lists['sorting'] = JHTML::_('select.genericlist', $orders, 'filter_orders', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_orders");
-
-
-        //Build order
-        $ord[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_ORDER'));
-        $ord = array_merge($ord, $orders);
-        $lists['orders'] = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" oncchange="this.form.submit()"', 'value', 'text', "filter_orders");
-
+       
         $this->assignRef('lists', $lists);
 
         $this->assignRef('request_url', $uri->toString());

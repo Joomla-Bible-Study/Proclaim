@@ -7,9 +7,7 @@ $option = JRequest::getCmd('option');
 $listingcall = JView::loadHelper('serieslist');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
-$document = JFactory::getDocument();
-$document->addScript(JURI::base() . '../media/com_biblestudy/js/tooltip.js');
-$document->addStyleSheet(JURI::base() . '../media/com_biblestudy/css/biblestudy.css');
+
 $params = $this->params;
 $url = $params->get('stylesheet');
 if ($url) {
@@ -26,7 +24,7 @@ if ($url) {
                 <?php
                 if ($this->params->get('show_page_image_series') > 0) {
                     ?>
-                    <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" />
+                    <img src="<?php echo JURI::base() . $this->page->main->path; ?>" alt="<?php echo $this->page->main->path; ?>" width="<?php echo $this->page->main->width; ?>" height="<?php echo $this->page->main->height; ?>" />
                     <?php
                     //End of column for logo
                 }
@@ -42,7 +40,7 @@ if ($url) {
 
                 <?php
                 if ($this->params->get('search_series') > 0) {
-                    echo $this->lists['seriesid'];
+                    echo $this->page->series;
                 }
                 ?>
 

@@ -74,9 +74,7 @@ class BiblestudyViewTeacher extends JView {
         }
         $item->image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
         $this->assignRef('item', $item);
-
-        
-        $database = JFactory::getDBO();
+      
         $whereitem = $item->id;
         $wherefield = 'study.teacher_id';
         $this->teacherstudies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params);

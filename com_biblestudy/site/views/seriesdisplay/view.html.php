@@ -7,7 +7,7 @@
  */
 //No Direct Access
 defined('_JEXEC') or die;
-
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 jimport('joomla.application.component.view');
 $uri = JFactory::getURI();
@@ -27,7 +27,7 @@ class BiblestudyViewSeriesdisplay extends JView {
      * @return	mixed	False on error, null otherwise.
      */
     function display($tpl = null) {
-        //TF added
+        
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $document = JFactory::getDocument();
@@ -63,6 +63,11 @@ class BiblestudyViewSeriesdisplay extends JView {
         $items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES)) . ':' . $items->id;
         $itemparams = $mainframe->getPageParameters();
 
+        //get studies associated with the series
+        $pagebuilder = new JBSPagebuilder();
+        $whereitem = $items->id;
+        $wherefield = 'study.series_id';
+        $results = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $a_params);
         //Prepare meta information (under development)
         if ($itemparams->get('metakey')) {
             $document->setMetadata('keywords', $itemparams->get('metakey'));
@@ -97,14 +102,14 @@ class BiblestudyViewSeriesdisplay extends JView {
                 . $limit;
 
         $db->setQuery($query);
-        $results = $db->loadObjectList();
+      //  $results = $db->loadObjectList();
 
-        foreach ($results AS $item) {
-            $topic_text = getTopicItemTranslated($item);
-            $item->topic_text = $topic_text;
+        foreach ($results AS $study) {
+            $topic_text = getTopicItemTranslated($study);
+            $study->topic_text = $topic_text;
         }
 
-        $items2 = $results;
+     //   $items2 = $results;
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();
