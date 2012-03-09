@@ -101,6 +101,9 @@ class BibleStudyHelper {
                 case 'style':
                     $assetName = 'com_biblestudy.style' . (int) $Itemid;
                     break;
+                case 'templatecode':
+                    $assetName = 'com_biblestudy.templatecode' . (int) $Itemid;
+                    break;
                 
                 default:
                     $assetName = 'com_biblestudy.studiesedit.' . (int) $Itemid;
@@ -169,6 +172,9 @@ class BibleStudyHelper {
         );
         JSubMenuHelper::addEntry(
                 JText::_('JBS_CMN_TEMPLATES'), 'index.php?option=com_biblestudy&view=templates', $vName == 'templates'
+        );
+        JSubMenuHelper::addEntry(
+                JText::_('JBS_CMN_TEMPLATECODE'), 'index.php?option=com_biblestudy&view=templatecodes', $vName == 'templatecodes'
         );
         JSubMenuHelper::addEntry(
                 JText::_('JBS_CMN_MEDIAIMAGES'), 'index.php?option=com_biblestudy&view=mediaimages', $vName == 'mediaimages'

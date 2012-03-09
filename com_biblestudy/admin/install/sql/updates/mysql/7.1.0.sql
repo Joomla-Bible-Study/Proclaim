@@ -43,5 +43,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
   `type` int(3) NOT NULL,
   `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `templatecode` longtext NOT NULL,
+  `filename` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

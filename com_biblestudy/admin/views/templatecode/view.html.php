@@ -23,6 +23,7 @@ class biblestudyViewTemplatecode extends JView {
 	protected $defaults;
 
 	function display($tpl = null) {
+            $link = JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'templatecodehelp.html';
 		$this->form = $this->get("Form");
 		$item = $this->get("Item");
                 if ($item->id == 0)
@@ -52,7 +53,7 @@ class biblestudyViewTemplatecode extends JView {
                 JRequest::setVar('hidemainmenu', true);
 		$isNew = ($this->item->id < 1);
 		$title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
-		JToolBarHelper::title(JText::_('JBS_CMN_STYLES') . ': <small><small>[' . $title . ']</small></small>', 'css.png');
+		JToolBarHelper::title(JText::_('JBS_CMN_TEMPLATECODE') . ': <small><small>[' . $title . ']</small></small>', 'templates.png');
 
                 if ($this->canDo->get('core.create'))
                 {
@@ -67,7 +68,7 @@ class biblestudyViewTemplatecode extends JView {
 		JToolBarHelper::cancel('templatecode.cancel', 'JTOOLBAR_CANCEL');
 
 		JToolBarHelper::divider();
-		JToolBarHelper::help('biblestudy', true);
+		JToolBarHelper::help('templatecodehelp', true);
 	}
 
 }

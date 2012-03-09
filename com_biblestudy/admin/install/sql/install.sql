@@ -314,6 +314,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `published` int(3) NOT NULL DEFAULT '1',
   `type` int(3) NOT NULL,
+  `filename` text NOT NULL,
   `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `templatecode` longtext NOT NULL,
   PRIMARY KEY (`id`)

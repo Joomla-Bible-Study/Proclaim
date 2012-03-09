@@ -1,7 +1,7 @@
 <?php
 
 /*
- * controller for the css styles
+ * controller for the template codes
  * @since 7.1.0
  * @author Tom Fuller
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -11,13 +11,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controlleradmin');
 
+abstract class controllerClass extends JControllerAdmin {
 
+}
 
-class BiblestudyControllerTemplatecode extends JControllerForm {
+class BiblestudyControllerTemplatecodes extends controllerClass {
 
-    protected $view_list = 'templatecodes';
 	/**
 	 * Proxy for getModel
 	 *
@@ -27,7 +28,7 @@ class BiblestudyControllerTemplatecode extends JControllerForm {
 	 *
 	 * @since 7.1.0
 	 */
-	public function getModel($name = 'Templatecode', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
+	public function getModel($name = 'Templatecode', $prefix = 'BiblestudyModel') {
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
 	}

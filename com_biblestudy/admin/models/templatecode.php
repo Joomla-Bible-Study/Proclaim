@@ -62,7 +62,7 @@ class BiblestudyModelTemplatecode extends JModelAdmin
 	public function getForm($data = array(), $loadData = true) 
 	{
 		// Get the form.
-		$form = $this->loadForm('com_biblestudy.templatecode', 'style',
+		$form = $this->loadForm('com_biblestudy.templatecode', 'templatecode',
 		                        array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) 
 		{

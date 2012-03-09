@@ -1,0 +1,102 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Template Code Helper</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body><h2>Template Code Helper</h2><hr>
+        
+        <div>
+            <table border="1">
+                 <th colspan="2">Sermon List Codes</th>
+            </table>
+        </div><br/> 
+        
+        <div>
+             <table border="1">
+                 <th colspan="2">Sermon Display Codes</th>
+            </table>
+        </div><br/> 
+        
+        <div>
+            <table border="1">
+                 <th colspan="2">Series List Codes</th>
+                <tr>
+                    <td>To get each series</td><td>foreach ($this->items as $series){echo $series->description; etc. See Series Display Codes</td>
+                </tr>
+                <tr>
+                    <td>Link to each series</td><td>echo $series->serieslink;</td>
+                </tr>
+                <tr>
+                    <td>Series Image</td><td>echo $series->image;</td>
+                </tr>
+                <tr>
+                    <td>Series Drop down box</td><td>echo $this->page->series;</td>
+                </tr>
+                <tr>
+                    <td>Main Series Page Image</td><td>echo $this->page->main;</td>
+                </tr>
+                <tr>
+                    <td>Footer Pagination Links</td><td>echo $this->page->pagelinks; echo $this->page->counter;</td>
+                </tr>
+               
+            </table>
+        </div><br/> 
+       
+        <div>
+            <table border="1">
+                <th colspan="2">Series Display Codes</th>
+                <tr>
+                    <td>Series Title</td><td>echo $this->page->series_text;</td>
+                </tr>
+                <tr>
+                    <td>Series Thumbnail</td><td>echo $this->page->image;</td>
+                </tr>
+                <tr>
+                    <td>Series Studies</td><td>foreach ($this->seriesstudies as $study){echo $study-> see Studies List for details;}</td>
+                </tr>
+                <tr>
+                    <td>Series Description</td><td>echo $this->page->description;</td>
+                </tr>
+                <tr>
+                    <td>Series Teacher Name</td><td>echo $this->page->teachername;</td>
+                </tr>
+                <tr>
+                    <td>Series Teacher Title</td><td>echo $this->page->teachertitle;</td>
+                </tr>
+                <tr>
+                    <td>Series Teacher Image</td><td>echo $this->page->teacherimage;</td>
+                </tr>
+            </table>
+        </div><br/> 
+        
+        <div>
+            <table border="1">
+                <th colspan="2">Teacher List Codes</th>
+                <tr>
+                    <td>Each Teacher's Information</td><td>foreach ($this->items as $teacher){echo $teacher->teachername; See Teacher Display Codes</td>
+                </tr>
+                <tr>
+                    <td>Link to each teacher</td><td>echo $teacher->teacherlink;</td>
+                </tr>
+            </table>
+        </div><br/> 
+       
+        <div>
+             <table border="1">
+                 <th colspan="2">Teacher Display Codes</th>
+                 <tr>
+                     <td>Teacher Thumbnail</td><td>echo $this->$item->image;</td>
+                 </tr>
+                 <tr>
+                     <td>Large Teacher Image</td><td>echo $this->item->largeimage;</td>
+                 </tr>
+            </table>
+        </div>
+            
+    </body>
+</html>
