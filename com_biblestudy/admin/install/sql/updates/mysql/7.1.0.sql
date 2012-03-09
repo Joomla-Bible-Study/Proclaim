@@ -37,3 +37,11 @@ UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=shares', `im
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=templates', `img` = '../media/com_biblestudy/images/menu/icon-16-templates.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=templates' LIMIT 1;
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=mimetypes', `img` = '../media/com_biblestudy/images/menu/icon-16-mimetype.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=mimetypes' LIMIT 1;
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=cssedit', `img` = '../media/com_biblestudy/images/menu/icon-16-css.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=cssedit' LIMIT 1;
+CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `published` int(3) NOT NULL DEFAULT '1',
+  `type` int(3) NOT NULL,
+  `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `templatecode` longtext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
