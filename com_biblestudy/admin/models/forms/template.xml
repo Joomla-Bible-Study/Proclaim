@@ -24,22 +24,34 @@
 				label="JBS_TPL_TEMPLATE_STUDIES_LIST" description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC"
 				query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
 				key_field="id" value_field="title" required="true" />
+                        <field name="sermonstemplate" type="filelist" label="JBS_TPL_SERMONS_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
+                                directory="/components/com_biblestudy/views/sermons/tmpl" exclude="\.html$|^default.php|\.xml$|default_main.php|default_formheader.php|default_formfooter.php|default_custom.php"/>
 			<field name="detailstemplateid" type="sql" default=""
 				label="JBS_TPL_TEMPLATE_STUDY_DETAIL" description="JBS_TPL_TEMPLATE_STUDY_DETAIL_DESC"
 				query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
 				key_field="id" value_field="title" required="true" />
+                        <field name="sermontemplate" type="filelist" label="JBS_TPL_SERMON_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
+                                directory="/components/com_biblestudy/views/sermon/tmpl" exclude="\.html$|^default.php|\.xml$|default_main.php|default_custom.php|default_footer.php|default_scripture.php|default_commentsform.php"/>
 			<field name="teachertemplateid" type="sql" default=""
 				label="JBS_TPL_TEMPLATE_TEACHER" description="JBS_TPL_TEMPLATE_TEACHER_DESC"
 				query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
 				key_field="id" value_field="title" required="true" />
-			<field name="serieslisttemplateid" type="sql" default=""
+                        <field name="teachertemplate" type="filelist" label="JBS_TPL_TEACHER_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
+                                directory="/components/com_biblestudy/views/teacher/tmpl" exclude="\.html$|^default.php|\.xml$|default_main.php|default_custom.php"/>
+                        <field name="teacherstemplate" type="filelist" label="JBS_TPL_TEACHER_LIST_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
+                                directory="/components/com_biblestudy/views/teachers/tmpl" exclude="\.html$|^default.php|\.xml$|default_main.php|default_custom.php"/>
+                        <field name="serieslisttemplateid" type="sql" default=""
 				label="JBS_TPL_TEMPLATE_SERIES_LIST" description="JBS_TPL_TEMPLATE_SERIES_LIST_DESC"
 				query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
 				key_field="id" value_field="title" required="true" />
+                                <field name="seriesdisplaystemplate" type="filelist" label="JBS_TPL_SERIES_LIST_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
+                                directory="/components/com_biblestudy/views/seriesdisplays/tmpl" exclude="\.html$|^default.php|\.xml$|default_main.php|default_custom.php"/>
 			<field name="seriesdetailtemplateid" type="sql" default=""
 				label="JBS_TPL_TEMPLATE_SERIES_DETAIL" description="JBS_TPL_TEMPLATE_SERIES_DETAIL_DESC"
 				query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
 				key_field="id" value_field="title" required="true" />
+                        <field name="seriesdisplaytemplate" type="filelist" label="JBS_TPL_SERIES_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
+                                directory="/components/com_biblestudy/views/seriesdisplay/tmpl" exclude="\.html$|^default.php|\.xml$|default_main.php|default_custom.php"/>
 		</fieldset>
 		<fieldset name="FILTERS">
                         <field name="teacher_id" type="sql"
