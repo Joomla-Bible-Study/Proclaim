@@ -4,15 +4,13 @@ defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
 
-require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
-$mainframe = JFactory::getApplication();
-$option = JRequest::getCmd('option');
+//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 JHTML::_('behavior.tooltip');
 $params = $this->params;
 $document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 
-$row = $this->studydetails;
+$row = $this->study;
 $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');
 ?>
@@ -23,7 +21,7 @@ $sharecall = JView::loadHelper('share');
 
             <?php
             if ($this->params->get('show_print_view') > 0) {
-                echo JHtml::_('icon.print_popup', $params);
+                echo $this->page->print;
             }
             ?>
 
@@ -34,8 +32,8 @@ $sharecall = JView::loadHelper('share');
             ?>
             <div id="bsms_share">
                 <?php
-                $social = getShare($this->detailslink, $row, $params, $this->admin_params);
-                echo $social;
+              //  $social = getShare($this->detailslink, $row, $params, $this->admin_params);
+                echo $this->page->social;
                 ?>
             </div>
         <?php } //End Social Networking  ?>
@@ -98,7 +96,7 @@ $sharecall = JView::loadHelper('share');
                 if ($this->params->get('show_scripture_link') > 0) {
                     echo $this->article->studytext;
                 } else {
-                    echo $this->studydetails->studytext;
+                    echo $this->study->studytext;
                 }
                 ?>
 

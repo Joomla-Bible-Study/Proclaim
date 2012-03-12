@@ -5,7 +5,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
-
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 $uri = JFactory::getURI();
 
 class BiblestudyViewSermon extends JView {
@@ -13,8 +13,8 @@ class BiblestudyViewSermon extends JView {
     function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
-        $option = JRequest::getCmd('option');
-         $studydetails = $this->get('Item');
+        $study = $this->get('Item');
+        
         // Convert parameter fields to objects.
         $template = $this->get('template');
 
@@ -30,7 +30,7 @@ class BiblestudyViewSermon extends JView {
 
         // Convert item paremeters into objects
         $registry = new JRegistry;
-        $registry->loadJSON($studydetails->params);
+        $registry->loadJSON($study->params);
         $itemparams = $registry;
         $adminrows = new JBSAdmin();
         $document = JFactory::getDocument();
@@ -44,30 +44,33 @@ class BiblestudyViewSermon extends JView {
         $pathway = $mainframe->getPathWay();
         $contentConfig = JComponentHelper::getParams('com_biblestudy');
         $dispatcher = JDispatcher::getInstance();
-        // Get the menu item object
-
-      
-       
+        
         //Adjust the slug if there is no alias in the row
         //Set the slug
-        $studydetails->slug = $studydetails->alias ? ($studydetails->id . ':' . $studydetails->alias) : str_replace(' ', '-', htmlspecialchars_decode($studydetails->studytitle, ENT_QUOTES)) . ':' . $studydetails->id;
-
-
-        //Load the Admin settings and params from the template
+        $study->slug = $study->alias ? ($study->id . ':' . $study->alias) : str_replace(' ', '-', htmlspecialchars_decode($study->studytitle, ENT_QUOTES)) . ':' . $study->id;
+        $pagebuilder = new JBSPagebuilder();
+        $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
+                $study->scripture1 = $pelements->scripture1;
+                $study->scripture2 = $pelements->scripture2;
+                $study->media = $pelements->media;
+                $study->duration = $pelements->duration;
+                $study->studydate = $pelements->studydate;
+                $study->topics = $pelements->topics;
+                $study->study_thumbnail = $pelements->study_thumbnail;
+                $study->series_thumbnail = $pelements->series_thumbnail;
+                $study->detailslink = $pelements->detailslink;
+                $study->teacherimage = $pelements->teacherimage;
+        
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
-
-       
-        
-        
 
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();
 
         //   $count = count($items);
-        if ($studydetails->access > 1) {
-            if (!in_array($studydetails->access, $groups)) {
+        if ($study->access > 1) {
+            if (!in_array($study->access, $groups)) {
                 return JError::raiseError('403', JText::_('JBS_CMN_ACCESS_FORBIDDEN'));
             }
         }
@@ -76,13 +79,13 @@ class BiblestudyViewSermon extends JView {
         if ($itemparams->get('metakey')) {
             $document->setMetadata('keywords', $itemparams->get('metakey'));
         } elseif (!$itemparams->get('metakey')) {
-            $document->setMetadata('keywords', $studydetails->topic_text . ',' . $studydetails->studytitle);
+            $document->setMetadata('keywords', $study->topic_text . ',' . $study->studytitle);
         }
 
         if ($itemparams->get('metadesc')) {
             $document->setDescription($itemparams->get('metadesc'));
         } elseif (!$itemparams->get('metadesc')) {
-            $document->setDescription($studydetails->studyintro);
+            $document->setDescription($study->studyintro);
         }
         //Passage link to BibleGateway
         $plugin = JPluginHelper::getPlugin('content', 'scripturelinks');
@@ -116,7 +119,7 @@ class BiblestudyViewSermon extends JView {
         /*
          * Process the prepare content plugins
          */
-        $article->text = $studydetails->studytext;
+        $article->text = $study->studytext;
         $linkit = $params->get('show_scripture_link');
         if ($linkit) {
             switch ($linkit) {
@@ -132,18 +135,24 @@ class BiblestudyViewSermon extends JView {
             $limitstart = JRequest::getVar('limitstart', 'int');
             $results = $dispatcher->trigger('onPrepareContent', array(& $article, & $params, $limitstart));
             $article->studytext = $article->text;
+            $study->studytext = $article->text;
         } //end if $linkit
         //Prepares a link string for use in social networking
         $u = JURI::getInstance();
         $detailslink = htmlspecialchars($u->toString());
         $detailslink = JRoute::_($detailslink);
         $this->assignRef('detailslink', $detailslink);
+        $share = JView::loadHelper('share');
+        $this->page->social = getShare($detailslink, $study, $params, $this->admin_params);
+        JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
+        JHTML::_('behavior.tooltip');
+        $this->page->print = JHtml::_('icon.print_popup', $params);
         //End social networking
         // End process prepare content plugins
         $this->assignRef('template', $template);
         $this->assignRef('print', $print);
         $this->assignRef('params', $params);
-        $this->assignRef('studydetails', $studydetails);
+        $this->assignRef('study', $study);
         $this->assignRef('article', $article);
         $this->assignRef('passage_link', $passage_link);
 

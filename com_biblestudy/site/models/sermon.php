@@ -119,9 +119,13 @@ class BiblestudyModelSermon extends JModelItem {
                         $query->select('group_concat(stp.id separator ", ") AS tp_id, group_concat(stp.topic_text separator ", ") as topic_text, group_concat(stp.params separator ", ") as topic_params');
                         $query->join('LEFT','#__bsms_studytopics as tp on s.id = tp.study_id');
                         $query->join('LEFT','#__bsms_topics as stp on stp.id = tp.topic_id');
+                        
                         //join over media files
                         $query->select('sum(m.plays) AS totalplays, sum(m.downloads) AS totaldownloads, m.id');
+                        $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
                         $query->join('LEFT','#__bsms_mediafiles AS m on s.id = m.study_id');
+                        
+                       // $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');
                         $query->group('s.id');
                         $query->where('s.id = ' . (int) $pk);
                         $db->setQuery($query);

@@ -176,7 +176,6 @@ class BiblestudyModelSermons extends JModelList {
         $query->join('LEFT', '#__bsms_locations AS locations ON study.location_id = locations.id');
 
         //Join over topics
-
         $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
         $query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
         $query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topics_text, GROUP_CONCAT(DISTINCT t.params)');

@@ -39,7 +39,7 @@ switch ($this->params->get('link_comments', 0)) {
                         </th></tr></thead>
                 <?php
                 $db = JFactory::getDBO();
-                $query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = ' . $this->studydetails->id . ' ORDER BY c.comment_date ASC';
+                $query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = ' . $this->study->id . ' ORDER BY c.comment_date ASC';
 
                 $db->setQuery($query);
                 $comments = $db->loadObjectList();

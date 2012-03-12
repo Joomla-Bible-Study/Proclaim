@@ -60,6 +60,8 @@ class JBSPagebuilder
             }
         $page->detailslink = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));    
         return $page;
+        $teacherimage = $images->getTeacherImage($item->image, $item->thumb);
+        $page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->teachername . '">';
     }
     
     function mediaBuilder($mediaids, $params, $admin_params)
