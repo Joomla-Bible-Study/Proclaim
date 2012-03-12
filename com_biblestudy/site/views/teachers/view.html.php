@@ -75,9 +75,10 @@ class BiblestudyViewTeachers extends JView {
         
         foreach ($items as $i=>$item)
         {
-            $items[$i]->image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
-            $items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id='.$item->slug.'&t='.$t);
+            $image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+            $items[$i]->image = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'">';
             $items[$i]->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
+            $items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id='.$item->slug.'&t='.$t);
         }
                 
         $menu = & JSite::getMenu();

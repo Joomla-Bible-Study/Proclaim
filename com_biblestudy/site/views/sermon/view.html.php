@@ -120,7 +120,7 @@ class BiblestudyViewSermon extends JView {
          * Process the prepare content plugins
          */
         $article->text = $study->studytext;
-        $linkit = $params->get('show_scripture_link');
+        $linkit = $params->get('show_scripture_link'); 
         if ($linkit) {
             switch ($linkit) {
                 case 0:
@@ -133,7 +133,7 @@ class BiblestudyViewSermon extends JView {
                     break;
             }
             $limitstart = JRequest::getVar('limitstart', 'int');
-            $results = $dispatcher->trigger('onPrepareContent', array(& $article, & $params, $limitstart));
+            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon',& $article, & $params, $limitstart));
             $article->studytext = $article->text;
             $study->studytext = $article->text;
         } //end if $linkit

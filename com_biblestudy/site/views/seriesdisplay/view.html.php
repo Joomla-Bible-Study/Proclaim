@@ -11,6 +11,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 jimport('joomla.application.component.view');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
+require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
 class BiblestudyViewSeriesdisplay extends JView {
@@ -41,7 +42,13 @@ class BiblestudyViewSeriesdisplay extends JView {
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
-
+        $items = $this->get('Item');
+        //Get the series image
+        $images = new jbsImages();
+        $image = getSeriesThumbnail($item->series_thumbnail);
+        $items->image = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'">';
+        $teacherimage = $images->getTeacherThumbnail($items->thumb, $image2=null);
+        $items->teacherimage = '<img src="'.$teacherimage->path.'" height="'.$teacherimage->height.'" width="'.$teacherimage->width.'">';
         $t = JRequest::getInt('t', 'get', 1);
         if (!$t) {
             $t = 1;
@@ -58,7 +65,7 @@ class BiblestudyViewSeriesdisplay extends JView {
         $this->admin_params = $registry;
         $css = $params->get('css','biblestudy.css');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
-        $items = $this->get('Item');
+        
         $items->slug = $items->alias ? ($items->id . ':' . $items->alias) : str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES)) . ':' . $items->id;
         $itemparams = $mainframe->getPageParameters();
 
@@ -88,33 +95,7 @@ class BiblestudyViewSeriesdisplay extends JView {
         } elseif (!$itemparams->get('metadesc')) {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
-        //Get studies from this series
-       
-
-        $limit = ' LIMIT ' . $params->get('series_detail_limit', 10);
-        $db = JFactory::getDBO();
-        $query = 'SELECT #__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
-                . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.description AS sdescription,'
-                . ' #__bsms_message_type.id AS mid,'
-                . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-                . ' #__bsms_locations.id AS lid, #__bsms_locations.location_text,'
-                . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
-                . ' FROM #__bsms_studies'
-                . ' LEFT JOIN #__bsms_books ON (#__bsms_studies.booknumber = #__bsms_books.booknumber)'
-                . ' LEFT JOIN #__bsms_teachers ON (#__bsms_studies.teacher_id = #__bsms_teachers.id)'
-                . ' LEFT JOIN #__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)'
-                . ' LEFT JOIN #__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)'
-                . ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studies.topics_id)'
-                . ' LEFT JOIN #__bsms_locations ON (#__bsms_studies.location_id = #__bsms_locations.id)'
-                . ' WHERE #__bsms_studies.series_id = ' . $items->id . ' GROUP BY #__bsms_studies.id ORDER BY #__bsms_studies.studydate ' . $seriesorder
-                . $limit;
-
-        $db->setQuery($query);
-      //  $results = $db->loadObjectList();
-
         
-
-     //   $items2 = $results;
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();

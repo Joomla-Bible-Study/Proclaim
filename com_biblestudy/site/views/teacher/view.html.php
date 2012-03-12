@@ -72,7 +72,10 @@ class BiblestudyViewTeacher extends JView {
         if ($id) {
             $item->id = $id;
         }
-        $item->image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+        $image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+        $largeimage = $images->getTeacherImage($item->image, $item->teacher_image);
+        $item->image = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'">';
+        $item->largeimage = '<img src="'.$largeimage->path.'" height="'.$largeimage->height.'" width="'.$largeimage->width.'">';
         $this->assignRef('item', $item);
       
         $whereitem = $item->id;

@@ -77,12 +77,16 @@ class BiblestudyViewSeriesdisplays extends JView {
         $filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
        
         $items = $this->get('Items');
-
+        $images = new jbsImages();
         //Adjust the slug if there is no alias in the row
 
-        foreach ($items AS $item) {
+        foreach ($items AS $item) 
+            {
             $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
-        }
+            $seriesimage = $images->getSeriesThumbnail($item->series_thumbnail);
+            $item->image = '<img src="'.$seriesimage->path.'" height="'.$seriesimage->height.'" width="'.$seriesimage->width.'">';
+            $item->serieslink = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id='.$item->slug.'&t='.$t);
+            }
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();
@@ -99,6 +103,8 @@ class BiblestudyViewSeriesdisplays extends JView {
         $this->items = $items;
         $total = $this->get('Total');
         $pagination = $this->get('Pagination');
+        $this->page->pagelinks = $pagination->getPagesLinks();
+        $this->page->counter = $pagination->getPagesCounter();
         $series = $this->get('Series');
         
         //This is the helper for scripture formatting
@@ -109,8 +115,8 @@ class BiblestudyViewSeriesdisplays extends JView {
         
        
         //Get the main study list image
-        $images = new jbsImages();
-        $this->page->main = $images->mainStudyImage();
+        $mainimage = $images->mainStudyImage();
+        $this->page->main = '<img src="'.$mainimage->path.'" height="'.$mainimage->height.'" width="'.$mainimage->width.'">';
 
         $this->assignRef('main', $main);
 
