@@ -7,23 +7,106 @@ and open the template in the editor.
     <head>
         <title>Template Code Helper</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+table.sample {
+	border-width: 1px;
+	border-spacing: 2px;
+	border-style: outset;
+	border-color: gray;
+	border-collapse: collapse;
+	background-color: white;
+}
+table.sample th {
+	border-width: 1px;
+	padding: 2px;
+	border-style: inset;
+	border-color: gray;
+	background-color: white;
+	
+}
+table.sample td {
+	border-width: 1px;
+	padding: 2px;
+	border-style: inset;
+	border-color: gray;
+	background-color: white;
+	
+}
+table.sample th, table.sample td {
+  font-size : 77%;
+  font-family : "Myriad Web",Verdana,Helvetica,Arial,sans-serif;
+  background : #efe none; color : #630; }
+h2 {
+    font-size : 100%;
+  font-family : "Myriad Web",Verdana,Helvetica,Arial,sans-serif;
+  background : #efe none; color : #630;
+}
+</style>
+
+
+
     </head>
-    <body><h2>Template Code Helper</h2><hr>
-        
+    <body><h2>Template Code Helper</h2>
         <div>
-            <table border="1">
+            <table class="sample">
+                 <th colspan="2">Studies Codes (for all views)</th>
+                 <tr>  <td>To get the list, see each view</td><td>foreach ($this->items as $study){put code here}</td></tr>
+                 <tr><td>Title</td><td>echo $study->studytitle;</td></tr>
+                 <tr><td>Study Number</td><td>echo $study->studynumber;</td></tr>
+                 <tr><td>Description</td><td>echo $study->studyintro;</td></tr>
+                 <tr><td>Date</td><td>echo $study->studydate;</td></tr>
+                 <tr><td>Id</td><td>echo $study->id;</td></tr>
+                 <tr><td>Scripture 1</td><td>echo $study->scripture1;</td></tr>
+                 <tr><td>Scripture 2</td><td>echo $study->scripture2;</td></tr>
+                 <tr><td>Title</td><td>echo $study->studytitle;</td></tr>
+                 <tr><td>Media</td><td>echo $study->media;</td></tr>
+                 <tr><td>Duration</td><td>echo $study->duration;</td></tr>
+                 <tr><td>Topics</td><td>echo $study->topics;</td></tr>
+                 <tr><td>Study Thumbnail</td><td>echo $study->study_thumbnail;</td></tr>
+                 <tr><td>Series Thumbnail</td><td>echo $study->series_thumbnail;</td></tr>
+                 <tr><td>Link to Details View</td><td>echo $study->detailslink;</td></tr>
+                 <tr><td>Topics</td><td>echo $study->topics;</td></tr>
+                 <tr><td>Teacher Name</td><td>echo $study->teachername;</td></tr>
+                 <tr><td>Teacher Title</td><td>echo $study->teachertitle;</td></tr>
+                 <tr><td>Teacher Image</td><td>echo $study->teacherimage;</td></tr>
+                 <tr><td>Topics</td><td>echo $study->topics;</td></tr>
+                 <tr><td>Hits</td><td>echo $study->hits;</td></tr>
+                 <tr><td>Submitted By</td><td>echo $study->submitted;</td></tr>
+                 <tr><td>Slug</td><td>echo $study->slug;</td></tr>
+                 <tr><td>Total Plays</td><td>echo $study->totalplays;</td></tr>
+                 <tr><td>Total Downloads</td><td>echo $study->totaldownloads;</td></tr>
+                 <tr><td>Location</td><td>echo $study->location_text;</td></tr>
+                 
+                 
+            </table>
+        </div><br/>  
+        <div>
+            <table  class="sample">
                  <th colspan="2">Sermon List Codes</th>
+                 <tr><td>Popular Study Drop Down</td><td>echo $this->page->popular;</td></tr>
+                 <tr><td>Go Button</td><td>echo $this->page->gobutton;</td></tr>
+                 <tr><td>Teachers Dropdown</td><td>echo $this->page->teachers;</td></tr>
+                 <tr><td>Series Dropdown</td><td>echo $this->page->series;</td></tr>
+                 <tr><td>Message Types Dropdown</td><td>echo $this->page->messagetypes;</td></tr>
+                 <tr><td>Years Dropdown</td><td>echo $this->page->years;</td></tr>
+                 <tr><td>Locations Dropdown</td><td>echo  $this->page->locations;</td></tr>
+                 <tr><td>Topics Dropdown</td><td>echo  $this->page->topics;</td></tr>
+                 <tr><td>Books Dropdown</td><td>echo  $this->page->books;</td></tr>
+                 <tr><td>Order (Asc, Desc) Dropdown</td><td>echo $this->page->order;</td></tr>
+                
             </table>
         </div><br/> 
         
         <div>
-             <table border="1">
+             <table  class="sample">
                  <th colspan="2">Sermon Display Codes</th>
+                 <tr><td>Print Button</td><td>echo  $this->page->print;</td></tr>
+                 <tr><td>Social Media Box</td><td>echo  $this->page->social;</td></tr>
             </table>
         </div><br/> 
         
         <div>
-            <table border="1">
+            <table class="sample">
                  <th colspan="2">Series List Codes</th>
                 <tr>
                     <td>To get each series</td><td>foreach ($this->items as $series){echo $series->description; etc. See Series Display Codes</td>
@@ -48,7 +131,7 @@ and open the template in the editor.
         </div><br/> 
        
         <div>
-            <table border="1">
+            <table  class="sample">
                 <th colspan="2">Series Display Codes</th>
                 <tr>
                     <td>Series Title</td><td>echo $this->page->series_text;</td>
@@ -75,7 +158,7 @@ and open the template in the editor.
         </div><br/> 
         
         <div>
-            <table border="1">
+            <table  class="sample">
                 <th colspan="2">Teacher List Codes</th>
                 <tr>
                     <td>Each Teacher's Information</td><td>foreach ($this->items as $teacher){echo $teacher->teachername; See Teacher Display Codes</td>
@@ -87,7 +170,7 @@ and open the template in the editor.
         </div><br/> 
        
         <div>
-             <table border="1">
+             <table  class="sample">
                  <th colspan="2">Teacher Display Codes</th>
                  <tr>
                      <td>Teacher Thumbnail</td><td>echo $this->$item->image;</td>
