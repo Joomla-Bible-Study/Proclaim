@@ -61,36 +61,43 @@ class BiblestudyControllerTemplate extends controllerClass {
 
         function export_import()
         {
-               if ( $userfile = JRequest::getVar('template_import', null, 'files', 'array'))
-               {
-                   if ($import = $this->template_import($userfile))
-                   {
-                       $message = JText::_('JBS_TPL_IMPORT_SUCCESS');
-                       $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
-                   }
-                   else
-                   {
-                       $message = JText::_('JBS_TPL_IMPORT_FAILED');
-                       $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
-                   }
-               }
-               //assuming there is not $userfile, then this is an export
-               if ($export = $this->template_export())
-                    {
-                        $message = JText::_('JBS_TPL_EXPORT_SUCCESS');
-                        $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
-                   }
-               else
-                   {
-                       $message = JText::_('JBS_TPL_EXPORT_FAILED');
-                       $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
-                   }
-               
+            $tool = JRequest::getVar('tooltype', '', 'post'); 
+            switch ($tool) 
+                {
+                    case 'export':
+                        $export = $this->template_export();
+                        if ($export)
+                        {
+                            $message = JText::_('JBS_TPL_EXPORT_SUCCESS');
+                            $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
+                        }
+                        else
+                        {
+                            $message = JText::_('JBS_TPL_EXPORT_FAILED');
+                            $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
+                        }
+                        break;
+                    
+                    case 'import':
+                        $import = $this->template_import();
+                        if ($import)
+                        {
+                            $message = JText::_('JBS_TPL_IMPORT_SUCCESS');
+                            $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
+                        }
+                        else
+                        {
+                            $message = JText::_('JBS_TPL_IMPORT_FAILED');
+                            $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
+                        }
+                        break;
+                }
+
         }
            
             
         
-        function template_import($userfile)
+        function template_import()
         {
              jimport('joomla.filesystem.file');
             // Make sure that file uploads are enabled in php
@@ -98,12 +105,62 @@ class BiblestudyControllerTemplate extends controllerClass {
                 JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_TPL_NO_UPLOADS'));
                 return false;
             }
-            
+             jimport('joomla.filesystem.file');
+        @set_time_limit(300);
+
+        $result = false;
+        $userfile = JRequest::getVar('template_import', null, 'files', 'array');
+         // Make sure that file uploads are enabled in php
+        if (!(bool) ini_get('file_uploads')) {
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('WARNINSTALLFILE'));
+            return false;
+        }
+
+
+        // If there is no uploaded file, we have a problem...
+        if (!is_array($userfile)) {
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('No file selected'));
+            return false;
+        }
+
+        // Check if there was a problem uploading the file.
+        if ($userfile['error'] || $userfile['size'] < 1) {
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('WARNINSTALLUPLOADERROR'));
+            return false;
+        }
+
+        // Build the appropriate paths
+        $config = JFactory::getConfig();
+        $tmp_dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'];
+
+        $tmp_src = $userfile['tmp_name'];
+
+        // Move uploaded file
+        jimport('joomla.filesystem.file');
+        $uploaded = @move_uploaded_file($tmp_src, $tmp_dest);
+
+        $db = JFactory::getDBO();
+
+        $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+        $queries = $db->splitSql($query);
+        foreach ($queries as $querie) {
+            $db->setQuery($querie);
+            $db->query();
+            if ($db->getErrorNum() != 0) {
+                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
+                $error .= $db->stderr(true);
+                $error .= "</font>";
+                print_r($error);
+                //return false;
+            }
+        }
         }
         
         function template_export()
         {
-            if (!$exporttemplate = JRequest::get('template_export','','post'))
+            $data = JRequest::getVar('jform', array(), 'post', 'array');
+            $exporttemplate = $data['params']['template_export'];
+            if (!$exporttemplate )
             {
                 $message = JText::_('JBS_TPL_NO_FILE_SELECTED');
                 $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
@@ -119,37 +176,50 @@ class BiblestudyControllerTemplate extends controllerClass {
             $result = $db->loadObject();
             //Create the main template insert
             $objects[] = 'INSERT INTO #__bsms_templates SET `type` = "'.$db->getEscaped($result->type).'",
-                `params` = "'.$db->getEscaped($result->params).'", `title` = "'.$db->getEscaped($result->text).'";\n';
-            $registry = new JRegistry;
-            $registry->loadJSON($result->params);
-            $params = $registry;
+                `params` = "'.$db->getEscaped($result->params).'", `title` = "'.$db->getEscaped($result->text).'";
+                    ';
+          
             //Get the individual template files
-            if($sermons = $params->get('sermonstemplate')){$objects[]=$this->getTemplate($sermons);}
-            if($sermon = $params->get('sermontemplate')){$objects[]=$this->getTemplate($sermon);}
-            if($teachers = $params->get('teacherstemplate')){$objects[]=$this->getTemplate($teachers);}
-            if($teacher = $params->get('teachertemplate')){$objects[]=$this->getTemplate($teacher);}
-            if($seriesdisplays = $params->get('seriesdisplays')){$objects[]=$this->getTemplate($seriesdisplays);}
-            if($seriesdisplay = $params->get('seriesdisplay')){$objects[]=$this->getTemplate($seriesdisplay);}
-            $filecontents = implode('\n',$objects);
-            $filename = $result->title.'sql';
+            $sermons = $data['params']['sermonstemplate'];
+            if($sermons){$objects[]=$this->getTemplate($sermons);}
+            $sermon = $data['params']['sermontemplate'];
+            if($sermon){$objects[]=$this->getTemplate($sermon);}
+            $teachers = $data['params']['teacherstemplate'];
+            if($teachers){$objects[]=$this->getTemplate($teachers);}
+            $teacher = $data['params']['teachertemplate'];
+            if($teacher ){$objects[]=$this->getTemplate($teacher);}
+            $seriesdisplays = $data['params']['seriesdisplaystemplate'];
+            if($seriesdisplays){$objects[]=$this->getTemplate($seriesdisplays);}
+            $seriesdisplay = $data['params']['seriesdisplaytemplate'];
+            if($seriesdisplay){$objects[]=$this->getTemplate($seriesdisplay);} 
+            $filecontents = implode('',$objects);
+            $filename = $result->title.'.sql';
             $filepath = JPATH_ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$filename;
             if (!$filewrite = JFile::write($filepath,$filecontents)){return false;}
             $xport = new JBSExport();
             $savefile = $xport->output_file($filepath, $filename, 'text/x-sql');
+            $filedelete = JFile::delete($filepath);
         }
         
         function getTemplate($template)
         {
+            $length = strlen($template);
+            $template = substr($template,8,$length - 8); 
+            $length2 = strlen($template);
+            $template = substr($template,0,$length2-4); 
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
             $query->select('tc.id, tc.templatecode,tc.type,tc.filename');
             $query->from('#__bsms_templatecode as tc');
-            $query->where('tc.id ='.$template);
+            $query->where('tc.filename ="'.$template.'"');
             $db->setQuery($query);
             if (!$object = $db->loadObject()) {return false;}
-            $templatereturn = 'INSERT INTO #__bsms_templatecode SET `type` = "'.$db->getEscaped($object->type).'",
-                `templatecode` = "'.$db->getEscaped($object->templatecode).'", `filename`="'.$db->getEscaped($object->filename).'",
-                `published` = "1";\n';
+            $templatereturn = '
+INSERT INTO #__bsms_templatecode SET `type` = "'.$db->getEscaped($object->type).'",
+`templatecode` = "'.$db->getEscaped($object->templatecode).'",
+`filename`="'.$db->getEscaped($template).'",
+`published` = "1";
+';
             return $templatereturn;
         }
 }
