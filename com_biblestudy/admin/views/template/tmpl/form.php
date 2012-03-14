@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 ?>
 
-<form
+<form enctype="multipart/form-data"
     action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
     method="post" name="adminForm" id="adminForm">
 
@@ -332,6 +332,7 @@ require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTO
 <?php echo JHtml::_('tabs.end'); ?>
 
 
-                                                                                    <input type="hidden" name="task" value="" />
+<input type="hidden" name="task" value="" />
+<input type="hidden" name="controller" value="template" />
 <?php echo JHtml::_('form.token'); ?>
-                                                                                    </form>
+</form>

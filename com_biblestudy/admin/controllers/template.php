@@ -59,43 +59,7 @@ class BiblestudyControllerTemplate extends controllerClass {
 		$this->setRedirect('index.php?option=com_biblestudy&view=templates');
 	}
 
-        function export_import()
-        {
-            $tool = JRequest::getVar('tooltype', '', 'post'); 
-            switch ($tool) 
-                {
-                    case 'export':
-                        $export = $this->template_export();
-                        if ($export)
-                        {
-                            $message = JText::_('JBS_TPL_EXPORT_SUCCESS');
-                            $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
-                        }
-                        else
-                        {
-                            $message = JText::_('JBS_TPL_EXPORT_FAILED');
-                            $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
-                        }
-                        break;
-                    
-                    case 'import':
-                        $import = $this->template_import();
-                        if ($import)
-                        {
-                            $message = JText::_('JBS_TPL_IMPORT_SUCCESS');
-                            $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
-                        }
-                        else
-                        {
-                            $message = JText::_('JBS_TPL_IMPORT_FAILED');
-                            $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
-                        }
-                        break;
-                }
-
-        }
-           
-            
+        
         
         function template_import()
         {
@@ -109,7 +73,7 @@ class BiblestudyControllerTemplate extends controllerClass {
         @set_time_limit(300);
 
         $result = false;
-        $userfile = JRequest::getVar('template_import', null, 'files', 'array');
+        $userfile = JRequest::getVar('template_import', null, 'files', 'array'); 
          // Make sure that file uploads are enabled in php
         if (!(bool) ini_get('file_uploads')) {
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('WARNINSTALLFILE'));
@@ -144,16 +108,22 @@ class BiblestudyControllerTemplate extends controllerClass {
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
         $queries = $db->splitSql($query);
         foreach ($queries as $querie) {
-            $db->setQuery($querie);
-            $db->query();
-            if ($db->getErrorNum() != 0) {
-                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
-                $error .= $db->stderr(true);
-                $error .= "</font>";
-                print_r($error);
-                //return false;
+            if (substr_count($querie,'INSERT'))
+            { 
+                $db->setQuery($querie);
+                $db->query();
+                if ($db->getErrorNum() != 0) {
+                    $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
+                    $error .= $db->stderr(true);
+                    $error .= "</font>";
+                    print_r($error);
+                    //return false;
+                }
+                //todo: determine if templatecode or css, load model and save file
             }
         }
+        $message = JText::_('JBS_TPL_IMPORT_SUCCESS');
+        $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
         }
         
         function template_export()
@@ -181,17 +151,19 @@ class BiblestudyControllerTemplate extends controllerClass {
           
             //Get the individual template files
             $sermons = $data['params']['sermonstemplate'];
-            if($sermons){$objects[]=$this->getTemplate($sermons);}
+            if($sermons){$objects[]=$this->getTemplate($sermons, false);}
             $sermon = $data['params']['sermontemplate'];
-            if($sermon){$objects[]=$this->getTemplate($sermon);}
+            if($sermon){$objects[]=$this->getTemplate($sermon, false);}
             $teachers = $data['params']['teacherstemplate'];
-            if($teachers){$objects[]=$this->getTemplate($teachers);}
+            if($teachers){$objects[]=$this->getTemplate($teachers, false);}
             $teacher = $data['params']['teachertemplate'];
-            if($teacher ){$objects[]=$this->getTemplate($teacher);}
+            if($teacher ){$objects[]=$this->getTemplate($teacher, false);}
             $seriesdisplays = $data['params']['seriesdisplaystemplate'];
-            if($seriesdisplays){$objects[]=$this->getTemplate($seriesdisplays);}
+            if($seriesdisplays){$objects[]=$this->getTemplate($seriesdisplays, false);}
             $seriesdisplay = $data['params']['seriesdisplaytemplate'];
-            if($seriesdisplay){$objects[]=$this->getTemplate($seriesdisplay);} 
+            if($seriesdisplay){$objects[]=$this->getTemplate($seriesdisplay, false);}
+            $css = $data['params']['css'];
+            if($css){$objects[]=$this->getTemplate($css, true);}
             $filecontents = implode('',$objects);
             $filename = $result->title.'.sql';
             $filepath = JPATH_ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$filename;
@@ -199,12 +171,17 @@ class BiblestudyControllerTemplate extends controllerClass {
             $xport = new JBSExport();
             $savefile = $xport->output_file($filepath, $filename, 'text/x-sql');
             $filedelete = JFile::delete($filepath);
+            $message = JText::_('JBS_TPL_EXPORT_SUCCESS');
+            $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
         }
         
-        function getTemplate($template)
+        function getTemplate($template, $iscss=false)
         {
-            $length = strlen($template);
-            $template = substr($template,8,$length - 8); 
+            if (!$isscss)
+            {
+                $length = strlen($template);
+                $template = substr($template,8,$length - 8); 
+            }
             $length2 = strlen($template);
             $template = substr($template,0,$length2-4); 
             $db = JFactory::getDBO();

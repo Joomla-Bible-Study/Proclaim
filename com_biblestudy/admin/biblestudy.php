@@ -39,7 +39,7 @@ addJS();
 
 jimport('joomla.application.component.controller');
 $controller = JController::getInstance('biblestudy');
-$controller->execute(JRequest::getCmd('task'));
+$controller->execute(JRequest::getCmd('task')); 
 $controller->redirect();
 
 /**

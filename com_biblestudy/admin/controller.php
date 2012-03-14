@@ -58,8 +58,8 @@ class biblestudyController extends JController {
             }
         }
 
-        if (JRequest::getCmd('view') == 'studydetails') {
-            $model = $this->getModel('studydetails');
+        if (JRequest::getCmd('view') == 'study') {
+            $model = $this->getModel('study');
         }
         $fixassets = JRequest::getWord('task', '', 'get');
         if ($fixassets == 'fixassetid') {

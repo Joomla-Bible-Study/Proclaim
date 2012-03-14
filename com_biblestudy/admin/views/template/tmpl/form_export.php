@@ -24,14 +24,14 @@ defined('_JEXEC') or die;
         form.submit();
     }
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=template&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
-      name="adminForm" id="adminForm">
+
+     
    <div class="width-100 fltlft">
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_EXPORT'); ?></legend>
                 <ul>
                     <li><?php echo $this->form->getLabel('template_export','params'); ?></td><?php echo $this->form->getInput('template_export','params'); ?></li>
-                    <li><input type="submit" value="Submit" onclick="Joomla.submitbutton3()"/></li>
+                    <li><input type="submit" value="Submit" onclick="Joomla.submitbutton('template.template_export')"/></li>
                 </ul>
             </fieldset>
    <div class="width-100 fltlft">
@@ -39,14 +39,10 @@ defined('_JEXEC') or die;
                 <legend><?php echo JText::_('JBS_TPL_IMPORT'); ?></legend>
                 <ul>
                     <li> <input class="input_box" id="template_import" name="template_import" type="file" size="57" /></li>
-                    <li><input type="submit" value="Submit" onclick="Joomla.submitbutton4()"/></li>
+                    <li><input type="submit" value="Submit" onclick="Joomla.submitbutton('template.template_import')"/></li>
                 </ul>
                 
             </fieldset>                      
        
    
-    <input type="hidden" name="option" value="com_biblestudy" />
-    <input type="hidden" name="view" value="template"
-    <input type="hidden" name="controller" value="template" />
-<?php echo JHtml::_('form.token'); ?>
-</form>
+    
