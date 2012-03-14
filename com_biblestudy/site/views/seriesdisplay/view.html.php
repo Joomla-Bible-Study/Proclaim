@@ -45,7 +45,7 @@ class BiblestudyViewSeriesdisplay extends JView {
         $items = $this->get('Item');
         //Get the series image
         $images = new jbsImages();
-        $image = getSeriesThumbnail($item->series_thumbnail);
+        $image = $images->getSeriesThumbnail($items->series_thumbnail);
         $items->image = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'">';
         $teacherimage = $images->getTeacherThumbnail($items->thumb, $image2=null);
         $items->teacherimage = '<img src="'.$teacherimage->path.'" height="'.$teacherimage->height.'" width="'.$teacherimage->width.'">';

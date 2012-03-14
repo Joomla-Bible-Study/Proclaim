@@ -8,13 +8,10 @@ if ($this->params->get('useexpert_list') > 0) {
 } 
 elseif ($this->params->get('sermonstemplate') )
     {
-    $length = strlen($this->params->get('sermonstemplate'));
-    $template = substr($this->params->get('sermonstemplate'),8,$length - 8);    
-    $template = substr($template,-0,4); 
-    echo $this->loadTemplate($template);
+        echo $this->loadTemplate($this->params->get('sermonstemplate'));
     }
-else {
-    echo $this->loadTemplate('main');
-    
-}
+else 
+    {
+        echo $this->loadTemplate('main');
+    }
 echo $this->loadTemplate('formfooter');

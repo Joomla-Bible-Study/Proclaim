@@ -9,12 +9,9 @@ if ($this->params->get('useexpert_teacherlist')> 0)
 	 }
 elseif ($this->params->get('teacherstemplate') )
     {
-    $length = strlen($this->params->get('teacherstemplate'));
-    $template = substr($this->params->get('teacherstemplate'),8,$length - 8);    
-    $template = substr($template,-0,4); 
-    echo $this->loadTemplate($template);
+        echo $this->loadTemplate($this->params->get('teacherstemplate'));
     }
 else
-	{
-		echo $this->loadTemplate('main');
-	}
+    {
+        echo $this->loadTemplate('main');
+    }

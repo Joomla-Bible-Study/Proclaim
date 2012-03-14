@@ -8,15 +8,11 @@ if ($this->params->get('useexpert_details') > 0)
  }
  elseif ($this->params->get('sermontemplate') )
     {
-    $length = strlen($this->params->get('sermontemplate'));
-    $template = substr($this->params->get('sermontemplate'),8,$length - 8);    
-    $template = substr($template,-0,4); 
-    echo $this->loadTemplate($template);
+        echo $this->loadTemplate($this->params->get('sermontemplate'));
     }
  else
  {
  	echo $this->loadTemplate('main');
-
  }
  echo $this->loadTemplate('scripture');
  echo '<br />';
