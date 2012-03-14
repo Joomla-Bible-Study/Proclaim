@@ -47,6 +47,7 @@ h2 {
 
     </head>
     <body><h2>Template Code Helper</h2>
+        <form action="post">
         <div>
             <table class="sample">
                  <th colspan="2">Studies Codes (for all views)</th>
@@ -93,7 +94,8 @@ h2 {
                  <tr><td>Topics Dropdown</td><td>echo  $this->page->topics;</td></tr>
                  <tr><td>Books Dropdown</td><td>echo  $this->page->books;</td></tr>
                  <tr><td>Order (Asc, Desc) Dropdown</td><td>echo $this->page->order;</td></tr>
-                
+                 <tr><td>Sample Code</td><td><textarea cols="50" rows="10" onClick="this.select();">
+foreach ($this->items as $study){echo $study->studyintro.'<br />';}</textarea></td></tr>
             </table>
         </div><br/> 
         
@@ -102,6 +104,8 @@ h2 {
                  <th colspan="2">Sermon Display Codes</th>
                  <tr><td>Print Button</td><td>echo  $this->page->print;</td></tr>
                  <tr><td>Social Media Box</td><td>echo  $this->page->social;</td></tr>
+                 <tr><td>Sample Code</td><td><textarea cols="50" rows="10" onClick="this.select();">
+foreach ($this->items as $study){echo $study->studyintro.'<br />';}</textarea></td></tr>
             </table>
         </div><br/> 
         
@@ -126,6 +130,8 @@ h2 {
                 <tr>
                     <td>Footer Pagination Links</td><td>echo $this->page->pagelinks; echo $this->page->counter;</td>
                 </tr>
+                <tr><td>Sample Code</td><td><textarea cols="50" rows="10" onClick="this.select();">
+foreach ($this->items as $study){echo $study->studyintro.'<br />';}</textarea></td></tr>
                
             </table>
         </div><br/> 
@@ -154,6 +160,8 @@ h2 {
                 <tr>
                     <td>Series Teacher Image</td><td>echo $this->page->teacherimage;</td>
                 </tr>
+                <tr><td>Sample Code</td><td><textarea cols="50" rows="10" onClick="this.select();">
+foreach ($this->items as $study){echo $study->studyintro.'<br />';}</textarea></td></tr>
             </table>
         </div><br/> 
         
@@ -166,6 +174,8 @@ h2 {
                 <tr>
                     <td>Link to each teacher</td><td>echo $teacher->teacherlink;</td>
                 </tr>
+                <tr><td>Sample Code</td><td><textarea cols="50" rows="10" onClick="this.select();">
+foreach ($this->items as $study){echo $study->studyintro.'<br />';}</textarea></td></tr>
             </table>
         </div><br/> 
        
@@ -178,8 +188,10 @@ h2 {
                  <tr>
                      <td>Large Teacher Image</td><td>echo $this->item->largeimage;</td>
                  </tr>
+                 <tr><td>Sample Code</td><td><textarea cols="50" rows="10" onClick="this.select();">
+foreach ($this->items as $study){echo $study->studyintro.'<br />';}</textarea></td></tr>
             </table>
         </div>
-            
+        </form> 
     </body>
 </html>

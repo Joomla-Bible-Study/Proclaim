@@ -121,6 +121,7 @@ class BiblestudyControllerTemplate extends controllerClass {
                 }
                 $typecss = substr_count($querie,'#__bsms_styles');
                 $typefile = substr_count($querie,'#__bsms_templatecode');
+                $typetemplate = substr_count($querie,'#__bsms_templates');
                 if ($typecss)
                 {
                     $query = 'SELECT id from #__bsms_styles ORDER BY id DESC LIMIT 1';
@@ -131,7 +132,7 @@ class BiblestudyControllerTemplate extends controllerClass {
                     $table = JTable::getInstance('Style', 'BiblestudyTable', array('dbo' => $db));
                     if ($data->id)
                     {
-                        
+                       $cssid = $data->filename; 
                        try {$table->load($data->id);}
                         catch (Exception $e) {echo 'Caught exception: ',  $e->getMessage(), "\n";}
                         if (!$table->store()) 
@@ -143,7 +144,7 @@ class BiblestudyControllerTemplate extends controllerClass {
                 }
                 if ($typefile)
                 {
-                    $query = 'SELECT id from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
+                    $query = 'SELECT id, filename from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
                     $db->setQuery($query);
                     $db->query();
                     $data = $db->loadObject();
@@ -151,8 +152,72 @@ class BiblestudyControllerTemplate extends controllerClass {
                     $table = JTable::getInstance('Templatecode', 'BiblestudyTable', array('dbo' => $db));
                     if ($data->id)
                     {
-                        
+                       switch ($data->type)
+                       {
+                           case 1:
+                               //sermonlist
+                               $sermonstemplate = $data->filename;
+                               break;
+                           
+                           case 2:
+                               //sermon
+                               $sermontemplate = $data->filename;
+                               break;
+                           
+                           case 3:
+                               //teachers
+                               $teacherstemplate = $data->filename;
+                               break;
+                           
+                           case 4:
+                               //teacher
+                               $teachertemplate = $data->filename;
+                               break;
+                           
+                           case 5:
+                               //serieslist
+                               $seriesdisplaystemplate = $data->filename;
+                               break;
+                           
+                           case 6:
+                               //series
+                               $seriesdisplaytemplate = $data->filename;
+                               break;
+                       }
                        try {$table->load($data->id);}
+                        catch (Exception $e) {echo 'Caught exception: ',  $e->getMessage(), "\n";}
+                        if (!$table->store()) 
+                        {
+                            $this->setError($db->getErrorMsg());
+                            return false;
+                        }
+                    }
+                }
+                if ($typetemplate)
+                {
+                    $query = 'SELECT id from #__bsms_templates ORDER BY id DESC LIMIT 1';
+                    $db->setQuery($query);
+                    $db->query();
+                    $data = $db->loadObject(); 
+                    JTable::addIncludePath(JPATH_COMPONENT.'/tables');
+                    $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
+                    if ($data->id)
+                    {
+                        
+                       try {
+                            $table->load($data->id); //dump($table->params);
+                            $registry = new JRegistry();
+                            $registry->loadArray($table->params); 
+                            $registry->set('sermonstemplate',$sermonstemplate);
+                            $registry->set('sermontemplate',$sermontemplate);
+                            $registry->set('teachertemplate',$teachertemplate);
+                            $registry->set('teacherstemplate',$sermonstemplate);
+                            $registry->set('seriesdisplaystemplate',$seriesdisplaystemplate);
+                            $registry->set('seriesdisplaytemplate',$seriesdisplaytemplate);
+                            $registry->set('css',$cssid);
+                            $table->params = $registry->toString();
+                            $table->bind($data->id);
+                           }
                         catch (Exception $e) {echo 'Caught exception: ',  $e->getMessage(), "\n";}
                         if (!$table->store()) 
                         {

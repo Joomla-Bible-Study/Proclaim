@@ -92,11 +92,11 @@ class BiblestudyTableTemplatecode extends JTable
         public function store($updateNulls = false)
         {
             $table = JTable::getInstance('Templatecode', 'BiblestudyTable');
-          /*  if ($table->load(array('filename'=>$this->filename)) && ($table->id != $this->id || $this->id==0)) {
-			$this->setError(JText::_('JBS_STYLE_FILENAME_NOT_UNIQUE'));
+            if ($this->filename == 'main' || $this->filename == 'custom') {
+			$this->setError(JText::_('JBS_STYLE_RESTRICED_FILE_NAME'));
 			return false;
 		}
-          */      
+                
                 //write the css file
                 jimport('joomla.client.helper');
                 jimport('joomla.filesystem.file');

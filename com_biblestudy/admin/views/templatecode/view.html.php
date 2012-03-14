@@ -69,6 +69,10 @@ class biblestudyViewTemplatecode extends JView {
 
 		JToolBarHelper::divider();
 		JToolBarHelper::help('templatecodehelp', true);
+                JToolBarHelper::divider();
+                
+                
+               
 	}
 
 }
