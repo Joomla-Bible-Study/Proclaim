@@ -119,7 +119,48 @@ class BiblestudyControllerTemplate extends controllerClass {
                     print_r($error);
                     //return false;
                 }
-                //todo: determine if templatecode or css, load model and save file
+                $typecss = substr_count($querie,'#__bsms_styles');
+                $typefile = substr_count($querie,'#__bsms_templatecode');
+                if ($typecss)
+                {
+                    $query = 'SELECT id from #__bsms_styles ORDER BY id DESC LIMIT 1';
+                    $db->setQuery($query);
+                    $db->query();
+                    $data = $db->loadObject();
+                    JTable::addIncludePath(JPATH_COMPONENT.'/tables');
+                    $table = JTable::getInstance('Style', 'BiblestudyTable', array('dbo' => $db));
+                    if ($data->id)
+                    {
+                        
+                       try {$table->load($data->id);}
+                        catch (Exception $e) {echo 'Caught exception: ',  $e->getMessage(), "\n";}
+                        if (!$table->store()) 
+                        {
+                            $this->setError($db->getErrorMsg());
+                            return false;
+                        }
+                    }
+                }
+                if ($typefile)
+                {
+                    $query = 'SELECT id from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
+                    $db->setQuery($query);
+                    $db->query();
+                    $data = $db->loadObject();
+                    JTable::addIncludePath(JPATH_COMPONENT.'/tables');
+                    $table = JTable::getInstance('Templatecode', 'BiblestudyTable', array('dbo' => $db));
+                    if ($data->id)
+                    {
+                        
+                       try {$table->load($data->id);}
+                        catch (Exception $e) {echo 'Caught exception: ',  $e->getMessage(), "\n";}
+                        if (!$table->store()) 
+                        {
+                            $this->setError($db->getErrorMsg());
+                            return false;
+                        }
+                    }
+                }
             }
         }
         $message = JText::_('JBS_TPL_IMPORT_SUCCESS');
@@ -146,24 +187,38 @@ class BiblestudyControllerTemplate extends controllerClass {
             $result = $db->loadObject();
             //Create the main template insert
             $objects[] = 'INSERT INTO #__bsms_templates SET `type` = "'.$db->getEscaped($result->type).'",
-                `params` = "'.$db->getEscaped($result->params).'", `title` = "'.$db->getEscaped($result->text).'";
+                `params` = "'.$db->getEscaped($result->params).'", `title` = "'.$db->getEscaped($result->title).'",
+                `text` = "'.$db->getEscaped($result->text).'";
                     ';
           
             //Get the individual template files
             $sermons = $data['params']['sermonstemplate'];
-            if($sermons){$objects[]=$this->getTemplate($sermons, false);}
+            if($sermons){$objects[]=$this->getTemplate($sermons);}
             $sermon = $data['params']['sermontemplate'];
-            if($sermon){$objects[]=$this->getTemplate($sermon, false);}
+            if($sermon){$objects[]=$this->getTemplate($sermon);}
             $teachers = $data['params']['teacherstemplate'];
-            if($teachers){$objects[]=$this->getTemplate($teachers, false);}
+            if($teachers){$objects[]=$this->getTemplate($teachers);}
             $teacher = $data['params']['teachertemplate'];
-            if($teacher ){$objects[]=$this->getTemplate($teacher, false);}
+            if($teacher ){$objects[]=$this->getTemplate($teacher);}
             $seriesdisplays = $data['params']['seriesdisplaystemplate'];
-            if($seriesdisplays){$objects[]=$this->getTemplate($seriesdisplays, false);}
+            if($seriesdisplays){$objects[]=$this->getTemplate($seriesdisplays);}
             $seriesdisplay = $data['params']['seriesdisplaytemplate'];
-            if($seriesdisplay){$objects[]=$this->getTemplate($seriesdisplay, false);}
-            $css = $data['params']['css'];
-            if($css){$objects[]=$this->getTemplate($css, true);}
+            if($seriesdisplay){$objects[]=$this->getTemplate($seriesdisplay);}
+            $css = $data['params']['css']; 
+            $length = strlen($css);
+            $css = substr($css,0,-4); 
+            if($css){
+                $query2 = $db->getQuery(true);
+                $query2->select('style.*');
+                $query2->from('#__bsms_styles AS style');
+                $query2->where('style.filename = "'.$css.'"');
+                $db->setQuery($query2);
+                $db->query();
+                $cssresult = $db->loadObject();
+                $objects[] = 'INSERT INTO #__bsms_styles SET `published` = "1",
+                    `filename` = "'.$db->getEscaped($cssresult->filename).'",
+                    `stylecode` = "'.$db->getEscaped($cssresult->stylecode).'";';
+                }
             $filecontents = implode('',$objects);
             $filename = $result->title.'.sql';
             $filepath = JPATH_ROOT.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$filename;
@@ -175,15 +230,8 @@ class BiblestudyControllerTemplate extends controllerClass {
             $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
         }
         
-        function getTemplate($template, $iscss=false)
+        function getTemplate($template)
         {
-            if (!$isscss)
-            {
-                $length = strlen($template);
-                $template = substr($template,8,$length - 8); 
-            }
-            $length2 = strlen($template);
-            $template = substr($template,0,$length2-4); 
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
             $query->select('tc.id, tc.templatecode,tc.type,tc.filename');
