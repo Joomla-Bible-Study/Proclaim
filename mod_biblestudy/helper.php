@@ -75,6 +75,9 @@ class modBiblestudyHelper {
         $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
         $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
         $query->group('study.id');
+        
+        $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
+        $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');
 
         //filter over teazchers
         $filters = $teacher;

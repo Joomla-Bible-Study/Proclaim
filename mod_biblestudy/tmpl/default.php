@@ -18,6 +18,10 @@ if ($this->params->get('useexpert_module')> 0)
 {
 	echo $this->loadTemplate('custom');
 }
+elseif ($this->params->get('moduletemplate'))
+{
+    echo $this->loadTemplate($this->params->get('moduletemplate'));
+}
 else
 {
 	echo $this->loadTemplate('main');

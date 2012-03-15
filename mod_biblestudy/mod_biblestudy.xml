@@ -2,12 +2,12 @@
 <extension type="module" version="1.6" method="upgrade" client="site">
     <name>mod_biblestudy</name>
     <author>Joomla Bible Study Team</author>
-    <creationDate>February 8, 2012</creationDate>
-    <copyright>(C) 2007-2011 Joomla Bible Study</copyright>
+    <creationDate>May 1, 2012</creationDate>
+    <copyright>(C) 2007-2012 Joomla Bible Study</copyright>
     <license>GPL/GNU</license>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>7.0.4</version>
+    <version>7.1.0</version>
     <description>JBS_MDL_DESCRIPTION</description>
     <files>
         <filename module="mod_biblestudy">mod_biblestudy.php</filename>
@@ -31,6 +31,12 @@
                                        label="JBS_MNU_SELECT_TEMPLATE" default="1"
                                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
                                        key_field="id" value_field="title" required="true" />
+                 <field name="moduletemplate" type="sql" label="JBS_TPL_MODULE_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
+                                query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=7 AND published =1 ORDER BY filename ASC" key_field="filename" value_field="filename"> 
+                                <option value="0">JBS_CMN_USE_DEFAULT</option>
+                                </field>
+                <field name="css" type="filelist" label="JBS_STYLE_CHOOSE_CSS_FILE" description="JBS_STYLE_CHOOSE_FILE_DESC"
+                        directory="/media/com_biblestudy/css/site" exclude=".html" hide_default="true" required="true"/>
                 <field name="moduleitems" description="JBS_MDL_ITEMS_DESC"
                                        label="JBS_MDL_ITEMS" default="5" type="text" size="10" />
                 <field name="show_link" type="radio" default="1"

@@ -15,13 +15,7 @@ defined('_JEXEC') or die;
 
 $show_link = $params->get('show_link', 1);
 $pagetext = $params->get('pagetext');
-$document = JFactory::getDocument();
-$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
-$url = $params->get('stylesheet');
 $ismodule = 1;
-if ($url) {
-    $document->addStyleSheet($url);
-}
 ?>
 <div id="biblestudy" class="noRefTagger">
     <div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
@@ -29,23 +23,23 @@ if ($url) {
     <table id="bsmsmoduletable" cellspacing="0">
 
 
-        <?php
+        <?php 
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
         include_once($path1 . 'header.php');
         include_once($path1 . 'helper.php');
         include_once($path1 . 'listing.php');
-        $header = getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
+        $header = getHeader($studies[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
         echo $header;
         ?>
 
         <tbody>
 
 
-<?php
+<?php  
 $class1 = 'bsodd';
 $class2 = 'bseven';
 $oddeven = $class1;
-foreach ($list as $study) {
+foreach ($studies as $study) {
     if ($oddeven == $class1) {
         //Alternate the color background
         $oddeven = $class2;
