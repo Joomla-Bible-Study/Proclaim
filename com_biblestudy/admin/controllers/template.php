@@ -215,7 +215,7 @@ class BiblestudyControllerTemplate extends controllerClass {
                             $registry->set('seriesdisplaystemplate',$seriesdisplaystemplate);
                             $registry->set('seriesdisplaytemplate',$seriesdisplaytemplate);
                             $registry->set('css',$cssid);
-                            $table->params = $registry->toString();
+                            $data->params = $registry->toString(); 
                             $table->bind($data->id);
                            }
                         catch (Exception $e) {echo 'Caught exception: ',  $e->getMessage(), "\n";}
