@@ -349,13 +349,27 @@ function getSeriesLandingPage($params, $id, $admin_params)
 
 	$db->setQuery($query);
 
-	$tresult = $db->loadObjectList();
+	$items = $db->loadObjectList();
 	$t = 0;
 	$i = 0;
 
 	$series .= "\n\t" . '<tr>';
 	$showdiv = 0;
-	foreach ($tresult as &$b) {
+         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user = JFactory::getUser();
+        $groups = $user->getAuthorisedViewLevels();
+        
+        $count = count($items);
+
+        for ($i = 0; $i < $count; $i++) {
+
+            if ($items[$i]->access > 1) {
+                if (!in_array($items[$i]->access, $groups)) {
+                    unset($items[$i]);
+                }
+            }
+        }
+	foreach ($items as &$b) {
 	    if ($t >= $limit)
 		{
 			if ($showdiv < 1)
@@ -484,7 +498,7 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 	if ($params->get('series_detail_limit')) {$limit = ' LIMIT '.$params->get('series_detail_limit');}
 	if ($nolimit == 1) {$limit = '';}
 
-	$result = getSeriesstudiesDBO ($id, $params, $limit);
+	$items = getSeriesstudiesDBO ($id, $params, $limit);
 	$numrows = count($result);
 
 	$studies = '';
@@ -503,8 +517,20 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template)
 		  break;
 		}
 	echo $params->get('series_headercode');
+ //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user = JFactory::getUser();
+        $groups = $user->getAuthorisedViewLevels();
+        $count = count($items);
 
-	foreach ($result AS $row)
+        for ($i = 0; $i < $count; $i++) {
+
+            if ($items[$i]->access > 1) {
+                if (!in_array($items[$i]->access, $groups)) {
+                    unset($items[$i]);
+                }
+            }
+        }
+	foreach ($items AS $row)
 	{
 	    $oddeven = 0;
 		$studies .= getListingExp($row, $params, $params, $params->get('seriesdetailtemplateid'));
