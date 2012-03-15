@@ -13,6 +13,7 @@
             <option value="4">JBS_TPLCODE_TEACHER</option>
             <option value="5">JBS_TPLCODE_SERIESDISPLAYS</option>
             <option value="6">JBS_TPLCODE_SERIESDISPLAY</option>
+            <option value="7">JBS_TPLCODE_MODULE</option>
         </field>
 	<field name="filename" type="text" label="JBS_TPLCODE_FILENAME" description="JBS_TPLCODE_FILENAME_DESC"
 		size="75" required="true" />

@@ -23,6 +23,33 @@ class BiblestudyViewTemplatecodes extends JView
             $this->canDo	= BibleStudyHelper::getActions('', 'templatecode');
             $this->state = $this->get('State');
             $this->items = $this->get('Items');
+            foreach ($this->items as $item)
+            {
+                switch ($item->type)
+                {
+                    case 1:
+                        $item->typetext = JText::_('JBS_TPLCODE_SERMONLIST');
+                        break;
+                    case 2:
+                        $item->typetext = JText::_('JBS_TPLCODE_SERMON');
+                        break;
+                    case 3:
+                        $item->typetext = JText::_('JBS_TPLCODE_TEACHERS');
+                        break;
+                    case 4:
+                        $item->typetext = JText::_('JBS_TPLCODE_TEACHER');
+                        break;
+                    case 5:
+                        $item->typetext = JText::_('JBS_TPLCODE_SERIESDISPLAYS');
+                        break;
+                    case 6:
+                        $item->typetext = JText::_('JBS_TPLCODE_SERIESDISPLAY');
+                        break;
+                    case 7:
+                        $item->typetext = JText::_('JBS_TPLCODE_MODULE');
+                        break;
+                }
+            }
             $modelView = $this->getModel();
             $this->pagination = $this->get('Pagination');
             // Set the toolbar

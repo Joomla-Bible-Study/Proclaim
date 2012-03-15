@@ -183,6 +183,10 @@ class BiblestudyControllerTemplate extends controllerClass {
                                //series
                                $seriesdisplaytemplate = $data->filename;
                                break;
+                           case 7:
+                               //module
+                               $moduletemplate = $data->filename;
+                               break;
                        }
                        try {$table->load($data->id);}
                         catch (Exception $e) {echo 'Caught exception: ',  $e->getMessage(), "\n";}

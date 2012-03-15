@@ -69,7 +69,7 @@ $saveOrder = $listOrder == 'location.ordering';
                         <a href="<?php echo $link; ?>"><?php echo $item->filename; ?></a>
                     </td>
                      <td>
-                        <a href="<?php echo $link; ?>"><?php echo $item->type; ?></a>
+                        <a href="<?php echo $link; ?>"><?php echo $item->typetext; ?></a>
                     </td>
                 </tr>
             <?php endforeach; ?>

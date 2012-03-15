@@ -92,7 +92,7 @@ class BiblestudyTableTemplatecode extends JTable
         public function store($updateNulls = false)
         {
             $table = JTable::getInstance('Templatecode', 'BiblestudyTable');
-            if ($this->filename == 'main' || $this->filename == 'custom') {
+            if ($this->filename == 'main' || $this->filename == 'custom' || $this->filename == 'formheader' || $this->filename == 'formfooter') {
 			$this->setError(JText::_('JBS_STYLE_RESTRICED_FILE_NAME'));
 			return false;
 		}
@@ -127,6 +127,10 @@ class BiblestudyTableTemplatecode extends JTable
                     case 6:
                         //seriesdisplay
                         $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'seriesdisplay' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . $filename;
+                        break;
+                    case 7:
+                        //seriesdisplay
+                        $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy' . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . $filename;
                         break;
                 }
                 JClientHelper::setCredentialsFromRequest('ftp');
@@ -184,8 +188,12 @@ class BiblestudyTableTemplatecode extends JTable
                         //seriesdisplay
                         $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'seriesdisplay' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . $filename;
                         break;
+                     case 7:
+                        //seriesdisplay
+                        $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy' . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . $filename;
+                        break;
                 }
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . $filename;
+                
                 if (!$delete = JFile::delete($file))
                 {$this->setError(JText::_('JBS_STYLE_FILENAME_NOT_DELETED'));
 			return false;}
