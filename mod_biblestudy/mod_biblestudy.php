@@ -65,7 +65,7 @@ foreach ($items AS $item) {
             $limitstart = JRequest::getVar('limitstart', 'int');
             
 $studies = $items;
-   /*     $pagebuilder = new JBSPagebuilder();
+       $pagebuilder = new JBSPagebuilder();
         foreach ($studies as $i=>$study)
             {
                 $pelements = $pagebuilder->buildPage($study, $params, $admin_params);
@@ -92,7 +92,7 @@ $studies = $items;
                 $studies[$i]->secondary_reference = $article->text;
             }
         
-*/
+
 
 $language = JFactory::getLanguage();
 $language->load('com_biblestudy');
@@ -110,13 +110,23 @@ $url = $params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);
 }
-$pageclass_sfx = $params->get('pageclass_sfx');
+$link_text = $params->get('pagetext', 'More Bible Studies');
+
+
+    $t = $params->get('studielisttemplateid');
+    if (!$t) {
+        $t = JRequest::getVar('t', 1, 'get', 'int');
+    }
+
+    $linkroute = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
+    $link = '<a href="'.$linkroute.'">'.$link_text.'</a>';
+    
 if ($params->get('useexpert_module') > 0) {
     $layout = 'default_custom';
 } 
 elseif ($params->get('moduletemplate'))
 {
-    $layout = $params->get('moduletemplate');
+    $layout = 'default_'.$params->get('moduletemplate');
 }
 else {
     $layout = 'default_main';
