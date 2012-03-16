@@ -86,6 +86,8 @@ class BiblestudyViewSeriesdisplays extends JView {
             $seriesimage = $images->getSeriesThumbnail($item->series_thumbnail);
             $item->image = '<img src="'.$seriesimage->path.'" height="'.$seriesimage->height.'" width="'.$seriesimage->width.'">';
             $item->serieslink = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id='.$item->slug.'&t='.$t);
+            $teacherimage = $images->getTeacherImage($item->thumb, $image2=null);
+            $item->teacherimage = '<img src="'.$teacherimage->path.'" height="'.$teacherimage->height.'" width="'.$teacherimage->width.'">';
             }
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();

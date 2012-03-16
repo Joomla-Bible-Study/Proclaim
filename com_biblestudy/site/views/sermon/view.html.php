@@ -60,7 +60,18 @@ class BiblestudyViewSermon extends JView {
                 $study->series_thumbnail = $pelements->series_thumbnail;
                 $study->detailslink = $pelements->detailslink;
                 $study->teacherimage = $pelements->teacherimage;
-        
+                $article->text = $study->scripture1;
+                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
+                $study->scripture1 = $article->text; 
+                $article->text = $study->scripture2;
+                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
+                $study->scripture2 = $article->text;
+                $article->text = $study->studyintro;
+                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
+                $study->studyintro = $article->text;
+                $article->text = $study->secondary_reference;
+                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
+                $study->secondary_reference = $article->text;
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
 
