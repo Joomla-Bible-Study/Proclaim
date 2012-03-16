@@ -185,6 +185,9 @@ class BibleStudyHelper {
         JSubMenuHelper::addEntry(
                 JText::_('JBS_CSS_CSS_EDIT'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'
         );
+         JSubMenuHelper::addEntry(
+                JText::_('JBS_DATABASE_FIX'), 'index.php?option=com_biblestudy&view=database', $vName == 'database'
+        );
     }
 
     /**
