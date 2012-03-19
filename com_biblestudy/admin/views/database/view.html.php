@@ -18,6 +18,7 @@ jimport('joomla.application.component.view');
  * @subpackage	com_installer
  * @since		1.6
  */
+
 class BiblestudyViewDatabase extends JView
 {
 	/**
@@ -26,8 +27,8 @@ class BiblestudyViewDatabase extends JView
 	function display($tpl=null)
 	{
 		$language = JFactory::getLanguage();
-        $language->load('com_installer');
-        // Get data from the model
+                $language->load('com_installer');
+                // Get data from the model
 		$this->state = $this->get('State');
 		$this->changeSet = $this->get('Items');
 		$this->errors = $this->changeSet->check();
@@ -39,9 +40,12 @@ class BiblestudyViewDatabase extends JView
 		$this->updateVersion = ($this->updateVersion) ?  $this->updateVersion : JText::_('JNONE');
 		$this->pagination = $this->get('Pagination');
 		$this->errorCount = count($this->errors);
-
+                
+                $jbsversion = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'biblestudy.xml');
+                $this->version = $jbsversion['version'];
+                
 		$errors = count($this->errors);
-		if (!(strncmp($this->schemaVersion, JVERSION, 5) === 0))
+		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
 		{
 			$this->errorCount++;
 		}
@@ -49,11 +53,11 @@ class BiblestudyViewDatabase extends JView
 		{
 			$this->errorCount++;
 		}
-		if (($this->updateVersion != JVERSION))
+		if (($this->updateVersion != $this->version))
 		{
 			$this->errorCount++;
 		}
-
+               // $this->addToolbar();
 		parent::display($tpl);
 	}
 
@@ -64,7 +68,7 @@ class BiblestudyViewDatabase extends JView
 	 */
 	protected function addToolbar()
 	{
-		$canDo	= InstallerHelper::getActions();
+		
 		/*
 		 * Set toolbar items for the page
 		 */

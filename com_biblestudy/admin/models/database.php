@@ -34,7 +34,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = JFactory::getApplication();
-		$this->setState('message', $app->getUserState('com_biblestudy.message'));
+		$this->setState('message', $app->getUserState('com_installer.message'));
 		$this->setState('extension_message', $app->getUserState('com_installer.extension_message'));
 		$app->setUserState('com_installer.message', '');
 		$app->setUserState('com_installer.extension_message', '');
@@ -82,21 +82,23 @@ class BiblestudyModelDatabase extends InstallerModel
 	 */
 
 	public function getSchemaVersion() {
-		$db = JFactory::getDbo();
+	$db = JFactory::getDbo();
         $query = $db->getQuery(true);
         //get the extension id
+        $extensionquery = 'SELECT extension_id from #__extensions WHERE element = "com_biblestudy"';
+        $db->setQuery($extensionquery);
+        $db->query();
+        $extensionresult = $db->loadResult();
+        $schemaquery = 'SELECT version_id from #__schemas WHERE extension_id = "'.$extensionresult.'"';
+        $db->setQuery($schemaquery);
+        $result = $db->loadResult(); //dump ($result);
+        
         $query->select('e.extension_id');
         $query->from('#__extensions as e');
         $query->where('element = "com_biblestudy"');
         $db->setQuery($query);
         $this->extension_id = $db->loadResult();
-		$query->select('version_id')->from($db->qn('#__schemas'))
-		->where('e.extension_id = "'.$this->extension_id.'"');
-		$db->setQuery($query);
-		$result = $db->loadResult();
-		if ($db->getErrorNum()) {
-			throw new Exception('Database error - getSchemaVersion');
-		}
+		
 		return $result;
 	}
 
@@ -110,7 +112,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	public function fixSchemaVersion($changeSet)
 	{
 		// Get correct schema version -- last file in array
-		$schema = $changeSet->getSchema();
+		$schema = $changeSet->getSchema(); 
 		$db = JFactory::getDbo();
 		$result = false;
 
@@ -152,8 +154,8 @@ class BiblestudyModelDatabase extends InstallerModel
 	{
 		$table = JTable::getInstance('Extension');
 		$table->load($this->extension_id);
-		$cache = new JRegistry($table->manifest_cache);
-		return $cache->get('version');
+		$cache = new JRegistry($table->manifest_cache); 
+		return $cache->get('version'); 
 	}
 
 	/**
@@ -166,23 +168,21 @@ class BiblestudyModelDatabase extends InstallerModel
 		$table = JTable::getInstance('Extension');
 		$table->load($this->extension_id);
 		$cache = new JRegistry($table->manifest_cache);
-		$updateVersion =  $cache->get('version');
-        /**
-         * @todo figure out where to keep the JBS version to get instead of the Joomla version
-         */
-          
-		$cmsVersion = new JVersion();
-		if ($updateVersion == $cmsVersion->getShortVersion())
+		$updateVersion =  $cache->get('version'); 
+       
+                $jbsversion = $this->version; 
+		//$cmsVersion = new JVersion();
+		if ($updateVersion == $jbsversion)
 		{
 			return $updateVersion;
 		}
 		else
 		{
-			$cache->set('version', $cmsVersion->getShortVersion());
+			$cache->set('version', $jbsversion);
 			$table->manifest_cache = $cache->toString();
 			if ($table->store())
 			{
-				return $cmsVersion->getShortVersion();
+				return $jbsversion;
 			}
 			else
 			{
@@ -230,5 +230,6 @@ class BiblestudyModelDatabase extends InstallerModel
 			}
 		}
 	}
+        
 }
 
