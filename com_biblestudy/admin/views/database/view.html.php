@@ -57,7 +57,7 @@ class BiblestudyViewDatabase extends JView
 		{
 			$this->errorCount++;
 		}
-               // $this->addToolbar();
+                $this->addToolbar();
 		parent::display($tpl);
 	}
 
@@ -74,7 +74,6 @@ class BiblestudyViewDatabase extends JView
 		 */
 		JToolBarHelper::custom('database.fix', 'refresh', 'refresh', 'COM_INSTALLER_TOOLBAR_DATABASE_FIX', false, false);
 		JToolBarHelper::divider();
-		parent::addToolbar();
 		JToolBarHelper::help('JHELP_EXTENSIONS_EXTENSION_MANAGER_DATABASE');
 	}
 }
