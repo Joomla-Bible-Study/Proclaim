@@ -65,7 +65,7 @@ class BiblestudyModelDatabase extends InstallerModel
 	public function getItems()
 	{
 		$folder = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/mysql';
-		$changeSet = JSchemaChangeset::getInstance(JFactory::getDbo(), $folder);
+		$changeSet = JSchemaChangeset::getInstance(JFactory::getDbo(), $folder); 
 		return $changeSet;
 	}
 
