@@ -69,21 +69,21 @@
       <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
             <menu link="option=com_biblestudy&amp;view=cpanel" view="cpanel" img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png" alt="JBS_MNU_CONTROL_PANEL">JBS_MNU_CONTROL_PANEL</menu>
             <menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png" view="admin" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
-            <menu link="option=com_biblestudy&amp;view=studieslist" view="studieslist" img="../media/com_biblestudy/images/menu/icon-16-studies.png" alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
-            <menu link="option=com_biblestudy&amp;view=mediafileslist" view="mediafileslist" img="../media/com_biblestudy/images/menu/icon-16-mp3.png" alt="JBS_MNU_MEDIA_FILES">JBS_MNU_MEDIA_FILES</menu>
-            <menu link="option=com_biblestudy&amp;view=teacherlist" view="teacherlist" img="../media/com_biblestudy/images/menu/icon-16-teachers.png" alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
-            <menu link="option=com_biblestudy&amp;view=serieslist" view="serieslist" img="../media/com_biblestudy/images/menu/icon-16-series.png" alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
-            <menu link="option=com_biblestudy&amp;view=messagetypelist" view="messagetypelist" img="../media/com_biblestudy/images/menu/icon-16-messagetype.png" alt="JBS_MNU_MESSAGE_TYPES">JBS_MNU_MESSAGE_TYPES</menu>
-            <menu link="option=com_biblestudy&amp;view=locationslist" view="locationslist" img="../media/com_biblestudy/images/menu/icon-16-locations.png" alt="JBS_MNU_LOCATIONS">JBS_MNU_LOCATIONS</menu>
-            <menu link="option=com_biblestudy&amp;view=topicslist" view="topicslist" img="../media/com_biblestudy/images/menu/icon-16-topics.png" alt="JBS_MNU_TOPICS">JBS_MNU_TOPICS</menu>
-            <menu link="option=com_biblestudy&amp;view=commentslist" view="commentslist" img="../media/com_biblestudy/images/menu/icon-16-comments.png" alt="JBS_MNU_STUDY_COMMENTS">JBS_MNU_STUDY_COMMENTS</menu>
-            <menu link="option=com_biblestudy&amp;view=serverslist" view="serverslist" img="../media/com_biblestudy/images/menu/icon-16-servers.png" alt="JBS_MNU_SERVERS">JBS_MNU_SERVERS</menu>
-            <menu link="option=com_biblestudy&amp;view=folderslist" view="folderslist" img="../media/com_biblestudy/images/menu/icon-16-folder.png" alt="JBS_MNU_SERVER_FOLDERS">JBS_MNU_SERVER_FOLDERS</menu>
-            <menu link="option=com_biblestudy&amp;view=podcastlist" view="podcastlist" img="../media/com_biblestudy/images/menu/icon-16-podcast.png" alt="JBS_MNU_PODCASTS">JBS_MNU_PODCASTS</menu>
-            <menu link="option=com_biblestudy&amp;view=sharelist" view="sharelist" img="../media/com_biblestudy/images/menu/icon-16-social.png" alt="JBS_MNU_SOCIAL_NETWORK_LINKS">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
-            <menu link="option=com_biblestudy&amp;view=templateslist" view="templateslist" img="../media/com_biblestudy/images/menu/icon-16-templates.png" alt="JBS_MNU_TEMPLATE_DISPLAY">JBS_MNU_TEMPLATE_DISPLAY</menu>
-            <menu link="option=com_biblestudy&amp;view=medialist" view="medialist" img="../media/com_biblestudy/images/menu/icon-16-mediaimages.png" alt="JBS_MNU_MEDIA_IMAGES">JBS_MNU_MEDIA_IMAGES</menu>
-            <menu link="option=com_biblestudy&amp;view=mimetypelist" view="mimetypelist" img="../media/com_biblestudy/images/menu/icon-16-mimetype.png" alt="JBS_MNU_MIME_TYPES">JBS_MNU_MIME_TYPES</menu>
+            <menu link="option=com_biblestudy&amp;view=sermons" view="sermons" img="../media/com_biblestudy/images/menu/icon-16-studies.png" alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
+            <menu link="option=com_biblestudy&amp;view=mediafiles" view="mediafiles" img="../media/com_biblestudy/images/menu/icon-16-mp3.png" alt="JBS_MNU_MEDIA_FILES">JBS_MNU_MEDIA_FILES</menu>
+            <menu link="option=com_biblestudy&amp;view=teachers" view="teachers" img="../media/com_biblestudy/images/menu/icon-16-teachers.png" alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
+            <menu link="option=com_biblestudy&amp;view=seriesdisplays" view="seriesdisplays" img="../media/com_biblestudy/images/menu/icon-16-series.png" alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
+            <menu link="option=com_biblestudy&amp;view=messagetypes" view="messagetypes" img="../media/com_biblestudy/images/menu/icon-16-messagetype.png" alt="JBS_MNU_MESSAGE_TYPES">JBS_MNU_MESSAGE_TYPES</menu>
+            <menu link="option=com_biblestudy&amp;view=locations" view="locations" img="../media/com_biblestudy/images/menu/icon-16-locations.png" alt="JBS_MNU_LOCATIONS">JBS_MNU_LOCATIONS</menu>
+            <menu link="option=com_biblestudy&amp;view=topics" view="topics" img="../media/com_biblestudy/images/menu/icon-16-topics.png" alt="JBS_MNU_TOPICS">JBS_MNU_TOPICS</menu>
+            <menu link="option=com_biblestudy&amp;view=comments" view="comments" img="../media/com_biblestudy/images/menu/icon-16-comments.png" alt="JBS_MNU_STUDY_COMMENTS">JBS_MNU_STUDY_COMMENTS</menu>
+            <menu link="option=com_biblestudy&amp;view=servers" view="servers" img="../media/com_biblestudy/images/menu/icon-16-servers.png" alt="JBS_MNU_SERVERS">JBS_MNU_SERVERS</menu>
+            <menu link="option=com_biblestudy&amp;view=folders" view="folders" img="../media/com_biblestudy/images/menu/icon-16-folder.png" alt="JBS_MNU_SERVER_FOLDERS">JBS_MNU_SERVER_FOLDERS</menu>
+            <menu link="option=com_biblestudy&amp;view=podcasts" view="podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png" alt="JBS_MNU_PODCASTS">JBS_MNU_PODCASTS</menu>
+            <menu link="option=com_biblestudy&amp;view=shares" view="shares" img="../media/com_biblestudy/images/menu/icon-16-social.png" alt="JBS_MNU_SOCIAL_NETWORK_LINKS">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
+            <menu link="option=com_biblestudy&amp;view=templates" view="templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png" alt="JBS_MNU_TEMPLATE_DISPLAY">JBS_MNU_TEMPLATE_DISPLAY</menu>
+            <menu link="option=com_biblestudy&amp;view=mediaimages" view="mediaimages" img="../media/com_biblestudy/images/menu/icon-16-mediaimages.png" alt="JBS_MNU_MEDIA_IMAGES">JBS_MNU_MEDIA_IMAGES</menu>
+            <menu link="option=com_biblestudy&amp;view=mimetypes" view="mimetypes" img="../media/com_biblestudy/images/menu/icon-16-mimetype.png" alt="JBS_MNU_MIME_TYPES">JBS_MNU_MIME_TYPES</menu>
             <menu link="option=com_biblestudy&amp;view=styles" view="styles" img="../media/com_biblestudy/images/menu/icon-16-css.png" alt="JBS_MNU_CSS_EDIT">JBS_MNU_CSS_EDIT</menu>
       <!-- Instead of link you can specify individual link attributes -->
         </submenu>

@@ -22,7 +22,7 @@ class com_biblestudyInstallerScript {
      * The release value to be displayed and check against throughout this file.
      */
 
-    private $release = '7.0.3';
+    private $release = '7.1.0';
 
     /*
      * Find mimimum required joomla version for this extension. It will be read from the version attribute (install tag) in the manifest file
@@ -265,7 +265,8 @@ class com_biblestudyInstallerScript {
             <img src="media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left" />
             <strong><?php echo JText::_('JBS_INS_THANK_YOU'); ?></strong>
         </p>
-
+        <p>
+            <?php echo JText::_('JBS_INS_STATEMENT_710'); ?> </p>
         <p>
             <?php echo JText::_('JBS_INS_STATEMENT1'); ?> </p>
         <p>
