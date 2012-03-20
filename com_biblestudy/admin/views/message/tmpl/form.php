@@ -251,8 +251,9 @@ $params = $this->form->getFieldsets('params');
                     <?php //if (! empty($this->item->studytitle)) : ?>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&layout=edit').'">'.JText::_('JBS_STY_NEW_MEDIAFILE'); ?>"></a></td>
+                                        <td colspan="4"><input type="button" value="Add Media File" onClick="window.open('index.php?option=com_biblestudy&view=mediafile&layout=edit','mywindow','with=500,height=600,toolbar=no,menubar=no,scrollbars=yes,resizable=yes')"><?php echo JText::_('JBS_STY_SAVE_FIRST');?></td>
                                     </tr>
+                                   
                                 </tfoot>
                     <?php //endif; ?>
                             </table>
