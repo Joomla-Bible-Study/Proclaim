@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
+require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 jimport('joomla.application.component.view');
 
 class BiblestudyViewMessage extends JView {
@@ -61,7 +62,9 @@ class BiblestudyViewMessage extends JView {
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/js/ui/theme/ui.all.css');
 
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-
+        $swfUploadHeadJs = JBSUpload::uploadjs($host);
+        //add the javascript to the head of the html document
+        $document->addScriptDeclaration($swfUploadHeadJs);
         parent::display($tpl);
     }
 
