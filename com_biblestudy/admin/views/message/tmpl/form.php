@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
 $params = $this->form->getFieldsets('params');
 ?>
+
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
@@ -229,7 +230,8 @@ $params = $this->form->getFieldsets('params');
                     ?>
                                     <tr class="row<?php echo $i % 2; ?>">
                                         <td align="center">
-                                            <a href="<?php echo JRoute::_("index.php?option=com_biblestudy&task=mediafile.edit&id=".(int)$item->id); ?>">
+                                             <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='.(int)$item->id.'&amp;tmpl=component&amp;view=mediafile&amp;layout=modal';?>
+                                            <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo $this->escape($item->filename) ?  $this->escape($item->filename) : 'ID: '.$this->escape($item->id);?>">
                                                 <?php echo ($this->escape($item->filename) ?  $this->escape($item->filename) : 'ID: '.$this->escape($item->id)); ?>
                                             </a>
                                         </td>
@@ -250,39 +252,17 @@ $params = $this->form->getFieldsets('params');
                                 </tbody>
                     <?php //if (! empty($this->item->studytitle)) : ?>
                                 <tfoot>
-                                    <tr>
-                                        <td colspan="4"><input type="button" value="Add Media File" onClick="window.open('index.php?option=com_biblestudy&view=mediafile&layout=edit','mywindow','with=500,height=600,toolbar=no,menubar=no,scrollbars=yes,resizable=yes')"><?php echo JText::_('JBS_STY_SAVE_FIRST');?></td>
-                                    </tr>
-                                   
+                                    <tr><td colspan="4">
+                                            <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;tmpl=component&amp;view=mediafile&amp;layout=modal' ; ?>
+					<a class="modal" href="<?php echo $link;?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE');?>">
+						<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a><?php if (empty($this->mediafiles)){echo ' - '.JText::_('JBS_STY_SAVE_FIRST');}?>
+
+                                        </td></tr>
+                                                                       
                                 </tfoot>
                     <?php //endif; ?>
                             </table>
-                    <table class="adminlist">
-                        <thead>
-                        <th align="center" colspan="2"><?php echo JText::_('JBS_STY_UPLOAD');?></th>
-                        </thead>
-                        <tbody>
-                        <tr><td>
-                             <?php echo $this->form->getLabel('server');?><td><?php echo $this->form->getInput('server');?></td>
-                        </td></tr>
-                        <tr><td>
-                             <?php echo $this->form->getLabel('path');?><td><?php echo $this->form->getInput('path');?></td>
-                        </td></tr>
-                            <tr>
-                                <td>
-                                    <div class="fieldset flash" id="fsUploadProgress">
-                                    </div> 	
-                                    <div>
-                                    <span id="spanButtonPlaceHolder"></span>
-                                            <input id="btnCancel" type="button" value="<?php echo JText::_('JBS_STY_CANCEL');?>" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
-                                             
-                                    </div>
-                                    <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')">
-                                        <?php echo JText::_('JBS_STY_UPLOAD_BUTTON');?> </button>
-                                    </td><td></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    
                         </fieldset>
 
     </div>

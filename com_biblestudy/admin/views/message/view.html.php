@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
-require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
+
 jimport('joomla.application.component.view');
 
 class BiblestudyViewMessage extends JView {
@@ -36,12 +36,7 @@ class BiblestudyViewMessage extends JView {
         $document = JFactory::getDocument();
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
-        $document->addScript($host.'media/com_biblestudy/js/swfupload/swfupload.js');
-        $document->addScript($host.'media/com_biblestudy/js/swfupload/swfupload.queue.js');
-        $document->addScript($host.'media/com_biblestudy/js/swfupload/fileprogress.js');
-        $document->addScript($host.'media/com_biblestudy/js/swfupload/handlers.js');
-        $document->addScript(JURI::root() . 'administrator/components/com_biblestudy/views/message/tmpl/submitbutton.js');
-        $document->addStyleSheet($host.'media/com_biblestudy/js/swfupload/default.css');
+        
         $script = "
             \$j(document).ready(function() {
                 \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
@@ -62,9 +57,7 @@ class BiblestudyViewMessage extends JView {
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/js/ui/theme/ui.all.css');
 
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-        $swfUploadHeadJs = JBSUpload::uploadjs($host);
-        //add the javascript to the head of the html document
-        $document->addScriptDeclaration($swfUploadHeadJs);
+        
         parent::display($tpl);
     }
 
