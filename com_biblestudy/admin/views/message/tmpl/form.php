@@ -222,6 +222,7 @@ $params = $this->form->getFieldsets('params');
                             </tr>
                         </thead>
                         <tbody>
+                            
                     <?php
                             if (count($this->mediafiles) > 0) :
                                 foreach ($this->mediafiles as $i => $item) :
@@ -245,15 +246,42 @@ $params = $this->form->getFieldsets('params');
                                         <td colspan="4" align="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
                                     </tr>
                     <?php endif; ?>
+                                    
                                 </tbody>
-                    <?php if (! empty($this->item->studytitle)) : ?>
+                    <?php //if (! empty($this->item->studytitle)) : ?>
                                 <tfoot>
                                     <tr>
                                         <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&layout=edit').'">'.JText::_('JBS_STY_NEW_MEDIAFILE'); ?>"></a></td>
                                     </tr>
                                 </tfoot>
-                    <?php endif; ?>
+                    <?php //endif; ?>
                             </table>
+                    <table class="adminlist">
+                        <thead>
+                        <th align="center" colspan="2"><?php echo JText::_('JBS_STY_UPLOAD');?></th>
+                        </thead>
+                        <tbody>
+                        <tr><td>
+                             <?php echo $this->form->getLabel('server');?><td><?php echo $this->form->getInput('server');?></td>
+                        </td></tr>
+                        <tr><td>
+                             <?php echo $this->form->getLabel('path');?><td><?php echo $this->form->getInput('path');?></td>
+                        </td></tr>
+                            <tr>
+                                <td>
+                                    <div class="fieldset flash" id="fsUploadProgress">
+                                    </div> 	
+                                    <div>
+                                    <span id="spanButtonPlaceHolder"></span>
+                                            <input id="btnCancel" type="button" value="<?php echo JText::_('JBS_STY_CANCEL');?>" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
+                                             
+                                    </div>
+                                    <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')">
+                                        <?php echo JText::_('JBS_STY_UPLOAD_BUTTON');?> </button>
+                                    </td><td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                         </fieldset>
 
     </div>

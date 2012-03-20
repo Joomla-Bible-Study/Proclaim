@@ -58,7 +58,7 @@ class JBSExport {
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
-        $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
+      //  $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
         $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
         //Create a new table defintion based on the incoming database
@@ -72,7 +72,7 @@ class JBSExport {
                 $export = str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
-        $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
+      //  $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
         $db->setQuery($query);

@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <field name="server" type="sql" extension="com_biblestudy" label="JBS_CMN_SERVER"
+		description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
+		query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
+		key_field="id" value_field="server_name">
+		<option value="-1">JBS_CMN_SELECT_SERVER</option>
+	</field>
+	<field name="path" type="sql" extension="com_biblestudy" label="JBS_MED_PATH_OR_FOLDER"
+		description="JBS_MED_PATH_OR_FOLDER_DESC" class="inputbox" default="-1"
+		query="SELECT id, foldername FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC"
+		key_field="id" value_field="foldername">
+		<option value="-1">JBS_CMN_SELECT_FOLDER</option>
+        </field>
     <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
                 description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
                 class="readonly" />
@@ -89,6 +101,7 @@
 	<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
 		description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
 	<field name="asset_id" type="hidden" filter="unset" />
+        
     <fields name="params">
 		<fieldset name="params">
             <field name ="metakey" type="text" class="inputbox" size="50" label="JBS_STY_METAKEYWORDS" description="JBS_STY_METAKEYWORDS_DESC" />
