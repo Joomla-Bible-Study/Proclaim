@@ -13,8 +13,8 @@
 		<option value="-1">JBS_CMN_SELECT_FOLDER</option>
         </field>
     <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-                class="readonly" />
+           description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+           class="readonly" />
     <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
@@ -33,15 +33,15 @@
 
     <field name="studytitle" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" required="true"/>
     <field name="alias"
-                type="text"
-                label="JFIELD_ALIAS_LABEL"
-                description="JFIELD_ALIAS_DESC"
-                class="inputbox"
-                size="30"
+           type="text"
+           label="JFIELD_ALIAS_LABEL"
+           description="JFIELD_ALIAS_DESC"
+           class="inputbox"
+           size="30"
         />
 
     <field name="studyintro" type="editor"  class="inputbox" label="JBS_CMN_DESCRIPTION"
-        filter="BibleStudyHelper::filterText" buttons="true"/>
+           filter="BibleStudyHelper::filterText" buttons="true"/>
 
     <field name="studynumber" type="text" class="inputbox" size="15" label="JBS_CMN_STUDYNUMBER" />
 
@@ -69,43 +69,43 @@
     <field name="media_seconds" type="text" class="inputbox" size="5" label="JBS_CMN_SECONDS"/>
 
     <field name="teacher_id" type="sql" extension="com_biblestudy" label="JBS_CMN_TEACHER"
-                class="inputbox" query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC" key_field="id" value_field="teachername">
+           class="inputbox" query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC" key_field="id" value_field="teachername">
         <option value="-1">JBS_CMN_SELECT_TEACHER</option>
     </field>
 
     <field name="location_id" type="sql" extension="com_biblestudy" label="JBS_CMN_LOCATION"
-                class="inputbox" query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER by location_text ASC" key_field="id" value_field="location_text">
+           class="inputbox" query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER by location_text ASC" key_field="id" value_field="location_text">
         <option value="-1">JBS_CMN_SELECT_LOCATION</option>
     </field>
 
     <field name="series_id" type="sql" extension="com_biblestudy" label="JBS_CMN_SERIES"
-                class="inputbox" query="SELECT id, series_text FROM #__bsms_series WHERE published = 1 ORDER by series_text ASC" key_field="id" value_field="series_text">
+           class="inputbox" query="SELECT id, series_text FROM #__bsms_series WHERE published = 1 ORDER by series_text ASC" key_field="id" value_field="series_text">
         <option value="-1">JBS_CMN_SELECT_SERIES</option>
     </field>
 
     <field name="topics" type="topics" class="inputbox" size="30" label="JBS_CMN_TOPIC_TAG" description="JBS_CMN_TOPIC_TAG_DESC" />
 
     <field name="messagetype" type="sql" extension="com_biblestudy"
-		label="JBS_CMN_MESSAGE_TYPE" description="JBS_STY_MESSAGE_TYPE_DESC"
-		class="inputbox"
-		query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC"
-		key_field="id" value_field="message_type">
-		<option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
-	</field>
-	<field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE" />
-	<field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
-		filter="BibleStudyHelper::filterText" buttons="true" />
-	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-		translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
-		section="message" validate="rules" />
-	<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
-		description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
-	<field name="asset_id" type="hidden" filter="unset" />
+           label="JBS_CMN_MESSAGE_TYPE" description="JBS_STY_MESSAGE_TYPE_DESC"
+           class="inputbox"
+           query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC"
+           key_field="id" value_field="message_type">
+        <option value="-1">JBS_CMN_SELECT_MESSAGE_TYPE</option>
+    </field>
+    <field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE" />
+    <field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
+               filter="BibleStudyHelper::filterText" buttons="true" />
+    <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+               translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+               section="message" validate="rules" />
+    <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
+               description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+    <field name="asset_id" type="hidden" filter="unset" />
         
     <fields name="params">
-		<fieldset name="params">
+        <fieldset name="params">
             <field name ="metakey" type="text" class="inputbox" size="50" label="JBS_STY_METAKEYWORDS" description="JBS_STY_METAKEYWORDS_DESC" />
             <field name = "metadesc" type="textarea" class="inputbox" cols="50" rows="4" label="JBS_STY_METADESCRIPTION" description="JBS_STY_METADESCRIPTION_DESC" />
         </fieldset>
-  </fields>
+    </fields>
 </form>

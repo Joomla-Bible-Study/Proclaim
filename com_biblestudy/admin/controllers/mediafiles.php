@@ -12,11 +12,11 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controlleradmin');
 
-abstract class controllerClass extends JControllerAdmin {
+//abstract class controllerClass extends JControllerAdmin {
+//
+//}
 
-}
-
-class BiblestudyControllerMediafiles extends controllerClass {
+class BiblestudyControllerMediafiles extends JControllerAdmin {
 
 	/**
 	 * Proxy for getModel

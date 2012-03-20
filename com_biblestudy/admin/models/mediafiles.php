@@ -14,22 +14,24 @@ jimport('joomla.application.component.modellist');
 
 class BiblestudyModelMediafiles extends JModelList {
 
-    var $_data;
-    var $_total = null;
-    var $_pagination = null;
-    var $_allow_deletes = null;
+//    var $_data;
+//    var $_total = null;
+//    var $_pagination = null;
+//    var $_allow_deletes = null;
 
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'mediafile.published',
-                'mediafile.ordering',
-                'mediafile.filename',
-                'study.studytitle',
-                'mediatype.media_text',
-                'mediafile.createdate',
-                'mediafile.plays',
-                'mediafile.downloads'
+                'id', 'mediafile.id',
+                'published', 'mediafile.published',
+                'ordering', 'mediafile.ordering',
+                'filenam', 'mediafile.filename',
+                'studytitle', 'study.studytitle',
+                'media_text', 'mediatype.media_text',
+                'createdate', 'mediafile.createdate',
+                'plays', 'mediafile.plays',
+                'downloads', 'mediafile.downloads',
+                'language', 'mediafile.language'
             );
         }
 
@@ -50,11 +52,16 @@ class BiblestudyModelMediafiles extends JModelList {
      * @since   7.0
      */
     protected function populateState($ordering = null, $direction = null) {
+
+        // Initialise variables.
+        $app = JFactory::getApplication();
+        $session = JFactory::getSession();
+
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
         }
-        
+
         $filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
         $this->setState('filter.filename', $filename);
 
@@ -66,6 +73,9 @@ class BiblestudyModelMediafiles extends JModelList {
 
         $mediaTypeId = $this->getUserStateFromRequest($this->context . '.filter.mediatype', 'filter_mediatypeId');
         $this->setState('filter.mediatypeId', $mediaTypeId);
+
+        $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
+        $this->setState('filter.language', $language);
 
         parent::populateState('mediafile.createdate', 'DESC');
     }
@@ -97,6 +107,14 @@ class BiblestudyModelMediafiles extends JModelList {
      * @since 7.0
      */
     protected function getStoreId($id = '') {
+
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.filename');
+        $id .= ':' . $this->getState('filter.published');
+        $id .= ':' . $this->getState('filter.studytitle');
+        $id .= ':' . $this->getState('filter.mediatypeId');
+        $id	.= ':'.$this->getState('filter.language');
+
         return parent::getStoreId($id);
     }
 
@@ -113,9 +131,13 @@ class BiblestudyModelMediafiles extends JModelList {
         $query->select(
                 $this->getState(
                         'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename,
-                        mediafile.createdate, mediafile.plays, mediafile.downloads'));
+                        mediafile.createdate, mediafile.plays, mediafile.downloads, mediafile.language'));
 
         $query->from('`#__bsms_mediafiles` AS mediafile');
+
+        // Join over the language
+        $query->select('l.title AS language_title');
+        $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = mediafile.language');
 
         //Join over the studies
         $query->select('study.studytitle AS studytitle');
@@ -149,8 +171,8 @@ class BiblestudyModelMediafiles extends JModelList {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
 
         //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
+        $orderCol = $this->state->get('list.ordering', 'mediafile.filename');
+        $orderDirn = $this->state->get('list.direction', 'asc');
         $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
 
         return $query;
