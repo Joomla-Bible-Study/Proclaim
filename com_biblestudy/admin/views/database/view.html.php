@@ -1,28 +1,28 @@
 <?php
 /**
- * @package		Joomla.Administrator
- * @subpackage	com_installer
- * @copyright	Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- */
+ * @version     $Id: view.html.php 2025 2011-08-28 04:08:06Z genu $
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * @since		7.1.0
+ * */
 
 // no direct access
 defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
-//include_once dirname(__FILE__).'/../default/view.php';
 
 /**
- * Extension Manager Manage View
+ * Database Manager Manage View
  *
- * @package		Joomla.Administrator
- * @subpackage	com_installer
- * @since		1.6
+ * @package		BibleStudy.Administrator
+ * @since		7.1.0
  */
 
 class BiblestudyViewDatabase extends JView
 {
 	/**
-	 * @since	1.6
+	 * @since	7.1.0
 	 */
 	function display($tpl=null)
 	{
@@ -40,10 +40,10 @@ class BiblestudyViewDatabase extends JView
 		$this->updateVersion = ($this->updateVersion) ?  $this->updateVersion : JText::_('JNONE');
 		$this->pagination = $this->get('Pagination');
 		$this->errorCount = count($this->errors);
-                
+
                 $jbsversion = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'biblestudy.xml');
                 $this->version = $jbsversion['version'];
-                
+
 		$errors = count($this->errors);
 		if (!(strncmp($this->schemaVersion, $this->version, 5) === 0))
 		{
@@ -64,11 +64,11 @@ class BiblestudyViewDatabase extends JView
 	/**
 	 * Add the page title and toolbar.
 	 *
-	 * @since	1.6
+	 * @since	7.1.0
 	 */
 	protected function addToolbar()
 	{
-		
+
 		/*
 		 * Set toolbar items for the page
 		 */

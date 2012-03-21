@@ -1,30 +1,30 @@
 <?php
 /**
- * @package		Joomla.Administrator
- * @subpackage	com_installer
- * @copyright	Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License, see LICENSE.php
- */
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * @since		7.1.0
+ * */
 
 // No direct access.
 defined('_JEXEC') or die;
 
 /**
- * @package		Joomla.Administrator
- * @subpackage	com_installer
+ * @package		BibleStudy.Administrator
+ * @since	7.1.0
  */
-class BiblestudyControllerDatabase extends JController
-{
+class BiblestudyControllerDatabase extends JController {
 
-	/**
-	 * Tries to fix missing database updates
-	 *
-	 * @since	2.5
-	 */
-	function fix()
-	{
-		$model = $this->getModel('database');
-		$model->fix();
-		$this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=database', false));
-	}
+    /**
+     * Tries to fix missing database updates
+     *
+     * @since	7.1.0
+     */
+    function fix() {
+        $model = $this->getModel('database');
+        $model->fix();
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=database', false));
+    }
+
 }

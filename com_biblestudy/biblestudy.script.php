@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
 </script>
 <?php
 
-class com_biblestudyInstallerScript {
+class biblestudyInstallerScript {
     /*
      * The release value to be displayed and check against throughout this file.
      */
@@ -225,7 +225,6 @@ class com_biblestudyInstallerScript {
             <legend>
                 <?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type . '_TEXT'); ?></legend>
             <?php
-
             //changes after 7.0.2
             require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'updateAll.php');
 
@@ -317,6 +316,31 @@ class com_biblestudyInstallerScript {
                     $db->quote($paramsString) .
                     ' WHERE name = "com_biblestudy"');
             $db->query();
+        }
+    }
+    // @todo Must Add in all fixes hear for update?
+    public function deleteUnexistingFiles() {
+        $files = array(
+            '/includes/version.php',
+            '/media/system/images/modal/closebox.gif',
+        );
+
+        // TODO There is an issue while deleting folders using the ftp mode
+        $folders = array(
+            '/libraries/joomlacms',
+            '/media/mod_finder_status',
+        );
+
+        foreach ($files as $file) {
+            if (JFile::exists(JPATH_ROOT . $file) && !JFile::delete(JPATH_ROOT . $file)) {
+                echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $file) . '<br />';
+            }
+        }
+
+        foreach ($folders as $folder) {
+            if (JFolder::exists(JPATH_ROOT . $folder) && !JFolder::delete(JPATH_ROOT . $folder)) {
+                echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $folder) . '<br />';
+            }
         }
     }
 
