@@ -31,12 +31,49 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
 				<?php echo $this->form->getLabel('server_path'); ?>
 
 				<?php echo $this->form->getInput('server_path'); ?></li>
+                                <li>
+				<?php echo $this->form->getLabel('type'); ?>
+
+				<?php echo $this->form->getInput('type'); ?></li>
+				
 			</ul>
 
 	</div>
 	<div class="clr"></div>
 
+<div class="width-60 fltlft">
+		<fieldset class="panelform">
+			<legend>
 
+			<?php echo JText::_( 'JBS_CMN_FTP' ); ?></legend>
+			<ul class="adminformlist">
+				
+				<?php echo $this->form->getLabel('ftphost'); ?>
+
+				<?php echo $this->form->getInput('ftphost'); ?></li>
+				<li>
+				<?php echo $this->form->getLabel('ftpuser'); ?>
+
+				<?php echo $this->form->getInput('ftpuser'); ?></li>
+                                <li>
+				<?php echo $this->form->getLabel('ftppassword'); ?>
+
+				<?php echo $this->form->getInput('ftppassword'); ?></li>
+                                <li>
+				<?php echo $this->form->getLabel('ftpport'); ?>
+
+				<?php echo $this->form->getInput('ftpport'); ?></li>
+                                <li>
+				<?php echo $this->form->getLabel('aws_key'); ?>
+
+				<?php echo $this->form->getInput('aws_key'); ?></li>
+                                <li>
+				<?php echo $this->form->getLabel('aws_secret'); ?>
+
+				<?php echo $this->form->getInput('aws_secret'); ?></li>
+			</ul>
+
+	</div>
 
 
 

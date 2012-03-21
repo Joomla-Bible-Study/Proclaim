@@ -21,7 +21,7 @@ $params = $this->form->getFieldsets('params');
     
 function showupload() {
     var id = 'SWFUpload_0';
-	if (document.adminForm.server.value != '' && document.adminForm.path.value != '')
+	if (document.adminForm.upload_server.value != '' && document.adminForm.upload_folder.value != '')
 		{document.getElementById(id).style.display = 'inline';}
 		else {document.getElementById(id).style.display = 'none';}
 	}
@@ -166,10 +166,10 @@ if (window.addEventListener){
                         </thead>
                         <tbody>
                         <tr><td>
-                             <?php echo $this->form->getLabel('server');?><td><?php echo $this->form->getInput('server');?></td>
+                             <?php echo $this->upload_server;?></td>
                         </td></tr>
                         <tr><td>
-                             <?php echo $this->form->getLabel('path');?><td><?php echo $this->form->getInput('path');?></td>
+                             <?php echo $this->upload_folder;?></td>
                         </td></tr>
                             <tr>
                                 <td>
@@ -182,8 +182,8 @@ if (window.addEventListener){
                                              
                                     </div>
                                         </div>
-                                    <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')">
-                                        <?php echo JText::_('JBS_STY_UPLOAD_BUTTON');?> </button>
+                                  <!--  <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')"> -->
+                                        <?php //echo JText::_('JBS_STY_UPLOAD_BUTTON');?><!-- </button> -->
                                     </td><td></td>
                             </tr>
                         </tbody>
@@ -254,6 +254,7 @@ if (window.addEventListener){
             <?php echo JHtml::_('sliders.end'); ?>
         </div>
     <?php endif; ?>
+    <input type="hidden" name="flupfile" value ="" />
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>
 </form>

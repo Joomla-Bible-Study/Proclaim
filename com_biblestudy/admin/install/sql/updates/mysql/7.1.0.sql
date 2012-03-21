@@ -52,3 +52,12 @@ ADD COLUMN `created_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 ADD COLUMN `created_by_alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 ADD COLUMN `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 ADD COLUMN `modified_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
+
+ALTER TABLE `#__bsms_servers`
+ADD COLUMN `type` tinyint(3) NOT NULL,
+ADD COLUMN `ftphost` varchar(100) NOT NULL,
+ADD COLUMN `ftpuser` varchar(250) NOT NULL,
+ADD COLUMN `ftppassword` varchar(250) NOT NULL,
+ADD COLUMN `ftpport` varchar(10) NOT NULL,
+ADD COLUMN `aws_key` varchar(100) NOT NULL,
+ADD COLUMN `aws_secret` varchar(100) NOT NULL;

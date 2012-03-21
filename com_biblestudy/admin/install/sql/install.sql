@@ -209,6 +209,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
 	`ftp_password` char(255) NOT NULL,
 	`asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 	`access` int(10) UNSIGNED NOT NULL DEFAULT '0',
+        `type` tinyint(3) NOT NULL,
+        `ftphost` varchar(100) NOT NULL,
+        `ftpuser` varchar(250) NOT NULL,
+        `ftppassword` varchar(250) NOT NULL,
+        `ftpport` varchar(10) NOT NULL,
+        `aws_key` varchar(100) NOT NULL,
+        `aws_secret` varchar(100) NOT NULL,
 	PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)

@@ -17,4 +17,35 @@
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
                 description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
                 class="readonly" />
+        <field
+			name="type"
+			type="list"
+			label="JBS_SERVER_FILEPATH_TYPE"
+			description="JBS_SERVER_FILEPATH_TYPE_DESC"
+			class="inputbox"
+			size="1"
+			default="" validate="options">
+			<option
+				value="0">JBS_SERVER_FTYPE_LOCAL</option>
+			<option
+				value="1">JBS_SERVER_FTYPE_3RDPARTY</option>
+			<option
+				value="2">JBS_SERVER_FTYPE_3RDPARTY_FTP</option>
+			<option
+				value="3">JBS_SERVER_FTYPE_AMAZON</option>
+        </field>
+        <field name="ftphost" type="text" class="inputbox"
+                size="50" maxlength="100" label="JBS_SERVER_FTPHOST" description="JBS_SERVER_FTPHOST_DESC"/>
+        <field name="ftpuser" type="text" class="inputbox"
+                size="50" maxlength="100" label="JBS_SERVER_FTPUSER" description="JBS_SERVER_FTPUSER_DESC"/>
+        <field name="ftppassword" type="password" class="inputbox"
+                size="50" maxlength="100" label="JBS_SERVER_FTPPASSWORD" description="JBS_SERVER_FTPPASSWORD_DESC"/>
+        <field name="ftpport" type="text" class="inputbox"
+                size="2" maxlength="3" label="JBS_SERVER_FTPPORT" description="JBS_SERVER_FTPPORT_DESC"/>
+                <field name="aws_key" type="text" class="inputbox"
+                size="50" maxlength="100" label="JBS_SERVER_AWSKEY" description="JBS_SERVER_AWSKEY_DESC"/>
+        <field name="aws_secret" type="password" class="inputbox"
+                size="50" maxlength="100" label="JBS_SERVER_AWSSECRET" description="JBS_SERVER_AWSSECRET_DESC"/>
+	</fieldset>
+	
 </form>

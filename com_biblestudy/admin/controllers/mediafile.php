@@ -9,7 +9,7 @@
  **/
 //No Direct Access
 defined('_JEXEC') or die;
-
+require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 jimport('joomla.application.component.controllerform');
 
 abstract class controllerClass extends JControllerForm {
@@ -117,7 +117,72 @@ class BiblestudyControllerMediafile extends controllerClass {
 			$this->setRedirect( 'index.php?option=com_biblestudy&view=mediafile&controller=message&layout=form&cid[]='.$id, $msg );
 		}
 	}
-}
+        
+    function uploadflash()
+    {
+        JRequest::checktoken() or jexit( 'Invalid Token' );
+        $option = JRequest::getCmd('option');
+        $db		= & JFactory::getDBO();
+        jimport('joomla.filesystem.file');
+     /*   $admin =& JTable::getInstance('Bckadmin', 'Table');
+        $adminid = '1';
+        $admin->load($adminid);
+        $uploadmsg = '';
+        // get table, bind and store data
+        $row =PIAdminfunctions::getformdetails('Studies'); 
+        // sanitise and allow raw entries
+        $row = PIHelperadmin::sanitisestudyrow($row);
+        if (!$row->store())
+        {JError::raiseError(500, $row->getError() );}
+      
+      */
+        // get temp file details
+        $temp = JBSUpload::gettempfile();
+        $temp_folder = JBSUpload::gettempfolder();
+        $tempfile = $temp_folder.$temp;	
+        // get path and abort if none
+        $url = 'index.php?option=' . $option . '&controller=studylist&task=edit&cid[] =' . $row->id;
+        $path = JBSUpload::getpath($url, $tempfile);
+        // get media type
+        $media = JRequest::getVar ( 'mediaselector', '', 'POST', 'INT');
+        // check filetype is allowed
+        $allow = JBSUpload::checkfile($temp);
+        if ($allow)
+        {
+        $filename = JBSUpload::buildpath($temp, 1, $media, $row->id, $path, 1);
+    
+        // resize image if needed
+     //   $resize = JBSUpload::resizemesimage($tempfile, $media);
+        // get id3 info if available available before moving file
+     //   $data = JBSUpload::getid3($tempfile, 1);	
+        // process file
+        $uploadmsg = JBSUpload::processflashfile($tempfile, $filename);
+        if (!$uploadmsg) 
+                { 
+                // set folder and link entries
+              //  $row = PIHelperadmin::setstudylist($row, $data, $filename, $path, $media);
+                $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
+                }	
+        // get filesizes if needed
+      //  $row = PIHelperadmin::getstudydates($row);	
+        //set saccess
+     //   $row = PIHelperadmin::getsaccess($row);
+        // set minaccess
+      //  $row = PIHelperadmin::getminaccess($row);
+        // get filesizes if needed
+      //  $row = PIHelperadmin::getfilesize($row);
+      //  if (!$row->store())
+     //   {JError::raiseError(500, $row->getError() );}
+        }
+        else {$uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');}
+      //  $podmsg = PIHelperadmin::setpods($row);
+     
+        // delete temp file
+        JBSUpload::deletetempfile($tempfile);
+        $this->setRedirect('index.php?option=' . $option . '&controller=mediafile&task=edit&cid[]=' . $row->id, $uploadmsg);	
+    }
+
+
 
 //New File Size System Should work on all server now.
 function getSizeFile ($url){
@@ -171,3 +236,6 @@ function getSizeFile ($url){
 	}
 	return $return;
 }
+
+}
+
