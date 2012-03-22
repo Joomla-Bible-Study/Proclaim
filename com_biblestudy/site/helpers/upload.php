@@ -292,12 +292,13 @@ function processuploadfile($file, $filename)
 	 */
 
 function upload($filename, $file)
-{$msg = '';
-jimport('joomla.filesystem.file');
-if (!JFILE::upload($file['tmp_name'], $filename->path))
-{ $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH').' '. $filename->path .' '.JText::_('JBS_MED_UPLOAD_EXISTS');}
+{
+    $msg = '';
+    jimport('joomla.filesystem.file');
+    if (!JFILE::upload($file['tmp_name'], $filename->path))
+    { $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH').' '. $filename->path .' '.JText::_('JBS_MED_UPLOAD_EXISTS');}
 
-return $msg;
+    return $msg;
 }
 
 /**
@@ -310,12 +311,13 @@ return $msg;
 	 */
 
 function uploadftp($filename, $file)
-{$msg = '';
-jimport('joomla.filesystem.file');
+{
+    $msg = '';
+    jimport('joomla.filesystem.file');
 
-if (!JFILE::upload($file['tmp_name'], $filename))
-{ $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH').' '. $filename->path .' '.JText::_('JBS_MED_UPLOAD_EXISTS');}
-return $msg;
+    if (!JFILE::upload($file['tmp_name'], $filename))
+    { $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH').' '. $filename->path .' '.JText::_('JBS_MED_UPLOAD_EXISTS');}
+    return $msg;
 }
 
 /**
@@ -329,86 +331,340 @@ return $msg;
 	 */
 
 function ftp($file, $filename, $admin = 0)
-{
-$app = JFactory::getApplication();
-$ftpsuccess = true;
-$ftpsuccess1 = true;
-$ftpsuccess2 = true;
-$ftpsuccess3 = true;
-$ftpsuccess4 = true;
-	// FTP access parameters
-$host = $filename->ftphost;
-$usr = $filename->ftpuser;
-$pwd = $filename->ftppassword;
-$port = $filename->ftpport;
- 
-// file to move:
-$local_file = $file;
-$ftp_path = $filename->path;
-// connect to FTP server (port 21)
-if (!$conn_id = ftp_connect($host, $port))
-{
- if ($admin == 0)
- {
- $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_CONNECT'), 'error' );}
- $ftpsuccess1 = false;
-}
+    {
+        $app = JFactory::getApplication();
+        $ftpsuccess = true;
+        $ftpsuccess1 = true;
+        $ftpsuccess2 = true;
+        $ftpsuccess3 = true;
+        $ftpsuccess4 = true;
+                // FTP access parameters
+        $host = $filename->ftphost;
+        $usr = $filename->ftpuser;
+        $pwd = $filename->ftppassword;
+        $port = $filename->ftpport;
 
+        // file to move:
+        $local_file = $file;
+        $ftp_path = $filename->path;
+        // connect to FTP server (port 21)
+        if (!$conn_id = ftp_connect($host, $port))
+        {
+        if ($admin == 0)
+        {
+        $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_CONNECT'), 'error' );}
+        $ftpsuccess1 = false;
+        }
 
-// send access parameters
-if (!ftp_login($conn_id, $usr, $pwd))
-{
- if ($admin == 0)
- {
- $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_LOGIN'), 'error' );}
- $ftpsuccess2 = false;
-}
+        // send access parameters
+        if (!ftp_login($conn_id, $usr, $pwd))
+        {
+        if ($admin == 0)
+        {
+        $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_LOGIN'), 'error' );}
+        $ftpsuccess2 = false;
+        }
 
+        // turn on passive mode transfers (some servers need this)
+        // ftp_pasv ($conn_id, true);
 
- 
-// turn on passive mode transfers (some servers need this)
-// ftp_pasv ($conn_id, true);
- 
-// perform file upload
-if (!$upload = ftp_put($conn_id, $ftp_path, $local_file, FTP_BINARY))
-{
- if ($admin == 0)
- {
- $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_UPLOAD'), 'error' );}
- $ftpsuccess3 = false;
-}
+        // perform file upload
+        if (!$upload = ftp_put($conn_id, $ftp_path, $local_file, FTP_BINARY))
+        {
+        if ($admin == 0)
+        {
+        $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_UPLOAD'), 'error' );}
+        $ftpsuccess3 = false;
+        }
 
+        /*
+        ** Chmod the file (just as example)
+        */
 
- 
+        // If you are using PHP4 then you need to use this code:
+        // (because the "ftp_chmod" command is just available in PHP5+)
+        if (!function_exists('ftp_chmod')) {
+        function ftp_chmod($ftp_stream, $mode, $filename){
+                return ftp_site($ftp_stream, sprintf('CHMOD %o %s', $mode, $filename));
+        }
+        }
+
+        // try to chmod the new file to 666 (writeable)
+        if (ftp_chmod($conn_id, 0755, $ftp_path) == false)
+        {
+                if ($admin == 0)
+                {
+            $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_CHMOD'), 'error' );}
+                $ftpsuccess4 = false;
+        }
+
+        // close the FTP stream
+        ftp_close($conn_id);
+
+        if (!$ftpsuccess1 || !$ftpsuccess2 || !$ftpsuccess3)
+        {$ftpsuccess = false;}
+
+        return $ftpsuccess;
+    }
+
+/**
+	 * Method to build filepath
+	 *
+	 * @param	array $file  File details.
+	 * @param	int $path The path id.
+	 * @param	bolean $flash	Sets whether this is a flash upload or normal php upload and chooses right path through function.
+	 *
+	 * @return	array
+	 */
+
+function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
+    {
+        $filepath=& JTable::getInstance('Server', 'Table');
+
+        $filepath->load($serverid);
+        $folderpath = JTable::getInstance('Folder','Table');
+        $folderpath->load($folderid);
+        $folder = $filepath->server_path.$folderpath->folderpath;
+        $filename->type = $filepath->type;
+        $filename->ftphost = $filepath->ftphost;
+        $filename->ftpuser = $filepath->ftpuser;
+        $filename->ftppassword = $filepath->ftppassword;
+        $filename->ftpport = $filepath->ftpport;
+        $filename->aws_key = $filepath->aws_key;
+        $filename->aws_secret = $filepath->aws_secret;
+        $filename->aws_bucket = $filepath->server_path.$folderpath->folderpath;
+
+        //sanitise folder
+
+        //remove last / if present from folder
+
+        $last1 = substr($folder, -1);
+        if ($last1 == '/')
+        {$folder = substr_replace($folder,"",-1);}
+
+        //remove first / if present from folder
+
+        $first = substr($folder, 0, 1);
+        if ($first == '/')
+        {$folder = substr_replace($folder,'',0, 1);}
+
+     //   $pre = PIHelperadmin::buildprefix($type, $media, $id);
+
+        //This removes any characters that might cause headaches to browsers. This also does the same thing in the model
+        $badchars = array(' ', '\'', '"', '`', '@', '^', '!', '#', '$', '%', '*', '(', ')', '[', ']', '{', '}', '~', '?', '>', '<', ',', '|', '\\', ';', '&', '_and_');
+
+        if ($flash == 0)
+        {
+            $file['name'] = str_replace($badchars, '_', $file['name']);
+            $filename->file = JFILE::makeSafe($file['name']);
+        }
+
+        if ($flash == 1)
+        {
+            $file = str_replace($badchars, '_', $file);
+            $filename->file = JFILE::makeSafe($file);
+        }
+        if ($filename->type == 2)
+        {$filename->path = $folder . '/' . $filename->file;}
+        else {
+        $filename->path = JPATH_SITE . DS . $folder . DS . $filename->file;}
+
+        return $filename;
+    }
+
+    function aws($file, $filename, $admin = 0)
+    {
+        $app = JFactory::getApplication();
+        $awssuccess = true;
+        $awssuccess5 = true;
+        $awssuccess1 = true;
+        $awssuccess2 = true;
+        $awssuccess3 = true;
+        $awssuccess4 = true;
+        $aws_key = $filename->aws_key;
+        $aws_secret = $filename->aws_secret;
+
+        $source_file = $file; // file to upload to S3
+
+        jimport('joomla.filesystem.file');
+        $ext = JFile::getExt($filename->file);
+
+        if ($ext ==  'jpg')
+        {$file_type = 'image/jpg';}
+        elseif ($ext ==  'png')
+        {$file_type = 'image/png';}
+        elseif ($ext ==  'gif')
+        {$file_type = 'image/gif';}
+        else {
 /*
-** Chmod the file (just as example)
+        $db=& JFactory::getDBO();	
+        $query = "SELECT ".$db->nameQuote('mediatype')."
+            FROM ".$db->nameQuote('#__pimime')."
+            WHERE ".$db->nameQuote('extension')." = ".$db->quote($ext).";
+        ";
+        $db->setQuery($query);
+        $file_type = $db->loadResult();
 */
- 
-// If you are using PHP4 then you need to use this code:
-// (because the "ftp_chmod" command is just available in PHP5+)
-if (!function_exists('ftp_chmod')) {
-   function ftp_chmod($ftp_stream, $mode, $filename){
-        return ftp_site($ftp_stream, sprintf('CHMOD %o %s', $mode, $filename));
-   }
-}
- 
-// try to chmod the new file to 666 (writeable)
-if (ftp_chmod($conn_id, 0755, $ftp_path) == false)
-{
-	if ($admin == 0)
- 	{
-    $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_CHMOD'), 'error' );}
- 	$ftpsuccess4 = false;
-}
- 
-// close the FTP stream
-ftp_close($conn_id);
+        if (!$file_type)
+        {$file_type = 'binary/octet-stream';}
+        }
 
-if (!$ftpsuccess1 || !$ftpsuccess2 || !$ftpsuccess3)
-{$ftpsuccess = false;}
+        $aws_bucket = $filename->aws_bucket; // AWS bucket 
+        $aws_object = $filename->file;         // AWS object name (file name)
 
-return $ftpsuccess;
-}
+
+        if (strlen($aws_secret) != 40) 
+        {
+        if ($admin == 0)
+        {
+        $app->enqueueMessage ( JText::_('JBS_MED_AWS_SECRET_WRONG_LENGTH'), 'error' );}
+        $awssuccess1 = false;
+        }
+        else {
+        $file_data = file_get_contents($source_file);
+        if ($file_data == false)
+        {
+        if ($admin == 0)
+        {
+        $app->enqueueMessage ( JText::_('JBS_MED_AWS_FAILED_READ_FILE'), 'error' );}
+        $awssuccess2 = false;
+        }
+        else {
+
+
+        // opening HTTP connection to Amazon S3
+        $fp = fsockopen("s3.amazonaws.com", 80, $errno, $errstr, 30);
+        if (!$fp) {
+        if ($admin == 0)
+        {
+        $app->enqueueMessage ( JText::_('JBW_MED_AWS_NOT_OPEN_SOCKET'), 'error' );}
+        $awssuccess3 = false;
+        }
+        else {
+
+
+        // Creating or updating bucket 
+
+        $dt = gmdate('r'); // GMT based timestamp 
+
+        // preparing String to Sign    (see AWS S3 Developer Guide)
+        $string2sign = "PUT
+
+
+        {$dt}
+        /{$aws_bucket}";
+
+        // preparing HTTP PUT query
+        $query = "PUT /{$aws_bucket} HTTP/1.1
+        Host: s3.amazonaws.com
+        Connection: keep-alive
+        Date: $dt
+        Authorization: AWS {$aws_key}:".$this->amazon_hmac($string2sign, $aws_secret)."\n\n";
+
+        $resp = $this->sendREST($fp, $query);
+        if (strpos($resp, '<Error>') !== false)
+        {
+        if ($admin == 0)
+        {
+        $app->enqueueMessage ( JText::_('JBS_MED_AWS_CANNOT_CREATE_BUCKET'), 'error' );}
+        $awssuccess4 = false;
+        }
+        else {
+        // done
+
+
+        // Uploading object
+        $file_length = strlen($file_data); // for Content-Length HTTP field 
+
+        $dt = gmdate('r'); // GMT based timestamp
+        // preparing String to Sign    (see AWS S3 Developer Guide)
+        $string2sign = "PUT
+
+        {$file_type}
+        {$dt}
+        x-amz-acl:public-read
+        /{$aws_bucket}/{$aws_object}";
+
+        // preparing HTTP PUT query
+        $query = "PUT /{$aws_bucket}/{$aws_object} HTTP/1.1
+        Host: s3.amazonaws.com
+        x-amz-acl: public-read
+        Connection: keep-alive
+        Content-Type: {$file_type}
+        Content-Length: {$file_length}
+        Date: $dt
+        Authorization: AWS {$aws_key}:".$this->amazon_hmac($string2sign, $aws_secret)."\n\n";
+        $query .= $file_data;
+
+        $resp = $this->sendREST($fp, $query);
+        if (strpos($resp, '<Error>') !== false)
+        {
+        if ($admin == 0)
+        {
+        $app->enqueueMessage ( JText::_('JBS_MED_AWS_CANNOT_CREATE_FILE'), 'error' );}
+        $awssuccess5 = false;
+        }
+
+        fclose($fp);
+        }
+        }
+        }
+        }
+
+        if (!$awssuccess1 || !$awssuccess2 || !$awssuccess3 || !$awssuccess4 || !$awssuccess5)
+        {$awssuccess = false;}
+
+        return $awssuccess;
+    }
+
+    function amazon_hmac($stringToSign, $aws_secret) 
+    {
+    // helper function binsha1 for amazon_hmac (returns binary value of sha1 hash)
+    if (!function_exists('binsha1'))
+    { 
+        if (version_compare(phpversion(), "5.0.0", ">=")) { 
+            function binsha1($d) { return sha1($d, true); }
+        } else { 
+            function binsha1($d) { return pack('H*', sha1($d)); }
+        }
+    }
+
+    if (strlen($aws_secret) == 40)
+        $aws_secret = $aws_secret.str_repeat(chr(0), 24);
+
+    $ipad = str_repeat(chr(0x36), 64);
+    $opad = str_repeat(chr(0x5c), 64);
+
+    $hmac = binsha1(($aws_secret^$opad).binsha1(($aws_secret^$ipad).$stringToSign));
+    return base64_encode($hmac);
+    }
+
+function sendREST($fp, $q, $debug = false)
+    {
+    if ($debug) echo "\nQUERY<<{$q}>>\n";
+
+    fwrite($fp, $q);
+    $r = '';
+    $check_header = true;
+    while (!feof($fp)) {
+        $tr = fgets($fp, 256);
+        if ($debug) echo "\nRESPONSE<<{$tr}>>"; 
+        $r .= $tr;
+
+        if (($check_header)&&(strpos($r, "\r\n\r\n") !== false))
+        {
+            // if content-length == 0, return query result
+            if (strpos($r, 'Content-Length: 0') !== false)
+                return $r;
+        }
+
+        // Keep-alive responses does not return EOF
+        // they end with \r\n0\r\n\r\n string
+        if (substr($r, -7) == "\r\n0\r\n\r\n")
+            return $r;
+    }
+    return $r;
+    }
 
 }
 ?>
