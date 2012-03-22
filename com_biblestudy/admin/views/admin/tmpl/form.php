@@ -59,6 +59,10 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
                         <?php echo $this->form->getInput('studylistlimit', 'params'); ?>
                     </li>
                     <li>
+                        <?php echo $this->form->getLabel('uploadtype', 'params'); ?>
+                        <?php echo $this->form->getInput('uploadtype', 'params'); ?>
+                    </li>
+                    <li>
                         <?php echo $this->form->getLabel('show_location_media', 'params'); ?>
                         <?php echo $this->form->getInput('show_location_media', 'params'); ?>
                     </li>

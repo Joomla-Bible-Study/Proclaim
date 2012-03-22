@@ -28,8 +28,8 @@ class BiblestudyViewMediafile extends JView {
 		$this->canDo = BibleStudyHelper::getActions($this->item->id, 'mediafile');
 		//Load the Admin settings
 		$this->loadHelper('params');
-		$this->admin = BsmHelper::getAdmin();
-                $host = JURI::base();
+		$this->admin = BsmHelper::getAdmin(); 
+                $host = JURI::root();
                 $document = JFactory::getDocument();
                 $document->addScript($host.'media/com_biblestudy/js/swfupload/swfupload.js');
                 $document->addScript($host.'media/com_biblestudy/js/swfupload/swfupload.queue.js');

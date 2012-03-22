@@ -172,7 +172,7 @@ if (window.addEventListener){
                              <?php echo $this->upload_folder;?></td>
                         </td></tr>
                             <tr>
-                                <td>
+                                <td> <?php if ($this->admin->params['uploadtype'] == 1){ ?>
                                     <div id="swfuploader">
                                     <div class="fieldset flash" id="fsUploadProgress">
                                     </div> 	
@@ -181,9 +181,10 @@ if (window.addEventListener){
                                             <input id="btnCancel" type="button" value="<?php echo JText::_('JBS_STY_CANCEL');?>" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
                                              
                                     </div>
-                                        </div>
-                                  <!--  <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')"> -->
-                                        <?php //echo JText::_('JBS_STY_UPLOAD_BUTTON');?><!-- </button> -->
+                                        </div> <?php } ?>
+                                  <?php if ($this->admin->params['uploadtype'] == 0){ ?>
+                                    <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')"> 
+                                        <?php echo JText::_('JBS_STY_UPLOAD_BUTTON');?> </button> <?php } ?>
                                     </td><td></td>
                             </tr>
                         </tbody>

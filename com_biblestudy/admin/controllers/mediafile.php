@@ -122,8 +122,16 @@ class BiblestudyControllerMediafile extends controllerClass {
     {
         JRequest::checktoken() or jexit( 'Invalid Token' );
         $option = JRequest::getCmd('option');
-        $db		= & JFactory::getDBO();
+        $db = & JFactory::getDBO();
         jimport('joomla.filesystem.file');
+        //get the server and folder id from the request
+       
+        $bind = JRequest::getVar('jform', array(), 'post', 'array');
+        $row =& JTable::getInstance('Mediafile', 'Table');
+        if (!$row->bind($bind))
+        {JError::raiseError(500, $row->getError() );}
+        $serverid = $row->upload_server;
+        $folderid = $row->upload_folder;
      /*   $admin =& JTable::getInstance('Bckadmin', 'Table');
         $adminid = '1';
         $admin->load($adminid);
@@ -141,15 +149,16 @@ class BiblestudyControllerMediafile extends controllerClass {
         $temp_folder = JBSUpload::gettempfolder();
         $tempfile = $temp_folder.$temp;	
         // get path and abort if none
-        $url = 'index.php?option=' . $option . '&controller=studylist&task=edit&cid[] =' . $row->id;
+        $url = 'index.php?option=' . $option . '&view=mediafiles';
         $path = JBSUpload::getpath($url, $tempfile);
         // get media type
-        $media = JRequest::getVar ( 'mediaselector', '', 'POST', 'INT');
+      //  $media = JRequest::getVar ( 'mediaselector', '', 'POST', 'INT');
+        $media = null;
         // check filetype is allowed
         $allow = JBSUpload::checkfile($temp);
         if ($allow)
         {
-        $filename = JBSUpload::buildpath($temp, 1, $media, $row->id, $path, 1);
+        $filename = JBSUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
     
         // resize image if needed
      //   $resize = JBSUpload::resizemesimage($tempfile, $media);
@@ -179,7 +188,8 @@ class BiblestudyControllerMediafile extends controllerClass {
      
         // delete temp file
         JBSUpload::deletetempfile($tempfile);
-        $this->setRedirect('index.php?option=' . $option . '&controller=mediafile&task=edit&cid[]=' . $row->id, $uploadmsg);	
+        $mediafileid = JRequest::getInt('id','','post');
+        $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&cid[]=' . $mediafileid, $uploadmsg);	
     }
 
 
@@ -236,6 +246,79 @@ function getSizeFile ($url){
 	}
 	return $return;
 }
+
+function upflash()
+    {
+        
+//import joomla filesystem functions, we will do all the filewriting with joomlas functions,
+        //so if the ftp layer is on, joomla will write with that, not the apache user, which might
+        //not have the correct permissions
+        $abspath    = JPATH_SITE;
+        //this is the name of the field in the html form, filedata is the default name for swfupload
+        //so we will leave it as that
+        $fieldName = 'Filedata';
+        //any errors the server registered on uploading
+        $fileError = $_FILES[$fieldName]['error'];
+        if ($fileError > 0) 
+        {
+                switch ($fileError) 
+                {
+                case 1:
+                echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_FILE_TOO_LARGE_THAN_PHP_INI_ALLOWS' );
+                return;
+
+                case 2:
+                echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_FILE_TO_LARGE_THAN_HTML_FORM_ALLOWS' );
+                return;
+
+                case 3:
+                echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_ERROR_PARTIAL_UPLOAD' );
+                return;
+
+                case 4:
+                echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_ERROR_NO_FILE' );
+                return;
+                }
+        }
+
+        //check for filesize
+        $fileSize = $_FILES[$fieldName]['size'];
+        if($fileSize > 500000000)
+        {
+            echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_FILE_BIGGER_THAN').' 500MB';
+        }
+
+        //check the file extension is ok
+        $fileName = $_FILES[$fieldName]['name'];
+        $extOk = JBSUpload::checkfile($fileName);
+
+        if ($extOk == false) 
+        {
+                echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_NOT_UPLOAD_THIS_FILE_EXT' );
+                return;
+        }
+
+        //the name of the file in PHP's temp directory that we are going to move to our folder
+        $fileTemp = $_FILES[$fieldName]['tmp_name'];
+
+        //always use constants when making file paths, to avoid the possibilty of remote file inclusion
+        $uploadPath = JURI::root().DS.'media'.DS.'com_biblestudy'.DS.'js'.DS.'swfupload'.DS.'tmp'.DS.$fileName;
+
+        if(!JFile::upload($fileTemp, $uploadPath)) 
+        {
+                echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_ERROR_MOVING_FILE' );
+                return;
+        }
+        else
+        {
+              //  $id = 1;
+              //  $db =& JFactory::getDBO();
+              //  $db->setQuery ("UPDATE #__pibckadmin SET uploadfile = '".$fileName."' WHERE id = '{$id}' ;"); 
+               // $db->query();
+        // success, exit with code 0 for Mac users, otherwise they receive an IO Error
+        exit(0);
+        }
+    }
 
 }
 
