@@ -17,9 +17,9 @@ class JBSUpload{
     function uploadjs($host)
     {
     //when we send the files for upload, we have to tell Joomla our session, or we will get logged out 
-    $session = & JFactory::getSession();
+    $session =  JFactory::getSession();
     
-    $val = ini_get('upload_max_filesize');
+    $val = ini_get('upload_max_filesize'); 
     $val = trim($val);
         $last = strtolower($val[strlen($val)-1]);
         switch($last) {
@@ -421,7 +421,7 @@ function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
     {
         JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'tables');
         $filepath=& JTable::getInstance('Server', 'Table');
-        $filepath->load($serverid);
+        $filepath->load($serverid); dump($filepath);
         $folderpath = JTable::getInstance('Folder','Table');
         $folderpath->load($folderid);
         $folder = $filepath->server_path.$folderpath->folderpath;
