@@ -11,7 +11,78 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.helper');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 $params = $this->form->getFieldsets('params');
+
 ?>
+<script language="javascript" type="text/javascript">
+function submitbutton(task)
+{
+        if (task == '')
+        		{
+                return false;
+        		}
+       	else if (task == 'upload')
+        		{
+					if (document.adminForm.upload_folder.value == '') 
+						{
+							alert("<?php echo JText::_('JBS_MED_SELECT_FOLDER');?>");
+						} 
+					else if (document.adminForm.upload_server.value == '' ) 
+						{
+							alert("<?php echo JText::_('JBS_MED_ENTER_SERVER');?>");
+						} 
+  					else {
+						submitform(task);
+                  return true;
+						}
+		 		}
+		 else if  (task == 'thirdparty') 
+				{
+					if (document.adminForm.video_third.value == '') 
+						{
+							alert("<?php echo JText::_('JBS_MED_ADD_THIRD_PARTY_URL');?>");
+						} 
+					else
+						{
+							if(confirm("<?php echo JText::_('JBS_MED_SURE_OVERWRITE_DETAILS');?>"))
+								{submitform(task);
+       							return true;}
+						}
+				}
+	   else if (task == 'cancelclose')
+		  		{
+		  			
+					window.parent.SqueezeBox.close();
+				}
+        else
+       	 {
+                var isValid=true;
+                if (task != 'cancel' && task != 'close' && task != 'uploadflash')
+                {
+                        var forms = $$('form.form-validate');
+                        for (var i=0;i<forms.length;i++)
+                        {
+                                if (!document.formvalidator.isValid(forms[i]))
+                                {
+                                        isValid = false;
+                                        break;
+                                }
+                        }
+                }
+ 
+                if (isValid)
+                {
+                        submitform(task);
+                        return true;
+                }
+                else
+                {
+                        alert('<?php echo JText::_('JBS_MED_FIELDS_INVALID');?>');
+                        return false;
+                }
+        }
+}
+</script>
+
 <script language="javascript" type="text/javascript">
     function sizebutton(remotefilesize)
     {
@@ -34,7 +105,7 @@ if (window.addEventListener){
 
 </script>
 <form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
+    action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id); ?>"
     method="post" name="adminForm" id="adminForm">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
@@ -258,4 +329,5 @@ if (window.addEventListener){
     <input type="hidden" name="flupfile" value ="" />
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>
+    <input type="hidden" name="controller" value="mediafile" />
 </form>

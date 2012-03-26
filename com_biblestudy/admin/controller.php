@@ -77,6 +77,7 @@ class biblestudyController extends JController {
         die();
     }
 
+    
     /**
      * @desc Looks up a topic for the auto-complete. Used by jquery.tag-it.js
      * @since 7.0.1

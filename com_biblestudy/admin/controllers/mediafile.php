@@ -127,7 +127,7 @@ class BiblestudyControllerMediafile extends controllerClass {
         //get the server and folder id from the request
        
         $bind = JRequest::getVar('jform', array(), 'post', 'array');
-        $row =& JTable::getInstance('Mediafile', 'Table');
+        $row =& JTable::getInstance('Mediafile', 'Table'); 
         if (!$row->bind($bind))
         {JError::raiseError(500, $row->getError() );}
         $serverid = $row->upload_server;
@@ -249,18 +249,19 @@ function getSizeFile ($url){
 
 function upflash()
     {
-        
+        jimport('joomla.filesystem.file');
+        jimport('joomla.filesystem.folder');
 //import joomla filesystem functions, we will do all the filewriting with joomlas functions,
         //so if the ftp layer is on, joomla will write with that, not the apache user, which might
         //not have the correct permissions
-        $abspath    = JPATH_SITE;
+        $abspath    = JPATH_SITE; 
         //this is the name of the field in the html form, filedata is the default name for swfupload
         //so we will leave it as that
         $fieldName = 'Filedata';
         //any errors the server registered on uploading
         $fileError = $_FILES[$fieldName]['error'];
         if ($fileError > 0) 
-        {
+        { 
                 switch ($fileError) 
                 {
                 case 1:
@@ -285,7 +286,7 @@ function upflash()
         $fileSize = $_FILES[$fieldName]['size'];
         if($fileSize > 500000000)
         {
-            echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_FILE_BIGGER_THAN').' 500MB';
+            echo JText::_( 'JBS_MED_FILE_BIGGER_THAN').' 500MB';
         }
 
         //check the file extension is ok
@@ -294,7 +295,7 @@ function upflash()
 
         if ($extOk == false) 
         {
-                echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_NOT_UPLOAD_THIS_FILE_EXT' );
+                echo JText::_( 'JBS_MED_NOT_UPLOAD_THIS_FILE_EXT' );
                 return;
         }
 
@@ -306,7 +307,7 @@ function upflash()
 
         if(!JFile::upload($fileTemp, $uploadPath)) 
         {
-                echo JText::_( 'COM_PREACHIT_ADMIN_MESSAGE_ERROR_MOVING_FILE' );
+                echo JText::_( 'JBS_MED_ERROR_MOVING_FILE' );
                 return;
         }
         else
@@ -318,6 +319,71 @@ function upflash()
         // success, exit with code 0 for Mac users, otherwise they receive an IO Error
         exit(0);
         }
+    }
+
+    function upload()
+    {
+        JRequest::checktoken() or jexit( 'Invalid Token' );
+        $option = JRequest::getCmd('option');
+        $layout = JRequest::getVar ( 'layout', '', 'post', 'string' ); 
+     //   $admin =& JTable::getInstance('Bckadmin', 'Table');
+     //   $adminid = '1';
+     //   $admin->load($adminid);
+        $uploadmsg = '';
+        // get table, bind and store data
+     //   $row =PIAdminfunctions::getformdetails('Studies'); 
+        // sanitise and allow raw entries
+      //  $row = PIHelperadmin::sanitisestudyrow($row);
+     //   if (!$row->store())
+     //   {JError::raiseError(500, $row->getError() );}
+        // get path and abort if none
+       
+        $id = JRequest::getInt('id','','post');
+        $url = 'index.php?option=com_biblestudy&view=mediafile&id=' . $id;
+        $path = JBSUpload::getpath($url, '');
+        //get media details
+        $media = JRequest::getVar ( 'upload_server', '', 'POST', 'INT');
+        $file = JRequest::getVar( 'uploadfile', '', 'files', 'array' );
+         $row =& JTable::getInstance('Mediafile', 'Table'); 
+        if (!$row->bind($bind))
+        {JError::raiseError(500, $row->getError() );}
+        $serverid = $row->upload_server;
+        $folderid = $row->upload_folder;
+        // check filetype allowed
+        $allow = JBSUpload::checkfile($file['name']);
+        // get id3 info if available before moving file
+        $data = JBSUpload::getid3($file, 2);
+        if ($allow)
+        {
+        $filename = JBSUpload::buildpath($file, 1, $media, $row->id, $path);
+        // process file
+        $uploadmsg = JBSUpload::processuploadfile($file, $filename);
+        $err = '';
+        if (!$uploadmsg) 
+        { 
+        // resize image if needed
+        $resize = JBSUpload::resizemesimage($filename->path, $media);
+                // set folder and link entries	
+            //    $row = PIHelperadmin::setstudylist($row, $data, $filename, $path, $media);
+                $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
+        }	
+        else 
+        {$err = '&err=1';}
+        // get filesizes if needed
+        $row = PIHelperadmin::getstudydates($row);	
+        //set saccess
+        $row = PIHelperadmin::getsaccess($row);
+        // set minaccess
+        $row = PIHelperadmin::getminaccess($row);
+        // get filesizes if needed
+        $row = PIHelperadmin::getfilesize($row);
+        if (!$row->store())
+        {JError::raiseError(500, $row->getError() );}
+        }
+        else {$uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');}
+        $podmsg = PIHelperadmin::setpods($row);
+       
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=mediafile&id=' . $row->id), JText::_('JBS_MED_FILE_UPLOADED'));
     }
 
 }
