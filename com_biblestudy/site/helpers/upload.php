@@ -34,7 +34,7 @@ class JBSUpload{
     $valk = $val/1024;
     $valm = $valk/1024;
     $maxupload = $valm. ' MB';
-    
+    $host = JURI::root();
     $swfUploadHeadJs ='
     var swfu;
      
@@ -44,7 +44,7 @@ class JBSUpload{
     var settings = 
     {
             //this is the path to the flash file, you need to put your components name into it
-            flash_url : "'.JURI::root().'media/com_biblestudy/js/swfupload/swfupload.swf",
+            flash_url : "'.$host.'media/com_biblestudy/js/swfupload/swfupload.swf",
      
             //we can not put any vars into the url for complicated reasons, but we can put them into the post...
             upload_url: "'.$host.'index.php",
@@ -119,7 +119,7 @@ function gettempfile()
 function gettempfolder()
 {
 	$abspath    = JPATH_SITE;
-	$temp_folder = $abspath.DS.'media/com_biblestudy/js/swfupload/tmp/';
+	$temp_folder = $abspath.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'swfupload'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR;
 	
 	return $temp_folder;
 }
@@ -276,8 +276,8 @@ function processuploadfile($file, $filename)
 	}
 	else
 	{
-		$uploadmsg = $this->upload($filename, $file);
-	}
+		//$uploadmsg = $this->upload($filename, $file);
+            dump($filename, 'filname: '); dump($file,'file: ');	}
 	
 	return $uploadmsg;
 }
@@ -294,7 +294,7 @@ function processuploadfile($file, $filename)
 function upload($filename, $file)
 {
     $msg = '';
-    jimport('joomla.filesystem.file');
+    jimport('joomla.filesystem.file'); dump($filename,'filename: '); dump($file, '$file: '); return;
     if (!JFILE::upload($file['tmp_name'], $filename->path))
     { $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH').' '. $filename->path .' '.JText::_('JBS_MED_UPLOAD_EXISTS');}
 
@@ -419,8 +419,8 @@ function ftp($file, $filename, $admin = 0)
 
 function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
     {
+        JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'tables');
         $filepath=& JTable::getInstance('Server', 'Table');
-
         $filepath->load($serverid);
         $folderpath = JTable::getInstance('Folder','Table');
         $folderpath->load($folderid);
@@ -467,7 +467,9 @@ function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
         if ($filename->type == 2)
         {$filename->path = $folder . '/' . $filename->file;}
         else {
-        $filename->path = JPATH_SITE . DS . $folder . DS . $filename->file;}
+      //  $filename->path = JPATH_SITE . DS . $folder . DS . $filename->file;
+         $filename->path =  $folder . '/' . $filename->file;
+        }
 
         return $filename;
     }
@@ -496,15 +498,7 @@ function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
         elseif ($ext ==  'gif')
         {$file_type = 'image/gif';}
         else {
-/*
-        $db=& JFactory::getDBO();	
-        $query = "SELECT ".$db->nameQuote('mediatype')."
-            FROM ".$db->nameQuote('#__pimime')."
-            WHERE ".$db->nameQuote('extension')." = ".$db->quote($ext).";
-        ";
-        $db->setQuery($query);
-        $file_type = $db->loadResult();
-*/
+
         if (!$file_type)
         {$file_type = 'binary/octet-stream';}
         }
