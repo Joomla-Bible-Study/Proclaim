@@ -67,7 +67,7 @@ class BiblestudyViewMediafile extends JView {
                 $folderlist = array_merge( $folder, $db->loadObjectList() );
                 $idsel = "'SWFUpload_0'";
                 $this->assignRef('upload_folder', JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload('.$idsel.')"'. '', 'value', 'text', '' ));
-
+                $this->setLayout('edit');
 		$this->addToolbar();
 		parent::display($tpl);
 	}
@@ -96,6 +96,7 @@ class BiblestudyViewMediafile extends JView {
 		JToolBarHelper::media_manager();
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
+                
 	}
 
 }

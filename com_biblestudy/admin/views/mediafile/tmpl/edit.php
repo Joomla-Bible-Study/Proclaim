@@ -106,7 +106,7 @@ if (window.addEventListener){
 </script>
 <form
     action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id); ?>"
-    method="post" name="adminForm" id="adminForm">
+    method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
             <legend>
@@ -114,9 +114,14 @@ if (window.addEventListener){
                 <?php echo JText::_('JBS_MED_MEDIA_FILES_DETAILS'); ?></legend>
             <ul class="adminformlist">
                 <li>
+                    <?php echo $this->form->getLabel('id'); ?>
+
+                    <?php echo $this->form->getInput('id'); ?></li>
+                <li>
                     <?php echo $this->form->getLabel('published'); ?>
 
                     <?php echo $this->form->getInput('published'); ?></li>
+                
                 <li>
                     <?php echo $this->form->getLabel('createdate'); ?>
 

@@ -15,10 +15,10 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
     return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-
+require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 jimport('joomla.application.component.controller');
 require_once JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php';
-
+//dump($_FILES, '$_FILES');
 class biblestudyController extends JController {
 
     protected $default_view = 'cpanel';
@@ -240,4 +240,276 @@ class biblestudyController extends JController {
         }
     }
 
+    function uploadflash3()
+    {
+        //import joomlas filesystem functions, we will do all the filewriting with joomlas functions,
+//so if the ftp layer is on, joomla will write with that, not the apache user, which might
+//not have the correct permissions
+jimport('joomla.filesystem.file');
+jimport('joomla.filesystem.folder');
+ 
+//this is the name of the field in the html form, filedata is the default name for swfupload
+//so we will leave it as that
+$fieldName = 'Filedata';
+ 
+//any errors the server registered on uploading
+$fileError = $_FILES[$fieldName]['error'];
+if ($fileError > 0) 
+{
+        switch ($fileError) 
+	{
+        case 1:
+        echo JText::_( 'FILE TO LARGE THAN PHP INI ALLOWS' );
+        return;
+ 
+        case 2:
+        echo JText::_( 'FILE TO LARGE THAN HTML FORM ALLOWS' );
+        return;
+ 
+        case 3:
+        echo JText::_( 'ERROR PARTIAL UPLOAD' );
+        return;
+ 
+        case 4:
+        echo JText::_( 'ERROR NO FILE' );
+        return;
+        }
+}
+ 
+//check for filesize
+$fileSize = $_FILES[$fieldName]['size'];
+if($fileSize > 2000000)
+{
+    echo JText::_( 'FILE BIGGER THAN 2MB' );
+}
+ 
+//check the file extension is ok
+$fileName = $_FILES[$fieldName]['name'];
+$uploadedFileNameParts = explode('.',$fileName);
+$uploadedFileExtension = array_pop($uploadedFileNameParts);
+ 
+$validFileExts = explode(',', 'jpeg,jpg,png,gif');
+ 
+//assume the extension is false until we know its ok
+$extOk = false;
+ 
+//go through every ok extension, if the ok extension matches the file extension (case insensitive)
+//then the file extension is ok
+foreach($validFileExts as $key => $value)
+{
+	if( preg_match("/$value/i", $uploadedFileExtension ) )
+	{
+		$extOk = true;
+	}
+}
+ 
+if ($extOk == false) 
+{
+	//echo JText::_( 'INVALID EXTENSION' );
+      //  return;
+}
+ 
+//the name of the file in PHP's temp directory that we are going to move to our folder
+$fileTemp = $_FILES[$fieldName]['tmp_name'];
+ 
+//for security purposes, we will also do a getimagesize on the temp file (before we have moved it 
+//to the folder) to check the MIME type of the file, and whether it has a width and height
+$imageinfo = getimagesize($fileTemp);
+ 
+//we are going to define what file extensions/MIMEs are ok, and only let these ones in (whitelisting), rather than try to scan for bad
+//types, where we might miss one (whitelisting is always better than blacklisting) 
+$okMIMETypes = 'image/jpeg,image/pjpeg,image/png,image/x-png,image/gif';
+$validFileTypes = explode(",", $okMIMETypes);		
+ 
+//if the temp file does not have a width or a height, or it has a non ok MIME, return
+if( !is_int($imageinfo[0]) || !is_int($imageinfo[1]) ||  !in_array($imageinfo['mime'], $validFileTypes) )
+{
+	echo JText::_( 'INVALID FILETYPE' );
+        return;
+}
+ 
+//lose any special characters in the filename
+$fileName = preg_replace("/[^A-Za-z0-9]/i", "-", $fileName);
+ 
+//always use constants when making file paths, to avoid the possibilty of remote file inclusion
+$uploadPath = JPATH_SITE.DS.'images'.DS.'stories'.DS.$fileName;
+ 
+if(!JFile::upload($fileTemp, $uploadPath)) 
+{
+	echo JText::_( 'ERROR MOVING FILE' );
+        return;
+}
+else
+{
+   // success, exit with code 0 for Mac users, otherwise they receive an IO Error
+   exit(0);
+}
+    }
+    function uploadflash()
+    {dump($_FILES,'Files: ');
+        JRequest::checktoken() or jexit( 'Invalid Token' );
+        $option = JRequest::getCmd('option');
+        jimport('joomla.filesystem.file'); 
+        //get the server and folder id from the request
+        $serverid = JRequest::getInt('upload_server','','post');
+        $folderid = JRequest::getInt('upload_folder','','post');
+        $form = JRequest::getVar('jform',array(),'post','array'); 
+        $returnid = $form['id']; 
+        // get temp file details
+        $temp = JBSUpload::gettempfile();
+        $temp_folder = JBSUpload::gettempfolder();
+        $tempfile = $temp_folder.$temp;	
+        // get path and abort if none
+        $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
+        $path = JBSUpload::getpath($url, $tempfile);
+        
+        // check filetype is allowed
+        $allow = JBSUpload::checkfile($temp);
+        if ($allow)
+        {
+        $filename = JBSUpload::buildpath($temp, 1, $serverid, $folderid, $path, 1);
+    
+        
+        // process file
+        $uploadmsg = JBSUpload::processflashfile($tempfile, $filename);
+        if (!$uploadmsg) 
+                { 
+                // set folder and link entries
+              
+                $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
+                }	
+       
+        }
+        else {$uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');}
+      //  $podmsg = PIHelperadmin::setpods($row);
+     
+        // delete temp file
+        JBSUpload::deletetempfile($tempfile);
+        $mediafileid = JRequest::getInt('id','','post');
+        $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);	
+    }
+
+    function upflash()
+    {
+        jimport('joomla.filesystem.file');
+        jimport('joomla.filesystem.folder');
+//import joomla filesystem functions, we will do all the filewriting with joomlas functions,
+        //so if the ftp layer is on, joomla will write with that, not the apache user, which might
+        //not have the correct permissions
+        $abspath    = JPATH_SITE; 
+        //this is the name of the field in the html form, filedata is the default name for swfupload
+        //so we will leave it as that
+        $fieldName = 'Filedata';
+        //any errors the server registered on uploading
+        $fileError = $_FILES[$fieldName]['error'];
+        if ($fileError > 0) 
+        { 
+                switch ($fileError) 
+                {
+                case 1:
+                echo JText::_( 'JBS_MED_FILE_TOO_LARGE_THAN_PHP_INI_ALLOWS' );
+                return;
+
+                case 2:
+                echo JText::_( 'JBS_MED_FILE_TO_LARGE_THAN_HTML_FORM_ALLOWS' );
+                return;
+
+                case 3:
+                echo JText::_( 'JBS_MED_ERROR_PARTIAL_UPLOAD' );
+                return;
+
+                case 4:
+                echo JText::_( 'JBS_MED_ERROR_NO_FILE' );
+                return;
+                }
+        }
+
+        //check for filesize
+        $fileSize = $_FILES[$fieldName]['size'];
+        if($fileSize > 500000000)
+        {
+            echo JText::_( 'JBS_MED_FILE_BIGGER_THAN').' 500MB';
+        }
+
+        //check the file extension is ok
+        $fileName = $_FILES[$fieldName]['name'];
+        $extOk = JBSUpload::checkfile($fileName);
+
+        if ($extOk == false) 
+        {
+                echo JText::_( 'JBS_MED_NOT_UPLOAD_THIS_FILE_EXT' );
+                return;
+        }
+
+        //the name of the file in PHP's temp directory that we are going to move to our folder
+        $fileTemp = $_FILES[$fieldName]['tmp_name'];
+
+        //always use constants when making file paths, to avoid the possibilty of remote file inclusion
+        $uploadPath = JURI::root().DS.'media'.DS.'com_biblestudy'.DS.'js'.DS.'swfupload'.DS.'tmp'.DS.$fileName;
+
+        if(!JFile::upload($fileTemp, $uploadPath)) 
+        {
+                echo JText::_( 'JBS_MED_ERROR_MOVING_FILE' );
+                return;
+        }
+        else
+        {
+              //  $id = 1;
+              //  $db =& JFactory::getDBO();
+              //  $db->setQuery ("UPDATE #__pibckadmin SET uploadfile = '".$fileName."' WHERE id = '{$id}' ;"); 
+               // $db->query();
+        // success, exit with code 0 for Mac users, otherwise they receive an IO Error
+        exit(0);
+        }
+    }
+   function upload()
+    {
+        JRequest::checktoken() or jexit( 'Invalid Token' );
+        $option = JRequest::getCmd('option');
+        
+    
+        $uploadmsg = '';
+        $serverid = JRequest::getInt('upload_server','','post');
+        $folderid = JRequest::getInt('upload_folder','','post');
+        $form = JRequest::getVar('jform',array(),'post','array'); 
+        $returnid = $form['id']; 
+       
+        
+        $url = 'index.php?option=com_biblestudy&view=mediafile&id=' . $returnid;
+        $path = JBSUpload::getpath($url, '');
+        //get media details
+        
+        $file = JRequest::getVar( 'uploadfile', '', 'files', 'array' ); //dump($file, '$file: ');
+      
+       
+        // check filetype allowed
+        $allow = JBSUpload::checkfile($file['name']);
+        
+        if ($allow)
+        {
+        $filename = JBSUpload::buildpath($file, 1, $serverid, $folderid, $path); //dump($filename, '$filename: ');
+        // process file
+        $uploadmsg = JBSUpload::processuploadfile($file, $filename);
+        $err = '';
+        if (!$uploadmsg) 
+        { 
+        // resize image if needed
+    //    $resize = JBSUpload::resizemesimage($filename->path, $media);
+                // set folder and link entries	
+            //    $row = PIHelperadmin::setstudylist($row, $data, $filename, $path, $media);
+                $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
+        }	
+        else 
+        {$err = '&err=1';}
+        }
+        
+            $uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
+            
+          //  }
+  //      $podmsg = PIHelperadmin::setpods($row);
+       
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=mediafile&id=' . $returnid), JText::_('JBS_MED_FILE_UPLOADED'));
+    }
+
+    
 }
