@@ -346,7 +346,7 @@ else
 }
     }
     function uploadflash()
-    {dump($_FILES,'Files: ');
+    {
         JRequest::checktoken() or jexit( 'Invalid Token' );
         $option = JRequest::getCmd('option');
         jimport('joomla.filesystem.file'); 
@@ -358,7 +358,7 @@ else
         // get temp file details
         $temp = JBSUpload::gettempfile();
         $temp_folder = JBSUpload::gettempfolder();
-        $tempfile = $temp_folder.$temp;	
+        $tempfile = $temp_folder.$temp;	dump($tempfile);
         // get path and abort if none
         $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
         $path = JBSUpload::getpath($url, $tempfile);
@@ -445,7 +445,8 @@ else
         $fileTemp = $_FILES[$fieldName]['tmp_name'];
 
         //always use constants when making file paths, to avoid the possibilty of remote file inclusion
-        $uploadPath = JURI::root().DS.'media'.DS.'com_biblestudy'.DS.'js'.DS.'swfupload'.DS.'tmp'.DS.$fileName;
+        //$uploadPath = JURI::root().DS.'media'.DS.'com_biblestudy'.DS.'js'.DS.'swfupload'.DS.'tmp'.DS.$fileName;
+        $uploadPath = $abspath.DS.'media'.DS.'com_biblestudy'.DS.'js'.DS.'swfupload'.DS.'tmp'.DS.$fileName;
 
         if(!JFile::upload($fileTemp, $uploadPath)) 
         {
@@ -454,10 +455,7 @@ else
         }
         else
         {
-              //  $id = 1;
-              //  $db =& JFactory::getDBO();
-              //  $db->setQuery ("UPDATE #__pibckadmin SET uploadfile = '".$fileName."' WHERE id = '{$id}' ;"); 
-               // $db->query();
+              
         // success, exit with code 0 for Mac users, otherwise they receive an IO Error
         exit(0);
         }
@@ -487,28 +485,20 @@ else
         
         if ($allow)
         {
-        $filename = JBSUpload::buildpath($file, 1, $serverid, $folderid, $path); //dump($filename, '$filename: ');
-        // process file
-        $uploadmsg = JBSUpload::processuploadfile($file, $filename);
-        $err = '';
-        if (!$uploadmsg) 
-        { 
-        // resize image if needed
-    //    $resize = JBSUpload::resizemesimage($filename->path, $media);
-                // set folder and link entries	
-            //    $row = PIHelperadmin::setstudylist($row, $data, $filename, $path, $media);
-                $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
-        }	
-        else 
-        {$err = '&err=1';}
-        }
-        
-            $uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
+            $filename = JBSUpload::buildpath($file, 1, $serverid, $folderid, $path); //dump($filename, '$filename: ');
+            // process file
+            $uploadmsg = JBSUpload::processuploadfile($file, $filename);
             
-          //  }
-  //      $podmsg = PIHelperadmin::setpods($row);
+                if (!$uploadmsg) 
+                { 
+                    $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
+                }	
        
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=mediafile&id=' . $returnid), JText::_('JBS_MED_FILE_UPLOADED'));
+        }
+      //  $uploadmsg = JText::_('JBS_MED_ERROR_MOVING_FILE');
+            
+       
+        $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
     }
 
     
