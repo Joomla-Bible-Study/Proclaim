@@ -47,7 +47,7 @@ class JBSUpload{
             flash_url : "'.$host.'media/com_biblestudy/js/swfupload/swfupload.swf",
      
             //we can not put any vars into the url for complicated reasons, but we can put them into the post...
-            upload_url: "'.$host.'index.php",
+            upload_url: "'.JURI::root().'components/com_biblestudy/helpers/upload.php",
             post_params: {
             		"option" : "com_biblestudy",
            		"controller" : "mediafile",
@@ -106,7 +106,7 @@ class JBSUpload{
 
 function gettempfile()
 {
-	$temp = JRequest::getVar ( 'flupfile', '', 'POST', 'STRING');
+	$temp = JRequest::getVar ( 'flupfile', '', 'POST', 'STRING'); 
 	return $temp;
 }
 
@@ -120,7 +120,7 @@ function gettempfolder()
 {
 	$abspath    = JPATH_SITE;
 	$temp_folder = $abspath.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'swfupload'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR;
-	
+	//$temp_folder = $abspath.DS.'components/com_preachit/assets/swfupload/tmp/';
 	return $temp_folder;
 }
 
@@ -223,6 +223,7 @@ function processflashfile($tempfile, $filename)
 	}
 
 	else {
+            //dump($tempfile, 'tempfile: '); dump($filename->path,'filepath: ');
 	if (!$copy = JFile::copy($tempfile, $filename->path))
 	{$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED');}
 	}
@@ -276,8 +277,12 @@ function processuploadfile($file, $filename)
 	}
 	else
 	{
-		//$uploadmsg = $this->upload($filename, $file);
-            dump($filename, 'filname: '); dump($file,'file: ');	}
+           // $uploadmsg = $this->upload($filename, $file);
+            //dump($filename, 'filname: '); 
+         //   dump($filename->path,'filename->path: ');
+          //  dump ($file['tmp_name']);
+            if (!JFILE::upload($file['tmp_name'], $filename->path)){$uploadmsg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH');}
+            }
 	
 	return $uploadmsg;
 }
@@ -294,7 +299,7 @@ function processuploadfile($file, $filename)
 function upload($filename, $file)
 {
     $msg = '';
-    jimport('joomla.filesystem.file'); dump($filename,'filename: '); dump($file, '$file: '); return;
+    jimport('joomla.filesystem.file'); //dump($filename,'filename: '); dump($file, '$file: '); return;
     if (!JFILE::upload($file['tmp_name'], $filename->path))
     { $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH').' '. $filename->path .' '.JText::_('JBS_MED_UPLOAD_EXISTS');}
 
@@ -421,10 +426,11 @@ function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
     {
         JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_biblestudy'.DS.'tables');
         $filepath=& JTable::getInstance('Server', 'Table');
-        $filepath->load($serverid); dump($filepath);
+        $filepath->load($serverid); //dump($filepath);
         $folderpath = JTable::getInstance('Folder','Table');
         $folderpath->load($folderid);
-        $folder = $filepath->server_path.$folderpath->folderpath;
+      //  $folder = $filepath->server_path.$folderpath->folderpath;
+        $folder = $folderpath->folderpath;
         $filename->type = $filepath->type;
         $filename->ftphost = $filepath->ftphost;
         $filename->ftpuser = $filepath->ftpuser;
@@ -467,8 +473,8 @@ function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
         if ($filename->type == 2)
         {$filename->path = $folder . '/' . $filename->file;}
         else {
-      //  $filename->path = JPATH_SITE . DS . $folder . DS . $filename->file;
-         $filename->path =  $folder . '/' . $filename->file;
+        $filename->path = JPATH_SITE . DS . $folder . DS . $filename->file;
+      //   $filename->path =  $folder . '/' . $filename->file;
         }
 
         return $filename;
