@@ -218,7 +218,8 @@ $params = $this->form->getFieldsets('params');
                     ?>
                                     <tr class="row<?php echo $i % 2; ?>">
                                         <td align="center">
-                                            <a href="<?php echo JRoute::_("index.php?option=com_biblestudy&task=mediafile.edit&id=".(int)$item->id); ?>">
+                                            <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='.(int)$item->id.'&amp;tmpl=component&amp;view=mediafile&amp;layout=modal';?>
+                                            <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo $this->escape($item->filename) ?  $this->escape($item->filename) : 'ID: '.$this->escape($item->id);?>">
                                                 <?php echo ($this->escape($item->filename) ?  $this->escape($item->filename) : 'ID: '.$this->escape($item->id)); ?>
                                             </a>
                                         </td>
@@ -236,13 +237,18 @@ $params = $this->form->getFieldsets('params');
                                     </tr>
                     <?php endif; ?>
                                 </tbody>
-                    <?php if (! empty($this->item->studytitle)) : ?>
+                    <?php // if (! empty($this->item->studytitle)) : ?>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&layout=form').'">'.JText::_('JBS_STY_NEW_MEDIAFILE'); ?>"></a></td>
+                                       <td colspan="4">
+                                            <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;tmpl=component&amp;view=mediafile&amp;layout=modal' ; ?>
+					<a class="modal" href="<?php echo $link;?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE');?>">
+						<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a><?php if (empty($this->mediafiles)){echo ' - '.JText::_('JBS_STY_SAVE_FIRST');}?>
+
+                                        </td>
                                     </tr>
                                 </tfoot>
-                    <?php endif; ?>
+                    <?php //endif; ?>
                             </table>
                         </fieldset>
  <div class="clr"></div>

@@ -67,7 +67,7 @@ class JBSUpload{
                     progressTarget : "fsUploadProgress",
                     cancelButtonId : "btnCancel"
             },
-            debug: true,
+            debug: false,
      
             // Button settings
             button_image_url: "'.JURI::root().'media/com_biblestudy/js/swfupload/images/uploadbutton.png",

@@ -11,14 +11,99 @@ $params = $this->form->getFieldsets('params');
  echo $this->toolbar;
 ?>
 <script language="javascript" type="text/javascript">
+function submitbutton(task)
+{
+        if (task == '')
+        		{
+                return false;
+        		}
+       	else if (task == 'upload')
+        		{
+					if (document.adminForm.upload_folder.value == '') 
+						{
+							alert("<?php echo JText::_('JBS_MED_SELECT_FOLDER');?>");
+						} 
+					else if (document.adminForm.upload_server.value == '' ) 
+						{
+							alert("<?php echo JText::_('JBS_MED_ENTER_SERVER');?>");
+						} 
+  					else {
+						submitform(task);
+                  return true;
+						}
+		 		}
+		 else if  (task == 'thirdparty') 
+				{
+					if (document.adminForm.video_third.value == '') 
+						{
+							alert("<?php echo JText::_('JBS_MED_ADD_THIRD_PARTY_URL');?>");
+						} 
+					else
+						{
+							if(confirm("<?php echo JText::_('JBS_MED_SURE_OVERWRITE_DETAILS');?>"))
+								{submitform(task);
+       							return true;}
+						}
+				}
+	   else if (task == 'cancelclose')
+		  		{
+		  			
+					window.parent.SqueezeBox.close();
+				}
+        else
+       	 {
+                var isValid=true;
+                if (task != 'cancel' && task != 'close' && task != 'uploadflash')
+                {
+                        var forms = $$('form.form-validate');
+                        for (var i=0;i<forms.length;i++)
+                        {
+                                if (!document.formvalidator.isValid(forms[i]))
+                                {
+                                        isValid = false;
+                                        break;
+                                }
+                        }
+                }
+ 
+                if (isValid)
+                {
+                        submitform(task);
+                        return true;
+                }
+                else
+                {
+                        alert('<?php echo JText::_('JBS_MED_FIELDS_INVALID');?>');
+                        return false;
+                }
+        }
+}
+</script>
+
+<script language="javascript" type="text/javascript">
     function sizebutton(remotefilesize)
     {
         var objTB = document.getElementById("size");
         objTB.value = remotefilesize;
     }
+    
+function showupload() {
+    var id = 'SWFUpload_0';
+	if (document.adminForm.upload_server.value != '' && document.adminForm.upload_folder.value != '')
+		{document.getElementById(id).style.display = 'inline';}
+		else {document.getElementById(id).style.display = 'none';}
+	}
+
+if (window.addEventListener){
+ window.addEventListener('load', showupload, false);
+} else if (window.attachEvent){
+ window.attachEvent('load', showupload);
+}
+
 </script>
+
 <div class="edit">
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm"enctype="multipart/form-data">
 	<div class="formelm-buttons">
 			<button type="button" onclick="Joomla.submitbutton('mediafile.save')">
 				<?php echo JText::_('JSAVE') ?>
@@ -127,6 +212,37 @@ $params = $this->form->getFieldsets('params');
                     <?php echo $this->form->getLabel('special'); ?>
                     <?php echo $this->form->getInput('special', null, $this->admin->params['target']); ?>
                 </div>
+            
+            <table class="adminlist">
+                        <thead>
+                        <th align="center" colspan="2"><?php echo JText::_('JBS_STY_UPLOAD');?></th>
+                        </thead>
+                        <tbody>
+                        <tr><td>
+                             <?php echo $this->upload_server;?></td>
+                        </td></tr>
+                        <tr><td>
+                             <?php echo $this->upload_folder;?></td>
+                        </td></tr>
+                            <tr>
+                                <td> <?php if ($this->admin->params['uploadtype'] == 1){ ?>
+                                    <div id="swfuploader">
+                                    <div class="fieldset flash" id="fsUploadProgress">
+                                    </div> 	
+                                    <div>
+                                    <span id="spanButtonPlaceHolder"></span>
+                                            <input id="btnCancel" type="button" value="<?php echo JText::_('JBS_STY_CANCEL');?>" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
+                                             
+                                    </div>
+                                        </div> <?php } ?>
+                                  <?php if ($this->admin->params['uploadtype'] == 0){ ?>
+                                    <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')"> 
+                                        <?php echo JText::_('JBS_STY_UPLOAD_BUTTON');?> </button> <?php } ?>
+                                    </td><td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+            
               <div class="formelm">
               	<?php echo $this->form->getLabel('docMan_id'); ?>
 				<?php echo $this->form->getInput('docMan_id'); ?>
@@ -160,20 +276,7 @@ $params = $this->form->getFieldsets('params');
 
   <div class="clr"></div>
 
-	<?php if ($this->canDo->get('core.admin')): ?>
-		<div class="width-100 fltlft">
-			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
-
-				<?php echo JHtml::_('sliders.panel',JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
-
-				<fieldset class="panelform">
-					<?php echo $this->form->getLabel('rules'); ?>
-					<?php echo $this->form->getInput('rules'); ?>
-				</fieldset>
-
-			<?php echo JHtml::_('sliders.end'); ?>
-		</div>
-	<?php endif; ?>
+	
 
  <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>
