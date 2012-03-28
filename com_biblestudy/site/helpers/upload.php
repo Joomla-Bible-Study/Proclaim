@@ -47,7 +47,7 @@ class JBSUpload{
             flash_url : "'.$host.'media/com_biblestudy/js/swfupload/swfupload.swf",
      
             //we can not put any vars into the url for complicated reasons, but we can put them into the post...
-            upload_url: "'.JURI::root().'components/com_biblestudy/helpers/upload.php",
+            upload_url: "'.JURI::root().'administrator/index.php?option=com_biblestudy&view=mediafile&task=uploadflash",
             post_params: {
             		"option" : "com_biblestudy",
            		"controller" : "mediafile",
@@ -67,7 +67,7 @@ class JBSUpload{
                     progressTarget : "fsUploadProgress",
                     cancelButtonId : "btnCancel"
             },
-            debug: false,
+            debug: true,
      
             // Button settings
             button_image_url: "'.JURI::root().'media/com_biblestudy/js/swfupload/images/uploadbutton.png",
@@ -143,9 +143,9 @@ function getpath($url, $tempfile, $front = '')
 		{JFile::delete($tempfile);}
 		$msg = JText::_('JBS_MED_UPLOAD_FAILED_NO_FOLDER');
 		if ($front)
-		{$this->setRedirect($url.$msg);}
+		{JBSUpload::setRedirect($url.$msg);}
 		else
-		{$this->setRedirect($url, $msg);}
+		{JBSUpload::setRedirect($url, $msg);}
 	}
         $returnpath = $server.$path;
 	return $returnpath;
@@ -213,12 +213,12 @@ function processflashfile($tempfile, $filename)
 	}
 	elseif ($filename->type == 2)
 	{
-	if (!$copy = $this->ftp($tempfile, $filename, 1))
+	if (!$copy = JBSUpload::ftp($tempfile, $filename, 1))
 	{$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_FTP');}
 	}
 	elseif ($filename->type == 3)
 	{
-	if (!$copy = $this->aws($tempfile, $filename, 1))
+	if (!$copy = JBSUpload::aws($tempfile, $filename, 1))
 	{$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_AWS');}
 	}
 
@@ -251,12 +251,12 @@ function processuploadfile($file, $filename)
 	}
 	elseif ($filename->type == 2)
 	{
-	$temp_folder = $this->gettempfolder();
+	$temp_folder = JBSUpload::gettempfolder();
 	$tempfile = $temp_folder.$file['name'];	
-	$uploadmsg = $this->uploadftp($tempfile, $file);
+	$uploadmsg = JBSUpload::uploadftp($tempfile, $file);
 	if (!$uploadmsg)
 		{
-			if (!$copy = $this->ftp($tempfile, $filename, 1))
+			if (!$copy = JBSUpload::ftp($tempfile, $filename, 1))
 			{$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_FTP');}
 
 	JFile::delete($tempfile);	
@@ -264,12 +264,12 @@ function processuploadfile($file, $filename)
 	}
 	elseif ($filename->type == 3)
 	{
-	$temp_folder = $this->gettempfolder();
+	$temp_folder = JBSUpload::gettempfolder();
 	$tempfile = $temp_folder.$file['name'];	
-	$uploadmsg = $this->uploadftp($tempfile, $file);
+	$uploadmsg = JBSUpload::uploadftp($tempfile, $file);
 	if (!$uploadmsg)
 		{
-			if (!$copy = $this->aws($tempfile, $filename, 1))
+			if (!$copy = JBSUpload::aws($tempfile, $filename, 1))
 			{$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_AWS');}
 
 		JFile::delete($tempfile);
@@ -277,10 +277,7 @@ function processuploadfile($file, $filename)
 	}
 	else
 	{
-           // $uploadmsg = $this->upload($filename, $file);
-            //dump($filename, 'filname: '); 
-         //   dump($filename->path,'filename->path: ');
-          //  dump ($file['tmp_name']);
+           
             if (!JFILE::upload($file['tmp_name'], $filename->path)){$uploadmsg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH');}
             }
 	
@@ -559,9 +556,9 @@ function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
         Host: s3.amazonaws.com
         Connection: keep-alive
         Date: $dt
-        Authorization: AWS {$aws_key}:".$this->amazon_hmac($string2sign, $aws_secret)."\n\n";
+        Authorization: AWS {$aws_key}:".JBSUpload::amazon_hmac($string2sign, $aws_secret)."\n\n";
 
-        $resp = $this->sendREST($fp, $query);
+        $resp = JBSUpload::sendREST($fp, $query);
         if (strpos($resp, '<Error>') !== false)
         {
         if ($admin == 0)
@@ -593,10 +590,10 @@ function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0)
         Content-Type: {$file_type}
         Content-Length: {$file_length}
         Date: $dt
-        Authorization: AWS {$aws_key}:".$this->amazon_hmac($string2sign, $aws_secret)."\n\n";
+        Authorization: AWS {$aws_key}:".JBSUpload::amazon_hmac($string2sign, $aws_secret)."\n\n";
         $query .= $file_data;
 
-        $resp = $this->sendREST($fp, $query);
+        $resp = JBSUpload::sendREST($fp, $query);
         if (strpos($resp, '<Error>') !== false)
         {
         if ($admin == 0)
