@@ -174,8 +174,7 @@ function getSizeFile ($url){
 	return $return;
 }
 
-
-
+ 
  
 }
 

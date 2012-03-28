@@ -288,7 +288,7 @@ class biblestudyController extends JController {
     }
 
     function upflash()
-    {dump($_FILES);
+    {
         jimport('joomla.filesystem.file');
         jimport('joomla.filesystem.folder');
 //import joomla filesystem functions, we will do all the filewriting with joomlas functions,
