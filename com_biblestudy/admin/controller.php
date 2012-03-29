@@ -257,7 +257,7 @@ class biblestudyController extends JController {
         $form = JRequest::getVar('jform',array(),'post','array');
         $returnid = $form['id'];
         // get temp file details
-        $temp = JBSUpload::gettempfile();
+        $temp = JBSUpload::gettempfile(); 
         $temp_folder = JBSUpload::gettempfolder();
         $tempfile = $temp_folder.$temp;	//dump($tempfile);
         // get path and abort if none
