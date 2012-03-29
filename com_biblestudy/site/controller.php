@@ -294,7 +294,6 @@ class biblestudyController extends JController {
         $fileTemp = $_FILES[$fieldName]['tmp_name'];
 
         //always use constants when making file paths, to avoid the possibilty of remote file inclusion
-        //$uploadPath = JURI::root().DS.'media'.DS.'com_biblestudy'.DS.'js'.DS.'swfupload'.DS.'tmp'.DS.$fileName;
         $uploadPath = $abspath.DS.'media'.DS.'com_biblestudy'.DS.'js'.DS.'swfupload'.DS.'tmp'.DS.$fileName;
 
         if(!JFile::upload($fileTemp, $uploadPath))
