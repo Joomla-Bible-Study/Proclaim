@@ -64,7 +64,11 @@ class BiblestudyViewComment extends JView {
      */
     protected function setDocument() {
         $document = JFactory::getDocument();
-        $document->setTitle(JText::sprintf('JBS_TITLE_COMMENT', $this->item->id, $this->item->id));
+        JText::sprintf('JBS_TITLE_COMMENT',
+                $this->item->id
+                );
+        $document->setTitle(
+                );
     }
 
 }
