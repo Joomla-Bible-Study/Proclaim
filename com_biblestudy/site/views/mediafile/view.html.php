@@ -81,9 +81,9 @@ class biblestudyViewmediafile extends JView {
 
         $this->setLayout('edit');
 
-        require_once( JPATH_COMPONENT_SITE . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'toolbar.php' );
-        $toolbar = biblestudyHelperToolbar::getToolbar();
-        $this->assignRef('toolbar', $toolbar);
+    //    require_once( JPATH_COMPONENT_SITE . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'toolbar.php' );
+    //    $toolbar = biblestudyHelperToolbar::getToolbar();
+     //   $this->assignRef('toolbar', $toolbar);
         //	$isNew		= ($mediafilesedit->id < 1);
 
         parent::display($tpl);

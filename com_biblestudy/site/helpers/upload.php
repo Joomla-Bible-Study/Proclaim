@@ -67,7 +67,7 @@ class JBSUpload{
                     progressTarget : "fsUploadProgress",
                     cancelButtonId : "btnCancel"
             },
-            debug: false,
+            debug: true,
      
             // Button settings
             button_image_url: "'.JURI::root().'media/com_biblestudy/js/swfupload/images/uploadbutton.png",
@@ -253,11 +253,13 @@ function processuploadfile($file, $filename)
 	{
 	$temp_folder = JBSUpload::gettempfolder();
 	$tempfile = $temp_folder.$file['name'];	
-	$uploadmsg = JBSUpload::uploadftp($tempfile, $file);
+	$uploadmsg = JBSUpload::uploadftp($tempfile, $file); 
 	if (!$uploadmsg)
 		{
-			if (!$copy = JBSUpload::ftp($tempfile, $filename, 1))
-			{$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_FTP');}
+                    if (!$copy = JBSUpload::ftp($tempfile, $filename, 0))
+                    {$uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_FTP');
+                    
+                    }
 
 	JFile::delete($tempfile);	
 		}
@@ -316,9 +318,9 @@ function uploadftp($filename, $file)
 {
     $msg = '';
     jimport('joomla.filesystem.file');
-
-    if (!JFILE::upload($file['tmp_name'], $filename))
-    { $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH').' '. $filename->path .' '.JText::_('JBS_MED_UPLOAD_EXISTS');}
+//dump($filename,'filename: '); dump($file,'file: ');    
+if (!JFILE::upload($file['tmp_name'], $filename))
+    { $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH').' '. $filename->path .' '.JText::_('JBS_MED_UPLOAD_EXISTS'); }
     return $msg;
 }
 
@@ -333,7 +335,7 @@ function uploadftp($filename, $file)
 	 */
 
 function ftp($file, $filename, $admin = 0)
-    {
+    {dump($_REQUEST);
         $app = JFactory::getApplication();
         $ftpsuccess = true;
         $ftpsuccess1 = true;
@@ -351,31 +353,32 @@ function ftp($file, $filename, $admin = 0)
         $ftp_path = $filename->path;
         // connect to FTP server (port 21)
         if (!$conn_id = ftp_connect($host, $port))
-        {
-        if ($admin == 0)
-        {
-        $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_CONNECT'), 'error' );}
-        $ftpsuccess1 = false;
+        { 
+            if ($admin == 0)
+            {
+            $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_CONNECT'), 'error' );}
+            $ftpsuccess1 = false;
         }
 
         // send access parameters
         if (!ftp_login($conn_id, $usr, $pwd))
         {
-        if ($admin == 0)
-        {
-        $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_LOGIN'), 'error' );}
+            if ($admin == 0)
+            {
+                $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_LOGIN'), 'error' );
+            }
         $ftpsuccess2 = false;
         }
 
         // turn on passive mode transfers (some servers need this)
         // ftp_pasv ($conn_id, true);
-
+//dump($conn_id,'connection id: '); dump ($ftp_path, 'ftp path: '); dump($local_file,'local file: ');
         // perform file upload
         if (!$upload = ftp_put($conn_id, $ftp_path, $local_file, FTP_BINARY))
-        {
-        if ($admin == 0)
-        {
-        $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_UPLOAD'), 'error' );}
+        {$stop = 'stopped at ftp_put'; //dump($stop);
+            if ($admin == 0)
+            {
+            $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_UPLOAD'), 'error' );}
         $ftpsuccess3 = false;
         }
 
@@ -386,9 +389,11 @@ function ftp($file, $filename, $admin = 0)
         // If you are using PHP4 then you need to use this code:
         // (because the "ftp_chmod" command is just available in PHP5+)
         if (!function_exists('ftp_chmod')) {
-        function ftp_chmod($ftp_stream, $mode, $filename){
-                return ftp_site($ftp_stream, sprintf('CHMOD %o %s', $mode, $filename));
-        }
+        
+            function ftp_chmod($ftp_stream, $mode, $filename)
+                {
+                    return ftp_site($ftp_stream, sprintf('CHMOD %o %s', $mode, $filename));
+                }
         }
 
         // try to chmod the new file to 666 (writeable)
@@ -396,7 +401,7 @@ function ftp($file, $filename, $admin = 0)
         {
                 if ($admin == 0)
                 {
-            $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_CHMOD'), 'error' );}
+                    $app->enqueueMessage ( JText::_('JBS_MED_FTP_NO_CHMOD'), 'error' );}
                 $ftpsuccess4 = false;
         }
 
