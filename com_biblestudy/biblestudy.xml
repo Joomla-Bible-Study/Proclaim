@@ -103,6 +103,7 @@
             <folder>helpers</folder>
             <folder>controllers</folder>
             <folder>lib</folder>
+            <folder>liveupdate</folder>
             <folder>language</folder>
             <folder>install</folder>
             <folder>migration</folder>

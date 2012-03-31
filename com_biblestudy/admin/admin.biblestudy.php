@@ -11,11 +11,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-require_once (JPATH_COMPONENT_ADMINISTRATOR.DS.'liveupdate'.DS.'liveupdate.php');
-if(JRequest::getCmd('view','') == 'liveupdate') {
-    LiveUpdate::handleRequest();
-    return;
-}
 
 // Check for PHP4
 if (defined('PHP_VERSION')) {
@@ -39,7 +34,7 @@ addJS();
 
 jimport('joomla.application.component.controller');
 $controller = JController::getInstance('biblestudy');
-$controller->execute(JRequest::getCmd('task')); 
+$controller->execute(JRequest::getCmd('task'));
 $controller->redirect();
 
 /**
@@ -48,8 +43,8 @@ $controller->redirect();
  * @since   1.7.0
  */
 function addCSS() {
-	JHTML::stylesheet('general.css', JURI::root() . 'media/com_biblestudy/css/');
-	JHTML::stylesheet('icons.css', JURI::root() . 'media/com_biblestudy/css/');
+	JHTML::stylesheet('general.css', JURI::base() . 'components/com_biblestudy/css/');
+	JHTML::stylesheet('icons.css', JURI::base() . 'components/com_biblestudy/css/');
 }
 
 /**
@@ -58,7 +53,7 @@ function addCSS() {
  * @since   7.0
  */
 function addJS() {
-	JHTML::script('jquery.js', JURI::root() . 'media/com_biblestudy/js/');
-	JHTML::script('noconflict.js', JURI::root() . 'media/com_biblestudy/js/');
-	JHTML::script('jquery-ui.js', JURI::root() . 'media/com_biblestudy/js/ui/');
+	JHTML::script('jquery.js', JURI::base() . 'components/com_biblestudy/js/');
+	JHTML::script('noconflict.js', JURI::base() . 'components/com_biblestudy/js/');
+	JHTML::script('jquery-ui.js', JURI::base() . 'components/com_biblestudy/js/ui/');
 }
