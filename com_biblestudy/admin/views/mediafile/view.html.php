@@ -22,6 +22,8 @@ class BiblestudyViewMediafile extends JView {
 	protected $admin;
 
 	function display($tpl = null) {
+            
+
 		$this->form = $this->get("Form");
 		$this->item = $this->get("Item");
 		$this->state = $this->get("State");
@@ -93,7 +95,7 @@ class BiblestudyViewMediafile extends JView {
 
 		// Add an upload button and view a popup screen width 550 and height 400
 		JToolBarHelper::divider();
-		JToolBarHelper::media_manager();
+		//JToolBarHelper::media_manager();
 		JToolBarHelper::divider();
 		JToolBarHelper::help('biblestudy', true);
                 

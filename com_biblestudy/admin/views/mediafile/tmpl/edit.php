@@ -314,9 +314,6 @@ if (window.addEventListener){
     <div class="clr"></div>
 
 
-
-
-
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">
             <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
@@ -336,3 +333,4 @@ if (window.addEventListener){
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="controller" value="mediafile" />
 </form>
+
