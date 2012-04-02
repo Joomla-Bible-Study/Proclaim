@@ -69,7 +69,7 @@
       <!-- Note that all & must be escaped to &amp; for the file to be valid XML and be parsed by the installer -->
             <menu link="option=com_biblestudy&amp;view=cpanel" view="cpanel" img="../media/com_biblestudy/images/menu/icon-16-biblemenu.png" alt="JBS_MNU_CONTROL_PANEL">JBS_MNU_CONTROL_PANEL</menu>
             <menu link="option=com_biblestudy&amp;task=admin.edit&amp;id=1" img="../media/com_biblestudy/images/menu/icon-16-administration.png" view="admin" alt="JBS_MNU_ADMINISTRATION">JBS_MNU_ADMINISTRATION</menu>
-            <menu link="option=com_biblestudy&amp;view=sermons" view="sermons" img="../media/com_biblestudy/images/menu/icon-16-studies.png" alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
+            <menu link="option=com_biblestudy&amp;view=messages" view="messages" img="../media/com_biblestudy/images/menu/icon-16-studies.png" alt="JBS_MNU_STUDIES">JBS_MNU_STUDIES</menu>
             <menu link="option=com_biblestudy&amp;view=mediafiles" view="mediafiles" img="../media/com_biblestudy/images/menu/icon-16-mp3.png" alt="JBS_MNU_MEDIA_FILES">JBS_MNU_MEDIA_FILES</menu>
             <menu link="option=com_biblestudy&amp;view=teachers" view="teachers" img="../media/com_biblestudy/images/menu/icon-16-teachers.png" alt="JBS_MNU_TEACHERS">JBS_MNU_TEACHERS</menu>
             <menu link="option=com_biblestudy&amp;view=seriesdisplays" view="seriesdisplays" img="../media/com_biblestudy/images/menu/icon-16-series.png" alt="JBS_MNU_SERIES">JBS_MNU_SERIES</menu>
