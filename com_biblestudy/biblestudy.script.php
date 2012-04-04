@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
 </script>
 <?php
 
-class com_biblestudyInstallerScript {
+class Com_BiblestudyInstallerScript {
     /*
      * The release value to be displayed and check against throughout this file.
      */
@@ -118,7 +118,7 @@ class com_biblestudyInstallerScript {
         $db = JFactory::getDBO();
         $query = file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install-defaults.sql');
         $queries = $db->splitSql($query);
-        foreach ($queries as $querie) { 
+        foreach ($queries as $querie) {
             $db->setQuery($querie);
             $db->query();
         }
