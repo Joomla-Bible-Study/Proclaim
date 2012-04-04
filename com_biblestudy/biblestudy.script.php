@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
 </script>
 <?php
 
-class biblestudyInstallerScript {
+class com_biblestudyInstallerScript {
     /*
      * The release value to be displayed and check against throughout this file.
      */
