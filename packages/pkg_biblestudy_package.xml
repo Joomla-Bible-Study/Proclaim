@@ -2,7 +2,7 @@
 <extension type="package" version="1.6">
     <name>Package Joomla Bible Study</name>
     <packagename>biblestudy_package</packagename>
-    <version>7.0.3</version>
+    <version>7.1.0.a1</version>
     <description>Joomla Bible Study is one of the most popular Bible Study System available today.</description>
     <creationDate>February 8, 2012</creationDate>
     <copyright>(C) 2007-2011 Copyright Joomla Bible Study</copyright>
@@ -15,10 +15,10 @@
     <update><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&dummy=extension.xml]]>
     </update>
     <files folder="packages">
-        <file type="component" id="com_biblestudy">com_biblestudy-7.0.3.zip</file>
-        <file type="module" id="mod_biblestudy" client="site">mod_biblestudy-7.0.4.zip</file>
-        <file type="plugin" id="biblestudysearch" group="search">plg_biblestudy_search-7.0.2.zip</file>
-        <file type="plugin" id="jbspodcast" group="system">plg_biblestudy_podcast-7.0.3.zip</file>
-        <file type="plugin" id="jbsbackup" group="system">plg_biblestudy_backup-7.0.4.zip</file>
+        <file type="component" id="com_biblestudy">com_biblestudy.zip</file>
+        <file type="module" id="mod_biblestudy" client="site">mod_biblestudy.zip</file>
+        <file type="plugin" id="biblestudysearch" group="search">plg_biblestudy_search.zip</file>
+        <file type="plugin" id="jbspodcast" group="system">plg_biblestudy_podcast.zip</file>
+        <file type="plugin" id="jbsbackup" group="system">plg_biblestudy_backup.zip</file>
     </files>
 </extension>
