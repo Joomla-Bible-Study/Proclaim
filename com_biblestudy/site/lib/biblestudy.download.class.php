@@ -12,12 +12,20 @@ defined('_JEXEC') or die;
 
 class Dump_File {
 
+    /**
+     * Method to send file to browser
+     *
+     * @param object $mid
+     * @since 6.1.2
+     */
+
     public function download($mid) {
         // Clears file status cache
         clearstatcache();
 
-        //@todo Cant find were this is used nee to look into this.
-        $hits = $this->hitDownloads($mid);
+        //@todo test if this will work.
+        $Hit = '';
+        $Hit = $this->hitDownloads($mid);
         $template = JRequest::getInt('t', '1', 'get');
         $db = JFactory::getDBO();
         //Get the template so we can find a protocol
@@ -44,22 +52,18 @@ class Dump_File {
         $db->setQuery($query);
 
         $media = $db->LoadObject();
-
+        JResponse::clearHeaders();
         $server = $media->spath;
         $path = $media->fpath;
         $filename = $media->filename;
         $size = $media->size;
         $download_file = $protocol . $server . $path . $filename;
-        $mime_type = $media->mimetype;
-
-        JResponse::clearHeaders();
-        $fileSize = $size;
         $mimeType = '';
-        $mimeType = $mime_type;
-        //dump($mimeType, 'meme');
+        $mimeType = $media->mimetype;
 
-        if ($fileSize == Null) {
-            if (!$fileSize = getRemoteFileSize($download_file))
+
+        if ($size == Null) {
+            if (!$size = getRemoteFileSize($download_file))
             {die(JText::_('COM_BIBLESTUDY_FILE_SIZE_EMPTY'));
             exit;}
         }
@@ -88,9 +92,9 @@ class Dump_File {
         // Modified by Rene
         // HTTP Range - see RFC2616 for more informations (http://www.ietf.org/rfc/rfc2616.txt)
         $httpRange = 0;
-        $newFileSize = $fileSize - 1;
+        $newFileSize = $size - 1;
         // Default values! Will be overridden if a valid range header field was detected!
-        $resultLenght = (string) $fileSize;
+        $resultLenght = (string) $size;
         $resultRange = "0-" . $newFileSize;
         // We support requests for a single range only.
         // So we check if we have a range field. If yes ensure that it is a valid one.
@@ -103,7 +107,7 @@ class Dump_File {
             // Check if we have values! If not we have nothing to do!
             if (!empty($httpRange[0]) || !empty($httpRange[1])) {
                 // We need the new content length ...
-                $resultLenght = $fileSize - $httpRange[0] - $httpRange[1];
+                $resultLenght = $size - $httpRange[0] - $httpRange[1];
                 // ... and we can add the 206 Status.
                 header("HTTP/1.1 206 Partial Content");
                 // Now we need the content-range, so we have to build it depending on the given range!
@@ -131,7 +135,7 @@ class Dump_File {
 
         // stop output buffering or we will run out of memory with large tables.
         ob_end_flush();
-        //header('Content-Type application/force-download', true);
+
         JResponse::sendHeaders();
 
         // Try to deliver in chunks
@@ -148,8 +152,12 @@ class Dump_File {
         flush();
         exit;
     }
-
-//Here we increment the hit counter
+    /**
+     * Method tho track Downloads
+     *
+     * @param object $mid Media ID
+     * @since 7.0.0
+     */
     function hitDownloads($mid) {
         $db = JFactory::getDBO();
         $db->setQuery('UPDATE ' . $db->nameQuote('#__bsms_mediafiles') . 'SET ' . $db->nameQuote('downloads') . ' = ' . $db->nameQuote('downloads') . ' + 1 ' . ' WHERE id = ' . $mid);
@@ -157,6 +165,13 @@ class Dump_File {
         return true;
         exit;
     }
+
+    /**
+     * Method to get file size
+     *
+     * @param object $url
+     * @return boolean
+     */
 
     function getRemoteFileSize($url)
     {
@@ -193,5 +208,3 @@ class Dump_File {
         return $return;
     }
 }
-
-//end of class

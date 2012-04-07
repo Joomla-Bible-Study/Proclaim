@@ -1,51 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
-		description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-		class="readonly" />
-	<field name="published" type="radio" label="JBS_CMN_PUBLISHED"
-		description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0"
-		required="true">
-		<option value="0">JBS_CMN_NO</option>
-		<option value="1">JBS_CMN_YES</option>
-	</field>
-	<field name="list_show" type="radio" label="JBS_TCH_SHOW_LIST_VIEW"
-		description="JBS_TCH_SHOW_LIST_VIEW_DESC" class="inputbox" default="0"
-		required="true">
-		<option value="0">JBS_CMN_NO</option>
-		<option value="1">JBS_CMN_YES</option>
-	</field>
-	<field name="ordering" type="teacherOrdering" label="JBS_CMN_ORDERING"
-		description="JBS_CMN_ORDERING_DESC" class="inputbox" />
-	<field name="teachername" type="text" class="inputbox" size="60"
-		label="JBS_CMN_TEACHER" required="true" />
-        <field name="alias"
-                type="text"
-                label="JFIELD_ALIAS_LABEL"
-                description="JFIELD_ALIAS_DESC"
-                class="inputbox"
-                size="30"
+    <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
+           description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
+           class="readonly" />
+    <field name="published" type="radio" label="JBS_CMN_PUBLISHED"
+           description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0"
+           required="true">
+        <option value="0">JBS_CMN_NO</option>
+        <option value="1">JBS_CMN_YES</option>
+    </field>
+    <field name="list_show" type="radio" label="JBS_TCH_SHOW_LIST_VIEW"
+           description="JBS_TCH_SHOW_LIST_VIEW_DESC" class="inputbox" default="0"
+           required="true">
+        <option value="0">JBS_CMN_NO</option>
+        <option value="1">JBS_CMN_YES</option>
+    </field>
+    <field name="ordering" type="teacherOrdering" label="JBS_CMN_ORDERING"
+           description="JBS_CMN_ORDERING_DESC" class="inputbox" />
+    <field name="teachername" type="text" class="inputbox" size="60"
+           label="JBS_CMN_TEACHER" required="true" />
+    <field name="alias"
+           type="text"
+           label="JFIELD_ALIAS_LABEL"
+           description="JFIELD_ALIAS_DESC"
+           class="inputbox"
+           size="30"
         />
-	<field name="title" type="text" class="inputbox" size="60"
-		label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC" />
-	<field name="teacher_image" type="media" label="JBS_TCH_TEACHER_IMAGE" />
-	<field name="teacher_thumbnail" type="media" label="JBS_TCH_TEACHER_THUMBNAIL" />
-	<field name="image" type="text" class="inputbox" size="60"
-		label="JBS_TCH_LARGE_IMAGE_URL" description="JBS_TCH_IMAGE_URL_DESC" />
-	<field name="thumb" type="text" class="inputbox" size="60"
-		label="JBS_TCH_THUMBNAIL_URL" description="JBS_TCH_IMAGE_URL_DESC" />
-	<field name="phone" type="text" class="inputbox" size="60"
-		label="JBS_TCH_PHONE" />
-	<field name="website" type="text" class="inputbox" size="60"
-		label="JBS_TCH_WEBSITE" />
-	<field name="short" type="editor" class="inputbox"
-		label="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE" filter="BibleStudyHelper::filterText"
-		buttons="true" />
-	<field name="information" type="editor" class="inputbox"
-		label="JBS_TCH_INFORMATION" filter="BibleStudyHelper::filterText"
-		buttons="true" />
-	<field name="asset_id" type="hidden" filter="unset" />
-	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-		translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
-		section="teacher" validate="rules" />
+    <field name="title" type="text" class="inputbox" size="60"
+           label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC" />
+    <field name="teacher_image" type="media" label="JBS_TCH_TEACHER_IMAGE" />
+    <field name="teacher_thumbnail" type="media" label="JBS_TCH_TEACHER_THUMBNAIL" />
+    <field name="image" type="text" class="inputbox" size="60"
+           label="JBS_TCH_LARGE_IMAGE_URL" description="JBS_TCH_IMAGE_URL_DESC" />
+    <field name="thumb" type="text" class="inputbox" size="60"
+           label="JBS_TCH_THUMBNAIL_URL" description="JBS_TCH_IMAGE_URL_DESC" />
+    <field name="phone" type="text" class="inputbox" size="60"
+           label="JBS_TCH_PHONE" />
+    <field name="website" type="text" class="inputbox" size="60"
+           label="JBS_TCH_WEBSITE" />
+    <field name="short" type="editor" class="inputbox"
+           label="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE" filter="BibleStudyHelper::filterText"
+           buttons="true" />
+    <field name="information" type="editor" class="inputbox"
+           label="JBS_TCH_INFORMATION" filter="BibleStudyHelper::filterText"
+           buttons="true" />
+    <field name="asset_id" type="hidden" filter="unset" />
+    <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+           translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+           section="teacher" validate="rules" />
+    <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+           description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
+        <option value="*">JALL</option>
+    </field>
 </form>

@@ -14,11 +14,6 @@ jimport('joomla.application.component.modellist');
 
 class BiblestudyModelMediafiles extends JModelList {
 
-//    var $_data;
-//    var $_total = null;
-//    var $_pagination = null;
-//    var $_allow_deletes = null;
-
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(

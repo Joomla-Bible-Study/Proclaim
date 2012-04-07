@@ -6,6 +6,10 @@
 		<option value="0">JBS_CMN_NO</option>
 		<option value="1">JBS_CMN_YES</option>
 	</field>
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+               description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
+            <option value="*">JALL</option>
+        </field>
 	<field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
 		description="JBS_CMT_CHOOSE_STUDY_DESC" class="inputbox" required="true" />
 	<field name="comment_date" type="calendar" label="JBS_CMT_CREATE_DATE"

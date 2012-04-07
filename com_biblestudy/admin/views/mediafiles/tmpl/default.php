@@ -40,7 +40,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 <option value=""> <?php echo JText::_('JBS_MED_SELECT_MEDIA_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->mediatypes, 'value', 'text', $this->state->get('filter.mediatypeId')); ?>
             </select>
-            
+
             <select name="filter_published" class="inputbox" onchange="this.form.submit()">
                 <option value=""> <?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
@@ -141,7 +141,6 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                     <td class="center">
                         <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                     </td>
-                    <!-- @todo need to add Language State for anton. -->
                     <td class="center">
                         <?php if ($item->language == '*'): ?>
                             <?php echo JText::alt('JALL', 'language'); ?>

@@ -30,7 +30,8 @@ class BiblestudyModelTeachers extends JModelList {
                 'teacher.published',
                 'teacher.ordering',
                 'teacher.teachername',
-                'teacher.alias'
+                'teacher.alias',
+                'teacher.language'
             );
         }
 
@@ -60,21 +61,45 @@ class BiblestudyModelTeachers extends JModelList {
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
+        $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
+        $this->setState('filter.language', $language);
+
         parent::populateState('teacher.teachername', 'ASC');
     }
 
-    /*
-     * @since   7.0
+    /**
+     *
+     * @param <string> $id   A prefix for the store id
+     * @return <string>      A store id
+     * @since 7.0
      */
+    protected function getStoreId($id = '') {
 
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.published');
+        $id .= ':' . $this->getState('filter.language');
+
+        return parent::getStoreId($id);
+    }
+
+    /**
+     *
+     * @return arrey
+     * @since 7.0
+     */
     protected function getListQuery() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
         $query->select(
                 $this->getState(
-                        'list.select', 'teacher.id, teacher.published, teacher.ordering, teacher.teachername, teacher.alias'));
+                        'list.select', 'teacher.id, teacher.published, teacher.ordering, teacher.teachername, teacher.alias, teacher.language'));
         $query->from('#__bsms_teachers AS teacher');
+
+        // Join over the language
+        $query->select('l.title AS language_title');
+        $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = teacher.language');
+
 
         // Filter by published state
         $published = $this->getState('filter.published');

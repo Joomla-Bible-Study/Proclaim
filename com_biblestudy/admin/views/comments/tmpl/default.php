@@ -18,17 +18,13 @@ $listOrder = $this->state->get('list.ordering');
     method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
-
-            <select name="filter_published" class="inputbox"
-                    onchange="this.form.submit()">
-                <option value="">
-
-                    <?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-
-
-
-
+            <select name="filter_published" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
+            </select>
+            <select name="filter_language" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
+                <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language')); ?>
             </select>
         </div>
     </fieldset>
@@ -37,8 +33,7 @@ $listOrder = $this->state->get('list.ordering');
 
             <thead>
                 <tr>
-                    <th width="1"><input type="checkbox" name="toggle" value=""
-                                         onclick="checkAll(<?php echo count($this->items); ?>);" />
+                    <th width="1"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
                     </th>
                     <th width="20" align="center"> <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
                     </th>
@@ -47,11 +42,11 @@ $listOrder = $this->state->get('list.ordering');
                     <th width="100"><?php echo JText::_('JBS_CMT_FULL_NAME'); ?></th>
                     <th width="100">   <?php echo JHtml::_('grid.sort', 'JBS_CMT_CREATE_DATE', 'study.studydate', $listDirn, $listOrder); ?>
                     </th>
+                    <th width="5%">
+                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+                    </th>
                 </tr>
             </thead>
-
-
-
 
             <?php
             foreach ($this->items as $i => $item) :
@@ -67,6 +62,13 @@ $listOrder = $this->state->get('list.ordering');
                     <td> <a href="<?php echo $link; ?>"><?php echo $item->studytitle . ' - ' . JText::_($item->bookname) . ' ' . $item->chapter_begin; ?></a> </td>
                     <td> <?php echo $item->full_name; ?> </td>
                     <td> <?php echo $item->comment_date; ?> </td>
+                    <td class="center">
+                        <?php if ($item->language == '*'): ?>
+                            <?php echo JText::alt('JALL', 'language'); ?>
+                        <?php else: ?>
+                            <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
 

@@ -12,24 +12,59 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
+class BiblestudyModelComments extends JModelList {
 
-}
+    public function __construct($config = array()) {
+        if (empty($config['filter_fields'])) {
+            $config['filter_fields'] = array(
+                'id', 'comment.id',
+                'published', 'comment.published',
+                'ordering', 'comment.ordering',
+                'studytitle', 'comment.studytitle',
+                'bookname', 'comment.studytitle',
+                'createdate', 'comment.createdate',
+                'language', 'comment.language'
+            );
+        }
 
-class BiblestudyModelComments extends modelClass {
-
-   
+        parent::__construct($config);
+    }
 
     /**
-     * @since   7.0
+     *
+     * @param <string> $id   A prefix for the store id
+     * @return <string>      A store id
+     * @since 7.0
      */
+    protected function getStoreId($id = '') {
+
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.published');
+        $id .= ':' . $this->getState('filter.language');
+
+        return parent::getStoreId($id);
+    }
+ /**
+  *
+  * @param null $ordering
+  * @param null $direction
+  *
+  * @since 7.0
+  */
     protected function populateState($ordering = null, $direction = null) {
+        // Initialise variables.
+        $app = JFactory::getApplication();
+        $session = JFactory::getSession();
+
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
         }
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
+
+        $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
+        $this->setState('filter.language', $language);
         parent::populateState('comment.comment_date', 'DESC');
     }
 
@@ -44,6 +79,10 @@ class BiblestudyModelComments extends modelClass {
                 $this->getState(
                         'list.select', 'comment.*'));
         $query->from('#__bsms_comments AS comment');
+
+        // Join over the language
+        $query->select('l.title AS language_title');
+        $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = comment.language');
 
         // Filter by published state
         $published = $this->getState('filter.published');

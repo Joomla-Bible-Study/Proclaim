@@ -41,6 +41,11 @@ class BiblestudyViewComment extends JView {
         $this->setDocument();
     }
 
+    /**
+     * Adds ToolBar
+     *
+     * @since 7.0
+     */
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
         $isNew = ($this->item->id < 1);
@@ -63,12 +68,9 @@ class BiblestudyViewComment extends JView {
      * @since	7.1.0
      */
     protected function setDocument() {
+        $isNew = ($this->item->id < 1);
         $document = JFactory::getDocument();
-        JText::sprintf('JBS_TITLE_COMMENT',
-                $this->item->id
-                );
-        $document->setTitle(
-                );
+        $document->setTitle($isNew ? JText::_('JBS_TITLE_COMMENT_CREATING') : JText::sprintf('JBS_TITLE_COMMENT_EDITING', $this->item->teachername));
     }
 
 }
