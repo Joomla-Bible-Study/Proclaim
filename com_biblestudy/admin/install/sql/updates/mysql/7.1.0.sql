@@ -51,7 +51,8 @@ ALTER TABLE `#__bsms_mediafiles` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET u
 ADD COLUMN `created_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 ADD COLUMN `created_by_alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 ADD COLUMN `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-ADD COLUMN `modified_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
+ADD COLUMN `modified_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
+ADD INDEX `idx_study_id` ( `study_id` );
 UPDATE `#__bsms_mediafiles` SET `language` = '*' WHERE `#__bsms_mediafiles`.`language` = '';
 
 ALTER TABLE `#__bsms_comments` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
