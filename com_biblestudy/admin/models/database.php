@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 
 // Import library dependencies
 JLoader::register('InstallerModel', JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_installer' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'extension.php');
-JLoader::register('biblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
+JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 
 /**
  * Installer Manage Model
@@ -50,7 +50,7 @@ class BiblestudyModelDatabase extends InstallerModel {
         $changeSet->fix();
         $this->fixSchemaVersion($changeSet);
         $this->fixUpdateVersion();
-        $installer = new biblestudyInstallerScript();
+        $installer = new Com_BiblestudyInstallerScript();
         //$installer->deleteUnexistingFiles();  // XXX Need to Update first deleat files of the new template do to them not in the biblestudy xml
         $this->fixDefaultTextFilters();
     }
@@ -62,7 +62,7 @@ class BiblestudyModelDatabase extends InstallerModel {
      * @return  JSchemaChangeset
      */
     public function getItems() {
-        $folder = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/mysql';
+        $folder = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/';
         $changeSet = JSchemaChangeset::getInstance(JFactory::getDbo(), $folder);
         return $changeSet;
     }
@@ -80,21 +80,14 @@ class BiblestudyModelDatabase extends InstallerModel {
     public function getSchemaVersion() {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
-        //get the extension id
-        $extensionquery = 'SELECT extension_id from #__extensions WHERE element = "com_biblestudy"';
-        $db->setQuery($extensionquery);
-        $db->query();
-        $extensionresult = $db->loadResult();
-        $schemaquery = 'SELECT version_id from #__schemas WHERE extension_id = "' . $extensionresult . '"';
-        $db->setQuery($schemaquery);
-        $result = $db->loadResult(); //dump ($result);
-
-        $query->select('e.extension_id');
-        $query->from('#__extensions as e');
-        $query->where('element = "com_biblestudy"');
+        $extensionresult = $this->getExtentionId();
+        $query->select('version_id')->from($db->qn('#__schemas'))
+                ->where('extension_id = "' . $extensionresult . '"');
         $db->setQuery($query);
-        $this->extension_id = $db->loadResult();
-
+        $result = $db->loadResult();
+        if ($db->getErrorNum()) {
+            throw new Exception('Database error - getSchemaVersion');
+        }
         return $result;
     }
 
@@ -110,6 +103,7 @@ class BiblestudyModelDatabase extends InstallerModel {
         $schema = $changeSet->getSchema();
         $db = JFactory::getDbo();
         $result = false;
+        $extensionresult = $this->getExtentionId();
 
         // Check value. If ok, don't do update
         $version = $this->getSchemaVersion();
@@ -119,14 +113,14 @@ class BiblestudyModelDatabase extends InstallerModel {
             // Delete old row
             $query = $db->getQuery(true);
             $query->delete($db->qn('#__schemas'));
-            $query->where($db->qn('extension_id') . ' = "' . $this->extension_id . '"');
+            $query->where($db->qn('extension_id') . ' = "' . $extensionresult . '"');
             $db->setQuery($query);
             $db->query();
 
             // Add new row
             $query = $db->getQuery(true);
             $query->insert($db->qn('#__schemas'));
-            $query->set($db->qn('extension_id') . '= "' . $this->extension_id . '"');
+            $query->set($db->qn('extension_id') . '= "' . $extensionresult . '"');
             $query->set($db->qn('version_id') . '= ' . $db->q($schema));
             $db->setQuery($query);
             if ($db->query()) {
@@ -143,7 +137,7 @@ class BiblestudyModelDatabase extends InstallerModel {
      */
     public function getUpdateVersion() {
         $table = JTable::getInstance('Extension');
-        $table->load($this->extension_id);
+        $table->load($this->getExtentionId());
         $cache = new JRegistry($table->manifest_cache);
         return $cache->get('version');
     }
@@ -155,12 +149,12 @@ class BiblestudyModelDatabase extends InstallerModel {
      */
     public function fixUpdateVersion() {
         $table = JTable::getInstance('Extension');
-        $table->load($this->extension_id);
+        $table->load($this->getExtentionId());
         $cache = new JRegistry($table->manifest_cache);
         $updateVersion = $cache->get('version');
-
+        // XXX Need to Fix this is not working right yet.
         $jbsversion = $this->version;
-        //$cmsVersion = new JVersion();
+
         if ($updateVersion == $jbsversion) {
             return $updateVersion;
         } else {
@@ -208,5 +202,25 @@ class BiblestudyModelDatabase extends InstallerModel {
         }
     }
 
-}
+    /**
+     *
+     * To retreave component extention_id
+     *
+     * @return extention_id
+     * @since 7.1.0
+     * @throws Exception
+     */
+    public function getExtentionId() {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('extension_id')->from($db->qn('#__extensions'))
+                ->where('element = "com_biblestudy"');
+        $db->setQuery($query);
+        $result = $db->loadResult();
+        if ($db->getErrorNum()) {
+            throw new Exception('Database error - getExtentionId');
+        }
+        return $result;
+    }
 
+}

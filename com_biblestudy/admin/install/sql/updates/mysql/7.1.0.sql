@@ -1,9 +1,13 @@
 
 -- @todo need to look at a better way to do this sql
 UPDATE `#__bsms_share` SET `params` = '{"mainlink":"http://www.facebook.com/sharer.php?","item1prefix":"u=","item1":200,"item1custom":"","item2prefix":"t=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":8,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/facebook.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":"","alttext":"FaceBook"}' WHERE `#__bsms_share`.`id` = 1;
+
 UPDATE `#__bsms_share` SET `params` = '{"mainlink":"http://twitter.com/nfsda?","item1prefix":"status=","item1":200,"item1custom":"","item2prefix":"","item2":5,"item2custom":"","item3prefix":"","item3":1,"item3custom":"","item4prefix":"","item4":0,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/twitter.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":140,"alttext":"Twitter"}' WHERE `#__bsms_share`.`id` = 2;
+
 UPDATE `#__bsms_share` SET `params` = '{"mainlink":"http://delicious.com/save?","item1prefix":"url=","item1":200,"item1custom":"","item2prefix":"&title=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/delicious.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"Delicious"}' WHERE `#__bsms_share`.`id` = 3;
+
 UPDATE `#__bsms_share` SET `params` = '{"mainlink":"http://www.myspace.com/index.cfm?","item1prefix":"fuseaction=postto&t=","item1":5,"item1custom":"","item2prefix":"&c=","item2":6,"item2custom":"","item3prefix":"&u=","item3":200,"item3custom":"","item4prefix":"&l=1","item4":"","item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/myspace.png","shareimagew":"33px","shareimageh":"33px","totalcharacters":"","alttext":"MySpace"}' WHERE `#__bsms_share`.`id` = 4;
+
 CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `published` int(3) NOT NULL,
@@ -19,24 +23,43 @@ INSERT INTO `#__bsms_styles` (`id`, `published`, `filename`, `stylecode`) VALUES
 
 -- Menu Update
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=mediaimages', `img` = '../media/com_biblestudy/images/menu/icon-16-mediaimages.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=mediaimages' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy', `img` = '../media/com_biblestudy/images/menu/icon-16-biblemenu.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=cpanel', `img` = '../media/com_biblestudy/images/menu/icon-16-biblemenu.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=cpanel' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&task=admin.edit&id=1', `img` = '../media/com_biblestudy/images/menu/icon-16-administration.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&task=admin.edit&id=1' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=messages', `img` = '../media/com_biblestudy/images/menu/icon-16-studies.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=messages' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=mediafiles', `img` = '../media/com_biblestudy/images/menu/icon-16-mp3.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=mediafiles' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=teachers', `img` = '../media/com_biblestudy/images/menu/icon-16-teachers.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=teachers' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=series', `img` = '../media/com_biblestudy/images/menu/icon-16-series.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=series' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=messagetypes', `img` = '../media/com_biblestudy/images/menu/icon-16-messagetype.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=messagetypes' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=locations', `img` = '../media/com_biblestudy/images/menu/icon-16-locations.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=locations' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=topics', `img` = '../media/com_biblestudy/images/menu/icon-16-topics.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=topics' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=comments', `img` = '../media/com_biblestudy/images/menu/icon-16-comments.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=comments' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=servers', `img` = '../media/com_biblestudy/images/menu/icon-16-servers.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=servers' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=folders', `img` = '../media/com_biblestudy/images/menu/icon-16-folder.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=folders' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=podcasts', `img` = '../media/com_biblestudy/images/menu/icon-16-podcast.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=podcasts' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=shares', `img` = '../media/com_biblestudy/images/menu/icon-16-social.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=shares' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=templates', `img` = '../media/com_biblestudy/images/menu/icon-16-templates.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=templates' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=mimetypes', `img` = '../media/com_biblestudy/images/menu/icon-16-mimetype.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=mimetypes' LIMIT 1;
+
 UPDATE `#__menu` SET `link` = 'index.php?option=com_biblestudy&view=cssedit', `img` = '../media/com_biblestudy/images/menu/icon-16-css.png' WHERE `#__menu`.`link` ='index.php?option=com_biblestudy&view=cssedit' LIMIT 1;
+
 CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `published` int(3) NOT NULL DEFAULT '1',
@@ -53,21 +76,30 @@ ADD COLUMN `created_by_alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_gen
 ADD COLUMN `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 ADD COLUMN `modified_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 ADD INDEX `idx_study_id` ( `study_id` );
+
 UPDATE `#__bsms_mediafiles` SET `language` = '*' WHERE `#__bsms_mediafiles`.`language` = '';
 
 ALTER TABLE `#__bsms_comments` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
+
 UPDATE `#__bsms_comments` SET `language` = '*' WHERE `#__bsms_comments`.`language` = '';
+
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
+
 UPDATE `#__bsms_teachers` SET `language` = '*' WHERE `#__bsms_teachers`.`language` = '';
+
 ALTER TABLE `#__bsms_podcast` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
+
 ALTER TABLE `#__bsms_series` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
+
 ALTER TABLE `#__bsms_studies` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
+
 ALTER TABLE `#__bsms_studytopics` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
+
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
+
 ALTER TABLE `#__bsms_topics` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
 
-ALTER TABLE `#__bsms_servers`
-ADD COLUMN `type` tinyint(3) NOT NULL,
+ALTER TABLE `#__bsms_servers` ADD COLUMN `type` tinyint(3) NOT NULL,
 ADD COLUMN `ftphost` varchar(100) NOT NULL,
 ADD COLUMN `ftpuser` varchar(250) NOT NULL,
 ADD COLUMN `ftppassword` varchar(250) NOT NULL,

@@ -35,7 +35,6 @@ defined('_JEXEC') or die;
                         <?php endif; ?>
 
                     <?php if (($this->updateVersion != $this->version)) : ?>
-                        <?php dump($this->updateVersion, 'UpdateVersion'); ?>
                         <li><?php echo JText::sprintf('COM_INSTALLER_MSG_DATABASE_UPDATEVERSION_ERROR', $this->updateVersion, $this->version); ?></li>
                     <?php endif; ?>
 
