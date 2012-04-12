@@ -44,18 +44,15 @@ class BiblestudyModelComments extends JModelList {
 
         return parent::getStoreId($id);
     }
- /**
-  *
-  * @param null $ordering
-  * @param null $direction
-  *
-  * @since 7.0
-  */
-    protected function populateState($ordering = null, $direction = null) {
-        // Initialise variables.
-        $app = JFactory::getApplication();
-        $session = JFactory::getSession();
 
+    /**
+    *
+    * @param null $ordering
+    * @param null $direction
+    *
+    * @since 7.0
+    */
+    protected function populateState($ordering = null, $direction = null) {
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;

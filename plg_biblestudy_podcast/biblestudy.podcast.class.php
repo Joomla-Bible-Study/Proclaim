@@ -81,7 +81,7 @@ class JBSPodcast {
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
-                	<language>' . $podinfo->language . '</language>
+                	<language>' . $podinfo->podcastlanguage . '</language>
                 	<copyright>' . $year . ' All rights reserved.</copyright>
                 	<pubDate>' . $date . '</pubDate>
                 	<lastBuildDate>' . $date . '</lastBuildDate>
@@ -110,7 +110,6 @@ class JBSPodcast {
                     $registry->loadJSON($podinfo->params);
                     $params = $registry;
                     $params->set('show_verses', '1');
-                    //  dump ($episodes, 'episodes: ');
                     if (!$episodes) {
                         return false;
                     }

@@ -20,7 +20,11 @@
 		size="20" />
 	<field name="podcastsearch" type="text" label="JBS_PDC_PODCAST_SEARCH_WORDS"
 		size="20" />
-	<field name="language" type="language" label="JBS_PDC_PODCAST_LANGUAGE" />
+        <field name="podcastlanguage" type="language" label="JBS_PDC_PODCAST_LANGUAGE" />
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+               description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
+            <option value="*">JALL</option>
+        </field>
 	<field name="detailstemplateid" type="sql"
 		label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK"
 		query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"

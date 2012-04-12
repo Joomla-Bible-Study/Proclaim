@@ -153,7 +153,8 @@ class BiblestudyModelDatabase extends InstallerModel {
         $cache = new JRegistry($table->manifest_cache);
         $updateVersion = $cache->get('version');
         // XXX Need to Fix this is not working right yet.
-        $jbsversion = $this->version;
+        //$jbsversion = $this->version;
+        $jbsversion = '7.1.0';
 
         if ($updateVersion == $jbsversion) {
             return $updateVersion;

@@ -59,6 +59,10 @@ require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY
 				<?php echo $this->form->getLabel('language'); ?>
 
 				<?php echo $this->form->getInput('language'); ?></li>
+                                <li>
+				<?php echo $this->form->getLabel('podcastlanguage'); ?>
+
+				<?php echo $this->form->getInput('podcastlanguage'); ?></li>
 				<li>
 				<?php echo $this->form->getLabel('detailstemplateid'); ?>
 

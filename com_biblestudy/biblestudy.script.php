@@ -318,17 +318,16 @@ class Com_BiblestudyInstallerScript {
             $db->query();
         }
     }
+    
     // @todo Must Add in all fixes hear for update?
     public function deleteUnexistingFiles() {
         $files = array(
-            '/includes/version.php',
-            '/media/system/images/modal/closebox.gif',
+
         );
 
         // TODO There is an issue while deleting folders using the ftp mode
         $folders = array(
-            '/libraries/joomlacms',
-            '/media/mod_finder_status',
+            JPATH_ADMINISTRATOR .'/components/com_biblestudy/assets',
         );
 
         foreach ($files as $file) {
