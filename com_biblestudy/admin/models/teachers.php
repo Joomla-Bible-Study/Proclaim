@@ -123,11 +123,14 @@ class BiblestudyModelTeachers extends JModelList {
         }
 
         // Add the list ordering clause.
-        $orderCol = $this->state->get('list.ordering');
+      /*  $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
         if ($orderCol == 'teacher.ordering' || $orderCol == 'teacher.teachername') {
             $orderCol = 'teacher.teachername ' . $orderDirn . ', teacher.ordering';
-        }
+        } */
+         $orderCol = $this->state->get('list.ordering', 'teacher.ordering');
+        $orderDirn = $this->state->get('list.direction', 'asc');
+        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
         $query->order($db->getEscaped($orderCol . ' ' . $orderDirn)); 
       
         return $query;
