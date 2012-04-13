@@ -12,6 +12,8 @@ defined('_JEXEC') or die;
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 jimport('joomla.application.component.view');
+jimport('joomla.application.component.helper');
+jimport('joomla.i18n.help');
 
 class BiblestudyViewTeachers extends JView {
 
@@ -28,6 +30,13 @@ class BiblestudyViewTeachers extends JView {
         if (count($errors = $this->get('Errors'))) {
             JError::raiseError(500, implode("\n", $errors));
             return false;
+        }
+
+        // Preprocess the list of items to find ordering divisions.
+        // TODO: Complete the ordering stuff with nested sets
+        foreach ($this->items as &$item) {
+            $item->order_up = true;
+            $item->order_dn = true;
         }
 
         $this->addToolbar();

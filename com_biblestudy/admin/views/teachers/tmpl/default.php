@@ -9,14 +9,17 @@
 //No Direct Access
 defined('_JEXEC') or die;
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
-JHtml::_('script', 'system/multiselect.js', false, true);
-$listOrder = $this->state->get('list.ordering');
-$listDirn = $this->state->get('list.direction');
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.multiselect');
+
+$user = JFactory::getUser();
+$userId = $user->get('id');
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn = $this->escape($this->state->get('list.direction'));
+$canOrder = $user->authorise('core.edit.state');
 $saveOrder = $listOrder == 'teacher.ordering';
 ?>
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teachers'); ?>"
-    method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teachers'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
             <select name="filter_published" class="inputbox"
@@ -35,18 +38,17 @@ $saveOrder = $listOrder == 'teacher.ordering';
     <table class="adminlist">
         <thead>
             <tr>
-                <th width="1%"><input type="checkbox" name="checkall-toggle"
-                                      value="" onclick="checkAll(this)" />
+                <th width="10" class="title">
+                    <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
                 </th>
                 <th width="8%">
                     <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'teacher.published', $listDirn, $listOrder); ?>
                 </th>
-                <th align="center" width="10%">
-                    <?php
-                    echo JHtml::_('grid.sort', 'JGRID_HEADING_ORDERING', 'teacher.ordering', $listDirn, $listOrder);
-//echo JHtml::_('grid.order', $this->items, 'filesave.png', 'teachers.saveorer');
-//@todo need to fix for next version
-                    ?>
+                <th width="10%">
+                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ORDERING', 'teacher.ordering', $listDirn, $listOrder); ?>
+                    <?php if ($canOrder && $saveOrder) : ?>
+                        <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'teacher.saveorder'); ?>
+                    <?php endif; ?>
                 </th>
                 <th align="center">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
@@ -67,8 +69,11 @@ $saveOrder = $listOrder == 'teacher.ordering';
 
 
             <?php
+            $n = count($this->items);
             foreach ($this->items as $i => $item) :
-                $ordering = ($listOrder == 'teacher.ordering');
+                $item->catid = '1';
+                $ordering = $listOrder == 'teacher.ordering';
+                $canChange = $user->authorise('core.edit.state');
                 ?>
                 <tr class="row<?php echo $i % 2; ?>">
                     <td class="center">
@@ -77,16 +82,22 @@ $saveOrder = $listOrder == 'teacher.ordering';
                     <td class="center">
                         <?php echo JHtml::_('jgrid.published', $item->published, $i, 'teachers.', true, 'cb', '', ''); ?>
                     </td>
-                    <td class="center">
-                        <?php if ($listDirn == 'asc') : ?> <span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'teachers.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?>
-                            </span> <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->id == @$this->items[$i - 1]->id), 'teachers.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?>
-                            </span>
-                        <?php elseif ($listDirn == 'desc') : ?>
-                            <span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'teachers.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-                            <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->id == @$this->items[$i - 1]->id), 'teachers.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                    <td class="order">
+                        <?php if ($canChange) : ?>
+                            <?php if ($saveOrder) : ?>
+                                <?php if ($listDirn == 'asc') : ?>
+                                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->catid == @$this->items[$i - 1]->catid), 'teachers.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                                    <span><?php echo $this->pagination->orderDownIcon($i, $n, ($item->catid == @$this->items[$i + 1]->catid), 'teachers.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                <?php elseif ($listDirn == 'desc') : ?>
+                                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->catid == @$this->items[$i - 1]->catid), 'teachers.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                                    <span><?php echo $this->pagination->orderDownIcon($i, $n, ($item->catid == @$this->items[$i + 1]->catid), 'teachers.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
+                            <input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled ?> class="text-area-order" />
+                        <?php else : ?>
+                            <?php echo $item->ordering; ?>
                         <?php endif; ?>
-                        <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
-                        <input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled ?> class="text-area-order" />
                     </td>
                     <td class="center"><a
                             href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=teacher.edit&id=' . (int) $item->id); ?>">

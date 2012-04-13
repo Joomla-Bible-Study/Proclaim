@@ -8,41 +8,44 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 
 $function = JRequest::getVar('function', 'jSelectTeacher');
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teachers&layout=modal&tmpl=component'); ?>"
-    method="post" name="adminForm">
-    <div id="editcell">
-        <table class="adminlist">
-            <thead>
-                <tr>
-                    <th width="5">
-                        <?php echo JText::_('JBS_CMN_ID'); ?>
-                    </th>
-                    <th>
-                        <?php echo JText::_('JBS_CMN_TEACHER'); ?>
-                    </th>
-                    <th width="5%">
-                        <?php echo JText::_('JGRID_HEADING_LANGUAGE'); ?>
-                    </th>
-                </tr>
-            </thead>
-
-            <?php
-            $k = 0;
-            for ($i = 0, $n = count($this->items); $i < $n; $i++) {
-                $row = &$this->items[$i];
-                ?>
-                <tr class="<?php echo "row$k"; ?>">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=teachers&layout=modal&tmpl=component'); ?>" method="post" name="adminForm" id="adminForm">
+    <table class="adminlist">
+        <thead>
+            <tr>
+                <th width="5">
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_ID', 'teacher.id', $listDirn, $listOrder); ?>
+                </th>
+                <th>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_TEACHER', 'teacher.teachername', $listDirn, $listOrder); ?>
+                </th>
+                <th width="5%">
+                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'teacher.language', $listDirn, $listOrder); ?>
+                </th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="10">
+                    <?php echo $this->pagination->getListFooter(); ?>
+                </td>
+            </tr>
+        </tfoot>
+        <tbody>
+            <?php foreach ($this->items as $i => $item) : ?>
+                <tr class="row<?php echo $i % 2; ?>">
                     <td width="20">
-                        <?php echo $row->id; ?>
+                        <?php echo (int) $item->id; ?>
                     </td>
-                    <td><a class="pointer" onclick="if (window.parent) window.parent.<?php echo $function; ?>('<?php echo $row->id; ?>', '<?php echo $row->teachername; ?>');">
-                            <?php echo $row->teachername; ?></a>
+                    <td><a class="pointer" onclick="if (window.parent) window.parent.<?php echo $function; ?>('<?php echo $item->id; ?>', '<?php echo $item->teachername; ?>');">
+                            <?php echo $item->teachername; ?></a>
                     </td>
                     <td class="center">
                         <?php if ($item->language == '*'): ?>
@@ -52,14 +55,9 @@ $function = JRequest::getVar('function', 'jSelectTeacher');
                         <?php endif; ?>
                     </td>
                 </tr>
-                <?php
-                $k = 1 - $k;
-            }
-            ?>
-            <tfoot>
-                <tr><td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tr></tfoot>
-        </table>
-    </div>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>

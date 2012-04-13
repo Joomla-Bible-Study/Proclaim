@@ -15,40 +15,45 @@ jimport('joomla.application.component.modellist');
 class BiblestudyModelTeachers extends JModelList {
 
     /**
-     * teachers data array
+     * Constructor.
      *
-     * @var array
+     * @param	array	An optional associative array of configuration settings.
+     * @see		JController
+     * @since	1.7.0
      */
-    var $_data;
-    var $_total = null;
-    var $_pagination = null;
-    var $allow_deletes = null;
-
     function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'teacher.published',
-                'teacher.ordering',
-                'teacher.teachername',
-                'teacher.alias',
-                'teacher.language'
+                'id', 'teacher.id',
+                'catid', 'teacher.catid',
+                'access', 'teacher.access', 'access_level',
+                'published', 'teacher.published',
+                'ordering', 'teacher.ordering',
+                'teahername', 'teacher.teachername',
+                'alias', 'teacher.alias',
+                'language', 'teacher.language'
             );
         }
 
         parent::__construct($config);
     }
 
-    function getDeletes() {
-        if (empty($this->_deletes)) {
-            $query = 'SELECT allow_deletes'
-                    . ' FROM #__bsms_admin'
-                    . ' WHERE id = 1';
-            $this->_deletes = $this->_getList($query);
-        }
-        return $this->_deletes;
-    }
+//    function getDeletes() {
+//        if (empty($this->_deletes)) {
+//            $query = 'SELECT allow_deletes'
+//                    . ' FROM #__bsms_admin'
+//                    . ' WHERE id = 1';
+//            $this->_deletes = $this->_getList($query);
+//        }
+//        return $this->_deletes;
+//    }
 
-    /*
+    /**
+     * Method to auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @return	void
      * @since   7.0
      */
 
@@ -64,13 +69,20 @@ class BiblestudyModelTeachers extends JModelList {
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        parent::populateState('teacher.teachername', 'ASC');
+        // List state information.
+        parent::populateState('teacher.teachername', 'acs');
     }
 
     /**
+     * Method to get a store id based on model configuration state.
      *
-     * @param <string> $id   A prefix for the store id
-     * @return <string>      A store id
+     * This is necessary because the model is used by the component and
+     * different modules that might need different sets of data or different
+     * ordering requirements.
+     *
+     * @param	string		$id	A prefix for the store id.
+     *
+     * @return	string		A store id.
      * @since 7.0
      */
     protected function getStoreId($id = '') {
@@ -83,9 +95,10 @@ class BiblestudyModelTeachers extends JModelList {
     }
 
     /**
+     * Build an SQL query to load the list data.
      *
-     * @return arrey
-     * @since 7.0
+     * @return	JDatabaseQuery
+     * @since   7.0
      */
     protected function getListQuery() {
         $db = $this->getDbo();
@@ -98,7 +111,7 @@ class BiblestudyModelTeachers extends JModelList {
 
         // Join over the language
         $query->select('l.title AS language_title');
-        $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = teacher.language');
+        $query->join('LEFT', '`#__languages` AS l ON l.lang_code = teacher.language');
 
 
         // Filter by published state
@@ -109,10 +122,14 @@ class BiblestudyModelTeachers extends JModelList {
             $query->where('(teacher.published = 0 OR teacher.published = 1)');
         }
 
-        //Add the list ordering clause
+        // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
+        if ($orderCol == 'teacher.ordering' || $orderCol == 'teacher.teachername') {
+            $orderCol = 'teacher.teachername ' . $orderDirn . ', teacher.ordering';
+        }
         $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+
         return $query;
     }
 

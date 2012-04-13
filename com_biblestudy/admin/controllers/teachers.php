@@ -13,11 +13,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controlleradmin');
 
-abstract class controllerClass extends JControllerAdmin {
-
-}
-
-class BiblestudyControllerTeachers extends controllerClass {
+class BiblestudyControllerTeachers extends JControllerAdmin {
 	/**
 	 * Proxy for getModel
 	 *
@@ -27,8 +23,8 @@ class BiblestudyControllerTeachers extends controllerClass {
 	 *
 	 * @since 7.0
 	 */
-	public function &getModel($name = 'Teacher', $prefix = 'BiblestudyModel') {
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
+	public function &getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
+		$model = parent::getModel($name, $prefix, $config);
 		return $model;
 	}
 }

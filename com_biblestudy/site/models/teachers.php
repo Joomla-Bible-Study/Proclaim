@@ -1,23 +1,20 @@
 <?php
+
 /**
  * @version $Id: teacher.php 1 $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- **/
-
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
-jimport( 'joomla.application.component.modellist' );
+jimport('joomla.application.component.modellist');
 
+class BiblestudyModelTeachers extends JModelList {
 
-class BiblestudyModelTeachers extends JModelList
-{
-
-   
-/**
+    /**
      * Build an SQL query to load the list data
      *
      * @return  JDatabaseQuery
@@ -25,17 +22,16 @@ class BiblestudyModelTeachers extends JModelList
      */
     protected function getListQuery() {
         $db = $this->getDbo();
-        
+
         $query = $db->getQuery(true);
         $query->select('teachers.*,CASE WHEN CHAR_LENGTH(teachers.alias) THEN CONCAT_WS(\':\', teachers.id, teachers.alias) ELSE teachers.id END as slug');
         $query->from('#__bsms_teachers as teachers');
         $query->select('s.id as sid');
-        $query->join('LEFT','#__bsms_studies as s on teachers.id = s.teacher_id');
+        $query->join('LEFT', '#__bsms_studies as s on teachers.id = s.teacher_id');
         $query->where('teachers.published = 1 AND teachers.list_show = 1');
         $query->order('teachers.teachername, teachers.ordering ASC');
         $query->group('teachers.id');
         return $query;
-        
     }
 
     /**
@@ -56,16 +52,15 @@ class BiblestudyModelTeachers extends JModelList
         }
         return $this->_template;
     }
-  
-function getAdmin()
-	{
-		if (empty($this->_admin)) {
-			$query = 'SELECT params'
-			. ' FROM #__bsms_admin'
-			. ' WHERE id = 1';
-			$this->_admin = $this->_getList($query);
-		}
-		return $this->_admin;
-	}
+
+    function getAdmin() {
+        if (empty($this->_admin)) {
+            $query = 'SELECT params'
+                    . ' FROM #__bsms_admin'
+                    . ' WHERE id = 1';
+            $this->_admin = $this->_getList($query);
+        }
+        return $this->_admin;
+    }
 
 }
