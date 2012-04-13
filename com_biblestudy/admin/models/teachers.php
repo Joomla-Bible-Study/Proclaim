@@ -70,7 +70,7 @@ class BiblestudyModelTeachers extends JModelList {
         $this->setState('filter.language', $language);
 
         // List state information.
-        parent::populateState('teacher.teachername', 'acs');
+        parent::populateState('teacher.teachername', 'asc');
     }
 
     /**
@@ -128,8 +128,8 @@ class BiblestudyModelTeachers extends JModelList {
         if ($orderCol == 'teacher.ordering' || $orderCol == 'teacher.teachername') {
             $orderCol = 'teacher.teachername ' . $orderDirn . ', teacher.ordering';
         }
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
-
+        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn)); 
+      
         return $query;
     }
 
