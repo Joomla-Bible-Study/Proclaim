@@ -15,7 +15,7 @@
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
-    <field name="ordering" type="teacherOrdering" label="JBS_CMN_ORDERING"
+    <field name="ordering" type="teacherordering" label="JBS_CMN_ORDERING"
            description="JBS_CMN_ORDERING_DESC" class="inputbox" />
     <field name="teachername" type="text" class="inputbox" size="60"
            label="JBS_CMN_TEACHER" required="true" />
