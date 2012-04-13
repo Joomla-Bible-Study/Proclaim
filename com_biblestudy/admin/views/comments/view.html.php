@@ -30,7 +30,6 @@ class BiblestudyViewComments extends JView {
             return false;
         }
 
-
         // We don't need toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {
             $this->addToolbar();

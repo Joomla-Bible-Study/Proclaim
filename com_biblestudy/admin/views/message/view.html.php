@@ -26,17 +26,15 @@ class BiblestudyViewMessage extends JView {
         $this->item = $this->get("Item");
 
         $this->mediafiles = $this->get('MediaFiles');
-        $this->setLayout('form');
 
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin();
         $this->canDo = BibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
-        $this->addToolbar();
         $host = JURI::base();
         $document = JFactory::getDocument();
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
-        
+
         $script = "
             \$j(document).ready(function() {
                 \$j('#topics').tokenInput(" . $this->get('alltopics') . ",
@@ -57,8 +55,21 @@ class BiblestudyViewMessage extends JView {
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/js/ui/theme/ui.all.css');
 
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-        
+
+        if (!JFactory::getUser()->authorize('core.manage', 'com_biblestudy')) {
+            JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));
+            return false;
+        }
+
+        $this->setLayout("form");
+        // Set the toolbar
+        $this->addToolbar();
+
+        // Display the template
         parent::display($tpl);
+
+        // Set the document
+        $this->setDocument();
     }
 
     protected function addToolbar() {
@@ -80,6 +91,17 @@ class BiblestudyViewMessage extends JView {
 
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
+    }
+
+    /**
+     * Add the page title to browser.
+     *
+     * @since	7.1.0
+     */
+    protected function setDocument() {
+        $isNew = ($this->item->id < 1);
+        $document = JFactory::getDocument();
+        $document->setTitle($isNew ? JText::_('JBS_TITLE_STUDIES_CREATING') : JText::sprintf('JBS_TITLE_STUDIES_EDITING', $this->item->studytitle));
     }
 
 }

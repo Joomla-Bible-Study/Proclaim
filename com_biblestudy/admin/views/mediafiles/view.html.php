@@ -41,7 +41,11 @@ class BiblestudyViewMediafiles extends JView {
             $this->addToolbar();
         }
 
+        // Display the template
         parent::display($tpl);
+
+        // Set the document
+        $this->setDocument();
     }
 
     /**
@@ -69,6 +73,16 @@ class BiblestudyViewMediafiles extends JView {
             JToolBarHelper::trash('mediafiles.trash');
             JToolBarHelper::divider();
         }
+    }
+
+    /**
+     * Add the page title to browser.
+     *
+     * @since	7.1.0
+     */
+    protected function setDocument() {
+        $document = JFactory::getDocument();
+        $document->setTitle(JText::_('JBS_TITLE_MEDIA_FILES'));
     }
 
 }

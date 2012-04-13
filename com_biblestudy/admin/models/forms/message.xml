@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <field name="server" type="sql" extension="com_biblestudy" label="JBS_CMN_SERVER"
-		description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
-		query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
-		key_field="id" value_field="server_name">
-		<option value="-1">JBS_CMN_SELECT_SERVER</option>
-	</field>
-	<field name="path" type="sql" extension="com_biblestudy" label="JBS_MED_PATH_OR_FOLDER"
-		description="JBS_MED_PATH_OR_FOLDER_DESC" class="inputbox" default="-1"
-		query="SELECT id, foldername FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC"
-		key_field="id" value_field="foldername">
-		<option value="-1">JBS_CMN_SELECT_FOLDER</option>
-        </field>
+           description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
+           query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
+           key_field="id" value_field="server_name">
+        <option value="-1">JBS_CMN_SELECT_SERVER</option>
+    </field>
+    <field name="path" type="sql" extension="com_biblestudy" label="JBS_MED_PATH_OR_FOLDER"
+           description="JBS_MED_PATH_OR_FOLDER_DESC" class="inputbox" default="-1"
+           query="SELECT id, foldername FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC"
+           key_field="id" value_field="foldername">
+        <option value="-1">JBS_CMN_SELECT_FOLDER</option>
+    </field>
     <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
            description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
            class="readonly" />
     <field name="published" type="radio" label="JBS_CMN_PUBLISHED" description="JBS_CMN_PUBLISHED_DESC" class="inputbox" default="0" required="true">
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
+    </field>
+    <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+               description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
+        <option value="*">JALL</option>
     </field>
 
     <field name="studydate" type="calendar" label="JBS_CMN_STUDY_DATE"
@@ -94,14 +98,14 @@
     </field>
     <field name="thumbnailm" type="media" size="46" label="JBS_STY_STUDY_IMAGE" />
     <field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
-               filter="BibleStudyHelper::filterText" buttons="true" />
+           filter="BibleStudyHelper::filterText" buttons="true" />
     <field name="rules" type="rules" label="JFIELD_RULES_LABEL"
-               translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
-               section="message" validate="rules" />
+           translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
+           section="message" validate="rules" />
     <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
-               description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
+           description="JFIELD_ACCESS_DESC" class="inputbox" size="1" />
     <field name="asset_id" type="hidden" filter="unset" />
-        
+
     <fields name="params">
         <fieldset name="params">
             <field name ="metakey" type="text" class="inputbox" size="50" label="JBS_STY_METAKEYWORDS" description="JBS_STY_METAKEYWORDS_DESC" />

@@ -12,25 +12,15 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
+class BiblestudyModelSeries extends JModelList {
 
-}
-
-class BiblestudyModelSeries extends modelClass {
-
-    /**
-     *
-     * @var array
-     */
-    var $_data;
-    var $allow_deletes = null;
-
-    function __construct($config = array()) {
+    public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'series.id',
-                'series.series_text',
-                'series.alias'
+                'id', 'series.id',
+                'series_text', 'series.series_text',
+                'alias', 'series.alias',
+                'language', 'series.language'
             );
         }
 
@@ -38,55 +28,36 @@ class BiblestudyModelSeries extends modelClass {
     }
 
     /**
-     * Returns the query
-     * @return string The query to be used to retrieve the rows from the database
+     *
+     * @param <string> $id   A prefix for the store id
+     * @return <string>      A store id
+     * @since 7.0
      */
-    function _buildQuery() {
-        $query = ' SELECT * '
-                . ' FROM #__bsms_series '
-        ;
+    protected function getStoreId($id = '') {
 
-        return $query;
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.published');
+        $id .= ':' . $this->getState('filter.language');
+
+        return parent::getStoreId($id);
     }
 
     /**
-     * Retrieves the data
-     * @return array Array of objects containing the data from the database
-     */
-    function getData() {
-        // Lets load the data if it doesn't already exist
-        if (empty($this->_data)) {
-            $query = $this->_buildQuery();
-            $this->_data = $this->_getList($query);
-        }
-
-        return $this->_data;
-    }
-
-    function getDeletes() {
-        if (empty($this->_deletes)) {
-            $query = 'SELECT allow_deletes'
-                    . ' FROM #__bsms_admin'
-                    . ' WHERE id = 1';
-            $this->_deletes = $this->_getList($query);
-        }
-        return $this->_deletes;
-    }
-
-    /*
+     * @param null $ordering
+     * @param null $direction
+     *
      * @since   7.0
      */
-
     protected function populateState($ordering = null, $direction = null) {
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
         }
-
-
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
+        $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
+        $this->setState('filter.language', $language);
         parent::populateState('series.series_text', 'ASC');
     }
 
@@ -101,8 +72,12 @@ class BiblestudyModelSeries extends modelClass {
 
         $query->select(
                 $this->getState(
-                        'list.select', 'series.id, series_text, series.published, series.alias'));
+                        'list.select', 'series.id, series_text, series.published, series.alias, series.language'));
         $query->from('#__bsms_series AS series');
+
+        // Join over the language
+        $query->select('l.title AS language_title');
+        $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = series.language');
 
         // Filter by published state
         $published = $this->getState('filter.published');

@@ -21,26 +21,38 @@ class biblestudyViewcpanel extends JView {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*');
-	$query->from('#__extensions');
+        $query->from('#__extensions');
         $query->where('element = "com_biblestudy"');
         $db->setQuery($query);
-	$data = $db->loadObject();
+        $data = $db->loadObject();
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($data->manifest_cache);
-        if ($data)
-            {
-                $this->version = $registry->get('version'); 
-                $this->versiondate = $registry->get('creationDate');
-            }
+        if ($data) {
+            $this->version = $registry->get('version');
+            $this->versiondate = $registry->get('creationDate');
+        }
         $this->addToolbar();
 
-
+        // Display the template
         parent::display($tpl);
+
+        // Set the document
+        $this->setDocument();
     }
 
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_CMN_CONTROL_PANEL'), 'administration');
+    }
+
+    /**
+     * Add the page title to browser.
+     *
+     * @since	7.1.0
+     */
+    protected function setDocument() {
+        $document = JFactory::getDocument();
+        $document->setTitle(JText::_('JBS_TITLE_CONTROL_PANEL'));
     }
 
 }

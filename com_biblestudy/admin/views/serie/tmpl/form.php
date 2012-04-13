@@ -44,6 +44,10 @@ require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTO
                 <li><?php echo $this->form->getLabel('access'); ?>
 
                     <?php echo $this->form->getInput('access'); ?></li>
+                <li>
+                    <?php echo $this->form->getLabel('language'); ?>
+
+                    <?php echo $this->form->getInput('language'); ?></li>
             </ul>
             <div class="clr"></div>
 

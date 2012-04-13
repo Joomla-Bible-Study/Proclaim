@@ -14,6 +14,33 @@ jimport('joomla.application.component.modellist');
 
 class BiblestudyModelTopics extends JModelList {
 
+    public function __construct($config = array()) {
+        if (empty($config['filter_fields'])) {
+            $config['filter_fields'] = array(
+                'id', 'topic.id',
+                'published', 'topic.published',
+                'topic_text', 'topic.topic_text',
+                'params', 'topic.params',
+            );
+        }
+
+        parent::__construct($config);
+    }
+
+    /**
+     *
+     * @param <string> $id   A prefix for the store id
+     * @return <string>      A store id
+     * @since 7.0
+     */
+    protected function getStoreId($id = '') {
+
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.published');
+
+        return parent::getStoreId($id);
+    }
+
     /**
      * @since   7.0
      */
@@ -22,7 +49,7 @@ class BiblestudyModelTopics extends JModelList {
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
         }
-        
+
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 

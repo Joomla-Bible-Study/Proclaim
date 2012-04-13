@@ -33,14 +33,20 @@ $listOrder = $this->state->get('list.ordering');
 
             <thead>
                 <tr>
-                    <th width="1"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
+                    <th width="1">
+                        <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
                     </th>
-                    <th width="20" align="center"> <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
+                    <th width="20" align="center">
+                        <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
                     </th>
-                    <th width="200"> <?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
+                    <th width="200">
+                        <?php echo JHtml::_('grid.sort', 'JBS_CMN_TITLE', 'study.studytitle', $listDirn, $listOrder); ?>
                     </th>
-                    <th width="100"><?php echo JText::_('JBS_CMT_FULL_NAME'); ?></th>
-                    <th width="100">   <?php echo JHtml::_('grid.sort', 'JBS_CMT_CREATE_DATE', 'study.studydate', $listDirn, $listOrder); ?>
+                    <th width="100">
+                        <?php echo JText::_('JBS_CMT_FULL_NAME'); ?>
+                    </th>
+                    <th width="100">
+                        <?php echo JHtml::_('grid.sort', 'JBS_CMT_CREATE_DATE', 'study.studydate', $listDirn, $listOrder); ?>
                     </th>
                     <th width="5%">
                         <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
@@ -71,8 +77,13 @@ $listOrder = $this->state->get('list.ordering');
                     </td>
                 </tr>
             <?php endforeach; ?>
-            <tfoot><tr>
-                    <td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tr></tfoot>
+            <tfoot>
+                <tr>
+                    <td colspan="10">
+                        <?php echo $this->pagination->getListFooter(); ?>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
     <input type="hidden" name="task" value="" />

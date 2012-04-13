@@ -10,7 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-include_once (JPATH_COMPONENT_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'translated.php');
+include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
 jimport('joomla.application.component.modellist');
 
@@ -21,16 +21,17 @@ class biblestudyModelmessages extends JModelList {
     function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'study.published',
-                'study.studydate',
-                'study.studytitle',
-                'book.bookname',
-                'teacher.teachername',
-                'messageType.message_type',
-                'series.series_text',
-                'study.hits',
-                'mediafile.plays',
-                'mediafile.downloads'
+                'id', 'study.id',
+                'published', 'study.published',
+                'studydate', 'study.studydate',
+                'studytitle', 'study.studytitle',
+                'bookname', 'book.bookname',
+                'teachername', 'teacher.teachername',
+                'message_type', 'messageType.message_type',
+                'series_text', 'series.series_text',
+                'hits', 'study.hits',
+                'plays', 'mediafile.plays',
+                'downloads', 'mediafile.downloads'
             );
         }
 
@@ -45,6 +46,27 @@ class biblestudyModelmessages extends JModelList {
             return $result;
         }
         return $result[0]->totalDownloads;
+    }
+
+    /**
+     * Method to get a store id based on model configuration state.
+     *
+     * This is necessary because the model is used by the component and
+     * different modules that might need different sets of data or different
+     * ordering requirements.
+     *
+     * @param	string		$id	A prefix for the store id.
+     *
+     * @return	string		A store id.
+     * @since	7.1.0
+     */
+    protected function getStoreId($id = '') {
+
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.published');
+        $id .= ':' . $this->getState('filter.language');
+
+        return parent::getStoreId($id);
     }
 
     /**
@@ -74,9 +96,16 @@ class biblestudyModelmessages extends JModelList {
         return $this->_files;
     }
 
-
     /**
-     * @since   7.0
+     * Method to auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param type $ordering
+     * @param type $direction
+     * 
+     * @return	void
+     * @since 7.1.0
      */
     protected function populateState($ordering = null, $direction = null) {
         // Adjust the context to support modal layouts.
@@ -104,6 +133,9 @@ class biblestudyModelmessages extends JModelList {
         $year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
         $this->setState('filter.year', $year);
 
+        $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
+        $this->setState('filter.language', $language);
+
         parent::populateState('study.studydate', 'DESC');
     }
 
@@ -120,8 +152,12 @@ class biblestudyModelmessages extends JModelList {
         $query->select(
                 $this->getState(
                         'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-                        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias'));
+                        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.language'));
         $query->from('#__bsms_studies AS study');
+
+        // Join over the language
+        $query->select('l.title AS language_title');
+        $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = study.language');
 
         //Join over Message Types
         $query->select('messageType.message_type AS messageType');
@@ -143,8 +179,6 @@ class biblestudyModelmessages extends JModelList {
         $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
         $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
         $query->group('study.id');
-
-
 
         //Filter by studytitle
         $studytitle = $this->getState('filter.studytitle');
@@ -193,11 +227,11 @@ class biblestudyModelmessages extends JModelList {
         return $query;
     }
 
-    /*
+    /**
+     *
      * @since 7.0
      * translate item entries: books, topics
      */
-
     public function getTranslated($items = array()) {
         foreach ($items as $item) {
             $item->bookname = JText::_($item->bookname);
@@ -206,11 +240,11 @@ class biblestudyModelmessages extends JModelList {
         return $items;
     }
 
-    /*
+    /**
+     *
      * @since 7.0
      * get a list of all used books
      */
-
     public function getBooks() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -230,11 +264,11 @@ class biblestudyModelmessages extends JModelList {
         return $db_result;
     }
 
-    /*
+    /**
+     *
      * @since 7.0
      * get a list of all used teachers
      */
-
     public function getTeachers() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -249,11 +283,11 @@ class biblestudyModelmessages extends JModelList {
         return $db->loadObjectList();
     }
 
-    /*
+    /**
+     *
      * @since 7.0
      * get a list of all used series
      */
-
     public function getSeries() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -268,11 +302,10 @@ class biblestudyModelmessages extends JModelList {
         return $db->loadObjectList();
     }
 
-    /*
+    /**
      * @since 7.0
      * get a list of all used message types
      */
-
     public function getMessageTypes() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -287,11 +320,10 @@ class biblestudyModelmessages extends JModelList {
         return $db->loadObjectList();
     }
 
-    /*
+    /**
      * @since 7.0
      * get a list of all used years
      */
-
     public function getYears() {
         $db = $this->getDBO();
         $query = $db->getQuery(true);
@@ -305,11 +337,10 @@ class biblestudyModelmessages extends JModelList {
         return $year;
     }
 
-    /*
+    /**
      * @since 7.0
      * get the number of plays of this study
      */
-
     public function getPlays($id) {
         $db = $this->getDBO();
         $query = $db->getQuery(true);

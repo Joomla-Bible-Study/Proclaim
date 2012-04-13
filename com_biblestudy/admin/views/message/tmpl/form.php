@@ -5,10 +5,10 @@
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- **/
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 $params = $this->form->getFieldsets('params');
 ?>
 
@@ -48,8 +48,10 @@ $params = $this->form->getFieldsets('params');
                     <div class="inlineFields">
                         <div>
                             <?php echo $this->form->getLabel('booknumber'); ?><br/>
-                            <?php // studytitle is required; fill in default if empty and leave value otherwise
-                                  echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin->params['booknumber'] : $this->item->booknumber); ?>
+                            <?php
+                            // studytitle is required; fill in default if empty and leave value otherwise
+                            echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin->params['booknumber'] : $this->item->booknumber);
+                            ?>
                         </div>
                         <div>
                             <?php echo $this->form->getLabel('chapter_begin'); ?><br/>
@@ -97,192 +99,204 @@ $params = $this->form->getFieldsets('params');
                 <li>
                     <?php echo $this->form->getLabel('secondary_reference'); ?>
                     <?php echo $this->form->getInput('secondary_reference'); ?>
-                        </li>
-                        <li>
-                            <label><?php echo JText::_('JBS_CMN_DURATION'); ?></label>
-                            <div class="inlineFields">
-                                <div>
-                                    <?php echo $this->form->getLabel('media_hours'); ?><br/>
-                                    <?php echo $this->form->getInput('media_hours'); ?>
-                                </div>
-                                <div>
-                                    <?php echo $this->form->getLabel('media_minutes'); ?><br/>
-                                    <?php echo $this->form->getInput('media_minutes'); ?>
-                                </div>
-                                <div>
-                                    <?php echo $this->form->getLabel('media_seconds'); ?><br/>
-                                    <?php echo $this->form->getInput('media_seconds'); ?>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
+                </li>
+                <li>
+                    <label><?php echo JText::_('JBS_CMN_DURATION'); ?></label>
+                    <div class="inlineFields">
+                        <div>
+                            <?php echo $this->form->getLabel('media_hours'); ?><br/>
+                            <?php echo $this->form->getInput('media_hours'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('media_minutes'); ?><br/>
+                            <?php echo $this->form->getInput('media_minutes'); ?>
+                        </div>
+                        <div>
+                            <?php echo $this->form->getLabel('media_seconds'); ?><br/>
+                            <?php echo $this->form->getInput('media_seconds'); ?>
+                        </div>
+                    </div>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('teacher_id'); ?>
                     <?php echo $this->form->getInput('teacher_id', null, empty($this->item->studytitle) ? $this->admin->params['teacher_id'] : $this->item->teacher_id) ?>
-                        </li>
-                        <li>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('location_id'); ?>
                     <?php echo $this->form->getInput('location_id', null, empty($this->item->studytitle) ? $this->admin->params['location_id'] : $this->item->location_id) ?>
-                        </li>
-                        <li>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('series_id'); ?>
                     <?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin->params['series_id'] : $this->item->series_id) ?>
-                        </li>
+                </li>
 
 
-                        </ul>
-                        <?php echo $this->form->getLabel('topics'); ?>
-                        <div class="clr"></div>
-                        <?php echo $this->form->getInput('topics'); ?>
-                         <ul>
-                        <li>
+            </ul>
+            <?php echo $this->form->getLabel('topics'); ?>
+            <div class="clr"></div>
+            <?php echo $this->form->getInput('topics'); ?>
+            <ul>
+                <li>
                     <?php echo $this->form->getLabel('messagetype'); ?>
                     <?php echo $this->form->getInput('messagetype', null, empty($this->item->studytitle) ? $this->admin->params['messagetype'] : $this->item->messagetype) ?>
-                        </li>
-                        <li>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('thumbnailm'); ?>
                     <?php echo $this->form->getInput('thumbnailm', null, empty($this->item->studytitle) ? $this->admin->params['default_study_image'] : $this->item->thumbnailm) ?>
-                    </li>
-                    <li>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('studytext'); ?>
-                        </li>
-                    </ul>
-                    <div class="clr"></div>
+                </li>
+            </ul>
+            <div class="clr"></div>
             <?php echo $this->form->getInput('studytext'); ?>
-                        </fieldset>
-                    </div>
-                    <div class="width-35 fltrt">
-                        <fieldset class="panelform">
-                            <legend><?php echo JText::_('JBS_CMN_PUBLISHING_OPTIONS'); ?></legend>
-                            <ul>
-                            <li>
+        </fieldset>
+    </div>
+    <div class="width-35 fltrt">
+        <fieldset class="panelform">
+            <legend><?php echo JText::_('JBS_CMN_PUBLISHING_OPTIONS'); ?></legend>
+            <ul>
+                <li>
                     <?php echo JText::_('JBS_STY_HITS'); ?>
                     <?php echo $this->item->hits; ?>
-                    </li>
-                                <li>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('published'); ?>
                     <?php echo $this->form->getInput('published'); ?>
-                        </li>
-                        <li>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('studydate'); ?>
                     <?php echo $this->form->getInput('studydate'); ?>
-                        </li>
-                        <li>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('comments'); ?>
                     <?php echo $this->form->getInput('comments'); ?>
-                        </li>
-
-                        <li>
+                </li>
+                <li>
                     <?php echo $this->form->getLabel('user_id'); ?>
-                    <?php // fill in actual user if empty
-                          echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id) ?>
+                    <?php
+                    // fill in actual user if empty
+                    echo $this->form->getInput('user_id', null, empty($this->item->studytitle) ? $this->admin->user_id : $this->item->user_id)
+                    ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('access'); ?>
+                    <?php echo $this->form->getInput('access'); ?></li>
+                <li>
+                    <?php echo $this->form->getLabel('language'); ?>
+
+                    <?php echo $this->form->getInput('language'); ?></li>
+                <?php if ($this->canDo->get('core.admin')): ?>
+                    <li><span class="faux-label"><?php echo JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL'); ?></span>
+                        <div class="button2-left"><div class="blank">
+                                <button type="button" onclick="document.location.href='#access-rules';">
+                                    <?php echo JText::_('JGLOBAL_PERMISSIONS_ANCHOR'); ?>
+                                </button>
+                            </div></div>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </fieldset>
+    </div>
+    <div class="width-35 fltrt">
+        <?php
+        foreach ($params as $name => $fieldset):
+            if (isset($fieldset->description) && trim($fieldset->description)):
+                ?>
+                <p class="tip">
+
+
+                    <?php echo $this->escape(JText::_($fieldset->description)); ?>
+                </p>
+            <?php endif; ?>
+            <fieldset class="panelform" >
+                <legend><?php echo JText::_('JBS_STY_METADATA'); ?></legend>
+                <ul class="adminformlist">
+                    <?php foreach ($this->form->getFieldset($name) as $field) : ?>
+                        <li><?php echo $field->label; ?><?php echo $field->input; ?>
                         </li>
-                    <li><?php echo $this->form->getLabel('access'); ?>
-        				<?php echo $this->form->getInput('access'); ?></li>
-                    	<?php if ($this->canDo->get('core.admin')): ?>
-        					<li><span class="faux-label"><?php echo JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL'); ?></span>
-        						<div class="button2-left"><div class="blank">
-        							<button type="button" onclick="document.location.href='#access-rules';">
-        								<?php echo JText::_('JGLOBAL_PERMISSIONS_ANCHOR'); ?>
-							         </button>
-						</div></div>
-					</li>
-				<?php endif; ?>
-                    </ul>
-                </fieldset>
-            </div>
-            <div class="width-35 fltrt">
-            	<?php foreach ($params as $name => $fieldset):
-            	if (isset($fieldset->description) && trim($fieldset->description)): ?>
-            		<p class="tip">
-
-
-            		<?php echo $this->escape(JText::_($fieldset->description)); ?>
-            		</p>
-        		<?php endif; ?>
-				<fieldset class="panelform" >
-						<legend><?php echo JText::_('JBS_STY_METADATA'); ?></legend>
-						<ul class="adminformlist">
-                		<?php foreach ($this->form->getFieldset($name) as $field) : ?>
-								<li><?php echo $field->label; ?><?php echo $field->input; ?>
-								</li>
-                		<?php endforeach; ?>
-						</ul>
-				</fieldset>
-				<?php endforeach; ?>
-
-            </div>
-            <div class="width-35 fltrt">
-                <fieldset class="panelform">
-                    <legend><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></legend>
-                    <table class="adminlist">
-                        <thead>
-                            <tr>
-                                <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
-                                <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                    <?php
-                            if (count($this->mediafiles) > 0) :
-                                foreach ($this->mediafiles as $i => $item) :
-                    ?>
-                                    <tr class="row<?php echo $i % 2; ?>">
-                                        <td align="center">
-                                             <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id='.(int)$item->id.'&amp;tmpl=component&amp;view=mediafile&amp;layout=modal';?>
-                                            <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo $this->escape($item->filename) ?  $this->escape($item->filename) : 'ID: '.$this->escape($item->id);?>">
-                                                <?php echo ($this->escape($item->filename) ?  $this->escape($item->filename) : 'ID: '.$this->escape($item->id)); ?>
-                                            </a>
-                                        </td>
-                                        <td align="center">
-                                            <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
-                                        </td>
-
-                                    </tr>
-                    <?php
-                                    endforeach;
-                                else:
-                    ?>
-                                    <tr>
-                                        <td colspan="4" align="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
-                                    </tr>
-                    <?php endif; ?>
-                                    
-                                </tbody>
-                    <?php //if (! empty($this->item->studytitle)) : ?>
-                                <tfoot>
-                                    <tr><td colspan="4">
-                                            <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;tmpl=component&amp;view=mediafile&amp;layout=modal' ; ?>
-					<a class="modal" href="<?php echo $link;?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE');?>">
-						<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a><?php if (empty($this->mediafiles)){echo ' - '.JText::_('JBS_STY_SAVE_FIRST');}?>
-
-                                        </td></tr>
-                                                                       
-                                </tfoot>
-                    <?php //endif; ?>
-                            </table>
-                    
-                        </fieldset>
+                    <?php endforeach; ?>
+                </ul>
+            </fieldset>
+        <?php endforeach; ?>
 
     </div>
-<div class="clr"></div>
+    <div class="width-35 fltrt">
+        <fieldset class="panelform">
+            <legend><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></legend>
+            <table class="adminlist">
+                <thead>
+                    <tr>
+                        <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
+                        <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
 
-	<?php if ($this->canDo->get('core.admin')): ?>
-		<div class="width-100 fltlft">
-			<?php echo JHtml::_('sliders.start','permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
+                    </tr>
+                </thead>
+                <tbody>
 
-				<?php echo JHtml::_('sliders.panel',JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
+                    <?php
+                    if (count($this->mediafiles) > 0) :
+                        foreach ($this->mediafiles as $i => $item) :
+                            ?>
+                            <tr class="row<?php echo $i % 2; ?>">
+                                <td align="center">
+                                    <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=' . (int) $item->id . '&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
+                                    <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo $this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id); ?>">
+                                        <?php echo ($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
+                                    </a>
+                                </td>
+                                <td align="center">
+                                    <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
+                                </td>
 
-				<fieldset class="panelform">
-					<?php echo $this->form->getLabel('rules'); ?>
-					<?php echo $this->form->getInput('rules'); ?>
-				</fieldset>
+                            </tr>
+                            <?php
+                        endforeach;
+                    else:
+                        ?>
+                        <tr>
+                            <td colspan="4" align="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
+                        </tr>
+                    <?php endif; ?>
 
-			<?php echo JHtml::_('sliders.end'); ?>
-		</div>
-	<?php endif; ?>
- <input type="hidden" name="task" value=""/>
+                </tbody>
+                <?php //if (! empty($this->item->studytitle)) : ?>
+                <tfoot>
+                    <tr><td colspan="4">
+                            <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
+                            <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+                                <?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a><?php
+                                if (empty($this->mediafiles)) {
+                                    echo ' - ' . JText::_('JBS_STY_SAVE_FIRST');
+                                }
+                                ?>
 
-        <?php echo JHtml::_('form.token'); ?>
+                        </td></tr>
+
+                </tfoot>
+                <?php //endif;   ?>
+            </table>
+
+        </fieldset>
+
+    </div>
+    <div class="clr"></div>
+
+    <?php if ($this->canDo->get('core.admin')): ?>
+        <div class="width-100 fltlft">
+            <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
+
+            <?php echo JHtml::_('sliders.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
+
+            <fieldset class="panelform">
+                <?php echo $this->form->getLabel('rules'); ?>
+                <?php echo $this->form->getInput('rules'); ?>
+            </fieldset>
+
+            <?php echo JHtml::_('sliders.end'); ?>
+        </div>
+    <?php endif; ?>
+    <input type="hidden" name="task" value=""/>
+
+    <?php echo JHtml::_('form.token'); ?>
 </form>
