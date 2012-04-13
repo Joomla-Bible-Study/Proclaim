@@ -749,7 +749,7 @@ function getStudyExp($row, $params, $admin_params, $template) {
     $label = str_replace('{{topics}}', $row->topic_text, $label);
     $label = str_replace('{{mediatime}}', getDuration($params, $row), $label);
     $label = str_replace('{{thumbnail}}', '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" id="bsms_studyThumbnail" />', $label);
-    $label = str_replace('{{seriestext}}', $row->stext, $label);
+    $label = str_replace('{{seriestext}}', $row->seriestext, $label);
     $label = str_replace('{{messagetype}}', $row->message_type, $label);
     $label = str_replace('{{bookname}}', $row->bname, $label);
     $label = str_replace('{{studytext}}', $row->studytext, $label);
