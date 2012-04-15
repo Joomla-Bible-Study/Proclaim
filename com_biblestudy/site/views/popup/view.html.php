@@ -23,7 +23,7 @@ class biblestudyViewpopup extends JView {
         $player = JRequest::getInt('player', '1', 'get');
 
         $document = JFactory::getDocument();
-        
+
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
@@ -48,8 +48,8 @@ class biblestudyViewpopup extends JView {
         $registry->loadJSON($template->params);
         $params = $registry;
 
-        $css = $params->get('css','biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+        $css = $params->get('css', 'biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($media->params);
@@ -116,39 +116,23 @@ class biblestudyViewpopup extends JView {
 
             if ($itemparams->get('player') == 1 || $player == 1) {
 
-                $embedshare = $params->get('embedshare', 'FALSE'); // Used for Embed Share replace with param
                 echo "<div align='center'>";
-                echo "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>";
+                echo "<video src=" . $path1 . " 
+                height=" . $playerheight . " 
+                poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
+                width=" . $playerwidth . " id='placeholder'>" .
+                "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div></video>";
                 echo "</div>";
 
                 echo "<script type='text/javascript'>
-							jwplayer('placeholder').setup({
-								stretching: 'fill',
-								flashplayer: '" . JURI::base() . "media/com_biblestudy/js/player/player.swf',
-								width: " . $playerwidth . ",
-								height:" . $playerheight . ",
-								displayheight:'300',
+				jwplayer('placeholder').setup({
+				flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
 								title:'" . $studytitle . "',
 								author:'" . $media->teachername . "',
 								date:'" . $media->studydate . "',
 								description:'" . $studyintro . "',
-								controlbar:'bottom',
-                                                                file: '" . $path1 . "',
-								link:'" . JURI::base() . "index.php?option=com_biblestudy&view=sermons&templatemenuid=" . $templateid . "',
-								image: '" . JURI::base() . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
-								autostart:'false',
-								lightcolor: '" . $lightcolor . "',frontcolor:'" . $frontcolor . "',backcolor:'" . $backcolor . "',screencolor:'" . $screencolor . "',
-								'plugins': {
-                                                                    'viral-2': {'onpause':'" . $embedshare . "','oncomplete':'" . $embedshare . "','allowmenu':'" . $embedshare . "'},
-								},
-								'modes': [
-                                                                        {type: 'html5'},
-                                                                        {type: 'flash', src: '" . JURI::base() . "media/com_biblestudy/player/player.swf'},
-                                                                        {type: 'download'}
-								]
-
-							})
-						</script>";
+			});
+		</script>";
 
                 //  Flashvar - Colors, Autostart, Title, Author, Date, Description, Link, Image
                 //    Params - Allowfullscreen, Allowscriptaccess

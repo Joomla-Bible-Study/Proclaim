@@ -368,34 +368,14 @@ class jbsMedia {
             case 1: //Internal
                 switch ($player->type) {
                     case 2: //Inline
-                        $embedshare = $params->get('embedshare', 'FALSE'); // Used for Embed Share replace with param
-                        $playercode = "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div>
+                        $playercode = "<video src=".$path ." 
+    height=". $player->playerheight ." 
+    poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
+    width=" . $player->playerwidth . " id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
 			<script type='text/javascript'>
 			jwplayer('placeholder').setup({
-			stretching: 'fill',
-			flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
-			width: " . $player->playerwidth . ",
-			height:" . $player->playerheight . ",
-			displayheight:'300',
-			title:'" . $studytitle . "',
-			author:'" . $media->teachername . "',
-			date:'" . $media->studydate . "',
-			description:'" . $studyintro . "',
-			controlbar:'bottom',
-			link:'" . JURI::base() . "index.php?option=com_biblestudy&view=sermons&templatemenuid=" . $templateid . "',
-			image:'" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "',
-			autostart:'true',
-			lightcolor:'" . $lightcolor . "',frontcolor:'" . $frontcolor . "',backcolor:'" . $backcolor . "',screencolor:'" . $screencolor . "',
-			'plugins': {
-			'viral-2': {'onpause':'" . $embedshare . "','oncomplete':'" . $embedshare . "','allowmenu':'" . $embedshare . "'},
-			},
-			levels: [
-               {file: '" . $path . "'}
-                        ],
-			'modes': [
-			{type: 'html5'},
-			{type: 'flash', src: '" . JURI::base() . "media/com_biblestudy/player/player.swf'},
-			]})
+			flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf'
+                            });
 			</script>";
                         break;
 
