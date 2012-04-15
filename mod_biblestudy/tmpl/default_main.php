@@ -23,7 +23,7 @@ $ismodule = 1;
     <table id="bsmsmoduletable" cellspacing="0">
 
 
-        <?php 
+        <?php
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
         include_once($path1 . 'header.php');
         include_once($path1 . 'helper.php');
@@ -35,31 +35,29 @@ $ismodule = 1;
         <tbody>
 
 
-<?php  
-$class1 = 'bsodd';
-$class2 = 'bseven';
-$oddeven = $class1;
-foreach ($studies as $study) {
-    if ($oddeven == $class1) {
-        //Alternate the color background
-        $oddeven = $class2;
-    } else {
-        $oddeven = $class1;
-    }
-    $listing = getListing($study, $params, $oddeven, $admin_params, $template, $ismodule);
-    echo $listing;
-}
-?>
+            <?php
+            $class1 = 'bsodd';
+            $class2 = 'bseven';
+            $oddeven = $class1;
+            foreach ($studies as $study) {
+                if ($oddeven == $class1) {
+                    //Alternate the color background
+                    $oddeven = $class2;
+                } else {
+                    $oddeven = $class1;
+                }
+                $listing = getListing($study, $params, $oddeven, $admin_params, $template, $ismodule);
+                echo $listing;
+            }
+            ?>
         </tbody>
     </table>
 </div>
 <div class="modulelistingfooter">
     <br />
-
-
-
-
-<?php if ($params->get('show_link') > 0) {echo $link;}
-?>
+    <?php if ($params->get('show_link') > 0) {
+        echo $link;
+    }
+    ?>
 </div>
 <!--end of footer div-->

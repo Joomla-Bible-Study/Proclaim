@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version		$Id: _study.php 8591 2007-08-27 21:09:32Z Tom Fuller $
  * @package		mod_biblestudy
@@ -10,11 +11,10 @@
  * other free or open source software licenses.
  * See COPYRIGHT.php for copyright notices and details.
  */
-
 defined('_JEXEC') or die('Restricted access');
 
-$path1 = JPATH_BASE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy/helpers/';
+$path1 = JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
 $row = $study;
-include_once($path1.'listing.php');
+include_once($path1 . 'listing.php');
 $listing = getListing($row, $params, $oddeven);
 echo $listing;
