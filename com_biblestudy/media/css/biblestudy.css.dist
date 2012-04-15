@@ -945,7 +945,7 @@ text-align:center;
 }
 p.popuptitle {
 font-weight: bold;
-color: black;
+color: grey;
 }
 
 .popupfooter
