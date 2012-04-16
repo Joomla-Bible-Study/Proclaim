@@ -9,7 +9,6 @@
  * */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 jimport('joomla.application.component.view');
 jimport('joomla.application.component.helper');
 jimport('joomla.i18n.help');

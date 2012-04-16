@@ -8,7 +8,6 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 JHtml::_('script', 'system/multiselect.js', false, true);
 $user = JFactory::getUser();
 $userId = $user->get('id');

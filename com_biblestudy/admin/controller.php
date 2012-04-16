@@ -17,8 +17,6 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
 
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 jimport('joomla.application.component.controller');
-require_once JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php';
-//dump($_FILES, '$_FILES');
 class biblestudyController extends JController {
 
     protected $default_view = 'cpanel';

@@ -15,7 +15,6 @@ defined('_JEXEC') or die;
  * Bible Study stats support class
  * @package com_biblestudy
  */
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'helper.php');
 
 class jbStats {

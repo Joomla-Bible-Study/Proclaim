@@ -2,7 +2,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-require_once (JPATH_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
 /**
  * @version $Id: helper.php 2025 2011-08-28 04:08:06Z genu $
  * @package BibleStudy

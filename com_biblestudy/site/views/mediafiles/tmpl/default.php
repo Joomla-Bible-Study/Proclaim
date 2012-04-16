@@ -4,10 +4,9 @@
  * @package     com_biblestudy
  * @license     GNU/GPL
  */
-
 //No Direct Access
 defined('_JEXEC') or die;
-//require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.defines.php');
+
 JHtml::_('script', 'system/multiselect.js', false, true);
 
 
@@ -15,7 +14,7 @@ $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 $saveOrder = $listOrder == 'mediafile.ordering';
 ?>
-<h2><?php echo JText::_('JBS_CMN_MEDIA');?></h2>
+<h2><?php echo JText::_('JBS_CMN_MEDIA'); ?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-search fltlft">
@@ -27,8 +26,8 @@ $saveOrder = $listOrder == 'mediafile.ordering';
             <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button" onclick="document.id('filter_filename').value='';document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
         </div>
-      <div class="clr"></div>
-      <div class="filter-select fltrt">
+        <div class="clr"></div>
+        <div class="filter-select fltrt">
             <select name="filter_mediatypeId" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JBS_MED_SELECT_MEDIA_TYPE'); ?></option>
                 <?php echo JHtml::_('select.options', $this->mediatypes, 'value', 'text', $this->state->get('filter.mediatypeId')); ?>
@@ -39,8 +38,8 @@ $saveOrder = $listOrder == 'mediafile.ordering';
             </select>
         </div>
     </fieldset>
-   <div>
-   <h3> <?php echo $this->newlink; ?></h3></div>
+    <div>
+        <h3> <?php echo $this->newlink; ?></h3></div>
     <div class="clr"></div>
 
     <table class="adminlist">
@@ -54,8 +53,8 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 </th>
                 <th width="5%">
                     <?php
-                        echo JHtml::_('grid.sort', 'JBS_CMN_HEADING_ORDERING', 'mediafile.ordering', $listDirn, $listOrder);
-                        echo JHtml::_('grid.order', $this->items, 'filesave.png', 'mediafiles.saveorer');
+                    echo JHtml::_('grid.sort', 'JBS_CMN_HEADING_ORDERING', 'mediafile.ordering', $listDirn, $listOrder);
+                    echo JHtml::_('grid.order', $this->items, 'filesave.png', 'mediafiles.saveorer');
                     ?>
                 </th>
                 <th width="20%">
@@ -86,48 +85,48 @@ $saveOrder = $listOrder == 'mediafile.ordering';
             </tr>
         </tfoot>
         <?php
-        foreach($this->items as $i => $item) :
+        foreach ($this->items as $i => $item) :
             $ordering = ($listOrder == 'mediafile.ordering');
-        ?>
-        <tr class="row<?php echo $i % 2; ?>">
-            <td class="center">
-                <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-            </td>
-            <td class="center">
-                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafiles.', true, 'cb', '', ''); ?>
-            </td>
-            <td class="order">
-                <?php if($listDirn == 'asc') : ?>
-                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->studytitle == @$this->items[$i-1]->studytitle), 'mediafiles.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->studytitle == @$this->items[$i-1]->studytitle), 'mediafiles.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-                <?php elseif ($listDirn == 'desc') : ?>
-                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->studytitle == @$this->items[$i-1]->studytitle), 'mediafiles.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->studytitle == @$this->items[$i-1]->studytitle), 'mediafiles.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                <?php endif; ?>
-                <?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
-		<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
-            </td>
-            <td class="center">
-                <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit&id='.(int)$item->id); ?>">
-                    <?php echo ($this->escape($item->filename) ?  $this->escape($item->filename) : 'ID: '.$this->escape($item->id)); ?>
-                </a>
-            </td>
-            <td class="center">
-                <?php echo $this->escape($item->studytitle); ?>
-            </td>
-            <td class="center">
-                <?php echo $this->escape($item->mediaType); ?>
-            </td>
-            <td class="center">
-                <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
-            </td>
-            <td class="center">
-                <?php echo $this->escape($item->plays);?>
-            </td>
-            <td class="center">
-                <?php echo $this->escape($item->downloads);?>
-            </td>
-        </tr>
+            ?>
+            <tr class="row<?php echo $i % 2; ?>">
+                <td class="center">
+                    <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                </td>
+                <td class="center">
+                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'mediafiles.', true, 'cb', '', ''); ?>
+                </td>
+                <td class="order">
+                    <?php if ($listDirn == 'asc') : ?>
+                        <span><?php echo $this->pagination->orderUpIcon($i, ($item->studytitle == @$this->items[$i - 1]->studytitle), 'mediafiles.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                        <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->studytitle == @$this->items[$i - 1]->studytitle), 'mediafiles.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                    <?php elseif ($listDirn == 'desc') : ?>
+                        <span><?php echo $this->pagination->orderUpIcon($i, ($item->studytitle == @$this->items[$i - 1]->studytitle), 'mediafiles.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                        <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->studytitle == @$this->items[$i - 1]->studytitle), 'mediafiles.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                    <?php endif; ?>
+                    <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
+                    <input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled ?> class="text-area-order" />
+                </td>
+                <td class="center">
+                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&task=mediafile.edit&id=' . (int) $item->id); ?>">
+                        <?php echo ($this->escape($item->filename) ? $this->escape($item->filename) : 'ID: ' . $this->escape($item->id)); ?>
+                    </a>
+                </td>
+                <td class="center">
+                    <?php echo $this->escape($item->studytitle); ?>
+                </td>
+                <td class="center">
+                    <?php echo $this->escape($item->mediaType); ?>
+                </td>
+                <td class="center">
+                    <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
+                </td>
+                <td class="center">
+                    <?php echo $this->escape($item->plays); ?>
+                </td>
+                <td class="center">
+                    <?php echo $this->escape($item->downloads); ?>
+                </td>
+            </tr>
         <?php endforeach; ?>
     </table>
     <div>
