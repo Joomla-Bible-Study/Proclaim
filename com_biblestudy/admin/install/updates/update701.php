@@ -68,8 +68,6 @@ class updatejbs701 {
 
     function performdb($query) {
         $db = JFactory::getDBO();
-        // @todo don't think we need the $results = false;
-        $results = false;
         $db->setQuery($query);
         $db->query();
         if ($db->getErrorNum() != 0) {

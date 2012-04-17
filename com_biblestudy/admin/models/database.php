@@ -51,7 +51,7 @@ class BiblestudyModelDatabase extends InstallerModel {
         $this->fixSchemaVersion($changeSet);
         $this->fixUpdateVersion();
         $installer = new Com_BiblestudyInstallerScript();
-        //$installer->deleteUnexistingFiles();  // XXX Need to Update first deleat files of the new template do to them not in the biblestudy xml
+        $installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
         $this->fixDefaultTextFilters();
     }
 

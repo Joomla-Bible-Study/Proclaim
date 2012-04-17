@@ -1,17 +1,12 @@
 <?php
 
 /**
- * @version $Id: mod_biblestudy.php 1 $
  * @package mod_biblestudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
-?>
-<script type="text/javascript" src="media/com_biblestudy/js/tooltip.js"></script>
-
-<?php
 
 require(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'helper.php');
 require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
@@ -19,6 +14,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 // Need for inline player
 $document = JFactory::getDocument();
 $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+$document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 $params = new JParameter($params);
 $templatemenuid = $params->get('t');
 $template = modBiblestudyHelper::getTemplate($params);
@@ -50,48 +46,47 @@ foreach ($items AS $item) {
 }
 
 //Build the elements so they can be accessed through the $this->page array in the template
-        $dispatcher = JDispatcher::getInstance();
-        $linkit = $params->get('show_scripture_link','0'); 
-            switch ($linkit) {
-                case 0:
-                    break;
-                case 1:
-                    JPluginHelper::importPlugin('content');
-                    break;
-                case 2:
-                    JPluginHelper::importPlugin('content', 'scripturelinks');
-                    break;
-            }
-            $limitstart = JRequest::getVar('limitstart', 'int');
-            
+$dispatcher = JDispatcher::getInstance();
+$linkit = $params->get('show_scripture_link', '0');
+switch ($linkit) {
+    case 0:
+        break;
+    case 1:
+        JPluginHelper::importPlugin('content');
+        break;
+    case 2:
+        JPluginHelper::importPlugin('content', 'scripturelinks');
+        break;
+}
+$limitstart = JRequest::getVar('limitstart', 'int');
+
 $studies = $items;
-       $pagebuilder = new JBSPagebuilder();
-        foreach ($studies as $i=>$study)
-            {
-                $pelements = $pagebuilder->buildPage($study, $params, $admin_params);
-                $studies[$i]->scripture1 = $pelements->scripture1;
-                $studies[$i]->scripture2 = $pelements->scripture2;
-                $article->text = $studies[$i]->scripture1;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $studies[$i]->scripture1 = $article->text; 
-                $article->text = $studies[$i]->scripture2;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $studies[$i]->scripture2 = $article->text;
-                $studies[$i]->media = $pelements->media;
-                $studies[$i]->duration = $pelements->duration;
-                $studies[$i]->studydate = $pelements->studydate;
-                $studies[$i]->topics = $pelements->topics;
-                $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-                $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
-                $studies[$i]->detailslink = $pelements->detailslink;
-                $article->text = $studies[$i]->studyintro;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $studies[$i]->studyintro = $article->text;
-                $article->text = $studies[$i]->secondary_reference;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $studies[$i]->secondary_reference = $article->text;
-            }
-        
+$pagebuilder = new JBSPagebuilder();
+foreach ($studies as $i => $study) {
+    $pelements = $pagebuilder->buildPage($study, $params, $admin_params);
+    $studies[$i]->scripture1 = $pelements->scripture1;
+    $studies[$i]->scripture2 = $pelements->scripture2;
+    $article->text = $studies[$i]->scripture1;
+    $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+    $studies[$i]->scripture1 = $article->text;
+    $article->text = $studies[$i]->scripture2;
+    $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+    $studies[$i]->scripture2 = $article->text;
+    $studies[$i]->media = $pelements->media;
+    $studies[$i]->duration = $pelements->duration;
+    $studies[$i]->studydate = $pelements->studydate;
+    $studies[$i]->topics = $pelements->topics;
+    $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
+    $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
+    $studies[$i]->detailslink = $pelements->detailslink;
+    $article->text = $studies[$i]->studyintro;
+    $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+    $studies[$i]->studyintro = $article->text;
+    $article->text = $studies[$i]->secondary_reference;
+    $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+    $studies[$i]->secondary_reference = $article->text;
+}
+
 
 
 $language = JFactory::getLanguage();
@@ -113,22 +108,19 @@ if ($url) {
 $link_text = $params->get('pagetext', 'More Bible Studies');
 
 
-    $t = $params->get('studielisttemplateid');
-    if (!$t) {
-        $t = JRequest::getVar('t', 1, 'get', 'int');
-    }
+$t = $params->get('studielisttemplateid');
+if (!$t) {
+    $t = JRequest::getVar('t', 1, 'get', 'int');
+}
 
-    $linkroute = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
-    $link = '<a href="'.$linkroute.'">'.$link_text.'</a>';
-    
+$linkroute = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $t);
+$link = '<a href="' . $linkroute . '">' . $link_text . '</a>';
+
 if ($params->get('useexpert_module') > 0) {
     $layout = 'default_custom';
-} 
-elseif ($params->get('moduletemplate'))
-{
-    $layout = 'default_'.$params->get('moduletemplate');
-}
-else {
+} elseif ($params->get('moduletemplate')) {
+    $layout = 'default_' . $params->get('moduletemplate');
+} else {
     $layout = 'default_main';
 }
 require(JModuleHelper::getLayoutPath('mod_biblestudy', $layout));
