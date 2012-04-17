@@ -357,7 +357,7 @@ class jbsMedia {
                     case 1: //Popup window
 
                         $playercode =
-                                "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=0&view=popup&t=" . $template . "&mediaid=" . $media->id . "', 'newwindow','width=" . $player->playerwidth . ",height=" .
+                                "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=0&view=popup&t=" . $template . "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
                                 $player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' border='0' width='" . $width .
                                 "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $media->malttext . "'></a>";
                         break;
@@ -368,10 +368,8 @@ class jbsMedia {
             case 1: //Internal
                 switch ($player->type) {
                     case 2: //Inline
-                        $playercode = "<video src=".$path ." 
-    height=". $player->playerheight ." 
-    poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
-    width=" . $player->playerwidth . " id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
+                        $playercode = "<video height=" . $playerheight . " poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
+                width=" . $playerwidth . " id='placeholder'> <source src='".$path1."' /> </video>
 			<script type='text/javascript'>
 			jwplayer('placeholder').setup({
 			flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf'
@@ -385,7 +383,7 @@ class jbsMedia {
                         $player->playerheight = $player->playerheight + $params->get('popupmargin', '50');
 
                         $playercode =
-                                "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&t=" . $template . "&mediaid=" . $media->id . "', 'newwindow','width=" . $player->playerwidth . ",height=" .
+                                "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=1&view=popup&t=" . $template . "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" .
                                 $player->playerheight . "'); return false\"><img src='" . $src . "' height='" . $height . "' width='" . $width .
                                 "' title='" . $mimetype . " " . $duration . " " . $filesize . "' border='0' alt='" . $media->malttext . "'></a>";
                         break;
@@ -399,7 +397,7 @@ class jbsMedia {
                     case 1: //This goes to the popup view
                         $playercode =
                                 "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=3&t=" . $template .
-                                "&mediaid=" . $media->id . "', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
+                                "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
                 <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
                                 "' alt='" . $src . "'></a>";
                         break;
@@ -446,7 +444,7 @@ class jbsMedia {
                     case 1:
                         $playercode =
                                 "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=7&t=" . $template .
-                                "&mediaid=" . $media->id . "', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
+                                "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
                 <img src='" . $src . "' border='0' height='" . $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize .
                                 "' alt='" . $src . "'></a>";
                         return $playercode;
@@ -457,10 +455,10 @@ class jbsMedia {
 
                 $playercode =
                         "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=8&t=" . $template .
-                        "&mediaid=" . $media->id . "', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
+                        "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
             <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
                         "' alt='" . $src . "'></a>";
-                
+
                 return $playercode;
                 break;
         }

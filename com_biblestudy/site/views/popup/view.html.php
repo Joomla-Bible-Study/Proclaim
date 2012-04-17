@@ -11,10 +11,10 @@ class biblestudyViewpopup extends JView {
 
     function display() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
-        $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'scripture.php');
-        include_once($path1 . 'date.php');
-        include_once($path1 . 'duration.php');
+        $pathh = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+        include_once($pathh . 'scripture.php');
+        include_once($pathh . 'date.php');
+        include_once($pathh . 'duration.php');
         //	$getMedia = new jbsMedia();
         JRequest::setVar('tmpl', 'component');
         $mediaid = JRequest::getInt('mediaid', '', 'get');
@@ -117,6 +117,7 @@ class biblestudyViewpopup extends JView {
             if ($itemparams->get('player') == 1 || $player == 1) {
 
                 echo "<div align='center'>";
+                var_dump($media);
                 if ($media->mime_type == 1 || substr_count($media->filename,'mp3') == 1)
                 {
                     echo "<audio controls='controls' id='placeholder'>" .

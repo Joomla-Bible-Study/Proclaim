@@ -8,10 +8,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
 JHTML::_('behavior.tooltip');
 $params = $this->params;
 $document = JFactory::getDocument();
-// @todo need to look at compressing this.
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
-$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 
 $row = $this->study;
 // @todo need to clean up old code.

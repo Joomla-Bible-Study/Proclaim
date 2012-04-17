@@ -166,7 +166,7 @@ function getMediatable($params, $row, $admin_params) {
 
                 if ($type == 1) {
                     $media1_link =
-                            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=2&view=popup&Itemid=" . $Itemid . "&template=" . $template . "&mediaid=" . $media->id . "', 'newwindow','width=" . $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
+                            "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&player=2&view=popup&Itemid=" . $Itemid . "&template=" . $template . "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $playerwidth . ",height=" . $playerheight . "'); return false\"\"><img src='" . $src . "' height='" . $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize . "' alt='" . $src . "'></a>";
                 } else {
                     $media1_link = $getMedia->getInternalLink($media, $width, $height, $src, $params, $image, $row_count, $path1);
                 }
