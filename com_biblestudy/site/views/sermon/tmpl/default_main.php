@@ -8,9 +8,13 @@ JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
 JHTML::_('behavior.tooltip');
 $params = $this->params;
 $document = JFactory::getDocument();
+// @todo need to look at compressing this.
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
+$document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
+$document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
 
 $row = $this->study;
+// @todo need to clean up old code.
 $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');
 ?>
@@ -32,7 +36,7 @@ $sharecall = JView::loadHelper('share');
             ?>
             <div id="bsms_share">
                 <?php
-              //  $social = getShare($this->detailslink, $row, $params, $this->admin_params);
+                //  $social = getShare($this->detailslink, $row, $params, $this->admin_params);
                 echo $this->page->social;
                 ?>
             </div>
