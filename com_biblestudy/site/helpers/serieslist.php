@@ -103,7 +103,7 @@ function getSerieslink($islink, $row, $element, $params, $admin_params)
 
 function getStudieslink($islink, $row, $element, $params, $admin_params)
 {
-	$link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=sermon&id='.$row->id.'&t='.$params->get('studiesdetailtemplateid', 1)).'">'.$element.'</a>';
+    $link = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=sermon&id='.$row->id.'&t='.$params->get('detailstemplateid', 1)).'">'.$element.'</a>';
 	return $link;
 }
 

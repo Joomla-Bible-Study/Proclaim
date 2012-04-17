@@ -117,11 +117,11 @@ class biblestudyViewpopup extends JView {
             if ($itemparams->get('player') == 1 || $player == 1) {
 
                 echo "<div align='center'>";
-                var_dump($media);
+                //dump($media);
                 if ($media->mime_type == 1 || substr_count($media->filename,'mp3') == 1)
                 {
                     echo "<audio controls='controls' id='placeholder'>" .
-                    "<source src='".$path1."' type='".$media->mime_type."'>" .
+                    "<source src='".$path1."' type='".$media->mimetype."'>" .
                     "</audio>";
                 } else {
                 echo "<video src=" . $path1 . " 
