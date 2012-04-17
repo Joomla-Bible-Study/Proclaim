@@ -119,15 +119,16 @@ class biblestudyViewpopup extends JView {
                 echo "<div align='center'>";
                 if ($media->mime_type == 1 || substr_count($media->filename,'mp3'))
                 {
-                    echo '<audio controls="controls">
-                    <source src="'.$path1.'">
-                    </audio>';
-                }
+                    echo "<audio controls='controls' id='placeholder'>" .
+                    "<source src='".$path1."' type='".$media->mime_type."'>" .
+                    "</audio>";
+                } else {
                 echo "<video src=" . $path1 . " 
                 height=" . $playerheight . " 
                 poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
                 width=" . $playerwidth . " id='placeholder'>" .
-                "<div id='placeholder'><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</div></video>";
+                "<a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>";
+                }
                 echo "</div>";
 
                 echo "<script type='text/javascript'>
@@ -150,7 +151,7 @@ class biblestudyViewpopup extends JView {
                 //  echo '<div id=\'direct\'><script type=text/javascript> window.location.href=\''.$path1.'\'</script></div>';
 
                 echo '<div class=\'direct\'><iframe src ="' . $path1 . '" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>' . JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') . '</p>
-</iframe></div>';
+                        </iframe></div>';
             }
 
 
