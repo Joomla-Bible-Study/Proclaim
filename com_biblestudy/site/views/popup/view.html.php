@@ -5,7 +5,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 
 // This is the popup window for the teachings.  We could put anything in this window.
-//TODO Need to Clean this up and rework to be proper Joomla calles bcc
+//TODO Need to Clean this up and rework to be proper Joomla calls bcc
 
 class biblestudyViewpopup extends JView {
 
@@ -117,6 +117,12 @@ class biblestudyViewpopup extends JView {
             if ($itemparams->get('player') == 1 || $player == 1) {
 
                 echo "<div align='center'>";
+                if ($media->mime_type == 1 || substr_count($media->filename,'mp3'))
+                {
+                    echo '<audio controls="controls">
+                    <source src="'.$path1.'">
+                    </audio>';
+                }
                 echo "<video src=" . $path1 . " 
                 height=" . $playerheight . " 
                 poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
