@@ -46,7 +46,7 @@ $saveOrder = $listOrder == 'teacher.ordering';
                 <th width="10%">
                     <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ORDERING', 'teacher.ordering', $listDirn, $listOrder); ?>
                     <?php if ($canOrder && $saveOrder) : ?>
-                        <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'teacher.saveorder'); ?>
+                        <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'teachers.saveorder'); ?>
                     <?php endif; ?>
                 </th>
                 <th align="center">
