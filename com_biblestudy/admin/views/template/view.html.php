@@ -46,16 +46,23 @@ class BiblestudyViewTemplate extends JView {
         if ($isNew && $this->canDo->get('core.create', 'com_biblestudy')) {
             JToolBarHelper::apply('template.apply');
             JToolBarHelper::save('template.save');
-            JToolBarHelper::save2copy('template.save2copy');
+            JToolBarHelper::save2new('template.save2new');
             JToolBarHelper::cancel('template.cancel');
         } else {
-            if ($this->canDo->get('core.edit')) {
+            if ($this->canDo->get('core.edit', 'com_biblestudy')) {
                 JToolBarHelper::apply('template.apply');
                 JToolBarHelper::save('template.save');
-                JToolbarHelper::save2new('template.save2new');
-            }
 
-        JToolBarHelper::cancel('template.cancel', 'JTOOLBAR_CLOSE');
+                // We can save this record, but check the create permission to see if we can return to make a new one.
+                if ($this->canDo->get('core.create', 'com_biblestudy')) {
+                    JToolbarHelper::save2new('template.save2new');
+                }
+            }
+            // If checked out, we can still save
+            if ($this->canDo->get('core.create', 'com_biblestudy')) {
+                JToolBarHelper::save2copy('template.save2copy');
+            }
+            JToolBarHelper::cancel('template.cancel', 'JTOOLBAR_CLOSE');
         }
 
         JToolBarHelper::divider();

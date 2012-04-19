@@ -43,16 +43,21 @@ class BiblestudyViewTeacher extends JView {
 
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
-        $isNew = ($this->item->id < 1);
+        $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_TEACHERS') . ': <small><small>[' . $title . ']</small></small>', 'teachers.png');
 
-        if ($this->canDo->get('core.edit', 'com_biblestudy')) {
-            JToolBarHelper::save('teacher.save');
+        if ($isNew && $this->canDo->get('core.create', 'com_biblestudy')) {
             JToolBarHelper::apply('teacher.apply');
+            JToolBarHelper::save('teacher.save');
+            JToolBarHelper::cancel('teacher.cancel');
+        } else {
+            if ($this->canDo->get('core.edit', 'com_biblestudy')) {
+                JToolBarHelper::apply('teacher.apply');
+                JToolBarHelper::save('teacher.save');
+            }
+        JToolBarHelper::cancel('teacher.cancel', 'JTOOLBAR_CLOSE');
         }
-        JToolBarHelper::cancel('teacher.cancel', 'JTOOLBAR_CANCEL');
-
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

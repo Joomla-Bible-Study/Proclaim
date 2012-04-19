@@ -1,3 +1,5 @@
+INSERT INTO `#__bsms_update` (id,version) VALUES (7,'7.1.0')
+ON DUPLICATE KEY UPDATE version= '7.1.0';
 
 -- @todo need to look at a better way to do this sql
 UPDATE `#__bsms_share` SET `params` = '{"mainlink":"http://www.facebook.com/sharer.php?","item1prefix":"u=","item1":200,"item1custom":"","item2prefix":"t=","item2":5,"item2custom":"","item3prefix":"","item3":6,"item3custom":"","item4prefix":"","item4":8,"item4custom":"","use_bitly":0,"username":"","api":"","shareimage":"media/com_biblestudy/images/facebook.png","shareimageh":"33px","shareimagew":"33px","totalcharacters":"","alttext":"FaceBook"}' WHERE `#__bsms_share`.`id` = 1;

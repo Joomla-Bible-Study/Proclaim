@@ -81,24 +81,38 @@ class BiblestudyViewMediafile extends JView {
 
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
-        $isNew = ($this->item->id < 1);
+        $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>', 'mp3.png');
 
-        if ($this->canDo->get('core.edit', 'com_biblestudy')) {
-            JToolBarHelper::save('mediafile.save');
+        if ($isNew && $this->canDo->get('core.create', 'com_biblestudy')) {
             JToolBarHelper::apply('mediafile.apply');
-        }
-        JToolBarHelper::cancel('mediafile.cancel', 'JTOOLBAR_CANCEL');
-        if ($this->canDo->get('core.edit', 'com_biblestudy') && !$isNew) {
-            JToolBarHelper::divider();
-            JToolBarHelper::custom('resetDownloads', 'download.png', 'Reset Download Hits', 'JBS_MED_RESET_DOWNLOAD_HITS', false, false);
-            JToolBarHelper::custom('resetPlays', 'play.png', 'Reset Plays', 'JBS_MED_RESET_PLAYS', false, false);
-        }
+            JToolBarHelper::save('mediafile.save');
+            JToolBarHelper::save2new('mediafile.save2new');
+            JToolBarHelper::cancel('mediafile.cancel');
+        } else {
+            if ($this->canDo->get('core.edit', 'com_biblestudy')) {
+                JToolBarHelper::apply('mediafile.apply');
+                JToolBarHelper::save('mediafile.save');
+                if ($this->canDo->get('core.create', 'com_biblestudy')) {
+                    JToolBarHelper::save2new('mediafile.save2new');
+                }
+            }
+            // If checked out, we can still save
+            if ($this->canDo->get('core.create', 'com_biblestudy')) {
+                JToolBarHelper::save2copy('mediafile.save2copy');
+            }
+            JToolBarHelper::cancel('mediafile.cancel', 'JTOOLBAR_CLOSE');
+            if ($this->canDo->get('core.edit', 'com_biblestudy')) {
+                JToolBarHelper::divider();
+                JToolBarHelper::custom('resetDownloads', 'download.png', 'Reset Download Hits', 'JBS_MED_RESET_DOWNLOAD_HITS', false, false);
+                JToolBarHelper::custom('resetPlays', 'play.png', 'Reset Plays', 'JBS_MED_RESET_PLAYS', false, false);
+            }
 
-        // Add an upload button and view a popup screen width 550 and height 400
-        JToolBarHelper::divider();
-        //JToolBarHelper::media_manager();
+            // Add an upload button and view a popup screen width 550 and height 400
+            //JToolBarHelper::divider();
+            //JToolBarHelper::media_manager();
+        }
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

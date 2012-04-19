@@ -46,16 +46,21 @@ class BiblestudyViewSerie extends JView {
 
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
-        $isNew = ($this->item->id < 1);
+        $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>', 'series.png');
 
-        if ($this->canDo->get('core.edit', 'com_biblestudy')) {
-            JToolBarHelper::save('serie.save');
+        if ($isNew && $this->canDo->get('core.create', 'com_biblestudy')) {
             JToolBarHelper::apply('serie.apply');
+            JToolBarHelper::save('serie.save');
+            JToolBarHelper::cancel('serie.cancel');
+        } else {
+            if ($this->canDo->get('core.edit', 'com_biblestudy')) {
+                JToolBarHelper::apply('serie.apply');
+                JToolBarHelper::save('serie.save');
+            }
+            JToolBarHelper::cancel('serie.cancel', 'JTOOLBAR_CLOSE');
         }
-        JToolBarHelper::cancel('serie.cancel', 'JTOOLBAR_CANCEL');
-
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

@@ -47,16 +47,22 @@ class BiblestudyViewComment extends JView {
      */
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
-        $isNew = ($this->item->id < 1);
+        $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>', 'comments.png');
 
-        if ($this->canDo->get('core.edit', 'com_biblestudy')) {
-            JToolBarHelper::save('comment.save');
+        if ($isNew && $this->canDo->get('core.create', 'com_biblestudy')) {
             JToolBarHelper::apply('comment.apply');
+            JToolBarHelper::save('comment.save');
+            JToolBarHelper::save2new('comment.save2new');
+            JToolBarHelper::cancel('comment.cancel');
+        } else {
+            if ($this->canDo->get('core.edit', 'com_biblestudy')) {
+                JToolBarHelper::apply('comment.apply');
+                JToolBarHelper::save('comment.save');
+            }
+            JToolBarHelper::cancel('comment.cancel', 'JTOOLBAR_CLOSE');
         }
-        JToolBarHelper::cancel('comment.cancel', 'JTOOLBAR_CANCEL');
-
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

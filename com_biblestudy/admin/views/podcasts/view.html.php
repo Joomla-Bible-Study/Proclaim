@@ -48,11 +48,14 @@ class BiblestudyViewPodcasts extends JView {
         }
         if ($this->canDo->get('core.delete')) {
             JToolBarHelper::trash('podcasts.trash');
+            if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+                JToolBarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
+            }
         }
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
-            JToolBarHelper::deleteList('', 'podcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
+        if ($this->canDo->get('core.create')) {
+            JToolBarHelper::divider();
+            JToolBarHelper::custom('writeXMLFile', 'xml.png', 'JBS_PDC_WRITE_XML_FILES', 'JBS_PDC_WRITE_XML_FILES', false, false);
         }
-        JToolBarHelper::custom('writeXMLFile', 'xml.png', 'JBS_PDC_WRITE_XML_FILES', 'JBS_PDC_WRITE_XML_FILES', false, false);
     }
 
     /**

@@ -52,12 +52,12 @@ class BiblestudyViewTopic extends JView {
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'topics.png');
 
-        if ($isNew && $this->canDo->get('core.edit', 'com_biblestudy')) {
+        if ($isNew && $this->canDo->get('core.create', 'com_biblestudy')) {
             JToolBarHelper::apply('topic.apply');
             JToolBarHelper::save('topic.save');
             JToolBarHelper::cancel('topic.cancel');
         } else {
-            if ($this->canDo->get('core.edit')) {
+            if ($this->canDo->get('core.edit', 'com_biblestudy')) {
                 JToolBarHelper::apply('topic.apply');
                 JToolBarHelper::save('topic.save');
             }

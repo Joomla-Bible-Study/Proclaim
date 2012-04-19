@@ -9,7 +9,7 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR. DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
+require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 
 jimport('joomla.application.component.view');
@@ -74,21 +74,35 @@ class BiblestudyViewMessage extends JView {
 
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
-        $isNew = ($this->item->id < 1);
+        $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . $title . ' ]</small></small>', 'studies.png');
 
-        $canDo = BibleStudyHelper::getActions($this->item->id, 'message');
-        if ($this->canDo->get('core.edit', 'com_biblestudy')) {
-            JToolBarHelper::save('message.save');
+        if ($isNew && $this->canDo->get('core.create', 'com_biblestudy')) {
             JToolBarHelper::apply('message.apply');
-        }
-        JToolBarHelper::cancel('message.cancel', 'JTOOLBAR_CANCEL');
-        if ($this->canDo->get('core.edit', 'com_biblestudy') && !$isNew) {
-            JToolBarHelper::divider();
-            JToolBarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
-        }
+            JToolBarHelper::save('message.save');
+            JToolBarHelper::save2new('message.save2new');
+            JToolBarHelper::cancel('message.cancel');
+        } else {
+            if ($this->canDo->get('core.edit', 'com_biblestudy')) {
+                JToolBarHelper::apply('message.apply');
+                JToolBarHelper::save('message.save');
 
+                // We can save this record, but check the create permission to see if we can return to make a new one.
+                if ($this->canDo->get('core.create', 'com_biblestudy')) {
+                    JToolBarHelper::save2new('message.save2new');
+                }
+            }
+            // If checked out, we can still save
+            if ($this->canDo->get('core.create', 'com_biblestudy')) {
+                JToolBarHelper::save2copy('message.save2copy');
+            }
+            JToolBarHelper::cancel('message.cancel', 'JTOOLBAR_CLOSE');
+            if ($this->canDo->get('core.edit', 'com_biblestudy')) {
+                JToolBarHelper::divider();
+                JToolBarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false, false);
+            }
+        }
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }
