@@ -117,19 +117,10 @@ class biblestudyViewpopup extends JView {
             if ($itemparams->get('player') == 1 || $player == 1) {
 
                 echo "<div align='center'>";
-                //dump($media);
-                if ($media->mime_type == 1 || substr_count($media->filename,'mp3') == 1)
-                {
-                    echo "<audio controls='controls' id='placeholder'>" .
-                    "<source src='".$path1."' type='".$media->mimetype."'>" .
-                    "</audio>";
-                } else {
-                echo "<video src=" . $path1 . " 
-                height=" . $playerheight . " 
+                echo "<video height=" . $playerheight . "
                 poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
-                width=" . $playerwidth . " id='placeholder'>" .
+                width=" . $playerwidth . " id='placeholder'><source src='".$path1."'>" .
                 "<a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>";
-                }
                 echo "</div>";
 
                 echo "<script type='text/javascript'>
