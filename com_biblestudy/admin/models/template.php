@@ -19,8 +19,6 @@ abstract class modelClass extends JModelAdmin {
 
 class BiblestudyModelTemplate extends modelClass {
 
-   
-
     /**
      * Method override to check if you can edit an existing record.
      *
@@ -35,7 +33,6 @@ class BiblestudyModelTemplate extends modelClass {
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.template.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
-   
     function store($data = null, $tmpl = null) {
         $row = & $this->getTable();
         //@todo Clean this up
@@ -76,8 +73,6 @@ class BiblestudyModelTemplate extends modelClass {
         }
         return true;
     }
-
-
 
     /**
      * Get the form data
@@ -125,6 +120,16 @@ class BiblestudyModelTemplate extends modelClass {
      */
     public function getTable($type = 'template', $prefix = 'Table', $config = array()) {
         return JTable::getInstance($type, $prefix, $config);
+    }
+
+    /**
+     * Custom clean the cache of com_biblestudy and biblestudy modules
+     *
+     * @since	1.6
+     */
+    protected function cleanCache($group = null, $client_id = 0) {
+        parent::cleanCache('com_biblestudy');
+        parent::cleanCache('mod_biblestudy');
     }
 
 }

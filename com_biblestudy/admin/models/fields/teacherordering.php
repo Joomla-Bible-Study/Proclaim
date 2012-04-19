@@ -20,7 +20,7 @@ jimport('joomla.form.formfield');
  * @subpackage	com_weblinks
  * @since		1.6
  */
-class JFormFieldteacherOrdering extends JFormField
+class JFormFieldTeacherOrdering extends JFormField
 {
 	/**
 	 * The form field type.
@@ -28,7 +28,7 @@ class JFormFieldteacherOrdering extends JFormField
 	 * @var		string
 	 * @since	1.6
 	 */
-	protected $type = 'teacherOrdering';
+	protected $type = 'TeacherOrdering';
 
 	/**
 	 * Method to get the field input markup.

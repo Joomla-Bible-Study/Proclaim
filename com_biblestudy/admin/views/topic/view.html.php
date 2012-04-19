@@ -48,15 +48,21 @@ class BiblestudyViewTopic extends JView {
      */
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
-        $isNew = ($this->item->id < 1);
+        $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('JBS_CMN_NEW') : JText::_('JBS_CMN_EDIT');
         JToolBarHelper::title(JText::_('JBS_CMN_TOPICS') . ': <small><small>[' . $title . ']</small></small>', 'topics.png');
 
-        if ($this->canDo->get('core.edit', 'com_biblestudy')) {
-            JToolBarHelper::save('topic.save');
+        if ($isNew && $this->canDo->get('core.edit', 'com_biblestudy')) {
             JToolBarHelper::apply('topic.apply');
+            JToolBarHelper::save('topic.save');
+            JToolBarHelper::cancel('topic.cancel');
+        } else {
+            if ($this->canDo->get('core.edit')) {
+                JToolBarHelper::apply('topic.apply');
+                JToolBarHelper::save('topic.save');
+            }
+            JToolBarHelper::cancel('topic.cancel', 'JTOOLBAR_CLOSE');
         }
-        JToolBarHelper::cancel('topic.cancel', 'JTOOLBAR_CANCEL');
 
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
@@ -72,4 +78,5 @@ class BiblestudyViewTopic extends JView {
         $document = JFactory::getDocument();
         $document->setTitle($isNew ? JText::_('JBS_TITLE_TOPICS_CREATING') : JText::sprintf('JBS_TITLE_TOPICS_EDITING', $this->item->topic_text));
     }
+
 }

@@ -12,11 +12,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
-abstract class adminClass extends JModelAdmin {
-
-}
-
-class biblestudyModeladmin extends adminClass {
+class biblestudyModeladmin extends JModelAdmin {
 
     /**
      * Constructor that retrieves the ID from the request
@@ -111,8 +107,6 @@ class biblestudyModeladmin extends adminClass {
         return $form;
     }
 
-   
-
     protected function loadFormData() {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.admin.data', array());
         if (empty($data))
@@ -133,6 +127,16 @@ class biblestudyModeladmin extends adminClass {
     protected function allowEdit($data = array(), $key = 'id') {
         // Check specific edit permission then general edit permission.
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.admin.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+    }
+
+    /**
+     * Custom clean the cache of com_biblestudy and biblestudy modules
+     *
+     * @since	1.6
+     */
+    protected function cleanCache($group = null, $client_id = 0) {
+        parent::cleanCache('com_biblestudy');
+        parent::cleanCache('mod_biblestudy');
     }
 
 }

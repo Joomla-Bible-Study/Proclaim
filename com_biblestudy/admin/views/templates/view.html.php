@@ -23,8 +23,14 @@ class BiblestudyViewTemplates extends JView {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->canDo = BibleStudyHelper::getActions('', 'template');
+        // Set the toolbar
         $this->addToolbar();
+
+        // Display the template
         parent::display($tpl);
+
+        // Set the document
+        $this->setDocument();
     }
 
     protected function addToolbar() {
@@ -42,10 +48,19 @@ class BiblestudyViewTemplates extends JView {
         }
         if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
             JToolBarHelper::deleteList('', 'templates.delete', 'JTOOLBAR_EMPTY_TRASH');
-        }
-        elseif ($this->canDo->get('core.delete')) {
+        } elseif ($this->canDo->get('core.delete')) {
             JToolBarHelper::trash('templates.trash');
         }
+    }
+
+    /**
+     * Add the page title to browser.
+     *
+     * @since	7.1.0
+     */
+    protected function setDocument() {
+        $document = JFactory::getDocument();
+        $document->setTitle(JText::_('JBS_TITLE_TEMPLATES'));
     }
 
 }

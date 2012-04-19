@@ -57,6 +57,9 @@ $saveOrder = $listOrder == 'share.ordering';
                     <th>
                         <?php echo JHtml::_('grid.sort', 'JBS_SHR_SOCIAL_NETWORK', 'share.name', $listDirn, $listOrder); ?>
                     </th>
+                    <th width="1%" class="nowrap">
+                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'share.id', $listDirn, $listOrder); ?>
+                    </th>
                 </tr>
             </thead>
 
@@ -93,6 +96,9 @@ $saveOrder = $listOrder == 'share.ordering';
                     </td>
                     <td>
                         <a href="<?php echo $link; ?>"><?php echo $item->name; ?></a>
+                    </td>
+                    <td class="center">
+                        <?php echo (int) $item->id; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

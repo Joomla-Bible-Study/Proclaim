@@ -55,6 +55,9 @@ $saveOrder = $listOrder == 'teacher.ordering';
                 <th width="5%">
                     <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
                 </th>
+                <th width="1%" class="nowrap">
+                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'teacher.id', $listDirn, $listOrder); ?>
+                </th>
             </tr>
         </thead>
         <tfoot>
@@ -110,6 +113,9 @@ $saveOrder = $listOrder == 'teacher.ordering';
                         <?php else: ?>
                             <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                         <?php endif; ?>
+                    </td>
+                    <td class="center">
+                        <?php echo (int) $item->id; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version $Id: teacher.php 2025 2011-08-28 04:08:06Z genu $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -14,35 +13,6 @@ defined('_JEXEC') or die;
 
 class TableTeacher extends JTable
 {
-	/**
-	 * Primary Key
-	 *
-	 * @var int
-	 */
-	var $id = null;
-	var $published = 1;
-
-	/**
-	 * @var string
-	 */
-	var $teachername = null;
-	var $title = null;
-	var $phone = null;
-	var $email = null;
-	var $website = null;
-	var $information = null;
-	var $image = null;
-	var $imageh = null;
-	var $imagew = null;
-	var $thumb = null;
-	var $thumbw = null;
-	var $thumbh = null;
-	var $short = null;
-	var $ordering = null;
-	var $catid = null;
-	var $list_show = 1;
-	var $teacher_thumbnail = null;
-	var $teacher_image = null;
 
 	/**
 	 * Constructor

@@ -64,6 +64,10 @@ class Com_BiblestudyInstallerScript {
                 $db->query();
             }
         }
+        // @TODO Tom add test to see if podcastlanguage colum exests
+        //$db->setQuery('ALTER TABLE `#__bsms_podcast` CHANGE `language` `podcastlanguage` VARCHAR( 10 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'en-us',');
+        //
+        //
         // First see if there is an update table
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
@@ -102,16 +106,9 @@ class Com_BiblestudyInstallerScript {
 
         // abort if the component being installed is not newer than the currently installed version
         if ($type == 'update') {
-            // @todo need to fix will need to find out whey this is not working on packages upgrades.
-//            $oldRelease = $this->getParam('version');
-//            $rel = $oldRelease . ' to ' . $this->release;
-//            if (version_compare($this->release, $oldRelease, 'le')) {
-//                Jerror::raiseWarning(null, 'Incorrect version sequence. Cannot upgrade ' . $rel);
-//                return false;
-//            }
-//        } else {
             $rel = $this->release;
         }
+
     }
 
     function install($parent) {
@@ -317,7 +314,7 @@ class Com_BiblestudyInstallerScript {
             $db->query();
         }
     }
-    
+
     // @todo Must Add in all fixes hear for update?
     public function deleteUnexistingFiles() {
         $files = array(

@@ -19,6 +19,10 @@ defined('_JEXEC') or die;
                 <?php echo JText::_('JBS_PDC_PODCAST_DETAILS'); ?></legend>
             <ul class="adminformlist">
                 <li>
+                    <?php echo $this->form->getLabel('id'); ?>
+
+                    <?php echo $this->form->getInput('id'); ?></li>
+                <li>
                     <?php echo $this->form->getLabel('published'); ?>
 
                     <?php echo $this->form->getInput('published'); ?></li>

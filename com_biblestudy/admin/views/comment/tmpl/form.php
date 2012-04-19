@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     $Id: form.php 2025 2011-08-28 04:08:06Z genu $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -9,14 +8,10 @@
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
-    method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-100 fltlft">
         <fieldset class="panelform">
-            <legend>
-
-                <?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
+            <legend><?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
             <ul class="adminformlist">
                 <li>
                     <?php echo $this->form->getLabel('published'); ?>
@@ -43,6 +38,10 @@ defined('_JEXEC') or die;
 
                     <?php echo $this->form->getInput('user_email'); ?></li>
                 <li>
+                    <?php echo $this->form->getLabel('id'); ?>
+
+                    <?php echo $this->form->getInput('id'); ?></li>
+                <li>
                     <?php echo $this->form->getLabel('comment_text'); ?>
 
                     <?php echo $this->form->getInput('comment_text'); ?></li>
@@ -50,11 +49,6 @@ defined('_JEXEC') or die;
         </fieldset>
     </div>
     <div class="clr"></div>
-
-
-
-
-
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">
             <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>

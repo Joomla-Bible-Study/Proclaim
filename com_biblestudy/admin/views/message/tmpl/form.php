@@ -183,8 +183,10 @@ $params = $this->form->getFieldsets('params');
                     <?php echo $this->form->getInput('access'); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('language'); ?>
-
                     <?php echo $this->form->getInput('language'); ?></li>
+                <li>
+                    <?php echo $this->form->getLabel('id'); ?>
+                    <?php echo $this->form->getInput('id'); ?></li>
                 <?php if ($this->canDo->get('core.admin')): ?>
                     <li><span class="faux-label"><?php echo JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL'); ?></span>
                         <div class="button2-left"><div class="blank">

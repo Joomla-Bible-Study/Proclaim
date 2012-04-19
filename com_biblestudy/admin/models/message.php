@@ -372,4 +372,14 @@ class BiblestudyModelMessage extends JModelAdmin {
         }
     }
 
+    /**
+     * Custom clean the cache of com_biblestudy and biblestudy modules
+     *
+     * @since	1.6
+     */
+    protected function cleanCache($group = null, $client_id = 0) {
+        parent::cleanCache('com_biblestudy');
+        parent::cleanCache('mod_biblestudy');
+    }
+
 }

@@ -111,7 +111,7 @@ class BiblestudyModelTeachers extends JModelList {
             $query->where('(teacher.published = 0 OR teacher.published = 1)');
         }
 
-        // Add the list ordering clause.
+        //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering', 'teacher.ordering');
         $orderDirn = $this->state->get('list.direction', 'asc');
         $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));

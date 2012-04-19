@@ -47,6 +47,10 @@ defined('_JEXEC') or die;
                     <?php echo $this->form->getLabel('language'); ?>
 
                     <?php echo $this->form->getInput('language'); ?></li>
+                <li>
+                    <?php echo $this->form->getLabel('id'); ?>
+
+                    <?php echo $this->form->getInput('id'); ?></li>
             </ul>
             <div class="clr"></div>
 

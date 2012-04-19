@@ -1,7 +1,13 @@
 <?php
+/**
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
+//No Direct Access
+defined('_JEXEC') or die;
 
-//Import filesystem libraries. Perhaps not necessary, but does not hurt
-// jimport('joomla.filesystem.file');
 //Remove Old Language Files Administrator
 if (JFile::exists(JPATH_ADMINISTRATOR . '/language/en-GB/en-GB.com_biblestudy.ini') == TRUE):
     JFile::delete(JPATH_ADMINISTRATOR . '/language/en-GB/en-GB.com_biblestudy.ini');
@@ -65,8 +71,3 @@ endif;
 if (JFile::exists(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini') == TRUE):
     JFile::delete(JPATH_ROOT . '/language/no-NO/no-NO.com_biblestudy.ini');
 endif;
-//create an index.html file in the media folders if not there already
-$index = '<html><body bgcolor="#FFFFFF"></body></html>';
-JFile::write('media/com_biblestudy/index.html', $index);
-JFile::write('media/com_biblestudy/backup/index.html', $index);
-JFile::write('media/com_biblestudy/database/index.html', $index);

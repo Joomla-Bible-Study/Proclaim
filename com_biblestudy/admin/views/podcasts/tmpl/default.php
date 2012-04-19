@@ -46,6 +46,9 @@ $listDirn = $this->state->get('list.direction');
                 <th width="5%">
                     <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
                 </th>
+                <th width="1%" class="nowrap">
+                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'podcast.id', $listDirn, $listOrder); ?>
+                </th>
             </tr>
         </thead>
         <tfoot>
@@ -81,6 +84,9 @@ $listDirn = $this->state->get('list.direction');
                         <?php else: ?>
                             <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                         <?php endif; ?>
+                    </td>
+                    <td class="center">
+                        <?php echo (int) $item->id; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

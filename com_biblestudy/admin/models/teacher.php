@@ -45,7 +45,19 @@ class BiblestudyModelTeacher extends JModelAdmin {
         return $this->_admin;
     }
 
-    
+    /**
+     * Returns a Table object, always creating it
+     *
+     * @param	type	$type	The table type to instantiate
+     * @param	string	$prefix	A prefix for the table class name. Optional.
+     * @param	array	$config	Configuration array for model. Optional.
+     *
+     * @return	JTable	A database object
+     * @since	1.7.0
+     */
+    public function getTable($type = 'Teacher', $prefix = 'Table', $config = array()) {
+        return JTable::getInstance($type, $prefix, $config);
+    }
 
     /**
      * Method to get a single record.
@@ -166,6 +178,7 @@ class BiblestudyModelTeacher extends JModelAdmin {
      */
     protected function cleanCache($group = null, $client_id = 0) {
         parent::cleanCache('com_biblestudy');
+        parent::cleanCache('mod_biblestudy');
     }
 
 }
