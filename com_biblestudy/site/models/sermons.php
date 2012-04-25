@@ -96,6 +96,8 @@ class BiblestudyModelSermons extends JModelList {
      * @since   7.0
      */
     protected function populateState($ordering=null, $direction=null) {
+        $app = JFactory::getApplication();
+        
         $studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
 
@@ -123,6 +125,14 @@ class BiblestudyModelSermons extends JModelList {
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
 
+        $value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+        //$value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
+        $this->setState('list.limit', $value);
+
+        $value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
+        //$value = JRequest::getUInt('limitstart', 0);
+        $this->setState('list.start', $value);
+        
         parent::populateState('study.studydate', 'DESC');
     }
 
@@ -654,5 +664,8 @@ class BiblestudyModelSermons extends JModelList {
         }
         return $this->_Locations;
     }
-
+public function getStart()
+	{
+		return $this->getState('list.start');
+	}
 }
