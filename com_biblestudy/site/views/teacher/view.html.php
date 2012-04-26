@@ -7,13 +7,16 @@
  */
 //No Direct Access
 defined('_JEXEC') or die;
+
+// @todo need to clean up all the includes with better calling in the whay we need the healpers.
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
-require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
-$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
+require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
+$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
 include_once($path1 . 'teacher.php');
 include_once($path1 . 'listing.php');
-include_once($path1.'image.php');
+include_once($path1 . 'image.php');
 jimport('joomla.application.component.view');
 
 class BiblestudyViewTeacher extends JView {
@@ -61,8 +64,8 @@ class BiblestudyViewTeacher extends JView {
         $registry->loadJSON($template[0]->params);
         $params = $registry;
 
-        $css = $params->get('css','biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+        $css = $params->get('css', 'biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 
         $item = $this->get('Item');
         //add the slug
@@ -73,16 +76,16 @@ class BiblestudyViewTeacher extends JView {
         }
         $image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
         $largeimage = $images->getTeacherImage($item->image, $item->teacher_image);
-        $item->image = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'">';
-        $item->largeimage = '<img src="'.$largeimage->path.'" height="'.$largeimage->height.'" width="'.$largeimage->width.'">';
+        $item->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '">';
+        $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '">';
         $this->assignRef('item', $item);
-      
+
         $whereitem = $item->id;
         $wherefield = 'study.teacher_id';
-        $limit = $params->get('studies','20');
+        $limit = $params->get('studies', '20');
         $order = 'DESC';
         $this->teacherstudies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $order);
-      
+
         $this->item = $item;
         $print = JRequest::getBool('print');
         // build the html select list for ordering
@@ -91,7 +94,5 @@ class BiblestudyViewTeacher extends JView {
         $this->assignRef('template', $template);
         parent::display($tpl);
     }
-
-    
 
 }
