@@ -23,7 +23,7 @@ if (!$studieslisttemplateid) {
         <tr>
             <td class="bsm_teacherthumbnail">
                 <?php
-                
+
                 if ($item->title) {
                     $teacherdisplay = $this->item->teachername . ' - ' . $this->item->title;
                 } else {
@@ -98,7 +98,7 @@ if (!$studieslisttemplateid) {
                 break;
 
          case 2:
-                        ?>    
+                        ?>
                     <table id="bsm_teachertable" cellspacing="0">
                         <tr class="titlerow">
                             <td class="title" colspan="3"><?php echo $this->params->get('label_teacher'); ?></td></tr></table><table id="bslisttable" cellspacing="0"><tr><td><?php
@@ -115,7 +115,7 @@ if (!$studieslisttemplateid) {
                                     $oddeven = $class1;
                                 }
                                 $studies = getListing($row, $this->params, $oddeven, $admin_params, $this->template, $ismodule = 0);
-                                 
+
                                 echo $studies;
                                 }?>
                              </td>
@@ -124,7 +124,7 @@ if (!$studieslisttemplateid) {
                     break;
 
          case 3:
-                    
+
                 $studies = getTeacherStudiesExp($this->item->id, $this->params, $admin_params, $this->template);
                     echo $studies;
                     break;
@@ -132,7 +132,7 @@ if (!$studieslisttemplateid) {
             </td>
         </tr>
         <tr>
-            <td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacher&t=<?php echo $t; ?>"><?php echo '<-- ' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></a> <?php
+            <td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teachers&t=<?php echo $t; ?>"><?php echo '<-- ' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></a> <?php
                 if ($this->params->get('teacherlink', '1') > 0) {
                     echo ' | <a href="index.php?option=com_biblestudy&view=sermons&filter_teacher=' . (int) $this->item->id . '&t=' . $t . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a>';
                 }?>
