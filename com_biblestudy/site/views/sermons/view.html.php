@@ -159,19 +159,25 @@ class BiblestudyViewSermons extends JView {
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
         $uri = JFactory::getURI();
+        /*
         $filter_topic = $mainframe->getUserStateFromRequest($option . 'filter_topic', 'filter_topic', 0, 'int');
         $filter_book = $mainframe->getUserStateFromRequest($option . 'filter_book', 'filter_book', 0, 'int');
-
-        if ($filter_book != 0) {
-            $filter_chapter = $mainframe->getUserStateFromRequest($option . 'filter_chapter', 'filter_chapter', 0, 'int');
-        }
         $filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
         $filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
         $filter_messagetype = $mainframe->getUserStateFromRequest($option . 'filter_messagetype', 'filter_messagetype', 0, 'int');
         $filter_year = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
         $filter_location = $mainframe->getuserStateFromRequest($option . 'filter_location', 'filter_location', 0, 'int');
         $filter_orders = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
-        //$search = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
+        */
+        $filter_topic = $this->state->get('filter.topic');
+        $filter_book = $this->state->get('filter.book');
+        $filter_teacher = $this->state->get('filter.teacher');
+        $filter_series = $this->state->get('filter.series');
+        $filter_messagetype = $this->state->get('filter.messageType');
+        $filter_year = $this->state->get('filter.year');
+        $filter_location = $this->state->get('filter.location');
+        $filter_orders = $this->state->get('filter.orders');
+        
         $total = $this->get('Total');
         //Remove the studies the user is not allowed to see
        
