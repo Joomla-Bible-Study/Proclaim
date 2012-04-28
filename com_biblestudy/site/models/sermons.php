@@ -460,7 +460,7 @@ class BiblestudyModelSermons extends JModelList {
         $studytitle = $this->getState('filter.studytitle');
         if (!empty($studytitle))
             $query->where('study.studytitle LIKE "' . $studytitle . '%"');
-/*
+
         //Filter by book
         $book = $this->getState('filter.book');
         if (!empty($book)) {
@@ -504,7 +504,7 @@ class BiblestudyModelSermons extends JModelList {
         //  $query->where('study.topics_id = ' . (int) $topic);
   
   
- */
+ 
         //Order by order filter
         $orderparam = $params->get('default_order');
         if (empty($orderparam)) {
@@ -524,6 +524,44 @@ class BiblestudyModelSermons extends JModelList {
         return $query;
     }
 
+    
+    /**
+     * Method to get a pagination object for the studies
+     * @since 1.5
+     * @access public
+     * @return integer
+     */
+    function getPagination() {
+        // Lets load the content if it doesn't already exist
+        if (empty($this->_pagination)) {
+            jimport('joomla.html.pagination');
+            $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
+        }
+
+        return $this->_pagination;
+    }
+    
+    	/**
+	 * Method to get the total number of studies items
+	 * @since 1.5
+	 * @access public
+	 * @return integer
+	 */
+	function getTotal()
+	{
+		// Lets load the content if it doesn't already exist
+		if (empty($this->_total))
+		{
+			$query = $this->_getListQuery();
+			$this->_total = $this->_getListCount($query);
+			//dump ($this->getState('limitstart'), 'limitstart: ');
+			
+		}
+
+		return $this->_total;
+	}
+
+    
     /**
      * @since 7.0
      * translate item entries: books, topics
