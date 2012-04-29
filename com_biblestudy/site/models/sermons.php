@@ -18,20 +18,21 @@ class BiblestudyModelSermons extends JModelList {
 
     var $_files = null;
 
-   function __construct($config = array()) {
+    function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'id', 'study.id',
-                'published', 'study.published',
-                'studydate', 'study.studydate',
-                'studytitle', 'study.studytitle',
-                'bookname', 'book.bookname',
-                'teachername', 'teacher.teachername',
-                'message_type', 'messageType.message_type',
-                'series_text', 'series.series_text',
-                'hits', 'study.hits',
-                'plays', 'mediafile.plays',
-                'downloads', 'mediafile.downloads'
+                'study.published',
+                'study.studydate',
+                'study.studytitle',
+                'book.bookname',
+                'teacher.teachername',
+                'messageType.message_type',
+                'series.series_text',
+                'study.hits',
+                'mediafile.plays',
+                'mediafile.downloads',
+                'study.chapter_begin',
+                'study.chapter_end'
             );
         }
 
@@ -48,26 +49,6 @@ class BiblestudyModelSermons extends JModelList {
         return $result[0]->totalDownloads;
     }
 
-      /**
-     * Method to get a store id based on model configuration state.
-     *
-     * This is necessary because the model is used by the component and
-     * different modules that might need different sets of data or different
-     * ordering requirements.
-     *
-     * @param	string		$id	A prefix for the store id.
-     *
-     * @return	string		A store id.
-     * @since	7.1.0
-     */
-    protected function getStoreId($id = '') {
-
-        // Compile the store id.
-        $id .= ':' . $this->getState('filter.published');
-        $id .= ':' . $this->getState('filter.language');
-
-        return parent::getStoreId($id);
-    }
     /**
      * Creates and executes a new query that retrieves the medifile information from the mediafiles table.
      * It then adds to the dataObject the mediafiles associated with the sermon.
@@ -100,7 +81,7 @@ class BiblestudyModelSermons extends JModelList {
      *
      * @access public
      * @return integer
-     
+     */
     function getTotal() {
         // Lets load the content if it doesn't already exist
         if (empty($this->_total)) {
@@ -110,7 +91,7 @@ class BiblestudyModelSermons extends JModelList {
 
         return $this->_total;
     }
-*/
+
     /**
      * @since   7.0
      */
@@ -143,7 +124,7 @@ class BiblestudyModelSermons extends JModelList {
 
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
-/*
+
         $value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
         //$value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
         $this->setState('list.limit', $value);
@@ -151,7 +132,7 @@ class BiblestudyModelSermons extends JModelList {
         $value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
         //$value = JRequest::getUInt('limitstart', 0);
         $this->setState('list.start', $value);
- */       
+        
         parent::populateState('study.studydate', 'DESC');
     }
 
@@ -252,7 +233,7 @@ class BiblestudyModelSermons extends JModelList {
         $menu = $application->getMenu();
         $item = $menu->getItem($itemid);
         // only do this if item id is avalible
-   //     if ($item != null) {
+        if ($item != null) {
             $teacher = $menuparams->get('mteacher_id');
             $locations = $menuparams->get('mlocations');
             $books = $menuparams->get('mbooknumber');
@@ -282,12 +263,6 @@ class BiblestudyModelSermons extends JModelList {
                     }
                 }
             }
-            else
-            {
-                $teacher = $this->getState('filter.teacher');
-                if (!empty($teacher))
-                    $query->where('study.teacher_id = ' . (int) $teacher);
-            }
             //filter locations
             $filters = $locations;
             if ($filters) {
@@ -308,12 +283,6 @@ class BiblestudyModelSermons extends JModelList {
                         }
                     }
                 }
-            }
-            else
-            {
-                $locations = $this->getState('filter.location');
-                if (!empty($locations))
-                    $query->where('study.location_id = ' . (int) $locations);
             }
             //filter over books
             $filters = $books;
@@ -338,13 +307,6 @@ class BiblestudyModelSermons extends JModelList {
                     }
                 }
             }
-            else
-            {
-                $book = $this->getState('filter.book');
-                if (!empty($book))
-                    $query->where('study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book);
-                    $query->join('LEFT', '#__bsms_books AS books ON books.booknumber = study.booknumber');
-            }
             $filters = $series;
             if ($filters) {
                 if (count($filters) > 1) {
@@ -365,13 +327,6 @@ class BiblestudyModelSermons extends JModelList {
                     }
                 }
             }
-            else
-            {
-                $series = $this->getState('filter.series');
-                if (!empty($series))
-                    $query->where('study.series_id = ' . (int) $series);
-                    }
-            //Filter over topics
             $filters = $topics;
             if ($filters) {
                 if (count($filters) > 1) {
@@ -392,14 +347,6 @@ class BiblestudyModelSermons extends JModelList {
                     }
                 }
             }
-            else
-            {
-                $topics = $this->getState('filter.topic');
-                if (!empty($series))
-                    $query->where('study.topics_id = ' . (int) $topics);
-                    }
-                    
-            //Filter over messageTypes
             $filters = $messagetype;
             if ($filters) {
                 if (count($filters) > 1) {
@@ -420,14 +367,6 @@ class BiblestudyModelSermons extends JModelList {
                     }
                 }
             }
-            else
-            {
-                $messageType = $this->getState('filter.messageType');
-                if (!empty($messageType))
-                    $query->where('study.messageType = ' . (int) $messageType);
-                    }
-                    
-            //Filter over years
             $filters = $years;
             if ($filters) {
                 if (count($filters) > 1) {
@@ -448,13 +387,7 @@ class BiblestudyModelSermons extends JModelList {
                     }
                 }
             }
-            else
-            {
-                $year = $this->getState('filter.year');
-                if (!empty($year))
-                $query->where('YEAR(study.studydate) = ' . (int) $year);
-            }
-      //  } removed if itemid
+        }
 
         //Filter by studytitle
         $studytitle = $this->getState('filter.studytitle');
@@ -502,9 +435,6 @@ class BiblestudyModelSermons extends JModelList {
         if (!empty($topic))
             $query->where('st.topic_id LIKE "%' . $topic . '%"');
         //  $query->where('study.topics_id = ' . (int) $topic);
-  
-  
- 
         //Order by order filter
         $orderparam = $params->get('default_order');
         if (empty($orderparam)) {
@@ -520,48 +450,9 @@ class BiblestudyModelSermons extends JModelList {
             $order = $orderstate;
 
         $query->order('studydate ' . $order);
-        
         return $query;
     }
 
-    
-    /**
-     * Method to get a pagination object for the studies
-     * @since 1.5
-     * @access public
-     * @return integer
-     */
-    function getPagination() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_pagination)) {
-            jimport('joomla.html.pagination');
-            $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
-        }
-
-        return $this->_pagination;
-    }
-    
-    	/**
-	 * Method to get the total number of studies items
-	 * @since 1.5
-	 * @access public
-	 * @return integer
-	 */
-	function getTotal()
-	{
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_total))
-		{
-			$query = $this->_getListQuery();
-			$this->_total = $this->_getListCount($query);
-			//dump ($this->getState('limitstart'), 'limitstart: ');
-			
-		}
-
-		return $this->_total;
-	}
-
-    
     /**
      * @since 7.0
      * translate item entries: books, topics
