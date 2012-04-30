@@ -131,8 +131,10 @@ class BiblestudyModelSermons extends JModelList {
 
         $value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
         //$value = JRequest::getUInt('limitstart', 0);
+        if (empty($value)){$value = JRequest::getInt('start','int');}
         $this->setState('list.start', $value);
-        
+        $this->setState('list.limitstart', $value);
+        // dump ($start);
         parent::populateState('study.studydate', 'DESC');
     }
 
@@ -666,6 +668,7 @@ class BiblestudyModelSermons extends JModelList {
     }
 public function getStart()
 	{
-		return $this->getState('list.start');
+//dump ($this->getState('list.start'));		
+    return $this->getState('list.start'); 
 	}
 }
