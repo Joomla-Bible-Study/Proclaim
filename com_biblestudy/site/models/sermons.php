@@ -129,9 +129,9 @@ class BiblestudyModelSermons extends JModelList {
         //$value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
         $this->setState('list.limit', $value);
 
-        $value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
+        $value = $app->getUserStateFromRequest('global.list.limitstart', 'limitstart', 0,'none',0);
         //$value = JRequest::getUInt('limitstart', 0);
-        if (empty($value)){$value = JRequest::getInt('start','int');}
+   //     if (empty($value)){$value = JRequest::getInt('start','int');}
         $this->setState('list.start', $value);
         $this->setState('list.limitstart', $value);
         // dump ($start);
