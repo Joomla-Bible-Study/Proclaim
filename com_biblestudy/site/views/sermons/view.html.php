@@ -22,12 +22,12 @@ class BiblestudyViewSermons extends JView {
     function display($tpl = null) {
 
 
-        $this->state = $this->get('State');
+        $this->state = $this->get('State'); //dump($this->state);
         $document = JFactory::getDocument();
 
         $items = $this->get('Items');
         //dump($items);
-        
+        $this->limitstart = JRequest::getVar('start', 'int'); //dump ($this->limitstart);
         $pagination = $this->get('Pagination');
         $this->page->pagelinks = $pagination->getPagesLinks();
         $this->page->limitbox = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM').$pagination->getLimitBox(). '</span>';

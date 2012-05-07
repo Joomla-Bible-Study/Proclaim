@@ -125,17 +125,29 @@ class BiblestudyModelSermons extends JModelList {
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
 
-        $value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
-        //$value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
-        $this->setState('list.limit', $value);
+        $app = JFactory::getApplication();
+        
+       
+       
+        // List state information
+		//$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+		$value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
+		$this->setState('list.limit', $value);
 
-        $value = $app->getUserStateFromRequest('global.list.limitstart', 'limitstart', 0,'none',0);
-        //$value = JRequest::getUInt('limitstart', 0);
-   //     if (empty($value)){$value = JRequest::getInt('start','int');}
-        $this->setState('list.start', $value);
-        $this->setState('list.limitstart', $value);
-        // dump ($start);
+		
         parent::populateState('study.studydate', 'DESC');
+        $limitstart = JRequest::getVar('limitstart', 0, '', 'int');
+		$this->setState('list.start', $limitstart);
+	//	$value = JRequest::getUInt('start');
+           //     if (!$value)
+           //     {
+           //         //$value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
+                    $value = JRequest::getUInt('limitstart',0);
+            //    }
+        
+            //    $this->setState('list.start', $value);
+             //   $this->setState('list.limitstart', $value);
+                 //dump($value,'start: ');
     }
 
     /**

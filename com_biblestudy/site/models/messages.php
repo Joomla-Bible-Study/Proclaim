@@ -166,6 +166,9 @@ class biblestudyModelMessages extends modelClass {
      * @since   7.0
      */
      protected function  populateState() {
+         
+        
+        
         $studytitle = $this->getUserStateFromRequest($this->context.'.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
 
