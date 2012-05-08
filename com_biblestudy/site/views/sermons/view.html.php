@@ -22,7 +22,8 @@ class BiblestudyViewSermons extends JView {
     function display($tpl = null) {
 
 
-        $this->state = $this->get('State'); //dump($this->state);
+        $state = $this->get('State'); dump($state);
+        $this->assignRef('state', $state);
         $document = JFactory::getDocument();
 
         $items = $this->get('Items');
@@ -31,8 +32,8 @@ class BiblestudyViewSermons extends JView {
         $pagination = $this->get('Pagination');
         $this->page->pagelinks = $pagination->getPagesLinks();
         $this->page->limitbox = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM').$pagination->getLimitBox(). '</span>';
-        $this->pagination = $pagination;
-        
+    //    $this->pagination = $pagination;
+        $this->assignRef('pagination', $pagination);
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');

@@ -95,7 +95,7 @@ class BiblestudyModelSermons extends JModelList {
     /**
      * @since   7.0
      */
-    protected function populateState($ordering=null, $direction=null) {
+    protected function populateState($ordering='study.studydate', $direction='DESC') {
         $app = JFactory::getApplication();
         
         $studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
@@ -124,30 +124,18 @@ class BiblestudyModelSermons extends JModelList {
 
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
-
-        $app = JFactory::getApplication();
-        
+        //$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+        $value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
+       // $this->setState('list.limit', $value);
+   parent::populateState('study.studydate', 'DESC');
+       	
        
-       
-        // List state information
-		//$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
-		$value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
-		$this->setState('list.limit', $value);
-
-		
-        parent::populateState('study.studydate', 'DESC');
-        $limitstart = JRequest::getVar('limitstart', 0, '', 'int');
-		$this->setState('list.start', $limitstart);
-	//	$value = JRequest::getUInt('start');
-           //     if (!$value)
-           //     {
-           //         //$value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
-                    $value = JRequest::getUInt('limitstart',0);
-            //    }
-        
-            //    $this->setState('list.start', $value);
-             //   $this->setState('list.limitstart', $value);
-                 //dump($value,'start: ');
+		$value = JRequest::getUInt('start'); 
+                $limitstart = JRequest::getInt('limitstart','','get');
+          //      $this->setState('list.limitstart',$limitstart);
+               // dump($limitstart,'limitstart: ');
+                $this->setState('list.start', $value);
+               //dump($value,'start: '); */
     }
 
     /**
@@ -678,7 +666,7 @@ class BiblestudyModelSermons extends JModelList {
         }
         return $this->_Locations;
     }
-public function getStart()
+public function getStart2()
 	{
 //dump ($this->getState('list.start'));		
     return $this->getState('list.start'); 
