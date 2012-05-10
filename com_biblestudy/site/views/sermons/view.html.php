@@ -21,8 +21,9 @@ class BiblestudyViewSermons extends JView {
      * */
     function display($tpl = null) {
 
-
-        $state = $this->get('State'); dump($state);
+        $limitstart = JRequest::getInt('limitstart'); 
+        JRequest::setVar('start',$limitstart,'get','true'); //dump ($limitstart, 'start from view: ');
+        $state = $this->get('State'); //dump($state);
         $this->assignRef('state', $state);
         $document = JFactory::getDocument();
 
@@ -160,16 +161,7 @@ class BiblestudyViewSermons extends JView {
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
         $uri = JFactory::getURI();
-        /*
-        $filter_topic = $mainframe->getUserStateFromRequest($option . 'filter_topic', 'filter_topic', 0, 'int');
-        $filter_book = $mainframe->getUserStateFromRequest($option . 'filter_book', 'filter_book', 0, 'int');
-        $filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
-        $filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-        $filter_messagetype = $mainframe->getUserStateFromRequest($option . 'filter_messagetype', 'filter_messagetype', 0, 'int');
-        $filter_year = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
-        $filter_location = $mainframe->getuserStateFromRequest($option . 'filter_location', 'filter_location', 0, 'int');
-        $filter_orders = $mainframe->getUserStateFromRequest($option . 'filter_orders', 'filter_orders', 'DESC', 'word');
-        */
+        
         $filter_topic = $this->state->get('filter.topic');
         $filter_book = $this->state->get('filter.book');
         $filter_teacher = $this->state->get('filter.teacher');

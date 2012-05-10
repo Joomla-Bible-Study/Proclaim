@@ -124,16 +124,17 @@ class BiblestudyModelSermons extends JModelList {
 
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
+        
+        
         //$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
-        $value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
+      //  $value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
        // $this->setState('list.limit', $value);
    parent::populateState('study.studydate', 'DESC');
        	
-       
+       $limitstart = JRequest::getInt('limitstart');
+      // dump ($limitstart,'limitstart from model: ');
+     //  dump ($_GET,'Request: ');
 		$value = JRequest::getUInt('start'); 
-                $limitstart = JRequest::getInt('limitstart','','get');
-          //      $this->setState('list.limitstart',$limitstart);
-               // dump($limitstart,'limitstart: ');
                 $this->setState('list.start', $value);
                //dump($value,'start: '); */
     }
@@ -438,7 +439,7 @@ class BiblestudyModelSermons extends JModelList {
             $query->where('st.topic_id LIKE "%' . $topic . '%"');
         //  $query->where('study.topics_id = ' . (int) $topic);
         //Order by order filter
-        $orderparam = $params->get('default_order'); print_r($t_params);
+        $orderparam = $params->get('default_order'); //print_r($t_params);
         if (empty($orderparam)) {
             $orderparam = $t_params->get('default_order', '1');
         }
