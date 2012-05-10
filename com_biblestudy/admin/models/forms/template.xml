@@ -1259,6 +1259,11 @@
 				<option value="1">JBS_TPL_BUTTON_LABEL</option>
 				<option value="2">JBS_TPL_LABEL_ONLY</option>
 			</field>
+                        <field name="landing_default_order" type="list" default="ASC"
+				label="JBS_TPL_FILTERS_DEFAULTORDER" description="JBS_TPL_FILTERS_DEFAULTORDER_DESC">
+				<option value="DESC">JBS_CMN_DESCENDING</option>
+				<option value="ASC">JBS_CMN_ASCENDING</option>
+			</field>
 			<field type="text" name="landing_hidelabel" size="100"
 				default="Show/Hide All" label="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL"
 				description="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL_DESC" />
