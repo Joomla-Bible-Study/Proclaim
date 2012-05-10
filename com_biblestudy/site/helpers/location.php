@@ -23,13 +23,35 @@ function getLocationsLandingPage($params, $id, $admin_params)
 	if (!$limit) {
 		$limit = 10000;
 	}
+         $menu = JSite::getMenu();
+        $item = $menu->getActive(); 
+        $registry = new JRegistry;
+        $registry->loadJSON($item->params);
+        $m_params = $registry; 
+        $menu_order = $m_params->get('locations_order');
+        if ($menu_order)
+        {
+            switch ($menu_order)
+            {
+                case 2:
+                    $order = 'ASC';
+                    break;
+                case 1:
+                    $order = 'DESC';
+                    break;
+            }
+        }
+            else
+        {
+            $order = $params->get('landing_default_order', 'ASC'); 
+        }
 	if (!$t) {
 		$t = JRequest::getVar('t',1,'get','int');
 	}
 
 		$location = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
-		$query = 'select distinct a.* from #__bsms_locations a inner join #__bsms_studies b on a.id = b.location_id';
+		$query = 'select distinct a.* from #__bsms_locations a inner join #__bsms_studies b on a.id = b.location_id order by a.location_text '.$order;
 
 		$db->setQuery($query);
 

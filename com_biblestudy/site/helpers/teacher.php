@@ -84,13 +84,34 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	$template = $params->get('teachertemplateid',1);
 	$limit = $params->get('landingteacherslimit');
 	if (!$limit) {$limit = 10000;}
-	$menu =& JSite::getMenu();
+	 $menu = JSite::getMenu();
+        $item = $menu->getActive(); 
+        $registry = new JRegistry;
+        $registry->loadJSON($item->params);
+        $m_params = $registry; 
+        $menu_order = $m_params->get('teachers_order');
+        if ($menu_order)
+        {
+            switch ($menu_order)
+            {
+                case 2:
+                    $order = 'ASC';
+                    break;
+                case 1:
+                    $order = 'DESC';
+                    break;
+            }
+        }
+            else
+        {
+            $order = $params->get('landing_default_order', 'ASC'); 
+        }
 
 
 
 		$teacher = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
-		$query = 'select distinct a.* from #__bsms_teachers a inner join #__bsms_studies b on a.id = b.teacher_id where list_show = 1 order by a.teachername';
+		$query = 'select distinct a.* from #__bsms_teachers a inner join #__bsms_studies b on a.id = b.teacher_id where list_show = 1 order by ordering, a.teachername '.$order;
 
 		$db->setQuery($query);
 

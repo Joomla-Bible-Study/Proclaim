@@ -341,10 +341,33 @@ function getSeriesLandingPage($params, $id, $admin_params)
 	$template = $params->get('serieslisttemplateid',1);
 	$limit = $params->get('landingserieslimit');
 	if (!$limit) {$limit = 10000;}
-
+        
+        $menu = JSite::getMenu();
+        $item = $menu->getActive(); 
+        $registry = new JRegistry;
+        $registry->loadJSON($item->params);
+        $m_params = $registry; 
+        $menu_order = $m_params->get('series_order');
+        if ($menu_order)
+        {
+            switch ($menu_order)
+            {
+                case 2:
+                    $order = 'ASC';
+                    break;
+                case 1:
+                    $order = 'DESC';
+                    break;
+            }
+        }
+            else
+        {
+            $order = $params->get('landing_default_order', 'ASC'); 
+        }
+        
 	$series = "\n" . '<table id="landing_table" width=100%>';
 	$db	=& JFactory::getDBO();
-	$query = 'select distinct a.* from #__bsms_series a inner join #__bsms_studies b on a.id = b.series_id';
+	$query = 'select distinct a.* from #__bsms_series a inner join #__bsms_studies b on a.id = b.series_id ORDER BY a.series_text '.$order;
 
 	$db->setQuery($query);
 
@@ -433,6 +456,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 
 	return $series;
 }
+
 
 function getSerieslistExp($row, $params, $admin_params, $template)
 {

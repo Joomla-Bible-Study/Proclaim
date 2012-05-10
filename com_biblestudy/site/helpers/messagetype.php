@@ -24,13 +24,35 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
 	if (!$limit) {
 		$limit = 10000;
 	}
+         $menu = JSite::getMenu();
+        $item = $menu->getActive(); 
+        $registry = new JRegistry;
+        $registry->loadJSON($item->params);
+        $m_params = $registry; 
+        $menu_order = $m_params->get('messagetypes_order');
+        if ($menu_order)
+        {
+            switch ($menu_order)
+            {
+                case 2:
+                    $order = 'ASC';
+                    break;
+                case 1:
+                    $order = 'DESC';
+                    break;
+            }
+        }
+            else
+        {
+            $order = $params->get('landing_default_order', 'ASC'); 
+        }
 	if (!$t) {
 		$t = JRequest::getVar('t',1,'get','int');
 	}
 
 		$messagetype = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
-		$query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype';
+		$query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype order by a.message_type '.$order;
 
 		$db->setQuery($query);
 

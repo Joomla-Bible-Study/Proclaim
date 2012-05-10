@@ -23,10 +23,31 @@ function getBooksLandingPage($params, $id, $admin_params) {
     if (!$limit) {
         $limit = 10000;
     }
-
+     $menu = JSite::getMenu();
+        $item = $menu->getActive(); 
+        $registry = new JRegistry;
+        $registry->loadJSON($item->params);
+        $m_params = $registry; 
+        $menu_order = $m_params->get('books_order');
+        if ($menu_order)
+        {
+            switch ($menu_order)
+            {
+                case 2:
+                    $order = 'ASC';
+                    break;
+                case 1:
+                    $order = 'DESC';
+                    break;
+            }
+        }
+            else
+        {
+            $order = $params->get('landing_default_order', 'ASC'); 
+        }
     $book = "\n" . '<table id="landing_table" width=100%>';
     $db = & JFactory::getDBO();
-    $query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber order by a.booknumber';
+    $query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber order by a.booknumber '.$order;
 
     $db->setQuery($query);
 

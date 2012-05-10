@@ -438,7 +438,7 @@ class BiblestudyModelSermons extends JModelList {
             $query->where('st.topic_id LIKE "%' . $topic . '%"');
         //  $query->where('study.topics_id = ' . (int) $topic);
         //Order by order filter
-        $orderparam = $params->get('default_order');
+        $orderparam = $params->get('default_order'); print_r($t_params);
         if (empty($orderparam)) {
             $orderparam = $t_params->get('default_order', '1');
         }
