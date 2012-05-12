@@ -124,19 +124,15 @@ class BiblestudyModelSermons extends JModelList {
 
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
-        
-        
-        //$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
-      //  $value = JRequest::getUInt('limit', $app->getCfg('list_limit', 0));
-       // $this->setState('list.limit', $value);
+ /**
+  *@todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF 
+  */      
    parent::populateState('study.studydate', 'DESC');
        	
        $limitstart = JRequest::getInt('limitstart');
-      // dump ($limitstart,'limitstart from model: ');
-     //  dump ($_GET,'Request: ');
-		$value = JRequest::getUInt('start'); 
-                $this->setState('list.start', $value);
-               //dump($value,'start: '); */
+       $value = JRequest::getUInt('start'); 
+       $this->setState('list.start', $value);
+               
     }
 
     /**
