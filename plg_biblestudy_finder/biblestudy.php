@@ -63,6 +63,13 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	protected $table = '#__bsms_studies';
 
+/**
+ * The state field
+ * @var string
+ * @since 2.5
+ */
+  protected $state_field = 'published';
+    
 	/**
 	 * Constructor
 	 *
@@ -71,7 +78,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 *
 	 * @since   2.5
 	 */
-	public function __construct(&$subject, $config)
+	
+    public function __construct(&$subject, $config)
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -112,7 +120,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	 */
 	public function onFinderAfterDelete($context, $table)
 	{
-		if ($context == 'com_biblestudy.sermon')
+		if ($context == 'com_biblestudy.message')
 		{
 			$id = $table->id;
 		}
@@ -143,7 +151,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	public function onFinderAfterSave($context, $row, $isNew)
 	{
 	
-		if ($context == 'com_biblestudy.sermon'  )
+		if ($context == 'com_biblestudy.message'  )
 		{
 			// Check if the access levels are different
 			
@@ -156,7 +164,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 			// Reindex the item
 //			$this->reindex($row->id);
 		}
-
+/*
 		// Check for access changes in the category
 		if ($context == 'com_categories.category')
 		{
@@ -166,7 +174,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 				$this->categoryAccessChange($row);
 			}
 		}
-
+*/
 		return true;
 	}
 
@@ -187,7 +195,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	public function onFinderBeforeSave($context, $row, $isNew)
 	{
 		// We only want to handle sermons here
-		if ($context == 'com_biblestudy.sermon' )
+		if ($context == 'com_biblestudy.message')
 		{
 			// Query the database for the old access level if the item isn't new
 		
@@ -196,7 +204,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 				$this->checkItemAccess($row);
 			} 
 		}
-
+/*
 		// Check for access levels from the category
 		if ($context == 'com_categories.category')
 		{
@@ -206,7 +214,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 				$this->checkCategoryAccess($row);
 			}
 		}
-
+*/
 		return true;
 	}
 
@@ -226,7 +234,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	public function onFinderChangeState($context, $pks, $value)
 	{
 		// We only want to handle sermons here
-		if ($context == 'com_biblestudy.sermon' )
+		if ($context == 'com_biblestudy.message' )
 		{
 			$this->itemStateChange($pks, $value);
 		}
@@ -257,13 +265,22 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 			return;
 		}
 
+        // Initialize the item parameters.
+		$registry = new JRegistry;
+		$registry->loadString($item->params);
+		$item->params = $registry;
+
+		$registry = new JRegistry;
+		$registry->loadString($item->metadata);
+		$item->metadata = $registry;
+        
 		// Trigger the onContentPrepare event.
-		$item->summary = FinderIndexerHelper::prepareContent($item->summary);
-//		$item->summary = FinderIndexerHelper::prepareContent($item->body);
+		$item->summary = FinderIndexerHelper::prepareContent($item->studyintro);
+		$item->summary = FinderIndexerHelper::prepareContent($item->studytext);
 
 		// Build the necessary route and path information.
 		$item->url = $this->getURL($item->id, $this->extension, $this->layout);
-		$item->route = SermonspeakerHelperRoute::getSermonRoute($item->slug);
+		$item->route = BiblestudyHelperRoute::getArticleRoute($item->id);
 		$item->path = FinderIndexerHelper::getContentPath($item->route);
 
 		/*
@@ -284,7 +301,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		$item->addTaxonomy('Type', 'Sermon');
 
 		// Add the category taxonomy data.
-		$item->addTaxonomy('Category', $item->category, $item->cat_state, $item->cat_access);
+	//	$item->addTaxonomy('Category', $item->category, $item->cat_state, $item->cat_access);
 
 		// Add the language taxonomy data.
 		$item->addTaxonomy('Language', $item->language);
@@ -306,8 +323,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 	protected function setup()
 	{
 		// Load dependent classes.
-		require_once JPATH_SITE . '/components/com_sermonspeaker/helpers/route.php';
-		$params	= JComponentHelper::getParams('com_sermonspeaker');
+		require_once JPATH_SITE . '/components/com_biblestudy/helpers/route.php';
+		$params	= JComponentHelper::getParams('com_biblestudy');
 		$this->access	= $params->get('access', 1);
 
 		return true;
@@ -327,11 +344,11 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
-		$sql->select('a.id, a.sermon_title AS title, a.alias, a.notes AS summary');
-		$sql->select('a.state, a.catid, a.created AS start_date, a.created_by');
-		$sql->select('a.metakey, a.metadesc, '.(int)$this->access.' AS access, a.ordering');
-		$sql->select('a.created AS publish_start_date');
-		$sql->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
+		$sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary');
+		$sql->select('a.state, a.studydate AS start_date, a.created_by');
+		$sql->select((int)$this->access.' AS access, a.ordering');
+		$sql->select('a.studydate AS publish_start_date');
+	//	$sql->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
 
 		// Handle the alias CASE WHEN portion of the query
 		$case_when_item_alias = ' CASE WHEN ';
@@ -340,9 +357,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		$a_id = $sql->castAsChar('a.id');
 		$case_when_item_alias .= $sql->concatenate(array($a_id, 'a.alias'), ':');
 		$case_when_item_alias .= ' ELSE ';
-		$case_when_item_alias .= $a_id.' END as slug';
+		$case_when_item_alias .= $a_id.' END as studytitle';
 		$sql->select($case_when_item_alias);
-
+/*
 		$case_when_category_alias = ' CASE WHEN ';
 		$case_when_category_alias .= $sql->charLength('c.alias');
 		$case_when_category_alias .= ' THEN ';
@@ -351,11 +368,11 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		$case_when_category_alias .= ' ELSE ';
 		$case_when_category_alias .= $c_id.' END as catslug';
 		$sql->select($case_when_category_alias);
-
+*/
 		$sql->select('u.name AS author');
-		$sql->from('#__sermon_sermons AS a');
-		$sql->join('LEFT', '#__categories AS c ON c.id = a.catid');
-		$sql->join('LEFT', '#__users AS u ON u.id = a.created_by');
+		$sql->from('#__bsms_studies AS a');
+//		$sql->join('LEFT', '#__categories AS c ON c.id = a.catid');
+		$sql->join('LEFT', '#__users AS u ON u.id = a.user_id');
 
 		return $sql;
 	}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="finder" method="upgrade">
-	<name>plg_biblestudy_finder</name>
+	<name>PLG_FINDER_BIBLESTUDY</name>
 	<author>Joomla Bible Study</author>
 	<creationDate>May 2012</creationDate>
 	<authorEmail>info@joomlabiblestudy.org</authorEmail>
@@ -8,7 +8,7 @@
 	<copyright>(C) 2007 - 2012 Joomla Bible Study All rights reserved.</copyright>
 	<version>1.0</version>
 	<license>http://www.gnu.org/licenses/gpl.html</license>
-	<description>PLG_BIBLESTUDY_FINDER_XML_DESCRIPTION</description>
+	<description>PLG_FINDER_BIBLESTUDY_XML_DESCRIPTION</description>
 	<files>
 		<file plugin="biblestudy">biblestudy.php</file>
 		<filename>index.html</filename>
