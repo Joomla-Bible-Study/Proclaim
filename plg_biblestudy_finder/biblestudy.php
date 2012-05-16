@@ -103,7 +103,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		//we probably dont' need this
 		if ($extension == 'com_biblestudy')
 		{
-			$this->categoryStateChange($pks, $value);
+		//	$this->categoryStateChange($pks, $value);
 		}
 	}
 
@@ -275,9 +275,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		$item->metadata = $registry;
         
 		// Trigger the onContentPrepare event.
-		$item->summary = FinderIndexerHelper::prepareContent($item->studyintro);
-		$item->summary = FinderIndexerHelper::prepareContent($item->studytext);
-
+		$item->summary = FinderIndexerHelper::prepareContent($item->studyintro, $item->params);
+		$item->body = FinderIndexerHelper::prepareContent($item->studytext, $item->params);
+        $item->title = $item->studytitle;
 		// Build the necessary route and path information.
 		$item->url = $this->getURL($item->id, $this->extension, $this->layout);
 		$item->route = BiblestudyHelperRoute::getArticleRoute($item->id);
@@ -330,6 +330,20 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		return true;
 	}
 
+/**
+ * Override the change of state query due to errors
+ * @param $table 
+ * @param $state_field
+ */
+ protected function getStateQuery($sql = null)
+ {
+    $db = JFactory::getDBO();
+    $sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
+    $sql->select('a.id, a.published AS state, a.access');
+    $sql->from('#__bsms_studies AS a');
+    	return $sql;
+
+ } 
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
@@ -344,7 +358,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
-		$sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary');
+		$sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body');
 		$sql->select('a.published, a.studydate AS start_date, a.user_id');
 		$sql->select((int)$this->access.' AS access, a.ordering');
 		$sql->select('a.studydate AS publish_start_date');
