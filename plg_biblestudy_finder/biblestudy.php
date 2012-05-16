@@ -345,7 +345,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary');
-		$sql->select('a.state, a.studydate AS start_date, a.created_by');
+		$sql->select('a.published, a.studydate AS start_date, a.user_id');
 		$sql->select((int)$this->access.' AS access, a.ordering');
 		$sql->select('a.studydate AS publish_start_date');
 	//	$sql->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
