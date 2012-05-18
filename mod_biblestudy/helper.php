@@ -53,7 +53,9 @@ class modBiblestudyHelper {
                         study.user_id, study.studynumber,'
                 . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 
-
+        //Join over mediafile ids
+        $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
+        $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');
 
         //Join over Message Types
         $query->select('messageType.message_type AS messageType');
@@ -76,8 +78,7 @@ class modBiblestudyHelper {
         $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
         $query->group('study.id');
         
-        $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-        $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');
+        
 
         //filter over teazchers
         $filters = $teacher;
@@ -238,8 +239,12 @@ class modBiblestudyHelper {
         $admin = $db->loadObjectList();
         return $admin;
     }
-
-    function renderStudy(&$study, &$params) {
+/** @todo make this change according to the parameter settings for new template
+ *
+ * @param type $study
+ * @param type $params 
+ */
+    function renderStudy($study, $params) {
         require(JModuleHelper::getLayoutPath('mod_biblestudy', '_study'));
     }
 

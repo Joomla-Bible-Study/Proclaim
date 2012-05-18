@@ -39,7 +39,7 @@ $ismodule = 1;
             $class1 = 'bsodd';
             $class2 = 'bseven';
             $oddeven = $class1;
-            foreach ($studies as $study) {
+            foreach ($list as $study) {
                 if ($oddeven == $class1) {
                     //Alternate the color background
                     $oddeven = $class2;
@@ -56,7 +56,7 @@ $ismodule = 1;
 <div class="modulelistingfooter">
     <br />
     <?php if ($params->get('show_link') > 0) {
-        echo $link;
+        echo $link; 
     }
     ?>
 </div>

@@ -39,6 +39,11 @@
                         directory="/media/com_biblestudy/css/site" exclude=".html" hide_default="true" required="true"/>
                 <field name="moduleitems" description="JBS_MDL_ITEMS_DESC"
                                        label="JBS_MDL_ITEMS" default="5" type="text" size="10" />
+                <field name="use_headers" type="radio" default="1" label="JBS_MDL_USE_LIST_HEADER"
+                        description="JBS_MDL_USE_LIST_HEADER_DESC" >
+                      <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>  
                 <field name="show_link" type="radio" default="1"
                                        label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC">
                     <option value="1">JSHOW</option>
