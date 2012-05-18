@@ -21,22 +21,34 @@ class BiblestudyModelSermons extends JModelList {
     function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'study.published',
-                'study.studydate',
-                'study.studytitle',
-                'book.bookname',
-                'teacher.teachername',
-                'messageType.message_type',
-                'series.series_text',
-                'study.hits',
-                'mediafile.plays',
-                'mediafile.downloads',
-                'study.chapter_begin',
-                'study.chapter_end'
+                'id', 'study.id',
+                'published', 'study.published',
+                'studydate', 'study.studydate',
+                'studytitle', 'study.studytitle',
+                'bookname', 'book.bookname',
+                'teachername', 'teacher.teachername',
+                'message_type', 'messageType.message_type',
+                'series_text', 'series.series_text',
+                'hits', 'study.hits',
+                'plays', 'mediafile.plays',
+                'downloads', 'mediafile.downloads',
+                'chapter_begin', 'study.chapter_begin',
+                'chapter_end', 'study.chapter_end'
             );
         }
 
         parent::__construct($config);
+        $mainframe = JFactory::getApplication();
+
+        // Get pagination request variables
+        $limit = $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+        $limitstart = JRequest::getVar('limitstart', 0, '', 'int');
+
+        // In case limit has been changed, adjust it
+        $limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
+
+        $this->setState('limit', $limit);
+        $this->setState('limitstart', $limitstart);
     }
 
     function getDownloads($id) {
@@ -97,7 +109,7 @@ class BiblestudyModelSermons extends JModelList {
      */
     protected function populateState($ordering='study.studydate', $direction='DESC') {
         $app = JFactory::getApplication();
-        
+
         $studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
 
@@ -133,6 +145,29 @@ class BiblestudyModelSermons extends JModelList {
        $value = JRequest::getUInt('start'); 
        $this->setState('list.start', $value);
                
+    }
+
+    /**
+     *
+     * @param <string> $id   A prefix for the store id
+     * @return <string>      A store id
+     * @since 7.0
+     */
+    protected function getStoreId($id = '') {
+
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.studytitle');
+        $id .= ':' . $this->getState('filter.published');
+        $id .= ':' . $this->getState('filter.book');
+        $id .= ':' . $this->getState('filter.teacher');
+        $id .= ':' . $this->getState('filter.series');
+        $id .= ':' . $this->getState('filter.messageType');
+        $id .= ':' . $this->getState('filter.year');
+        $id .= ':' . $this->getState('filter.order');
+        $id .= ':' . $this->getState('filter.topic');
+        $id .= ':' . $this->getState('filter.locations');
+
+        return parent::getStoreId($id);
     }
 
     /**
@@ -196,10 +231,10 @@ class BiblestudyModelSermons extends JModelList {
 
         $query->group('study.id');
 
-          //$query->select('GROUP_CONCAT(DISTINCT m.id), GROUP_CONCAT(DISTINCT m.filename), GROUP_CONCAT(DISTINCT m.server), GROUP_CONCAT(DISTINCT m.path), GROUP_CONCAT(DISTINCT m.params)');
-          $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-          $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');
-        
+        //$query->select('GROUP_CONCAT(DISTINCT m.id), GROUP_CONCAT(DISTINCT m.filename), GROUP_CONCAT(DISTINCT m.server), GROUP_CONCAT(DISTINCT m.path), GROUP_CONCAT(DISTINCT m.params)');
+        $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
+        $query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
+
         //filter only for authorized view
         $query->where('study.access IN (' . $groups . ')');
 
@@ -218,175 +253,175 @@ class BiblestudyModelSermons extends JModelList {
         if ($menu = $app->getMenu()->getActive()) {
             $menuparams->loadString($menu->params);
         }
-        $books = null;
-        $teacher = null;
-        $locations = null;
-        $messagetype = null;
-        $topics = null;
-        $series = null;
-        $years = null;
+//        $books = null;
+//        $teacher = null;
+//        $locations = null;
+//        $messagetype = null;
+//        $topics = null;
+//        $series = null;
+//        $years = null;
 
         // See if we are getting itemid
         $itemid = JRequest::getVar('Itemid');
         $application = JFactory::getApplication();
         $menu = $application->getMenu();
         $item = $menu->getItem($itemid);
-        // only do this if item id is avalible
-        if ($item != null) {
-            $teacher = $menuparams->get('mteacher_id');
-            $locations = $menuparams->get('mlocations');
-            $books = $menuparams->get('mbooknumber');
-            $series = $menuparams->get('mseries_id');
-            $topics = $menuparams->get('mtopic_id');
-            $messagetype = $menuparams->get('mmessagetype');
-            $years = $menuparams->get('years');
-
-            //filter over teachers
-            $filters = $teacher;
-            if ($filters) {
-                if (count($filters) > 1) {
-                    $where2 = array();
-                    $subquery = '(';
-                    foreach ($filters as $filter) {
-                        $where2[] = 'study.teacher_id = ' . (int) $filter;
-                    }
-                    $subquery .= implode(' OR ', $where2);
-                    $subquery .= ')';
-
-                    $query->where($subquery);
-                } else {
-                    foreach ($filters as $filter) {
-                        if ($filter != -1) {
-                            $query->where('study.teacher_id = ' . (int) $filter);
-                        }
-                    }
-                }
-            }
-            //filter locations
-            $filters = $locations;
-            if ($filters) {
-                if (count($filters) > 1) {
-                    $where2 = array();
-                    $subquery = '(';
-                    foreach ($filters as $filter) {
-                        $where2[] = 'study.location_id = ' . (int) $filter;
-                    }
-                    $subquery .= implode(' OR ', $where2);
-                    $subquery .= ')';
-
-                    $query->where($subquery);
-                } else {
-                    foreach ($filters AS $filter) {
-                        if ($filter != -1) {
-                            $query->where('study.location_id = ' . (int) $filter);
-                        }
-                    }
-                }
-            }
-            //filter over books
-            $filters = $books;
-            $chb = JRequest::getInt('minChapt', '', 'post');
-            $che = JRequest::getInt('maxChapt', '', 'post');
-            if ($filters) {
-                if (count($filters) > 1) {
-                    $where2 = array();
-                    $subquery = '(';
-                    foreach ($filters as $filter) {
-                        $where2[] = 'study.booknumber = ' . (int) $filter;
-                    }
-                    $subquery .= implode(' OR ', $where2);
-                    $subquery .= ')';
-
-                    $query->where($subquery);
-                } else {
-                    foreach ($filters AS $filter) {
-                        if ($filter != -1) {
-                            $query->where('study.booknumber = ' . (int) $filter);
-                        }
-                    }
-                }
-            }
-            $filters = $series;
-            if ($filters) {
-                if (count($filters) > 1) {
-                    $where2 = array();
-                    $subquery = '(';
-                    foreach ($filters as $filter) {
-                        $where2[] = 'study.series_id = ' . (int) $filter;
-                    }
-                    $subquery .= implode(' OR ', $where2);
-                    $subquery .= ')';
-
-                    $query->where($subquery);
-                } else {
-                    foreach ($filters AS $filter) {
-                        if ($filter != -1) {
-                            $query->where('study.series_id = ' . (int) $filter);
-                        }
-                    }
-                }
-            }
-            $filters = $topics;
-            if ($filters) {
-                if (count($filters) > 1) {
-                    $where2 = array();
-                    $subquery = '(';
-                    foreach ($filters as $filter) {
-                        $where2[] = 'study.topics_id = ' . (int) $filter;
-                    }
-                    $subquery .= implode(' OR ', $where2);
-                    $subquery .= ')';
-
-                    $query->where($subquery);
-                } else {
-                    foreach ($filters AS $filter) {
-                        if ($filter != -1) {
-                            $query->where('study.topics_id = ' . (int) $filter);
-                        }
-                    }
-                }
-            }
-            $filters = $messagetype;
-            if ($filters) {
-                if (count($filters) > 1) {
-                    $where2 = array();
-                    $subquery = '(';
-                    foreach ($filters as $filter) {
-                        $where2[] = 'study.messagetype = ' . (int) $filter;
-                    }
-                    $subquery .= implode(' OR ', $where2);
-                    $subquery .= ')';
-
-                    $query->where($subquery);
-                } else {
-                    foreach ($filters AS $filter) {
-                        if ($filter != -1) {
-                            $query->where('study.messagetype = ' . (int) $filter);
-                        }
-                    }
-                }
-            }
-            $filters = $years;
-            if ($filters) {
-                if (count($filters) > 1) {
-                    $where2 = array();
-                    $subquery = '(';
-                    foreach ($filters as $filter) {
-                        $where2[] = 'YEAR(study.studydate) = ' . (int) $filter;
-                    }
-                    $subquery .= implode(' OR ', $where2);
-                    $subquery .= ')';
-
-                    $query->where($subquery);
-                } else {
-                    foreach ($filters AS $filter) {
-                        if ($filter != -1) {
-                            $query->where('YEAR(study.studydate) = ' . (int) $filter);
-                        }
-                    }
-                }
-            }
-        }
+//        // only do this if item id is avalible
+//        if ($item != null) {
+//            $teacher = $menuparams->get('mteacher_id');
+//            $locations = $menuparams->get('mlocations');
+//            $books = $menuparams->get('mbooknumber');
+//            $series = $menuparams->get('mseries_id');
+//            $topics = $menuparams->get('mtopic_id');
+//            $messagetype = $menuparams->get('mmessagetype');
+//            $years = $menuparams->get('years');
+//
+//            //filter over teachers
+//            $filters = $teacher;
+//            if ($filters) {
+//                if (count($filters) > 1) {
+//                    $where2 = array();
+//                    $subquery = '(';
+//                    foreach ($filters as $filter) {
+//                        $where2[] = 'study.teacher_id = ' . (int) $filter;
+//                    }
+//                    $subquery .= implode(' OR ', $where2);
+//                    $subquery .= ')';
+//
+//                    $query->where($subquery);
+//                } else {
+//                    foreach ($filters as $filter) {
+//                        if ($filter != -1) {
+//                            $query->where('study.teacher_id = ' . (int) $filter);
+//                        }
+//                    }
+//                }
+//            }
+//            //filter locations
+//            $filters = $locations;
+//            if ($filters) {
+//                if (count($filters) > 1) {
+//                    $where2 = array();
+//                    $subquery = '(';
+//                    foreach ($filters as $filter) {
+//                        $where2[] = 'study.location_id = ' . (int) $filter;
+//                    }
+//                    $subquery .= implode(' OR ', $where2);
+//                    $subquery .= ')';
+//
+//                    $query->where($subquery);
+//                } else {
+//                    foreach ($filters AS $filter) {
+//                        if ($filter != -1) {
+//                            $query->where('study.location_id = ' . (int) $filter);
+//                        }
+//                    }
+//                }
+//            }
+//            //filter over books
+//            $filters = $books;
+//            $chb = JRequest::getInt('minChapt', '', 'post');
+//            $che = JRequest::getInt('maxChapt', '', 'post');
+//            if ($filters) {
+//                if (count($filters) > 1) {
+//                    $where2 = array();
+//                    $subquery = '(';
+//                    foreach ($filters as $filter) {
+//                        $where2[] = 'study.booknumber = ' . (int) $filter;
+//                    }
+//                    $subquery .= implode(' OR ', $where2);
+//                    $subquery .= ')';
+//
+//                    $query->where($subquery);
+//                } else {
+//                    foreach ($filters AS $filter) {
+//                        if ($filter != -1) {
+//                            $query->where('study.booknumber = ' . (int) $filter);
+//                        }
+//                    }
+//                }
+//            }
+//            $filters = $series;
+//            if ($filters) {
+//                if (count($filters) > 1) {
+//                    $where2 = array();
+//                    $subquery = '(';
+//                    foreach ($filters as $filter) {
+//                        $where2[] = 'study.series_id = ' . (int) $filter;
+//                    }
+//                    $subquery .= implode(' OR ', $where2);
+//                    $subquery .= ')';
+//
+//                    $query->where($subquery);
+//                } else {
+//                    foreach ($filters AS $filter) {
+//                        if ($filter != -1) {
+//                            $query->where('study.series_id = ' . (int) $filter);
+//                        }
+//                    }
+//                }
+//            }
+//            $filters = $topics;
+//            if ($filters) {
+//                if (count($filters) > 1) {
+//                    $where2 = array();
+//                    $subquery = '(';
+//                    foreach ($filters as $filter) {
+//                        $where2[] = 'study.topics_id = ' . (int) $filter;
+//                    }
+//                    $subquery .= implode(' OR ', $where2);
+//                    $subquery .= ')';
+//
+//                    $query->where($subquery);
+//                } else {
+//                    foreach ($filters AS $filter) {
+//                        if ($filter != -1) {
+//                            $query->where('study.topics_id = ' . (int) $filter);
+//                        }
+//                    }
+//                }
+//            }
+//            $filters = $messagetype;
+//            if ($filters) {
+//                if (count($filters) > 1) {
+//                    $where2 = array();
+//                    $subquery = '(';
+//                    foreach ($filters as $filter) {
+//                        $where2[] = 'study.messagetype = ' . (int) $filter;
+//                    }
+//                    $subquery .= implode(' OR ', $where2);
+//                    $subquery .= ')';
+//
+//                    $query->where($subquery);
+//                } else {
+//                    foreach ($filters AS $filter) {
+//                        if ($filter != -1) {
+//                            $query->where('study.messagetype = ' . (int) $filter);
+//                        }
+//                    }
+//                }
+//            }
+//            $filters = $years;
+//            if ($filters) {
+//                if (count($filters) > 1) {
+//                    $where2 = array();
+//                    $subquery = '(';
+//                    foreach ($filters as $filter) {
+//                        $where2[] = 'YEAR(study.studydate) = ' . (int) $filter;
+//                    }
+//                    $subquery .= implode(' OR ', $where2);
+//                    $subquery .= ')';
+//
+//                    $query->where($subquery);
+//                } else {
+//                    foreach ($filters AS $filter) {
+//                        if ($filter != -1) {
+//                            $query->where('YEAR(study.studydate) = ' . (int) $filter);
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         //Filter by studytitle
         $studytitle = $this->getState('filter.studytitle');
@@ -413,6 +448,11 @@ class BiblestudyModelSermons extends JModelList {
         $teacher = $this->getState('filter.teacher');
         if (!empty($teacher))
             $query->where('study.teacher_id = ' . (int) $teacher);
+
+        //Filter by locations
+        $locations = $this->getState('filter.locations');
+        if (!empty($locations))
+            $query->where('study.location_id = ' . (int) $locations);
 
         //Filter by series
         $series = $this->getState('filter.series');
@@ -450,6 +490,45 @@ class BiblestudyModelSermons extends JModelList {
 
         $query->order('studydate ' . $order);
         return $query;
+    }
+
+    /**
+     * Method to get the archived article list
+     *
+     * @access public
+     * @return array
+     */
+    public function getData() {
+        $app = JFactory::getApplication();
+
+        // Lets load the content if it doesn't already exist
+        if (empty($this->_data)) {
+            // Get the page/component configuration
+            $params = $app->getParams();
+
+            // Get the pagination request variables
+            $limit = JRequest::getVar('limit', $params->get('display_num', 20), '', 'int');
+            $limitstart = JRequest::getVar('limitstart', 0, '', 'int');
+
+            $query = $this->_buildQuery();
+
+            $this->_data = $this->_getList($query, $limitstart, $limit);
+        }
+
+        return $this->_data;
+    }
+
+    // JModel override to add alternating value for $odd
+    protected function _getList($query, $limitstart = 0, $limit = 0) {
+        $result = parent::_getList($query, $limitstart, $limit);
+
+        $odd = 1;
+        foreach ($result as $k => $row) {
+            $result[$k]->odd = $odd;
+            $odd = 1 - $odd;
+        }
+
+        return $result;
     }
 
     /**

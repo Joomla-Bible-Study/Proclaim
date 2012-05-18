@@ -49,7 +49,7 @@
            translate_label="false" class="inputbox" filter="rules" component="com_biblestudy"
            section="teacher" validate="rules" />
     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-           description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
+           description="JBS_CMN_FIELD_LANGUAGE_DESC" class="inputbox" >
         <option value="*">JALL</option>
     </field>
 </form>

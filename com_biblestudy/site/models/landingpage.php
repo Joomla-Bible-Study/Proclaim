@@ -13,53 +13,70 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
-
-
 class biblestudyModellandingpage extends JModelList {
+
+    /**
+     * Constructor.
+     *
+     * @param	array	An optional associative array of configuration settings.
+     * @see		JController
+     * @since	1.6
+     */
+    public function __construct($config = array()) {
+        if (empty($config['filter_fields'])) {
+            $config['filter_fields'] = array(
+                'id', 's.id',
+                'language', 's.language',
+            );
+        }
+
+        parent::__construct($config);
+    }
 
     /**
      * @since   7.0
      */
-    protected function populateState($ordering=null, $direction=null) {
+    protected function populateState($ordering = null, $direction = null) {
         $order = $this->getUserStateFromRequest($this->context . '.filter.order', 'filter_orders');
         $this->setState('filter.order', $order);
 
         parent::populateState('s.studydate', 'DESC');
     }
-   
-     protected function getListQuery() {
-         $db = $this->getDbo();
-         $query = $db->getQuery(true);
-         $template_params = $this->getTemplate();
-         $registry = new JRegistry;
-         $registry->loadJSON($template_params->params);
-         $t_params = $registry;
-         // Load the parameters. Merge Global and Menu Item params into new object
-         $app = JFactory::getApplication('site');
-         $params = $app->getParams();
-         $menuparams = new JRegistry;
+
+    protected function getListQuery() {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $template_params = $this->getTemplate();
+        $registry = new JRegistry;
+        $registry->loadJSON($template_params->params);
+        $t_params = $registry;
+        // Load the parameters. Merge Global and Menu Item params into new object
+        $app = JFactory::getApplication('site');
+        $params = $app->getParams();
+        $menuparams = new JRegistry;
 
         if ($menu = $app->getMenu()->getActive()) {
             $menuparams->loadString($menu->params);
         }
-         $query->select('list.select','s.id');
-         $query->from('#__bsms_studies as s');
-         $query->select('t.id as tid, t.teachername, t.title as teachertitle');
-         $query->join('LEFT','#__bsms_teachers as t on s.teacher_id = t.id');
-         $query->select('se.id as sid, se.series_text, se.description as sdescription, se.series_thumbnail');
-         $query->join('LEFT','#__bsms_series as se on s.series_id = se.id');
-         $query->select('m.id as mid, m.message_type');
-         $query->join('LEFT','#__bsms_message_type as m on s.messagetype = m.id');
-         $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
-         $query->join('LEFT', '#__bsms_studytopics AS st ON s.id = st.study_id');
-         $query->select('GROUP_CONCAT(DISTINCT tp.id), GROUP_CONCAT(DISTINCT tp.topic_text) as topics_text, GROUP_CONCAT(DISTINCT tp.params)');
-         $query->join('LEFT', '#__bsms_topics AS tp ON tp.id = st.topic_id');
-         $query->select('l.id as lid, l.location_text');
-         $query->join('LEFT','#__bsms_locations as l on s.location_id = l.id');
-         $rightnow = date('Y-m-d H:i:s');
-         $query->where('s.published = 1');
-         $query->where("date_format(s.studydate, %Y-%m-%d %T') <= " . (int) $rightnow);
-         //Order by order filter
+        $query->select('list.select', 's.id');
+        $query->from('#__bsms_studies as s');
+        $query->select('t.id as tid, t.teachername, t.title as teachertitle, t.language');
+        $query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
+        $query->select('se.id as sid, se.series_text, se.description as sdescription, se.series_thumbnail');
+        $query->join('LEFT', '#__bsms_series as se on s.series_id = se.id');
+        $query->select('m.id as mid, m.message_type');
+        $query->join('LEFT', '#__bsms_message_type as m on s.messagetype = m.id');
+        $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
+        $query->join('LEFT', '#__bsms_studytopics AS st ON s.id = st.study_id');
+        $query->select('GROUP_CONCAT(DISTINCT tp.id), GROUP_CONCAT(DISTINCT tp.topic_text) as topics_text, GROUP_CONCAT(DISTINCT tp.params)');
+        $query->join('LEFT', '#__bsms_topics AS tp ON tp.id = st.topic_id');
+        $query->select('l.id as lid, l.location_text');
+        $query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
+        $rightnow = date('Y-m-d H:i:s');
+        $query->where('s.published = 1');
+        $query->where("date_format(s.studydate, %Y-%m-%d %T') <= " . (int) $rightnow);
+
+        //Order by order filter
         $orderparam = $params->get('default_order');
         if (empty($orderparam)) {
             $orderparam = $t_params->get('default_order', '1');
@@ -75,9 +92,7 @@ class biblestudyModellandingpage extends JModelList {
 
         $query->order('studydate ' . $order);
         return $query;
-     }
-
-   
+    }
 
     /**
      * @desc Returns teachers
@@ -103,10 +118,5 @@ class biblestudyModellandingpage extends JModelList {
         }
         return $this->_template;
     }
-
-   
-
-   
-   
 
 }

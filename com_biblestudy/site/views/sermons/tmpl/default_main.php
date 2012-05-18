@@ -25,62 +25,72 @@ $listingcall = JView::loadHelper('listing');
 ?>
 
 
-    <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
-        <div id="bsheader">
-            <h1 class="componentheading">
-                <?php
-                if ($this->params->get('show_page_image') > 0) {
-                    ?>
-                    <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" alt="Bible Study" />
-                    <?php
-                    //End of column for logo
-                }
-                ?>
-                <?php
-                if ($this->params->get('show_page_title') > 0) {
-                    echo $this->params->get('page_title');
-                }
-                ?>
-            </h1>
+    <div id="bsheader">
+        <h1 class="componentheading">
             <?php
-            if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
-                // @todo $teacher_call look like it is not used?
-                $teacher_call = JView::loadHelper('teacher');
-                $teacher = getTeacher($params, $id = null, $this->admin_params);
-                if ($teacher) {
-                    echo $teacher;
-                }
+            if ($this->params->get('show_page_image') > 0) {
+                ?>
+                <img src="<?php echo JURI::base() . $this->main->path; ?>" alt="<?php echo $this->main->path; ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>" alt="Bible Study" />
+                <?php
+                //End of column for logo
             }
             ?>
-        </div><!--header-->
+            <?php
+            if ($this->params->get('show_page_title') > 0) {
+                echo $this->params->get('page_title');
+            }
+            ?>
+        </h1>
+        <?php
+        if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
+            // @todo $teacher_call look like it is not used?
+            $teacher_call = JView::loadHelper('teacher');
+            $teacher = getTeacher($params, $id = null, $this->admin_params);
+            if ($teacher) {
+                echo $teacher;
+            }
+        }
+        ?>
+    </div><!--header-->
 
-        <div id="listintro"><table id="listintro"><tr><td><p>
-                            <?php
-                            if ($params->get('intro_show') == 1) {
-                                echo $params->get('list_intro');
-                            }
-                            ?>
-                        </p></td></tr></table> </div>
-
-        <div id="bsdropdownmenu">
+    <div id="listintro">
+        <p>
+            <?php
+            if ($params->get('intro_show') == 1) {
+                echo $params->get('list_intro');
+            }
+            ?>
+        </p>
+    </div>
+    <fieldset id="filter-bar">
+        <div id="filter-select fltrt">
             <?php
             if ($this->params->get('use_go_button') > 0) {
                 echo $this->page->gobutton;
             }
 
             if ($this->params->get('show_pagination') == 1) {
-                echo $this->page->limitbox;
-                
+                echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
             }
             if (($this->params->get('show_locations_search') > 0 && ($location_menu == -1)) || $this->params->get('show_locations_search') > 1) {
-                //echo $this->lists['locations'];
-                echo $this->page->locations;
+                ?>
+                <select name="filter_locations" class="inputbox" onchange="this.form.submit()">
+                    <option value=""> <?php echo JText::_('JBS_CMN_SELECT_LOCATION'); ?></option>
+                    <?php echo JHtml::_('select.options', $this->locations, 'value', 'text', $this->state->get('filter.locations')); ?>
+                </select>
+                <?php
+                //echo $this->page->locations;
             }
             if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1) {
-                //echo $this->lists['books'] . ' ';
-                echo $this->page->books;
-                
+                ?>
+                <select name="filter_books" class="inputbox" onchange="this.form.submit()">
+                    <option value=""> <?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
+                    <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.books')); ?>
+                </select>
+            <?php
+                //echo $this->page->books;
             }
             if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1) {
                 //echo $this->lists['teacher_id'];
@@ -103,7 +113,7 @@ $listingcall = JView::loadHelper('listing');
                 echo $this->page->order;
             }
             if (($this->params->get('show_topic_search') > 0 && ($topic_menu == -1)) || $this->params->get('show_topic_search') > 1) {
-               // echo $this->lists['topics'];
+                // echo $this->lists['topics'];
                 echo $this->page->topics;
             }
             if ($this->params->get('show_popular') > 0) {
@@ -116,39 +126,41 @@ $listingcall = JView::loadHelper('listing');
 
 
         </div><!--dropdownmenu-->
-        <table id="bslisttable" cellspacing="0">
+    </fieldset>
+
+    <div class="clr"></div>
+    <table id="bslisttable" cellspacing="0">
+        <?php
+// @todo $headerCall seams not to be used?
+        $headerCall = JView::loadHelper('header');
+        $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
+        echo $header;
+        ?>
+        <tbody>
+
             <?php
-            // @todo $headerCall seams not to be used?
-            $headerCall = JView::loadHelper('header');
-            $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
-            echo $header;
-            ?>
-            <tbody>
-
-                <?php
-                //This sets the alternativing colors for the background of the table cells
-                $class1 = 'bsodd';
-                $class2 = 'bseven';
-                $oddeven = $class1;
-                foreach ($this->items as $row) { //Run through each row of the data result from the model
-                    if ($oddeven == $class1) { //Alternate the color background
-                        $oddeven = $class2;
-                    } else {
-                        $oddeven = $class1;
-                    }
-
-                    $listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
-                    echo $listing;
+//This sets the alternativing colors for the background of the table cells
+            $class1 = 'bsodd';
+            $class2 = 'bseven';
+            $oddeven = $class1;
+            foreach ($this->items as $row) { //Run through each row of the data result from the model
+                if ($oddeven == $class1) { //Alternate the color background
+                    $oddeven = $class2;
+                } else {
+                    $oddeven = $class1;
                 }
-                ?>
-            </tbody></table>
-        <div class="listingfooter" >
-            <?php
-            if ($this->params->get('show_pagination') == 2) {
-                echo $this->page->limitbox;
+
+                $listing = getListing($row, $params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
+                echo $listing;
             }
-            echo $this->page->pagelinks;
             ?>
-        </div> <!--end of bsfooter div-->
-    </div><!--end of bspagecontainer div-->
-    
+        </tbody></table>
+    <div class="listingfooter pagination" >
+        <?php
+//if ($this->params->get('show_pagination') == 2) {
+        echo $this->pagination->getPageslinks();
+//}
+        ?>
+    </div> <!--end of bsfooter div-->
+</div><!--end of bspagecontainer div-->
+
