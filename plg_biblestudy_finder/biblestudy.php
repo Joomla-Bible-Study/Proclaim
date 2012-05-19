@@ -255,7 +255,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         // Trigger the onContentPrepare event.
         $item->summary = FinderIndexerHelper::prepareContent($item->studyintro, $item->params);
         $item->body = FinderIndexerHelper::prepareContent($item->studytext, $item->params);
-        $item->title = $item->studytitle;
+        //$item->title = $item->studytitle;
         // Build the necessary route and path information.
         $item->url = $this->getURL($item->id, $this->extension, $this->layout);
         $item->route = BiblestudyHelperRoute::getArticleRoute($item->id);
