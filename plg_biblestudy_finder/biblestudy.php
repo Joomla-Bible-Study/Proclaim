@@ -268,6 +268,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         // Add the meta-author.
 //		$item->metaauthor = $item->metadata->get('author');
         // Handle the link to the meta-data.
+        $item->addInstruction(FinderIndexer::META_CONTEXT, 'summary');
+        $item->addInstruction(FinderIndexer::META_CONTEXT, 'body');
 //        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
 //        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'metaauthor');
