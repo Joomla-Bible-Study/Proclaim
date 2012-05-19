@@ -117,9 +117,9 @@
                    description="JBS_MED_PLAYERWIDTH_DESC" />
             <field name="playerheight" default="" type="text"
                    label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_DESC" />
-            <field name="itempopuptitle" type="text" size="35" default=""
+            <field name="itempopuptitle" type="textarea"  cols="54" rows="10" default="" filter="raw"
                    label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
-            <field name="itempopupfooter" type="text" size="35" default=""
+            <field name="itempopupfooter" type="textarea" cols="54" rows="10" default="" filter="raw"
                    label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC" />
             <field name="popupmargin" type="text" default="50"
                    label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC" />
