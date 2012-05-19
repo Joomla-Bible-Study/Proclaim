@@ -248,9 +248,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         $registry->loadString($item->params);
         $item->params = $registry;
 
-        $registry = new JRegistry;
-        $registry->loadString($item->metadata);
-        $item->metadata = $registry;
+//        $registry = new JRegistry;
+//        $registry->loadString($item->metadata);
+//        $item->metadata = $registry;
 
         // Trigger the onContentPrepare event.
         $item->summary = FinderIndexerHelper::prepareContent($item->studyintro, $item->params);
@@ -268,8 +268,8 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         // Add the meta-author.
 //		$item->metaauthor = $item->metadata->get('author');
         // Handle the link to the meta-data.
-        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
-        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
+//        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
+//        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'metaauthor');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
@@ -332,7 +332,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         $sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
         $sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body');
         $sql->select('a.published AS state, a.studydate AS start_date, a.user_id');
-        $sql->select('a.metakey, a.metadesc, a.metadata, a.language');
+        $sql->select('a.language');
         $sql->select('a.access, a.ordering, a.params');
         $sql->select('a.studydate AS publish_start_date');
 
