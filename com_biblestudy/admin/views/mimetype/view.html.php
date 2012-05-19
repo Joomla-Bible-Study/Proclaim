@@ -1,7 +1,5 @@
 <?php
-
 /**
- * @version $Id: view.html.php 2025 2011-08-28 04:08:06Z genu $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL

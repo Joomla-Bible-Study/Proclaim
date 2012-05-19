@@ -1,5 +1,12 @@
 <?php
-// @todo add header
+
+/**
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
+//No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
@@ -7,7 +14,7 @@ jimport('joomla.application.component.view');
 class biblestudyViewmp3 extends JView {
 
     function display($tpl = null) {
-        $document = & JFactory::getDocument();
+        $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudyimport/assets/css/ui.css');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudyimport/assets/css/bsmImport.css');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js');
@@ -19,7 +26,7 @@ class biblestudyViewmp3 extends JView {
         JToolBarHelper::help('biblestudyimport', true);
 
         // Get data from the model
-        $model = & $this->getModel();
+        $model = $this->getModel();
 
         $this->setLayout('form');
         $this->assignRef('items', $items);
@@ -71,16 +78,17 @@ class biblestudyViewmp3 extends JView {
                 $document->addScriptDeclaration('var file' . $i . ' = ' . json_encode($id3Element) . ';');
                 $i++;
             }
-            $this->assignRef('id3Info', $model->getId3Info());
+            $Id3Info = $model->getId3Info();
+            $this->assignRef('id3Info', $Id3Info);
         }
 
         parent::display($tpl);
     }
 
     function getAvailableTags($parent = null, $id3Sample) {
-        if (!is_array($keys)) {
+        //if (!is_array($id3Sample)) {
             $keys = array();
-        }
+        //}
         foreach ($id3Sample as $sample => $value) {
             if (is_array($value)) {
                 $keys = array_merge($keys, $this->getAvailableTags($parent . $sample . '.', $value));
