@@ -87,6 +87,16 @@ defined('_JEXEC') or die;
                     <?php echo $this->form->getLabel('podcastimage'); ?>
 
                     <?php echo $this->form->getInput('podcastimage'); ?></li>
+                <li>
+                    <?php echo $this->form->getLabel('podcast_image_subscribe'); ?>
+                    
+                    <?php echo $this->form->getInput('podcast_image_subscribe'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('podcast_subscribe_desc'); ?>
+                    
+                    <?php echo $this->form->getInput('podcast_subscribe_desc'); ?>
+                </li>
             </ul>
         </fieldset>
         <fieldset class="panelform">

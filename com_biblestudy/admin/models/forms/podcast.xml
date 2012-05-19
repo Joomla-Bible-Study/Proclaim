@@ -33,6 +33,9 @@
 		description="JBS_PDC_IMAGE_DESC" />
 	<field name="podcastimage" type="media" label="JBS_PDC_PODCAST_LOGO"
 		description="JBS_PDC_PODCAST_LOGO_DESC" />
+        <field name="podcast_image_subscribe" type="media"
+           label="JBS_PDC_SUBSCRIBE_IMAGE" description="JBS_PDC_SUBSCRIBE_IMAGE_DESC" />
+           
 	<field name="filename" type="text" label="JBS_PDC_PODCAST_XML_FILENAME"
 		description="JBS_PDC_PODCAST_XML_FILENAME_DESC" size="20" />
 	<field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE"
@@ -55,4 +58,8 @@
         <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
                 description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
                 class="readonly" />
+       <field name="podcast_subscribe_desc" type="text" label="JBS_PDC_SUBSCRIBE_WORDS"
+                description="JBS_PDC_SUBSCRIBE_WORDS_DESC" size="20" default=""
+       />
+    
 </form>

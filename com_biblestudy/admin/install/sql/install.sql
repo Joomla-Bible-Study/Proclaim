@@ -176,7 +176,9 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
 	`detailstemplateid` int(11) DEFAULT NULL,
 	`asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 	`access` int(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (`id`),
+        `podcast_image_subscribe` VARCHAR(150),
+        `podcast_subscribe_desc` VARCHAR(150),
+        PRIMARY KEY (`id`),
 	KEY `idx_state` (`published`),
 	KEY `idx_access` (`access`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;

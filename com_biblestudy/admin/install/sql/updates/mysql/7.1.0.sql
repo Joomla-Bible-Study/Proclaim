@@ -110,3 +110,6 @@ ADD COLUMN `ftppassword` varchar(250) NOT NULL,
 ADD COLUMN `ftpport` varchar(10) NOT NULL,
 ADD COLUMN `aws_key` varchar(100) NOT NULL,
 ADD COLUMN `aws_secret` varchar(100) NOT NULL;
+
+ALTER TABLE `#__bsms_podcast` ADD COLUMN `podcast_image_subscribe` VARCHAR(150) COMMENT 'The image to use for the podcast subscription image',
+ADD COLUMN `podcast_subscribe_desc` VARCHAR(150) COMMENT 'Words to go below podcast subscribe image';
