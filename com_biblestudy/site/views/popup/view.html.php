@@ -12,6 +12,7 @@ class biblestudyViewpopup extends JView {
     function display() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
         $pathh = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
         include_once($pathh . 'scripture.php');
         include_once($pathh . 'date.php');
         include_once($pathh . 'duration.php');
@@ -36,7 +37,7 @@ class biblestudyViewpopup extends JView {
         jimport('joomla.application.component.helper');
 
         $getMedia = new jbsMedia();
-        $media = $getMedia->getMediaRows2($mediaid);
+        $media = $getMedia->getMediaRows2($mediaid); 
         $db = JFactory::getDBO();
         $query = 'SELECT * FROM #__bsms_templates WHERE id = ' . $templateid;
         $db->setQuery($query);
@@ -65,7 +66,11 @@ class biblestudyViewpopup extends JView {
         $badchars = array("'", '"');
         $studytitle = str_replace($badchars, ' ', $media->studytitle);
         $studyintro = str_replace($badchars, ' ', $media->studyintro);
-
+        $images = new jbsImages();
+        $seriesimage = $images->getSeriesThumbnail($media->series_thumbnail); 
+        $this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="' . $seriesimage->height . '" alt="' . $media->series_text . '">';
+        $image = $images->getTeacherThumbnail($media->teacher_thumbnail, $media->thumb); 
+        $this->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $media->teachername . '">';
         $path1 = $media->spath . $media->fpath . $media->filename;
         if (preg_match('@^(?:http://)?([^/]+)@i', $path1)) {
             $path1 = 'http://' . $path1;
@@ -198,6 +203,17 @@ class biblestudyViewpopup extends JView {
         }
         if (isset($scripture)) {
             $text = str_replace('{{scripture}}', $scripture, $text);
+        }
+        if (isset($this->teacherimage)){
+            $text = str_replace('{{teacherimage}}',$this->teacherimage, $text);
+        }
+        if (isset($media->series_text))
+        {
+            $text = str_replace('{{series}}',$media->series_text, $text);
+        }
+        if (isset($media->series_thumbnail))
+        {
+            $text = str_replace('{{series_thumbnail}}',$this->series_thumbnail, $text);
         }
         return $text;
     }

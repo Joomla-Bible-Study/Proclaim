@@ -167,9 +167,10 @@ class jbsMedia {
         $db = JFactory::getDBO();
         $query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
                 . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath,'
-                . ' #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes,'
+                . ' #__bsms_media.media_image_name AS imname, #__bsms_media.path2 AS path2, s.studyintro, s.media_hours, s.media_minutes, s.series_id,'
                 . ' s.media_seconds, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
-                . ' s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro,  #__bsms_media.media_alttext AS malttext,'
+                . ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,  #__bsms_media.media_alttext AS malttext,'
+                . ' se.id as seriesid, se.series_text, se.series_thumbnail,'
                 . ' #__bsms_mimetype.id AS mtid, #__bsms_mimetype.mimetext, #__bsms_mimetype.mimetype FROM #__bsms_mediafiles'
                 . ' LEFT JOIN #__bsms_media ON (#__bsms_media.id = #__bsms_mediafiles.media_image)'
                 . ' LEFT JOIN #__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server)'
@@ -177,7 +178,8 @@ class jbsMedia {
                 . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type)'
                 . ' LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)'
                 . ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
-                . ' WHERE #__bsms_mediafiles.id = ' . $id . ' AND #__bsms_mediafiles.published = 1'
+                . ' LEFT JOIN #__bsms_series as se ON (s.series_id = se.id)'
+                . ' WHERE #__bsms_mediafiles.id = ' . (int)$id . ' AND #__bsms_mediafiles.published = 1'
                 . ' ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
         $db->setQuery($query);
         $db->query();

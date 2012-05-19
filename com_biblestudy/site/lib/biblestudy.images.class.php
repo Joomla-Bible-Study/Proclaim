@@ -134,7 +134,7 @@ class jbsImages {
     }
 
     function getTeacherThumbnail($image1 = NULL, $image2 = NULL) {
-        $imagepath = array();
+        $imagepath = array(); 
         $folder = $this->getTeacherImageFolder();
 
         if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0) {
@@ -149,7 +149,7 @@ class jbsImages {
             }
         }
 
-        $imagepath = $this->getImagePath($path);
+        $imagepath = $this->getImagePath($path); 
         return $imagepath;
     }
 
@@ -163,7 +163,7 @@ class jbsImages {
             }
         } else {
             $path = $folder . '/' . $image1;
-            if (substr_count($media1, '/') > 0) {
+            if (substr_count($image1, '/') > 0) {
                 $path = $image1;
             }
         }
