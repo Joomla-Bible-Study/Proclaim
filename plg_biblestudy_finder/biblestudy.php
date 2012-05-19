@@ -151,17 +151,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
             // Reindex the item
 //			$this->reindex($row->id);
         }
-        /*
-          // Check for access changes in the category
-          if ($context == 'com_categories.category')
-          {
-          // Check if the access levels are different
-          if (!$isNew && $this->old_cataccess != $row->access)
-          {
-          $this->categoryAccessChange($row);
-          }
-          }
-         */
+        
         return true;
     }
 
@@ -188,17 +178,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
                 $this->checkItemAccess($row);
             }
         }
-        /*
-          // Check for access levels from the category
-          if ($context == 'com_categories.category')
-          {
-          // Query the database for the old access level if the item isn't new
-          if (!$isNew)
-          {
-          $this->checkCategoryAccess($row);
-          }
-          }
-         */
+       
         return true;
     }
 
@@ -248,19 +228,17 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         $registry->loadString($item->params);
         $item->params = $registry;
 
-//        $registry = new JRegistry;
-//        $registry->loadString($item->metadata);
-//        $item->metadata = $registry;
+
 
         // Trigger the onContentPrepare event.
-        $item->summary = FinderIndexerHelper::prepareContent($item->studyintro, $item->params);
-        $item->body = FinderIndexerHelper::prepareContent($item->studytext, $item->params);
+        $item->summary = FinderIndexerHelper::prepareContent($item->summary, $item->params);
+        $item->body = FinderIndexerHelper::prepareContent($item->body, $item->params);
         //$item->title = $item->studytitle;
         // Build the necessary route and path information.
         $item->url = $this->getURL($item->id, $this->extension, $this->layout);
         $item->route = BiblestudyHelperRoute::getArticleRoute($item->id);
         $item->path = FinderIndexerHelper::getContentPath($item->route);
-
+        $item->state = $this->translateState($item->state);
         /*
          * Add the meta-data processing instructions based on the newsfeeds
          * configuration parameters.
@@ -272,7 +250,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         $item->addInstruction(FinderIndexer::META_CONTEXT, 'body');
 //        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
 //        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
-//		$item->addInstruction(FinderIndexer::META_CONTEXT, 'metaauthor');
+		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
         // Add the type taxonomy data.
@@ -348,9 +326,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         $case_when_item_alias .= $a_id . ' END as studytitle';
         $sql->select($case_when_item_alias);
 
-        $sql->select('u.name AS author');
+        $sql->select('u.teachername AS author');
         $sql->from('#__bsms_studies AS a');
-        $sql->join('LEFT', '#__users AS u ON u.id = a.user_id');
+        $sql->join('LEFT', '#__bsms_teachers AS u ON u.id = a.teacher_id');
 
         return $sql;
     }
