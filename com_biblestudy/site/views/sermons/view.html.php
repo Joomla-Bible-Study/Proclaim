@@ -7,7 +7,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
-
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'podcastsubscribe.php');
 
 class BiblestudyViewSermons extends JView {
 
@@ -117,11 +117,10 @@ class BiblestudyViewSermons extends JView {
                 $studies[$i]->secondary_reference = $article->text;
             }
            $this->study = $studies;
-        //Adjust the slug if there is no alias in the row
-
-        
-        $this->items = $items;
-
+           $this->items = $items;
+//get the podcast subscription
+           $podcast = new podcastSubscribe();
+           $this->subscribe = $podcast->buildSubscribeTable();
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $itemparams = $mainframe->getPageParameters();

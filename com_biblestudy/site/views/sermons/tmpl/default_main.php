@@ -44,6 +44,7 @@ $listingcall = JView::loadHelper('listing');
             ?>
         </h1>
         <?php
+        echo $this->subscribe;
         if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
             // @todo $teacher_call look like it is not used?
             $teacher_call = JView::loadHelper('teacher');
