@@ -96,7 +96,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
         </thead>
         <tfoot>
             <tr>
-                <td colspan="9">
+                <td colspan="11">
                     <?php echo $this->pagination->getListFooter(); ?>
                 </td>
             </tr>

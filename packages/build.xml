@@ -4,6 +4,7 @@
 		<mkdir dir="packages" />
 		<zip destfile="packages/com_biblestudy.zip" basedir="../com_biblestudy" />
 		<zip destfile="packages/mod_biblestudy.zip" basedir="../mod_biblestudy" />
+                <zip destfile="packages/plg_biblestudy_finder.zip" basedir="../plg_biblestudy_finder" />
 		<zip destfile="packages/plg_biblestudy_search.zip" basedir="../plg_biblestudy_search" />
 		<zip destfile="packages/plg_biblestudy_podcast.zip" basedir="../plg_biblestudy_podcast" />
                 <zip destfile="packages/plg_biblestudy_backup.zip" basedir="../plg_biblestudy_backup" />

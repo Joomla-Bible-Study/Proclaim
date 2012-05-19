@@ -331,10 +331,11 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         // Check if we can use the supplied SQL query.
         $sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
         $sql->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body');
-        $sql->select('a.published, a.studydate AS start_date, a.user_id');
-        $sql->select((int) $this->access . ' AS access, a.ordering');
+        $sql->select('a.published AS state, a.studydate AS start_date, a.user_id');
+        $sql->select('a.metakey, a.metadesc, a.metadata, a.language');
+        $sql->select('a.access, a.ordering, a.params');
         $sql->select('a.studydate AS publish_start_date');
-        //	$sql->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
+
         // Handle the alias CASE WHEN portion of the query
         $case_when_item_alias = ' CASE WHEN ';
         $case_when_item_alias .= $sql->charLength('a.alias');
@@ -344,19 +345,9 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         $case_when_item_alias .= ' ELSE ';
         $case_when_item_alias .= $a_id . ' END as studytitle';
         $sql->select($case_when_item_alias);
-        /*
-          $case_when_category_alias = ' CASE WHEN ';
-          $case_when_category_alias .= $sql->charLength('c.alias');
-          $case_when_category_alias .= ' THEN ';
-          $c_id = $sql->castAsChar('c.id');
-          $case_when_category_alias .= $sql->concatenate(array($c_id, 'c.alias'), ':');
-          $case_when_category_alias .= ' ELSE ';
-          $case_when_category_alias .= $c_id.' END as catslug';
-          $sql->select($case_when_category_alias);
-         */
+
         $sql->select('u.name AS author');
         $sql->from('#__bsms_studies AS a');
-//		$sql->join('LEFT', '#__categories AS c ON c.id = a.catid');
         $sql->join('LEFT', '#__users AS u ON u.id = a.user_id');
 
         return $sql;
