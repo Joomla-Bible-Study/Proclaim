@@ -63,6 +63,19 @@ class podcastSubscribe
         $query->where('p.published = 1');
         $db->setQuery($query);
         $podcasts = $db->loadObjectList();
+        //check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $user = JFactory::getUser();
+        $groups = $user->getAuthorisedViewLevels();
+        $count = count($podcasts);
+
+        for ($i = 0; $i < $count; $i++) {
+
+            if ($podcasts[$i]->access > 1) {
+                if (!in_array($podcasts[$i]->access, $groups)) {
+                    unset($podcasts[$i]);
+                }
+            }
+        }
         return $podcasts;
     }
     
