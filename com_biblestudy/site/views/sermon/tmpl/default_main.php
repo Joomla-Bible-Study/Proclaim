@@ -15,7 +15,13 @@ $row = $this->study;
 $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');
 ?>
-<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+
+    <?php if ($this->params->get('showpodcastsubscribedetails') == 1 || $this->params->get('showpodcastsubscribedetails') == 2)
+{
+    if ($this->params->get('showpodcastsubscribedetails')== 1){$float = 'style="float: right;"';}else{$float = 'style="float: left;"';}
+    ?><div id="subscribelinks" <?php echo $float; ?>><?php echo $this->subscribe; ?></div><?php
+}
+?> 
     <div id="bsmHeader">
 
         <div class="buttonheading">
@@ -102,6 +108,10 @@ $sharecall = JView::loadHelper('share');
                 ?>
 
             </td></tr></table>
-    <?php ?>
-
-</div><!--End of page container div-->
+   
+<?php if ($this->params->get('showpodcastsubscribedetails') == 3 || $this->params->get('showpodcastsubscribedetails') == 4)
+{
+    if ($this->params->get('showpodcastsubscribedetails')== 4){$float = 'style="float: left;"';}else{$float = 'style="float: right;"';}
+    ?><div id="subscribelinks" <?php echo $float; ?>><?php echo $this->subscribe; ?></div><?php
+}
+ 

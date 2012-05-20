@@ -9,35 +9,48 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 class podcastSubscribe
 {
     
-    function buildSubscribeTable()
+    function buildSubscribeTable($introtext = 'Our Podcasts')
     {
         $podcasts = $this->getPodcasts();
-        $subscribe = '<div class="podcastsubscribe">';
+        $totalpodcasts = $this->getTotal();
+        $subscribe = '';
         if ($podcasts)
         {
+            $subscribe = '<div class="podcastsubscribe">';
+            $subscribe .= '<table id="podcastsubscribetable"><tr align="center"><td colspan="'.$totalpodcasts.'">';
+            $subscribe .= '<h3 id="podcastsubscribetable">';
+            $subscribe .= $introtext.'</h3></td></tr><tr>';
             foreach ($podcasts AS $podcast)
             {
-                
+                $subscribe .= '<td>';
                 $image = $this->buildPodcastImage($podcast);
-                $link = '<a href="'.JURI::base().$podcast->filename.'">'.$image.'</a>';
-                $words = $podcast->podcast_subscribe_desc;
-                if ($words)
+                if ($podcast->alternatelink)
                 {
-                    $subscribe .= '<table class="podcast_small_table" style="display: inline"><tr><td>';
-                    $subscribe .= $link;
-                    $subscribe .= '</td></tr><tr align="center"><td>';
-                    $subscribe .= $words.'</td></tr></table>';
-                    $subscribe .= '</td>';
+                    $link = '<a href="'.$podcast->alternatelink.'">'.$image.'</a>';
                 }
                 else
                 {
+                    $link = '<a href="'.JURI::base().$podcast->filename.'">'.$image.'</a>';
+                }
+                
+                $words = $podcast->podcast_subscribe_desc;
+                    $subscribe .= '<table id="podcasttable"><tr>';
                     $subscribe .= '<td>';
                     $subscribe .= $link;
-                    $subscribe .= '</td>';
-                }
+                    $subscribe .= '</td></tr>';
+                    $subscribe .= '<tr><td>';
+                    if ($words)
+                    {
+                        $subscribe .= '<a href="'.JURI::base().$podcast->filename.'"><p id="podcasttable">'.$words.'</p></a>';
+                    }
+                $subscribe .= '</td></tr>';
+                $subscribe .= '</table>';
+                $subscribe .= '</td>';
             }
+            $subscribe .= '</tr></table>';
+            $subscribe .= '</div>'; 
         }
-        $subscribe .= '</div>'; 
+        
         return $subscribe;
     }
     
@@ -57,8 +70,20 @@ class podcastSubscribe
     {
         $images = new jbsImages();
         $image = $images->getMediaImage($podcast->podcast_image_subscribe);
-        $podcastimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $podcast->title . '">';
+        $podcastimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $podcast->title . '" title="'.$podcast->title.'">';
         return $podcastimage;
+    }
+    
+    function getTotal()
+    {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery('true');
+        $query->select('COUNT(*)');
+        $query->from('#__bsms_podcast as p');
+        $query->where('p.published = 1');
+        $db->setQuery($query);
+        $total = $db->loadResult();
+        return $total;
     }
 }
 

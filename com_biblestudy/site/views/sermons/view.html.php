@@ -118,9 +118,9 @@ class BiblestudyViewSermons extends JView {
             }
            $this->study = $studies;
            $this->items = $items;
-//get the podcast subscription
+            //get the podcast subscription
            $podcast = new podcastSubscribe();
-           $this->subscribe = $podcast->buildSubscribeTable();
+           $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro','Our Podcasts'));
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $itemparams = $mainframe->getPageParameters();

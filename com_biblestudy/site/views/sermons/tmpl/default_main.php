@@ -26,7 +26,12 @@ $listingcall = JView::loadHelper('listing');
 
 
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-
+<?php if ($this->params->get('showpodcastsubscribelist') == 1 || $this->params->get('showpodcastsubscribelist') == 2)
+{
+    if ($this->params->get('showpodcastsubscribelist')== 1){$float = 'style="float: left;"';}else{$float = 'style="float: right;"';}
+    ?><div id="subscribelinks" <?php echo $float; ?>><?php echo $this->subscribe; ?></div><?php
+}
+?>
     <div id="bsheader">
         <h1 class="componentheading">
             <?php
@@ -44,7 +49,7 @@ $listingcall = JView::loadHelper('listing');
             ?>
         </h1>
         <?php
-        echo $this->subscribe;
+        
         if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
             // @todo $teacher_call look like it is not used?
             $teacher_call = JView::loadHelper('teacher');
@@ -163,5 +168,11 @@ $listingcall = JView::loadHelper('listing');
 //}
         ?>
     </div> <!--end of bsfooter div-->
+ <?php if ($this->params->get('showpodcastsubscribelist') == 3 || $this->params->get('showpodcastsubscribelist') == 4)
+{
+    if ($this->params->get('showpodcastsubscribelist')== 4){$float = 'style="float: left;"';}else{$float = 'style="float: right;"';}
+    ?><div id="subscribelinks" <?php echo $float; ?>><?php echo $this->subscribe; ?></div><?php
+}
+?>   
 </div><!--end of bspagecontainer div-->
 

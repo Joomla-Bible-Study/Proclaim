@@ -6,6 +6,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'podcastsubscribe.php');
 $uri = JFactory::getURI();
 
 class BiblestudyViewSermon extends JView {
@@ -75,6 +76,9 @@ class BiblestudyViewSermon extends JView {
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
 
+         //get the podcast subscription
+           $podcast = new podcastSubscribe();
+           $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro','Our Podcasts'));
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();

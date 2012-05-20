@@ -144,6 +144,6 @@ switch ($this->params->get('link_comments', 0)) {
                 </form>
             <?php } //end if $allow > 9
             ?>
-        </div>
+        
     </div>
 </div>

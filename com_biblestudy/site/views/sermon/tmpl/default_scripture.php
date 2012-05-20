@@ -9,7 +9,7 @@
 
 //No Direct Access
 defined('_JEXEC') or die;;
-
+?> <div> <?php
 switch ($this->params->get('show_passage_view', '0'))
 {
 	case 0:
@@ -28,14 +28,15 @@ switch ($this->params->get('show_passage_view', '0'))
 $passage_call = JView::loadHelper('passage');
 $response = getPassage($this->params, $this->studydetails);
 echo $response;
-echo '</div>';
+?> </div> <?php
 break;
 
 case 2:
-	echo '<div id="scripture">';
+	?><div id="scripture"> <?php
 	$passage_call = JView::loadHelper('passage');
 	$response = getPassage($this->params, $this->studydetails);
 	echo $response;
-	echo '</div>';
+	 ?> </div> <?php
 	break;
 }
+?> </div>
