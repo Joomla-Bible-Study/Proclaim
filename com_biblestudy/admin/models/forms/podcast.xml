@@ -61,5 +61,6 @@
        <field name="podcast_subscribe_desc" type="text" label="JBS_PDC_SUBSCRIBE_WORDS"
                 description="JBS_PDC_SUBSCRIBE_WORDS_DESC" size="20" default=""
        />
+       <field name="alternatelink" type="text" label="JBS_PDC_ALTERNATE_LINK" description="JBS_PDC_ALTERNATE_LINK_DESC" size="75" />
     
 </form>

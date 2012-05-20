@@ -97,6 +97,10 @@ defined('_JEXEC') or die;
                     
                     <?php echo $this->form->getInput('podcast_subscribe_desc'); ?>
                 </li>
+                <li>
+                    <?php echo $this->form->getLabel('alternatelink'); ?>
+                    <?php echo $this->form->getInput('alternatelink'); ?>
+                </li>
             </ul>
         </fieldset>
         <fieldset class="panelform">

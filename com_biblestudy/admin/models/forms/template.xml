@@ -264,6 +264,16 @@
 				<option value="0">JBS_TPL_HIDE_LINK</option>
 				<option value="1">JBS_TPL_SHOW_LINK</option>
 			</field>
+                        <field name="showpodcastsubscribelist" type="list" default="1"
+                                label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC" >
+                                    <option value="0">JBS_SHOW_PODCAST_SUBSCRIBE_NO</option>
+                                    <option value="1">JBS_SHOW_PODCAST_SUBSCRIBE_UR</option>
+                                    <option value="2">JBS_SHOW_PODCAST_SUBSCRIBE_UL</option>
+                                    <option value="3">JBS_SHOW_PODCAST_SUBSCRIBE_LR</option>
+                                    <option value="4">JBS_SHOW_PODCAST_SUBSCRIBE_LL</option>
+                        </field>
+                        <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
+                                label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC" />
 			<field name="details_text" type="text" default="Study Details"
 				size="50" label="JBS_TPL_LISTITEMS_DETAILS_TEXT" description="JBS_TPL_LISTITEMS_DETAILS_TEXT_DESC" />
 			<field name="show_book_search" type="list" default="1"
@@ -614,6 +624,14 @@
 				<option value="1">JBS_TPL_ALL_PLUGINS</option>
 				<option value="2">JBS_TPL_SCRIPTURE_LINKS</option>
 			</field>
+                        <field name="showpodcastsubscribedetails" type="list" default="1"
+                                label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC" >
+                                    <option value="0">JBS_SHOW_PODCAST_SUBSCRIBE_NO</option>
+                                    <option value="1">JBS_SHOW_PODCAST_SUBSCRIBE_UR</option>
+                                    <option value="2">JBS_SHOW_PODCAST_SUBSCRIBE_UL</option>
+                                    <option value="3">JBS_SHOW_PODCAST_SUBSCRIBE_LR</option>
+                                    <option value="4">JBS_SHOW_PODCAST_SUBSCRIBE_LL</option>
+                        </field>
 			<field name="show_comments" type="accesslevel" default=""
 				label="JBS_TPL_DETAILS_SHOW_COMMENTS" description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC" />
 			<field name="link_comments" default="0" type="list"

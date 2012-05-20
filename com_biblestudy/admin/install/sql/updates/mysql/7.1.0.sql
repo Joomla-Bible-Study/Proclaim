@@ -116,4 +116,5 @@ ADD COLUMN `aws_key` varchar(100) NOT NULL,
 ADD COLUMN `aws_secret` varchar(100) NOT NULL;
 
 ALTER TABLE `#__bsms_podcast` ADD COLUMN `podcast_image_subscribe` VARCHAR(150) COMMENT 'The image to use for the podcast subscription image',
-ADD COLUMN `podcast_subscribe_desc` VARCHAR(150) COMMENT 'Words to go below podcast subscribe image';
+ADD COLUMN `podcast_subscribe_desc` VARCHAR(150) COMMENT 'Words to go below podcast subscribe image',
+ADD COLUMN `alternatelink` varchar(300) COMMENT 'replaces podcast file link on subscription';
