@@ -253,6 +253,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
   `detailstemplateid` int(11) DEFAULT NULL,
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
+  `alternatelink` varchar(300) COMMENT 'replaces podcast file link on subscription',
+  `alternateimage` varchar(150),
+  `podcast_subscribe_show` int(3),
+  `alternatewords` varchar(20),
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)

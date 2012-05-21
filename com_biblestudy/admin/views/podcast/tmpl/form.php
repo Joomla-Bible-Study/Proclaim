@@ -101,6 +101,18 @@ defined('_JEXEC') or die;
                     <?php echo $this->form->getLabel('alternatelink'); ?>
                     <?php echo $this->form->getInput('alternatelink'); ?>
                 </li>
+                <li>
+                    <?php echo $this->form->getLabel('alternateimage'); ?>
+                    <?php echo $this->form->getInput('alternateimage'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('podcast_subscribe_show'); ?>
+                    <?php echo $this->form->getInput('podcast_subscribe_show'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('alternatewords'); ?>
+                    <?php echo $this->form->getInput('alternatewords'); ?>
+                </li>
             </ul>
         </fieldset>
         <fieldset class="panelform">
