@@ -12,40 +12,72 @@ class podcastSubscribe
     function buildSubscribeTable($introtext = 'Our Podcasts')
     {
         $podcasts = $this->getPodcasts();
-        $totalpodcasts = $this->getTotal();
+        
         $subscribe = '';
         if ($podcasts)
         {
             $subscribe = '<div class="podcastsubscribe">';
-            $subscribe .= '<table id="podcastsubscribetable"><tr align="center"><td colspan="'.$totalpodcasts.'">';
-            $subscribe .= '<h3 id="podcastsubscribetable">';
-            $subscribe .= $introtext.'</h3></td></tr><tr>';
+            $subscribe .= '<table id="podcastsubscribetable"><caption id="podcastsubscribetable">'.$introtext.'</caption>';
+            $subscribe .= '<tr>';
             foreach ($podcasts AS $podcast)
             {
-                $subscribe .= '<td>';
-                $image = $this->buildPodcastImage($podcast);
-                if ($podcast->alternatelink)
+                $podcastshow = $podcast->podcast_subscribe_show;
+                if (!$podcastshow){$podcastshow = 2;}
+                switch ($podcastshow)
                 {
-                    $link = '<a href="'.$podcast->alternatelink.'">'.$image.'</a>';
-                }
-                else
-                {
-                    $link = '<a href="'.JURI::base().$podcast->filename.'">'.$image.'</a>';
-                }
-                
-                $words = $podcast->podcast_subscribe_desc;
-                    $subscribe .= '<table id="podcasttable"><tr>';
-                    $subscribe .= '<td>';
-                    $subscribe .= $link;
-                    $subscribe .= '</td></tr>';
-                    $subscribe .= '<tr><td>';
-                    if ($words)
-                    {
+                    case 1:
+                        break;
+                    case 2:
+                        $subscribe .= '<td>';
+                        $image = $this->buildPodcastImage($podcast->podcast_image_subscribe);
+                        $link = '<a href="'.JURI::base().$podcast->filename.'">'.$image.'</a>';
+                        $subscribe .= '<table id="podcasttable"><tr>';
+                        $subscribe .= '<td>';
+                        $subscribe .= $link;
+                        $subscribe .= '</td></tr>';
+                        $subscribe .= '<tr><td>';
+                        $subscribe .= '<a href="'.JURI::base().$podcast->filename.'"><p id="podcasttable">'.$podcast->podcast_subscribe_desc.'</p></a>';
+                        $subscribe .= '</td></tr>';
+                        $subscribe .= '</table>';
+                        $subscribe .= '</td>';
+                        break;
+                    case 3:
+                        $subscribe .= '<td>';
+                        $image = $this->buildPodcastImage($podcast->alternateimage);
+                        $link1 = '<a href="'.$podcast->alternatelink.'">'.$image.'</a>';
+                        $subscribe .= '<table id="podcasttable"><tr>';
+                        $subscribe .= '<td>';
+                        $subscribe .= $link;
+                        $subscribe .= '</td></tr>';
+                        $subscribe .= '<tr><td>';
+                        $subscribe .= '<a href="'.JURI::base().$podcast->filename.'"><p id="podcasttable">'.$podcast->alternatewords.'</p></a>';
+                        $subscribe .= '</td></tr>';
+                        $subscribe .= '</table>';
+                        $subscribe .= '</td>';
+                        break;
+                    case 4:
+                        $subscribe .= '<td>';
+                        $image1 = $this->buildPodcastImage($podcast->podcast_image_subscribe);
+                        $link1 = '<a href="'.JURI::base().$podcast->filename.'">'.$image1.'</a>';
+                        $image2 = $this->buildPodcastImage($podcast->alternateimage);
+                        $link2 = '<a href="'.$podcast->alternatelink.'">'.$image2.'</a>';
+                        $subscribe .= '<table id="podcasttable"><tr>';
+                        $subscribe .= '<td>';
+                        $subscribe .= $link1;
+                        $subscribe .= '</td>';
+                        $subscribe .= '<td>';
+                        $subscribe .= $link2;
+                        $subscribe .= '</td></tr>';
+                        $subscribe .= '<tr><td>';
                         $subscribe .= '<a href="'.JURI::base().$podcast->filename.'"><p id="podcasttable">'.$words.'</p></a>';
-                    }
-                $subscribe .= '</td></tr>';
-                $subscribe .= '</table>';
-                $subscribe .= '</td>';
+                        $subscribe .= '</td>';
+                        $subscribe .= '<td>';
+                        $subscribe .= '<a href="'.JURI::base().$podcast->filename.'"><p id="podcasttable">'.$podcast->alternatewords.'</p></a>';
+                        $subscribe .= '</td></tr>';
+                        $subscribe .= '</table>';
+                        $subscribe .= '</td>';
+                        break;
+                }
             }
             $subscribe .= '</tr></table>';
             $subscribe .= '</div>'; 
@@ -79,25 +111,15 @@ class podcastSubscribe
         return $podcasts;
     }
     
-    function buildPodcastImage($podcast)
+    function buildPodcastImage($podcastimagefromdb = 'null')
     {
         $images = new jbsImages();
-        $image = $images->getMediaImage($podcast->podcast_image_subscribe);
+        $image = $images->getMediaImage($podcastimagefromdb);
         $podcastimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $podcast->title . '" title="'.$podcast->title.'">';
         return $podcastimage;
     }
     
-    function getTotal()
-    {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery('true');
-        $query->select('COUNT(*)');
-        $query->from('#__bsms_podcast as p');
-        $query->where('p.published = 1');
-        $db->setQuery($query);
-        $total = $db->loadResult();
-        return $total;
-    }
+    
 }
 
 ?>
