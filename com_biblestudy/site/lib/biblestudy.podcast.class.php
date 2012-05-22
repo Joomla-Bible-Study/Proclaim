@@ -43,6 +43,7 @@ class JBSPodcast
                 if ($checkresult)
                 {
                 $description = str_replace("&","and",$podinfo->description);
+                $description = strip_tags($description);
 				$detailstemplateid = $podinfo->detailstemplateid;
 				if (!$detailstemplateid) {$detailstemplateid = 1;}
 		  		$detailstemplateid = '&amp;t='.$detailstemplateid;
@@ -110,7 +111,7 @@ class JBSPodcast
         			        $episode->id = $episode->study_id;
         			        $scripture = getScripture($params, $episode, $esv, $scripturerow);
         					$pod_title = $podinfo->episodetitle;
-        			         if (!$episode->size){$episode->size = '1024';}
+        			         if (!$episode->size){$episode->size = '1024';} 
         					switch ($pod_title)
         					{
         						case 0:
@@ -133,10 +134,22 @@ class JBSPodcast
 
         							$title = $element->element;
         							break;
+                                                        case 6:
+                                                                $query = $db->getQuery('true');
+                                                                $query->select('*');
+                                                                $query->from('#__bsms_books');
+                                                                $query->where('booknumber = '.$episode->booknumber);
+                                                                $db->setQuery($query);
+                                                                $db->query();
+                                                                $book = $db->loadObject();
+                                                                $bookname = JText::_($book->bookname);
+                                                                $title = $bookname.' '.$episode->chapter_begin;
+                                                                break;
         					}
 
         					$title = str_replace('&',"and",$title);
         					$description = str_replace('&',"and",$episode->studyintro);
+                                                $description = strip_tags($description);
         					$episodedetailtemp = '';
         					$episodedetailtemp = '
                         	   <item>
