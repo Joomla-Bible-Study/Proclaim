@@ -108,6 +108,7 @@
 				label="JBS_TPL_VERSES_SHOW_VERSES" description="JBS_TPL_VERSES_SHOW_VERSES_DESC">
 				<option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
 				<option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
+                                <option value="2">JBS_TPL_SHOW_ONLY_BOOKS</option>
 			</field>
 			<field name="stylesheet" type="text" size="50" default=""
 				label="JBS_TPL_VERSES_STYLESHEET" description="JBS_TPL_VERSES_STYLESHEET_DESC" />
