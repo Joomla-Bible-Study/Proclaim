@@ -22,16 +22,16 @@ $teachers = $params->get('teacher_id');
 
 
 $listingcall = JView::loadHelper('listing');
+
 ?>
 
-
-<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 <?php if ($this->params->get('showpodcastsubscribelist') == 1 || $this->params->get('showpodcastsubscribelist') == 2)
 {
     if ($this->params->get('showpodcastsubscribelist')== 1){$float = 'style="float: left;"';}else{$float = 'style="float: right;"';}
-    ?><div id="subscribelinks" <?php echo $float; ?>><?php echo $this->subscribe; ?></div><?php
-}
-?>
+    ?><div id="subscribelinks" <?php //echo $float; ?>><?php echo $this->subscribe; ?></div><?php
+}?>
+<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
+
     <div id="bsheader">
         <h1 class="componentheading">
             <?php
