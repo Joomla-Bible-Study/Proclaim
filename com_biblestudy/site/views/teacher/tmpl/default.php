@@ -7,9 +7,9 @@ if ($this->params->get('useexpert_teacherdetail')> 0)
     {
      	echo $this->loadTemplate('custom');
     }
-elseif ($this->params->get('teachertemplate') )
+elseif ($this->params->get('teachertemplate') > 0 )
     {
-        echo $this->loadTemplate($this->params->get('teachertemplate'));
+        echo $this->loadTemplate($this->params->get('teachertemplate')); 
     }     
 else
     {
