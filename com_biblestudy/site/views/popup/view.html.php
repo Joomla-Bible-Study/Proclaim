@@ -37,7 +37,7 @@ class biblestudyViewpopup extends JView {
         jimport('joomla.application.component.helper');
 
         $getMedia = new jbsMedia();
-        $media = $getMedia->getMediaRows2($mediaid); 
+        $media = $getMedia->getMediaRows2($mediaid);
         $db = JFactory::getDBO();
         $query = 'SELECT * FROM #__bsms_templates WHERE id = ' . $templateid;
         $db->setQuery($query);
@@ -67,9 +67,9 @@ class biblestudyViewpopup extends JView {
         $studytitle = str_replace($badchars, ' ', $media->studytitle);
         $studyintro = str_replace($badchars, ' ', $media->studyintro);
         $images = new jbsImages();
-        $seriesimage = $images->getSeriesThumbnail($media->series_thumbnail); 
+        $seriesimage = $images->getSeriesThumbnail($media->series_thumbnail);
         $this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="' . $seriesimage->height . '" alt="' . $media->series_text . '">';
-        $image = $images->getTeacherThumbnail($media->teacher_thumbnail, $media->thumb); 
+        $image = $images->getTeacherThumbnail($media->teacher_thumbnail, $media->thumb);
         $this->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $media->teachername . '">';
         $path1 = $media->spath . $media->fpath . $media->filename;
         if (preg_match('@^(?:http://)?([^/]+)@i', $path1)) {
@@ -124,19 +124,15 @@ class biblestudyViewpopup extends JView {
                 echo "<div align='center'>";
                 echo "<video height=" . $playerheight . "
                 poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
-                width=" . $playerwidth . " id='placeholder'><source src='".$path1."'>" .
+                width=" . $playerwidth . " id='placeholder'><source src='" . $path1 . "'>" .
                 "<a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>";
                 echo "</div>";
-
                 echo "<script type='text/javascript'>
 				jwplayer('placeholder').setup({
 				flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
-								title:'" . $studytitle . "',
-								author:'" . $media->teachername . "',
-								date:'" . $media->studydate . "',
-								description:'" . $studyintro . "',
-			});
-		</script>";
+                                autostart:'true',
+                                });
+                       </script>";
 
                 //  Flashvar - Colors, Autostart, Title, Author, Date, Description, Link, Image
                 //    Params - Allowfullscreen, Allowscriptaccess
@@ -204,16 +200,14 @@ class biblestudyViewpopup extends JView {
         if (isset($scripture)) {
             $text = str_replace('{{scripture}}', $scripture, $text);
         }
-        if (isset($this->teacherimage)){
-            $text = str_replace('{{teacherimage}}',$this->teacherimage, $text);
+        if (isset($this->teacherimage)) {
+            $text = str_replace('{{teacherimage}}', $this->teacherimage, $text);
         }
-        if (isset($media->series_text))
-        {
-            $text = str_replace('{{series}}',$media->series_text, $text);
+        if (isset($media->series_text)) {
+            $text = str_replace('{{series}}', $media->series_text, $text);
         }
-        if (isset($media->series_thumbnail))
-        {
-            $text = str_replace('{{series_thumbnail}}',$this->series_thumbnail, $text);
+        if (isset($media->series_thumbnail)) {
+            $text = str_replace('{{series_thumbnail}}', $this->series_thumbnail, $text);
         }
         return $text;
     }

@@ -10,6 +10,8 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+jimport('joomla.environment.response');
+
 class Dump_File {
 
     /**
@@ -18,7 +20,6 @@ class Dump_File {
      * @param object $mid
      * @since 6.1.2
      */
-
     public function download($mid) {
         // Clears file status cache
         clearstatcache();
@@ -63,9 +64,11 @@ class Dump_File {
 
 
         if ($size == Null) {
-            if (!$size = getRemoteFileSize($download_file))
-            {die(JText::_('COM_BIBLESTUDY_FILE_SIZE_EMPTY'));
-            exit;}
+
+            if (!$size = $this->getRemoteFileSize($download_file)) {//die(JText::_('COM_BIBLESTUDY_FILE_SIZE_EMPTY'));
+                //exit;
+                $size = $this->getRemoteFileSize($download_file);
+            }
         }
 
         // Clean the output buffer
@@ -122,10 +125,10 @@ class Dump_File {
                     $resultRange = $httpRange[0] . '-' . $httpRange[1];
             }
         }
-        header('Content-Length: '. $size);
+        header('Content-Length: ' . (string) $size);
         header('Content-Range: bytes ' . $resultRange . '/' . $size);
 
-        header('Content-Type: ' . (string) $mimeType); // joomla will overwrite this...
+        header('Content-Type: ' . $mimeType); // joomla will overwrite this...
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Content-Transfer-Encoding: binary\n');
 
@@ -152,6 +155,7 @@ class Dump_File {
         flush();
         exit;
     }
+
     /**
      * Method tho track Downloads
      *
@@ -172,39 +176,40 @@ class Dump_File {
      * @param object $url
      * @return boolean
      */
-
-    function getRemoteFileSize($url)
-    {
+    function getRemoteFileSize($url) {
         $parsed = parse_url($url);
         $host = $parsed["host"];
         $fp = @fsockopen($host, 80, $errno, $errstr, 20);
-        if(!$fp)return false;
+        if (!$fp)
+            return false;
         else {
             @fputs($fp, "HEAD $url HTTP/1.1\r\n");
             @fputs($fp, "HOST: $host\r\n");
             @fputs($fp, "Connection: close\r\n\r\n");
             $headers = "";
-            while(!@feof($fp))$headers .= @fgets ($fp, 128);
+            while (!@feof($fp))
+                $headers .= @fgets($fp, 128);
         }
-        @fclose ($fp);
+        @fclose($fp);
         $return = false;
         $arr_headers = explode("\n", $headers);
-        foreach($arr_headers as $header) {
+        foreach ($arr_headers as $header) {
             $s = "Content-Length: ";
-            if(substr(strtolower ($header), 0, strlen($s)) == strtolower($s)) {
-            $return = trim(substr($header, strlen($s)));
-            break;
+            if (substr(strtolower($header), 0, strlen($s)) == strtolower($s)) {
+                $return = trim(substr($header, strlen($s)));
+                break;
             }
         }
-        if($return){
+        if ($return) {
             $size = round($return / 1024, 2);
             $sz = "KB"; // Size In KB
             if ($size > 1024) {
-            $size = round($size / 1024, 2);
-            $sz = "MB"; // Size in MB
-        }
-        $return = "$size $sz";
+                $size = round($size / 1024, 2);
+                $sz = "MB"; // Size in MB
+            }
+            $return = "$size $sz";
         }
         return $return;
     }
+
 }

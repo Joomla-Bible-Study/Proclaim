@@ -1,5 +1,4 @@
-<?php
-
+a<?php
 /**
  * @version $Id: biblestudy.media.class.php 1 $
  * @package BibleStudy
@@ -179,7 +178,7 @@ class jbsMedia {
                 . ' LEFT JOIN #__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)'
                 . ' LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
                 . ' LEFT JOIN #__bsms_series as se ON (s.series_id = se.id)'
-                . ' WHERE #__bsms_mediafiles.id = ' . (int)$id . ' AND #__bsms_mediafiles.published = 1'
+                . ' WHERE #__bsms_mediafiles.id = ' . (int) $id . ' AND #__bsms_mediafiles.published = 1'
                 . ' ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
         $db->setQuery($query);
         $db->query();
@@ -371,10 +370,10 @@ class jbsMedia {
                 switch ($player->type) {
                     case 2: //Inline
                         $playercode = "<video height=" . $playerheight . " poster=" . $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') . "
-                width=" . $playerwidth . " id='placeholder'> <source src='".$path1."' /> </video>
+                        width=" . $playerwidth . " id='placeholder'> <source src='" . $path1 . "' /><a href='http://www.adobe.com/go/getflashplayer'>" . JText::_('Get flash') . "</a> " . JText::_('to see this player') . "</video>
 			<script type='text/javascript'>
 			jwplayer('placeholder').setup({
-			flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf'
+                                flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
                             });
 			</script>";
                         break;
@@ -400,7 +399,7 @@ class jbsMedia {
                         $playercode =
                                 "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=3&t=" . $template .
                                 "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
-                <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
+                                <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
                                 "' alt='" . $src . "'></a>";
                         break;
 
@@ -447,7 +446,7 @@ class jbsMedia {
                         $playercode =
                                 "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=7&t=" . $template .
                                 "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
-                <img src='" . $src . "' border='0' height='" . $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize .
+                                <img src='" . $src . "' border='0' height='" . $height . "' width='" . $width . "' title='" . $mimetype . " " . $duration . " " . $filesize .
                                 "' alt='" . $src . "'></a>";
                         return $playercode;
                         break;
@@ -458,7 +457,7 @@ class jbsMedia {
                 $playercode =
                         "<a href=\"#\" onclick=\"window.open('index.php?option=com_biblestudy&view=popup&player=8&t=" . $template .
                         "&mediaid=" . $media->id . "&tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"\">
-            <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
+                        <img src='" . $src . "' height='" . $height . "' width='" . $width . "' border='0' title='" . $mimetype . " " . $duration . " " . $filesize .
                         "' alt='" . $src . "'></a>";
 
                 return $playercode;
