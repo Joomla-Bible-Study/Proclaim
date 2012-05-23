@@ -18,7 +18,7 @@ class BiblestudyViewSermon extends JView {
         $mainframe = JFactory::getApplication();
         $study = $this->get('Item');
         $relatedstudies = new relatedStudies();
-        $therelated = $relatedstudies->getRelated($study);
+        
         // Convert parameter fields to objects.
         $template = $this->get('template');
 
@@ -26,7 +26,7 @@ class BiblestudyViewSermon extends JView {
         $registry->loadJSON($template[0]->params);
         $params = $registry;
         $a_params = $this->get('Admin');
-
+        $related = $relatedstudies->getRelated($study, $params);
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($a_params[0]->params);
