@@ -41,14 +41,10 @@ class relatedStudies
         {
             $registry->loadJSON($study->params);
             $studyparams = $registry;
-            $studykeywords = $studyparams->get('metakey');
-            if (!is_array($studykeywords)&& $studykeywords )
+            $studykeywords = $studyparams->get('metakey'); 
+            if (substr_count($studykeywords,','))
             {
-                if (strcmp($keyword,$studykeywords)){$score[] = $study->id;}
-            }
-            elseif (!empty($keyarray)) 
-            {
-                $studykeyarray = explode(',', $studykeywords);
+                $studykeyarray = explode($studykeywords);
                 foreach ($keyarray as $key)
                 {
                     if (in_array($key, $studykeyarray))
@@ -57,6 +53,11 @@ class relatedStudies
                     }
                 }
             }
+            else
+            {
+                if (strcmp($keyword,$studykeywords)){$score[] = $study->id;}
+            }
+            
             if (!is_array($topicsarray)&& $study->topics_id )
             {
                 if (strcmp($topicword,$study->topics_id)){$score[] = $study->id;}
