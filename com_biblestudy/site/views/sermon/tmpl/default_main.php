@@ -17,7 +17,7 @@ $sharecall = JView::loadHelper('share');
 
 ?> 
     <div id="bsmHeader">
-
+<?php echo $this->related; ?>
         <div class="buttonheading">
 
             <?php
@@ -64,7 +64,6 @@ $sharecall = JView::loadHelper('share');
 
                 </td></tr></table>
     </div><!-- header -->
-?>
 
     <?php if ($this->params->get('showpodcastsubscribedetails') == 1 || $this->params->get('showpodcastsubscribedetails') == 2)
 {

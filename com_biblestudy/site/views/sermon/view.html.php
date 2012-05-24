@@ -26,7 +26,7 @@ class BiblestudyViewSermon extends JView {
         $registry->loadJSON($template[0]->params);
         $params = $registry;
         $a_params = $this->get('Admin');
-        $related = $relatedstudies->getRelated($study, $params);
+        $this->related = $relatedstudies->getRelated($study, $params); 
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($a_params[0]->params);
@@ -41,6 +41,7 @@ class BiblestudyViewSermon extends JView {
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         $document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
         $url = $params->get('css','biblestudy.css');
         if ($url) {
             $document->addStyleSheet(JURI::base().'media/com_biblestudy/css/site/'.$url);

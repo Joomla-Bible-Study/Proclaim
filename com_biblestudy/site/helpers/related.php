@@ -16,7 +16,7 @@ class relatedStudies
         $topicsgo = true;
         $registry = new JRegistry();
         $registry->loadJSON($row->params);
-        $params = $registry;
+        $params = $registry; 
         $keywords = $params->get('metakey');
         $topics = $row->topics_id;
         if (!$keywords){$keygo = false;}
@@ -38,7 +38,7 @@ class relatedStudies
         $scored =  ($this->score);
         
         $related = $this->getRelatedLinks($scored, $params);
-       // return $related;
+        return $related;
     }
     
     function parseKeys($source, $compare, $id)
@@ -130,20 +130,19 @@ class relatedStudies
             $query->where('id = '.$link);
             $db->setQuery($query);
             $db->query();
-            $study = $db->loadObject();
-            $study->slug = $study->alias ? ($study->id . ':' . $study->alias) : str_replace(' ', '-', htmlspecialchars_decode($study->studytitle, ENT_QUOTES)) . ':' . $study->id;
-            $studyrecords[] = array('text'=>$study->studytitle,'value'=>JRoute::_('index.php?option=com_biblestudy&view=sermon&id='.$study->slug.'&t='.$params->get('detailstemplateid',1)));
+            $studyrecords[] = $db->loadObject();
+           
         }
         
-        //print_r($studyrecords);
-        $go = 'onchange="this.form.submit()"';
-        $related[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_RELATED_STUDY'));
-        $related = array_merge($related, $studyrecords);
-        $relatedstudies = JHTML::_('select.genericlist', $related, '', 'class="inputbox" size="1" ' . 'onchange="goTo()"', 'value', 'text', "");
-       // $relatedlinks = '<form action="index.php?option=com_biblestudy&view=sermon&t=' . JRequest::getInt('t', '1').'" method="post">'.$relatedstudies.'</form>';
-        $relatedlinks = '<form >'.$relatedstudies.'</form>';
-        //$relatedlinks = $relatedstudies;
-        echo $relatedlinks;
+        $related = '<select onchange="goTo()" id="urlList"><option value="">'.JText::_('JBS_CMN_SELECT_RELATED_STUDY').'</option>';
+        foreach ($studyrecords as $studyrecord)
+        {
+            $related .= '<option value="'.JRoute::_('index.php?option=com_biblestudy&view=sermon&id='.$studyrecord->id.'&t='.JRequest::getInt('t', '1')).'">'.$studyrecord->studytitle.'</option>';
+        }
+        $related .= '</select>';
+       
+        $relatedlinks = '<div class="related"><form >'.$related.'</form></div>';
+        return $relatedlinks; 
 
     }
 }
