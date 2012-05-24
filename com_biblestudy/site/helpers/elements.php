@@ -205,12 +205,16 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
             $elementid->element = $row->totaldownloads;
             break;
         case 30:
-            $elemntid->id = 'teacher-image';
-            $elemtnid->headetext = JText::_('JBS_CMN_TEACHER_IMAGE');
-            $query = "SELECT thumb FROM #__bsms_teachers WHERE id = $row->id";
+            $timages = new jbsImages();
+            $elementid->id = 'teacher-image';
+            $elemtenid->headetext = JText::_('JBS_CMN_TEACHER_IMAGE');
+            $query = "SELECT thumb, teacher_thumbnail FROM #__bsms_teachers WHERE id = $row->teacher_id";
             $db->setQuery($query);
             $thumb = $db->loadObject();
-            $elementid->element = '<img src="' . $thumb->thumb . '"/>';
+            if ($thumb->teacher_thumbnail){ $timage = $timages->getTeacherImage($thumb->teacher_thumbnail);}
+            else
+            {$timage = $timage = $timages->getTeacherImage($thumb->thumb);}
+            $elementid->element = '<img src="' . $timage->path . '" width="'.$timage->width.'" height="'.$timage->height.'" />';
             break;
         case 100:
             $elementid->id = '';
