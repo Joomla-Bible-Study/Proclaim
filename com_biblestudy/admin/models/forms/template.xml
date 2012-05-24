@@ -625,6 +625,12 @@
 				<option value="1">JBS_TPL_ALL_PLUGINS</option>
 				<option value="2">JBS_TPL_SCRIPTURE_LINKS</option>
 			</field>
+                        <field name="showrelated" type="list" default="1"
+                                label="JBS_TPL_SHOW_RELATED" description="JBS_TPL_SHOW_RELATED_DESC" >
+                                <option value="0">JBS_TPL_RELATED_NO_SHOW</option>
+                                <option value="1">JBS_TPL_RELATED_TOP</option>
+                                <option value="2">JBS_TPL_RELATED_BOTTOM</option>
+                        </field>
                         <field name="showpodcastsubscribedetails" type="list" default="1"
                                 label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC" >
                                     <option value="0">JBS_SHOW_PODCAST_SUBSCRIBE_NO</option>

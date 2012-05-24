@@ -52,4 +52,13 @@
            description="JBS_CMN_FIELD_LANGUAGE_DESC" class="inputbox" >
         <option value="*">JALL</option>
     </field>
+    <field name="facebooklink" type="text" format="raw" label="JBS_TCH_FACEBOOK" description="JBS_TCH_FACEBOOK_DESC" size="65"/>
+    <field name="twitterlink" type="text" format="raw" label="JBS_TCH_TWITTER" description="JBS_TCH_TWITTER_DESC" size="65"/>
+    <field name="bloglink" type="text" format="raw" label="JBS_TCH_BLOG" description="JBS_TCH_BLOG_DESC" size="100"/>
+    <field name="link1" type="text" format="raw" label="JBS_TCH_LINK" description="JBS_TCH_LINK_DESC" size="100"/>
+    <field name="link2" type="text" format="raw" label="JBS_TCH_LINK" description="JBS_TCH_LINK_DESC" size="100"/>
+    <field name="link3" type="text" format="raw" label="JBS_TCH_LINK" description="JBS_TCH_LINK_DESC" size="100"/>
+    <field name="linklabel1" type="text" format="raw" label="JBS_TCH_LINK_LABEL" description="JBS_TCH_LINK_LABEL_DESC" size="100"/>
+    <field name="linklabel2" type="text" format="raw" label="JBS_TCH_LINK_LABEL" description="JBS_TCH_LINK_LABEL_DESC" size="100"/>
+    <field name="linklabel3" type="text" format="raw" label="JBS_TCH_LINK_LABEL" description="JBS_TCH_LINK_LABEL_DESC" size="100"/>
 </form>

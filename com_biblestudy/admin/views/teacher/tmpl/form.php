@@ -12,7 +12,20 @@ defined('_JEXEC') or die;
 <form
     action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
     method="post" name="adminForm" id="adminForm">
-    <div class="width-100">
+    <div class="width-35 fltrt">
+        <fieldset class="panelform">
+            <legend>
+
+                <?php echo JText::_('JBS_TCH_LINKS'); ?></legend>
+            <ul class="adminformlist">
+                <li>
+                    <?php echo $this->form->getLabel('facebooklink'); ?>
+                    <?php echo $this->form->getInput('facebooklink'); ?>
+                </li>
+            </ul>
+        </fieldset>
+</div>
+    <div class="width-65 fltlft">
         <fieldset class="panelform">
             <legend>
 
@@ -85,8 +98,7 @@ defined('_JEXEC') or die;
                     <?php echo $this->form->getInput('id'); ?></li>
 
             </ul>
-            <div class="clr"></div>
-
+           
 
 
 
@@ -95,6 +107,9 @@ defined('_JEXEC') or die;
             <?php echo $this->form->getInput('short'); ?>
         </fieldset>
     </div>
+     <div class="clr"></div>
+
+    
     <div>
         <fieldset class="panelform">
             <legend>
@@ -103,7 +118,6 @@ defined('_JEXEC') or die;
         </fieldset>
     </div>
     <div class="clr"></div>
-
 
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">

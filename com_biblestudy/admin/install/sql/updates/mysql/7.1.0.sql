@@ -121,3 +121,13 @@ ADD COLUMN `alternatelink` varchar(300) COMMENT 'replaces podcast file link on s
 ADD COLUMN `alternateimage` varchar(150) COMMENT 'alternate image path for podcast',
 ADD COLUMN `podcast_subscribe_show` int(3),
 ADD COLUMN `alternatewords` varchar(20);
+
+ALTER TABLE `#__bsms_teachers` ADD COLUMN `facebooklink` varchar(150),
+ADD COLUMN `twitterlink` varchar(150),
+ADD COLUMN `bloglink` varchar(150),
+ADD COLUMN `link1` varchar(150),
+ADD COLUMN `linklabel1` varchar(150),
+ADD COLUMN `link2` varchar(150),
+ADD COLUMN `linklabel2` varchar(150),
+ADD COLUMN `link3` varchar(150),
+ADD COLUMN `linklabel3` varchar(150);

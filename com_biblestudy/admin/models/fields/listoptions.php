@@ -42,6 +42,7 @@ class JFormFieldListoptions extends JFormFieldList
 		$options[] = JHtml::_('select.option', '6', JText::_('JBS_TPL_INTRODUCTION_BRACE'));
 		$options[] = JHtml::_('select.option', '7', JText::_('JBS_TPL_TEACHER_BRACE'));
 		$options[] = JHtml::_('select.option', '8', JText::_('JBS_TPL_TITLE_TEACHER_BRACE'));
+                $options[] = JHtml::_('select.option', '30', JText::_('JBS_TPL_TITLE_TEACHER_THUMBNAIL'));
 		$options[] = JHtml::_('select.option', '9', JText::_('JBS_TPL_SERIES_BRACE'));
 		$options[] = JHtml::_('select.option', '26', JText::_('JBS_TPL_SERIES_THUMBNAIL_BRACE'));
 		$options[] = JHtml::_('select.option', '27', JText::_('JBS_TPL_SERIES_DESCRIPTION_BRACE'));
