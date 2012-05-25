@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <fieldset addfieldpath="/administrator/components/com_contact/models/fields">
     <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
            description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
            class="readonly" />
@@ -36,6 +37,7 @@
            label="JBS_TCH_THUMBNAIL_URL" description="JBS_TCH_IMAGE_URL_DESC" />
     <field name="phone" type="text" class="inputbox" size="60"
            label="JBS_TCH_PHONE" />
+    <field name="email" type="text" format="raw" size="50" label="JBS_TCH_EMAIL" description="JBS_TCH_EMAIL_DESC" />
     <field name="website" type="text" class="inputbox" size="60"
            label="JBS_TCH_WEBSITE" />
     <field name="short" type="editor" class="inputbox"
@@ -54,11 +56,20 @@
     </field>
     <field name="facebooklink" type="text" format="raw" label="JBS_TCH_FACEBOOK" description="JBS_TCH_FACEBOOK_DESC" size="65"/>
     <field name="twitterlink" type="text" format="raw" label="JBS_TCH_TWITTER" description="JBS_TCH_TWITTER_DESC" size="65"/>
-    <field name="bloglink" type="text" format="raw" label="JBS_TCH_BLOG" description="JBS_TCH_BLOG_DESC" size="100"/>
-    <field name="link1" type="text" format="raw" label="JBS_TCH_LINK" description="JBS_TCH_LINK_DESC" size="100"/>
-    <field name="link2" type="text" format="raw" label="JBS_TCH_LINK" description="JBS_TCH_LINK_DESC" size="100"/>
-    <field name="link3" type="text" format="raw" label="JBS_TCH_LINK" description="JBS_TCH_LINK_DESC" size="100"/>
-    <field name="linklabel1" type="text" format="raw" label="JBS_TCH_LINK_LABEL" description="JBS_TCH_LINK_LABEL_DESC" size="100"/>
-    <field name="linklabel2" type="text" format="raw" label="JBS_TCH_LINK_LABEL" description="JBS_TCH_LINK_LABEL_DESC" size="100"/>
-    <field name="linklabel3" type="text" format="raw" label="JBS_TCH_LINK_LABEL" description="JBS_TCH_LINK_LABEL_DESC" size="100"/>
+    <field name="bloglink" type="text" format="raw" label="JBS_TCH_BLOG" description="JBS_TCH_BLOG_DESC" size="65"/>
+    <field name="link1" type="text" format="raw" label="JBS_TCH_LINK1" description="JBS_TCH_LINK1_DESC" size="65"/>
+    <field name="link2" type="text" format="raw" label="JBS_TCH_LINK2" description="JBS_TCH_LINK2_DESC" size="65"/>
+    <field name="link3" type="text" format="raw" label="JBS_TCH_LINK3" description="JBS_TCH_LINK3_DESC" size="65"/>
+    <field name="linklabel1" type="text" format="raw" label="JBS_TCH_LINK_LABEL1" description="JBS_TCH_LINK_LABEL1_DESC" size="65"/>
+    <field name="linklabel2" type="text" format="raw" label="JBS_TCH_LINK_LABEL2" description="JBS_TCH_LINK_LABEL2_DESC" size="65"/>
+    <field name="linklabel3" type="text" format="raw" label="JBS_TCH_LINK_LABEL3" description="JBS_TCH_LINK_LABEL3_DESC" size="65"/>
+    
+			<field name="contact"
+				type="modal_contacts"
+				description="JBS_TCH_SELECT_CONTACT_DESC"
+				label="JBS_TCH_SELECT_CONTACT_LABEL"
+			/>
+		</fieldset>
+	
+		
 </form>

@@ -12,25 +12,66 @@ defined('_JEXEC') or die;
 <form
     action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
     method="post" name="adminForm" id="adminForm">
-    <div class="width-35 fltrt">
+    
+    <div class="width-45 fltrt">
         <fieldset class="panelform">
             <legend>
 
                 <?php echo JText::_('JBS_TCH_LINKS'); ?></legend>
             <ul class="adminformlist">
+                 <li>
+                    <?php echo $this->form->getLabel('website'); ?>
+                    <?php echo $this->form->getInput('website'); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('facebooklink'); ?>
                     <?php echo $this->form->getInput('facebooklink'); ?>
                 </li>
+                <li>
+                    <?php echo $this->form->getLabel('twitterlink'); ?>
+                    <?php echo $this->form->getInput('twitterlink'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('bloglink'); ?>
+                    <?php echo $this->form->getInput('bloglink'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('link1'); ?>
+                    <?php echo $this->form->getInput('link1'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('linklabel1'); ?>
+                    <?php echo $this->form->getInput('linklabel1'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('link2'); ?>
+                    <?php echo $this->form->getInput('link2'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('linklabel2'); ?>
+                    <?php echo $this->form->getInput('linklabel2'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('link3'); ?>
+                    <?php echo $this->form->getInput('link3'); ?>
+                </li>
+                <li>
+                    <?php echo $this->form->getLabel('linklabel3'); ?>
+                    <?php echo $this->form->getInput('linklabel3'); ?>
+                </li>
             </ul>
         </fieldset>
 </div>
-    <div class="width-65 fltlft">
-        <fieldset class="panelform">
+    <div class="width-50 fltlft">
+        <fieldset class="panelform" >
             <legend>
 
                 <?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
             <ul class="adminformlist">
+                <li>
+                    <?php echo $this->form->getLabel('contact'); ?>
+
+                    <?php echo $this->form->getInput('contact'); ?>
+                </li>
                 <li>
                     <?php echo $this->form->getLabel('published'); ?>
 
@@ -59,7 +100,33 @@ defined('_JEXEC') or die;
                     <?php echo $this->form->getLabel('title'); ?>
 
                     <?php echo $this->form->getInput('title'); ?></li>
+                
+               
+                    <?php echo $this->form->getLabel('phone'); ?>
+
+                    <?php echo $this->form->getInput('phone'); ?></li>
                 <li>
+                    <?php echo $this->form->getLabel('email'); ?>
+
+                    <?php echo $this->form->getInput('email'); ?></li>
+               
+                <li><?php echo $this->form->getLabel('id'); ?>
+
+
+                    <?php echo $this->form->getInput('id'); ?></li>
+
+            </ul>
+
+            <?php echo $this->form->getLabel('short'); ?>
+            <div class="clr"></div>
+            <?php echo $this->form->getInput('short'); ?>
+        </fieldset>
+    </div>
+     <div class="width-45 fltrt">
+        <fieldset class="panelform">
+            <legend><?php echo JText::_('JBS_TCH_IMAGES'); ?></legend>
+            <ul>
+                 <li>
 
                     <?php echo $this->form->getLabel('teacher_image'); ?>
 
@@ -68,7 +135,7 @@ defined('_JEXEC') or die;
                     echo $this->form->getInput('teacher_image', null, empty($this->item->teachername) ? $this->admin->params['default_teacher_image'] : $this->item->teacher_image);
                     ?>
                 </li>
-                <li>
+            <li>
                     <?php echo $this->form->getLabel('teacher_thumbnail'); ?>
 
                     <?php echo $this->form->getInput('teacher_thumbnail'); ?></li>
@@ -81,32 +148,9 @@ defined('_JEXEC') or die;
 
                     <?php echo $this->form->getInput('thumb'); ?></li>
                 <li>
-                    <?php echo $this->form->getLabel('phone'); ?>
-
-                    <?php echo $this->form->getInput('phone'); ?></li>
-                <li>
-                    <?php echo $this->form->getLabel('email'); ?>
-
-                    <?php echo $this->form->getInput('email'); ?></li>
-                <li>
-                    <?php echo $this->form->getLabel('website'); ?>
-
-                    <?php echo $this->form->getInput('website'); ?></li>
-                <li><?php echo $this->form->getLabel('id'); ?>
-
-
-                    <?php echo $this->form->getInput('id'); ?></li>
-
+                
             </ul>
-           
-
-
-
-            <?php echo $this->form->getLabel('short'); ?>
-            <div class="clr"></div>
-            <?php echo $this->form->getInput('short'); ?>
-        </fieldset>
-    </div>
+     </div>
      <div class="clr"></div>
 
     
@@ -118,7 +162,7 @@ defined('_JEXEC') or die;
         </fieldset>
     </div>
     <div class="clr"></div>
-
+ 
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">
             <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
