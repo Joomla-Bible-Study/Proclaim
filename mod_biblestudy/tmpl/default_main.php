@@ -55,8 +55,9 @@ $ismodule = 1;
 </div>
 <div class="modulelistingfooter">
     <br />
-    <?php if ($params->get('show_link') > 0) {
-        echo $link; 
+    <?php
+    if ($params->get('show_link') > 0) {
+        echo $link;
     }
     ?>
 </div>
