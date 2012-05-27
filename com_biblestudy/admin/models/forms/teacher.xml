@@ -63,7 +63,7 @@
     <field name="linklabel1" type="text" format="raw" label="JBS_TCH_LINK_LABEL1" description="JBS_TCH_LINK_LABEL1_DESC" size="65"/>
     <field name="linklabel2" type="text" format="raw" label="JBS_TCH_LINK_LABEL2" description="JBS_TCH_LINK_LABEL2_DESC" size="65"/>
     <field name="linklabel3" type="text" format="raw" label="JBS_TCH_LINK_LABEL3" description="JBS_TCH_LINK_LABEL3_DESC" size="65"/>
-    
+    <field name="address" type="textarea" format="raw" label="JBS_TCH_ADDRESS" description="JBS_TCH_ADDRESS_DESC" cols="50" rows="10" />
 			<field name="contact"
 				type="modal_contacts"
 				description="JBS_TCH_SELECT_CONTACT_DESC"

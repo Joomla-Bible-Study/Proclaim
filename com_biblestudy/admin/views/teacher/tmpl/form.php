@@ -70,7 +70,7 @@ defined('_JEXEC') or die;
                 <li>
                     <?php echo $this->form->getLabel('contact'); ?>
 
-                    <?php echo $this->form->getInput('contact'); ?>
+                    <?php echo $this->form->getInput('contact'); if ($this->item->contact) {echo '  <a href="index.php?option=com_contact&task=contact.edit&id='.(int)$this->item->contact.'" target="blank">'.JText::_('JBS_TCH_EDIT_THIS_CONTACT').'</a>';}?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('published'); ?>
@@ -101,7 +101,11 @@ defined('_JEXEC') or die;
 
                     <?php echo $this->form->getInput('title'); ?></li>
                 
-               
+               <li>
+                    <?php echo $this->form->getLabel('address'); ?>
+
+                    <?php echo $this->form->getInput('address'); ?></li>
+                
                     <?php echo $this->form->getLabel('phone'); ?>
 
                     <?php echo $this->form->getInput('phone'); ?></li>
@@ -117,9 +121,7 @@ defined('_JEXEC') or die;
 
             </ul>
 
-            <?php echo $this->form->getLabel('short'); ?>
-            <div class="clr"></div>
-            <?php echo $this->form->getInput('short'); ?>
+           
         </fieldset>
     </div>
      <div class="width-45 fltrt">
@@ -152,7 +154,13 @@ defined('_JEXEC') or die;
             </ul>
      </div>
      <div class="clr"></div>
-
+     <div>
+         <fieldset class="panelform">
+             <legend> <?php echo JText::_('JBS_TCH_SHORT'); ?></legend>
+              
+            <?php echo $this->form->getInput('short'); ?>
+         </fieldset>
+     </div>
     
     <div>
         <fieldset class="panelform">

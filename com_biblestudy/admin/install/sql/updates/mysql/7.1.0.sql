@@ -131,4 +131,5 @@ ADD COLUMN `link2` varchar(150),
 ADD COLUMN `linklabel2` varchar(150),
 ADD COLUMN `link3` varchar(150),
 ADD COLUMN `linklabel3` varchar(150),
-ADD COLUMN `contact` int(11);
+ADD COLUMN `contact` int(11),
+ADD COLUMN `address1` mediumtext(300);
