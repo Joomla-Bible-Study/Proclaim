@@ -102,6 +102,7 @@ class BiblestudyViewTeacher extends JView {
             $item->link2 = $contact_params->get('linke');
             $item->linklabel2 = $contact_params->get('linke_name');
             $item->website = $this->contact->webpage; 
+            $item->address = $this->contact->address;
         }
         
         $this->assignRef('item', $item);
