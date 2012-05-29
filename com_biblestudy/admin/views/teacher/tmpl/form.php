@@ -9,6 +9,16 @@
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
+<script type="text/javascript">
+    function jInsertFieldValue(value, id) {
+var old_id = document.id(id).value;
+if (old_id != id) {
+var elem = document.id(id);
+elem.value = value;
+elem.fireEvent("change");
+}
+} 
+</script>
 <form
     action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
     method="post" name="adminForm" id="adminForm">
@@ -70,7 +80,8 @@ defined('_JEXEC') or die;
                 <li>
                     <?php echo $this->form->getLabel('contact'); ?>
 
-                    <?php echo $this->form->getInput('contact'); if ($this->item->contact) {echo '  <a href="index.php?option=com_contact&task=contact.edit&id='.(int)$this->item->contact.'" target="blank">'.JText::_('JBS_TCH_EDIT_THIS_CONTACT').'</a>';}?>
+                    <?php echo $this->form->getInput('contact'); ?>  <?php if ($this->item->contact) { ?><div class="button2-left"><div class="blank"> <a onclick=" document.id('jform_contact_id').value=''; document.id('jform_contact_id').fireEvent('change');
+Joomla.submitbutton('teacher.apply'); " title="Clear" > <?php echo JText::_('JBS_CMN_CLEAR'); ?> </a></div></div> <div class="button2-left"><div class="blank"><?php echo '<a href="index.php?option=com_contact&task=contact.edit&id='.(int)$this->item->contact.'" target="blank">'.JText::_('JBS_TCH_EDIT_THIS_CONTACT').'</a></div></div>';}?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('published'); ?>
