@@ -16,6 +16,11 @@ $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');
 
 ?> 
+ <?php if ($this->params->get('showpodcastsubscribedetails') == 1 || $this->params->get('showpodcastsubscribedetails') == 2)
+{
+    if ($this->params->get('showpodcastsubscribedetails')== 1){$float = 'style="float: right;"';}else{$float = 'style="float: left;"';}
+    ?><div class="podcastsubscribe" <?php  ?>><?php echo $this->subscribe; ?></div><?php
+} ?>
     <div id="bsmHeader">
 <?php if ($this->params->get('showrelated') == 1) {echo $this->related;} ?>
         <div class="buttonheading">
@@ -27,6 +32,7 @@ $sharecall = JView::loadHelper('share');
             ?>
 
         </div>
+       
         <?php
         //Social Networking begins here
         if ($this->admin_params->get('socialnetworking') > 0) {
@@ -65,11 +71,7 @@ $sharecall = JView::loadHelper('share');
                 </td></tr></table>
     </div><!-- header -->
 
-    <?php if ($this->params->get('showpodcastsubscribedetails') == 1 || $this->params->get('showpodcastsubscribedetails') == 2)
-{
-    if ($this->params->get('showpodcastsubscribedetails')== 1){$float = 'style="float: right;"';}else{$float = 'style="float: left;"';}
-    ?><div id="subscribelinks" <?php echo $float; ?>><?php echo $this->subscribe; ?></div><?php
-} ?>
+    
     <table id="bsmsdetailstable" cellspacing="0">
         <?php
         if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items_view') < 1) {
