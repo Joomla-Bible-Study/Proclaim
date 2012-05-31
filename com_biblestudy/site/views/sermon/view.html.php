@@ -16,6 +16,9 @@ class BiblestudyViewSermon extends JView {
 
 
         $mainframe = JFactory::getApplication();
+       
+      // $id = JRequest::getInt('id');
+     //  dump ($id);
         $study = $this->get('Item');
         $relatedstudies = new relatedStudies();
         

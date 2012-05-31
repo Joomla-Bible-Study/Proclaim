@@ -13,8 +13,9 @@
             <field name="id" type="modal_studydetails"
 				description="JBS_MNU_SELECT_STUDY_DESC"
 				label="JBS_CMN_SELECT_STUDY"
-				required="true"
+				
 			/>
+        
             <field name="t" type="sql"
                 description="JBS_MNU_SELECT_TEMPLATE_DESC"
                 label="JBS_MNU_SELECT_TEMPLATE"
@@ -25,7 +26,14 @@
                 required="true"
             />
         </fieldset>
-    
+        </fields>
+        <fields name="params">
+        <fieldset name="basic" label="JBS_MNU_STUDY_OPTIONS">
+     <field name="uselatest" type="list" label="JBS_MNU_USE_LATEST_STUDY" description="JBS_MNU_USE_LATEST_STUDY_DESC">
+             <option value="0">JBS_MNU_NO_USE_LATEST</option>
+             <option value="1">JBS_MNU_USE_LATEST</option>
+         </field>
+         </fieldset>
     </fields>
 </metadata>
 

@@ -19,6 +19,7 @@ class relatedStudies
         $params = $registry; 
         $keywords = $params->get('metakey');
         $topics = $row->topics_id;
+        $topicslist = $this->getTopics(); 
         if (!$keywords){$keygo = false;}
         if (!$topics){$topicsgo = false;}
         if (!$keygo && !$topicsgo){return false;}
@@ -29,9 +30,10 @@ class relatedStudies
             $registry->loadJSON($study->params);
             $sparams = $registry;
             $compare = $sparams->get('metakey');
-            
+                        
             if ($compare) {$keywordsresults = $this->parseKeys($keywords, $compare, $study->id);}
             if ($study->topics_id) {$topicsresults = $this->parseKeys($topics,$study->topics_id,$study->id);}
+            if ($study->tp_id){$studytopics = $this->parseKeys($topicslist,$study->tp_id, $study->id);} 
         }
         
        // print_r($this->score);
@@ -86,12 +88,16 @@ class relatedStudies
     {
         $db = JFactory::getDBO();
         $query = $db->getQuery('true');
-        $query->select('id, params, topics_id, access');
-        $query->from('#__bsms_studies');
-        $query->where('published = 1');
+        $query->select('s.id, s.params, s.topics_id, s.access');
+        $query->from('#__bsms_studies as s');
+        $query->select('group_concat(stp.id separator ", ") AS tp_id');
+        $query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
+        $query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
+        $query->group('s.id');
+        $query->where('s.published = 1');
         $db->setQuery($query);
         $db->query();
-        $studies = $db->loadObjectList();
+        $studies = $db->loadObjectList(); 
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();
@@ -144,6 +150,30 @@ class relatedStudies
         $relatedlinks = '<div class="related"><form >'.$related.'</form></div>';
         return $relatedlinks; 
 
+    }
+    
+    function getTopics()
+    {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery('true');
+        $query->select('id');
+        $query->from('#__bsms_topics');
+        $query->where('published = 1');
+        $db->setQuery($query);
+        $db->query();
+        $topics = $db->loadObjectList();
+        $topicslist = array();
+       // $topicslist = implode(',',$topics); dump($topicslist);
+        foreach ($topics as $key=>$value)
+        {
+            foreach ($value as $v)
+            {
+                $topicslist[] = $v;
+            }
+        }
+       // dump($topicslist);
+        $returntopics = implode(',',$topicslist);
+        return $returntopics;
     }
 }
 ?>

@@ -36,7 +36,7 @@ class BiblestudyControllerSermon extends JController {
         $model = $this->getModel('sermon');
         $menu = JSite::getMenu();
         $item = $menu->getActive();
-        $params = $mainframe->getPageParameters();
+        $params = $mainframe->getPageParameters(); 
         $t = $params->get('t');
         if (!$t) {
             $t = 1;
