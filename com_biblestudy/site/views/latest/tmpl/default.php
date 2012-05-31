@@ -1,7 +1,7 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @package     com_biblestudy
+ * @license     GNU/GPL
  */
-?>
+//No Direct Access
+defined('_JEXEC') or die;

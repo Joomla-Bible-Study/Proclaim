@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package     com_biblestudy
+ * @license     GNU/GPL
+ */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,25 +20,25 @@ class BiblestudyViewSermon extends JView {
 
 
         $mainframe = JFactory::getApplication();
-       
-      // $id = JRequest::getInt('id');
-     //  dump ($id);
+
+        // $id = JRequest::getInt('id');
+        //  dump ($id);
         $study = $this->get('Item');
         $relatedstudies = new relatedStudies();
-        
+
         // Convert parameter fields to objects.
         $template = $this->get('template');
 
-        $registry = new JRegistry;
+        $registry = new JRegistry();
         $registry->loadJSON($template[0]->params);
         $params = $registry;
         $a_params = $this->get('Admin');
-        $this->related = $relatedstudies->getRelated($study, $params); 
+        $this->related = $relatedstudies->getRelated($study, $params);
         // Convert parameter fields to objects.
-        $registry = new JRegistry;
+        $registry = new JRegistry();
         $registry->loadJSON($a_params[0]->params);
         $this->admin_params = $registry;
-
+        //@todo need to move to module bad way to code this.
         // Convert item paremeters into objects
         $registry = new JRegistry;
         $registry->loadJSON($study->params);
@@ -45,47 +49,47 @@ class BiblestudyViewSermon extends JView {
         $document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
-        $url = $params->get('css','biblestudy.css');
+        $url = $params->get('css', 'biblestudy.css');
         if ($url) {
-            $document->addStyleSheet(JURI::base().'media/com_biblestudy/css/site/'.$url);
+            $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $url);
         }
         $pathway = $mainframe->getPathWay();
         $contentConfig = JComponentHelper::getParams('com_biblestudy');
         $dispatcher = JDispatcher::getInstance();
-        
+
         //Adjust the slug if there is no alias in the row
         //Set the slug
         $study->slug = $study->alias ? ($study->id . ':' . $study->alias) : str_replace(' ', '-', htmlspecialchars_decode($study->studytitle, ENT_QUOTES)) . ':' . $study->id;
         $pagebuilder = new JBSPagebuilder();
         $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
-                $study->scripture1 = $pelements->scripture1;
-                $study->scripture2 = $pelements->scripture2;
-                $study->media = $pelements->media;
-                $study->duration = $pelements->duration;
-                $study->studydate = $pelements->studydate;
-                $study->topics = $pelements->topics;
-                $study->study_thumbnail = $pelements->study_thumbnail;
-                $study->series_thumbnail = $pelements->series_thumbnail;
-                $study->detailslink = $pelements->detailslink;
-                $study->teacherimage = $pelements->teacherimage;
-                $article->text = $study->scripture1;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $study->scripture1 = $article->text; 
-                $article->text = $study->scripture2;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $study->scripture2 = $article->text;
-                $article->text = $study->studyintro;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $study->studyintro = $article->text;
-                $article->text = $study->secondary_reference;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $study->secondary_reference = $article->text;
+        $study->scripture1 = $pelements->scripture1;
+        $study->scripture2 = $pelements->scripture2;
+        $study->media = $pelements->media;
+        $study->duration = $pelements->duration;
+        $study->studydate = $pelements->studydate;
+        $study->topics = $pelements->topics;
+        $study->study_thumbnail = $pelements->study_thumbnail;
+        $study->series_thumbnail = $pelements->series_thumbnail;
+        $study->detailslink = $pelements->detailslink;
+        $study->teacherimage = $pelements->teacherimage;
+        $article->text = $study->scripture1;
+        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+        $study->scripture1 = $article->text;
+        $article->text = $study->scripture2;
+        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+        $study->scripture2 = $article->text;
+        $article->text = $study->studyintro;
+        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+        $study->studyintro = $article->text;
+        $article->text = $study->secondary_reference;
+        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+        $study->secondary_reference = $article->text;
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
 
-         //get the podcast subscription
-           $podcast = new podcastSubscribe();
-           $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro','Our Podcasts'));
+        //get the podcast subscription
+        $podcast = new podcastSubscribe();
+        $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();
@@ -142,7 +146,7 @@ class BiblestudyViewSermon extends JView {
          * Process the prepare content plugins
          */
         $article->text = $study->studytext;
-        $linkit = $params->get('show_scripture_link'); 
+        $linkit = $params->get('show_scripture_link');
         if ($linkit) {
             switch ($linkit) {
                 case 0:
@@ -155,7 +159,7 @@ class BiblestudyViewSermon extends JView {
                     break;
             }
             $limitstart = JRequest::getVar('limitstart', 'int');
-            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon',& $article, & $params, $limitstart));
+            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $params, $limitstart));
             $article->studytext = $article->text;
             $study->studytext = $article->text;
         } //end if $linkit
@@ -186,7 +190,5 @@ class BiblestudyViewSermon extends JView {
         $document->setTitle(JText::_('JBS_CMN_READ_MORE'));
         parent::display($tpl);
     }
-
-
 
 }

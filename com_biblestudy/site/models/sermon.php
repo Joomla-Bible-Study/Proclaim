@@ -63,7 +63,7 @@ class BiblestudyModelSermon extends JModelItem {
         $app = JFactory::getApplication('site');
 
         // Load state from the request.
-        $pk = JRequest::getInt('id'); 
+        $pk = JRequest::getInt('id');
         $this->setState('study.id', $pk);
         $offset = JRequest::getUInt('limitstart');
         $this->setState('list.offset', $offset);
@@ -207,8 +207,7 @@ class BiblestudyModelSermon extends JModelItem {
         return $this->_admin;
     }
 
-    public function getLatestStudy()
-    {
+    public function getLatestStudy() {
         $db = JFactory::getDBO();
         $query = $db->getQuery('true');
         $query->select('id');
@@ -217,8 +216,9 @@ class BiblestudyModelSermon extends JModelItem {
         $query->order('studydate DESC LIMIT 1');
         $db->setQuery($query);
         $db->query();
-        $result = $db->loadResult(); 
+        $result = $db->loadResult();
         return $result;
-        }
+    }
+
 //end class
 }
