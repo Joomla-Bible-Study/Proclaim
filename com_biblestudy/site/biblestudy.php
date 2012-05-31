@@ -41,6 +41,7 @@ if ($controller = JRequest::getWord('controller')) {
         'studiesedit',
         'landingpage',
         'messages',
+        'latest',
         'message'
     );
 

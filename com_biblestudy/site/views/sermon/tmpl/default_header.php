@@ -1,26 +1,8 @@
 <?php
-
-/**
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
-//No Direct Access
 defined('_JEXEC') or die;
-echo $this->loadTemplate('header');
-if ($this->params->get('useexpert_details') > 0)
- {
-	echo $this->loadTemplate('custom');
- }
- elseif ($this->params->get('sermontemplate') )
-    {
-        echo $this->loadTemplate($this->params->get('sermontemplate'));
-    }
- else
- {
- 	echo $this->loadTemplate('main');
- }
- echo $this->loadTemplate('scripture');
- //echo '<br />';
- echo $this->loadTemplate('commentsform');
- echo $this->loadTemplate('footerlink');
- echo $this->loadTemplate('footer');
+/*
+ * @desc this is the main div for the page. default_footer has the closing div
+ * 
+ */
+?>
+<div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->

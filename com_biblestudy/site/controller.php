@@ -17,24 +17,7 @@ class biblestudyController extends JController {
 
     public function display($cachable = false, $urlparams = false) {
         $cachable = true;
-        //For Latest Study link
-        $latest = JRequest::getVar('view', '', 'get');
-        if ($latest == 'latest') {
-            $db = JFactory::getDBO();
-            $query = $db->getQuery('true');
-            $query->select('id');
-            $query->from('#__bsms_studies');
-            $query->where('published = 1');
-            $query->order('studydate DESC LIMIT 1');
-            $db->setQuery($query);
-            $db->query();
-            $id = $db->loadResult();
-            $t = JRequest::getInt('t', '1', '');
-            $link = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $id . '&t=' . $t);
-            $this->setRedirect($link);
-            //    JRequest::setVar('id',$id,'get');
-            //    $id2 = JRequest::getInt('id2'); dump ($id2);
-        }
+
         JHtml::_('behavior.caption');
 
         // Set the default view name and format from the Request.
@@ -50,7 +33,7 @@ class biblestudyController extends JController {
         if ($user->get('id') ||
                 ($_SERVER['REQUEST_METHOD'] == 'POST' &&
                 ($vName == 'archive' ))) {
-            $cachable = false;
+                    $cachable = false;
         }
 
         //attempt to change mysql for error in large select
