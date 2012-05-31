@@ -24,7 +24,7 @@ class BiblestudyControllerDatabase extends JController {
     function fix() {
         $model = $this->getModel('database');
         $model->fix();
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=database', false));
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin', false));
     }
 
 }

@@ -26,7 +26,7 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
     }
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
-    <?php echo JHtml::_('tabs.start', 'com_biblestudy_admin_'.$this->item->id, array('useCookie' => 1)); ?>
+    <?php echo JHtml::_('tabs.start', 'com_biblestudy_admin_' . $this->item->id, array('useCookie' => 1)); ?>
 
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PARAMS'), 'admin-settings'); ?>
     <div class="width-100">
@@ -264,15 +264,26 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
     </div>
 
 <?php endif ?>
+
+<div class="clr"></div>
+<?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_DATABASE'), 'admin-database'); ?>
+<div class="width-100">
+    <div class="width-60 fltlft">
+        <fieldset class="panelform">
+            <legend><?php echo JText::_('JBS_ADM_DATABASE'); ?></legend>
+            <?php echo $this->loadTemplate('database'); ?>
+        </fieldset>
+    </div>
+</div>
 <div class="clr"></div>
 <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_CONVERSION'), 'admin-conversion-settings'); ?>
 <div class="width-100">
-        <div class="width-60 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_ADM_CONVERT'); ?></legend>
-               <div> <?php echo $this->ss;?> </div>
-               <div> <?php echo $this->pi; ?> </div>
-            </fieldset>
-        </div>
+    <div class="width-60 fltlft">
+        <fieldset class="panelform">
+            <legend><?php echo JText::_('JBS_ADM_CONVERT'); ?></legend>
+            <div> <?php echo $this->ss; ?> </div>
+            <div> <?php echo $this->pi; ?> </div>
+        </fieldset>
     </div>
+</div>
 <?php echo JHtml::_('tabs.end'); ?>

@@ -97,14 +97,14 @@ class BibleStudyHelper {
                 case 'mediafile':
                     $assetName = 'com_biblestudy.mediafile.' . (int) $Itemid;
                     break;
-                
+
                 case 'style':
                     $assetName = 'com_biblestudy.style' . (int) $Itemid;
                     break;
                 case 'templatecode':
                     $assetName = 'com_biblestudy.templatecode' . (int) $Itemid;
                     break;
-                
+
                 default:
                     $assetName = 'com_biblestudy.studiesedit.' . (int) $Itemid;
                     break;
@@ -184,9 +184,6 @@ class BibleStudyHelper {
         );
         JSubMenuHelper::addEntry(
                 JText::_('JBS_CSS_CSS_EDIT'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'
-        );
-         JSubMenuHelper::addEntry(
-                JText::_('JBS_DATABASE_FIX'), 'index.php?option=com_biblestudy&view=database', $vName == 'database'
         );
     }
 

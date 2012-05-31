@@ -15,9 +15,7 @@ $params = $this->form->getFieldsets('params');
     method="post" name="adminForm" id="adminForm">
     <div class="width-60 fltlft">
         <fieldset class="panelform">
-            <legend>
-
-                <?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
+            <legend><?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
             <ul class="adminformlist">
                 <li>
                     <?php echo $this->form->getLabel('id'); ?>

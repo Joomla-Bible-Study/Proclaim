@@ -51,7 +51,7 @@ class LiveUpdateView extends JView
 				$this->setLayout('install');
 
 				// Get data from the model
-				$state		= &$this->get('State');
+				$state		= $this->get('State');
 		
 				// Are there messages to display ?
 				$showMessage	= false;

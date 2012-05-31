@@ -109,12 +109,15 @@ $params = $this->form->getFieldsets('params');
         <fieldset class="panelform">
             <legend>
 
-                <?php echo JText::_('JBS_MED_MEDIA_FILES_DETAILS'); if (JRequest::getWord('layout','','default') == 'modal'){ ?> <div class="fltrt">
-	<button type="button" onclick="Joomla.submitbutton('mediafile.save');  ">
-		<?php echo JText::_('JSAVE');?></button>
-	<button type="button" onclick="window.parent.SqueezeBox.close();  ">
-		<?php echo JText::_('JCANCEL');?></button>
-</div> <?php }?></legend>
+                <?php
+                echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
+                if (JRequest::getWord('layout', '', 'default') == 'modal') {
+                    ?> <div class="fltrt">
+                        <button type="button" onclick="Joomla.submitbutton('mediafile.save');  ">
+                            <?php echo JText::_('JSAVE'); ?></button>
+                        <button type="button" onclick="window.parent.SqueezeBox.close();  ">
+                            <?php echo JText::_('JCANCEL'); ?></button>
+                    </div> <?php } ?></legend>
             <ul class="adminformlist">
                 <li>
                     <?php echo $this->form->getLabel('id'); ?>
@@ -295,7 +298,8 @@ $params = $this->form->getFieldsets('params');
     <div class="width-35 fltrt">
 
 
-        <?php foreach ($params as $name => $fieldset):
+        <?php
+        foreach ($params as $name => $fieldset):
             if (isset($fieldset->description) && trim($fieldset->description)):
                 ?>
                 <p class="tip">

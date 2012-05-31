@@ -16,21 +16,13 @@ $listDirn = $this->state->get('list.direction');
 $canOrder = $user->authorise('core.edit.state');
 $saveOrder = $listOrder == 'share.ordering';
 ?>
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=shares'); ?>"
-    method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=shares'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
-
             <select name="filter_published" class="inputbox"
                     onchange="this.form.submit()">
                 <option value="">
-
                     <?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
-
-
-
-
                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
             </select>
         </div>
@@ -63,14 +55,10 @@ $saveOrder = $listOrder == 'share.ordering';
                 </tr>
             </thead>
 
-
-
-
             <?php
             $n = count($this->items);
             foreach ($this->items as $i => $item) :
                 $ordering = ($listOrder == 'share.ordering');
-                $params = new JParameter($item->params);
                 $link = JRoute::_('index.php?option=com_biblestudy&task=share.edit&id=' . (int) $item->id);
                 ?>
                 <tr class="row<?php echo $i % 2; ?>">
@@ -92,7 +80,7 @@ $saveOrder = $listOrder == 'share.ordering';
                         <input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled ?> class="text-area-order" />
                     </td>
                     <td width="60" align="left">
-                        <?php echo '<img src="' . JURI::root() . $params->get('shareimage') . '">'; ?>
+                        <?php echo '<img src="' . JURI::root() . $item->params->get('shareimage') . '">'; ?>
                     </td>
                     <td>
                         <a href="<?php echo $link; ?>"><?php echo $item->name; ?></a>

@@ -73,49 +73,49 @@ $listingcall = JView::loadHelper('listing');
                     switch ($showIt) {
 
                         case 'teachers':
-                            $heading_call = JView::loadHelper('teacher');
+                            JView::loadHelper('teacher');
                             $heading = getTeacherLandingPage($params, $id = null, $this->admin_params);
                             $showIt_phrase = JText::_('JBS_CMN_TEACHERS');
                             //echo "</div>";
                             break;
 
                         case 'series':
-                            $heading_call = JView::loadHelper('serieslist');
+                            JView::loadHelper('serieslist');
                             $heading = getSeriesLandingPage($params, $id = null, $this->admin_params);
                             $showIt_phrase = JText::_('JBS_CMN_SERIES');
                             //echo "</div>";
                             break;
 
                         case 'locations':
-                            $heading_call = JView::loadHelper('location');
+                            JView::loadHelper('location');
                             $heading = getLocationsLandingPage($params, $id = null, $this->admin_params);
                             $showIt_phrase = JText::_('JBS_CMN_LOCATIONS');
                             //echo "</div>";
                             break;
 
                         case 'messagetypes':
-                            $heading_call = JView::loadHelper('messagetype');
+                            JView::loadHelper('messagetype');
                             $heading = getMessageTypesLandingPage($params, $id = null, $this->admin_params);
                             $showIt_phrase = JText::_('JBS_CMN_MESSAGE_TYPES');
                             //echo "</div>";
                             break;
 
                         case 'topics':
-                            $heading_call = JView::loadHelper('topics');
+                            JView::loadHelper('topics');
                             $heading = getTopicsLandingPage($params, $id = null, $this->admin_params);
                             $showIt_phrase = JText::_('JBS_CMN_TOPICS');
                             //	echo "</div>";
                             break;
 
                         case 'books':
-                            $heading_call = JView::loadHelper('book');
+                            JView::loadHelper('book');
                             $heading = getBooksLandingPage($params, $id = null, $this->admin_params);
                             $showIt_phrase = JText::_('JBS_CMN_BOOKS');
                             //echo "</div>";
                             break;
 
                         case 'years':
-                            $heading_call = JView::loadHelper('year');
+                            JView::loadHelper('year');
                             $heading = getYearsLandingPage($params, $id = null, $this->admin_params);
                             $showIt_phrase = JText::_('JBS_CMN_YEARS');
                             //echo "</div>";

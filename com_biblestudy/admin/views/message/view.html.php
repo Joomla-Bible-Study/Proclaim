@@ -28,7 +28,7 @@ class BiblestudyViewMessage extends JView {
         $this->mediafiles = $this->get('MediaFiles');
 
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin();
+        $this->admin = @BsmHelper::getAdmin();
         $this->canDo = BibleStudyHelper::getActions($type = 'message', $Itemid = $this->item->id);
         $host = JURI::base();
         $document = JFactory::getDocument();

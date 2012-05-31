@@ -85,7 +85,7 @@ class LiveUpdateXMLSlurp extends JObject
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
 		}
 		
-		$xml = & JFactory::getXMLParser('Simple');
+		$xml = JFactory::getXMLParser('Simple');
 		if (!$xml->loadFile($filename)) {
 			unset($xml);
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
@@ -97,9 +97,9 @@ class LiveUpdateXMLSlurp extends JObject
 		}
 		
 		$data = array();
-		$element = & $xml->document->version[0];
+		$element = $xml->document->version[0];
 		$data['version'] = $element ? $element->data() : '';		
-		$element = & $xml->document->creationDate[0];
+		$element = $xml->document->creationDate[0];
 		$data['date'] = $element ? $element->data() : '';
 		
 		$data['xmlfile'] = $filename;
@@ -166,7 +166,7 @@ class LiveUpdateXMLSlurp extends JObject
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
 		}
 		
-		$xml = & JFactory::getXMLParser('Simple');
+		$xml = JFactory::getXMLParser('Simple');
 		if (!$xml->loadFile($filename)) {
 			unset($xml);
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
@@ -178,9 +178,9 @@ class LiveUpdateXMLSlurp extends JObject
 		}
 		
 		$data = array();
-		$element = & $xml->document->version[0];
+		$element = $xml->document->version[0];
 		$data['version'] = $element ? $element->data() : '';		
-		$element = & $xml->document->creationDate[0];
+		$element = $xml->document->creationDate[0];
 		$data['date'] = $element ? $element->data() : '';
 		
 		$data['xmlfile'] = $filename;
@@ -219,7 +219,7 @@ class LiveUpdateXMLSlurp extends JObject
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
 		}
 
-		$xml = & JFactory::getXMLParser('Simple');
+		$xml = JFactory::getXMLParser('Simple');
 		if (!$xml->loadFile($filename)) {
 			unset($xml);
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
@@ -231,9 +231,9 @@ class LiveUpdateXMLSlurp extends JObject
 		}
 		
 		$data = array();
-		$element = & $xml->document->version[0];
+		$element = $xml->document->version[0];
 		$data['version'] = $element ? $element->data() : '';		
-		$element = & $xml->document->creationDate[0];
+		$element = $xml->document->creationDate[0];
 		$data['date'] = $element ? $element->data() : '';
 		
 		$data['xmlfile'] = $filename;
@@ -276,7 +276,7 @@ class LiveUpdateXMLSlurp extends JObject
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
 		}
 		
-		$xml = & JFactory::getXMLParser('Simple');
+		$xml = JFactory::getXMLParser('Simple');
 		if (!$xml->loadFile($filename)) {
 			unset($xml);
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
@@ -288,9 +288,9 @@ class LiveUpdateXMLSlurp extends JObject
 		}
 		
 		$data = array();
-		$element = & $xml->document->version[0];
+		$element = $xml->document->version[0];
 		$data['version'] = $element ? $element->data() : '';		
-		$element = & $xml->document->creationDate[0];
+		$element = $xml->document->creationDate[0];
 		$data['date'] = $element ? $element->data() : '';
 		
 		$data['xmlfile'] = $filename;
@@ -332,7 +332,7 @@ class LiveUpdateXMLSlurp extends JObject
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
 		}
 
-		$xml = & JFactory::getXMLParser('Simple');
+		$xml = JFactory::getXMLParser('Simple');
 		if (!$xml->loadFile($filename)) {
 			unset($xml);
 			return array('version' => '', 'date' => '', 'xmlfile' => '');
@@ -344,9 +344,9 @@ class LiveUpdateXMLSlurp extends JObject
 		}
 
 		$data = array();
-		$element = & $xml->document->version[0];
+		$element = $xml->document->version[0];
 		$data['version'] = $element ? $element->data() : '';
-		$element = & $xml->document->creationDate[0];
+		$element = $xml->document->creationDate[0];
 		$data['date'] = $element ? $element->data() : '';
 
 		$data['xmlfile'] = $filename;

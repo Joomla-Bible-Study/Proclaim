@@ -23,7 +23,7 @@ class BiblestudyModelShares extends modelClass {
      *
      * @var array
      */
-   
+
 
     function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
@@ -38,7 +38,7 @@ class BiblestudyModelShares extends modelClass {
         parent::__construct($config);
     }
 
-  
+
     /**
      * @since   7.0
      */
@@ -52,6 +52,29 @@ class BiblestudyModelShares extends modelClass {
         $this->setState('filter.published', $published);
 
         parent::populateState('share.name', 'ASC');
+    }
+
+    /**
+     * Method to get a list of items.
+     *
+     * @return	mixed	An array of objects on success, false on failure.
+     */
+    public function &getItems() {
+        // Invoke the parent getItems method to get the main list
+        $items = parent::getItems();
+
+        // Convert the params field into an object, saving original in _params
+        for ($i = 0, $n = count($items); $i < $n; $i++) {
+            $item = &$items[$i];
+            if (!isset($this->_params)) {
+                $params = new JRegistry();
+                $params->loadString($item->params);
+                $item->params = $params;
+            }
+
+        }
+
+        return $items;
     }
 
     /**

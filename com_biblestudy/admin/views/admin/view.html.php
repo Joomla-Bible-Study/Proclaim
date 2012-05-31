@@ -22,10 +22,25 @@ class biblestudyViewadmin extends JView {
     protected $state;
 
     function display($tpl = null) {
-
+        $language = JFactory::getLanguage();
+        $language->load('com_installer');
+        // Get data from the model
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
+
+        // Get data from the model for database
+        $this->changeSet = $this->get('Items');
+        $this->errors = $this->changeSet->check();
+        $this->results = $this->changeSet->getStatus();
+        $this->schemaVersion = $this->get('SchemaVersion');
+        $this->updateVersion = $this->get('UpdateVersion');
+        $this->filterParams = $this->get('DefaultTextFilters');
+        $this->schemaVersion = ($this->schemaVersion) ? $this->schemaVersion : JText::_('JNONE');
+        $this->updateVersion = ($this->updateVersion) ? $this->updateVersion : JText::_('JNONE');
+        $this->pagination = $this->get('Pagination');
+        $this->errorCount = count($this->errors);
+        //end for database
 
         $this->setLayout('form');
 
@@ -82,9 +97,23 @@ class biblestudyViewadmin extends JView {
             }
         }
 
+        $jbsversion = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'biblestudy.xml');
+        $this->version = $jbsversion['version'];
+
+        $errors = count($this->errors);
+        if (!(strncmp($this->schemaVersion, $this->version, 5) === 0)) {
+            $this->errorCount++;
+        }
+        if (!$this->filterParams) {
+            $this->errorCount++;
+        }
+        if (($this->updateVersion != $this->version)) {
+            $this->errorCount++;
+        }
+
         // Set the toolbar
         $this->addToolbar();
-        
+
         // Display the template
         parent::display($tpl);
 
@@ -105,6 +134,8 @@ class biblestudyViewadmin extends JView {
         JToolBarHelper::custom('admin.resetHits', 'reset.png', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false, false);
         JToolBarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
         JToolBarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false);
+        JToolBarHelper::divider();
+        JToolBarHelper::custom('database.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false, false);
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

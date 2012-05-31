@@ -50,7 +50,8 @@ class jbStats {
         if (count($where) > 0)
             $query.=' AND ' . implode(' AND ', $where);
         $biblestudy_db->setQuery($query);
-        return intval($biblestudy_db->loadResult());
+        $results = $biblestudy_db->loadResult();
+        return intval($results);
     }
 
     /**

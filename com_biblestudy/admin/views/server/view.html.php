@@ -26,7 +26,7 @@ class BiblestudyViewServer extends JView {
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'server');
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin();
+        $this->admin = @BsmHelper::getAdmin();
 
         $this->setLayout("form");
         // Set the toolbar

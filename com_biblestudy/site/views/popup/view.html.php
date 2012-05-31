@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -57,15 +64,15 @@ class biblestudyViewpopup extends JView {
         $itemparams = $registry;
         $saveid = $media->id;
         $media->id = $media->study_id;
-        $scripture = getScripture($params, $media, $esv = '0', $scripturerow = '1');
+        //$scripture = getScripture($params, $media, $esv = '0', $scripturerow = '1');
         $media->id = $saveid;
         $date = getstudyDate($params, $media->studydate);
         // The popup window call the counter function
-        $play = $getMedia->hitPlay($mediaid);
+        $getMedia->hitPlay($mediaid);
         $length = getDuration($params, $media);
-        $badchars = array("'", '"');
-        $studytitle = str_replace($badchars, ' ', $media->studytitle);
-        $studyintro = str_replace($badchars, ' ', $media->studyintro);
+        //$badchars = array("'", '"');
+        //$studytitle = str_replace($badchars, ' ', $media->studytitle);
+        //$studyintro = str_replace($badchars, ' ', $media->studyintro);
         $images = new jbsImages();
         $seriesimage = $images->getSeriesThumbnail($media->series_thumbnail);
         $this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="' . $seriesimage->height . '" alt="' . $media->series_text . '">';

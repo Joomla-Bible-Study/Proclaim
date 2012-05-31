@@ -220,9 +220,7 @@ function writeXML() {
 		<itunes:subtitle>' . $title . '</itunes:subtitle>
 		<itunes:summary>' . $description . '</itunes:summary>
 		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>';
-                    if ($hours && $episode->media_minutes && $episode->media_seconds) {
                     $episodedetailtemp .= '<itunes:duration>' . $hours . ':' . sprintf("%02d", $episode->media_minutes) . ':' . sprintf("%02d", $episode->media_seconds) . '</itunes:duration>';
-                    }
                     //Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
                     if ($episode->article_id > 1) {
                         $episodedetailtemp .=

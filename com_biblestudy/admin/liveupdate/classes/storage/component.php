@@ -39,10 +39,10 @@ class LiveUpdateStorageComponent extends LiveUpdateStorage
 		$db = JFactory::getDbo();
 		if( version_compare(JVERSION,'1.6.0','ge') ) {
 			$sql = $db->getQuery(true)
-				->select($db->nq('params'))
-				->from($db->nq('#__extensions'))
-				->where($db->nq('type').' = '.$db->q('component'))
-				->where($db->nq('element').' = '.$db->q(self::$component));
+				->select($db->qn('params'))
+				->from($db->qn('#__extensions'))
+				->where($db->qn('type').' = '.$db->q('component'))
+				->where($db->qn('element').' = '.$db->q(self::$component));
 		} else {
 			$sql = 'SELECT '.$db->nameQuote('params').' FROM '.$db->nameQuote('#__components').
 				' WHERE '.$db->nameQuote('option').' = '.$db->Quote(self::$component).
@@ -68,7 +68,7 @@ class LiveUpdateStorageComponent extends LiveUpdateStorage
 	{
 		$data = self::$registry->toString('INI');
 		
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		
 		// An interesting discovery: if your component is manually updating its
 		// component parameters before Live Update is called, then calling Live
@@ -79,17 +79,17 @@ class LiveUpdateStorageComponent extends LiveUpdateStorage
 		/*
 		jimport('joomla.html.parameter');
 		jimport('joomla.application.component.helper');
-		$component =& JComponentHelper::getComponent(self::$component);
+		$component = JComponentHelper::getComponent(self::$component);
 		$params = new JParameter($component->params);
 		$params->setValue(self::$key, $data);
 		*/
 
 		if( version_compare(JVERSION,'1.6.0','ge') ) {
 			$sql = $db->getQuery(true)
-				->select($db->nq('params'))
-				->from($db->nq('#__extensions'))
-				->where($db->nq('type').' = '.$db->q('component'))
-				->where($db->nq('element').' = '.$db->q(self::$component));
+				->select($db->qn('params'))
+				->from($db->qn('#__extensions'))
+				->where($db->qn('type').' = '.$db->q('component'))
+				->where($db->qn('element').' = '.$db->q(self::$component));
 		} else {
 			$sql = 'SELECT '.$db->nameQuote('params').' FROM '.$db->nameQuote('#__components').
 				' WHERE '.$db->nameQuote('option').' = '.$db->Quote(self::$component).
@@ -111,10 +111,10 @@ class LiveUpdateStorageComponent extends LiveUpdateStorage
 			// Joomla! 1.6
 			$data = $params->toString('JSON');
 			$sql = $db->getQuery(true)
-				->update($db->nq('#__extensions'))
-				->set($db->nq('params').' = '.$db->q($data))
-				->where($db->nq('type').' = '.$db->q('component'))
-				->where($db->nq('element').' = '.$db->q(self::$component));
+				->update($db->qn('#__extensions'))
+				->set($db->qn('params').' = '.$db->q($data))
+				->where($db->qn('type').' = '.$db->q('component'))
+				->where($db->qn('element').' = '.$db->q(self::$component));
 		}
 		else
 		{

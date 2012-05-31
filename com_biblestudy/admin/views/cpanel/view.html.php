@@ -10,6 +10,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
+include_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
 
 class biblestudyViewcpanel extends JView {
 
@@ -31,6 +32,9 @@ class biblestudyViewcpanel extends JView {
             $this->version = $registry->get('version');
             $this->versiondate = $registry->get('creationDate');
         }
+        //$jbstats = new jbStats();
+        $this->total_messages = @jbStats::get_total_messages();
+
         $this->addToolbar();
 
         // Display the template

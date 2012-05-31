@@ -26,7 +26,7 @@ class BiblestudyViewSerie extends JView {
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'serie');
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin();
+        $this->admin = @BsmHelper::getAdmin();
 
         if (!JFactory::getUser()->authorize('core.manage', 'com_biblestudy')) {
             JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));

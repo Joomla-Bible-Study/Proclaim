@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @version     $Id: view.html.php 2025 2011-08-28 04:08:06Z genu $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -29,16 +28,15 @@ class BiblestudyViewMediafile extends JView {
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'mediafile');
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin();
+        $this->admin = @BsmHelper::getAdmin();
         $host = JURI::root();
         $document = JFactory::getDocument();
         $document->addScript($host . 'media/com_biblestudy/js/swfupload/swfupload.js');
         $document->addScript($host . 'media/com_biblestudy/js/swfupload/swfupload.queue.js');
         $document->addScript($host . 'media/com_biblestudy/js/swfupload/fileprogress.js');
         $document->addScript($host . 'media/com_biblestudy/js/swfupload/handlers.js');
-        $document->addScript(JURI::root() . 'administrator/components/com_biblestudy/views/mediafile/tmpl/submitbutton.js');
         $document->addStyleSheet($host . 'media/com_biblestudy/js/swfupload/default.css');
-        $swfUploadHeadJs = JBSUpload::uploadjs($host);
+        $swfUploadHeadJs = @JBSUpload::uploadjs($host);
         //add the javascript to the head of the html document
         $document->addScriptDeclaration($swfUploadHeadJs);
         //Needed to load the article field type for the article selector
@@ -53,8 +51,11 @@ class BiblestudyViewMediafile extends JView {
         $server = array(
             array('value' => '', 'text' => JText::_('JBS_MED_SELECT_SERVER')),
         );
-        $serverlist = array_merge($server, $db->loadObjectList());
+        $results = $db->loadObjectList();
+        $serverlist = array_merge($server, $results);
         $idsel = "'SWFUpload_0'";
+        //@todo need to fix this not sure what to do to fix it now error
+        //Strict standards: Only variables should be passed by reference in /Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Trunk/com_biblestudy/admin/views/mediafile/view.html.php on line 56
         $this->assignRef('upload_server', JHTML::_('select.genericList', $serverlist, 'upload_server', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', ''));
 
         //Get folders for upload dropdown
@@ -67,6 +68,7 @@ class BiblestudyViewMediafile extends JView {
         );
         $folderlist = array_merge($folder, $db->loadObjectList());
         $idsel = "'SWFUpload_0'";
+        //@todo need to fix also
         $this->assignRef('upload_folder', JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', ''));
         $this->setLayout('edit');
         // Set the toolbar
