@@ -38,7 +38,9 @@ switch ($this->params->get('link_comments', 0)) {
                             <?php echo JText::_('JBS_CMN_COMMENTS'); ?>
                         </th></tr></thead>
                 <?php
-                if (!$this->study->id){$this->study->id = JRequest::getInt('id');} 
+                if (!$this->study->id) {
+                    $this->study->id = JRequest::getInt('id');
+                }
                 $db = JFactory::getDBO();
                 $query = 'SELECT c.* FROM #__bsms_comments AS c WHERE c.published = 1 AND c.study_id = ' . $this->study->id . ' ORDER BY c.comment_date ASC';
 
@@ -145,6 +147,6 @@ switch ($this->params->get('link_comments', 0)) {
                 </form>
             <?php } //end if $allow > 9
             ?>
-        
+
+        </div>
     </div>
-</div>

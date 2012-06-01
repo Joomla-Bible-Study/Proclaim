@@ -10,30 +10,31 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
 $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-    include_once($path1 . 'scripture.php');
-    include_once($path1 . 'duration.php');
-    include_once($path1 . 'date.php');
-    include_once($path1 . 'filesize.php');
-    include_once($path1 . 'image.php');
+include_once($path1 . 'scripture.php');
+include_once($path1 . 'duration.php');
+include_once($path1 . 'date.php');
+include_once($path1 . 'filesize.php');
+include_once($path1 . 'image.php');
 jimport('joomla.html.parameter');
-class JBSPagebuilder
-{
-    
-    function buildPage($item, $params, $admin_params)
-    {
+
+class JBSPagebuilder {
+
+    function buildPage($item, $params, $admin_params) {
         $page->study_thumbnail = '';
         $page->series_thumbnail = '';
         $page->teacherimage = '';
-        $images = new jbsImages(); 
+        $images = new jbsImages();
         //media files image, links, download
-        $mids = $item->mids; 
-       if ($mids){ $page->media = $this->mediaBuilder($mids, $params, $admin_params);
-           }
-       else {$page->media = '';}
+        $mids = $item->mids;
+        if ($mids) {
+            $page->media = $this->mediaBuilder($mids, $params, $admin_params);
+        } else {
+            $page->media = '';
+        }
         //scripture1
         $esv = 0;
         $scripturerow = 1;
-        $page->scripture1 = getScripture($params, $item, $esv, $scripturerow); 
+        $page->scripture1 = getScripture($params, $item, $esv, $scripturerow);
         //scripture 2
         $esv = 0;
         $scripturerow = 2;
@@ -41,59 +42,54 @@ class JBSPagebuilder
         //duration
         $page->duration = getDuration($params, $item);
         $page->studydate = getstudyDate($params, $item->studydate);
-        if (substr_count($item->topic_text, ',')) 
-                {
-                $topics = explode(',', $item->topic_text);
-                foreach ($topics as $key => $value) 
-                    {
-                    $topics[$key] = JText::_($value);
-                    }
-              //  $page->topics = implode(', ', $topics);
-                } 
-        else {$page->topics = JText::_($item->topic_text);}
-        if ($item->thumbnailm)
-        {
+        if (substr_count($item->topic_text, ',')) {
+            $topics = explode(',', $item->topic_text);
+            foreach ($topics as $key => $value) {
+                $topics[$key] = JText::_($value);
+            }
+            //  $page->topics = implode(', ', $topics);
+        } else {
+            $page->topics = JText::_($item->topic_text);
+        }
+        if ($item->thumbnailm) {
             $image = $images->getStudyThumbnail($item->thumbnailm);
             $page->study_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->studytitle . '">';
         }
-        if ($item->series_thumbnail) 
-            {
-              $image = $images->getSeriesThumbnail($item->series_thumbnail);
-              $page->series_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->series_text . '">';
-            }
-        $page->detailslink = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));    
+        if ($item->series_thumbnail) {
+            $image = $images->getSeriesThumbnail($item->series_thumbnail);
+            $page->series_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->series_text . '">';
+        }
+        $page->detailslink = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
         return $page;
         $teacherimage = $images->getTeacherImage($item->image, $item->thumb);
         $page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->teachername . '">';
     }
-    
-    function mediaBuilder($mediaids, $params, $admin_params)
-    {
+
+    function mediaBuilder($mediaids, $params, $admin_params) {
         $images = new jbsImages();
         $mediaelements = new jbsMedia();
-        
+
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('media.*');
         $query->from('#__bsms_mediafiles as media');
         $query->select('server.id as serverid, server.server_path as spath');
-        $query->join('LEFT','#__bsms_servers AS server ON server.id = media.server');
+        $query->join('LEFT', '#__bsms_servers AS server ON server.id = media.server');
         $query->select('folder.folderpath as fpath');
-        $query->join('LEFT','#__bsms_folders as folder ON folder.id = media.path');
+        $query->join('LEFT', '#__bsms_folders as folder ON folder.id = media.path');
         $query->select('image.media_image_path AS impath, image.media_image_name as imname, image.path2');
-        $query->join('LEFT','#__bsms_media as image ON image.id = media.media_image');
+        $query->join('LEFT', '#__bsms_media as image ON image.id = media.media_image');
         $query->select('study.media_hours, study.media_minutes, study.media_seconds');
-        $query->join('LEFT','#__bsms_studies AS study ON study.id = media.study_id');
+        $query->join('LEFT', '#__bsms_studies AS study ON study.id = media.study_id');
         $query->select('mime.mimetext');
-        $query->join('LEFT','#__bsms_mimetype as mime ON mime.id = media.mime_type');
-        $query->where('media.id IN ('.$mediaids.')');
+        $query->join('LEFT', '#__bsms_mimetype as mime ON mime.id = media.mime_type');
+        $query->where('media.id IN (' . $mediaids . ')');
         $query->where('media.published = 1');
         $query->order('media.ordering, image.media_image_name ASC');
         $db->setQuery($query); //print_r($querym);
-	$medias = $db->loadObjectList();
+        $medias = $db->loadObjectList();
         $mediareturns = array();
-        foreach ($medias as $media)
-        { 
+        foreach ($medias as $media) {
             $link_type = $media->link_type;
             $registry = new JRegistry;
             $registry->loadJSON($media->params);
@@ -106,50 +102,47 @@ class JBSPagebuilder
             $download_tmp = $images->getMediaImage($d_image, $media = NULL);
             $download_image = $download_tmp->path;
             $compat_mode = $admin_params->get('compat_mode');
-            if ($link_type > 0) 
-                {
-                    $width = $download_tmp->width;
-                    $height = $download_tmp->height;
+            if ($link_type > 0) {
+                $width = $download_tmp->width;
+                $height = $download_tmp->height;
 
-                    if ($compat_mode == 0) {
-                        $downloadlink = '<a href="index.php?option=com_biblestudy&mid=' .
-                              (int)$mediaid . '&view=sermons&task=download">';
-                    } else {
-                        $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
-                                $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
-                    }
-                    $downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
-                    $height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+                if ($compat_mode == 0) {
+                    $downloadlink = '<a href="index.php?option=com_biblestudy&mid=' .
+                            (int) $mediaid . '&view=sermons&task=download">';
+                } else {
+                    $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
+                            $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
                 }
-            switch ($link_type) 
-            {
+                $downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
+                        $height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+            }
+            switch ($link_type) {
                 case 0:
                     $mediareturns[] = $playercode;
                     break;
 
                 case 1:
-                    $mediareturns[] = $playercode . $downloadlink;echo $mediareturn;
+                    $mediareturns[] = $playercode . $downloadlink;
+                    echo $mediareturn;
                     break;
 
                 case 2:
                     $mediareturns[] = $downloadlink;
                     break;
             }
-      }
-       $mediareturn = implode('',$mediareturns);
-       return $mediareturn;
-       
+        }
+        $mediareturn = implode('', $mediareturns);
+        return $mediareturn;
     }
-    
-    function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order)
-    {
+
+    function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order) {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
 		        study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.topics_id, study.studyintro,
 		        study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
-		        study.media_seconds, study.series_id, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name, 
-                        study.user_id, study.studynumber, CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', 
+		        study.media_seconds, study.series_id, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
+                        study.user_id, study.studynumber, CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\',
                         study.id, study.alias) ELSE study.id END as slug ');
         $query->from('#__bsms_studies AS study');
 
@@ -189,36 +182,40 @@ class JBSPagebuilder
         $query->join('LEFT', '#__users as users on study.user_id = users.id');
 
         $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-        $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');
-        
+        $query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
+
         $query->group('study.id');
 
         $query->select('GROUP_CONCAT(DISTINCT media.id) as mids');
-        $query->join('LEFT','#__bsms_mediafiles as media ON study.id = media.study_id');
+        $query->join('LEFT', '#__bsms_mediafiles as media ON study.id = media.study_id');
         $query->where('study.published = 1');
-        $query->where($wherefield.' = '. $whereitem);
-        if (!$order){$order = 'DESC';}
-        $query->order('studydate '.$order);
-        if (!$limit){$limit = 10;}
-        $db->setQuery($query,0,$limit);
-      //  $db->setQuery($query->__toString());
-     //   print_r ($query);
-	//$studies = $db->loadObjectList();
+        $query->where($wherefield . ' = ' . $whereitem);
+        if (!$order) {
+            $order = 'DESC';
+        }
+        $query->order('studydate ' . $order);
+        if (!$limit) {
+            $limit = 10;
+        }
+        $db->setQuery($query, 0, $limit);
+        //  $db->setQuery($query->__toString());
+        //   print_r ($query);
+        //$studies = $db->loadObjectList();
         $studies = $db->loadObjectList();
         //Remove items user is not authorized to see
-     /*   $user = JFactory::getUser();
-        $groups = $user->getAuthorisedViewLevels();
-        $count = count($studies);
-        for ($i = 0; $i < $count; $i++) {
+        /*   $user = JFactory::getUser();
+          $groups = $user->getAuthorisedViewLevels();
+          $count = count($studies);
+          for ($i = 0; $i < $count; $i++) {
 
-            if ($studies[$i]->access > 1) {
-                if (!in_array($studies[$i]->access, $groups)) {
-                    unset($studies[$i]);
-                }
-            }
-        } */
-        foreach($studies as $study)    
-        {$pelements = $this->buildPage($study, $params, $admin_params);
+          if ($studies[$i]->access > 1) {
+          if (!in_array($studies[$i]->access, $groups)) {
+          unset($studies[$i]);
+          }
+          }
+          } */
+        foreach ($studies as $study) {
+            $pelements = $this->buildPage($study, $params, $admin_params);
             $study->scripture1 = $pelements->scripture1;
             $study->scripture2 = $pelements->scripture2;
             $study->media = $pelements->media;
@@ -227,9 +224,10 @@ class JBSPagebuilder
             $study->topics = $pelements->topics;
             $study->study_thumbnail = $pelements->study_thumbnail;
             $study->series_thumbnail = $pelements->series_thumbnail;
-            $study->detailslink = $pelements->detailslink; }
-        
+            $study->detailslink = $pelements->detailslink;
+        }
+
         return $studies;
     }
+
 }
-?>

@@ -1,6 +1,5 @@
 a<?php
 /**
- * @version $Id: biblestudy.media.class.php 1 $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -140,7 +139,9 @@ class jbsMedia {
     }
 
     function getMediaRows($id) {
-        if (!$id){return false;}
+        if (!$id) {
+            return false;
+        }
         $db = JFactory::getDBO();
         $query = 'SELECT #__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.server_path AS spath, #__bsms_folders.id AS fid,'
                 . ' #__bsms_folders.folderpath AS fpath, #__bsms_media.id AS mid, #__bsms_media.media_image_path AS impath, #__bsms_media.media_image_name AS imname,'

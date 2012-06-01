@@ -25,30 +25,32 @@ if ($this->params->get('showpodcastsubscribedetails') == 1 || $this->params->get
     ?><div class="podcastsubscribe" <?php ?>><?php echo $this->subscribe; ?></div><?php }
 ?>
 <div id="bsmHeader">
-        <?php if ($this->params->get('showrelated') == 1) {
-            echo $this->related;
-        } ?>
+    <?php
+    if ($this->params->get('showrelated') == 1) {
+        echo $this->related;
+    }
+    ?>
     <div class="buttonheading">
 
-<?php
-if ($this->params->get('show_print_view') > 0) {
-    echo $this->page->print;
-}
-?>
+        <?php
+        if ($this->params->get('show_print_view') > 0) {
+            echo $this->page->print;
+        }
+        ?>
 
     </div>
 
-        <?php
-        //Social Networking begins here
-        if ($this->admin_params->get('socialnetworking') > 0) {
-            ?>
-        <div id="bsms_share">
-        <?php
-        //  $social = getShare($this->detailslink, $row, $params, $this->admin_params);
-        echo $this->page->social;
+    <?php
+    //Social Networking begins here
+    if ($this->admin_params->get('socialnetworking') > 0) {
         ?>
+        <div id="bsms_share">
+            <?php
+            //  $social = getShare($this->detailslink, $row, $params, $this->admin_params);
+            echo $this->page->social;
+            ?>
         </div>
-                <?php } //End Social Networking  ?>
+<?php } //End Social Networking   ?>
     <table><tr><td>
 
 
@@ -114,9 +116,11 @@ if ($this->params->get('show_print_view') > 0) {
             ?>
 
         </td></tr></table>
-<?php if ($this->params->get('showrelated') == 2) {
+<?php
+if ($this->params->get('showrelated') == 2) {
     echo $this->related;
-} ?>
+}
+?>
 <?php
 if ($this->params->get('showpodcastsubscribedetails') == 3 || $this->params->get('showpodcastsubscribedetails') == 4) {
     if ($this->params->get('showpodcastsubscribedetails') == 4) {
