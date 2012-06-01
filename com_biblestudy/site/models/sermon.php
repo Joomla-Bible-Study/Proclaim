@@ -103,7 +103,7 @@ class BiblestudyModelSermon extends JModelItem {
                 $query->select('t.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh, t.thumb, t.thumbw, t.thumbh');
                 $query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
                 //join over series
-                $query->select('se.id AS sid, se.series_text, se.description as sdescription');
+                $query->select('se.id AS sid, se.series_text, se.series_thumbnail, se.description as sdescription');
                 $query->join('LEFT', '#__bsms_series as se on s.series_id = se.id');
                 //join over message type
                 $query->select('mt.id as mid, mt.message_type');
@@ -207,18 +207,7 @@ class BiblestudyModelSermon extends JModelItem {
         return $this->_admin;
     }
 
-    public function getLatestStudy() {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery('true');
-        $query->select('id');
-        $query->from('#__bsms_studies');
-        $query->where('published = 1');
-        $query->order('studydate DESC LIMIT 1');
-        $db->setQuery($query);
-        $db->query();
-        $result = $db->loadResult();
-        return $result;
-    }
+   
 
 //end class
 }

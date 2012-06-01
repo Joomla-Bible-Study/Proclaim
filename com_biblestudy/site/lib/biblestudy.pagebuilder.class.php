@@ -21,12 +21,15 @@ class JBSPagebuilder
     
     function buildPage($item, $params, $admin_params)
     {
+        $page->study_thumbnail = '';
+        $page->series_thumbnail = '';
+        $page->teacherimage = '';
         $images = new jbsImages(); 
         //media files image, links, download
         $mids = $item->mids; 
        if ($mids){ $page->media = $this->mediaBuilder($mids, $params, $admin_params);
            }
-       
+       else {$page->media = '';}
         //scripture1
         $esv = 0;
         $scripturerow = 1;
@@ -38,16 +41,16 @@ class JBSPagebuilder
         //duration
         $page->duration = getDuration($params, $item);
         $page->studydate = getstudyDate($params, $item->studydate);
-        if (substr_count($item->topics_text, ',')) 
+        if (substr_count($item->topic_text, ',')) 
                 {
-                $topics = explode(',', $item->topics_text);
+                $topics = explode(',', $item->topic_text);
                 foreach ($topics as $key => $value) 
                     {
                     $topics[$key] = JText::_($value);
                     }
               //  $page->topics = implode(', ', $topics);
                 } 
-        else {$page->topics = JText::_($item->topics_text);}
+        else {$page->topics = JText::_($item->topic_text);}
         if ($item->thumbnailm)
         {
             $image = $images->getStudyThumbnail($item->thumbnailm);

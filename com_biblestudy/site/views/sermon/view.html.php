@@ -21,9 +21,8 @@ class BiblestudyViewSermon extends JView {
 
         $mainframe = JFactory::getApplication();
 
-        // $id = JRequest::getInt('id');
-        //  dump ($id);
-        $study = $this->get('Item');
+        
+        $study = $this->get('Item'); 
         $relatedstudies = new relatedStudies();
 
         // Convert parameter fields to objects.
@@ -73,16 +72,16 @@ class BiblestudyViewSermon extends JView {
         $study->detailslink = $pelements->detailslink;
         $study->teacherimage = $pelements->teacherimage;
         $article->text = $study->scripture1;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
         $study->scripture1 = $article->text;
         $article->text = $study->scripture2;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
         $study->scripture2 = $article->text;
         $article->text = $study->studyintro;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
         $study->studyintro = $article->text;
         $article->text = $study->secondary_reference;
-        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+        $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
         $study->secondary_reference = $article->text;
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
