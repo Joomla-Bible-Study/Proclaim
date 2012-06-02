@@ -568,12 +568,7 @@
 				<option value="0">JBS_CMN_HIDE</option>
 				<option value="1">JBS_CMN_SHOW</option>
 			</field>
-			<field name="show_passage_view" type="list" default="1"
-				label="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW" description="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW_DESC">
-				<option value="0">JBS_CMN_HIDE</option>
-				<option value="1">JBS_CMN_SHOW</option>
-				<option value="2">JBS_TPL_SHOW_ALWAYS_NO_HIDE_SHOW_LINK</option>
-			</field>
+			
 			<field name="use_headers_view" type="list" default="1"
 				label="JBS_TPL_DETAILS_USE_HEADERS_VIEW" description="JBS_TPL_DETAILS_USE_HEADERS_VIEW_DESC">
 				<option value="0">JBS_TPL_NO_HEADER_ROW</option>
@@ -619,12 +614,7 @@
 			<field name="link_text" type="text" size="75"
 				default="Return to Studies List" label="JBS_TPL_DETAILS_LINK_TEXT"
 				description="JBS_TPL_DETAILS_LINK_TEXT_DESC" />
-			<field name="show_scripture_link" type="list" default="0"
-				label="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK" description="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK_DESC">
-				<option value="0">JBS_TPL_NO_PLUGINS</option>
-				<option value="1">JBS_TPL_ALL_PLUGINS</option>
-				<option value="2">JBS_TPL_SCRIPTURE_LINKS</option>
-			</field>
+			
                         <field name="showrelated" type="list" default="1"
                                 label="JBS_TPL_SHOW_RELATED" description="JBS_TPL_SHOW_RELATED_DESC" >
                                 <option value="0">JBS_TPL_RELATED_NO_SHOW</option>
@@ -638,6 +628,107 @@
                                     <option value="2">JBS_SHOW_PODCAST_SUBSCRIBE_UL</option>
                                     <option value="3">JBS_SHOW_PODCAST_SUBSCRIBE_LR</option>
                                     <option value="4">JBS_SHOW_PODCAST_SUBSCRIBE_LL</option>
+                        </field>
+                        <field name="show_scripture_link" type="list" default="0"
+				label="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK" description="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK_DESC">
+				<option value="0">JBS_TPL_NO_PLUGINS</option>
+				<option value="1">JBS_TPL_ALL_PLUGINS</option>
+				<option value="2">JBS_TPL_SCRIPTURE_LINKS</option>
+			</field>
+                        <field name="show_passage_view" type="list" default="1"
+				label="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW" description="JBS_TPL_DETAILS_SHOW_PASSAGE_VIEW_DESC">
+				<option value="0">JBS_CMN_HIDE</option>
+				<option value="1">JBS_TPL_SHOW_PASSAGE_WITH_HIDE_SHOW</option>
+				<option value="2">JBS_TPL_SHOW_ALWAYS_NO_HIDE_SHOW_LINK</option>
+                                <option value="3">JBS_TPL_SHOW_AS_POPUP</option>
+			</field>
+                        <field name="bible_version" type="list" default="51" label="JBS_TPL_CHOOSE_BIBLE_VERSION" desc="JBS_TPL_CHOOSE_BIBLE_VERSION_DESC">
+                            <option value="69">	1550 Stephanus New Testament (NT)	</option>
+                            <option value="68">	1881 Westcott-Hort New Testament (NT)	</option>
+                            <option value="70">	1894 Scrivener New Testament (NT)	</option>
+                            <option value="19">	1934 Vietnamese Bible	</option>
+                            <option value="82">	1940 Bulgarian Bible	</option>
+                            <option value="48">	21st Century King James Version	</option>
+                            <option value="1">	Albanian Bible	</option>
+                            <option value="8">	American Standard Version	</option>
+                            <option value="45">	Amplified Bible	</option>
+                            <option value="94">	Amuzgo de Guerrero (NT) </option>
+                            <option value="43">	Ang Salita ng Diyos	(NT) </option>
+                            <option value="28">	Arabic Life Application Bible	</option>
+                            <option value="57">	Biblia en Lenguaje Sencillo (NT) </option>
+                            <option value="4">	Biblia Sacra Vulgata (with Apocrypha)	</option>
+                            <option value="21">	Bulgarian Bible	</option>
+                            <option value="98">	Cakchiquel Occidental (NT)	</option>
+                            <option value="41">	Castilian (NT) </option>
+                            <option value="90">	Chinanteco de Comaltepec (NT)	</option>
+                            <option value="80">	Chinese Union Version (Simplified) 	</option>
+                            <option value="22">	Chinese Union Version (Traditional)	</option>
+                            <option value="3">	Conferenza Episcopale Italiana (with Apocrypha)	</option>
+                            <option value="46">	Contemporary English Version	</option>
+                            <option value="62">	Croatian Bible (NT) </option>
+                            <option value="16">	Darby Translation	</option>
+                            <option value="5">	Det Norsk Bibelselskap 1930	</option>
+                            <option value="11">	Dette er Biblen pÃ¥ dansk	</option>
+                            <option value="58">	Dios Habla Hoy (with Apocrypha)	</option>
+                            <option value="63">	Douay-Rheims 1899 American Edition (with Apocrypha)	</option>
+                            <option value="54">	Elberfelder	</option>
+                            <option value="47">	English Standard Version	</option>
+                            <option value="GNT"> Good News Translation (with Apocrypha) </option>
+                            <option value="23">	Haitian Creole Version	</option>
+                            <option value="30">	Het Boek	</option>
+                            <option value="71">	Hiligaynon Bible	</option>
+                            <option value="33">	Hoffnung für Alle (NT) </option>
+                            <option value="77">	Holman Christian Standard Bible	</option>
+                            <option value="17">	Hungarian KÃ¡roli	</option>
+                            <option value="18">	Icelandic Bible	</option>
+                            <option value="103"> Jacalteco, Oriental (NT) </option>
+                            <option value="25">	João Ferreira de Almeida Atualizada	</option>
+                            <option value="104"> Kekchi (NT) </option>
+                            <option value="9">	King James Version	</option>
+                            <option value="20">	Korean Bible	</option>
+                            <option value="32">	La Bible du Semeur	</option>
+                            <option value="59">	La Biblia de las Américas	</option>
+                            <option value="55">	La Nuova Diodati	</option>
+                            <option value="34">	La Parola è Vita (NT)	</option>
+                            <option value="35">	Levande Bibeln (NT)	</option>
+                            <option value="44">	Levande Bibeln	</option>
+                            <option value="2">	Louis Segond	</option>
+                            <option value="10">	Luther Bibel 1545	</option>
+                            <option value="122">	Macedonian New Testament (NT)	</option>
+                            <option value="88">	Mam, Central (NT) </option>
+                            <option value="107">	Mam de Todos Santos Chuchumatán (NT) </option>
+                            <option value="24">	Maori Bible	</option>
+                            <option value="40">	Nádej pre kazdého	(NT) </option>
+                            <option value="109"> Náhuatl de Guerrero (NT) </option>
+                            <option value="49">	New American Standard Bible	</option>
+                            <option value="76">	New International Reader's Version	</option>
+                            <option value="31">	New International Version	</option>
+                            <option value="64">	New International Version - UK	</option>
+                            <option value="50">	New King James Version	</option>
+                            <option value="74">	New Life Version	</option>
+                            <option value="51">	New Living Translation	</option>
+                            <option value="42">	Nueva Versión Internacional	</option>
+                            <option value="37">	O Livro	</option>
+                            <option value="111"> Quiché, Centro Occidental (NT) </option>
+                            <option value="56">	Reimer 2001 (NT) </option>
+                            <option value="60">	Reina-Valera 1960	</option>
+                            <option value="61">	Reina-Valera 1995	</option>
+                            <option value="6">	Reina-Valera Antigua	</option>
+                            <option value="14">	Romanian	</option>
+                            <option value="38">	Romanian (NT)	</option>
+                            <option value="13">	Russian Synodal Version	</option>
+                            <option value="29">	Slovo na cestu (NT)	</option>
+                            <option value="39">	Slovo Zhizny (NT)	</option>
+                            <option value="7">	Svenska 1917	</option>
+                            <option value="75">	Swahili New Testament	(NT) </option>
+                            <option value="65">	The Message	</option>
+                            <option value="81">	The Westminster Leningrad Codex (OT) </option>
+                            <option value="72">	Today's New International Version	</option>
+                            <option value="27">	Ukrainian Bible	</option>
+                            <option value="113"> Uspanteco Bible (NT) </option>
+                            <option value="73">	Worldwide English (NT)	</option>
+                            <option value="53">	Wycliffe New Testament (NT)	</option>
+                            <option value="15">	Young's Literal Translation	</option>
                         </field>
 			<field name="show_comments" type="accesslevel" default=""
 				label="JBS_TPL_DETAILS_SHOW_COMMENTS" description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC" />
