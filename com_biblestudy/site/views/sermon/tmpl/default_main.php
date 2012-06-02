@@ -108,6 +108,7 @@ if ($this->params->get('showpodcastsubscribedetails') == 1 || $this->params->get
 <table id="bsmsdetailstable" cellspacing="0">
     <tr><td id="studydetailstext">
             <?php
+            echo $this->passage;
             if ($this->params->get('show_scripture_link') > 0) {
                 echo $this->article->studytext;
             } else {
@@ -130,4 +131,5 @@ if ($this->params->get('showpodcastsubscribedetails') == 3 || $this->params->get
     }
     ?><div id="subscribelinks" <?php echo $float; ?>><?php echo $this->subscribe; ?></div><?php
 }
+
 

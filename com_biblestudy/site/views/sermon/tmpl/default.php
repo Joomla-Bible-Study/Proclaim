@@ -19,8 +19,7 @@ if ($this->params->get('useexpert_details') > 0)
  {
  	echo $this->loadTemplate('main');
  }
- echo $this->loadTemplate('scripture');
- //echo '<br />';
+ 
  echo $this->loadTemplate('commentsform');
  echo $this->loadTemplate('footerlink');
 echo $this->loadTemplate('footer');

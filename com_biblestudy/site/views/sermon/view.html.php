@@ -12,6 +12,7 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'podcastsubscribe.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'related.php');
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblegateway.php');
 $uri = JFactory::getURI();
 
 class BiblestudyViewSermon extends JView {
@@ -20,8 +21,7 @@ class BiblestudyViewSermon extends JView {
 
 
         $mainframe = JFactory::getApplication();
-
-        
+       
         $study = $this->get('Item'); 
         $relatedstudies = new relatedStudies();
 
@@ -145,7 +145,7 @@ class BiblestudyViewSermon extends JView {
          * Process the prepare content plugins
          */
         $article->text = $study->studytext;
-        $linkit = $params->get('show_scripture_link');
+        $linkit = $params->get('show_scripture_link'); 
         if ($linkit) {
             switch ($linkit) {
                 case 0:
@@ -159,9 +159,12 @@ class BiblestudyViewSermon extends JView {
             }
             $limitstart = JRequest::getVar('limitstart', 'int');
             $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $params, $limitstart));
-            $article->studytext = $article->text;
-            $study->studytext = $article->text;
+            $article->studytext = $article->text; 
+            $study->studytext = $article->text; 
         } //end if $linkit
+        $Biblepassage = new showScripture();
+        $this->passage = $Biblepassage->buildPassage($study, $params); 
+        
         //Prepares a link string for use in social networking
         $u = JURI::getInstance();
         $detailslink = htmlspecialchars($u->toString());
