@@ -170,7 +170,8 @@ class plgSystemjbspodcast extends JPlugin {
     }
 
     function doPodcast() {
-        $path1 = JPATH_SITE . '/plugins/system/jbspodcast/';
+        //$path1 = JPATH_SITE . '/plugins/system/jbspodcast/';
+        $path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
         require_once($path1 . 'biblestudy.podcast.class.php');
         $podcasts = new JBSPodcast();
         $result = $podcasts->makePodcasts();
