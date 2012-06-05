@@ -14,7 +14,8 @@ $row = $this->study;
 // @todo need to clean up old code.
 $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');
- echo $this->subscribe; ?><?php 
+if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscribe; }
+ 
 ?>
 <div id="bsmHeader">
     <?php
@@ -115,6 +116,6 @@ if ($this->params->get('showrelated') == 2) {
 }
 ?>
 <?php
-if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscribe; }
+if ($this->params->get('showpodcastsubscribedetails') == 2 ) {echo $this->subscribe; }
 
 
