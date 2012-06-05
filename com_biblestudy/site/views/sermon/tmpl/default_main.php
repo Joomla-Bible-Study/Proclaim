@@ -14,15 +14,7 @@ $row = $this->study;
 // @todo need to clean up old code.
 $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');
-?>
-<?php
-if ($this->params->get('showpodcastsubscribedetails') == 1 || $this->params->get('showpodcastsubscribedetails') == 2) {
-    if ($this->params->get('showpodcastsubscribedetails') == 1) {
-        $float = 'style="float: right;"';
-    } else {
-        $float = 'style="float: left;"';
-    }
-    ?><div class="podcastsubscribe" <?php ?>><?php echo $this->subscribe; ?></div><?php }
+ echo $this->subscribe; ?><?php 
 ?>
 <div id="bsmHeader">
     <?php
@@ -123,13 +115,6 @@ if ($this->params->get('showrelated') == 2) {
 }
 ?>
 <?php
-if ($this->params->get('showpodcastsubscribedetails') == 3 || $this->params->get('showpodcastsubscribedetails') == 4) {
-    if ($this->params->get('showpodcastsubscribedetails') == 4) {
-        $float = 'style="float: left;"';
-    } else {
-        $float = 'style="float: right;"';
-    }
-    ?><div id="subscribelinks" <?php echo $float; ?>><?php echo $this->subscribe; ?></div><?php
-}
+if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscribe; }
 
 

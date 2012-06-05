@@ -25,11 +25,9 @@ $listingcall = JView::loadHelper('listing');
 
 ?>
 
-<?php if ($this->params->get('showpodcastsubscribelist') == 1 || $this->params->get('showpodcastsubscribelist') == 2)
-{
-    if ($this->params->get('showpodcastsubscribelist')== 1){$float = 'style="float: left;"';}else{$float = 'style="float: right;"';}
-    ?><div id="subscribelinks" <?php //echo $float; ?>><?php echo $this->subscribe; ?></div><?php
-}?>
+<?php if ($this->params->get('showpodcastsubscribelist') == 1 )
+{echo $this->subscribe;}
+    ?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
     <div id="bsheader">
@@ -168,11 +166,8 @@ $listingcall = JView::loadHelper('listing');
 //}
         ?>
     </div> <!--end of bsfooter div-->
- <?php if ($this->params->get('showpodcastsubscribelist') == 3 || $this->params->get('showpodcastsubscribelist') == 4)
-{
-    if ($this->params->get('showpodcastsubscribelist')== 4){$float = 'style="float: left;"';}else{$float = 'style="float: right;"';}
-    ?><div id="subscribelinks" <?php echo $float; ?>><?php echo $this->subscribe; ?></div><?php
-}
-?>   
+ <?php if ($this->params->get('showpodcastsubscribelist') == 2 )
+{echo $this->subscribe; }?>
+    
 </div><!--end of bspagecontainer div-->
 

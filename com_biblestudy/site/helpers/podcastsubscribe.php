@@ -16,7 +16,7 @@ class podcastSubscribe {
         if ($podcasts) {
 
             $subscribe .= '<div class="podcastheader" ><h3>' . $introtext . '</h3></div>';
-            $subscribe .= '<div class="podcastlinks">';
+           // $subscribe .= '<div class="podcastlinks">';
         //    $subscribe .= '<table class="podcasttable"><tr><td>';
             $subscribe .= '<div class="prow">';
             foreach ($podcasts AS $podcast) {
@@ -35,40 +35,45 @@ class podcastSubscribe {
                         $link = '<div class="image"><a href="' . JURI::base() . $podcast->filename . '">' . $image . '</a>';
                         $subscribe .= '<div class="pcell">';
                         $subscribe .= $link;
-                        $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '"><p >' . $podcast->podcast_subscribe_desc . '</p></a></div></div>';
-                        $subsribe .= '</div>';
+                        $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $podcast->podcast_subscribe_desc . '</a></div></div>';
+                        //end of cell
+                        $subscribe .= '</div>';
                         break;
 
                     case 3:
-                        $subscribe .= '<div class="pcell">';
+                        
                         $image = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
                         $link1 = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a>';
+                        $subscribe .= '<div class="pcell">';
+                        $subscribe .= $link1;
                         $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $podcast->alternatewords . '</a></div></div>';
-                        $subsribe .= '</div>';
+                        //end of cell
+                        $subscribe .= '</div>';
                         break;
 
                     case 4:
-                         $subscribe .= '<div class="pcell">';
+                         
                         $image1 = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
                         $link1 = '<div class="image"><a href="' . JURI::base() . $podcast->filename . '">' . $image1 . '</a>';
-                        
+                        $subscribe .= '<div class="pcell">';
                         $subscribe .= $link1;
-                        
                         $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $podcast->podcast_subscribe_desc . '</a></div></div>';
-                      //  $subscribe .= '<div class="pcell">';
+                      
                         $image2 = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
                         $link2 = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image2 . '</a>';
                         $subscribe .= $link2;
                         $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $podcast->alternatewords . '</a></div></div>';
-                       // $subscribe .= '</div>';
-                        $subsribe .= '</div>';
+                       // end of cell
+                        $subscribe .= '</div>';
                         break;
                 }
-                $subscribe .= '</div>';
+              
             }
-        //    $subscribe .= '</td></tr></table>';
+        // end of row
             $subscribe .= '</div>';
-            $subscribe .= '</div>';
+        
+            //add a div around it all
+            $subscribe = '<div class="podcastsubscribe">'.$subscribe.'</div>';
         }
 
         return $subscribe;
