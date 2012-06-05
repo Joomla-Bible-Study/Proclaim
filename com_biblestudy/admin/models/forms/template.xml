@@ -268,10 +268,8 @@
                         <field name="showpodcastsubscribelist" type="list" default="1"
                                 label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC" >
                                     <option value="0">JBS_SHOW_PODCAST_SUBSCRIBE_NO</option>
-                                    <option value="1">JBS_SHOW_PODCAST_SUBSCRIBE_UR</option>
-                                    <option value="2">JBS_SHOW_PODCAST_SUBSCRIBE_UL</option>
-                                    <option value="3">JBS_SHOW_PODCAST_SUBSCRIBE_LR</option>
-                                    <option value="4">JBS_SHOW_PODCAST_SUBSCRIBE_LL</option>
+                                    <option value="1">JBS_SHOW_PODCAST_SUBSCRIBE_TOP</option>
+                                    <option value="2">JBS_SHOW_PODCAST_SUBSCRIBE_BOTTOM</option>
                         </field>
                         <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
                                 label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC" />
@@ -625,7 +623,7 @@
                                 label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC" >
                                     <option value="0">JBS_SHOW_PODCAST_SUBSCRIBE_NO</option>
                                     <option value="1">JBS_SHOW_PODCAST_SUBSCRIBE_TOP</option>
-                                    <option value="1">JBS_SHOW_PODCAST_SUBSCRIBE_BOTTOM</option>
+                                    <option value="2">JBS_SHOW_PODCAST_SUBSCRIBE_BOTTOM</option>
                                    
                         </field>
                         <field name="show_scripture_link" type="list" default="0"
