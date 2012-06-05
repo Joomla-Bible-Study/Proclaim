@@ -32,33 +32,34 @@ class podcastSubscribe {
                     case 2:
                         
                         $image = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
-                        $link = '<a href="' . JURI::base() . $podcast->filename . '">' . $image . '</a>';
+                        $link = '<div class="image"><a href="' . JURI::base() . $podcast->filename . '">' . $image . '</a>';
                         $subscribe .= '<div class="pcell">';
                         $subscribe .= $link;
-                    //    $subscribe .= '<a href="' . JURI::base() . $podcast->filename . '"><p >' . $podcast->podcast_subscribe_desc . '</p></a>';
+                        $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '"><p >' . $podcast->podcast_subscribe_desc . '</p></a></div></div>';
                         $subsribe .= '</div>';
                         break;
 
                     case 3:
                         $subscribe .= '<div class="pcell">';
                         $image = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-                        $link1 = '<a href="' . $podcast->alternatelink . '">' . $image . '</a>';
-                  //      $subscribe .= '<a href="' . JURI::base() . $podcast->filename . '"><p >' . $podcast->alternatewords . '</p></a>';
+                        $link1 = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a>';
+                        $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $podcast->alternatewords . '</a></div></div>';
                         $subsribe .= '</div>';
                         break;
 
                     case 4:
                          $subscribe .= '<div class="pcell">';
                         $image1 = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
-                        $link1 = '<a href="' . JURI::base() . $podcast->filename . '">' . $image1 . '</a>';
-                        $image2 = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-                        $link2 = '<a href="' . $podcast->alternatelink . '">' . $image2 . '</a>';
-                        $subscribe .= $link1;
-                        $subscribe .= $link2;
-                   //     $subscribe .= '<a href="' . JURI::base() . $podcast->filename . '"><p >' . $podcast->podcast_subscribe_desc . '</p></a>';
-                      //  $subscribe .= '<div class="pcell">';
+                        $link1 = '<div class="image"><a href="' . JURI::base() . $podcast->filename . '">' . $image1 . '</a>';
                         
-                   //     $subscribe .= '<a href="' . JURI::base() . $podcast->filename . '"><p >' . $podcast->alternatewords . '</p></a>';
+                        $subscribe .= $link1;
+                        
+                        $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $podcast->podcast_subscribe_desc . '</a></div></div>';
+                      //  $subscribe .= '<div class="pcell">';
+                        $image2 = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
+                        $link2 = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image2 . '</a>';
+                        $subscribe .= $link2;
+                        $subscribe .= '<div class="text"><a href="' . JURI::base() . $podcast->filename . '">' . $podcast->alternatewords . '</a></div></div>';
                        // $subscribe .= '</div>';
                         $subsribe .= '</div>';
                         break;
@@ -100,7 +101,7 @@ class podcastSubscribe {
     function buildPodcastImage($podcastimagefromdb = 'null', $words = 'null') {
         $images = new jbsImages();
         $image = $images->getMediaImage($podcastimagefromdb);
-        $podcastimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $words . '" title="' . $words . '">';
+        $podcastimage = '<img class="image" src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $words . '" title="' . $words . '">';
      
         return $podcastimage;
     }
