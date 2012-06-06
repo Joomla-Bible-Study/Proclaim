@@ -65,6 +65,65 @@ class JBS710Update
                 }
             }
         } //end if no new css file
+        
+        //Add CSS to the file
+        $new710css = '/* Podcast Subscription Display Settings */
+
+.podcastsubscribe{
+clear:both;
+display:table;
+width:auto;         
+background-color:#eee;
+border: 1px solid grey;
+padding: 1em;
+}
+.image {
+display: inline;
+}
+.image .text {
+display:inline;
+position:relative;
+right:50px;
+bottom:-10px;
+}
+.prow {
+  display: table-row;
+ width:auto;
+  clear:both;
+}
+.pcell {
+  display: table-cell;
+  float:left;/*fix for  buggy browsers*/
+    }
+.podcastheader h3{
+display:table-header;
+text-align:center;
+}/* Listing Page Items */
+#subscribelinks {
+
+}
+.podcastheader{
+font-weight: bold;
+}
+
+
+.podcastlinks{
+  display: inline;
+  
+}
+
+';
+        $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
+                $db->setQuery($query);
+                $db->query();
+                $result = $db->loadObject();
+                $oldcss = $result->stylecode;
+                $newcss = $new710css.' '.$oldcss;
+        $query = 'UPDATE #__bsms_styles SET stylecode='.$newcss.' where `filename` = "biblestudy"';
+        $db->setQuery($query);
+        $db->query();
+         if (!JFile::write($dest,$newcss)){return false;}
+        
     }
     
 }
