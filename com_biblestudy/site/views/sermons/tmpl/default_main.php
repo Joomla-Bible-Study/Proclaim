@@ -79,22 +79,10 @@ $listingcall = JView::loadHelper('listing');
                 echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
             }
             if (($this->params->get('show_locations_search') > 0 && ($location_menu == -1)) || $this->params->get('show_locations_search') > 1) {
-                ?>
-                <select name="filter_locations" class="inputbox" onchange="this.form.submit()">
-                    <option value=""> <?php echo JText::_('JBS_CMN_SELECT_LOCATION'); ?></option>
-                    <?php echo JHtml::_('select.options', $this->locations, 'value', 'text', $this->state->get('filter.locations')); ?>
-                </select>
-                <?php
-                //echo $this->page->locations;
+                echo $this->page->locations;
             }
             if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1) {
-                ?>
-                <select name="filter_books" class="inputbox" onchange="this.form.submit()">
-                    <option value=""> <?php echo JText::_('JBS_CMN_SELECT_BOOK'); ?></option>
-                    <?php echo JHtml::_('select.options', $this->books, 'value', 'text', $this->state->get('filter.books')); ?>
-                </select>
-            <?php
-                //echo $this->page->books;
+                echo $this->page->books; 
             }
             if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1) {
                 //echo $this->lists['teacher_id'];

@@ -39,59 +39,7 @@ class BiblestudyModelSermons extends JModelList {
         parent::__construct($config);
     }
 
-    function getDownloads($id) {
-        $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
-        $result = $this->_getList($query);
-        if (!$result) {
-            $result = '0';
-            return $result;
-        }
-        return $result[0]->totalDownloads;
-    }
-
-    /**
-     * Creates and executes a new query that retrieves the medifile information from the mediafiles table.
-     * It then adds to the dataObject the mediafiles associated with the sermon.
-     * @return unknown_type
-     */
-    /* Tom commented this out because it caused the query to fail - needs work. */
-    function getFiles() {
-        $mediaFiles = null;
-        $db = & JFactory::getDBO();
-        $i = 0;
-        foreach ($this->_data as $sermon) {
-            $i++;
-            $sermon_id = $sermon->id;
-            $query = 'SELECT study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path'
-                    . ' FROM #__bsms_mediafiles'
-                    . ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
-                    . ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
-                    . ' WHERE `study_id` ='
-                    . $sermon_id
-            ;
-            $db->setQuery($query);
-            $mediaFiles[$sermon->id] = $db->loadAssocList();
-        }
-        $this->_files = $mediaFiles;
-        return $this->_files;
-    }
-
-    /**
-     * Method to get the total number of studies items
-     *
-     * @access public
-     * @return integer
-     */
-    function getTotal() {
-        // Lets load the content if it doesn't already exist
-        if (empty($this->_total)) {
-            $query = $this->_getListQuery();
-            $this->_total = $this->_getListCount($query);
-        }
-
-        return $this->_total;
-    }
-
+   
     /**
      * @since   7.0
      */
@@ -394,7 +342,7 @@ class BiblestudyModelSermons extends JModelList {
             $query->where('study.studytitle LIKE "' . $studytitle . '%"');
 
         //Filter by book
-        $book = $this->getState('filter.book');
+        $book = $this->getState('filter.book'); 
         if (!empty($book)) {
             $chb = JRequest::getInt('minChapt', '', 'post');
             $che = JRequest::getInt('maxChapt', '', 'post');
@@ -668,4 +616,58 @@ public function getStart2()
 //dump ($this->getState('list.start'));		
     return $this->getState('list.start'); 
 	}
+        
+   function getDownloads($id) {
+        $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
+        $result = $this->_getList($query);
+        if (!$result) {
+            $result = '0';
+            return $result;
+        }
+        return $result[0]->totalDownloads;
+    }
+
+    /**
+     * Creates and executes a new query that retrieves the medifile information from the mediafiles table.
+     * It then adds to the dataObject the mediafiles associated with the sermon.
+     * @return unknown_type
+     */
+    /* Tom commented this out because it caused the query to fail - needs work. */
+    function getFiles() {
+        $mediaFiles = null;
+        $db = & JFactory::getDBO();
+        $i = 0;
+        foreach ($this->_data as $sermon) {
+            $i++;
+            $sermon_id = $sermon->id;
+            $query = 'SELECT study_id, filename, #__bsms_folders.folderpath, #__bsms_servers.server_path'
+                    . ' FROM #__bsms_mediafiles'
+                    . ' LEFT JOIN #__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)'
+                    . ' LEFT JOIN #__bsms_folders ON (#__bsms_mediafiles.path = #__bsms_folders.id)'
+                    . ' WHERE `study_id` ='
+                    . $sermon_id
+            ;
+            $db->setQuery($query);
+            $mediaFiles[$sermon->id] = $db->loadAssocList();
+        }
+        $this->_files = $mediaFiles;
+        return $this->_files;
+    }
+
+    /**
+     * Method to get the total number of studies items
+     *
+     * @access public
+     * @return integer
+     */
+    function getTotal() {
+        // Lets load the content if it doesn't already exist
+        if (empty($this->_total)) {
+            $query = $this->_getListQuery();
+            $this->_total = $this->_getListCount($query);
+        }
+
+        return $this->_total;
+    }
+
 }
