@@ -42,14 +42,14 @@ class JBSPagebuilder {
         //duration
         $page->duration = getDuration($params, $item);
         $page->studydate = getstudyDate($params, $item->studydate);
-        if (substr_count($item->topic_text, ',')) {
+        if ( $item->topics_text && substr_count($item->topics_text, ',')) {
             $topics = explode(',', $item->topic_text);
             foreach ($topics as $key => $value) {
                 $topics[$key] = JText::_($value);
             }
             //  $page->topics = implode(', ', $topics);
         } else {
-            $page->topics = JText::_($item->topic_text);
+            $page->topics = JText::_($item->topics_text);
         }
         if ($item->thumbnailm) {
             $image = $images->getStudyThumbnail($item->thumbnailm);

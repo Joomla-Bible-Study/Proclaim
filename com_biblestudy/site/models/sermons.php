@@ -191,7 +191,7 @@ class BiblestudyModelSermons extends JModelList {
 		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.topics_id, study.studyintro,
 		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
 		                study.media_seconds, study.series_id, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
-		                study.user_id, study.studynumber ') . ','
+		                study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2, study.verse_end2, study.verse_begin2 ') . ','
                 . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
         $query->from('#__bsms_studies AS study');
 
