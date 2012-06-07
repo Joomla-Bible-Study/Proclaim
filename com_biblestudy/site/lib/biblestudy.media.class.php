@@ -68,6 +68,7 @@ class jbsMedia {
             $link_type = $media->link_type;
 
             if ($link_type > 0) {
+                
                 $width = $download_tmp->width;
                 $height = $download_tmp->height;
 
@@ -78,8 +79,16 @@ class jbsMedia {
                     $downloadlink = '<a href="http://joomlabiblestudy.org/router.php?file=' .
                             $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
                 }
+                //Check to see if they want to use a popu
+                if ($params->get('useterms')> 0)
+                {
+                    $downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;type='.$compat_mode.'&amp;mid='.$media->id.'&amp;template='.$template.'" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+                    //$downloadlink = '<a onclick="window.open(\'index.php?option=com_biblestudy&view="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;id='.$row->id.'&amp;tmpl=component&amp;layout=modal&amp;type='.$compat_mode.'&amp;mid='.$media->id.'&amp;template='.$template.'",\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
+                   //  return true;">';
+                }
                 $downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
                         $height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
+                
             }
             switch ($link_type) {
                 case 0:

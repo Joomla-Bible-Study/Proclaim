@@ -2,6 +2,7 @@
 
 //No Direct Access
 defined('_JEXEC') or die; 
+JHTML::_('behavior.modal');
 echo $this->loadTemplate('formheader');
 if ($this->params->get('useexpert_list') > 0) {
     echo $this->loadTemplate('custom');
