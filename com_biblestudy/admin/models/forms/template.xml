@@ -14,9 +14,19 @@
                 
                 <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
                 description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-                class="readonly" />        
+                class="readonly" />    
+               
 	</fieldset>
 	<fields name="params">
+                <fieldset name="TERMS">
+                     <field name="useterms" type="list" default="0" label="JBS_CMN_USE_TERMS" description="JBS_CMN_USE_TERMS_DESC">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="terms" type="editor" height="300" width="500"
+				label="JBS_CMN_TERMS" description="JBS_CMN_TERMS_DESC" filter="raw"
+				buttons="true" />
+                </fieldset>
 		<fieldset name="TEMPLATES">
                     <field name="css" type="filelist" label="JBS_STYLE_CHOOSE_CSS_FILE" description="JBS_STYLE_CHOOSE_FILE_DESC"
                         directory="/media/com_biblestudy/css/site" exclude=".html" hide_default="true" required="true"/>

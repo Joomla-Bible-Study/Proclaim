@@ -25,19 +25,48 @@ defined('_JEXEC') or die;
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_GENERAL'); ?></legend>
                 <ul class="adminformlist">
-                    <?php foreach ($this->form->getFieldset('GENERAL') as $field): ?>
-                        <li>
-                            <?php echo $field->label;
-                            echo $field->input;
-                            ?>
-                        </li>
-                    <?php endforeach; ?>
+                    <li>
+                        <?php echo $this->form->getLabel('id'); ?>
+                        <?php echo $this->form->getInput('id'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('published'); ?>
+                        <?php echo $this->form->getInput('published'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('title'); ?>
+                        <?php echo $this->form->getInput('title'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('text'); ?>
+                        <?php echo $this->form->getInput('text'); ?>
+                    </li>
+                    <li>
+                        <?php echo $this->form->getLabel('useterms'); ?>
+                        <?php echo $this->form->getInput('useterms'); ?>
+                    </li>
+                </ul>
+                <div class="clr"></div>
+                <ul>
+                    <li>
+                        <?php echo $this->form->getLabel('terms'); ?>
+                        <?php echo $this->form->getInput('terms'); ?>
+                    </li>
+                </ul>
+                <?php foreach ($this->form->getFieldset('TERMS') as $field): ?>
+                 
+                <li>
+                    <?php echo $field->label;?>
+                    <div class="clr"> </div>
+                    <?php echo $field->input; ?>
+                </li>
+                <?php endforeach; ?>
                     <?php foreach ($this->form->getFieldset('TEMPLATES') as $field): ?>
                         <li>
                         <?php echo $field->label;
                         echo $field->input; ?>
                         </li>
-<?php endforeach; ?>
+                <?php endforeach; ?>
                 </ul>
             </fieldset>
         </div>
