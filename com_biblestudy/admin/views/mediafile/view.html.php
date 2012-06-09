@@ -55,7 +55,7 @@ class BiblestudyViewMediafile extends JView {
         $serverlist = array_merge($server, $results);
         $idsel = "'SWFUpload_0'";
         //@todo need to fix this not sure what to do to fix it now error
-        //Strict standards: Only variables should be passed by reference in /Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Trunk/com_biblestudy/admin/views/mediafile/view.html.php on line 56
+        //Strict standards: Only variables should be passed by reference in /Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Trunk/com_biblestudy/admin/views/mediafile/view.html.php on line 59
         $this->assignRef('upload_server', JHTML::_('select.genericList', $serverlist, 'upload_server', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', ''));
 
         //Get folders for upload dropdown
