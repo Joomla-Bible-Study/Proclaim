@@ -43,6 +43,9 @@ $saveOrder = $listOrder == 'location.ordering';
                     <th>
                         <?php echo JText::_('JBS_TPLCODE_TYPE'); ?>
                     </th>
+                    <th>
+                        <?php echo JText::_('JGRID_HEADING_ID'); ?>
+                    </th>
                 </tr>
             </thead>
             <tfoot>
@@ -69,6 +72,9 @@ $saveOrder = $listOrder == 'location.ordering';
                     </td>
                      <td>
                         <a href="<?php echo $link; ?>"><?php echo $item->typetext; ?></a>
+                    </td>
+                    <td>
+                        <?php echo $item->id; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

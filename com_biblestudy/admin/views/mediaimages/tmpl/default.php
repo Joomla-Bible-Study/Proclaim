@@ -43,6 +43,9 @@ $saveOrder = $listOrder == 'mediafile.ordering';
 				echo JText::_('JBS_CMN_MEDIA');
 				?>
 				</th>
+                                <th>
+                        <?php echo JText::_('JGRID_HEADING_ID'); ?>
+                    </th>
 			</tr>
 		</thead>
 		<tfoot>
@@ -88,6 +91,9 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                     <?php echo $this->escape($item->media_image_name); ?>
                 </a>
             </td>
+            <td>
+                        <?php echo $item->id; ?>
+                    </td>
         </tr>
         <?php endforeach; ?>
     </table>

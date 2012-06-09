@@ -32,6 +32,9 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . 
                     <th>
                         <?php echo JText::_('JBS_CMN_TOPICS'); ?>
                     </th>
+                    <th>
+                        <?php echo JText::_('JGRID_HEADING_ID'); ?>
+                    </th>
                 </tr>
             </thead>
             <tfoot>
@@ -57,6 +60,9 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . 
                     </td>
                     <td>
                         <a href="<?php echo $link; ?>"><?php echo getTopicItemTranslated($item); ?></a>
+                    </td>
+                    <td>
+                        <?php echo $item->id; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

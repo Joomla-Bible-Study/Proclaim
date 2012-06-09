@@ -39,6 +39,9 @@ defined('_JEXEC') or die;
 					<th>
 					<?php echo JText::_('JBS_FLD_FOLDER_NAME'); ?>
 					</th>
+                                        <th>
+                                            <?php echo JText::_('JGRID_HEADING_ID'); ?>
+                                        </th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -65,6 +68,9 @@ defined('_JEXEC') or die;
                         <td>
                             <?php echo $item->foldername; ?>
                         </td>
+                        <td>
+                        <?php echo $item->id; ?>
+                    </td>
                     </tr>
             <?php endforeach; ?>
                         </table>

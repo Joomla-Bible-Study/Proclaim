@@ -42,6 +42,9 @@ defined('_JEXEC') or die;
 					<th>
 					<?php echo JText::_( 'JBS_SVR_SERVER_NAME' ); ?>
 					</th>
+                                        <th>
+                                            <?php echo JText::_('JGRID_HEADING_ID'); ?>
+                                        </th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -70,6 +73,9 @@ defined('_JEXEC') or die;
 			<td>
 				<?php echo $row->server_name; ?>
 			</td>
+                        <td>
+                        <?php echo $item->id; ?>
+                    </td>
 		</tr>
 		<?php endforeach; ?>
 	</table>
