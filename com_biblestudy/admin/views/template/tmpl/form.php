@@ -41,31 +41,22 @@ defined('_JEXEC') or die;
                         <?php echo $this->form->getLabel('text'); ?>
                         <?php echo $this->form->getInput('text'); ?>
                     </li>
-                    <li>
-                        <?php echo $this->form->getLabel('useterms'); ?>
-                        <?php echo $this->form->getInput('useterms'); ?>
-                    </li>
+                    
                 </ul>
-                <div class="clr"></div>
-                <ul>
-                    <li>
-                        <?php echo $this->form->getLabel('terms'); ?>
-                        <?php echo $this->form->getInput('terms'); ?>
-                    </li>
-                </ul>
-                <?php foreach ($this->form->getFieldset('TERMS') as $field): ?>
+               
+                    <?php foreach ($this->form->getFieldset('TEMPLATES') as $field): ?>
+                        <li>
+                        <?php echo $field->label;
+                        echo $field->input; ?>
+                        </li>
+                <?php endforeach; ?>
+                         <?php foreach ($this->form->getFieldset('TERMS') as $field): ?>
                  
                 <li>
                     <?php echo $field->label;?>
                     <div class="clr"> </div>
                     <?php echo $field->input; ?>
                 </li>
-                <?php endforeach; ?>
-                    <?php foreach ($this->form->getFieldset('TEMPLATES') as $field): ?>
-                        <li>
-                        <?php echo $field->label;
-                        echo $field->input; ?>
-                        </li>
                 <?php endforeach; ?>
                 </ul>
             </fieldset>

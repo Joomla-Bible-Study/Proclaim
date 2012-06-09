@@ -67,7 +67,14 @@ class JBS710Update
         } //end if no new css file
         
         //Add CSS to the file
-        $new710css = '/* Podcast Subscription Display Settings */
+        $new710css = '
+/* Terms of use or donate display settings */
+.termstext {
+}
+
+.termslink{
+}            
+/* Podcast Subscription Display Settings */
 
 .podcastsubscribe{
 clear:both;
