@@ -82,9 +82,10 @@ class jbsMedia {
                 //Check to see if they want to use a popu
                 if ($params->get('useterms')> 0)
                 {
-                    $downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;type='.$compat_mode.'&amp;mid='.$media->id.'&amp;template='.$template.'" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
-                    //$downloadlink = '<a onclick="window.open(\'index.php?option=com_biblestudy&view="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;id='.$row->id.'&amp;tmpl=component&amp;layout=modal&amp;type='.$compat_mode.'&amp;mid='.$media->id.'&amp;template='.$template.'",\'newwindow\',\'width=100, height=100,menubar=no, status=no,location=no,toolbar=no,scrollbars=no\');
-                   //  return true;">';
+                                        
+                    $downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='.$compat_mode.'&amp;mid='.$media->id.'&amp;t='.$template.'" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+                  //  $downloadlink = '<a href="#" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;compat_mode='.$compat_mode.'&amp;mid='.$media->id.'&amp;template='.$template.'\',\'newwindow\',\'width=640, height=480,menubar=no, status=no,location=no,toolbar=no,scrollbars=yes\');
+//                     return false">';
                 }
                 $downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
                         $height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
