@@ -46,10 +46,10 @@ $function = JRequest::getVar('function', 'jSelectStudy');
 
                 </tr>
                 <td class="center">
-                    <?php if ($item->language == '*'): ?>
+                    <?php if ($row->language == '*'): ?>
                         <?php echo JText::alt('JALL', 'language'); ?>
                     <?php else: ?>
-                        <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                        <?php echo $row->language_title ? $this->escape($row->language_title) : JText::_('JUNDEFINED'); ?>
                     <?php endif; ?>
                 </td>
                 <?php
