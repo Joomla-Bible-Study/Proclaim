@@ -19,12 +19,17 @@ class BiblestudyViewSermon extends JView {
 
     function display($tpl = null) {
 
-
         $mainframe = JFactory::getApplication();
-       
         $study = $this->get('Item'); 
         $relatedstudies = new relatedStudies();
-
+ 
+$app = JFactory::getApplication();
+    $menu = $app->getMenu();
+    $item = $menu->getActive(); 
+    dump ($item);
+    $lang = JFactory::getLanguage();
+    $lang_tag = $lang->getTag(); dump($lang_tag);
+//$language = JMenuSite::getItem('language'); print_r($language);
         // Convert parameter fields to objects.
         $template = $this->get('template');
 

@@ -37,7 +37,8 @@ class jbsMedia {
         $compat_mode = $admin_params->get('compat_mode');
 
         //Here we get a list of the media ids associated with the study we got from $row
-        $mediaids = $this->getMediaRows($row->id);
+       
+        $mediaids = $this->getMediaRows($row->id); 
         $rowcount = count($mediaids); // echo $rowcount; return true;
         if ($rowcount < 1) {
             $table = null;
@@ -105,14 +106,14 @@ class jbsMedia {
                     break;
             }
             //End of the column holding the media image
-            $table .= '</td>';
+            $table .= '</td>'; 
         } // end of foreach mediaids
         //End of row holding media image/link
         $table .= '</tr>';
 
         // This is the last part of the table where we see if we need to display the filesize
         if ($params->get('show_filesize') > 0) {
-            $table .= '<tr>';
+            $table .= '<tr>'; 
             foreach ($mediaids as $media) {
                 switch ($params->get('show_filesize')) {
                     case 1:
@@ -163,12 +164,12 @@ class jbsMedia {
                 . ' LEFT JOIN #__bsms_mimetype ON (#__bsms_mimetype.id = #__bsms_mediafiles.mime_type) LEFT JOIN #__bsms_studies AS s'
                 . ' ON (s.id = #__bsms_mediafiles.study_id) LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
                 . ' WHERE #__bsms_mediafiles.study_id = ' . $id . ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_media.media_image_name ASC';
-        $db->setQuery($query);
+        $db->setQuery($query); 
         $db->query();
-        if ($media = $db->loadObjectList()) {
+        if ($media = $db->loadObjectList()) { 
             return $media;
         } else {
-            $error = $db->getErrorMsg();
+            $error = $db->getErrorMsg(); 
             return false;
         }
     }

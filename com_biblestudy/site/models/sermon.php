@@ -137,6 +137,7 @@ class BiblestudyModelSermon extends JModelItem {
                 }
                 // concat topic_text and concat topic_params do not fit, so translate individually
                 $topic_text = getConcatTopicItemTranslated($data);
+                $data->id = $pk;
                 $data->topic_text = $topic_text;
                 $data->bname = JText::_($data->bname);
                 $this->_item[$pk] = $data;
