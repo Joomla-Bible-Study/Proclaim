@@ -31,7 +31,10 @@ class biblestudyModelmessage extends JModelAdmin {
 	protected function populateState()
 	{
 		$app = JFactory::getApplication('site');
-
+// Adjust the context to support modal layouts.
+        if ($layout = JRequest::getVar('layout')) {
+            $this->context .= '.' . $layout;
+        }
 		// Load state from the request.
 		$pks = JRequest::getInt('id');
         if ($pks){$this->pks = $pks;}

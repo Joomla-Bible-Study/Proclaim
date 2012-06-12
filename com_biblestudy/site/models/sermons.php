@@ -46,6 +46,8 @@ class BiblestudyModelSermons extends JModelList {
     protected function populateState($ordering='study.studydate', $direction='DESC') {
         $app = JFactory::getApplication();
         
+        $this->setState('filter.language', $app->getLanguageFilter());
+        
         $studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
 
@@ -382,6 +384,11 @@ class BiblestudyModelSermons extends JModelList {
         if (!empty($topic))
             $query->where('st.topic_id LIKE "%' . $topic . '%"');
         //  $query->where('study.topics_id = ' . (int) $topic);
+          
+        // Filter by language
+        if ($this->getState('filter.language')) {
+            $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+        }
         //Order by order filter
         $orderparam = $params->get('default_order'); //print_r($t_params);
         if (empty($orderparam)) {

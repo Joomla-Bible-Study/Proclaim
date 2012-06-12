@@ -92,13 +92,15 @@ class BiblestudyViewSeriesdisplays extends JView {
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();
-        $count = count($items);
+        $count = count($items); 
+        if ($count > 0)
+        {        
+            for ($i = 0; $i < $count; $i++) {
 
-        for ($i = 0; $i < $count; $i++) {
-
-            if ($items[$i]->access > 1) {
-                if (!in_array($items[$i]->access, $groups)) {
-                    unset($items[$i]);
+                if ($items[$i]->access > 1) {
+                    if (!in_array($items[$i]->access, $groups)) {
+                        unset($items[$i]);
+                    }
                 }
             }
         }

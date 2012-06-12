@@ -22,6 +22,8 @@ class BiblestudyModelSeriesdisplays extends JModelList {
      * @since   7.0
      */
     protected function populateState($ordering = null, $direction = null) {
+        
+        $app = JFactory::getApplication();
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
@@ -30,6 +32,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $this->setState('filter.published', $published);
         $series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
         $this->setState('filter.series', $series);
+        $this->setState('filter.language', $app->getLanguageFilter());
         parent::populateState('study.studydate', 'DESC');
     }
 
@@ -61,6 +64,11 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $query->join('LEFT','#__bsms_teachers as t on se.teacher = t.id');
         $where = $this->_buildContentWhere();
         $query->where($where);
+        
+// Filter by language
+        if ($this->getState('filter.language')) {
+            $query->where('se.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+        } 
          $orderparam = $params->get('default_order');
         if (empty($orderparam)) {
             $orderparam = $t_params->get('default_order', '1');

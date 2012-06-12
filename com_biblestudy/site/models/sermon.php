@@ -114,7 +114,7 @@ class BiblestudyModelSermon extends JModelItem {
                 $query->select('l.id as lid, l.location_text');
                 $query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
                 //join over topics
-                $query->select('group_concat(stp.id separator ", ") AS tp_id, group_concat(stp.topic_text separator ", ") as topic_text, group_concat(stp.params separator ", ") as topic_params');
+                $query->select('group_concat(stp.id separator ", ") AS tp_id, group_concat(stp.topic_text separator ", ") as topics_text, group_concat(stp.params separator ", ") as topic_params');
                 $query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
                 $query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
 

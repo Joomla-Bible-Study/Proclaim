@@ -28,7 +28,7 @@ $app = JFactory::getApplication();
     $item = $menu->getActive(); 
     dump ($item);
     $lang = JFactory::getLanguage();
-    $lang_tag = $lang->getTag(); dump($lang_tag);
+    $lang_tag = $lang->getTag(); //dump($lang_tag);
 //$language = JMenuSite::getItem('language'); print_r($language);
         // Convert parameter fields to objects.
         $template = $this->get('template');
