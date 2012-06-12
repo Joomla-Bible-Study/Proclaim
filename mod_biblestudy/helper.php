@@ -3,7 +3,7 @@
 /**
  * @version $Id: helper.php 1 $
  * @package mod_biblestudy
- * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
@@ -80,7 +80,7 @@ class modBiblestudyHelper {
         
         
 
-        //filter over teazchers
+        //filter over teachers
         $filters = $teacher;
         if (count($filters) > 1) {
             $where2 = array();
@@ -172,6 +172,13 @@ class modBiblestudyHelper {
                     $query->where('study.topics_id = ' . (int) $filter, $condition);
                 }
             }
+        }
+        $app = JFactory::getApplication();
+      //  $this->setState('filter.language', $app->getLanguageFilter());
+        // Filter by language
+        $lang = $app->getLanguageFilter();
+        if ($lang) {
+            $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }
         $filters = $messagetype_menu;
         if (count($filters) > 1) {
