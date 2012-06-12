@@ -73,6 +73,10 @@
                     <option value="1">DESC</option>
                     <option value="2">ASC</option>
                 </field>
+                <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+               description="JBS_MDL_TPL_LANGUAGE_DESC" class="inputbox" >
+                <option value="*">JALL</option>
+                </field>
                 <field name="teacher_id" type="teacherlist" label="JBS_CMN_FILTERS_TEACHER"
                        description="JBS_CMN_FILTERS_TEACHER_DESC" multiple="true" default="-1">
                     <option value="-1">JBS_CMN_SHOW_ALL</option>

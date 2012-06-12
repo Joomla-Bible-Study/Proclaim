@@ -59,7 +59,7 @@ foreach ($items AS $item)
         $item->series_thumbnail = $pelements->series_thumbnail;
         $item->detailslink = $pelements->detailslink;
     }
-$list = $items;
+$list = $items; 
 $link_text = $params->get('pagetext', 'More Bible Studies');
 $templatemenuid = $params->get('studielisttemplateid');
 if (!$templatemenuid) {$templatemenuid = JRequest::getVar('templatemenuid',1,'get','int');}

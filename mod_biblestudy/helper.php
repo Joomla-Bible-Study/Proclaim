@@ -33,6 +33,7 @@ class modBiblestudyHelper {
         $messagetype_menu = $params->get('messagetype');
         $year = $params->get('year');
         $orderparam = $params->get('order', '1');
+        $language = $params->get('language','*');
         if ($orderparam == 2) {
             $order = "ASC";
         } else {
@@ -49,7 +50,7 @@ class modBiblestudyHelper {
         $query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
                         study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.topics_id, study.studyintro,
                         study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, study.media_hours, study.media_minutes,
-                        study.media_seconds, study.series_id, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
+                        study.media_seconds, study.series_id, study.chapter_begin2, study.chapter_end2, study.verse_begin2, study.verse_end2, study.thumbnailm, study.thumbhm, study.thumbwm, study.access, study.user_name,
                         study.user_id, study.studynumber,'
                 . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug ');
 
@@ -65,10 +66,10 @@ class modBiblestudyHelper {
         $query->select('teacher.teachername AS teachername, teacher.id AS tid');
         $query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
-        //Join over Series
-        $query->select('series.series_text');
+       //Join over Series
+        $query->select('series.series_text, series.series_thumbnail, series.description as sdescription');
         $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
-
+        
         //Join over Books
         $query->select('book.bookname');
         $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
@@ -78,7 +79,11 @@ class modBiblestudyHelper {
         $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
         $query->group('study.id');
         
-        
+        //Join over topics
+        $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
+        $query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
+        $query->select('GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topics_text, GROUP_CONCAT(DISTINCT t.params)');
+        $query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
 
         //filter over teachers
         $filters = $teacher;
@@ -177,9 +182,10 @@ class modBiblestudyHelper {
       //  $this->setState('filter.language', $app->getLanguageFilter());
         // Filter by language
         $lang = $app->getLanguageFilter();
-        if ($lang) {
+        if ($lang || $language != '*') {
             $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }
+        
         $filters = $messagetype_menu;
         if (count($filters) > 1) {
             $where2 = array();

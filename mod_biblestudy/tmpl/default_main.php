@@ -28,7 +28,7 @@ $ismodule = 1;
         include_once($path1 . 'header.php');
         include_once($path1 . 'helper.php');
         include_once($path1 . 'listing.php');
-        $header = getHeader($studies[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
+        $header = getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
         echo $header;
         ?>
 
