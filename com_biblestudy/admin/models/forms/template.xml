@@ -1464,6 +1464,7 @@
 				<option value="messagetypes">JBS_CMN_MESSAGE_TYPES</option>
 				<option value="years">JBS_CMN_YEARS</option>
 			</field>
+                        
 			<field name="showteachers" type="radio"
 				label="JBS_TPL_LANDINGPAGE_SHOWTEACHERS" default="1">
 				<option value="0">JBS_CMN_NO</option>
