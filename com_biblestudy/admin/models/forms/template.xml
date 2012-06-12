@@ -76,6 +76,10 @@
                                 </field>
 		</fieldset>
 		<fieldset name="FILTERS">
+                        <field name="listlanguage" type="list" size="1" label="JBS_CMN_USE_LANGUAGE_LIST" description="JBS_CMN_USE_LANGUAGE_LIST_DESC">
+                            <option value="0">JNO</option>
+                            <option value="1">JYES</option>
+                        </field>
                         <field name="teacher_id" type="sql"
 				query="SELECT * FROM #__bsms_teachers WHERE published = 1"
 				key_field="id" value_field="teachername" default="-1" multiple="true"
