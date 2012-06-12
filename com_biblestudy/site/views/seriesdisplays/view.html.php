@@ -1,10 +1,18 @@
 <?php
 
+/**
+ * @package BibleStudy
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
+
 jimport('joomla.application.component.view');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
+
 class BiblestudyViewSeriesdisplays extends JView {
 
     /**
@@ -18,8 +26,8 @@ class BiblestudyViewSeriesdisplays extends JView {
         include_once($path1 . 'image.php');
 
         $document = JFactory::getDocument();
-        
-      //  $model = $this->getModel();
+
+        //  $model = $this->getModel();
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
@@ -55,8 +63,8 @@ class BiblestudyViewSeriesdisplays extends JView {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
 
-        $css = $params->get('css','biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+        $css = $params->get('css', 'biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 
 
         //Import Scripts
@@ -75,26 +83,24 @@ class BiblestudyViewSeriesdisplays extends JView {
 
         $uri = JFactory::getURI();
         $filter_series = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-       
+
         $items = $this->get('Items');
         $images = new jbsImages();
         //Adjust the slug if there is no alias in the row
 
-        foreach ($items AS $item) 
-            {
+        foreach ($items AS $item) {
             $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
             $seriesimage = $images->getSeriesThumbnail($item->series_thumbnail);
-            $item->image = '<img src="'.$seriesimage->path.'" height="'.$seriesimage->height.'" width="'.$seriesimage->width.'">';
-            $item->serieslink = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id='.$item->slug.'&t='.$t);
-            $teacherimage = $images->getTeacherImage($item->thumb, $image2=null);
-            $item->teacherimage = '<img src="'.$teacherimage->path.'" height="'.$teacherimage->height.'" width="'.$teacherimage->width.'">';
-            }
+            $item->image = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="' . $seriesimage->width . '">';
+            $item->serieslink = JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $item->slug . '&t=' . $t);
+            $teacherimage = $images->getTeacherImage($item->thumb, $image2 = null);
+            $item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="' . $teacherimage->width . '">';
+        }
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
         $groups = $user->getAuthorisedViewLevels();
-        $count = count($items); 
-        if ($count > 0)
-        {        
+        $count = count($items);
+        if ($count > 0) {
             for ($i = 0; $i < $count; $i++) {
 
                 if ($items[$i]->access > 1) {
@@ -110,17 +116,17 @@ class BiblestudyViewSeriesdisplays extends JView {
         $this->page->pagelinks = $pagination->getPagesLinks();
         $this->page->counter = $pagination->getPagesCounter();
         $series = $this->get('Series');
-        
+
         //This is the helper for scripture formatting
         $scripture_call = Jview::loadHelper('scripture');
         //end scripture helper
         $this->assignRef('template', $template);
         $this->assignRef('pagination', $pagination);
-        
-       
+
+
         //Get the main study list image
         $mainimage = $images->mainStudyImage();
-        $this->page->main = '<img src="'.$mainimage->path.'" height="'.$mainimage->height.'" width="'.$mainimage->width.'">';
+        $this->page->main = '<img src="' . $mainimage->path . '" height="' . $mainimage->height . '" width="' . $mainimage->width . '">';
 
         $this->assignRef('main', $main);
 
@@ -129,7 +135,7 @@ class BiblestudyViewSeriesdisplays extends JView {
         $types3 = array_merge($types3, $series);
         $this->page->series = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series");
 
-       
+
         $this->assignRef('lists', $lists);
 
         $this->assignRef('request_url', $uri->toString());

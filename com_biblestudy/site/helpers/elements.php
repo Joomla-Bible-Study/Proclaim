@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @version $Id: elements.php 1 $
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,6 +11,15 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
 
+/**
+ *
+ * @param string $rowid
+ * @param string $row
+ * @param array $params
+ * @param array $admin_params
+ * @param array $template
+ * @return object
+ */
 function getElementid($rowid, $row, $params, $admin_params, $template) {
     $elementid = null;
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -26,7 +34,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
     include_once($path1 . 'elements.php');
     include_once($path1 . 'custom.php');
     include_once($path1 . 'image.php');
-    
+
     $db = JFactory::getDBO();
     switch ($rowid) {
         case 1:
@@ -147,7 +155,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
             $mediaclass = new jbsMedia();
             $elementid->id = 'jbsmedia';
             $elementid->headertext = JText::_('JBS_CMN_MEDIA');
-            $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params); 
+            $elementid->element = $mediaclass->getMediaTable($row, $params, $admin_params);
             break;
         case 22:
             $elementid->id = 'store';
@@ -211,10 +219,12 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
             $query = "SELECT thumb, teacher_thumbnail FROM #__bsms_teachers WHERE id = $row->teacher_id";
             $db->setQuery($query);
             $thumb = $db->loadObject();
-            if ($thumb->teacher_thumbnail){ $timage = $timages->getTeacherImage($thumb->teacher_thumbnail);}
-            else
-            {$timage = $timage = $timages->getTeacherImage($thumb->thumb);}
-            $elementid->element = '<img src="' . $timage->path . '" width="'.$timage->width.'" height="'.$timage->height.'" />';
+            if ($thumb->teacher_thumbnail) {
+                $timage = $timages->getTeacherImage($thumb->teacher_thumbnail);
+            } else {
+                $timage = $timage = $timages->getTeacherImage($thumb->thumb);
+            }
+            $elementid->element = '<img src="' . $timage->path . '" width="' . $timage->width . '" height="' . $timage->height . '" />';
             break;
         case 100:
             $elementid->id = '';

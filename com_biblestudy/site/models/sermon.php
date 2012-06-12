@@ -186,6 +186,11 @@ class BiblestudyModelSermon extends JModelItem {
         return true;
     }
 
+    /**
+     * Method to get Template Settings
+     *
+     * @return array
+     */
     public function getTemplate() {
         if (empty($this->_template)) {
             $templateid = JRequest::getVar('t', 1, 'get', 'int');
@@ -197,6 +202,11 @@ class BiblestudyModelSermon extends JModelItem {
         return $this->_template;
     }
 
+    /**
+     * Method to Get Admin Settings
+     * 
+     * @return array
+     */
     public function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT *'
