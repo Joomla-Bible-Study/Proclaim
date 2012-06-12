@@ -169,7 +169,7 @@ class BiblestudyViewSermons extends JView {
         $filter_year = $this->state->get('filter.year');
         $filter_location = $this->state->get('filter.location');
         $filter_orders = $this->state->get('filter.orders');
-        
+        $filter_languages = $this->state->get('filter.languages');
         $total = $this->get('Total');
         //Remove the studies the user is not allowed to see
        
@@ -207,6 +207,19 @@ class BiblestudyViewSermons extends JView {
             $go = 'onchange="this.form.submit()"';}
         //Build go button
         $this->page->gobutton = '<span id="gobutton"><input type="submit" value="'.JText::_('JBS_STY_GO_BUTTON').'" /></span>';
+        
+        //Build language drop down
+        $used = JLanguageHelper::getLanguages(); 
+        $langtemp = array();
+        $lang = array();
+        foreach ($used as $use)
+        { 
+            $langtemp = array('text'=>$use->title_native,'value'=>$use->lang_code);
+            $lang[] = $langtemp;
+        }
+        $langdropdown[] = JHTML::_('select.option', '0', JTEXT::_('JBS_SELECT_LANGUAGE'));
+        $langdropdown = array_merge($langdropdown, $lang);
+        $this->page->languages = JHTML::_('select.genericlist', $langdropdown, 'filter_languages', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_languages");
         
         //Build the teacher dropdown
         $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEACHER'));

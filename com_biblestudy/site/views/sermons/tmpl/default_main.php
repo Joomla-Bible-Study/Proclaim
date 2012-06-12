@@ -74,7 +74,7 @@ $listingcall = JView::loadHelper('listing');
             if ($this->params->get('use_go_button') > 0) {
                 echo $this->page->gobutton;
             }
-
+                        
             if ($this->params->get('show_pagination') == 1) {
                 echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
             }
@@ -100,6 +100,10 @@ $listingcall = JView::loadHelper('listing');
                 //echo $this->lists['studyyear'];
                 echo $this->page->years;
             }
+            
+            if ($this->params->get('listlanguage') == 1)
+            {echo $this->page->languages;}
+            
             if ($this->params->get('show_order_search') > 0) {
                 //echo $this->lists['orders'];
                 echo $this->page->order;

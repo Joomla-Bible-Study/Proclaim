@@ -46,7 +46,10 @@
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
-
+            <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+                    description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
+                <option value="*">JALL</option>
+            </field>
             <field name="mteacher_id"
                    type="teacherlist"
                    label="JBS_CMN_FILTERS_TEACHER"

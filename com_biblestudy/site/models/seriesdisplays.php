@@ -60,7 +60,8 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $query->where($where);
 
         // Filter by language
-        if ($this->getState('filter.language')) {
+        $language = $params->get('language', '*'); 
+        if ($this->getState('filter.language') || $language != '*') {
             $query->where('se.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }
         $orderparam = $params->get('default_order');

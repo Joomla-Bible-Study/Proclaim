@@ -18,10 +18,6 @@ class BiblestudyModelSermons extends JModelList {
 
     var $_files = null;
 
-    /**
-     *
-     * @param string $config
-     */
     function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -43,18 +39,15 @@ class BiblestudyModelSermons extends JModelList {
         parent::__construct($config);
     }
 
+   
     /**
-     * Method to auto-populate the model state.
-     *
-     * Note. Calling getState in this method will result in recursion.
-     *
-     * @since	7.0
+     * @since   7.0
      */
-    protected function populateState($ordering = 'study.studydate', $direction = 'DESC') {
+    protected function populateState($ordering='study.studydate', $direction='DESC') {
         $app = JFactory::getApplication();
-
+        
         $this->setState('filter.language', $app->getLanguageFilter());
-
+        
         $studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
 
@@ -81,14 +74,18 @@ class BiblestudyModelSermons extends JModelList {
 
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
-        /**
-         * @todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF
-         */
-        parent::populateState('study.studydate', 'DESC');
-
-        $limitstart = JRequest::getInt('limitstart');
-        $value = JRequest::getUInt('start');
-        $this->setState('list.start', $value);
+        
+        $languages = $this->getUserStateFromRequest($this->context . '.filter.languages', 'filter_languages'); 
+        $this->setState('filter.languages', $languages);
+ /**
+  *@todo We need to figure out how to properly use the populate state so that limitstart works with and without SEF 
+  */      
+   parent::populateState('study.studydate', 'DESC');
+       	
+       $limitstart = JRequest::getInt('limitstart');
+       $value = JRequest::getUInt('start'); 
+       $this->setState('list.start', $value);
+               
     }
 
     /**
@@ -152,10 +149,10 @@ class BiblestudyModelSermons extends JModelList {
 
         $query->group('study.id');
 
-        //$query->select('GROUP_CONCAT(DISTINCT m.id), GROUP_CONCAT(DISTINCT m.filename), GROUP_CONCAT(DISTINCT m.server), GROUP_CONCAT(DISTINCT m.path), GROUP_CONCAT(DISTINCT m.params)');
-        $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-        $query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
-
+          //$query->select('GROUP_CONCAT(DISTINCT m.id), GROUP_CONCAT(DISTINCT m.filename), GROUP_CONCAT(DISTINCT m.server), GROUP_CONCAT(DISTINCT m.path), GROUP_CONCAT(DISTINCT m.params)');
+          $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
+          $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');
+        
         //filter only for authorized view
         $query->where('study.access IN (' . $groups . ')');
 
@@ -350,7 +347,7 @@ class BiblestudyModelSermons extends JModelList {
             $query->where('study.studytitle LIKE "' . $studytitle . '%"');
 
         //Filter by book
-        $book = $this->getState('filter.book');
+        $book = $this->getState('filter.book'); 
         if (!empty($book)) {
             $chb = JRequest::getInt('minChapt', '', 'post');
             $che = JRequest::getInt('maxChapt', '', 'post');
@@ -390,10 +387,18 @@ class BiblestudyModelSermons extends JModelList {
         if (!empty($topic))
             $query->where('st.topic_id LIKE "%' . $topic . '%"');
         //  $query->where('study.topics_id = ' . (int) $topic);
+          
         // Filter by language
-        if ($this->getState('filter.language')) {
+        
+        $language = $params->get('language','*');
+        if ($this->getState('filter.languages'))
+        {
+            $query->where('study.language  LIKE "%' . $this->getState('filter.languages') . '%"');
+        }
+        elseif ($this->getState('filter.language') || $language != '*') {
             $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }
+        
         //Order by order filter
         $orderparam = $params->get('default_order'); //print_r($t_params);
         if (empty($orderparam)) {
@@ -623,23 +628,13 @@ class BiblestudyModelSermons extends JModelList {
         }
         return $this->_Locations;
     }
-
-    /**
-     *
-     * @return Object
-     */
-    public function getStart2() {
-        //dump ($this->getState('list.start'));
-        return $this->getState('list.start');
-    }
-
-    /**
-     * Get Downloads
-     *
-     * @param type $id
-     * @return string
-     */
-    function getDownloads($id) {
+public function getStart2()
+	{
+//dump ($this->getState('list.start'));		
+    return $this->getState('list.start'); 
+	}
+        
+   function getDownloads($id) {
         $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
         $result = $this->_getList($query);
         if (!$result) {
