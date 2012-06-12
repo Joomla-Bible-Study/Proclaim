@@ -63,7 +63,7 @@ class biblestudyViewLandingpage extends JView {
         $registry->loadJSON($template[0]->params);
         $params = $registry;
         $admin = $this->get('Admin');
-
+        
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($admin[0]->params);

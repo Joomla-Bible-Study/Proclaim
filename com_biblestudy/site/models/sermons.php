@@ -32,6 +32,7 @@ class BiblestudyModelSermons extends JModelList {
                 'mediafile.plays',
                 'mediafile.downloads',
                 'study.chapter_begin',
+                'study.language',
                 'study.chapter_end'
             );
         }
