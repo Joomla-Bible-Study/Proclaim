@@ -225,7 +225,15 @@ function getseriesElementnumber($subcustom)
 
 function getSeriesstudiesDBO($id, $params, $limit = '')
 {
-	$db	= & JFactory::getDBO();
+	$menu = JSite::getMenu();
+        $item = $menu->getActive();
+        $registry = new JRegistry;
+        $registry->loadJSON($item->params);
+        $m_params = $registry;
+        $language = $m_params->get('language'); dump($language);
+        if ($language == '*' || !$language){$langlink = '';}
+        elseif ($language != '*'){$langlink = '&filter.languages='.$language;}
+        $db	= & JFactory::getDBO();
 	$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = '.$id;
 	$db->setQuery($query);
 	$allrows = $db->loadObjectList();
