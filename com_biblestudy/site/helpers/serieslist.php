@@ -426,7 +426,7 @@ function getSeriesLandingPage($params, $id, $admin_params)
 	    $series .= "\n\t\t" . '<td id="landing_td">';
 
 	    if ($params->get('series_linkto') == '0') {
-	        $series .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_series='.$b->id.'&filter_book=0&filter_teacher=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
+	        $series .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_series='.$b->id.'&filter_book=0&filter_teacher=0'.$langlink.'&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
 	    } else {
 	        $series .= '<a href="index.php?option=com_biblestudy&view=seriesdisplay&id='.$b->id.'&t='.$template.'">';
 	    }

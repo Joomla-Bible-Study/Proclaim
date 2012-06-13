@@ -29,6 +29,9 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
         $registry = new JRegistry;
         $registry->loadJSON($item->params);
         $m_params = $registry; 
+         $language = $m_params->get('language'); 
+        if ($language == '*' || !$language){$langlink = '';}
+        elseif ($language != '*'){$langlink = '&filter.languages='.$language;}
         $menu_order = $m_params->get('messagetypes_order');
         if ($menu_order)
         {
@@ -53,7 +56,10 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
 		$messagetype = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype order by a.message_type '.$order;
-
+                if ($language != '*' && $language)
+                    {
+                        $query = 'select distinct a.* from #__bsms_message_type a inner join #__bsms_studies b on a.id = b.messagetype where b.language LIKE "'.$language.'" order by a.message_type '.$order;
+                    }
 		$db->setQuery($query);
 
         $tresult = $db->loadObjectList();
@@ -91,7 +97,7 @@ function getMessageTypesLandingPage($params, $id, $admin_params)
             }
             $messagetype .= "\n\t\t" . '<td id="landing_td">';
 
-		    $messagetype .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_messagetype='.$b->id.'&filter_book=0&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&t='.$template.'">';
+		    $messagetype .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_messagetype='.$b->id.$langlink.'&filter_book=0&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&t='.$template.'">';
 
 		    $messagetype .= $b->message_type;
 

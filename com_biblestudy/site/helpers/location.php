@@ -28,6 +28,9 @@ function getLocationsLandingPage($params, $id, $admin_params)
         $registry = new JRegistry;
         $registry->loadJSON($item->params);
         $m_params = $registry; 
+        $language = $m_params->get('language'); 
+        if ($language == '*' || !$language){$langlink = '';}
+        elseif ($language != '*'){$langlink = '&filter.languages='.$language;}
         $menu_order = $m_params->get('locations_order');
         if ($menu_order)
         {
@@ -52,8 +55,11 @@ function getLocationsLandingPage($params, $id, $admin_params)
 		$location = "\n" . '<table id="landing_table" width=100%>';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_locations a inner join #__bsms_studies b on a.id = b.location_id order by a.location_text '.$order;
-
-		$db->setQuery($query);
+                if ($language != '*' && $language)
+                    {
+                        $query = 'select distinct a.* from #__bsms_locations a inner join #__bsms_studies b on a.id = b.location_id  WHERE b.language LIKE "'.$language.'" order by a.location_text '.$order;
+                    }
+               $db->setQuery($query);
 
         $tresult = $db->loadObjectList();
         $t = 0;
@@ -88,7 +94,7 @@ function getLocationsLandingPage($params, $id, $admin_params)
                 $location .= "\n\t" . '<tr>';
             }
             $location .= "\n\t\t" . '<td id="landing_td">';
-		    $location .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_location='.$b->id.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
+		    $location .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_location='.$b->id.$langlink.'&filter_teacher=0&filter_series=0&filter_topic=0&filter_book=0&filter_year=0&filter_messagetype=0&t='.$template.'">';
 
 		    $location .= $b->location_text;
 
