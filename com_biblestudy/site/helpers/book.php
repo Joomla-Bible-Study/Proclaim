@@ -28,6 +28,9 @@ function getBooksLandingPage($params, $id, $admin_params) {
         $registry = new JRegistry;
         $registry->loadJSON($item->params);
         $m_params = $registry; 
+        $language = $m_params->get('language'); 
+        if ($language == '*' || !$language){$langlink = '';}
+        elseif ($language != '*'){$langlink = '&filter.languages='.$language;}
         $menu_order = $m_params->get('books_order');
         if ($menu_order)
         {
@@ -48,7 +51,10 @@ function getBooksLandingPage($params, $id, $admin_params) {
     $book = "\n" . '<table id="landing_table" width=100%>';
     $db = & JFactory::getDBO();
     $query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber order by a.booknumber '.$order;
-
+    if ($language != '*' && $language)
+    {
+        $query = 'select distinct a.* from #__bsms_books a inner join #__bsms_studies b on a.booknumber = b.booknumber where b.language LIKE "'.$language.'" order by a.booknumber '.$order;
+    }
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList();
@@ -84,7 +90,7 @@ function getBooksLandingPage($params, $id, $admin_params) {
             $book .= "\n\t" . '<tr>';
         }
         $book .= "\n\t\t" . '<td id="landing_td">';
-        $book .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_book=' . $b->booknumber . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+        $book .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_book=' . $b->booknumber . $langlink . '&filter_teacher=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
         ##$book .= '<a href="dummy">'; ## can uncomment this line and use instead of above line when bug-fixing for simpler code
 
         $book .= $numRows;

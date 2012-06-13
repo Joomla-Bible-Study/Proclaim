@@ -24,15 +24,17 @@
                 value_field="title"
                 required="true"
             />
+            
         </fieldset>
      </fields>
       <fields name="params">
      <fieldset name="basic" 
      label="JBS_MNU_LANDING_PAGE_LAYOUT" >
-     <field name="filterlanguage" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-                            description="JBS_CMN_FILTER_LANGUAGE_LANDING" class="inputbox" >
-                        <option value="*">JALL</option>
-                        </field>
+         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+               description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
+        <option value="*">JALL</option>
+    </field>
+    
        <field name="series_order"
                         type="list"
                         label="JBS_CMN_SERIES_ORDERING"

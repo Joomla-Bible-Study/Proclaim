@@ -238,9 +238,9 @@ class BiblestudyModelSermons extends JModelList {
                 }
             }
             //filter over books
-            $filters = $books;
-            $chb = JRequest::getInt('minChapt', '', 'post');
-            $che = JRequest::getInt('maxChapt', '', 'post');
+            $filters = $books; 
+           // $chb = JRequest::getInt('minChapt', '', 'post');
+          //  $che = JRequest::getInt('maxChapt', '', 'post');
             if ($filters) {
                 if (count($filters) > 1) {
                     $where2 = array();
@@ -251,7 +251,7 @@ class BiblestudyModelSermons extends JModelList {
                     $subquery .= implode(' OR ', $where2);
                     $subquery .= ')';
 
-                    $query->where($subquery);
+                    $query->where($subquery); 
                 } else {
                     foreach ($filters AS $filter) {
                         if ($filter != -1) {
@@ -359,7 +359,7 @@ class BiblestudyModelSermons extends JModelList {
             } else if ($che) {
                 $query->where('(study.booknumber = ' . (int) $book . ' AND study.chapter_end <= ' . $che . ') OR study.booknumber2 = ' . (int) $book);
             } else {
-                $query->where('study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book);
+                $query->where('(study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book.')');
             }
         }
 
@@ -394,7 +394,7 @@ class BiblestudyModelSermons extends JModelList {
         $language = $params->get('language','*');
         if ($this->getState('filter.languages'))
         {
-            $query->where('study.language  LIKE "%' . $this->getState('filter.languages') . '%"');
+            $query->where('study.language  LIKE "' . $this->getState('filter.languages') . '"');
         }
         elseif ($this->getState('filter.language') || $language != '*') {
             $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
