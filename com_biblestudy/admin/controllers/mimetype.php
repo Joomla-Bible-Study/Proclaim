@@ -1,33 +1,30 @@
 <?php
 
 /**
- * @version     $Id: mimetype.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- **/
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
-abstract class controllerClass extends JControllerForm {
+/**
+ * Controller for MimeType
+ * @package BibleStudy.Admin
+ */
+class BiblestudyControllerMimetype extends JControllerForm {
 
-}
+    /**
+     * constructor (registers additional tasks to methods)
+     * @return void
+     */
+    protected $view_list = 'mimetypes';
 
-class BiblestudyControllerMimetype extends controllerClass
-{
-	/**
-	 * constructor (registers additional tasks to methods)
-	 * @return void
-	 */
-
-	protected $view_list = 'mimetypes';
-	function __construct()
-	{
-		parent::__construct();
-
-	}
+    function __construct() {
+        parent::__construct();
+    }
 
 }

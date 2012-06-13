@@ -1,107 +1,130 @@
 <?php
-// @todo add header
+
+/**
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controller');
+
+/**
+ * Controler for MP3
+ * @package BibleStudy.Admin
+ */
 class biblestudyImportControllermp3 extends JController {
 
-	function __construct() {
-		parent::__construct();
-	}
+    function __construct() {
+        parent::__construct();
+    }
 
-	function main() {
-		$model = $this->getModel('biblestudy');
-		$test = $model;
-		JRequest::setVar('view', 'mp3');
-		parent::display();
-	}
-	function edit()
-	{
-		JRequest::setVar( 'view', 'topicsedit' );
-		JRequest::setVar( 'layout', 'form'  );
-		JRequest::setVar('hidemainmenu', 1);
+    /**
+     * Main View
+     */
+    function main() {
+        $model = $this->getModel('biblestudy');
+        $test = $model;
+        JRequest::setVar('view', 'mp3');
+        parent::display();
+    }
 
-		parent::display();
-	}
+    /**
+     * Edit the topic
+     */
+    function edit() {
+        JRequest::setVar('view', 'topicsedit');
+        JRequest::setVar('layout', 'form');
+        JRequest::setVar('hidemainmenu', 1);
 
-	/**
-	 * save a record (and redirect to main page)
-	 * @return void
-	 */
-	function save()
-	{
-		$model = $this->getModel('topicsedit');
+        parent::display();
+    }
 
-		if ($model->store($post)) {
-			$msg = JText::_( 'Topic Saved!' );
-		} else {
-			$msg = JText::_( 'Error Saving Topic' );
-		}
+    /**
+     * save a record (and redirect to main page)
+     * @return void
+     */
+    function save() {
+        $model = $this->getModel('topicsedit');
 
-		// Check the table in so it can be edited.... we are done with it anyway
-		$link = 'index.php?option=com_biblestudy&view=topicslist';
-		$this->setRedirect($link, $msg);
-	}
+        if ($model->store($post)) {
+            $msg = JText::_('Topic Saved!');
+        } else {
+            $msg = JText::_('Error Saving Topic');
+        }
 
-	/**
-	 * remove record(s)
-	 * @return void
-	 */
-	function remove()
-	{
-		$model = $this->getModel('topicsedit');
-		if(!$model->delete()) {
-			$msg = JText::_( 'Error: One or More Topics Items Could not be Deleted' );
-		} else {
-			$msg = JText::_( 'Topics Item(s) Deleted' );
-		}
+        // Check the table in so it can be edited.... we are done with it anyway
+        $link = 'index.php?option=com_biblestudy&view=topicslist';
+        $this->setRedirect($link, $msg);
+    }
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=topicslist', $msg );
-	}
-function publish()
-	{
-		global $mainframe;
+    /**
+     * remove record(s)
+     * @return void
+     */
+    function remove() {
+        $model = $this->getModel('topicsedit');
+        if (!$model->delete()) {
+            $msg = JText::_('Error: One or More Topics Items Could not be Deleted');
+        } else {
+            $msg = JText::_('Topics Item(s) Deleted');
+        }
 
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+        $this->setRedirect('index.php?option=com_biblestudy&view=topicslist', $msg);
+    }
 
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to publish' ) );
-		}
+    /**
+     * Publish Topics
+     *
+     * @global type $mainframe
+     */
+    function publish() {
+        global $mainframe;
 
-		$model = $this->getModel('topicsedit');
-		if(!$model->publish($cid, 1)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
+        $cid = JRequest::getVar('cid', array(0), 'post', 'array');
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=topicslist' );
-	}
+        if (!is_array($cid) || count($cid) < 1) {
+            JError::raiseError(500, JText::_('Select an item to publish'));
+        }
 
+        $model = $this->getModel('topicsedit');
+        if (!$model->publish($cid, 1)) {
+            echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
+        }
 
-	function unpublish()
-	{
-		global $mainframe;
+        $this->setRedirect('index.php?option=com_biblestudy&view=topicslist');
+    }
 
-		$cid 	= JRequest::getVar( 'cid', array(0), 'post', 'array' );
+    /**
+     * Unpublish topic
+     *
+     * @global type $mainframe
+     */
+    function unpublish() {
+        global $mainframe;
 
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
-		}
+        $cid = JRequest::getVar('cid', array(0), 'post', 'array');
 
-		$model = $this->getModel('topicsedit');
-		if(!$model->publish($cid, 0)) {
-			echo "<script> alert('".$model->getError(true)."'); window.history.go(-1); </script>\n";
-		}
+        if (!is_array($cid) || count($cid) < 1) {
+            JError::raiseError(500, JText::_('Select an item to unpublish'));
+        }
 
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=topicslist' );
-	}
+        $model = $this->getModel('topicsedit');
+        if (!$model->publish($cid, 0)) {
+            echo "<script> alert('" . $model->getError(true) . "'); window.history.go(-1); </script>\n";
+        }
 
-	/**
-	 * cancel editing a record
-	 * @return void
-	 */
-	function cancel()
-	{
-		$msg = JText::_( 'Operation Cancelled' );
-		$this->setRedirect( 'index.php?option=com_biblestudy&view=topicslist', $msg );
-	}
+        $this->setRedirect('index.php?option=com_biblestudy&view=topicslist');
+    }
+
+    /**
+     * cancel editing a record
+     * @return void
+     */
+    function cancel() {
+        $msg = JText::_('Operation Cancelled');
+        $this->setRedirect('index.php?option=com_biblestudy&view=topicslist', $msg);
+    }
+
 }

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: controller.php 1 $
- * @package COM_JBSMIGRATION
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -18,7 +17,7 @@ include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTOR
 /**
  * JBS Export Migration Controller
  *
- *
+ *@package BibleStudy.Admin
  */
 class BiblestudyControllerMigration extends JController {
 
@@ -71,6 +70,9 @@ class BiblestudyControllerMigration extends JController {
         parent::display($cachable);
     }
 
+    /**
+     * Import fungtion
+     */
     function import() {
         $application = JFactory::getApplication();
         $import = new JBSImport();
@@ -83,6 +85,11 @@ class BiblestudyControllerMigration extends JController {
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 
+    /**
+     * Do the import
+     *
+     * @param <boolon> $cachable
+     */
     function doimport($cachable = false) {
         $copysuccess = false;
         $import = new JBSImport();
@@ -133,6 +140,12 @@ class BiblestudyControllerMigration extends JController {
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 
+    /**
+     * Perform DB check
+     *
+     * @param array $query
+     * @return string|boolean
+     */
     function performdb($query) {
         $db = JFactory::getDBO();
         $results = false;
@@ -149,6 +162,12 @@ class BiblestudyControllerMigration extends JController {
         }
     }
 
+    /**
+     * Copy Old Tables to new Joomla! Tables
+     *
+     * @param string $oldprefix
+     * @return array
+     */
     function copyTables($oldprefix) {
         //create table tablename_new like tablename; -> this will copy the structure...
         //insert into tablename_new select * from tablename; -> this would copy all the data
@@ -183,6 +202,11 @@ class BiblestudyControllerMigration extends JController {
         return $results;
     }
 
+    /**
+     * Fix Assets Table
+     *
+     * @return boolean
+     */
     function fixAssets() {
         require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
         $asset = new fixJBSAssets();

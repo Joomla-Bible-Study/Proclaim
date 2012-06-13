@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: admin.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,11 +11,11 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
-abstract class controllerClass extends JControllerForm {
-
-}
-
-class biblestudyControlleradmin extends controllerClass {
+/**
+ * Controller for Admin
+ * @package BibleSutdy.Admin
+ */
+class biblestudyControlleradmin extends JControllerForm {
 
     /**
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
@@ -38,6 +37,10 @@ class biblestudyControlleradmin extends controllerClass {
         $this->registerTask('apply', 'save');
     }
 
+    /**
+     * Tools to change player or pupup
+     * @param string $tool Function to pull the tooltype
+     */
     function tools() {
         $tool = JRequest::getVar('tooltype', '', 'post');
         switch ($tool) {
@@ -59,8 +62,9 @@ class biblestudyControlleradmin extends controllerClass {
         }
     }
 
-   
-  
+    /**
+     * Update SEF
+     */
     function updatesef() {
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'updatesef.php');
@@ -73,6 +77,9 @@ class biblestudyControlleradmin extends controllerClass {
         }
     }
 
+    /**
+     * Reset Hits
+     */
     function resetHits() {
         $msg = null;
         $db = JFactory::getDBO();
@@ -89,6 +96,9 @@ class biblestudyControlleradmin extends controllerClass {
         }
     }
 
+    /**
+     * Reset Downloads
+     */
     function resetDownloads() {
         $msg = null;
         $db = JFactory::getDBO();
@@ -105,6 +115,9 @@ class biblestudyControlleradmin extends controllerClass {
         }
     }
 
+    /**
+     * Reset Players
+     */
     function resetPlays() {
         $msg = null;
         $db = JFactory::getDBO();
@@ -121,6 +134,9 @@ class biblestudyControlleradmin extends controllerClass {
         }
     }
 
+    /**
+     * Change Player Modes
+     */
     function changePlayers() {
 
         $db = JFactory::getDBO();
@@ -147,6 +163,9 @@ class biblestudyControlleradmin extends controllerClass {
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 
+    /**
+     * Change Media Popup
+     */
     function changePopup() {
 
         $db = JFactory::getDBO();
@@ -165,6 +184,9 @@ class biblestudyControlleradmin extends controllerClass {
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 
+    /**
+     * Check Assets
+     */
     function checkassets() {
         require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
         $asset = new fixJBSAssets();
@@ -174,6 +196,9 @@ class biblestudyControlleradmin extends controllerClass {
         parent::display();
     }
 
+    /**
+     * Fix Assets
+     */
     function fixAssets() {
         $application = JFactory::getApplication();
         require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
@@ -182,22 +207,25 @@ class biblestudyControlleradmin extends controllerClass {
         JRequest::setVar('messages', $fixassets, 'get', 'true');
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&task=admin.checkassets', $fixassets);
     }
-    
-    function convertSermonSpeaker()
-    {
+
+    /**
+     * Convert SermonSpeaker to BibleStudy
+     */
+    function convertSermonSpeaker() {
         require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.sermonspeakerconvert.class.php');
         $convert = new JBSconvert();
-        $ssconversion = $convert->convertSS(); 
+        $ssconversion = $convert->convertSS();
         $this->setRedirect('index.php?option=com_biblestudy&view=admin', $ssconversion);
     }
-    
-    function convertPreachIt()
-    {
+
+    /**
+     * Convert PreachIt to BibleStudy
+     */
+    function convertPreachIt() {
         require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.preachitconvert.class.php');
         $convert = new JBSPIconvert();
         $piconversion = $convert->convertPI();
         $this->setRedirect('index.php?option=com_biblestudy&view=admin', $piconversion);
     }
-        
 
 }

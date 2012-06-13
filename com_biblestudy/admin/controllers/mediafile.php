@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version     $Id: mediafile.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Controller for MediaFile
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -33,6 +33,10 @@ class BiblestudyControllerMediafile extends JControllerForm {
         // Register Extra tasks
     }
 
+    /**
+     * Get DocMan Category Items
+     * @since 7.0.4
+     */
     function docmanCategoryItems() {
         //hide errors and warnings
         error_reporting(0);
@@ -43,6 +47,12 @@ class BiblestudyControllerMediafile extends JControllerForm {
         echo $items;
     }
 
+    /**
+     * System to Get Section of Categories
+     *
+     * @deprecated since version 7.0.0
+     * @todo Need to remove for Joomla! 2.5
+     */
     function articlesSectionCategories() {
         error_reporting(0);
         $secId = JRequest::getVar('secId');
@@ -52,6 +62,9 @@ class BiblestudyControllerMediafile extends JControllerForm {
         echo $items;
     }
 
+    /**
+     * Get Article Category Items
+     */
     function articlesCategoryItems() {
         error_reporting(0);
         $catId = JRequest::getVar('catId');
@@ -61,6 +74,9 @@ class BiblestudyControllerMediafile extends JControllerForm {
         echo $items;
     }
 
+    /**
+     * Get Virtumart Items
+     */
     function virtueMartItems() {
         error_reporting(0);
         $catId = JRequest::getVar('catId');
@@ -70,6 +86,9 @@ class BiblestudyControllerMediafile extends JControllerForm {
         echo $items;
     }
 
+    /**
+     * Reset Downloads
+     */
     function resetDownloads() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'post');
@@ -87,6 +106,9 @@ class BiblestudyControllerMediafile extends JControllerForm {
         }
     }
 
+    /**
+     * Reset Plays
+     */
     function resetPlays() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'post');
@@ -104,7 +126,12 @@ class BiblestudyControllerMediafile extends JControllerForm {
         }
     }
 
-//New File Size System Should work on all server now.
+    /**
+     * New File Size System Should work on all server now.
+     * @since 7.1.0
+     * @param string $url
+     * @return boolean
+     */
     function getSizeFile($url) {
         $head = "";
         $url_p = @parse_url($url);
