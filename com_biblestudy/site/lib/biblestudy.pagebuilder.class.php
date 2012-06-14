@@ -138,13 +138,10 @@ class JBSPagebuilder {
     function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order) {
         $menu = JSite::getMenu();
         $item = $menu->getActive(); 
-        $registry = new JRegistry;
-        $registry->loadJSON($item->params);
-        $m_params = $registry; 
-        $language = $m_params->get('language'); 
+        $language = $item->language;
         if ($language == '*' || !$language){$langlink = '';}
         elseif ($language != '*'){$langlink = '&filter.languages='.$language;}
-        $itemid = JRequest::getInt('Itemid'); 
+        
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,

@@ -230,7 +230,7 @@ function getSeriesstudiesDBO($id, $params, $limit = '')
         $registry = new JRegistry;
         $registry->loadJSON($item->params);
         $m_params = $registry;
-        $language = $m_params->get('language'); dump($language);
+        $language = $m_params->get('language'); 
         if ($language == '*' || !$language){$langlink = '';}
         elseif ($language != '*'){$langlink = '&filter.languages='.$language;}
         $db	= & JFactory::getDBO();
