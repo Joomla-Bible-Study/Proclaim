@@ -12,6 +12,10 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controlleradmin');
 
+/**
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyControllerTemplates extends JControllerAdmin {
 
     /**
@@ -21,7 +25,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
      * @param <String> $prefix  The prefix for the PHP class name
      * @return JModel
      *
-     * @since 7.0
+     * @since 7.0.0
      */
     public function &getModel($name = 'Template', $prefix = 'BiblestudyModel') {
         $model = parent::getModel($name, $prefix, array('ignore_request' => true));

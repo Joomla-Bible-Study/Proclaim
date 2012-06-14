@@ -14,6 +14,7 @@ jimport('joomla.application.component.controllerform');
 /**
  * Controller for Admin
  * @package BibleSutdy.Admin
+ * @since 7.0.0
  */
 class biblestudyControlleradmin extends JControllerForm {
 
@@ -29,8 +30,7 @@ class biblestudyControlleradmin extends JControllerForm {
      * @return void
      */
     function __construct($config = array()) {
-        parent::__construct();
-
+        parent::__construct($config);
 
         // Register Extra tasks
         $this->registerTask('add', 'edit');

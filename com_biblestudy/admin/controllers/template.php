@@ -12,14 +12,21 @@ include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTOR
 require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
 jimport('joomla.application.component.controllerform');
 
+/**
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyControllerTemplate extends JControllerForm {
 
-    protected $view_list = 'templates';
-
-    function __construct() {
-        parent::__construct();
-
-        //register extra tasks
+    /**
+     * Class constructor.
+     *
+     * @param   array  $config  A named array of configuration variables.
+     *
+     * @since	7.0.0
+     */
+    function __construct($config = array()) {
+        parent::__construct($config);
     }
 
     /**

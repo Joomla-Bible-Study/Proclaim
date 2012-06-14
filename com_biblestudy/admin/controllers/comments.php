@@ -11,6 +11,10 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controlleradmin');
 
+/**
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyControllerComments extends JControllerAdmin {
 
     /**

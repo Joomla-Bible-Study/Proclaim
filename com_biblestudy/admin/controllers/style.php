@@ -13,21 +13,10 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
+/**
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyControllerStyle extends JControllerForm {
-
-    protected $view_list = 'styles';
-
-    /**
-     * Proxy for getModel
-     *
-     * @param <String> $name    The name of the model
-     * @param <String> $prefix  The prefix for the PHP class name
-     * @return JModel
-     *
-     * @since 7.1.0
-     */
-    /* public function getModel($name = 'Style', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
-      $model = parent::getModel($name, $prefix, array('ignore_request' => true));
-      return $model;
-      } */
+    
 }

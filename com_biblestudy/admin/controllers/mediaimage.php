@@ -12,20 +12,20 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controllerform');
 
 /**
- * Controller for MediaImages
  * @package BibleStudy.Admin
- * @since 7.0
+ * @since 7.0.0
  */
 class BiblestudyControllerMediaimage extends JControllerForm {
 
-    protected $view_list = 'mediaimages';
-
     /**
-     * constructor (registers additional tasks to methods)
-     * @return void
+     * Class constructor.
+     *
+     * @param   array  $config  A named array of configuration variables.
+     *
+     * @since	7.0.0
      */
-    function __construct() {
-        parent::__construct();
+    function __construct($config = array()) {
+        parent::__construct($config);
     }
 
 }

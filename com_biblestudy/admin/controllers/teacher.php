@@ -14,6 +14,7 @@ jimport('joomla.application.component.controllerform');
 /**
  * Controller for Teacher
  * @package BibleStudy.Admin
+ * @since 7.0.0
  */
 class BiblestudyControllerTeacher extends JControllerForm {
 

@@ -14,6 +14,7 @@ jimport('joomla.filesystem.file');
 /**
  * Controler for Ajax
  * @package BibleStudy.Admin
+ * @since 7.0.0
  */
 class biblestudyControllerajax extends JController {
 

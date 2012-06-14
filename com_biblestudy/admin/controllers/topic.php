@@ -12,49 +12,21 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
+/**
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyControllerTopic extends JControllerForm {
 
     /**
-     * constructor (registers additional tasks to methods)
-     * @return void
-     */
-    protected $view_list = 'topics';
-
-    function __construct() {
-        parent::__construct();
-
-        // Register Extra tasks
-    }
-
-    /**
-     * Method to save a topic item.
+     * Class constructor.
      *
-     * @return	void
-     * @since	1.6
+     * @param   array  $config  A named array of configuration variables.
+     *
+     * @since	7.0.0
      */
-    public function save($key = null, $urlVar = null) {
-        // Check for request forgeries.
-        JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-        // get the model and check alias
-        $app = JFactory::getApplication();
-        $model = $this->getModel();
-        $table = $model->getTable();
-        $data = JRequest::getVar('jform', array(), 'post', 'array');
-        // Determine the name of the primary key for the data.
-        if (empty($key)) {
-            $key = $table->getKeyName();
-        }
-        // The urlVar may be different from the primary key to avoid data collisions.
-        if (empty($urlVar)) {
-            $urlVar = $key;
-        }
-        $recordId = JRequest::getInt($urlVar);
-        $data = $table->checkAlias($data, $recordId);
-        // push back to JRequest
-        JRequest::setVar('jform', $data, 'post', true);
-
-        parent::save($key, $urlVar);
+    function __construct($config = array()) {
+        parent::__construct($config);
     }
 
 }

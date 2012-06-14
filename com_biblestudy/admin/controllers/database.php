@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 /**
  * Controler for Database
- * @package		BibleStudy.Admin
+ * @package	BibleStudy.Admin
  * @since	7.1.0
  */
 class BiblestudyControllerDatabase extends JController {

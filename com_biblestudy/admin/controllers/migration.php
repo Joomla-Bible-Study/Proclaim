@@ -17,7 +17,8 @@ include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTOR
 /**
  * JBS Export Migration Controller
  *
- *@package BibleStudy.Admin
+ * @package BibleStudy.Admin
+ * @since 7.1.0
  */
 class BiblestudyControllerMigration extends JController {
 

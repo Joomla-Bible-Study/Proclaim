@@ -12,18 +12,21 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
+/**
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class biblestudyControllercpanel extends JControllerForm {
 
     /**
-     * constructor (registers additional tasks to methods)
-     * @return void
+     * Class constructor.
+     *
+     * @param   array  $config  A named array of configuration variables.
+     *
+     * @since	7.0.0
      */
-    protected $view_list = 'cpanel';
-
-    function __construct() {
-        parent::__construct();
-
-        // Register Extra tasks
+    function __construct($config = array()) {
+        parent::__construct($config);
     }
 
 }

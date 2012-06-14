@@ -12,21 +12,23 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controlleradmin');
 
 /**
- * Controller for Teachers
+ * Teachers list controller class.
+ *
  * @package BibleStudy.Admin
+ * @since 7.0.0
  */
 class BiblestudyControllerTeachers extends JControllerAdmin {
 
     /**
      * Proxy for getModel
      *
-     * @param <String> $name    The name of the model
-     * @param <String> $prefix  The prefix for the PHP class name
-     * @return JModel
+     * @param string $name    The name of the model
+     * @param string $prefix  The prefix for the PHP class name
      *
-     * @since 7.0
+     * @return JModel
+     * @since 7.0.0
      */
-    public function &getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
+    public function getModel($name = 'Teacher', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
         $model = parent::getModel($name, $prefix, $config);
         return $model;
     }

@@ -12,16 +12,21 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
+/**
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyControllerMessagetype extends JControllerForm {
 
     /**
-     * constructor (registers additional tasks to methods)
-     * @return void
+     * Class constructor.
+     *
+     * @param   array  $config  A named array of configuration variables.
+     *
+     * @since	7.0.0
      */
-    protected $view_list = 'messagetypes';
-
-    function __construct() {
-        parent::__construct();
+    function __construct($config = array()) {
+        parent::__construct($config);
     }
 
 }
