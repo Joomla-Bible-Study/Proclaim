@@ -17,8 +17,22 @@ include_once($path1 . 'filesize.php');
 include_once($path1 . 'image.php');
 jimport('joomla.html.parameter');
 
+/**
+ * Class to build page elements in use by custom template files
+ *
+ * @package BibleStudy.Admin
+ * @since 7.0.1
+ */
 class JBSPagebuilder {
 
+    /**
+     * Build Page
+     *
+     * @param object $item
+     * @param array $params
+     * @param array $admin_params
+     * @return string
+     */
     function buildPage($item, $params, $admin_params) {
         $page->study_thumbnail = '';
         $page->series_thumbnail = '';
@@ -42,7 +56,7 @@ class JBSPagebuilder {
         //duration
         $page->duration = getDuration($params, $item);
         $page->studydate = getstudyDate($params, $item->studydate);
-        if ( $item->topics_text && substr_count($item->topics_text, ',')) {
+        if ($item->topics_text && substr_count($item->topics_text, ',')) {
             $topics = explode(',', $item->topic_text);
             foreach ($topics as $key => $value) {
                 $topics[$key] = JText::_($value);
@@ -65,6 +79,14 @@ class JBSPagebuilder {
         $page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->teachername . '">';
     }
 
+    /**
+     * Media Builder
+     *
+     * @param array $mediaids
+     * @param array $params
+     * @param array $admin_params
+     * @return array
+     */
     function mediaBuilder($mediaids, $params, $admin_params) {
         $images = new jbsImages();
         $mediaelements = new jbsMedia();
@@ -135,13 +157,26 @@ class JBSPagebuilder {
         return $mediareturn;
     }
 
+    /**
+     *
+     * @param string $whereitem
+     * @param string $wherefield
+     * @param array $params
+     * @param array $admin_params
+     * @param int $limit
+     * @param string $order
+     * @return object
+     */
     function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order) {
         $menu = JSite::getMenu();
-        $item = $menu->getActive(); 
+        $item = $menu->getActive();
         $language = $item->language;
-        if ($language == '*' || !$language){$langlink = '';}
-        elseif ($language != '*'){$langlink = '&filter.languages='.$language;}
-        
+        if ($language == '*' || !$language) {
+            $langlink = '';
+        } elseif ($language != '*') {
+            $langlink = '&filter.languages=' . $language;
+        }
+
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
@@ -196,7 +231,9 @@ class JBSPagebuilder {
         $query->join('LEFT', '#__bsms_mediafiles as media ON study.id = media.study_id');
         $query->where('study.published = 1');
         $query->where($wherefield . ' = ' . $whereitem);
-        if ($language != '*'){$query->where('study.language LIKE "'.$language.'"');}
+        if ($language != '*') {
+            $query->where('study.language LIKE "' . $language . '"');
+        }
         if (!$order) {
             $order = 'DESC';
         }
