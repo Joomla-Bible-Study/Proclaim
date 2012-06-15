@@ -8,7 +8,12 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'podcastsubscribe.php');
-
+/**
+ * View for Sermons class
+ *
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class BiblestudyViewSermons extends JView {
 
     protected $items;
@@ -21,24 +26,25 @@ class BiblestudyViewSermons extends JView {
      * */
     function display($tpl = null) {
 
-        $limitstart = JRequest::getInt('limitstart'); 
-        JRequest::setVar('start',$limitstart,'get','true'); //dump ($limitstart, 'start from view: ');
-        $state = $this->get('State'); //dump($state);
+        $limitstart = JRequest::getInt('limitstart');
+        JRequest::setVar('start', $limitstart, 'get', 'true');
+        $state = $this->get('State');
         $this->assignRef('state', $state);
         $document = JFactory::getDocument();
 
         $items = $this->get('Items');
-        //dump($items);
-        $this->limitstart = JRequest::getVar('start', 'int'); //dump ($this->limitstart);
+        $this->limitstart = JRequest::getVar('start', 'int');
         $pagination = $this->get('Pagination');
-        $this->page->pagelinks = $pagination->getPagesLinks();
-        $this->page->limitbox = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM').$pagination->getLimitBox(). '</span>';
-    //    $this->pagination = $pagination;
+        $pagelinks = $pagination->getPagesLinks();
+        if ($pagelinks !== ''):
+            $this->pagelinks = $pagelinks;
+        endif;
+        $this->limitbox = '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $pagination->getLimitBox() . '</span>';
         $this->assignRef('pagination', $pagination);
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin(true);
+        $this->admin = @BsmHelper::getAdmin(true);
 
         $admin_parameters = $this->get('Admin');
         // Convert parameter fields to objects.
@@ -64,7 +70,7 @@ class BiblestudyViewSermons extends JView {
         $registry = new JRegistry;
         $registry->loadJSON($template->params);
         $params = $registry;
-       
+
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
@@ -75,52 +81,51 @@ class BiblestudyViewSermons extends JView {
         }
         //Build the elements so they can be accessed through the $this->page array in the template
         $dispatcher = JDispatcher::getInstance();
-        $linkit = $params->get('show_scripture_link','0'); 
-            switch ($linkit) {
-                case 0:
-                    break;
-                case 1:
-                    JPluginHelper::importPlugin('content');
-                    break;
-                case 2:
-                    JPluginHelper::importPlugin('content', 'scripturelinks');
-                    break;
-            }
-            $limitstart = JRequest::getVar('limitstart', 'int');
-            
-           
+        $linkit = $params->get('show_scripture_link', '0');
+        switch ($linkit) {
+            case 0:
+                break;
+            case 1:
+                JPluginHelper::importPlugin('content');
+                break;
+            case 2:
+                JPluginHelper::importPlugin('content', 'scripturelinks');
+                break;
+        }
+        $limitstart = JRequest::getVar('limitstart', 'int');
+
+
         $studies = $items;
         $pagebuilder = new JBSPagebuilder();
-        foreach ($studies as $i=>$study)
-            {
-                $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
-                $studies[$i]->scripture1 = $pelements->scripture1;
-                $studies[$i]->scripture2 = $pelements->scripture2;
-                $article->text = $studies[$i]->scripture1;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $studies[$i]->scripture1 = $article->text; 
-                $article->text = $studies[$i]->scripture2;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $studies[$i]->scripture2 = $article->text;
-                $studies[$i]->media = $pelements->media;
-                $studies[$i]->duration = $pelements->duration;
-                $studies[$i]->studydate = $pelements->studydate;
-                $studies[$i]->topics = $pelements->topics;
-                $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-                $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
-                $studies[$i]->detailslink = $pelements->detailslink;
-                $article->text = $studies[$i]->studyintro;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $studies[$i]->studyintro = $article->text;
-                $article->text = $studies[$i]->secondary_reference;
-                $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons',& $article, & $params, $limitstart));
-                $studies[$i]->secondary_reference = $article->text;
-            }
-           $this->study = $studies;
-           $this->items = $items;
-            //get the podcast subscription
-           $podcast = new podcastSubscribe();
-           $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro','Our Podcasts'));
+        foreach ($studies as $i => $study) {
+            $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
+            $studies[$i]->scripture1 = $pelements->scripture1;
+            $studies[$i]->scripture2 = $pelements->scripture2;
+            $article->text = $studies[$i]->scripture1;
+            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+            $studies[$i]->scripture1 = $article->text;
+            $article->text = $studies[$i]->scripture2;
+            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+            $studies[$i]->scripture2 = $article->text;
+            $studies[$i]->media = $pelements->media;
+            $studies[$i]->duration = $pelements->duration;
+            $studies[$i]->studydate = $pelements->studydate;
+            $studies[$i]->topics = $pelements->topics;
+            $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
+            $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
+            $studies[$i]->detailslink = $pelements->detailslink;
+            $article->text = $studies[$i]->studyintro;
+            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+            $studies[$i]->studyintro = $article->text;
+            $article->text = $studies[$i]->secondary_reference;
+            $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
+            $studies[$i]->secondary_reference = $article->text;
+        }
+        $this->study = $studies;
+        $this->items = $items;
+        //get the podcast subscription
+        $podcast = new podcastSubscribe();
+        $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $itemparams = $mainframe->getPageParameters();
@@ -143,10 +148,10 @@ class BiblestudyViewSermons extends JView {
 
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $document = JFactory::getDocument();
-       
+
         JHTML::_('behavior.mootools');
-        $css = $params->get('css','biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+        $css = $params->get('css', 'biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         //Errors when using local swfobject.js file.  IE 6 doesn't work
         //Import Scripts
@@ -160,7 +165,7 @@ class BiblestudyViewSermons extends JView {
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
         $uri = JFactory::getURI();
-        
+
         $filter_topic = $this->state->get('filter.topic');
         $filter_book = $this->state->get('filter.book');
         $filter_teacher = $this->state->get('filter.teacher');
@@ -172,7 +177,7 @@ class BiblestudyViewSermons extends JView {
         $filter_languages = $this->state->get('filter.languages');
         $total = $this->get('Total');
         //Remove the studies the user is not allowed to see
-       
+
         $this->teachers = $this->get('Teachers');
         $this->series = $this->get('Series');
         $this->messageTypes = $this->get('MessageTypes');
@@ -201,56 +206,56 @@ class BiblestudyViewSermons extends JView {
         $popular = $stats->top_score_site($item->id);
         //$this->assignRef('popular', $popular);
         $this->page->popular = $stats->top_score_site($item->id);
-        
+
         //Get whether "Go" Button is used then turn off onchange if it is
         if ($params->get('use_go_button', 0) == 0) {
-            $go = 'onchange="this.form.submit()"';}
+            $go = 'onchange="this.form.submit()"';
+        }
         //Build go button
-        $this->page->gobutton = '<span id="gobutton"><input type="submit" value="'.JText::_('JBS_STY_GO_BUTTON').'" /></span>';
-        
+        $this->page->gobutton = '<span id="gobutton"><input type="submit" value="' . JText::_('JBS_STY_GO_BUTTON') . '" /></span>';
+
         //Build language drop down
-        $used = JLanguageHelper::getLanguages(); 
+        $used = JLanguageHelper::getLanguages();
         $langtemp = array();
         $lang = array();
-        foreach ($used as $use)
-        { 
-            $langtemp = array('text'=>$use->title_native,'value'=>$use->lang_code);
+        foreach ($used as $use) {
+            $langtemp = array('text' => $use->title_native, 'value' => $use->lang_code);
             $lang[] = $langtemp;
         }
         $langdropdown[] = JHTML::_('select.option', '0', JTEXT::_('JBS_SELECT_LANGUAGE'));
         $langdropdown = array_merge($langdropdown, $lang);
         $this->page->languages = JHTML::_('select.genericlist', $langdropdown, 'filter_languages', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_languages");
-        
+
         //Build the teacher dropdown
         $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEACHER'));
         $types = array_merge($types, $this->teachers);
         $this->page->teachers = JHTML::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_teacher");
-        
+
         //Build Series List for drop down menu
         $types3[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_SERIES'));
         $types3 = array_merge($types3, $this->series);
         $this->page->series = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_series");
-        
+
         //Build message types
         $types4[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_MESSAGE_TYPE'));
         $types4 = array_merge($types4, $this->messageTypes);
         $this->page->messagetypes = JHTML::_('select.genericlist', $types4, 'filter_messagetype', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_messagetype");
-        
+
         //build study years
         $years[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_YEAR'));
         $years = array_merge($years, $this->years);
         $this->page->years = JHTML::_('select.genericlist', $years, 'filter_year', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_year");
-        
+
         //build locations
         $loc[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_LOCATION'));
         $loc = array_merge($loc, $this->locations);
         $this->page->locations = JHTML::_('select.genericlist', $loc, 'filter_location', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_location");
-        
+
         //Build Topics
         $top[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TOPIC'));
         $top = array_merge($top, $this->topics);
         $this->page->topics = JHTML::_('select.genericlist', $top, 'filter_topic', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_topic");
-        
+
         //Build Books
         $boo[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_BOOK'));
         $boo = array_merge($boo, $this->books);
@@ -264,7 +269,7 @@ class BiblestudyViewSermons extends JView {
         $ord[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_ORDER'));
         $ord = array_merge($ord, $ordervalues);
         $this->page->order = JHTML::_('select.genericlist', $ord, 'filter_orders', 'class="inputbox" size="1" ' . $go, 'value', 'text', "$filter_orders");
-        
+
         $this->assignRef('lists', $lists);
         $this->assignRef('items', $items);
 
