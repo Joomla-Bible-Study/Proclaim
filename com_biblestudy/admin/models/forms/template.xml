@@ -76,10 +76,7 @@
                                 </field>
 		</fieldset>
 		<fieldset name="FILTERS">
-                        <field name="listlanguage" type="list" size="1" label="JBS_CMN_USE_LANGUAGE_LIST" description="JBS_CMN_USE_LANGUAGE_LIST_DESC">
-                            <option value="0">JNO</option>
-                            <option value="1">JYES</option>
-                        </field>
+                        
                         <field name="teacher_id" type="sql"
 				query="SELECT * FROM #__bsms_teachers WHERE published = 1"
 				key_field="id" value_field="teachername" default="-1" multiple="true"
@@ -236,6 +233,10 @@
 			</field>
 		</fieldset>
 		<fieldset name="LISTITEMS">
+                    <field name="listlanguage" type="list" size="1" label="JBS_CMN_USE_LANGUAGE_LIST" description="JBS_CMN_USE_LANGUAGE_LIST_DESC">
+                            <option value="0">JNO</option>
+                            <option value="1">JYES</option>
+                        </field>
 			<field name="default_order" type="list" default="DESC"
 				label="JBS_TPL_FILTERS_DEFAULTORDER" description="JBS_TPL_FILTERS_DEFAULTORDER_DESC">
 				<option value="DESC">JBS_CMN_DESCENDING</option>
