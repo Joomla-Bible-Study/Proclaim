@@ -22,6 +22,7 @@ class relatedStudies {
      * @return boolean
      */
     function getRelated($row, $params) {
+        $this->score = array();
         $keygo = true;
         $topicsgo = true;
         $registry = new JRegistry();
@@ -47,7 +48,7 @@ class relatedStudies {
             return false;
         }
         $studies = $this->getStudies();
-        var_dump($params);
+        //var_dump($params);
         foreach ($studies as $study) {
             $registry = new JRegistry();
             $registry->loadJSON($study->params);
@@ -65,10 +66,9 @@ class relatedStudies {
             }
         }
 
-        var_dump($this);
-        $scored = ($this->score);
-
-        $related = $this->getRelatedLinks($scored, $params);
+       
+        if (!$this->score){return false;}
+        $related = $this->getRelatedLinks($this->score, $params);
         return $related;
     }
 
@@ -162,7 +162,7 @@ class relatedStudies {
      * @return string
      */
     function getRelatedLinks($scored, $params) {
-        var_dump($scored);
+       // var_dump($scored);
         $db = JFactory::getDBO();
         $scored = array_count_values($scored);
         $sorted = arsort($scored);
