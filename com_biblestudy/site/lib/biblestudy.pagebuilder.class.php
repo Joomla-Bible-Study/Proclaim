@@ -34,9 +34,7 @@ class JBSPagebuilder {
      * @return string
      */
     function buildPage($item, $params, $admin_params) {
-        $page->study_thumbnail = '';
-        $page->series_thumbnail = '';
-        $page->teacherimage = '';
+        
         $images = new jbsImages();
         //media files image, links, download
         $mids = $item->mids;
@@ -48,11 +46,11 @@ class JBSPagebuilder {
         //scripture1
         $esv = 0;
         $scripturerow = 1;
-        $page->scripture1 = getScripture($params, $item, $esv, $scripturerow);
+        if ($item->chapter_begin){ $page->scripture1 = getScripture($params, $item, $esv, $scripturerow);} else{$page->scripture1 = '';}
         //scripture 2
         $esv = 0;
         $scripturerow = 2;
-        $page->scripture2 = getScripture($params, $item, $esv, $scripturerow);
+        if ($item->chapter_begin2){$page->scripture2 = getScripture($params, $item, $esv, $scripturerow);} else {$page->scripture2 = '';}
         //duration
         $page->duration = getDuration($params, $item);
         $page->studydate = getstudyDate($params, $item->studydate);
@@ -75,8 +73,10 @@ class JBSPagebuilder {
         }
         $page->detailslink = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
         return $page;
-        $teacherimage = $images->getTeacherImage($item->image, $item->thumb);
-        $page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->teachername . '">';
+        if ($item->image || $item->thumb)
+        {$teacherimage = $images->getTeacherImage($item->image, $item->thumb);
+        $page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->teachername . '">';}
+        else {$page->teacherimage = '';}
     }
 
     /**
