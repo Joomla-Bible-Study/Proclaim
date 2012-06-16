@@ -1,3 +1,53 @@
+/* Terms of use or donate display settings */
+.termstext {
+}
+
+.termslink{
+}            
+/* Podcast Subscription Display Settings */
+
+.podcastsubscribe{
+clear:both;
+display:table;
+width:auto;         
+background-color:#eee;
+border: 1px solid grey;
+padding: 1em;
+}
+.image {
+display: inline;
+}
+.image .text {
+display:inline;
+position:relative;
+right:50px;
+bottom:-10px;
+}
+.prow {
+  display: table-row;
+ width:auto;
+  clear:both;
+}
+.pcell {
+  display: table-cell;
+  float:left;/*fix for  buggy browsers*/
+    }
+.podcastheader h3{
+display:table-header;
+text-align:center;
+}/* Listing Page Items */
+#subscribelinks {
+
+}
+.podcastheader{
+font-weight: bold;
+}
+
+
+.podcastlinks{
+  display: inline;
+  
+}
 /* Listing Page Items */
 #listintro p, #listintro td {
 	margin: 0;
