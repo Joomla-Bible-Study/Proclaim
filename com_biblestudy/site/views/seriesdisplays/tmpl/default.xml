@@ -21,16 +21,17 @@
                 value_field="title"
                 required="true"
             />
-            <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-               description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
-        <option value="*">JALL</option>
-    </field>
+            
         </fieldset>
      </fields>
        <fields name="params">
+           
      <fieldset name="basic" 
      label="JBS_MNU_SERIES_LIST_LAYOUT" >
-     
+     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+               description="JBS_FIELD_LANGUAGE_DESC" class="inputbox" >
+        <option value="*">JALL</option>
+    </field>
      <field name ="metakey" 
      type="text" 
      class="inputbox" 

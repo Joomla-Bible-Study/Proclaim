@@ -230,15 +230,33 @@ function getSeriesstudiesDBO($id, $params, $limit = '')
         $registry = new JRegistry;
         $registry->loadJSON($item->params);
         $m_params = $registry;
-        $language = $m_params->get('language'); 
+        $language = $m_params->get('language'); if (!$language){ $language = ($item->language);} 
         if ($language == '*' || !$language){$langlink = '';}
         elseif ($language != '*'){$langlink = '&filter.languages='.$language;}
         $db	= & JFactory::getDBO();
-	$query = 'SELECT s.series_id FROM #__bsms_studies AS s WHERE s.published = 1 AND s.series_id = '.$id;
-	$db->setQuery($query);
-	$allrows = $db->loadObjectList();
-	$rows = $db->getAffectedRows();
-
+	/*$query = $db->getQuery('true');
+        $query->select('*');
+        $query->from('#__bsms_studies as s');
+        $query->select('se.id as seid, se.series_text, se.description as sdescription, se.series_thumbnail');
+        $query->join('LEFT','#__bsms_series as se on s.series_id = se.id');
+        $query->select('t.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail');
+        $query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
+        $query->select('m.message_type');
+        $query->join('LEFT', '#__bsms_message_type as m on s.messagetype = m.id');
+        $query->select('b.bookname');
+        $query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
+        $query->select('#__bsms_studytopics.topic_id');
+        $query->select('group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params');
+        $query->join('LEFT', '#__bsms_topics on #__bsms_topics.id = #__bsms_studytopics.topic_id');
+        $query->join('LEFT', '#__bsms_studytopics ON #__bsms_studytopics.study_id = s.id');
+        $query->select('l.location_text');
+        
+        $query->join('LEFT', '#__bsms_locations as l on s.location_id = l.locations.id');
+        $query->where('s.series_id = '.$id);
+        $query->where('s.published = 1');
+        if ($language){$query->where('s.language LIKE "'.$language.'"');}
+        $query->order($params->get('series_detail_sort', 'studydate'), $params->get('series_detail_order', 'DESC'));
+        */
 	$query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
 		. ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
 		. ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
@@ -252,11 +270,12 @@ function getSeriesstudiesDBO($id, $params, $limit = '')
 		. ' LEFT JOIN #__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)'
 		. ' LEFT JOIN #__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)'
 		. ' LEFT JOIN #__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)'
-		. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)'
-		. ' WHERE s.series_id = '.$id.' AND s.published = 1'
-		. ' GROUP BY s.id'
-		. ' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC')
-		. $limit;
+		. ' LEFT JOIN #__bsms_locations ON (s.location_id = #__bsms_locations.id)';
+                if ($language){$query .= ' WHERE s.series_id = '.$id.' AND s.published = 1 AND s.language LIKE "'.$language.'"';}
+                else {$query .= ' WHERE s.series_id = '.$id.' AND s.published = 1';}
+		$query .= ' GROUP BY s.id';
+		$query .= ' ORDER BY '.$params->get('series_detail_sort', 'studydate').' '.$params->get('series_detail_order', 'DESC');
+		$query .= $limit; 
 	$db->setQuery($query);
 	$results = $db->loadObjectList();
 	$items = $results;
