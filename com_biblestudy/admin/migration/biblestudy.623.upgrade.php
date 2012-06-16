@@ -1,16 +1,24 @@
 <?php
 
 /**
- * @version $Id: biblestudy.623.upgrade.php 1 $
- * @package COM_JBSMIGRATION
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
+/**
+ * Upgrade class for 6.2.3
+ * @package BibleStudy.Admin
+ * @since 7.0.2
+ */
 class jbs623Install {
 
+    /**
+     * Upgrade funtion
+     * @return string
+     */
     function upgrade623() {
 
         $messages = array();
@@ -60,6 +68,11 @@ class jbs623Install {
         return $results;
     }
 
+    /**
+     * Perform DB Query
+     * @param string $query
+     * @return string|boolean
+     */
     function performdb($query) {
         $db = JFactory::getDBO();
         $results = false;

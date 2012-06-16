@@ -4,12 +4,16 @@
 defined('_JEXEC') or die;
 
 /**
- * @version $Id: helper.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
+
+/**
+ *
+ * @return \JParameter
+ */
 function getAdminsettings() {
     $db = JFactory::getDBO();
 
@@ -21,6 +25,16 @@ function getAdminsettings() {
     return $admin_params;
 }
 
+/**
+ * Get tooltip.
+ *
+ * @param int $rowid
+ * @param string $row
+ * @param array $params
+ * @param array $admin_params
+ * @param string $template
+ * @return string
+ */
 function getTooltip($rowid, $row, $params, $admin_params, $template) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'elements.php');
@@ -50,6 +64,11 @@ function getTooltip($rowid, $row, $params, $admin_params, $template) {
     return $linktext;
 }
 
+/**
+ * Get ShowHide.
+ *
+ * @return string
+ */
 function getShowhide() {
     $showhide = '
 function HideContent(d) {

@@ -1,16 +1,24 @@
 <?php
 
 /**
- * @version $Id: biblestudy.622.upgrade.php 1 $
- * @package COM_JBSMIGRATION
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
+/**
+ * Update from 6.2.2
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class jbs622Install {
 
+    /**
+     * Upgrade Function
+     * @return string
+     */
     function upgrade622() {
         $messages = array();
         $msg = false;
@@ -44,11 +52,16 @@ class jbs622Install {
         } else {
             $messages[] = $msg;
         }
-        $results = array('build' => '622', 'messages' => $messages);
+        $result = array('build' => '622', 'messages' => $messages);
 
-        return $results;
+        return $result;
     }
 
+    /**
+     * Perform DB Query
+     * @param string $query
+     * @return string|boolean
+     */
     function performdb($query) {
         $db = JFactory::getDBO();
         $results = false;

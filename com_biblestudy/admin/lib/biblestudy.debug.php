@@ -1,8 +1,6 @@
 <?php
 /**
- * @version $Id: biblestudy.debug.php 2025 2011-08-28 04:08:06Z genu $
- * Bible Study Component
- * @package Bible Study
+ * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -17,8 +15,13 @@ assert_options(ASSERT_WARNING, 1);
 assert_options(ASSERT_BAIL, 1);
 assert_options(ASSERT_CALLBACK, 'debug_assert_callback');
 
-// Default assert call back funtion
-// If certain things fail hard we MUST know about it
+/**
+ * Default assert call back funtion
+ * If certain things fail hard we MUST know about it
+ * @param string $script
+ * @param int $line
+ * @param string $message
+ */
 function debug_assert_callback($script, $line, $message) {
     echo "<h1>Assertion failed!</h1><br />
         Script: <strong>$script</strong><br />
@@ -28,7 +31,11 @@ function debug_assert_callback($script, $line, $message) {
     echo debug_callstackinfo();
 }
 
-// Production error handling
+/**
+ * Production error handling
+ * @param string $text
+ * @param int $back
+ */
 function trigger_dberror($text = '', $back = 0) {
     $biblestudy_db = &JFactory::getDBO();
     $dberror = $biblestudy_db->stderr(true);
@@ -42,7 +49,7 @@ function trigger_dberror($text = '', $back = 0) {
     <!-- Version Info -->
     <div class="fbfooter">
         Installed version:
-    <?php echo $biblestudyVersion; ?>
+        <?php echo $biblestudyVersion; ?>
         | php
         <?php echo $biblestudyPHPVersion; ?>
         | mysql
@@ -54,6 +61,11 @@ function trigger_dberror($text = '', $back = 0) {
     biblestudy_error($text . '<br /><br />' . $dberror, E_USER_ERROR, $back + 1);
 }
 
+/**
+ * Check db Error
+ * @param string $text
+ * @param int $back
+ */
 function check_dberror($text = '', $back = 0) {
     $biblestudy_db = JFactory::getDBO();
     if ($biblestudy_db->getErrorNum() != 0) {
@@ -61,6 +73,10 @@ function check_dberror($text = '', $back = 0) {
     }
 }
 
+/**
+ * Check db worning
+ * @param string $text
+ */
 function check_dbwarning($text = '') {
     $biblestudy_db = JFactory::getDBO();
     if ($biblestudy_db->getErrorNum() != 0) {
@@ -68,12 +84,20 @@ function check_dbwarning($text = '') {
     }
 }
 
+/**
+ * DB Warning
+ * @param string $text
+ */
 function trigger_dbwarning($text = '') {
     $biblestudy_db = JFactory::getDBO();
     biblestudy_error($text . '<br />' . $biblestudy_db->stderr(true), E_USER_WARNING);
 }
 
-// Little helper to created a formated output of variables
+/**
+ * Little helper to created a formated output of variables
+ * @param array $varlist
+ * @return string
+ */
 function debug_vars($varlist) {
     $output = '<table border=1><tr> <th>variable</th> <th>value</th> </tr>';
 
@@ -113,12 +137,22 @@ function debug_vars($varlist) {
     return $output;
 }
 
-// Show the callstack to this point in a decent format
+/**
+ * Show the callstack to this point in a decent format
+ * @param int $back
+ * @return object
+ */
 function debug_callstackinfo($back = 1) {
     $trace = array_slice(debug_backtrace(), $back);
     return debug_vars($trace);
 }
 
+/**
+ * Triger JBS Erros
+ * @param string $message
+ * @param string $level
+ * @param int $back
+ */
 function biblestudy_error($message, $level = E_USER_NOTICE, $back = 1) {
     $trace = debug_backtrace();
     $caller = $trace[$back];

@@ -1,16 +1,24 @@
 <?php
 
 /**
- * @version $Id: biblestudy.restore.php 1 $
- * @package Bible Study
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
+/**
+ * Restor class
+ * @package BibleStudy.Admin
+ * @since 7.0.4
+ */
 class JBSImport {
 
+    /**
+     * Import DB
+     * @return boolean
+     */
     function importdb() {
         $result = FALSE;
         jimport('joomla.filesystem.file');
@@ -43,6 +51,10 @@ class JBSImport {
         return $result;
     }
 
+    /**
+     * Get Package form Upload
+     * @return boolean
+     */
     function _getPackageFromUpload() {
         // Get the uploaded file information
         $userfile = JRequest::getVar('importdb', null, 'files', 'array');
@@ -83,6 +95,11 @@ class JBSImport {
         }
     }
 
+    /**
+     * Install DB
+     * @param string $tmp_src Temp info
+     * @return boolean If db installed corectrly.
+     */
     function installdb($tmp_src) {
         jimport('joomla.filesystem.file');
         @set_time_limit(300);
@@ -107,6 +124,11 @@ class JBSImport {
         return true;
     }
 
+    /**
+     * Restor DB
+     * @param string $backuprestroe
+     * @return boolean See if we restore worked.
+     */
     function restoreDB($backuprestore) {
         $result = false;
         $db = JFactory::getDBO();
@@ -127,6 +149,10 @@ class JBSImport {
         return true;
     }
 
+    /**
+     * Get Packege from Folder
+     * @return boolean
+     */
     function _getPackageFromFolder() {
         $result = false;
 
@@ -153,6 +179,10 @@ class JBSImport {
         return $result;
     }
 
+    /**
+     * Funtion to present array of tables
+     * @return array
+     */
     function getObjects() {
         $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'serversedit', 'realname' => 'JBS_CMN_SERVERS'),
             array('name' => '#__bsms_folders', 'titlefield' => 'foldername', 'assetname' => 'foldersedit', 'realname' => 'JBS_CMN_FOLDERS'),
@@ -180,6 +210,10 @@ class JBSImport {
         return $objects;
     }
 
+    /**
+     * Alter tables for Blob
+     * @return boolean
+     */
     function TablestoBlob() {
         $backuptables = $this->getObjects();
 
@@ -229,6 +263,10 @@ class JBSImport {
         return true;
     }
 
+    /**
+     * Modify tables to Text
+     * @return boolean
+     */
     function TablestoText() {
         $backuptables = $this->getObjects();
 

@@ -9,8 +9,18 @@
  * */
 defined('_JEXEC') or die;
 
+/**
+ * Update class for version 7.0.1
+ *
+ * @package BibleStudy.Admin
+ * @since 7.0.1
+ */
 class updatejbs701 {
 
+    /**
+     * Do the 7.0.1 Update
+     * @return array
+     */
     function do701update() {
 
         $db = JFactory::getDBO();
@@ -54,6 +64,11 @@ class updatejbs701 {
         return $results;
     }
 
+    /**
+     * Update Topics
+     *
+     * @return array
+     */
     function updatetopics() {
         $db = JFactory::getDBO();
         $query = 'INSERT INTO #__bsms_studytopics (study_id, topic_id) SELECT #__bsms_studies.id, #__bsms_studies.topics_id FROM #__bsms_studies WHERE #__bsms_studies.topics_id > 0';
@@ -66,6 +81,11 @@ class updatejbs701 {
         return $messages;
     }
 
+    /**
+     * Update the Database
+     *
+     * @return array
+     */
     function updateUpdatedb() {
         $db = JFactory::getDBO();
         $query = "INSERT INTO `#__bsms_update` (id,version) VALUES (1, '7.0.0'), (2, '7.0.1'), (3,'7.0.1.1')";
@@ -79,6 +99,12 @@ class updatejbs701 {
         return $messages;
     }
 
+    /**
+     * Perform DB Query
+     *
+     * @param array $query
+     * @return string|boolean
+     */
     function performdb($query) {
         $db = JFactory::getDBO();
         $results = false;

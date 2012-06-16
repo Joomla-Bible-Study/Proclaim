@@ -1,9 +1,7 @@
 <?php
 
 /**
- * @version $Id:biblestudy.stats.class.php  $
- * Bible Study Component
- * @package Bible Study
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,17 +9,18 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-/**
- * Bible Study stats support class
- * @package com_biblestudy
- */
 require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'helper.php');
 
+/**
+ * Bible Study stats support class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class jbStats {
 
     /**
      * Total plays of media files per study
-     *
+     * @return int Total plays form the media
      */
     function totalplays($id) {
         $db = JFactory::getDBO();
@@ -34,7 +33,8 @@ class jbStats {
         return (int) $plays;
     }
 
-    /** Total messages in Bible Study
+    /**
+     * Total messages in Bible Study
      * @param  string date start
      * @param string date end
      * @return int
@@ -141,6 +141,10 @@ class jbStats {
         return intval($biblestudy_db->loadResult());
     }
 
+    /**
+     * Get top thirty days
+     * @return string
+     */
     function get_topthirtydays() {
         $month = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
         $lastmonth = date("Y-m-d 00:00:01", $month);
@@ -159,12 +163,20 @@ class jbStats {
         return $top_studies;
     }
 
+    /**
+     * Get Total Meida Files
+     * @return array Don't know
+     */
     function total_mediafiles() {
         $biblestudy_db = JFactory::getDBO();
         $biblestudy_db->setQuery('SELECT COUNT(*) FROM #__bsms_mediafiles WHERE published = 1');
         return intval($biblestudy_db->loadResult());
     }
 
+    /**
+     * Get Top Downloads
+     * @return string List of links to the downloads
+     */
     function get_top_downloads() {
         $biblestudy_db = JFactory::getDBO();
         $biblestudy_db->setQuery('SELECT #__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished, #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate FROM #__bsms_mediafiles LEFT JOIN #__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id) WHERE #__bsms_mediafiles.published = 1 ' .
@@ -178,6 +190,10 @@ class jbStats {
         return $top_studies;
     }
 
+    /**
+     * Get Downloads ninety
+     * @return array list of download links
+     */
     function get_downloads_ninety() {
         $month = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
         $lastmonth = date("Y-m-d 00:00:01", $month);
@@ -196,12 +212,20 @@ class jbStats {
         return $top_studies;
     }
 
+    /**
+     * Total Downloads
+     * @return array
+     */
     function total_downloads() {
         $biblestudy_db = JFactory::getDBO();
         $biblestudy_db->setQuery('SELECT SUM(downloads) FROM #__bsms_mediafiles WHERE published = 1 AND downloads > 0');
         return intval($biblestudy_db->loadResult());
     }
 
+    /**
+     * Top Score ???
+     * @return int number of scors
+     */
     function top_score() {
         $final = array();
         $final2 = array();
@@ -235,6 +259,10 @@ class jbStats {
         return $topscoretable;
     }
 
+    /**
+     * Returns a System of Player
+     * @return string
+     */
     function players() {
         $db = JFactory::getDBO();
 
@@ -295,6 +323,10 @@ class jbStats {
         return $mediaplayers;
     }
 
+    /**
+     * Popups for media files
+     * @return string
+     */
     function popups() {
         $db = JFactory::getDBO();
 

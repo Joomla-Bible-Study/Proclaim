@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: update701.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -10,8 +9,17 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+/**
+ * Update for 7.0.1 class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class updatejbs701 {
 
+    /**
+     * Upgrade for 7.0.1
+     * @return boolean
+     */
     function do701update() {
 
         $db = JFactory::getDBO();
@@ -55,6 +63,10 @@ class updatejbs701 {
         return true;
     }
 
+    /**
+     * Update the Topics
+     * @return boolean
+     */
     function updatetopics() {
         $db = JFactory::getDBO();
         $query = 'INSERT INTO #__bsms_studytopics (study_id, topic_id) SELECT #__bsms_studies.id, #__bsms_studies.topics_id FROM #__bsms_studies WHERE #__bsms_studies.topics_id > 0';
@@ -66,6 +78,11 @@ class updatejbs701 {
         return true;
     }
 
+    /**
+     * Perfomr DB Query
+     * @param string $query
+     * @return boolean
+     */
     function performdb($query) {
         $db = JFactory::getDBO();
         $db->setQuery($query);

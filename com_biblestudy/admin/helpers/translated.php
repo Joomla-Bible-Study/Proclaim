@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: translated.php 2027 2011-08-28 04:32:14Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -10,13 +9,15 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-
-/*
-  translate a topicItem to clear text
-  topicItem: stdClass containing topic_text and topic_params
-  return: translated string or null if topicItem is not initialised
+/**
+ * translate a topicItem to clear text
+ * topicItem: stdClass containing topic_text and topic_params
+ * return: translated string or null if topicItem is not initialised
+ *
+ *
+ * @param string $topicItem
+ * @return string|NULL
  */
-
 function getTopicItemTranslated($topicItem) {
     //If there is no topic to translate, just return
     if ($topicItem) {
@@ -47,12 +48,15 @@ function getTopicItemTranslated($topicItem) {
     return (null);
 }
 
-/*
-  translate a list of topicItems to clear text each
-  topicItems: array of stdClass containing topic_text and topic_params
-  return: list of topicItems containing translated strings in topic_text
+/**
+ * translate a list of topicItems to clear text each
+ * topicItems: array of stdClass containing topic_text and topic_params
+ * return: list of topicItems containing translated strings in topic_text
+ *
+ *
+ * @param array $topicItems
+ * @return array
  */
-
 function getTopicItemsTranslated($topicItems = array()) {
     $output = array();
     foreach ($topicItems as $topicItem) {
@@ -63,12 +67,15 @@ function getTopicItemsTranslated($topicItems = array()) {
     return $output;
 }
 
-/*
-  translate a concatenated list of topics to clear text
-  topicItem: stdClass containing the studies id and tp_id (i.e. concatenated topic ids)
-  return: translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
+/**
+ * translate a concatenated list of topics to clear text
+ * topicItem: stdClass containing the studies id and tp_id (i.e. concatenated topic ids)
+ * return: translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
+ *
+ *
+ * @param type $topicItem
+ * @return type
  */
-
 function getConcatTopicItemTranslated($topicItem) {
     if ($topicItem) {
         // Check if there should be topics at all to save time

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: biblestudy.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -10,10 +9,28 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+/**
+ * BibleStudy Helper class
+ *
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BibleStudyHelper {
 
+    /**
+     * Set extension
+     *
+     * @var string
+     */
     public static $extension = 'com_biblestudy';
 
+    /**
+     * Get Actions
+     * 
+     * @param int $Itemid
+     * @param string $type
+     * @return \JObject
+     */
     public static function getActions($Itemid = 0, $type = null) {
         $user = JFactory::getUser();
         $result = new JObject;

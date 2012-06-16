@@ -1,16 +1,26 @@
 <?php
 
 /**
- * @version $Id: updateALL.php 2085 2011-11-11 21:10:18Z bcordis $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
+/**
+ * Update on All upgrades
+ *
+ * @package BibleStudy.Admin
+ * @since 7.0.3
+ */
 class updatejbsALL {
 
+    /**
+     * Funtion to do updates
+     *
+     * @return array
+     */
     function doALLupdate() {
 
         $messages = array();
@@ -44,7 +54,6 @@ class updatejbsALL {
         }
 
         $results = array('build' => 'ALL', 'messages' => $messages);
-        //print_r( $results);
 
         return $results;
     }

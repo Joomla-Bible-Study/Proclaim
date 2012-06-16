@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: biblestudy.backup.php 1 $
- * @package COM_JBSMIGRATION
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -10,8 +9,18 @@
  * */
 defined('_JEXEC') or die;
 
+/**
+ * JBS Export class
+ * @package BibleStudy.Admin
+ * @since 7.1.0
+ */
 class JBSExport {
 
+    /**
+     * Export DB
+     * @param int $run
+     * @return boolean
+     */
     function exportdb($run = '1') {
         $return = false;
 
@@ -45,6 +54,11 @@ class JBSExport {
         }
     }
 
+    /**
+     * Get Export Table
+     * @param string $table
+     * @return boolean|string
+     */
     function getExportTable($table) {
         if (!$table) {
             return false;
@@ -58,7 +72,7 @@ class JBSExport {
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
-      //  $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
+        //  $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
         $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
         //Create a new table defintion based on the incoming database
@@ -72,7 +86,7 @@ class JBSExport {
                 $export = str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
-      //  $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
+        //  $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
         $db->setQuery($query);
@@ -90,10 +104,16 @@ class JBSExport {
             $export .= implode(',', $data);
             $export .= ";\n";
         }
-        
+
         return $export;
     }
 
+    /**
+     * File output
+     * @param string $file
+     * @param string $name
+     * @param string $mime_type
+     */
     function output_file($file, $name, $mime_type = '') {
         /*
           This function takes a path to a file to output ($file),
@@ -198,6 +218,10 @@ class JBSExport {
         unlink($file);
     }
 
+    /**
+     * Get Opjects for tables
+     * @return array
+     */
     function getObjects() {
         $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'serversedit', 'realname' => 'JBS_CMN_SERVERS'),
             array('name' => '#__bsms_folders', 'titlefield' => 'foldername', 'assetname' => 'foldersedit', 'realname' => 'JBS_CMN_FOLDERS'),

@@ -1,19 +1,26 @@
 <?php
 
 /**
- * @version $Id: biblestudy.700.upgrade.php 1 $
- * @package COM_JBSMIGRATION
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
 
-
 require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
 
+/**
+ * Upgrade class for 7.0.0
+ * @package BibleStudy.Admin
+ * @since 7.0.2
+ */
 class jbs700Install {
 
+    /**
+     * Upgrade function
+     * @return array
+     */
     function upgrade700() {
         $db = JFactory::getDBO();
         $messages = array();
@@ -750,13 +757,16 @@ class jbs700Install {
                 }
             }
         }
-        $application = JFactory::getApplication();
-      //  $application->enqueueMessage('' . JText::_('Upgrading Joomla Biblestudy') . '');
-        $results = array('build' => '700', 'messages' => $messages);
+        $fresult = array('build' => '700', 'messages' => $messages);
 
-        return $results;
+        return $fresult;
     }
 
+    /**
+     * Perform DB Query
+     * @param string $query
+     * @return string|boolean
+     */
     function performdb($query) {
         $db = JFactory::getDBO();
         $results = false;
