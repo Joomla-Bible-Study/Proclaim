@@ -77,13 +77,13 @@ function getTeacherLandingPage($params, $id, $admin_params)
 	$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
 	include_once($path1.'image.php');
 	include_once($path1.'helper.php');
-
+        
 	$teacher = null;
 	$teacherid = null;
 
 	$template = $params->get('teachertemplateid',1);
-	$limit = $params->get('landingteacherslimit');
-	if (!$limit) {$limit = 10000;}
+	$limit = $params->get('landingteacherslimit', 10000);
+        $teacheruselimit = $params->get('landingteachersuselimit',0);
 	 $menu = JSite::getMenu();
         $item = $menu->getActive(); 
         $registry = new JRegistry;
@@ -121,17 +121,22 @@ function getTeacherLandingPage($params, $id, $admin_params)
 
         $teacher .= "\n\t" . '<tr>';
         $showdiv = 0;
+        //Unset those teachers that are not supposed to be on the landing page
+        foreach ($tresult as $key=>$value)
+        {
+            if(!$value->landing_show){unset($tresult[$key]);} 
+        }
         foreach ($tresult as &$b) {
 
-            if ($t >= $limit)
+            if ($t >= $limit || ($teacheruselimit > 0 && $b->landing_show == '2'))
 		{
-			if ($showdiv < 1)
+		if ($showdiv < 1)
 			{
-				if ($i == 1) {
+		if ($i == 1) {
     	      		$teacher .= "\n\t\t" . '<td  id="landing_td"></td>' . "\n\t\t" . '<td id="landing_td"></td>';
     	      		$teacher .= "\n\t" . '</tr>';
-    	    	};
-    	    	if ($i == 2) {
+                        };
+                if ($i == 2) {
     	        	$teacher .= "\n\t\t" . '<td  id="landing_td"></td>';
     	      		$teacher .= "\n\t" . '</tr>';
 	        	};
@@ -140,7 +145,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
 			$teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
 			$teacher .= "\n" .'<table width = "100%" id="landing_table">';
 
-            $i = 0;
+                        $i = 0;
 			$showdiv = 1;
 			}
 		}
