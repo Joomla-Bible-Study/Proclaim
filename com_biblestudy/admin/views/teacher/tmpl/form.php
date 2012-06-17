@@ -96,6 +96,11 @@ Joomla.submitbutton('teacher.apply'); " title="Clear" > <?php echo JText::_('JBS
 
                     <?php echo $this->form->getInput('ordering'); ?></li>
                 <li>
+                    <li>
+                    <?php echo $this->form->getLabel('landing_show'); ?>
+
+                    <?php echo $this->form->getInput('landing_show'); ?></li>
+                <li>
                     <?php echo $this->form->getLabel('language'); ?>
 
                     <?php echo $this->form->getInput('language'); ?></li>

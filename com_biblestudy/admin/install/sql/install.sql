@@ -483,6 +483,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
   `linklabel3` varchar(150),
   `contact` int(11),
   `address` mediumtext NOT NULL,
+  `landing_show` int(3),
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)

@@ -1471,6 +1471,10 @@
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
+                        <field name="landingteachersuselimit" type="list" label="JBS_TPL_USE_TEACHERS_LIMIT" description="JBS_TPL_USE_TEACHERS_LIMIT_DESC" default="0">
+                            <option value="0">JBS_TPL_USE_LIMIT</option>
+                            <option value="1">JBS_TPL_USE_TEACHER_SETTING</option>
+                        </field>
 			<field name="landingteacherslimit" type="text"
 				label="JBS_TPL_LANDINGPAGE_LANDINGTEACHERSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 				size="5" />
