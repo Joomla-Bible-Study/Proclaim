@@ -108,11 +108,11 @@ function getTeacherLandingPage($params, $id, $admin_params)
         }
 		$teacher = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
-		$query = 'select distinct a.* from #__bsms_teachers a inner join #__bsms_studies b on a.id = b.teacher_id where list_show = 1 order by ordering, a.teachername '.$order;
+		$query = 'select a.* from #__bsms_teachers a where list_show = 1 and a.published = 1 order by ordering, a.teachername '.$order;
 
 		$db->setQuery($query);
 
-        $tresult = $db->loadObjectList();
+        $tresult = $db->loadObjectList(); 
          $t = 0;
          $i = 0;
 
@@ -192,14 +192,23 @@ function getTeacherLandingPage($params, $id, $admin_params)
 $teacher .= '</div>';
 
 if ($teacheruselimit > 0)
-{
+{ 
+    //$tresult2 = array_unique($tresult);
     $teacher = '<div class="landing_table_above" style="display:inline;">';
     //sort the teacher table to separate the above from below the button
     foreach ($tresult as $b)
-    {
+    { 
         if ($b->landing_show == 1)
         {
-            echo $b->teachername.' '.$b->landing_show;
+             if ($params->get('linkto') == 0) {
+		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=sermons&t='.$template).'&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0">';
+            } else {
+
+		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacher&id='.$b->id.'&t='.$template).'">';
+		    };
+		    $teacher .= $b->teachername;
+
+            $teacher .='</a>';
         }
     }
     $teacher .= '</div>';
@@ -208,7 +217,15 @@ if ($teacheruselimit > 0)
     {
         if ($b->landing_show == 2)
         {
-            echo $b->teachername.' '.$b->landing_show;
+             if ($params->get('linkto') == 0) {
+		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=sermons&t='.$template).'&filter_teacher='.$b->id.'&filter_book=0&filter_series=0&filter_topic=0&filter_location=0&filter_year=0&filter_messagetype=0">';
+            } else {
+
+		        $teacher .= '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=teacher&id='.$b->id.'&t='.$template).'">';
+		    };
+		    $teacher .= $b->teachername;
+
+            $teacher .='</a>';
         }
     }
     $teacher .= '</div>';
