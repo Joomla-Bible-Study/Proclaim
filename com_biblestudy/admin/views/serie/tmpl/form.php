@@ -35,6 +35,10 @@ defined('_JEXEC') or die;
 
                     <?php echo $this->form->getInput('teacher'); ?></li>
                 <li>
+                    <?php echo $this->form->getLabel('landing_show'); ?>
+
+                    <?php echo $this->form->getInput('landing_show'); ?></li>
+                <li>
                     <?php echo $this->form->getLabel('series_thumbnail'); ?>
 
                     <?php // series_text is required; fill in default if empty and leave value otherwise

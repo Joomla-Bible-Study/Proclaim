@@ -71,6 +71,27 @@ class JBS710Update {
         } //end if no new css file
         //Add CSS to the file
         $new710css = '
+/* New Landing Page CSS */
+
+.landingtable {
+clear:both;
+width:auto;
+display:table;
+
+}
+
+.landingrow {
+display:inline;
+padding: 1em;
+}
+.landingcell {
+display:table-cell;
+}
+
+.landinglink a{
+display:inline;
+}
+
 /* Terms of use or donate display settings */
 .termstext {
 }

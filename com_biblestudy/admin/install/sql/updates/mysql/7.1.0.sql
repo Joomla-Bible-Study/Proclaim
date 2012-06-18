@@ -134,3 +134,7 @@ ADD COLUMN `linklabel3` varchar(150),
 ADD COLUMN `contact` int(11),
 ADD COLUMN `landing_show` int(3),
 ADD COLUMN `address1` MEDIUMTEXT NOT NULL;
+
+ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` INT(3);
+ALTER TABLE `#__bsms_messagetype` ADD COLUMN `landing_show` INT(3);
+ALTER TABLE `#__bsms_series` ADD COLUMN `landing_show` INT(3);

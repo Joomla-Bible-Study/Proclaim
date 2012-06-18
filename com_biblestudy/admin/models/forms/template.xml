@@ -1471,9 +1471,9 @@
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
-                        <field name="landingteachersuselimit" type="list" label="JBS_TPL_USE_TEACHERS_LIMIT" description="JBS_TPL_USE_TEACHERS_LIMIT_DESC" default="0">
+                        <field name="landingteachersuselimit" type="list" label="JBS_TPL_USE_TEACHERS_LIMIT" description="JBS_TPL_USE_LIMIT_DESC" default="0">
                             <option value="0">JBS_TPL_USE_LIMIT</option>
-                            <option value="1">JBS_TPL_USE_TEACHER_SETTING</option>
+                            <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
                         </field>
 			<field name="landingteacherslimit" type="text"
 				label="JBS_TPL_LANDINGPAGE_LANDINGTEACHERSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
@@ -1490,6 +1490,10 @@
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
+                        <field name="landingseriesuselimit" type="list" label="JBS_TPL_USE_SERIES_LIMIT" description="JBS_TPL_USE_LIMIT_DESC" default="0">
+                            <option value="0">JBS_TPL_USE_LIMIT</option>
+                            <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
+                        </field>
 			<field name="landingserieslimit" type="text"
 				label="JBS_TPL_LANDINGPAGE_LANDINGSERIESLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 				size="5" />
@@ -1525,6 +1529,10 @@
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
+                        <field name="landinglocationsuselimit" type="list" label="JBS_TPL_USE_LOCATIONS_LIMIT" description="JBS_TPL_USE_LIMIT_DESC" default="0">
+                            <option value="0">JBS_TPL_USE_LIMIT</option>
+                            <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
+                        </field>
 			<field name="landinglocationslimit" type="text"
 				label="JBS_TPL_LANDINGPAGE_LANDINGLOCATIONSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 				size="5" />
@@ -1535,6 +1543,10 @@
 				<option value="0">JBS_CMN_NO</option>
 				<option value="1">JBS_CMN_YES</option>
 			</field>
+                        <field name="landingmessagetypeuselimit" type="list" label="JBS_TPL_USE_MESSAGETYPE_LIMIT" description="JBS_TPL_USE_LIMIT_DESC" default="0">
+                            <option value="0">JBS_TPL_USE_LIMIT</option>
+                            <option value="1">JBS_TPL_USE_RECORD_SETTING</option>
+                        </field>
 			<field name="landingmessagetypeslimit" type="text"
 				label="JBS_TPL_LANDINGPAGE_LANDINGMESSAGETYPESLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
 				size="5" />

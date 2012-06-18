@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
   `asset_id` int(10) DEFAULT NULL,
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
+  `landing_show` int(3),
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
@@ -188,6 +189,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
+  `landing_show` int(3),
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
@@ -293,6 +295,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series` (
   `ordering` int(11) NOT NULL DEFAULT '0',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL COMMENT 'The language code for the Series.',
+  `landing_show` int(3),
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)

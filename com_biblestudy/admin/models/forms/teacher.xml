@@ -16,7 +16,7 @@
         <option value="0">JBS_CMN_NO</option>
         <option value="1">JBS_CMN_YES</option>
     </field>
-    <field name="landing_show" default="1" type="list" label="JBS_TCH_LANDING_SHOW" description="JBS_TCH_LANDING_SHOW_DESC">
+    <field name="landing_show" default="1" type="list" label="JBS_LANDING_SHOW" description="JBS_LANDING_SHOW_DESC">
         <option value="0">JBS_TCH_NO_SHOW_LANDING</option>
         <option value="1">JBS_TCH_SHOW_ABOVE_LANDING</option>
         <option value="2">JBS_TCH_SHOW_BELOW_LANDING</option>
