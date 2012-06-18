@@ -106,9 +106,6 @@ function getTeacherLandingPage($params, $id, $admin_params)
         {
             $order = $params->get('landing_default_order', 'ASC'); 
         }
-
-
-
 		$teacher = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
 		$query = 'select distinct a.* from #__bsms_teachers a inner join #__bsms_studies b on a.id = b.teacher_id where list_show = 1 order by ordering, a.teachername '.$order;
@@ -126,9 +123,11 @@ function getTeacherLandingPage($params, $id, $admin_params)
         {
             if(!$value->landing_show){unset($tresult[$key]);} 
         }
+        
         foreach ($tresult as &$b) {
 
-            if ($t >= $limit || ($teacheruselimit > 0 && $b->landing_show == '2'))
+
+            if ($t >= $limit )
 		{
 		if ($showdiv < 1)
 			{
@@ -190,6 +189,30 @@ function getTeacherLandingPage($params, $id, $admin_params)
 			}
   $teacher .= '<div id="landing_separator"></div>';
 
+$teacher .= '</div>';
+
+if ($teacheruselimit > 0)
+{
+    $teacher = '<div class="landing_table_above" style="display:inline;">';
+    //sort the teacher table to separate the above from below the button
+    foreach ($tresult as $b)
+    {
+        if ($b->landing_show == 1)
+        {
+            echo $b->teachername.' '.$b->landing_show;
+        }
+    }
+    $teacher .= '</div>';
+    $teacher .= '<div id="showhideteachers" style="display:none;">';
+    foreach ($tresult as $b)
+    {
+        if ($b->landing_show == 2)
+        {
+            echo $b->teachername.' '.$b->landing_show;
+        }
+    }
+    $teacher .= '</div>';
+}
 	return $teacher;
 }
 
