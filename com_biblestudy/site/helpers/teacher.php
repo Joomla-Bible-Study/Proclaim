@@ -108,7 +108,7 @@ function getTeacherLandingPage($params, $id, $admin_params)
         }
 		$teacher = "\n" . '<table id="landing_table" width="100%">';
 		$db	=& JFactory::getDBO();
-		$query = 'select a.* from #__bsms_teachers a where list_show = 1 and a.published = 1 order by ordering, a.teachername '.$order;
+		$query = 'select distinct a.* from #__bsms_teachers a inner join #__bsms_studies b on a.id = b.teacher_id where a.list_show = 1 and a.published = 1 order by a.ordering, a.teachername '.$order;
 
 		$db->setQuery($query);
 
