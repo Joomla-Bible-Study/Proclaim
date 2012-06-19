@@ -10,7 +10,7 @@ if (!$t) {
 $admin_params = $this->admin_params;
 ?>
 <div id="biblestudy" class="noRefTagger">
-    <table id="bsm_teachertable" cellspacing="0">
+    <table id="bsm_teachertable_list" cellspacing="0">
         <tbody>
             <tr class="titlerow"><td align="center" colspan="3" class="title" ><?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?></td></tr>
             <tr><td>
@@ -31,7 +31,7 @@ $admin_params = $this->admin_params;
                         }
                         ?>
                 <tr class="<?php echo $oddeven; ?> lastrow">
-                    <td class="bsm_teacherthumbnail" ><?php if ($item->thumb || $item->teacher_thumbnail) { ?>
+                    <td class="bsm_teacherthumbnail_list" ><?php if ($item->thumb || $item->teacher_thumbnail) { ?>
                 <iimg src="<?php echo $item->image->path; ?>" border="1" title="<?php echo $item->teachername; ?>" alt="<?php echo $item->teachername; ?>" width="<?php echo $image->width; ?>" height="<?php echo $image->height; ?>" /><?php } ?>
             </td>
             <td class="bsm_teachername">
