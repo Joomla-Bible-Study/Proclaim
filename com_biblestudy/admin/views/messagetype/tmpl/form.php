@@ -31,6 +31,11 @@ defined('_JEXEC') or die;
 
                     <?php echo $this->form->getInput('alias'); ?></li>
                 <li>
+                    <?php echo $this->form->getLabel('landing_show'); ?>
+
+                    <?php echo $this->form->getInput('landing_show'); ?></li>
+                <li>
+                <li>
                     <?php echo $this->form->getLabel('id'); ?>
 
                     <?php echo $this->form->getInput('id'); ?></li>

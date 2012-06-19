@@ -26,6 +26,16 @@ defined('_JEXEC') or die;
                     <?php echo $this->form->getLabel('location_text'); ?>
 
                     <?php echo $this->form->getInput('location_text'); ?></li>
+                <li>
+                    <?php echo $this->form->getLabel('landing_show'); ?>
+
+                    <?php echo $this->form->getInput('landing_show'); ?></li>
+                <li>
+                     <li>
+                    <?php echo $this->form->getLabel('language'); ?>
+
+                    <?php echo $this->form->getInput('language'); ?></li>
+                <li>
             </ul>
 
         </fieldset>
