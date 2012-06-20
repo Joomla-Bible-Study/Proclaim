@@ -103,7 +103,9 @@ $params = $this->form->getFieldsets('params');
 
 </script>
 <form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id); ?>"
+    action="<?php 
+    
+    if (JRequest::getWord('layout','') == 'modal') {$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id='.(int) $this->item->id;} else {$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;} echo JRoute::_($url); ?>"
     method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
@@ -111,7 +113,7 @@ $params = $this->form->getFieldsets('params');
 
                 <?php
                 echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
-                if (JRequest::getWord('layout', '', 'default') == 'modal') {
+                if (JRequest::getWord('layout', '') == 'modal') {
                     ?> <div class="fltrt">
                         <button type="button" onclick="Joomla.submitbutton('mediafile.save');  ">
                             <?php echo JText::_('JSAVE'); ?></button>

@@ -288,7 +288,9 @@ class biblestudyController extends JController {
         $temp_folder = JBSUpload::gettempfolder();
         $tempfile = $temp_folder . $temp; //dump($tempfile);
         // get path and abort if none
-        $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
+        $layout = JRequest::getWord('layout','');
+        if ($layout == 'modal'){$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;}
+        else {$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;}
         $path = JBSUpload::getpath($url, $tempfile);
 
         // check filetype is allowed
@@ -311,7 +313,8 @@ class biblestudyController extends JController {
         // delete temp file
         JBSUpload::deletetempfile($tempfile);
         $mediafileid = JRequest::getInt('id', '', 'post');
-        $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
+        if ($layout = 'modal'){$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);}
+        else {$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);}
     }
     /**
      * Upload Flash System

@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 ?>
 <div class="fltrt">
-	<button type="button" onclick="Joomla.submitbutton('mediafile.save');">
+	<button type="button" onclick="Joomla.submitbutton('mediafile.save'); window.parent.SqueezeBox.close();">
 		<?php echo JText::_('JSAVE');?></button>
 	<button type="button" onclick="window.parent.SqueezeBox.close();">
 		<?php echo JText::_('JCANCEL');?></button>
