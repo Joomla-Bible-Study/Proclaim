@@ -70,6 +70,11 @@ $params = $this->form->getFieldsets('params');
             if (isValid)
             {
                 submitform(task);
+                if (self != top) 
+                {
+                    window.top.setTimeout('window.parent.SqueezeBox.close()', 2000);
+		}
+                window.top.setTimeout('window.location.reload(true)', 1000);
                 return true;
             }
             else
@@ -115,7 +120,7 @@ $params = $this->form->getFieldsets('params');
                 echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
                 if (JRequest::getWord('layout', '') == 'modal') {
                     ?> <div class="fltrt">
-                        <button type="button" onclick="Joomla.submitbutton('mediafile.save');  ">
+                        <button type="button" onclick="submitbutton('mediafile.save');  ">
                             <?php echo JText::_('JSAVE'); ?></button>
                         <button type="button" onclick="window.parent.SqueezeBox.close();  ">
                             <?php echo JText::_('JCANCEL'); ?></button>
