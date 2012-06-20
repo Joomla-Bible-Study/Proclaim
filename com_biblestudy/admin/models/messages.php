@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: messages.php 2026 2011-08-28 04:29:25Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -14,10 +13,23 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . 
 
 jimport('joomla.application.component.modellist');
 
+/**
+ * Message model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class biblestudyModelmessages extends JModelList {
 
+    /**
+     *
+     * @var array
+     */
     var $_files = null;
 
+    /**
+     *
+     * @param string $config
+     */
     function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -38,6 +50,11 @@ class biblestudyModelmessages extends JModelList {
         parent::__construct($config);
     }
 
+    /**
+     *
+     * @param type $id
+     * @return string
+     */
     function getDownloads($id) {
         $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
         $result = $this->_getList($query);
@@ -103,7 +120,7 @@ class biblestudyModelmessages extends JModelList {
      *
      * @param type $ordering
      * @param type $direction
-     * 
+     *
      * @return	void
      * @since 7.1.0
      */

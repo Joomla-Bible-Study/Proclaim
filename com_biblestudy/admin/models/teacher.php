@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: teacher.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,6 +12,11 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
 
+/**
+ * Teacher model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyModelTeacher extends JModelAdmin {
 
     /**

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: share.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,19 +11,18 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
-
-}
-
-class BiblestudyModelShares extends modelClass {
+/**
+ * Shares model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
+class BiblestudyModelShares extends JModelList {
 
     /**
      * teacherlist data array
      *
      * @var array
      */
-
-
     function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -37,7 +35,6 @@ class BiblestudyModelShares extends modelClass {
         }
         parent::__construct($config);
     }
-
 
     /**
      * @since   7.0
@@ -71,7 +68,6 @@ class BiblestudyModelShares extends modelClass {
                 $params->loadString($item->params);
                 $item->params = $params;
             }
-
         }
 
         return $items;

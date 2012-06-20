@@ -12,11 +12,12 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
-
-}
-
-class BiblestudyModelMessagetypes extends modelClass {
+/**
+ * MessageType model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
+class BiblestudyModelMessagetypes extends JModelList {
 
     /**
      * Message Type data array
@@ -26,6 +27,11 @@ class BiblestudyModelMessagetypes extends modelClass {
     var $_data;
     var $_allow_deletes = null;
 
+    /**
+     * Mesaggetype construct
+     *
+     * @param string $config
+     */
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -40,8 +46,10 @@ class BiblestudyModelMessagetypes extends modelClass {
         parent::__construct($config);
     }
 
-   
-
+    /**
+     *
+     * @return type
+     */
     function getDeletes() {
         if (empty($this->_deletes)) {
             $query = 'SELECT allow_deletes'

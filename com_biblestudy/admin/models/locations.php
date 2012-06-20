@@ -12,11 +12,12 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
-
-}
-
-class BiblestudyModelLocations extends modelClass {
+/**
+ * Locations model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
+class BiblestudyModelLocations extends JModelList {
 
     /**
      * locations data array
@@ -24,10 +25,28 @@ class BiblestudyModelLocations extends modelClass {
      * @var array
      */
     var $_data;
+
+    /**
+     *
+     * @var type
+     */
     var $_pagination = null;
+
+    /**
+     *
+     * @var type
+     */
     var $_total = null;
+
+    /**
+     *
+     * @var type
+     */
     var $_allow_deletes = null;
 
+    /**
+     * Construct
+     */
     public function __construct() {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -42,8 +61,10 @@ class BiblestudyModelLocations extends modelClass {
         parent::__construct();
     }
 
-   
-
+    /**
+     *
+     * @return type
+     */
     function getDeletes() {
         if (empty($this->_deletes)) {
             $query = 'SELECT allow_deletes'
@@ -58,7 +79,7 @@ class BiblestudyModelLocations extends modelClass {
      * @since   7.0
      */
     protected function populateState($ordering = null, $direction = null) {
-        
+
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
@@ -70,6 +91,10 @@ class BiblestudyModelLocations extends modelClass {
         parent::populateState('location.location_text', 'ASC');
     }
 
+    /**
+     *
+     * @return type
+     */
     protected function getListQuery() {
 
         $db = $this->getDbo();

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: share.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,6 +11,11 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
+/**
+ * Share model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyModelShare extends JModelAdmin {
 
     /**
@@ -28,6 +32,11 @@ class BiblestudyModelShare extends JModelAdmin {
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.share.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
+    /**
+     * Set ID
+     *
+     * @param int $id
+     */
     function setId($id) {
         // Set id and wipe data
 
@@ -90,7 +99,7 @@ class BiblestudyModelShare extends JModelAdmin {
 
     /**
      *
-     * @return <type>
+     * @return array
      * @since   7.0
      */
     protected function loadFormData() {

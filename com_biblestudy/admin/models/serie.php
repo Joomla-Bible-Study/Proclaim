@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: serie.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,6 +12,11 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
 
+/**
+ * Serie admin model
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyModelSerie extends JModelAdmin {
 
     /**
@@ -29,6 +33,10 @@ class BiblestudyModelSerie extends JModelAdmin {
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.serie.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
+    /**
+     * Get Teacher data
+     * @return abject
+     */
     function getTeacher() {
         if (empty($this->_teacher)) {
             $query = 'SELECT id AS value, teachername AS text'
@@ -39,6 +47,10 @@ class BiblestudyModelSerie extends JModelAdmin {
         return $this->_teacher;
     }
 
+    /**
+     * Get Admin data
+     * @return abject
+     */
     function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT *'

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: admin.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -16,17 +15,31 @@ jimport('joomla.application.component.modeladmin');
 JLoader::register('InstallerModel', JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_installer' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'extension.php');
 JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
 
+/**
+ * Admin admin model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class biblestudyModeladmin extends JModelAdmin {
 
     /**
      * Constructor that retrieves the ID from the request
-     *
+     * @var     Prefix Component decleraion
      * @access	public
      * @return	void
      */
     var $_text_prefix = 'COM_BIBLESTUDY';
+
+    /**
+     * Conctruter that retrives the id from the admin section
+     *
+     * @var Admin section decleration
+     */
     var $_admin;
 
+    /**
+     * Cuncructer
+     */
     function __construct() {
         parent::__construct();
 
@@ -34,12 +47,21 @@ class biblestudyModeladmin extends JModelAdmin {
         $this->setId((int) $array[0]);
     }
 
+    /**
+     * Set ID of admin
+     *
+     * @param int $id
+     */
     function setId($id) {
         // Set id and wipe data
         $this->_id = $id;
         $this->_data = null;
     }
 
+    /**
+     * Get Date
+     * @return object
+     */
     function &getData() {
         // Load the data
         $query = ' SELECT * FROM #__bsms_admin ' .
@@ -111,6 +133,10 @@ class biblestudyModeladmin extends JModelAdmin {
         return $form;
     }
 
+    /**
+     * Load Form Date
+     * @return object
+     */
     protected function loadFormData() {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.admin.data', array());
         if (empty($data))
@@ -187,6 +213,10 @@ class biblestudyModeladmin extends JModelAdmin {
         return $changeSet;
     }
 
+    /**
+     * Get Pagination state but is harde coded to be true right now.
+     * @return boolean
+     */
     public function getPagination() {
         return true;
     }

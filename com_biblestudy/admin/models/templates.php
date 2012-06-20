@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: templates.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,14 +11,23 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
+/**
+ * Templates model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
+class BiblestudyModelTemplates extends JModelList {
 
-}
-
-class BiblestudyModelTemplates extends modelClass {
-
+    /**
+     *
+     * @var type
+     */
     var $_templates;
 
+    /**
+     *
+     * @return type
+     */
     function getTemplates() {
         if (empty($this->_templates)) {
             $query = 'SELECT * FROM #__bsms_templates ORDER BY id ASC';

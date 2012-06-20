@@ -1,9 +1,7 @@
 <?php
 
 /**
- * @version    templatecodes.php 
- * @since 7.1.0
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,19 +11,18 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
-
-}
-
-class BiblestudyModelTemplatecodes extends modelClass {
+/**
+ * Template codes model class
+ * @package BibleStudy.Admin
+ * @since 7.1.0
+ */
+class BiblestudyModelTemplatecodes extends JModelList {
 
     /**
      * locationslist data array
      *
      * @var array
      */
-   
-
     public function __construct() {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -39,12 +36,11 @@ class BiblestudyModelTemplatecodes extends modelClass {
         parent::__construct();
     }
 
-  
     /**
      * @since   7.1
      */
     protected function populateState($ordering = null, $direction = null) {
-        
+
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
@@ -56,6 +52,10 @@ class BiblestudyModelTemplatecodes extends modelClass {
         parent::populateState('templatecode.filename', 'ASC');
     }
 
+    /**
+     * Get list query
+     * @return array
+     */
     protected function getListQuery() {
 
         $db = $this->getDbo();

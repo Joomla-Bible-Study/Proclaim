@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: template.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,11 +12,12 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
 
-abstract class modelClass extends JModelAdmin {
-
-}
-
-class BiblestudyModelTemplate extends modelClass {
+/**
+ * Template model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
+class BiblestudyModelTemplate extends JModelAdmin {
 
     /**
      * Method override to check if you can edit an existing record.
@@ -33,6 +33,12 @@ class BiblestudyModelTemplate extends modelClass {
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.template.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
+    /**
+     *
+     * @param type $data
+     * @param type $tmpl
+     * @return boolean
+     */
     function store($data = null, $tmpl = null) {
         $row = & $this->getTable();
         //@todo Clean this up
@@ -59,6 +65,11 @@ class BiblestudyModelTemplate extends modelClass {
         return true;
     }
 
+    /**
+     *
+     * @param type $cid
+     * @return boolean
+     */
     function copy($cid) {
         foreach ($cid as $id) {
             $tmplCurr = & JTable::getInstance('template', 'Table');
@@ -92,6 +103,11 @@ class BiblestudyModelTemplate extends modelClass {
         return $form;
     }
 
+    /**
+     *
+     * @param type $pk
+     * @return type
+     */
     public function getItem($pk = null) {
         return parent::getItem($pk);
     }

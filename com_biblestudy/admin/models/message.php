@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: message.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -15,6 +14,11 @@ jimport('joomla.application.component.modeladmin');
 require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
+/**
+ * Message model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyModelMessage extends JModelAdmin {
 
     var $_admin;
@@ -140,6 +144,13 @@ class BiblestudyModelMessage extends JModelAdmin {
         return true;
     }
 
+    /**
+     * Duplicate Check
+     *
+     * @param int $study_id
+     * @param int $topic_id
+     * @return boolean
+     */
     function isDuplicate($study_id, $topic_id) {
         $db = & JFactory::getDBO();
         $query = 'select * from #__bsms_studytopics where study_id = ' . $study_id . ' and topic_id = ' . $topic_id;
@@ -211,6 +222,10 @@ class BiblestudyModelMessage extends JModelAdmin {
         return json_encode($translatedList);
     }
 
+    /**
+     * Get admin info
+     * @return object
+     */
     function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT *'
@@ -225,6 +240,7 @@ class BiblestudyModelMessage extends JModelAdmin {
      * Returns a list of mediafiles associated with this study
      *
      * @since   7.0
+     * @return object
      */
     public function getMediaFiles() {
         $db = $this->getDbo();
@@ -241,7 +257,7 @@ class BiblestudyModelMessage extends JModelAdmin {
 
     /**
      * Overrides the JModelAdmin save routine to save the topics(tags)
-     * @param type $data
+     * @param string $data
      * @since 7.0.1
      * @todo This may need to be optimized
      */
@@ -256,8 +272,8 @@ class BiblestudyModelMessage extends JModelAdmin {
 
     /**
      * Routine to save the topics(tags)
-     * @param type $data from post
-     * @param type $pks is the id of the record being saved
+     * @param string $data from post
+     * @param int $pks is the id of the record being saved
      * @since 7.0.2
      * @todo This may need to be optimized
      */
@@ -298,9 +314,9 @@ class BiblestudyModelMessage extends JModelAdmin {
     /**
      * Get the form data
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param array $data
+     * @param boolean $loadData
+     * @return string
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -315,7 +331,7 @@ class BiblestudyModelMessage extends JModelAdmin {
 
     /**
      *
-     * @return <type>
+     * @return abject
      * @since   7.0
      */
     protected function loadFormData() {

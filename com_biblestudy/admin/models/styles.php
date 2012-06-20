@@ -1,9 +1,7 @@
 <?php
 
 /**
- * @version     
- * @since 7.1.0
- * @package BibleStudy
+ * @package BibleStudy.Asmin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,19 +11,18 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
-
-}
-
-class BiblestudyModelstyles extends modelClass {
+/**
+ * Styles list model class
+ * @package BibleStudy.Admin
+ * @since 7.1.0
+ */
+class BiblestudyModelstyles extends JModelList {
 
     /**
      * locationslist data array
      *
      * @var array
      */
-   
-
     public function __construct() {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -39,12 +36,15 @@ class BiblestudyModelstyles extends modelClass {
         parent::__construct();
     }
 
-  
     /**
-     * @since   7.1
+     * Populate State.
+     *
+     * @param string $ordering
+     * @param string $direction
+     * @since 7.1.0
      */
     protected function populateState($ordering = null, $direction = null) {
-        
+
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
@@ -56,6 +56,10 @@ class BiblestudyModelstyles extends modelClass {
         parent::populateState('style.filename', 'ASC');
     }
 
+    /**
+     * Get List Qurey
+     * @return string
+     */
     protected function getListQuery() {
 
         $db = $this->getDbo();

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: topics.php 2026 2011-08-28 04:29:25Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,6 +11,11 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
+/**
+ * Topics model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyModelTopics extends JModelList {
 
     public function __construct($config = array()) {
@@ -29,8 +33,8 @@ class BiblestudyModelTopics extends JModelList {
 
     /**
      *
-     * @param <string> $id   A prefix for the store id
-     * @return <string>      A store id
+     * @param string $id   A prefix for the store id
+     * @return string      A store id
      * @since 7.0
      */
     protected function getStoreId($id = '') {
@@ -59,6 +63,7 @@ class BiblestudyModelTopics extends JModelList {
     /**
      *
      * @since   7.0
+     * @return array Description
      */
     protected function getListQuery() {
         $db = $this->getDbo();

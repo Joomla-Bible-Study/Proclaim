@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: mediafiles.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,8 +11,17 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
+/**
+ * MediaFiles model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyModelMediafiles extends JModelList {
 
+    /**
+     *
+     * @param string $config
+     */
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -33,6 +41,10 @@ class BiblestudyModelMediafiles extends JModelList {
         parent::__construct($config);
     }
 
+    /**
+     *
+     * @return type
+     */
     function getDeletes() {
         if (empty($this->_deletes)) {
             $query = 'SELECT allow_deletes'
@@ -108,7 +120,7 @@ class BiblestudyModelMediafiles extends JModelList {
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.studytitle');
         $id .= ':' . $this->getState('filter.mediatypeId');
-        $id	.= ':'.$this->getState('filter.language');
+        $id .= ':' . $this->getState('filter.language');
 
         return parent::getStoreId($id);
     }

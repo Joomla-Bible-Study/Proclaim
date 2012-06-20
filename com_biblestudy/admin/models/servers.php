@@ -12,15 +12,15 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
-abstract class modelClass extends JModelList {
+/**
+ * Servers model class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
+class BiblestudyModelServers extends JModelList {
 
-}
-
-class BiblestudyModelServers extends modelClass {
-
-  
     /**
-     * @since   7.0
+     * @since   7.0.0
      */
     protected function populateState($ordering = null, $direction = null) {
         // Adjust the context to support modal layouts.
@@ -36,7 +36,7 @@ class BiblestudyModelServers extends modelClass {
 
     /**
      *
-     * @since   7.0
+     * @since   7.0.0
      */
     protected function getListQuery() {
         $db = $this->getDbo();
