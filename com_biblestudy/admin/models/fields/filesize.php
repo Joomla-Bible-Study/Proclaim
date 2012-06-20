@@ -1,12 +1,11 @@
 <?php
-/**
- * @version		$Id: filesize.php 2025 2011-08-28 04:08:06Z genu $
- * @package		Joomla.Framework
- * @subpackage	Form
- * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- */
 
+/**
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -15,37 +14,45 @@ jimport('joomla.access.access');
 jimport('joomla.form.formfield');
 
 /**
- * Form Field class for the Joomla Framework.
- *
- * @package		Joomla.Framework
- * @subpackage	Form
- * @since		1.6
+ * Form Field class for the FileSize
+ * @package BibleStudy.Admin
+ * @since 7.0.0
  */
-class JFormFieldFilesize extends JFormField
-{
-	public $type = 'Filesize';
+class JFormFieldFilesize extends JFormField {
 
-	protected function getInput()
-	{
-		// Initialize some field attributes.
-		$size		= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
-		$maxLength	= $this->element['maxlength'] ? ' maxlength="'.(int) $this->element['maxlength'].'"' : '';
-		$class		= $this->element['class'] ? ' class="'.(string) $this->element['class'].'"' : '';
-		$readonly	= ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
-		$disabled	= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
+    /**
+     *  Set Neming of type
+     * @var string
+     */
+    public $type = 'Filesize';
 
-		// Initialize JavaScript field attributes.
-		$onchange	= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'"' : '';
+    /**
+     * Get inpute of form
+     * @return string
+     */
+    protected function getInput() {
+        // Initialize some field attributes.
+        $size = $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
+        $maxLength = $this->element['maxlength'] ? ' maxlength="' . (int) $this->element['maxlength'] . '"' : '';
+        $class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
+        $readonly = ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
+        $disabled = ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
 
-		return '<input type="text" name="'.$this->name.'" id="'.$this->id.'"' .
-				' value="'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'"' .
-		$class.$size.$disabled.$readonly.$onchange.$maxLength.'/>'.$this->sizeConverter();
-	}
+        // Initialize JavaScript field attributes.
+        $onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
-	private function sizeConverter() {
-		JHTML::Script('filesize.js', JURI::root() . '/media/com_biblestudy/js/');
-		return '<a style="float: left; margin-top: 6px;" href="javascript:openConverter1();">'.JText::_('JBS_MED_FILESIZE_CONVERTER').'</a>';
-	}
+        return '<input type="text" name="' . $this->name . '" id="' . $this->id . '"' .
+                ' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
+                $class . $size . $disabled . $readonly . $onchange . $maxLength . '/>' . $this->sizeConverter();
+    }
+
+    /**
+     * Returns converted size
+     * @return string
+     */
+    private function sizeConverter() {
+        JHTML::Script('filesize.js', JURI::root() . '/media/com_biblestudy/js/');
+        return '<a style="float: left; margin-top: 6px;" href="javascript:openConverter1();">' . JText::_('JBS_MED_FILESIZE_CONVERTER') . '</a>';
+    }
+
 }
-
-

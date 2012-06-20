@@ -1,12 +1,11 @@
 <?php
-/**
- * @version		$Id: teacherOrdering.php 2025 2011-08-28 04:08:06Z genu $
- * @package		Joomla.Administrator
- * @subpackage	com_weblinks
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- */
 
+/**
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -14,63 +13,61 @@ jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 
 /**
- * Supports an HTML select list of categories
- *
- * @package		Joomla.Administrator
- * @subpackage	com_weblinks
- * @since		1.6
+ * Form Ordering for Teacher
+ * @package BibleStudy.Admin
+ * @since 7.0.4
  */
-class JFormFieldTeacherOrdering extends JFormField
-{
-	/**
-	 * The form field type.
-	 *
-	 * @var		string
-	 * @since	1.6
-	 */
-	protected $type = 'TeacherOrdering';
+class JFormFieldTeacherOrdering extends JFormField {
 
-	/**
-	 * Method to get the field input markup.
-	 *
-	 * @return	string	The field input markup.
-	 * @since	1.6
-	 */
-	protected function getInput()
-	{
-		// Initialize variables.
-		$html = array();
-		$attr = '';
+    /**
+     * The form field type.
+     *
+     * @var		string
+     * @since	1.6
+     */
+    protected $type = 'TeacherOrdering';
 
-		// Initialize some field attributes.
-		$attr .= $this->element['class'] ? ' class="'.(string) $this->element['class'].'"' : '';
-		$attr .= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
-		$attr .= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
+    /**
+     * Method to get the field input markup.
+     *
+     * @return	string	The field input markup.
+     * @since	1.6
+     */
+    protected function getInput() {
+        // Initialize variables.
+        $html = array();
+        $attr = '';
 
-		// Initialize JavaScript field attributes.
-		$attr .= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'"' : '';
+        // Initialize some field attributes.
+        $attr .= $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
+        $attr .= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
+        $attr .= $this->element['size'] ? ' size="' . (int) $this->element['size'] . '"' : '';
 
-		// Get some field values from the form.
-		$teacherId	= (int) $this->form->getValue('id');
+        // Initialize JavaScript field attributes.
+        $attr .= $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
 
-		// Build the query for the ordering list.
-		$query = 'SELECT ordering AS value, teachername AS text' .
-				' FROM #__bsms_teachers' .
-				' WHERE catid = 1' .
-				' ORDER BY ordering';
+        // Get some field values from the form.
+        $teacherId = (int) $this->form->getValue('id');
 
-		// Create a read-only list (no name) with a hidden input to store the value.
+        // Build the query for the ordering list.
+        $query = 'SELECT ordering AS value, teachername AS text' .
+                ' FROM #__bsms_teachers' .
+                ' WHERE catid = 1' .
+                ' ORDER BY ordering';
 
-		if ((string) $this->element['readonly'] == 'true') {
-			$html[] = JHtml::_('list.ordering', '', $query, trim($attr), $this->value, $teacherId ? 0 : 1);
-			$html[] = '<input type="hidden" name="'.$this->teachername.'" value="'.$this->value.'"/>';
-		}
-		// Create a regular list.
-		else {
+        // Create a read-only list (no name) with a hidden input to store the value.
 
-			$html[] = JHtml::_('list.ordering', $this->teachername, $query, trim($attr), $this->value, $teacherId ? 0 : 1);
-		}
+        if ((string) $this->element['readonly'] == 'true') {
+            $html[] = JHtml::_('list.ordering', '', $query, trim($attr), $this->value, $teacherId ? 0 : 1);
+            $html[] = '<input type="hidden" name="' . $this->teachername . '" value="' . $this->value . '"/>';
+        }
+        // Create a regular list.
+        else {
 
-		return implode($html);
-	}
+            $html[] = JHtml::_('list.ordering', $this->teachername, $query, trim($attr), $this->value, $teacherId ? 0 : 1);
+        }
+
+        return implode($html);
+    }
+
 }

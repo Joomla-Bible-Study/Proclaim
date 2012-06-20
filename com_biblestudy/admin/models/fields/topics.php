@@ -1,12 +1,11 @@
 <?php
 
 /**
- * @version		$Id: topics.php 2025 2011-08-28 04:08:06Z genu $
- * @package		Joomla.Framework
- * @subpackage	Form
- * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- */
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -15,22 +14,28 @@ jimport('joomla.access.access');
 jimport('joomla.form.formfield');
 
 /**
- * Form Field class for the Joomla Framework.
- *
- * @package		Joomla.Framework
- * @subpackage	Form
- * @since		1.6
+ * Form Field class for the Topics
+ * @package BibleStudy.Admin
+ * @since 7.0.0
  */
 class JFormFieldTopics extends JFormField {
 
-	public $type = 'Topics';
+    /**
+     * Set type to topics
+     * @var string
+     */
+    public $type = 'Topics';
 
-	protected function getInput() {
+    /**
+     * Get input form form
+     * @return string
+     */
+    protected function getInput() {
 
-		return '
+        return '
             <input type="hidden" id="topics" name="jform[topics]"/>
             ';
-	}
+    }
 
 }
 

@@ -1,12 +1,11 @@
 <?php
 
-
 /**
- * @author Tom Fuller
- * @copyright 2010
- * Displays a location list for the studieslist menu item
- */
-
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,42 +15,42 @@ JFormHelper::loadFieldClass('list');
 
 /**
  * Lodation List Form Field class for the Joomla Bible Study component
+ * @package BibleStudy.Admin
+ * @since 7.0.0
  */
-class JFormFieldLocations extends JFormFieldList
-{
-	/**
-	 * The field type.
-	 *
-	 * @var         string
-	 */
-	protected $type = 'Locations';
+class JFormFieldLocations extends JFormFieldList {
 
-	/**
-	 * Method to get a list of options for a list input.
-	 *
-	 * @return      array           An array of JHtml options.
-	 */
-	protected function getOptions()
-	{
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('id,location_text');
-		$query->from('#__bsms_locations');
-		$db->setQuery((string)$query);
-		$messages = $db->loadObjectList();
+    /**
+     * The field type.
+     *
+     * @var         string
+     */
+    protected $type = 'Locations';
 
-		$options = array();
+    /**
+     * Method to get a list of options for a list input.
+     *
+     * @return      array           An array of JHtml options.
+     */
+    protected function getOptions() {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('id,location_text');
+        $query->from('#__bsms_locations');
+        $db->setQuery((string) $query);
+        $messages = $db->loadObjectList();
 
-		if ($messages)
-		{
-			foreach($messages as $message)
-			{
-				$options[] = JHtml::_('select.option', $message->id, $message->location_text);
-			}
-		}
+        $options = array();
+
+        if ($messages) {
+            foreach ($messages as $message) {
+                $options[] = JHtml::_('select.option', $message->id, $message->location_text);
+            }
+        }
 
 
-		$options = array_merge(parent::getOptions(), $options);
-		return $options;
-	}
+        $options = array_merge(parent::getOptions(), $options);
+        return $options;
+    }
+
 }

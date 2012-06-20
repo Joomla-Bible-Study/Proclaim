@@ -1,10 +1,11 @@
 <?php
 
 /**
- * @author Tom Fuller
- * @copyright 2010
- * Displays a teacher list for the studieslist menu item
- */
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -15,6 +16,8 @@ JFormHelper::loadFieldClass('list');
 
 /**
  * Virtuemart Category List Form Field class for the Joomla Bible Study component
+ * @package BibleStudy.Admin
+ * @since 7.0.4
  */
 class JFormFieldVirtuemart extends JFormFieldList {
 
@@ -38,9 +41,9 @@ class JFormFieldVirtuemart extends JFormFieldList {
 
         //check to see if component installed
         jimport('joomla.filesystem.folder');
-		if(!JFolder::exists(JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_virtuemart')){
-			return JText::_('JBS_CMN_VIRTUEMART_NOT_INSTALLED');
-		}
+        if (!JFolder::exists(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_virtuemart')) {
+            return JText::_('JBS_CMN_VIRTUEMART_NOT_INSTALLED');
+        }
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('v.virtuemart_product_id, v.product_name');

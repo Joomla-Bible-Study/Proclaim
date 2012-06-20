@@ -1,10 +1,11 @@
 <?php
 
 /**
- * @author Tom Fuller
- * @copyright 2010
- * Displays a books list for the studieslist menu item
- */
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 
 //No Direct Access
 defined('_JEXEC') or die;
@@ -15,6 +16,8 @@ JFormHelper::loadFieldClass('list');
 
 /**
  * Books List Form Field class for the Joomla Bible Study component
+ * @package BibleStudy.Admin
+ * @package 7.0.0
  */
 class JFormFieldListoptions extends JFormFieldList
 {
