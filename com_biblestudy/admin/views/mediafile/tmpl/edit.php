@@ -141,8 +141,8 @@ $params = $this->form->getFieldsets('params');
                     <?php echo $this->form->getInput('createdate'); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('study_id'); ?>
-
-                    <?php echo $this->form->getInput('study_id'); ?></li>
+                    <?php $study = JRequest::getInt('study','','default'); dump ($_GET);?>
+                    <?php echo $this->form->getInput('study_id',null, empty($this->item->study_id) ? $study : null); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('podcast_id'); ?>
 
