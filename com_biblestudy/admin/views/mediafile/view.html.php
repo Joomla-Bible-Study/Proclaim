@@ -21,7 +21,7 @@ class BiblestudyViewMediafile extends JView {
 
     function display($tpl = null) {
 
-
+//$sid=JRequest::getInt('sid'); dump($_REQUEST);
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");

@@ -10,6 +10,8 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.helper');
 $params = $this->form->getFieldsets('params');
+//Get the studyid if this is coming to us in a modal form
+$app = JFactory::getApplication(); $study = $app->getUserState('sid'); 
 ?>
 <script language="javascript" type="text/javascript">
     function submitbutton(task)
@@ -141,7 +143,7 @@ $params = $this->form->getFieldsets('params');
                     <?php echo $this->form->getInput('createdate'); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('study_id'); ?>
-                    <?php $study = JRequest::getInt('study','','default'); dump ($_GET);?>
+                    
                     <?php echo $this->form->getInput('study_id',null, empty($this->item->study_id) ? $study : null); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('podcast_id'); ?>
