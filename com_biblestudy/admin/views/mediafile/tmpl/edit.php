@@ -14,6 +14,8 @@ $params = $this->form->getFieldsets('params');
 $app = JFactory::getApplication(); 
 $study = $app->getUserState('sid'); 
 $sdate = $app->getUserState('sdate');
+$size = $app->getUserState('size');
+$fname = $app->getUserState('fname');
 ?>
 <script language="javascript" type="text/javascript">
     function submitbutton(task)
@@ -34,6 +36,7 @@ $sdate = $app->getUserState('sdate');
             }
             else {
                 submitform(task);
+                window.location.setTimeout('window.location.reload(true)', 1000);
                 return true;
             }
         }
@@ -47,6 +50,7 @@ $sdate = $app->getUserState('sdate');
             {
                 if(confirm("<?php echo JText::_('JBS_MED_SURE_OVERWRITE_DETAILS'); ?>"))
                 {submitform(task);
+                    window.top.setTimeout('window.location.reload(true)', 1000);
                     return true;}
             }
         }
@@ -114,7 +118,7 @@ $sdate = $app->getUserState('sdate');
 <form
     action="<?php 
     
-    if (JRequest::getWord('layout','') == 'modal') {$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id='.(int) $this->item->id;} else {$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;} echo JRoute::_($url); ?>"
+    if (JRequest::getWord('layout') == 'modal') {$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id='.(int) $this->item->id;} else {$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;} echo $url; ?>"
     method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
@@ -246,11 +250,11 @@ $sdate = $app->getUserState('sdate');
                 <li>
                     <?php echo $this->form->getLabel('filename'); ?>
 
-                    <?php echo $this->form->getInput('filename'); ?></li>
+                    <?php echo $this->form->getInput('filename',null, empty($this->item->filename) ? $fname : null); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('size'); ?>
 
-                    <?php echo $this->form->getInput('size'); ?></li>
+                    <?php echo $this->form->getInput('size',null, empty($this->item->size) ? $size : null); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('special'); ?>
 

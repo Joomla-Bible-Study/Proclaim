@@ -418,10 +418,14 @@ class biblestudyController extends JController {
                 $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
             }
         }
-        //  $uploadmsg = JText::_('JBS_MED_ERROR_MOVING_FILE');
-
-
-        $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
+        $mediafileid = JRequest::getInt('id', '', 'post');
+        $app = JFactory::getApplication(); 
+        $app->setUserState('fname',$file['name']); 
+        $app->setUserState('size', $file['size']);
+       
+        if ($layout = 'modal'){$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);}
+        else {$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);}
+        
     }
 
 }
