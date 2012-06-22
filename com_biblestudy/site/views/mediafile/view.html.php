@@ -23,6 +23,7 @@ class biblestudyViewmediafile extends JView {
     function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
+        
         $this->state = $this->get("State");
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
         //Load the Admin settings
@@ -48,6 +49,9 @@ class biblestudyViewmediafile extends JView {
                 $document->addScript($host.'media/com_biblestudy/js/swfupload/handlers.js');
                 $document->addScript(JURI::root() . 'administrator/components/com_biblestudy/views/mediafile/tmpl/submitbutton.js');
                 $document->addStyleSheet($host.'media/com_biblestudy/js/swfupload/default.css');
+                $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
+                $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
+                $document->addStyleSheet($host . 'media/system/css/modal.css');
                 $swfUploadHeadJs = JBSUpload::uploadjs($host);
                 //add the javascript to the head of the html document
                 $document->addScriptDeclaration($swfUploadHeadJs);

@@ -22,6 +22,8 @@ class biblestudyViewmessage extends JView {
 
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
+        JApplication::setUserState('sid',$this->item->id);
+        JApplication::setUserState('sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
         $this->setLayout('form');
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'message');
@@ -44,7 +46,8 @@ class biblestudyViewmessage extends JView {
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/ui/jquery-ui.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/plugins/jquery.tokeninput.js');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/token-input-jbs.css');
-
+        $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
+        $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
         $script = "
             \$j(document).ready(function() {
                 \$j('#topics').tokenInput(" . $this->get('alltopics') . ",

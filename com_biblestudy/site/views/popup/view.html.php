@@ -101,6 +101,9 @@ class biblestudyViewpopup extends JView {
         $frontcolor = $params->get('frontcolor', '0xFFFFFF');
         $lightcolor = $params->get('lightcolor', '0x000000');
         $screencolor = $params->get('screencolor', '0xFFFFFF');
+        if ($params->get('autostart',1) == 1){$autostart = 'true';} else {$autostart = 'false';}
+        if ($itemparams->get('autostart') == 1){$autostart = 'true';} elseif($itemparams->get('autostart') == 2) {$autostart = 'false';}
+        
         //Here is where we start the display
         ?>
         <div class="popupwindow">
@@ -137,7 +140,7 @@ class biblestudyViewpopup extends JView {
                 echo "<script type='text/javascript'>
 				jwplayer('placeholder').setup({
 				flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
-                                autostart:'true',
+                                autostart:'".$autostart."',
                                 });
                        </script>";
 
