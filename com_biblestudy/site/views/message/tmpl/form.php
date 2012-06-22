@@ -11,7 +11,7 @@ $params = $this->form->getFieldsets('params');
 ?>
 <div class="edit">
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
-    <div class="width-65 fltlft">
+    <div class="width-100 fltlft">
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_STY_DETAILS'); ?></legend>
             <ul>
@@ -150,7 +150,8 @@ $params = $this->form->getFieldsets('params');
             <?php echo $this->form->getInput('studytext'); ?>
         </fieldset>
     </div>
-    <div class="width-35 fltrt">
+    <div style="clear: both;"></div>
+    <div class="width-100 fltlft">
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_CMN_PUBLISHING_OPTIONS'); ?></legend>
             <ul>
@@ -198,7 +199,7 @@ $params = $this->form->getFieldsets('params');
             </ul>
         </fieldset>
     </div>
-    <div class="width-35 fltrt">
+    <div class="width-100 fltlft">
         <?php
         foreach ($params as $name => $fieldset):
             if (isset($fieldset->description) && trim($fieldset->description)):
@@ -221,7 +222,7 @@ $params = $this->form->getFieldsets('params');
         <?php endforeach; ?>
 
     </div>
-    <div class="width-35 fltrt">
+    <div class="width-100 fltlft">
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_STY_MEDIA_THIS_STUDY'); ?></legend>
             <table class="adminlist">

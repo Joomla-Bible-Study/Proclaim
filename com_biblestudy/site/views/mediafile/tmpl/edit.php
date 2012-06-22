@@ -11,6 +11,8 @@ $params = $this->form->getFieldsets('params');
 $app = JFactory::getApplication(); 
 $study = $app->getUserState('sid'); 
 $sdate = $app->getUserState('sdate');
+$size = $app->getUserState('size');
+$fname = $app->getUserState('fname');
 ?>
 <script language="javascript" type="text/javascript">
     function submitbutton(task)
@@ -31,6 +33,7 @@ $sdate = $app->getUserState('sdate');
             }
             else {
                 submitform(task);
+                window.top.setTimeout('window.location.reload(true)', 1000);
                 return true;
             }
         }
@@ -44,6 +47,7 @@ $sdate = $app->getUserState('sdate');
             {
                 if(confirm("<?php echo JText::_('JBS_MED_SURE_OVERWRITE_DETAILS'); ?>"))
                 {submitform(task);
+                    window.location.setTimeout('window.location.reload(true)', 1000);
                     return true;}
             }
         }
@@ -109,19 +113,27 @@ $sdate = $app->getUserState('sdate');
 </script>
 
 <div class="edit">
-    <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm"enctype="multipart/form-data">
-        <div class="formelm-buttons">
-            <button type="button" onclick="Joomla.submitbutton('mediafile.save')">
-                <?php echo JText::_('JSAVE') ?>
-            </button>
-            <button type="button" onclick="Joomla.submitbutton('mediafile.cancel')">
-                <?php echo JText::_('JCANCEL') ?>
-            </button>
-        </div>
-
-
+ <form
+    action="<?php 
+    
+    if (JRequest::getWord('layout','') == 'modal') {$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id='.(int) $this->item->id;} else {$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;} echo JRoute::_($url); ?>"
+    method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+        
         <fieldset class="panelform">
-            <legend><?php echo JText::_('JBS_MED_MEDIA_FILES_DETAILS'); ?></legend>
+            <div class="formelm-buttons">
+            <legend>
+            <?php
+                echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
+                if (JRequest::getWord('layout', '') == 'modal') {
+                    ?> <div class="fltlft">
+                        <button type="button" onclick="submitbutton('mediafile.save');  ">
+                            <?php echo JText::_('JSAVE'); ?></button>
+                        <button type="button" onclick="window.parent.SqueezeBox.close();  ">
+                            <?php echo JText::_('JCANCEL'); ?></button>
+                    </div> <?php } ?>
+            
+            </legend>
+            </div>
             <div class="formelm">
 
                 <?php echo $this->form->getLabel('published'); ?>
@@ -208,11 +220,11 @@ $sdate = $app->getUserState('sdate');
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('filename'); ?>
-                <?php echo $this->form->getInput('filename'); ?>
+                <?php echo $this->form->getInput('filename',null, empty($this->item->filename) ? $fname : null); ?>
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('size'); ?>
-                <?php echo $this->form->getInput('size'); ?><br /><br />
+                <?php echo $this->form->getInput('size',null, empty($this->item->size) ? $size : null); ?><br /><br />
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('special'); ?>
@@ -290,7 +302,8 @@ $sdate = $app->getUserState('sdate');
 
         <input type="hidden" name="task" value="" />
         <?php echo JHtml::_('form.token'); ?>
+</form>
+
 </div>
 
-</form>
 
