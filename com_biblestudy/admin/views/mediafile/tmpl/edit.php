@@ -11,7 +11,9 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.helper');
 $params = $this->form->getFieldsets('params');
 //Get the studyid if this is coming to us in a modal form
-$app = JFactory::getApplication(); $study = $app->getUserState('sid'); 
+$app = JFactory::getApplication(); 
+$study = $app->getUserState('sid'); 
+$sdate = $app->getUserState('sdate');
 ?>
 <script language="javascript" type="text/javascript">
     function submitbutton(task)
@@ -140,7 +142,7 @@ $app = JFactory::getApplication(); $study = $app->getUserState('sid');
                 <li>
                     <?php echo $this->form->getLabel('createdate'); ?>
 
-                    <?php echo $this->form->getInput('createdate'); ?></li>
+                    <?php echo $this->form->getInput('createdate',null, empty($this->item->createdate) ? $sdate : null); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('study_id'); ?>
                     

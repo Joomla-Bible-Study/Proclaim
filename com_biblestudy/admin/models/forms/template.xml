@@ -164,6 +164,11 @@
 				<option value="1">JBS_CMN_POPUP_NEW_WINDOW</option>
 				<option value="2">JBS_CMN_INLINE</option>
 			</field>
+                        <field name="autostart" type="list" default="1"
+                                label="JBS_TPL_MEDIA_AUTOSTART" description="JBS_TPL_MEDIA_AUTOSTART_DESC">
+                                    <option value="1">JYES</option>
+                                    <option value="2">JNO</option>
+                        </field>
 			<field name="player_width" type="text" default="400"
 				label="JBS_TPL_MEDIA_PLAYER_WIDTH" description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC" />
 			<field name="player_height" type="text" default="300"

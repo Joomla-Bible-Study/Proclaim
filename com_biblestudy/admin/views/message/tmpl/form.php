@@ -271,7 +271,7 @@ $params = $this->form->getFieldsets('params');
                                 }
                                 else
                                 { ?>
-                                    <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 900, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+                                    <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 1000, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
                                 <?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
                                 }
                                 ?> 
