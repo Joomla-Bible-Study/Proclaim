@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: view.html.php 1330 2011-01-06 08:01:38Z genu $
- * @package     com_biblestudy
+ * @package     BibleStudy.Site
  * @license     GNU/GPL
  */
 //No Direct Access
@@ -11,7 +10,11 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 jimport('joomla.application.component.view');
-
+/**
+ * Landing page list view class
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class biblestudyViewLandingpage extends JView {
 
     /**
@@ -63,7 +66,7 @@ class biblestudyViewLandingpage extends JView {
         $registry->loadJSON($template[0]->params);
         $params = $registry;
         $admin = $this->get('Admin');
-        
+
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($admin[0]->params);
@@ -71,8 +74,8 @@ class biblestudyViewLandingpage extends JView {
 
         $document = JFactory::getDocument();
         $document->addScript(JURI::base() . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'tooltip.js');
-        $css = $params->get('css','biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+        $css = $params->get('css', 'biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 
         //Import Scripts
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
@@ -98,11 +101,8 @@ class biblestudyViewLandingpage extends JView {
         $search = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
 
         $adminrows = new JBSAdmin();
-       // $total = $this->get('Total');
 
-       // $pagination = $this->get('Pagination');
-        //@todo need to find a Diffente way to do this
-        $menu = JSite::getMenu();
+        $menu = @JSite::getMenu();
         $item = $menu->getActive();
 
         //Get the main study list image
