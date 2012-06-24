@@ -186,12 +186,12 @@ class biblestudyModelmessage extends JModelAdmin {
      * @todo This may need to be optimized
      */
     public function save($data) {
-        $pks = JRequest::getInt('id');
+        $pks = JRequest::getInt('a_id');
         if ($pks) {
             $this->setTopics($pks, $data);
             return true;
         } elseif (parent::save($data)) {
-            $this->setTopics(JRequest::getInt('id'), $data);
+            $this->setTopics(JRequest::getInt('a_id'), $data);
             return true;
         }
     }
