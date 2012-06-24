@@ -31,8 +31,8 @@ class biblestudyModelmessage extends JModelAdmin {
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
         }
-        // Load state from the request.
-        $pks = JRequest::getInt('id');
+        // Load state from the request. We use a_id to avoid collisions with the router
+        $pks = JRequest::getInt('a_id'); 
         if ($pks) {
             $this->pks = $pks;
         }

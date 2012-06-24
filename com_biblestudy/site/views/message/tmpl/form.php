@@ -10,7 +10,7 @@ JHtml::_('behavior.formvalidation');
 $params = $this->form->getFieldsets('params');
 ?>
 <div class="edit">
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&a_id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-100 fltlft">
     <div class="formelm-buttons">
         <button type="button" onclick="Joomla.submitbutton('message.save')">

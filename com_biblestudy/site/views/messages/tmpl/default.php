@@ -103,7 +103,7 @@ $listDirn = $this->state->get('list.direction');
                 <?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
                     </td>
                     <td class="center">
-                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&task=message.edit&id=' . (int) $item->id); ?>">
+                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=form&task=message.edit&a_id=' . (int) $item->id); ?>">
                     <?php echo $this->escape($item->studytitle); ?>
                     </a>
                 </td>

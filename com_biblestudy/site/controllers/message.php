@@ -18,24 +18,7 @@ defined('_JEXEC') or die;
     }
 
 class biblestudyControllermessage extends controllerClass {
-    /*
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
-     *
-     * @todo    We should rename this controler to "study" and the list view controller
-     * to "studies" so that the pluralization in 1.6 would work properly
-     *
-     * @since 7.0
-     */
-
-    /**
-     * constructor (registers additional tasks to methods)
-     * @return void
-     */
-    function __construct() {
-        parent::__construct();
-    }
-
-
+    
     	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
@@ -50,7 +33,7 @@ class biblestudyControllermessage extends controllerClass {
 		$task = $this->getTask();
 
 		if ($task == 'save') {
-		  $id = JRequest::getInt('id');
+		  $id = JRequest::getInt('a_id'); 
           //this will be null if new
           if (empty($id))
           {
@@ -72,7 +55,18 @@ class biblestudyControllermessage extends controllerClass {
 		//	$this->setRedirect(JRoute::_('index.php?option=com_content&view=category&id='.$validData['catid'], false));
 		}
 	}
-
+/**
+	 * Method to cancel an edit.
+	 *
+	 * @param	string	$key	The name of the primary key of the URL variable.
+	 *
+	 * @return	Boolean	True if access level checks pass, false otherwise.
+	 * @since	1.6
+	 */
+	public function cancel($key = 'a_id')
+	{
+		parent::cancel($key);
+	}
 
      /**
      * Routine to save the topics(tags)
@@ -124,7 +118,7 @@ class biblestudyControllermessage extends controllerClass {
     public function resetHits()
     {
         $msg = null;
-        $id = JRequest::getInt('id', 0, 'post');
+        $id = JRequest::getInt('a_id', 0, 'post');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
         $reset = $db->query();
@@ -139,6 +133,34 @@ class biblestudyControllermessage extends controllerClass {
         }
 }
 
+/**
+	 * Method to edit an existing record.
+	 *
+	 * @param	string	$key	The name of the primary key of the URL variable.
+	 * @param	string	$urlVar	The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 *
+	 * @return	Boolean	True if access level check and checkout passes, false otherwise.
+	 * @since	1.6
+	 */
+	public function edit($key = null, $urlVar = 'a_id')
+	{
+		$result = parent::edit($key, $urlVar);
+		return $result;
+	}
 
-
+        	/**
+	 * Method to save a record.
+	 *
+	 * @param	string	$key	The name of the primary key of the URL variable.
+	 * @param	string	$urlVar	The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 *
+	 * @return	Boolean	True if successful, false otherwise.
+	 * @since	1.6
+	 */
+	public function save($key = null, $urlVar = 'a_id')
+	{
+	
+            $result = parent::save($key, $urlVar);
+            return $result;
+	}
 }
