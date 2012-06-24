@@ -8,11 +8,17 @@
 defined('_JEXEC') or die;
 
 $params = $this->form->getFieldsets('params');
+$folder = '';
+$server = '';
 $app = JFactory::getApplication(); 
 $study = $app->getUserState('sid'); 
 $sdate = $app->getUserState('sdate');
 $size = $app->getUserState('size');
 $fname = $app->getUserState('fname');
+$serverid = $app->getUserState('serverid');
+if ($this->item->server){$server = $this->item->server;}elseif($serverid){$server = $serverid;}elseif(empty($this->item->study_id)){$server = $this->admin->params['server'];} 
+$folderid = $app->getUserState('folderid');
+if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = $folderid;}elseif(empty($this->item->study_id)){$folder = $this->admin->params['path'];}
 ?>
 <script language="javascript" type="text/javascript">
     function submitbutton(task)
@@ -212,11 +218,11 @@ $fname = $app->getUserState('fname');
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('server'); ?>
-                <?php echo $this->form->getInput('server', null, $this->admin->params['server']); ?>
+                <?php echo $this->form->getInput('server', null, empty($this->item->server) ? $server : null); ?>
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('path'); ?>
-                <?php echo $this->form->getInput('path', null, $this->admin->params['path']); ?>
+                <?php echo $this->form->getInput('path', null, empty($this->item->study_id) ? $folder : null); ?>
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('filename'); ?>

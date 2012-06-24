@@ -17,7 +17,12 @@ class biblestudyController extends JController {
 
     public function display($cachable = false, $urlparams = false) {
         $cachable = true;
-
+        //clear the user state
+        $app = JFactory::getApplication(); 
+        $app->setUserState('fname',''); 
+        $app->setUserState('size', '');
+        $app->setUserState('serverid','');
+        $app->setUserState('folderid','');
         JHtml::_('behavior.caption');
 
         // Set the default view name and format from the Request.
@@ -204,6 +209,9 @@ class biblestudyController extends JController {
         //get the server and folder id from the request
         $serverid = JRequest::getInt('upload_server', '', 'post');
         $folderid = JRequest::getInt('upload_folder', '', 'post');
+        $app = JFactory::getApplication();
+        $app->setUserState('serverid',$serverid);
+        $app->setUserState('folderid',$folderid);
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
         // get temp file details
@@ -268,33 +276,33 @@ class biblestudyController extends JController {
                     return;
             }
         }
-
         //check for filesize
         $fileSize = $_FILES[$fieldName]['size'];
         if ($fileSize > 500000000) {
             echo JText::_('JBS_MED_FILE_BIGGER_THAN') . ' 500MB';
         }
-
         //check the file extension is ok
         $fileName = $_FILES[$fieldName]['name'];
         $extOk = JBSUpload::checkfile($fileName);
-
+        $serverid = JRequest::getInt('upload_server', '', 'post');
+        $folderid = JRequest::getInt('upload_folder', '', 'post');
+        $app = JFactory::getApplication(); 
+        $app->setUserState('serverid',$serverid);
+        $app->setUserState('folderid',$folderid);
+        $app->setUserState('fname',$_FILES[$fieldName]['name']); 
+        $app->setUserState('size', $_FILES[$fieldName]['size']);
         if ($extOk == false) {
             echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
             return;
         }
-
         //the name of the file in PHP's temp directory that we are going to move to our folder
         $fileTemp = $_FILES[$fieldName]['tmp_name'];
-
         //always use constants when making file paths, to avoid the possibilty of remote file inclusion
-        $uploadPath = $abspath . DS . 'media' . DS . 'com_biblestudy' . DS . 'js' . DS . 'swfupload' . DS . 'tmp' . DS . $fileName;
-
+        $uploadPath = $abspath . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'swfupload' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $fileName;
         if (!JFile::upload($fileTemp, $uploadPath)) {
             echo JText::_('JBS_MED_ERROR_MOVING_FILE');
             return;
         } else {
-
             // success, exit with code 0 for Mac users, otherwise they receive an IO Error
             exit(0);
         }
@@ -327,6 +335,8 @@ class biblestudyController extends JController {
         $app = JFactory::getApplication(); 
         $app->setUserState('fname',$file['name']); 
         $app->setUserState('size', $file['size']);
+        $app->setUserState('serverid',$serverid);
+        $app->setUserState('folderid',$folderid);
         if ($layout = 'modal'){$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);}
         else {$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);}
     }

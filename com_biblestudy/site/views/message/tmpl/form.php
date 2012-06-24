@@ -12,6 +12,14 @@ $params = $this->form->getFieldsets('params');
 <div class="edit">
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-100 fltlft">
+    <div class="formelm-buttons">
+        <button type="button" onclick="Joomla.submitbutton('message.save')">
+                <?php echo JText::_('JSAVE') ?>
+        </button>
+        <button type="button" onclick="Joomla.submitbutton('message.cancel')">
+                <?php echo JText::_('JCANCEL') ?>
+        </button>
+    </div>
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_STY_DETAILS'); ?></legend>
             <ul>
