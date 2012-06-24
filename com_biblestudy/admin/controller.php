@@ -281,6 +281,9 @@ class biblestudyController extends JController {
         //get the server and folder id from the request
         $serverid = JRequest::getInt('upload_server', '', 'post');
         $folderid = JRequest::getInt('upload_folder', '', 'post');
+        $app = JFactory::getApplication();
+        $app->setUserState('serverid',$serverid);
+        $app->setUserState('folderid',$folderid);
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
         // get temp file details
@@ -311,6 +314,7 @@ class biblestudyController extends JController {
         }
         //  $podmsg = PIHelperadmin::setpods($row);
         // delete temp file
+        
         JBSUpload::deletetempfile($tempfile);
         $mediafileid = JRequest::getInt('id', '', 'post');
         if ($layout = 'modal'){$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);}
@@ -323,6 +327,8 @@ class biblestudyController extends JController {
     function upflash() {
         jimport('joomla.filesystem.file');
         jimport('joomla.filesystem.folder');
+        $serverid = JRequest::getInt('upload_server', '', 'post');
+        $folderid = JRequest::getInt('upload_folder', '', 'post');
         //import joomla filesystem functions, we will do all the filewriting with joomlas functions,
         //so if the ftp layer is on, joomla will write with that, not the apache user, which might
         //not have the correct permissions
@@ -361,7 +367,11 @@ class biblestudyController extends JController {
         //check the file extension is ok
         $fileName = $_FILES[$fieldName]['name'];
         $extOk = JBSUpload::checkfile($fileName);
-
+        $app = JFactory::getApplication(); 
+        $app->setUserState('fname',$_FILES[$fieldName]['name']); 
+        $app->setUserState('size', $_FILES[$fieldName]['size']);
+        $app->setUserState('serverid',$serverid);
+        $app->setUserState('folderid',$folderid);
         if ($extOk == false) {
             echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
             return;
@@ -422,7 +432,8 @@ class biblestudyController extends JController {
         $app = JFactory::getApplication(); 
         $app->setUserState('fname',$file['name']); 
         $app->setUserState('size', $file['size']);
-       
+        $app->setUserState('serverid',$serverid);
+        $app->setUserState('folderid',$folderid);
         if ($layout = 'modal'){$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);}
         else {$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);}
         

@@ -11,11 +11,17 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.helper');
 $params = $this->form->getFieldsets('params');
 //Get the studyid if this is coming to us in a modal form
+$folder = '';
+$server = '';
 $app = JFactory::getApplication(); 
 $study = $app->getUserState('sid'); 
 $sdate = $app->getUserState('sdate');
 $size = $app->getUserState('size');
 $fname = $app->getUserState('fname');
+$serverid = $app->getUserState('serverid');
+if ($this->item->server){$server = $this->item->server;}elseif($serverid){$server = $serverid;}elseif(empty($this->item->study_id)){$server = $this->admin->params['server'];} 
+$folderid = $app->getUserState('folderid');
+if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = $folderid;}elseif(empty($this->item->study_id)){$folder = $this->admin->params['path'];}
 ?>
 <script language="javascript" type="text/javascript">
     function submitbutton(task)
@@ -240,12 +246,12 @@ $fname = $app->getUserState('fname');
                 <li>
                     <?php echo $this->form->getLabel('server'); ?>
 
-                    <?php echo $this->form->getInput('server', null, empty($this->item->study_id) ? $this->admin->params['server'] : $this->item->server); ?>
+                    <?php echo $this->form->getInput('server', null, empty($this->item->server) ? $server : null); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('path'); ?>
 
-                    <?php echo $this->form->getInput('path', null, empty($this->item->study_id) ? $this->admin->params['path'] : $this->item->path); ?>
+                    <?php echo $this->form->getInput('path', null, empty($this->item->study_id) ? $folder : null); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('filename'); ?>
