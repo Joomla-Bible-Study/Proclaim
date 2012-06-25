@@ -160,7 +160,7 @@ class biblestudyControllermessage extends controllerClass {
 	public function save($key = null, $urlVar = 'a_id')
 	{
 	
-            $result = parent::save($key, $urlVar);
+            $result = parent::save($key, $urlVar); 
             return $result;
 	}
 }

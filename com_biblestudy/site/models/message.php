@@ -5,6 +5,7 @@
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
+ * class biblestudyModelmessage extends JModelAdmin
  */
 //No Direct Access
 defined('_JEXEC') or die;
@@ -13,6 +14,7 @@ jimport('joomla.application.component.modeladmin');
 jimport('joomla.html.parameter');
 require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
+//require_once JPATH_ADMINISTRATOR.'/components/com_biblestudy/models/message.php';
 
 class biblestudyModelmessage extends JModelAdmin {
 
@@ -185,8 +187,8 @@ class biblestudyModelmessage extends JModelAdmin {
      * @since 7.0.1
      * @todo This may need to be optimized
      */
-    public function save($data) {
-        $pks = JRequest::getInt('a_id');
+    public function save($data) { 
+        $pks = JRequest::getInt('a_id'); 
         if ($pks) {
             $this->setTopics($pks, $data);
             return true;
@@ -196,6 +198,7 @@ class biblestudyModelmessage extends JModelAdmin {
         }
     }
 
+    
     /**
      * Routine to save the topics(tags)
      * @param type $data from post
