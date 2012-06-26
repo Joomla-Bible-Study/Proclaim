@@ -57,7 +57,7 @@ $listDirn = $this->state->get('list.direction');
         <thead>
             <tr>
                 <th width="1%">
-                    <input type="checkbox" name="checkall-toggle" value="" onclick="checkAll(this)"/>
+                    <?php echo 'id';?>
                 </th>
                 <th width="8%">
                     <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
@@ -94,7 +94,7 @@ $listDirn = $this->state->get('list.direction');
         ?>
                         <tr class="row<?php echo $i % 2; ?>">
                             <td class="center">
-                <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                <?php echo $item->id; ?>
                     </td>
                     <td class="center">
                 <?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', true, 'cb', '', ''); ?>
