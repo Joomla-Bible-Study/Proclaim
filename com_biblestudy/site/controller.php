@@ -331,9 +331,10 @@ class biblestudyController extends JController {
                 $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
             }
         }
+        //JRequest::setVar('test',$file['name'],'get'); 
         $mediafileid = JRequest::getInt('id', '', 'post');
         $app = JFactory::getApplication(); 
-        $app->setUserState('fname',$file['name']); 
+        $app->setUserState('fname',$file['name']); //$name= $app->getUserState('fname'); print_r($app);
         $app->setUserState('size', $file['size']);
         $app->setUserState('serverid',$serverid);
         $app->setUserState('folderid',$folderid);

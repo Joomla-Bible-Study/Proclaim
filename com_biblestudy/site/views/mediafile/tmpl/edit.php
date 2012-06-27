@@ -9,7 +9,7 @@ defined('_JEXEC') or die;
 $params = $this->form->getFieldsets('params');
 $folder = '';
 $server = '';
-
+//$test = JRequest::getVar('test'); dump($test); 
 $app = JFactory::getApplication(); 
 $study = $app->getUserState('sid'); 
 $sdate = $app->getUserState('sdate');
