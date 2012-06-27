@@ -20,6 +20,15 @@ defined('_JEXEC') or die;
 class biblestudyControllermessage extends controllerClass {
     
     	/**
+	 * @since	1.6
+	 */
+	protected $view_item = 'message';
+
+	/**
+	 * @since	1.6
+	 */
+	protected $view_list = 'messages';
+    	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
 	 * @param	JModel	$model		The data model object.
@@ -162,5 +171,23 @@ class biblestudyControllermessage extends controllerClass {
 	
             $result = parent::save($key, $urlVar); 
             return $result;
+	}
+        
+        	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param	string	$name	The model name. Optional.
+	 * @param	string	$prefix	The class prefix. Optional.
+	 * @param	array	$config	Configuration array for model. Optional.
+	 *
+	 * @return	object	The model.
+	 *
+	 * @since	1.5
+	 */
+	public function getModel($name = 'message', $prefix = 'biblestudyModel', $config = array('ignore_request' => true))
+	{
+		$model = parent::getModel($name, $prefix, $config);
+
+		return $model;
 	}
 }

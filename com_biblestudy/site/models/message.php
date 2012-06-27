@@ -35,10 +35,10 @@ class biblestudyModelmessage extends JModelAdmin {
         }
         // Load state from the request. We use a_id to avoid collisions with the router
         $pks = JRequest::getInt('a_id'); 
-        if ($pks) {
-            $this->pks = $pks;
-        }
+        $this->pks = $pks;
         $this->setState('message.id', $pks);
+        
+        
     }
 
     /**
@@ -323,4 +323,33 @@ class biblestudyModelmessage extends JModelAdmin {
         }
     }
 
+    /**
+	 * Method to get article data.
+	 *
+	 * @param	integer	The id of the article.
+	 *
+	 * @return	mixed	Content item data object on success, false on failure.
+	 */
+	public function getItem($itemId = null)
+	{
+		// Initialise variables.
+		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('message.id');
+
+		// Get a row instance.
+		$table = $this->getTable();
+
+		// Attempt to load the row.
+		$return = $table->load($itemId);
+
+		// Check for a table object error.
+		if ($return === false && $table->getError()) {
+			$this->setError($table->getError());
+			return false;
+		}
+                $properties = $table->getProperties(1);
+		$value = JArrayHelper::toObject($properties, 'JObject');
+                return $value;
+	}
+        
+        
 }
