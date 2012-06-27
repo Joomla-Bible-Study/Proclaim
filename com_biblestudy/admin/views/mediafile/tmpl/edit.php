@@ -13,15 +13,27 @@ $params = $this->form->getFieldsets('params');
 //Get the studyid if this is coming to us in a modal form
 $folder = '';
 $server = '';
-$app = JFactory::getApplication(); 
-$study = $app->getUserState('sid'); 
+$app = JFactory::getApplication();
+$study = $app->getUserState('sid');
 $sdate = $app->getUserState('sdate');
 $size = $app->getUserState('size');
 $fname = $app->getUserState('fname');
 $serverid = $app->getUserState('serverid');
-if ($this->item->server){$server = $this->item->server;}elseif($serverid){$server = $serverid;}elseif(empty($this->item->study_id)){$server = $this->admin->params['server'];} 
+if ($this->item->server) {
+    $server = $this->item->server;
+} elseif ($serverid) {
+    $server = $serverid;
+} elseif (empty($this->item->study_id)) {
+    $server = $this->admin->params['server'];
+}
 $folderid = $app->getUserState('folderid');
-if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = $folderid;}elseif(empty($this->item->study_id)){$folder = $this->admin->params['path'];}
+if ($this->item->path) {
+    $folder = $this->item->path;
+} elseif ($folderid) {
+    $folder = $folderid;
+} elseif (empty($this->item->study_id)) {
+    $folder = $this->admin->params['path'];
+}
 ?>
 <script language="javascript" type="text/javascript">
     function submitbutton(task)
@@ -84,10 +96,10 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
             if (isValid)
             {
                 submitform(task);
-                if (self != top) 
+                if (self != top)
                 {
                     window.top.setTimeout('window.parent.SqueezeBox.close()', 2000);
-		}
+                }
                 window.top.setTimeout('window.location.reload(true)', 1000);
                 return true;
             }
@@ -122,9 +134,13 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
 
 </script>
 <form
-    action="<?php 
-    
-    if (JRequest::getWord('layout') == 'modal') {$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id='.(int) $this->item->id;} else {$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;} echo $url; ?>"
+    action="<?php
+if (JRequest::getWord('layout') == 'modal') {
+    $url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
+} else {
+    $url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
+} echo $url;
+?>"
     method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
@@ -152,11 +168,11 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
                 <li>
                     <?php echo $this->form->getLabel('createdate'); ?>
 
-                    <?php echo $this->form->getInput('createdate',null, empty($this->item->createdate) ? $sdate : null); ?></li>
+                    <?php echo $this->form->getInput('createdate', null, empty($this->item->createdate) ? $sdate : null); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('study_id'); ?>
-                    
-                    <?php echo $this->form->getInput('study_id',null, empty($this->item->study_id) ? $study : null); ?></li>
+
+                    <?php echo $this->form->getInput('study_id', null, empty($this->item->study_id) ? $study : null); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('podcast_id'); ?>
 
@@ -256,11 +272,11 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
                 <li>
                     <?php echo $this->form->getLabel('filename'); ?>
 
-                    <?php echo $this->form->getInput('filename',null, empty($this->item->filename) ? $fname : null); ?></li>
+                    <?php echo $this->form->getInput('filename', null, empty($this->item->filename) ? $fname : null); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('size'); ?>
 
-                    <?php echo $this->form->getInput('size',null, empty($this->item->size) ? $size : null); ?></li>
+                    <?php echo $this->form->getInput('size', null, empty($this->item->size) ? $size : null); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('special'); ?>
 

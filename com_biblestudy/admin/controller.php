@@ -17,10 +17,24 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 jimport('joomla.application.component.controller');
 
+/**
+ * JController for BibleStudy Admin class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class biblestudyController extends JController {
 
+    /**
+     * Default view var.
+     * @var string
+     */
     protected $default_view = 'cpanel';
 
+    /**
+     * Core Display
+     * @param boolaen $cachable
+     * @param boolean $urlparams
+     */
     public function display($cachable = false, $urlparams = false) {
 
         //attempt to change mysql for error in large select
@@ -249,6 +263,7 @@ class biblestudyController extends JController {
             $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
         }
     }
+
     /**
      * Resets Plays
      */
@@ -273,6 +288,7 @@ class biblestudyController extends JController {
      * Adds the ability to uploade with flash
      * @since 7.1.0
      */
+
     function uploadflash() {
 
         JRequest::checktoken() or jexit('Invalid Token');
@@ -282,8 +298,8 @@ class biblestudyController extends JController {
         $serverid = JRequest::getInt('upload_server', '', 'post');
         $folderid = JRequest::getInt('upload_folder', '', 'post');
         $app = JFactory::getApplication();
-        $app->setUserState('serverid',$serverid);
-        $app->setUserState('folderid',$folderid);
+        $app->setUserState('serverid', $serverid);
+        $app->setUserState('folderid', $folderid);
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
         // get temp file details
@@ -291,9 +307,12 @@ class biblestudyController extends JController {
         $temp_folder = JBSUpload::gettempfolder();
         $tempfile = $temp_folder . $temp; //dump($tempfile);
         // get path and abort if none
-        $layout = JRequest::getWord('layout','');
-        if ($layout == 'modal'){$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;}
-        else {$url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;}
+        $layout = JRequest::getWord('layout', '');
+        if ($layout == 'modal') {
+            $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;
+        } else {
+            $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
+        }
         $path = JBSUpload::getpath($url, $tempfile);
 
         // check filetype is allowed
@@ -314,12 +333,16 @@ class biblestudyController extends JController {
         }
         //  $podmsg = PIHelperadmin::setpods($row);
         // delete temp file
-        
+
         JBSUpload::deletetempfile($tempfile);
         $mediafileid = JRequest::getInt('id', '', 'post');
-        if ($layout = 'modal'){$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);}
-        else {$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);}
+        if ($layout = 'modal') {
+            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
+        } else {
+            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
+        }
     }
+
     /**
      * Upload Flash System
      * @return text
@@ -367,11 +390,11 @@ class biblestudyController extends JController {
         //check the file extension is ok
         $fileName = $_FILES[$fieldName]['name'];
         $extOk = JBSUpload::checkfile($fileName);
-        $app = JFactory::getApplication(); 
-        $app->setUserState('fname',$_FILES[$fieldName]['name']); 
+        $app = JFactory::getApplication();
+        $app->setUserState('fname', $_FILES[$fieldName]['name']);
         $app->setUserState('size', $_FILES[$fieldName]['size']);
-        $app->setUserState('serverid',$serverid);
-        $app->setUserState('folderid',$folderid);
+        $app->setUserState('serverid', $serverid);
+        $app->setUserState('folderid', $folderid);
         if ($extOk == false) {
             echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
             return;
@@ -429,14 +452,16 @@ class biblestudyController extends JController {
             }
         }
         $mediafileid = JRequest::getInt('id', '', 'post');
-        $app = JFactory::getApplication(); 
-        $app->setUserState('fname',$file['name']); 
+        $app = JFactory::getApplication();
+        $app->setUserState('fname', $file['name']);
         $app->setUserState('size', $file['size']);
-        $app->setUserState('serverid',$serverid);
-        $app->setUserState('folderid',$folderid);
-        if ($layout = 'modal'){$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);}
-        else {$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);}
-        
+        $app->setUserState('serverid', $serverid);
+        $app->setUserState('folderid', $folderid);
+        if ($layout = 'modal') {
+            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
+        } else {
+            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
+        }
     }
 
 }
