@@ -67,7 +67,7 @@ class JBSConvert {
                 $db->query();
                 if ($db->getErrorNum() > 0) {
                     $error = $db->getErrorMsg();
-                    $result_table .= '<tr><td>' . JText::_('JBS_ERROR_OCCURED_SS_SERIES') . ': ' . $error . '</td></tr>';
+                    $result_table .= '<tr><td>' . JText::_('JBS_ADM_ERROR_OCCURED_SS_SERIES') . ': ' . $error . '</td></tr>';
                 } else {
                     $updatedse = 0;
                     $updatedse = $db->getAffectedRows(); //echo 'affected: '.$updated;

@@ -63,7 +63,7 @@
                 description="JBS_PDC_SUBSCRIBE_WORDS_DESC" size="20" default="" />
        <field name="alternatelink" type="text" label="JBS_PDC_ALTERNATE_LINK" description="JBS_PDC_ALTERNATE_LINK_DESC" size="75" />
        <field name="alternateimage" type="media" label="JBS_PDC_ALTERNATE_IMAGE" description="JBS_PDC_ALTERNATE_IMAGE_DESC" />
-       <field name="alternatewords" type="text" size="20" label="JBS_PDC_ALTERNATE_WORDS" description="JBS_PDC_SUBSCRIBE_WORDS" />
+       <field name="alternatewords" type="text" size="20" label="JBS_PDC_ALTERNATE_WORDS" description="JBS_PDC_ALTERNATE_WORDS_DESC" />
        <field name="podcast_subscribe_show" type="list" default="1" label="JBS_PDC_PODCAST_SHOW" description="JBS_PDC_PODCAST_SHOW_DESC" >
            <option value="1">JBS_PDC_PODCAST_SHOW_NO</option>
            <option value="2">JBS_PDC_PODCAST_SHOW_MAIN</option>
