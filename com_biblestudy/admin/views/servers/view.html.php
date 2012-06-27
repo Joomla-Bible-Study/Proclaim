@@ -32,6 +32,8 @@ class BiblestudyViewServers extends JView {
             JError::raiseError(500, implode("\n", $errors));
             return false;
         }
+        
+        $this->addToolbar();
 
         // Display the template
         parent::display($tpl);
