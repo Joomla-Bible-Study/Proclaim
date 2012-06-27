@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,16 +13,17 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 jimport('joomla.html.parameter');
 
 /**
- *
+ * Joomla! Bible Study Media class.
+ * @package BibleStudy.Site
+ * @since 7.0.0
  */
-
 class jbsMedia {
 
     /**
-     *
-     * @param type $row
-     * @param type $params
-     * @param type $admin_params
+     * Return Media Table
+     * @param string $row
+     * @param string $params
+     * @param string $admin_params
      * @return null|string
      */
     function getMediaTable($row, $params, $admin_params) {
@@ -92,16 +94,14 @@ class jbsMedia {
                             $media->spath . $media->fpath . $media->filename . '&size=' . $media->size . '">';
                 }
                 //Check to see if they want to use a popu
-                if ($params->get('useterms')> 0)
-                {
+                if ($params->get('useterms') > 0) {
 
-                    $downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode='.$compat_mode.'&amp;mid='.$media->id.'&amp;t='.$template.'" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
-                  //  $downloadlink = '<a href="#" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;compat_mode='.$compat_mode.'&amp;mid='.$media->id.'&amp;template='.$template.'\',\'newwindow\',\'width=640, height=480,menubar=no, status=no,location=no,toolbar=no,scrollbars=yes\');
+                    $downloadlink = '<a class="modal" href="index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;layout=modal&amp;compat_mode=' . $compat_mode . '&amp;mid=' . $media->id . '&amp;t=' . $template . '" rel="{handler: \'iframe\', size: {x: 640, y: 480}}">';
+                    //  $downloadlink = '<a href="#" onclick="window.open(\'index.php?option=com_biblestudy&amp;view=terms&amp;tmpl=component&amp;compat_mode='.$compat_mode.'&amp;mid='.$media->id.'&amp;template='.$template.'\',\'newwindow\',\'width=640, height=480,menubar=no, status=no,location=no,toolbar=no,scrollbars=yes\');
 //                     return false">';
                 }
                 $downloadlink .= '<img src="' . $download_image . '" alt="' . JText::_('JBS_MED_DOWNLOAD') . '" height="' .
                         $height . '" width="' . $width . '" border="0" title="' . JText::_('JBS_MED_DOWNLOAD') . '" /></a>';
-
             }
             switch ($link_type) {
                 case 0:
@@ -151,11 +151,10 @@ class jbsMedia {
     }
 
     /**
-     *
-     * @param type $id
-     * @return type
+     * Get Media ID
+     * @param int $id
+     * @return object
      */
-
     function getMediaid($id) {
         $db = JFactory::getDBO();
         $query = 'SELECT m.id as mid, m.study_id, s.id as sid FROM #__bsms_mediafiles AS m
@@ -167,11 +166,10 @@ class jbsMedia {
     }
 
     /**
-     *
+     * Get Media info Row1
      * @param type $id
      * @return boolean
      */
-
     function getMediaRows($id) {
         if (!$id) {
             return false;
@@ -198,11 +196,10 @@ class jbsMedia {
     }
 
     /**
-     *
-     * @param type $id
+     * Get Media info Row2
+     * @param int $id
      * @return boolean
      */
-
     function getMediaRows2($id) {
         //We use this for the popup view because it relies on the media file's id rather than the study_id field above
         $db = JFactory::getDBO();
@@ -233,10 +230,9 @@ class jbsMedia {
     }
 
     /**
-     *
-     * @return type
+     * Return Admin DB
+     * @return object
      */
-
     function getAdmin() {
         $db = JFactory::getDBO();
         $db->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
@@ -246,14 +242,13 @@ class jbsMedia {
     }
 
     /**
-     *
+     * Set up Player Attributes
      * @param type $admin_params
      * @param type $params
      * @param type $itemparams
      * @param type $media
      * @return string
      */
-
     function getPlayerAttributes($admin_params, $params, $itemparams, $media) {
         $player->playerwidth = $params->get('player_width');
         $player->playerheight = $params->get('player_height');
@@ -333,12 +328,11 @@ class jbsMedia {
     }
 
     /**
-     *
+     * Return Docman Media
      * @param type $media
      * @param type $image
      * @return string
      */
-
     function getDocman($media, $image) {
         $src = JURI::base() . $image->path;
         $height = $image->height;
@@ -358,12 +352,11 @@ class jbsMedia {
     }
 
     /**
-     *
+     * Return Articles.
      * @param type $media
      * @param type $image
      * @return string
      */
-
     function getArticle($media, $image) {
 
         $src = JURI::base() . $image->path;
@@ -377,13 +370,12 @@ class jbsMedia {
     }
 
     /**
-     *
+     * Set up Virtumart if Vertumart is installed.
      * @param type $media
      * @param type $params
      * @param type $image
      * @return string
      */
-
     function getVirtuemart($media, $params, $image) {
         $src = JURI::base() . $image->path;
         $height = $image->height;
@@ -396,7 +388,7 @@ class jbsMedia {
     }
 
     /**
-     *
+     * Setup Player Code.
      * @param type $params
      * @param type $itemparams
      * @param type $player
@@ -404,7 +396,6 @@ class jbsMedia {
      * @param type $media
      * @return string
      */
-
     function getPlayerCode($params, $itemparams, $player, $image, $media) {
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         include_once($path1 . 'filesize.php');
@@ -554,7 +545,7 @@ class jbsMedia {
     }
 
     /**
-     *
+     * Return AVMedia Code.
      * @param type $mediacode
      * @param type $media
      * @return sting
@@ -573,12 +564,12 @@ class jbsMedia {
     }
 
     /**
-     *
+     * Update Hit count for playes.
      * @param type $id
      * @return boolean
      */
     function hitPlay($id) {
-        $db = & JFactory::getDBO();
+        $db = JFactory::getDBO();
         $query = 'UPDATE #__bsms_mediafiles SET plays = plays + 1 WHERE id = ' . $id;
         $db->setQuery('UPDATE ' . $db->nameQuote('#__bsms_mediafiles') . 'SET ' . $db->nameQuote('plays') . ' = ' . $db->nameQuote('plays') . ' + 1 ' . ' 	WHERE id = ' . $id);
         $db->query();

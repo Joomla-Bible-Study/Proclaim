@@ -61,16 +61,15 @@ class Dump_File {
         $download_file = $protocol . $server . $path . $filename;
         $mimeType = '';
         $mimeType = $media->mimetype;
-
-
-        if ($size == Null) {
-
-            if (!$size = $this->getRemoteFileSize($download_file)) {//die(JText::_('COM_BIBLESTUDY_FILE_SIZE_EMPTY'));
-                //exit;
-                $size = $this->getRemoteFileSize($download_file);
+        $getsize = $this->getRemoteFileSize($download_file);
+        if ($size === '') {
+            if ($size != $getsize) {
+                if ($getsize != FALSE) :
+                    $size = $getsize;
+                endif;
             }
         }
-
+        
         // Clean the output buffer
         @ob_end_clean();
 
@@ -176,10 +175,12 @@ class Dump_File {
      * @param object $url
      * @return boolean
      */
-    function getRemoteFileSize($url) {
+    protected function getRemoteFileSize($url) {
         $parsed = parse_url($url);
         $host = $parsed["host"];
-        $fp = @fsockopen($host, 80, $errno, $errstr, 20);
+        if (function_exists('fsockopen')) {
+            $fp = @fsockopen($host, 80, $errno, $errstr, 20);
+        }
         if (!$fp)
             return false;
         else {
@@ -199,15 +200,6 @@ class Dump_File {
                 $return = trim(substr($header, strlen($s)));
                 break;
             }
-        }
-        if ($return) {
-            $size = round($return / 1024, 2);
-            $sz = "KB"; // Size In KB
-            if ($size > 1024) {
-                $size = round($size / 1024, 2);
-                $sz = "MB"; // Size in MB
-            }
-            $return = "$size $sz";
         }
         return $return;
     }

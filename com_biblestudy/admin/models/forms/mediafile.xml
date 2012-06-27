@@ -58,10 +58,10 @@
         <option value="-1">JBS_CMN_SELECT_FOLDER</option>
     </field>
     <field name="media_image" type="sql" extension="com_biblestudy"
-           label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC" required="true"
+           label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
            class="inputbox"
            query="SELECT id, media_image_name FROM #__bsms_media WHERE published=1 ORDER BY media_image_name ASC"
-           key_field="id" value_field="media_image_name">
+           key_field="id" value_field="media_image_name" required="true" >
         <option value="-1">JBS_MED_SELECT_MEDIA_TYPE</option>
     </field>
     <field name="mime_type" type="sql" extension="com_biblestudy"

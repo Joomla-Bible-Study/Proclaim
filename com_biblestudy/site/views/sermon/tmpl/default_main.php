@@ -4,7 +4,6 @@ defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
 
-//require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 JHTML::_('behavior.tooltip');
 $params = $this->params;
 $document = JFactory::getDocument();
@@ -14,8 +13,9 @@ $row = $this->study;
 // @todo need to clean up old code.
 $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');
-if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscribe; }
- 
+if ($this->params->get('showpodcastsubscribedetails') == 1) {
+    echo $this->subscribe;
+}
 ?>
 <div id="bsmHeader">
     <?php
@@ -30,7 +30,6 @@ if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscr
             echo $this->page->print;
         }
         ?>
-
     </div>
 
     <?php
@@ -43,9 +42,10 @@ if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscr
             echo $this->page->social;
             ?>
         </div>
-<?php } //End Social Networking   ?>
-    <table><tr><td>
-
+    <?php } //End Social Networking    ?>
+    <table>
+        <tr>
+            <td>
 
                 <?php if ($this->params->get('show_teacher_view') > 0) {
                     ?>
@@ -54,10 +54,11 @@ if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscr
                     $teacher_call = JView::loadHelper('teacher');
                     $teacher = getTeacher($this->params, $row->teacher_id, $this->admin_params);
                     echo $teacher;
-                    echo '</td><td>';
-                }
+                    ?>
+                </td>
+                <td><?php
+            }
                 ?>
-
 
                 <?php
                 if ($this->params->get('title_line_1') + $params->get('title_line_2') > 0) {
@@ -68,9 +69,10 @@ if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscr
                 ?>
 
 
-            </td></tr></table>
+            </td>
+        </tr>
+    </table>
 </div><!-- header -->
-
 
 <table id="bsmsdetailstable" cellspacing="0">
     <?php
@@ -97,9 +99,11 @@ if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscr
             echo $listing;
         }
         ?>
-    </tbody></table>
+    </tbody>
+</table>
 <table id="bsmsdetailstable" cellspacing="0">
-    <tr><td id="studydetailstext">
+    <tr>
+        <td id="studydetailstext">
             <?php
             echo $this->passage;
             if ($this->params->get('show_scripture_link') > 0) {
@@ -108,14 +112,15 @@ if ($this->params->get('showpodcastsubscribedetails') == 1 ) {echo $this->subscr
                 echo $this->study->studytext;
             }
             ?>
-
-        </td></tr></table>
+        </td>
+    </tr>
+</table>
 <?php
 if ($this->params->get('showrelated') == 2) {
     echo $this->related;
 }
 ?>
 <?php
-if ($this->params->get('showpodcastsubscribedetails') == 2 ) {echo $this->subscribe; }
-
-
+if ($this->params->get('showpodcastsubscribedetails') == 2) {
+    echo $this->subscribe;
+}

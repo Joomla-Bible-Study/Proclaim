@@ -1,7 +1,6 @@
 <?php
-
 /**
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,10 +12,18 @@ jimport('joomla.application.component.view');
 
 // This is the popup window for the teachings.  We could put anything in this window.
 //TODO Need to Clean this up and rework to be proper Joomla calls bcc
-
+/**
+ * Popup Jview
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class biblestudyViewpopup extends JView {
 
-    function display() {
+    /**
+     * Dispay function
+     * @param string $tpl
+     */
+    function display($tpl = null) {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
         $pathh = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
@@ -101,9 +108,17 @@ class biblestudyViewpopup extends JView {
         $frontcolor = $params->get('frontcolor', '0xFFFFFF');
         $lightcolor = $params->get('lightcolor', '0x000000');
         $screencolor = $params->get('screencolor', '0xFFFFFF');
-        if ($params->get('autostart',1) == 1){$autostart = 'true';} else {$autostart = 'false';}
-        if ($itemparams->get('autostart') == 1){$autostart = 'true';} elseif($itemparams->get('autostart') == 2) {$autostart = 'false';}
-        
+        if ($params->get('autostart', 1) == 1) {
+            $autostart = 'true';
+        } else {
+            $autostart = 'false';
+        }
+        if ($itemparams->get('autostart') == 1) {
+            $autostart = 'true';
+        } elseif ($itemparams->get('autostart') == 2) {
+            $autostart = 'false';
+        }
+
         //Here is where we start the display
         ?>
         <div class="popupwindow">
@@ -140,7 +155,7 @@ class biblestudyViewpopup extends JView {
                 echo "<script type='text/javascript'>
 				jwplayer('placeholder').setup({
 				flashplayer: '" . JURI::base() . "media/com_biblestudy/player/player.swf',
-                                autostart:'".$autostart."',
+                                autostart:'" . $autostart . "',
                                 });
                        </script>";
 
@@ -156,8 +171,6 @@ class biblestudyViewpopup extends JView {
                 echo '<div class=\'direct\'><iframe src ="' . $path1 . '" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0"><p>' . JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') . '</p>
                         </iframe></div>';
             }
-
-
 
             //Legacy Player (since JBS 6.2.2)
             if ($player == 7) {
@@ -188,6 +201,15 @@ class biblestudyViewpopup extends JView {
 
 //end of display function
 
+    /**
+     * Set Titles
+     * @param string $text
+     * @param string $media
+     * @param string $scripture
+     * @param string $date
+     * @param string $length
+     * @return object
+     */
     function titles($text, $media, $scripture, $date, $length) {
         if (isset($media->teachername)) {
             $text = str_replace('{{teacher}}', $media->teachername, $text);
