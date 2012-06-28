@@ -331,13 +331,13 @@ class biblestudyController extends JController {
                 $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
             }
         }
-        //JRequest::setVar('test',$file['name'],'get'); 
         $mediafileid = JRequest::getInt('id', '', 'post');
         $app = JFactory::getApplication(); 
-        $app->setUserState('fname',$file['name']); //$name= $app->getUserState('fname'); print_r($app);
-        $app->setUserState('size', $file['size']);
-        $app->setUserState('serverid',$serverid);
-        $app->setUserState('folderid',$folderid);
+        $app->setUserState($option.'fname',$file['name']); //$name= $app->getUserState('fname'); print_r($app);
+        $app->setUserState($option.'size', $file['size']);
+        $app->setUserState($option.'serverid',$serverid);
+        $app->setUserState($option.'folderid',$folderid); 
+        
         if ($layout = 'modal'){$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);}
         else {$this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);}
     }

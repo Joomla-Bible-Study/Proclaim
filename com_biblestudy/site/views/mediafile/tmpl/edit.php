@@ -9,15 +9,15 @@ defined('_JEXEC') or die;
 $params = $this->form->getFieldsets('params');
 $folder = '';
 $server = '';
-//$test = JRequest::getVar('test'); dump($test); 
 $app = JFactory::getApplication(); 
-$study = $app->getUserState('sid'); 
-$sdate = $app->getUserState('sdate');
-$size = $app->getUserState('size');
-$fname = $app->getUserState('fname'); //dump($fname);
-$serverid = $app->getUserState('serverid');
+$option = JRequest::getCmd('option');
+$study = $app->getUserState($option.'sid'); 
+$sdate = $app->getUserState($option.'sdate');
+$size = $app->getUserState($option.'size');
+$fname = $app->getUserState($option.'fname'); //dump($fname);
+$serverid = $app->getUserState($option.'serverid');
 if ($this->item->server){$server = $this->item->server;}elseif($serverid){$server = $serverid;}elseif(empty($this->item->study_id)){$server = $this->admin->params['server'];} 
-$folderid = $app->getUserState('folderid');
+$folderid = $app->getUserState($option.'folderid');
 if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = $folderid;}elseif(empty($this->item->study_id)){$folder = $this->admin->params['path'];}
 ?>
 <script language="javascript" type="text/javascript">
