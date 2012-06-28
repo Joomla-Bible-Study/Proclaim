@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: biblestudy.download.class.php 7.0.3 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,6 +11,10 @@ defined('_JEXEC') or die;
 
 jimport('joomla.environment.response');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class Dump_File {
 
     /**
@@ -69,7 +72,7 @@ class Dump_File {
                 endif;
             }
         }
-        
+
         // Clean the output buffer
         @ob_end_clean();
 

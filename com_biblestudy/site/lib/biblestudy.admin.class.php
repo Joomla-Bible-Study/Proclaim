@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: biblestudy.admin.class.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,8 +11,16 @@ defined('_JEXEC') or die;
 
 require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class JBSAdmin {
 
+    /**
+     *
+     * @return string
+     */
     function getMediaPlayer() {
         $db = JFactory::getDBO();
         $query = "Select #__components.name FROM #__components WHERE #__components.name LIKE '%AvReloaded%'";
@@ -36,6 +43,10 @@ class JBSAdmin {
         return $player;
     }
 
+    /**
+     *
+     * @return \JRegistry
+     */
     function getAdminsettings() {
         $db = JFactory::getDBO();
         $db->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
@@ -50,6 +61,10 @@ class JBSAdmin {
         return $admin_params;
     }
 
+    /**
+     *
+     * @return boolean
+     */
     function getPermission() {
 
         $results = array();
@@ -108,7 +123,11 @@ class JBSAdmin {
     }
 
 // End of Permission function
-
+    /**
+     *
+     * @param type $params
+     * @return boolean|int
+     */
     function commentsPermission($params) {
         $results = array();
         $comments = 0;
@@ -169,6 +188,11 @@ class JBSAdmin {
         return $comments;
     }
 
+    /**
+     *
+     * @param type $row
+     * @return boolean
+     */
     function getShowLevel($row) {
         $show = null;
         $database = JFactory::getDBO();
@@ -199,6 +223,11 @@ class JBSAdmin {
         return $show;
     }
 
+    /**
+     *
+     * @param type $results
+     * @return type
+     */
     function showRows($results) {
         $count = count($results);
 

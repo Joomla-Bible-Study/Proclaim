@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: editlisting.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,6 +10,12 @@
 defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 
+/**
+ *
+ * @param type $admin_params
+ * @param type $params
+ * @return null
+ */
 function getEditlisting($admin_params, $params) {
 
     $mainframe = JFactory::getApplication();

@@ -8,6 +8,7 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+
 /**
  * Function to get File Size
  * @param string $file_size

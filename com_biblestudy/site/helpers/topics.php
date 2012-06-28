@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: topics.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -10,6 +9,13 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+/**
+ *
+ * @param type $params
+ * @param type $id
+ * @param type $admin_params
+ * @return string
+ */
 function getTopicsLandingPage($params, $id, $admin_params) {
     $mainframe = & JFactory::getApplication();
     $option = JRequest::getCmd('option');
@@ -31,9 +37,12 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     $registry = new JRegistry;
     $registry->loadJSON($item->params);
     $m_params = $registry;
-     $language = $m_params->get('language'); 
-        if ($language == '*' || !$language){$langlink = '';}
-        elseif ($language != '*'){$langlink = '&filter.languages='.$language;}
+    $language = $m_params->get('language');
+    if ($language == '*' || !$language) {
+        $langlink = '';
+    } elseif ($language != '*') {
+        $langlink = '&filter.languages=' . $language;
+    }
     $menu_order = $m_params->get('topics_order');
     if ($menu_order) {
         switch ($menu_order) {
@@ -52,12 +61,14 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     $query = $db->getQuery('true');
     $query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params');
     $query->from('#__bsms_studies');
-    $query->join('LEFT','#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id');
+    $query->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id');
     $query->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id');
     $query->where('#__bsms_topics.published = 1');
-    $query->order('#__bsms_topics.topic_text '. $order);
-    if ($language != '*'){$query->where('#__bsms_studies.language LIKE "'.$language.'"');}
-  
+    $query->order('#__bsms_topics.topic_text ' . $order);
+    if ($language != '*') {
+        $query->where('#__bsms_studies.language LIKE "' . $language . '"');
+    }
+
     $db->setQuery($query);
 
     $tresult = $db->loadObjectList();
@@ -93,7 +104,7 @@ function getTopicsLandingPage($params, $id, $admin_params) {
             $topic .= "\n\t" . '<tr>';
         }
         $topic .= "\n\t\t" . '<td id="landing_td">';
-        $topic .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_topic=' . $b->id . '&filter_teacher=0'.$langlink.'&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
+        $topic .= '<a href="index.php?option=com_biblestudy&view=sermons&filter_topic=' . $b->id . '&filter_teacher=0' . $langlink . '&filter_series=0&filter_location=0&filter_book=0&filter_year=0&filter_messagetype=0&t=' . $template . '">';
 
         $topic .= getTopicItemTranslated($b);
 

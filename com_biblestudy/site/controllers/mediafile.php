@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: mediafile.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,6 +11,10 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class biblestudyControllermediafile extends JControllerForm {
     /*
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
@@ -33,11 +36,20 @@ class biblestudyControllermediafile extends JControllerForm {
         $this->registerTask('upload', 'upload');
     }
 
+    /**
+     *
+     * @param type $name
+     * @param type $prefix
+     * @return type
+     */
     public function &getModel($name = 'mediafile', $prefix = 'biblestudyModel') {
         $model = parent::getModel($name, $prefix, array('ignore_request' => true));
         return $model;
     }
 
+    /**
+     * Link to Docman Category Items
+     */
     function docmanCategoryItems() {
         //hide errors and warnings
         error_reporting(0);
@@ -48,6 +60,9 @@ class biblestudyControllermediafile extends JControllerForm {
         echo $items;
     }
 
+    /**
+     * Link to Sections May need to be Removed.
+     */
     function articlesSectionCategories() {
         error_reporting(0);
         $secId = JRequest::getVar('secId');
@@ -57,6 +72,9 @@ class biblestudyControllermediafile extends JControllerForm {
         echo $items;
     }
 
+    /**
+     * Link to Articals Category Items
+     */
     function articlesCategoryItems() {
         error_reporting(0);
         $catId = JRequest::getVar('catId');
@@ -66,6 +84,9 @@ class biblestudyControllermediafile extends JControllerForm {
         echo $items;
     }
 
+    /**
+     * Link to VertueMart Items
+     */
     function virtueMartItems() {
         error_reporting(0);
         $catId = JRequest::getVar('catId');
@@ -75,6 +96,9 @@ class biblestudyControllermediafile extends JControllerForm {
         echo $items;
     }
 
+    /**
+     * Reset Download count
+     */
     function resetDownloads() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'post');
@@ -92,6 +116,9 @@ class biblestudyControllermediafile extends JControllerForm {
         }
     }
 
+    /**
+     * Reset Play Count
+     */
     function resetPlays() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'post');
@@ -109,6 +136,9 @@ class biblestudyControllermediafile extends JControllerForm {
         }
     }
 
+    /**
+     * Upload Flash system
+     */
     function uploadflash() {
 
         JRequest::checktoken() or jexit('Invalid Token');
@@ -150,6 +180,10 @@ class biblestudyControllermediafile extends JControllerForm {
         $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
     }
 
+    /**
+     * Upload Flash
+     * @return type
+     */
     function upflash() {
         jimport('joomla.filesystem.file');
         jimport('joomla.filesystem.folder');
@@ -214,6 +248,9 @@ class biblestudyControllermediafile extends JControllerForm {
         }
     }
 
+    /**
+     * Upload Function
+     */
     function upload() {
         JRequest::checktoken() or jexit('Invalid Token');
         $option = JRequest::getCmd('option');
@@ -250,6 +287,11 @@ class biblestudyControllermediafile extends JControllerForm {
     }
 
 //New File Size System Should work on all server now.
+    /**
+     *
+     * @param type $url
+     * @return boolean
+     */
     function getSizeFile($url) {
         $head = "";
         $url_p = @parse_url($url);

@@ -1,21 +1,23 @@
 <?php
 
 /**
- * @author Tom Fuller
- * @copyright 2012
- */
-
-/**
- * Method to load javascript for squeezebox modal
- *
- * $param string $host the site base url
- *
- * @return	string
- */
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * @since 7.2.0
+ * */
 class JBSUpload {
 
+    /**
+     * Method to load javascript for squeezebox modal
+     *
+     * $param string $host the site base url
+     *
+     * @return	string
+     */
     function uploadjs($host) {
-        //when we send the files for upload, we have to tell Joomla our session, or we will get logged out 
+        //when we send the files for upload, we have to tell Joomla our session, or we will get logged out
         $session = JFactory::getSession();
 
         $val = ini_get('upload_max_filesize');
@@ -36,15 +38,15 @@ class JBSUpload {
         $host = JURI::root();
         $swfUploadHeadJs = '
     var swfu;
-     
+
     window.onload = function()
     {
-     
-    var settings = 
+
+    var settings =
     {
             //this is the path to the flash file, you need to put your components name into it
             flash_url : "' . $host . 'media/com_biblestudy/js/swfupload/swfupload.swf",
-     
+
             //we can not put any vars into the url for complicated reasons, but we can put them into the post...
             upload_url: "' . JURI::root() . 'administrator/index.php?option=com_biblestudy&view=mediafile&task=uploadflash",
             post_params: {
@@ -61,13 +63,13 @@ class JBSUpload {
             file_types_description : "All Files",
             file_upload_limit : 100,
             file_queue_limit : 10,
-            custom_settings : 
+            custom_settings :
             {
                     progressTarget : "fsUploadProgress",
                     cancelButtonId : "btnCancel"
             },
             debug: true,
-     
+
             // Button settings
             button_image_url: "' . JURI::root() . 'media/com_biblestudy/js/swfupload/images/uploadbutton.png",
             button_width: "86",
@@ -77,7 +79,7 @@ class JBSUpload {
             button_text_style: ".upbutton { font-size: 14px; margin-left: 15px;}",
             button_text_left_padding: 5,
             button_text_top_padding: 5,
-     
+
             // The event handler functions are defined in handlers.js
             file_queued_handler : fileQueued,
             file_queue_error_handler : fileQueueError,
@@ -91,7 +93,7 @@ class JBSUpload {
     };
     swfu = new SWFUpload(settings);
     };
-     
+
     ';
 
         return $swfUploadHeadJs;
@@ -123,7 +125,7 @@ class JBSUpload {
      * Method to get path variable
      *
      * @param	array $row  message details.
-     * @param	string $tempfile  Temp file path.	 
+     * @param	string $tempfile  Temp file path.
      * @return	string
      */
     function getpath($url, $tempfile, $front = '') {
@@ -290,7 +292,7 @@ class JBSUpload {
     function uploadftp($filename, $file) {
         $msg = '';
         jimport('joomla.filesystem.file');
-//dump($filename,'filename: '); dump($file,'file: ');    
+//dump($filename,'filename: '); dump($file,'file: ');
         if (!JFILE::upload($file['tmp_name'], $filename)) {
             $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH') . ' ' . $filename->path . ' ' . JText::_('JBS_MED_UPLOAD_EXISTS');
         }
@@ -447,6 +449,13 @@ class JBSUpload {
         return $filename;
     }
 
+    /**
+     *
+     * @param type $file
+     * @param type $filename
+     * @param type $admin
+     * @return boolean
+     */
     function aws($file, $filename, $admin = 0) {
         $app = JFactory::getApplication();
         $awssuccess = true;
@@ -476,7 +485,7 @@ class JBSUpload {
             }
         }
 
-        $aws_bucket = $filename->aws_bucket; // AWS bucket 
+        $aws_bucket = $filename->aws_bucket; // AWS bucket
         $aws_object = $filename->file;         // AWS object name (file name)
 
 
@@ -505,9 +514,9 @@ class JBSUpload {
                 } else {
 
 
-                    // Creating or updating bucket 
+                    // Creating or updating bucket
 
-                    $dt = gmdate('r'); // GMT based timestamp 
+                    $dt = gmdate('r'); // GMT based timestamp
                     // preparing String to Sign    (see AWS S3 Developer Guide)
                     $string2sign = "PUT
 
@@ -531,7 +540,7 @@ class JBSUpload {
                     } else {
                         // done
                         // Uploading object
-                        $file_length = strlen($file_data); // for Content-Length HTTP field 
+                        $file_length = strlen($file_data); // for Content-Length HTTP field
 
                         $dt = gmdate('r'); // GMT based timestamp
                         // preparing String to Sign    (see AWS S3 Developer Guide)
@@ -574,19 +583,26 @@ class JBSUpload {
         return $awssuccess;
     }
 
+    /**
+     *
+     * @param type $stringToSign
+     * @param string $aws_secret
+     * @return type
+     */
     function amazon_hmac($stringToSign, $aws_secret) {
         // helper function binsha1 for amazon_hmac (returns binary value of sha1 hash)
         if (!function_exists('binsha1')) {
+
             function binsha1($d) {
-            if (version_compare(phpversion(), "5.0.0", ">=")) {
+                if (version_compare(phpversion(), "5.0.0", ">=")) {
 
-                
+
                     return sha1($d, true);
-
-            } else {
+                } else {
                     return pack('H*', sha1($d));
                 }
             }
+
         }
 
         if (strlen($aws_secret) == 40)
@@ -599,6 +615,13 @@ class JBSUpload {
         return base64_encode($hmac);
     }
 
+    /**
+     *
+     * @param type $fp
+     * @param type $q
+     * @param type $debug
+     * @return type
+     */
     function sendREST($fp, $q, $debug = false) {
         if ($debug)
             echo "\nQUERY<<{$q}>>\n";

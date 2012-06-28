@@ -12,6 +12,13 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
 
+/**
+ *
+ * @param type $params
+ * @param type $row
+ * @param type $admin_params
+ * @return boolean|null|string
+ */
 function getMediatable($params, $row, $admin_params) {
     jimport('joomla.html.parameter');
     $getMedia = new jbsMedia();
@@ -220,7 +227,7 @@ function getMediatable($params, $row, $admin_params) {
                 break;
 
             case 2:
-                $mediatable = '<div><table class="mediatable"><tbody><tr><td>' . $downloadlink .'</td></tr></tbody></table></div>';
+                $mediatable = '<div><table class="mediatable"><tbody><tr><td>' . $downloadlink . '</td></tr></tbody></table></div>';
                 break;
         }
         $mediatable .= '</td>';
@@ -253,6 +260,16 @@ function getMediatable($params, $row, $admin_params) {
     return $mediatable;
 }
 
+/**
+ *
+ * @param type $media
+ * @param type $width
+ * @param type $height
+ * @param type $src
+ * @param type $duration
+ * @param type $filesize
+ * @return string
+ */
 function getDocman($media, $width, $height, $src, $duration, $filesize) {
     $docman = '<a href="index.php?option=com_docman&task=doc_download&gid=' . $media->docMan_id . '"
 		 title="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src
@@ -263,6 +280,14 @@ function getDocman($media, $width, $height, $src, $duration, $filesize) {
     return $docman;
 }
 
+/**
+ *
+ * @param type $media
+ * @param type $width
+ * @param type $height
+ * @param type $src
+ * @return string
+ */
 function getArticle($media, $width, $height, $src) {
     $article = '<a href="index.php?option=com_content&view=article&id=' . $media->article_id . '"
 		 alt="' . $media->malttext . ' - ' . $media->comment . '" target="' . $media->special . '"><img src="' . $src . '" width="' . $width
@@ -271,6 +296,15 @@ function getArticle($media, $width, $height, $src) {
     return $article;
 }
 
+/**
+ *
+ * @param type $media
+ * @param type $width
+ * @param type $height
+ * @param type $src
+ * @param type $params
+ * @return string
+ */
 function getVirtuemart($media, $width, $height, $src, $params) {
 
     $vm = '<a href="index.php?option=com_virtuemart&page=shop.product_details&flypage=' . $params->get('store_page', 'flypage.tpl') . '&product_id=' . $media->virtueMart_id . '"
@@ -280,6 +314,11 @@ function getVirtuemart($media, $width, $height, $src, $params) {
     return $vm;
 }
 
+/**
+ *
+ * @param type $study_id
+ * @return type
+ */
 function getMediaRows($study_id) {
     $query = 'SELECT #_bsms_mediafiles.*,'
             . ' #_bsms_servers.id AS ssid, #_bsms_servers.server_path AS spath,'

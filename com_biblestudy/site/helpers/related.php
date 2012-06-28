@@ -1,9 +1,11 @@
 <?php
 
-/*
- * @desc helper to get related studies to the current one
- * @since 7.1.0
- */
+/**
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ **/
 
 defined('_JEXEC') or die;
 
@@ -66,7 +68,7 @@ class relatedStudies {
             }
         }
 
-       
+
         if (!$this->score){return false;}
         $related = $this->getRelatedLinks($this->score, $params);
         return $related;

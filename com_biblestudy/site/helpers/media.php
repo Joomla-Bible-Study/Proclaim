@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: media.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,6 +10,11 @@
 defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 
+/**
+ *
+ * @param type $id
+ * @return type
+ */
 function getMedia($id) {
     $database = JFactory::getDBO();
 
@@ -33,6 +37,13 @@ function getMedia($id) {
     return $media;
 }
 
+/**
+ *
+ * @param type $media
+ * @param type $params
+ * @param type $admin_params
+ * @return string
+ */
 function getInternalPlayer($media, $params, $admin_params) {
 
     include_once($path1 . 'filesize.php');
@@ -75,6 +86,13 @@ function getInternalPlayer($media, $params, $admin_params) {
     return $media1_link;
 }
 
+/**
+ *
+ * @param null $media
+ * @param type $params
+ * @param type $admin_params
+ * @return string
+ */
 function getDownloadLink($media, $params, $admin_params) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'filesize.php');
@@ -91,7 +109,7 @@ function getDownloadLink($media, $params, $admin_params) {
     $image = $images->getMediaImage($media->path2, $media->impath);
 
 
-    $database =JFactory::getDBO();
+    $database = JFactory::getDBO();
 
     $database->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
     $database->query();
@@ -133,6 +151,13 @@ function getDownloadLink($media, $params, $admin_params) {
     }
 }
 
+/**
+ *
+ * @param null $media
+ * @param type $params
+ * @param type $admin_params
+ * @return string
+ */
 function getMediaFile($media, $params, $admin_params) {
 
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -183,6 +208,13 @@ function getMediaFile($media, $params, $admin_params) {
     return $media_link;
 }
 
+/**
+ *
+ * @param type $media
+ * @param type $params
+ * @param type $admin_params
+ * @return string
+ */
 function getTypeIcon($media, $params, $admin_params) {
 
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -218,6 +250,13 @@ function getTypeIcon($media, $params, $admin_params) {
     return $media_link;
 }
 
+/**
+ *
+ * @param type $row
+ * @param type $params
+ * @param type $admin_params
+ * @return type
+ */
 function getPDF($row, $params, $admin_params) {
     //PDF View
     $url = 'index.php?option=com_biblestudy&view=sermon&id=' . $row->id . '&format=pdf';
@@ -231,6 +270,13 @@ function getPDF($row, $params, $admin_params) {
     return $link;
 }
 
+/**
+ *
+ * @param type $row
+ * @param type $params
+ * @param type $admin_params
+ * @deprecated since version 7.0.4
+ */
 function getMediaForList($row, $params, $admin_params) {
 
 }

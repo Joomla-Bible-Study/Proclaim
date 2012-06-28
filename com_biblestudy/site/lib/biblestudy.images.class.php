@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: biblestudy.images.class.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,8 +10,16 @@
 defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class jbsImages {
 
+    /**
+     *
+     * @return \JRegistry
+     */
     function adminSettings() {
         $database = & JFactory::getDBO();
         $database->setQuery("SELECT params FROM #__bsms_admin WHERE id = 1");
@@ -27,6 +34,11 @@ class jbsImages {
         return $admin_params;
     }
 
+    /**
+     *
+     * @param type $path
+     * @return \JObject
+     */
     function getImagePath($path) {
         error_reporting(0);
         jimport('joomla.filesystem.folder');
@@ -59,6 +71,10 @@ class jbsImages {
         return $tmp;
     }
 
+    /**
+     *
+     * @return type
+     */
     function mainStudyImage() {
         $mainimage = array();
         $path = null;
@@ -82,6 +98,10 @@ class jbsImages {
         return $mainimage;
     }
 
+    /**
+     *
+     * @return string
+     */
     function getMediaImageFolder() {
 
         $mediaimagefolder = 'media/com_biblestudy/images';
@@ -90,6 +110,10 @@ class jbsImages {
         return $mediaimagefolder;
     }
 
+    /**
+     *
+     * @return string
+     */
     function getSeriesImageFolder() {
 
         $seriesimagefolder = 'images';
@@ -97,6 +121,10 @@ class jbsImages {
         return $seriesimagefolder;
     }
 
+    /**
+     *
+     * @return string
+     */
     function getStudiesImageFolder() {
 
         $studiesimagefolder = 'images';
@@ -104,6 +132,10 @@ class jbsImages {
         return $studiesimagefolder;
     }
 
+    /**
+     *
+     * @return string
+     */
     function getTeacherImageFolder() {
 
         $teacherimagefolder = 'images';
@@ -111,6 +143,11 @@ class jbsImages {
         return $teacherimagefolder;
     }
 
+    /**
+     *
+     * @param type $image
+     * @return type
+     */
     function getStudyThumbnail($image = 'openbible.png') {
         $imagepath = array();
         $folder = $this->getStudiesImageFolder();
@@ -122,6 +159,11 @@ class jbsImages {
         return $imagepath;
     }
 
+    /**
+     *
+     * @param type $image
+     * @return type
+     */
     function getSeriesThumbnail($image = 'openbible.png') {
         $imagepath = array();
         $folder = $this->getSeriesImageFolder();
@@ -133,8 +175,14 @@ class jbsImages {
         return $imagepath;
     }
 
+    /**
+     *
+     * @param type $image1
+     * @param type $image2
+     * @return type
+     */
     function getTeacherThumbnail($image1 = NULL, $image2 = NULL) {
-        $imagepath = array(); 
+        $imagepath = array();
         $folder = $this->getTeacherImageFolder();
 
         if (!$image1 || $image1 == '0' || strncmp($image1, '- ', 2) == 0) {
@@ -149,10 +197,16 @@ class jbsImages {
             }
         }
 
-        $imagepath = $this->getImagePath($path); 
+        $imagepath = $this->getImagePath($path);
         return $imagepath;
     }
 
+    /**
+     *
+     * @param type $image1
+     * @param type $image2
+     * @return type
+     */
     function getTeacherImage($image1 = null, $image2 = null) {
         $imagepath = array();
         $folder = $this->getTeacherImageFolder();
@@ -171,6 +225,12 @@ class jbsImages {
         return $imagepath;
     }
 
+    /**
+     *
+     * @param type $media1
+     * @param type $media2
+     * @return type
+     */
     function getMediaImage($media1 = NULL, $media2 = NULL) {
         $imagepath = array();
         $folder = $this->getMediaImageFolder();
@@ -189,6 +249,10 @@ class jbsImages {
         return $imagepath;
     }
 
+    /**
+     *
+     * @return type
+     */
     function getShowHide() {
         $database = & JFactory::getDBO();
         $database->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");

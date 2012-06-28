@@ -96,7 +96,15 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 }
 
 //elements are: series title, series image, series pastor + image, description
-
+/**
+ *
+ * @param type $islink
+ * @param type $row
+ * @param type $element
+ * @param type $params
+ * @param type $admin_params
+ * @return string
+ */
 function getSerieslink($islink, $row, $element, $params, $admin_params) {
     if ($islink == 1) {
         $link = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplay&id=' . $row->slug . '&t=' . $params->get('seriesdetailtemplateid', 1)) . '">' . $element . '</a>';

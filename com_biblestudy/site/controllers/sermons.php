@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: sermons.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,8 +10,16 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class BiblestudyControllerSermons extends JController {
 
+    /**
+     *
+     * @var string
+     */
     var $mediaCode;
 
     /**
@@ -25,10 +32,16 @@ class BiblestudyControllerSermons extends JController {
         // Register Extra tasks
     }
 
+    /**
+     * ?
+     */
     function display() {
         parent::display();
     }
 
+    /**
+     * Download?
+     */
     function download() {
         $abspath = JPATH_SITE;
         require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
@@ -43,6 +56,10 @@ class BiblestudyControllerSermons extends JController {
         }
     }
 
+    /**
+     *
+     * @return type
+     */
     function avplayer() {
         $task = JRequest::getVar('task');
         if ($task == 'avplayer') {
@@ -53,6 +70,9 @@ class BiblestudyControllerSermons extends JController {
         }
     }
 
+    /**
+     * Add hits to the play count.
+     */
     function playHit() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
         $getMedia = new jbsMedia();
@@ -63,6 +83,7 @@ class BiblestudyControllerSermons extends JController {
      * @desc: This function is supposed to generate the Media Player that is requested via AJAX
      * from the studiesList view "default.php". It has not been implemented yet, so its not used.
      * @return unknown_type
+     * @deprecated since version 7.0.4
      */
     function inlinePlayer() {
         echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');

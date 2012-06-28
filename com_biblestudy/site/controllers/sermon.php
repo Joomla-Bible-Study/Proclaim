@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: sermon.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,7 +11,8 @@ defined('_JEXEC') or die;
 
 /**
  * studies Edit Controller
- *
+ * @package BibleStudy.Site
+ * @since 7.0.0
  */
 class BiblestudyControllerSermon extends JController {
 
@@ -36,7 +36,7 @@ class BiblestudyControllerSermon extends JController {
         $model = $this->getModel('sermon');
         $menu = JSite::getMenu();
         $item = $menu->getActive();
-        $params = $mainframe->getPageParameters(); 
+        $params = $mainframe->getPageParameters();
         $t = $params->get('t');
         if (!$t) {
             $t = 1;
@@ -59,6 +59,10 @@ class BiblestudyControllerSermon extends JController {
         parent::display();
     }
 
+    /**
+     *
+     * @return NULL
+     */
     function comment() {
 
         $mainframe = JFactory::getApplication();
@@ -114,7 +118,9 @@ class BiblestudyControllerSermon extends JController {
         } // End of $cap
     }
 
-    //Begin scripture links plugin function
+    /**
+     * Begin scripture links plugin function
+     */
     function biblegateway_link() {
         $return = false;
         $row->text = JRequest::getVar('scripture1');
@@ -129,8 +135,9 @@ class BiblestudyControllerSermon extends JController {
         $results = $mainframe->triggerEvent('onPrepareContent', array(&$row, &$params, 1));
     }
 
-    //End of scripture links plugin function
-    
+    /**
+     * Download system
+     */
     function download() {
         $abspath = JPATH_SITE;
         require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
@@ -143,6 +150,10 @@ class BiblestudyControllerSermon extends JController {
         }
     }
 
+    /**
+     * Email comment out.
+     * @param object $params
+     */
     function commentsEmail($params) {
         $mainframe = JFactory::getApplication();
         $menuitemid = JRequest::getInt('Itemid');

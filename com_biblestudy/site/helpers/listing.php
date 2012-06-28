@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: listing.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -15,6 +14,16 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.listing.class.php');
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'route.php');
 
+/**
+ *
+ * @param type $row
+ * @param type $params
+ * @param type $oddeven
+ * @param type $admin_params
+ * @param type $template
+ * @param type $ismodule
+ * @return string
+ */
 function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
     include_once($path1 . 'elements.php');
@@ -560,7 +569,27 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 
     return $listing;
 }
-
+/**
+ *
+ * @param type $elementid
+ * @param type $element
+ * @param type $rowcolid
+ * @param type $colspan
+ * @param type $rowspan
+ * @param type $lastcol
+ * @param type $islink
+ * @param type $id3
+ * @param type $tid
+ * @param type $smenu
+ * @param type $tmenu
+ * @param type $entry_access
+ * @param type $allow_entry
+ * @param type $params
+ * @param type $admin_params
+ * @param type $row
+ * @param type $template
+ * @return string
+ */
 function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, $islink, $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template) {
 
     $cell = '
@@ -614,6 +643,19 @@ function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, 
     return $cell;
 }
 
+/**
+ *
+ * @param type $islink
+ * @param type $id3
+ * @param type $tid
+ * @param type $smenu
+ * @param type $tmenu
+ * @param type $params
+ * @param type $admin_params
+ * @param type $row
+ * @param type $template
+ * @return string
+ */
 function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template) {
     $filelinks = new JBSListing();
     $Itemid = JRequest::getVar('Itemid');
@@ -685,6 +727,14 @@ function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $r
     return $column;
 }
 
+/**
+ *
+ * @param type $row
+ * @param type $params
+ * @param type $admin_params
+ * @param type $template
+ * @return type
+ */
 function getListingExp($row, $params, $admin_params, $template) {
     $Media = new jbsMedia();
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -724,6 +774,14 @@ function getListingExp($row, $params, $admin_params, $template) {
     return $label;
 }
 
+/**
+ *
+ * @param type $row
+ * @param type $params
+ * @param type $admin_params
+ * @param type $template
+ * @return type
+ */
 function getStudyExp($row, $params, $admin_params, $template) {
     $Media = new jbsMedia();
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
