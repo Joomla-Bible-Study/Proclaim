@@ -1,23 +1,29 @@
 <?php
 
 /**
- * @version     $Id: view.html.php 1330 2011-01-06 08:01:38Z genu $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
-require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.images.class.php');
-$path1 = JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_biblestudy'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR;
-include_once($path1.'image.php');
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
+$path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+include_once($path1 . 'image.php');
 jimport('joomla.application.component.view');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class BiblestudyViewTeachers extends JView {
 
     protected $items;
     protected $pagination;
     protected $state;
+
     /**
      * teacherlist view display method
      * @return void
@@ -29,14 +35,16 @@ class BiblestudyViewTeachers extends JView {
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
 
-       
+
         $template = $this->get('template');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
         $registry->loadJSON($template->params);
         $params = $registry;
         $t = $params->get('teachertemplateid');
-        if (!$t) {$t = JRequest::getVar('t', 1, 'get', 'int');}
+        if (!$t) {
+            $t = JRequest::getVar('t', 1, 'get', 'int');
+        }
         $a_params = $this->get('Admin');
         // Convert parameter fields to objects.
         $registry = new JRegistry;
@@ -66,20 +74,19 @@ class BiblestudyViewTeachers extends JView {
         //Import Stylesheets
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/general.css');
         $document->addStylesheet(JURI::base() . 'media/com_biblestudy/css/studieslist.css');
-        $css = $params->get('css','biblestudy.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/'.$css);
+        $css = $params->get('css', 'biblestudy.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
         $images = new jbsImages();
         // Get data from the model
         $items = & $this->get('Items');
-        
-        foreach ($items as $i=>$item)
-        {
+
+        foreach ($items as $i => $item) {
             $image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
-            $items[$i]->image = '<img src="'.$image->path.'" height="'.$image->height.'" width="'.$image->width.'">';
+            $items[$i]->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '">';
             $items[$i]->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
-            $items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id='.$item->slug.'&t='.$t);
+            $items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $t);
         }
-                
+
         $menu = & JSite::getMenu();
         //	$item =& $menu->getActive();
 

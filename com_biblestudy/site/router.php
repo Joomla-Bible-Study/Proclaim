@@ -1,7 +1,18 @@
 <?php
 
+/**
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 defined('_JEXEC') or die;
 
+/**
+ *
+ * @param type $query
+ * @return type
+ */
 function biblestudyBuildRoute(&$query) {
     $segments = array();
 
@@ -29,6 +40,11 @@ function biblestudyBuildRoute(&$query) {
     return $segments;
 }
 
+/**
+ *
+ * @param type $segments
+ * @return type
+ */
 function biblestudyParseRoute($segments) {
     $vars = array();
     //Get the active menu item.

@@ -1,24 +1,37 @@
 <?php
 /**
- * @version     $Id: form_16.php 1395 2011-01-17 22:43:01Z genu $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 $params = $this->form->getFieldsets('params');
 $folder = '';
 $server = '';
-$app = JFactory::getApplication(); 
+$app = JFactory::getApplication();
 $option = JRequest::getCmd('option');
-$study = $app->getUserState($option.'sid'); 
-$sdate = $app->getUserState($option.'sdate');
-$size = $app->getUserState($option.'size');
-$fname = $app->getUserState($option.'fname'); //dump($fname);
-$serverid = $app->getUserState($option.'serverid');
-if ($this->item->server){$server = $this->item->server;}elseif($serverid){$server = $serverid;}elseif(empty($this->item->study_id)){$server = $this->admin->params['server'];} 
-$folderid = $app->getUserState($option.'folderid');
-if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = $folderid;}elseif(empty($this->item->study_id)){$folder = $this->admin->params['path'];}
+$study = $app->getUserState($option . 'sid');
+$sdate = $app->getUserState($option . 'sdate');
+$size = $app->getUserState($option . 'size');
+$fname = $app->getUserState($option . 'fname'); //dump($fname);
+$serverid = $app->getUserState($option . 'serverid');
+if ($this->item->server) {
+    $server = $this->item->server;
+} elseif ($serverid) {
+    $server = $serverid;
+} elseif (empty($this->item->study_id)) {
+    $server = $this->admin->params['server'];
+}
+$folderid = $app->getUserState($option . 'folderid');
+if ($this->item->path) {
+    $folder = $this->item->path;
+} elseif ($folderid) {
+    $folder = $folderid;
+} elseif (empty($this->item->study_id)) {
+    $folder = $this->admin->params['path'];
+}
 ?>
 <script language="javascript" type="text/javascript">
     function submitbutton(task)
@@ -81,10 +94,10 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
             if (isValid)
             {
                 submitform(task);
-                if (self != top) 
+                if (self != top)
                 {
                     window.top.setTimeout('window.parent.SqueezeBox.close()', 2000);
-		}
+                }
                 window.top.setTimeout('window.location.reload(true)', 1000);
                 return true;
             }
@@ -102,7 +115,7 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
         var objTB = document.getElementById("size");
         objTB.value = remotefilesize;
     }
-    
+
     function showupload() {
         var id = 'SWFUpload_0';
         if (document.adminForm.upload_server.value != '' && document.adminForm.upload_folder.value != '')
@@ -119,26 +132,30 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
 </script>
 
 <div class="edit">
- <form
-    action="<?php 
-    
-    if (JRequest::getWord('layout','') == 'modal') {$url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id='.(int) $this->item->id;} else {$url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;} echo JRoute::_($url); ?>"
-    method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
-        
+    <form
+        action="<?php
+if (JRequest::getWord('layout', '') == 'modal') {
+    $url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
+} else {
+    $url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
+} echo JRoute::_($url);
+?>"
+        method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+
         <fieldset class="panelform">
             <div class="formelm-buttons">
-            <legend>
-            <?php
-                echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
-                if (JRequest::getWord('layout', '') == 'modal') {
-                    ?> <div class="fltlft">
-                        <button type="button" onclick="submitbutton('mediafile.save');  ">
-                            <?php echo JText::_('JSAVE'); ?></button>
-                        <button type="button" onclick="window.parent.SqueezeBox.close();  ">
-                            <?php echo JText::_('JCANCEL'); ?></button>
-                    </div> <?php } ?>
-            
-            </legend>
+                <legend>
+                    <?php
+                    echo JText::_('JBS_MED_MEDIA_FILES_DETAILS');
+                    if (JRequest::getWord('layout', '') == 'modal') {
+                        ?> <div class="fltlft">
+                            <button type="button" onclick="submitbutton('mediafile.save');  ">
+                                <?php echo JText::_('JSAVE'); ?></button>
+                            <button type="button" onclick="window.parent.SqueezeBox.close();  ">
+                                <?php echo JText::_('JCANCEL'); ?></button>
+                        </div> <?php } ?>
+
+                </legend>
             </div>
             <div class="formelm">
 
@@ -147,11 +164,11 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('createdate'); ?>
-                <?php echo $this->form->getInput('createdate',null, empty($this->item->createdate) ? $sdate : null); ?>
+                <?php echo $this->form->getInput('createdate', null, empty($this->item->createdate) ? $sdate : null); ?>
             </div>
             <div class="formelm-area">
                 <?php echo $this->form->getLabel('study_id'); ?>
-                <?php echo $this->form->getInput('study_id',null, empty($this->item->study_id) ? $study : null); ?><br /><br />
+                <?php echo $this->form->getInput('study_id', null, empty($this->item->study_id) ? $study : null); ?><br /><br />
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('podcast_id'); ?>
@@ -226,11 +243,11 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('filename'); ?>
-                <?php echo $this->form->getInput('filename',null, empty($this->item->filename) ? $fname : null); ?>
+                <?php echo $this->form->getInput('filename', null, empty($this->item->filename) ? $fname : null); ?>
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('size'); ?>
-                <?php echo $this->form->getInput('size',null, empty($this->item->size) ? $size : null); ?><br /><br />
+                <?php echo $this->form->getInput('size', null, empty($this->item->size) ? $size : null); ?><br /><br />
             </div>
             <div class="formelm">
                 <?php echo $this->form->getLabel('special'); ?>
@@ -249,23 +266,23 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
                             <?php echo $this->upload_folder; ?></td>
                         </td></tr>
                     <tr>
-                        <td> 
+                        <td>
                             <?php if ($this->admin->params['uploadtype'] == 1) { ?>
                                 <div id="swfuploader">
                                     <div class="fieldset flash" id="fsUploadProgress">
-                                    </div> 	
+                                    </div>
                                     <div>
                                         <span id="spanButtonPlaceHolder"></span>
                                         <input id="btnCancel" type="button" value="<?php echo JText::_('JBS_STY_CANCEL'); ?>" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
 
                                     </div>
-                                </div> 
+                                </div>
                             <?php } ?>
                             <?php if ($this->admin->params['uploadtype'] == 0) { ?>
                                 <input type="file" name ="uploadfile" value="" />
-                                <button type="button" onclick="submitbutton('upload')"> 
-                                    <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> 
-                                </button> 
+                                <button type="button" onclick="submitbutton('upload')">
+                                    <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?>
+                                </button>
                             <?php } ?>
                         </td>
                         <td>
@@ -308,7 +325,7 @@ if ($this->item->path){$folder = $this->item->path;}elseif($folderid){$folder = 
 
         <input type="hidden" name="task" value="" />
         <?php echo JHtml::_('form.token'); ?>
-</form>
+    </form>
 
 </div>
 

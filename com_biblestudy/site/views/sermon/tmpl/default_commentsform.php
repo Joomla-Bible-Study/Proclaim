@@ -1,8 +1,10 @@
 <?php
 /**
- * @author Tom Fuller
- * @copyright 2011
- */
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
@@ -25,14 +27,19 @@ switch ($this->params->get('link_comments', 0)) {
     case 0:
         echo '<strong><a class="heading' . $this->params->get('pageclass_sfx') . '" href="' . $commentjava . '">>>'
         . JText::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '<<</a></strong>';
-        ?> <div id="comments" style="display:none;"><br /> <?php
-        break;
+        ?>
+        <div id="comments" style="display:none;">
+            <br />
+            <?php
+            break;
 
-    case 1:
-        ?><div id="comments"><?php
-        break;
-}
-?>
+        case 1:
+            ?>
+            <div id="comments">
+                <?php
+                break;
+        }
+        ?>
 
         <div id="commentstable" ><table id="bslisttable" cellspacing="0" border="0"><thead><tr class="lastrow"><th id="commentshead" class="row1col1">
                             <?php echo JText::_('JBS_CMN_COMMENTS'); ?>

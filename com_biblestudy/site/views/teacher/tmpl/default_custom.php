@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -41,29 +47,29 @@ if (!$teacher->teacher_image) {
 ?>
 <div id="biblestudy" class="noRefTagger">
 
-        <?php
-        if (!$teacher->teacher_image) {
-            $image->path = $teacher->image;
-            $image->height = $teacher->imageh;
-            $image->width = $teacher->imagew;
-        } else {
-            if ($teacher->teacher_image) {
-                $i_path = 'images' . $teacher->teacher_image;
-            }
-            $image = getImage($i_path);
+    <?php
+    if (!$teacher->teacher_image) {
+        $image->path = $teacher->image;
+        $image->height = $teacher->imageh;
+        $image->width = $teacher->imagew;
+    } else {
+        if ($teacher->teacher_image) {
+            $i_path = 'images' . $teacher->teacher_image;
         }
-        ?>
+        $image = getImage($i_path);
+    }
+    ?>
     <table id="bslisttable" cellspacing="0">
-<?php
-$listing = getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
-echo $listing;
-if ($this->params->get('show_teacher_studies') > 0) {
-    $studies = getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);
-    echo $studies;
-}
+        <?php
+        $listing = getTeacherDetailsExp($teacher, $params, $this->template, $admin_params);
+        echo $listing;
+        if ($this->params->get('show_teacher_studies') > 0) {
+            $studies = getTeacherStudiesExp($teacher->id, $params, $admin_params, $this->template);
+            echo $studies;
+        }
 
-echo '<table><tr><td id="bsmsteacherstudyfooter"><a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . $teacher->id) . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
-?>
+        echo '<table><tr><td id="bsmsteacherstudyfooter"><a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_teacher=' . $teacher->id) . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a></td><tr></table>';
+        ?>
         <tr><td align="center" colspan="0"class="bsm_teacherfooter"><a href="index.php?option=com_biblestudy&view=teacher<?php echo '&t=' . $t; ?>"><?php echo '<--' . JText::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></a>
     </table>
 </div>

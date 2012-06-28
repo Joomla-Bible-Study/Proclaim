@@ -1,9 +1,11 @@
 <?php
 
 /**
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -15,19 +17,23 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblegateway.php');
 $uri = JFactory::getURI();
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class BiblestudyViewSermon extends JView {
 
     function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
-        $study = $this->get('Item'); 
+        $study = $this->get('Item');
         $relatedstudies = new relatedStudies();
- 
-$app = JFactory::getApplication();
-    $menu = $app->getMenu();
-    $item = $menu->getActive(); 
-    
-    
+
+        $app = JFactory::getApplication();
+        $menu = $app->getMenu();
+        $item = $menu->getActive();
+
+
         $template = $this->get('template');
 
         $registry = new JRegistry();
@@ -147,7 +153,7 @@ $app = JFactory::getApplication();
          * Process the prepare content plugins
          */
         $article->text = $study->studytext;
-        $linkit = $params->get('show_scripture_link'); 
+        $linkit = $params->get('show_scripture_link');
         if ($linkit) {
             switch ($linkit) {
                 case 0:
@@ -161,12 +167,12 @@ $app = JFactory::getApplication();
             }
             $limitstart = JRequest::getVar('limitstart', 'int');
             $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermon', & $article, & $params, $limitstart));
-            $article->studytext = $article->text; 
-            $study->studytext = $article->text; 
+            $article->studytext = $article->text;
+            $study->studytext = $article->text;
         } //end if $linkit
         $Biblepassage = new showScripture();
-        $this->passage = $Biblepassage->buildPassage($study, $params); 
-        
+        $this->passage = $Biblepassage->buildPassage($study, $params);
+
         //Prepares a link string for use in social networking
         $u = JURI::getInstance();
         $detailslink = htmlspecialchars($u->toString());
@@ -189,6 +195,10 @@ $app = JFactory::getApplication();
         parent::display($tpl);
     }
 
+    /**
+     * Display PageBrack
+     * @param string $tpl
+     */
     function _displayPagebreak($tpl) {
         $document = JFactory::getDocument();
         $document->setTitle(JText::_('JBS_CMN_READ_MORE'));

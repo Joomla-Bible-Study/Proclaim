@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -69,7 +75,7 @@ $listingcall = JView::loadHelper('listing');
             <?php
             if ($this->params->get('use_go_button') > 0) {
                 ?><span id="gobutton"><input type="submit" value="<?php echo JText::_('JBS_STY_GO_BUTTON'); ?>" /></span>
-            <?php
+                <?php
             }
 
             if ($this->params->get('show_pagination') == 1) {

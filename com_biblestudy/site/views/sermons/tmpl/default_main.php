@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -22,12 +28,13 @@ $teachers = $params->get('teacher_id');
 
 
 $listingcall = JView::loadHelper('listing');
-
 ?>
 
-<?php if ($this->params->get('showpodcastsubscribelist') == 1 )
-{echo $this->subscribe;}
-    ?>
+<?php
+if ($this->params->get('showpodcastsubscribelist') == 1) {
+    echo $this->subscribe;
+}
+?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
     <div id="bsheader">
@@ -47,7 +54,6 @@ $listingcall = JView::loadHelper('listing');
             ?>
         </h1>
         <?php
-        
         if ($params->get('listteachers') && $params->get('list_teacher_show') > 0) {
             // @todo $teacher_call look like it is not used?
             $teacher_call = JView::loadHelper('teacher');
@@ -74,7 +80,7 @@ $listingcall = JView::loadHelper('listing');
             if ($this->params->get('use_go_button') > 0) {
                 echo $this->page->gobutton;
             }
-                        
+
             if ($this->params->get('show_pagination') == 1) {
                 echo '<span class="display-limit">' . JText::_('JGLOBAL_DISPLAY_NUM') . $this->pagination->getLimitBox() . '</span>';
             }
@@ -82,7 +88,7 @@ $listingcall = JView::loadHelper('listing');
                 echo $this->page->locations;
             }
             if (($this->params->get('show_book_search') > 0 && $book_menu == -1) || $this->params->get('show_book_search') > 1) {
-                echo $this->page->books; 
+                echo $this->page->books;
             }
             if (($this->params->get('show_teacher_search') > 0 && ($teacher_menu == -1)) || $this->params->get('show_teacher_search') > 1) {
                 //echo $this->lists['teacher_id'];
@@ -100,10 +106,11 @@ $listingcall = JView::loadHelper('listing');
                 //echo $this->lists['studyyear'];
                 echo $this->page->years;
             }
-            
-            if ($this->params->get('listlanguage') == 1)
-            {echo $this->page->languages;}
-            
+
+            if ($this->params->get('listlanguage') == 1) {
+                echo $this->page->languages;
+            }
+
             if ($this->params->get('show_order_search') > 0) {
                 //echo $this->lists['orders'];
                 echo $this->page->order;
@@ -158,8 +165,10 @@ $listingcall = JView::loadHelper('listing');
 //}
         ?>
     </div> <!--end of bsfooter div-->
- <?php if ($this->params->get('showpodcastsubscribelist') == 2 )
-{echo $this->subscribe; }?>
-    
+    <?php if ($this->params->get('showpodcastsubscribelist') == 2) {
+        echo $this->subscribe;
+    }
+    ?>
+
 </div><!--end of bspagecontainer div-->
 

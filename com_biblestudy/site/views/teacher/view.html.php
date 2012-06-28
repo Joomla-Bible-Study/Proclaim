@@ -1,10 +1,11 @@
 <?php
 
 /**
- * @version     $Id: view.html.php 1330 2011-01-06 08:01:38Z genu $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -18,13 +19,17 @@ include_once($path1 . 'listing.php');
 include_once($path1 . 'image.php');
 jimport('joomla.application.component.view');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class BiblestudyViewTeacher extends JView {
 
     function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
         $pagebuilder = new JBSPagebuilder();
-        
+
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
@@ -78,17 +83,16 @@ class BiblestudyViewTeacher extends JView {
         $item->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '">';
         $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="' . $largeimage->width . '">';
         //Check to see if com_contact used instead
-        if ($item->contact)
-        {
+        if ($item->contact) {
             require_once '/components/com_contact/models/contact.php';
-            $contactmodel = JModel::getInstance('contact','contactModel');
+            $contactmodel = JModel::getInstance('contact', 'contactModel');
             $this->contact = $contactmodel->getItem($pk = $item->id);
             //Substitute contact info from com_contacts for duplicate fields
             $item->title = $this->contact->con_position;
             $item->teachername = $this->contact->name;
             $item->email = $this->contact->email_to;
             $largeimage = $images->getImagePath($this->contact->image);
-            $item->largeimage = '<img src="'.$largeimage->path.'" height="'.$largeimage->height.'" <width="'.$largeimage->width.'">';
+            $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="' . $largeimage->width . '">';
             $item->information = $this->contact->misc;
             $item->phone = $this->contact->telephone;
             $cregistry = new JRegistry();
@@ -101,18 +105,19 @@ class BiblestudyViewTeacher extends JView {
             $item->linklabel1 = $contact_params->get('linklabel1');
             $item->link2 = $contact_params->get('linke');
             $item->linklabel2 = $contact_params->get('linke_name');
-            $item->website = $this->contact->webpage; 
+            $item->website = $this->contact->webpage;
             $item->address = $this->contact->address;
         }
-        
+
         $this->assignRef('item', $item);
 
         $whereitem = $item->id;
         $wherefield = 'study.teacher_id';
         $limit = $params->get('studies', '20');
         $order = 'DESC';
-        if ($params->get('show_teacher_studies') > 0)
-        {$this->teacherstudies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $order);}
+        if ($params->get('show_teacher_studies') > 0) {
+            $this->teacherstudies = $pagebuilder->studyBuilder($whereitem, $wherefield, $params, $this->admin_params, $limit, $order);
+        }
 
         $this->item = $item;
         $print = JRequest::getBool('print');

@@ -1,17 +1,18 @@
 <?php
 /**
- * @version     $Id: default.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
-JHtml::_('script', 'system/multiselect.js', false, true);
+JHtml::_('behavior.multiselect');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
-<h2><?php echo JText::_('JBS_CMN_MESSAGES_LIST');?></h2>
+<h2><?php echo JText::_('JBS_CMN_MESSAGES_LIST'); ?></h2>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messages'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-search fltlft">
@@ -43,21 +44,21 @@ $listDirn = $this->state->get('list.direction');
                 <option value=""><?php echo JText::_('JBS_CMN_SELECT_YEAR'); ?></option>
                 <?php echo JHtml::_('select.options', $this->years, 'value', 'text', $this->state->get('filter.year')); ?>
             </select>
-           <select name="filter_published" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
-			</select>
+            <select name="filter_published" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
+            </select>
         </div>
     </fieldset>
-   <div>
-   <h3> <?php echo $this->newlink; ?></h3></div>
+    <div>
+        <h3> <?php echo $this->newlink; ?></h3></div>
     <div class="clr"></div>
 
     <table class="adminlist">
         <thead>
             <tr>
                 <th width="1%">
-                    <?php echo 'id';?>
+                    <?php echo 'id'; ?>
                 </th>
                 <th width="8%">
                     <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'study.published', $listDirn, $listOrder); ?>
@@ -90,43 +91,43 @@ $listDirn = $this->state->get('list.direction');
             </tr>
         </tfoot>
         <?php
-                    foreach ($this->items as $i => $item) :
-        ?>
-                        <tr class="row<?php echo $i % 2; ?>">
-                            <td class="center">
-                <?php echo $item->id; ?>
-                    </td>
-                    <td class="center">
-                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', true, 'cb', '', ''); ?>
-                    </td>
-                    <td class="center">
-                <?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
-                    </td>
-                    <td class="center">
-                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=form&task=message.edit&a_id=' . (int) $item->id); ?>">
-                    <?php echo $this->escape($item->studytitle); ?>
+        foreach ($this->items as $i => $item) :
+            ?>
+            <tr class="row<?php echo $i % 2; ?>">
+                <td class="center">
+                    <?php echo $item->id; ?>
+                </td>
+                <td class="center">
+                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'messages.', true, 'cb', '', ''); ?>
+                </td>
+                <td class="center">
+                    <?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
+                </td>
+                <td class="center">
+                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&view=message&layout=form&task=message.edit&a_id=' . (int) $item->id); ?>">
+                        <?php echo $this->escape($item->studytitle); ?>
                     </a>
                 </td>
                 <td class="center">
-                     <?php echo JText::_($this->escape($item->bookname)).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
+                    <?php echo JText::_($this->escape($item->bookname)) . ' ' . $this->escape($item->chapter_begin) . ':' . $this->escape($item->verse_begin); ?>
                 </td>
                 <td class="center">
-                <?php echo $this->escape($item->teachername); ?>
-                    </td>
-                    <td class="center">
-                <?php echo $this->escape($item->messageType); ?>
-                    </td>
+                    <?php echo $this->escape($item->teachername); ?>
+                </td>
+                <td class="center">
+                    <?php echo $this->escape($item->messageType); ?>
+                </td>
 
 
 
-                </tr>
+            </tr>
         <?php endforeach; ?>
-                    </table>
-                    <div>
-                        <input type="hidden" name="task" value=""/>
-                        <input type="hidden" name="boxchecked" value="0"/>
-                        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-                        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
+    </table>
+    <div>
+        <input type="hidden" name="task" value=""/>
+        <input type="hidden" name="boxchecked" value="0"/>
+        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
+        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
         <?php echo JHtml::_('form.token'); ?>
     </div>
 </form>

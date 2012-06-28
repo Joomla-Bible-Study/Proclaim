@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'route.php');
@@ -38,7 +44,7 @@ $admin_params = $this->admin_params;
                 <a href="<?php echo $item->teacherlink; ?>"><?php echo $teacherdisplay; ?></a>
             </td>
             <td align="left" class="bsm_short">
-    <?php echo $item->short; ?>
+                <?php echo $item->short; ?>
             </td>
             </tr>
         <?php } //end of foreach ?>
@@ -46,9 +52,9 @@ $admin_params = $this->admin_params;
         </tbody>
     </table>
     <div class="listingfooter" >
-<?php
-echo $this->page->pagelinks;
-echo $this->page->counter;
-?>
+        <?php
+        echo $this->page->pagelinks;
+        echo $this->page->counter;
+        ?>
     </div> <!--end of bsfooter div-->
 </div>

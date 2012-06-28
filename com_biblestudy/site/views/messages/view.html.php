@@ -1,17 +1,23 @@
 <?php
 
 /**
- * @version     $Id: view.html.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'biblestudy.php');
-require_once (JPATH_ROOT  .DIRECTORY_SEPARATOR. 'components' .DIRECTORY_SEPARATOR. 'com_biblestudy' .DIRECTORY_SEPARATOR. 'lib' .DIRECTORY_SEPARATOR. 'biblestudy.admin.class.php');
+require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
+require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 jimport('joomla.application.component.view');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class biblestudyViewmessages extends JView {
+
     protected $items;
     protected $pagination;
     protected $state;
@@ -32,18 +38,15 @@ class biblestudyViewmessages extends JView {
 
         $user = JFactory::getUser();
 
-        if (!$this->canDo->get('core.edit'))
-        {
+        if (!$this->canDo->get('core.edit')) {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
             return false;
         }
-     //Puts a new record link at the top of the form
-     if ($this->canDo->get('core.create'))
-     {
-      $this->newlink = '<a href="'.JRoute::_('index.php?option=com_biblestudy&view=message&task=message.edit').'">'.JText::_('JBS_CMN_NEW').'</a>';
-     }
+        //Puts a new record link at the top of the form
+        if ($this->canDo->get('core.create')) {
+            $this->newlink = '<a href="' . JRoute::_('index.php?option=com_biblestudy&view=message&task=message.edit') . '">' . JText::_('JBS_CMN_NEW') . '</a>';
+        }
         parent::display($tpl);
-
     }
 
 }
