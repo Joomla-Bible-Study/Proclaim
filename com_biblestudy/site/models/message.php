@@ -209,7 +209,7 @@ class biblestudyModelmessage extends JModelAdmin {
             JError::raiseError(500, $db->getErrorMsg());
         	return false;
         } else {
-            $this->setTopics($pks, $data);	
+            //$this->setTopics($pks, $data);	
             return true;
 		}
            
