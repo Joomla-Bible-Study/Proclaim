@@ -20,7 +20,7 @@ jimport('joomla.form.formfield');
  * @subpackage	Form
  * @since		7.0.0
  */
-class JFormFieldTopics extends JFormFaield {
+class JFormFieldTopics extends JFormField {
 
     /**
      *

@@ -196,14 +196,25 @@ class biblestudyModelmessage extends JModelAdmin {
      * @todo This may need to be optimized
      */
     public function save($data) {
-        $pks = JRequest::getInt('a_id');
+        $pks = JRequest::getInt('a_id'); 
         if ($pks) {
-            $this->setTopics($pks, $data);
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query->clear();
+            $query->update('#__bsms_studies');
+            $query->set(' studytitle = '.$db->Quote($data['studytitle']));
+            $db->where(' id ='. (int)$pks.' LIMIT 1');
+            $db->setQuery((string)$query);
+            if (!$db->query()) {
+            JError::raiseError(500, $db->getErrorMsg());
+        	return false;
+        } else {
+            $this->setTopics($pks, $data);	
             return true;
-        } elseif (parent::save($data)) {
-            $this->setTopics(JRequest::getInt('a_id'), $data);
-            return true;
-        }
+		}
+           
+           
+        } 
     }
 
     /**
