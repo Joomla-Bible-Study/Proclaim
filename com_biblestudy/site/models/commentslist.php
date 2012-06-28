@@ -1,37 +1,35 @@
 <?php
 
 /**
- * @version     $Id: commentslist.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- **/
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
-    jimport('joomla.application.component.modellist');
+jimport('joomla.application.component.modellist');
 
-    abstract class modelClass extends JModelList {
-
-    }
-
-class biblestudyModelcommentslist extends modelClass {
-
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
+class biblestudyModelcommentslist extends JModelList {
 
     /**
-     * @since   7.0
+     * @since   7.0.0
      */
     protected function populateState() {
 
-        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+        $this->setState('filter.published', $published);
 
-        $studytitle = $this->getUserStateFromRequest($this->context.'.filter.studytitle', 'filter_studytitle');
+        $studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
 
-        $date = $this->getUserStateFromRequest($this->context.'.filter.studydate', 'filter_studydate', '');
-		$this->setState('filter.studydate', $date);
+        $date = $this->getUserStateFromRequest($this->context . '.filter.studydate', 'filter_studydate', '');
+        $this->setState('filter.studydate', $date);
 
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
@@ -41,7 +39,7 @@ class biblestudyModelcommentslist extends modelClass {
 
     /**
      *
-     * @since   7.0
+     * @since   7.0.0
      */
     protected function getListQuery() {
         $db = $this->getDbo();
@@ -49,8 +47,7 @@ class biblestudyModelcommentslist extends modelClass {
 
         $query->select(
                 $this->getState(
-                        'list.select',
-                        'comment.*'));
+                        'list.select', 'comment.*'));
         $query->from('#__bsms_comments AS comment');
 
         //Filter by state

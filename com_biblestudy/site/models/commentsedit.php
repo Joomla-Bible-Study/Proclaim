@@ -1,24 +1,22 @@
 <?php
 
 /**
- * @version     $Id: commentsedit.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- **/
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
-    jimport('joomla.application.component.modeladmin');
+jimport('joomla.application.component.modeladmin');
 
-    abstract class modelClass extends JModelAdmin {
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
+class biblestudyModelcommentsedit extends JModelAdmin {
 
-    }
-
-class biblestudyModelcommentsedit extends modelClass {
-
-    
     /**
      * Method to store a record
      *
@@ -50,9 +48,6 @@ class biblestudyModelcommentsedit extends modelClass {
 
         return true;
     }
-
-   
-    
 
     /**
      * Get the form data

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: teacher.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,20 +11,24 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class BiblestudyModelTeachers extends JModelList {
 
     /**
      * Build an SQL query to load the list data
      *
      * @return  JDatabaseQuery
-     * @since   7.0
+     * @since   7.0.0
      */
     protected function getListQuery() {
         $db = $this->getDbo();
 
         //See if this view is being filtered by language in the menu
-         $menu = JSite::getMenu();
-        $item = $menu->getActive(); 
+        $menu = JSite::getMenu();
+        $item = $menu->getActive();
         $language = $item->language;
         $query = $db->getQuery(true);
         $query->select('teachers.*,CASE WHEN CHAR_LENGTH(teachers.alias) THEN CONCAT_WS(\':\', teachers.id, teachers.alias) ELSE teachers.id END as slug');
@@ -41,11 +44,17 @@ class BiblestudyModelTeachers extends JModelList {
         return $query;
     }
 
-    protected function populateState($ordering='teachers.ordering', $direction='asc') {
+    /**
+     * Populate the State
+     * @param type $ordering
+     * @param type $direction
+     */
+    protected function populateState($ordering = 'teachers.ordering', $direction = 'asc') {
         $app = JFactory::getApplication();
-        
+
         $this->setState('filter.language', $app->getLanguageFilter());
     }
+
     /**
      * @desc Returns the Template to display the list
      * @return Array
@@ -65,6 +74,10 @@ class BiblestudyModelTeachers extends JModelList {
         return $this->_template;
     }
 
+    /**
+     * Get Admin Stettings.
+     * @return type
+     */
     function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT params'

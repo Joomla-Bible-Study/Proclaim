@@ -1,12 +1,11 @@
 <?php
 
 /**
- * @version		$Id: docman.php 1284 2011-01-04 07:57:59Z genu $
- * @package		Joomla.Framework
- * @subpackage	Form
- * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- */
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -17,14 +16,22 @@ jimport('joomla.form.formfield');
 /**
  * Form Field class for the Joomla Framework.
  *
- * @package		Joomla.Framework
+ * @package		BibleStudy.Site
  * @subpackage	Form
- * @since		1.6
+ * @since		7.0.0
  */
-class JFormFieldTopics extends JFormField {
+class JFormFieldTopics extends JFormFaield {
 
+    /**
+     *
+     * @var type
+     */
     public $type = 'Topics';
 
+    /**
+     *
+     * @return string
+     */
     protected function getInput() {
 
         return '

@@ -6,17 +6,13 @@
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- **/
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
-    jimport('joomla.application.component.modellist');
+jimport('joomla.application.component.modellist');
 
-    abstract class modelClass extends JModelList {
-
-    }
-
-class biblestudyModelmediafiles extends modelClass {
+class biblestudyModelmediafiles extends JModelList {
 
     var $_data;
     var $_total = null;
@@ -193,8 +189,7 @@ class biblestudyModelmediafiles extends modelClass {
 
         $query->select(
                 $this->getState(
-                        'list.select',
-                        'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename,
+                        'list.select', 'mediafile.id, mediafile.published, mediafile.ordering, mediafile.filename,
                         mediafile.createdate, mediafile.plays, mediafile.downloads'));
 
         $query->from('`#__bsms_mediafiles` AS mediafile');

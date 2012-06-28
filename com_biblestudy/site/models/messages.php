@@ -6,18 +6,19 @@
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- **/
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
-include_once (JPATH_COMPONENT_ADMINISTRATOR .DIRECTORY_SEPARATOR. 'helpers' .DIRECTORY_SEPARATOR. 'translated.php');
+include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
-    abstract class modelClass extends JModelList {
-
-    }
-
-class biblestudyModelMessages extends modelClass {
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ * @todo need to redo model to Joomla Standers.
+ */
+class biblestudyModelMessages extends JModelList {
 
     /**
      *
@@ -28,10 +29,13 @@ class biblestudyModelMessages extends modelClass {
     var $_pagination = null;
     var $_files = null;
 
+    /**
+     * Construct
+     */
     function __construct() {
         parent::__construct();
 
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
 
         // Get the pagination request variables
@@ -44,6 +48,11 @@ class biblestudyModelMessages extends modelClass {
         $this->setState('limitstart', $limitstart);
     }
 
+    /**
+     *
+     * @param type $id
+     * @return string
+     */
     function getDownloads($id) {
         $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
         $result = $this->_getList($query);
@@ -54,6 +63,11 @@ class biblestudyModelMessages extends modelClass {
         return $result[0]->totalDownloads;
     }
 
+    /**
+     *
+     * @param type $id
+     * @return string
+     */
     function getPlays($id) {
         $query = ' SELECT SUM(plays) AS totalPlays FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
         $result = $this->_getList($query);
@@ -107,6 +121,10 @@ class biblestudyModelMessages extends modelClass {
         return $this->_pagination;
     }
 
+    /**
+     *
+     * @return type
+     */
     function _buildContentWhere() {
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -143,6 +161,10 @@ class biblestudyModelMessages extends modelClass {
         return $where;
     }
 
+    /**
+     *
+     * @return string
+     */
     function _buildContentOrderBy() {
         $mainframe = & JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -165,35 +187,35 @@ class biblestudyModelMessages extends modelClass {
     /**
      * @since   7.0
      */
-     protected function  populateState() {
-         
-        
-        
-        $studytitle = $this->getUserStateFromRequest($this->context.'.filter.studytitle', 'filter_studytitle');
+    protected function populateState() {
+
+
+
+        $studytitle = $this->getUserStateFromRequest($this->context . '.filter.studytitle', 'filter_studytitle');
         $this->setState('filter.studytitle', $studytitle);
 
-        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
-		$this->setState('filter.published', $published);
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+        $this->setState('filter.published', $published);
 
-        $book = $this->getUserStateFromRequest($this->context.'.filter.book', 'filter_book');
+        $book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
         $this->setState('filter.book', $book);
 
-        $teacher = $this->getUserStateFromRequest($this->context.'.filter.teacher', 'filter_teacher');
+        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
         $this->setState('filter.teacher', $teacher);
 
-        $series = $this->getUserStateFromRequest($this->context.'.filter.series', 'filter_series');
+        $series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
         $this->setState('filter.series', $series);
 
-        $messageType = $this->getUserStateFromRequest($this->context.'.filter.messageType', 'filter_message_type');
+        $messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_message_type');
         $this->setState('filter.messageType', $messageType);
 
-        $year = $this->getUserStateFromRequest($this->context.'.filter.year', 'filter_year');
+        $year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
         $this->setState('filter.year', $year);
 
-        $topic = $this->getUserStateFromRequest($this->context.'.filter.topic', 'filter_topic');
+        $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic');
         $this->setState('filter.topic', $topic);
 
-        $state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state');
+        $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);
 
         parent::populateState('study.studydate', 'DESC');
@@ -205,14 +227,13 @@ class biblestudyModelMessages extends modelClass {
      * @return  JDatabaseQuery
      * @since   7.0
      */
-   protected function getListQuery() {
+    protected function getListQuery() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
         $query->select(
                 $this->getState(
-                        'list.select',
-                        'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
+                        'list.select', 'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
                         study.verse_begin, study.chapter_end, study.verse_end, study.hits'));
         $query->from('#__bsms_studies AS study');
 
@@ -234,64 +255,63 @@ class biblestudyModelMessages extends modelClass {
 
         //Join over Plays/Downloads
         $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
-        $query->join('LEFT','#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
+        $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
         $query->group('study.id');
 
 
 
         //Filter by studytitle
         $studytitle = $this->getState('filter.studytitle');
-        if(!empty($studytitle))
-            $query->where('study.studytitle LIKE "'.$studytitle.'%"');
+        if (!empty($studytitle))
+            $query->where('study.studytitle LIKE "' . $studytitle . '%"');
 
         //Filter by book
         $book = $this->getState('filter.book');
-        if(!empty($book))
-            $query->where('study.booknumber = '.(int)$book.' OR study.booknumber2 = '.(int)$book);
-            $query->join('LEFT', '#__bsms_books AS books ON books.booknumber = study.booknumber');
+        if (!empty($book))
+            $query->where('study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book);
+        $query->join('LEFT', '#__bsms_books AS books ON books.booknumber = study.booknumber');
 
         //Filter by teacher
         $teacher = $this->getState('filter.teacher');
-        if(!empty($teacher))
-            $query->where('study.teacher_id = '.(int)$teacher);
+        if (!empty($teacher))
+            $query->where('study.teacher_id = ' . (int) $teacher);
 
         //Filter by series
         $series = $this->getState('filter.series');
-        if(!empty($series))
-            $query->where('study.series_id = '.(int)$series);
+        if (!empty($series))
+            $query->where('study.series_id = ' . (int) $series);
 
         //Filter by message type
         $messageType = $this->getState('filter.messageType');
-        if(!empty($messageType))
-            $query->where('study.messageType = '.(int)$messageType);
+        if (!empty($messageType))
+            $query->where('study.messageType = ' . (int) $messageType);
 
         //Filter by Year?
         $year = $this->getState('filter.year');
         if (!empty($year))
-            $query->where('YEAR(study.studydate) = '.(int)$year );
+            $query->where('YEAR(study.studydate) = ' . (int) $year);
 
         // Filter by published state
-		$published = $this->getState('filter.published');
-		if (is_numeric($published)) {
-			$query->where('study.published = ' . (int) $published);
-		}
-		else if ($published === '') {
-			$query->where('(study.published = 0 OR study.published = 1)');
-		}
+        $published = $this->getState('filter.published');
+        if (is_numeric($published)) {
+            $query->where('study.published = ' . (int) $published);
+        } else if ($published === '') {
+            $query->where('(study.published = 0 OR study.published = 1)');
+        }
 
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
-        $query->order($db->getEscaped($orderCol.' '.$orderDirn));
+        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
 
         return $query;
     }
-
 
     /*
      * @since 7.0
      * get a list of all used books
      */
+
     public function getBooks() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -304,9 +324,8 @@ class biblestudyModelMessages extends modelClass {
 
         $db->setQuery($query->__toString());
         $db_result = $db->loadAssocList();
-        foreach($db_result as $i => $value)
-        {
-                 $db_result[$i]['text'] = JText::_($value['text']);
+        foreach ($db_result as $i => $value) {
+            $db_result[$i]['text'] = JText::_($value['text']);
         }
         return $db_result;
     }
@@ -315,6 +334,7 @@ class biblestudyModelMessages extends modelClass {
      * @since 7.0
      * get a list of all used teachers
      */
+
     public function getTeachers() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -333,6 +353,7 @@ class biblestudyModelMessages extends modelClass {
      * @since 7.0
      * get a list of all used series
      */
+
     public function getSeries() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -351,6 +372,7 @@ class biblestudyModelMessages extends modelClass {
      * @since 7.0
      * get a list of all used message types
      */
+
     public function getMessageTypes() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -369,17 +391,18 @@ class biblestudyModelMessages extends modelClass {
      * @since 7.0
      * get a list of all used years
      */
-    public function getYears(){
+
+    public function getYears() {
         $db = $this->getDBO();
         $query = $db->getQuery(true);
 
         $query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
-        $query->from('#__bsms_studies' );
+        $query->from('#__bsms_studies');
         $query->order('value');
 
         $db->setQuery($query->__toString());
         $year = $db->loadObjectList();
-      //  dump ($year);
+        //  dump ($year);
         return $year;
     }
 

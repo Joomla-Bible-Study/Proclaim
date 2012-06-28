@@ -12,11 +12,23 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
-abstract class modelClass extends JModelAdmin {
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
+class biblestudyModelmediafile extends JModelAdmin {
 
-}
+    /**
+     *
+     * @var type
+     */
+    var $_admin;
 
-class biblestudyModelmediafile extends modelClass {
+    /**
+     *
+     * @var type
+     */
+    var $_text_prefix = 'COM_BIBLESTUDY';
 
     /**
      * Constructor that retrieves the ID from the request
@@ -24,9 +36,6 @@ class biblestudyModelmediafile extends modelClass {
      * @access	public
      * @return	void
      */
-    var $_admin;
-    var $_text_prefix = 'COM_BIBLESTUDY';
-
     function __construct() {
         parent::__construct();
 
@@ -59,17 +68,32 @@ class biblestudyModelmediafile extends modelClass {
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.mediafilesedit.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
+    /**
+     *
+     * @param type $type
+     * @param type $prefix
+     * @param type $config
+     * @return type
+     */
     public function getTable($type = 'mediafile', $prefix = 'Table', $config = array()) {
         JTable::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'tables');
         return JTable::getInstance($type, $prefix, $config);
     }
 
+    /**
+     *
+     * @param type $id
+     */
     function setId($id) {
         // Set id and wipe data
         $this->_id = $id;
         $this->_data = null;
     }
 
+    /**
+     *
+     * @return type
+     */
     function &getData() {
         // Load the data
         if (empty($this->_data)) {
@@ -204,6 +228,12 @@ class biblestudyModelmediafile extends modelClass {
         return true;
     }
 
+    /**
+     * @deprecated since version 7.0.4
+     * @param type $cid
+     * @param type $publish
+     * @return boolean
+     */
     function legacyPublish($cid = array(), $publish = 1) {
 
         if (count($cid)) {
@@ -279,6 +309,10 @@ class biblestudyModelmediafile extends modelClass {
         return true;
     }
 
+    /**
+     * @deprecated since version 7.0.4
+     * @return type
+     */
     function getLegacyAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT params'
@@ -453,6 +487,12 @@ class biblestudyModelmediafile extends modelClass {
         return parent::save($data);
     }
 
+    /**
+     *
+     * @param JForm $form
+     * @param type $data
+     * @param type $group
+     */
     protected function preprocessForm(JForm $form, $data, $group = 'content') {
         parent::preprocessForm($form, $data, $group);
     }

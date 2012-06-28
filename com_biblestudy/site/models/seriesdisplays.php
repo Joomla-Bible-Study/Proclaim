@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @since 7.1.0
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,6 +12,10 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class BiblestudyModelSeriesdisplays extends JModelList {
 
     /**
@@ -60,7 +64,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
         $query->where($where);
 
         // Filter by language
-        $language = $params->get('language', '*'); 
+        $language = $params->get('language', '*');
         if ($this->getState('filter.language') || $language != '*') {
             $query->where('se.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }

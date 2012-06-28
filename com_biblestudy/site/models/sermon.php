@@ -12,6 +12,10 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modelitem');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class BiblestudyModelSermon extends JModelItem {
 
     /**
@@ -204,7 +208,7 @@ class BiblestudyModelSermon extends JModelItem {
 
     /**
      * Method to Get Admin Settings
-     * 
+     *
      * @return array
      */
     public function getAdmin() {

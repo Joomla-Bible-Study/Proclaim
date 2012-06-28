@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: landingpage.php 1 $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,6 +12,10 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class biblestudyModellandingpage extends JModelList {
 
     /**
@@ -43,6 +46,10 @@ class biblestudyModellandingpage extends JModelList {
         parent::populateState('s.studydate', 'DESC');
     }
 
+    /**
+     *
+     * @return type
+     */
     protected function getListQuery() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -108,6 +115,10 @@ class biblestudyModellandingpage extends JModelList {
         return $this->_admin;
     }
 
+    /**
+     *
+     * @return type
+     */
     function getTemplate() {
         if (empty($this->_template)) {
             $templateid = JRequest::getVar('t', 1, 'get', 'int');

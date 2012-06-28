@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -14,8 +14,12 @@ jimport('joomla.application.component.modeladmin');
 jimport('joomla.html.parameter');
 require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
-//require_once JPATH_ADMINISTRATOR.'/components/com_biblestudy/models/message.php';
 
+//require_once JPATH_ADMINISTRATOR.'/components/com_biblestudy/models/message.php';
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class biblestudyModelmessage extends JModelAdmin {
 
     var $_admin;
@@ -34,11 +38,9 @@ class biblestudyModelmessage extends JModelAdmin {
             $this->context .= '.' . $layout;
         }
         // Load state from the request. We use a_id to avoid collisions with the router
-        $pks = JRequest::getInt('a_id'); 
+        $pks = JRequest::getInt('a_id');
         $this->pks = $pks;
         $this->setState('message.id', $pks);
-        
-        
     }
 
     /**
@@ -55,6 +57,12 @@ class biblestudyModelmessage extends JModelAdmin {
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.studiesedit.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
+    /**
+     *
+     * @param type $study_id
+     * @param type $topic_id
+     * @return boolean
+     */
     function isDuplicate($study_id, $topic_id) {
         $db = & JFactory::getDBO();
         $query = 'select * from #__bsms_studytopics where study_id = ' . $study_id . ' and topic_id = ' . $topic_id;
@@ -187,8 +195,8 @@ class biblestudyModelmessage extends JModelAdmin {
      * @since 7.0.1
      * @todo This may need to be optimized
      */
-    public function save($data) { 
-        $pks = JRequest::getInt('a_id'); 
+    public function save($data) {
+        $pks = JRequest::getInt('a_id');
         if ($pks) {
             $this->setTopics($pks, $data);
             return true;
@@ -198,7 +206,6 @@ class biblestudyModelmessage extends JModelAdmin {
         }
     }
 
-    
     /**
      * Routine to save the topics(tags)
      * @param type $data from post
@@ -324,32 +331,30 @@ class biblestudyModelmessage extends JModelAdmin {
     }
 
     /**
-	 * Method to get article data.
-	 *
-	 * @param	integer	The id of the article.
-	 *
-	 * @return	mixed	Content item data object on success, false on failure.
-	 */
-	public function getItem($itemId = null)
-	{
-		// Initialise variables.
-		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('message.id');
+     * Method to get article data.
+     *
+     * @param	integer	The id of the article.
+     *
+     * @return	mixed	Content item data object on success, false on failure.
+     */
+    public function getItem($itemId = null) {
+        // Initialise variables.
+        $itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('message.id');
 
-		// Get a row instance.
-		$table = $this->getTable();
+        // Get a row instance.
+        $table = $this->getTable();
 
-		// Attempt to load the row.
-		$return = $table->load($itemId);
+        // Attempt to load the row.
+        $return = $table->load($itemId);
 
-		// Check for a table object error.
-		if ($return === false && $table->getError()) {
-			$this->setError($table->getError());
-			return false;
-		}
-                $properties = $table->getProperties(1);
-		$value = JArrayHelper::toObject($properties, 'JObject');
-                return $value;
-	}
-        
-        
+        // Check for a table object error.
+        if ($return === false && $table->getError()) {
+            $this->setError($table->getError());
+            return false;
+        }
+        $properties = $table->getProperties(1);
+        $value = JArrayHelper::toObject($properties, 'JObject');
+        return $value;
+    }
+
 }
