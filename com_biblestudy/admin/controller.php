@@ -425,23 +425,16 @@ class biblestudyController extends JController {
     function upload() {
         JRequest::checktoken() or jexit('Invalid Token');
         $option = JRequest::getCmd('option');
-
-
         $uploadmsg = '';
         $serverid = JRequest::getInt('upload_server', '', 'post');
         $folderid = JRequest::getInt('upload_folder', '', 'post');
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
-
-
         $url = 'index.php?option=com_biblestudy&view=mediafile&id=' . $returnid;
         $path = JBSUpload::getpath($url, '');
-        //get media details
-
         $file = JRequest::getVar('uploadfile', '', 'files', 'array'); //dump($file, '$file: ');
         // check filetype allowed
         $allow = JBSUpload::checkfile($file['name']);
-
         if ($allow) {
             $filename = JBSUpload::buildpath($file, 1, $serverid, $folderid, $path); //dump($filename, '$filename: ');
             // process file
