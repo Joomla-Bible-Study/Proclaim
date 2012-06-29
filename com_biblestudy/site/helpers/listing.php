@@ -154,7 +154,7 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
     $id3 = $row->id;
     $smenu = $params->get('detailsitemid');
     $tmenu = $params->get('teacheritemid');
-    $tid = $row->tid;
+    $tid = $row->teacher_id;
     $entry_access = $admin_params->get('entry_access');
     $allow_entry = $admin_params->get('allow_entry_study');
     //This is the beginning of row 1
@@ -685,7 +685,7 @@ function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $r
             if ($tmenu > 0) {
                 $link .= '&Itemid=' . $tmenu;
             }
-            $column .= '<a href="' . $link . '">';
+            $column .= '<a href="' . $link . '">'; 
             break;
 
         case 4 :

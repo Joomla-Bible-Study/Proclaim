@@ -202,19 +202,60 @@ class biblestudyModelmessage extends JModelAdmin {
             $query = $db->getQuery(true);
             $query->clear();
             $query->update('#__bsms_studies');
+            $query->set(' studydate = '.$db->Quote($data['studydate']));
+            $query->set(' teacher_id = '.$db->Quote($data['teacher_id']));
+            $query->set(' booknumber = '.$db->Quote($data['booknumber']));
+            $query->set(' chapter_begin = '.$db->Quote($data['chapter_begin']));
+            $query->set(' chapter_end = '.$db->Quote($data['chapter_end']));
+            $query->set(' verse_begin = '.$db->Quote($data['verse_begin']));
+            $query->set(' secondary_reference = '.$db->Quote($data['secondary_reference']));
+            $query->set(' booknumber2 = '.$db->Quote($data['booknumber2']));
+            $query->set(' chapter_begin2 = '.$db->Quote($data['chapter_begin2']));
+            $query->set(' chapter_end2 = '.$db->Quote($data['chapter_end2']));
+            $query->set(' verse_begin2 = '.$db->Quote($data['verse_begin2']));
+            $query->set(' prod_dvd = '.$db->Quote($data['prod_dvd']));
+            $query->set(' prod_cd = '.$db->Quote($data['prod_cd']));
+            $query->set(' server_dvd = '.$db->Quote($data['server_dvd']));
+            $query->set(' server_cd = '.$db->Quote($data['server_cd']));
+            $query->set(' image_cd = '.$db->Quote($data['image_cd']));
+            $query->set(' image_dvd = '.$db->Quote($data['image_dvd']));
+            $query->set(' studytext2 = '.$db->Quote($data['studytext2']));
+            $query->set(' comments = '.$db->Quote($data['comments']));
+            $query->set(' hits = '.$db->Quote($data['hits']));
+            $query->set(' user_id = '.$db->Quote($data['user_id']));
+            $query->set(' user_name = '.$db->Quote($data['user_name']));
+            $query->set(' show_level = '.$db->Quote($data['show_level']));
+            $query->set(' location_id = '.$db->Quote($data['location_id']));
             $query->set(' studytitle = '.$db->Quote($data['studytitle']));
-            $db->where(' id ='. (int)$pks.' LIMIT 1');
-            $db->setQuery((string)$query);
+            $query->set(' alias = '.$db->Quote($data['alias']));
+            $query->set(' studyintro = '.$db->Quote($data['studyintro']));
+            $query->set(' media_hours = '.$db->Quote($data['media_hours']));
+            $query->set(' media_minutes = '.$db->Quote($data['media_minutes']));
+            $query->set(' media_seconds = '.$db->Quote($data['media_seconds']));
+            $query->set(' messagetype = '.$db->Quote($data['messagetype']));
+            $query->set(' series_id = '.$db->Quote($data['series_id']));
+            $query->set(' topics_id = '.$db->Quote($data['topics_id']));
+            $query->set(' studytext = '.$db->Quote($data['studytext']));
+            $query->set(' thumbnailm = '.$db->Quote($data['thumbnailm']));
+            $query->set(' thumbhm = '.$db->Quote($data['thumbhm']));
+            $query->set(' thumbwm = '.$db->Quote($data['thumbwm']));
+            $query->set(' params = '.$db->Quote($data['params']));
+            $query->set(' published = '.$db->Quote($data['published']));
+            $query->set(' asset_id = '.$db->Quote($data['asset_id']));
+            $query->set(' access = '.$db->Quote($data['access']));
+            $query->set(' ordering = '.$db->Quote($data['ordering']));
+            $query->set(' language = '.$db->Quote($data['language']));
+            $query->where(' id ='. (int)$pks.' LIMIT 1');
+            $db->setQuery((string)$query); 
             if (!$db->query()) {
             JError::raiseError(500, $db->getErrorMsg());
         	return false;
         } else {
-            //$this->setTopics($pks, $data);	
+            $this->setTopics($pks, $data);	
             return true;
-		}
-           
-           
-        } 
+		} 
+        }
+        return parent::save($data);
     }
 
     /**
