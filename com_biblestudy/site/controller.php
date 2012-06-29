@@ -27,11 +27,7 @@ class biblestudyController extends JController {
     public function display($cachable = false, $urlparams = false) {
         $cachable = true;
         //clear the user state
-        $app = JFactory::getApplication();
-        $app->setUserState('fname', '');
-        $app->setUserState('size', '');
-        $app->setUserState('serverid', '');
-        $app->setUserState('folderid', '');
+        
         JHtml::_('behavior.caption');
 
         // Set the default view name and format from the Request.
