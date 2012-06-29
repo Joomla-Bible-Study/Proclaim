@@ -240,8 +240,8 @@ class biblestudyController extends JController {
         $serverid = JRequest::getInt('upload_server', '', 'post');
         $folderid = JRequest::getInt('upload_folder', '', 'post');
         $app = JFactory::getApplication();
-        $app->setUserState('serverid', $serverid);
-        $app->setUserState('folderid', $folderid);
+        $app->setUserState($option.'serverid', $serverid);
+        $app->setUserState($option.'folderid', $folderid);
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
         // get temp file details
@@ -320,11 +320,12 @@ class biblestudyController extends JController {
         $extOk = JBSUpload::checkfile($fileName);
         $serverid = JRequest::getInt('upload_server', '', 'post');
         $folderid = JRequest::getInt('upload_folder', '', 'post');
+        $option = JRequest::getCmd('option');
         $app = JFactory::getApplication();
-        $app->setUserState('serverid', $serverid);
-        $app->setUserState('folderid', $folderid);
-        $app->setUserState('fname', $_FILES[$fieldName]['name']);
-        $app->setUserState('size', $_FILES[$fieldName]['size']);
+        $app->setUserState($option.'serverid', $serverid);
+        $app->setUserState($option.'folderid', $folderid);
+        $app->setUserState($option.'fname', $_FILES[$fieldName]['name']);
+        $app->setUserState($option.'size', $_FILES[$fieldName]['size']);
         if ($extOk == false) {
             echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
             return;
