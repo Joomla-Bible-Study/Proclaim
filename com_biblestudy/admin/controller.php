@@ -298,8 +298,8 @@ class biblestudyController extends JController {
         $serverid = JRequest::getInt('upload_server', '', 'post');
         $folderid = JRequest::getInt('upload_folder', '', 'post');
         $app = JFactory::getApplication();
-        $app->setUserState('serverid', $serverid);
-        $app->setUserState('folderid', $folderid);
+        $app->setUserState($option,'serverid', $serverid);
+        $app->setUserState($option.'folderid', $folderid);
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
         // get temp file details
@@ -391,10 +391,11 @@ class biblestudyController extends JController {
         $fileName = $_FILES[$fieldName]['name'];
         $extOk = JBSUpload::checkfile($fileName);
         $app = JFactory::getApplication();
-        $app->setUserState('fname', $_FILES[$fieldName]['name']);
-        $app->setUserState('size', $_FILES[$fieldName]['size']);
-        $app->setUserState('serverid', $serverid);
-        $app->setUserState('folderid', $folderid);
+        $option = JRequest::getCmd('option');
+        $app->setUserState($option.'fname', $_FILES[$fieldName]['name']);
+        $app->setUserState($option.'size', $_FILES[$fieldName]['size']);
+        $app->setUserState($option.'serverid', $serverid);
+        $app->setUserState($option.'folderid', $folderid);
         if ($extOk == false) {
             echo JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
             return;
@@ -446,10 +447,10 @@ class biblestudyController extends JController {
         }
         $mediafileid = JRequest::getInt('id', '', 'post');
         $app = JFactory::getApplication();
-        $app->setUserState('fname', $file['name']);
-        $app->setUserState('size', $file['size']);
-        $app->setUserState('serverid', $serverid);
-        $app->setUserState('folderid', $folderid);
+        $app->setUserState($option . 'fname', $file['name']); 
+        $app->setUserState($option . 'size', $file['size']);
+        $app->setUserState($option . 'serverid', $serverid);
+        $app->setUserState($option . 'folderid', $folderid);
         if ($layout = 'modal') {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
         } else {

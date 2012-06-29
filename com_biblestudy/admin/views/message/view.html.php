@@ -24,8 +24,9 @@ class BiblestudyViewMessage extends JView {
     function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
-JApplication::setUserState('sid',$this->item->id);
-JApplication::setUserState('sdate', $this->item->studydate);
+        $option = JRequest::getCmd('option');
+        JApplication::setUserState($option.'sid', $this->item->id);
+        JApplication::setUserState($option.'sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
 
         $this->loadHelper('params');
