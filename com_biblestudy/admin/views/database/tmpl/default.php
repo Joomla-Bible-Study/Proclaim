@@ -31,7 +31,7 @@ defined('_JEXEC') or die;
                     <?php endif; ?>
 
                         <?php if (!(strncmp($this->schemaVersion, $this->version, 5) === 0)) : ?>
-                        <li><?php echo JText::sprintf('JBS_DATABASE_SCHEMA_DOES_NOT_MATCH', $this->schemaVersion, $this->version); ?></li>
+                        <li><?php echo JText::sprintf('JBS_INS_DATABASE_SCHEMA_DOES_NOT_MATCH', $this->schemaVersion, $this->version); ?></li>
                         <?php endif; ?>
 
                     <?php if (($this->updateVersion != $this->version)) : ?>

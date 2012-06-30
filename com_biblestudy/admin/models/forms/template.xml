@@ -287,7 +287,7 @@
 			</field>
                         <field name="showpodcastsubscribelist" type="list" default="1"
                                 label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC" >
-                                    <option value="0">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_NO</option>
+                                    <option value="0">JBS_CMN_HIDE</option>
                                     <option value="1">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_TOP</option>
                                     <option value="2">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_BOTTOM</option>
                         </field>
@@ -635,13 +635,13 @@
 			
                         <field name="showrelated" type="list" default="1"
                                 label="JBS_TPL_SHOW_RELATED" description="JBS_TPL_SHOW_RELATED_DESC" >
-                                <option value="0">JBS_TPL_RELATED_NO_SHOW</option>
+                                <option value="0">JBS_CMN_HIDE</option>
                                 <option value="1">JBS_TPL_RELATED_TOP</option>
                                 <option value="2">JBS_TPL_RELATED_BOTTOM</option>
                         </field>
                         <field name="showpodcastsubscribedetails" type="list" default="1"
                                 label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC" >
-                                    <option value="0">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_NO</option>
+                                    <option value="0">JBS_CMN_HIDE</option>
                                     <option value="1">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_TOP</option>
                                     <option value="2">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_BOTTOM</option>
                                    
@@ -659,7 +659,7 @@
 				<option value="2">JBS_TPL_SHOW_ALWAYS_NO_HIDE_SHOW_LINK</option>
                                 <option value="3">JBS_TPL_SHOW_AS_POPUP</option>
 			</field>
-                        <field name="bible_version" type="list" default="51" label="JBS_TPL_CHOOSE_BIBLE_VERSION" desc="JBS_TPL_CHOOSE_BIBLE_VERSION_DESC">
+                        <field name="bible_version" type="list" default="51" label="JBS_TPL_CHOOSE_BIBLE_VERSION" description="JBS_TPL_CHOOSE_BIBLE_VERSION_DESC">
                             <option value="69">	1550 Stephanus New Testament (NT)	</option>
                             <option value="68">	1881 Westcott-Hort New Testament (NT)	</option>
                             <option value="70">	1894 Scrivener New Testament (NT)	</option>

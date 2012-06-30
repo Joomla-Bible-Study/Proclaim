@@ -200,7 +200,7 @@ class BibleStudyHelper {
                 JText::_('JBS_CMN_MIME_TYPES'), 'index.php?option=com_biblestudy&view=mimetypes', $vName == 'mimetypes'
         );
         JSubMenuHelper::addEntry(
-                JText::_('JBS_CSS_CSS_EDIT'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'
+                JText::_('JBS_CMN_STYLES'), 'index.php?option=com_biblestudy&view=styles', $vName == 'styles'
         );
     }
 

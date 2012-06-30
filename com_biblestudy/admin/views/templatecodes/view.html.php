@@ -62,7 +62,7 @@ class BiblestudyViewTemplatecodes extends JView {
 
     protected function addToolbar() {
 
-        JToolBarHelper::title(JText::_('JBS_TPLCODES'), 'templates.png');
+        JToolBarHelper::title(JText::_('JBS_TPLCODE_TPLCODES'), 'templates.png');
 
         if ($this->canDo->get('core.create')) {
             JToolBarHelper::addNew('templatecode.add');

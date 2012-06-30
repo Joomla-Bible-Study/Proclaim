@@ -122,9 +122,9 @@ class Com_BiblestudyInstallerScript {
         require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'biblestudy.install.special.php');
         $fresh = new JBSFreshInstall();
         if (!$freshcss = $fresh->installCSS()) {
-            echo '<br />' . JText::_('JBS_CSS_FAILURE');
+            echo '<br />' . JText::_('JBS_INS_FAILURE');
         } else {
-            echo '<br />' . JText::_('JBS_CSS_SUCCESS');
+            echo '<br />' . JText::_('JBS_INS_SUCCESS');
         }
         echo JHtml::_('sliders.panel', JText::_('JBS_INS_INSTALLING_VERSION_TO_') . ' ' . $this->release, 'publishing-details');
     }
@@ -214,7 +214,7 @@ class Com_BiblestudyInstallerScript {
         }
 
 
-        // Sart Sliders
+        // Start Sliders
         echo JHtml::_('sliders.start', 'content-sliders-1', array('useCookie' => 1));
         ?>
         <fieldset class="panelform">
@@ -228,9 +228,9 @@ class Com_BiblestudyInstallerScript {
             require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
             $JBS710 = JBS710Update::update710();
             if (!$JBS710) {
-                echo '<br />' . JText::_('JBS_CSS_FAILURE');
+                echo '<br />' . JText::_('JBS_INS_FAILURE');
             } else {
-                echo '<br />' . JText::_('JBS_CSS_SUCCESS');
+                echo '<br />' . JText::_('JBS_INS_SUCCESS');
             }
 
             //Check for default details text link image and copy if not present
