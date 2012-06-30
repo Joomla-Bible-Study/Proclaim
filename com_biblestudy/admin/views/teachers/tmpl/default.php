@@ -124,7 +124,7 @@ $saveOrder = $listOrder == 'teacher.ordering';
                         <?php if (!$item->list_show){echo JText::_('JNO');} if ($item->list_show > 0){echo JText::_('JYES');}?>
                     </td>
                     <td class="center">
-                        <?php if (!$item->landing_show){echo JText::_('JNO');} if ($item->landing_show > 0){echo JText::_('JYES');}if($item->landing_show == '1'){ echo ' - '.JText::_('JBS_ABOVE');} elseif($item->landing_show == '2') {echo ' - '.JText::_('JBS_BELOW');}?>
+                        <?php if (!$item->landing_show){echo JText::_('JNO');} if ($item->landing_show > 0){echo JText::_('JYES');}if($item->landing_show == '1'){ echo ' - '.JText::_('JBS_TCH_ABOVE');} elseif($item->landing_show == '2') {echo ' - '.JText::_('JBS_TCH_BELOW');}?>
                     </td>
                     <td class="center">
                         <?php echo (int) $item->id; ?>
