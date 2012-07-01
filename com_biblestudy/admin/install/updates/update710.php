@@ -251,7 +251,7 @@ font-weight: bold;
         $result = $db->loadObject();
         $oldcss = $result->stylecode;
         $newcss = $new710css . ' ' . $oldcss;
-        $query = 'UPDATE #__bsms_styles SET stylecode=' . $newcss . ' where `filename` = "biblestudy"';
+        $query = 'UPDATE #__bsms_styles SET stylecode="' . $newcss . '" where `filename` = "biblestudy"';
         $db->setQuery($query);
         $db->query();
         if (!JFile::write($dest, $newcss)) {
