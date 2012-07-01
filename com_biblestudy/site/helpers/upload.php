@@ -309,7 +309,7 @@ class JBSUpload {
      * @return	bolean
      */
     function ftp($file, $filename, $admin = 0) {
-        dump($filename);
+        
         $app = JFactory::getApplication();
         $ftpsuccess = true;
         $ftpsuccess1 = true;
