@@ -187,7 +187,7 @@ class biblestudyModelMessages extends JModelList {
     /**
      * @since   7.0
      */
-    protected function populateState() {
+    protected function populateState($ordering = null, $direction = null) {
 
 
 

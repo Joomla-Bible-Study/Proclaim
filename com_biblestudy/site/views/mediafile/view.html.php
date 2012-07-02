@@ -33,7 +33,7 @@ class biblestudyViewmediafile extends JView {
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin($issite = true);
+        $this->admin = @BsmHelper::getAdmin($issite = true);
 
         //Needed to load the article field type for the article selector
         jimport('joomla.form.helper');
@@ -57,7 +57,7 @@ class biblestudyViewmediafile extends JView {
         $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
         $document->addStyleSheet($host . 'media/system/css/modal.css');
-        $swfUploadHeadJs = JBSUpload::uploadjs($host);
+        $swfUploadHeadJs = @JBSUpload::uploadjs($host);
         //add the javascript to the head of the html document
         $document->addScriptDeclaration($swfUploadHeadJs);
         //Needed to load the article field type for the article selector
@@ -74,7 +74,9 @@ class biblestudyViewmediafile extends JView {
         );
         $serverlist = array_merge($server, $db->loadObjectList());
         $idsel = "'SWFUpload_0'";
-        $this->assignRef('upload_server', JHTML::_('select.genericList', $serverlist, 'upload_server', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', ''));
+        $ref1 = JHTML::_('select.genericList', $serverlist, 'upload_server', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
+        $ref1comm = 'upload_server';
+        $this->assignRef($ref1comm, $ref1);
 
         //Get folders for upload dropdown
         $query = 'SELECT id as value, foldername as text FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC';
@@ -86,7 +88,9 @@ class biblestudyViewmediafile extends JView {
         );
         $folderlist = array_merge($folder, $db->loadObjectList());
         $idsel = "'SWFUpload_0'";
-        $this->assignRef('upload_folder', JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', ''));
+        $ref2 = JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
+        $ref2comm = 'upload_folder';
+        $this->assignRef($ref2comm, $ref2);
 
         $this->setLayout('edit');
 

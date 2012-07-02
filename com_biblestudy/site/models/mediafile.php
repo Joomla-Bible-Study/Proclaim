@@ -212,7 +212,7 @@ class biblestudyModelmediafile extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function delete() {
+    function delete(&$pks) {
         $cids = JRequest::getVar('cid', array(0), 'post', 'array');
 
         $row = & $this->getTable();
@@ -281,8 +281,8 @@ class biblestudyModelmediafile extends JModelAdmin {
      * @return	boolean	True on success
      * @since	1.5
      */
-    function saveorder($cid = array(), $order) {
-        $row = & $this->getTable();
+    function saveorder($cid = array(), $pks=null, $order=null) {
+        $row = $this->getTable();
         $groupings = array();
 
         // update ordering values

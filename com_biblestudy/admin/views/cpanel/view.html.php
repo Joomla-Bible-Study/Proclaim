@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version $Id: view.html.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,6 +11,10 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 include_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
 
+/**
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class biblestudyViewcpanel extends JView {
 
     function display($tpl = null) {
@@ -44,6 +47,11 @@ class biblestudyViewcpanel extends JView {
         $this->setDocument();
     }
 
+    /**
+     * Add Toolbar to page
+     *
+     * @since 7.0.0
+     */
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_CMN_CONTROL_PANEL'), 'administration');
     }

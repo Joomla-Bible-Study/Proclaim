@@ -53,7 +53,7 @@ class JFormFieldFilesize extends JFormField {
      * @return type
      */
     private function sizeConverter() {
-        $document = & JFactory::getDocument();
+        $document = JFactory::getDocument();
         $document->addScriptDeclaration('function openConverter1()
 		{
 			var Wheight=125;

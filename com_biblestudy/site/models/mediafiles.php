@@ -22,7 +22,7 @@ class biblestudyModelmediafiles extends JModelList {
     function __construct() {
         parent::__construct();
 
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
 
         // Get the pagination request variables
@@ -98,7 +98,7 @@ class biblestudyModelmediafiles extends JModelList {
     }
 
     function _buildContentOrderBy() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $orders = array('id', 'published', 'studytitle', 'ordering', 'media_image_name', 'createdate', 'filename');
         $filter_order = $mainframe->getUserStateFromRequest($option . 'filter_order', 'filter_order', 'ordering', 'cmd');
@@ -131,7 +131,7 @@ class biblestudyModelmediafiles extends JModelList {
     /**
      * @since   7.0
      */
-    protected function populateState() {
+    protected function populateState($ordering=null, $direction=null) {
         $filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
         $this->setState('filter.filename', $filename);
 

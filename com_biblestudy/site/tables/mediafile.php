@@ -95,7 +95,7 @@ class Tablemediafile extends JTable {
      * @return      int
      * @since       1.6
      */
-    protected function _getAssetParentId() {
+    protected function _getAssetParentId($table=null, $id=null) {
         $asset = JTable::getInstance('Asset');
         $asset->loadByName('com_biblestudy');
         return $asset->id;
