@@ -59,22 +59,7 @@ if ($this->item->path) {
                 return true;
             }
         }
-        	else if (task == 'upflash')
-        {
-            if (document.adminForm.upload_folder.value == '')
-            {
-                alert("<?php echo JText::_('JBS_MED_SELECT_FOLDER'); ?>");
-            }
-            else if (document.adminForm.upload_server.value == '' )
-            {
-                alert("<?php echo JText::_('JBS_MED_ENTER_SERVER'); ?>");
-            }
-            else {
-                submitform(task);
-                window.location.setTimeout('window.location.reload(true)', 1000);
-                return true;
-            }
-        }
+        	
         else if  (task == 'thirdparty')
         {
             if (document.adminForm.video_third.value == '')
@@ -204,10 +189,7 @@ if (JRequest::getWord('layout') == 'modal') {
                     <?php echo $this->form->getLabel('ordering'); ?>
 
                     <?php echo $this->form->getInput('ordering'); ?></li>
-                <li>
-                    <?php echo $this->form->getLabel('language'); ?>
-
-                    <?php echo $this->form->getInput('language'); ?></li>
+                
                 <li>
                     <?php echo $this->form->getLabel('comment'); ?>
 

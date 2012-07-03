@@ -45,10 +45,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
             </select>
 
-            <select name="filter_language" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language')); ?>
-            </select>
+           
         </div>
     </fieldset>
     <div class="clr"></div>
@@ -80,9 +77,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 <th width="15%">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
                 </th>
-                <th width="5%">
-                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
-                </th>
+               
                 <th width="5%">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
                 </th>
@@ -143,13 +138,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                     <td class="center">
                         <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                     </td>
-                    <td class="center">
-                        <?php if ($item->language == '*'): ?>
-                            <?php echo JText::alt('JALL', 'language'); ?>
-                        <?php else: ?>
-                            <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-                        <?php endif; ?>
-                    </td>
+                    
                     <td class="center">
                         <?php echo $this->escape($item->plays); ?>
                     </td>
