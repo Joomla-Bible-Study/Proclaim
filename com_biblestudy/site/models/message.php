@@ -84,7 +84,7 @@ class biblestudyModelmessage extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function delete() {
+    public function delete(&$pks) {
         $cids = JRequest::getVar('cid', array(0), 'post', 'array');
 
         $row = & $this->getTable();

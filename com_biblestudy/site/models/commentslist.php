@@ -20,7 +20,7 @@ class biblestudyModelcommentslist extends JModelList {
     /**
      * @since   7.0.0
      */
-    protected function populateState() {
+    protected function populateState($ordering = null, $direction = null) {
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);

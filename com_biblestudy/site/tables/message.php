@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class Tablemessage extends JTable {
+class TableMessage extends JTable {
 
     /**
      * Primary Key
@@ -135,7 +135,7 @@ class Tablemessage extends JTable {
      * @return      int
      * @since       1.6
      */
-    protected function _getAssetParentId() {
+    protected function _getAssetParentId($table = null, $id = null) {
         $asset = JTable::getInstance('Asset');
         $asset->loadByName('com_biblestudy');
         return $asset->id;

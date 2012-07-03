@@ -42,7 +42,7 @@ class biblestudyViewcommentslist extends JView {
         }
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin($issite = true);
+        $this->admin = @BsmHelper::getAdmin($issite = true);
 
         //check permissions to enter studies
         if (!$this->canDo->get('core.edit')) {

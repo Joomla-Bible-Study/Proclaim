@@ -28,13 +28,13 @@ class biblestudyViewmessage extends JView {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $option = JRequest::getCmd('option');
-        JApplication::setUserState($option.'sid', $this->item->id);
-        JApplication::setUserState($option.'sdate', $this->item->studydate);
+        @JApplication::setUserState($option . 'sid', $this->item->id);
+        @JApplication::setUserState($option . 'sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
         $this->setLayout('form');
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'message');
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin($isSite = true);
+        $this->admin = @BsmHelper::getAdmin($isSite = true);
 
         $user = JFactory::getUser();
 

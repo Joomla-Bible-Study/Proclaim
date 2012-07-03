@@ -29,15 +29,15 @@ class biblestudyViewcommentsedit extends JView {
      * @return boolean
      */
     function display($tpl = null) {
-        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'commentsedit');
+        $this->canDo = @BibleStudyHelper::getActions($this->item->id, 'commentsedit');
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
 
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = BsmHelper::getAdmin($issite = true);
-//check permissions to enter studies
+        $this->admin = @BsmHelper::getAdmin($issite = true);
+        //check permissions to enter studies
         //check permissions to enter studies
         if (!$this->canDo->get('core.edit')) {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));

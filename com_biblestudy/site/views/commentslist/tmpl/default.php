@@ -28,7 +28,7 @@ $listOrder = $this->state->get('list.ordering');
             </thead>
             <?php
             foreach ($this->items as $i => $item) :
-                $link = JRoute::_('index.php?option=com_biblestudy&task=commentsedit.edit&id=' . (int) $item->id);
+                $link = JRoute::_('index.php?option=com_biblestudy&view=commentsedit&task=commentsedit.edit&a_id=' . (int) $item->id);
                 ?>
                 <tr class="row<?php echo $i % 2; ?>">
                     <td width="1">
