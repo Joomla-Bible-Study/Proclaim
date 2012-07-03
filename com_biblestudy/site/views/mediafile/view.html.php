@@ -52,7 +52,7 @@ class biblestudyViewmediafile extends JView {
         $document->addScript($host . 'media/com_biblestudy/js/swfupload/swfupload.queue.js');
         $document->addScript($host . 'media/com_biblestudy/js/swfupload/fileprogress.js');
         $document->addScript($host . 'media/com_biblestudy/js/swfupload/handlers.js');
-        $document->addScript($host . 'medis/com_biblestudy/js/mediafile/submitbutton.js');
+        $document->addScript($host . 'media/com_biblestudy/js/mediafile/submitbutton.js');
         $document->addStyleSheet($host . 'media/com_biblestudy/js/swfupload/default.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
