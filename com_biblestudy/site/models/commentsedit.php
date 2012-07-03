@@ -31,9 +31,12 @@ class biblestudyModelcommentsedit extends JModelAdmin {
             $this->context .= '.' . $layout;
         }
         // Load state from the request. We use a_id to avoid collisions with the router
-        $pks = JRequest::getInt('a_id');
+        $pks = JRequest::getInt('a_id'); 
         $this->pks = $pks;
         $this->setState('comment.id', $pks);
+        $option = JRequest::getCmd('option');
+        $app = JFactory::getApplication();
+        $app->setUserState($option.'comment.id', $pks);
     }
     
      /**
@@ -70,7 +73,10 @@ class biblestudyModelcommentsedit extends JModelAdmin {
      * @todo This may need to be optimized
      */
     public function save($data) {
-        $pks = JRequest::getInt('a_id');
+        $pks = JRequest::getInt('a_id'); 
+        $option = JRequest::getCmd('option');
+        $app = JFactory::getApplication();
+        $pks = $app->getUserState($option.'comment.id'); 
         if ($pks) {
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
@@ -92,7 +98,6 @@ class biblestudyModelcommentsedit extends JModelAdmin {
                 JError::raiseError(500, $db->getErrorMsg());
                 return false;
             } else {
-                $this->setTopics($pks, $data);
                 return true;
             }
         }
