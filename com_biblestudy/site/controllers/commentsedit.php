@@ -21,8 +21,12 @@ class biblestudyControllerCommentsEdit extends JControllerForm {
      *
      * @var type
      */
-    protected $view_list = 'commentsedit';
+    protected $view_list = 'commentslist';
 
+    /**
+     * @since	1.6
+     */
+    protected $view_item = 'commentsedit';
     /**
      * Method to cancel an edit.
      *
@@ -49,7 +53,7 @@ class biblestudyControllerCommentsEdit extends JControllerForm {
         return $result;
     }
 
-    /**
+     /**
      * Method to save a record.
      *
      * @param	string	$key	The name of the primary key of the URL variable.

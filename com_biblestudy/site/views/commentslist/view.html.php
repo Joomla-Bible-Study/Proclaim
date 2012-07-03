@@ -40,6 +40,9 @@ class biblestudyViewcommentslist extends JView {
             JError::raiseError(500, implode("\n", $errors));
             return false;
         }
+        $document = JFactory::getDocument();
+        $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
+        $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
         //Load the Admin settings
         $this->loadHelper('params');
         $this->admin = @BsmHelper::getAdmin($issite = true);

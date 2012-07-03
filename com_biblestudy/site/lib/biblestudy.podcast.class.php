@@ -85,6 +85,7 @@ class JBSPodcast {
                 	</itunes:owner>
                 	<itunes:author>' . $podinfo->editor_name . '</itunes:author>
                 	<itunes:explicit>no</itunes:explicit>
+                        <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
                 	<ttl>1</ttl>
                 	<atom:link href="http://' . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />';
                     //Now let's get the podcast episodes
