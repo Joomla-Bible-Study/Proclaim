@@ -23,8 +23,8 @@ class JBSExport {
      */
     function exportdb($run = '1') {
         $return = false;
-        $date = date('Y-F-j');
-        $localfilename = 'jbs-db-backup-' . $date .'-'. time() . '.sql';
+        $date = date('Y_F_j');
+        $localfilename = 'jbs-db-backup_' . $date .'_'. time() . '.sql';
         $mainframe = JFactory::getApplication();
         $objects = $this->getObjects();
         foreach ($objects as $object) {
