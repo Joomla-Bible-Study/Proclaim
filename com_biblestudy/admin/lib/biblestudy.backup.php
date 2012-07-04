@@ -23,14 +23,14 @@ class JBSExport {
      */
     function exportdb($run = '1') {
         $return = false;
-
-        $localfilename = 'jbs-db-backup-' . time() . '.sql';
+        $date = date('Y-F-j');
+        $localfilename = 'jbs-db-backup-' . $date .'-'. time() . '.sql';
         $mainframe = JFactory::getApplication();
         $objects = $this->getObjects();
         foreach ($objects as $object) {
             $tables[] = $this->getExportTable($object['name']);
         }
-        $export = implode('\n', $tables);
+        $export = implode(' ', $tables);
 
         switch ($run) {
             case 1:
@@ -74,7 +74,8 @@ class JBSExport {
         $prefix = $db->getPrefix();
         //  $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
+        $export .= 'DROP TABLE IF EXISTS `' . $table . "`;
+";
         //Create a new table defintion based on the incoming database
         $query = 'SHOW CREATE TABLE `' . $table . '`';
         $db->setQuery($query);
@@ -82,7 +83,8 @@ class JBSExport {
         $table_def = $db->loadObject();
         foreach ($table_def as $key => $value) {
             if (substr_count($value, 'CREATE')) {
-                $export .= str_replace($prefix, '#__', $value) . ";\n";
+                $export .= str_replace($prefix, '#__', $value) . ";
+";
                 $export = str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
@@ -102,7 +104,8 @@ class JBSExport {
                 $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
             }
             $export .= implode(',', $data);
-            $export .= ";\n";
+            $export .= ";
+";
         }
 
         return $export;

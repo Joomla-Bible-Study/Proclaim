@@ -89,10 +89,6 @@ ALTER TABLE `#__bsms_teachers` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf
 
 UPDATE `#__bsms_teachers` SET `language` = '*' WHERE `#__bsms_teachers`.`language` = '';
 
-ALTER TABLE `#__bsms_podcast` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the Podcasts.';
-
-UPDATE `#__bsms_podcast` SET `language` = '*' WHERE `#__bsms_podcast`.`language` = '';
-
 ALTER TABLE `#__bsms_series` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the Series.';
 
 UPDATE `#__bsms_series` SET `language` = '*' WHERE `#__bsms_series`.`language` = '';
