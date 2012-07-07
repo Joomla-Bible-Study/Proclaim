@@ -15,21 +15,17 @@
         <filename>index.html</filename>
         <filename>mod_biblestudy_podcast.xml</filename>
     </files>
-    <languages>
-        <!-- Any language files included with the module -->
-        <language tag="en-GB">en-GB.mod_biblestudy_podcast.ini</language>
-    </languages>
     <config>
         <fields name="params">
             <fieldset name="basic" label="JBS_MDL_LIST_LAYOUT"
-              addfieldpath="/administrator/components/com_biblestudy/models/fields">
+                      addfieldpath="/administrator/components/com_biblestudy/models/fields">
                 <field name="t" type="sql" description="JBS_MNU_SELECT_TEMPLATE_DESC"
-           label="JBS_MNU_SELECT_TEMPLATE" default="1"
-           query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-           key_field="id" value_field="title" required="true" />
+                       label="JBS_MNU_SELECT_TEMPLATE" default="1"
+                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                       key_field="id" value_field="title" required="true" />
 
                 <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
-           label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC" />
+                       label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC" />
             </fieldset>
         </fields>
     </config>
