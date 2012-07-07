@@ -229,7 +229,7 @@ class biblestudyController extends JController {
      */
     function resetHits() {
         $msg = null;
-        $id = JRequest::getInt('id', 0, 'get'); //dump ($cid, 'cid: ');
+        $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_studies SET hits='0' WHERE id = " . $id);
         $reset = $db->query();
@@ -249,7 +249,7 @@ class biblestudyController extends JController {
      */
     function resetDownloads() {
         $msg = null;
-        $id = JRequest::getInt('id', 0, 'get'); //dump ($cid, 'cid: ');
+        $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET downloads='0' WHERE id = " . $id);
         $reset = $db->query();
@@ -269,7 +269,7 @@ class biblestudyController extends JController {
      */
     function resetPlays() {
         $msg = null;
-        $id = JRequest::getInt('id', 0, 'get'); //dump ($cid, 'cid: ');
+        $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
         $db->setQuery("UPDATE #__bsms_mediafiles SET plays='0' WHERE id = " . $id);
         $reset = $db->query();
@@ -433,11 +433,11 @@ class biblestudyController extends JController {
         $returnid = $form['id'];
         $url = 'index.php?option=com_biblestudy&view=mediafile&id=' . $returnid;
         $path = JBSUpload::getpath($url, '');
-        $file = JRequest::getVar('uploadfile', '', 'files', 'array'); //dump($file, '$file: ');
+        $file = JRequest::getVar('uploadfile', '', 'files', 'array');
         // check filetype allowed
         $allow = JBSUpload::checkfile($file['name']);
         if ($allow) {
-            $filename = JBSUpload::buildpath($file, 1, $serverid, $folderid, $path); //dump($filename, '$filename: ');
+            $filename = JBSUpload::buildpath($file, 1, $serverid, $folderid, $path);
             // process file
             $uploadmsg = JBSUpload::processuploadfile($file, $filename);
 

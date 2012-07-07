@@ -15,7 +15,7 @@ $option = JRequest::getCmd('option');
 $study = $app->getUserState($option . 'sid');
 $sdate = $app->getUserState($option . 'sdate');
 $size = $app->getUserState($option . 'size');
-$fname = $app->getUserState($option . 'fname'); //dump($fname);
+$fname = $app->getUserState($option . 'fname');
 $serverid = $app->getUserState($option . 'serverid');
 if ($this->item->server) {
     $server = $this->item->server;
@@ -253,12 +253,7 @@ if (JRequest::getWord('layout', '') == 'modal') {
                 <?php echo $this->form->getLabel('special'); ?>
                 <?php echo $this->form->getInput('special', null, $this->admin->params['target']); ?>
             </div>
-            <div class="clr"></div>
-            <div class="formelm">
-                <?php echo $this->upload_server; ?><br /><br />
-                <?php echo $this->upload_folder; ?><br />
-            </div>
-<table class="adminlist">
+            <table class="adminlist">
                 <thead>
                 <th align="center" colspan="2"><?php echo JText::_('JBS_STY_UPLOAD'); ?></th>
                 </thead>
@@ -288,18 +283,18 @@ if (JRequest::getWord('layout', '') == 'modal') {
                 </tbody>
             </table>
         </fieldset>
-            <div class="formelm">
-                <?php echo $this->form->getLabel('docMan_id'); ?>
-                <?php echo $this->form->getInput('docMan_id'); ?>
-            </div>
-            <div class="formelm">
-                <?php echo $this->form->getLabel('virtueMart_id'); ?>
-                <?php echo $this->form->getInput('virtueMart_id'); ?>
-            </div>
-            <div class="formelm">
-                <?php echo $this->form->getLabel('article_id'); ?>
-                <?php echo $this->form->getInput('article_id'); ?>
-            </div>
+        <div class="formelm">
+            <?php echo $this->form->getLabel('docMan_id'); ?>
+            <?php echo $this->form->getInput('docMan_id'); ?>
+        </div>
+        <div class="formelm">
+            <?php echo $this->form->getLabel('virtueMart_id'); ?>
+            <?php echo $this->form->getInput('virtueMart_id'); ?>
+        </div>
+        <div class="formelm">
+            <?php echo $this->form->getLabel('article_id'); ?>
+            <?php echo $this->form->getInput('article_id'); ?>
+        </div>
         </fieldset>
 
         <fieldset class="panelform">

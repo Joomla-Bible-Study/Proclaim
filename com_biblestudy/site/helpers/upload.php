@@ -16,7 +16,7 @@ class JBSUpload {
      *
      * @return	string
      */
-    function uploadjs($host) {
+    function uploadjs($host, $admin) {
         //when we send the files for upload, we have to tell Joomla our session, or we will get logged out
         $session = JFactory::getSession();
 
@@ -47,7 +47,7 @@ class JBSUpload {
             flash_url : "' . $host . 'media/com_biblestudy/js/swfupload/swfupload.swf",
 
             //we can not put any vars into the url for complicated reasons, but we can put them into the post...
-            upload_url: "' . JURI::root() . 'administrator/index.php?option=com_biblestudy&view=mediafile&task=uploadflash",
+            upload_url: "' . $host . $admin . 'index.php?option=com_biblestudy&view=mediafile&task=uploadflash",
             post_params: {
             		"option" : "com_biblestudy",
            		"controller" : "Mediafile",
@@ -207,7 +207,6 @@ class JBSUpload {
                 $uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED_AWS');
             }
         } else {
-            //dump($tempfile, 'tempfile: '); dump($filename->path,'filepath: ');
             if (!$copy = JFile::copy($tempfile, $filename->path)) {
                 $uploadmsg = JText::_('JBS_MED_FILE_NO_UPLOADED');
             }
@@ -272,7 +271,7 @@ class JBSUpload {
      */
     function upload($filename, $file) {
         $msg = '';
-        jimport('joomla.filesystem.file'); //dump($filename,'filename: '); dump($file, '$file: '); return;
+        jimport('joomla.filesystem.file');
         if (!JFILE::upload($file['tmp_name'], $filename->path)) {
             $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH') . ' ' . $filename->path . ' ' . JText::_('JBS_MED_UPLOAD_EXISTS');
         }
@@ -343,7 +342,7 @@ class JBSUpload {
         // ftp_pasv ($conn_id, true);
         // perform file upload
         if (!$upload = ftp_put($conn_id, $ftp_path, $local_file, FTP_BINARY)) {
-            $stop = 'stopped at ftp_put'; //dump($stop);
+            $stop = 'stopped at ftp_put';
             if ($admin == 0) {
                 $app->enqueueMessage(JText::_('JBS_MED_FTP_NO_UPLOAD'), 'error');
             }

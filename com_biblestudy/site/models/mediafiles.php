@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @version     $Id: mediafileslist.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package BibleStudy
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,6 +11,10 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
+/**
+ * @package BibleStudy.Site
+ * @since 7.0.0
+ */
 class biblestudyModelmediafiles extends JModelList {
 
     var $_data;
@@ -85,7 +88,7 @@ class biblestudyModelmediafiles extends JModelList {
     }
 
     function _buildContentWhere() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $where = array();
         $filter_studyid = $mainframe->getUserStateFromRequest($option . 'filter_studyid', 'filter_studyid', 0, 'int');
@@ -131,7 +134,7 @@ class biblestudyModelmediafiles extends JModelList {
     /**
      * @since   7.0
      */
-    protected function populateState($ordering=null, $direction=null) {
+    protected function populateState($ordering = null, $direction = null) {
         $filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
         $this->setState('filter.filename', $filename);
 
