@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: jbsbackup.php 1 $
- * @package jbsbackup
+ * @package BibleStudy
+ * @subpackage Plugin.JBSBackup
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,6 +13,11 @@ defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
+/**
+ * @package BibleStudy
+ * @subpackage Plugin.JBSBackup
+ * @since 7.1.0
+ */
 class plgSystemjbsbackup extends JPlugin {
 
     /**
@@ -52,14 +57,12 @@ class plgSystemjbsbackup extends JPlugin {
             //If we have run the backupcheck and it returned no errors then the last thing we do is reset the time we did it to current
             if ($dobackup) {
                 $updatetime = $this->updatetime();
-                 // check to see if we need to email anything
+                // check to see if we need to email anything
                 if ($check && $params->get('email') > 0) {
                     $email = $this->doEmail($params, $dobackup);
                 }
                 $updatefiles = $this->updatefiles($params);
             }
-
-
         }
     }
 
@@ -166,8 +169,9 @@ class plgSystemjbsbackup extends JPlugin {
     }
 
     function doBackup() {
-        $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . 'jbsbackup' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'backup.php');
+        $path1 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/';
+        ;
+        include_once($path1 . 'biblestudy.backup.php');
         $dbbackup = new JBSExport();
         $backup = $dbbackup->exportdb();
         return $backup;
@@ -218,23 +222,21 @@ class plgSystemjbsbackup extends JPlugin {
     }
 
     function updatefiles($params) {
-       jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
         $path = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database';
         $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
         $excludefilter = array('^\..*', '.*~');
-        $files = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter);// print_r($files);
-        asort($files,SORT_STRING);
+        $files = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter); // print_r($files);
+        asort($files, SORT_STRING);
         $parts = array();
-        $numfiles = count($files); 
-        $totalnumber = $params->get('filestokeep','5');
-        
-        for ($counter = $numfiles; $counter > $totalnumber; $counter--) 
-        {
+        $numfiles = count($files);
+        $totalnumber = $params->get('filestokeep', '5');
+
+        for ($counter = $numfiles; $counter > $totalnumber; $counter--) {
             $parts[] = array_pop($files);
         }
-        foreach ($parts as $part)
-        {
+        foreach ($parts as $part) {
             JFile::delete($part);
         }
     }

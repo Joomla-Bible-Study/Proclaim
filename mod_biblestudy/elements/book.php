@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: book.php 1 $
- * @package mod_biblestudy
+ * @package BibleStudy
+ * @subpackage Model.BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -10,6 +10,11 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+/**
+ * @package BibleStudy
+ * @subpackage Model.BibleStudy
+ * @since 7.0.0
+ */
 class JElementbook extends JElement {
 
     /**

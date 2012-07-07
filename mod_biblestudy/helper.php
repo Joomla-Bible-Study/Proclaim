@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: helper.php 1 $
- * @package mod_biblestudy
+ * @package BibleStudy
+ * @subpackage Model.BibleStudy
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,6 +13,11 @@ if (class_exists('modbiblestudyhelper')) {
     return;
 }
 
+/**
+ * @package BibleStudy
+ * @subpackage Model.BibleStudy
+ * @since 7.1.0
+ */
 class modBiblestudyHelper {
 
     var $_template;
@@ -33,7 +38,7 @@ class modBiblestudyHelper {
         $messagetype_menu = $params->get('messagetype');
         $year = $params->get('year');
         $orderparam = $params->get('order', '1');
-        $language = $params->get('language','*');
+        $language = $params->get('language', '*');
         if ($orderparam == 2) {
             $order = "ASC";
         } else {
@@ -56,7 +61,7 @@ class modBiblestudyHelper {
 
         //Join over mediafile ids
         $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-        $query->join('LEFT','#__bsms_mediafiles as m ON study.id = m.study_id');
+        $query->join('LEFT', '#__bsms_mediafiles as m ON study.id = m.study_id');
 
         //Join over Message Types
         $query->select('messageType.message_type AS messageType');
@@ -66,10 +71,10 @@ class modBiblestudyHelper {
         $query->select('teacher.teachername AS teachername, teacher.id AS tid');
         $query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
 
-       //Join over Series
+        //Join over Series
         $query->select('series.series_text, series.series_thumbnail, series.description as sdescription');
         $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
-        
+
         //Join over Books
         $query->select('book.bookname');
         $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
@@ -78,7 +83,7 @@ class modBiblestudyHelper {
         $query->select('SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) as totaldownloads, mediafile.study_id');
         $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
         $query->group('study.id');
-        
+
         //Join over topics
         $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
         $query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
@@ -179,13 +184,13 @@ class modBiblestudyHelper {
             }
         }
         $app = JFactory::getApplication();
-      //  $this->setState('filter.language', $app->getLanguageFilter());
+        //  $this->setState('filter.language', $app->getLanguageFilter());
         // Filter by language
         $lang = $app->getLanguageFilter();
         if ($lang || $language != '*') {
             $query->where('study.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
         }
-        
+
         $filters = $messagetype_menu;
         if (count($filters) > 1) {
             $where2 = array();
@@ -252,11 +257,12 @@ class modBiblestudyHelper {
         $admin = $db->loadObjectList();
         return $admin;
     }
-/** @todo make this change according to the parameter settings for new template
- *
- * @param type $study
- * @param type $params 
- */
+
+    /** @todo make this change according to the parameter settings for new template
+     *
+     * @param type $study
+     * @param type $params
+     */
     function renderStudy($study, $params) {
         require(JModuleHelper::getLayoutPath('mod_biblestudy', '_study'));
     }

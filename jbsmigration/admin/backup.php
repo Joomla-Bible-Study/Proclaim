@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: backup.php 1 $
- * @package COM_JBSMIGRATION
+ * @package BibleStudy
+ * @subpackage JBSMigration
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -10,6 +10,11 @@
  * */
 defined('_JEXEC') or die;
 
+/**
+ * @package BibleStudy
+ * @subpackage JBSMigration
+ * @since 7.0.2
+ */
 class JBSExport {
 
     function exportdb() {

@@ -1,9 +1,8 @@
 <?php
 
 /**
- * @version $Id: biblestudysearch.php 1 $
- * @name Bible Study Search Plugin
- *
+ * @package BibleStudy
+ * @subpackage Search.BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,6 +11,11 @@
 defined('_JEXEC') or die;
 jimport('joomla.plugin.plugin');
 
+/**
+ * @package BibleStudy
+ * @subpackage Search.BibleStudy
+ * @since 7.0.2
+ */
 class plgSearchBiblestudysearch extends JPlugin {
 
     /**

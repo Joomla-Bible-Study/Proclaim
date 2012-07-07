@@ -1,17 +1,21 @@
 <?php
 
-/*
- * @version             $Id: script.php 72 $
- * @package		com_jbsmigration
+/**
+ * @package BibleStudy
+ * @subpackage JBSMigration
  * @copyright           (C) 2007 - 2011 Joomla Bible Study Team All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */
-
 // No direct access to this file
 defined('_JEXEC') or die;
 
 //the name of the class must be the name of your component + InstallerScript
 //for example: com_contentInstallerScript for com_content.
+/**
+ * @package BibleStudy
+ * @subpackage Com_JBSMigration
+ * @since 7.0.2
+ */
 class com_jbsmigrationInstallerScript {
     /*
      * The release value to be displayed and check against throughout this file.

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: jbsmigration.php 1 $
- * @package COM_JBSMIGRATION
+ * @package BibleStudy
+ * @subpackage JBSMigration
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org

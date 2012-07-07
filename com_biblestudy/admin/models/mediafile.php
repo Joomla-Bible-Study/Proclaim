@@ -19,14 +19,6 @@ jimport('joomla.application.component.modeladmin');
 class BiblestudyModelMediafile extends JModelAdmin {
 
     /**
-     * Constructor that retrieves the ID from the request
-     *
-     * @access	public
-     * @return	void
-     */
-    var $_text_prefix = 'COM_BIBLESTUDY';
-
-    /**
      * Method override to check if you can edit an existing record.
      *
      * @param       array   $data   An array of input data.

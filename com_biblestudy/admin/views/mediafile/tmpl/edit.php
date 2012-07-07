@@ -59,7 +59,7 @@ if ($this->item->path) {
                 return true;
             }
         }
-        	
+
         else if  (task == 'thirdparty')
         {
             if (document.adminForm.video_third.value == '')
@@ -141,7 +141,7 @@ if (JRequest::getWord('layout') == 'modal') {
     $url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
 } else {
     $url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
-} echo $url;
+} echo JRoute::_($url);
 ?>"
     method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
     <div class="width-65 fltlft">
@@ -189,7 +189,7 @@ if (JRequest::getWord('layout') == 'modal') {
                     <?php echo $this->form->getLabel('ordering'); ?>
 
                     <?php echo $this->form->getInput('ordering'); ?></li>
-                
+
                 <li>
                     <?php echo $this->form->getLabel('comment'); ?>
 

@@ -11,32 +11,31 @@
     <description>JBS_MDL_DESCRIPTION</description>
     <files>
         <filename module="mod_biblestudy_podcast">mod_biblestudy_podcast.php</filename>
-        
         <folder>language</folder>
         <filename>index.html</filename>
         <filename>mod_biblestudy_podcast.xml</filename>
     </files>
-   <languages>
+    <languages>
         <!-- Any language files included with the module -->
         <language tag="en-GB">en-GB.mod_biblestudy_podcast.ini</language>
     </languages>
     <config>
-    <fields name="params">
-    <fieldset name="basic" label="JBS_MDL_LIST_LAYOUT"
-                      addfieldpath="/administrator/components/com_biblestudy/models/fields">
-    <field name="t" type="sql" description="JBS_MNU_SELECT_TEMPLATE_DESC"
+        <fields name="params">
+            <fieldset name="basic" label="JBS_MDL_LIST_LAYOUT"
+              addfieldpath="/administrator/components/com_biblestudy/models/fields">
+                <field name="t" type="sql" description="JBS_MNU_SELECT_TEMPLATE_DESC"
            label="JBS_MNU_SELECT_TEMPLATE" default="1"
            query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
            key_field="id" value_field="title" required="true" />
-		
-    <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
-                                label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC" />
-    </fieldset>
-    </fields>
+
+                <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
+           label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC" />
+            </fieldset>
+        </fields>
     </config>
-	<!-- UPDATESERVER DEFINITION -->
+    <!-- UPDATESERVER DEFINITION -->
     <updateservers>
-		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+        <!-- Note: No spaces or linebreaks allowed between the server tags -->
         <server type="extension" priority="1" name="Joomla Bible Study Podcast Module"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml]]>
         </server>
     </updateservers>

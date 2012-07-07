@@ -7,7 +7,7 @@
     <license>GPL/GNU</license>
     <authorEmail>info@joomlabiblestudy.org</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>7.1.0.a1</version>
+    <version>7.1.0</version>
     <description>JBS_MDL_DESCRIPTION</description>
     <files>
         <filename module="mod_biblestudy">mod_biblestudy.php</filename>
@@ -18,13 +18,8 @@
         <filename>index.html</filename>
         <filename>mod_biblestudy.xml</filename>
     </files>
-    <!-- For Joomla 1.5 only
-    <languages>
-        <language tag="en-GB">language/en-GB/en-GB.mod_biblestudy.ini</language>
-        <language tag="en-GB">language/en-GB/en-GB.mod_biblestudy.sys.ini</language>
-    </languages> -->
     <config>
-		<!-- @todo: look at new params for j1.7+ -->
+        <!-- @todo: look at new params for j1.7+ -->
         <fields name="params">
             <fieldset name="basic" label="JBS_MDL_LIST_LAYOUT"
                       addfieldpath="/administrator/components/com_biblestudy/models/fields">
@@ -33,7 +28,7 @@
                        query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
                        key_field="id" value_field="title" required="true" />
                 <field name="moduletemplate" type="sql" label="JBS_TPL_MODULE_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
-                        query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=7 AND published =1 ORDER BY filename ASC" key_field="filename" value_field="filename">
+                       query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=7 AND published =1 ORDER BY filename ASC" key_field="filename" value_field="filename">
                     <option value="0">JBS_CMN_USE_DEFAULT</option>
                 </field>
                 <field name="css" type="filelist" label="JBS_STYLE_CHOOSE_CSS_FILE" description="JBS_STYLE_CHOOSE_FILE_DESC"
@@ -41,10 +36,10 @@
                 <field name="moduleitems" description="JBS_MDL_ITEMS_DESC"
                        label="JBS_MDL_ITEMS" default="5" type="text" size="10" />
                 <field name="use_headers" type="radio" default="1" label="JBS_MDL_USE_LIST_HEADER"
-                        description="JBS_MDL_USE_LIST_HEADER_DESC" >
-                      <option value="1">JYES</option>
+                       description="JBS_MDL_USE_LIST_HEADER_DESC" >
+                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
-                </field>  
+                </field>
                 <field name="show_link" type="radio" default="1"
                        label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC">
                     <option value="1">JSHOW</option>
@@ -74,8 +69,8 @@
                     <option value="2">ASC</option>
                 </field>
                 <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-               description="JBS_MDL_TPL_LANGUAGE_DESC" class="inputbox" >
-                <option value="*">JALL</option>
+                       description="JBS_MDL_TPL_LANGUAGE_DESC" class="inputbox" >
+                    <option value="*">JALL</option>
                 </field>
                 <field name="teacher_id" type="teacherlist" label="JBS_CMN_FILTERS_TEACHER"
                        description="JBS_CMN_FILTERS_TEACHER_DESC" multiple="true" default="-1">
@@ -560,9 +555,9 @@
             </fieldset>
         </fields>
     </config>
-	<!-- UPDATESERVER DEFINITION -->
+    <!-- UPDATESERVER DEFINITION -->
     <updateservers>
-		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+        <!-- Note: No spaces or linebreaks allowed between the server tags -->
         <server type="extension" priority="1" name="Joomla Bible Study Module"><![CDATA[http://www.joomlabiblestudy.org/index.php?option=com_ars&view=update&task=stream&format=xml&id=3&dummy=extension.xml]]>
         </server>
     </updateservers>

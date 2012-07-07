@@ -1,12 +1,12 @@
 <?php
 
 /**
- * @package     Joomla Bible Study
+ * @package     BibleStudy
  * @subpackage  Finder.biblestudy
- *
- * @copyright   Copyright (C) 2007 - 2012 Joomla Bible Study, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE
- */
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 defined('JPATH_BASE') or die;
 
 jimport('joomla.application.component.helper');
@@ -19,7 +19,7 @@ require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapt
  *
  * @package     Biblestudy
  * @subpackage  Finder.BibleStudy
- * @since       2.5
+ * @since       7.1.0
  */
 class plgFinderBiblestudy extends FinderIndexerAdapter {
 
@@ -27,7 +27,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      * The plugin identifier.
      *
      * @var    string
-     * @since  2.5
+     * @since  7.1.0
      */
     protected $context = 'Biblestudy';
 
@@ -35,7 +35,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      * The extension name.
      *
      * @var    string
-     * @since  2.5
+     * @since  7.1.0
      */
     protected $extension = 'com_biblestudy';
 
@@ -43,7 +43,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      * The sublayout to use when rendering the results.
      *
      * @var    string
-     * @since  2.5
+     * @since  7.1.0
      */
     protected $layout = 'sermon';
 
@@ -51,7 +51,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      * The type of content that the adapter indexes.
      *
      * @var    string
-     * @since  2.5
+     * @since  7.1.0
      */
     protected $type_title = 'Studies';
 
@@ -59,14 +59,14 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      * The table name.
      *
      * @var    string
-     * @since  2.5
+     * @since  7.1.0
      */
     protected $table = '#__bsms_studies';
 
     /**
      * The state field
      * @var string
-     * @since 2.5
+     * @since 7.1.0
      */
     protected $state_field = 'published';
 
@@ -76,7 +76,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      * @param   object  &$subject  The object to observe
      * @param   array   $config    An array that holds the plugin configuration
      *
-     * @since   2.5
+     * @since   7.1.0
      */
     public function __construct(&$subject, $config) {
         parent::__construct($subject, $config);
@@ -94,12 +94,12 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      *
      * @return  void
      *
-     * @since   2.5
+     * @since   7.1.0
      */
     public function onFinderCategoryChangeState($extension, $pks, $value) {
         //we probably dont' need this
         if ($extension == 'com_biblestudy') {
-            //	$this->categoryStateChange($pks, $value);
+
         }
     }
 
@@ -111,7 +111,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      *
      * @return  boolean  True on success.
      *
-     * @since   2.5
+     * @since   7.1.0
      * @throws  Exception on database error.
      */
     public function onFinderAfterDelete($context, $table) {
@@ -135,7 +135,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      *
      * @return  boolean  True on success.
      *
-     * @since   2.5
+     * @since   7.1.0
      * @throws  Exception on database error.
      */
     public function onFinderAfterSave($context, $row, $isNew) {
@@ -151,7 +151,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
             // Reindex the item
 //			$this->reindex($row->id);
         }
-        
+
         return true;
     }
 
@@ -166,7 +166,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      *
      * @return  boolean  True on success.
      *
-     * @since   2.5
+     * @since   7.1.0
      * @throws  Exception on database error.
      */
     public function onFinderBeforeSave($context, $row, $isNew) {
@@ -178,7 +178,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
                 $this->checkItemAccess($row);
             }
         }
-       
+
         return true;
     }
 
@@ -193,7 +193,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      *
      * @return  void
      *
-     * @since   2.5
+     * @since   7.1.0
      */
     public function onFinderChangeState($context, $pks, $value) {
         // We only want to handle sermons here
@@ -214,7 +214,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      *
      * @return  void
      *
-     * @since   2.5
+     * @since   7.1.0
      * @throws  Exception on database error.
      */
     protected function index(FinderIndexerResult $item, $format = 'html') {
@@ -250,7 +250,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
         $item->addInstruction(FinderIndexer::META_CONTEXT, 'body');
 //        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
 //        $item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
+        $item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
 //		$item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
         // Add the type taxonomy data.
@@ -273,7 +273,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      *
      * @return  boolean  True on success.
      *
-     * @since   2.5
+     * @since   7.1.0
      */
     protected function setup() {
         // Load dependent classes.
@@ -304,7 +304,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      *
      * @return  JDatabaseQuery  A database object.
      *
-     * @since   2.5
+     * @since   7.1.0
      */
     protected function getListQuery($sql = null) {
         $db = JFactory::getDbo();
@@ -340,7 +340,7 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
      *
      * @return  JDatabaseQuery  A database object.
      *
-     * @since   2.5
+     * @since   7.1.0
      */
     protected function getUpdateQueryByTime($time) {
         // Build an SQL query based on the modified time.

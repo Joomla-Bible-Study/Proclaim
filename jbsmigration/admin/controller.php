@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: controller.php 1 $
- * @package COM_JBSMIGRATION
+ * @package BibleStudy
+ * @subpackage JBSMigration
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -14,8 +14,9 @@ include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTOR
 
 /**
  * JBS Export Migration Controller
- *
- *
+ * @package BibleStudy
+ * @subpackage JBSMigration
+ * @since 7.0.2
  */
 class jbsmigrationController extends JController {
 
@@ -43,7 +44,6 @@ class jbsmigrationController extends JController {
         parent::display();
     }
 
-
     function performdb($query) {
         $db = JFactory::getDBO();
         $results = false;
@@ -59,7 +59,6 @@ class jbsmigrationController extends JController {
             return $results;
         }
     }
-
 
 }
 

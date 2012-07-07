@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: jbspodcast.php 1 $
- * @package PLG_JBSPODCAST
+ * @package BibleStudy
+ * @subpackage Plugin.JBSPodcast
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,7 +12,12 @@ defined('_JEXEC') or die;
 /* Import library dependencies */
 jimport('joomla.plugin.plugin');
 
-class plgSystemjbspodcast extends JPlugin {
+/**
+ * @package BibleStudy
+ * @subpackage Plugin.JBSPodcast
+ * @since 7.0.0
+ */
+class PlgSystemJbspodcast extends JPlugin {
 
     /**
      * Constructor
@@ -170,7 +175,6 @@ class plgSystemjbspodcast extends JPlugin {
     }
 
     function doPodcast() {
-        //$path1 = JPATH_SITE . '/plugins/system/jbspodcast/';
         $path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
         require_once($path1 . 'biblestudy.podcast.class.php');
         $podcasts = new JBSPodcast();

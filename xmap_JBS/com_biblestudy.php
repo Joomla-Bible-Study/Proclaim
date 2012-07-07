@@ -1,10 +1,8 @@
 <?php
 
-/*
- * @author Tom Fuller www.JoomlaBibleStudy.org
- * @email info@joomlabiblestudy.org
- * @version $Id: com_biblestudy.php 2011-09-09
- * @package Xmap
+/**
+ * @package BibleStudy
+ * @subpackage Xmap.BibleStudy
  * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
  * @description Xmap plugin for Bible Study Component
  * adapted for Bible Study by TOm Fuller

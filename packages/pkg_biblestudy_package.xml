@@ -2,7 +2,7 @@
 <extension type="package" version="1.6">
     <name>Package Joomla Bible Study</name>
     <packagename>biblestudy_package</packagename>
-    <version>7.1.0.a2</version>
+    <version>7.1.0</version>
     <description>Joomla Bible Study is one of the most popular Bible Study System available today.</description>
     <creationDate>Apr 4, 2012</creationDate>
     <copyright>(C) 2007-2011 Copyright Joomla Bible Study</copyright>

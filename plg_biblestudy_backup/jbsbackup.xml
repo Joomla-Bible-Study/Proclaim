@@ -6,7 +6,7 @@
     <copyright>This component is released under the GNU/GPL License</copyright>
     <authorEmail>tomfuller2@gmail.com</authorEmail>
     <authorUrl>http://www.joomlabiblestudy.org</authorUrl>
-    <version>7.1.0.a1</version>
+    <version>7.1.1</version>
     <description>PLG_JBSBACKUP_XML_DESCRIPTION</description>
 
     <!-- Runs on install/uninstall/update; New in 1.7 -->
@@ -29,7 +29,6 @@
     </update>
     <files>
         <filename plugin="jbsbackup">jbsbackup.php</filename>
-        <filename>backup.php</filename>
         <filename>index.html</filename>
         <folder>language</folder>
         <folder>sql</folder>
