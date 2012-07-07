@@ -314,9 +314,10 @@ if (JRequest::getWord('layout', '') == 'modal') {
         </fieldset>
 
         <div class="clr"></div>
-
+        <input type="hidden" name="flupfile" value ="" />
         <input type="hidden" name="task" value="" />
         <?php echo JHtml::_('form.token'); ?>
+        <input type="hidden" name="controller" value="mediafile" />
     </form>
 
 </div>

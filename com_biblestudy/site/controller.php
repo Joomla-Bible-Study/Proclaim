@@ -8,7 +8,7 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-
+require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 jimport('joomla.application.component.controller');
 
 /**
@@ -223,6 +223,7 @@ class biblestudyController extends JController {
         echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
     }
 
+
     /*
      * Adds the ability to uploade with flash
      * @since 7.1.0
@@ -240,6 +241,7 @@ class biblestudyController extends JController {
         $app->setUserState($option,'serverid', $serverid);
         $app->setUserState($option.'folderid', $folderid);
         $form = JRequest::getVar('jform', array(), 'post', 'array');
+        var_dump($form);
         $returnid = $form['id'];
         // get temp file details
         $temp = JBSUpload::gettempfile();
