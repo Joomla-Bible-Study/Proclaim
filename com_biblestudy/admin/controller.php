@@ -305,7 +305,7 @@ class biblestudyController extends JController {
         // get temp file details
         $temp = JBSUpload::gettempfile();
         $temp_folder = JBSUpload::gettempfolder();
-        $tempfile = $temp_folder . $temp; //dump($tempfile);
+        $tempfile = $temp_folder . $temp;
         // get path and abort if none
         $layout = JRequest::getWord('layout', '');
         if ($layout == 'modal') {
@@ -447,7 +447,7 @@ class biblestudyController extends JController {
         }
         $mediafileid = JRequest::getInt('id', '', 'post');
         $app = JFactory::getApplication();
-        $app->setUserState($option . 'fname', $file['name']); 
+        $app->setUserState($option . 'fname', $file['name']);
         $app->setUserState($option . 'size', $file['size']);
         $app->setUserState($option . 'serverid', $serverid);
         $app->setUserState($option . 'folderid', $folderid);

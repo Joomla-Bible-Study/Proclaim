@@ -35,7 +35,6 @@ class JBSUpload {
         $valk = $val / 1024;
         $valm = $valk / 1024;
         $maxupload = $valm . ' MB';
-        $host = JURI::root();
         $swfUploadHeadJs = '
     var swfu;
 
@@ -51,7 +50,7 @@ class JBSUpload {
             upload_url: "' . JURI::root() . 'administrator/index.php?option=com_biblestudy&view=mediafile&task=uploadflash",
             post_params: {
             		"option" : "com_biblestudy",
-           		"controller" : "mediafile",
+           		"controller" : "Mediafile",
             		"task" : "upflash",
             		"' . $session->getName() . '" : "' . $session->getId() . '",
            		"format" : "raw"
@@ -71,7 +70,7 @@ class JBSUpload {
             debug: true,
 
             // Button settings
-            button_image_url: "' . JURI::root() . 'media/com_biblestudy/js/swfupload/images/uploadbutton.png",
+            button_image_url: "' . $host . 'media/com_biblestudy/js/swfupload/images/uploadbutton.png",
             button_width: "86",
             button_height: "33",
             button_placeholder_id: "spanButtonPlaceHolder",
@@ -292,7 +291,6 @@ class JBSUpload {
     function uploadftp($filename, $file) {
         $msg = '';
         jimport('joomla.filesystem.file');
-//dump($filename,'filename: '); dump($file,'file: ');
         if (!JFILE::upload($file['tmp_name'], $filename)) {
             $msg = JText::_('JBS_MED_UPLOAD_FAILED_CHECK_PATH') . ' ' . $filename->path . ' ' . JText::_('JBS_MED_UPLOAD_EXISTS');
         }
@@ -309,7 +307,7 @@ class JBSUpload {
      * @return	bolean
      */
     function ftp($file, $filename, $admin = 0) {
-        
+
         $app = JFactory::getApplication();
         $ftpsuccess = true;
         $ftpsuccess1 = true;
@@ -343,7 +341,6 @@ class JBSUpload {
 
         // turn on passive mode transfers (some servers need this)
         // ftp_pasv ($conn_id, true);
-//dump($conn_id,'connection id: '); dump ($ftp_path, 'ftp path: '); dump($local_file,'local file: ');
         // perform file upload
         if (!$upload = ftp_put($conn_id, $ftp_path, $local_file, FTP_BINARY)) {
             $stop = 'stopped at ftp_put'; //dump($stop);
@@ -397,7 +394,7 @@ class JBSUpload {
     function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0) {
         JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'tables');
         $filepath = & JTable::getInstance('Server', 'Table');
-        $filepath->load($serverid); //dump($filepath);
+        $filepath->load($serverid);
         $folderpath = JTable::getInstance('Folder', 'Table');
         $folderpath->load($folderid);
         //  $folder = $filepath->server_path.$folderpath->folderpath;

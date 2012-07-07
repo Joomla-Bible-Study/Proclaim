@@ -9,10 +9,11 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
+
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
+jimport('joomla.application.component.view');
 
 /**
  * @package BibleStudy.Site
@@ -82,7 +83,7 @@ class biblestudyViewmediafile extends JView {
         $query = 'SELECT id as value, foldername as text FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC';
         $db->setQuery($query);
         $db->query();
-        // $folders = $db->loadObjectList();
+        $folders = $db->loadObjectList();
         $folder = array(
             array('value' => '', 'text' => JText::_('JBS_MED_SELECT_FOLDER')),
         );
@@ -93,11 +94,6 @@ class biblestudyViewmediafile extends JView {
         $this->assignRef($ref2comm, $ref2);
 
         $this->setLayout('edit');
-
-        //    require_once( JPATH_COMPONENT_SITE . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'toolbar.php' );
-        //    $toolbar = biblestudyHelperToolbar::getToolbar();
-        //   $this->assignRef('toolbar', $toolbar);
-        //	$isNew		= ($mediafilesedit->id < 1);
 
         parent::display($tpl);
     }

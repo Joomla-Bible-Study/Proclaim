@@ -253,8 +253,12 @@ if (JRequest::getWord('layout', '') == 'modal') {
                 <?php echo $this->form->getLabel('special'); ?>
                 <?php echo $this->form->getInput('special', null, $this->admin->params['target']); ?>
             </div>
-
-            <table class="adminlist">
+            <div class="clr"></div>
+            <div class="formelm">
+                <?php echo $this->upload_server; ?><br /><br />
+                <?php echo $this->upload_folder; ?><br />
+            </div>
+<table class="adminlist">
                 <thead>
                 <th align="center" colspan="2"><?php echo JText::_('JBS_STY_UPLOAD'); ?></th>
                 </thead>
@@ -266,8 +270,7 @@ if (JRequest::getWord('layout', '') == 'modal') {
                             <?php echo $this->upload_folder; ?></td>
                         </td></tr>
                     <tr>
-                        <td>
-                            <?php if ($this->admin->params['uploadtype'] == 1) { ?>
+                        <td> <?php if ($this->admin->params['uploadtype'] == 1) { ?>
                                 <div id="swfuploader">
                                     <div class="fieldset flash" id="fsUploadProgress">
                                     </div>
@@ -276,21 +279,15 @@ if (JRequest::getWord('layout', '') == 'modal') {
                                         <input id="btnCancel" type="button" value="<?php echo JText::_('JBS_STY_CANCEL'); ?>" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
 
                                     </div>
-                                </div>
-                            <?php } ?>
+                                </div> <?php } ?>
                             <?php if ($this->admin->params['uploadtype'] == 0) { ?>
-                                <input type="file" name ="uploadfile" value="" />
-                                <button type="button" onclick="submitbutton('upload')">
-                                    <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?>
-                                </button>
-                            <?php } ?>
-                        </td>
-                        <td>
-                        </td>
+                                <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')">
+                                    <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button> <?php } ?>
+                        </td><td></td>
                     </tr>
                 </tbody>
             </table>
-
+        </fieldset>
             <div class="formelm">
                 <?php echo $this->form->getLabel('docMan_id'); ?>
                 <?php echo $this->form->getInput('docMan_id'); ?>
@@ -328,5 +325,3 @@ if (JRequest::getWord('layout', '') == 'modal') {
     </form>
 
 </div>
-
-

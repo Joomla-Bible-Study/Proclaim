@@ -16,7 +16,7 @@ jimport('joomla.application.component.modeladmin');
  * @package BibleStudy.Site
  * @since 7.0.0
  */
-class biblestudyModelmediafile extends JModelAdmin {
+class BiblestudyModelMediafile extends JModelAdmin {
 
     /**
      *

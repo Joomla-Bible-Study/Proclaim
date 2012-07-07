@@ -56,7 +56,9 @@ class BiblestudyViewMediafile extends JView {
         $idsel = "'SWFUpload_0'";
         //@todo need to fix this not sure what to do to fix it now error
         //Strict standards: Only variables should be passed by reference in /Users/bcordis/NetBeansProjects/biblestudy/BibleStudy/Trunk/com_biblestudy/admin/views/mediafile/view.html.php on line 59
-        $this->assignRef('upload_server', JHTML::_('select.genericList', $serverlist, 'upload_server', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', ''));
+        $ref1 = JHTML::_('select.genericList', $serverlist, 'upload_server', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
+        $ref1com = 'upload_server';
+        $this->assignRef($ref1com, $ref1);
 
         //Get folders for upload dropdown
         $query = 'SELECT id as value, foldername as text FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC';
@@ -68,8 +70,10 @@ class BiblestudyViewMediafile extends JView {
         );
         $folderlist = array_merge($folder, $db->loadObjectList());
         $idsel = "'SWFUpload_0'";
-        //@todo need to fix also
-        $this->assignRef('upload_folder', JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', ''));
+
+        $ref2 = JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
+        $ref2com = 'upload_folder';
+        $this->assignRef($ref2com, $ref2);
         $this->setLayout('edit');
         // Set the toolbar
         $this->addToolbar();
