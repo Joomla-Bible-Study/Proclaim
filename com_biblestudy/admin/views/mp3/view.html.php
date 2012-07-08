@@ -15,11 +15,11 @@ class biblestudyViewmp3 extends JView {
 
     function display($tpl = null) {
         $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudyimport/css/ui.css');
-        $document->addStyleSheet(JURI::base() . 'media/com_biblestudyimport/css/bsmImport.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/ui.css');
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/bsmImport.css');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js');
         $document->addScript('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js');
-        $document->addScript(JURI::base() . 'media/com_biblestudyimport/js/bsmImport.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/bsmImport.js');
 
         JToolBarHelper::title(JText::_('Bible Study Import [mp3]'), 'generic.png');
         JToolBarHelper::editList('edit', 'Import');

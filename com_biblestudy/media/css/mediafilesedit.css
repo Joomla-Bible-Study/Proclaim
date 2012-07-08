@@ -1,30 +1,30 @@
 #categoryItems {
-	display: none;
+    display: none;
 }
 
 #loading {
-	display: none;
-	position: absolute;
-	right: 50px;
+    display: none;
+    position: absolute;
+    right: 50px;
 }
 
 .selectContainer {
-	float: left;
-	margin-left: 5px;
+    float: left;
+    margin-left: 5px;
 }
 
 #docManItemsContainer {
-	display: none;
+    display: none;
 }
 
 #articlesCategoriesContainer {
-	display: none;
+    display: none;
 }
 
 #articlesItemsContainer {
-	display: none;
+    display: none;
 }
 
 #virtueMartItemsContainer {
-	display: none;
+    display: none;
 }
