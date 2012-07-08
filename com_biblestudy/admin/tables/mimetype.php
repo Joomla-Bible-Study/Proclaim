@@ -73,7 +73,7 @@ class TableMimetype extends JTable {
      */
     protected function _getAssetName() {
         $k = $this->_tbl_key;
-        return 'com_biblestudy.mimetypeedit.' . (int) $this->$k;
+        return 'com_biblestudy.mimetype.' . (int) $this->$k;
     }
 
     /**

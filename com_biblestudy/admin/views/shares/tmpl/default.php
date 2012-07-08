@@ -8,7 +8,10 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-JHtml::_('script', 'system/multiselect.js', false, true);
+
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.multiselect');
+
 $user = JFactory::getUser();
 $userId = $user->get('id');
 $listOrder = $this->state->get('list.ordering');
@@ -58,26 +61,33 @@ $saveOrder = $listOrder == 'share.ordering';
             <?php
             $n = count($this->items);
             foreach ($this->items as $i => $item) :
-                $ordering = ($listOrder == 'share.ordering');
+                $ordering = $listOrder == 'share.ordering';
+                $canChange = $user->authorise('core.edit.state');
                 $link = JRoute::_('index.php?option=com_biblestudy&task=share.edit&id=' . (int) $item->id);
                 ?>
                 <tr class="row<?php echo $i % 2; ?>">
-                    <td width="20">
+                    <td class="center">
                         <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                     </td>
                     <td width="20" align="center">
                         <?php echo JHtml::_('jgrid.published', $item->published, $i, 'shares.', true, 'cb', '', ''); ?>
                     </td>
                     <td class="order">
-                        <?php if ($listDirn == 'asc') : ?>
-                            <span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'share.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                            <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'share.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-                        <?php elseif ($listDirn == 'desc') : ?>
-                            <span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'share.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                            <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'share.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                        <?php if ($canChange) : ?>
+                            <?php if ($saveOrder) : ?>
+                                <?php var_dump($this->items[$i]->id);if ($listDirn == 'asc') : ?>
+                                    <span><?php echo $this->pagination->orderUpIcon($i, ('1' == @$this->items[$i - 1]->id), 'share.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                                    <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'share.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                <?php elseif ($listDirn == 'desc') : ?>
+                                    <span><?php echo $this->pagination->orderUpIcon($i, ('1' == @$this->items[$i - 1]->id), 'share.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                                    <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'share.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
+                            <input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled ?> class="text-area-order" />
+                        <?php else : ?>
+                            <?php echo $item->ordering; ?>
                         <?php endif; ?>
-                        <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
-                        <input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled ?> class="text-area-order" />
                     </td>
                     <td width="60" align="left">
                         <?php echo '<img src="' . JURI::root() . $item->params->get('shareimage') . '">'; ?>
@@ -91,13 +101,21 @@ $saveOrder = $listOrder == 'share.ordering';
                 </tr>
             <?php endforeach; ?>
             <tfoot>
-                <tr><td colspan="10"> <?php echo $this->pagination->getListFooter(); ?> </td></tr></tfoot>
+                <tr>
+                    <td colspan="10">
+                        <?php echo $this->pagination->getListFooter(); ?>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
-    <input type="hidden" name="task" value="" />
-    <input type="hidden" name="boxchecked" value="0" />
-    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-    <?php echo JHtml::_('form.token'); ?>
+
+    <div>
+        <input type="hidden" name="task" value="" />
+        <input type="hidden" name="boxchecked" value="0" />
+        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
+        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+        <?php echo JHtml::_('form.token'); ?>
+    </div>
 
 </form>

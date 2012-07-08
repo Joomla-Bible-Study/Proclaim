@@ -35,7 +35,7 @@ class fixJBSAssets {
             $datarows = $db->loadObjectList();
             if ($datarows) {
                 foreach ($datarows as $data) {
-                    JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+                    JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
                     $table = JTable::getInstance($object['assetname'], 'Table', array('dbo' => $db));
                     if ($data->id) {
 
@@ -112,12 +112,12 @@ class fixJBSAssets {
      * @return array
      */
     function getObjects() {
-        $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'serversedit', 'realname' => 'JBS_CMN_SERVERS'),
+        $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'server', 'realname' => 'JBS_CMN_SERVERS'),
             array('name' => '#__bsms_folders', 'titlefield' => 'foldername', 'assetname' => 'folder', 'realname' => 'JBS_CMN_FOLDERS'),
-            array('name' => '#__bsms_studies', 'titlefield' => 'studytitle', 'assetname' => 'sermon', 'realname' => 'JBS_CMN_STUDIES'),
-            array('name' => '#__bsms_comments', 'titlefield' => 'comment_date', 'assetname' => 'commentsedit', 'realname' => 'JBS_CMN_COMMENTS'),
+            array('name' => '#__bsms_studies', 'titlefield' => 'studytitle', 'assetname' => 'message', 'realname' => 'JBS_CMN_STUDIES'),
+            array('name' => '#__bsms_comments', 'titlefield' => 'comment_date', 'assetname' => 'comment', 'realname' => 'JBS_CMN_COMMENTS'),
             array('name' => '#__bsms_locations', 'titlefield' => 'location_text', 'assetname' => 'location', 'realname' => 'JBS_CMN_LOCATIONS'),
-            array('name' => '#__bsms_media', 'titlefield' => 'media_text', 'assetname' => 'media', 'realname' => 'JBS_CMN_MEDIAIMAGES'),
+            array('name' => '#__bsms_media', 'titlefield' => 'media_text', 'assetname' => 'mediaimage', 'realname' => 'JBS_CMN_MEDIAIMAGES'),
             array('name' => '#__bsms_mediafiles', 'titlefield' => 'filename', 'assetname' => 'mediafile', 'realname' => 'JBS_CMN_MEDIA_FILES'),
             array('name' => '#__bsms_message_type', 'titlefield' => 'message_type', 'assetname' => 'messagetype', 'realname' => 'JBS_CMN_MESSAGE_TYPES'),
             array('name' => '#__bsms_mimetype', 'titlefield' => 'mimetext', 'assetname' => 'mimetype', 'realname' => 'JBS_CMN_MIME_TYPES'),

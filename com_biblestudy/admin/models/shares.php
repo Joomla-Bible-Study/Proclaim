@@ -52,6 +52,26 @@ class BiblestudyModelShares extends JModelList {
     }
 
     /**
+     * Method to get a store id based on model configuration state.
+     *
+     * This is necessary because the model is used by the component and
+     * different modules that might need different sets of data or different
+     * ordering requirements.
+     *
+     * @param	string		$id	A prefix for the store id.
+     *
+     * @return	string		A store id.
+     * @since	1.6
+     */
+    protected function getStoreId($id = '') {
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.access');
+        $id .= ':' . $this->getState('filter.published');
+
+        return parent::getStoreId($id);
+    }
+
+    /**
      * Method to get a list of items.
      *
      * @return	mixed	An array of objects on success, false on failure.
@@ -74,13 +94,18 @@ class BiblestudyModelShares extends JModelList {
     }
 
     /**
+     * Build an SQL query to load the list data.
      *
+     * @return	JDatabaseQuery
      * @since   7.0
      */
     protected function getListQuery() {
+        // Create a new query object.
         $db = $this->getDbo();
         $query = $db->getQuery(true);
+        $user = JFactory::getUser();
 
+        // Select the required fields from the table.
         $query->select(
                 $this->getState(
                         'list.select', 'share.id, share.name, share.params, share.published,' .
@@ -92,6 +117,13 @@ class BiblestudyModelShares extends JModelList {
         $query->select('ag.title AS access_level');
         $query->join('LEFT', '#__viewlevels AS ag ON ag.id = share.access');
 
+
+        // Implement View Level Access
+        if (!$user->authorise('core.admin')) {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where('share.access IN (' . $groups . ')');
+        }
+
         // Filter by published state
         $published = $this->getState('filter.published');
         if (is_numeric($published)) {
@@ -101,8 +133,8 @@ class BiblestudyModelShares extends JModelList {
         }
 
         //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
+        $orderCol = $this->state->get('list.ordering', 'share.name');
+        $orderDirn = $this->state->get('list.direction', 'asc');
         $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
 
         return $query;

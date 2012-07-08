@@ -52,7 +52,7 @@ class BiblestudyModelShare extends JModelAdmin {
      * @return	boolean	True on success
      */
     function store() {
-        $row = & $this->getTable();
+        $row = $this->getTable();
 
         $data = JRequest::get('post');
 

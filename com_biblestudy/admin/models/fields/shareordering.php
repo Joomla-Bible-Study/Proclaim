@@ -51,7 +51,7 @@ class JFormFieldShareOrdering extends JFormField {
 
 
         // Build the query for the ordering list.
-        $query = 'SELECT ordering AS value, filename AS text' .
+        $query = 'SELECT ordering AS value, name AS text' .
                 ' FROM #__bsms_share' .
                 ' WHERE id = ' . (int) $messagetypeId .
                 ' ORDER BY ordering';

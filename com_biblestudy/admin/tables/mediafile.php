@@ -87,7 +87,7 @@ class TableMediafile extends JTable {
      */
     protected function _getAssetName() {
         $k = $this->_tbl_key;
-        return 'com_biblestudy.mediafilesedit.' . (int) $this->$k;
+        return 'com_biblestudy.mediafile.' . (int) $this->$k;
     }
 
     /**

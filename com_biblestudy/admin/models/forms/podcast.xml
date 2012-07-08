@@ -13,13 +13,13 @@
 	<field name="website" type="text" label="JBS_PDC_WEBSITE_URL"
 		size="80" />
 	<field name="author" type="text" label="JBS_PDC_PODCAST_AUTHOR"
-		size="20" />
+		size="50" />
 	<field name="editor_name" type="text" label="JBS_PDC_EDITORS_NAME"
-		size="20" />
+		size="50" />
 	<field name="editor_email" type="text" label="JBS_PDC_EDITORS_EMAIL"
-		size="20" />
+		size="50" />
 	<field name="podcastsearch" type="text" label="JBS_PDC_PODCAST_SEARCH_WORDS"
-		size="20" />
+		size="80" />
         <field name="podcastlanguage" type="language" label="JBS_PDC_PODCAST_LANGUAGE" />
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
                description="COM_CONTACT_FIELD_LANGUAGE_DESC" class="inputbox" >
@@ -35,9 +35,9 @@
 		description="JBS_PDC_PODCAST_LOGO_DESC" />
         <field name="podcast_image_subscribe" type="media"
            label="JBS_PDC_SUBSCRIBE_IMAGE" description="JBS_PDC_SUBSCRIBE_IMAGE_DESC" />
-           
+
 	<field name="filename" type="text" label="JBS_PDC_PODCAST_XML_FILENAME"
-		description="JBS_PDC_PODCAST_XML_FILENAME_DESC" size="20" />
+		description="JBS_PDC_PODCAST_XML_FILENAME_DESC" size="50" />
 	<field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE"
 		size="3" description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC" />
 	<field name="episodetitle" type="list" default="0"
@@ -70,5 +70,5 @@
            <option value="3">JBS_PDC_PODCAST_SHOW_ALTERNATE</option>
            <option value="4">JBS_PDC_PODCAST_SHOW_BOTH</option>
        </field>
-    
+
 </form>

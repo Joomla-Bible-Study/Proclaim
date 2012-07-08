@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bible Study Topics table class
  * @version $Id: topic.php 2025 2011-08-28 04:08:06Z genu $
@@ -6,152 +7,142 @@
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- **/
-
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
+class TableTopic extends JTable {
 
-class TableTopic extends JTable
-{
-	/**
-	 * Primary Key
-	 *
-	 * @var int
-	 */
-	var $id = null;
-	var $published = 1;
-	/**
-	 * @var string
-	 */
-	var $topic_text = null;
-	var $params = null;
+    /**
+     * Primary Key
+     *
+     * @var int
+     */
+    var $id = null;
+    var $published = 1;
 
-	/**
-	 * Constructor
-	 *
-	 * @param object Database connector object
-	 */
-	function Tabletopic(& $db) {
-		parent::__construct('#__bsms_topics', 'id', $db);
-	}
+    /**
+     * @var string
+     */
+    var $topic_text = null;
+    var $params = null;
 
-	public function bind($array, $ignore = '')
-	{
-		if (isset($array['params']) && is_array($array['params'])) {
-			$registry = new JRegistry();
-			$registry->loadArray($array['params']);
-			$array['params'] = (string)$registry;
-		}
+    /**
+     * Constructor
+     *
+     * @param object Database connector object
+     */
+    function Tabletopic(& $db) {
+        parent::__construct('#__bsms_topics', 'id', $db);
+    }
 
-		// Bind the rules.
-		if (isset($array['rules']) && is_array($array['rules'])) {
-			$rules = new JRules($array['rules']);
-			$this->setRules($rules);
-		}
+    public function bind($array, $ignore = '') {
+        if (isset($array['params']) && is_array($array['params'])) {
+            $registry = new JRegistry();
+            $registry->loadArray($array['params']);
+            $array['params'] = (string) $registry;
+        }
 
-		return parent::bind($array, $ignore);
-	}
+        // Bind the rules.
+        if (isset($array['rules']) && is_array($array['rules'])) {
+            $rules = new JRules($array['rules']);
+            $this->setRules($rules);
+        }
 
-	/**
-	 * Method to compute the default name of the asset.
-	 * The default name is in the form `table_name.id`
-	 * where id is the value of the primary key of the table.
-	 *
-	 * @return      string
-	 * @since       1.6
-	 */
-	protected function _getAssetName()
-	{
-		$k = $this->_tbl_key;
-		return 'com_biblestudy.topicsedit.'.(int) $this->$k;
-	}
+        return parent::bind($array, $ignore);
+    }
 
-	/**
-	 * Method to return the title to use for the asset table.
-	 *
-	 * @return      string
-	 * @since       1.6
-	 */
-	protected function _getAssetTitle()
-	{
-		$title = 'JBS Topic: '.$this->topic_text;
-		return $title;
-	}
+    /**
+     * Method to compute the default name of the asset.
+     * The default name is in the form `table_name.id`
+     * where id is the value of the primary key of the table.
+     *
+     * @return      string
+     * @since       1.6
+     */
+    protected function _getAssetName() {
+        $k = $this->_tbl_key;
+        return 'com_biblestudy.topic.' . (int) $this->$k;
+    }
 
-	/**
-	 * Get the parent asset id for the record
-	 *
-	 * @return      int
-	 * @since       1.6
-	 */
-	protected function _getAssetParentId($table=null, $id=null)
-	{
-		$asset = JTable::getInstance('Asset');
-		$asset->loadByName('com_biblestudy');
-		return $asset->id;
-	}
+    /**
+     * Method to return the title to use for the asset table.
+     *
+     * @return      string
+     * @since       1.6
+     */
+    protected function _getAssetTitle() {
+        $title = 'JBS Topic: ' . $this->topic_text;
+        return $title;
+    }
 
-	/**
-	 * Overloaded load function
-	 *
-	 * @param       int $pk primary key
-	 * @param       boolean $reset reset data
-	 * @return      boolean
-	 * @see JTable:load
-	 */
-	public function load($pk = null, $reset = true)
-	{
-		if (parent::load($pk, $reset))
-		{
-			// Convert the languages field to a registry.
-			$params = new JRegistry;
-			$params->loadJSON($this->params);
-			$this->params = $params;
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+    /**
+     * Get the parent asset id for the record
+     *
+     * @return      int
+     * @since       1.6
+     */
+    protected function _getAssetParentId($table = null, $id = null) {
+        $asset = JTable::getInstance('Asset');
+        $asset->loadByName('com_biblestudy');
+        return $asset->id;
+    }
 
-	/**
-	 * check and (re-)construct the alias before storing the topic
-	 *
-	 * @return      boolean true on success
-	 */
-	public function checkAlias($data = array(), $recordId)
-	{
-		$topic = $data[topic_text];
+    /**
+     * Overloaded load function
+     *
+     * @param       int $pk primary key
+     * @param       boolean $reset reset data
+     * @return      boolean
+     * @see JTable:load
+     */
+    public function load($pk = null, $reset = true) {
+        if (parent::load($pk, $reset)) {
+            // Convert the languages field to a registry.
+            $params = new JRegistry;
+            $params->loadJSON($this->params);
+            $this->params = $params;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-		// topic_text not given? -> use the first language item with some text
-		if ($topic == null || strlen($topic)==0) {
-			if (isset($data['params']) && is_array($data['params'])) {
-				foreach ($data[params] AS $language) {
-					if (strlen($language)>0) {
-						$topic = $language;
-						break;
-					}
-				}
-			}
-		}
+    /**
+     * check and (re-)construct the alias before storing the topic
+     *
+     * @return      boolean true on success
+     */
+    public function checkAlias($data = array(), $recordId) {
+        $topic = $data[topic_text];
 
-		// if still empty: use id
-		// todo: For new items, this is always '0'. Next primary key would be nice...
-		if ($topic == null || strlen($topic)==0) {
-			$topic = $recordId;
-		}
+        // topic_text not given? -> use the first language item with some text
+        if ($topic == null || strlen($topic) == 0) {
+            if (isset($data['params']) && is_array($data['params'])) {
+                foreach ($data[params] AS $language) {
+                    if (strlen($language) > 0) {
+                        $topic = $language;
+                        break;
+                    }
+                }
+            }
+        }
 
-		// add prefix if needed
-		if (strncmp ($topic, 'JBS_TOP_', 8) != 0) {
-			$topic = 'JBS_TOP_'. $topic;
-		}
-		// and form well
-		$topic = strtoupper (preg_replace ( '/[^a-z0-9]/i', '_', $topic ));  // replace all non a-Z 0-9 by '_'
-		$data[topic_text] = $topic;
+        // if still empty: use id
+        // todo: For new items, this is always '0'. Next primary key would be nice...
+        if ($topic == null || strlen($topic) == 0) {
+            $topic = $recordId;
+        }
 
-		return $data;
-	}
+        // add prefix if needed
+        if (strncmp($topic, 'JBS_TOP_', 8) != 0) {
+            $topic = 'JBS_TOP_' . $topic;
+        }
+        // and form well
+        $topic = strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic));  // replace all non a-Z 0-9 by '_'
+        $data[topic_text] = $topic;
+
+        return $data;
+    }
 
 }

@@ -48,7 +48,7 @@ class BiblestudyModelStyle extends JModelAdmin {
      * @return	JTable	A database object
      * @since	2.5
      */
-    public function getTable($type = 'Style', $prefix = 'BiblestudyTable', $config = array()) {
+    public function getTable($type = 'Style', $prefix = 'Table', $config = array()) {
         return JTable::getInstance($type, $prefix, $config);
     }
 
