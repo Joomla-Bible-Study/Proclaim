@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS #__bsms_podcast;
 DROP TABLE IF EXISTS #__bsms_mimetype;
 DROP TABLE IF EXISTS #__bsms_mediafiles;
 DROP TABLE IF EXISTS #__bsms_templates;
+DROP TABLE IF EXISTS #__bsms_templatecode;
 DROP TABLE IF EXISTS #__bsms_comments;
 DROP TABLE IF EXISTS #__bsms_admin;
 DROP TABLE IF EXISTS #__bsms_studytopics;

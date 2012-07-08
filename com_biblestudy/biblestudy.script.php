@@ -228,7 +228,7 @@ class Com_BiblestudyInstallerScript {
             require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
             $JBS710 = JBS710Update::update710();
             if (!$JBS710) {
-                echo '<br />' . JText::_('JBS_INS_FAILURE');
+                echo '<br />' . JText::_('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.1');
             } else {
                 echo '<br />' . JText::_('JBS_INS_SUCCESS');
             }
