@@ -907,12 +907,12 @@ margin-right: 10px;
         margin: 0;
         color: #9FD4FF;
         padding: 8px 8px 4px;
-        background: url(/images/tooltip/bubble.gif) top left;
+        background: url(../../media/com_biblestudy/images/tooltip/bubble.gif) top left;
 }
 .tool-text {
         font-size: 11px;
         padding: 4px 8px 8px;
-        background: url(/images/tooltip/bubble_filler.gif) bottom right;
+        background: url(../../media/com_biblestudy/images/tooltip/bubble_filler.gif) bottom right;
 }
     .custom-tip {
        color: #000;
@@ -1128,6 +1128,10 @@ text-align:center;
 p.popupfooter {
 font-weight: bold;
 color: grey;
+}
+.playeralign {
+margin: auto;
+width: 400px;
 }
 #main ul, #main li
 {

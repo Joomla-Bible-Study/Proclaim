@@ -11,9 +11,14 @@ defined('_JEXEC') or die;
 
 define('JSTART', '$j(document).ready( function() {');
 define('JSTOP', '});');
-
+/**
+ * Joomla Core Toolbar
+ */
 require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'toolbar.php');
-require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
+/**
+ * Bible Study Core Difines
+ */
+require_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 
 // Require the base controller
 jimport("joomla.application.component.controller");

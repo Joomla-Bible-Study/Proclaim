@@ -1,7 +1,6 @@
 <?php
 /**
- * @version     $Id: form.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -15,11 +14,11 @@ $folder = '';
 $server = '';
 $app = JFactory::getApplication();
 $option = JRequest::getCmd('option');
-$study = $app->getUserState($option.'sid');
-$sdate = $app->getUserState($option.'sdate');
-$size = $app->getUserState($option.'size');
-$fname = $app->getUserState($option.'fname');
-$serverid = $app->getUserState($option.'serverid');
+$study = $app->getUserState($option . 'sid');
+$sdate = $app->getUserState($option . 'sdate');
+$size = $app->getUserState($option . 'size');
+$fname = $app->getUserState($option . 'fname');
+$serverid = $app->getUserState($option . 'serverid');
 if ($this->item->server) {
     $server = $this->item->server;
 } elseif ($serverid) {
@@ -112,9 +111,7 @@ if ($this->item->path) {
             }
         }
     }
-</script>
-
-<script language="javascript" type="text/javascript">
+    
     function sizebutton(remotefilesize)
     {
         var objTB = document.getElementById("size");
