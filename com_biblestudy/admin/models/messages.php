@@ -19,12 +19,11 @@ jimport('joomla.application.component.modellist');
  * @since 7.0.0
  */
 class biblestudyModelmessages extends JModelList {
-
     /**
      *
      * @var array
      */
-    var $_files = null;
+    //var $_files = null;
 
     /**
      *
@@ -81,6 +80,12 @@ class biblestudyModelmessages extends JModelList {
 
         // Compile the store id.
         $id .= ':' . $this->getState('filter.published');
+        $id .= ':' . $this->getState('filter.studytitle');
+        $id .= ':' . $this->getState('filter.book');
+        $id .= ':' . $this->getState('filter.teacher');
+        $id .= ':' . $this->getState('filter.series');
+        $id .= ':' . $this->getState('filter.messageType');
+        $id .= ':' . $this->getState('filter.year');
         $id .= ':' . $this->getState('filter.language');
 
         return parent::getStoreId($id);
@@ -125,6 +130,7 @@ class biblestudyModelmessages extends JModelList {
      * @since 7.1.0
      */
     protected function populateState($ordering = null, $direction = null) {
+
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
             $this->context .= '.' . $layout;
@@ -203,10 +209,11 @@ class biblestudyModelmessages extends JModelList {
             $query->where('study.studytitle LIKE "' . $studytitle . '%"');
 
         //Filter by book
-        $book = $this->getState('filter.book');
-        if (!empty($book))
+
+        if ($book = $this->getState('filter.book')) {
             $query->where('study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book);
-        $query->join('LEFT', '#__bsms_books AS books ON books.booknumber = study.booknumber');
+            $query->join('LEFT', '#__bsms_books AS books ON books.booknumber = study.booknumber');
+        }
 
         //Filter by teacher
         $teacher = $this->getState('filter.teacher');

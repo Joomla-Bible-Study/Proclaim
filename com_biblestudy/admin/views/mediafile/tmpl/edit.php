@@ -7,7 +7,10 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-jimport('joomla.application.component.helper');
+
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
+
 $params = $this->form->getFieldsets('params');
 //Get the studyid if this is coming to us in a modal form
 $folder = '';
@@ -111,7 +114,7 @@ if ($this->item->path) {
             }
         }
     }
-    
+
     function sizebutton(remotefilesize)
     {
         var objTB = document.getElementById("size");
@@ -138,7 +141,7 @@ if (JRequest::getWord('layout') == 'modal') {
     $url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
 } else {
     $url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
-} echo JRoute::_($url);
+} echo $url;
 ?>"
     method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
     <div class="width-65 fltlft">

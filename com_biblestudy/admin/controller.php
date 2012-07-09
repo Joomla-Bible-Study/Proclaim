@@ -9,11 +9,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-// Access check.
-if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
-    return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-}
-
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 jimport('joomla.application.component.controller');
 
@@ -43,10 +38,10 @@ class biblestudyController extends JController {
         $db->query();
 
         require_once JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
-        BiblestudyHelper::addSubmenu(JRequest::getWord('view', 'cpanel'));
+        BiblestudyHelper::addSubmenu(JRequest::getCmd('view', 'cpanel'));
 
-        $view = JRequest::getWord('view', 'cpanel');
-        $layout = JRequest::getWord('layout', 'default');
+        $view = JRequest::getCmd('view', 'cpanel');
+        $layout = JRequest::getCmd('layout', 'default');
         $id = JRequest::getInt('id');
 
         $type = JRequest::getWord('view');

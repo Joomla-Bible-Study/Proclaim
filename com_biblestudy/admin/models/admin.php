@@ -172,22 +172,6 @@ class biblestudyModeladmin extends JModelAdmin {
     protected $_context = 'com_biblestudy.discover';
 
     /**
-     * Method to auto-populate the model state.
-     *
-     * Note. Calling getState in this method will result in recursion.
-     *
-     * @since	7.1.0
-     */
-    protected function populateState($ordering = null, $direction = null) {
-        $app = JFactory::getApplication();
-        $this->setState('message', $app->getUserState('com_biblestudy.message'));
-        $this->setState('extension_message', $app->getUserState('com_biblestudy.extension_message'));
-        $app->setUserState('com_biblestudy.message', '');
-        $app->setUserState('com_biblestudy.extension_message', '');
-        parent::populateState('name', 'asc');
-    }
-
-    /**
      *
      * Fixes database problems
      */

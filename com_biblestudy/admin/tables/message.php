@@ -106,7 +106,7 @@ class TableMessage extends JTable {
      */
     protected function _getAssetName() {
         $k = $this->_tbl_key;
-        return 'com_biblestudy.studiesedit.' . (int) $this->$k;
+        return 'com_biblestudy.message.' . (int) $this->$k;
     }
 
     /**
@@ -116,7 +116,7 @@ class TableMessage extends JTable {
      * @since       1.6
      */
     protected function _getAssetTitle() {
-        $title = 'JBS Study: ' . $this->studytitle;
+        $title = 'JBS Message: ' . $this->studytitle;
         return $title;
     }
 

@@ -21,7 +21,6 @@ class BiblestudyViewMediafile extends JView {
 
     function display($tpl = null) {
 
-//$sid=JRequest::getInt('sid'); dump($_REQUEST);
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
@@ -70,7 +69,6 @@ class BiblestudyViewMediafile extends JView {
             array('value' => '', 'text' => JText::_('JBS_MED_SELECT_FOLDER')),
         );
         $folderlist = array_merge($folder, $db->loadObjectList());
-        $idsel = "'SWFUpload_0'";
 
         $ref2 = JHTML::_('select.genericList', $folderlist, 'upload_folder', 'class="inputbox" onchange="showupload(' . $idsel . ')"' . '', 'value', 'text', '');
         $ref2com = 'upload_folder';

@@ -18,6 +18,19 @@ jimport('joomla.application.component.controlleradmin');
  * @since 7.0.0
  */
 class biblestudyControllerMessages extends JControllerAdmin {
+    /**
+	 * Constructor.
+	 *
+	 * @param	array	$config	An optional associative array of configuration settings.
+
+	 * @return	ContentControllerArticles
+	 * @see		JController
+	 * @since	1.6
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+	}
 
     /**
      * Proxy for getModel
@@ -28,8 +41,8 @@ class biblestudyControllerMessages extends JControllerAdmin {
      * @return JModel
      * @since 7.0
      */
-    public function getModel($name = 'Message', $prefix = 'BiblestudyModel') {
-        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+    public function getModel($name = 'Message', $prefix = 'BiblestudyModel', $config = array('ignore_request' => true)) {
+        $model = parent::getModel($name, $prefix, $config);
         return $model;
     }
 

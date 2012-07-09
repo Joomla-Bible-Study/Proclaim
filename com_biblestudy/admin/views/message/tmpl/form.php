@@ -8,7 +8,9 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-$params = $this->form->getFieldsets('params'); 
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
+$params = $this->form->getFieldsets('params');
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
@@ -264,7 +266,7 @@ $params = $this->form->getFieldsets('params');
                 <?php //if (! empty($this->item->studytitle)) : ?>
                 <tfoot>
                     <tr><td colspan="4">
-                            <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;tmpl=component&amp;view=mediafile&amp;layout=modal&amp;sid='.$this->form->getValue('id'); ?>
+                            <?php $link = 'index.php?option=com_biblestudy&task=mediafile.edit&id=0&tmpl=component&layout=modal&sid='.$this->form->getValue('id'); ?>
                             <?php
                                 if (empty($this->item->id)) {
                                     ?> <a onClick="Joomla.submitbutton('message.apply');" href="#"> <?php echo JText::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
@@ -274,7 +276,7 @@ $params = $this->form->getFieldsets('params');
                                     <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 1000, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
                                 <?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
                                 }
-                                ?> 
+                                ?>
 
                         </td></tr>
 

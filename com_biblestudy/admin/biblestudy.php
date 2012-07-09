@@ -9,6 +9,11 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+// Access check.
+if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
+	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+}
+
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'liveupdate' . DS . 'liveupdate.php');
 if (JRequest::getCmd('view', '') == 'liveupdate') {
     LiveUpdate::handleRequest();
@@ -32,13 +37,18 @@ if (!version_compare($version, '5.0.0', '>=')) {
     return JError::raise(E_ERROR, 500, 'PHP 4 is not supported by Joomla Bible Study');
 }
 
-define('JSTART', '$j(document).ready( function() {');
-define('JSTOP', '});');
+// Register helper class
+JLoader::register('BibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
+
+//define('JSTART', '$j(document).ready( function() {');
+//define('JSTOP', '});');
 addCSS();
 addJS();
 
+// Include dependencies
 jimport('joomla.application.component.controller');
-$controller = JController::getInstance('biblestudy');
+
+$controller = JController::getInstance('Biblestudy');
 $controller->execute(JRequest::getCmd('task'));
 $controller->redirect();
 
