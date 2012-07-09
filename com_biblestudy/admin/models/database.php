@@ -153,8 +153,10 @@ class BiblestudyModelDatabase extends InstallerModel {
         $updateVersion = $cache->get('version');
         // XXX Need to Fix this is not working right yet.
         //$jbsversion = $this->version;
-        $jbsversion = '7.1.0';
-
+        //$jbsversion = '7.1.0';
+        $file = JPATH_ADMINISTRATOR.'/components/com_biblestudy/biblestudy.xml';
+        $xml = JFactory::getXML($file);
+        $jbsversion = (string)$xml->version;
         if ($updateVersion == $jbsversion) {
             return $updateVersion;
         } else {
