@@ -145,4 +145,60 @@ class BiblestudyModelMessagetype extends JModelAdmin {
         parent::cleanCache('mod_biblestudy');
     }
 
+    /**
+     * Method to move a mediafile listing
+     *
+     * @access	public
+     * @return	boolean	True on success
+     * @since	1.5
+     */
+    function saveorder($pks = null, $cid = array(), $order = null) {
+        $row = & $this->getTable();
+        $groupings = array();
+
+        // update ordering values
+        for ($i = 0; $i < count($cid); $i++) {
+            $row->load((int) $cid[$i]);
+            // track categories
+            $groupings[] = $row->id;
+
+            if ($row->ordering != $order[$i]) {
+                $row->ordering = $order[$i];
+                if (!$row->store()) {
+                    $this->setError($this->_db->getErrorMsg());
+                    return false;
+                }
+            }
+        }
+
+        // execute updateOrder for each parent group
+        $groupings = array_unique($groupings);
+        foreach ($groupings as $group) {
+            $row->reorder('id = ' . (int) $group);
+        }
+
+        return true;
+    }
+
+     /**
+     * Method to move a mediafile listing
+     *
+     * @access	public
+     * @return	boolean	True on success
+     * @since	1.5
+     */
+    function move($direction) {
+        $row = & $this->getTable();
+        if (!$row->load($this->_id)) {
+            $this->setError($this->_db->getErrorMsg());
+            return false;
+        }
+
+        if (!$row->move($direction, ' id = ' . (int) $row->study_id . ' AND published >= 0 ')) {
+            $this->setError($this->_db->getErrorMsg());
+            return false;
+        }
+
+        return true;
+    }
 }
