@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_books` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `bookname` varchar(250) DEFAULT NULL,
   `booknumber` int(5) DEFAULT NULL,
-  `published` tinyint(3) NOT NULL DEFAULT '1',
+  `published` tinyint(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
@@ -436,10 +436,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
 
 CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `published` int(3) NOT NULL,
+  `published` tinyint(3) NOT NULL DEFAULT '1',
   `filename` text NOT NULL,
   `stylecode` longtext NOT NULL,
-  `asset_id` int(10) NOT NULL,
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
