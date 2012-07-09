@@ -265,19 +265,10 @@ if (JRequest::getWord('layout', '') == 'modal') {
                             <?php echo $this->upload_folder; ?></td>
                         </td></tr>
                     <tr>
-                        <td> <?php if ($this->admin->params['uploadtype'] == 1) { ?>
-                                <div id="swfuploader">
-                                    <div class="fieldset flash" id="fsUploadProgress">
-                                    </div>
-                                    <div>
-                                        <span id="spanButtonPlaceHolder"></span>
-                                        <input id="btnCancel" type="button" value="<?php echo JText::_('JBS_STY_CANCEL'); ?>" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
-
-                                    </div>
-                                </div> <?php } ?>
-                            <?php if ($this->admin->params['uploadtype'] == 0) { ?>
+                        <td> 
+                           
                                 <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')">
-                                    <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button> <?php } ?>
+                                    <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button> 
                         </td><td></td>
                     </tr>
                 </tbody>
