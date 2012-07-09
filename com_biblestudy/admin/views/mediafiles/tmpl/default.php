@@ -6,6 +6,8 @@
  */
 //No Direct Access
 defined('_JEXEC') or die;
+
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 
@@ -15,21 +17,14 @@ $listDirn = $this->state->get('list.direction');
 $saveOrder = $listOrder == 'mediafile.ordering';
 ?>
 
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>"
-    method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-search fltlft">
-            <label class="filter-search-lbl" for="filter_filename"><?php echo JText::_('JBS_MED_FILENAME'); ?>:
-            </label> <input type="text" name="filter_filename"
-                            id="filter_filename"
-                            value="<?php echo $this->escape($this->state->get('filter.filename')); ?>"
-                            title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" /> <label
-                            class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>:
-            </label> <input type="text" name="filter_studytitle"
-                            id="filter_studytitle"
-                            value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>"
-                            title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
+            <label class="filter-search-lbl" for="filter_filename"><?php echo JText::_('JBS_MED_FILENAME'); ?>:</label>
+            <input type="text" name="filter_filename" id="filter_filename" value="<?php echo $this->escape($this->state->get('filter.filename')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
+
+            <label class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>:</label>
+            <input type="text" name="filter_studytitle" id="filter_studytitle" value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
 
             <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button" onclick="document.id('filter_filename').value='';document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
@@ -44,8 +39,6 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 <option value=""> <?php echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true); ?>
             </select>
-
-           
         </div>
     </fieldset>
     <div class="clr"></div>
@@ -77,7 +70,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                 <th width="15%">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_MEDIA_CREATE_DATE', 'mediafile.createdate', $listDirn, $listOrder); ?>
                 </th>
-               
+
                 <th width="5%">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_PLAYS', 'mediafile.plays', $listDirn, $listOrder); ?>
                 </th>
@@ -138,7 +131,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
                     <td class="center">
                         <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                     </td>
-                    
+
                     <td class="center">
                         <?php echo $this->escape($item->plays); ?>
                     </td>

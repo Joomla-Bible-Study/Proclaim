@@ -18,7 +18,6 @@ $params = $this->form->getFieldsets('params');
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_STY_DETAILS'); ?></legend>
             <ul>
-
                 <li>
                     <?php echo $this->form->getLabel('studytitle'); ?>
                     <?php echo $this->form->getInput('studytitle'); ?>
@@ -130,8 +129,6 @@ $params = $this->form->getFieldsets('params');
                     <?php echo $this->form->getLabel('series_id'); ?>
                     <?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin->params['series_id'] : $this->item->series_id) ?>
                 </li>
-
-
             </ul>
             <?php echo $this->form->getLabel('topics'); ?>
             <div class="clr"></div>
@@ -207,8 +204,6 @@ $params = $this->form->getFieldsets('params');
             if (isset($fieldset->description) && trim($fieldset->description)):
                 ?>
                 <p class="tip">
-
-
                     <?php echo $this->escape(JText::_($fieldset->description)); ?>
                 </p>
             <?php endif; ?>
@@ -222,7 +217,6 @@ $params = $this->form->getFieldsets('params');
                 </ul>
             </fieldset>
         <?php endforeach; ?>
-
     </div>
     <div class="width-35 fltrt">
         <fieldset class="panelform">
@@ -232,7 +226,6 @@ $params = $this->form->getFieldsets('params');
                     <tr>
                         <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
                         <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-
                     </tr>
                 </thead>
                 <tbody>
@@ -265,30 +258,29 @@ $params = $this->form->getFieldsets('params');
                 </tbody>
                 <?php //if (! empty($this->item->studytitle)) : ?>
                 <tfoot>
-                    <tr><td colspan="4">
-                            <?php $link = 'index.php?option=com_biblestudy&task=mediafile.edit&id=0&tmpl=component&layout=modal&sid='.$this->form->getValue('id'); ?>
+                    <tr>
+                        <td colspan="4">
+                            <?php $link = 'index.php?option=com_biblestudy&task=mediafile.edit&id=0&tmpl=component&layout=modal&sid=' . $this->form->getValue('id'); ?>
                             <?php
-                                if (empty($this->item->id)) {
-                                    ?> <a onClick="Joomla.submitbutton('message.apply');" href="#"> <?php echo JText::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
-                                }
-                                else
-                                { ?>
-                                    <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 1000, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
-                                <?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
+                            if (empty($this->item->id)) {
+                                ?> <a onClick="Joomla.submitbutton('message.apply');" href="#"> <?php echo JText::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
+                        } else {
+                                ?>
+                                <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 1000, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+                                    <?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
                                 }
                                 ?>
 
-                        </td></tr>
-
+                        </td>
+                    </tr>
                 </tfoot>
-                <?php //endif;   ?>
+                <?php //endif;    ?>
             </table>
 
         </fieldset>
 
     </div>
     <div class="clr"></div>
-
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">
             <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
@@ -304,6 +296,5 @@ $params = $this->form->getFieldsets('params');
         </div>
     <?php endif; ?>
     <input type="hidden" name="task" value=""/>
-
     <?php echo JHtml::_('form.token'); ?>
 </form>

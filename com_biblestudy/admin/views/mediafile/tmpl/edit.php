@@ -332,21 +332,13 @@ if (JRequest::getWord('layout') == 'modal') {
         </fieldset>
     </div>
     <div class="width-35 fltrt">
-
-
         <?php
         foreach ($params as $name => $fieldset):
             if (isset($fieldset->description) && trim($fieldset->description)):
                 ?>
                 <p class="tip">
-
-
                     <?php echo $this->escape(JText::_($fieldset->description)); ?>
                 </p>
-
-
-
-
             <?php endif; ?>
             <fieldset class="panelform" >
                 <legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
@@ -360,8 +352,6 @@ if (JRequest::getWord('layout') == 'modal') {
         <?php endforeach; ?>
     </div>
     <div class="clr"></div>
-
-
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">
             <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>

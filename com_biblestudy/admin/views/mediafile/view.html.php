@@ -64,7 +64,6 @@ class BiblestudyViewMediafile extends JView {
         $query = 'SELECT id as value, foldername as text FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC';
         $db->setQuery($query);
         $db->query();
-        // $folders = $db->loadObjectList();
         $folder = array(
             array('value' => '', 'text' => JText::_('JBS_MED_SELECT_FOLDER')),
         );
@@ -74,6 +73,13 @@ class BiblestudyViewMediafile extends JView {
         $ref2com = 'upload_folder';
         $this->assignRef($ref2com, $ref2);
         $this->setLayout('edit');
+
+        // Check for errors.
+        if (count($errors = $this->get('Errors'))) {
+            JError::raiseError(500, implode("\n", $errors));
+            return false;
+        }
+
         // Set the toolbar
         $this->addToolbar();
 
