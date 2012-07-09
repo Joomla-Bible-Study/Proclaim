@@ -26,11 +26,6 @@
             <option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
             <option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
         </field>
-        <field id="uploadtype" name="uploadtype" type="radio"
-                class="inputbox" label="JBS_ADM_UPLOAD_TYPE" default="1" description="JBS_ADM_UPLOAD_TYPE_DESC">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-        </field>	
         <field name="socialnetworking"  type="list" default="1" label="JBS_ADM_SOCIALNETWORKING" description="JBS_ADM_SOCIALNETWORKING_DESC">
             <option value="0">JBS_CMN_HIDE</option>
             <option value="1">JBS_CMN_SHOW</option>
