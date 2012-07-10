@@ -75,11 +75,11 @@ $saveOrder = $listOrder == 'messagetype.ordering';
                     </td>
                     <td class="order">
                         <?php if ($listDirn == 'asc') : ?>
-                            <span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'messagetype.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                            <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'messagetype.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                            <span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'messagetypes.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                            <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'messagetypes.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
                         <?php elseif ($listDirn == 'desc') : ?>
-                            <span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'messagetype.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                            <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'messagetype.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                            <span><?php echo $this->pagination->orderUpIcon($i, ($item->id == @$this->items[$i - 1]->id), 'messagetypes.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                            <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'messagetypes.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
                         <?php endif; ?>
                         <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
                         <input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled ?> class="text-area-order" />
