@@ -97,7 +97,7 @@ class JBSPodcast {
                     }
                     $episodes = $this->getEpisodes($podinfo->id, $limit);
                     $registry = new JRegistry;
-                    $podinfo->params = array('{"show_verses":"1"');
+                    $podinfo->params = '{"show_verses":"1"}';
                     $registry->loadJSON($podinfo->params);
                     $params = $registry;
                     $params->set('show_verses', '1');
@@ -120,10 +120,8 @@ class JBSPodcast {
                         } else {
                             $hours = '00';
                         }
-                        if (!$episode->media_seconds) {
-                            $episode->media_seconds = 1;
-                        }
-
+                        //if there is no length set, we default to 35 minuts
+                        if (!$episode->media_minutes && !$episode->media_seconds){$episode->media_minutes = 35;}
                         $esv = 0;
                         $scripturerow = 1;
                         $episode->id = $episode->study_id;
