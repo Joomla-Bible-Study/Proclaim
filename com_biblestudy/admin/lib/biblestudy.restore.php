@@ -103,7 +103,8 @@ class JBSImport {
     function installdb($tmp_src) {
         jimport('joomla.filesystem.file');
         @set_time_limit(300);
-
+        $error = '';
+        $errors = array();
         $result = false;
         $userfile = JRequest::getVar('importdb', null, 'files', 'array');
         $db = JFactory::getDBO();
@@ -118,10 +119,13 @@ class JBSImport {
                 $error .= $db->stderr(true);
                 $error .= "</font>";
                 print_r($error);
+                $errors[] = $error;
                 //return false;
             }
         }
-        return true;
+        if (!empty($errors)){return $errors;}
+        else
+        {return true;}
     }
 
     /**

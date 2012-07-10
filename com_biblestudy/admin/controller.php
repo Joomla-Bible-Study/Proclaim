@@ -282,6 +282,7 @@ class biblestudyController extends JController {
     /*
      * Adds the ability to uploade with flash
      * @since 7.1.0
+     * Note: This function is not used in 7.1.0 since it caused problems with the session and closing the media form
      */
 
     function uploadflash() {

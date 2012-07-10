@@ -81,7 +81,7 @@ class BiblestudyControllerMigration extends JController {
         if ($result) {
             $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
         } else {
-            $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . '');
+            $application->enqueueMessage('' . $result . '');
         }
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
