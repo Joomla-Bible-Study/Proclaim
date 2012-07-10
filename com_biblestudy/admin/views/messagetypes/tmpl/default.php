@@ -41,7 +41,7 @@ $saveOrder = $listOrder == 'messagetype.ordering';
                 <th width="10%">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_ORDERING', 'messagetype.ordering', $listDirn, $listOrder); ?>
                     <?php if ($canOrder && $saveOrder) : ?>
-                        <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'messagetype.saveorder'); ?>
+                        <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'messagetypes.saveorder'); ?>
                     <?php endif; ?>
                 </th>
                 <th>
