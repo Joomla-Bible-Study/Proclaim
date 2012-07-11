@@ -25,7 +25,7 @@ class JBSExport {
         $return = false;
         $date = date('Y_F_j');
         $localfilename = 'jbs-db-backup_' . $date .'_'. time() . '.sql';
-        $mainframe = JFactory::getApplication();
+        //$mainframe = JFactory::getApplication();
         $objects = $this->getObjects();
         foreach ($objects as $object) {
             $tables[] = $this->getExportTable($object['name']);
@@ -248,7 +248,8 @@ class JBSExport {
             array('name' => '#__bsms_books', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_update', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
             array('name' => '#__bsms_styles', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-            array('name' => '#__bsms_order', 'titlefield' => '', 'assetname' => '', 'realname' => '')
+            array('name' => '#__bsms_order', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
+            array('name' => '#__bsms_templatecode', 'titlefield' => '', 'assetname' => '', 'realname' => '')
         );
         return $objects;
     }
