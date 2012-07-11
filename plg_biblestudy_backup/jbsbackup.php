@@ -228,7 +228,7 @@ class plgSystemjbsbackup extends JPlugin {
         $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
         $excludefilter = array('^\..*', '.*~');
         $files = JFolder::files($path, '.sql', 'false', 'true', $exclude, $excludefilter); // print_r($files);
-        asort($files, SORT_STRING);
+        arsort($files, SORT_STRING);
         $parts = array();
         $numfiles = count($files);
         $totalnumber = $params->get('filestokeep', '5');
