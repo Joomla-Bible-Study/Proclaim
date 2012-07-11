@@ -173,7 +173,7 @@ class plgSystemjbsbackup extends JPlugin {
         ;
         include_once($path1 . 'biblestudy.backup.php');
         $dbbackup = new JBSExport();
-        $backup = $dbbackup->exportdb();
+        $backup = $dbbackup->exportdb($run = 2);
         return $backup;
     }
 
