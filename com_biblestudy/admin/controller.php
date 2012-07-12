@@ -1,13 +1,17 @@
 <?php
 
 /**
- * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+
+// Access check.
+if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
+	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+}
 
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 jimport('joomla.application.component.controller');
@@ -17,7 +21,7 @@ jimport('joomla.application.component.controller');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class biblestudyController extends JController {
+class BiblestudyController extends JController {
 
     /**
      * Default view var.
@@ -78,6 +82,8 @@ class biblestudyController extends JController {
             }
         }
         parent::display();
+
+        return $this;
     }
 
     /**

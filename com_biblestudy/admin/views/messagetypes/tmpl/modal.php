@@ -13,14 +13,11 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 
-$user = JFactory::getUser();
-$userId = $user->get('id');
-$listOrder = $this->state->get('list.ordering');
-$listDirn = $this->state->get('list.direction');
-$canOrder = $user->authorise('core.edit.state');
-$saveOrder = $listOrder == 'messagetype.ordering';
+$function = JRequest::getCmd('function', 'jSelectMessagetype');
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagetypes'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=messagetypes&layout=modal&tmpl=component&function=' . $function . '&' . JSession::getFormToken() . '=1'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
             <select name="filter_published" class="inputbox" onchange="this.form.submit()">
@@ -43,8 +40,8 @@ $saveOrder = $listOrder == 'messagetype.ordering';
 
                 <th width="10%">
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_ORDERING', 'messagetype.ordering', $listDirn, $listOrder); ?>
-                    <?php if ($canOrder && $saveOrder) : ?>
-                        <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'messagetypes.saveorder'); ?>
+                    <?php if ($saveOrder) : ?>
+                        <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'messagetype.saveorder'); ?>
                     <?php endif; ?>
                 </th>
                 <th>
