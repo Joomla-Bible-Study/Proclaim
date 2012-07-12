@@ -99,7 +99,7 @@ class JBSMigrate {
                 $db->query();
             }
             $update = $prefix . 'bsms_update';
-            $jbsexistsup = substr_count($table, $update);
+            $jbsexists = substr_count($table, $update);
             if (!$jbsexists) {
                 $query = "CREATE TABLE IF NOT EXISTS `#__bsms_update` (
                         `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -136,6 +136,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
+                        $message[] = $this->$update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -157,6 +158,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
+                        $message[] = $this->$update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -184,6 +186,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
+                        $message[] = $this->$update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -217,6 +220,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
+                        $message[] = $this->$update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -252,6 +256,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
+                        $message[] = $this->$update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -292,6 +297,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
+                        $message[] = $this->$update710();
                         $msg2 = $msg2 . $message;
                         break;
                 }
@@ -361,6 +367,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
+                        $message[] = $this->$update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -407,6 +414,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
+                        $message[] = $this->$update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -455,6 +463,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
+                        $message[] = $this->$update710();
                         $msg2 = $msg2 . $message;
                         break;
                 }
@@ -471,4 +480,28 @@ class JBSMigrate {
         return true;
     }
 
+    function update710()
+    {
+        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update710.php');
+        $migrate = JBS710Update();
+        $update710php = $migrate->update710();
+        if (!$update710php){$errors[] = 'Problem with 710php update';}
+        $db = JFactory::getDBO();
+        $query = @file_get_contents(JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'install'.DIRECTORY_SEPARATOR.'sql'.DIRECTORY_SEPARATOR.'updates'.DIRECTORY_SEPARATOR.'mysql'.DIRECTORY_SEPARATOR.'7.1.0.sql');
+        $queries = $db->splitSql($query);
+        foreach ($queries as $querie) {
+            $db->setQuery($querie);
+            $db->query();
+            if ($db->getErrorNum() != 0) {
+                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
+                $error .= $db->stderr(true);
+                $error .= "</font>";
+                print_r($error);
+                $errors[] = $error;
+            }
+        }
+        if (!empty($errors)){return $errors;}
+        else
+        {return true;}
+    }
 }
