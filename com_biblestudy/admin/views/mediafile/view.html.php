@@ -30,15 +30,15 @@ class BiblestudyViewMediafile extends JView {
         $this->admin = @BsmHelper::getAdmin();
         $host = JURI::root();
         $admin = 'administrator/';
-        $document = JFactory::getDocument();
-        $document->addScript($host . 'media/com_biblestudy/js/swfupload/swfupload.js');
-        $document->addScript($host . 'media/com_biblestudy/js/swfupload/swfupload.queue.js');
-        $document->addScript($host . 'media/com_biblestudy/js/swfupload/fileprogress.js');
-        $document->addScript($host . 'media/com_biblestudy/js/swfupload/handlers.js');
-        $document->addStyleSheet($host . 'media/com_biblestudy/js/swfupload/default.css');
-        $swfUploadHeadJs = @JBSUpload::uploadjs($host, $admin);
-        //add the javascript to the head of the html document
-        $document->addScriptDeclaration($swfUploadHeadJs);
+//        $document = JFactory::getDocument();
+//        $document->addScript($host . 'media/com_biblestudy/js/swfupload/swfupload.js');
+//        $document->addScript($host . 'media/com_biblestudy/js/swfupload/swfupload.queue.js');
+//        $document->addScript($host . 'media/com_biblestudy/js/swfupload/fileprogress.js');
+//        $document->addScript($host . 'media/com_biblestudy/js/swfupload/handlers.js');
+//        $document->addStyleSheet($host . 'media/com_biblestudy/js/swfupload/default.css');
+//        $swfUploadHeadJs = @JBSUpload::uploadjs($host, $admin);
+//        //add the javascript to the head of the html document
+//        $document->addScriptDeclaration($swfUploadHeadJs);
         //Needed to load the article field type for the article selector
         JFormHelper::addFieldPath(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_content' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR . 'modal');
 
