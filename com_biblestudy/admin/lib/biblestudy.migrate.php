@@ -136,7 +136,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
-                        $message[] = $this->$update710();
+                        $message[] = $this->update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -158,7 +158,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
-                        $message[] = $this->$update710();
+                        $message[] = $this->update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -186,7 +186,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
-                        $message[] = $this->$update710();
+                        $message[] = $this->update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -220,7 +220,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
-                        $message[] = $this->$update710();
+                        $message[] = $this->update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -256,7 +256,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
-                        $message[] = $this->$update710();
+                        $message[] = $this->update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -297,7 +297,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
-                        $message[] = $this->$update710();
+                        $message[] = $this->update710();
                         $msg2 = $msg2 . $message;
                         break;
                 }
@@ -367,7 +367,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
-                        $message[] = $this->$update710();
+                        $message[] = $this->update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -414,7 +414,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
-                        $message[] = $this->$update710();
+                        $message[] = $this->update710();
                         $msg2 = $msg2 . $message;
                         break;
 
@@ -463,7 +463,7 @@ class JBSMigrate {
                         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
                         $install = new updatejbsALL();
                         $message[] = $install->doALLupdate();
-                        $message[] = $this->$update710();
+                        $message[] = $this->update710();
                         $msg2 = $msg2 . $message;
                         break;
                 }

@@ -127,7 +127,7 @@ class fixJBSAssets {
             array('name' => '#__bsms_teachers', 'titlefield' => 'teachername', 'assetname' => 'teacher', 'realname' => 'JBS_CMN_TEACHERS'),
             array('name' => '#__bsms_templates', 'titlefield' => 'title', 'assetname' => 'template', 'realname' => 'JBS_CMN_TEMPLATES'),
             array('name' => '#__bsms_topics', 'titlefield' => 'topic_text', 'assetname' => 'topic', 'realname' => 'JBS_CMN_TOPICS'),
-            array('name' => '#__bsms_styles', 'titlefield' => 'filename', 'assetname' => 'style', 'realname' => 'JBS_CMN_CSS'),
+            array('name' => '#__bsms_styles', 'titlefield' => 'filename', 'assetname' => 'style', 'realname' => 'JBS_CMN_STYLES'),
             array('name' => '#__bsms_templatecode', 'titlefield' => 'filename', 'assetname' => 'templatecode', 'realname' => 'JBS_CMN_TEMPLATECODE'),
             array('name' => '#__bsms_admin', 'titlefield' => 'id', 'assetname' => 'admin', 'realname' => 'JBS_CMN_ADMINISTRATION')
         );
