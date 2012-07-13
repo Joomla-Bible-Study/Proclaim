@@ -28,7 +28,7 @@ class biblestudyControllerajax extends JController {
 
         $folder = JRequest::getVar('folder');
         if (empty($folder)) {
-            $folder = JPATH_SITE . DS . 'media';
+            $folder = JPATH_SITE . DIRECTORY_SEPARATOR . 'media';
         }
         if ($folders->files($folder, '.', true) != false) {
             echo json_encode(array('fileCount' => count($folders->files($folder, '.', true))));
@@ -40,7 +40,7 @@ class biblestudyControllerajax extends JController {
      */
     function analyzeFiles() {
         // @todo need to chang to right place
-        require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'getid3.php');
+        require_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'getid3.php');
         $id3 = new getID3();
         $files = new JFolder();
         $ext = new JFile();

@@ -143,7 +143,7 @@ class biblestudyModelmp3 extends JModel {
             return $this->id3Data;
         }
         // @todo change folders
-        require_once(JPATH_SITE . DS . 'media' . DS . 'com_biblestudy' . DS . 'classes' . DS . 'getid3.php');
+        require_once(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'getid3.php');
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
 

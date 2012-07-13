@@ -14,7 +14,7 @@ defined('_JEXEC') or die; ?>
 		<label for="series" >
 			<?php echo JText::_('Directory to Scan'); ?>:
 		</label>
-		<input type="text" name="directoryname" size="50" value="<?php echo JPATH_SITE.DS.'media'.DS; ?>" />
+		<input type="text" name="directoryname" size="50" value="<?php echo JPATH_SITE.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR; ?>" />
 		<span id="dirStatus" class="st"></span>
 		<input type="submit" name="preview" value="Preview"/>
 	<div class="clr"></div>

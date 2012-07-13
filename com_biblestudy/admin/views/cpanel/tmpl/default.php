@@ -6,7 +6,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.debug.php');
-require_once (JPATH_COMPONENT_ADMINISTRATOR.DS.'liveupdate'.DS.'liveupdate.php');
+require_once (JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'liveupdate'.DIRECTORY_SEPARATOR.'liveupdate.php');
 $msg = '';
 $msg = JRequest::getVar('msg', '', 'post');
 if ($msg) {
