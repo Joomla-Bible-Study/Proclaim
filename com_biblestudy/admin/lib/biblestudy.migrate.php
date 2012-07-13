@@ -121,184 +121,52 @@ class JBSMigrate {
                 $version = $db->loadObject();
                 switch ($version->build) {
                     case '700':
-                        $message[] = JText::_('JBS_IBM_VERSION_700_MESSAGE');
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
-                        $install = new updatejbs701();
-                        $message[] = $install->do701update();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
-                        $install = new updatejbsALL();
-                        $message[] = $install->doALLupdate();
+                        $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
-                        $msg2 = $msg2 . $message;
                         break;
 
                     case '624':
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
-                        $install = new jbs700Install();
-                        $message[] = $install->upgrade700();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
-                        $install = new updatejbs701();
-                        $message[] = $install->do701update();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
-                        $install = new updatejbsALL();
-                        $message[] = $install->doALLupdate();
+                        $message[] = $this->update700();
+                        $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
-                        $msg2 = $msg2 . $message;
                         break;
 
                     case '623':
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
-                        $install = new jbs623Install();
-                        $message[] = $install->upgrade623();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
-                        $install = new jbs700Install();
-                        $message[] = $install->upgrade700();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
-                        $install = new updatejbs701();
-                        $message[] = $install->do701update();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
-                        $install = new updatejbsALL();
-                        $message[] = $install->doALLupdate();
+                        $message[] = $this->update623();
+                        $message[] = $this->update700();
+                        $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
-                        $msg2 = $msg2 . $message;
                         break;
 
                     case '622':
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
-                        $install = new jbs622Install();
-                        $message[] = $install->upgrade622();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
-                        $install = new jbs623Install();
-                        $message[] = $install->upgrade623();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
-                        $install = new jbs700Install();
-                        $message[] = $install->upgrade700();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
-                        $install = new updatejbs701();
-                        $message[] = $install->do701update();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
-                        $install = new updatejbsALL();
-                        $message[] = $install->doALLupdate();
+                        $message[] = $this->update622();
+                        $message[] = $this->update623();
+                        $message[] = $this->update700();
+                        $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
-                        $msg2 = $msg2 . $message;
                         break;
 
                     case '615':
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
-                        $install = new jbs622Install();
-                        $message[] = $install->upgrade622();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
-                        $install = new jbs623Install();
-                        $message[] = $install->upgrade623();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
-                        $install = new jbs700Install();
-                        $message[] = $install->upgrade700();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
-                        $install = new updatejbs701();
-                        $message[] = $install->do701update();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
-                        $install = new updatejbsALL();
-                        $message[] = $install->doALLupdate();
+                        $message[] = $this->update622();
+                        $message[] = $this->update623();
+                        $message[] = $this->update700();
+                        $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
-                        $msg2 = $msg2 . $message;
                         break;
 
                     case '614':
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.614.upgrade.php');
-                        $install = new jbs614Install();
-                        $message[] = $install->upgrade614();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
-                        $install = new jbs622Install();
-                        $message[] = $install->upgrade622();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
-                        $install = new jbs623Install();
-                        $message[] = $install->upgrade623();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
-                        $install = new jbs700Install();
-                        $message[] = $install->upgrade700();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
-                        $install = new updatejbs701();
-                        $message[] = $install->do701update();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
-                        $install = new updatejbsALL();
-                        $message[] = $install->doALLupdate();
+                        $message[] = $this->update614();
+                        $message[] = $this->update622();
+                        $message[] = $this->update623();
+                        $message[] = $this->update700();
+                        $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
-                        $msg2 = $msg2 . $message;
                         break;
                 }
 
@@ -319,152 +187,39 @@ class JBSMigrate {
                         break;
 
                     case '608':
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.611.upgrade.php');
-                        $install = new jbs611Install();
-                        $message[] = $install->upgrade611();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.613.upgrade.php');
-                        $install = new jbs613Install();
-                        $message[] = $install->upgrade613();
-                        $msg2 = $msg2 . $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.614.upgrade.php');
-                        $install = new jbs614Install();
-                        $message[] = $install->upgrade614();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
-                        $install = new jbs622Install();
-                        $message[] = $install->upgrade622();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
-                        $install = new jbs623Install();
-                        $message[] = $install->upgrade623();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
-                        $install = new jbs700Install();
-                        $message[] = $install->upgrade700();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
-                        $install = new updatejbs701();
-                        $message[] = $install->do701update();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
-                        $install = new updatejbsALL();
-                        $message[] = $install->doALLupdate();
+                        
+                        $message[] = $this->update611();
+                        $message[] = $this->update613();
+                        $message[] = $this->update614();
+                        $message[] = $this->update622();
+                        $message[] = $this->update623();
+                        $message[] = $this->update700();
+                        $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
-                        $msg2 = $msg2 . $message;
                         break;
 
                     case '611':
 
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.613.upgrade.php');
-                        $install = new jbs613Install();
-                        $message[] = $install->upgrade613();
-                        $msg2 = $msg2 . $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.614.upgrade.php');
-                        $install = new jbs614Install();
-                        $message[] = $install->upgrade614();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
-                        $install = new jbs622Install();
-                        $message[] = $install->upgrade622();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
-                        $install = new jbs623Install();
-                        $message[] = $install->upgrade623();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
-                        $install = new jbs700Install();
-                        $message[] = $install->upgrade700();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
-                        $install = new updatejbs701();
-                        $message[] = $install->do701update();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
-                        $install = new updatejbsALL();
-                        $message[] = $install->doALLupdate();
+                        $message[] = $this->update613();
+                        $message[] = $this->update614();
+                        $message[] = $this->update622();
+                        $message[] = $this->update623();
+                        $message[] = $this->update700();
+                        $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
-                        $msg2 = $msg2 . $message;
                         break;
 
                     case '613':
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.613.upgrade.php');
-                        $install = new jbs613Install();
-                        $message[] = $install->upgrade613();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.614.upgrade.php');
-                        $install = new jbs614Install();
-                        $message[] = $install->upgrade614();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
-                        $install = new jbs622Install();
-                        $message[] = $install->upgrade622();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
-                        $install = new jbs623Install();
-                        $message[] = $install->upgrade623();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
-                        $install = new jbs700Install();
-                        $message[] = $install->upgrade700();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
-                        $install = new updatejbs701();
-                        $message[] = $install->do701update();
-                        $msg2 = $msg2 . $message;
-                        //echo $message;
-
-
-                        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
-                        $install = new updatejbsALL();
-                        $message[] = $install->doALLupdate();
+                        
+                        $message[] = $this->update614();
+                        $message[] = $this->update622();
+                        $message[] = $this->update623();
+                        $message[] = $this->update700();
+                        $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
-                        $msg2 = $msg2 . $message;
                         break;
                 }
                 break;
@@ -479,7 +234,62 @@ class JBSMigrate {
         JRequest::setVar('jbsmessages', $jbsmessages, 'get', 'array');
         return true;
     }
-
+    function update611()
+    {
+         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.611.upgrade.php');
+         $install = new jbs611Install();
+         $message = $install->upgrade611();
+         return $message;
+    }
+    function update613()
+    {
+        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.613.upgrade.php');
+        $install = new jbs613Install();
+        $message = $install->upgrade613();
+        return $message;
+    }
+    function update614()
+    {
+        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.614.upgrade.php');
+        $install = new jbs614Install();
+        $message = $install->upgrade614();
+        return $message;
+    }
+    function update622()
+    {
+        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
+        $install = new jbs622Install();
+        $message = $install->upgrade622();
+        return $message;
+    }
+    function update623()
+    {
+        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
+        $install = new jbs623Install();
+        $message = $install->upgrade623();
+        return $message;
+    }
+    function update700()
+    {
+        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
+        $install = new jbs700Install();
+        $message = $install->upgrade700();
+        return $message;
+    }
+    function update701()
+    {
+        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
+        $install = new updatejbs701();
+        $message = $install->do701update();
+        return $message;
+    }
+    function allupdate()
+    {
+        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
+        $install = new updatejbsALL();
+        $message = $install->doALLupdate();
+        return $message;
+    }
     function update710() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update710.php');
         $migrate = JBS710Update();
