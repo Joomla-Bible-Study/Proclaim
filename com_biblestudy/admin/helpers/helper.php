@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 /**
  *
- * @return \JParameter
+ * @return \JRegistry
  */
 function getAdminsettings() {
     $db = JFactory::getDBO();
@@ -20,7 +20,11 @@ function getAdminsettings() {
     $db->setQuery("SELECT params FROM #__bsms_admin WHERE id = 1");
     $db->query();
     $compat = $db->loadObject();
-    $admin_params = new JParameter($compat->params);
+    // Convert parameter fields to objects.
+        $registry = new JRegistry;
+        $registry->loadJSON($compat->params);
+        $admin_params = $registry;
+    
 
     return $admin_params;
 }
