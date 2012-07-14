@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 <form enctype="multipart/form-data" action="index.php" method="post" name="adminForm">
     <table>
         <tr>
-            <td><img src="<?php echo JURI::base() . '/media/com_biblestudy/images/icons/import.png'; ?>" alt="Import" height="48" width="48" /></td>
+            <td><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>" alt="Import" height="48" width="48" /></td>
             <td>
                 <strong><?php echo JText::_('JBS_CMN_IMPORT'); ?></strong>
             </td>
@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
         </tr>
         <tr>
             <td>
-                <img src="<?php echo JURI::base() . '/media/com_biblestudy/images/icons/folder.png'; ?>" alt="Tmp Folder" height="48" width="48" /></td><td>
+                <img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/folder.png'; ?>" alt="Tmp Folder" height="48" width="48" /></td><td>
                 <strong><?php echo JText::_('JBS_IBM_IMPORT_FROM_FOLDER'); ?></strong>
             </td>
             <td>
@@ -30,7 +30,7 @@ defined('_JEXEC') or die;
         </tr>
         <tr>
             <td>
-                <img src="<?php echo JURI::base() . '/media/com_biblestudy/images/icons/copydatabase.png'; ?>" alt="Import" height="48" width="48" />
+                <img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/copydatabase.png'; ?>" alt="Import" height="48" width="48" />
             </td>
             <td>
                 <strong><?php echo JText::_('JBS_IBM_OLDPREFIX'); ?></strong>

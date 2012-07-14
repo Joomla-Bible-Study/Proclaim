@@ -169,6 +169,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL COMMENT 'The language code for the MediaFile.',
+  `created_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
+  `created_by_alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_study_id` (`study_id`),
@@ -258,6 +262,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
   `alternatelink` varchar(300) COMMENT 'replaces podcast file link on subscription',
   `alternateimage` varchar(150),
   `podcast_subscribe_show` int(3),
+  `podcast_image_subscribe` VARCHAR(150) COMMENT 'The image to use for the podcast subscription image',
+  `podcast_subscribe_desc` VARCHAR(150) COMMENT 'Words to go below podcast subscribe image',
   `alternatewords` varchar(20),
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
@@ -487,6 +493,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
   `contact` int(11),
   `address` mediumtext NOT NULL,
   `landing_show` int(3),
+  `address1` MEDIUMTEXT NOT NULL
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
