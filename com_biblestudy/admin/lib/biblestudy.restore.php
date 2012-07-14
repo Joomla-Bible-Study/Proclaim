@@ -110,6 +110,11 @@ class JBSImport {
         $db = JFactory::getDBO();
 
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+         $isold = substr_count('#__bsms_admin_genesis', $query); 
+        if ($isold) {
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('This is a database from an old version. Migrate first!'));
+            return false;
+        }
         $queries = $db->splitSql($query);
         foreach ($queries as $querie) {
             $db->setQuery($querie);
@@ -132,8 +137,8 @@ class JBSImport {
 
     /**
      * Restor DB
-     * @param string $backuprestroe
-     * @return boolean See if we restore worked.
+     * @param string $backuprestore
+     * @return boolean See if the restore worked.
      */
     function restoreDB($backuprestore) {
         $result = false;
@@ -141,7 +146,7 @@ class JBSImport {
         @set_time_limit(300);
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
         //Check to see if this is a backup from an old db and not a migration
-        $isold = substr_compare('#__bsms_admin_genesis', $query);
+        $isold = substr_count('#__bsms_admin_genesis', $query); 
         if ($isold) {
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('This is a database from an old version. Migrate first!'));
             return false;
