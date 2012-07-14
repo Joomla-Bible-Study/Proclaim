@@ -22,10 +22,6 @@ class JBS710Update {
      */
     function update710() {
         $db = JFactory::getDBO();
-        //fix some css from 701 to 702
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update702.php');
-        $update702 = new JBS702Update();
-        $update702css = $update702->css702();
         $oldcss = '';
         jimport('joomla.filesystem.file');
         //Check to see if there is an existing css
