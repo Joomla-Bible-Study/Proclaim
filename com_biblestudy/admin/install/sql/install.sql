@@ -493,7 +493,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
   `contact` int(11),
   `address` mediumtext NOT NULL,
   `landing_show` int(3),
-  `address1` MEDIUMTEXT NOT NULL
+  `address1` MEDIUMTEXT NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
   KEY `idx_access` (`access`)
