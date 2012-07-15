@@ -29,7 +29,7 @@ class BiblestudyControllerMigration extends JController {
      *
      * @access	public
      */
-    function display($cachable = false) {
+    function display($cachable = false, $urlparams = false) {
 
         JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
         $application = JFactory::getApplication();
@@ -39,7 +39,6 @@ class BiblestudyControllerMigration extends JController {
         $run = 0;
         $run = JRequest::getInt('run', '', 'get');
         $import = JRequest::getVar('file', '', 'post');
-
 
         if ($task == 'export' && ($run == 1 || $run == 2)) {
             $export = new JBSExport();
@@ -78,8 +77,11 @@ class BiblestudyControllerMigration extends JController {
         $application = JFactory::getApplication();
         $import = new JBSImport();
         $result = $import->importdb();
-        if ($result) {
+        dump($result, 'Result');
+        if ($result === true) {
             $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
+        } elseif ($result === false) {
+
         } else {
             $application->enqueueMessage('' . $result . '');
         }
@@ -91,7 +93,7 @@ class BiblestudyControllerMigration extends JController {
      *
      * @param <boolon> $cachable
      */
-    function doimport($cachable = false) {
+    function doimport($cachable = false, $urlparams = false) {
         $copysuccess = false;
         $import = new JBSImport();
         $result = $import->importdb();

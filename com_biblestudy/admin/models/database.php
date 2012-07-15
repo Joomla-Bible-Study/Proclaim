@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 // Import library dependencies
 JLoader::register('InstallerModel', JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_installer' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'extension.php');
-JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/components/com_biblestudy/biblestudy.script.php');
+JLoader::register('Com_BiblestudyInstallerScript', JPATH_COMPONENT_ADMINISTRATOR . 'biblestudy.script.php');
 
 /**
  * Installer Manage Model
