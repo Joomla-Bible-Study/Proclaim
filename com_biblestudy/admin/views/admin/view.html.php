@@ -15,7 +15,7 @@ jimport('joomla.i18n.help');
 
 require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
 
-class biblestudyViewadmin extends JView {
+class BiblestudyViewAdmin extends JView {
 
     protected $form;
     protected $item;
@@ -24,6 +24,7 @@ class biblestudyViewadmin extends JView {
     function display($tpl = null) {
         $language = JFactory::getLanguage();
         $language->load('com_installer');
+
         // Get data from the model
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
@@ -40,6 +41,7 @@ class biblestudyViewadmin extends JView {
         $this->updateVersion = ($this->updateVersion) ? $this->updateVersion : JText::_('JNONE');
         $this->pagination = $this->get('Pagination');
         $this->errorCount = count($this->errors);
+        $this->jversion = $this->get('CompVersion');
         //end for database
 
         $this->setLayout('form');

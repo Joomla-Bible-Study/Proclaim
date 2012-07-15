@@ -22,6 +22,24 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
  */
 class biblestudyModeladmin extends JModelAdmin {
 
+    protected $_context = 'com_churchdirectory.discover';
+
+    /**
+     * Method to auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @since	1.7.2
+     */
+    protected function populateState($ordering = null, $direction = null) {
+        $app = JFactory::getApplication();
+        $this->setState('message', $app->getUserState('com_biblestudy.message'));
+        $this->setState('extension_message', $app->getUserState('com_biblestudy.extension_message'));
+        $app->setUserState('com_biblestudy.message', '');
+        $app->setUserState('com_biblestudy.extension_message', '');
+        parent::populateState('name', 'asc');
+    }
+
     /**
      * Constructor that retrieves the ID from the request
      * @var     Prefix Component decleraion
@@ -169,8 +187,6 @@ class biblestudyModeladmin extends JModelAdmin {
         parent::cleanCache('mod_biblestudy');
     }
 
-    protected $_context = 'com_biblestudy.discover';
-
     /**
      *
      * Fixes database problems
@@ -180,8 +196,8 @@ class biblestudyModeladmin extends JModelAdmin {
         $changeSet->fix();
         $this->fixSchemaVersion($changeSet);
         $this->fixUpdateVersion();
-        $installer = new Com_BiblestudyInstallerScript();
-        $installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
+        //$installer = new Com_BiblestudyInstallerScript();
+        //$installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
         $this->fixDefaultTextFilters();
     }
 
@@ -243,7 +259,6 @@ class biblestudyModeladmin extends JModelAdmin {
         $version = $this->getSchemaVersion();
         if ($version == $schema) {
             $result = $version;
-            var_dump($result);
         } else {
             // Delete old row
             $query = $db->getQuery(true);
@@ -287,17 +302,13 @@ class biblestudyModeladmin extends JModelAdmin {
         $table->load($this->getExtentionId());
         $cache = new JRegistry($table->manifest_cache);
         $updateVersion = $cache->get('version');
-        // XXX Need to Fix this is not working right yet.
-        $jbsversion = $this->version;
-        //$jbsversion = '7.1.0';
-
-        if ($updateVersion == $jbsversion) {
+        if ($updateVersion == $this->getCompVersion()) {
             return $updateVersion;
         } else {
-            $cache->set('version', $jbsversion);
+            $cache->set('version', $this->getCompVersion());
             $table->manifest_cache = $cache->toString();
             if ($table->store()) {
-                return $jbsversion;
+                return $this->getCompVersion();
             } else {
                 return false;
             }
@@ -357,6 +368,19 @@ class biblestudyModeladmin extends JModelAdmin {
             throw new Exception('Database error - getExtentionId');
         }
         return $result;
+    }
+
+    /**
+     * To retreave component version
+     *
+     * @return string Version of component
+     * @since 1.7.3
+     */
+    public function getCompVersion() {
+        $file = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
+        $xml = JFactory::getXML($file);
+        $jversion = (string) $xml->version;
+        return $jversion;
     }
 
 }
