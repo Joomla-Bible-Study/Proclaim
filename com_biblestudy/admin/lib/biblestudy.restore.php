@@ -111,7 +111,8 @@ class JBSImport {
 
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
         $isold = substr_count($query, '#__bsms_admin_genesis');
-        if ($isold != 0) {
+        $isnot = substr_count($query, '#__bsms_admin');
+        if ($isold != 0 && $isnot != 0) {
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DB'));
             $errors = JText::_('JBS_ADM_OLD_DB');
             return false;
@@ -148,7 +149,8 @@ class JBSImport {
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
         //Check to see if this is a backup from an old db and not a migration
         $isold = substr_count($query, '#__bsms_admin_genesis');
-        if ($isold != 0) {
+        $isnot = substr_count($query, '#__bsms_admin');
+        if ($isold != 0 && $isnot != 0) {
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DB'));
             return false;
         }
