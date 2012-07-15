@@ -1,8 +1,7 @@
 <?php
 /**
- * @version $Id: biblestudy.script.php 1 $
  * Bible Study Component
- * @package Bible Study
+ * @package BibleStudy.Admin
  *
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -108,7 +107,6 @@ class Com_BiblestudyInstallerScript {
         if ($type == 'update') {
             $rel = $this->release;
         }
-
     }
 
     function install($parent) {
@@ -132,7 +130,7 @@ class Com_BiblestudyInstallerScript {
     function uninstall($parent) {
         $admin = null;
 
-        require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
+        require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
         require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
 
         $db = JFactory::getDBO();
@@ -314,31 +312,6 @@ class Com_BiblestudyInstallerScript {
             $db->query();
         }
     }
-
-    // @todo Must Add in all fixes hear for update?
-//    public function deleteUnexistingFiles() {
-//        $files = array(
-//            'components/com_biblestudy/lib/biblestudy.defines.php',
-//        );
-//
-//        // TODO There is an issue while deleting folders using the ftp mode
-//        $folders = array(
-//            '/administrator/components/com_biblestudy/assets',
-//            '/components/com_biblestudy/assets',
-//        );
-//
-//        foreach ($files as $file) {
-//            if (JFile::exists(JPATH_ROOT . $file) && !JFile::delete(JPATH_ROOT . $file)) {
-//                echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $file) . '<br />';
-//            }
-//        }
-//
-//        foreach ($folders as $folder) {
-//            if (JFolder::exists(JPATH_ROOT . $folder) && !JFolder::delete(JPATH_ROOT . $folder)) {
-//                echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $folder) . '<br />';
-//            }
-//        }
-//    }
 
 }
 
