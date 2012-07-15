@@ -77,7 +77,6 @@ class BiblestudyControllerMigration extends JController {
         $application = JFactory::getApplication();
         $import = new JBSImport();
         $result = $import->importdb();
-        dump($result, 'Result');
         if ($result === true) {
             $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
         } elseif ($result === false) {
