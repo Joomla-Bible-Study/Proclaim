@@ -194,7 +194,7 @@ class biblestudyModeladmin extends JModelAdmin {
     public function fix() {
         $changeSet = $this->getItems();
         $changeSet->fix();
-        $this->fixSchemaVersion($changeSet);
+        $this->fixSchemaVersion($changeSet); 
         $this->fixUpdateVersion();
         //$installer = new Com_BiblestudyInstallerScript();
         //$installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
@@ -250,15 +250,15 @@ class biblestudyModeladmin extends JModelAdmin {
      */
     public function fixSchemaVersion($changeSet) {
         // Get correct schema version -- last file in array
-        $schema = $changeSet->getSchema();
+        $schema = $changeSet->getSchema(); 
         $db = JFactory::getDbo();
         $result = false;
         $extensionresult = $this->getExtentionId();
 
         // Check value. If ok, don't do update
-        $version = $this->getSchemaVersion();
+        $version = $this->getSchemaVersion(); 
         if ($version == $schema) {
-            $result = $version;
+            $result = $version; 
         } else {
             // Delete old row
             $query = $db->getQuery(true);
@@ -306,7 +306,7 @@ class biblestudyModeladmin extends JModelAdmin {
             return $updateVersion;
         } else {
             $cache->set('version', $this->getCompVersion());
-            $table->manifest_cache = $cache->toString();
+            $table->manifest_cache = $cache->toString(); //print_r($table->manifest_cache);
             if ($table->store()) {
                 return $this->getCompVersion();
             } else {
@@ -379,7 +379,7 @@ class biblestudyModeladmin extends JModelAdmin {
     public function getCompVersion() {
         $file = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
         $xml = JFactory::getXML($file);
-        $jversion = (string) $xml->version;
+        $jversion = (string) $xml->version; 
         return $jversion;
     }
 

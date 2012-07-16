@@ -7,7 +7,7 @@
  * @since  7.1.0
  * */
 // no direct access
-defined('_JEXEC') or die;
+defined('_JEXEC') or die; 
 $errors = count($this->errors);
 if (!(strncmp($this->schemaVersion, $this->jversion, 5) === 0)) {
     $this->errorCount++;
