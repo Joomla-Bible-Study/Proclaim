@@ -54,8 +54,8 @@ ALTER TABLE `#__bsms_series` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 
 
 UPDATE `#__bsms_series` SET `language` = '*' WHERE `#__bsms_series`.`language` = '';
 
-ALTER TABLE `#__bsms_studies` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the Studies.',
-ALTER TABLE `#__bsms_studies`ADD INDEX `idx_seriesid` ( `series_id` );
+ALTER TABLE `#__bsms_studies` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the Studies.';
+ALTER TABLE `#__bsms_studies` ADD INDEX `idx_seriesid` ( `series_id` );
 ALTER TABLE `#__bsms_studies`ADD INDEX `idx_topicsid` ( `topics_id` );
 ALTER TABLE `#__bsms_studies`ADD INDEX `idx_user` ( `user_id` );
 
@@ -68,7 +68,7 @@ ALTER TABLE `#__bsms_servers` ADD COLUMN `type` tinyint(3) NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `ftphost` varchar(100) NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `ftpuser` varchar(250) NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `ftppassword` varchar(250) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `ftpport` varchar(10) NOT NULL
+ALTER TABLE `#__bsms_servers` ADD COLUMN `ftpport` varchar(10) NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_key` varchar(100) NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_secret` varchar(100) NOT NULL;
 
@@ -95,4 +95,3 @@ ALTER TABLE `#__bsms_teachers` ADD COLUMN `address1` MEDIUMTEXT NOT NULL;
 ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` INT(3) DEFAULT NULL;
 ALTER TABLE `#__bsms_message_type` ADD COLUMN `landing_show` INT(3);
 ALTER TABLE `#__bsms_series` ADD COLUMN `landing_show` INT(3);
-ALTER TABLE `#__bsms_teachers` ADD COLUMN `landing_show` INT(3);
