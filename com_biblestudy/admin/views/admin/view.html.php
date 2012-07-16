@@ -137,7 +137,7 @@ class BiblestudyViewAdmin extends JView {
         JToolBarHelper::custom('admin.resetDownloads', 'download.png', 'Reset All Download Hits', 'JBS_ADM_RESET_ALL_DOWNLOAD_HITS', false, false);
         JToolBarHelper::custom('admin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false, false);
         JToolBarHelper::divider();
-        JToolBarHelper::custom('database.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false, false);
+        JToolBarHelper::custom('admin.fix', 'refresh', 'refresh', 'JBS_ADM_DB_FIX', false, false);
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }

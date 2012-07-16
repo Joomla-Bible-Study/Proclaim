@@ -22,7 +22,7 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
  */
 class biblestudyModeladmin extends JModelAdmin {
 
-    protected $_context = 'com_churchdirectory.discover';
+    protected $_context = 'com_biblestudy.discover';
 
     /**
      * Method to auto-populate the model state.

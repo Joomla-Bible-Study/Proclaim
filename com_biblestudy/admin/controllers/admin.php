@@ -228,4 +228,15 @@ class biblestudyControlleradmin extends JControllerForm {
         $this->setRedirect('index.php?option=com_biblestudy&view=admin', $piconversion);
     }
 
+    /**
+     * Tries to fix missing database updates
+     *
+     * @since	7.1.0
+     */
+    function fix() {
+        $model = $this->getModel('admin');
+        $model->fix();
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin', false));
+    }
+
 }

@@ -20,7 +20,7 @@ if (($this->updateVersion != $this->jversion)) {
 }
 ?>
 <div id="installer-database">
-    <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=warnings'); ?>" method="post" name="adminForm" id="adminForm">
+    <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin'); ?>" method="post" name="adminForm" id="adminForm">
 
         <?php if ($this->errorCount === 0) : ?>
             <p class="nowarning"><?php echo JText::_('COM_INSTALLER_MSG_DATABASE_OK'); ?></p>
@@ -78,7 +78,6 @@ if (($this->updateVersion != $this->jversion)) {
         <div>
             <input type="hidden" name="option" value="com_biblestudy" />
             <input type="hidden" name="task" value="database.fix" />
-            <input type="hidden" name="controller" value="database" />
             <input type="hidden" name="boxchecked" value="0" />
         </div>
     </form>
