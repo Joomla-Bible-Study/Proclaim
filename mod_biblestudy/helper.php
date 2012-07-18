@@ -227,6 +227,7 @@ class modBiblestudyHelper {
                 }
             }
         }
+        $query->where('study.published = 1');
         $query->order('studydate ' . $order);
         $db->setQuery((string) $query, 0, $params->get('moduleitems', '5'));
         $rows = $db->loadObjectList();
