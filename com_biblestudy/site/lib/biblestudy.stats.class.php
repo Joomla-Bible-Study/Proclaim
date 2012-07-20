@@ -39,7 +39,7 @@ class jbStats {
 			where m.published = 1 GROUP BY m.study_id');
         $format = $admin_params->get('format_popular', '0');
 
-        $db->query();
+       // $db->query();
 
         $items = $db->loadObjectList();
 
@@ -61,7 +61,7 @@ class jbStats {
             $db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id,
             #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)
             WHERE #__bsms_mediafiles.study_id = ' . $result->study_id);
-            $db->query();
+           // $db->query();
             $hits = $db->loadObject();
             if (!$hits->studytitle) {
                 $name = $hits->id;

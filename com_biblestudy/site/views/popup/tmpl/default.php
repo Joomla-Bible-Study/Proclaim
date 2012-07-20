@@ -36,7 +36,7 @@ $media = $getMedia->getMediaRows2($mediaid);
 $db = JFactory::getDBO();
 $query = 'SELECT * FROM #__bsms_templates WHERE id = ' . $templateid;
 $db->setQuery($query);
-$db->query();
+//$db->query();
 $template = $db->loadObject();
 
 // Convert parameter fields to objects.

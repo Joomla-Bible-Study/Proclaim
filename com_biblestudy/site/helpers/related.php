@@ -137,7 +137,7 @@ class relatedStudies {
         $query->group('s.id');
         $query->where('s.published = 1');
         $db->setQuery($query);
-        $db->query();
+        //$db->query();
         $studies = $db->loadObjectList();
         //check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user = JFactory::getUser();
@@ -183,7 +183,7 @@ class relatedStudies {
             $query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
             $query->where('s.id = ' . $link);
             $db->setQuery($query);
-            $db->query();
+            //$db->query();
             $studyrecords[] = $db->loadObject();
         }
 
@@ -209,7 +209,7 @@ class relatedStudies {
         $query->from('#__bsms_topics');
         $query->where('published = 1');
         $db->setQuery($query);
-        $db->query();
+       // $db->query();
         $topics = $db->loadObjectList();
         $topicslist = array();
         // $topicslist = implode(',',$topics); dump($topicslist);

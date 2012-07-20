@@ -25,7 +25,7 @@ class BiblestudyViewLatest extends JView {
         $query->where('published = 1');
         $query->order('studydate DESC LIMIT 1');
         $db->setQuery($query);
-        $db->query();
+        //$db->query();
         $id = $db->loadResult();
         $t = JRequest::getInt('t', '1', '');
 

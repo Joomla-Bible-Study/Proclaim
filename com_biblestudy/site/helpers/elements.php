@@ -170,7 +170,7 @@ function getElementid($rowid, $row, $params, $admin_params, $template) {
                     . ' WHERE #__bsms_mediafiles.study_id = ' . $row->id . ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering, #__bsms_mediafiles.id ASC LIMIT 1';
 
             $db->setQuery($query_media1);
-            $db->query();
+            //$db->query();
             $media1 = $db->loadObject();
             $elementid->element = getFilesize($media1->size);
             break;

@@ -29,7 +29,7 @@ class biblestudyViewterms extends JView {
         $query->from('#__bsms_templates');
         $query->where('id = ' . $t);
         $db->setQuery($query);
-        $db->query();
+        //$db->query();
         $template = $db->loadObject();
         $registry = new JRegistry();
         $registry->loadJSON($template->params);
@@ -41,7 +41,7 @@ class biblestudyViewterms extends JView {
         $query->from('#__bsms_mediafiles');
         $query->where('id= ' . $mid);
         $db->setQuery($query);
-        $db->query();
+       // $db->query();
         $media = $db->loadObject();
         ?>
         <div class="termstext">

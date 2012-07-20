@@ -160,7 +160,7 @@ class jbsMedia {
         $query = 'SELECT m.id as mid, m.study_id, s.id as sid FROM #__bsms_mediafiles AS m
          LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id) WHERE s.id = ' . $id;
         $db->setQuery($query);
-        $db->query();
+        //$db->query();
         $mediaids = $db->loadObjectList();
         return $mediaids;
     }
@@ -186,7 +186,7 @@ class jbsMedia {
                 . ' ON (s.id = #__bsms_mediafiles.study_id) LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
                 . ' WHERE #__bsms_mediafiles.study_id = ' . $id . ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_media.media_image_name ASC';
         $db->setQuery($query);
-        $db->query();
+       // $db->query();
         if ($media = $db->loadObjectList()) {
             return $media;
         } else {
@@ -220,7 +220,7 @@ class jbsMedia {
                 . ' WHERE #__bsms_mediafiles.id = ' . (int) $id . ' AND #__bsms_mediafiles.published = 1'
                 . ' ORDER BY ordering ASC, #__bsms_mediafiles.mime_type ASC';
         $db->setQuery($query);
-        $db->query();
+        //$db->query();
         if ($media = $db->loadObject()) {
             return $media;
         } else {
@@ -236,7 +236,7 @@ class jbsMedia {
     function getAdmin() {
         $db = JFactory::getDBO();
         $db->setQuery('SELECT * FROM #__bsms_admin WHERE id = 1');
-        $db->query();
+        //$db->query();
         $admin = $db->loadObjectList();
         return $admin;
     }

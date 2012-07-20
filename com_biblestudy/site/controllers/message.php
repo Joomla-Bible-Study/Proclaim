@@ -46,7 +46,7 @@ class biblestudyControllermessage extends JControllerForm {
                 $db = JFactory::getDBO();
                 $query = 'SELECT id FROM #__bsms_studies ORDER BY id DESC LIMIT 1';
                 $db->setQuery($query);
-                $db->query();
+                //$db->query();
                 $pks = $db->loadResult();
                 if ($this->setTopics($pks, $data)) {
                     $msg = JText::_('JSUCCESS');

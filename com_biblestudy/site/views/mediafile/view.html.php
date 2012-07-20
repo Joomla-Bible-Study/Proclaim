@@ -82,7 +82,7 @@ class biblestudyViewmediafile extends JView {
         //Get folders for upload dropdown
         $query = 'SELECT id as value, foldername as text FROM #__bsms_folders WHERE published=1 ORDER BY foldername ASC';
         $db->setQuery($query);
-        $db->query();
+        //$db->query();
         $folders = $db->loadObjectList();
         $folder = array(
             array('value' => '', 'text' => JText::_('JBS_MED_SELECT_FOLDER')),

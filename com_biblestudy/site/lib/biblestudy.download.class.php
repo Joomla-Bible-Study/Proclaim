@@ -35,7 +35,7 @@ class Dump_File {
         //Get the template so we can find a protocol
         $query = 'SELECT id, params FROM #__bsms_templates WHERE `id` = ' . $template;
         $db->setQuery($query);
-        $db->query();
+       // $db->query();
         $template = $db->loadObject();
 
         // Convert parameter fields to objects.
