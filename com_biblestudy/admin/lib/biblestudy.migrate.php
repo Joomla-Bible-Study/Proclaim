@@ -292,7 +292,7 @@ class JBSMigrate {
     }
     function update710() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
-        $migrate = JBS710Update();
+        $migrate = new JBS710Update();
         $update710php = $migrate->update710();
         if (!$update710php) {
             $errors[] = 'Problem with 710php update';
