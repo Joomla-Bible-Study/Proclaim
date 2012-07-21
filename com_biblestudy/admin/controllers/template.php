@@ -214,7 +214,7 @@ class BiblestudyControllerTemplate extends JControllerForm {
                     if ($data->id) {
 
                         try {
-                            $table->load($data->id); //dump($table->params);
+                            $table->load($data->id);
                             $registry = new JRegistry();
                             $registry->loadArray($table->params);
                             $registry->set('sermonstemplate', $sermonstemplate);

@@ -50,7 +50,6 @@ class relatedStudies {
             return false;
         }
         $studies = $this->getStudies();
-        //var_dump($params);
         foreach ($studies as $study) {
             $registry = new JRegistry();
             $registry->loadJSON($study->params);
@@ -164,7 +163,6 @@ class relatedStudies {
      * @return string
      */
     function getRelatedLinks($scored, $params) {
-       // var_dump($scored);
         $db = JFactory::getDBO();
         $scored = array_count_values($scored);
         $sorted = arsort($scored);
@@ -209,16 +207,13 @@ class relatedStudies {
         $query->from('#__bsms_topics');
         $query->where('published = 1');
         $db->setQuery($query);
-       // $db->query();
         $topics = $db->loadObjectList();
         $topicslist = array();
-        // $topicslist = implode(',',$topics); dump($topicslist);
         foreach ($topics as $key => $value) {
             foreach ($value as $v) {
                 $topicslist[] = $v;
             }
         }
-        // dump($topicslist);
         $returntopics = implode(',', $topicslist);
         return $returntopics;
     }

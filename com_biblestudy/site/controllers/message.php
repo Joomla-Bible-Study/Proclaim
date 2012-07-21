@@ -53,7 +53,6 @@ class biblestudyControllermessage extends JControllerForm {
                     $this->setRedirect('index.php?option=com_biblestudy&view=messages', $msg);
                 }
             }
-            // dump ($id);
             //  $this->setTopics($id = JRequest::getInt('id', 0), $data);
             //	$this->setRedirect(JRoute::_('index.php?option=com_content&view=category&id='.$validData['catid'], false));
         }
@@ -79,7 +78,6 @@ class biblestudyControllermessage extends JControllerForm {
      * @todo This may need to be optimized
      */
     public function setTopics($pks, $data) {
-        // dump ($pks);
         if (empty($pks)) {
             $this->setError(JText::_('JBS_STY_ERROR_TOPICS_UPDATE'));
             return false;

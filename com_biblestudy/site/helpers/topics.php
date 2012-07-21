@@ -112,7 +112,7 @@ function getTopicsLandingPage($params, $id, $admin_params) {
 
         $topic .= '</td>';
         $i++;
-        $t++; //dump ($t, 't: ');
+        $t++;
         if ($i == 3) {
             $topic .= "\n\t" . '</tr>';
             $i = 0;

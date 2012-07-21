@@ -75,7 +75,7 @@ $saveOrder = $listOrder == 'share.ordering';
                     <td class="order">
                         <?php if ($canChange) : ?>
                             <?php if ($saveOrder) : ?>
-                                <?php var_dump($this->items[$i]->id);if ($listDirn == 'asc') : ?>
+                                <?php if ($listDirn == 'asc') : ?>
                                     <span><?php echo $this->pagination->orderUpIcon($i, ('1' == @$this->items[$i - 1]->id), 'share.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
                                     <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'share.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
                                 <?php elseif ($listDirn == 'desc') : ?>

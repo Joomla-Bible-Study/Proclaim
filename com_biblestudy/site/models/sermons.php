@@ -637,7 +637,6 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     public function getStart2() {
-//dump ($this->getState('list.start'));
         return $this->getState('list.start');
     }
 

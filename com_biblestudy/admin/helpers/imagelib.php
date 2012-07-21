@@ -40,8 +40,6 @@ class ImageMagickLib extends ImageLib {
 
             /*             * * a new imagick object ** */
             $im = new Imagick($image);
-
-            var_dump($im->getImageGeometry());
         } catch (Exception $e) {
             echo $e->getMessage();
         }

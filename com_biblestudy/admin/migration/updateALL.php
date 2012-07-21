@@ -22,7 +22,6 @@ class updatejbsALL {
      * @return array
      */
     function doALLupdate() {
-        dump('doALL');
         $messages = array();
         $results = array();
         $db = JFactory::getDBO();
@@ -45,12 +44,13 @@ class updatejbsALL {
                 $query = file_get_contents($value);
                 $db->setQuery($query);
                 $db->queryBatch();
-                dump($db->debug('1'),'db');
-                if ($db->getErrorNum() != 0)
+                if ($db->getErrorNum() != 0) :
                     $results = JText::_('JBS_IBM_DB_ERROR') . ': ' . $db->getErrorNum() . "<br /><font color=\"red\">";
-                $results .= $db->stderr(true);
-                $results .= "</font>";
-                $messages[] = $results;
+                    $results .= $db->stderr(true);
+                    $results .= "</font>";
+                    $messages[] = $results;
+                    JError::raiseWarning('SOME_ERROR_CODE', $db->stderr(true));
+                endif;
             }
         }
 

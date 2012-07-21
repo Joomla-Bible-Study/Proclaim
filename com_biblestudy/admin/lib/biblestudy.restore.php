@@ -93,16 +93,14 @@ class JBSImport {
         } else {
             return false;
         }
-        }
+    }
 
-        /**
-         * Install DB
-         * @param string $tmp_src Temp info
-         * @return boolean If db installed corectrly.
-         */
-        function installdb($tmp_src) {
-        $i++;
-        dump($i, 'count');
+    /**
+     * Install DB
+     * @param string $tmp_src Temp info
+     * @return boolean If db installed corectrly.
+     */
+    function installdb($tmp_src) {
         jimport('joomla.filesystem.file');
         @set_time_limit(300);
         $error = '';
@@ -111,44 +109,31 @@ class JBSImport {
         $userfile = JRequest::getVar('importdb', null, 'files', 'array');
         $db = JFactory::getDBO();
 
-        $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+        $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
-        //dump($isnot, 'isnot');
-        //dump($isold, 'isold');
         if ($isold !== 0 && $isnot === 0) :
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DBa'));
-            $errors = JText::_('JBS_ADM_OLD_DB');
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DB'));
+            //$errors = JText::_('JBS_ADM_OLD_DB');
             return false;
         elseif ($isnot === 0):
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_NOT_DBb'));
-            $errors = JText::_('JBS_ADM_NOT_DB');
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_NOT_DB'));
+            //$errors = JText::_('JBS_ADM_NOT_DB');
             return false;
         else:
-
-            //dump($db, 'db');
-            $queries = $db->splitSql($query);
-
-            dump($queries, 'before Foreach');
-            //return 'false';
-            foreach ($queries as $querie) {
-                $db = JFactory::getDBO();
-                //dump($querie, 'Querie');
-                $db->setQuery($querie);
-                $db->query();
-                if (is_null($posts=$db->loadRowList())) {$jAp->enqueueMessage(nl2br($db->getErrorMsg()),'error'); return;}
-                //dump($db->getErrorNum(), 'erros');
-                if ($db->getErrorNum() != 0) {
-                    $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
-                    $error .= $db->stderr(true);
-                    $error .= "</font>";
-                    //print_r($error);
-                    $errors[] = $error;
-                    //return false;
-                }
+            //$query = file_get_contents($file);
+            $db->setDebug(1);
+            $db->setQuery($query);
+            $db->queryBatch();
+            if ($db->getErrorNum() != 0) {
+                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
+                $error .= $db->stderr(true);
+                $error .= "</font>";
+                $errors[] = $error;
             }
         endif;
         if (!empty($errors)) {
+            JError::raiseWarning('SOME_ERROR_CODE', $error);
             return $errors;
         } else {
             return true;
@@ -168,10 +153,13 @@ class JBSImport {
         //Check to see if this is a backup from an old db and not a migration
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
-        if ($isold != 0 && $isnot === 0) {
+        if ($isold !== 0 && $isnot === 0) :
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DB'));
             return false;
-        }
+        elseif ($isnot === 0):
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_NOT_DB'));
+            return false;
+        else:
         $queries = $db->splitSql($query);
         foreach ($queries as $querie) {
             $db->setQuery($querie);
@@ -184,6 +172,7 @@ class JBSImport {
                 //return false;
             }
         }
+        endif;
         return true;
     }
 

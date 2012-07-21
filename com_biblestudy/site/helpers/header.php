@@ -430,7 +430,6 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
  * @return string
  */
 function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template) {
-    //dump($rowcolid);
     $headercell = '<th id="';
     if ($rowid == '20') {
         $elementid = null;
@@ -477,8 +476,6 @@ function getCustomhead($rowcolid, $params) {
     $row = substr($rowcolid, 3, 1);
     $col = substr($rowcolid, 7, 1);
     $customhead = $params->get('r' . $row . 'c' . $col . 'customlabel');
-    //  dump ($row, 'row:'); dump ($col, 'col: ');
-    //dump ($customhead);
 
     return $customhead;
 }

@@ -241,7 +241,6 @@ class biblestudyController extends JController {
         $app->setUserState($option,'serverid', $serverid);
         $app->setUserState($option.'folderid', $folderid);
         $form = JRequest::getVar('jform', array(), 'post', 'array');
-        var_dump($form);
         $returnid = $form['id'];
         // get temp file details
         $temp = JBSUpload::gettempfile();

@@ -51,7 +51,7 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 -- Comments
 --
 ALTER TABLE `#__bsms_comments` ADD INDEX `idx_state` ( `published` );
-ALTER TABLE `#__bsms_comments` ADD INDEX `idx_access` ( `access` );
+ALTER TABLE `#__bsms_comments` ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
@@ -164,7 +164,7 @@ ALTER TABLE `#__bsms_studies` ADD INDEX `idx_state` ( `published` );
 ALTER TABLE `#__bsms_studies` ADD INDEX `idx_access` ( `access` );
 ALTER TABLE `#__bsms_studies` ADD COLUMN `ordering` INT( 11 ) NOT NULL DEFAULT '0';
 ALTER TABLE `#__bsms_studies` MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
-MODIFY `asset_id` `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 ADD COLUMN `alias` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' AFTER `studytitle`,
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
@@ -200,7 +200,7 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 ALTER TABLE `#__bsms_topics` ADD INDEX `idx_state` ( `published` );
 ALTER TABLE `#__bsms_topics` ADD INDEX `idx_access` ( `access` ),
-MODIFY `asset_id` `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
-MODIFY `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;

@@ -22,7 +22,6 @@ class updatejbs701 {
      * @return array
      */
     function do701update() {
-        dump('do701');
         $db = JFactory::getDBO();
         $tables = $db->getTableFields('#__bsms_topics');
         $languagetag = 0;

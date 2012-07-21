@@ -402,7 +402,6 @@ class biblestudyModelMessages extends JModelList {
 
         $db->setQuery($query->__toString());
         $year = $db->loadObjectList();
-        //  dump ($year);
         return $year;
     }
 

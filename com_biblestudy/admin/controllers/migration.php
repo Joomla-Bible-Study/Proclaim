@@ -119,7 +119,6 @@ class BiblestudyControllerMigration extends JController {
             $import = new JBSImport();
             $result = $import->importdb();
         }
-
         if ($result || $copysuccess) {
             //We need to drop the update table first as it will be added back later
             $db = JFactory::getDBO();
@@ -127,18 +126,17 @@ class BiblestudyControllerMigration extends JController {
             $db->query();
             $migrate = new JBSMigrate();
             $migration = $migrate->migrate();
-            dump($migration, 'Migration');
             //Final step is to fix assets
             $this->fixAssets();
             if ($migration) {
                 $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . '');
                 JRequest::setVar('migrationdone', '1', 'get');
             } else {
-                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . '');
+                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration . '');
             }
             JRequest::setVar('migrationdone', '1', 'get');
         } else {
-            $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . '');
+            $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration . '');
         }
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }

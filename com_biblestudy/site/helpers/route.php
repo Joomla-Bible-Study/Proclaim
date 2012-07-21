@@ -29,7 +29,7 @@ abstract class BiblestudyHelperRoute {
     public static function getArticleRoute($id) {
         $needles = array(
             'article' => array((int) $id)
-        ); //dump ($needles);
+        );
         //Create the link
         $link = 'index.php?option=com_biblestudy&view=sermon&id=' . $id;
 

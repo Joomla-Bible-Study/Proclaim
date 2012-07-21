@@ -19,7 +19,7 @@ jimport('joomla.application.component.model');
 class biblestudyModelmp3 extends JModel {
 
     /**
-     * 
+     *
      * @var string
      */
     var $db;
@@ -169,7 +169,6 @@ class biblestudyModelmp3 extends JModel {
             }
         }
         $this->id3Data = $rows;
-        //var_dump($rows);
         return $this->id3Data;
     }
 
