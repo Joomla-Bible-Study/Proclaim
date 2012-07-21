@@ -39,7 +39,7 @@ class JBSImport {
             }
         } else {
             $uploadresults = $this->_getPackageFromUpload();
-            $result = true;
+            $result = $uploadresults;
         }
         if ($result == true) {
             $result = $this->installdb($uploadresults);
@@ -93,14 +93,16 @@ class JBSImport {
         } else {
             return false;
         }
-    }
+        }
 
-    /**
-     * Install DB
-     * @param string $tmp_src Temp info
-     * @return boolean If db installed corectrly.
-     */
-    function installdb($tmp_src) {
+        /**
+         * Install DB
+         * @param string $tmp_src Temp info
+         * @return boolean If db installed corectrly.
+         */
+        function installdb($tmp_src) {
+        $i++;
+        dump($i, 'count');
         jimport('joomla.filesystem.file');
         @set_time_limit(300);
         $error = '';
@@ -112,24 +114,40 @@ class JBSImport {
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
-        if ($isold != 0 && $isnot != 0) {
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DB'));
+        //dump($isnot, 'isnot');
+        //dump($isold, 'isold');
+        if ($isold !== 0 && $isnot === 0) :
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DBa'));
             $errors = JText::_('JBS_ADM_OLD_DB');
             return false;
-        }
-        $queries = $db->splitSql($query);
-        foreach ($queries as $querie) {
-            $db->setQuery($querie);
-            $db->query();
-            if ($db->getErrorNum() != 0) {
-                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
-                $error .= $db->stderr(true);
-                $error .= "</font>";
-                print_r($error);
-                $errors[] = $error;
-                //return false;
+        elseif ($isnot === 0):
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_NOT_DBb'));
+            $errors = JText::_('JBS_ADM_NOT_DB');
+            return false;
+        else:
+
+            //dump($db, 'db');
+            $queries = $db->splitSql($query);
+
+            dump($queries, 'before Foreach');
+            //return 'false';
+            foreach ($queries as $querie) {
+                $db = JFactory::getDBO();
+                //dump($querie, 'Querie');
+                $db->setQuery($querie);
+                $db->query();
+                if (is_null($posts=$db->loadRowList())) {$jAp->enqueueMessage(nl2br($db->getErrorMsg()),'error'); return;}
+                //dump($db->getErrorNum(), 'erros');
+                if ($db->getErrorNum() != 0) {
+                    $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
+                    $error .= $db->stderr(true);
+                    $error .= "</font>";
+                    //print_r($error);
+                    $errors[] = $error;
+                    //return false;
+                }
             }
-        }
+        endif;
         if (!empty($errors)) {
             return $errors;
         } else {
@@ -150,7 +168,7 @@ class JBSImport {
         //Check to see if this is a backup from an old db and not a migration
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
-        if ($isold != 0 && $isnot != 0) {
+        if ($isold != 0 && $isnot === 0) {
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DB'));
             return false;
         }

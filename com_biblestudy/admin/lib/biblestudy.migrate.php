@@ -97,10 +97,11 @@ class JBSMigrate {
                     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ";
                 $db->setQuery($query);
                 $db->query();
+                dump('version');
             }
             $update = $prefix . 'bsms_update';
             $jbsexists2 = substr_count($table, $update);
-            if (!$jbsexists2) {
+            if ($jbsexists2 === 0) {
                 $query = "CREATE TABLE IF NOT EXISTS `#__bsms_update` (
                         `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                         `version` VARCHAR(255) DEFAULT NULL,
@@ -108,9 +109,10 @@ class JBSMigrate {
                         ) DEFAULT CHARSET=utf8";
                 $db->setQuery($query);
                 $db->query();
+                dump('update');
             }
         }
-
+        dump($versiontype, 'version Type');
         //Now we run a switch case on the versiontype and run an install routine accordingly
         switch ($versiontype) {
             case 1:
@@ -119,6 +121,7 @@ class JBSMigrate {
                 $db->setQuery($query);
                 $db->query();
                 $version = $db->loadObject();
+                dump($version->build, 'build');
                 switch ($version->build) {
                     case '700':
                         $message[] = $this->update701();
@@ -131,6 +134,7 @@ class JBSMigrate {
                         $message[] = $this->update701();
                         $message[] = $this->allupdate();
                         $message[] = $this->update710();
+                        dump('624');
                         break;
 
                     case '623':
@@ -167,6 +171,10 @@ class JBSMigrate {
                         $message[] = $this->update701();
                         $message[] = $this->allupdate();
                         $message[] = $this->update710();
+                        break;
+                    case NULL:
+                        JError::raiseNotice('SOME_ERROR_CODE' , 'Bade DB Upload');
+                        return FALSE;
                         break;
                 }
 
