@@ -21,15 +21,14 @@ include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTOR
  * @since 7.1.0
  */
 class BiblestudyControllerMigration extends JController {
-
-    var $cachable = false;
+    //var $cachable = false;
 
     /**
      * Method to display the view
      *
      * @access	public
      */
-    function display($cachable = false, $urlparams = false) {
+    public function display($cachable = false, $urlparams = false) {
 
         JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
         $application = JFactory::getApplication();
@@ -67,7 +66,9 @@ class BiblestudyControllerMigration extends JController {
         if ($task == 'import') {
             $importjbs = $this->import();
         }
-        parent::display($cachable);
+        parent::display();
+
+        return $this;
     }
 
     /**
@@ -127,9 +128,8 @@ class BiblestudyControllerMigration extends JController {
             $migrate = new JBSMigrate();
             $migration = $migrate->migrate();
             //Final step is to fix assets
-            $assetfix = $this->fixAssets();
+            $this->fixAssets();
             if ($migration) {
-
                 $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . '');
                 JRequest::setVar('migrationdone', '1', 'get');
             } else {

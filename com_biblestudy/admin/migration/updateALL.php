@@ -21,7 +21,7 @@ class updatejbsALL {
      *
      * @return array
      */
-    function doALLupdate() {
+    private function doALLupdate() {
 
         $messages = array();
         $results = array();
@@ -53,9 +53,9 @@ class updatejbsALL {
             }
         }
 
-        $results = array('build' => 'ALL', 'messages' => $messages);
+        $result = array('build' => 'ALL', 'messages' => $messages);
 
-        return $results;
+        return $result;
     }
 
 }
