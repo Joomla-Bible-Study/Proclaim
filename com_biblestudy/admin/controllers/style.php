@@ -1,7 +1,7 @@
 <?php
 
 /**
- * controller for the css styles
+ * Controller for the css styles
  * @package BibleStudy.Admin
  * @since 7.1.0
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -18,5 +18,5 @@ jimport('joomla.application.component.controllerform');
  * @since 7.0.0
  */
 class BiblestudyControllerStyle extends JControllerForm {
-    
+
 }

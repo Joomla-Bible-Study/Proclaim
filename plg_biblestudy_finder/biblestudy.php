@@ -1,8 +1,9 @@
 <?php
 
 /**
+ * Finder adapter for Biblestudy.
  * @package     BibleStudy
- * @subpackage  Finder.biblestudy
+ * @subpackage  Finder.BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -17,7 +18,7 @@ require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/adapt
 /**
  * Finder adapter for Biblestudy.
  *
- * @package     Biblestudy
+ * @package     BibleStudy
  * @subpackage  Finder.BibleStudy
  * @since       7.1.0
  */

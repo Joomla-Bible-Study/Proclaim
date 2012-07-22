@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller for Template
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -13,6 +14,7 @@ require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARA
 jimport('joomla.application.component.controllerform');
 
 /**
+ * Template controller class
  * @package BibleStudy.Admin
  * @since 7.0.0
  */

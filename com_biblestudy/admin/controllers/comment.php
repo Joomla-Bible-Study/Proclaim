@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controllerform');
 
 /**
+ * Controller for a Comment
  * @package BibleStudy.Admin
  * @since 7.0.0
  */

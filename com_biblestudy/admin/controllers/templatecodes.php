@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller for TemplateCodes list
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -24,6 +25,7 @@ class BiblestudyControllerTemplatecodes extends JControllerAdmin {
      *
      * @param string $name    The name of the model
      * @param string $prefix  The prefix for the PHP class name
+     * @param array $config
      *
      * @return JModel
      * @since 7.1.0

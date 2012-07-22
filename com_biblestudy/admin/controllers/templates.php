@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controlleradmin');
 
 /**
+ * Controller for Templates
  * @package BibleStudy.Admin
  * @since 7.0.0
  */

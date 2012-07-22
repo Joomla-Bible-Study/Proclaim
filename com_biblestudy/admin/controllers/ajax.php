@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller for Ajax
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,7 +13,7 @@ jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
 /**
- * Controler for Ajax
+ * Controller for Ajax
  * @package BibleStudy.Admin
  * @since 7.0.0
  */

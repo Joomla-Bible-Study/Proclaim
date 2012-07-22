@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller for Admin
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -13,10 +14,10 @@ jimport('joomla.application.component.controllerform');
 
 /**
  * Controller for Admin
- * @package BibleSutdy.Admin
+ * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class biblestudyControlleradmin extends JControllerForm {
+class BiblestudyControllerAdmin extends JControllerForm {
 
     /**
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in

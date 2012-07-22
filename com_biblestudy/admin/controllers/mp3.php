@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller for MP3
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,7 +12,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
 /**
- * Controler for MP3
+ * Controller for MP3
  * @package BibleStudy.Admin
  * @since 7.1.0
  */

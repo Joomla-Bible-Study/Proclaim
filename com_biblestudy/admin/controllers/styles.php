@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller for Styles list
  * @package BibleStudy.Admin
  * @since 7.1.0
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved

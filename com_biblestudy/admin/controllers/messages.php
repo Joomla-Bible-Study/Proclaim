@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller for Messages list
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -18,19 +19,19 @@ jimport('joomla.application.component.controlleradmin');
  * @since 7.0.0
  */
 class biblestudyControllerMessages extends JControllerAdmin {
-    /**
-	 * Constructor.
-	 *
-	 * @param	array	$config	An optional associative array of configuration settings.
 
-	 * @return	ContentControllerArticles
-	 * @see		JController
-	 * @since	1.6
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
+    /**
+     * Constructor.
+     *
+     * @param	array	$config	An optional associative array of configuration settings.
+
+     * @return	ContentControllerArticles
+     * @see		JController
+     * @since	1.6
+     */
+    public function __construct($config = array()) {
+        parent::__construct($config);
+    }
 
     /**
      * Proxy for getModel

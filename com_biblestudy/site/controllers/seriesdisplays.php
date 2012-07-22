@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller for SeriesDisplay
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,11 +12,16 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
 /**
- * @package BibleSutdy.Site
+ * Controller for SeriesDisplay
+ * @package BibleStudy.Site
  * @since 7.0.0
  */
 class BiblestudyControllerSeriesdisplays extends JController {
 
+    /**
+     * Set the var for mediaCode
+     * @var string
+     */
     var $mediaCode;
 
     /**

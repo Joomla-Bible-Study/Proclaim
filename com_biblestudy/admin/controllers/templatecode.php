@@ -14,11 +14,16 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controllerform');
 
 /**
+ * Template Code controller class
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
 class BiblestudyControllerTemplatecode extends JControllerForm {
 
+    /**
+     * Protect the view
+     * @var string
+     */
     protected $view_list = 'templatecodes';
 
     /**
