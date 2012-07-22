@@ -58,6 +58,6 @@ $controller->redirect();
  * @since   7.0
  */
 function addCSS() {
-    $doc = & JFactory::getDocument();
+    $doc = JFactory::getDocument();
     $doc->addStyleSheet(JURI::base() . 'components/com_jbsmigration/css/icons.css');
 }

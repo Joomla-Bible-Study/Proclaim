@@ -17,10 +17,12 @@ defined('_JEXEC') or die;
  */
 class JBSExport {
 
-    function exportdb() {
-        $return = false;
-
-        $localfilename = 'jbs-db-backup-' . time() . '.sql';
+    /**
+     * Export Db function
+     */
+    public function exportdb() {
+        $date = date('Y_F_j');
+        $localfilename = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
         $mainframe = JFactory::getApplication();
         if (!$outputDB = $this->createBackup($localfilename)) {
             $mainframe->redirect('index.php?option=com_biblestudy&view=admin', JText::_('JBS_EI_NO_BACKUP'));
@@ -31,8 +33,14 @@ class JBSExport {
         if (!$downloadfile = $this->output_file($serverfile, $localfilename, $mime_type = 'text/x-sql')) {
             $mainframe->redirect('index.php?option=com_biblestudy&view=admin', JText::_('JBS_CMN_OPERATION_FAILED'));
         }
+        return TRUE;
     }
 
+    /**
+     * Not sure if this works or is used right.
+     * @param string $localfilename
+     * @return boolean
+     */
     function createBackup($localfilename) {
         $objects = $this->getObjects();
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
@@ -43,20 +51,29 @@ class JBSExport {
         return true;
     }
 
+    /**
+     * Get Export Table
+     * @param string $table
+     * @param string $localfilename
+     * @return boolean
+     */
     function getExportTable($table, $localfilename) {
+        if (!$table) {
+            return false;
+        }
         @set_time_limit(300);
-        //Change some tables TEXT fields to BLOB so they will restore okay
-        // $changetoblob = $this->TablestoBlob();
+
         $data = array();
         $export = '';
-        $return = array();
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
+
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
-        $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
+
         //Drop the existing table
         $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
+
         //Create a new table defintion based on the incoming database
         $query = 'SHOW CREATE TABLE `' . $table . '`';
         $db->setQuery($query);
@@ -68,12 +85,15 @@ class JBSExport {
                 $export = str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
-        $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
+
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
         $db->setQuery($query);
         $db->query();
         $results = $db->loadObjectList();
+        if (!$results) {
+            return false;
+        }
         foreach ($results as $result) {
             $data = array();
             $export .= 'INSERT INTO ' . $table . ' SET ';
@@ -81,9 +101,8 @@ class JBSExport {
                 $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
             }
             $export .= implode(',', $data);
-            $export .= ";\n";
+            $export .= ";";
         }
-        $export .= "\n-- --------------------------------------------------------\n\n";
         $handle = fopen($serverfile, 'a');
         fwrite($handle, $export);
         fclose($handle);
@@ -93,6 +112,12 @@ class JBSExport {
         return true;
     }
 
+    /**
+     * File output
+     * @param string $file
+     * @param string $name
+     * @param string $mime_type
+     */
     function output_file($file, $name, $mime_type = '') {
         /*
           This function takes a path to a file to output ($file),
@@ -197,7 +222,11 @@ class JBSExport {
         unlink($file);
     }
 
-    function getObjects() {
+    /**
+     * Get Opjects for tables
+     * @return array
+     */
+    public function getObjects() {
         $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'serversedit', 'realname' => 'JBS_CMN_SERVERS'),
             array('name' => '#__bsms_folders', 'titlefield' => 'foldername', 'assetname' => 'foldersedit', 'realname' => 'JBS_CMN_FOLDERS'),
             array('name' => '#__bsms_studies', 'titlefield' => 'studytitle', 'assetname' => 'studiesedit', 'realname' => 'JBS_CMN_STUDIES'),
@@ -222,104 +251,6 @@ class JBSExport {
             array('name' => '#__bsms_order', 'titlefield' => '', 'assetname' => '', 'realname' => '')
         );
         return $objects;
-    }
-
-    function TablestoBlob() {
-        $backuptables = $this->getObjects();
-
-        $db = JFactory::getDBO();
-        foreach ($backuptables AS $backuptable) {
-
-            if (substr_count($backuptable, 'studies')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext BLOB';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 BLOB';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-            }
-            if (substr_count($backuptable, 'podcast')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-            }
-            if (substr_count($backuptable, 'series')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-            }
-            if (substr_count($backuptable, 'teachers')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information BLOB';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-            }
-        }
-        return true;
-    }
-
-    function TablestoText() {
-        $backuptables = $this->getObjects();
-
-        $db = JFactory::getDBO();
-        foreach ($backuptables AS $backuptable) {
-
-            if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext TEXT';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 TEXT';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-            }
-            if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-            }
-            if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-            }
-            if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information TEXT';
-                $db->setQuery($query);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    print_r($db->stderr(true));
-                }
-            }
-        }
-        return true;
     }
 
 }

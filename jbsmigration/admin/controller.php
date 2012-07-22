@@ -55,8 +55,7 @@ class jbsmigrationController extends JController {
             $results .= "</font>";
             return $results;
         } else {
-            $results = false;
-            return $results;
+            return FALSE;
         }
     }
 
