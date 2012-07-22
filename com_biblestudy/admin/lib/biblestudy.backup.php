@@ -216,38 +216,28 @@ class JBSExport {
         unlink($file);
     }
 
-    /**
+   /**
      * Get Opjects for tables
      * @return array
      */
     public function getObjects() {
-        $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'serversedit', 'realname' => 'JBS_CMN_SERVERS'),
-            array('name' => '#__bsms_folders', 'titlefield' => 'foldername', 'assetname' => 'foldersedit', 'realname' => 'JBS_CMN_FOLDERS'),
-            array('name' => '#__bsms_studies', 'titlefield' => 'studytitle', 'assetname' => 'studiesedit', 'realname' => 'JBS_CMN_STUDIES'),
-            array('name' => '#__bsms_comments', 'titlefield' => 'comment_date', 'assetname' => 'commentsedit', 'realname' => 'JBS_CMN_COMMENTS'),
-            array('name' => '#__bsms_locations', 'titlefield' => 'location_text', 'assetname' => 'locationsedit', 'realname' => 'JBS_CMN_LOCATIONS'),
-            array('name' => '#__bsms_media', 'titlefield' => 'media_text', 'assetname' => 'mediaedit', 'realname' => 'JBS_CMN_MEDIAIMAGES'),
-            array('name' => '#__bsms_mediafiles', 'titlefield' => 'filename', 'assetname' => 'mediafilesedit', 'realname' => 'JBS_CMN_MEDIA_FILES'),
-            array('name' => '#__bsms_message_type', 'titlefield' => 'message_type', 'assetname' => 'messagetypeedit', 'realname' => 'JBS_CMN_MESSAGE_TYPES'),
-            array('name' => '#__bsms_mimetype', 'titlefield' => 'mimetext', 'assetname' => 'mimetypeedit', 'realname' => 'JBS_CMN_MIME_TYPES'),
-            array('name' => '#__bsms_podcast', 'titlefield' => 'title', 'assetname' => 'podcastedit', 'realname' => 'JBS_CMN_PODCASTS'),
-            array('name' => '#__bsms_series', 'titlefield' => 'series_text', 'assetname' => 'seriesedit', 'realname' => 'JBS_CMN_SERIES'),
-            array('name' => '#__bsms_share', 'titlefield' => 'name', 'assetname' => 'shareedit', 'realname' => 'JBS_CMN_SOCIAL_NETWORKING_LINKS'),
-            array('name' => '#__bsms_teachers', 'titlefield' => 'teachername', 'assetname' => 'teacheredit', 'realname' => 'JBS_CMN_TEACHERS'),
-            array('name' => '#__bsms_templates', 'titlefield' => 'title', 'assetname' => 'templateedit', 'realname' => 'JBS_CMN_TEMPLATES'),
-            array('name' => '#__bsms_topics', 'titlefield' => 'topic_text', 'assetname' => 'topicsedit', 'realname' => 'JBS_CMN_TOPICS'),
-            array('name' => '#__bsms_admin', 'titlefield' => 'id', 'assetname' => 'admin', 'realname' => 'JBS_CMN_ADMINISTRATION'),
-            array('name' => '#__bsms_studytopics', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-            array('name' => '#__bsms_timeset', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-            array('name' => '#__bsms_search', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-            array('name' => '#__bsms_books', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-            array('name' => '#__bsms_update', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-            array('name' => '#__bsms_styles', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-            array('name' => '#__bsms_order', 'titlefield' => '', 'assetname' => '', 'realname' => ''),
-            array('name' => '#__bsms_templatecode', 'titlefield' => '', 'assetname' => '', 'realname' => '')
-        );
-        return $objects;
-    }
+        $db = JFactory::getDBO();
+        $tables = $db->getTableList();
+        $prefix = $db->getPrefix();
+        $prelength = strlen($prefix);
+        $prefix.$bsms = 'bsms_';
+        $objects = array();
+        foreach ($tables as $table) 
+            {
+                if (substr_count($table, $bsms))
+                {
+                    $table = substr_replace($table, '#__',0,$prelength);
+                    $objects[] = array('name'=>$table);
+                }
+                
+            }
+            return $objects;
+        }
 
 }
 

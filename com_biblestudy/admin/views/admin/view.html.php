@@ -22,6 +22,7 @@ class BiblestudyViewAdmin extends JView {
     protected $state;
 
     function display($tpl = null) {
+        
         $language = JFactory::getLanguage();
         $language->load('com_installer');
 
