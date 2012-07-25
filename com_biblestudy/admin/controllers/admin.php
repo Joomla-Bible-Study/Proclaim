@@ -254,7 +254,7 @@ class BiblestudyControllerAdmin extends JControllerForm {
         {
             $msg = JText::_('JBS_ADMIN_RESET_ALIAS_SUCCESS');
         }
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg));
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin', $msg));
     }
     
 }

@@ -14,48 +14,57 @@ class fixJBSalias
     function updateAlias() {
         $db = JFactory::getDBO();
         $objects = $this->getObjects(); 
-        foreach ($objects as $object) {
-            $results = $this->getTable($table = $object['name'], $title = $object['titlefield']); 
-            
-            foreach ($results as $result) { 
-                $title = $object['titlefield'];
-                $alias = JFilterOutput::stringURLSafe($result->title); 
-                $query = 'UPDATE TABLE ' . $object['name'] . ' SET alias=' . $alias . 'WHERE id=' . $result->id; 
-                dump ($query);
-              //  $db->setQuery($query);
-              //  $db->query();
+        foreach ($objects as $object) 
+            {
+                $results[] = $this->getTableQuery($table = $object['name'], $title = $object['titlefield']); 
             }
-         
-        }
-        return TRUE;
+            
+        foreach ($results as $result) 
+            { 
+                foreach ($result as $r)    
+                {
+                    if (!$r['title'])
+                    {
+                        //do nothing
+                    }
+                    else
+                    {
+                        $alias = JFilterOutput::stringURLSafe($r['title']); 
+                        $query = 'UPDATE ' . $r['table'] . ' SET alias="' . $alias . '" WHERE id=' . $r['id']; 
+                        $db->setQuery($query);
+                        $db->query();
+                        //dump($query);
+                    }
+                }
+            }
+          return TRUE;
     }
+
     /**
-     * Get Table fiels for updateing.
+     * Get Table fields for updateing.
      * @param string $table
      * @param string $title
      * @return boolean|array
      */
-    function getTable($table, $title) {
+    function getTableQuery($table, $title)
+    { 
         $data = array();
         if (!$table) {
             return false;
         }
         $db = JFactory::getDBO();
-
         $query = 'SELECT id, alias,' . $title . ' FROM ' . $table;
         $db->setQuery($query);
-        //$db->query();
         $results = $db->loadObjectList(); 
-        if (!$results) {
-            return false;
-        }
-        foreach ($results as $result) {
-            foreach ($result as $key => $value) {
-                $data[] = $db->getEscaped($value);
+        foreach ($results as $result)
+        {
+            if (!$result->alias)
+            {
+                $temp = array('id'=>$result->id, 'title'=>$result->$title, 'alias'=>$result->alias, 'table'=>$table);
+                $data[] = $temp;
             }
-            $export = implode(',', $data);
         }
-        return $export;
+        return $data;
     }
 
     /**
