@@ -86,6 +86,7 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
                         <?php echo $this->form->getInput('sharetype', 'params'); ?>
                     </li>
                 </ul>
+            
             </fieldset>
 
         </div>

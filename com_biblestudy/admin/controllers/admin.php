@@ -240,4 +240,21 @@ class BiblestudyControllerAdmin extends JControllerForm {
         $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin', false));
     }
 
+    function aliasUpdate()
+    {
+        $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
+        include_once($path1 . 'alias.php');
+        $alias = new fixJBSalias();
+        $update = $alias->updateAlias();
+        if (!$update)
+        {
+            $msg = JText::_('JBS_ADMIN_RESET_ALIAS_FAILED');
+        }
+        else
+        {
+            $msg = JText::_('JBS_ADMIN_RESET_ALIAS_SUCCESS');
+        }
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg));
+    }
+    
 }
