@@ -24,7 +24,7 @@ class BiblestudyControllerAdmin extends JControllerForm {
      *
      * @since 7.0
      */
-    protected $view_list = 'cpanel';
+    protected $view_list = 'admin';
 
     /**
      * constructor (registers additional tasks to methods)
@@ -246,15 +246,8 @@ class BiblestudyControllerAdmin extends JControllerForm {
         include_once($path1 . 'alias.php');
         $alias = new fixJBSalias();
         $update = $alias->updateAlias();
-        if (!$update)
-        {
-            $msg = JText::_('JBS_ADMIN_RESET_ALIAS_FAILED');
-        }
-        else
-        {
-            $msg = JText::_('JBS_ADMIN_RESET_ALIAS_SUCCESS');
-        }
-        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin', $msg));
+        $this->setMessage(JText::_('JBS_ADM_ALIAS_ROWS').$update);
+        $this->setRedirect(JRoute::_('index.php?option=com_biblestudy&view=admin', false));
     }
     
 }

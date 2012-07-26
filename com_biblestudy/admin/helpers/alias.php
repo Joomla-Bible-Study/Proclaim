@@ -12,6 +12,7 @@ class fixJBSalias
      * @return boolean
      */
     function updateAlias() {
+        $done = 0;
         $db = JFactory::getDBO();
         $objects = $this->getObjects(); 
         foreach ($objects as $object) 
@@ -33,11 +34,12 @@ class fixJBSalias
                         $query = 'UPDATE ' . $r['table'] . ' SET alias="' . $alias . '" WHERE id=' . $r['id']; 
                         $db->setQuery($query);
                         $db->query();
-                        //dump($query);
+                        $done ++;
                     }
                 }
             }
-          return TRUE;
+           
+          return $done;
     }
 
     /**

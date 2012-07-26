@@ -37,6 +37,10 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
                         <?php echo $this->form->getLabel('jbsmigrationshow', 'params'); ?>
                         <?php echo $this->form->getInput('jbsmigrationshow', 'params'); ?>
                     </li>
+                    <div class="clr"></div>
+                    <li>
+                        <?php echo   '<label class="hasTip"><a href="index.php?option=com_biblestudy&view=admin&task=admin.aliasUpdate">'.JText::_('JBS_ADM_RESET_ALIAS').'</a></label>'; ?>
+                    </li>
                     <li>
                         <?php echo $this->form->getLabel('metakey', 'params'); ?>
                         <?php echo $this->form->getInput('metakey', 'params'); ?>

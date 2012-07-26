@@ -82,4 +82,4 @@ if (($this->updateVersion != $this->jversion)) {
         </div>
     </form>
 </div>
-<div> <?php echo   '<a href="index.php?option=com_biblestudy&view=admin&task=admin.aliasUpdate">Reset all alias</a>'; ?></div>
+
