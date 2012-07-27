@@ -1,45 +1,50 @@
 <?php
 
-/*
+/**
+ * Helper for Alias
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
+//No Direct Access
+defined('_JEXEC') or die;
+
+/**
  * Class for updating the alias in certain tables
- * 
+ * @package BibleSutdy.Admin
+ * @since 7.1.0
  */
-class fixJBSalias
-{
-    
+class fixJBSalias {
+
     /**
-     * Update Alias for Upgrade form 7.1.0
-     * @return boolean
+     * Update Alias
+     * @since 7.1.0
+     * @return string
      */
     function updateAlias() {
         $done = 0;
         $db = JFactory::getDBO();
-        $objects = $this->getObjects(); 
-        foreach ($objects as $object) 
-            {
-                $results[] = $this->getTableQuery($table = $object['name'], $title = $object['titlefield']); 
-            }
-            
-        foreach ($results as $result) 
-            { 
-                foreach ($result as $r)    
-                {
-                    if (!$r['title'])
-                    {
-                        //do nothing
-                    }
-                    else
-                    {
-                        $alias = JFilterOutput::stringURLSafe($r['title']); 
-                        $query = 'UPDATE ' . $r['table'] . ' SET alias="' . $alias . '" WHERE id=' . $r['id']; 
-                        $db->setQuery($query);
-                        $db->query();
-                        $done ++;
-                    }
+        $objects = $this->getObjects();
+        foreach ($objects as $object) {
+            $results[] = $this->getTableQuery($table = $object['name'], $title = $object['titlefield']);
+        }
+
+        foreach ($results as $result) {
+            foreach ($result as $r) {
+                if (!$r['title']) {
+                    //do nothing
+                } else {
+                    $alias = JFilterOutput::stringURLSafe($r['title']);
+                    $query = 'UPDATE ' . $r['table'] . ' SET alias="' . $alias . '" WHERE id=' . $r['id'];
+                    $db->setQuery($query);
+                    $db->query();
+                    $done++;
                 }
             }
-           
-          return $done;
+        }
+
+        return $done;
     }
 
     /**
@@ -48,8 +53,7 @@ class fixJBSalias
      * @param string $title
      * @return boolean|array
      */
-    function getTableQuery($table, $title)
-    { 
+    function getTableQuery($table, $title) {
         $data = array();
         if (!$table) {
             return false;
@@ -57,12 +61,10 @@ class fixJBSalias
         $db = JFactory::getDBO();
         $query = 'SELECT id, alias,' . $title . ' FROM ' . $table;
         $db->setQuery($query);
-        $results = $db->loadObjectList(); 
-        foreach ($results as $result)
-        {
-            if (!$result->alias)
-            {
-                $temp = array('id'=>$result->id, 'title'=>$result->$title, 'alias'=>$result->alias, 'table'=>$table);
+        $results = $db->loadObjectList();
+        foreach ($results as $result) {
+            if (!$result->alias) {
+                $temp = array('id' => $result->id, 'title' => $result->$title, 'alias' => $result->alias, 'table' => $table);
                 $data[] = $temp;
             }
         }
@@ -81,5 +83,5 @@ class fixJBSalias
         );
         return $objects;
     }
-    
+
 }

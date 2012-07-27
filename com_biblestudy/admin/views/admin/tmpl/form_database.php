@@ -1,5 +1,6 @@
 <?php
 /**
+ * Admin form subset database
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -7,7 +8,7 @@
  * @since  7.1.0
  * */
 // no direct access
-defined('_JEXEC') or die; 
+defined('_JEXEC') or die;
 $errors = count($this->errors);
 if (!(strncmp($this->schemaVersion, $this->jversion, 5) === 0)) {
     $this->errorCount++;

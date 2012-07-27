@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Madel for MediaFile Admin
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -102,7 +103,6 @@ class BiblestudyModelMediafile extends JModelAdmin {
         //This code could be uncommented and would remove spaces from filename
         //$data['filename'] = str_replace(' ','_',$data['filename']);
         return parent::save($data);
-        
     }
 
     protected function preprocessForm(JForm $form, $data, $group = 'content') {
@@ -129,8 +129,8 @@ class BiblestudyModelMediafile extends JModelAdmin {
     }
 
     /**
-     *
-     * @return <type>
+     * Load Form Data
+     * @return Array
      * @since   7.0
      */
     protected function loadFormData() {

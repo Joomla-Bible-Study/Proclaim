@@ -1,5 +1,6 @@
 <?php
 /**
+ * Admin Form
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -90,7 +91,7 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
                         <?php echo $this->form->getInput('sharetype', 'params'); ?>
                     </li>
                 </ul>
-            
+
             </fieldset>
 
         </div>
