@@ -99,7 +99,10 @@ class BiblestudyModelMediafile extends JModelAdmin {
     public function save($data) {
         //Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
         $data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(',', $data['podcast_id']);
+        //This code could be uncommented and would remove spaces from filename
+        //$data['filename'] = str_replace(' ','_',$data['filename']);
         return parent::save($data);
+        
     }
 
     protected function preprocessForm(JForm $form, $data, $group = 'content') {
