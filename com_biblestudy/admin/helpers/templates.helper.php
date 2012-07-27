@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Templates helper
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -17,9 +18,22 @@ defined('_JEXEC') or die;
  */
 class bibleStudyTemplate extends JObject {
 
+    /**
+     * Tags
+     * @var string
+     */
     var $_tags;
+
+    /**
+     *  DBO
+     * @var string
+     */
     var $_DBO;
-    //Template types
+
+    /**
+     * Template types
+     * @var array
+     */
     var $tmplTypes = array(
         'tmplList' => 'List',
         'tmplListItem' => 'List Item',
@@ -30,7 +44,7 @@ class bibleStudyTemplate extends JObject {
     );
 
     /**
-     * @desc Builds arrays of all the possible tags.
+     * Builds arrays of all the possible tags.
      * @return null
      */
     function __construct() {
@@ -133,7 +147,7 @@ class bibleStudyTemplate extends JObject {
     }
 
     /**
-     * @desc Generates a drop down list of all the template types. Used in TemplateEdit View to
+     * Generates a drop down list of all the template types. Used in TemplateEdit View to
      * generate the dropdown box of template types.
      * @param $selected	 String	Defines the default item
      * @return HTML Dropdown box
@@ -147,7 +161,7 @@ class bibleStudyTemplate extends JObject {
     }
 
     /**
-     * @desc Returns the template object from the database
+     * Returns the template object from the database
      * @param $id  Int  The id of the template to query
      * @return Row Object
      */
@@ -158,7 +172,7 @@ class bibleStudyTemplate extends JObject {
     }
 
     /**
-     * @desc Builds list of fields to be used in the SELECT statement, so only the fields required
+     * Builds list of fields to be used in the SELECT statement, so only the fields required
      * by the template are selected
      * @param $fields  Array  The fields to include in the SELECT
      * @return String

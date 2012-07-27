@@ -4,6 +4,7 @@
 defined('_JEXEC') or die;
 
 /**
+ * Core Bible Study Helper
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -21,10 +22,10 @@ function getAdminsettings() {
     $db->query();
     $compat = $db->loadObject();
     // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($compat->params);
-        $admin_params = $registry;
-    
+    $registry = new JRegistry;
+    $registry->loadJSON($compat->params);
+    $admin_params = $registry;
+
 
     return $admin_params;
 }
