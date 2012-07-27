@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Topic Element
  * @package BibleStudy
  * @subpackage Model.BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -25,6 +26,14 @@ class JElementtopic extends JElement {
      */
     var $_name = 'topic';
 
+    /**
+     * Elment function
+     * @param string $name
+     * @param string $value
+     * @param string $node
+     * @param string $control_name
+     * @return string
+     */
     function fetchElement($name, $value, &$node, $control_name) {
         $db = JFactory::getDBO();
         $language = JFactory::getLanguage();

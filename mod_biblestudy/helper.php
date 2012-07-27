@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Helper for mod_biblestudy.php
  * @package BibleStudy
  * @subpackage Model.BibleStudy
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved

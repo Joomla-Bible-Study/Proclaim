@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Mod_Biblesutdy core file
  * @package BibleStudy
  * @subpackage Model.BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved

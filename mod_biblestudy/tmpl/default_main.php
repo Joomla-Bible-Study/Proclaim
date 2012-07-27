@@ -1,6 +1,7 @@
 
 <?php
 /**
+ * Main view
  * @package BibleStudy
  * @subpackage Model.BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Book Element
  * @package BibleStudy
  * @subpackage Model.BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -11,6 +12,7 @@
 defined('_JEXEC') or die;
 
 /**
+ * Book Element
  * @package BibleStudy
  * @subpackage Model.BibleStudy
  * @since 7.0.0
@@ -25,6 +27,14 @@ class JElementbook extends JElement {
      */
     var $_name = 'book';
 
+    /**
+     * Element Function
+     * @param string $name
+     * @param string $value
+     * @param string $node
+     * @param string $control_name
+     * @return string
+     */
     function fetchElement($name, $value, &$node, $control_name) {
         $db = JFactory::getDBO();
         $language = JFactory::getLanguage();
