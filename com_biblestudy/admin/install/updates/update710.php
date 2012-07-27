@@ -168,6 +168,31 @@ class JBS710Update {
                 border-top: 1px solid #999999;
                 padding: 4px 1px 1px 4px;
               }
+        /* New Teacher Details Codes */
+        
+        #bsm_teachertable .teacheraddress{
+            text-align:left;
+        }
+        
+        #bsm_teachertable .teacherwebsite{
+            text-align:left;}
+            
+        #bsm_teachertable .teacherfacebook{
+            text-align:left;
+        }
+        
+        #bsm_teachertable .bsm_teachertwitter{
+            text-align:left;
+        }
+        
+        #bsm_teachertable .bsm_teacherblog{
+            text-align:left;
+        }
+        
+        #bsm_teachertable .bsm_teacherlink1{
+            text-align:left;
+        }
+
 
             /* New Landing Page CSS */
 
