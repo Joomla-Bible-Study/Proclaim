@@ -35,15 +35,17 @@ if (!$studieslisttemplateid) {
                     $teacherdisplay = $this->item->teachername;
                 }
                 ?>
-                <img src="<?php echo JURI::base() . $this->item->image->path; ?>" width="<?php echo $this->item->image->width; ?>" height="<?php echo $this->item->image->height; ?>" border="1" alt="<?php echo $teacherdisplay; ?>" />
+                <?php echo $this->item->largeimage; ?>
             </td>
             <td class="bsm_teachername">
                 <table id="bsm_teachertable" cellspacing="0">
                     <tr><td class="bsm_teachername">
                             <?php echo $teacherdisplay; ?>
                         </td></tr>
+                    <tr> <td class="bsm_teacheraddress">
+                            <?php echo $this->item->address; ?></td></tr>
                     <tr> <td class="bsm_teacherphone">
-                            <?php echo $item->phone; ?></td></tr>
+                            <?php echo $this->item->phone; ?></td></tr>
                     <tr><td class="bsm_teacheremail">
                             <?php
                             if ($this->item->email) {
@@ -64,10 +66,41 @@ if (!$studieslisttemplateid) {
                             <?php if ($this->item->website) { ?>
                                 <a href="<?php echo $this->item->website; ?>"><?php echo JText::_('JBS_TCH_WEBSITE'); ?></a>
                             <?php } ?>
-                        </td></tr></table>
+                        </td></tr>
+                    <tr><td class="bsm_teacherfacebook">
+                            <?php if ($this->item->facebooklink) { ?>
+                                <a href="<?php echo $this->item->facebooklink; ?>"><?php echo JText::_('JBS_TCH_FACEBOOK'); ?></a>
+                            <?php } ?>
+                    </td></tr>
+                    <tr><td class="bsm_teachertwitter">
+                            <?php if ($this->item->twitterlink) { ?>
+                                <a href="<?php echo $this->item->twitterlink; ?>"><?php echo JText::_('JBS_TCH_TWITTER'); ?></a>
+                            <?php } ?>
+                    </td></tr>
+                    <tr><td class="bsm_teacherblog">
+                            <?php if ($this->item->bloglink) { ?>
+                                <a href="<?php echo $this->item->bloglink; ?>"><?php echo JText::_('JBS_TCH_BLOG'); ?></a>
+                            <?php } ?>
+                    </td></tr>
+                    <tr><td class="bsm_teacherlink1">
+                            <?php if ($this->item->link1) { ?>
+                                <a href="<?php echo $this->item->link1; ?>"><?php echo $this->item->linklabel1 ?></a>
+                            <?php } ?>
+                    </td></tr>
+                    <tr><td class="bsm_teacherlink2">
+                            <?php if ($this->item->link2) { ?>
+                                <a href="<?php echo $this->item->link2; ?>"><?php echo $this->item->linklabel2 ?></a>
+                            <?php } ?>
+                    </td></tr>
+                    <tr><td class="bsm_teacherlink3">
+                            <?php if ($this->item->link3) { ?>
+                                <a href="<?php echo $this->item->link1; ?>"><?php echo $this->item->linklabel3 ?></a>
+                            <?php } ?>
+                    </td></tr>
+                </table>
             </td>
         </tr>
-        <?php if ($item->information) { ?>
+        <?php if ($this->item->information) { ?>
             <tr>
                 <td class="bsm_teacherlong" colspan="2">
                     <?php echo $this->item->information; ?>

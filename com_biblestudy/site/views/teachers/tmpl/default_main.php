@@ -38,7 +38,7 @@ $admin_params = $this->admin_params;
                         ?>
                 <tr class="<?php echo $oddeven; ?> lastrow">
                     <td class="bsm_teacherthumbnail_list" ><?php if ($item->thumb || $item->teacher_thumbnail) { ?>
-                <iimg src="<?php echo $item->image->path; ?>" border="1" title="<?php echo $item->teachername; ?>" alt="<?php echo $item->teachername; ?>" width="<?php echo $image->width; ?>" height="<?php echo $image->height; ?>" /><?php } ?>
+               <?php echo $item->image; } ?>
             </td>
             <td class="bsm_teachername">
                 <a href="<?php echo $item->teacherlink; ?>"><?php echo $teacherdisplay; ?></a>
