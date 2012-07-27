@@ -110,6 +110,7 @@ class JBSImport {
         $db = JFactory::getDBO();
 
         $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+        $query = str_replace('\n',' ', $query);
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
         if ($isold !== 0 && $isnot === 0) :
