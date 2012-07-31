@@ -29,51 +29,51 @@ class BiblestudyControllerMigration extends JController {
      *
      * @access	public
      */
-//    public function display($cachable = false, $urlparams = false) {
-//
-//        JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
-//        $application = JFactory::getApplication();
-//        JRequest::setVar('migrationdone', '0', 'get');
-//        $task = JRequest::getWord('task', '', '');
-//        $oldprefix = JRequest::getInt('oldprefix', '', 'post');
-//        $run = 0;
-//        $run = JRequest::getInt('run', '', 'get');
-//        $import = JRequest::getVar('file', '', 'post');
-//
-//        if ($task == 'export' && ($run == 1 || $run == 2)) {
-//            $export = new JBSExport();
-//            if (!$result = $export->exportdb($run)) {
-//                $msg = JText::_('JBS_CMN_OPERATION_FAILED');
-//                $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-//            } else {
-//                $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
-//                $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-//            }
-//        }
-//
-//        if ($task == 'migrate' && $run == 1 && !$oldprefix) {
-//
-//            $migrate = new JBSMigrate();
-//            $migration = $migrate->migrate();
-//            if ($migration) {
-//                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
-//                JRequest::setVar('migrationdone', '1', 'get');
-//                $errors = JRequest::getVar('jbsmessages', $jbsmessages, 'get', 'array');
-//            } else {
-//                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . '');
-//            }
-//        }
-//
-//        if ($task == 'import') {
-//            $importjbs = $this->import();
-//        }
-//        parent::display();
-//
-//        return $this;
-//    }
+    public function display($cachable = false, $urlparams = false) {
+
+        JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
+        $application = JFactory::getApplication();
+        JRequest::setVar('migrationdone', '0', 'get');
+        $task = JRequest::getWord('task', '', '');
+        $oldprefix = JRequest::getInt('oldprefix', '', 'post');
+        $run = 0;
+        $run = JRequest::getInt('run', '', 'get');
+        $import = JRequest::getVar('file', '', 'post');
+
+        if ($task == 'export' && ($run == 1 || $run == 2)) {
+            $export = new JBSExport();
+            if (!$result = $export->exportdb($run)) {
+                $msg = JText::_('JBS_CMN_OPERATION_FAILED');
+                $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+            } else {
+                $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+                $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+            }
+        }
+
+        if ($task == 'migrate' && $run == 1 && !$oldprefix) {
+
+            $migrate = new JBSMigrate();
+            $migration = $migrate->migrate();
+            if ($migration) {
+                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
+                JRequest::setVar('migrationdone', '1', 'get');
+                $errors = JRequest::getVar('jbsmessages', $jbsmessages, 'get', 'array');
+            } else {
+                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . '');
+            }
+        }
+
+        if ($task == 'import') {
+            $importjbs = $this->import();
+        }
+        parent::display();
+
+        return $this;
+    }
 
     /**
-     * Import fungtion
+     * Import function
      */
     function import() {
         $application = JFactory::getApplication();
