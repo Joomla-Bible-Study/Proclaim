@@ -28,6 +28,9 @@ class jbs700Install {
         //Alter some tables
         $msg = '';
 
+        @set_time_limit(300);
+        $query = @file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql'. DIRECTORY_SEPARATOR . 'updates'. DIRECTORY_SEPARATOR . 'mysql'. DIRECTORY_SEPARATOR . '7.0.0.sql');
+        $query = str_replace('\n',' ', $query);
 
         $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
         $db->setQuery($query);
