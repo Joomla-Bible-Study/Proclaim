@@ -29,7 +29,7 @@ class jbs700Install {
         $msg = '';
 
         @set_time_limit(300);
-        $query = @file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql'. DIRECTORY_SEPARATOR . 'updates'. DIRECTORY_SEPARATOR . 'mysql'. DIRECTORY_SEPARATOR . '7.0.0.sql');
+      /*  $query = @file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql'. DIRECTORY_SEPARATOR . 'updates'. DIRECTORY_SEPARATOR . 'mysql'. DIRECTORY_SEPARATOR . '7.0.0.sql');
         $db->setQuery($query);
         $db->queryBatch();
         if ($db->getErrorNum() != 0) 
@@ -39,6 +39,8 @@ class jbs700Install {
                 $results .= "</font>";
                 $msg[] = $results;
             }
+       */
+       
         $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
         $db->setQuery($query);
         $db->query();

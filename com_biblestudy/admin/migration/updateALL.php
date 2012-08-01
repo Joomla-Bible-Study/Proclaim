@@ -33,13 +33,13 @@ class updatejbsALL {
         $files = JFolder::files($path, '', '', 'false', $exclude, $excludefilter);
         foreach ($files as $i => $value) {
             if (!substr_count($value, '.sql')) {
-                unset($files[$i]);
+                //unset($files[$i]);
             } elseif (substr_count($value, '7.0.0')) {
-                unset($files[$i]);
+                //unset($files[$i]);
             } elseif (substr_count($value, '7.0.1')) {
-                unset($files[$i]);
+                //unset($files[$i]);
             } elseif (substr_count($value, '7.0.1.1')) {
-                unset($files[$i]);
+                //unset($files[$i]);
             } else {
                 $query = file_get_contents($value);
                 $db->setQuery($query);
