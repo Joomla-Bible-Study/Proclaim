@@ -110,7 +110,7 @@ class JBSImport {
         $db = JFactory::getDBO();
 
         $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
-        $query = str_replace('\n',' ', $query);
+        $query = str_replace('\n',' ', $query); //dump($query,'installDB');
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
         if ($isold !== 0 && $isnot === 0) :
@@ -151,6 +151,8 @@ class JBSImport {
         $db = JFactory::getDBO();
         @set_time_limit(300);
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
+        $query = str_replace('\n',' ', $query); 
+       // dump($query,'restoreDB');
         //Check to see if this is a backup from an old db and not a migration
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
