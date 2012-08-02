@@ -196,7 +196,10 @@ class jbs700Install {
         if ($results) {
             foreach ($results AS $result) {
                 //Update the params to json
-                $params = new JParameter($result->params);
+                $registry = new JRegistry;
+                $registry->loadJSON($result->params);
+                $params = $registry;
+                
                 $params2 = $params->toObject();
                 $params2 = json_encode($params2);
                 $query = "UPDATE #__bsms_studies SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
