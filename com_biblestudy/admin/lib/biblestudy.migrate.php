@@ -294,21 +294,7 @@ class JBSMigrate {
         if (!$update710php) {
             $errors[] = 'Problem with 710php update';
         }
-        //We should not rung this do to allupdates dos this..
-//        $db = JFactory::getDBO();
-//        $query = @file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'mysql' . DIRECTORY_SEPARATOR . '7.1.0.sql');
-//        $queries = $db->splitSql($query);
-//        foreach ($queries as $querie) {
-//            $db->setQuery($querie);
-//            $db->query();
-//            if ($db->getErrorNum() != 0) {
-//                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
-//                $error .= $db->stderr(true);
-//                $error .= "</font>";
-//                print_r($error);
-//                $errors[] = $error;
-//            }
-//        }
+        
         if (!empty($errors)) {
             return $errors;
         } else {
