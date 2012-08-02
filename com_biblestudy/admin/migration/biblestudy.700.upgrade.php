@@ -48,7 +48,9 @@ class jbs700Install {
         if ($results) {
             //Now run through all the results, pull out the media player and the popup type and move them to their respective db fields
             foreach ($results AS $result) {
-                $params = new JParameter($result->params);
+                $registry = new JRegistry;
+                $registry->loadJSON($result->params);
+                $params = $registry;
                 $player = $params->get('player');
                 $popup = $params->get('internal_popup');
                 $podcasts = $params->get('podcasts');
