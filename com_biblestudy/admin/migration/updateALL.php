@@ -55,7 +55,7 @@ class updatejbsALL {
         }
 
         $result = array('build' => 'ALL', 'messages' => $messages);
-
+dump($result);
         return $result;
     }
 

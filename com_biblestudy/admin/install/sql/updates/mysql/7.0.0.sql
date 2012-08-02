@@ -1,4 +1,3 @@
--- 7.0.0
 ALTER Table `#__bsms_admin` MODIFY `id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT, 
 DROP COLUMN `main`,
 DROP COLUMN `podcast`,
@@ -7,7 +6,6 @@ DROP COLUMN `study`,
 DROP COLUMN `teacher`,
 DROP COLUMN `media`,
 DROP COLUMN `download`,
-DROP COLUMN `main`,
 DROP COLUMN `showhide`,
 ADD COLUMN `drop_tables` int(3) NULL default "0",
 ADD COLUMN `asset_id` INT(10) DEFAULT NULL,

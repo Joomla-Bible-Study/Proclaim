@@ -101,6 +101,15 @@ class JBSImport {
      * @return boolean If db installed corectrly.
      */
     function installdb($tmp_src) {
+        //first we need to drop the existing JBS tables
+        $objects = $this->getObjects();
+        foreach ($objects as $object)
+        {
+            $db = JFactory::getDBO();
+            $query = 'DROP TABLE '.$object['name'].';';
+            $db->setQuery($query);
+            $db->query();
+        }
         jimport('joomla.filesystem.file');
         @set_time_limit(300);
         $error = '';
@@ -338,4 +347,6 @@ class JBSImport {
         return true;
     }
 
+    
+    
 }

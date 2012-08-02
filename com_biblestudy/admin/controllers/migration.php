@@ -52,7 +52,7 @@ class BiblestudyControllerMigration extends JController {
         }
 
         if ($task == 'migrate' && $run == 1 && !$oldprefix) {
-
+ 
             $migrate = new JBSMigrate();
             $migration = $migrate->migrate();
             if ($migration) {
@@ -94,10 +94,11 @@ class BiblestudyControllerMigration extends JController {
      *
      * @param <boolon> $cachable
      */
-    function doimport($cachable = false, $urlparams = false) {
+    function doimport($cachable = false, $urlparams = false) {  
+       
         $copysuccess = false;
-        //$import = new JBSImport();
-        //$result = $import->importdb();
+//        $import = new JBSImport();
+  //      $result = $import->importdb();
         //This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
         $application = JFactory::getApplication();
         JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
