@@ -71,7 +71,10 @@ class jbs700Install {
                     $msg = $this->performdb($query);
                 }
                 //Update the params to json
-                $params = new JParameter($result->params);
+               // $params = new JParameter($result->params);
+                $registry = new JRegistry;
+                $registry->loadJSON($result->params);
+                $params = $registry;
                 $params2 = $params->toObject();
                 $params2 = json_encode($params2);
 
