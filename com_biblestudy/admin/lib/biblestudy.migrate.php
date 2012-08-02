@@ -168,7 +168,7 @@ class JBSMigrate {
                         $message[] = $this->update710();
                         break;
                     case NULL:
-                        JError::raiseNotice('SOME_ERROR_CODE', 'Bade DB Upload');
+                        JError::raiseNotice('SOME_ERROR_CODE', 'Bad DB Upload');
                         return FALSE;
                         break;
                 }
@@ -292,7 +292,7 @@ class JBSMigrate {
         $migrate = new JBS710Update();
         $update710php = $migrate->update710();
         if (!$update710php) {
-            $errors[] = 'Problem with 710php update';
+            $errors[] = 'Problem with 7.1.0 update';
         }
         
         if (!empty($errors)) {
