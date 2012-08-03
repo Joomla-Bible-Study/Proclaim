@@ -102,9 +102,18 @@ class BiblestudyModelMediafile extends JModelAdmin {
         $data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(',', $data['podcast_id']);
         //This code could be uncommented and would remove spaces from filename
         //$data['filename'] = str_replace(' ','_',$data['filename']);
+        // Remove starting and traling spaces
+        $data['filename'] = trim($data['filename']);
         return parent::save($data);
     }
 
+    /**
+     * Preprocess Form
+     * 
+     * @param JForm $form
+     * @param array $data
+     * @param string $group
+     */
     protected function preprocessForm(JForm $form, $data, $group = 'content') {
         parent::preprocessForm($form, $data, $group);
     }

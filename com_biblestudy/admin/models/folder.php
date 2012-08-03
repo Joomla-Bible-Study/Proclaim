@@ -52,7 +52,9 @@ class BiblestudyModelFolder extends JModelAdmin {
         if ($slash_ending != '/') {
             $folderpath = $folderpath . '/';
         }
-        $data['folderpath'] = $folderpath;
+        // Remove starting and traling spaces
+        $data['folderpath'] = trim($folderpath);
+
         // Bind the form fields to the series table
         if (!$row->bind($data)) {
             $this->setError($this->_db->getErrorMsg());
@@ -78,9 +80,9 @@ class BiblestudyModelFolder extends JModelAdmin {
     /**
      * Get the form data
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param array $data
+     * @param boolean $loadData
+     * @return array
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -94,8 +96,8 @@ class BiblestudyModelFolder extends JModelAdmin {
     }
 
     /**
-     *
-     * @return <type>
+     * Load Form Data
+     * @return array
      * @since   7.0
      */
     protected function loadFormData() {
