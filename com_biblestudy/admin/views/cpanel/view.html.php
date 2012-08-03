@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 include_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
+include_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/dbhelper.php');
 
 /**
  * @package BibleStudy.Admin
@@ -19,6 +20,8 @@ class biblestudyViewcpanel extends JView {
 
     function display($tpl = null) {
 
+        $dbhelper = new jbsDBhelper();
+        if ($table = $dbhelper->checkDB('#__bsms_studies', 'studydte')){echo 'it is here.';}else{echo 'it is not.';}
         JHTML::stylesheet('cpanel.css', JURI::base() . '../media/com_biblestudy/css/');
         //get version information
         $db = JFactory::getDbo();
