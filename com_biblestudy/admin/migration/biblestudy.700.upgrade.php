@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 
 require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
-
+include_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/dbhelper.php');
 /**
  * Upgrade class for 7.0.0
  * @package BibleStudy.Admin
@@ -40,7 +40,174 @@ class jbs700Install {
                 $msg[] = $results;
             }
        */
-       
+       $dbhelper = new jbsDBhelper();
+       //alter the admin table
+       $table = '#__bsms_admin';
+        if($dbhelper->checkTables($table, 'main') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `main`');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'podcast') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `podcast`');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'series') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `series`');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'study') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `study`');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'teacher') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `teacher`');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'media') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `media`');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'download') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `download`');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'showhide') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `showhide`');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'drop_tables') == 'false')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `drop_tables` int(3) NULL default "0"');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY `id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $query = 'UPDATE `#__bsms_admin` SET `drop_tables` = 0 WHERE id = 1';
+            $msg[] = $this->performdb($query);
+        }
+        //comments table
+        $table = '#__bsms_comments';
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY `id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        //folders table
+        $table = '#__bsms_folders';
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY `id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_media';
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_mediafiles';
+        if($dbhelper->checkTables($table, 'podcast_id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY podcast_id VARCHAR(50)');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'drop_tables') == 'false')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `player` INT(2) NULL');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'popup') == 'false')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `popup` INT(2) NULL');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_message_type';
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_mimetype';
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_order';
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'text') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY text VARCHAR(50) DEFAULT NULL');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_podcast';
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_search';
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        
+        $table = '#__bsms_series';
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_servers';
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_share';
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        
+        $table = '#__bsms_studies';
+        if($dbhelper->checkTables($table, 'id') == 'true')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        $msg[] = $this->addAssetColumn($table);
+        
         $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
         $db->setQuery($query);
         $db->query();
@@ -299,5 +466,20 @@ class jbs700Install {
             return $results;
         }
     }
-
+    function addAssetColumn($table)
+    {
+        $dbhelper = new jbsDBhelper();
+        $msg = array();
+         if($dbhelper->checkTables($table, 'asset_id') == 'false')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `asset_id` INT(10) DEFAULT NULL');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        if($dbhelper->checkTables($table, 'access') == 'false')
+        {
+            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `access` INT(10) DEFAULT NULL');
+            if( $alteradmin != 'true'){$msg[]= $alteradmin;}
+        }
+        return $msg;
+    }
 }
