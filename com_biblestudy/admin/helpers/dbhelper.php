@@ -45,13 +45,17 @@ class jbsDBhelper {
     
     /**
      * Alters a table
-     * @ param string table is the table you are altering
+     * @ param array tables is an array of tables, fields, type of query and command lines
      * @ param string command is the mysql command you are using
      * @return boolean
      */
-    function alterDB($table, $command)
+    function alterDB($tables)
     {
         $db = JFactory::getDbo();
+        foreach ($tables as $t)
+        {
+            
+        }
         $query = 'ALTER TABLE '.$table.' '.$command;
         $db->setQuery($query);
         $db->query();
