@@ -169,26 +169,26 @@ class JBS710Update {
                 padding: 4px 1px 1px 4px;
               }
         /* New Teacher Details Codes */
-        
+
         #bsm_teachertable .teacheraddress{
             text-align:left;
         }
-        
+
         #bsm_teachertable .teacherwebsite{
             text-align:left;}
-            
+
         #bsm_teachertable .teacherfacebook{
             text-align:left;
         }
-        
+
         #bsm_teachertable .bsm_teachertwitter{
             text-align:left;
         }
-        
+
         #bsm_teachertable .bsm_teacherblog{
             text-align:left;
         }
-        
+
         #bsm_teachertable .bsm_teacherlink1{
             text-align:left;
         }
@@ -266,6 +266,11 @@ class JBS710Update {
 
             }
 
+            div.listingfooter ul li {
+            float: left;
+            list-style: none outside none;
+            }
+
             ';
         $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
         $db->setQuery($query);
@@ -281,6 +286,6 @@ class JBS710Update {
         }
     }
 
-    
+
 
 }

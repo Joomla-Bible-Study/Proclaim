@@ -1156,3 +1156,8 @@ margin-right: 10px;
 
 #recaptcha_widget_div {
 position:static !important;}
+
+div.listingfooter ul li {
+float: left;
+list-style: none outside none;
+}
