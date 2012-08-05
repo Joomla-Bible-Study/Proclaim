@@ -23,7 +23,7 @@ defined('_JEXEC') or die;
         <tr>
             <td>
                 <img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/folder.png'; ?>" alt="Tmp Folder" height="48" width="48" /></td><td>
-                <strong><?php echo JText::_('JBS_ADM_IMPORT_FROM_FOLDER'); ?></strong>
+                <strong><?php echo JText::_('JBS_IBM_IMPORT_MIGRATE_FROM_SERVER_FOLDER'); ?></strong>
             </td>
             <td>
                 <input type="text" id="install_directory" name="install_directory" class="input_box" size="70" value="<?php echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>" />
