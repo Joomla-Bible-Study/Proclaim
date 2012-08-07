@@ -127,21 +127,12 @@ class Dump_File {
                     $resultRange = $httpRange[0] . '-' . $httpRange[1];
             }
         }
-        header('Content-Length: ' . (string) $size);
+        header('Content-Length: ' . $resultLenght);
         header('Content-Range: bytes ' . $resultRange . '/' . $size);
 
-        header('Content-Type: ' . $mimeType); // joomla will overwrite this...
+        header('Content-Type: ' . $mimeType);
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Content-Transfer-Encoding: binary\n');
-
-        // joomla overwrites content-type, we can't use header()
-        $d = JFactory::getDocument();
-        $d->setMimeEncoding($mimeType);
-
-        // stop output buffering or we will run out of memory with large tables.
-        ob_end_flush();
-
-        JResponse::sendHeaders();
 
         // Try to deliver in chunks
         @set_time_limit(0);
