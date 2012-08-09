@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Plugin for BibleStudy Search
  * @package BibleStudy
  * @subpackage Search.BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -12,6 +13,7 @@ defined('_JEXEC') or die;
 jimport('joomla.plugin.plugin');
 
 /**
+ * Plugin class for BibleStudy Search
  * @package BibleStudy
  * @subpackage Search.BibleStudy
  * @since 7.0.2
@@ -34,6 +36,7 @@ class plgSearchBiblestudysearch extends JPlugin {
     }
 
     /**
+     * Content Search Areas
      * @return array An array of search areas
      */
     function onContentSearchAreas() {

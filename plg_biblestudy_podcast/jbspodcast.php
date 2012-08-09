@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Podcast Plugin
  * @package BibleStudy
  * @subpackage Plugin.JBSPodcast
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
@@ -13,6 +14,7 @@ defined('_JEXEC') or die;
 jimport('joomla.plugin.plugin');
 
 /**
+ * Podcast plugin class
  * @package BibleStudy
  * @subpackage Plugin.JBSPodcast
  * @since 7.0.0
@@ -36,6 +38,9 @@ class PlgSystemJbspodcast extends JPlugin {
         $this->loadLanguage('com_biblestudy', JPATH_ADMINISTRATOR);
     }
 
+    /**
+     * Initialise
+     */
     function onAfterInitialise() {
 
 
@@ -72,6 +77,11 @@ class PlgSystemJbspodcast extends JPlugin {
         }
     }
 
+    /**
+     * Check Time
+     * @param array $params
+     * @return boolean
+     */
     function checktime($params) {
 
         $now = time();
@@ -89,6 +99,11 @@ class PlgSystemJbspodcast extends JPlugin {
         }
     }
 
+    /**
+     * Check Days
+     * @param array $params
+     * @return boolean
+     */
     function checkdays($params) {
         $checkdays = FALSE;
         $config = & JFactory::getConfig();
@@ -161,6 +176,10 @@ class PlgSystemJbspodcast extends JPlugin {
         return $checkdays;
     }
 
+    /**
+     * Update Time
+     * @return boolean
+     */
     function updatetime() {
         $time = time();
         $db = JFactory::getDBO();
@@ -174,6 +193,10 @@ class PlgSystemJbspodcast extends JPlugin {
         }
     }
 
+    /**
+     * Do Podcast
+     * @return object
+     */
     function doPodcast() {
         $path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
         require_once($path1 . 'biblestudy.podcast.class.php');
@@ -182,6 +205,11 @@ class PlgSystemJbspodcast extends JPlugin {
         return $result;
     }
 
+    /**
+     * Do Email
+     * @param array $params
+     * @param object $dopodcast
+     */
     function doEmail($params, $dopodcast) {
 
         $livesite = JURI::root();

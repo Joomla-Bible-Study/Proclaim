@@ -1,10 +1,21 @@
 <?php
 
+/**
+ * Install Script
+ * @package BibleStudy
+ * @subpackage Plugin.JBSPodcast
+ * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 // No direct access to this file
 defined('_JEXEC') or die;
 
 /**
  * Script file of jbspodcast component
+ * @package BibleStudy
+ * @subpackage Plugin.JBSPodcast
+ * @since 7.0.4
  */
 class plgSystemjbspodcastInstallerScript {
 
@@ -19,7 +30,7 @@ class plgSystemjbspodcastInstallerScript {
 
     /**
      * method to uninstall the component
-     *
+     * @param string $parent
      * @return void
      */
     function uninstall($parent) {
@@ -29,7 +40,7 @@ class plgSystemjbspodcastInstallerScript {
 
     /**
      * method to update the component
-     *
+     * @param string $parent
      * @return void
      */
     function update($parent) {
@@ -66,7 +77,8 @@ class plgSystemjbspodcastInstallerScript {
 
     /**
      * method to run before an install/update/uninstall method
-     *
+     * @param string $parent
+     * @param string $type
      * @return void
      */
     function preflight($type, $parent) {
@@ -99,11 +111,12 @@ class plgSystemjbspodcastInstallerScript {
             $db->setQuery($query);
             $db->query();
         }
-
     }
 
     /**
      * method to run after an install/update/uninstall method
+     * @param string $parent
+     * @param string $type
      *
      * @return void
      */
