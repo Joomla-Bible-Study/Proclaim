@@ -18,8 +18,6 @@ $ismodule = 1;
     <div id="jbsmoduleheader"><?php echo $params->get('pageheader'); ?></div>
     <!-- This div is the container for the whole page -->
     <table id="bsmsmoduletable" cellspacing="0">
-
-
         <?php
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
         include_once($path1 . 'header.php');
@@ -28,10 +26,7 @@ $ismodule = 1;
         $header = getHeader($list[0], $params, $admin_params, $template, $params->get('use_headers'), $ismodule);
         echo $header;
         ?>
-
         <tbody>
-
-
             <?php
             $class1 = 'bsodd';
             $class2 = 'bseven';

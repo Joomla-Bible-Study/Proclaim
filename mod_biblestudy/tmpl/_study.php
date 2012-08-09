@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * _Study
  * @package BibleStudy
  * @subpackage Model.BibleStudy
  * @copyright            2010-2011

@@ -12,6 +12,7 @@
 defined('_JEXEC') or die;
 
 /**
+ * Tobic Element
  * @package BibleStudy
  * @subpackage Model.BibleStudy
  * @since 7.0.0

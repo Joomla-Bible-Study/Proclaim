@@ -4,6 +4,8 @@
  * User SEF extension for Joomla!
  *
  * @author      $Author: Nick Fossen $
+ * @package SefExt
+ * @subpackage Pugin.BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,14 +13,30 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+/**
+ * SefExt for BibleStudy class
+ * @package SefExt
+ * @subpackage Pugin.BibleStudy
+ * @6.2.2
+ */
 class SefExt_com_biblestudy extends SefExt {
 
+    /**
+     * Get non-sef vars
+     * @param string $uri
+     * @return array
+     */
     function getNonSefVars(&$uri) {
         $this->_createNonSefVars($uri);
 
         return array($this->nonSefVars, $this->ignoreVars);
     }
 
+    /**
+     * Create non-sef vars
+     * @param string $uri
+     * @return object
+     */
     function _createNonSefVars(&$uri) {
         if (isset($this->nonSefVars) && isset($this->ignoreVars))
             return;
@@ -30,6 +48,11 @@ class SefExt_com_biblestudy extends SefExt {
             $this->nonSefVars['return'] = $uri->getVar('return');
     }
 
+    /**
+     * Create url
+     * @param string $uri
+     * @return string
+     */
     function create(&$uri) {
         $vars = $uri->getQuery(true);
         extract($vars);

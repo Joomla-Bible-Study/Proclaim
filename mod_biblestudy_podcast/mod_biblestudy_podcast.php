@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Podcast Model
  * @package BibleStudy
  * @subpackage Model.Podcast
  * @author Joomla Bible Study Team

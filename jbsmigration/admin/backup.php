@@ -1,8 +1,9 @@
 <?php
 
 /**
+ * Export
  * @package BibleStudy
- * @subpackage JBSMigration
+ * @subpackage JBSMigration.Admin
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,8 +12,9 @@
 defined('_JEXEC') or die;
 
 /**
+ * Export Class
  * @package BibleStudy
- * @subpackage JBSMigration
+ * @subpackage JBSMigration.Admin
  * @since 7.0.2
  */
 class JBSExport {
@@ -233,20 +235,16 @@ class JBSExport {
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
         $prelength = strlen($prefix);
-        $prefix.$bsms = 'bsms_';
+        $prefix . $bsms = 'bsms_';
         $objects = array();
-        foreach ($tables as $table) 
-            {
-                if (substr_count($table, $bsms))
-                {
-                    $table = substr_replace($table, '#__',0,$prelength);
-                    $objects[] = array('name'=>$table);
-                }
-                
+        foreach ($tables as $table) {
+            if (substr_count($table, $bsms)) {
+                $table = substr_replace($table, '#__', 0, $prelength);
+                $objects[] = array('name' => $table);
             }
-            return $objects;
         }
-      
+        return $objects;
+    }
 
 }
 

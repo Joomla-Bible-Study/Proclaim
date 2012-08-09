@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Joomla BibleStudy Backup Plugin
  * @package BibleStudy
  * @subpackage Plugin.JBSBackup
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -14,6 +15,7 @@ defined('_JEXEC') or die;
 jimport('joomla.plugin.plugin');
 
 /**
+ * JBSBackup jplugin class
  * @package BibleStudy
  * @subpackage Plugin.JBSBackup
  * @since 7.1.0
@@ -37,7 +39,10 @@ class plgSystemjbsbackup extends JPlugin {
         $this->loadLanguage('com_biblestudy', JPATH_ADMINISTRATOR);
     }
 
-    function onAfterInitialise() {
+    /**
+     * After Initialise system
+     */
+    public function onAfterInitialise() {
 
 
         $params = $this->params;
@@ -66,6 +71,11 @@ class plgSystemjbsbackup extends JPlugin {
         }
     }
 
+    /**
+     * Check Time
+     * @param array $params
+     * @return boolean
+     */
     function checktime($params) {
 
         $now = time();
@@ -83,6 +93,11 @@ class plgSystemjbsbackup extends JPlugin {
         }
     }
 
+    /**
+     * Check Days
+     * @param array $params
+     * @return boolean
+     */
     function checkdays($params) {
         $checkdays = FALSE;
         $config = JFactory::getConfig();
@@ -155,6 +170,10 @@ class plgSystemjbsbackup extends JPlugin {
         return $checkdays;
     }
 
+    /**
+     * Update the time
+     * @return boolean
+     */
     function updatetime() {
         $time = time();
         $db = JFactory::getDBO();
@@ -168,6 +187,10 @@ class plgSystemjbsbackup extends JPlugin {
         }
     }
 
+    /**
+     * Do the backup
+     * @return object
+     */
     function doBackup() {
         $path1 = JPATH_ADMINISTRATOR . '/components/com_biblestudy/lib/';
         ;
@@ -177,6 +200,11 @@ class plgSystemjbsbackup extends JPlugin {
         return $backup;
     }
 
+    /**
+     * Send the Email
+     * @param array $params
+     * @param object $dobackup
+     */
     function doEmail($params, $dobackup) {
         $livesite = JURI::root();
         $config = JFactory::getConfig();
@@ -221,6 +249,10 @@ class plgSystemjbsbackup extends JPlugin {
         }
     }
 
+    /**
+     * Update files
+     * @param array $params
+     */
     function updatefiles($params) {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');

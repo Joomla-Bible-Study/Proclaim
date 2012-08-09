@@ -1,16 +1,27 @@
 <?php
 
+/**
+ * Install Script
+ * @package BibleStudy
+ * @subpackage Plugin.JBSBackup
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 // No direct access to this file
 defined('_JEXEC') or die;
 
 /**
  * Script file of JBSBACKUP component
+ * @package BibleStudy
+ * @subpackage Plugin.JBSBackup
+ * @since 7.1.0
  */
 class plgSystemjbsbackupInstallerScript {
 
     /**
      * method to install the component
-     *
+     * @param string $parant
      * @return void
      */
     function install($parent) {
@@ -19,7 +30,7 @@ class plgSystemjbsbackupInstallerScript {
 
     /**
      * method to uninstall the component
-     *
+     * @param string $parant
      * @return void
      */
     function uninstall($parent) {
@@ -29,7 +40,7 @@ class plgSystemjbsbackupInstallerScript {
 
     /**
      * method to update the component
-     *
+     * @param string $parant
      * @return void
      */
     function update($parent) {
@@ -65,7 +76,8 @@ class plgSystemjbsbackupInstallerScript {
 
     /**
      * method to run before an install/update/uninstall method
-     *
+     * @param string $type
+     * @param string $parant
      * @return void
      */
     function preflight($type, $parent) {
@@ -103,7 +115,8 @@ class plgSystemjbsbackupInstallerScript {
 
     /**
      * method to run after an install/update/uninstall method
-     *
+     * @param string $type
+     * @param string $parant
      * @return void
      */
     function postflight($type, $parent) {

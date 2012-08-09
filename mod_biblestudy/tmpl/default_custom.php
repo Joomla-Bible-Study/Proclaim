@@ -76,6 +76,6 @@ switch ($params->get('module_wrapcode')) {
         }
         $link = JRoute::_('index.php?option=com_biblestudy&view=studieslist&t=' . $t);
         ?>
-        <a href="<?php echo $link; ?>"> <?php echo $link_text . '<br />'; ?> </a> <?php } //End of if view_link not 0    ?>
+        <a href="<?php echo $link; ?>"> <?php echo $link_text . '<br />'; ?> </a> <?php } //End of if view_link not 0      ?>
 </div>
 <!--end of footer div-->

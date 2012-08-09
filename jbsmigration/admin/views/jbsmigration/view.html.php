@@ -1,8 +1,9 @@
 <?php
 
 /**
+ * View for Html
  * @package BibleStudy
- * @subpackage JBSMigration
+ * @subpackage JBSMigration.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -15,13 +16,18 @@ jimport('joomla.application.component.helper');
 jimport('joomla.i18n.help');
 
 /**
+ * View class for JBSMigration
  * @package BibleStudy
  * @subpackage JBSMigration
  * @since 7.0.2
  */
 class jbsmigrationViewjbsmigration extends JView {
 
-    function display($tpl = null) {
+    /**
+     * Set Display for the view
+     * @param string $tpl
+     */
+    public function display($tpl = null) {
 
         $config = & JFactory::getConfig();
         $tmp_dest = $config->getValue('config.tmp_path');
@@ -30,7 +36,10 @@ class jbsmigrationViewjbsmigration extends JView {
         parent::display($tpl);
     }
 
-    function addToolbar() {
+    /**
+     * Add the Toolbar to the view
+     */
+    public function addToolbar() {
         JToolBarHelper::title(JText::_('JBS_EI_TITLE'), 'folder');
         JToolBarHelper::help('jbsexportimport', true);
     }
