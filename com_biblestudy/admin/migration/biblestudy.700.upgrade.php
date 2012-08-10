@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 
 require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
-include_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/dbhelper.php');
+require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/dbhelper.php');
 /**
  * Upgrade class for 7.0.0
  * @package BibleStudy.Admin
@@ -43,6 +43,10 @@ class jbs700Install {
        $dbhelper = new jbsDBhelper();
        //alter the admin table
        $table = '#__bsms_admin';
+       $tables = array(
+           array('table'=>'#__bsms_admin','field'=>'main','type'=>'DROP','command'=>''),
+           array('table'=>'#__bsms_admin','field'=>'podcast','type'=>'DROP','command'=>'')
+       );
         if($dbhelper->checkTables($table, 'main') == 'true')
         {
             $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `main`');

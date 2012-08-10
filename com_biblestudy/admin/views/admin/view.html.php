@@ -14,6 +14,7 @@ jimport('joomla.application.component.helper');
 jimport('joomla.i18n.help');
 
 require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
+require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/dbhelper.php');
 
 class BiblestudyViewAdmin extends JView {
 
@@ -23,6 +24,14 @@ class BiblestudyViewAdmin extends JView {
 
     function display($tpl = null) {
         
+        $dbhelper = new jbsDBhelper();
+       //alter the admin table
+       $table = '#__bsms_admin';
+       $tables = array(
+           array('table'=>'#__bsms_admin','field'=>'main','type'=>'DROP','command'=>''),
+           array('table'=>'#__bsms_admin','field'=>'podcast','type'=>'DROP','command'=>'')
+       );
+       $res = $dbhelper->alterDB($tables);
         $language = JFactory::getLanguage();
         $language->load('com_installer');
 

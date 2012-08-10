@@ -45,7 +45,8 @@ class jbsDBhelper {
     
     /**
      * Alters a table
-     * @ param array tables is an array of tables, fields, type of query and command lines
+     * @desc command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY tables.
+     * @ param array tables is an array of tables, fields, type of query and optional command line
      * @ param string command is the mysql command you are using
      * @return boolean
      */
@@ -54,11 +55,15 @@ class jbsDBhelper {
         $db = JFactory::getDbo();
         foreach ($tables as $t)
         {
-            
+            $type = $t['type'];
+            $command = $t['command'];
+            $table = $t['table'];
+            $field = $t['field'];
+            //dump($type,'type: '); dump($command, 'command: '); dump($table, 'table: '); dump($field, 'field: '); 
         }
-        $query = 'ALTER TABLE '.$table.' '.$command;
-        $db->setQuery($query);
-        $db->query();
+    //    $query = 'ALTER TABLE '.$table.' '.$command;
+    //    $db->setQuery($query);
+    //    $db->query();
         if ($db->getErrorNum() != 0) { return $db->stderr(true);}
         else
         {
