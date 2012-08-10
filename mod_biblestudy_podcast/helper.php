@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * Podcast Model Helper
+ * @package BibleStudy
+ * @subpackage mod_biblestudy_podcast
+ * @author Joomla Bible Study Team
+ * @copyright 2012
+ * @desc a module to display the podcast subscription table
+ * @since 7.1.0
+ */
+class modBibleStudyPodcast {
+
+    /**
+     * @var params  the params registry for the module
+     */
+    protected $params;
+
+    /**
+     *
+     * Constructor.
+     *
+     * @param               JRegistry               $params
+     *
+     * @return      modRandomImageHelper
+     */
+    public function __construct($params) {
+        $this->params = $params;
+    }
+
+    /**
+     * Check to see if the component is enabled and the version
+     * @return boolean
+     */
+    static function checkforcombiblestudy() {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery('true');
+        $query->select('element, enabled');
+        $query->from('#__extensions');
+        $query->where('element = "com_biblestudy"');
+        $db->setQuery($query);
+        $db->query();
+        $results = $db->loadObjectList();
+        if (!$results) {
+            echo 'Extension Bible Study not found';
+            $go = false;
+        } else {
+            foreach ($results as $result) {
+                if ($result->enabled == '1') {
+                    $go = true;
+                } else {
+                    $go = false;
+                }
+            }
+        }
+        return $go;
+    }
+
+    /**
+     * Get BibleStudy Template Params
+     * @return \JRegistry
+     */
+    static function getTemplateParams() {
+        $introtext = $params->get('subscribeintro', "Follow Us!");
+        $t = $params->get('t', 1);
+        $query = $db->getQuery('true');
+        $query->select('*');
+        $query->from('#__bsms_templates');
+        $query->where('id = ' . $t);
+        $db->setQuery($query);
+        $db->query();
+        $template = $db->loadObject();
+        $registry = new JRegistry;
+        $registry->loadJSON($template->params);
+        return $registry;
+    }
+
+}
