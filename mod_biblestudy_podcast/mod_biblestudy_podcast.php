@@ -13,10 +13,13 @@ defined('_JEXEC') or die;
 
 // Include the syndicate functions only once
 require_once dirname(__FILE__) . '/helper.php';
+$introtext = $params->get('subscribeintro', "Follow Us!");
 
-$go = modBibleStudyPodcast::checkforcombiblestudy();
+$go = modBibleStudyPodcast::checkforcombiblestudy($params);
 if (!$go) {
-    $templateparams = modBibleStudyPodcast::getTemplateParams();
+    echo "Extension Bible Study not present or enabled";
+} else {
+    $templateparams = modBibleStudyPodcast::getTemplateParams($params);
 }
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'podcastsubscribe.php');
 
@@ -31,4 +34,4 @@ $podcast = new podcastSubscribe();
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
 //display the module
-echo $subscribe;
+require JModuleHelper::getLayoutPath('mod_biblestudy_podcast', $params->get('layout', 'default'));

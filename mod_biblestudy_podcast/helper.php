@@ -12,23 +12,6 @@
 class modBibleStudyPodcast {
 
     /**
-     * @var params  the params registry for the module
-     */
-    protected $params;
-
-    /**
-     *
-     * Constructor.
-     *
-     * @param               JRegistry               $params
-     *
-     * @return      modRandomImageHelper
-     */
-    public function __construct($params) {
-        $this->params = $params;
-    }
-
-    /**
      * Check to see if the component is enabled and the version
      * @return boolean
      */
@@ -60,9 +43,9 @@ class modBibleStudyPodcast {
      * Get BibleStudy Template Params
      * @return \JRegistry
      */
-    static function getTemplateParams() {
-        $introtext = $params->get('subscribeintro', "Follow Us!");
+    static function getTemplateParams($params) {
         $t = $params->get('t', 1);
+        $db = JFactory::getDBO();
         $query = $db->getQuery('true');
         $query->select('*');
         $query->from('#__bsms_templates');
