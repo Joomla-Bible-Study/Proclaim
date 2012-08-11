@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * PreachIT Converter system
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -8,8 +9,17 @@
  * */
 defined('_JEXEC') or die;
 
+/**
+ * Convert Class
+ * @package BibleStudy.Admin
+ * @since 7.1.0
+ */
 class JBSPIconvert {
 
+    /**
+     * Convert PreachIT
+     * @since 7.1.0
+     */
     function convertPI() {
         $this->commentsids = array();
         $this->serversids = array();
@@ -432,6 +442,14 @@ class JBSPIconvert {
         return $piconversion;
     }
 
+    /**
+     * Insert Medai into BibleStudy
+     * @param int $pi
+     * @param string $type
+     * @param int $newid
+     * @param int $oldid
+     * @return boolean
+     */
     function insertMedia($pi, $type, $newid, $oldid) {
         $db = JFactory::getDBO();
         $podcast_id = '-1';
@@ -610,6 +628,10 @@ class JBSPIconvert {
         return true;
     }
 
+    /**
+     * Get Books
+     * @return array
+     */
     function getBooks() {
         $books = array(
             array('id' => '1', 'book_name' => 'Genesis', 'published' => '1', 'jbs' => '101'),
@@ -682,6 +704,12 @@ class JBSPIconvert {
         return $books;
     }
 
+    /**
+     * Insert Comments
+     * @param int $oldid
+     * @param int $newid
+     * @return boolean
+     */
     function insertComments($oldid, $newid) {
 
         if (!$this->picomments) {

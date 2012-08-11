@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Sermon Speaker Converter
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -231,7 +232,7 @@ class JBSConvert {
      * @param string $sermon Book of the Bible.
      * @return string ??
      */
-    function getVerses($sermon) {
+    public function getVerses($sermon) {
         $sermonscripture->booknumber = '101';
         if (!$sermon) {
             $sermonscripture->chapter_begin = '';
@@ -531,7 +532,12 @@ class JBSConvert {
         return $sermonscripture;
     }
 
-    function getTime($time) {
+    /**
+     * Get Time
+     * @param string $time
+     * @return objects
+     */
+    public function getTime($time) {
 
         $firstcolon = strpos($time, ':');
         $secondcolon = strpos($time, ':', $firstcolon + 1);

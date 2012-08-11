@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Podcasts model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,8 +20,10 @@ jimport('joomla.application.component.modellist');
 class BiblestudyModelPodcasts extends JModelList {
 
     /**
+     * Constructor.
      *
-     * @param string $config
+     * @param   array  $config  An optional associative array of configuration settings.
+     *
      */
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
@@ -36,9 +39,16 @@ class BiblestudyModelPodcasts extends JModelList {
     }
 
     /**
+     * Method to get a store id based on the model configuration state.
      *
-     * @param <string> $id   A prefix for the store id
-     * @return <string>      A store id
+     * This is necessary because the model is used by the component and
+     * different modules that might need different sets of data or different
+     * ordering requirements.
+     *
+     * @param   string  $id  An identifier string to generate the store id.
+     *
+     * @return  string  A store id.
+     *
      * @since 7.0
      */
     protected function getStoreId($id = '') {
@@ -50,10 +60,21 @@ class BiblestudyModelPodcasts extends JModelList {
         return parent::getStoreId($id);
     }
 
-    /*
+    /**
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
      * @since   7.0
      */
-
     protected function populateState($ordering = null, $direction = null) {
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
@@ -68,10 +89,12 @@ class BiblestudyModelPodcasts extends JModelList {
         parent::populateState('podcast.title', 'ASC');
     }
 
-    /*
+    /**
+     * Method to get a JDatabaseQuery object for retrieving the data set from a database.
+     *
+     * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
      * @since   7.0
      */
-
     protected function getListQuery() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);

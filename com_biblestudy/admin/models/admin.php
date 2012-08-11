@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Admin Model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -22,12 +23,18 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
  */
 class biblestudyModeladmin extends JModelAdmin {
 
+    /**
+     * Context
+     * @var string
+     */
     protected $_context = 'com_biblestudy.discover';
 
     /**
      * Method to auto-populate the model state.
      *
      * Note. Calling getState in this method will result in recursion.
+     * @param string $ordering
+     * @param string $direction
      *
      * @since	1.7.2
      */
@@ -58,7 +65,7 @@ class biblestudyModeladmin extends JModelAdmin {
     /**
      * Cuncructer
      */
-    function __construct() {
+    public function __construct() {
         parent::__construct();
 
         $array = JRequest::getVar('cid', 0, '', 'array');
@@ -70,7 +77,7 @@ class biblestudyModeladmin extends JModelAdmin {
      *
      * @param int $id
      */
-    function setId($id) {
+    public function setId($id) {
         // Set id and wipe data
         $this->_id = $id;
         $this->_data = null;
@@ -80,7 +87,7 @@ class biblestudyModeladmin extends JModelAdmin {
      * Get Date
      * @return object
      */
-    function &getData() {
+    public function &getData() {
         // Load the data
         $query = ' SELECT * FROM #__bsms_admin ' .
                 '  WHERE id = 1';
@@ -93,9 +100,10 @@ class biblestudyModeladmin extends JModelAdmin {
      * Method to store a record
      *
      * @access	public
+     * @param boolean $updateNulls
      * @return	boolean	True on success
      */
-    function store($updateNulls = 'false') {
+    public function store($updateNulls = 'false') {
         $row = & $this->getTable();
 
 
@@ -179,7 +187,8 @@ class biblestudyModeladmin extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
-     *
+     * @param string $group
+     * @param int    $client_id
      * @since	1.6
      */
     protected function cleanCache($group = null, $client_id = 0) {
@@ -194,7 +203,7 @@ class biblestudyModeladmin extends JModelAdmin {
     public function fix() {
         $changeSet = $this->getItems();
         $changeSet->fix();
-        $this->fixSchemaVersion($changeSet); 
+        $this->fixSchemaVersion($changeSet);
         $this->fixUpdateVersion();
         //$installer = new Com_BiblestudyInstallerScript();
         //$installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
@@ -205,7 +214,7 @@ class biblestudyModeladmin extends JModelAdmin {
      *
      * Gets the changeset object
      *
-     * @return  JSchemaChangeset
+     * @return  JSchema  Changeset
      */
     public function getItems() {
         $folder = JPATH_ADMINISTRATOR . '/components/com_biblestudy/install/sql/updates/';
@@ -244,21 +253,21 @@ class biblestudyModeladmin extends JModelAdmin {
     /**
      * Fix schema version if wrong
      *
-     * @param JSchemaChangeSet
+     * @param JSchema ChangeSet
      *
      * @return   mixed  string schema version if success, false if fail
      */
     public function fixSchemaVersion($changeSet) {
         // Get correct schema version -- last file in array
-        $schema = $changeSet->getSchema(); 
+        $schema = $changeSet->getSchema();
         $db = JFactory::getDbo();
         $result = false;
         $extensionresult = $this->getExtentionId();
 
         // Check value. If ok, don't do update
-        $version = $this->getSchemaVersion(); 
+        $version = $this->getSchemaVersion();
         if ($version == $schema) {
-            $result = $version; 
+            $result = $version;
         } else {
             // Delete old row
             $query = $db->getQuery(true);
@@ -379,7 +388,7 @@ class biblestudyModeladmin extends JModelAdmin {
     public function getCompVersion() {
         $file = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
         $xml = JFactory::getXML($file);
-        $jversion = (string) $xml->version; 
+        $jversion = (string) $xml->version;
         return $jversion;
     }
 

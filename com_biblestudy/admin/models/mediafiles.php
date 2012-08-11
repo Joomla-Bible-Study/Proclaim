@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * MediaFiles model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,7 +20,7 @@ jimport('joomla.application.component.modellist');
 class BiblestudyModelMediafiles extends JModelList {
 
     /**
-     *
+     * Constructer
      * @param string $config
      */
     public function __construct($config = array()) {
@@ -42,10 +43,10 @@ class BiblestudyModelMediafiles extends JModelList {
     }
 
     /**
-     *
-     * @return type
+     * Get Deletes
+     * @return object
      */
-    function getDeletes() {
+    public function getDeletes() {
         if (empty($this->_deletes)) {
             $query = 'SELECT allow_deletes'
                     . ' FROM #__bsms_admin'
@@ -56,6 +57,18 @@ class BiblestudyModelMediafiles extends JModelList {
     }
 
     /**
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
      * @since   7.0
      */
     protected function populateState($ordering = null, $direction = null) {
@@ -90,7 +103,7 @@ class BiblestudyModelMediafiles extends JModelList {
     /**
      * Builds a list of mediatypes (Used for the filter combo box)
      *
-     * @return <Array> Array of Objects
+     * @return array Array of Objects
      * @since 7.0
      */
     public function getMediatypes() {
@@ -108,9 +121,8 @@ class BiblestudyModelMediafiles extends JModelList {
     }
 
     /**
-     *
-     * @param <string> $id   A prefix for the store id
-     * @return <string>      A store id
+     * Get Stored ID
+     * @param string $id   A prefix for the store id
      * @since 7.0
      */
     protected function getStoreId($id = '') {

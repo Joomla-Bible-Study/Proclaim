@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Share ordering field
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -16,6 +17,7 @@ jimport('joomla.form.formfield');
  * Set Odering for Share
  * @package BibleStudy.Admin
  * @since 7.0.4
+ * @todo need to see if this is till needed
  */
 class JFormFieldShareOrdering extends JFormField {
 

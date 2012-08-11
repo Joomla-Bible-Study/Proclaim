@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Template model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -34,12 +35,12 @@ class BiblestudyModelTemplate extends JModelAdmin {
     }
 
     /**
-     *
+     * Store record
      * @param type $data
      * @param type $tmpl
      * @return boolean
      */
-    function store($data = null, $tmpl = null) {
+    public function store($data = null, $tmpl = null) {
         $row = & $this->getTable();
         //@todo Clean this up
         if (!isset($data)) {
@@ -66,11 +67,11 @@ class BiblestudyModelTemplate extends JModelAdmin {
     }
 
     /**
-     *
+     * Copy Template
      * @param type $cid
      * @return boolean
      */
-    function copy($cid) {
+    public function copy($cid) {
         foreach ($cid as $id) {
             $tmplCurr = & JTable::getInstance('template', 'Table');
 
@@ -104,7 +105,7 @@ class BiblestudyModelTemplate extends JModelAdmin {
     }
 
     /**
-     *
+     * Get Items
      * @param type $pk
      * @return type
      */
@@ -113,7 +114,7 @@ class BiblestudyModelTemplate extends JModelAdmin {
     }
 
     /**
-     *
+     * Load Forme DateÏ
      * @return <type>
      * @since   7.0
      */
@@ -140,7 +141,10 @@ class BiblestudyModelTemplate extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
+     * @param   string   $group      The cache group
+     * @param   integer  $client_id  The ID of the client
      *
+     * @return  void
      * @since	1.6
      */
     protected function cleanCache($group = null, $client_id = 0) {

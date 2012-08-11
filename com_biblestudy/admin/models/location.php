@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Location model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -38,7 +39,7 @@ class BiblestudyModelLocation extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function store() {
+    public function store() {
         $row = & $this->getTable();
 
         $data = JRequest::get('post');
@@ -85,8 +86,9 @@ class BiblestudyModelLocation extends JModelAdmin {
     }
 
     /**
+     * Method to get the data that should be injected in the form.
      *
-     * @return <type>
+     * @return  array    The default data is an empty array.
      * @since   7.0
      */
     protected function loadFormData() {
@@ -99,6 +101,8 @@ class BiblestudyModelLocation extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
+     * @param string $group
+     * @param int $client_id
      *
      * @since	1.6
      */

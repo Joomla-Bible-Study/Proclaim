@@ -114,9 +114,8 @@ class bibleStudyTemplate extends JObject {
     }
 
     /**
-     * @desc Generates a list of tags that are being used in the input template.
+     * Generates a list of tags that are being used in the input template.
      * @param $itemTmpl	String	Raw Html template
-     * @param $category String  The category of possible tags: "tagsStudy", "tagsStudyList", "tagsTeacher", or "tagsTeacherList"
      * @param $id Int  An Id of a template to load. This replaces the contents of the $itemTmpl
      * @param $fieldNames Boolean  Default False. Set to True of you want to load the db fieldnames that correspond to the tags
      * @return Array

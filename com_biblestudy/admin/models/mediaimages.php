@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * MediaImages model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,10 +20,15 @@ jimport('joomla.application.component.modellist');
 class BiblestudyModelMediaimages extends JModelList {
 
     /**
-     *
+     * Data
      * @var array
      */
     var $_data;
+
+    /**
+     * Admin
+     * @var admin
+     */
     var $_admin;
 
     /**
@@ -30,7 +36,7 @@ class BiblestudyModelMediaimages extends JModelList {
      *
      * @return array
      */
-    function getAdmin() {
+    public function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT params'
                     . ' FROM #__bsms_admin'
@@ -40,10 +46,21 @@ class BiblestudyModelMediaimages extends JModelList {
         return $this->_admin;
     }
 
-    /*
+    /**
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
      * @since   7.0
      */
-
     protected function populateState($ordering = null, $direction = null) {
         $state = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
         $this->setState('filter.state', $state);

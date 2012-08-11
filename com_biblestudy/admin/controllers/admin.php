@@ -29,6 +29,7 @@ class BiblestudyControllerAdmin extends JControllerForm {
     /**
      * constructor (registers additional tasks to methods)
      * @return void
+     * @param array $config
      */
     function __construct($config = array()) {
         parent::__construct($config);
@@ -40,7 +41,6 @@ class BiblestudyControllerAdmin extends JControllerForm {
 
     /**
      * Tools to change player or pupup
-     * @param string $tool Function to pull the tooltype
      */
     function tools() {
         $tool = JRequest::getVar('tooltype', '', 'post');

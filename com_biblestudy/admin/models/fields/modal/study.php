@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Study field modal
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -15,6 +16,7 @@ jimport('joomla.form.formfield');
  * Field class for Modal_Study
  * @package BibleStudy.Admin
  * @since 7.0.0
+ * @deprecated since version 7.1.0
  */
 class JFormFieldModal_Study extends JFormField {
 

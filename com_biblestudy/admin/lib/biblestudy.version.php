@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Get Versions
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -22,6 +23,7 @@ if (!defined('_BIBLESTUDY_LICENSE'))
     DEFINE('_BIBLESTUDY_LICENSE', 'License');
 
 /**
+ * BibleSutdy Version Class
  * @package BibleStudy.Admin
  * @since 7.0.2
  */

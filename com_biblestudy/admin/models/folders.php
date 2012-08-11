@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Folders Model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,6 +20,18 @@ jimport('joomla.application.component.modellist');
 class BiblestudyModelFolders extends JModelList {
 
     /**
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
      * @since   7.0.0
      */
     protected function populateState($ordering = null, $direction = null) {
@@ -33,7 +46,7 @@ class BiblestudyModelFolders extends JModelList {
     }
 
     /**
-     *
+     * Get List Query
      * @since   7.0.0
      */
     protected function getListQuery() {

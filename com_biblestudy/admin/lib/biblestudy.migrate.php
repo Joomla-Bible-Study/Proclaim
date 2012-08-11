@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Migrate System
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -208,7 +209,7 @@ class JBSMigrate {
                         $message[] = $this->update614();
                         $message[] = $this->update622();
                         $message[] = $this->update623();
-                        $message[] = $this->allupdate();                        
+                        $message[] = $this->allupdate();
                         $message[] = $this->update700();
                         $message[] = $this->update701();
                         $message[] = $this->update710();
@@ -238,6 +239,10 @@ class JBSMigrate {
         return true;
     }
 
+    /**
+     * Update for 6.1.1
+     * @return string
+     */
     function update611() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.611.upgrade.php');
         $install = new jbs611Install();
@@ -245,6 +250,10 @@ class JBSMigrate {
         return $message;
     }
 
+    /**
+     * Update for 6.1.3
+     * @return string
+     */
     function update613() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.613.upgrade.php');
         $install = new jbs613Install();
@@ -252,6 +261,10 @@ class JBSMigrate {
         return $message;
     }
 
+    /**
+     * Update for 6.1.4
+     * @return string
+     */
     function update614() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.614.upgrade.php');
         $install = new jbs614Install();
@@ -259,6 +272,10 @@ class JBSMigrate {
         return $message;
     }
 
+    /**
+     * Update for 6.2.2
+     * @return string
+     */
     function update622() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.622.upgrade.php');
         $install = new jbs622Install();
@@ -266,6 +283,10 @@ class JBSMigrate {
         return $message;
     }
 
+    /**
+     * Update for 6.2.3
+     * @return string
+     */
     function update623() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.623.upgrade.php');
         $install = new jbs623Install();
@@ -273,6 +294,10 @@ class JBSMigrate {
         return $message;
     }
 
+    /**
+     * Update for 7.0.0
+     * @return string
+     */
     function update700() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'biblestudy.700.upgrade.php');
         $install = new jbs700Install();
@@ -280,6 +305,10 @@ class JBSMigrate {
         return $message;
     }
 
+    /**
+     * Update for 7.0.1
+     * @return string
+     */
     function update701() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'update701.php');
         $install = new updatejbs701();
@@ -287,6 +316,10 @@ class JBSMigrate {
         return $message;
     }
 
+    /**
+     * Update for 7.1.0
+     * @return string|boolean
+     */
     function update710() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
         $migrate = new JBS710Update();
@@ -294,7 +327,7 @@ class JBSMigrate {
         if (!$update710php) {
             $errors[] = 'Problem with 7.1.0 update';
         }
-        
+
         if (!empty($errors)) {
             return $errors;
         } else {
@@ -302,6 +335,10 @@ class JBSMigrate {
         }
     }
 
+    /**
+     * Update that is applyed to all migrations
+     * @return string
+     */
     function allupdate() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'updateALL.php');
         $install = new updatejbsALL();

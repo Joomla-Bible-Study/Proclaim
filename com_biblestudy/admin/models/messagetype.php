@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * MessageType model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -38,7 +39,7 @@ class BiblestudyModelMessagetype extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function store() {
+    public function store() {
         $row = & $this->getTable();
 
         $data = JRequest::get('post');
@@ -66,11 +67,11 @@ class BiblestudyModelMessagetype extends JModelAdmin {
     }
 
     /**
-     * Get the form data
+     * Abstract method for getting the form from the model.
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param   array    $data      Data for the form.
+     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     *
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -85,8 +86,9 @@ class BiblestudyModelMessagetype extends JModelAdmin {
     }
 
     /**
+     * Method to get the data that should be injected in the form.
      *
-     * @return <type>
+     * @return  array    The default data is an empty array.
      * @since   7.0
      */
     protected function loadFormData() {
@@ -137,6 +139,8 @@ class BiblestudyModelMessagetype extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
+     * @param string $group
+     * @param int $client_id
      *
      * @since	1.6
      */
@@ -145,5 +149,4 @@ class BiblestudyModelMessagetype extends JModelAdmin {
         parent::cleanCache('mod_biblestudy');
     }
 
-   
 }

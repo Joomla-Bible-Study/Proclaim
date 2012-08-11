@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version     $Id: locations.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Locations Model
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -27,27 +27,29 @@ class BiblestudyModelLocations extends JModelList {
     var $_data;
 
     /**
-     *
-     * @var type
+     * Pagination
+     * @var array
      */
     var $_pagination = null;
 
     /**
-     *
-     * @var type
+     * Total
+     * @var array
      */
     var $_total = null;
 
     /**
-     *
-     * @var type
+     * Allow Deletes
+     * @var string
      */
     var $_allow_deletes = null;
 
     /**
-     * Construct
+     * Constructor.
+     *
+     * @param   array  $config  An optional associative array of configuration settings.
      */
-    public function __construct() {
+    public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
                 'id', 'location.id',
@@ -62,10 +64,10 @@ class BiblestudyModelLocations extends JModelList {
     }
 
     /**
-     *
+     * Get Deletes
      * @return type
      */
-    function getDeletes() {
+    public function getDeletes() {
         if (empty($this->_deletes)) {
             $query = 'SELECT allow_deletes'
                     . ' FROM #__bsms_admin'
@@ -76,6 +78,18 @@ class BiblestudyModelLocations extends JModelList {
     }
 
     /**
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
      * @since   7.0
      */
     protected function populateState($ordering = null, $direction = null) {
@@ -92,7 +106,7 @@ class BiblestudyModelLocations extends JModelList {
     }
 
     /**
-     *
+     * Get List Query
      * @return type
      */
     protected function getListQuery() {

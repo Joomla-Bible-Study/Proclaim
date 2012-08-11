@@ -22,10 +22,11 @@ include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTOR
  * @since 7.1.0
  */
 class BiblestudyControllerMigration extends JController {
-    //var $cachable = false;
 
     /**
      * Method to display the view
+     * @param boolon $cachable
+     * @param boolon $urlparams
      *
      * @access	public
      */
@@ -52,7 +53,7 @@ class BiblestudyControllerMigration extends JController {
         }
 
         if ($task == 'migrate' && $run == 1 && !$oldprefix) {
- 
+
             $migrate = new JBSMigrate();
             $migration = $migrate->migrate();
             if ($migration) {
@@ -74,8 +75,9 @@ class BiblestudyControllerMigration extends JController {
 
     /**
      * Import function
+     * @since 7.1.0
      */
-    function import() {
+    public function import() {
         $application = JFactory::getApplication();
         $import = new JBSImport();
         $result = $import->importdb();
@@ -92,13 +94,14 @@ class BiblestudyControllerMigration extends JController {
     /**
      * Do the import
      *
-     * @param <boolon> $cachable
+     * @param boolon $cachable
+     * @param boolon $urlparams Description
      */
-    function doimport($cachable = false, $urlparams = false) {  
-       
+    public function doimport($cachable = false, $urlparams = false) {
+
         $copysuccess = false;
 //        $import = new JBSImport();
-  //      $result = $import->importdb();
+        //      $result = $import->importdb();
         //This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
         $application = JFactory::getApplication();
         JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
@@ -149,7 +152,7 @@ class BiblestudyControllerMigration extends JController {
      * @param array $query
      * @return string|boolean
      */
-    function performdb($query) {
+    public function performdb($query) {
         $db = JFactory::getDBO();
         $results = false;
         $db->setQuery($query);
@@ -171,7 +174,7 @@ class BiblestudyControllerMigration extends JController {
      * @param string $oldprefix
      * @return array
      */
-    function copyTables($oldprefix) {
+    public function copyTables($oldprefix) {
         //create table tablename_new like tablename; -> this will copy the structure...
         //insert into tablename_new select * from tablename; -> this would copy all the data
         $results = array();
@@ -210,7 +213,7 @@ class BiblestudyControllerMigration extends JController {
      *
      * @return boolean
      */
-    function fixAssets() {
+    public function fixAssets() {
         require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
         $asset = new fixJBSAssets();
         $asset->fixAssets();

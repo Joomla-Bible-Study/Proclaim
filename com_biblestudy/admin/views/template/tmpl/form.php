@@ -350,6 +350,7 @@ defined('_JEXEC') or die;
             </fieldset>
         </div>
     </div>
+    <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_IMPORT_EXPORT'), 'template-export-settings'); ?>
     <div class="width-100">
         <div class="width-60 fltlft">
@@ -378,6 +379,7 @@ defined('_JEXEC') or die;
             <?php echo JHtml::_('sliders.end'); ?>
         </div>
     <?php endif; ?>
+    <div class="clr"></div>
     <?php echo JHtml::_('tabs.end'); ?>
 
     <input type="hidden" name="task" value="" />

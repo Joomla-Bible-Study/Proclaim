@@ -29,8 +29,9 @@ class BiblestudyControllerTemplatecode extends JControllerForm {
     /**
      * Proxy for getModel
      *
-     * @param <String> $name    The name of the model
-     * @param <String> $prefix  The prefix for the PHP class name
+     * @param string $name    The name of the model
+     * @param string $prefix  The prefix for the PHP class name
+     * @param array $config
      * @return JModel
      *
      * @since 7.1.0

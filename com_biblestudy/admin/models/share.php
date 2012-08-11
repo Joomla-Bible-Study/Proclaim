@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Share model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -37,7 +38,7 @@ class BiblestudyModelShare extends JModelAdmin {
      *
      * @param int $id
      */
-    function setId($id) {
+    public function setId($id) {
         // Set id and wipe data
 
         $this->_id = $id;
@@ -51,7 +52,7 @@ class BiblestudyModelShare extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function store() {
+    public function store() {
         $row = $this->getTable();
 
         $data = JRequest::get('post');
@@ -81,9 +82,9 @@ class BiblestudyModelShare extends JModelAdmin {
     /**
      * Get the form data
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param array $data
+     * @param boolean $loadData
+     * @return boolean|object
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -98,7 +99,7 @@ class BiblestudyModelShare extends JModelAdmin {
     }
 
     /**
-     *
+     * Load Form Data
      * @return array
      * @since   7.0
      */
@@ -112,7 +113,10 @@ class BiblestudyModelShare extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
+     * @param   string   $group      The cache group
+     * @param   integer  $client_id  The ID of the client
      *
+     * @return  void
      * @since	1.6
      */
     protected function cleanCache($group = null, $client_id = 0) {

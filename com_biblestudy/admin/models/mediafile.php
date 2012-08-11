@@ -35,12 +35,12 @@ class BiblestudyModelMediafile extends JModelAdmin {
 
     /**
      * Method to move a mediafile listing
-     *
+     * @param string $direction
      * @access	public
      * @return	boolean	True on success
      * @since	1.5
      */
-    function move($direction) {
+    public function move($direction) {
         $row = & $this->getTable();
         if (!$row->load($this->_id)) {
             $this->setError($this->_db->getErrorMsg());
@@ -56,13 +56,16 @@ class BiblestudyModelMediafile extends JModelAdmin {
     }
 
     /**
-     * Method to move a mediafile listing
+     * Saves the manually set order of records.
      *
-     * @access	public
-     * @return	boolean	True on success
-     * @since	1.5
+     * @param   array    $pks    An array of primary key ids.
+     * @param   array    $cid
+     * @param   integer  $order  +1 or -1
+     *
+     * @return  mixed
+     * @since	11.1
      */
-    function saveorder($pks = null, $cid = array(), $order = null) {
+    public function saveorder($pks = null, $cid = array(), $order = null) {
         $row = & $this->getTable();
         $groupings = array();
 
@@ -109,7 +112,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
 
     /**
      * Preprocess Form
-     * 
+     *
      * @param JForm $form
      * @param array $data
      * @param string $group
@@ -121,9 +124,9 @@ class BiblestudyModelMediafile extends JModelAdmin {
     /**
      * Get the form data
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param array $data
+     * @param boolean $loadData
+     * @return boolean|object
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -139,7 +142,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
 
     /**
      * Load Form Data
-     * @return Array
+     * @return array
      * @since   7.0
      */
     protected function loadFormData() {
@@ -156,7 +159,8 @@ class BiblestudyModelMediafile extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
-     *
+     * @param string $group
+     * @param int $client_id
      * @since	1.6
      */
     protected function cleanCache($group = null, $client_id = 0) {

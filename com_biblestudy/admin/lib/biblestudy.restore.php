@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Restore System
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,6 +13,7 @@ defined('_JEXEC') or die;
  * Restor class
  * @package BibleStudy.Admin
  * @since 7.0.4
+ * @todo Rename Class to be better suted for restore
  */
 class JBSImport {
 
@@ -19,7 +21,7 @@ class JBSImport {
      * Import DB
      * @return boolean
      */
-    function importdb() {
+    public function importdb() {
         $result = FALSE;
         jimport('joomla.filesystem.file');
         // Attempt to increase the maximum execution time for php scripts
@@ -55,7 +57,7 @@ class JBSImport {
      * Get Package form Upload
      * @return boolean
      */
-    function _getPackageFromUpload() {
+    public function _getPackageFromUpload() {
         // Get the uploaded file information
         $userfile = JRequest::getVar('importdb', null, 'files', 'array');
 
@@ -100,7 +102,7 @@ class JBSImport {
      * @param string $tmp_src Temp info
      * @return boolean If db installed corectrly.
      */
-    function installdb($tmp_src) {
+    public function installdb($tmp_src) {
         //first we need to drop the existing JBS tables
         $objects = $this->getObjects();
         foreach ($objects as $object)
@@ -155,12 +157,12 @@ class JBSImport {
      * @param string $backuprestore
      * @return boolean See if the restore worked.
      */
-    function restoreDB($backuprestore) {
+    public function restoreDB($backuprestore) {
         $result = false;
         $db = JFactory::getDBO();
         @set_time_limit(300);
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
-        $query = str_replace('\n',' ', $query); 
+        $query = str_replace('\n',' ', $query);
        // dump($query,'restoreDB');
         //Check to see if this is a backup from an old db and not a migration
         $isold = substr_count($query, '#__bsms_admin_genesis');
@@ -192,7 +194,7 @@ class JBSImport {
      * Get Packege from Folder
      * @return boolean
      */
-    function _getPackageFromFolder() {
+    public function _getPackageFromFolder() {
         $result = false;
 
         $p_dir = JRequest::getString('install_directory', '', 'post');
@@ -229,14 +231,14 @@ class JBSImport {
         $prelength = strlen($prefix);
         $prefix.$bsms = 'bsms_';
         $objects = array();
-        foreach ($tables as $table) 
+        foreach ($tables as $table)
             {
                 if (substr_count($table, $bsms))
                 {
                     $table = substr_replace($table, '#__',0,$prelength);
                     $objects[] = array('name'=>$table);
                 }
-                
+
             }
             return $objects;
         }
@@ -245,7 +247,7 @@ class JBSImport {
      * Alter tables for Blob
      * @return boolean
      */
-    function TablestoBlob() {
+    public function TablestoBlob() {
         $backuptables = $this->getObjects();
 
         $db = JFactory::getDBO();
@@ -298,7 +300,7 @@ class JBSImport {
      * Modify tables to Text
      * @return boolean
      */
-    function TablestoText() {
+    public function TablestoText() {
         $backuptables = $this->getObjects();
 
         $db = JFactory::getDBO();
@@ -347,6 +349,6 @@ class JBSImport {
         return true;
     }
 
-    
-    
+
+
 }

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * MediaImage model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -38,8 +39,8 @@ class BiblestudyModelMediaimage extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function store() {
-        $row = & $this->getTable();
+    public function store() {
+        $row = $this->getTable();
 
         $data = JRequest::get('post');
 
@@ -66,10 +67,10 @@ class BiblestudyModelMediaimage extends JModelAdmin {
     }
 
     /**
-     *
-     * @return type
+     * Get Admin Table
+     * @return object
      */
-    function getAdmin() {
+    public function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT *'
                     . ' FROM #__bsms_admin'
@@ -82,9 +83,9 @@ class BiblestudyModelMediaimage extends JModelAdmin {
     /**
      * Get the form data
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param array $data
+     * @param boolean $loadData
+     * @return boolean|object
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -99,8 +100,8 @@ class BiblestudyModelMediaimage extends JModelAdmin {
     }
 
     /**
-     *
-     * @return <type>
+     * Load Form Data
+     * @return object
      * @since   7.0
      */
     protected function loadFormData() {
@@ -115,6 +116,8 @@ class BiblestudyModelMediaimage extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
+     * @param string $group
+     * @param int $client_id
      *
      * @since	1.6
      */

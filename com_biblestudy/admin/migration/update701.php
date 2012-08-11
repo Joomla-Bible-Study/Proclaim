@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: update701.php 2085 2011-11-11 21:10:18Z bcordis $
- * @package BibleStudy
+ * Migration for 7.0.1
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org

@@ -2,15 +2,18 @@
 
 /**
  * Servers Tables for BibleStudy
- * @version $Id: server.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-
+/**
+ * Table class for Server
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class TableServer extends JTable {
 
     /**
@@ -19,17 +22,53 @@ class TableServer extends JTable {
      * @var int
      */
     var $id = null;
+
+    /**
+     * Published
+     * @var int
+     */
     var $published = 1;
 
     /**
+     * Server Name
      * @var string
      */
     var $server_name = null;
+
+    /**
+     * Server Path
+     * @var string
+     */
     var $server_path = null;
+
+    /**
+     * Server Type
+     * @var string
+     */
     var $server_type = null;
+
+    /**
+     * Ftp User Name
+     * @var string
+     */
     var $ftp_username = null;
+
+    /**
+     * FTP Password
+     * @var string
+     */
     var $ftp_password = null;
+
+    /**
+     * Rules
+     * @var string
+     */
     var $rules = null;
+
+    /**
+     * Asset ID
+     * @var int
+     */
     var $assset_id = null;
 
     /**
@@ -37,10 +76,23 @@ class TableServer extends JTable {
      *
      * @param object Database connector object
      */
-    function Tableserver(& $db) {
+    public function Tableserver(& $db) {
         parent::__construct('#__bsms_servers', 'id', $db);
     }
 
+    /**
+     * Method to bind an associative array or object to the JTable instance.This
+     * method only binds properties that are publicly accessible and optionally
+     * takes an array of properties to ignore when binding.
+     *
+     * @param   mixed  $array     An associative array or object to bind to the JTable instance.
+     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     *
+     * @return  boolean  True on success.
+     *
+     * @link    http://docs.joomla.org/JTable/bind
+     * @since   11.1
+     */
     public function bind($array, $ignore = '') {
         if (isset($array['params']) && is_array($array['params'])) {
             $registry = new JRegistry();
@@ -82,10 +134,17 @@ class TableServer extends JTable {
     }
 
     /**
-     * Get the parent asset id for the record
+     * Method to get the parent asset under which to register this one.
+     * By default, all assets are registered to the ROOT node with ID 1.
+     * The extended class can define a table and id to lookup.  If the
+     * asset does not exist it will be created.
      *
-     * @return      int
-     * @since       1.6
+     * @param   JTable   $table  A JTable object for the asset parent.
+     * @param   integer  $id     Id to look up
+     *
+     * @return  integer
+     *
+     * @since   11.1
      */
     protected function _getAssetParentId($table = null, $id = null) {
         $asset = JTable::getInstance('Asset');

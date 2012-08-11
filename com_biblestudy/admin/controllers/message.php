@@ -18,12 +18,12 @@ jimport('joomla.application.component.controllerform');
  * @since 7.0.0
  */
 class BiblestudyControllerMessage extends JControllerForm {
-    /*
+
+    /**
      * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
      *
      * @since 7.0
      */
-
     protected $view_list = 'messages';
 
     /**
@@ -58,7 +58,9 @@ class BiblestudyControllerMessage extends JControllerForm {
     }
 
     /**
+     * Topics not sure what this dos???
      * @todo may need to be removed before relices
+     * @deprecated since version 7.1.0
      */
     function topics() {
         die('test');

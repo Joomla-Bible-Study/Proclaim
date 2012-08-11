@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Message model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -21,6 +22,10 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . 
  */
 class BiblestudyModelMessage extends JModelAdmin {
 
+    /**
+     * Admin
+     * @var string
+     */
     var $_admin;
 
     /**
@@ -43,7 +48,7 @@ class BiblestudyModelMessage extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function store() {
+    public function store() {
         // fix up special html fields
 
         $row = & $this->getTable();
@@ -151,7 +156,7 @@ class BiblestudyModelMessage extends JModelAdmin {
      * @param int $topic_id
      * @return boolean
      */
-    function isDuplicate($study_id, $topic_id) {
+    public function isDuplicate($study_id, $topic_id) {
         $db = & JFactory::getDBO();
         $query = 'select * from #__bsms_studytopics where study_id = ' . $study_id . ' and topic_id = ' . $topic_id;
 
@@ -172,7 +177,7 @@ class BiblestudyModelMessage extends JModelAdmin {
      * @return type JSON Object containing the topics
      * @since 7.0.1
      */
-    function getTopics() {
+    public function getTopics() {
         // do search in case of present study only, suppress otherwise
         $translatedList = array();
         if (JRequest::getVar('id', 0, null, 'int') > 0) {
@@ -203,7 +208,7 @@ class BiblestudyModelMessage extends JModelAdmin {
      * @return type JSON Object containing the topics
      * @since 7.0.1
      */
-    function getAlltopics() {
+    public function getAlltopics() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
@@ -226,7 +231,7 @@ class BiblestudyModelMessage extends JModelAdmin {
      * Get admin info
      * @return object
      */
-    function getAdmin() {
+    public function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT *'
                     . ' FROM #__bsms_admin'
@@ -272,8 +277,8 @@ class BiblestudyModelMessage extends JModelAdmin {
 
     /**
      * Routine to save the topics(tags)
-     * @param string $data from post
      * @param int $pks is the id of the record being saved
+     * @param string $data from post
      * @since 7.0.2
      * @todo This may need to be optimized
      */
@@ -330,8 +335,9 @@ class BiblestudyModelMessage extends JModelAdmin {
     }
 
     /**
+     * Method to get the data that should be injected in the form.
      *
-     * @return abject
+     * @return  array    The default data is an empty array.
      * @since   7.0
      */
     protected function loadFormData() {
@@ -390,6 +396,8 @@ class BiblestudyModelMessage extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
+     * @param string $group
+     * @param int $client_id
      *
      * @since	1.6
      */

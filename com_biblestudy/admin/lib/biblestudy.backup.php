@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Backup System
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -216,7 +217,7 @@ class JBSExport {
         unlink($file);
     }
 
-   /**
+    /**
      * Get Opjects for tables
      * @return array
      */
@@ -225,19 +226,16 @@ class JBSExport {
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
         $prelength = strlen($prefix);
-        $prefix.$bsms = 'bsms_';
+        $prefix . $bsms = 'bsms_';
         $objects = array();
-        foreach ($tables as $table) 
-            {
-                if (substr_count($table, $bsms))
-                {
-                    $table = substr_replace($table, '#__',0,$prelength);
-                    $objects[] = array('name'=>$table);
-                }
-                
+        foreach ($tables as $table) {
+            if (substr_count($table, $bsms)) {
+                $table = substr_replace($table, '#__', 0, $prelength);
+                $objects[] = array('name' => $table);
             }
-            return $objects;
         }
+        return $objects;
+    }
 
 }
 

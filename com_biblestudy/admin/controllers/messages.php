@@ -38,6 +38,7 @@ class biblestudyControllerMessages extends JControllerAdmin {
      *
      * @param string $name    The name of the model
      * @param string $prefix  The prefix for the PHP class name
+     * @param array $config
      *
      * @return JModel
      * @since 7.0

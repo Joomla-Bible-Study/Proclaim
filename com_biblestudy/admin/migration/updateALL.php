@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Migration for All
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -55,7 +56,6 @@ class updatejbsALL {
         }
 
         $result = array('build' => 'ALL', 'messages' => $messages);
-dump($result);
         return $result;
     }
 

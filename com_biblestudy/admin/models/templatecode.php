@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * TemplateCode model
  * @package BibleStudy.Admin
  * @since 7.1.0
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
@@ -20,6 +21,7 @@ jimport('joomla.application.component.modeladmin');
 class BiblestudyModelTemplatecode extends JModelAdmin {
 
     /**
+     * Controller Prefix
      * @var		string	The prefix to use with controller messages.
      * @since	1.6
      */

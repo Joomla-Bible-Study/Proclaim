@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * TemplateCodes model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -37,6 +38,10 @@ class BiblestudyModelTemplatecodes extends JModelList {
     }
 
     /**
+     * Populate State
+     * @param string $ordering
+     * @param string $direction
+     * 
      * @since   7.1
      */
     protected function populateState($ordering = null, $direction = null) {

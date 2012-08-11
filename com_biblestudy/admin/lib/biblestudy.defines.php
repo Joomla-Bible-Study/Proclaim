@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Bible Study Defines
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,7 +12,7 @@ defined('_JEXEC') or die;
 
 // Version information
 define('BIBLESTUDY_VERSION', '7.1.0');
-define('BIBLESTUDY_VERSION_DATE', '2012-02-12');
+define('BIBLESTUDY_VERSION_DATE', '2012-09-01');
 define('BIBLESTUDY_VERSION_BUILD', '710');
 
 // Default values

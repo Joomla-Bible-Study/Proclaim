@@ -17,6 +17,7 @@ jimport('joomla.form.formfield');
  *
  * @package BibleStudy.Admin
  * @since   7.0.0
+ * @deprecated since version 7.1.0
  */
 class JFormFieldModal_Studydetails extends JFormField {
 

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Podcast model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -32,7 +33,11 @@ class BiblestudyModelPodcast extends JModelAdmin {
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.podcast.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
     }
 
-    function store() {
+    /**
+     * Store
+     * @return boolean
+     */
+    public function store() {
         $row = & $this->getTable();
 
         $data = JRequest::get('post');
@@ -78,8 +83,9 @@ class BiblestudyModelPodcast extends JModelAdmin {
     }
 
     /**
+     * Method to get the data that should be injected in the form.
      *
-     * @return object
+     * @return  array    The default data is an empty array.
      * @since   7.0
      */
     protected function loadFormData() {
@@ -92,6 +98,8 @@ class BiblestudyModelPodcast extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
+     * @param string $group
+     * @param int $client_id
      *
      * @since	1.6
      */

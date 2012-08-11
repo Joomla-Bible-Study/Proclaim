@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version $Id: studytopics.php 2025 2011-08-28 04:08:06Z genu $
+ * StudyTopics JTable
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,15 +10,44 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-class Tablestudytopics extends JTable {
+/**
+ * StudyTopics table class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
+class TableStudyTopics extends JTable {
 
+    /**
+     * ID
+     * @var int
+     */
     var $id = null;
+
+    /**
+     * Study ID
+     * @var int
+     */
     var $study_id = null;
+
+    /**
+     * Topic ID
+     * @var int
+     */
     var $topic_id = null;
 
+    /**
+     * Object constructor to set table and key fields.  In most cases this will
+     * be overridden by child classes to explicitly set the table and key fields
+     * for a particular database table.
+     *
+     * @param   JDatabase  &$db    JDatabase connector object.
+     *
+     * @since   11.1
+     */
     function __construct(&$db) {
         parent::__construct('#__bsms_studytopics', 'id', $db);
     }
+
     /**
      * Method to compute the default name of the asset.
      * The default name is in the form `table_name.id`
@@ -44,14 +73,22 @@ class Tablestudytopics extends JTable {
     }
 
     /**
-     * Get the parent asset id for the record
+     * Method to get the parent asset under which to register this one.
+     * By default, all assets are registered to the ROOT node with ID 1.
+     * The extended class can define a table and id to lookup.  If the
+     * asset does not exist it will be created.
      *
-     * @return      int
-     * @since       1.6
+     * @param   JTable   $table  A JTable object for the asset parent.
+     * @param   integer  $id     Id to look up
+     *
+     * @return  integer
+     *
+     * @since   11.1
      */
     protected function _getAssetParentId($table = null, $id = null) {
         $asset = JTable::getInstance('Asset');
         $asset->loadByName('com_biblestudy');
         return $asset->id;
     }
+
 }

@@ -1,8 +1,5 @@
 <?php
 
-//No Direct Access
-defined('_JEXEC') or die;
-
 /**
  * Core Bible Study Helper
  * @package BibleStudy.Admin
@@ -10,9 +7,11 @@ defined('_JEXEC') or die;
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
+//No Direct Access
+defined('_JEXEC') or die;
 
 /**
- *
+ * Get Admin Settings
  * @return \JRegistry
  */
 function getAdminsettings() {
@@ -76,17 +75,17 @@ function getTooltip($rowid, $row, $params, $admin_params, $template) {
  */
 function getShowhide() {
     $showhide = '
-function HideContent(d) {
-document.getElementById(d).style.display = "none";
-}
-function ShowContent(d) {
-document.getElementById(d).style.display = "block";
-}
-function ReverseDisplay(d) {
-if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
-else { document.getElementById(d).style.display = "none"; }
-}
-';
+        function HideContent(d) {
+        document.getElementById(d).style.display = "none";
+        }
+        function ShowContent(d) {
+        document.getElementById(d).style.display = "block";
+        }
+        function ReverseDisplay(d) {
+        if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+        else { document.getElementById(d).style.display = "none"; }
+        }
+        ';
 
     return $showhide;
 }

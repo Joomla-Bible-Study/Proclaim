@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Comment Model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -38,7 +39,7 @@ class BiblestudyModelComment extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function store() {
+    public function store() {
         $row = & $this->getTable();
 
         $data = JRequest::get('post');
@@ -67,9 +68,9 @@ class BiblestudyModelComment extends JModelAdmin {
     /**
      * Get the form data
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param array $data
+     * @param boolean $loadData
+     * @return boolean|object
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -83,8 +84,8 @@ class BiblestudyModelComment extends JModelAdmin {
     }
 
     /**
-     *
-     * @return <type>
+     * Load Form Data
+     * @return object
      * @since   7.0
      */
     protected function loadFormData() {
@@ -97,7 +98,8 @@ class BiblestudyModelComment extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
-     *
+     * @param string $group
+     * @param int $client_id
      * @since	1.6
      */
     protected function cleanCache($group = null, $client_id = 0) {

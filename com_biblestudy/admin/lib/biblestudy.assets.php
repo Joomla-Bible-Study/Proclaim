@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Assets funtions
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,6 +20,7 @@ class fixJBSAssets {
     /**
      * Fix Assets function.
      * @return boolean
+     * @todo change to static
      */
     public function fixAssets() {
 
@@ -57,6 +59,7 @@ class fixJBSAssets {
     /**
      * Check Assets
      * @return int
+     * @todo change to static
      */
     function checkAssets() {
         $return = array();

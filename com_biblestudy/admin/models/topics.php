@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Topics Model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -18,6 +19,10 @@ jimport('joomla.application.component.modellist');
  */
 class BiblestudyModelTopics extends JModelList {
 
+    /**
+     * Constructer
+     * @param string $config
+     */
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -32,7 +37,7 @@ class BiblestudyModelTopics extends JModelList {
     }
 
     /**
-     *
+     * Get Stored ID
      * @param string $id   A prefix for the store id
      * @return string      A store id
      * @since 7.0
@@ -46,6 +51,10 @@ class BiblestudyModelTopics extends JModelList {
     }
 
     /**
+     * Populate State
+     * @param string $ordering
+     * @param string $direction
+     *
      * @since   7.0
      */
     protected function populateState($ordering = null, $direction = null) {
@@ -61,9 +70,9 @@ class BiblestudyModelTopics extends JModelList {
     }
 
     /**
-     *
+     * Get List Query
      * @since   7.0
-     * @return array Description
+     * @return array
      */
     protected function getListQuery() {
         $db = $this->getDbo();

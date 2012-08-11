@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * MP3 model
  * @package     BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,13 +20,13 @@ jimport('joomla.application.component.model');
 class biblestudyModelmp3 extends JModel {
 
     /**
-     *
+     * DB
      * @var string
      */
     var $db;
 
     /**
-     *
+     * ID Sample
      * @var string
      */
     var $id3Sample;
@@ -39,7 +40,7 @@ class biblestudyModelmp3 extends JModel {
     /**
      * Construct
      */
-    function __construct() {
+    public function __construct() {
         parent::__construct();
         $this->db = $this->getDBO();
     }
@@ -48,7 +49,7 @@ class biblestudyModelmp3 extends JModel {
      * Get Teachers
      * @return object
      */
-    function getTeachers() {
+    public function getTeachers() {
         $query = 'SELECT DISTINCT id, teachername FROM #__bsms_teachers';
         $this->db->setQuery($query);
         return $this->db->loadAssocList();
@@ -58,7 +59,7 @@ class biblestudyModelmp3 extends JModel {
      * Get Locations
      * @return object
      */
-    function getLocations() {
+    public function getLocations() {
         $query = 'SELECT DISTINCT id, location_text FROM #__bsms_locations';
         $this->db->setQuery($query);
         return $this->db->loadAssocList();
@@ -68,7 +69,7 @@ class biblestudyModelmp3 extends JModel {
      * Get Series
      * @return object
      */
-    function getSeries() {
+    public function getSeries() {
         $query = 'SELECT DISTINCT id, series_text FROM #__bsms_series';
         $this->db->setQuery($query);
         return $this->db->loadAssocList();
@@ -78,7 +79,7 @@ class biblestudyModelmp3 extends JModel {
      * Get Topics
      * @return object
      */
-    function getTopics() {
+    public function getTopics() {
         $query = 'SELECT DISTINCT id, topic_text FROM #__bsms_topics';
         $this->db->setQuery($query);
         return $this->db->loadAssocList();
@@ -88,7 +89,7 @@ class biblestudyModelmp3 extends JModel {
      * Get Types
      * @return object
      */
-    function getTypes() {
+    public function getTypes() {
         $query = 'SELECT DISTINCT id, message_type FROM #__bsms_message_type';
         $this->db->setQuery($query);
         return $this->db->loadAssocList();
@@ -98,7 +99,7 @@ class biblestudyModelmp3 extends JModel {
      * Get Servers
      * @return object
      */
-    function getServers() {
+    public function getServers() {
         $query = 'SELECT DISTINCT id, server_name FROM #__bsms_servers';
         $this->db->setQuery($query);
         return $this->db->loadAssocList();
@@ -108,7 +109,7 @@ class biblestudyModelmp3 extends JModel {
      * Get Folders
      * @return object
      */
-    function getFolders() {
+    public function getFolders() {
         $query = 'SELECT DISTINCT id, foldername FROM #__bsms_folders';
         $this->db->setQuery($query);
         return $this->db->loadAssocList();
@@ -118,7 +119,7 @@ class biblestudyModelmp3 extends JModel {
      * Get Podcast
      * @return object
      */
-    function getPodcast() {
+    public function getPodcast() {
         $query = 'SELECT DISTINCT id, title FROM #__bsms_podcast';
         $this->db->setQuery($query);
         return $this->db->loadAssocList();
@@ -128,7 +129,7 @@ class biblestudyModelmp3 extends JModel {
      * Get MimeTypes
      * @return object
      */
-    function getMimeTypes() {
+    public function getMimeTypes() {
         $query = 'SELECT DISTINCT id, mimetext FROM #__bsms_mimetype';
         $this->db->setQuery($query);
         return $this->db->loadAssocList();
@@ -138,7 +139,7 @@ class biblestudyModelmp3 extends JModel {
      * Get ID# of MP3
      * @return object
      */
-    function getId3Info() {
+    public function getId3Info() {
         if (isset($this->id3Data)) {
             return $this->id3Data;
         }
@@ -176,7 +177,7 @@ class biblestudyModelmp3 extends JModel {
      * Get ID# Sample
      * @return object
      */
-    function getId3Sample() {
+    public function getId3Sample() {
         $this->id3Sample = $this->getId3Info();
         return $this->id3Sample;
     }

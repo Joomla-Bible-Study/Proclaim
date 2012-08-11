@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version $Id: mediafile.php 2025 2011-08-28 04:08:06Z genu $
+ * MediaFile JTable
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -9,7 +9,11 @@
  */
 //No Direct Access
 defined('_JEXEC') or die;
-
+/**
+ * Table class for MediaFile
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class TableMediafile extends JTable {
 
     /**
@@ -20,30 +24,141 @@ class TableMediafile extends JTable {
     var $id = null;
 
     /**
+     * Study ID
      * @var string
      */
     var $study_id = null;
+
+    /**
+     * Media Image
+     * @var string
+     */
     var $media_image = null;
+
+    /**
+     * Server
+     * @var string
+     */
     var $server = null;
+
+    /**
+     * Path
+     * @var string
+     */
     var $path = null;
+
+    /**
+     * Published
+     * @var string
+     */
     var $published = 1;
+
+    /**
+     * Special
+     * @var string
+     */
     var $special = null;
+
+    /**
+     * File Name
+     * @var string
+     */
     var $filename = null;
+
+    /**
+     * File Size
+     * @var string
+     */
     var $size = null;
+
+    /**
+     * File Mime Type
+     * @var string
+     */
     var $mime_type = null;
+
+    /**
+     * Podcast ID
+     * @var string
+     */
     var $podcast_id = null;
+
+    /**
+     * Internal Viewer
+     * @var string
+     */
     var $internal_viewer = null;
+
+    /**
+     * Ordering
+     * @var string
+     */
     var $ordering = null;
+
+    /**
+     * Media Code
+     * @var string
+     */
     var $mediacode = null;
+
+    /**
+     * Create Date
+     * @var string
+     */
     var $createdate = null;
+
+    /**
+     * Link type
+     * @var string
+     */
     var $link_type = null;
+
+    /**
+     * Hits
+     * @var string
+     */
     var $hits = null;
+
+    /**
+     * DocMan ID
+     * @var string
+     */
     var $docMan_id = null;
+
+    /**
+     * Content Article ID
+     * @var string
+     */
     var $article_id = null;
+
+    /**
+     * VirtueMart ID
+     * @var string
+     */
     var $virtueMart_id = null;
+
+    /**
+     * Comment Text
+     * @var string
+     */
     var $comment = null;
+
+    /**
+     * Params before jSon
+     * @var string
+     */
     var $params = null;
+
+    /**
+     * Player state
+     * @var string
+     */
     var $player = null;
+
+    /**
+     * Popup state
+     * @var string
+     */
     var $popup = null;
 
     /**
@@ -51,10 +166,20 @@ class TableMediafile extends JTable {
      *
      * @param object Database connector object
      */
-    function Tablemediafile(& $db) {
+    public function Tablemediafile(& $db) {
         parent::__construct('#__bsms_mediafiles', 'id', $db);
     }
 
+    /**
+     * Method to bind an associative array or object to the JTable instance.This
+     * method only binds properties that are publicly accessible and optionally
+     * takes an array of properties to ignore when binding.
+     *
+     * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     *
+     * @return  boolean  True on success.
+     */
     public function bind($array, $ignore = '') {
         if (isset($array['params']) && is_array($array['params'])) {
             $registry = new JRegistry();
@@ -102,9 +227,15 @@ class TableMediafile extends JTable {
     }
 
     /**
-     * Get the parent asset id for the record
+     * Method to get the parent asset under which to register this one.
+     * By default, all assets are registered to the ROOT node with ID 1.
+     * The extended class can define a table and id to lookup.  If the
+     * asset does not exist it will be created.
      *
-     * @return      int
+     * @param   JTable   $table  A JTable object for the asset parent.
+     * @param   integer  $id     Id to look up
+     *
+     * @return  integer
      * @since       1.6
      */
     protected function _getAssetParentId($table = null, $id = null) {

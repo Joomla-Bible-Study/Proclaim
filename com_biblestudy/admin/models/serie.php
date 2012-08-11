@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Serie model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -37,7 +38,7 @@ class BiblestudyModelSerie extends JModelAdmin {
      * Get Teacher data
      * @return abject
      */
-    function getTeacher() {
+    public function getTeacher() {
         if (empty($this->_teacher)) {
             $query = 'SELECT id AS value, teachername AS text'
                     . ' FROM #__bsms_teachers'
@@ -51,7 +52,7 @@ class BiblestudyModelSerie extends JModelAdmin {
      * Get Admin data
      * @return abject
      */
-    function getAdmin() {
+    public function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT *'
                     . ' FROM #__bsms_admin'
@@ -67,8 +68,8 @@ class BiblestudyModelSerie extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function store() {
-        $row = & $this->getTable();
+    public function store() {
+        $row = $this->getTable();
 
         $data = JRequest::get('post');
         $data['description'] = JRequest::getVar('description', '', 'post', 'string', JREQUEST_ALLOWRAW);
@@ -95,11 +96,12 @@ class BiblestudyModelSerie extends JModelAdmin {
     }
 
     /**
-     * Get the form data
+     * Abstract method for getting the form from the model.
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param   array    $data      Data for the form.
+     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     *
+     * @return  mixed  A JForm object on success, false on failure
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -113,8 +115,10 @@ class BiblestudyModelSerie extends JModelAdmin {
     }
 
     /**
+     * Method to get the data that should be injected in the form.
      *
-     * @return <type>
+     * @return  array    The default data is an empty array.
+     *
      * @since   7.0
      */
     protected function loadFormData() {
@@ -165,7 +169,10 @@ class BiblestudyModelSerie extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
+     * @param   string   $group      The cache group
+     * @param   integer  $client_id  The ID of the client
      *
+     * @return  void
      * @since	1.6
      */
     protected function cleanCache($group = null, $client_id = 0) {

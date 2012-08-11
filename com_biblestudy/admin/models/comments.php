@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Comments Model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,7 +20,7 @@ jimport('joomla.application.component.modellist');
 class BiblestudyModelComments extends JModelList {
 
     /**
-     *
+     * Constructer
      * @param string $config
      */
     public function __construct($config = array()) {
@@ -39,9 +40,8 @@ class BiblestudyModelComments extends JModelList {
     }
 
     /**
-     *
-     * @param <string> $id   A prefix for the store id
-     * @return <string>      A store id
+     * Get Stored ID
+     * @param string $id   A prefix for the store id
      * @since 7.0
      */
     protected function getStoreId($id = '') {
@@ -54,7 +54,7 @@ class BiblestudyModelComments extends JModelList {
     }
 
     /**
-     *
+     * Populate State
      * @param null $ordering
      * @param null $direction
      *
@@ -74,7 +74,7 @@ class BiblestudyModelComments extends JModelList {
     }
 
     /**
-     *
+     * List Query
      * @since   7.0
      */
     protected function getListQuery() {

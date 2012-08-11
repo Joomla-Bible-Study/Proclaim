@@ -21,6 +21,7 @@ class BiblestudyControllerTeacher extends JControllerForm {
 
     /**
      * constructor (registers additional tasks to methods)
+     * @param array $config
      * @return void
      */
     function __construct($config = array()) {

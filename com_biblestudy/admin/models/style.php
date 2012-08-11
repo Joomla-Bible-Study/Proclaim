@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Style model
  * @package BibleStudy.Admin
  * @since 7.1.0
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
@@ -20,6 +21,7 @@ jimport('joomla.application.component.modeladmin');
 class BiblestudyModelStyle extends JModelAdmin {
 
     /**
+     * Protect prefix
      * @var		string	The prefix to use with controller messages.
      * @since	1.6
      */
@@ -102,7 +104,10 @@ class BiblestudyModelStyle extends JModelAdmin {
 
     /**
      * Custom clean the cache of com_biblestudy and biblestudy modules
+     * @param   string   $group      The cache group
+     * @param   integer  $client_id  The ID of the client
      *
+     * @return  void
      * @since	1.6
      */
     protected function cleanCache($group = null, $client_id = 0) {

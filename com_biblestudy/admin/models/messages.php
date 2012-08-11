@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Messages model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,17 +20,16 @@ jimport('joomla.application.component.modellist');
  * @since 7.0.0
  */
 class biblestudyModelmessages extends JModelList {
-    /**
-     *
-     * @var array
-     */
-    //var $_files = null;
 
     /**
+     * Constructor.
      *
-     * @param string $config
+     * @param   array  $config  An optional associative array of configuration settings.
+     *
+     * @see     JController
+     * @since   11.1
      */
-    function __construct($config = array()) {
+    public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
                 'id', 'study.id',
@@ -50,11 +50,11 @@ class biblestudyModelmessages extends JModelList {
     }
 
     /**
-     *
+     * Get Downloads
      * @param type $id
      * @return string
      */
-    function getDownloads($id) {
+    public function getDownloads($id) {
         $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
         $result = $this->_getList($query);
         if (!$result) {
@@ -91,15 +91,16 @@ class biblestudyModelmessages extends JModelList {
         return parent::getStoreId($id);
     }
 
+    /* Tom commented this out because it caused the query to fail - needs work. */
+
     /**
      * Creates and executes a new query that retrieves the medifile information from the mediafiles table.
      * It then adds to the dataObject the mediafiles associated with the sermon.
      * @return unknown_type
      */
-    /* Tom commented this out because it caused the query to fail - needs work. */
-    function getFiles() {
+    public function getFiles() {
         $mediaFiles = null;
-        $db = & JFactory::getDBO();
+        $db = JFactory::getDBO();
         $i = 0;
         foreach ($this->_data as $sermon) {
             $i++;
@@ -252,9 +253,9 @@ class biblestudyModelmessages extends JModelList {
     }
 
     /**
-     *
-     * @since 7.0
      * translate item entries: books, topics
+     * @param array $items Items for entris
+     * @since 7.0
      */
     public function getTranslated($items = array()) {
         foreach ($items as $item) {
@@ -265,9 +266,8 @@ class biblestudyModelmessages extends JModelList {
     }
 
     /**
-     *
-     * @since 7.0
      * get a list of all used books
+     * @since 7.0
      */
     public function getBooks() {
         $db = $this->getDbo();
@@ -289,9 +289,8 @@ class biblestudyModelmessages extends JModelList {
     }
 
     /**
-     *
-     * @since 7.0
      * get a list of all used teachers
+     * @since 7.0
      */
     public function getTeachers() {
         $db = $this->getDbo();
@@ -308,9 +307,8 @@ class biblestudyModelmessages extends JModelList {
     }
 
     /**
-     *
-     * @since 7.0
      * get a list of all used series
+     * @since 7.0
      */
     public function getSeries() {
         $db = $this->getDbo();
@@ -327,8 +325,8 @@ class biblestudyModelmessages extends JModelList {
     }
 
     /**
-     * @since 7.0
      * get a list of all used message types
+     * @since 7.0
      */
     public function getMessageTypes() {
         $db = $this->getDbo();
@@ -345,8 +343,8 @@ class biblestudyModelmessages extends JModelList {
     }
 
     /**
-     * @since 7.0
      * get a list of all used years
+     * @since 7.0
      */
     public function getYears() {
         $db = $this->getDBO();
@@ -362,8 +360,9 @@ class biblestudyModelmessages extends JModelList {
     }
 
     /**
-     * @since 7.0
      * get the number of plays of this study
+     * @param int $id
+     * @since 7.0
      */
     public function getPlays($id) {
         $db = $this->getDBO();

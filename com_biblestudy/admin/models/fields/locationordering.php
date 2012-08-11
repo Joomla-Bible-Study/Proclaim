@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Locations ordering field
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -16,6 +17,7 @@ jimport('joomla.form.formfield');
  * Form Ordering class for Message
  * @package BibleStudy.Admin
  * @since 7.0.4
+ * @todo need to test to see if this is still needed.
  */
 class JFormFieldMessageTypeOrdering extends JFormField {
 

@@ -2,10 +2,10 @@
 /**
  * Bible Study Component
  * @package BibleStudy.Admin
- *
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
+ * @todo Need to redisign to show progress stages.
  * */
 //
 //No Direct Access
@@ -16,25 +16,34 @@ defined('_JEXEC') or die;
 </script>
 <?php
 
+/**
+ * BibleStudy Install Script
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class Com_BiblestudyInstallerScript {
-    /*
-     * The release value to be displayed and check against throughout this file.
-     */
 
+    /**
+     * The release value to be displayed and check against throughout this file.
+     * @var string
+     */
     private $release = '7.1.0.a2';
 
-    /*
+    /**
      * Find mimimum required joomla version for this extension. It will be read from the version attribute (install tag) in the manifest file
+     * @var string
      */
     private $minimum_joomla_release = '1.6.0';
 
-    /*
+    /**
      * $parent is the class calling this method.
      * $type is the type of change (install, update or discover_install, not uninstall).
      * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
      * If preflight returns false, Joomla will abort the update and undo everything already done.
+     * @param string $type
+     * @param string $parent
+     * @return boolean
      */
-
     function preflight($type, $parent) {
         $rel = null;
         // this component does not work with Joomla releases prior to 1.6
@@ -109,6 +118,10 @@ class Com_BiblestudyInstallerScript {
         }
     }
 
+    /**
+     * Install
+     * @param string $parent
+     */
     function install($parent) {
         $db = JFactory::getDBO();
         $query = file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install-defaults.sql');
@@ -127,6 +140,10 @@ class Com_BiblestudyInstallerScript {
         echo JHtml::_('sliders.panel', JText::_('JBS_INS_INSTALLING_VERSION_TO_') . ' ' . $this->release, 'publishing-details');
     }
 
+    /**
+     * Uninstall
+     * @param string $parent
+     */
     function uninstall($parent) {
         $admin = null;
 
@@ -167,6 +184,10 @@ class Com_BiblestudyInstallerScript {
 
 //end of function uninstall()
 
+    /**
+     * Update
+     * @param string $parent
+     */
     function update($parent) {
 
         echo '<p>' . JText::_('JBS_INS_CUSTOM_UPDATE_SCRIPT_TO') . ' ' . $this->release . '</p>';
@@ -174,6 +195,11 @@ class Com_BiblestudyInstallerScript {
 
 // End Update
 
+    /**
+     * Post Flight
+     * @param string $type
+     * @param string $parent
+     */
     function postflight($type, $parent) {
         jimport('joomla.filesystem.file');
         //Set the #__schemas version_id to the correct number for error from 7.0.0
@@ -279,10 +305,12 @@ class Com_BiblestudyInstallerScript {
         //$parent-&gt;getParent()-&gt;set('redirect_url', 'http://www.google.com');
     }
 
-    /*
+    /**
      * get a variable from the manifest file (actually, from the manifest cache).
+     *
+     * @param string $name
+     * @return string
      */
-
     function getParam($name) {
         $db = JFactory::getDbo();
         $db->setQuery('SELECT manifest_cache FROM #__extensions WHERE name = "com_biblestudy"');
@@ -290,10 +318,10 @@ class Com_BiblestudyInstallerScript {
         return $manifest[$name];
     }
 
-    /*
+    /**
      * sets parameter values in the component's row of the extension table
+     * @param array $param_array
      */
-
     function setParams($param_array) {
         if (count($param_array) > 0) {
             // read the existing component value(s)

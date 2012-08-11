@@ -2,8 +2,7 @@
 
 /**
  * Bible Study Series table class
- * @version $Id: serie.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,6 +10,11 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
+/**
+ * Seris jtable class
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class TableSerie extends JTable {
 
     /**
@@ -19,14 +23,35 @@ class TableSerie extends JTable {
      * @var int
      */
     var $id = null;
+
+    /**
+     * Publish state
+     * @var int
+     */
     var $published = 1;
 
     /**
+     * Series Text
      * @var string
      */
     var $series_text = null;
+
+    /**
+     * Series Thumbnail
+     * @var string
+     */
     var $series_thumbnail = null;
+
+    /**
+     * Description
+     * @var string
+     */
     var $description = null;
+
+    /**
+     * Teacher
+     * @var string
+     */
     var $teacher = null;
 
     /**
@@ -34,10 +59,20 @@ class TableSerie extends JTable {
      *
      * @param object Database connector object
      */
-    function Tableserie(& $db) {
+    public function Tableserie(& $db) {
         parent::__construct('#__bsms_series', 'id', $db);
     }
 
+    /**
+     * Method to bind an associative array or object to the JTable instance.This
+     * method only binds properties that are publicly accessible and optionally
+     * takes an array of properties to ignore when binding.
+     *
+     * @param   mixed  $array   An associative array or object to bind to the JTable instance.
+     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     *
+     * @return  boolean  True on success.
+     */
     public function bind($array, $ignore = '') {
         if (isset($array['params']) && is_array($array['params'])) {
             $registry = new JRegistry();
@@ -80,9 +115,15 @@ class TableSerie extends JTable {
     }
 
     /**
-     * Get the parent asset id for the record
+     * Method to get the parent asset under which to register this one.
+     * By default, all assets are registered to the ROOT node with ID 1.
+     * The extended class can define a table and id to lookup.  If the
+     * asset does not exist it will be created.
      *
-     * @return      int
+     * @param   JTable   $table  A JTable object for the asset parent.
+     * @param   integer  $id     Id to look up
+     *
+     * @return  integer
      * @since       1.6
      */
     protected function _getAssetParentId($table = null, $id = null) {

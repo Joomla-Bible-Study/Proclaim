@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 /**
+ * Admin table class
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
@@ -24,19 +25,78 @@ class TableAdmin extends JTable {
     var $id = null;
 
     /**
+     * Podcast
      * @var string
      */
     var $podcast = null;
+
+    /**
+     * Series
+     * @var string
+     */
     var $series = null;
+
+    /**
+     * Study
+     * @var string
+     */
     var $study = null;
+
+    /**
+     * Teacher
+     * @var string
+     */
     var $teacher = null;
+
+    /**
+     * Media
+     * @var string
+     */
     var $media = null;
+
+    /**
+     * Params
+     * @var string
+     */
     var $params = null;
+
+    /**
+     * Download
+     * @var string
+     */
     var $download = null;
+
+    /**
+     * Main
+     * @var string
+     */
     var $main = null;
+
+    /**
+     * ShowHide
+     * @var string
+     */
     var $showhide = null;
+
+    /**
+     * Drop Tables
+     * @var string
+     */
     var $drop_tables = null;
 
+    /**
+     * Method to bind an associative array or object to the JTable instance.This
+     * method only binds properties that are publicly accessible and optionally
+     * takes an array of properties to ignore when binding.
+     *
+     * @param   mixed  $array     An associative array or object to bind to the JTable instance.
+     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     *
+     * @return  boolean  True on success.
+     *
+     * @link    http://docs.joomla.org/JTable/bind
+     * @since   11.1
+     */
     public function bind($array, $ignore = '') {
         if (isset($array['params']) && is_array($array['params'])) {
             // Convert the params field to a string.
@@ -48,6 +108,18 @@ class TableAdmin extends JTable {
         return parent::bind($array, $ignore);
     }
 
+    /**
+     * Method to load a row from the database by primary key and bind the fields
+     * to the JTable instance properties.
+     *
+     * @param   mixed    $pk
+     * @param   boolean  $reset  True to reset the default values before loading the new row.
+     *
+     * @return  boolean  True if successful. False if row not found or on error (internal error state set in that case).
+     *
+     * @link    http://docs.joomla.org/JTable/load
+     * @since   11.1
+     */
     public function load($pk = null, $reset = true) {
         if (parent::load($pk, $reset)) {
             // Convert the params field to a registry.
@@ -65,7 +137,7 @@ class TableAdmin extends JTable {
      *
      * @param object Database connector object
      */
-    function TableAdmin(& $db) {
+    public function TableAdmin(& $db) {
         parent::__construct('#__bsms_admin', 'id', $db);
     }
 
@@ -108,10 +180,17 @@ class TableAdmin extends JTable {
     }
 
     /**
-     * Get the parent asset id for the record
+     * Method to get the parent asset under which to register this one.
+     * By default, all assets are registered to the ROOT node with ID 1.
+     * The extended class can define a table and id to lookup.  If the
+     * asset does not exist it will be created.
      *
-     * @return      int
-     * @since       1.6
+     * @param   JTable   $table  A JTable object for the asset parent.
+     * @param   integer  $id     Id to look up
+     *
+     * @return  integer
+     *
+     * @since   11.1
      */
     protected function _getAssetParentId($table = null, $id = null) {
         $asset = JTable::getInstance('Asset');

@@ -15,15 +15,30 @@ if (class_exists('modbiblestudyhelper')) {
 }
 
 /**
+ * BibleStudy mod helper
  * @package BibleStudy
  * @subpackage Model.BibleStudy
  * @since 7.1.0
  */
 class modBiblestudyHelper {
 
+    /**
+     * Template Sistem
+     * @var array
+     */
     var $_template;
+
+    /**
+     * Admin Settings
+     * @var array
+     */
     var $_admin;
 
+    /**
+     * Get Latest
+     * @param array $params
+     * @return array
+     */
     function getLatest($params) {
 
         $items = $params->get('locations', 1);
@@ -235,10 +250,19 @@ class modBiblestudyHelper {
         return $rows;
     }
 
+    /**
+     * Build Content Where
+     * @deprecated since version 7.1.0
+     */
     function _buildContentWhere() {
 
     }
 
+    /**
+     * Get Template Setting
+     * @param array $params
+     * @return object
+     */
     function getTemplate($params) {
         $db = JFactory::getDBO();
         $templateid = $params->get('modulemenuid', 1);
@@ -250,6 +274,10 @@ class modBiblestudyHelper {
         return $template;
     }
 
+    /**
+     * Get Admin Setting
+     * @return object
+     */
     function getAdmin() {
         $db = JFactory::getDBO();
         $query = 'SELECT *'
@@ -260,10 +288,11 @@ class modBiblestudyHelper {
         return $admin;
     }
 
-    /** @todo make this change according to the parameter settings for new template
-     *
+    /**
+     * Render Study
      * @param type $study
      * @param type $params
+     * @todo make this change according to the parameter settings for new template
      */
     function renderStudy($study, $params) {
         require(JModuleHelper::getLayoutPath('mod_biblestudy', '_study'));

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Shares model
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -20,10 +21,10 @@ class BiblestudyModelShares extends JModelList {
 
     /**
      * teacherlist data array
-     *
+     * @param array $config
      * @var array
      */
-    function __construct($config = array()) {
+    public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
                 'id', 'share.id',
@@ -37,6 +38,10 @@ class BiblestudyModelShares extends JModelList {
     }
 
     /**
+     * Populate State
+     * @param string $ordering
+     * @param string $direction
+     * 
      * @since   7.0
      */
     protected function populateState($ordering = null, $direction = null) {
