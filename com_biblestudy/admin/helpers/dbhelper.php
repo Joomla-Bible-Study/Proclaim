@@ -43,13 +43,34 @@ class jbsDBhelper {
      * @return boolean
      */
     function alterDB($tables) {
-        $db = JFactory::getDbo();
+        
         foreach ($tables as $t) {
-            $type = $t['type'];
+            $type = strtolower($t['type']);
             $command = $t['command'];
             $table = $t['table'];
             $field = $t['field'];
-            //dump($type,'type: '); dump($command, 'command: '); dump($table, 'table: '); dump($field, 'field: ');
+            switch ($type)
+            {
+                case 'drop':
+                    if (!table || !$field){break;}
+                    //check the field to see if it exists first
+                    if ($this->checkTables($table, $field))
+                    {
+                        $query = 'ALTER TABLE '.$table.' DROP '.$field;
+                        $result = $this->performDB($query);
+                     }
+                    break;
+                
+                case 'add':
+                    
+                    break;
+                
+                case 'modify':
+                    
+                    break;
+                
+            }
+            //dump($type,'type: '); dump($command, 'command: '); dump($table, 'table: '); dump($field, 'field: '); 
         }
         //    $query = 'ALTER TABLE '.$table.' '.$command;
         //    $db->setQuery($query);
@@ -60,7 +81,20 @@ class jbsDBhelper {
             return true;
         }
     }
-
+    
+    function performDB($query)
+    {
+        if (!$query){return false;}
+        $db = JFactory::getDbo();
+        $db->setQuery($query);
+        $db->query();
+        if ($db->getErrorNum() != 0) { return $db->stderr(true);}
+        else
+        {
+            return true;
+        }
+    }
+    
     /**
      * Checks a table for the existance of a field, if it does not find it, runs the Admin model fix()
      * @param string table is the table you are checking
