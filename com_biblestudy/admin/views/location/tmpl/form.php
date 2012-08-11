@@ -1,7 +1,7 @@
 <?php
 /**
- * @version $Id: form.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Form
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -31,7 +31,7 @@ defined('_JEXEC') or die;
 
                     <?php echo $this->form->getInput('landing_show'); ?></li>
                 <li>
-                     <li>
+                <li>
                     <?php echo $this->form->getLabel('language'); ?>
 
                     <?php echo $this->form->getInput('language'); ?></li>

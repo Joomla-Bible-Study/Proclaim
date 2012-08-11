@@ -1,5 +1,6 @@
 <?php
 /**
+ * Edit
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -294,10 +295,10 @@ if (JRequest::getWord('layout') == 'modal') {
                             <?php echo $this->upload_folder; ?></td>
                         </td></tr>
                     <tr>
-                        <td> 
-                           
-                                <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')">
-                                    <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
+                        <td>
+
+                            <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')">
+                                <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button>
                         </td><td></td>
                     </tr>
                 </tbody>

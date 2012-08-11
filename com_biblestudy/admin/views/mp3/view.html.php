@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @package BibleStudy
+ * JView html
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,9 +12,24 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
+/**
+ * View class for MP3
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class biblestudyViewmp3 extends JView {
 
-    function display($tpl = null) {
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/ui.css');
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/bsmImport.css');
@@ -85,9 +101,15 @@ class biblestudyViewmp3 extends JView {
         parent::display($tpl);
     }
 
-    function getAvailableTags($parent = null, $id3Sample) {
+    /**
+     * Get available tags
+     * @param string $parent
+     * @param array $id3Sample
+     * @return array
+     */
+    public function getAvailableTags($parent = null, $id3Sample) {
         //if (!is_array($id3Sample)) {
-            $keys = array();
+        $keys = array();
         //}
         foreach ($id3Sample as $sample => $value) {
             if (is_array($value)) {

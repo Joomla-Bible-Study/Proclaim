@@ -1,7 +1,7 @@
 <?php
 /**
- * @version     $Id: form.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Form
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -11,27 +11,24 @@ defined('_JEXEC') or die;
 ?>
 <script type="text/javascript">
     function jInsertFieldValue(value, id) {
-var old_id = document.id(id).value;
-if (old_id != id) {
-var elem = document.id(id);
-elem.value = value;
-elem.fireEvent("change");
-}
-} 
+        var old_id = document.id(id).value;
+        if (old_id != id) {
+            var elem = document.id(id);
+            elem.value = value;
+            elem.fireEvent("change");
+        }
+    }
 </script>
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
-    method="post" name="adminForm" id="adminForm">
-    
-    <div class="width-45 fltrt">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?> method="post" name="adminForm" id="adminForm">
+      <div class="width-45 fltrt">
         <fieldset class="panelform">
             <legend>
-
                 <?php echo JText::_('JBS_TCH_LINKS'); ?></legend>
             <ul class="adminformlist">
-                 <li>
+                <li>
                     <?php echo $this->form->getLabel('website'); ?>
-                    <?php echo $this->form->getInput('website'); ?></li>
+                    <?php echo $this->form->getInput('website'); ?>
+                </li>
                 <li>
                     <?php echo $this->form->getLabel('facebooklink'); ?>
                     <?php echo $this->form->getInput('facebooklink'); ?>
@@ -70,18 +67,31 @@ elem.fireEvent("change");
                 </li>
             </ul>
         </fieldset>
-</div>
+    </div>
     <div class="width-50 fltlft">
         <fieldset class="panelform" >
             <legend>
-
                 <?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
             <ul class="adminformlist">
                 <li>
                     <?php echo $this->form->getLabel('contact'); ?>
 
-                    <?php echo $this->form->getInput('contact'); ?>  <?php if ($this->item->contact) { ?><div class="button2-left"><div class="blank"> <a onclick=" document.id('jform_contact_id').value=''; document.id('jform_contact_id').fireEvent('change');
-Joomla.submitbutton('teacher.apply'); " title="Clear" > <?php echo JText::_('JBS_CMN_CLEAR'); ?> </a></div></div> <div class="button2-left"><div class="blank"><?php echo '<a href="index.php?option=com_contact&task=contact.edit&id='.(int)$this->item->contact.'" target="blank">'.JText::_('JBS_TCH_EDIT_THIS_CONTACT').'</a></div></div>';}?>
+                    <?php echo $this->form->getInput('contact'); ?>
+                    <?php if ($this->item->contact) { ?>
+                        <div class="button2-left">
+                            <div class="blank">
+                                <a onclick=" document.id('jform_contact_id').value=''; document.id('jform_contact_id').fireEvent('change'); Joomla.submitbutton('teacher.apply'); " title="Clear" >
+                                    <?php echo JText::_('JBS_CMN_CLEAR'); ?>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="button2-left">
+                            <div class="blank">
+                                <a href="index.php?option=com_contact&task=contact.edit&id=<?php echo (int) $this->item->contact; ?>" target="blank">'<?php echo JText::_('JBS_TCH_EDIT_THIS_CONTACT'); ?>
+                                </a>
+                            </div>
+                        </div>
+                    <?php } ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('published'); ?>
@@ -96,7 +106,6 @@ Joomla.submitbutton('teacher.apply'); " title="Clear" > <?php echo JText::_('JBS
 
                     <?php echo $this->form->getInput('ordering'); ?></li>
                 <li>
-                    <li>
                     <?php echo $this->form->getLabel('landing_show'); ?>
 
                     <?php echo $this->form->getInput('landing_show'); ?></li>
@@ -116,12 +125,11 @@ Joomla.submitbutton('teacher.apply'); " title="Clear" > <?php echo JText::_('JBS
                     <?php echo $this->form->getLabel('title'); ?>
 
                     <?php echo $this->form->getInput('title'); ?></li>
-                
-               <li>
+                <li>
                     <?php echo $this->form->getLabel('address'); ?>
 
                     <?php echo $this->form->getInput('address'); ?></li>
-                
+                <li>
                     <?php echo $this->form->getLabel('phone'); ?>
 
                     <?php echo $this->form->getInput('phone'); ?></li>
@@ -129,22 +137,18 @@ Joomla.submitbutton('teacher.apply'); " title="Clear" > <?php echo JText::_('JBS
                     <?php echo $this->form->getLabel('email'); ?>
 
                     <?php echo $this->form->getInput('email'); ?></li>
-               
-                <li><?php echo $this->form->getLabel('id'); ?>
-
+                <li>
+                    <?php echo $this->form->getLabel('id'); ?>
 
                     <?php echo $this->form->getInput('id'); ?></li>
-
             </ul>
-
-           
         </fieldset>
     </div>
-     <div class="width-45 fltrt">
+    <div class="width-45 fltrt">
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_TCH_IMAGES'); ?></legend>
             <ul>
-                 <li>
+                <li>
 
                     <?php echo $this->form->getLabel('teacher_image'); ?>
 
@@ -153,7 +157,7 @@ Joomla.submitbutton('teacher.apply'); " title="Clear" > <?php echo JText::_('JBS
                     echo $this->form->getInput('teacher_image', null, empty($this->item->teachername) ? $this->admin->params['default_teacher_image'] : $this->item->teacher_image);
                     ?>
                 </li>
-            <li>
+                <li>
                     <?php echo $this->form->getLabel('teacher_thumbnail'); ?>
 
                     <?php echo $this->form->getInput('teacher_thumbnail'); ?></li>
@@ -166,18 +170,16 @@ Joomla.submitbutton('teacher.apply'); " title="Clear" > <?php echo JText::_('JBS
 
                     <?php echo $this->form->getInput('thumb'); ?></li>
                 <li>
-                
             </ul>
-     </div>
-     <div class="clr"></div>
-     <div>
-         <fieldset class="panelform">
-             <legend> <?php echo JText::_('JBS_TCH_SHORT'); ?></legend>
-              
+    </div>
+    <div class="clr"></div>
+    <div>
+        <fieldset class="panelform">
+            <legend> <?php echo JText::_('JBS_TCH_SHORT'); ?></legend>
             <?php echo $this->form->getInput('short'); ?>
-         </fieldset>
-     </div>
-    
+        </fieldset>
+    </div>
+
     <div>
         <fieldset class="panelform">
             <legend>
@@ -186,7 +188,7 @@ Joomla.submitbutton('teacher.apply'); " title="Clear" > <?php echo JText::_('JBS
         </fieldset>
     </div>
     <div class="clr"></div>
- 
+
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">
             <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>

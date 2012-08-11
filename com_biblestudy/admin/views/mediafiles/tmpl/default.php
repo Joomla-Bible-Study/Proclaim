@@ -1,9 +1,11 @@
 <?php
 /**
- * @version     $Id: default.php 2025 2011-08-28 04:08:06Z genu $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * Default
+ * @package BibleStudy.Admin
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -16,7 +18,6 @@ $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 $saveOrder = $listOrder == 'mediafile.ordering';
 ?>
-
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=mediafiles'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-search fltlft">

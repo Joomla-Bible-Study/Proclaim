@@ -40,7 +40,7 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
                     </li>
                     <div class="clr"></div>
                     <li>
-                        <?php echo   '<label class="hasTip"><a href="index.php?option=com_biblestudy&view=admin&task=admin.aliasUpdate">'.JText::_('JBS_ADM_RESET_ALIAS').'</a></label>'; ?>
+                        <?php echo '<label class="hasTip"><a href="index.php?option=com_biblestudy&view=admin&task=admin.aliasUpdate">' . JText::_('JBS_ADM_RESET_ALIAS') . '</a></label>'; ?>
                     </li>
                     <li>
                         <?php echo $this->form->getLabel('metakey', 'params'); ?>

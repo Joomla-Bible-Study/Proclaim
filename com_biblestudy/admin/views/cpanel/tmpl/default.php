@@ -1,5 +1,7 @@
 <?php
 /**
+ * Default
+ * @package BibleStudy.Admin
  * @author Joomla Bible Study
  * @copyright 2010
  */
@@ -126,37 +128,37 @@ if ($msg) {
 
                 <tr>
                     <td><?php echo JText::_('JBS_CPL_TOTAL_MESSAGES'); ?></td>
-                    <td><strong><?php echo @jbStats::get_total_messages(); ?></strong></td>
+                    <td><strong><?php echo jbStats::get_total_messages(); ?></strong></td>
                     <td><?php echo JText::_('JBS_CPL_TOTAL_COMMENTS'); ?></td>
-                    <td><strong><?php echo @jbStats::get_total_comments(); ?></strong></td>
+                    <td><strong><?php echo jbStats::get_total_comments(); ?></strong></td>
                 </tr>
                 <tr>
                     <td><?php echo JText::_('JBS_CPL_TOTAL_TOPICS'); ?></td>
-                    <td><strong><?php echo @jbStats::get_total_topics(); ?></strong></td>
+                    <td><strong><?php echo jbStats::get_total_topics(); ?></strong></td>
                     <td><?php echo JText::_('JBS_CPL_TOTAL_MEDIA_FILES'); ?></td>
-                    <td><strong><?php echo @jbStats::total_mediafiles(); ?></strong></td>
+                    <td><strong><?php echo jbStats::total_mediafiles(); ?></strong></td>
                 </tr>
                 <tr>
                     <td><?php echo JText::_('JBS_CPL_TOP5_STUDIES_HITS'); ?></td>
-                    <td><strong><?php echo @jbStats::get_top_studies(); ?></strong></td>
+                    <td><strong><?php echo jbStats::get_top_studies(); ?></strong></td>
                     <td><?php echo JText::_('JBS_CPL_TOP5_STUDIES_HITS_90DAYS'); ?></td>
-                    <td><strong><?php echo @jbStats::get_topthirtydays(); ?></strong></td>
+                    <td><strong><?php echo jbStats::get_topthirtydays(); ?></strong></td>
                 </tr>
                 <tr>
                     <td><?php echo JText::_('JBS_CPL_TOTAL_DOWNLOADS'); ?></td>
-                    <td><strong><?php echo @jbStats::total_downloads(); ?></strong></td>
+                    <td><strong><?php echo jbStats::total_downloads(); ?></strong></td>
                     <td><?php echo JText::_('JBS_CPL_TOP5_DOWNLOADS'); ?></td>
-                    <td><strong><?php echo @jbStats::get_top_downloads(); ?></strong></td>
+                    <td><strong><?php echo jbStats::get_top_downloads(); ?></strong></td>
                 </tr>
                 <tr>
                     <td><?php echo JText::_('JBS_CPL_TOP5_DOWNLOADS_LAST_90DAYS'); ?></td>
-                    <td><strong><?php echo @jbStats::get_downloads_ninety(); ?></strong></td>
+                    <td><strong><?php echo jbStats::get_downloads_ninety(); ?></strong></td>
                     <td></td>
                     <td><strong></strong></td>
                 </tr>
                 <tr>
                     <td> <?php echo JText::_('JBS_CPL_TOP_STUDIES_HITS_PLAYS_DOWNLOADS'); ?></td>
-                    <td><strong><?php echo @jbStats::top_score(); ?></strong></td>
+                    <td><strong><?php echo jbStats::top_score(); ?></strong></td>
                     <td></td>
                     <td></td>
                 </tr>

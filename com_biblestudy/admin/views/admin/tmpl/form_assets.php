@@ -1,5 +1,7 @@
 <?php
 /**
+ * Form sub assets
+ * @package BibleStudy.Admin
  * @author Joomla Bible Study
  * @copyright 2012
  * @since 7.0.2

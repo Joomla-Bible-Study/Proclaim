@@ -1,6 +1,7 @@
 <?php
 /**
- * @package BibleStudy
+ * Form
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -8,7 +9,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
-
 <form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <?php echo JHtml::_('tabs.start'); ?>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_GENERAL'), 'general'); ?>
@@ -35,7 +35,6 @@ defined('_JEXEC') or die;
                     </li>
 
                 </ul>
-
                 <?php foreach ($this->form->getFieldset('TEMPLATES') as $field): ?>
                     <li>
                         <?php
@@ -45,7 +44,6 @@ defined('_JEXEC') or die;
                     </li>
                 <?php endforeach; ?>
                 <?php foreach ($this->form->getFieldset('TERMS') as $field): ?>
-
                     <li>
                         <?php echo $field->label; ?>
                         <div class="clr"> </div>
@@ -72,6 +70,7 @@ defined('_JEXEC') or die;
                         ?></li>
                     <?php endforeach; ?>
                 </ul>
+            </fieldset>
         </div>
     </div>
 
@@ -89,6 +88,7 @@ defined('_JEXEC') or die;
                         ?></li>
                     <?php endforeach; ?>
                 </ul>
+            </fieldset>
         </div>
     </div>
 
@@ -99,7 +99,6 @@ defined('_JEXEC') or die;
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_VIEW'); ?></legend>
                 <?php echo JHtml::_('sliders.start', 'content-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-
                 <?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_VERSES_DATES_CSS'), 'publishing-details'); ?>
                 <fieldset class="panelform">
                     <legend><?php echo JText::_('JBS_TPL_VERSES_DATES_CSS'); ?></legend>
@@ -166,7 +165,6 @@ defined('_JEXEC') or die;
                         <?php endforeach; ?>
                     </ul>
                 </fieldset>
-
                 <?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_STUDY_LIST_ROW2'), 'publishing-details'); ?>
                 <fieldset class="panelform">
                     <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_ROW1'); ?></legend>
@@ -178,7 +176,6 @@ defined('_JEXEC') or die;
                             ?></li>
                         <?php endforeach; ?>
                     </ul>
-
                 </fieldset>
                 <?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_STUDY_LIST_ROW3'), 'publishing-details'); ?>
                 <fieldset class="panelform">
@@ -192,7 +189,6 @@ defined('_JEXEC') or die;
                         <?php endforeach; ?>
                     </ul>
                 </fieldset>
-
                 <?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_STUDY_LIST_ROW4'), 'publishing-details'); ?>
                 <fieldset class="panelform">
                     <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_ROW4'); ?></legend>
@@ -205,7 +201,6 @@ defined('_JEXEC') or die;
                         <?php endforeach; ?>
                     </ul>
                 </fieldset>
-
                 <?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_STUDY_LIST_CUSTOM'), 'publishing-details'); ?>
                 <fieldset class="panelform">
                     <legend><?php echo JText::_('JBS_TPL_STUDY_LIST_CUSTOM'); ?></legend>
@@ -230,7 +225,6 @@ defined('_JEXEC') or die;
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_TPL_STUDY_DETAILS_VIEW'); ?></legend>
                 <?php echo JHtml::_('sliders.start', 'content-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-
                 <?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_DETAILS_VIEW'), 'publishing-details'); ?>
                 <fieldset class="panelform">
                     <legend><?php echo JText::_('JBS_TPL_DETAILS_VIEW'); ?></legend>
@@ -291,16 +285,12 @@ defined('_JEXEC') or die;
                         <?php endforeach; ?>
                     </ul>
                 </fieldset>
-
-
                 <?php echo JHtml::_('sliders.end'); ?>
             </fieldset>
         </div>
     </div>
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_TEACHER_VIEW'), 'admin-system-defaults'); ?>
-
-
     <div class="width-100">
         <div class="width-80 fltlft">
             <fieldset class="panelform">
@@ -314,6 +304,7 @@ defined('_JEXEC') or die;
                         ?></li>
                     <?php endforeach; ?>
                 </ul>
+            </fieldset>
         </div>
     </div>
     <div class="clr"></div>
@@ -323,29 +314,24 @@ defined('_JEXEC') or die;
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_CMN_SERIES'); ?></legend>
                 <?php echo JHtml::_('sliders.start', 'content-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-
                 <?php echo JHtml::_('sliders.panel', JText::_('JBS_TPL_SERIES_LIST'), 'publishing-details'); ?>
                 <ul class="adminformlist">
                     <?php foreach ($this->form->getFieldset('SERIES') as $field): ?>
-
                         <li><?php
                     echo $field->label;
                     echo $field->input;
                         ?></li>
                     <?php endforeach; ?>
                 </ul>
-
                 <?php echo JHtml::_('sliders.panel', JText::_('JBS_CMN_SERIES_DETAIL_VIEW'), 'publishing-details'); ?>
                 <ul class="adminformlist">
                     <?php foreach ($this->form->getFieldset('SERIESDETAIL') as $field): ?>
-
                         <li><?php
                     echo $field->label;
                     echo $field->input;
                         ?></li>
                     <?php endforeach; ?>
                 </ul>
-
                 <?php echo JHtml::_('sliders.end'); ?>
             </fieldset>
         </div>
@@ -364,24 +350,19 @@ defined('_JEXEC') or die;
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'admin-system-defaults'); ?>
     <div class="clr"></div>
-
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">
             <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-
             <?php echo JHtml::_('sliders.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
-
             <fieldset class="panelform">
                 <?php echo $this->form->getLabel('rules'); ?>
                 <?php echo $this->form->getInput('rules'); ?>
             </fieldset>
-
             <?php echo JHtml::_('sliders.end'); ?>
         </div>
     <?php endif; ?>
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.end'); ?>
-
     <input type="hidden" name="task" value="" />
     <input type="hidden" name="controller" value="template" />
     <?php echo JHtml::_('form.token'); ?>

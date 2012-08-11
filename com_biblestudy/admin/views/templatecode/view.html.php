@@ -1,27 +1,59 @@
 <?php
 
 /**
- * @version $Id: view.html.php 2025 2011-08-28 04:08:06Z genu $
- * @since 7.1.0
- * @desc View for Style edit
- * @package BibleStudy
+ * View for Style edit
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
+
 jimport('joomla.application.component.view');
 
+/**
+ * View class for TemplateCode
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class biblestudyViewTemplatecode extends JView {
 
+    /**
+     * Form
+     * @var array
+     */
     protected $form;
+
+    /**
+     * Item
+     * @var array
+     */
     protected $item;
+
+    /**
+     * State
+     * @var array
+     */
     protected $state;
+
+    /**
+     * Defaults
+     * @var array
+     */
     protected $defaults;
 
-    function display($tpl = null) {
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
         $link = JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'templatecodehelp.html';
         $this->form = $this->get("Form");
         $item = $this->get("Item");
@@ -45,6 +77,10 @@ class biblestudyViewTemplatecode extends JView {
         parent::display($tpl);
     }
 
+    /**
+     * Add Toolbar
+     * @since 7.0.0
+     */
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
         $isNew = ($this->item->id == 0);

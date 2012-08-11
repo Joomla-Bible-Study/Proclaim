@@ -93,7 +93,7 @@ class BiblestudyController extends JController {
      *
      * @since 7.0.0
      */
-    function AjaxTags() {
+    public function AjaxTags() {
         die();
     }
 
@@ -102,7 +102,7 @@ class BiblestudyController extends JController {
      * @since 7.0.1
      * @return JSON object containing the results
      */
-    function lookup_topic() {
+    public function lookup_topic() {
         die();
     }
 
@@ -110,7 +110,7 @@ class BiblestudyController extends JController {
      * Get File List
      * @since 7.0.0
      */
-    function getFileList() {
+    public function getFileList() {
 
         $serverId = JRequest::getVar('server');
         $folderId = JRequest::getVar('path');
@@ -156,7 +156,7 @@ class BiblestudyController extends JController {
      *
      * @return string
      */
-    function changePlayers() {
+    public function changePlayers() {
 
         $db = JFactory::getDBO();
         $msg = null;
@@ -190,7 +190,7 @@ class BiblestudyController extends JController {
      *
      * @return string
      */
-    function changePopup() {
+    public function changePopup() {
 
         $db = JFactory::getDBO();
         $msg = null;
@@ -216,7 +216,7 @@ class BiblestudyController extends JController {
      * Write the XML file
      *
      */
-    function writeXMLFile() {
+    public function writeXMLFile() {
 
         $path1 = JPATH_SITE . '/components/com_biblestudy/lib/';
         require_once($path1 . 'biblestudy.podcast.class.php');
@@ -230,7 +230,7 @@ class BiblestudyController extends JController {
      * Resets the hits
      *
      */
-    function resetHits() {
+    public function resetHits() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
@@ -250,7 +250,7 @@ class BiblestudyController extends JController {
     /**
      * Resets Donwnloads
      */
-    function resetDownloads() {
+    public function resetDownloads() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
@@ -270,7 +270,7 @@ class BiblestudyController extends JController {
     /**
      * Resets Plays
      */
-    function resetPlays() {
+    public function resetPlays() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'get');
         $db = JFactory::getDBO();
@@ -292,7 +292,7 @@ class BiblestudyController extends JController {
      * @since 7.1.0
      * Note: This function is not used in 7.1.0 since it caused problems with the session and closing the media form
      */
-    function uploadflash() {
+    public function uploadflash() {
 
         JRequest::checktoken() or jexit('Invalid Token');
         $option = JRequest::getCmd('option');
@@ -426,7 +426,7 @@ class BiblestudyController extends JController {
      * Upload function
      *
      */
-    function upload() {
+    public function upload() {
         JRequest::checktoken() or jexit('Invalid Token');
         $option = JRequest::getCmd('option');
         $uploadmsg = '';

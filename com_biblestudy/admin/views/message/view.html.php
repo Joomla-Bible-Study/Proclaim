@@ -1,32 +1,64 @@
 <?php
 
 /**
- * @version     $Id: view.html.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * JView html
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 
 jimport('joomla.application.component.view');
 
+/**
+ * View class for Message
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyViewMessage extends JView {
 
+    /**
+     * Form
+     * @var array
+     */
     protected $form;
+
+    /**
+     * Item
+     * @var array
+     */
     protected $item;
+
+    /**
+     * State
+     * @var state
+     */
     protected $state;
+
+    /**
+     * Admin
+     * @var array
+     */
     protected $admin;
 
-    function display($tpl = null) {
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $option = JRequest::getCmd('option');
-        @JApplication::setUserState($option.'sid', $this->item->id);
-        @JApplication::setUserState($option.'sdate', $this->item->studydate);
+        @JApplication::setUserState($option . 'sid', $this->item->id);
+        @JApplication::setUserState($option . 'sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
 
         $this->loadHelper('params');
@@ -73,6 +105,10 @@ class BiblestudyViewMessage extends JView {
         $this->setDocument();
     }
 
+    /**
+     * Add Toolbar
+     * @since 7.0.0
+     */
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
         $isNew = ($this->item->id == 0);

@@ -1,7 +1,7 @@
 <?php
 /**
- * @version     $Id: form.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Form
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -12,7 +12,6 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 $params = $this->form->getFieldsets('params');
 ?>
-
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
@@ -256,7 +255,6 @@ $params = $this->form->getFieldsets('params');
                     <?php endif; ?>
 
                 </tbody>
-                <?php //if (! empty($this->item->studytitle)) : ?>
                 <tfoot>
                     <tr>
                         <td colspan="4">
@@ -268,13 +266,11 @@ $params = $this->form->getFieldsets('params');
                                 ?>
                                 <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 1000, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
                                     <?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
-                                }
+                            }
                                 ?>
-
                         </td>
                     </tr>
                 </tfoot>
-                <?php //endif;    ?>
             </table>
 
         </fieldset>

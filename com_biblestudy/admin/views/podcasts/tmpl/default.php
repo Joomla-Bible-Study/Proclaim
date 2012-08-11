@@ -1,7 +1,7 @@
 <?php
 /**
- * @version $Id: default.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Default
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -59,8 +59,6 @@ $listDirn = $this->state->get('list.direction');
             </tr>
         </tfoot>
         <tbody>
-
-
             <?php
             foreach ($this->items as $i => $item) :
                 ?>

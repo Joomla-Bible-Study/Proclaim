@@ -41,8 +41,6 @@ if (!version_compare($version, '5.0.0', '>=')) {
 // Register helper class
 JLoader::register('BibleStudyHelper', dirname(__FILE__) . '/helpers/biblestudy.php');
 
-//define('JSTART', '$j(document).ready( function() {');
-//define('JSTOP', '});');
 addCSS();
 addJS();
 

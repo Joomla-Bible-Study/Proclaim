@@ -1,25 +1,58 @@
 <?php
 
 /**
- * @version $Id: view.html.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * JView html
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 jimport('joomla.application.component.view');
 
+/**
+ * View class for Location
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyViewLocation extends JView {
 
+    /**
+     * Form
+     * @var array
+     */
     protected $form;
+
+    /**
+     * Item
+     * @var array
+     */
     protected $item;
+
+    /**
+     * State
+     * @var array
+     */
     protected $state;
+
+    /**
+     * Defaults
+     * @var array
+     */
     protected $defaults;
 
-    function display($tpl = null) {
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
@@ -39,6 +72,10 @@ class BiblestudyViewLocation extends JView {
         $this->setDocument();
     }
 
+    /**
+     * Add Toolbar
+     * @since 7.0.0
+     */
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', true);
         $isNew = ($this->item->id == 0);
@@ -52,8 +89,8 @@ class BiblestudyViewLocation extends JView {
             JToolBarHelper::cancel('location.cancel');
         } else {
             if ($this->canDo->get('core.edit', 'com_biblestudy')) {
-            JToolBarHelper::apply('location.apply');
-            JToolBarHelper::save('location.save');
+                JToolBarHelper::apply('location.apply');
+                JToolBarHelper::save('location.save');
 
                 // We can save this record, but check the create permission to see if we can return to make a new one.
                 if ($this->canDo->get('core.create', 'com_biblestudy')) {
@@ -65,7 +102,7 @@ class BiblestudyViewLocation extends JView {
                 JToolBarHelper::save2copy('location.save2copy');
             }
 
-        JToolBarHelper::cancel('location.cancel', 'JTOOLBAR_CLOSE');
+            JToolBarHelper::cancel('location.cancel', 'JTOOLBAR_CLOSE');
         }
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);

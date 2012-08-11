@@ -1,5 +1,6 @@
 <?php
 /**
+ * Form sub migrate
  * @package BibleStudy.Admin
  * @author Joomla Bible Study
  * @copyright 2012

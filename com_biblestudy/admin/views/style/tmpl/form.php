@@ -1,7 +1,7 @@
 <?php
 /**
- * @version $Id: form.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Form
+ * @package BibleStudy.Admin
  * @since 7.1.0
  * @desc Form for style
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
@@ -11,9 +11,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
-    method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-100">
         <fieldset class="panelform">
             <legend>
@@ -29,21 +27,15 @@ defined('_JEXEC') or die;
 
                     <?php echo $this->form->getInput('filename'); ?></li>
                 <li>
-                    <?php echo $this->form->getLabel('stylecode'); ?>
-                </li>
+                    <?php echo $this->form->getLabel('stylecode'); ?></li>
             </ul>
             <div class="clr"></div>
             <div>
                 <?php echo $this->form->getInput('stylecode', null, empty($this->item->stylecode) ? $this->defaultstyle : $this->item->stylecode); ?>
             </div>
-
-
         </fieldset>
     </div>
     <div class="clr"></div>
-
-
-
 
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">

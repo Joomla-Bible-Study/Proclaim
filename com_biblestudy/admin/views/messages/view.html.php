@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * JView html
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -8,7 +9,6 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 jimport('joomla.application.component.view');
 
 /**
@@ -19,14 +19,33 @@ jimport('joomla.application.component.view');
  */
 class BiblestudyViewMessages extends JView {
 
+    /**
+     * Items
+     * @var array
+     */
     protected $items;
+
+    /**
+     * Pagination
+     * @var array
+     */
     protected $pagination;
+
+    /**
+     * State
+     * @var array
+     */
     protected $state;
 
     /**
-     * Display the view
+     * Execute and display a template script.
      *
-     * @return	void
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
      */
     public function display($tpl = null) {
 

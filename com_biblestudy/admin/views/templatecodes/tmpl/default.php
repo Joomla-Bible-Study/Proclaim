@@ -1,8 +1,8 @@
 <?php
 /**
- * @version 
+ * Default
  * @since 7.1.0
- * @package BibleStudy
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -31,8 +31,8 @@ $saveOrder = $listOrder == 'location.ordering';
         <table class="adminlist">
             <thead>
                 <tr>
-                    <th width="20"><input type="checkbox" name="toggle" value=""
-                                          onclick="checkAll(<?php echo count($this->items); ?>);" />
+                    <th width="20">
+                        <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
                     </th>
                     <th width="20" align="center">
                         <?php echo JText::_('JBS_CMN_PUBLISHED'); ?>
@@ -70,7 +70,7 @@ $saveOrder = $listOrder == 'location.ordering';
                     <td>
                         <a href="<?php echo $link; ?>"><?php echo $item->filename; ?></a>
                     </td>
-                     <td>
+                    <td>
                         <a href="<?php echo $link; ?>"><?php echo $item->typetext; ?></a>
                     </td>
                     <td>

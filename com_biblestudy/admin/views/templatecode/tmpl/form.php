@@ -1,24 +1,18 @@
 <?php
 /**
- * @version $Id: form.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
- * @since 7.1.0
- * @desc Form for style
+ * Form for style
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2012 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-
 ?>
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
-    method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-100">
         <fieldset class="panelform">
             <legend>
-
                 <?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
             <ul class="adminformlist">
                 <li>
@@ -29,7 +23,6 @@ defined('_JEXEC') or die;
                     <?php echo $this->form->getLabel('filename'); ?>
 
                     <?php echo $this->form->getInput('filename'); ?></li>
-                <li>
                 <li>
                     <?php echo $this->form->getLabel('type'); ?>
 
@@ -42,14 +35,9 @@ defined('_JEXEC') or die;
             <div>
                 <?php echo $this->form->getInput('templatecode', null, empty($this->item->templatecode) ? $this->defaultcode : $this->item->templatecode); ?>
             </div>
-
-
         </fieldset>
     </div>
     <div class="clr"></div>
-
-
-
 
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">

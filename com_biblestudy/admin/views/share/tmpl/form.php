@@ -1,7 +1,7 @@
 <?php
 /**
- * @version $Id: form.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Form
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -10,9 +10,7 @@
 defined('_JEXEC') or die;
 $params = $this->form->getFieldsets('params');
 ?>
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
-    method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-60 fltlft">
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_CMN_DETAILS'); ?></legend>
@@ -33,13 +31,9 @@ $params = $this->form->getFieldsets('params');
         </fieldset>
         <fieldset class="panelform">
             <legend>
-
                 <?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
-
             <ul class="adminformlist">
-
                 <?php foreach ($params as $name => $fieldset): ?>
-
                     <?php foreach ($this->form->getFieldset($name) as $field) : ?>
                         <li><?php echo $field->label; ?>
 

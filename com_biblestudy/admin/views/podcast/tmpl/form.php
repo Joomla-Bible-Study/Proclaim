@@ -1,7 +1,7 @@
 <?php
 /**
- * @version $Id: form.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Form
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -9,9 +9,7 @@
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>"
-    method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
             <legend>
@@ -89,12 +87,12 @@ defined('_JEXEC') or die;
                     <?php echo $this->form->getInput('podcastimage'); ?></li>
                 <li>
                     <?php echo $this->form->getLabel('podcast_image_subscribe'); ?>
-                    
+
                     <?php echo $this->form->getInput('podcast_image_subscribe'); ?>
                 </li>
                 <li>
                     <?php echo $this->form->getLabel('podcast_subscribe_desc'); ?>
-                    
+
                     <?php echo $this->form->getInput('podcast_subscribe_desc'); ?>
                 </li>
                 <li>
@@ -147,10 +145,6 @@ defined('_JEXEC') or die;
         </fieldset>
     </div>
     <div class="clr"></div>
-
-
-
-
 
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">

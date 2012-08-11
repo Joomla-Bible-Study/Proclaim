@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: view.html.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * View html
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -14,24 +14,53 @@ jimport('joomla.application.component.helper');
 jimport('joomla.i18n.help');
 
 require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
-require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/dbhelper.php');
+require_once(JPATH_ADMINISTRATOR . '/components/com_biblestudy/helpers/dbhelper.php');
 
+/**
+ * View class for Admin
+ * @package BibleStudy.Admin
+ * @since 7.0.0
+ */
 class BiblestudyViewAdmin extends JView {
 
+    /**
+     * Form
+     * @var array
+     */
     protected $form;
+
+    /**
+     * Item
+     * @var array
+     */
     protected $item;
+
+    /**
+     * State
+     * @var array
+     */
     protected $state;
 
-    function display($tpl = null) {
-        
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
+
         $dbhelper = new jbsDBhelper();
-       //alter the admin table
-       $table = '#__bsms_admin';
-       $tables = array(
-           array('table'=>'#__bsms_admin','field'=>'main','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'podcast','type'=>'DROP','command'=>'')
-       );
-       $res = $dbhelper->alterDB($tables);
+        //alter the admin table
+        $table = '#__bsms_admin';
+        $tables = array(
+            array('table' => '#__bsms_admin', 'field' => 'main', 'type' => 'DROP', 'command' => ''),
+            array('table' => '#__bsms_admin', 'field' => 'podcast', 'type' => 'DROP', 'command' => '')
+        );
+        $res = $dbhelper->alterDB($tables);
         $language = JFactory::getLanguage();
         $language->load('com_installer');
 
@@ -133,6 +162,11 @@ class BiblestudyViewAdmin extends JView {
         $this->setDocument();
     }
 
+    /**
+     * Add Toolbar
+     *
+     * @since 7.0.0
+     */
     protected function addToolbar() {
         JRequest::setVar('hidemainmenu', false);
 
@@ -169,7 +203,7 @@ class BiblestudyViewAdmin extends JView {
      * @param type $component
      * @return boolean
      */
-    function versionXML($component) {
+    protected function versionXML($component) {
         switch ($component) {
             case 'sermonspeaker':
                 if ($data = JApplicationHelper::parseXMLInstallFile(JPATH_ROOT . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sermonspeaker' . DIRECTORY_SEPARATOR . 'sermonspeaker.xml')) {

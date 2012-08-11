@@ -16,7 +16,7 @@ jimport('joomla.application.component.helper');
  * //Eugen
  * @todo remove file in version 1.7+
  * This class may not be required
- *
+ * 
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
@@ -28,7 +28,7 @@ class BsmHelper extends JComponentHelper {
      * @param   $isSite   Boolean   True if this is called from the frontend
      * @since   7.0
      */
-    public function getAdmin($isSite = false) {
+    public static function getAdmin($isSite = false) {
         if ($isSite)
             JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
         $admin = JModel::getInstance('Admin', 'biblestudyModel');
@@ -46,7 +46,7 @@ class BsmHelper extends JComponentHelper {
      * @param object $isSite
      * @return object
      */
-    public function getTemplateparams($isSite = false) {
+    public static function getTemplateparams($isSite = false) {
         if ($isSite)
             JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
         $pk = JRequest::getInt('t', 'get', '1');

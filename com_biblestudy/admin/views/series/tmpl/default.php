@@ -1,7 +1,7 @@
 <?php
 /**
- * @version     $Id: default.php 2025 2011-08-28 04:08:06Z genu $
- * @package BibleStudy
+ * Default
+ * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,10 +13,7 @@ $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 $saveOrder = $listOrder == 'series.ordering';
 ?>
-
-<form
-    action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=series'); ?>"
-    method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=series'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div class="filter-select fltrt">
             <select name="filter_published" class="inputbox" onchange="this.form.submit()">

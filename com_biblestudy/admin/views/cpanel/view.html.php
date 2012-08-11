@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * View html
  * @package BibleStudy.Admin
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,16 +12,20 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 include_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
 
-
 /**
+ * JView class for Cpanel
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
 class biblestudyViewcpanel extends JView {
 
-    function display($tpl = null) {
+    /**
+     * Display
+     * @param string $tpl
+     */
+    public function display($tpl = null) {
 
-        
+
         JHTML::stylesheet('cpanel.css', JURI::base() . '../media/com_biblestudy/css/');
         //get version information
         $db = JFactory::getDbo();
@@ -37,8 +42,8 @@ class biblestudyViewcpanel extends JView {
             $this->version = $registry->get('version');
             $this->versiondate = $registry->get('creationDate');
         }
-        //$jbstats = new jbStats();
-        $this->total_messages = @jbStats::get_total_messages();
+        /* @todo need to convert to a statec call */
+        $this->total_messages = jbStats::get_total_messages();
 
         $this->addToolbar();
 
