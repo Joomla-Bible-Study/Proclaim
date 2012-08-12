@@ -175,6 +175,8 @@ class biblestudyModelmediaplayer extends JModel {
     /**
      * Method to move a mediafile listing
      *
+     * @param string $direction
+     *
      * @access	public
      * @return	boolean	True on success
      * @since	1.5
@@ -196,6 +198,9 @@ class biblestudyModelmediaplayer extends JModel {
 
     /**
      * Method to move a mediafile listing
+     *
+     * @param array $cid
+     * @param string $order
      *
      * @access	public
      * @return	boolean	True on success

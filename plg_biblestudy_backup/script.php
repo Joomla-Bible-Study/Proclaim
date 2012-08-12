@@ -21,7 +21,7 @@ class plgSystemjbsbackupInstallerScript {
 
     /**
      * method to install the component
-     * @param string $parant
+     * @param string $parent
      * @return void
      */
     function install($parent) {
@@ -30,7 +30,7 @@ class plgSystemjbsbackupInstallerScript {
 
     /**
      * method to uninstall the component
-     * @param string $parant
+     * @param string $parent
      * @return void
      */
     function uninstall($parent) {
@@ -40,7 +40,7 @@ class plgSystemjbsbackupInstallerScript {
 
     /**
      * method to update the component
-     * @param string $parant
+     * @param string $parent
      * @return void
      */
     function update($parent) {
@@ -77,7 +77,7 @@ class plgSystemjbsbackupInstallerScript {
     /**
      * method to run before an install/update/uninstall method
      * @param string $type
-     * @param string $parant
+     * @param string $parent
      * @return void
      */
     function preflight($type, $parent) {
@@ -116,7 +116,7 @@ class plgSystemjbsbackupInstallerScript {
     /**
      * method to run after an install/update/uninstall method
      * @param string $type
-     * @param string $parant
+     * @param string $parent
      * @return void
      */
     function postflight($type, $parent) {

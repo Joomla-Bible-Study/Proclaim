@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Topics Field
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -23,14 +24,17 @@ jimport('joomla.form.formfield');
 class JFormFieldTopics extends JFormField {
 
     /**
-     *
+     * Topics
      * @var type
      */
     public $type = 'Topics';
 
     /**
+     * Method to get the field input markup.
      *
-     * @return string
+     * @return  string  The field input markup.
+     *
+     * @since   11.1
      */
     protected function getInput() {
 

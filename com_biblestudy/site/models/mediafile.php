@@ -32,10 +32,12 @@ class BiblestudyModelMediafile extends JModelAdmin {
     var $_text_prefix = 'COM_BIBLESTUDY';
 
     /**
-     * Constructor that retrieves the ID from the request
+     * Constructor.
      *
-     * @access	public
-     * @return	void
+     * @param   array  $config  An optional associative array of configuration settings.
+     *
+     * @see     JController
+     * @since   11.1
      */
     public function __construct($config = array()) {
         parent::__construct($config);
@@ -212,10 +214,13 @@ class BiblestudyModelMediafile extends JModelAdmin {
     }
 
     /**
-     * Method to delete record(s)
+     * Method to delete one or more records.
      *
-     * @access	public
-     * @return	boolean	True on success
+     * @param   array  &$pks  An array of record primary keys.
+     *
+     * @return  boolean  True if successful, false if an error occurs.
+     *
+     * @since   11.1
      */
     public function delete(&$pks) {
         $cids = JRequest::getVar('cid', array(0), 'post', 'array');
@@ -261,6 +266,8 @@ class BiblestudyModelMediafile extends JModelAdmin {
     /**
      * Method to move a mediafile listing
      *
+     * @param string $direction
+     *
      * @access	public
      * @return	boolean	True on success
      * @since	1.5
@@ -281,11 +288,15 @@ class BiblestudyModelMediafile extends JModelAdmin {
     }
 
     /**
-     * Method to move a mediafile listing
+     * Saves the manually set order of records.
      *
-     * @access	public
-     * @return	boolean	True on success
-     * @since	1.5
+     * @param   array    $cid
+     * @param   array    $pks    An array of primary key ids.
+     * @param   integer  $order  +1 or -1
+     *
+     * @return  mixed
+     *
+     * @since   11.1
      */
     public function saveorder($cid = array(), $pks = null, $order = null) {
         $row = $this->getTable();

@@ -104,8 +104,8 @@ class biblestudyModelMessages extends JModelList {
      * It then adds to the dataObject the mediafiles associated with the sermon.
      * @return unknown_type
      */
-    /* Tom commented this out because it caused the query to fail - needs work. */
     function getFiles() {
+        /*@todo Tom commented this out because it caused the query to fail - needs work. */
         $mediaFiles = null;
         $db = JFactory::getDBO();
         $i = 0;

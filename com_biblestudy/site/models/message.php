@@ -84,10 +84,13 @@ class biblestudyModelmessage extends JModelAdmin {
     }
 
     /**
-     * Method to delete record(s)
+     * Method to delete one or more records.
      *
-     * @access	public
-     * @return	boolean	True on success
+     * @param   array  &$pks  An array of record primary keys.
+     *
+     * @return  boolean  True if successful, false if an error occurs.
+     *
+     * @since   11.1
      */
     public function delete(&$pks) {
         $cids = JRequest::getVar('cid', array(0), 'post', 'array');
@@ -265,8 +268,8 @@ class biblestudyModelmessage extends JModelAdmin {
 
     /**
      * Routine to save the topics(tags)
-     * @param type $data from post
-     * @param type $pks is the id of the record being saved
+     * @param string $pks is the id of the record being saved
+     * @param array $data from post
      * @since 7.0.2
      * @todo This may need to be optimized
      */

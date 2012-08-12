@@ -286,9 +286,13 @@ class plgFinderBiblestudy extends FinderIndexerAdapter {
     }
 
     /**
-     * Override the change of state query due to errors
-     * @param $table
-     * @param $state_field
+     * Method to get a SQL query to load the published and access states for
+     * an article and category.
+     *
+     * @param string $sql
+     * @return  JDatabaseQuery  A database object.
+     *
+     * @since   2.5
      */
     protected function getStateQuery($sql = null) {
         $db = JFactory::getDBO();

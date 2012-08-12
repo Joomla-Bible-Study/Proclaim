@@ -26,7 +26,7 @@ class biblestudyModelcommentsedit extends JModelAdmin {
      *
      * @since	1.6
      */
-    protected function populateState($ordering = null, $direction = null) {
+    protected function populateState() {
         $app = JFactory::getApplication('site');
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {

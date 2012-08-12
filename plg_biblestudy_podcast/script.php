@@ -21,7 +21,7 @@ class plgSystemjbspodcastInstallerScript {
 
     /**
      * method to install the component
-     *
+     * @param string $parent
      * @return void
      */
     function install($parent) {
@@ -77,8 +77,8 @@ class plgSystemjbspodcastInstallerScript {
 
     /**
      * method to run before an install/update/uninstall method
-     * @param string $parent
      * @param string $type
+     * @param string $parent
      * @return void
      */
     function preflight($type, $parent) {
@@ -115,8 +115,8 @@ class plgSystemjbspodcastInstallerScript {
 
     /**
      * method to run after an install/update/uninstall method
-     * @param string $parent
      * @param string $type
+     * @param string $parent
      *
      * @return void
      */

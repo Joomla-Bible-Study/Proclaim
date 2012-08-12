@@ -7,6 +7,14 @@
  * @author Joomla Bible Study Team
  * @copyright 2012
  * @desc a module to display the podcast subscription table
+ */
+// no direct access
+defined('_JEXEC') or die;
+
+/**
+ * A module to display the podcast subscription table
+ * @package BibleStudy
+ * @subpackage mod_biblestudy_podcast
  * @since 7.1.0
  */
 class modBibleStudyPodcast {
@@ -41,6 +49,7 @@ class modBibleStudyPodcast {
 
     /**
      * Get BibleStudy Template Params
+     * @param object $params
      * @return \JRegistry
      */
     static function getTemplateParams($params) {

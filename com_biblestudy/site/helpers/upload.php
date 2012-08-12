@@ -6,8 +6,15 @@
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
- * @since 7.2.0
  * */
+//No Direct Access
+defined('_JEXEC') or die;
+
+/**
+ * JBS Upload class
+ * @package BibleStudy.Site
+ * @since 7.1.0
+ */
 class JBSUpload {
 //    /**
 //     * Method to load javascript for squeezebox modal
@@ -103,7 +110,7 @@ class JBSUpload {
      *
      * @return	string
      */
-    function gettempfile() {
+    public function gettempfile() {
         $temp = JRequest::getVar('flupfile', '', 'POST', 'STRING');
         return $temp;
     }
@@ -113,7 +120,7 @@ class JBSUpload {
      *
      * @return	string
      */
-    function gettempfolder() {
+    public function gettempfolder() {
         $abspath = JPATH_SITE;
         $temp_folder = $abspath . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
         return $temp_folder;
@@ -122,11 +129,12 @@ class JBSUpload {
     /**
      * Method to get path variable
      *
-     * @param	array $row  message details.
+     * @param	array $url  message details.
      * @param	string $tempfile  Temp file path.
+     * @param   string $front Front info
      * @return	string
      */
-    function getpath($url, $tempfile, $front = '') {
+    public function getpath($url, $tempfile, $front = '') {
         jimport('joomla.filesystem.file');
         $path = JRequest::getVar('upload_folder', '', 'POST', 'INT');
         $server = JRequest::getVar('upload_server', '', 'POST', 'INT');
@@ -152,7 +160,7 @@ class JBSUpload {
      *
      * @return	bolean
      */
-    function deletetempfile($tempfile) {
+    public function deletetempfile($tempfile) {
         $db = JFactory::getDBO();
         jimport('joomla.filesystem.file');
 
@@ -171,7 +179,7 @@ class JBSUpload {
      *
      * @return	bolean
      */
-    function checkfile($file) {
+    public function checkfile($file) {
         $allow = true;
         $blacklist = array(".php", ".phtml", ".php3", ".php4", ".js", ".shtml", ".pl", ".py");
 
@@ -192,7 +200,7 @@ class JBSUpload {
      *
      * @return	string
      */
-    function processflashfile($tempfile, $filename) {
+    public function processflashfile($tempfile, $filename) {
         jimport('joomla.filesystem.file');
         $uploadmsg = '';
         if ($filename->type == 1) {
@@ -222,7 +230,7 @@ class JBSUpload {
      *
      * @return	string
      */
-    function processuploadfile($file, $filename) {
+    public function processuploadfile($file, $filename) {
         jimport('joomla.filesystem.file');
         $uploadmsg = '';
 
@@ -263,12 +271,12 @@ class JBSUpload {
     /**
      * Method to upload the file
      *
-     * @param	array $file  Source File details.
      * @param	array $filename Destination file details.
+     * @param	array $file  Source File details.
      *
      * @return	string
      */
-    function upload($filename, $file) {
+    public function upload($filename, $file) {
         $msg = '';
         jimport('joomla.filesystem.file');
         if (!JFILE::upload($file['tmp_name'], $filename->path)) {
@@ -281,12 +289,12 @@ class JBSUpload {
     /**
      * Method to upload the file for ftp upload
      *
-     * @param	array $file  Source File details.
      * @param	array $filename Destination file details.
+     * @param	array $file  Source File details.
      *
      * @return	string
      */
-    function uploadftp($filename, $file) {
+    public function uploadftp($filename, $file) {
         $msg = '';
         jimport('joomla.filesystem.file');
         if (!JFILE::upload($file['tmp_name'], $filename)) {
@@ -304,7 +312,7 @@ class JBSUpload {
      *
      * @return	bolean
      */
-    function ftp($file, $filename, $admin = 0) {
+    public function ftp($file, $filename, $admin = 0) {
 
         $app = JFactory::getApplication();
         $ftpsuccess = true;
@@ -356,6 +364,13 @@ class JBSUpload {
         // (because the "ftp_chmod" command is just available in PHP5+)
         if (!function_exists('ftp_chmod')) {
 
+            /**
+             * FTP Chmod
+             * @param string $ftp_stream
+             * @param string $mode
+             * @param array $filename
+             * @return \bolean|boolean
+             */
             function ftp_chmod($ftp_stream, $mode, $filename) {
                 return ftp_site($ftp_stream, sprintf('CHMOD %o %s', $mode, $filename));
             }
@@ -384,12 +399,15 @@ class JBSUpload {
      * Method to build filepath
      *
      * @param	array $file  File details.
+     * @param string $type
+     * @param int $serverid
+     * @param int $folderid
      * @param	int $path The path id.
      * @param	bolean $flash	Sets whether this is a flash upload or normal php upload and chooses right path through function.
      *
      * @return	array
      */
-    function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0) {
+    public function buildpath($file, $type, $serverid, $folderid, $path, $flash = 0) {
         JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_biblestudy' . DS . 'tables');
         $filepath = & JTable::getInstance('Server', 'Table');
         $filepath->load($serverid);
@@ -451,7 +469,7 @@ class JBSUpload {
      * @param string $admin
      * @return boolean
      */
-    function aws($file, $filename, $admin = 0) {
+    public function aws($file, $filename, $admin = 0) {
         $app = JFactory::getApplication();
         $awssuccess = true;
         $awssuccess5 = true;
@@ -584,10 +602,15 @@ class JBSUpload {
      * @param string $aws_secret
      * @return string
      */
-    function amazon_hmac($stringToSign, $aws_secret) {
+    public function amazon_hmac($stringToSign, $aws_secret) {
         // helper function binsha1 for amazon_hmac (returns binary value of sha1 hash)
         if (!function_exists('binsha1')) {
 
+            /**
+             * BinSha1
+             * @param string $d
+             * @return string
+             */
             function binsha1($d) {
                 if (version_compare(phpversion(), "5.0.0", ">=")) {
 
@@ -617,7 +640,7 @@ class JBSUpload {
      * @param string $debug
      * @return string
      */
-    function sendREST($fp, $q, $debug = false) {
+    public function sendREST($fp, $q, $debug = false) {
         if ($debug)
             echo "\nQUERY<<{$q}>>\n";
 

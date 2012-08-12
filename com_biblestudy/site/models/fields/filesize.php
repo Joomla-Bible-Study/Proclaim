@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * FileSize Field
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -23,14 +24,17 @@ jimport('joomla.form.formfield');
 class JFormFieldFilesize extends JFormField {
 
     /**
-     *
-     * @var type
+     * Type
+     * @var string
      */
     public $type = 'Filesize';
 
     /**
+     * Method to get the field input markup.
      *
-     * @return type
+     * @return  string  The field input markup.
+     *
+     * @since   11.1
      */
     protected function getInput() {
         // Initialize some field attributes.
@@ -49,8 +53,8 @@ class JFormFieldFilesize extends JFormField {
     }
 
     /**
-     *
-     * @return type
+     * Size Converter
+     * @return string
      */
     private function sizeConverter() {
         $document = JFactory::getDocument();

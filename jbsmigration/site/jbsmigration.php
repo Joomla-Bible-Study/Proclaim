@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * JBSMigration Holder File
  * @package BibleStudy
  * @subpackage JBSMigration.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -9,4 +10,4 @@
  * */
 defined('_JEXEC') or die();
 
-JError::raiseError(404,JText::_('COMPONENT NOT FOUND'));
+JError::raiseError(404, JText::_('COMPONENT NOT FOUND'));

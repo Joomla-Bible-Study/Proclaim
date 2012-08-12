@@ -40,10 +40,11 @@ class BiblestudyModelSermon extends JModelItem {
     var $_admin;
 
     /**
-     * Constructor that retrieves the ID from the request
+     * Constructor
      *
-     * @access	public
-     * @return	void
+     * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+     *
+     * @since   11.1
      */
     function __construct($config = array()) {
         parent::__construct($config);
@@ -53,6 +54,8 @@ class BiblestudyModelSermon extends JModelItem {
 
     /**
      * Method to increment the hit counter for the study
+     *
+     * @param string $pk
      *
      * @access	public
      * @return	boolean	True on success

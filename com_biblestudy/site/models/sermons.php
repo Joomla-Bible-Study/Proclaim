@@ -445,6 +445,7 @@ class BiblestudyModelSermons extends JModelList {
 
     /**
      * Translate item entries: books, topics
+     * @param array $items
      * @since 7.0
      */
     public function getTranslated($items = array()) {
@@ -584,6 +585,7 @@ class BiblestudyModelSermons extends JModelList {
 
     /**
      * Get the number of plays of this study
+     * @param int $id
      * @since 7.0
      */
     public function getPlays($id) {
@@ -684,8 +686,8 @@ class BiblestudyModelSermons extends JModelList {
      * It then adds to the dataObject the mediafiles associated with the sermon.
      * @return unknown_type
      */
-    /* Tom commented this out because it caused the query to fail - needs work. */
     public function getFiles() {
+        /* @todo Tom commented this out because it caused the query to fail - needs work. */
         $mediaFiles = null;
         $db = & JFactory::getDBO();
         $i = 0;

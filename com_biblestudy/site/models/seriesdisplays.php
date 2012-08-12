@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * SeriesDisplays JModelList
  * @package BibleStudy.Site
  * @since 7.1.0
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
@@ -13,6 +14,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
 
 /**
+ * Model class for SeriesDisplays
  * @package BibleStudy.Site
  * @since 7.0.0
  */
