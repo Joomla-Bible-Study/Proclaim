@@ -43,45 +43,57 @@ class jbsDBhelper {
      * @return boolean
      */
     function alterDB($tables) {
-        
+        $msg = array();
+        $result = null;
         foreach ($tables as $t) {
-            $type = strtolower($t['type']);
+            $type = strtolower($t['type']); 
             $command = $t['command'];
             $table = $t['table'];
             $field = $t['field'];
             switch ($type)
             {
-                case 'drop':
-                    if (!table || !$field){break;}
+                case 'drop': 
+                    if (!$table || !$field){break;}
                     //check the field to see if it exists first
                     if ($this->checkTables($table, $field))
-                    {
+                    { 
                         $query = 'ALTER TABLE '.$table.' DROP '.$field;
                         $result = $this->performDB($query);
+                        if ($result){$msg[]= $result;}
                      }
                     break;
                 
                 case 'add':
-                    
+                    if (!$table || !$field){break;}
+                    if ($this->checkTables($table, $field))
+                    {
+                        $query = 'ALTER TABLE '.$table.' ADD '.$field.' '.$command;
+                        $result = $this->performDB($query);
+                        if ($result){$msg[]= $result;}
+                     }
                     break;
                 
                 case 'modify':
-                    
+                    if (!$table || !$field){break;}
+                    if ($this->checkTables($table, $field))
+                    {
+                        $query = 'ALTER TABLE '.$table.' MODIFY '.$field.' '.$command;
+                        $result = $this->performDB($query);
+                        if ($result){$msg[]= $result;}
+                     }
                     break;
-                
             }
             //dump($type,'type: '); dump($command, 'command: '); dump($table, 'table: '); dump($field, 'field: '); 
         }
-        //    $query = 'ALTER TABLE '.$table.' '.$command;
-        //    $db->setQuery($query);
-        //    $db->query();
-        if ($db->getErrorNum() != 0) {
-            return $db->stderr(true);
-        } else {
-            return true;
-        }
+       if (!empty($msg)){return $msg;}
+       else{return true;}
     }
     
+    /**
+     * performs a database query
+     * @param $query is a Joomla ready query
+     * @return boolean true if success, or error string if failed
+     */
     function performDB($query)
     {
         if (!$query){return false;}
@@ -89,10 +101,7 @@ class jbsDBhelper {
         $db->setQuery($query);
         $db->query();
         if ($db->getErrorNum() != 0) { return $db->stderr(true);}
-        else
-        {
-            return true;
-        }
+        else {return true;}
     }
     
     /**
