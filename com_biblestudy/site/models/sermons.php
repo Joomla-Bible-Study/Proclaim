@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Sermons Model
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -14,22 +15,27 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . 
 jimport('joomla.application.component.modellist');
 
 /**
+ * Model class for Sermons
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class BiblestudyModelSermons extends JModelList {
 
     /**
-     *
-     * @var type
+     * Files
+     * @var array
      */
     var $_files = null;
 
     /**
+     * Constructor.
      *
-     * @param string $config
+     * @param   array  $config  An optional associative array of configuration settings.
+     *
+     * @see     JController
+     * @since   11.1
      */
-    function __construct($config = array()) {
+    public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
                 'study.published',
@@ -52,7 +58,20 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
-     * @since   7.0
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
+     *
+     * @since   11.1
      */
     protected function populateState($ordering = 'study.studydate', $direction = 'DESC') {
         $app = JFactory::getApplication();
@@ -425,8 +444,8 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
+     * Translate item entries: books, topics
      * @since 7.0
-     * translate item entries: books, topics
      */
     public function getTranslated($items = array()) {
         foreach ($items as $item) {
@@ -437,11 +456,11 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
-     * @desc Returns the topics
+     * Returns the topics
      * @return Array
      * @since 7.0.2
      */
-    function getTopics() {
+    public function getTopics() {
         if (empty($this->_Topics)) {
             $db = $this->getDBO();
             $query = $db->getQuery(true);
@@ -470,8 +489,8 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
+     * Get a list of all used books
      * @since 7.0
-     * get a list of all used books
      */
     public function getBooks() {
         $db = $this->getDbo();
@@ -493,8 +512,8 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
+     * Get a list of all used teachers
      * @since 7.0
-     * get a list of all used teachers
      */
     public function getTeachers() {
         $db = $this->getDbo();
@@ -511,8 +530,8 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
+     * Get a list of all used series
      * @since 7.0
-     * get a list of all used series
      */
     public function getSeries() {
         $db = $this->getDbo();
@@ -529,8 +548,8 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
+     * Get a list of all used message types
      * @since 7.0
-     * get a list of all used message types
      */
     public function getMessageTypes() {
         $db = $this->getDbo();
@@ -547,8 +566,8 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
+     * Get a list of all used years
      * @since 7.0
-     * get a list of all used years
      */
     public function getYears() {
         $db = $this->getDBO();
@@ -564,8 +583,8 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
+     * Get the number of plays of this study
      * @since 7.0
-     * get the number of plays of this study
      */
     public function getPlays($id) {
         $db = $this->getDBO();
@@ -581,11 +600,11 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
-     * @desc Returns the Template to display the list
+     * Returns the Template to display the list
      * @return Array
      * @since 7.0.2
      */
-    function getTemplate() {
+    public function getTemplate() {
         if (empty($this->_template)) {
             $templateid = JRequest::getVar('t', 1, 'get', 'int');
             $db = $this->getDBO();
@@ -600,11 +619,11 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
-     * @desc Returns the Admin settings to display the list
+     * Returns the Admin settings to display the list
      * @return Array
      * @since 7.0.2
      */
-    function getAdmin() {
+    public function getAdmin() {
         if (empty($this->_admin)) {
             $db = $this->getDBO();
             $query = $db->getQuery(true);
@@ -618,11 +637,11 @@ class BiblestudyModelSermons extends JModelList {
     }
 
     /**
-     * @desc Returns the locations
+     * Returns the locations
      * @return Array
      * @since 7.0.2
      */
-    function getLocations() {
+    public function getLocations() {
         if (empty($this->_Locations)) {
             $db = $this->getDBO();
             $query = $db->getQuery(true);
@@ -636,11 +655,21 @@ class BiblestudyModelSermons extends JModelList {
         return $this->_Locations;
     }
 
+    /**
+     * Get Start 2
+     * @return string
+     */
     public function getStart2() {
         return $this->getState('list.start');
     }
 
-    function getDownloads($id) {
+    /**
+     * Get Downloads
+     * @todo Need to see if we can use this out of a helper to reduce code.
+     * @param int $id
+     * @return string
+     */
+    public function getDownloads($id) {
         $query = ' SELECT SUM(downloads) AS totalDownloads FROM #__bsms_mediafiles WHERE study_id = ' . $id . ' GROUP BY study_id';
         $result = $this->_getList($query);
         if (!$result) {
@@ -656,7 +685,7 @@ class BiblestudyModelSermons extends JModelList {
      * @return unknown_type
      */
     /* Tom commented this out because it caused the query to fail - needs work. */
-    function getFiles() {
+    public function getFiles() {
         $mediaFiles = null;
         $db = & JFactory::getDBO();
         $i = 0;
@@ -683,7 +712,7 @@ class BiblestudyModelSermons extends JModelList {
      * @access public
      * @return integer
      */
-    function getTotal() {
+    public function getTotal() {
         // Lets load the content if it doesn't already exist
         if (empty($this->_total)) {
             $query = $this->_getListQuery();

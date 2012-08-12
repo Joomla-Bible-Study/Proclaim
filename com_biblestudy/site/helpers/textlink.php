@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * TextLink Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,12 +12,12 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 
 /**
- *
- * @param type $params
- * @param type $row
- * @param type $textorpdf
- * @param type $admin_params
- * @param type $template
+ * Get Textlink
+ * @param object $params
+ * @param object $row
+ * @param string $textorpdf
+ * @param object $admin_params
+ * @param string $template
  * @return string
  */
 function getTextlink($params, $row, $textorpdf, $admin_params, $template) {
@@ -32,9 +33,6 @@ function getTextlink($params, $row, $textorpdf, $admin_params, $template) {
     if (!$t) {
         $t = JRequest::getVar('t', 1, 'get', 'int');
     }
-
-
-
     if (!$template->text || !substr_count($template->text, '/')) {
         $i_path = 'media/com_biblestudy/images/textfile24.png';
         $textimage = $images->getImagePath($i_path);
@@ -52,7 +50,6 @@ function getTextlink($params, $row, $textorpdf, $admin_params, $template) {
         $height = $textimage->height;
         $width = $textimage->width;
     }
-
 
     $link = JRoute::_('index.php?option=com_biblestudy&view=sermon' . '&id=' . $row->id . '&t=' . $t) . JHTML::_('behavior.tooltip');
     $details_text = $params->get('details_text');

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default Main
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -66,15 +67,15 @@ if (!$t) {
 
             case 2:
                         ?> </table><table id="seriesstudytable" cellspacing="0"><tr><td><?php
-        $studies = getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);
-        echo $studies;
+                $studies = getSeriesstudiesExp($this->items->id, $this->params, $this->admin_params, $this->template);
+                echo $studies;
                         ?>
                         </td></tr></table><?php
-                break;
-        }
-        if ($this->params->get('series_list_return') > 0) {
-            echo '<table><tr class="seriesreturnlink"><td><a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplays&t=' . $t) . '"><< ' . JText::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $this->items->id . '&t=' . $t) . '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >></a></td></tr></table>';
-        }
+                    break;
+            }
+            if ($this->params->get('series_list_return') > 0) {
+                echo '<table><tr class="seriesreturnlink"><td><a href="' . JRoute::_('index.php?option=com_biblestudy&view=seriesdisplays&t=' . $t) . '"><< ' . JText::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $this->items->id . '&t=' . $t) . '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >></a></td></tr></table>';
+            }
                 ?>
 
     </div><!--end of bspagecontainer div-->
@@ -82,5 +83,4 @@ if (!$t) {
     <input name="task" value="" type="hidden">
     <input name="boxchecked" value="0" type="hidden">
     <input name="controller" value="seriesdisplay" type="hidden">
-
 </form>

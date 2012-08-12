@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This is a PHP library that handles calling reCAPTCHA.
  *    - Documentation and latest version
  *          http://recaptcha.net/plugins/php/
@@ -31,8 +31,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ * @package BibleStudy
+ * @subpackage plg.reCAPTCHA
+ * @since 7.0.0
  */
-
 /**
  * The reCAPTCHA server URL's
  */
@@ -129,7 +131,16 @@ function recaptcha_get_html($pubkey, $error = null, $use_ssl = false) {
  */
 class ReCaptchaResponse {
 
+    /**
+     * ID
+     * @var int
+     */
     var $is_valid;
+
+    /**
+     * Error
+     * @var string
+     */
     var $error;
 
 }
@@ -193,6 +204,11 @@ function recaptcha_get_signup_url($domain = null, $appname = null) {
     return "https://www.google.com/recaptcha/admin/create?" . _recaptcha_qsencode(array('domains' => $domain, 'app' => $appname));
 }
 
+/**
+ * Recaptcha AES Pad
+ * @param string $val
+ * @return string
+ */
 function _recaptcha_aes_pad($val) {
     $block_size = 16;
     $numpad = $block_size - (strlen($val) % $block_size);
@@ -201,6 +217,12 @@ function _recaptcha_aes_pad($val) {
 
 /* Mailhide related code */
 
+/**
+ * Recaptcha AES Encrypt
+ * @param string $val
+ * @param string $ky
+ * @return string
+ */
 function _recaptcha_aes_encrypt($val, $ky) {
     if (!function_exists("mcrypt_encrypt")) {
         die("To use reCAPTCHA Mailhide, you need to have the mcrypt php module installed.");
@@ -211,12 +233,23 @@ function _recaptcha_aes_encrypt($val, $ky) {
     return mcrypt_encrypt($enc, $ky, $val, $mode, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 }
 
+/**
+ * Recaptcha MailHide UrlBase64
+ * @param string $x
+ * @return string
+ */
 function _recaptcha_mailhide_urlbase64($x) {
     return strtr(base64_encode($x), '+/', '-_');
 }
 
-/* gets the reCAPTCHA Mailhide url for a given email, public key and private key */
-
+/**
+ *  gets the reCAPTCHA Mailhide url for a given email, public key and private key
+ *
+ * @param string $pubkey
+ * @param string $privkey
+ * @param string $email
+ * @return string
+ */
 function recaptcha_mailhide_url($pubkey, $privkey, $email) {
     if ($pubkey == '' || $pubkey == null || $privkey == "" || $privkey == null) {
         die("To use reCAPTCHA Mailhide, you have to sign up for a public and private key, " .
@@ -234,6 +267,7 @@ function recaptcha_mailhide_url($pubkey, $privkey, $email) {
  * gets the parts of the email to expose to the user.
  * eg, given johndoe@example,com return ["john", "example.com"].
  * the email is then displayed as john...@example.com
+ * @param string $email
  */
 function _recaptcha_mailhide_email_parts($email) {
     $arr = preg_split("/@/", $email);
@@ -253,6 +287,10 @@ function _recaptcha_mailhide_email_parts($email) {
  * to get a key, go to:
  *
  * http://www.google.com/recaptcha/mailhide/apikey
+ * @param string $pubkey
+ * @param string $privkey
+ * @param string $email
+ * @return string
  */
 function recaptcha_mailhide_html($pubkey, $privkey, $email) {
     $emailparts = _recaptcha_mailhide_email_parts($email);

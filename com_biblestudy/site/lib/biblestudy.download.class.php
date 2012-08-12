@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * BibleStudy Download Class
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,6 +13,7 @@ defined('_JEXEC') or die;
 jimport('joomla.environment.response');
 
 /**
+ * BibleStudy Download Class
  * @package BibleStudy.Site
  * @since 7.0.0
  */
@@ -155,7 +157,7 @@ class Dump_File {
      * @param object $mid Media ID
      * @since 7.0.0
      */
-    function hitDownloads($mid) {
+    protected function hitDownloads($mid) {
         $db = JFactory::getDBO();
         $db->setQuery('UPDATE ' . $db->nameQuote('#__bsms_mediafiles') . 'SET ' . $db->nameQuote('downloads') . ' = ' . $db->nameQuote('downloads') . ' + 1 ' . ' WHERE id = ' . $mid);
         $db->query();

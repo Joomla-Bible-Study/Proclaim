@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Related Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -18,7 +19,7 @@ defined('_JEXEC') or die;
 class relatedStudies {
 
     /**
-     *
+     * Get Related
      * @param object $row
      * @param object $params
      * @return boolean
@@ -74,7 +75,7 @@ class relatedStudies {
     }
 
     /**
-     *
+     * Parse keys
      * @param string $source
      * @param string $compare
      * @param int $id
@@ -223,6 +224,7 @@ class relatedStudies {
      *
      * @param string $input
      * @return array
+     * @XXX Fix this look like it dos not work?
      */
     function removeCommonWords($input) {
 

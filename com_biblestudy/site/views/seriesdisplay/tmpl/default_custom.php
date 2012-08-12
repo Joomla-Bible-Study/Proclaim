@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default Custom
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,12 +11,8 @@ defined('_JEXEC') or die;
 
 $mainframe = JFactory::getApplication();
 $option = JRequest::getCmd('option');
-
 $document = JFactory::getDocument();
 $params = $this->params;
-
-
-
 $url = $this->params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);
@@ -28,7 +25,6 @@ if (!$t) {
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-
             <?php
             echo getSeriesDetailsExp($this->items, $this->params, $this->admin_params, $this->template);
             ?> <table id="bslisttable" cellspacing="0"> <?php
@@ -47,5 +43,4 @@ if (!$t) {
     <input name="task" value="" type="hidden">
     <input name="boxchecked" value="0" type="hidden">
     <input name="controller" value="seriesdisplay" type="hidden">
-
 </form>

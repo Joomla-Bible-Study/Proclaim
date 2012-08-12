@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Series Display JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -14,16 +15,23 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 
 /**
+ * View class for SeriesDisplays
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class BiblestudyViewSeriesdisplays extends JView {
 
     /**
-     * studieslist view display method
-     * @return void
-     * */
-    function display($tpl = null) {
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -139,9 +147,7 @@ class BiblestudyViewSeriesdisplays extends JView {
         $types3 = array_merge($types3, $series);
         $this->page->series = JHTML::_('select.genericlist', $types3, 'filter_series', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', "$filter_series");
 
-
         $this->assignRef('lists', $lists);
-
         $this->assignRef('request_url', $uri->toString());
         $this->assignRef('params', $params);
         parent::display($tpl);

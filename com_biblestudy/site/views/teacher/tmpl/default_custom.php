@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default Custom
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -8,11 +9,11 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe = & JFactory::getApplication();
+$mainframe = JFactory::getApplication();
 
-$pathway = & $mainframe->getPathWay();
-$uri = & JFactory::getURI();
-$database = & JFactory::getDBO();
+$pathway = $mainframe->getPathWay();
+$uri = JFactory::getURI();
+$database = JFactory::getDBO();
 $teacher = $this->teacher;
 $admin_params = $this->admin_params;
 $params = $this->params;
@@ -46,7 +47,6 @@ if (!$teacher->teacher_image) {
 }
 ?>
 <div id="biblestudy" class="noRefTagger">
-
     <?php
     if (!$teacher->teacher_image) {
         $image->path = $teacher->image;

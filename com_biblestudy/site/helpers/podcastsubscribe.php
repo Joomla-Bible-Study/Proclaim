@@ -109,7 +109,7 @@ class podcastSubscribe {
 
     /**
      * Get Podcasts
-     * @return type
+     * @return object
      */
     public static function getPodcasts() {
         $db = JFactory::getDBO();
@@ -136,7 +136,7 @@ class podcastSubscribe {
     }
 
     /**
-     *
+     * Build Podcast Image
      * @param array $podcastimagefromdb
      * @param array $words
      * @return string

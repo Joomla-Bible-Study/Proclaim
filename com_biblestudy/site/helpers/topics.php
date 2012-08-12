@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Topics Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,10 +11,10 @@
 defined('_JEXEC') or die;
 
 /**
- *
- * @param type $params
- * @param type $id
- * @param type $admin_params
+ * Get Topics for LandingPage
+ * @param object $params
+ * @param int $id
+ * @param object $admin_params
  * @return string
  */
 function getTopicsLandingPage($params, $id, $admin_params) {

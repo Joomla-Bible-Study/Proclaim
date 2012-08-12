@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Filesize Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -15,8 +16,6 @@ defined('_JEXEC') or die;
  * @return null|string
  */
 function getFilesize($file_size) {
-
-
     if (!$file_size) {
         $file_size = null;
         return $file_size;
@@ -44,7 +43,6 @@ function getFilesize($file_size) {
             $file_size = $file_size . ' ' . 'GB';
             break;
     }
-
     return $file_size;
 }
 

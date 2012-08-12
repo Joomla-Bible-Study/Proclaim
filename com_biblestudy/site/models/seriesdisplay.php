@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Series Display Model
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,6 +13,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modelitem');
 
 /**
+ * Model class for SeriesDisplay
  * @package BibleStudy.Site
  * @since 7.0.0
  */
@@ -102,7 +104,7 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
 
     /**
      * Method to store a record
-     *
+     * @todo Need to move this into the Helper.php
      * @access	public
      * @return	boolean	True on success
      */
@@ -118,7 +120,8 @@ class BiblestudyModelSeriesdisplay extends JModelItem {
     }
 
     /**
-     *
+     * Get Admin
+     * @todo Need to move this into the Helper.php
      * @return type
      */
     function getAdmin() {

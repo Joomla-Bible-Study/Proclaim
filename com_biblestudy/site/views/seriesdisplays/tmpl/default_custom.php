@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default Custom
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -8,11 +9,11 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-$mainframe = & JFactory::getApplication();
+$mainframe = JFactory::getApplication();
 $option = JRequest::getCmd('option');
 JHTML::_('behavior.tooltip');
 $series_menu = $this->params->get('series_id', 1);
-$document = & JFactory::getDocument();
+$document = JFactory::getDocument();
 $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
 $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 $params = $this->params;
@@ -23,10 +24,7 @@ if ($url) {
 $listingcall = JView::loadHelper('serieslist');
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
-
-<!--<tbody><tr>-->
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-
         <div id="bsmHeader">
             <h1 class="componentheading">
                 <?php
@@ -44,17 +42,12 @@ $listingcall = JView::loadHelper('serieslist');
                 ?>
             </h1>
             <!--header-->
-
-
             <div id="bsdropdownmenu">
-
                 <?php
                 if ($this->params->get('search_series') > 0) {
                     echo $this->lists['seriesid'];
                 }
                 ?>
-
-
             </div><!--dropdownmenu-->
             <?php
             switch ($params->get('series_wrapcode')) {

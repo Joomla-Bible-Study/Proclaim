@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Popup JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -14,17 +15,23 @@ jimport('joomla.application.component.view');
 // This is the popup window for the teachings.  We could put anything in this window.
 //TODO Need to Clean this up and rework to be proper Joomla calls bcc
 /**
- * Popup Jview
+ * View class for Popup
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyViewpopup extends JView {
 
     /**
-     * Dispay function
-     * @param string $tpl
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
      */
-    function display($tpl = null) {
+    public function display($tpl = null) {
 
         parent::display($tpl);
     }

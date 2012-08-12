@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * MediaFiles JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -15,16 +16,41 @@ jimport('joomla.application.component.helper');
 jimport('joomla.html.toolbar');
 
 /**
+ * View class for MediaFiles
  * @package     BibleStudy.Site
  * @since       7.0.0
  */
 class biblestudyViewmediafiles extends JView {
 
+    /**
+     * Items
+     * @var array
+     */
     protected $items;
+
+    /**
+     * Pagination
+     * @var array
+     */
     protected $pagination;
+
+    /**
+     * State
+     * @var array
+     */
     protected $state;
 
-    function display($tpl = null) {
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
         $this->canDo = BibleStudyHelper::getActions('', 'mediafilesedit');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
@@ -37,7 +63,6 @@ class biblestudyViewmediafiles extends JView {
             JError::raiseError(500, implode("\n", $errors));
             return false;
         }
-
 
         if (!$this->canDo->get('core.edit')) {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));

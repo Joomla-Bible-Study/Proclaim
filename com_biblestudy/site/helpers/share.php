@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Share Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,10 +12,10 @@ defined('_JEXEC') or die;
 
 /**
  * Share Helper file
- * @param type $link
- * @param type $row
- * @param type $params
- * @param type $admin_params
+ * @param string $link
+ * @param object $row
+ * @param object $params
+ * @param object $admin_params
  * @return null|string
  */
 function getShare($link, $row, $params, $admin_params) {
@@ -156,11 +157,11 @@ function getShare($link, $row, $params, $admin_params) {
 
 /**
  * make a URL small
- * @param type $url
- * @param type $login
- * @param type $appkey
- * @param type $format
- * @param type $version
+ * @param string $url
+ * @param string $login
+ * @param string $appkey
+ * @param string $format
+ * @param string $version
  * @return string
  */
 function make_bitly_url($url, $login, $appkey, $format = 'xml', $version = '2.0.1') {

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * LandingPage JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -21,10 +22,16 @@ jimport('joomla.application.component.view');
 class biblestudyViewLandingpage extends JView {
 
     /**
-     * Landing Page view display method
-     * @return void
-     * */
-    function display($tpl = null) {
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -104,8 +111,8 @@ class biblestudyViewLandingpage extends JView {
         $search = JString::strtolower($mainframe->getUserStateFromRequest($option . 'search', 'search', '', 'string'));
 
         $adminrows = new JBSAdmin();
-
-        $menu = @JSite::getMenu();
+        $JSite = new JSite();
+        $menu = $JSite->getMenu();
         $item = $menu->getActive();
 
         //Get the main study list image

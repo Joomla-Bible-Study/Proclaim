@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Comments Edit Controller
  * @package BibleStudy
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,21 +13,24 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controllerform');
 
 /**
+ * Controller class for CommentsEdit
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyControllerCommentsEdit extends JControllerForm {
 
     /**
-     *
+     * View List
      * @var type
      */
     protected $view_list = 'commentslist';
 
     /**
+     * View Item
      * @since	1.6
      */
     protected $view_item = 'commentsedit';
+
     /**
      * Method to cancel an edit.
      *
@@ -53,7 +57,7 @@ class biblestudyControllerCommentsEdit extends JControllerForm {
         return $result;
     }
 
-     /**
+    /**
      * Method to save a record.
      *
      * @param	string	$key	The name of the primary key of the URL variable.

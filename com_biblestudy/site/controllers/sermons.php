@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller Sermons
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,38 +12,39 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
 /**
+ * Controller class for Sermons
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class BiblestudyControllerSermons extends JController {
 
     /**
-     *
+     * Media Code
      * @var string
      */
     var $mediaCode;
 
     /**
-     * @desc Method to display the view
+     * Method to display the view
      * @access public
      */
-    function __construct() {
+    public function __construct() {
         parent::__construct();
 
         // Register Extra tasks
     }
 
     /**
-     * ?
+     * Display function
      */
-    function display() {
+    public function display() {
         parent::display();
     }
 
     /**
      * Download?
      */
-    function download() {
+    public function download() {
         $abspath = JPATH_SITE;
         require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
 
@@ -57,10 +59,10 @@ class BiblestudyControllerSermons extends JController {
     }
 
     /**
-     *
-     * @return type
+     * Avplayer
+     * @return none
      */
-    function avplayer() {
+    public function avplayer() {
         $task = JRequest::getVar('task');
         if ($task == 'avplayer') {
             $mediacode = JRequest::getVar('code');
@@ -73,19 +75,19 @@ class BiblestudyControllerSermons extends JController {
     /**
      * Add hits to the play count.
      */
-    function playHit() {
+    public function playHit() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
         $getMedia = new jbsMedia();
         $getMedia->hitPlay(JRequest::getInt('id'));
     }
 
     /**
-     * @desc: This function is supposed to generate the Media Player that is requested via AJAX
+     * This function is supposed to generate the Media Player that is requested via AJAX
      * from the studiesList view "default.php". It has not been implemented yet, so its not used.
      * @return unknown_type
      * @deprecated since version 7.0.4
      */
-    function inlinePlayer() {
+    public function inlinePlayer() {
         echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
     }
 

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version $Id: mediatable.php 1 $
- * @package BibleStudy
+ * MediaTable Helper
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,10 +13,10 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
 
 /**
- *
- * @param type $params
- * @param type $row
- * @param type $admin_params
+ * Get MediaTable
+ * @param array $params
+ * @param array $row
+ * @param array $admin_params
  * @return boolean|null|string
  */
 function getMediatable($params, $row, $admin_params) {
@@ -261,13 +261,13 @@ function getMediatable($params, $row, $admin_params) {
 }
 
 /**
- *
- * @param type $media
- * @param type $width
- * @param type $height
- * @param type $src
- * @param type $duration
- * @param type $filesize
+ * Get Docman
+ * @param string $media
+ * @param int $width
+ * @param int $height
+ * @param string $src
+ * @param string $duration
+ * @param int $filesize
  * @return string
  */
 function getDocman($media, $width, $height, $src, $duration, $filesize) {
@@ -281,11 +281,11 @@ function getDocman($media, $width, $height, $src, $duration, $filesize) {
 }
 
 /**
- *
- * @param type $media
- * @param type $width
- * @param type $height
- * @param type $src
+ * Get Article
+ * @param string $media
+ * @param int $width
+ * @param int $height
+ * @param string $src
  * @return string
  */
 function getArticle($media, $width, $height, $src) {
@@ -297,12 +297,12 @@ function getArticle($media, $width, $height, $src) {
 }
 
 /**
- *
- * @param type $media
- * @param type $width
- * @param type $height
- * @param type $src
- * @param type $params
+ * Get Virtuart
+ * @param string $media
+ * @param int $width
+ * @param int $height
+ * @param string $src
+ * @param string $params
  * @return string
  */
 function getVirtuemart($media, $width, $height, $src, $params) {
@@ -315,9 +315,9 @@ function getVirtuemart($media, $width, $height, $src, $params) {
 }
 
 /**
- *
- * @param type $study_id
- * @return type
+ * Get MediaRows
+ * @param int $study_id
+ * @return object
  */
 function getMediaRows($study_id) {
     $query = 'SELECT #_bsms_mediafiles.*,'

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * BibleStudy images class
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,13 +12,15 @@ defined('_JEXEC') or die;
 jimport('joomla.html.parameter');
 
 /**
+ * BibleStudy images class
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class jbsImages {
 
     /**
-     *
+     * Admin Settings
+     * @todo move to the helper
      * @return \JRegistry
      */
     function adminSettings() {
@@ -35,8 +38,8 @@ class jbsImages {
     }
 
     /**
-     *
-     * @param type $path
+     * Get Image Path
+     * @param string $path
      * @return \JObject
      */
     function getImagePath($path) {
@@ -72,8 +75,8 @@ class jbsImages {
     }
 
     /**
-     *
-     * @return type
+     * Main Study Image
+     * @return string
      */
     function mainStudyImage() {
         $mainimage = array();
@@ -99,7 +102,7 @@ class jbsImages {
     }
 
     /**
-     *
+     * Get MediaImage Folder
      * @return string
      */
     function getMediaImageFolder() {
@@ -111,7 +114,8 @@ class jbsImages {
     }
 
     /**
-     *
+     * Get SeriesImage Folder
+     * @todo Tom need to look at this and verify this is right
      * @return string
      */
     function getSeriesImageFolder() {
@@ -122,7 +126,8 @@ class jbsImages {
     }
 
     /**
-     *
+     * Get StudiesImage Folder
+     * @todo Tom need to look at this and verify this is right
      * @return string
      */
     function getStudiesImageFolder() {
@@ -133,7 +138,8 @@ class jbsImages {
     }
 
     /**
-     *
+     * Get TeacherImage Folder
+     * @todo Tom need to look at this and verify this is right
      * @return string
      */
     function getTeacherImageFolder() {
@@ -144,9 +150,9 @@ class jbsImages {
     }
 
     /**
-     *
-     * @param type $image
-     * @return type
+     * Get Study Thumbnail
+     * @param string $image
+     * @return string
      */
     function getStudyThumbnail($image = 'openbible.png') {
         $imagepath = array();
@@ -160,9 +166,9 @@ class jbsImages {
     }
 
     /**
-     *
-     * @param type $image
-     * @return type
+     * Get Series Thumbnail
+     * @param string $image
+     * @return string
      */
     function getSeriesThumbnail($image = 'openbible.png') {
         $imagepath = array();
@@ -176,10 +182,10 @@ class jbsImages {
     }
 
     /**
-     *
-     * @param type $image1
-     * @param type $image2
-     * @return type
+     * Get Teacher Thumbnail
+     * @param string $image1
+     * @param string $image2
+     * @return string
      */
     function getTeacherThumbnail($image1 = NULL, $image2 = NULL) {
         $imagepath = array();
@@ -202,10 +208,10 @@ class jbsImages {
     }
 
     /**
-     *
-     * @param type $image1
-     * @param type $image2
-     * @return type
+     * Get Teacher Image
+     * @param string $image1
+     * @param string $image2
+     * @return string
      */
     function getTeacherImage($image1 = null, $image2 = null) {
         $imagepath = array();
@@ -226,10 +232,10 @@ class jbsImages {
     }
 
     /**
-     *
-     * @param type $media1
-     * @param type $media2
-     * @return type
+     * Get Media Image
+     * @param string $media1
+     * @param string $media2
+     * @return string
      */
     function getMediaImage($media1 = NULL, $media2 = NULL) {
         $imagepath = array();
@@ -250,11 +256,12 @@ class jbsImages {
     }
 
     /**
-     *
-     * @return type
+     * Get Show Hide
+     * @todo Brent Cordis need to refacter this to pull admin params from the helper.php
+     * @return string
      */
     function getShowHide() {
-        $database = & JFactory::getDBO();
+        $database = JFactory::getDBO();
         $database->setQuery("SELECT * FROM #__bsms_admin WHERE id = 1");
         $admin = $database->loadObject();
 

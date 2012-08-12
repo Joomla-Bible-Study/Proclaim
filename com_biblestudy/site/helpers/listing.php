@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Listing Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -15,13 +16,13 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'route.php');
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $oddeven
- * @param type $admin_params
- * @param type $template
- * @param type $ismodule
+ * Get listing
+ * @param object $row
+ * @param object $params
+ * @param string $oddeven
+ * @param object $admin_params
+ * @param object $template
+ * @param string $ismodule
  * @return string
  */
 function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule) {
@@ -569,25 +570,26 @@ function getListing($row, $params, $oddeven, $admin_params, $template, $ismodule
 
     return $listing;
 }
+
 /**
- *
- * @param type $elementid
- * @param type $element
- * @param type $rowcolid
- * @param type $colspan
- * @param type $rowspan
- * @param type $lastcol
- * @param type $islink
- * @param type $id3
- * @param type $tid
- * @param type $smenu
- * @param type $tmenu
- * @param type $entry_access
- * @param type $allow_entry
- * @param type $params
- * @param type $admin_params
- * @param type $row
- * @param type $template
+ * Get Cell
+ * @param int $elementid
+ * @param string $element
+ * @param int $rowcolid
+ * @param string $colspan
+ * @param string $rowspan
+ * @param string $lastcol
+ * @param string $islink
+ * @param string $id3
+ * @param int $tid
+ * @param string $smenu
+ * @param string $tmenu
+ * @param string $entry_access
+ * @param string $allow_entry
+ * @param object $params
+ * @param object $admin_params
+ * @param string $row
+ * @param object $template
  * @return string
  */
 function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, $islink, $id3, $tid, $smenu, $tmenu, $entry_access, $allow_entry, $params, $admin_params, $row, $template) {
@@ -644,16 +646,16 @@ function getCell($elementid, $element, $rowcolid, $colspan, $rowspan, $lastcol, 
 }
 
 /**
- *
- * @param type $islink
- * @param type $id3
- * @param type $tid
- * @param type $smenu
- * @param type $tmenu
- * @param type $params
- * @param type $admin_params
- * @param type $row
- * @param type $template
+ * Get Link
+ * @param string $islink
+ * @param string $id3
+ * @param int $tid
+ * @param string $smenu
+ * @param string $tmenu
+ * @param object $params
+ * @param object $admin_params
+ * @param object $row
+ * @param object $template
  * @return string
  */
 function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $row, $template) {
@@ -685,7 +687,7 @@ function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $r
             if ($tmenu > 0) {
                 $link .= '&Itemid=' . $tmenu;
             }
-            $column .= '<a href="' . $link . '">'; 
+            $column .= '<a href="' . $link . '">';
             break;
 
         case 4 :
@@ -728,12 +730,12 @@ function getLink($islink, $id3, $tid, $smenu, $tmenu, $params, $admin_params, $r
 }
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $admin_params
- * @param type $template
- * @return type
+ * Get Listing Exp
+ * @param object $row
+ * @param object $params
+ * @param object $admin_params
+ * @param object $template
+ * @return object
  */
 function getListingExp($row, $params, $admin_params, $template) {
     $Media = new jbsMedia();
@@ -775,12 +777,12 @@ function getListingExp($row, $params, $admin_params, $template) {
 }
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $admin_params
- * @param type $template
- * @return type
+ * Get Study Exp
+ * @param object $row
+ * @param object $params
+ * @param object $admin_params
+ * @param object $template
+ * @return object
  */
 function getStudyExp($row, $params, $admin_params, $template) {
     $Media = new jbsMedia();

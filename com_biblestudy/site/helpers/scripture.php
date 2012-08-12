@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Scripure Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -8,12 +9,13 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+
 /**
- *
- * @param type $params
- * @param type $row
- * @param type $esv
- * @param type $scripturerow
+ * Get Scripture
+ * @param object $params
+ * @param object $row
+ * @param string $esv
+ * @param string $scripturerow
  * @return strings
  */
 function getScripture($params, $row, $esv, $scripturerow) {
@@ -136,8 +138,7 @@ function getScripture($params, $row, $esv, $scripturerow) {
     if ($row->booknumber > 166) {
         $scripture = $book;
     }
-    if ($show_verses == 2)
-    {
+    if ($show_verses == 2) {
         $scripture = $book;
     }
     return $scripture;

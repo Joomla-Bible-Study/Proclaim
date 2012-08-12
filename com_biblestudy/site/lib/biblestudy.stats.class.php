@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * BibleStudy Stats Class
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -14,14 +15,15 @@ $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR .
 include_once ($path1 . 'helper.php');
 
 /**
+ * BibleStudy Stats Class
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class jbStats {
 
     /**
-     *
-     * @param type $item
+     * Top Score Site
+     * @param object $item
      * @return string
      */
     function top_score_site($item) {
@@ -39,7 +41,7 @@ class jbStats {
 			where m.published = 1 GROUP BY m.study_id');
         $format = $admin_params->get('format_popular', '0');
 
-       // $db->query();
+        // $db->query();
 
         $items = $db->loadObjectList();
 
@@ -61,7 +63,7 @@ class jbStats {
             $db->setQuery('SELECT #__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits, #__bsms_studies.id,
             #__bsms_mediafiles.study_id from #__bsms_studies LEFT JOIN #__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)
             WHERE #__bsms_mediafiles.study_id = ' . $result->study_id);
-           // $db->query();
+            // $db->query();
             $hits = $db->loadObject();
             if (!$hits->studytitle) {
                 $name = $hits->id;

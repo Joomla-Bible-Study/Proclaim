@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * BibleStudy Podcast Class
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -16,13 +17,14 @@ include_once($path1 . 'scripture.php');
 $this->admin_params = getAdminsettings();
 
 /**
+ * BibleStudy Podcast Class
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class JBSPodcast {
 
     /**
-     *
+     * Make Podcasts
      * @return boolean|string
      */
     function makePodcasts() {
@@ -121,7 +123,9 @@ class JBSPodcast {
                             $hours = '00';
                         }
                         //if there is no length set, we default to 35 minuts
-                        if (!$episode->media_minutes && !$episode->media_seconds){$episode->media_minutes = 35;}
+                        if (!$episode->media_minutes && !$episode->media_seconds) {
+                            $episode->media_minutes = 35;
+                        }
                         $esv = 0;
                         $scripturerow = 1;
                         $episode->id = $episode->study_id;
@@ -232,10 +236,10 @@ class JBSPodcast {
     }
 
     /**
-     *
-     * @param type $id
-     * @param type $limit
-     * @return type
+     * Get Episodes
+     * @param int $id
+     * @param string $limit
+     * @return object
      */
     function getEpisodes($id, $limit) {
         //here's where we look at each mediafile to see if they are connected to this podcast
@@ -268,9 +272,9 @@ class JBSPodcast {
     }
 
     /**
-     *
-     * @param type $file
-     * @param type $filecontent
+     * Write the File
+     * @param string $file
+     * @param string $filecontent
      * @return boolean|string
      */
     function writeFile($file, $filecontent) {

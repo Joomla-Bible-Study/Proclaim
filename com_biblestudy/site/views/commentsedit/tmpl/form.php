@@ -1,5 +1,6 @@
 <?php
 /**
+ * Form
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -31,31 +32,29 @@ defined('_JEXEC') or die;
                         <?php echo $this->form->getLabel('study_id'); ?>
                     </td><td>
                         <?php echo $this->form->getInput('study_id'); ?>
-                    </td> </tr>
+                    </td></tr>
                 <tr><td>
                         <?php echo $this->form->getLabel('comment_date'); ?>
                     </td><td>
                         <?php echo $this->form->getInput('comment_date'); ?>
-                    </td> </tr>
+                    </td></tr>
                 <tr><td>
                         <?php echo $this->form->getLabel('full_name'); ?>
                     </td><td>
                         <?php echo $this->form->getInput('full_name'); ?>
-                    </td> </tr>
+                    </td></tr>
                 <tr><td>
                         <?php echo $this->form->getLabel('user_email'); ?>
                     </td><td>
                         <?php echo $this->form->getInput('user_email'); ?>
-                    </td> </tr>
+                    </td></tr>
                 <tr><td>
                         <?php echo $this->form->getLabel('comment_text'); ?>
                     </td><td>
                         <?php echo $this->form->getInput('comment_text'); ?>
                     </td></tr>
             </table>
-
         </fieldset>
-
     </div>
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>

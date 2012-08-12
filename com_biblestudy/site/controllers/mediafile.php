@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller MediaFile
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,6 +13,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controllerform');
 
 /**
+ * Controller class for MediaFile
  * @package BibleStudy.Site
  * @since 7.0.0
  */
@@ -37,10 +39,10 @@ class biblestudyControllermediafile extends JControllerForm {
     }
 
     /**
-     *
-     * @param type $name
-     * @param type $prefix
-     * @return type
+     * Get Model
+     * @param string $name
+     * @param string $prefix
+     * @return array
      */
     public function &getModel($name = 'mediafile', $prefix = 'biblestudyModel') {
         $model = parent::getModel($name, $prefix, array('ignore_request' => true));
@@ -50,7 +52,7 @@ class biblestudyControllermediafile extends JControllerForm {
     /**
      * Link to Docman Category Items
      */
-    function docmanCategoryItems() {
+    public function docmanCategoryItems() {
         //hide errors and warnings
         error_reporting(0);
         $catId = JRequest::getVar('catId');
@@ -63,7 +65,7 @@ class biblestudyControllermediafile extends JControllerForm {
     /**
      * Link to Sections May need to be Removed.
      */
-    function articlesSectionCategories() {
+    public function articlesSectionCategories() {
         error_reporting(0);
         $secId = JRequest::getVar('secId');
 
@@ -75,7 +77,7 @@ class biblestudyControllermediafile extends JControllerForm {
     /**
      * Link to Articals Category Items
      */
-    function articlesCategoryItems() {
+    public function articlesCategoryItems() {
         error_reporting(0);
         $catId = JRequest::getVar('catId');
 
@@ -87,7 +89,7 @@ class biblestudyControllermediafile extends JControllerForm {
     /**
      * Link to VertueMart Items
      */
-    function virtueMartItems() {
+    public function virtueMartItems() {
         error_reporting(0);
         $catId = JRequest::getVar('catId');
 
@@ -99,7 +101,7 @@ class biblestudyControllermediafile extends JControllerForm {
     /**
      * Reset Download count
      */
-    function resetDownloads() {
+    public function resetDownloads() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'post');
         $db = JFactory::getDBO();
@@ -119,7 +121,7 @@ class biblestudyControllermediafile extends JControllerForm {
     /**
      * Reset Play Count
      */
-    function resetPlays() {
+    public function resetPlays() {
         $msg = null;
         $id = JRequest::getInt('id', 0, 'post');
         $db = JFactory::getDBO();
@@ -135,4 +137,5 @@ class biblestudyControllermediafile extends JControllerForm {
             $this->setRedirect('index.php?option=com_biblestudy&view=mediafilesedit&controller=studiesedit&layout=form&cid[]=' . $id, $msg);
         }
     }
+
 }

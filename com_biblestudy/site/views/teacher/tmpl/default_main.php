@@ -43,9 +43,9 @@ if (!$studieslisttemplateid) {
                     <tr><td class="bsm_teachername">
                             <?php echo $teacherdisplay; ?>
                         </td></tr>
-                    <tr> <td class="bsm_teacheraddress">
+                    <tr><td class="bsm_teacheraddress">
                             <?php echo $this->item->address; ?></td></tr>
-                    <tr> <td class="bsm_teacherphone">
+                    <tr><td class="bsm_teacherphone">
                             <?php echo $this->item->phone; ?></td></tr>
                     <tr><td class="bsm_teacheremail">
                             <?php
@@ -72,32 +72,32 @@ if (!$studieslisttemplateid) {
                             <?php if ($this->item->facebooklink) { ?>
                                 <a href="<?php echo $this->item->facebooklink; ?>"><?php echo JText::_('JBS_TCH_FACEBOOK'); ?></a>
                             <?php } ?>
-                    </td></tr>
+                        </td></tr>
                     <tr><td class="bsm_teachertwitter">
                             <?php if ($this->item->twitterlink) { ?>
                                 <a href="<?php echo $this->item->twitterlink; ?>"><?php echo JText::_('JBS_TCH_TWITTER'); ?></a>
                             <?php } ?>
-                    </td></tr>
+                        </td></tr>
                     <tr><td class="bsm_teacherblog">
                             <?php if ($this->item->bloglink) { ?>
                                 <a href="<?php echo $this->item->bloglink; ?>"><?php echo JText::_('JBS_TCH_BLOG'); ?></a>
                             <?php } ?>
-                    </td></tr>
+                        </td></tr>
                     <tr><td class="bsm_teacherlink1">
                             <?php if ($this->item->link1) { ?>
                                 <a href="<?php echo $this->item->link1; ?>"><?php echo $this->item->linklabel1 ?></a>
                             <?php } ?>
-                    </td></tr>
+                        </td></tr>
                     <tr><td class="bsm_teacherlink2">
                             <?php if ($this->item->link2) { ?>
                                 <a href="<?php echo $this->item->link2; ?>"><?php echo $this->item->linklabel2 ?></a>
                             <?php } ?>
-                    </td></tr>
+                        </td></tr>
                     <tr><td class="bsm_teacherlink3">
                             <?php if ($this->item->link3) { ?>
                                 <a href="<?php echo $this->item->link1; ?>"><?php echo $this->item->linklabel3 ?></a>
                             <?php } ?>
-                    </td></tr>
+                        </td></tr>
                 </table>
             </td>
         </tr>
@@ -112,7 +112,7 @@ if (!$studieslisttemplateid) {
     <?php ?> <table id="bslisttable" cellspacing="0"><tr><td> <?php
     switch ($this->params->get('show_teacher_studies')) {
         case 1:
-            ?>    <table  id="bsm_teachertable" cellspacing="0">
+            ?><table  id="bsm_teachertable" cellspacing="0">
                             <tr class="titlerow"><td class="title" colspan="3"><?php echo $this->params->get('label_teacher'); ?></td></tr>
 
                             <tr class="bsm_studiestitlerow">
@@ -123,54 +123,64 @@ if (!$studieslisttemplateid) {
                             <?php foreach ($this->teacherstudies as $study) { ?>
                                 <tr>
                                     <td class="bsm_studylink"> <a href="index.php?option=com_biblestudy&view=sermon&id=<?php echo $study->id . '&t=' . $studieslisttemplateid; ?>"><?php echo $study->studytitle; ?></a></td>
-                                    <td class="bsm_scripture"> <?php
-                                if ($study->bookname) {
-                                    echo JText::_($study->bookname) . ' ' . $study->chapter_begin;
-                                }
-                                ?></td>
-                                    <td class="bsm_date"> <?php
-                            $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC'));
-                            echo $date;
-                                ?></td>
+                                    <td class="bsm_scripture">
+                                        <?php
+                                        if ($study->bookname) {
+                                            echo JText::_($study->bookname) . ' ' . $study->chapter_begin;
+                                        }
+                                        ?>
+                                    </td>
+                                    <td class="bsm_date">
+                                        <?php
+                                        $date = JHTML::_('date', $study->studydate, JText::_('DATE_FORMAT_LC'));
+                                        echo $date;
+                                        ?>
+                                    </td>
                                 </tr>
                             <?php } // end of foreach ?>
                         </table><?php
                     break;
-
                 case 2:
                             ?>
                         <table id="bsm_teachertable" cellspacing="0">
                             <tr class="titlerow">
-                                <td class="title" colspan="3"><?php echo $this->params->get('label_teacher'); ?></td></tr></table><table id="bslisttable" cellspacing="0"><tr><td><?php
-                $headerCall = JView::loadHelper('header');
-                $header = getHeader($this->teacherstudies[0], $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
-                echo $header;
-                $class1 = 'bsodd';
-                $class2 = 'bseven';
-                $oddeven = $class1;
-                foreach ($this->teacherstudies as $row) { //Run through each row of the data result from the model
-                    if ($oddeven == $class1) { //Alternate the color background
-                        $oddeven = $class2;
-                    } else {
-                        $oddeven = $class1;
-                    }
-                    $studies = getListing($row, $this->params, $oddeven, $admin_params, $this->template, $ismodule = 0);
-
-                    echo $studies;
-                }
-                            ?>
+                                <td class="title" colspan="3">
+                                    <?php echo $this->params->get('label_teacher'); ?>
                                 </td>
                             </tr>
-                        </table><?php
-                            break;
+                        </table>
+                        <table id="bslisttable" cellspacing="0">
+                            <tr>
+                                <td>
+                                    <?php
+                                    $headerCall = JView::loadHelper('header');
+                                    $header = getHeader($this->teacherstudies[0], $this->params, $this->admin_params, $this->template, $showheader = $this->params->get('use_headers_list'), $ismodule = 0);
+                                    echo $header;
+                                    $class1 = 'bsodd';
+                                    $class2 = 'bseven';
+                                    $oddeven = $class1;
+                                    foreach ($this->teacherstudies as $row) { //Run through each row of the data result from the model
+                                        if ($oddeven == $class1) { //Alternate the color background
+                                            $oddeven = $class2;
+                                        } else {
+                                            $oddeven = $class1;
+                                        }
+                                        $studies = getListing($row, $this->params, $oddeven, $admin_params, $this->template, $ismodule = 0);
 
-                        case 3:
-
-                            $studies = getTeacherStudiesExp($this->item->id, $this->params, $admin_params, $this->template);
-                            echo $studies;
-                            break;
-                    }
-                    ?>
+                                        echo $studies;
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                        </table>
+                        <?php
+                        break;
+                    case 3:
+                        $studies = getTeacherStudiesExp($this->item->id, $this->params, $admin_params, $this->template);
+                        echo $studies;
+                        break;
+                }
+                ?>
             </td>
         </tr>
         <tr>
@@ -178,7 +188,7 @@ if (!$studieslisttemplateid) {
                 if ($this->params->get('teacherlink', '1') > 0) {
                     echo ' | <a href="index.php?option=com_biblestudy&view=sermons&filter_teacher=' . (int) $this->item->id . '&t=' . $t . '">' . JText::_('JBS_TCH_MORE_FROM_THIS_TEACHER') . ' --></a>';
                 }
-                    ?>
+                ?>
             </td>
         </tr>
     </table>

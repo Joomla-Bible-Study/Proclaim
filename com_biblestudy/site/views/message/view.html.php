@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Message JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -13,28 +14,59 @@ require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTO
 jimport('joomla.application.component.view');
 
 /**
+ * View class for Message
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyViewmessage extends JView {
 
+    /**
+     * Form
+     * @var array
+     */
     protected $form;
+
+    /**
+     * Item
+     * @var array
+     */
     protected $item;
+
+    /**
+     * State
+     * @var array
+     */
     protected $state;
+
+    /**
+     * Admin
+     * @var array
+     */
     protected $admin;
 
-    function display($tpl = null) {
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
 
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $option = JRequest::getCmd('option');
-        @JApplication::setUserState($option . 'sid', $this->item->id);
-        @JApplication::setUserState($option . 'sdate', $this->item->studydate);
+        $JApplication = new JApplication();
+        $JApplication->setUserState($option . 'sid', $this->item->id);
+        $JApplication->setUserState($option . 'sdate', $this->item->studydate);
         $this->mediafiles = $this->get('MediaFiles');
         $this->setLayout('form');
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'message');
         $this->loadHelper('params');
-        $this->admin = @BsmHelper::getAdmin($isSite = true);
+        $this->admin = BsmHelper::getAdmin($isSite = true);
 
         $user = JFactory::getUser();
 

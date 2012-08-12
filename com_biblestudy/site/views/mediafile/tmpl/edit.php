@@ -1,5 +1,6 @@
 <?php
 /**
+ * Edit
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -132,16 +133,13 @@ if ($this->item->path) {
 </script>
 
 <div class="edit">
-    <form
-        action="<?php
+    <form action="<?php
 if (JRequest::getWord('layout', '') == 'modal') {
     $url = 'index.php?option=com_biblestudy&layout=mediafile&tmpl=component&layout=modal&id=' . (int) $this->item->id;
 } else {
     $url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
 } echo JRoute::_($url);
-?>"
-        method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
-
+?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
         <fieldset class="panelform">
             <div class="formelm-buttons">
                 <legend>
@@ -154,11 +152,9 @@ if (JRequest::getWord('layout', '') == 'modal') {
                             <button type="button" onclick="window.parent.SqueezeBox.close();  ">
                                 <?php echo JText::_('JCANCEL'); ?></button>
                         </div> <?php } ?>
-
                 </legend>
             </div>
             <div class="formelm">
-
                 <?php echo $this->form->getLabel('published'); ?>
                 <?php echo $this->form->getInput('published'); ?>
             </div>
@@ -191,7 +187,6 @@ if (JRequest::getWord('layout', '') == 'modal') {
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></legend>
             <div class="formelm">
-
                 <?php echo $this->form->getLabel('player'); ?>
                 <?php echo $this->form->getInput('player'); ?>
             </div>
@@ -204,8 +199,6 @@ if (JRequest::getWord('layout', '') == 'modal') {
                 <?php echo $this->form->getInput('mediacode'); ?>
             </div>
         </fieldset>
-
-
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_MED_MEDIA_TYPE'); ?></legend>
             <div class="formelm">
@@ -217,9 +210,6 @@ if (JRequest::getWord('layout', '') == 'modal') {
                 <?php echo $this->form->getInput('mime_type', null, $this->admin->params['mime']); ?>
             </div>
         </fieldset>
-
-
-
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_MED_MEDIA_FILES'); ?></legend>
             <div class="formelm">
@@ -260,34 +250,32 @@ if (JRequest::getWord('layout', '') == 'modal') {
                 <tbody>
                     <tr><td>
                             <?php echo $this->upload_server; ?></td>
-                        </td></tr>
+                    </tr>
                     <tr><td>
                             <?php echo $this->upload_folder; ?></td>
-                        </td></tr>
-                    <tr>
-                        <td> 
-                           
-                                <input type="file" name ="uploadfile" value="" /><button type="button" onclick="submitbutton('upload')">
-                                    <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?> </button> 
-                        </td><td></td>
+                    </tr>
+                    <tr><td>
+                            <input type="file" name ="uploadfile" value="" />
+                            <button type="button" onclick="submitbutton('upload')">
+                                <?php echo JText::_('JBS_STY_UPLOAD_BUTTON'); ?></button></td>
                     </tr>
                 </tbody>
             </table>
         </fieldset>
-        <div class="formelm">
-            <?php echo $this->form->getLabel('docMan_id'); ?>
-            <?php echo $this->form->getInput('docMan_id'); ?>
-        </div>
-        <div class="formelm">
-            <?php echo $this->form->getLabel('virtueMart_id'); ?>
-            <?php echo $this->form->getInput('virtueMart_id'); ?>
-        </div>
-        <div class="formelm">
-            <?php echo $this->form->getLabel('article_id'); ?>
-            <?php echo $this->form->getInput('article_id'); ?>
-        </div>
+        <fieldset class="panelform">
+            <div class="formelm">
+                <?php echo $this->form->getLabel('docMan_id'); ?>
+                <?php echo $this->form->getInput('docMan_id'); ?>
+            </div>
+            <div class="formelm">
+                <?php echo $this->form->getLabel('virtueMart_id'); ?>
+                <?php echo $this->form->getInput('virtueMart_id'); ?>
+            </div>
+            <div class="formelm">
+                <?php echo $this->form->getLabel('article_id'); ?>
+                <?php echo $this->form->getInput('article_id'); ?>
+            </div>
         </fieldset>
-
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
             <?php
@@ -310,5 +298,4 @@ if (JRequest::getWord('layout', '') == 'modal') {
         <?php echo JHtml::_('form.token'); ?>
         <input type="hidden" name="controller" value="mediafile" />
     </form>
-
 </div>

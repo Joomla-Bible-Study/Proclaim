@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Joomla! Bible Study Media class.
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -186,7 +187,7 @@ class jbsMedia {
                 . ' ON (s.id = #__bsms_mediafiles.study_id) LEFT JOIN #__bsms_teachers AS t ON (t.id = s.teacher_id)'
                 . ' WHERE #__bsms_mediafiles.study_id = ' . $id . ' AND #__bsms_mediafiles.published = 1 ORDER BY ordering ASC, #__bsms_media.media_image_name ASC';
         $db->setQuery($query);
-       // $db->query();
+        // $db->query();
         if ($media = $db->loadObjectList()) {
             return $media;
         } else {

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default Custom
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -8,8 +9,8 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-$user = & JFactory::getUser();
-$mainframe = & JFactory::getApplication();
+$user = JFactory::getUser();
+$mainframe = JFactory::getApplication();
 $option = JRequest::getCmd('option');
 $params = $this->params;
 
@@ -28,54 +29,51 @@ $listingcall = JView::loadHelper('teacher');
         <tbody>
             <tr class="titlerow">
                 <td align="center" colspan="3" class="title" >
-<?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
+                    <?php echo $this->params->get('teacher_title', JText::_('JBS_TCH_OUR_TEACHERS')); ?>
                 </td>
             </tr>
         </tbody>
     </table>
-
-    <tr><td>
-            <?php
-            switch ($params->get('teacher_wrapcode')) {
-                case '0':
-                    //Do Nothing
-                    break;
-                case 'T':
-                    //Table
-                    echo '<table id="bsms_teachertable" width="100%">';
-                    break;
-                case 'D':
-                    //DIV
-                    echo '<div>';
-                    break;
-            }
-            echo $params->get('teacher_headercode');
+    <?php
+    switch ($params->get('teacher_wrapcode')) {
+        case '0':
+            //Do Nothing
+            break;
+        case 'T':
+            //Table
+            echo '<table id="bsms_teachertable" width="100%">';
+            break;
+        case 'D':
+            //DIV
+            echo '<div>';
+            break;
+    }
+    echo $params->get('teacher_headercode');
 
 
-            foreach ($this->items as $row) { //Run through each row of the data result from the model
-                $listing = getTeacherListExp($row, $params, $oddeven = 0, $this->admin_params, $t);
-                echo $listing;
-            }
+    foreach ($this->items as $row) { //Run through each row of the data result from the model
+        $listing = getTeacherListExp($row, $params, $oddeven = 0, $this->admin_params, $t);
+        echo $listing;
+    }
 
-            switch ($params->get('teacher_wrapcode')) {
-                case '0':
-                    //Do Nothing
-                    break;
-                case 'T':
-                    //Table
-                    echo '</table>';
-                    break;
-                case 'D':
-                    //DIV
-                    echo '</div>';
-                    break;
-            }
-            ?>
-
-            <div class="listingfooter" >
-                <?php
-                echo $this->pagination->getPagesLinks();
-                echo $this->pagination->getPagesCounter();
-                ?>
-            </div> <!--end of bsfooter div-->
+    switch ($params->get('teacher_wrapcode')) {
+        case '0':
+            //Do Nothing
+            break;
+        case 'T':
+            //Table
+            echo '</table>';
+            break;
+        case 'D':
+            //DIV
+            echo '</div>';
+            break;
+    }
+    ?>
+    <div class="listingfooter" >
+        <?php
+        echo $this->pagination->getPagesLinks();
+        echo $this->pagination->getPagesCounter();
+        ?>
+    </div> <!--end of bsfooter div-->
 </div>

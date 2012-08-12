@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Route Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -21,9 +22,15 @@ jimport('joomla.application.component.helper');
  */
 abstract class BiblestudyHelperRoute {
 
+    /**
+     * Lookup
+     * @var string
+     */
     protected static $lookup;
 
     /**
+     * Get Artical Rout
+     * @XXX This need to be fixed
      * @param	int	The route of the study item
      */
     public static function getArticleRoute($id) {
@@ -37,6 +44,7 @@ abstract class BiblestudyHelperRoute {
     }
 
     /**
+     * Get Teacher Route
      * @param	int	The route of the teacher item
      */
     public static function getTeacherRoute($id) {
@@ -49,6 +57,11 @@ abstract class BiblestudyHelperRoute {
         return $link;
     }
 
+    /**
+     * Get Series Route
+     * @param int $id
+     * @return string
+     */
     public static function getSeriesRoute($id) {
         $needles = array(
             'article' => array((int) $id)
@@ -59,6 +72,11 @@ abstract class BiblestudyHelperRoute {
         return $link;
     }
 
+    /**
+     * Find Item
+     * @param string $needles
+     * @return null
+     */
     protected static function _findItem($needles = null) {
         $app = JFactory::getApplication();
         $menus = $app->getMenu('site');

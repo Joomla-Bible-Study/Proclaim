@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Upload Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -8,7 +9,6 @@
  * @since 7.2.0
  * */
 class JBSUpload {
-
 //    /**
 //     * Method to load javascript for squeezebox modal
 //     *
@@ -445,10 +445,10 @@ class JBSUpload {
     }
 
     /**
-     *
-     * @param type $file
-     * @param type $filename
-     * @param type $admin
+     * AWS
+     * @param string $file
+     * @param string $filename
+     * @param string $admin
      * @return boolean
      */
     function aws($file, $filename, $admin = 0) {
@@ -579,10 +579,10 @@ class JBSUpload {
     }
 
     /**
-     *
-     * @param type $stringToSign
+     * Amazon HMAC
+     * @param string $stringToSign
      * @param string $aws_secret
-     * @return type
+     * @return string
      */
     function amazon_hmac($stringToSign, $aws_secret) {
         // helper function binsha1 for amazon_hmac (returns binary value of sha1 hash)
@@ -611,11 +611,11 @@ class JBSUpload {
     }
 
     /**
-     *
-     * @param type $fp
-     * @param type $q
-     * @param type $debug
-     * @return type
+     * Send Rest
+     * @param string $fp
+     * @param string $q
+     * @param string $debug
+     * @return string
      */
     function sendREST($fp, $q, $debug = false) {
         if ($debug)

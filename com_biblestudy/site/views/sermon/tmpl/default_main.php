@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default Main
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -52,7 +53,6 @@ if ($this->params->get('showpodcastsubscribedetails') == 1) {
     <table>
         <tr>
             <td>
-
                 <?php if ($this->params->get('show_teacher_view') > 0) {
                     ?>
 

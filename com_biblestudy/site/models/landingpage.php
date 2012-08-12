@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * LandingPage Model
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -8,11 +9,11 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-
 jimport('joomla.application.component.modellist');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
 /**
+ * Model class for LandingPage
  * @package BibleStudy.Site
  * @since 7.0.0
  */
@@ -37,7 +38,20 @@ class biblestudyModellandingpage extends JModelList {
     }
 
     /**
-     * @since   7.0
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
+     *
+     * @since   11.1
      */
     protected function populateState($ordering = null, $direction = null) {
         $order = $this->getUserStateFromRequest($this->context . '.filter.order', 'filter_orders');
@@ -47,8 +61,11 @@ class biblestudyModellandingpage extends JModelList {
     }
 
     /**
+     * Method to get a JDatabaseQuery object for retrieving the data set from a database.
      *
-     * @return type
+     * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
+     *
+     * @since   11.1
      */
     protected function getListQuery() {
         $db = $this->getDbo();
@@ -102,7 +119,8 @@ class biblestudyModellandingpage extends JModelList {
     }
 
     /**
-     * @desc Returns teachers
+     * Returns Admin Setting
+     * @todo Need to move to helper.php
      * @return Array
      */
     function getAdmin() {
@@ -116,7 +134,8 @@ class biblestudyModellandingpage extends JModelList {
     }
 
     /**
-     *
+     * Returns template
+     * @todo Need to move to helper.php
      * @return type
      */
     function getTemplate() {

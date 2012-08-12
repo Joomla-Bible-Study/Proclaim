@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * EditListing Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,10 +12,10 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 
 /**
- *
- * @param type $admin_params
- * @param type $params
- * @return null
+ * Get Edit Listing
+ * @param object $admin_params
+ * @param object $params
+ * @return string|null
  */
 function getEditlisting($admin_params, $params) {
 

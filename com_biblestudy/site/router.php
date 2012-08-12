@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Core Router for BibleStudy
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -9,9 +10,9 @@
 defined('_JEXEC') or die;
 
 /**
- *
- * @param type $query
- * @return type
+ * BibleStudy Build Route
+ * @param array $query
+ * @return string
  */
 function biblestudyBuildRoute(&$query) {
     $segments = array();
@@ -41,9 +42,9 @@ function biblestudyBuildRoute(&$query) {
 }
 
 /**
- *
- * @param type $segments
- * @return type
+ * BibleStudy Parse Route
+ * @param object $segments
+ * @return object
  */
 function biblestudyParseRoute($segments) {
     $vars = array();

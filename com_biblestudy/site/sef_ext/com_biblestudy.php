@@ -2,8 +2,9 @@
 
 /**
  * sh404SEF support for com_biblestudy component.
- * Author : Nick Fossen
- * Contact : nfossen@gmail
+ * @package BibleStudy.Site
+ * @subpackage sh404SEF.BibleStudy
+ * @author Nick Fossen <nfossen@gmail.com>
  * Home URL : http://www.newhorizoncf.org
  * {shSourceVersionTag: Version 6.2 - 2010-07-06}
  *
@@ -31,7 +32,6 @@ if (!empty($limit))
     shRemoveFromGETVarsList('limit');
 if (isset($limitstart))
     shRemoveFromGETVarsList('limitstart'); // limitstart can be zero
-
 
 // All urls will start with Biblestudy.  The "B" need to be uppercase
 $title[] = "Biblestudy";

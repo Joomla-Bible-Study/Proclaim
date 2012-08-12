@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default Main
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -25,8 +26,6 @@ $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css
 $params = $this->params;
 // @todo are we using these $teachers & $listingcall
 $teachers = $params->get('teacher_id');
-
-
 $listingcall = JView::loadHelper('listing');
 ?>
 
@@ -36,7 +35,6 @@ if ($this->params->get('showpodcastsubscribelist') == 1) {
 }
 ?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-
     <div id="bsheader">
         <h1 class="componentheading">
             <?php
@@ -124,17 +122,12 @@ if ($this->params->get('showpodcastsubscribelist') == 1) {
                 echo $this->page->popular;
             }
             ?>
-
-
-
-
         </div><!--dropdownmenu-->
     </fieldset>
-
     <div class="clr"></div>
     <table id="bslisttable" cellspacing="0">
         <?php
-// @todo $headerCall seams not to be used?
+        // @todo $headerCall seams not to be used?
         $headerCall = JView::loadHelper('header');
         $header = getHeader($this->items[0], $params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_list'), $ismodule = 0);
         echo $header;
@@ -142,7 +135,7 @@ if ($this->params->get('showpodcastsubscribelist') == 1) {
         <tbody>
 
             <?php
-//This sets the alternativing colors for the background of the table cells
+            //This sets the alternativing colors for the background of the table cells
             $class1 = 'bsodd';
             $class2 = 'bseven';
             $oddeven = $class1;
@@ -160,15 +153,13 @@ if ($this->params->get('showpodcastsubscribelist') == 1) {
         </tbody></table>
     <div class="listingfooter pagination" >
         <?php
-//if ($this->params->get('show_pagination') == 2) {
         echo $this->pagination->getPageslinks();
-//}
         ?>
     </div> <!--end of bsfooter div-->
-    <?php if ($this->params->get('showpodcastsubscribelist') == 2) {
+    <?php
+    if ($this->params->get('showpodcastsubscribelist') == 2) {
         echo $this->subscribe;
     }
     ?>
-
 </div><!--end of bspagecontainer div-->
 

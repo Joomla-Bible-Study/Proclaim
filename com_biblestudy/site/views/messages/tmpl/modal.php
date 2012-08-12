@@ -1,9 +1,11 @@
 <?php
 /**
- * @version     $Id: default_16.php 1336 2011-01-06 22:29:39Z genu $
- * @package     com_biblestudy
- * @license     GNU/GPL
- */
+ * Modal
+ * @package BibleStudy.Site
+ * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link http://www.JoomlaBibleStudy.org
+ * */
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -85,41 +87,40 @@ $listDirn = $this->state->get('list.direction');
             </tr>
         </tfoot>
         <?php
-                    foreach ($this->items as $i => $item) :
-        ?>
-                        <tr class="row<?php echo $i % 2; ?>">
-                            <td class="center">
-                                <a class="pointer" onclick="if(window.parent) window.parent.<?php echo $function; ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->studytitle)); ?>');">
-                    <?php echo $this->escape($item->studytitle); ?>
+        foreach ($this->items as $i => $item) :
+            ?>
+            <tr class="row<?php echo $i % 2; ?>">
+                <td class="center">
+                    <a class="pointer" onclick="if(window.parent) window.parent.<?php echo $function; ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->studytitle)); ?>');">
+                        <?php echo $this->escape($item->studytitle); ?>
                     </a>
                 </td>
                 <td class="center">
-                <?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
-                    </td>
-
-                    <td class="center">
-                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'studieslist.', true, 'cb', '', ''); ?>
-                    </td>
-                    <td class="center">
-                <?php echo JText::sprintf($item->bookname).' '.$this->escape($item->chapter_begin).':'.$this->escape($item->verse_begin); ?>
-                    </td>
-                    <td class="center">
-                <?php echo $this->escape($item->teachername); ?>
-                    </td>
-                    <td class="center">
-                <?php echo $this->escape($item->messageType); ?>
-                    </td>
-                    <td class="center">
-                <?php echo $this->escape($item->series_text); ?>
-                    </td>
-                </tr>
+                    <?php echo JHtml::_('date', $item->studydate, JText::_('DATE_FORMAT_LC4')); ?>
+                </td>
+                <td class="center">
+                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'studieslist.', true, 'cb', '', ''); ?>
+                </td>
+                <td class="center">
+                    <?php echo JText::sprintf($item->bookname) . ' ' . $this->escape($item->chapter_begin) . ':' . $this->escape($item->verse_begin); ?>
+                </td>
+                <td class="center">
+                    <?php echo $this->escape($item->teachername); ?>
+                </td>
+                <td class="center">
+                    <?php echo $this->escape($item->messageType); ?>
+                </td>
+                <td class="center">
+                    <?php echo $this->escape($item->series_text); ?>
+                </td>
+            </tr>
         <?php endforeach; ?>
-                    </table>
-                    <div>
-                        <input type="hidden" name="task" value=""/>
-                        <input type="hidden" name="boxchecked" value="0"/>
-                        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-                        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
+    </table>
+    <div>
+        <input type="hidden" name="task" value=""/>
+        <input type="hidden" name="boxchecked" value="0"/>
+        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
+        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
         <?php echo JHtml::_('form.token'); ?>
     </div>
 </form>

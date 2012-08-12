@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller Message
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,17 +13,20 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controllerform');
 
 /**
+ * Controller class for Message
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyControllermessage extends JControllerForm {
 
     /**
+     * View item
      * @since	1.6
      */
     protected $view_item = 'message';
 
     /**
+     * View list
      * @since	1.6
      */
     protected $view_list = 'messages';
@@ -31,7 +35,7 @@ class biblestudyControllermessage extends JControllerForm {
      * Function that allows child controller access to model data after the data has been saved.
      *
      * @param	JModel	$model		The data model object.
-     * @param	array	$validData	The validated data. Changed to $data in JBS
+     * @param	array	$data	The validated data. Changed to $data in JBS
      *
      * @return	void
      * @since	1.6
@@ -72,8 +76,8 @@ class biblestudyControllermessage extends JControllerForm {
 
     /**
      * Routine to save the topics(tags)
-     * @param type $data from post
-     * @param type $pks is the id of the record being saved
+     * @param array $pks is the id of the record being saved
+     * @param array $data from post
      * @since 7.0.2
      * @todo This may need to be optimized
      */

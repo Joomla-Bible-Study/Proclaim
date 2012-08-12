@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default Custom
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -33,9 +34,7 @@ $teachers = $params->get('teacher_id');
 $listingcall = JView::loadHelper('listing');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . JRequest::getInt('t', '1')); ?>" method="post">
-
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-
         <div id="bsheader">
             <h1 class="componentheading">
                 <?php
@@ -63,13 +62,20 @@ $listingcall = JView::loadHelper('listing');
             ?>
         </div><!--header-->
 
-        <div id="listintro"><table id="listintro"><tr><td><p>
+        <div id="listintro"><table id="listintro">
+                <tr>
+                    <td>
+                        <p>
                             <?php
                             if ($params->get('intro_show') == 1) {
                                 echo $params->get('list_intro');
                             }
                             ?>
-                        </p></td></tr></table> </div>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
         <div id="bsdropdownmenu">
             <?php
@@ -122,8 +128,6 @@ $listingcall = JView::loadHelper('listing');
                 echo $this->popular;
             }
             ?>
-
-
         </div><!--dropdownmenu-->
         <?php
         switch ($params->get('wrapcode')) {
@@ -140,8 +144,6 @@ $listingcall = JView::loadHelper('listing');
                 break;
         }
         echo $params->get('headercode');
-
-
         foreach ($this->items as $row) { //Run through each row of the data result from the model
             $listing = getListingExp($row, $params, $this->admin_params, $this->template);
             echo $listing;
@@ -161,8 +163,6 @@ $listingcall = JView::loadHelper('listing');
                 break;
         }
         ?>
-
-
         <div class="listingfooter" >
             <?php
             echo $this->pagination->getPagesLinks();
@@ -171,7 +171,6 @@ $listingcall = JView::loadHelper('listing');
         </div> <!--end of bsfooter div-->
     </div><!--end of bspagecontainer div-->
     <input name="option" value="com_biblestudy" type="hidden">
-
     <input name="task" value="" type="hidden">
     <input name="boxchecked" value="0" type="hidden">
     <input name="controller" value="sermons" type="hidden">

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version     $Id: studieslist.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package BibleStudy
+ * Message Model
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -14,6 +14,7 @@ jimport('joomla.application.component.modellist');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
 /**
+ * Model class for Messages
  * @package BibleStudy.Site
  * @since 7.0.0
  * @todo need to redo model to Joomla Standers.
@@ -21,19 +22,39 @@ include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . 
 class biblestudyModelMessages extends JModelList {
 
     /**
-     *
+     * Data
      * @var array
      */
     var $_data;
+
+    /**
+     * Total
+     * @var array
+     */
     var $_total = null;
+
+    /**
+     * Pagination
+     * @var array
+     */
     var $_pagination = null;
+
+    /**
+     * Files
+     * @var array
+     */
     var $_files = null;
 
     /**
-     * Construct
+     * Constructor.
+     *
+     * @param   array  $config  An optional associative array of configuration settings.
+     *
+     * @see     JController
+     * @since   11.1
      */
-    function __construct() {
-        parent::__construct();
+    function __construct($config = array()) {
+        parent::__construct($config);
 
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -49,8 +70,8 @@ class biblestudyModelMessages extends JModelList {
     }
 
     /**
-     *
-     * @param type $id
+     * Get Downloads
+     * @param int $id
      * @return string
      */
     function getDownloads($id) {
@@ -64,8 +85,8 @@ class biblestudyModelMessages extends JModelList {
     }
 
     /**
-     *
-     * @param type $id
+     * Get Plays
+     * @param int $id
      * @return string
      */
     function getPlays($id) {
@@ -86,7 +107,7 @@ class biblestudyModelMessages extends JModelList {
     /* Tom commented this out because it caused the query to fail - needs work. */
     function getFiles() {
         $mediaFiles = null;
-        $db = & JFactory::getDBO();
+        $db = JFactory::getDBO();
         $i = 0;
         foreach ($this->_data as $sermon) {
             $i++;
@@ -122,11 +143,11 @@ class biblestudyModelMessages extends JModelList {
     }
 
     /**
-     *
-     * @return type
+     * Build Content Where
+     * @return string
      */
     function _buildContentWhere() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
 
         $filter_book = $mainframe->getUserStateFromRequest($option . 'filter_book', 'filter_book', 0, 'int');
@@ -162,11 +183,11 @@ class biblestudyModelMessages extends JModelList {
     }
 
     /**
-     *
+     * Build Content Order By
      * @return string
      */
     function _buildContentOrderBy() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
 
         $orders = array('id', 'published', 'studydate', 'messagetype', 'teacher_id', 'studytitle', 'series_id');
@@ -185,7 +206,20 @@ class biblestudyModelMessages extends JModelList {
     }
 
     /**
-     * @since   7.0
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
+     *
+     * @since   11.1
      */
     protected function populateState($ordering = null, $direction = null) {
 
@@ -307,11 +341,10 @@ class biblestudyModelMessages extends JModelList {
         return $query;
     }
 
-    /*
+    /**
+     * Get a list of all used books
      * @since 7.0
-     * get a list of all used books
      */
-
     public function getBooks() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -330,11 +363,10 @@ class biblestudyModelMessages extends JModelList {
         return $db_result;
     }
 
-    /*
+    /**
+     * Get a list of all used teachers
      * @since 7.0
-     * get a list of all used teachers
      */
-
     public function getTeachers() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -349,11 +381,10 @@ class biblestudyModelMessages extends JModelList {
         return $db->loadObjectList();
     }
 
-    /*
+    /**
+     * Get a list of all used series
      * @since 7.0
-     * get a list of all used series
      */
-
     public function getSeries() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -368,11 +399,10 @@ class biblestudyModelMessages extends JModelList {
         return $db->loadObjectList();
     }
 
-    /*
+    /**
+     * Get a list of all used message types
      * @since 7.0
-     * get a list of all used message types
      */
-
     public function getMessageTypes() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -387,11 +417,10 @@ class biblestudyModelMessages extends JModelList {
         return $db->loadObjectList();
     }
 
-    /*
+    /**
+     * Get a list of all used years
      * @since 7.0
-     * get a list of all used years
      */
-
     public function getYears() {
         $db = $this->getDBO();
         $query = $db->getQuery(true);

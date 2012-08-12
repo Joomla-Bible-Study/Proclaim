@@ -1,5 +1,6 @@
 <?php
 /**
+ * Tearm JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -13,12 +14,23 @@ jimport('joomla.application.component.view');
 // This is the popup window for the teachings.  We could put anything in this window.
 //TODO Need to Clean this up and rework to be proper Joomla calls bcc
 /**
+ * View class for Terms
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyViewterms extends JView {
 
-    function display() {
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
         $t = JRequest::getInt('t', '1', 'get');
         $mid = JRequest::getInt('mid', '', 'get');
         $compat_mode = JRequest::getInt('compat_mode', '0', 'get');
@@ -41,7 +53,7 @@ class biblestudyViewterms extends JView {
         $query->from('#__bsms_mediafiles');
         $query->where('id= ' . $mid);
         $db->setQuery($query);
-       // $db->query();
+        // $db->query();
         $media = $db->loadObject();
         ?>
         <div class="termstext">

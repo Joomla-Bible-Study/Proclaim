@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Passage Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,10 +11,10 @@
 defined('_JEXEC') or die;
 
 /**
- *
- * @param type $params
- * @param type $row
- * @return type
+ * Get Passage
+ * @param object $params
+ * @param object $row
+ * @return string
  */
 function getPassage($params, $row) {
     $esv = 1;

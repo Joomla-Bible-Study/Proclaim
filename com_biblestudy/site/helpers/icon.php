@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Icon Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -19,12 +20,11 @@ defined('_JEXEC') or die;
 class JHtmlIcon {
 
     /**
-     *
-     * @return type
+     * Print Popup
+     * @return string
      */
     static function print_popup() {
-        //$url  = BibleStudyHelperRoute::getArticleRoute($id->slug);
-        $url = '&tmpl=component&print=1&layout=default&page=' . @ $request->limitstart;
+        $url = '&tmpl=component&print=1&layout=default&page=' . $request->limitstart;
 
         $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
 

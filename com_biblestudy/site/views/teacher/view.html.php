@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Teacher JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -20,12 +21,23 @@ include_once($path1 . 'image.php');
 jimport('joomla.application.component.view');
 
 /**
+ * View class for Teacher
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class BiblestudyViewTeacher extends JView {
 
-    function display($tpl = null) {
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
         $pagebuilder = new JBSPagebuilder();

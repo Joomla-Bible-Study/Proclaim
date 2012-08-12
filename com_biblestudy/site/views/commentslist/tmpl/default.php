@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,11 +13,8 @@ $listDirn = $this->state->get('list.direction');
 $listOrder = $this->state->get('list.ordering');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=commentslist'); ?>" method="post" name="adminForm" id="adminForm">
-
-    <?php //echo $this->lists['studyid'];  ?>
     <div id="editcell">
         <table class="adminlist">
-
             <thead>
                 <tr>
                     <th width="1"> <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" /> </th>
@@ -51,8 +49,6 @@ $listOrder = $this->state->get('list.ordering');
                 </tr>
             </tfoot>
         </table>
-
-
     </div>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="boxchecked" value="0"/>

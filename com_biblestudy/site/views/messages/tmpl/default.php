@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -51,7 +52,8 @@ $listDirn = $this->state->get('list.direction');
         </div>
     </fieldset>
     <div>
-        <h3> <?php echo $this->newlink; ?></h3></div>
+        <h3> <?php echo $this->newlink; ?></h3>
+    </div>
     <div class="clr"></div>
 
     <table class="adminlist">
@@ -78,9 +80,6 @@ $listDirn = $this->state->get('list.direction');
                 <th>
                     <?php echo JHtml::_('grid.sort', 'JBS_CMN_MESSAGE_TYPE', 'messageType.message_type', $listDirn, $listOrder); ?>
                 </th>
-
-
-
             </tr>
         </thead>
         <tfoot>
@@ -117,9 +116,6 @@ $listDirn = $this->state->get('list.direction');
                 <td class="center">
                     <?php echo $this->escape($item->messageType); ?>
                 </td>
-
-
-
             </tr>
         <?php endforeach; ?>
     </table>

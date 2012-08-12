@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Location Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,10 +11,10 @@
 defined('_JEXEC') or die;
 
 /**
- *
- * @param type $params
- * @param type $id
- * @param type $admin_params
+ * Get Locations for Landing Page
+ * @param object $params
+ * @param int $id
+ * @param object $admin_params
  * @return string
  */
 function getLocationsLandingPage($params, $id, $admin_params) {
@@ -167,7 +168,6 @@ function getLocationsLandingPage($params, $id, $admin_params) {
             $location .= '<div id="landing_separator"></div>';
             break;
     }
-
 
     return $location;
 }

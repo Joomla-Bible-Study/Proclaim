@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Message Model
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -15,13 +16,17 @@ jimport('joomla.html.parameter');
 require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
-//require_once JPATH_ADMINISTRATOR.'/components/com_biblestudy/models/message.php';
 /**
+ * Model class for Message
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyModelmessage extends JModelAdmin {
 
+    /**
+     * Admin
+     * @var array
+     */
     var $_admin;
 
     /**
@@ -31,7 +36,7 @@ class biblestudyModelmessage extends JModelAdmin {
      *
      * @since	1.6
      */
-    protected function populateState($ordering = null, $direction = null) {
+    protected function populateState() {
         $app = JFactory::getApplication('site');
         // Adjust the context to support modal layouts.
         if ($layout = JRequest::getVar('layout')) {
@@ -58,12 +63,12 @@ class biblestudyModelmessage extends JModelAdmin {
     }
 
     /**
-     *
-     * @param type $study_id
-     * @param type $topic_id
+     * Is Duplicate
+     * @param int $study_id
+     * @param int $topic_id
      * @return boolean
      */
-    function isDuplicate($study_id, $topic_id) {
+    public function isDuplicate($study_id, $topic_id) {
         $db = & JFactory::getDBO();
         $query = 'select * from #__bsms_studytopics where study_id = ' . $study_id . ' and topic_id = ' . $topic_id;
 
@@ -106,7 +111,7 @@ class biblestudyModelmessage extends JModelAdmin {
      * @return type JSON Object containing the topics
      * @since 7.0.1
      */
-    function getTopics() {
+    public function getTopics() {
         // do search in case of present study only, suppress otherwise
         $translatedList = array();
         if (JRequest::getVar('id', 0, null, 'int') > 0) {
@@ -137,7 +142,7 @@ class biblestudyModelmessage extends JModelAdmin {
      * @return type JSON Object containing the topics
      * @since 7.0.1
      */
-    function getAlltopics() {
+    public function getAlltopics() {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
@@ -161,7 +166,7 @@ class biblestudyModelmessage extends JModelAdmin {
      *
      * @return array
      */
-    function getAdmin() {
+    public function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT *'
                     . ' FROM #__bsms_admin'
@@ -191,7 +196,7 @@ class biblestudyModelmessage extends JModelAdmin {
 
     /**
      * Overrides the JModelAdmin save routine to save the topics(tags)
-     * @param type $data
+     * @param array $data
      * @since 7.0.1
      * @todo This may need to be optimized
      */
@@ -302,9 +307,9 @@ class biblestudyModelmessage extends JModelAdmin {
     /**
      * Get the form data
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param array $data
+     * @param boolean $loadData
+     * @return boolean|string
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -318,7 +323,7 @@ class biblestudyModelmessage extends JModelAdmin {
     }
 
     /**
-     *
+     * Load Form Data
      * @return array
      * @since   7.0
      */
@@ -333,7 +338,7 @@ class biblestudyModelmessage extends JModelAdmin {
     /**
      * Returns a reference to the a Table object, always creating it.
      *
-     * @param	type	The table type to instantiate
+     * @param	string	The table type to instantiate
      * @param	string	A prefix for the table class name. Optional.
      * @param	array	Configuration array for model. Optional.
      * @return	JTable	A database object

@@ -19,7 +19,20 @@ jimport('joomla.application.component.modellist');
 class BiblestudyModelSeriesdisplays extends JModelList {
 
     /**
-     * @since   7.0
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
+     *
+     * @since   11.1
      */
     protected function populateState($ordering = null, $direction = null) {
 
@@ -87,7 +100,8 @@ class BiblestudyModelSeriesdisplays extends JModelList {
     }
 
     /**
-     *
+     * Get Admin
+     * @todo move to helper.php
      * @return type
      */
     function getAdmin() {
@@ -101,7 +115,7 @@ class BiblestudyModelSeriesdisplays extends JModelList {
     }
 
     /**
-     * @desc Returns the Template to display the list
+     * Returns the Template to display the list
      * @return Array
      * @since 7.0.2
      */

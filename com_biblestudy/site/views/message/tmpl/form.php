@@ -1,5 +1,6 @@
 <?php
 /**
+ * Form
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -24,7 +25,6 @@ $params = $this->form->getFieldsets('params');
             <fieldset class="panelform">
                 <legend><?php echo JText::_('JBS_STY_DETAILS'); ?></legend>
                 <ul>
-
                     <li>
                         <?php echo $this->form->getLabel('studytitle'); ?>
                         <?php echo $this->form->getInput('studytitle'); ?>
@@ -50,59 +50,67 @@ $params = $this->form->getFieldsets('params');
                         <?php echo $this->form->getLabel('script2'); ?>
                         <?php echo $this->form->getInput('script1'); ?>
                     </li>
-                    <li>
-                        <label><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></label>
-                        <div class="inlineFields">
-                            <div>
-                                <?php echo $this->form->getLabel('booknumber'); ?><br/>
-                                <?php
-                                // studytitle is required; fill in default if empty and leave value otherwise
-                                echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin->params['booknumber'] : $this->item->booknumber);
-                                ?>
-                            </div>
-                            <div>
-                                <?php echo $this->form->getLabel('chapter_begin'); ?><br/>
-                                <?php echo $this->form->getInput('chapter_begin'); ?>
-                            </div>
-                            <div>
-                                <?php echo $this->form->getLabel('verse_begin'); ?><br/>
-                                <?php echo $this->form->getInput('verse_begin'); ?>
-                            </div>
-                            <div>
-                                <?php echo $this->form->getLabel('chapter_end'); ?><br/>
-                                <?php echo $this->form->getInput('chapter_end'); ?>
-                            </div>
-                            <div>
-                                <?php echo $this->form->getLabel('verse_end'); ?><br/>
-                                <?php echo $this->form->getInput('verse_end'); ?>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <label><?php echo JText::_('JBS_CMN_SCRIPTURE2'); ?></label>
-                        <div class="inlineFields">
-                            <div>
-                                <?php echo $this->form->getLabel('booknumber2'); ?><br/>
-                                <?php echo $this->form->getInput('booknumber2'); ?>
-                            </div>
-                            <div>
-                                <?php echo $this->form->getLabel('chapter_begin2'); ?><br/>
-                                <?php echo $this->form->getInput('chapter_begin2'); ?>
-                            </div>
-                            <div>
-                                <?php echo $this->form->getLabel('verse_begin2'); ?><br/>
-                                <?php echo $this->form->getInput('verse_begin2'); ?>
-                            </div>
-                            <div>
-                                <?php echo $this->form->getLabel('chapter_end2'); ?><br/>
-                                <?php echo $this->form->getInput('chapter_end2'); ?>
-                            </div>
-                            <div>
-                                <?php echo $this->form->getLabel('verse_end2'); ?><br/>
-                                <?php echo $this->form->getInput('verse_end2'); ?>
-                            </div>
-                        </div>
-                    </li>
+                </ul>
+            </fieldset>
+        </div>
+        <div class="width-100 fltlft">
+            <fieldset class="panelform">
+                <legend><?php echo JText::_('JBS_CMN_SCRIPTURE'); ?></legend>
+                <div class="inlineFields">
+                    <div>
+                        <?php echo $this->form->getLabel('booknumber'); ?><br/>
+                        <?php
+                        // studytitle is required; fill in default if empty and leave value otherwise
+                        echo $this->form->getInput('booknumber', null, empty($this->item->studytitle) ? $this->admin->params['booknumber'] : $this->item->booknumber);
+                        ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->getLabel('chapter_begin'); ?><br/>
+                        <?php echo $this->form->getInput('chapter_begin'); ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->getLabel('verse_begin'); ?><br/>
+                        <?php echo $this->form->getInput('verse_begin'); ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->getLabel('chapter_end'); ?><br/>
+                        <?php echo $this->form->getInput('chapter_end'); ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->getLabel('verse_end'); ?><br/>
+                        <?php echo $this->form->getInput('verse_end'); ?>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="width-100 fltlft">
+            <fieldset class="panelform">
+                <legend><?php echo JText::_('JBS_CMN_SCRIPTURE2'); ?></legend>
+                <div class="inlineFields">
+                    <div>
+                        <?php echo $this->form->getLabel('booknumber2'); ?><br/>
+                        <?php echo $this->form->getInput('booknumber2'); ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->getLabel('chapter_begin2'); ?><br/>
+                        <?php echo $this->form->getInput('chapter_begin2'); ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->getLabel('verse_begin2'); ?><br/>
+                        <?php echo $this->form->getInput('verse_begin2'); ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->getLabel('chapter_end2'); ?><br/>
+                        <?php echo $this->form->getInput('chapter_end2'); ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->getLabel('verse_end2'); ?><br/>
+                        <?php echo $this->form->getInput('verse_end2'); ?>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="panelform">
+                <ul>
                     <li>
                         <?php echo $this->form->getLabel('secondary_reference'); ?>
                         <?php echo $this->form->getInput('secondary_reference'); ?>
@@ -136,8 +144,6 @@ $params = $this->form->getFieldsets('params');
                         <?php echo $this->form->getLabel('series_id'); ?>
                         <?php echo $this->form->getInput('series_id', null, empty($this->item->studytitle) ? $this->admin->params['series_id'] : $this->item->series_id) ?>
                     </li>
-
-
                 </ul>
                 <?php echo $this->form->getLabel('topics'); ?>
                 <div class="clr"></div>
@@ -214,8 +220,6 @@ $params = $this->form->getFieldsets('params');
                 if (isset($fieldset->description) && trim($fieldset->description)):
                     ?>
                     <p class="tip">
-
-
                         <?php echo $this->escape(JText::_($fieldset->description)); ?>
                     </p>
                 <?php endif; ?>
@@ -229,7 +233,6 @@ $params = $this->form->getFieldsets('params');
                     </ul>
                 </fieldset>
             <?php endforeach; ?>
-
         </div>
         <div class="width-100 fltlft">
             <fieldset class="panelform">
@@ -239,11 +242,9 @@ $params = $this->form->getFieldsets('params');
                         <tr>
                             <th align="center"><?php echo JText::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
                             <th align="center"><?php echo JText::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-
                         </tr>
                     </thead>
                     <tbody>
-
                         <?php
                         if (count($this->mediafiles) > 0) :
                             foreach ($this->mediafiles as $i => $item) :
@@ -258,7 +259,6 @@ $params = $this->form->getFieldsets('params');
                                     <td align="center">
                                         <?php echo JHtml::_('date', $item->createdate, JText::_('DATE_FORMAT_LC4')); ?>
                                     </td>
-
                                 </tr>
                                 <?php
                             endforeach;
@@ -268,11 +268,11 @@ $params = $this->form->getFieldsets('params');
                                 <td colspan="4" align="center"><?php echo JText::_('JBS_STY_NO_MEDIAFILES'); ?></td>
                             </tr>
                         <?php endif; ?>
-
                     </tbody>
                     <?php //if (! empty($this->item->studytitle)) : ?>
                     <tfoot>
-                        <tr><td colspan="4">
+                        <tr>
+                            <td colspan="4">
                                 <?php $link = 'index.php?option=com_biblestudy&amp;task=mediafile.edit&amp;id=0&amp;tmpl=component&amp;view=mediafile&amp;layout=modal'; ?>
                                 <?php
                                 if (empty($this->item->id)) {
@@ -281,36 +281,30 @@ $params = $this->form->getFieldsets('params');
                                     ?>
                                     <a class="modal" href="<?php echo $link; ?>" rel="{handler: 'iframe', size: {x: 1000, y: 550}}" title="<?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
                                         <?php echo JText::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
-                                    }
+                                }
                                     ?>
 
-                            </td></tr>
-
+                            </td>
+                        </tr>
                     </tfoot>
                     <?php //endif;    ?>
                 </table>
-
             </fieldset>
-
         </div>
         <div class="clr"></div>
 
         <?php if ($this->canDo->get('core.admin')): ?>
             <div class="width-100 fltlft">
                 <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-
                 <?php echo JHtml::_('sliders.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
-
                 <fieldset class="panelform">
                     <?php echo $this->form->getLabel('rules'); ?>
                     <?php echo $this->form->getInput('rules'); ?>
                 </fieldset>
-
                 <?php echo JHtml::_('sliders.end'); ?>
             </div>
         <?php endif; ?>
         <input type="hidden" name="task" value=""/>
-
         <?php echo JHtml::_('form.token'); ?>
     </form>
 </div>

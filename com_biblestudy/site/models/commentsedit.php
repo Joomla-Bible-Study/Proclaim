@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Comments Edit
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,12 +13,13 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 
 /**
+ * Model class for CommentsEdit
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyModelcommentsedit extends JModelAdmin {
 
-     /**
+    /**
      * Method to auto-populate the model state.
      *
      * Note. Calling getState in this method will result in recursion.
@@ -31,15 +33,15 @@ class biblestudyModelcommentsedit extends JModelAdmin {
             $this->context .= '.' . $layout;
         }
         // Load state from the request. We use a_id to avoid collisions with the router
-        $pks = JRequest::getInt('a_id'); 
+        $pks = JRequest::getInt('a_id');
         $this->pks = $pks;
         $this->setState('comment.id', $pks);
         $option = JRequest::getCmd('option');
         $app = JFactory::getApplication();
-        $app->setUserState($option.'comment.id', $pks);
+        $app->setUserState($option . 'comment.id', $pks);
     }
-    
-     /**
+
+    /**
      * Method to get article data.
      *
      * @param	integer	The id of the article.
@@ -65,18 +67,18 @@ class biblestudyModelcommentsedit extends JModelAdmin {
         $value = JArrayHelper::toObject($properties, 'JObject');
         return $value;
     }
-    
+
     /**
      * Overrides the JModelAdmin save routine to save the topics(tags)
-     * @param type $data
+     * @param object $data
      * @since 7.0.1
      * @todo This may need to be optimized
      */
     public function save($data) {
-        $pks = JRequest::getInt('a_id'); 
+        $pks = JRequest::getInt('a_id');
         $option = JRequest::getCmd('option');
         $app = JFactory::getApplication();
-        $pks = $app->getUserState($option.'comment.id'); 
+        $pks = $app->getUserState($option . 'comment.id');
         if ($pks) {
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
@@ -139,9 +141,9 @@ class biblestudyModelcommentsedit extends JModelAdmin {
     /**
      * Get the form data
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
+     * @param array $data
+     * @param boolean $loadData
+     * @return string
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true) {
@@ -155,8 +157,8 @@ class biblestudyModelcommentsedit extends JModelAdmin {
     }
 
     /**
-     *
-     * @return <type>
+     * Load Form Data
+     * @return string
      * @since   7.0
      */
     protected function loadFormData() {
@@ -166,11 +168,11 @@ class biblestudyModelcommentsedit extends JModelAdmin {
 
         return $data;
     }
-    
+
     /**
      * Returns a reference to the a Table object, always creating it.
      *
-     * @param	type	The table type to instantiate
+     * @param	string	The table type to instantiate
      * @param	string	A prefix for the table class name. Optional.
      * @param	array	Configuration array for model. Optional.
      * @return	JTable	A database object

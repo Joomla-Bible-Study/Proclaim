@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * MediaPlayer Model
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,40 +11,43 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.model');
+
 /**
+ * Model class for MediaPlayer
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyModelmediaplayer extends JModel {
 
     /**
-     * Constructor that retrieves the ID from the request
+     * Constructor
      *
-     * @access	public
-     * @return	void
+     * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
+     *
+     * @since   11.1
      */
-    function __construct() {
-        parent::__construct();
+    public function __construct($config = array()) {
+        parent::__construct($config);
 
         $array = JRequest::getVar('cid', 0, '', 'array');
         $this->setId((int) $array[0]);
     }
 
     /**
-     *
-     * @param type $id
+     * Set ID
+     * @param int $id
      */
-    function setId($id) {
+    public function setId($id) {
         // Set id and wipe data
         $this->_id = $id;
         $this->_data = null;
     }
 
     /**
-     *
-     * @return type
+     * Get Data
+     * @return object
      */
-    function &getData() {
+    public function &getData() {
         // Load the data
         if (empty($this->_data)) {
             $query = ' SELECT mf.id AS mfid, mf.study_id, mf.server, mf.path, mf.filename, mf.size, mf.mime_type, mf.podcast_id, mf.published AS mfpub, mf.createdate,'
@@ -95,8 +99,8 @@ class biblestudyModelmediaplayer extends JModel {
      * @access	public
      * @return	boolean	True on success
      */
-    function store() {
-        $row = & $this->getTable();
+    public function store() {
+        $row = $this->getTable();
 
         $data = JRequest::get('post');
 
@@ -128,10 +132,10 @@ class biblestudyModelmediaplayer extends JModel {
      * @access	public
      * @return	boolean	True on success
      */
-    function delete() {
+    public function delete() {
         $cids = JRequest::getVar('cid', array(0), 'post', 'array');
 
-        $row = & $this->getTable();
+        $row = $this->getTable();
 
         if (count($cids)) {
             foreach ($cids as $cid) {
@@ -145,12 +149,12 @@ class biblestudyModelmediaplayer extends JModel {
     }
 
     /**
-     *
-     * @param type $cid
-     * @param type $publish
+     * Publish record
+     * @param int $cid
+     * @param int $publish
      * @return boolean
      */
-    function publish($cid = array(), $publish = 1) {
+    public function publish($cid = array(), $publish = 1) {
 
         if (count($cid)) {
             $cids = implode(',', $cid);
@@ -175,8 +179,8 @@ class biblestudyModelmediaplayer extends JModel {
      * @return	boolean	True on success
      * @since	1.5
      */
-    function move($direction) {
-        $row = & $this->getTable();
+    public function move($direction) {
+        $row = $this->getTable();
         if (!$row->load($this->_id)) {
             $this->setError($this->_db->getErrorMsg());
             return false;
@@ -197,8 +201,8 @@ class biblestudyModelmediaplayer extends JModel {
      * @return	boolean	True on success
      * @since	1.5
      */
-    function saveorder($cid = array(), $order) {
-        $row = & $this->getTable();
+    public function saveorder($cid = array(), $order) {
+        $row = $this->getTable();
         $groupings = array();
 
         // update ordering values

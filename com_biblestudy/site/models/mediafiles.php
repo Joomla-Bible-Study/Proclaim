@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * MediaFiles Model
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,18 +13,46 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
 
 /**
+ * Model class for MediaFiles
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyModelmediafiles extends JModelList {
 
+    /**
+     * Data
+     * @var array
+     */
     var $_data;
+
+    /**
+     * Total
+     * @var array
+     */
     var $_total = null;
+
+    /**
+     * Pagination
+     * @var array
+     */
     var $_pagination = null;
+
+    /**
+     * Allow Deletion
+     * @var array
+     */
     var $_allow_deletes = null;
 
-    function __construct() {
-        parent::__construct();
+    /**
+     * Constructor.
+     *
+     * @param   array  $config  An optional associative array of configuration settings.
+     *
+     * @see     JController
+     * @since   11.1
+     */
+    public function __construct($config = array()) {
+        parent::__construct($config);
 
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -36,7 +65,11 @@ class biblestudyModelmediafiles extends JModelList {
         $this->setState('limitstart', $limitstart);
     }
 
-    function _buildQuery() {
+    /**
+     * Build Queary
+     * @return string
+     */
+    public function _buildQuery() {
         $where = $this->_buildContentWhere();
         $orderby = $this->_buildContentOrderBy();
         $query = ' SELECT m.*, s.id AS sid, s.studytitle, md.media_image_name, md.id AS mid'
@@ -52,7 +85,7 @@ class biblestudyModelmediafiles extends JModelList {
      * Retrieves the data
      * @return array Array of objects containing the data from the database
      */
-    function getData() {
+    public function getData() {
         // Lets load the data if it doesn't already exist
         if (empty($this->_data)) {
             $query = $this->_buildQuery();
@@ -61,7 +94,14 @@ class biblestudyModelmediafiles extends JModelList {
         return $this->_data;
     }
 
-    function getTotal() {
+    /**
+     * Method to get the total number of items for the data set.
+     *
+     * @return  integer  The total number of items available in the data set.
+     *
+     * @since   11.1
+     */
+    public function getTotal() {
         // Lets load the content if it doesn't already exist
         if (empty($this->_total)) {
             $query = $this->_buildQuery();
@@ -72,12 +112,13 @@ class biblestudyModelmediafiles extends JModelList {
     }
 
     /**
-     * Method to get a pagination object for the studies
+     * Method to get a JPagination object for the data set.
      *
-     * @access public
-     * @return integer
+     * @return  JPagination  A JPagination object for the data set.
+     *
+     * @since   11.1
      */
-    function getPagination() {
+    public function getPagination() {
         // Lets load the content if it doesn't already exist
         if (empty($this->_pagination)) {
             jimport('joomla.html.pagination');
@@ -87,7 +128,11 @@ class biblestudyModelmediafiles extends JModelList {
         return $this->_pagination;
     }
 
-    function _buildContentWhere() {
+    /**
+     * Build Content Where
+     * @return string
+     */
+    public function _buildContentWhere() {
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $where = array();
@@ -100,7 +145,11 @@ class biblestudyModelmediafiles extends JModelList {
         return $where;
     }
 
-    function _buildContentOrderBy() {
+    /**
+     * Build Content Order By
+     * @return string
+     */
+    public function _buildContentOrderBy() {
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $orders = array('id', 'published', 'studytitle', 'ordering', 'media_image_name', 'createdate', 'filename');
@@ -121,7 +170,11 @@ class biblestudyModelmediafiles extends JModelList {
         return $orderby;
     }
 
-    function getDeletes() {
+    /**
+     * Get Deletes
+     * @return object
+     */
+    public function getDeletes() {
         if (empty($this->_deletes)) {
             $query = 'SELECT allow_deletes'
                     . ' FROM #__bsms_admin'
@@ -132,7 +185,20 @@ class biblestudyModelmediafiles extends JModelList {
     }
 
     /**
-     * @since   7.0
+     * Method to auto-populate the model state.
+     *
+     * This method should only be called once per instantiation and is designed
+     * to be called on the first call to the getState() method unless the model
+     * configuration flag to ignore the request is set.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @param   string  $ordering   An optional ordering field.
+     * @param   string  $direction  An optional direction (asc|desc).
+     *
+     * @return  void
+     *
+     * @since   11.1
      */
     protected function populateState($ordering = null, $direction = null) {
         $filename = $this->getUserStateFromRequest($this->context . '.filter.filename', 'filter_filename');
@@ -153,7 +219,7 @@ class biblestudyModelmediafiles extends JModelList {
     /**
      * Builds a list of mediatypes (Used for the filter combo box)
      *
-     * @return <Array> Array of Objects
+     * @return array Array of Objects
      * @since 7.0
      */
     public function getMediatypes() {
@@ -171,10 +237,17 @@ class biblestudyModelmediafiles extends JModelList {
     }
 
     /**
+     * Method to get a store id based on the model configuration state.
      *
-     * @param <string> $id   A prefix for the store id
-     * @return <string>      A store id
-     * @since 7.0
+     * This is necessary because the model is used by the component and
+     * different modules that might need different sets of data or different
+     * ordering requirements.
+     *
+     * @param   string  $id  An identifier string to generate the store id.
+     *
+     * @return  string  A store id.
+     *
+     * @since   11.1
      */
     protected function getStoreId($id = '') {
         return parent::getStoreId($id);

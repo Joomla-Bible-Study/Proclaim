@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Teachers JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -15,26 +16,46 @@ include_once($path1 . 'image.php');
 jimport('joomla.application.component.view');
 
 /**
+ * View class for Teachers
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class BiblestudyViewTeachers extends JView {
 
+    /**
+     * Items
+     * @var type
+     */
     protected $items;
+
+    /**
+     * Pagination
+     * @var type
+     */
     protected $pagination;
+
+    /**
+     * State
+     * @var type
+     */
     protected $state;
 
     /**
-     * teacherlist view display method
-     * @return void
-     * */
-    function display($tpl = null) {
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
 
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
         $this->admin = BsmHelper::getAdmin(true);
-
 
         $template = $this->get('template');
         // Convert parameter fields to objects.

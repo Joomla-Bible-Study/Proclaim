@@ -25,17 +25,17 @@ class BiblestudyControllerSeriesdisplays extends JController {
     var $mediaCode;
 
     /**
-     * @desc Method to display the view
+     * Method to display the view
      * @access public
      */
-    function display() {
+    public function display() {
         parent::display();
     }
 
     /**
      * Download funtion
      */
-    function download() {
+    public function download() {
         $abspath = JPATH_SITE;
         require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
         $task = JRequest::getVar('task');
@@ -50,7 +50,7 @@ class BiblestudyControllerSeriesdisplays extends JController {
      * AVPlyer Return system
      * @return string
      */
-    function avplayer() {
+    public function avplayer() {
         $task = JRequest::getVar('task');
         if ($task == 'avplayer') {
             $mediacode = JRequest::getVar('code');
@@ -61,12 +61,12 @@ class BiblestudyControllerSeriesdisplays extends JController {
     }
 
     /**
-     * @desc: This function is supposed to generate the Media Player that is requested via AJAX
+     * This function is supposed to generate the Media Player that is requested via AJAX
      * from the studiesList view "default.php". It has not been implemented yet, so its not used.
      * @return unknown_type
      * @deprecated since version 7.0.4
      */
-    function inlinePlayer() {
+    public function inlinePlayer() {
         echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
     }
 

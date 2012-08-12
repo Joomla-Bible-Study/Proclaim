@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * JView Comments Edit
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -14,22 +15,42 @@ require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTO
 jimport('joomla.application.component.view');
 
 /**
+ * View class for CommentsEdit
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyViewcommentsedit extends JView {
 
+    /**
+     * Form
+     * @var array
+     */
     protected $form;
+
+    /**
+     * Item
+     * @var array
+     */
     protected $item;
+
+    /**
+     * State
+     * @var array
+     */
     protected $state;
 
     /**
+     * Execute and display a template script.
      *
-     * @param boolean $tpl
-     * @return boolean
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
      */
-    function display($tpl = null) {
-        $this->canDo = @BibleStudyHelper::getActions($this->item->id, 'commentsedit');
+    public function display($tpl = null) {
+        $this->canDo = BibleStudyHelper::getActions($this->item->id, 'commentsedit');
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
         $this->state = $this->get("State");
@@ -38,7 +59,7 @@ class biblestudyViewcommentsedit extends JView {
         $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = @BsmHelper::getAdmin($issite = true);
+        $this->admin = BsmHelper::getAdmin($issite = true);
         //check permissions to enter studies
         //check permissions to enter studies
         if (!$this->canDo->get('core.edit')) {

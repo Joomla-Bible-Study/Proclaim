@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Media Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -11,9 +12,9 @@ defined('_JEXEC') or die;
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.images.class.php');
 
 /**
- *
- * @param type $id
- * @return type
+ * Get Media
+ * @param int $id
+ * @return object
  */
 function getMedia($id) {
     $database = JFactory::getDBO();
@@ -38,10 +39,10 @@ function getMedia($id) {
 }
 
 /**
- *
- * @param type $media
- * @param type $params
- * @param type $admin_params
+ * Get Internal Player
+ * @param object $media
+ * @param object $params
+ * @param object $admin_params
  * @return string
  */
 function getInternalPlayer($media, $params, $admin_params) {
@@ -87,10 +88,10 @@ function getInternalPlayer($media, $params, $admin_params) {
 }
 
 /**
- *
- * @param null $media
- * @param type $params
- * @param type $admin_params
+ * Get Download Link
+ * @param object $media
+ * @param object $params
+ * @param object $admin_params
  * @return string
  */
 function getDownloadLink($media, $params, $admin_params) {
@@ -152,10 +153,10 @@ function getDownloadLink($media, $params, $admin_params) {
 }
 
 /**
- *
- * @param null $media
- * @param type $params
- * @param type $admin_params
+ * Get Media File
+ * @param object $media
+ * @param object $params
+ * @param Object $admin_params
  * @return string
  */
 function getMediaFile($media, $params, $admin_params) {
@@ -209,10 +210,10 @@ function getMediaFile($media, $params, $admin_params) {
 }
 
 /**
- *
- * @param type $media
- * @param type $params
- * @param type $admin_params
+ * Get Type Icon
+ * @param object $media
+ * @param object $params
+ * @param object $admin_params
  * @return string
  */
 function getTypeIcon($media, $params, $admin_params) {
@@ -251,11 +252,11 @@ function getTypeIcon($media, $params, $admin_params) {
 }
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $admin_params
- * @return type
+ * Get PDF
+ * @param objcet $row
+ * @param object $params
+ * @param object $admin_params
+ * @return string
  */
 function getPDF($row, $params, $admin_params) {
     //PDF View
@@ -271,10 +272,10 @@ function getPDF($row, $params, $admin_params) {
 }
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $admin_params
+ * Get Media For List
+ * @param object $row
+ * @param object $params
+ * @param object $admin_params
  * @deprecated since version 7.0.4
  */
 function getMediaForList($row, $params, $admin_params) {

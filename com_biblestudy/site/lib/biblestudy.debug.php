@@ -1,5 +1,6 @@
 <?php
 /**
+ * BibleStudy Debug File
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -63,9 +64,9 @@ function trigger_dberror($text = '', $back = 0) {
 }
 
 /**
- *
- * @param type $text
- * @param type $back
+ * Check DB Error
+ * @param string $text
+ * @param string $back
  */
 function check_dberror($text = '', $back = 0) {
     $biblestudy_db = &JFactory::getDBO();
@@ -75,8 +76,8 @@ function check_dberror($text = '', $back = 0) {
 }
 
 /**
- *
- * @param type $text
+ * Chech DB Warning
+ * @param string $text
  */
 function check_dbwarning($text = '') {
     $biblestudy_db = &JFactory::getDBO();
@@ -86,8 +87,8 @@ function check_dbwarning($text = '') {
 }
 
 /**
- *
- * @param type $text
+ * Trigger DB Warning
+ * @param string $text
  */
 function trigger_dbwarning($text = '') {
     $biblestudy_db = &JFactory::getDBO();
@@ -96,7 +97,7 @@ function trigger_dbwarning($text = '') {
 
 /**
  * Little helper to created a formated output of variables
- * @param type $varlist
+ * @param string $varlist
  * @return string
  */
 function debug_vars($varlist) {
@@ -140,8 +141,8 @@ function debug_vars($varlist) {
 
 /**
  * Show the callstack to this point in a decent format
- * @param type $back
- * @return type
+ * @param string $back
+ * @return string
  */
 function debug_callstackinfo($back = 1) {
     $trace = array_slice(debug_backtrace(), $back);
@@ -149,10 +150,10 @@ function debug_callstackinfo($back = 1) {
 }
 
 /**
- *
- * @param type $message
- * @param type $level
- * @param type $back
+ * BibleStudy Error
+ * @param string $message
+ * @param string $level
+ * @param string $back
  */
 function biblestudy_error($message, $level = E_USER_NOTICE, $back = 1) {
     $trace = debug_backtrace();

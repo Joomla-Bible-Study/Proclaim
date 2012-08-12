@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Params Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -25,7 +26,7 @@ class BsmHelper extends JComponentHelper {
      * @param   $isSite   Boolean   True if this is called from the frontend
      * @since   7.0
      */
-    public function getAdmin($isSite = false) {
+    public static function getAdmin($isSite = false) {
         if ($isSite)
             JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
         $admin = JModel::getInstance('Admin', 'biblestudyModel');
@@ -38,11 +39,11 @@ class BsmHelper extends JComponentHelper {
     }
 
     /**
-     *
+     * Get Template Params
      * @param type $isSite
      * @return type
      */
-    public function getTemplateparams($isSite = false) {
+    public static function getTemplateparams($isSite = false) {
         if ($isSite)
             JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
         $pk = JRequest::getInt('t', 'get', '1');

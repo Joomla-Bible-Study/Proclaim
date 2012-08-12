@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * MediaFile JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -9,24 +10,49 @@
 //No Direct Access
 defined('_JEXEC') or die;
 
-
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php');
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
 jimport('joomla.application.component.view');
 
 /**
+ * View class for MediaFile
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyViewmediafile extends JView {
-
+    /**
+     * Form
+     * @var array
+     */
     protected $form;
+    /**
+     * Item
+     * @var array
+     */
     protected $item;
+    /**
+     * State
+     * @var array
+     */
     protected $state;
+    /**
+     * Admin
+     * @var array
+     */
     protected $admin;
 
-    function display($tpl = null) {
+    /**
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
 
@@ -34,7 +60,7 @@ class biblestudyViewmediafile extends JView {
         $this->canDo = BibleStudyHelper::getActions($this->item->id, 'mediafilesedit');
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = @BsmHelper::getAdmin($issite = true);
+        $this->admin = BsmHelper::getAdmin($issite = true);
 
         //Needed to load the article field type for the article selector
         jimport('joomla.form.helper');
@@ -49,18 +75,10 @@ class biblestudyViewmediafile extends JView {
         }
         $document = JFactory::getDocument();
         $host = JURI::root();
-//        $document->addScript($host . 'media/com_biblestudy/js/swfupload/swfupload.js');
-//        $document->addScript($host . 'media/com_biblestudy/js/swfupload/swfupload.queue.js');
-//        $document->addScript($host . 'media/com_biblestudy/js/swfupload/fileprogress.js');
-//        $document->addScript($host . 'media/com_biblestudy/js/swfupload/handlers.js');
         $document->addScript($host . 'media/com_biblestudy/js/mediafile/submitbutton.js');
-//        $document->addStyleSheet($host . 'media/com_biblestudy/js/swfupload/default.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/system/css/system.css');
         $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
         $document->addStyleSheet($host . 'media/system/css/modal.css');
-//        $swfUploadHeadJs = @JBSUpload::uploadjs($host);
-//        //add the javascript to the head of the html document
-//        $document->addScriptDeclaration($swfUploadHeadJs);
         //Needed to load the article field type for the article selector
         JFormHelper::addFieldPath(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_content' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR . 'modal');
 

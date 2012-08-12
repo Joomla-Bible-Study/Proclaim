@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -32,7 +33,6 @@ $listingcall = JView::loadHelper('listing');
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
     <div id="biblestudy_landing" class="noRefTagger"> <!-- This div is the container for the whole page -->
-
         <div id="bsms_header">
             <h1 class="componentheading">
                 <?php
@@ -56,15 +56,11 @@ $listingcall = JView::loadHelper('listing');
 
         <?php
         $i = 1;
-
         for ($i = 1; $i <= 7; $i++) {
-
             $showIt = $params->get('headingorder_' . $i);
-
             if ($params->get('show' . $showIt) == 1) {
                 //Wrap each in a DIV...
                 ?>
-
                 <div id="landing_item">
                     <div id="landing_title">
                         <?php
@@ -168,7 +164,6 @@ $listingcall = JView::loadHelper('listing');
                     }
                     ?>
                     <div id="landinglist">
-
                         <?php
                         if ($heading) {
                             echo $heading;
@@ -184,7 +179,6 @@ $listingcall = JView::loadHelper('listing');
         </div>
     </div> <!-- end div id="biblestudy_landing" -->
     <input name="option" value="com_biblestudy" type="hidden">
-
     <input name="task" value="" type="hidden">
     <input name="boxchecked" value="0" type="hidden">
     <input name="controller" value="sermons" type="hidden">

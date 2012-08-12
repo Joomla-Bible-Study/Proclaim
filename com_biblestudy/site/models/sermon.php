@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @package BibleStudy
+ * Sermon Model
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,6 +14,7 @@ jimport('joomla.application.component.modelitem');
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
 /**
+ * Model class for Sermon
  * @package BibleStudy.Site
  * @since 7.0.0
  */
@@ -26,16 +28,25 @@ class BiblestudyModelSermon extends JModelItem {
     protected $_context = 'com_biblestudy.sermon';
 
     /**
+     * Template
+     * @var array
+     */
+    var $_template;
+
+    /**
+     * Admin
+     * @var array
+     */
+    var $_admin;
+
+    /**
      * Constructor that retrieves the ID from the request
      *
      * @access	public
      * @return	void
      */
-    var $_template;
-    var $_admin;
-
-    function __construct() {
-        parent::__construct();
+    function __construct($config = array()) {
+        parent::__construct($config);
 
         $this->hit($pk = 0);
     }
@@ -158,12 +169,12 @@ class BiblestudyModelSermon extends JModelItem {
         return $this->_item[$pk];
     }
 
-    /*
+    /**
      * Method to store a record
      *
      * @access	public
-     * @return	boolean	True on success */
-
+     * @return	boolean	True on success
+     */
     protected function storecomment() {
         $row = $this->getTable('commentsedit');
 
@@ -192,7 +203,7 @@ class BiblestudyModelSermon extends JModelItem {
 
     /**
      * Method to get Template Settings
-     *
+     * @todo Need to move to helper.php
      * @return array
      */
     public function getTemplate() {
@@ -208,7 +219,7 @@ class BiblestudyModelSermon extends JModelItem {
 
     /**
      * Method to Get Admin Settings
-     *
+     * @todo Need to move to helper.php
      * @return array
      */
     public function getAdmin() {

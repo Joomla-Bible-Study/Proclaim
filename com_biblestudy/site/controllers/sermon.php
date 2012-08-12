@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Sermon Controller
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -20,7 +21,7 @@ class BiblestudyControllerSermon extends JController {
      * constructor (registers additional tasks to methods)
      * @return void
      */
-    function __construct() {
+    public function __construct() {
         parent::__construct();
 
         // Register Extra tasks
@@ -30,7 +31,7 @@ class BiblestudyControllerSermon extends JController {
      * display the edit form
      * @return void
      */
-    function view() {
+    public function view() {
 
         //Get the params so we can set the proper view
         $model = $this->getModel('sermon');
@@ -60,10 +61,10 @@ class BiblestudyControllerSermon extends JController {
     }
 
     /**
-     *
+     * Comment
      * @return NULL
      */
-    function comment() {
+    public function comment() {
 
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -121,7 +122,7 @@ class BiblestudyControllerSermon extends JController {
     /**
      * Begin scripture links plugin function
      */
-    function biblegateway_link() {
+    public function biblegateway_link() {
         $return = false;
         $row->text = JRequest::getVar('scripture1');
         JPluginHelper::importPlugin('content', 'scripturelinks');
@@ -138,7 +139,7 @@ class BiblestudyControllerSermon extends JController {
     /**
      * Download system
      */
-    function download() {
+    public function download() {
         $abspath = JPATH_SITE;
         require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
         $task = JRequest::getVar('task');
@@ -154,7 +155,7 @@ class BiblestudyControllerSermon extends JController {
      * Email comment out.
      * @param object $params
      */
-    function commentsEmail($params) {
+    public function commentsEmail($params) {
         $mainframe = JFactory::getApplication();
         $menuitemid = JRequest::getInt('Itemid');
         if ($menuitemid) {

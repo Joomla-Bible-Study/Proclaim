@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * BibleStudy Admin Class
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,13 +13,14 @@ defined('_JEXEC') or die;
 //require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
 
 /**
+ * BibleStudy Admin Class
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class JBSAdmin {
 
     /**
-     *
+     * Get MediaPlayer
      * @return string
      */
     function getMediaPlayer() {
@@ -44,8 +46,9 @@ class JBSAdmin {
     }
 
     /**
-     *
+     * Get Adm
      * @return \JRegistry
+     * @todo move to helper
      */
     function getAdminsettings() {
         $db = JFactory::getDBO();
@@ -62,7 +65,7 @@ class JBSAdmin {
     }
 
     /**
-     *
+     * Get Permision
      * @return boolean
      */
     function getPermission() {
@@ -124,8 +127,8 @@ class JBSAdmin {
 
 // End of Permission function
     /**
-     *
-     * @param type $params
+     * Comments Permission
+     * @param object $params
      * @return boolean|int
      */
     function commentsPermission($params) {
@@ -189,8 +192,8 @@ class JBSAdmin {
     }
 
     /**
-     *
-     * @param type $row
+     * Get ShowLevel
+     * @param object $row
      * @return boolean
      */
     function getShowLevel($row) {
@@ -224,9 +227,9 @@ class JBSAdmin {
     }
 
     /**
-     *
-     * @param type $results
-     * @return type
+     * Show Rows
+     * @param object $results
+     * @return object
      */
     function showRows($results) {
         $count = count($results);

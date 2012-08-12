@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @version     $Id: mediafile.php 1466 2011-01-31 23:13:03Z bcordis $
- * @package BibleStudy
+ * MediaFile Model
+ * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
@@ -13,19 +13,20 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 
 /**
+ * Model class for MediaFile
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class BiblestudyModelMediafile extends JModelAdmin {
 
     /**
-     *
+     * Admin
      * @var type
      */
     var $_admin;
 
     /**
-     *
+     * Context
      * @var type
      */
     var $_text_prefix = 'COM_BIBLESTUDY';
@@ -36,8 +37,8 @@ class BiblestudyModelMediafile extends JModelAdmin {
      * @access	public
      * @return	void
      */
-    function __construct() {
-        parent::__construct();
+    public function __construct($config = array()) {
+        parent::__construct($config);
 
         /**
          * @todo J16 has new way of retrieving parameters so we need to implement it here too
@@ -69,32 +70,36 @@ class BiblestudyModelMediafile extends JModelAdmin {
     }
 
     /**
+     * Method to get a table object, load it if necessary.
      *
-     * @param type $type
-     * @param type $prefix
-     * @param type $config
-     * @return type
+     * @param   string  $name     The table name. Optional.
+     * @param   string  $prefix   The class prefix. Optional.
+     * @param   array   $options  Configuration array for model. Optional.
+     *
+     * @return  JTable  A JTable object
+     *
+     * @since   11.1
      */
-    public function getTable($type = 'mediafile', $prefix = 'Table', $config = array()) {
+    public function getTable($name = 'mediafile', $prefix = 'Table', $options = array()) {
         JTable::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'tables');
-        return JTable::getInstance($type, $prefix, $config);
+        return JTable::getInstance($name, $prefix, $options);
     }
 
     /**
-     *
-     * @param type $id
+     * Set ID
+     * @param int $id
      */
-    function setId($id) {
+    public function setId($id) {
         // Set id and wipe data
         $this->_id = $id;
         $this->_data = null;
     }
 
     /**
-     *
-     * @return type
+     * Get Data
+     * @return object
      */
-    function &getData() {
+    public function &getData() {
         // Load the data
         if (empty($this->_data)) {
             $query = ' SELECT * FROM #__bsms_mediafiles ' .
@@ -144,7 +149,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
      * study, so that it doesn't default to 0, buecause that will break the
      * ordering functionality.
      */
-    function store() {
+    public function store() {
         $row = & $this->getTable();
 
         $data = JRequest::get('post');
@@ -212,7 +217,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
      * @access	public
      * @return	boolean	True on success
      */
-    function delete(&$pks) {
+    public function delete(&$pks) {
         $cids = JRequest::getVar('cid', array(0), 'post', 'array');
 
         $row = & $this->getTable();
@@ -229,12 +234,13 @@ class BiblestudyModelMediafile extends JModelAdmin {
     }
 
     /**
+     * Lagacy Publish
      * @deprecated since version 7.0.4
-     * @param type $cid
-     * @param type $publish
+     * @param int $cid
+     * @param int $publish
      * @return boolean
      */
-    function legacyPublish($cid = array(), $publish = 1) {
+    public function legacyPublish($cid = array(), $publish = 1) {
 
         if (count($cid)) {
             $cids = implode(',', $cid);
@@ -259,7 +265,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
      * @return	boolean	True on success
      * @since	1.5
      */
-    function move($direction) {
+    public function move($direction) {
         $row = & $this->getTable();
         if (!$row->load($this->_id)) {
             $this->setError($this->_db->getErrorMsg());
@@ -281,7 +287,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
      * @return	boolean	True on success
      * @since	1.5
      */
-    function saveorder($cid = array(), $pks=null, $order=null) {
+    public function saveorder($cid = array(), $pks = null, $order = null) {
         $row = $this->getTable();
         $groupings = array();
 
@@ -310,10 +316,11 @@ class BiblestudyModelMediafile extends JModelAdmin {
     }
 
     /**
+     * Get Legacy Admin
      * @deprecated since version 7.0.4
-     * @return type
+     * @return object
      */
-    function getLegacyAdmin() {
+    public function getLegacyAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT params'
                     . ' FROM #__bsms_admin'
@@ -326,52 +333,93 @@ class BiblestudyModelMediafile extends JModelAdmin {
     /**
      * @desc Functions to satisfy the ajax requests
      */
-    function getdocManCategories() {
+
+    /**
+     * Get docMan Categories
+     * @return object
+     */
+    public function getdocManCategories() {
         $query = "SELECT id, title FROM #__categories
 				  WHERE `extension` = 'com_content' AND `published`=1";
         return $this->_getList($query);
     }
 
-    function getArticleCategories() {
+    /**
+     * Get Article Categories
+     */
+    public function getArticleCategories() {
         $query = "SELECT id, title FROM #__categories WHERE `published`=1";
         return $this->_getList($query);
     }
 
-    function getArticleArticles($catId) {
+    /**
+     * Get Article Articles
+     * @param it $catId
+     * @return string
+     */
+    public function getArticleArticles($catId) {
 
         $query = "SELECT id, title FROM #__content WHERE `catid` = '$catId' AND `published`=1";
         return json_encode($this->_getList($query));
     }
 
-    function getArticlesItem($id) {
+    /**
+     * Get Articles Item
+     * @param int $id
+     * @return object
+     */
+    public function getArticlesItem($id) {
         $query = "SELECT title FROM #__content WHERE `id` = '$id'";
         $this->_db->setQuery($query);
         $data = $this->_db->loadRow();
         return $data[0];
     }
 
-    function getvirtueMartCategories() {
+    /**
+     * Get VirtuMart Categories
+     * @return object
+     */
+    public function getvirtueMartCategories() {
         $query = "SELECT category_id AS id, category_name AS title FROM `#__vm_category` WHERE `category_publish` = 'Y'";
         return $this->_getList($query);
     }
 
-    function getdocManCategoryItems($catId) {
+    /**
+     * Get DocMan Category items
+     * @param int $catId
+     * @return string
+     */
+    public function getdocManCategoryItems($catId) {
         $query = "SELECT id, title as name FROM #__content
 				  WHERE `catid`='$catId' AND `published`=1";
         return json_encode($this->_getList($query));
     }
 
-    function getArticlesSections() {
+    /**
+     * Get Articles Sections
+     * @return object
+     */
+    public function getArticlesSections() {
         $query = "SELECT id, title FROM #__sections WHERE `published` = 1";
         return $this->_getList($query);
     }
 
-    function getArticlesSectionCategories($secId) {
+    /**
+     * Get Articles Section Categories
+     * @param int $secId
+     * @return string
+     */
+    public function getArticlesSectionCategories($secId) {
         $query = "SELECT id, title FROM #__categories WHERE `section` = '$secId' AND `published` = 1";
         return json_encode($this->_getList($query));
     }
 
-    function getCategoryItems($catId) {
+    /**
+     * Get Category Items
+     * @param int $catId
+     * @return string
+     */
+    public function getCategoryItems($catId) {
         $query = "SELECT id, title FROM #__content WHERE `state` = 1 AND `catid` = '$catId'";
         $this->getDBO()->setQuery($query);
 
@@ -383,7 +431,12 @@ class BiblestudyModelMediafile extends JModelAdmin {
         return json_encode($articles);
     }
 
-    function getVirtueMartItems($catId) {
+    /**
+     * Get VertueMart Items
+     * @param int $catId
+     * @return string
+     */
+    public function getVirtueMartItems($catId) {
         $query = "SELECT #__vm_product_category_xref.product_id AS id, #__vm_product.product_name as title
 				  FROM #__vm_product_category_xref
 				  LEFT JOIN jos_vm_product
@@ -393,40 +446,67 @@ class BiblestudyModelMediafile extends JModelAdmin {
         return json_encode($this->_getList($query));
     }
 
-    function getDocManItem($id) {
+    /**
+     * Get DocMan Item
+     * @param int $id
+     * @return object
+     */
+    public function getDocManItem($id) {
         $query = "SELECT title FROM #__content WHERE `id` = '$id'";
         $this->_db->setQuery($query);
         $data = $this->_db->loadRow();
         return $data[0];
     }
 
-    function getArticleItem($id) {
+    /**
+     * Get Article Item
+     * @param string $id
+     * @return object
+     */
+    public function getArticleItem($id) {
         $query = "SELECT title FROM #__content WHERE `id` = '$id'";
         $this->_db->setQuery($query);
         $data = $this->_db->loadRow();
         return $data[0];
     }
 
-    function getVirtueMartItem($id) {
+    /**
+     * Get VirtueMart Item
+     * @param int $id
+     * @return object
+     */
+    public function getVirtueMartItem($id) {
         $query = "SELECT product_name AS name FROM #__vm_product WHERE `product_id` = $id";
         $this->_db->setQuery($query);
         $data = $this->_db->loadRow();
         return $data[0];
     }
 
-    function getStudy() {
+    /**
+     * Get Study
+     * @return object
+     */
+    public function getStudy() {
         $query = 'SELECT id, studytitle, studydate FROM #__bsms_studies ORDER BY id DESC LIMIT 1';
         $this->_db->setQuery($query);
         return $this->_db->loadObject();
     }
 
-    function getStudies() {
+    /**
+     * Get Studies
+     * @return object
+     */
+    public function getStudies() {
         $query = "SELECT id AS value, CONCAT(studytitle,' - ', date_format(studydate, '%a %b %e %Y'), ' - ', studynumber) AS text FROM #__bsms_studies ORDER BY studydate DESC";
         $this->_db->setQuery($query);
         return $this->_db->loadObjectList();
     }
 
-    function getServers() {
+    /**
+     * Get Servers
+     * @return object
+     */
+    public function getServers() {
         $query = 'SELECT id AS value, server_path AS text, published'
                 . ' FROM #__bsms_servers'
                 . ' WHERE published = 1'
@@ -435,7 +515,11 @@ class BiblestudyModelMediafile extends JModelAdmin {
         return $this->_db->loadObjectList();
     }
 
-    function getFolders() {
+    /**
+     * Get Folders
+     * @return Object
+     */
+    public function getFolders() {
         $query = 'SELECT id AS value, folderpath AS text, published'
                 . ' FROM #__bsms_folders'
                 . ' WHERE published = 1'
@@ -444,13 +528,21 @@ class BiblestudyModelMediafile extends JModelAdmin {
         return $this->_db->loadObjectList();
     }
 
-    function getPodcasts() {
+    /**
+     * Get Podcasts
+     * @return object
+     */
+    public function getPodcasts() {
         $query = 'SELECT id AS value, title AS text FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC';
         $this->_db->setQuery($query);
         return $this->_db->loadObjectList();
     }
 
-    function getMediaImages() {
+    /**
+     * Get Media Images
+     * @return object
+     */
+    public function getMediaImages() {
         $query = 'SELECT id AS value, media_image_name AS text, published'
                 . ' FROM #__bsms_media'
                 . ' WHERE published = 1'
@@ -459,13 +551,21 @@ class BiblestudyModelMediafile extends JModelAdmin {
         return $this->_db->loadObjectList();
     }
 
-    function getMimeTypes() {
+    /**
+     * Get MimeTypes
+     * @return object
+     */
+    public function getMimeTypes() {
         $query = 'SELECT id AS value, mimetext AS text, published FROM #__bsms_mimetype WHERE published = 1 ORDER BY id ASC';
         $this->_db->setQuery($query);
         return $this->_db->loadObjectList();
     }
 
-    function getOrdering() {
+    /**
+     * Get Ordering
+     * @return string
+     */
+    public function getOrdering() {
         $query = 'SELECT ordering AS value, ordering AS text'
                 . ' FROM #__bsms_mediafiles'
                 . ' WHERE study_id = ' . $this->_id
@@ -478,7 +578,7 @@ class BiblestudyModelMediafile extends JModelAdmin {
      * Overloads the JModelAdmin save routine in order to impload the podcast_id
      *
      * @param array $data
-     * @return <Boolean> True on sucessfull save
+     * @return boolean True on sucessfull save
      * @since   7.0
      */
     public function save($data) {
@@ -488,22 +588,31 @@ class BiblestudyModelMediafile extends JModelAdmin {
     }
 
     /**
+     * Method to allow derived classes to preprocess the form.
      *
-     * @param JForm $form
-     * @param type $data
-     * @param type $group
+     * @param   JForm   $form   A JForm object.
+     * @param   mixed   $data   The data expected for the form.
+     * @param   string  $group  The name of the plugin group to import (defaults to "content").
+     *
+     * @return  void
+     *
+     * @see     JFormField
+     * @since   11.1
+     * @throws  Exception if there is an error in the form event.
      */
     protected function preprocessForm(JForm $form, $data, $group = 'content') {
         parent::preprocessForm($form, $data, $group);
     }
 
     /**
-     * Get the form data
+     * Abstract method for getting the form from the model.
      *
-     * @param <Array> $data
-     * @param <Boolean> $loadData
-     * @return <type>
-     * @since 7.0
+     * @param   array    $data      Data for the form.
+     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     *
+     * @return  mixed  A JForm object on success, false on failure
+     *
+     * @since   11.1
      */
     public function getForm($data = array(), $loadData = true) {
         // Get the form.
@@ -517,9 +626,11 @@ class BiblestudyModelMediafile extends JModelAdmin {
     }
 
     /**
+     * Method to get the data that should be injected in the form.
      *
-     * @return <type>
-     * @since   7.0
+     * @return  array    The default data is an empty array.
+     *
+     * @since   11.1
      */
     protected function loadFormData() {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafile.data', array());

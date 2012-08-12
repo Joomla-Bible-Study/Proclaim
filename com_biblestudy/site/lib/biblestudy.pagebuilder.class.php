@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * BibleStudy Page Builder class
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -169,7 +170,7 @@ class JBSPagebuilder {
     }
 
     /**
-     *
+     * Study Builder
      * @param string $whereitem
      * @param string $wherefield
      * @param array $params

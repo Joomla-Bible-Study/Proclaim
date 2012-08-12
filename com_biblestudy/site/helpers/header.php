@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Header Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,13 +11,13 @@
 defined('_JEXEC') or die;
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $admin_params
- * @param type $template
- * @param type $showheader
- * @param type $ismodule
+ * Get Header
+ * @param object $row
+ * @param object $params
+ * @param object $admin_params
+ * @param object $template
+ * @param int $showheader
+ * @param int $ismodule
  * @return string
  */
 function getHeader($row, $params, $admin_params, $template, $showheader, $ismodule) {
@@ -416,17 +417,17 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
 }
 
 /**
- *
- * @param type $rowid
- * @param type $row
- * @param type $params
- * @param type $lastcol
- * @param type $colspan
- * @param type $rowspan
- * @param type $rowcolid
- * @param type $nh
- * @param type $admin_params
- * @param type $template
+ * Get Heder Cell
+ * @param int $rowid
+ * @param object $row
+ * @param object $params
+ * @param int $lastcol
+ * @param int $colspan
+ * @param int $rowspan
+ * @param int $rowcolid
+ * @param string $nh
+ * @param object $admin_params
+ * @param object $template
  * @return string
  */
 function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template) {
@@ -467,10 +468,10 @@ function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $row
 }
 
 /**
- *
- * @param type $rowcolid
- * @param type $params
- * @return type
+ * Get CustomHead
+ * @param int $rowcolid
+ * @param object $params
+ * @return string
  */
 function getCustomhead($rowcolid, $params) {
     $row = substr($rowcolid, 3, 1);

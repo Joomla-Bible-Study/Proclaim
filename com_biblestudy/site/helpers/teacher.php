@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Teacher Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,14 +13,13 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 
 /**
- *
- * @param type $params
- * @param type $id
- * @param type $admin_params
+ * Get Teacher
+ * @param object $params
+ * @param int $id
+ * @param object $admin_params
  * @return string
  */
 function getTeacher($params, $id, $admin_params) {
-
     $mainframe = & JFactory::getApplication();
     $option = JRequest::getCmd('option');
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -79,10 +79,10 @@ function getTeacher($params, $id, $admin_params) {
 }
 
 /**
- *
- * @param type $params
- * @param type $id
- * @param type $admin_params
+ * Get Teacher for LandingPage
+ * @param objcet $params
+ * @param int $id
+ * @param object $admin_params
  * @return string
  */
 function getTeacherLandingPage($params, $id, $admin_params) {
@@ -244,13 +244,13 @@ function getTeacherLandingPage($params, $id, $admin_params) {
 }
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $oddeven
- * @param type $admin_params
- * @param type $template
- * @return type
+ * Get TeacherList Exp
+ * @param object $row
+ * @param object $params
+ * @param string $oddeven
+ * @param object $admin_params
+ * @param object $template
+ * @return object
  */
 function getTeacherListExp($row, $params, $oddeven, $admin_params, $template) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -277,12 +277,12 @@ function getTeacherListExp($row, $params, $oddeven, $admin_params, $template) {
 }
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $template
- * @param type $admin_params
- * @return type
+ * Get Teacher Details Exp
+ * @param object $row
+ * @param object $params
+ * @param object $template
+ * @param object $admin_params
+ * @return object
  */
 function getTeacherDetailsExp($row, $params, $template, $admin_params) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -313,11 +313,11 @@ function getTeacherDetailsExp($row, $params, $template, $admin_params) {
 }
 
 /**
- *
- * @param type $id
- * @param type $params
- * @param type $admin_params
- * @param type $template
+ * Get Teacher Studies Exp
+ * @param int $id
+ * @param object $params
+ * @param object $admin_params
+ * @param object $template
  * @return string
  */
 function getTeacherStudiesExp($id, $params, $admin_params, $template) {

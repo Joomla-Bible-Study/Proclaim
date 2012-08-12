@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Date Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,10 +11,10 @@
 defined('_JEXEC') or die;
 
 /**
- *
- * @param type $params
- * @param type $studydate
- * @return type
+ * Get StudyDate
+ * @param object $params
+ * @param string $studydate
+ * @return string
  */
 function getstudyDate($params, $studydate) {
     switch ($params->get('date_format')) {

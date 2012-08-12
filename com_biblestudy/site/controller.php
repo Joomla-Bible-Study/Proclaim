@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Controller for Site
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,15 +13,16 @@ require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 jimport('joomla.application.component.controller');
 
 /**
+ * Controller for Core BibleStudy
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class biblestudyController extends JController {
 
     /**
-     *
-     * @param type $cachable
-     * @param type $urlparams
+     * Display
+     * @param boolean $cachable
+     * @param boolean $urlparams
      * @return \biblestudyController
      */
     public function display($cachable = false, $urlparams = false) {
@@ -64,10 +66,10 @@ class biblestudyController extends JController {
     }
 
     /**
-     *
+     * Comments
      * @return type
      */
-    function comment() {
+    public function comment() {
 
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
@@ -127,10 +129,10 @@ class biblestudyController extends JController {
     }
 
     /**
-     *
-     * @param type $params
+     * Comments Email
+     * @param string $params
      */
-    function commentsEmail($params) {
+    public function commentsEmail($params) {
         $mainframe = JFactory::getApplication();
         $menuitemid = JRequest::getInt('Itemid');
         if ($menuitemid) {
@@ -176,9 +178,9 @@ class biblestudyController extends JController {
     }
 
     /**
-     *
+     * Download
      */
-    function download() {
+    public function download() {
         $abspath = JPATH_SITE;
         require_once($abspath . DIRECTORY_SEPARATOR . 'components/com_biblestudy/lib/biblestudy.download.class.php');
         $task = JRequest::getVar('task');
@@ -192,10 +194,10 @@ class biblestudyController extends JController {
     }
 
     /**
-     *
-     * @return type
+     * AV Player
+     * @return none
      */
-    function avplayer() {
+    public function avplayer() {
         $task = JRequest::getVar('task');
         if ($task == 'avplayer') {
             $mediacode = JRequest::getVar('code');
@@ -206,30 +208,28 @@ class biblestudyController extends JController {
     }
 
     /**
-     *
+     * Play Hit
      */
-    function playHit() {
+    public function playHit() {
         require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
         $getMedia = new jbsMedia();
         $getMedia->hitPlay(JRequest::getInt('id'));
     }
 
     /**
-     * @desc: This function is supposed to generate the Media Player that is requested via AJAX
+     * This function is supposed to generate the Media Player that is requested via AJAX
      * from the sermons view "default.php". It has not been implemented yet, so its not used.
      * @return unknown_type
      */
-    function inlinePlayer() {
+    public function inlinePlayer() {
         echo('{m4vremote}http://www.livingwatersweb.com/video/John_14_15-31.m4v{/m4vremote}');
     }
 
-
-    /*
+    /**
      * Adds the ability to uploade with flash
      * @since 7.1.0
      */
-
-    function uploadflash() {
+    public function uploadflash() {
 
         JRequest::checktoken() or jexit('Invalid Token');
         $option = JRequest::getCmd('option');
@@ -238,8 +238,8 @@ class biblestudyController extends JController {
         $serverid = JRequest::getInt('upload_server', '', 'post');
         $folderid = JRequest::getInt('upload_folder', '', 'post');
         $app = JFactory::getApplication();
-        $app->setUserState($option,'serverid', $serverid);
-        $app->setUserState($option.'folderid', $folderid);
+        $app->setUserState($option, 'serverid', $serverid);
+        $app->setUserState($option . 'folderid', $folderid);
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
         // get temp file details
@@ -363,7 +363,7 @@ class biblestudyController extends JController {
      * Upload function
      *
      */
-    function upload() {
+    public function upload() {
         JRequest::checktoken() or jexit('Invalid Token');
         $option = JRequest::getCmd('option');
         $uploadmsg = '';
@@ -397,4 +397,5 @@ class biblestudyController extends JController {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
         }
     }
+
 }

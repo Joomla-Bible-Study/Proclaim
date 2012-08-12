@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * CommentsList JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -20,8 +21,22 @@ jimport('joomla.application.component.view');
  */
 class biblestudyViewcommentslist extends JView {
 
+    /**
+     * Items
+     * @var array
+     */
     protected $items;
+
+    /**
+     * Pagination
+     * @var array
+     */
     protected $pagination;
+
+    /**
+     * State
+     * @var array
+     */
     protected $state;
 
     /**
@@ -29,7 +44,7 @@ class biblestudyViewcommentslist extends JView {
      * @param string $tpl
      * @return boolean
      */
-    function display($tpl = null) {
+    public function display($tpl = null) {
         $this->canDo = BibleStudyHelper::getActions('', 'commentsedit');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
@@ -45,7 +60,7 @@ class biblestudyViewcommentslist extends JView {
         $document->addStyleSheet(JURI::base() . 'administrator/templates/bluestork/css/template.css');
         //Load the Admin settings
         $this->loadHelper('params');
-        $this->admin = @BsmHelper::getAdmin($issite = true);
+        $this->admin = BsmHelper::getAdmin($issite = true);
 
         //check permissions to enter studies
         if (!$this->canDo->get('core.edit')) {

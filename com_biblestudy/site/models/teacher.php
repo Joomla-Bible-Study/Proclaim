@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Teacher Model
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,15 +13,17 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modelitem');
 
 /**
+ * Model class for Teacher
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class BiblestudyModelTeacher extends JModelItem {
-    /* Model context string.
-     *
-     * @var		string
-     */
 
+    /**
+     *  Model context string.
+     *
+     * @var  string
+     */
     protected $_context = 'com_biblestudy.teacher';
 
     /**
@@ -59,7 +62,7 @@ class BiblestudyModelTeacher extends JModelItem {
      * @since 7.1.0
      * @return	mixed	Menu item data object on success, false on failure.
      */
-    function &getItem($pk = null) {
+    public function &getItem($pk = null) {
         // Initialise variables.
         $pk = (!empty($pk)) ? $pk : (int) $this->getState('teacher.id');
         if (!isset($this->_item[$pk])) {
@@ -97,10 +100,11 @@ class BiblestudyModelTeacher extends JModelItem {
     }
 
     /**
-     *
+     * Get Template
+     * @todo need to move to helper.php
      * @return type
      */
-    function getTemplate() {
+    public function getTemplate() {
         if (empty($this->_template)) {
             $templateid = JRequest::getVar('t', 1, 'get', 'int');
             $query = 'SELECT *'
@@ -112,7 +116,8 @@ class BiblestudyModelTeacher extends JModelItem {
     }
 
     /**
-     *
+     * Get Admin
+     * @todo need to move to helper.php
      * @return type
      */
     function getAdmin() {

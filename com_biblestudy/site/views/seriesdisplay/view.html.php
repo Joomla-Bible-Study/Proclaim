@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * SeriesDisplay JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -15,22 +16,47 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 include_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'translated.php');
 
 /**
+ * View class for SeriesDisplay
  * @package BibleStudy.Site
  * @since 7.0.0
  */
 class BiblestudyViewSeriesdisplay extends JView {
 
+    /**
+     * State
+     * @var array
+     */
     protected $state = null;
+
+    /**
+     * Item
+     * @var array
+     */
     protected $item = null;
+
+    /**
+     * Items
+     * @var array
+     */
     protected $items = null;
+
+    /**
+     * Pagination
+     * @var array
+     */
     protected $pagination = null;
 
     /**
-     * Display the view
+     * Execute and display a template script.
      *
-     * @return	mixed	False on error, null otherwise.
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
      */
-    function display($tpl = null) {
+    public function display($tpl = null) {
 
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');

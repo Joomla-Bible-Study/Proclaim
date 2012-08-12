@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Default Test
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -13,7 +14,11 @@
 //No Direct Access
 defined('_JEXEC') or die;
 ?>
-<table><tr><td>This is the header</td></tr></table>
+<table>
+    <tr>
+        <td>This is the header</td>
+    </tr>
+</table>
 <?php
 
 foreach ($this->study as $study) {

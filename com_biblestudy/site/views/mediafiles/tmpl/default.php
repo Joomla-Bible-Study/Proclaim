@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -9,7 +10,6 @@
 defined('_JEXEC') or die;
 
 JHtml::_('behavior.multiselect');
-
 
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
@@ -23,7 +23,6 @@ $saveOrder = $listOrder == 'mediafile.ordering';
             <input type="text" name="filter_filename" id="filter_filename" value="<?php echo $this->escape($this->state->get('filter.filename')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
             <label class="filter-search-lbl" for="filter_studytitle"><?php echo JText::_('JBS_CMN_STUDY_TITLE'); ?>: </label>
             <input type="text" name="filter_studytitle" id="filter_studytitle" value="<?php echo $this->escape($this->state->get('filter.studytitle')); ?>" title="<?php echo JText::_('JBS_CMN_FILTER_SEARCH_DESC'); ?>" />
-
             <button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button" onclick="document.id('filter_filename').value='';document.id('filter_studytitle').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
         </div>
@@ -40,7 +39,8 @@ $saveOrder = $listOrder == 'mediafile.ordering';
         </div>
     </fieldset>
     <div>
-        <h3> <?php echo $this->newlink; ?></h3></div>
+        <h3> <?php echo $this->newlink; ?></h3>
+    </div>
     <div class="clr"></div>
 
     <table class="adminlist">
@@ -132,7 +132,7 @@ $saveOrder = $listOrder == 'mediafile.ordering';
     </table>
     <div>
         <input type="hidden" name="task" value=""/>
-        <input type = "hidden" name = "option" value = "com_biblestudy" />
+        <input type="hidden" name="option" value="com_biblestudy" />
         <input type="hidden" name="boxchecked" value="0"/>
         <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
         <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>

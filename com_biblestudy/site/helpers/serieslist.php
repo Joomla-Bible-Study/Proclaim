@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * SeriesList Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,13 +13,13 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.admin.class.php');
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $oddeven
- * @param type $admin_params
- * @param type $template
- * @param type $view
+ * Get SeriesList
+ * @param object $row
+ * @param object $params
+ * @param string $oddeven
+ * @param object $admin_params
+ * @param object $template
+ * @param string $view
  * @return string
  */
 function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view) {
@@ -97,12 +98,12 @@ function getSerieslist($row, $params, $oddeven, $admin_params, $template, $view)
 
 //elements are: series title, series image, series pastor + image, description
 /**
- *
- * @param type $islink
- * @param type $row
- * @param type $element
- * @param type $params
- * @param type $admin_params
+ * Get SeriesLink
+ * @param string $islink
+ * @param object $row
+ * @param string $element
+ * @param object $params
+ * @param object $admin_params
  * @return string
  */
 function getSerieslink($islink, $row, $element, $params, $admin_params) {
@@ -115,12 +116,12 @@ function getSerieslink($islink, $row, $element, $params, $admin_params) {
 }
 
 /**
- *
- * @param type $islink
- * @param type $row
- * @param type $element
- * @param type $params
- * @param type $admin_params
+ * Get StudiesLink
+ * @param string $islink
+ * @param object $row
+ * @param object $element
+ * @param object $params
+ * @param object $admin_params
  * @return string
  */
 function getStudieslink($islink, $row, $element, $params, $admin_params) {
@@ -129,15 +130,15 @@ function getStudieslink($islink, $row, $element, $params, $admin_params) {
 }
 
 /**
- *
- * @param type $r
- * @param type $row
- * @param type $listelementid
- * @param type $custom
- * @param type $islink
- * @param type $admin_params
- * @param type $params
- * @param type $view
+ * Series Get Element
+ * @param string $r
+ * @param object $row
+ * @param int $listelementid
+ * @param string $custom
+ * @param string $islink
+ * @param object $admin_params
+ * @param object $params
+ * @param string $view
  * @return string
  */
 function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_params, $params, $view) {
@@ -216,15 +217,15 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
 }
 
 /**
- *
- * @param type $r
- * @param type $row
- * @param type $customelement
- * @param type $custom
- * @param type $islink
- * @param type $admin_params
- * @param type $params
- * @return type
+ * Series Get Custom
+ * @param string $r
+ * @param object $row
+ * @param object $customelement
+ * @param string $custom
+ * @param string $islink
+ * @param object $admin_params
+ * @param object $params
+ * @return string
  */
 function seriesGetcustom($r, $row, $customelement, $custom, $islink, $admin_params, $params) {
     $countbraces = substr_count($custom, '{');
@@ -243,8 +244,8 @@ function seriesGetcustom($r, $row, $customelement, $custom, $islink, $admin_para
 }
 
 /**
- *
- * @param type $subcustom
+ * Get Series ElementNumber
+ * @param string $subcustom
  * @return int
  */
 function getseriesElementnumber($subcustom) {
@@ -281,11 +282,11 @@ function getseriesElementnumber($subcustom) {
 }
 
 /**
- *
- * @param type $id
- * @param type $params
- * @param type $limit
- * @return type
+ * Get SeriesStudies DBO
+ * @param int $id
+ * @param object $params
+ * @param string $limit
+ * @return string
  */
 function getSeriesstudiesDBO($id, $params, $limit = '') {
     $menu = JSite::getMenu();
@@ -303,29 +304,6 @@ function getSeriesstudiesDBO($id, $params, $limit = '') {
         $langlink = '&filter.languages=' . $language;
     }
     $db = & JFactory::getDBO();
-    /* $query = $db->getQuery('true');
-      $query->select('*');
-      $query->from('#__bsms_studies as s');
-      $query->select('se.id as seid, se.series_text, se.description as sdescription, se.series_thumbnail');
-      $query->join('LEFT','#__bsms_series as se on s.series_id = se.id');
-      $query->select('t.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail');
-      $query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
-      $query->select('m.message_type');
-      $query->join('LEFT', '#__bsms_message_type as m on s.messagetype = m.id');
-      $query->select('b.bookname');
-      $query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
-      $query->select('#__bsms_studytopics.topic_id');
-      $query->select('group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params');
-      $query->join('LEFT', '#__bsms_topics on #__bsms_topics.id = #__bsms_studytopics.topic_id');
-      $query->join('LEFT', '#__bsms_studytopics ON #__bsms_studytopics.study_id = s.id');
-      $query->select('l.location_text');
-
-      $query->join('LEFT', '#__bsms_locations as l on s.location_id = l.locations.id');
-      $query->where('s.series_id = '.$id);
-      $query->where('s.published = 1');
-      if ($language){$query->where('s.language LIKE "'.$language.'"');}
-      $query->order($params->get('series_detail_sort', 'studydate'), $params->get('series_detail_order', 'DESC'));
-     */
     $query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
             . ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
             . ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
@@ -374,11 +352,11 @@ function getSeriesstudiesDBO($id, $params, $limit = '') {
 }
 
 /**
- *
- * @param type $id
- * @param type $params
- * @param type $admin_params
- * @param type $template
+ * Get SeriesStudies
+ * @param int $id
+ * @param object $params
+ * @param object $admin_params
+ * @param object $template
  * @return string
  */
 function getSeriesstudies($id, $params, $admin_params, $template) {
@@ -449,10 +427,10 @@ function getSeriesstudies($id, $params, $admin_params, $template) {
 }
 
 /**
- *
- * @param type $params
- * @param type $id
- * @param type $admin_params
+ * Get Series for LandingPage
+ * @param object $params
+ * @param int $id
+ * @param object $admin_params
  * @return string
  */
 function getSeriesLandingPage($params, $id, $admin_params) {
@@ -632,12 +610,12 @@ function getSeriesLandingPage($params, $id, $admin_params) {
 }
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $admin_params
- * @param type $template
- * @return type
+ * Get Serieslist Exp
+ * @param object $row
+ * @param object $params
+ * @param object $admin_params
+ * @param object $template
+ * @return object
  */
 function getSerieslistExp($row, $params, $admin_params, $template) {
     $path1 = JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
@@ -662,12 +640,12 @@ function getSerieslistExp($row, $params, $admin_params, $template) {
 }
 
 /**
- *
- * @param type $row
- * @param type $params
- * @param type $admin_params
- * @param type $template
- * @return type
+ * Get Series Details EXP
+ * @param object $row
+ * @param object $params
+ * @param object $admin_params
+ * @param object $template
+ * @return object
  */
 function getSeriesDetailsExp($row, $params, $admin_params, $template) {
     //seriesdesc_template
@@ -698,11 +676,11 @@ function getSeriesDetailsExp($row, $params, $admin_params, $template) {
 }
 
 /**
- *
- * @param type $id
- * @param type $params
- * @param type $admin_params
- * @param type $template
+ * Get Series Studies Exp
+ * @param int $id
+ * @param object $params
+ * @param object $admin_params
+ * @param object $template
  * @return string
  */
 function getSeriesstudiesExp($id, $params, $admin_params, $template) {
@@ -775,12 +753,13 @@ function getSeriesstudiesExp($id, $params, $admin_params, $template) {
 }
 
 /**
- *
- * @param type $t
- * @param type $id
+ * Get Series Footer
+ * @param object $template
+ * @param int $id
  * @return string
+ * @deprecated since version 7.1.0
  */
-function getSeriesFooter($t, $id) {
+function getSeriesFooter($template, $id) {
     $seriesfooter = '<tr class="seriesreturnlink"><td><a href="' . JRoute::_('index.php?option=com_biblestudy&view=sermons&filter_series=' . $id . '&t=' . $template) . '">' . JText::_('JBS_CMN_SHOW_ALL') . ' ' . JText::_('JBS_SER_STUDIES_FROM_THIS_SERIES') . ' >></a></td></tr>';
     return $seriesfooter;
 }

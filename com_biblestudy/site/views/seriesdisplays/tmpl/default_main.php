@@ -1,5 +1,6 @@
 <?php
 /**
+ * Default Main
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -21,10 +22,7 @@ if ($url) {
 }
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
-
-<!--<tbody><tr>-->
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
-
         <div id="bsmHeader">
             <h1 class="componentheading">
                 <?php
@@ -49,12 +47,9 @@ if ($url) {
                     echo $this->page->series;
                 }
                 ?>
-
-
             </div><!--dropdownmenu-->
             <table id="seriestable" cellspacing="0">
                 <tbody>
-
                     <?php
                     //This sets the alternativing colors for the background of the table cells
                     $class1 = 'bsodd';
@@ -74,7 +69,8 @@ if ($url) {
                         //echo '</table>';
                     }
                     ?>
-                </tbody></table>
+                </tbody>
+            </table>
             <div class="listingfooter" >
             </div> <!--end of bsfooter div-->
         </div><!--end of bspagecontainer div-->

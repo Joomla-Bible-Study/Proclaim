@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Teachers Model
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -12,6 +13,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
 
 /**
+ * Model class for Teachers
  * @package BibleStudy.Site
  * @since 7.0.0
  */
@@ -56,11 +58,11 @@ class BiblestudyModelTeachers extends JModelList {
     }
 
     /**
-     * @desc Returns the Template to display the list
+     * Returns the Template to display the list
      * @return Array
      * @since 7.0.2
      */
-    function getTemplate() {
+    public function getTemplate() {
         if (empty($this->_template)) {
             $templateid = JRequest::getVar('t', 1, 'get', 'int');
             $db = $this->getDBO();
@@ -76,9 +78,10 @@ class BiblestudyModelTeachers extends JModelList {
 
     /**
      * Get Admin Stettings.
-     * @return type
+     * @todo Need to move to helper.php
+     * @return string
      */
-    function getAdmin() {
+    public function getAdmin() {
         if (empty($this->_admin)) {
             $query = 'SELECT params'
                     . ' FROM #__bsms_admin'

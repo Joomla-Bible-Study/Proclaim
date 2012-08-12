@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Sermons JView
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -23,15 +24,35 @@ require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARA
  */
 class BiblestudyViewSermons extends JView {
 
+    /**
+     * Items
+     * @var array
+     */
     protected $items;
+
+    /**
+     * Pagination
+     * @var array
+     */
     protected $pagination;
+
+    /**
+     * State
+     * @var array
+     */
     protected $state;
 
     /**
-     * sermons view display method
-     * @return void
-     * */
-    function display($tpl = null) {
+     * Execute and display a template script.
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     *
+     * @see     fetch()
+     * @since   11.1
+     */
+    public function display($tpl = null) {
 
         $limitstart = JRequest::getInt('limitstart');
         JRequest::setVar('start', $limitstart, 'get', 'true');
@@ -51,7 +72,7 @@ class BiblestudyViewSermons extends JView {
         //Load the Admin settings and params from the template
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
         $this->loadHelper('params');
-        $this->admin = @BsmHelper::getAdmin(true);
+        $this->admin = BsmHelper::getAdmin(true);
 
         $admin_parameters = $this->get('Admin');
         // Convert parameter fields to objects.

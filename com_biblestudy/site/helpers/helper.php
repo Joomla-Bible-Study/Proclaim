@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Core Helper
  * @package BibleStudy.Site
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -10,7 +11,8 @@
 defined('_JEXEC') or die;
 
 /**
- *
+ * Get Administration Setting
+ * @todo look like this is a duplicate of helper params
  * @return \JRegistry
  */
 function getAdminsettings() {
@@ -29,12 +31,12 @@ function getAdminsettings() {
 }
 
 /**
- *
- * @param type $rowid
- * @param type $row
- * @param type $params
- * @param type $admin_params
- * @param type $template
+ * Get tooltip
+ * @param int $rowid
+ * @param object $row
+ * @param object $params
+ * @param object $admin_params
+ * @param object $template
  * @return string
  */
 function getTooltip($rowid, $row, $params, $admin_params, $template) {
@@ -68,7 +70,7 @@ function getTooltip($rowid, $row, $params, $admin_params, $template) {
 }
 
 /**
- *
+ * Get ShowHide JavaScript
  * @return string
  */
 function getShowhide() {
