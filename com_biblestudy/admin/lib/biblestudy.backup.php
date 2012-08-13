@@ -39,8 +39,8 @@ class JBSExport {
                 }
                 else {
                     $downloadfile = $this->output_file($file, $localfilename, $mime_type = 'text/x-sql');
+                    return $downloadfile;
                 }
-                return $downloadfile;
                 break;
 
             case 2:
@@ -66,7 +66,6 @@ class JBSExport {
 
         $data = array();
         $export = '';
-        $return = array();
 
         $db = JFactory::getDBO();
         //Get the prefix
@@ -211,10 +210,10 @@ class JBSExport {
                 $bytes_send += strlen($buffer);
             }
             fclose($file);
-
-            return TRUE;
         } else
-            return 'Error - can not open file.';
+            die('Error - can not open file.');
+
+        die();
         unlink($file);
     }
 
