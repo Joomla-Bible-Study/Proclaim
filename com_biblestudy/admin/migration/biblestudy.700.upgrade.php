@@ -59,7 +59,7 @@ class jbs700Install {
            array('table'=>'#__bsms_series','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
            array('table'=>'#__bsms_servers','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
            array('table'=>'#__bsms_share','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_studies','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_studies','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT')
        );
        
        $admin = $dbhelper->alterDB($tables);
