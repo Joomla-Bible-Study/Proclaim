@@ -30,212 +30,83 @@ class jbs700Install {
         $msg = '';
 
         @set_time_limit(300);
-      /*  $query = @file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql'. DIRECTORY_SEPARATOR . 'updates'. DIRECTORY_SEPARATOR . 'mysql'. DIRECTORY_SEPARATOR . '7.0.0.sql');
-        $db->setQuery($query);
-        $db->queryBatch();
-        if ($db->getErrorNum() != 0) 
-            {
-                $results = JText::_('JBS_IBM_DB_ERROR') . ': ' . $db->getErrorNum() . "<br /><font color=\"red\">";
-                $results .= $db->stderr(true);
-                $results .= "</font>";
-                $msg[] = $results;
-            }
-       */
+      
        $dbhelper = new jbsDBhelper();
        //alter the admin table
-       $table = '#__bsms_admin';
+       
        $tables = array(
            array('table'=>'#__bsms_admin','field'=>'main','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'podcast','type'=>'DROP','command'=>'')
+           array('table'=>'#__bsms_admin','field'=>'podcast','type'=>'DROP','command'=>''),
+           array('table'=>'#__bsms_admin','field'=>'series','type'=>'DROP','command'=>''),
+           array('table'=>'#__bsms_admin','field'=>'study','type'=>'DROP','command'=>''),
+           array('table'=>'#__bsms_admin','field'=>'teacher','type'=>'DROP','command'=>''),
+           array('table'=>'#__bsms_admin','field'=>'media','type'=>'DROP','command'=>''),
+           array('table'=>'#__bsms_admin','field'=>'showhide','type'=>'DROP','command'=>''),
+           array('table'=>'#__bsms_admin','field'=>'download','type'=>'DROP','command'=>''),
+           array('table'=>'#__bsms_admin','field'=>'drop_tables','type'=>'ADD','command'=>'int(3) NULL default "0"'),
+           array('table'=>'#__bsms_admin','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_comments','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_admin','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_folders','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_media','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_mediafiles','field'=>'podcast_id','type'=>'MODIFY','command'=>'VARCHAR(50)'),
+           array('table'=>'#__bsms_mediafiles','field'=>'player','type'=>'ADD','command'=>'INT(2) NULL'),
+           array('table'=>'#__bsms_mediafiles','field'=>'popup','type'=>'ADD','command'=>'INT(2) NULL'),
+           array('table'=>'#__bsms_mediafiles','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_order','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_order','field'=>'text','type'=>'MODIFY','command'=>'VARCHAR(50) DEFAULT NULL'),
+           array('table'=>'#__bsms_search','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_series','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_servers','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_share','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+           array('table'=>'#__bsms_studies','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
        );
-        if($dbhelper->checkTables($table, 'main') == 'true')
-        {
-            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `main`');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'podcast') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `podcast`');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'series') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `series`');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'study') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `study`');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'teacher') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `teacher`');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'media') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `media`');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'download') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `download`');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'showhide') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'DROP COLUMN `showhide`');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'drop_tables') == 'false') {
-            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `drop_tables` int(3) NULL default "0"');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
+       
+       $admin = $dbhelper->alterDB($tables);
+       if (!empty($admin)){$messages[] = $admin;}
+       
+        $table = '#__bsms_admin';
         $msg[] = $this->addAssetColumn($table);
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY `id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
+        if ($dbhelper->checkTables($table, 'drop_tables') == 'true') {
             $query = 'UPDATE `#__bsms_admin` SET `drop_tables` = 0 WHERE id = 1';
-            $msg[] = $this->performdb($query);
+            $messages[] = $this->performdb($query);
         }
-        //comments table
+        
         $table = '#__bsms_comments';
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY `id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        $msg[] = $this->addAssetColumn($table);
-        //folders table
+        $messages[] = $this->addAssetColumn($table);
+
         $table = '#__bsms_folders';
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY `id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_media';
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_mediafiles';
-        if ($dbhelper->checkTables($table, 'podcast_id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY podcast_id VARCHAR(50)');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'drop_tables') == 'false') {
-            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `player` INT(2) NULL');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'popup') == 'false') {
-            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `popup` INT(2) NULL');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_message_type';
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_mimetype';
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_order';
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        if ($dbhelper->checkTables($table, 'text') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY text VARCHAR(50) DEFAULT NULL');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_podcast';
-        $msg[] = $this->addAssetColumn($table);
-
-        $table = '#__bsms_search';
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_series';
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_servers';
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_share';
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_studies';
-        if ($dbhelper->checkTables($table, 'id') == 'true') {
-            $alteradmin = $dbhelper->alterDB($table, 'MODIFY id int(3) NOT NULL AUTO_INCREMENT');
-            if ($alteradmin != 'true') {
-                $msg[] = $alteradmin;
-            }
-        }
-        $msg[] = $this->addAssetColumn($table);
+        $messages[] = $this->addAssetColumn($table);
 
         $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
         $db->setQuery($query);
@@ -255,16 +126,16 @@ class jbs700Install {
                         $player = 3;
                     }
                     $query = "UPDATE #__bsms_mediafiles SET `player` = '$player' WHERE `id` = $result->id LIMIT 1";
-                    $msg = $this->performdb($query);
+                    $messages[] = $this->performdb($query);
                 }
                 if ($popup) {
                     $query = "UPDATE #__bsms_mediafiles SET `popup` = '$popup' WHERE `id` = $result->id LIMIT 1";
-                    $msg = $this->performdb($query);
+                    $messages[] = $this->performdb($query);
                 }
                 if ($podcasts) {
                     $podcasts = str_replace('|', ',', $podcasts);
                     $query = "UPDATE #__bsms_mediafiles SET `podcast_id` = '$podcasts' WHERE `id` = $result->id LIMIT 1";
-                    $msg = $this->performdb($query);
+                    $messages[] = $this->performdb($query);
                 }
                 //Update the params to json
                 // $params = new JParameter($result->params);
@@ -276,7 +147,7 @@ class jbs700Install {
 
 
                 $query = "UPDATE #__bsms_mediafiles SET `params` = '$params2' WHERE `id` = $result->id LIMIT 1";
-                $msg = $this->performdb($query);
+                $messages[] = $this->performdb($query);
             }
         }
 
