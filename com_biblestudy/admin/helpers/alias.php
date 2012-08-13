@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 /**
  * Class for updating the alias in certain tables
- * @package BibleSutdy.Admin
+ * @package BibleStudy.Admin
  * @since 7.1.0
  */
 class fixJBSalias {

@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 /**
  * Table class for Template
- * @package BibleSutdy.Admin
+ * @package BibleStudy.Admin
  * @since 7.0.0
  */
 class TableTemplate extends JTable {

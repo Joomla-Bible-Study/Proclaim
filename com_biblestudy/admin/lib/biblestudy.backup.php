@@ -18,11 +18,11 @@ defined('_JEXEC') or die;
 class JBSExport {
 
     /**
-     * Export DB
+     * Export DB//
      * @param int $run
      * @return boolean
      */
-    public function exportdb($run = '1') {
+    public function exportdb($run) {
         $date = date('Y_F_j');
         $localfilename = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
         $objects = $this->getObjects();
@@ -37,11 +37,10 @@ class JBSExport {
                 if (!JFile::write($file, $export)) {
                     return false;
                 }
-                // XXX This line look like it is not being used?
-                if (!$downloadfile = $this->output_file($file, $localfilename, $mime_type = 'text/x-sql')) {
-                    return false;
+                else {
+                    $downloadfile = $this->output_file($file, $localfilename, $mime_type = 'text/x-sql');
                 }
-                return true;
+                return $downloadfile;
                 break;
 
             case 2:
@@ -67,13 +66,14 @@ class JBSExport {
 
         $data = array();
         $export = '';
+        $return = array();
 
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
-
+        $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS `' . $table . "`;";
+        $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
         //Create a new table defintion based on the incoming database
         $query = 'SHOW CREATE TABLE `' . $table . '`';
         $db->setQuery($query);
@@ -81,11 +81,11 @@ class JBSExport {
         $table_def = $db->loadObject();
         foreach ($table_def as $key => $value) {
             if (substr_count($value, 'CREATE')) {
-                $export .= str_replace($prefix, '#__', $value) . ";";
+                $export .= str_replace($prefix, '#__', $value) . ";\n";
                 $export = str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
-
+        $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
         $db->setQuery($query);
@@ -101,8 +101,9 @@ class JBSExport {
                 $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
             }
             $export .= implode(',', $data);
-            $export .= ";";
+            $export .= ";\n";
         }
+        $export .= "\n-- --------------------------------------------------------\n\n";
 
         return $export;
     }
@@ -210,10 +211,10 @@ class JBSExport {
                 $bytes_send += strlen($buffer);
             }
             fclose($file);
-        } else
-            die('Error - can not open file.');
 
-        die();
+            return TRUE;
+        } else
+            return 'Error - can not open file.';
         unlink($file);
     }
 

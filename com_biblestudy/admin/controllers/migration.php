@@ -46,8 +46,12 @@ class BiblestudyControllerMigration extends JController {
             if (!$result = $export->exportdb($run)) {
                 $msg = JText::_('JBS_CMN_OPERATION_FAILED');
                 $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-            } else {
-                $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+            } elseif($run == 2) {
+                if (!$result) {
+                    $msg = $result;
+                } else {
+                    $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL');
+                }
                 $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
             }
         }
@@ -68,7 +72,7 @@ class BiblestudyControllerMigration extends JController {
         if ($task == 'import') {
             $importjbs = $this->import();
         }
-        parent::display();
+        parent::display($tpl);
 
         return $this;
     }
@@ -127,7 +131,7 @@ class BiblestudyControllerMigration extends JController {
         if ($result || $copysuccess) {
             //We need to drop the update table first as it will be added back later
             $db = JFactory::getDBO();
-            $db->setQuery('DROP TABLE #__bsms_update');
+            $db->setQuery('DROP TABLE IF EXISTS `#__bsms_update`');
             $db->query();
             $migrate = new JBSMigrate();
             $migration = $migrate->migrate();

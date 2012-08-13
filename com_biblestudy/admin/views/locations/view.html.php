@@ -13,7 +13,7 @@ jimport('joomla.application.component.view');
 
 /**
  * View class for Locations
- * @package     BibleStudy.Administrator
+ * @package     BibleStudy.Admin
  * @since       7.0
  */
 class BiblestudyViewLocations extends JView {

@@ -71,7 +71,6 @@ class biblestudyViewStyle extends JView {
             JError::raiseError(404, JText::_('JBS_CMN_NOT_AUTHORIZED'));
             return false;
         }
-        $this->setLayout("form");
         // Set the toolbar
         $this->addToolbar();
 
