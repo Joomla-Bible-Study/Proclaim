@@ -10,11 +10,6 @@
 //
 //No Direct Access
 defined('_JEXEC') or die;
-?>
-<script type="text/javascript">
-    window.addEvent('domready', function(){ new Accordion($$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler'), $$('div#content-sliders-1.pane-sliders > .panel > div.pane-slider'), {onActive: function(toggler, i) {toggler.addClass('pane-toggler-down');toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_content-sliders-1',$$('div#content-sliders-1.pane-sliders > .panel > h3').indexOf(toggler));},onBackground: function(toggler, i) {toggler.addClass('pane-toggler');toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');i.removeClass('pane-down');if($$('div#content-sliders-1.pane-sliders > .panel > h3').length==$$('div#content-sliders-1.pane-sliders > .panel > h3.pane-toggler').length) Cookie.write('jpanesliders_content-sliders-1',-1);},duration: 300,display: 1,show: 1,opacity: false,alwaysHide: true}); });
-</script>
-<?php
 
 /**
  * BibleStudy Install Script
@@ -236,10 +231,6 @@ class Com_BiblestudyInstallerScript {
         if (!$update701) {
             echo JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.0.2');
         }
-
-
-        // Start Sliders
-        echo JHtml::_('sliders.start', 'content-sliders-1', array('useCookie' => 1));
         ?>
         <fieldset class="panelform">
             <legend>
@@ -262,7 +253,6 @@ class Com_BiblestudyInstallerScript {
             $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
             $imageexists = JFile::exists($dest);
             if (!$imageexists) {
-                echo JHtml::_('sliders.panel', 'Image', 'image-details');
                 echo '<br /><br />' . JText::_('JBS_INS_COPYING_IMAGE');
                 //@todo need to move the copy funtions out of the if call
                 if ($imagesuccess = JFile::copy($src, $dest)) {
@@ -271,11 +261,8 @@ class Com_BiblestudyInstallerScript {
                     echo '<br />' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER1') . '/media/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER2');
                 }
             }
-
-            echo JHtml::_('sliders.end');
             ?>
         </fieldset>
-        </div>
         <!--end of div for panelform -->
 
         <!-- Rest of footer -->
