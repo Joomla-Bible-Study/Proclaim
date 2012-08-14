@@ -206,7 +206,7 @@ class BiblestudyControllerAdmin extends JControllerForm {
         $asset = new fixJBSAssets();
         $fixassets = $asset->fixAssets();
         JRequest::setVar('messages', $fixassets, 'get', 'true');
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&task=admin.checkassets', $fixassets);
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets', $fixassets);
     }
 
     /**

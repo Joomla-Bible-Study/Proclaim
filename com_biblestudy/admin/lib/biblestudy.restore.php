@@ -50,6 +50,9 @@ class JBSImport {
                 @unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
             }
         }
+        require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+        $fix = new fixJBSAssets();
+        $fix->fixassets();
         return $result;
     }
 
@@ -105,10 +108,9 @@ class JBSImport {
     public function installdb($tmp_src) {
         //first we need to drop the existing JBS tables
         $objects = $this->getObjects();
-        foreach ($objects as $object)
-        {
+        foreach ($objects as $object) {
             $db = JFactory::getDBO();
-            $query = 'DROP TABLE '.$object['name'].';';
+            $query = 'DROP TABLE ' . $object['name'] . ';';
             $db->setQuery($query);
             $db->query();
         }
@@ -121,7 +123,7 @@ class JBSImport {
         $db = JFactory::getDBO();
 
         $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
-        $query = str_replace('\n',' ', $query); //dump($query,'installDB');
+        $query = str_replace('\n', ' ', $query); //dump($query,'installDB');
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
         if ($isold !== 0 && $isnot === 0) :
@@ -158,12 +160,11 @@ class JBSImport {
      * @return boolean See if the restore worked.
      */
     public function restoreDB($backuprestore) {
-        $result = false;
         $db = JFactory::getDBO();
         @set_time_limit(300);
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
-        $query = str_replace('\n',' ', $query);
-       // dump($query,'restoreDB');
+        $query = str_replace('\n', ' ', $query);
+        // dump($query,'restoreDB');
         //Check to see if this is a backup from an old db and not a migration
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
@@ -174,18 +175,18 @@ class JBSImport {
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_NOT_DB'));
             return false;
         else:
-        $queries = $db->splitSql($query);
-        foreach ($queries as $querie) {
-            $db->setQuery($querie);
-            $db->query();
-            if ($db->getErrorNum() != 0) {
-                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
-                $error .= $db->stderr(true);
-                $error .= "</font>";
-                print_r($error);
-                //return false;
+            $queries = $db->splitSql($query);
+            foreach ($queries as $querie) {
+                $db->setQuery($querie);
+                $db->query();
+                if ($db->getErrorNum() != 0) {
+                    $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
+                    $error .= $db->stderr(true);
+                    $error .= "</font>";
+                    print_r($error);
+                    //return false;
+                }
             }
-        }
         endif;
         return true;
     }
@@ -199,7 +200,7 @@ class JBSImport {
 
         $p_dir = JRequest::getString('install_directory', '', 'post');
 
-        $config = & JFactory::getConfig();
+        $config = JFactory::getConfig();
 
         $p_dir = JPath::clean($p_dir);
 
@@ -220,7 +221,7 @@ class JBSImport {
         return $result;
     }
 
-     /**
+    /**
      * Get Opjects for tables
      * @return array
      */
@@ -229,19 +230,16 @@ class JBSImport {
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
         $prelength = strlen($prefix);
-        $prefix.$bsms = 'bsms_';
+        $prefix . $bsms = 'bsms_';
         $objects = array();
-        foreach ($tables as $table)
-            {
-                if (substr_count($table, $bsms))
-                {
-                    $table = substr_replace($table, '#__',0,$prelength);
-                    $objects[] = array('name'=>$table);
-                }
-
+        foreach ($tables as $table) {
+            if (substr_count($table, $bsms)) {
+                $table = substr_replace($table, '#__', 0, $prelength);
+                $objects[] = array('name' => $table);
             }
-            return $objects;
         }
+        return $objects;
+    }
 
     /**
      * Alter tables for Blob
@@ -348,7 +346,5 @@ class JBSImport {
         }
         return true;
     }
-
-
 
 }

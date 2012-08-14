@@ -168,7 +168,7 @@ class BiblestudyViewAdmin extends JView {
      * @since 7.0.0
      */
     protected function addToolbar() {
-        JRequest::setVar('hidemainmenu', false);
+        JRequest::setVar('hidemainmenu', TRUE);
 
         JToolBarHelper::title(JText::_('JBS_CMN_ADMINISTRATION'), 'administration');
         JToolBarHelper::preferences('com_biblestudy', '600', '800', 'JBS_ADM_PERMISSIONS');

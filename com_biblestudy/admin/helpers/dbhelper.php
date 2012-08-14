@@ -46,64 +46,79 @@ class jbsDBhelper {
         $msg = array();
         $result = null;
         foreach ($tables as $t) {
-            $type = strtolower($t['type']); 
+            $type = strtolower($t['type']);
             $command = $t['command'];
             $table = $t['table'];
             $field = $t['field'];
-            switch ($type)
-            {
-                case 'drop': 
-                    if (!$table || !$field){break;}
+            switch ($type) {
+                case 'drop':
+                    if (!$table || !$field) {
+                        break;
+                    }
                     //check the field to see if it exists first
-                    if ($this->checkTables($table, $field))
-                    { 
-                        $query = 'ALTER TABLE '.$table.' DROP '.$field;
+                    if ($this->checkTables($table, $field)) {
+                        $query = 'ALTER TABLE ' . $table . ' DROP ' . $field;
                         $result = $this->performDB($query);
-                        if ($result){$msg[]= $result;}
-                     }
+                        if ($result) {
+                            $msg[] = $result;
+                        }
+                    }
                     break;
-                
+
                 case 'add':
-                    if (!$table || !$field){break;}
-                    if ($this->checkTables($table, $field))
-                    {
-                        $query = 'ALTER TABLE '.$table.' ADD '.$field.' '.$command;
+                    if (!$table || !$field) {
+                        break;
+                    }
+                    if ($this->checkTables($table, $field)) {
+                        $query = 'ALTER TABLE ' . $table . ' ADD ' . $field . ' ' . $command;
                         $result = $this->performDB($query);
-                        if ($result){$msg[]= $result;}
-                     }
+                        if ($result) {
+                            $msg[] = $result;
+                        }
+                    }
                     break;
-                
+
                 case 'modify':
-                    if (!$table || !$field){break;}
-                    if ($this->checkTables($table, $field))
-                    {
-                        $query = 'ALTER TABLE '.$table.' MODIFY '.$field.' '.$command;
+                    if (!$table || !$field) {
+                        break;
+                    }
+                    if ($this->checkTables($table, $field)) {
+                        $query = 'ALTER TABLE ' . $table . ' MODIFY ' . $field . ' ' . $command;
                         $result = $this->performDB($query);
-                        if ($result){$msg[]= $result;}
-                     }
+                        if ($result) {
+                            $msg[] = $result;
+                        }
+                    }
                     break;
             }
-            //dump($type,'type: '); dump($command, 'command: '); dump($table, 'table: '); dump($field, 'field: '); 
+            //dump($type,'type: '); dump($command, 'command: '); dump($table, 'table: '); dump($field, 'field: ');
         }
-       if (!empty($msg)){return $msg;}
-       else{return true;}
+        if (!empty($msg)) {
+            return $msg;
+        } else {
+            return true;
+        }
     }
-    
+
     /**
      * performs a database query
      * @param $query is a Joomla ready query
      * @return boolean true if success, or error string if failed
      */
-    function performDB($query)
-    {
-        if (!$query){return false;}
+    function performDB($query) {
+        if (!$query) {
+            return false;
+        }
         $db = JFactory::getDbo();
         $db->setQuery($query);
         $db->query();
-        if ($db->getErrorNum() != 0) { return $db->stderr(true);}
-        else {return true;}
+        if ($db->getErrorNum() != 0) {
+            return $db->stderr(true);
+        } else {
+            return true;
+        }
     }
-    
+
     /**
      * Checks a table for the existance of a field, if it does not find it, runs the Admin model fix()
      * @param string table is the table you are checking
@@ -120,6 +135,26 @@ class jbsDBhelper {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Get Opjects for tables
+     * @return array
+     */
+    public static function getObjects() {
+        $db = JFactory::getDBO();
+        $tables = $db->getTableList();
+        $prefix = $db->getPrefix();
+        $prelength = strlen($prefix);
+        $prefix . $bsms = 'bsms_';
+        $objects = array();
+        foreach ($tables as $table) {
+            if (substr_count($table, $bsms)) {
+                $table = substr_replace($table, '#__', 0, $prelength);
+                $objects[] = array('name' => $table);
+            }
+        }
+        return $objects;
     }
 
 }

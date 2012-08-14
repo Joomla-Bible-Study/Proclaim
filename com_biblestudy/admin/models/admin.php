@@ -104,7 +104,7 @@ class biblestudyModeladmin extends JModelAdmin {
      * @return	boolean	True on success
      */
     public function store($updateNulls = 'false') {
-        $row = & $this->getTable();
+        $row = $this->getTable();
 
 
         $data = JRequest::get('post');
@@ -183,6 +183,19 @@ class biblestudyModeladmin extends JModelAdmin {
     protected function allowEdit($data = array(), $key = 'id') {
         // Check specific edit permission then general edit permission.
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.admin.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
+    }
+
+    /**
+     * Method to check-out a row for editing.
+     *
+     * @param   integer  $pk  The numeric id of the primary key.
+     *
+     * @return  boolean  False on failure or error, true otherwise.
+     *
+     * @since   11.1
+     */
+    public function checkout($pk = null) {
+        return $pk;
     }
 
     /**
