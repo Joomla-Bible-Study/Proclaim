@@ -30,7 +30,7 @@ abstract class BiblestudyHelperRoute {
 
     /**
      * Get Artical Rout
-     * @XXX This need to be fixed
+     * @fixme This need to be fixed
      * @param	int	The route of the study item
      */
     public static function getArticleRoute($id) {

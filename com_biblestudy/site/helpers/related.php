@@ -224,7 +224,7 @@ class relatedStudies {
      *
      * @param string $input
      * @return array
-     * @XXX Fix this look like it dos not work?
+     * @fixme Fix this look like it dos not work?
      */
     function removeCommonWords($input) {
 

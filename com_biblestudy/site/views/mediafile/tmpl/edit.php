@@ -5,6 +5,7 @@
  * @Copyright (C) 2007 - 2011 Joomla Bible Study Team All rights reserved
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link http://www.JoomlaBibleStudy.org
+ * @fixme look at coresponding fixme
  * */
 //No Direct Access
 defined('_JEXEC') or die;
@@ -279,7 +280,7 @@ if (JRequest::getWord('layout', '') == 'modal') {
         <fieldset class="panelform">
             <legend><?php echo JText::_('JBS_CMN_PARAMETERS'); ?></legend>
             <?php
-            foreach ($params as $name => $fieldset): // XXX what is going on hear not sure whey we need this?
+            foreach ($params as $name => $fieldset): // @fixme what is going on hear not sure whey we need this?
                 ?>
                 <fieldset class="panelform" >
                     <legend><?php echo JText::_('JBS_MED_OPTIONS'); ?></legend>
