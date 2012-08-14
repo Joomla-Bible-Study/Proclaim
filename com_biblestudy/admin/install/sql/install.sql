@@ -504,13 +504,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
 
 CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `published` int(3) NOT NULL DEFAULT '1',
-  `type` int(3) NOT NULL,
+  `published` tinyint(3) NOT NULL DEFAULT '1',
+  `type` tinyint(3) NOT NULL,
   `filename` text NOT NULL,
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `templatecode` longtext NOT NULL,
+  `templatecode` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
-) DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
