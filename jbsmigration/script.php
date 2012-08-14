@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 /**
  * JBSMigration class
  * @package BibleStudy
- * @subpackage Com_JBSMigration
+ * @subpackage JBSMigration
  * @since 7.0.2
  */
 class com_jbsmigrationInstallerScript {

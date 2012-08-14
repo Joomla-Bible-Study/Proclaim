@@ -3,7 +3,7 @@
 /**
  * Podcast Model Helper
  * @package BibleStudy
- * @subpackage mod_biblestudy_podcast
+ * @subpackage Model.Podcast
  * @author Joomla Bible Study Team
  * @copyright 2012
  * @desc a module to display the podcast subscription table
@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 /**
  * A module to display the podcast subscription table
  * @package BibleStudy
- * @subpackage mod_biblestudy_podcast
+ * @subpackage Model.Podcast
  * @since 7.1.0
  */
 class modBibleStudyPodcast {
