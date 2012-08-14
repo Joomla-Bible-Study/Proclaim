@@ -22,12 +22,22 @@ class fixJBSAssets {
      * @return boolean
      * @todo change to static
      */
-    public function fixAssets() {
-
+    public function fixassets() {
         $db = JFactory::getDBO();
         @set_time_limit(300);
+
+        //Remove all old assets_id exept the parent_id
+        $query = "SELECT * FROM `#__assets` WHERE name='com_biblestudy'";
+        $db->setQuery($query);
+        $db->query();
+        $object_perent_id = $db->loadObject();
+        $perent_id = $object_perent_id->id;
+        $query = "DELETE FROM `#__assets` WHERE parent_id= " . $perent_id;
+        $db->setQuery($query);
+        $db->query();
+
         //Get all of the table names
-        $objects = $this->getObjects();
+        $objects = fixJBSAssets::getObjects();
         $msg = array();
         foreach ($objects as $object) {
             @set_time_limit(300);
@@ -40,7 +50,6 @@ class fixJBSAssets {
                     JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
                     $table = JTable::getInstance($object['assetname'], 'Table', array('dbo' => $db));
                     if ($data->id) {
-
                         try {
                             $table->load($data->id);
                         } catch (Exception $e) {
@@ -79,7 +88,6 @@ class fixJBSAssets {
             //Get the total number of rows and collect the table into a query
             $query = 'SELECT j.id as jid, j.asset_id as jasset_id, a.id as aid, a.parent_id FROM ' . $object['name'] . ' as j LEFT JOIN #__assets as a ON (a.id = j.asset_id)';
             $db->setQuery($query);
-            $db->query();
             $results = $db->loadObjectList();
             $nullrows = 0;
             $matchrows = 0;
@@ -114,7 +122,7 @@ class fixJBSAssets {
      * Table list Array.
      * @return array
      */
-    function getObjects() {
+    private static function getObjects() {
         $objects = array(array('name' => '#__bsms_servers', 'titlefield' => 'server_name', 'assetname' => 'server', 'realname' => 'JBS_CMN_SERVERS'),
             array('name' => '#__bsms_folders', 'titlefield' => 'foldername', 'assetname' => 'folder', 'realname' => 'JBS_CMN_FOLDERS'),
             array('name' => '#__bsms_studies', 'titlefield' => 'studytitle', 'assetname' => 'message', 'realname' => 'JBS_CMN_STUDIES'),
