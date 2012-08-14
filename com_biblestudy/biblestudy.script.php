@@ -132,6 +132,10 @@ class Com_BiblestudyInstallerScript {
         } else {
             echo '<br />' . JText::_('JBS_INS_SUCCESS');
         }
+        //Fix Assets
+        require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+        $fixJBSAssets = new fixJBSAssets();
+        $fixJBSAssets->fixassets();
         echo JHtml::_('sliders.panel', JText::_('JBS_INS_INSTALLING_VERSION_TO_') . ' ' . $this->release, 'publishing-details');
     }
 
@@ -184,7 +188,10 @@ class Com_BiblestudyInstallerScript {
      * @param string $parent
      */
     function update($parent) {
-
+        //Fix Assets
+        require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+        $fixJBSAssets = new fixJBSAssets();
+        $fixJBSAssets->fixassets();
         echo '<p>' . JText::_('JBS_INS_CUSTOM_UPDATE_SCRIPT_TO') . ' ' . $this->release . '</p>';
     }
 
