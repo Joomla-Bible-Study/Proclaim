@@ -36,8 +36,7 @@ class JBSExport {
                 $file = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
                 if (!JFile::write($file, $export)) {
                     return false;
-                }
-                else {
+                } else {
                     $downloadfile = $this->output_file($file, $localfilename, $mime_type = 'text/x-sql');
                     return $downloadfile;
                 }
@@ -70,7 +69,7 @@ class JBSExport {
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
-        $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
+        $export = "\n--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
         $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
         //Create a new table defintion based on the incoming database
@@ -90,20 +89,18 @@ class JBSExport {
         $db->setQuery($query);
         $db->query();
         $results = $db->loadObjectList();
-        if (!$results) {
-            return false;
-        }
-        foreach ($results as $result) {
-            $data = array();
-            $export .= 'INSERT INTO ' . $table . ' SET ';
-            foreach ($result as $key => $value) {
-                $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
+        if ($results) {
+            foreach ($results as $result) {
+                $data = array();
+                $export .= 'INSERT INTO ' . $table . ' SET ';
+                foreach ($result as $key => $value) {
+                    $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
+                }
+                $export .= implode(',', $data);
+                $export .= ";\n";
             }
-            $export .= implode(',', $data);
-            $export .= ";\n";
         }
         $export .= "\n-- --------------------------------------------------------\n\n";
-
         return $export;
     }
 
