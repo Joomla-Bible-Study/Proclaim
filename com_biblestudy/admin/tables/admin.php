@@ -142,20 +142,6 @@ class TableAdmin extends JTable {
     }
 
     /**
-     * Overload the store method for the Weblinks table.
-     *
-     * @param	boolean	Toggle whether null values should be updated.
-     * @return	boolean	True on success, false on failure.
-     * @since	1.6
-     */
-    public function store($updateNulls = false) {
-        if (!$this->id) {
-            return false;
-        }
-        return parent::store($updateNulls);
-    }
-
-    /**
      * Method to compute the default name of the asset.
      * The default name is in the form `table_name.id`
      * where id is the value of the primary key of the table.

@@ -24,7 +24,7 @@ class BiblestudyControllerAdmin extends JControllerForm {
      *
      * @since 7.0
      */
-    protected $view_list = 'admin';
+    protected $view_list = 'cpanel';
 
     /**
      * constructor (registers additional tasks to methods)
