@@ -32,7 +32,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * @package BibleStudy
- * @subpackage plg.reCAPTCHA
+ * @subpackage Plugin.reCAPTCHA
  * @since 7.0.0
  */
 /**
@@ -99,7 +99,6 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
  * @param string $pubkey A public key for reCAPTCHA
  * @param string $error The error given by reCAPTCHA (optional, default is null)
  * @param boolean $use_ssl Should the request be made over ssl? (optional, default is false)
-
  * @return string - The HTML to be embedded in the user's form.
  */
 function recaptcha_get_html($pubkey, $error = null, $use_ssl = false) {
@@ -128,6 +127,9 @@ function recaptcha_get_html($pubkey, $error = null, $use_ssl = false) {
 
 /**
  * A ReCaptchaResponse is returned from recaptcha_check_answer()
+ * @package BibleStudy
+ * @subpackage Plugin.reCAPTCHA
+ * @since 7.0.0
  */
 class ReCaptchaResponse {
 
