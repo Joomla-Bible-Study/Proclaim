@@ -21,7 +21,7 @@ class JBSImport {
      * Import DB
      * @return boolean
      */
-    public function importdb() {
+    public function importdb($perent) {
         $result = FALSE;
         jimport('joomla.filesystem.file');
         // Attempt to increase the maximum execution time for php scripts
@@ -29,30 +29,33 @@ class JBSImport {
         $installtype = JRequest::getString('install_directory', '', 'post');
         $backuprestore = JRequest::getString('backuprestore', '', 'post');
         if (substr_count($backuprestore, '.sql')) {
-            if ($restored = $this->restoreDB($backuprestore)) {
+            if ($restored = JBSImport::restoreDB($backuprestore)) {
                 $result = true;
                 return $result;
             }
         }
         if (substr_count($installtype, 'sql')) {
-            $uploadresults = $this->_getPackageFromFolder();
+            $uploadresults = JBSImport::_getPackageFromFolder();
             if ($uploadresults) {
                 $result = true;
             }
         } else {
-            $uploadresults = $this->_getPackageFromUpload();
+            $uploadresults = JBSImport::_getPackageFromUpload();
             $result = $uploadresults;
         }
         if ($result == true) {
-            $result = $this->installdb($uploadresults);
+            $result = JBSImport::installdb($uploadresults);
             $userfile = JRequest::getVar('importdb', null, 'files', 'array');
             if (JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'])) {
                 @unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
             }
         }
-        require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
-        $fix = new fixJBSAssets();
-        $fix->fixassets();
+        if ($perent):
+            dump('importdb fixassets');
+            require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+            $fix = new fixJBSAssets();
+            $fix->fixassets();
+        endif;
         return $result;
     }
 
@@ -105,9 +108,9 @@ class JBSImport {
      * @param string $tmp_src Temp info
      * @return boolean If db installed corectrly.
      */
-    public function installdb($tmp_src) {
+    protected static function installdb($tmp_src) {
         //first we need to drop the existing JBS tables
-        $objects = $this->getObjects();
+        $objects = JBSImport::getObjects();
         foreach ($objects as $object) {
             $db = JFactory::getDBO();
             $query = 'DROP TABLE ' . $object['name'] . ';';
@@ -123,20 +126,16 @@ class JBSImport {
         $db = JFactory::getDBO();
 
         $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
-        $query = str_replace('\n', ' ', $query); //dump($query,'installDB');
+        $query = str_replace('\n', ' ', $query);
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
         if ($isold !== 0 && $isnot === 0) :
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DB'));
-            //$errors = JText::_('JBS_ADM_OLD_DB');
             return false;
         elseif ($isnot === 0):
             JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_NOT_DB'));
-            //$errors = JText::_('JBS_ADM_NOT_DB');
             return false;
         else:
-            //$query = file_get_contents($file);
-            $db->setDebug(1);
             $db->setQuery($query);
             $db->queryBatch();
             if ($db->getErrorNum() != 0) {
@@ -159,7 +158,7 @@ class JBSImport {
      * @param string $backuprestore
      * @return boolean See if the restore worked.
      */
-    public function restoreDB($backuprestore) {
+    public static function restoreDB($backuprestore) {
         $db = JFactory::getDBO();
         @set_time_limit(300);
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
@@ -195,7 +194,7 @@ class JBSImport {
      * Get Packege from Folder
      * @return boolean
      */
-    public function _getPackageFromFolder() {
+    private static function _getPackageFromFolder() {
         $result = false;
 
         $p_dir = JRequest::getString('install_directory', '', 'post');
@@ -225,7 +224,7 @@ class JBSImport {
      * Get Opjects for tables
      * @return array
      */
-    public function getObjects() {
+    protected static function getObjects() {
         $db = JFactory::getDBO();
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
@@ -245,7 +244,7 @@ class JBSImport {
      * Alter tables for Blob
      * @return boolean
      */
-    public function TablestoBlob() {
+    protected static function TablestoBlob() {
         $backuptables = $this->getObjects();
 
         $db = JFactory::getDBO();
@@ -298,7 +297,7 @@ class JBSImport {
      * Modify tables to Text
      * @return boolean
      */
-    public function TablestoText() {
+    protected static function TablestoText() {
         $backuptables = $this->getObjects();
 
         $db = JFactory::getDBO();

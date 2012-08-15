@@ -30,10 +30,10 @@ class jbs700Install {
         $msg = '';
 
         @set_time_limit(300);
-      
+
        $dbhelper = new jbsDBhelper();
        //alter the admin table
-       
+
        $tables = array(
            array('table'=>'#__bsms_admin','field'=>'main','type'=>'DROP','command'=>''),
            array('table'=>'#__bsms_admin','field'=>'podcast','type'=>'DROP','command'=>''),
@@ -50,8 +50,8 @@ class jbs700Install {
            array('table'=>'#__bsms_folders','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
            array('table'=>'#__bsms_media','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
            array('table'=>'#__bsms_mediafiles','field'=>'podcast_id','type'=>'MODIFY','command'=>'VARCHAR(50)'),
-           array('table'=>'#__bsms_mediafiles','field'=>'player','type'=>'ADD','command'=>'INT(2) NULL'),
-           array('table'=>'#__bsms_mediafiles','field'=>'popup','type'=>'ADD','command'=>'INT(2) NULL'),
+           array('table'=>'#__bsms_mediafiles','field'=>'player','type'=>'ADD','command'=>'INT( 2 ) NULL DEFAULT NULL'),
+           array('table'=>'#__bsms_mediafiles','field'=>'popup','type'=>'ADD','command'=>'INT( 2 ) NULL DEFAULT NULL'),
            array('table'=>'#__bsms_mediafiles','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
            array('table'=>'#__bsms_order','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
            array('table'=>'#__bsms_order','field'=>'text','type'=>'MODIFY','command'=>'VARCHAR(50) DEFAULT NULL'),
@@ -61,17 +61,17 @@ class jbs700Install {
            array('table'=>'#__bsms_share','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
            array('table'=>'#__bsms_studies','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT')
        );
-       
+
        $admin = $dbhelper->alterDB($tables);
        if (!empty($admin)){$messages[] = $admin;}
-       
+
         $table = '#__bsms_admin';
         $msg[] = $this->addAssetColumn($table);
         if ($dbhelper->checkTables($table, 'drop_tables') == 'true') {
             $query = 'UPDATE `#__bsms_admin` SET `drop_tables` = 0 WHERE id = 1';
             $messages[] = $this->performdb($query);
         }
-        
+
         $table = '#__bsms_comments';
         $messages[] = $this->addAssetColumn($table);
 
@@ -83,7 +83,6 @@ class jbs700Install {
 
         $table = '#__bsms_mediafiles';
         $messages[] = $this->addAssetColumn($table);
-
         $table = '#__bsms_message_type';
         $messages[] = $this->addAssetColumn($table);
 
@@ -351,7 +350,7 @@ class jbs700Install {
      * @param string $query
      * @return string|boolean
      */
-    function performdb($query) {
+    protected function performdb($query) {
         $db = JFactory::getDBO();
         $results = false;
         $db->setQuery($query);
@@ -372,18 +371,20 @@ class jbs700Install {
      * @param array $table
      * @return objects
      */
-    function addAssetColumn($table) {
-        $dbhelper = new jbsDBhelper();
+    protected function addAssetColumn($table) {
         $msg = array();
-        if ($dbhelper->checkTables($table, 'asset_id') == 'false') {
-            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `asset_id` INT(10) DEFAULT NULL');
-            if ($alteradmin != 'true') {
+        $dbhelper = new jbsDBhelper();
+        if (jbsDBhelper::checkTables($table, 'asset_id') == FALSE) {
+            $array = array('table'=>$table,'field'=>'asset_id','type'=>'ADD','command'=>'INT( 10 ) NULL DEFAULT NULL');
+            $alteradmin = $dbhelper->alterDB($array);
+            if ($alteradmin != TRUE) {
                 $msg[] = $alteradmin;
             }
         }
-        if ($dbhelper->checkTables($table, 'access') == 'false') {
-            $alteradmin = $dbhelper->alterDB($table, 'ADD COLUMN `access` INT(10) DEFAULT NULL');
-            if ($alteradmin != 'true') {
+        if (jbsDBhelper::checkTables($table, 'access') == FALSE) {
+            $array = array('table'=>$table,'field'=>'access','type'=>'ADD','command'=>'INT( 10 ) NULL DEFAULT NULL');
+            $alteradmin = $dbhelper->alterDB($array);
+            if ($alteradmin != TRUE) {
                 $msg[] = $alteradmin;
             }
         }

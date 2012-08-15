@@ -42,6 +42,7 @@ class updatejbsALL {
             } elseif (substr_count($value, '7.0.1.1')) {
                 //unset($files[$i]);
             } else {
+                dump($value, 'Files Dumped');
                 $query = file_get_contents($value);
                 $db->setQuery($query);
                 $db->queryBatch();

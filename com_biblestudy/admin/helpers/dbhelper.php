@@ -22,7 +22,7 @@ class jbsDBhelper {
      * @param string field
      * @return boolean false equals field does not exist
      */
-    function checkTables($table, $field) {
+    static function checkTables($table, $field) {
         $db = JFactory::getDBO();
         $prefix = $db->getPrefix();
         $fields = $db->getTableColumns($table, 'false');
@@ -30,9 +30,10 @@ class jbsDBhelper {
             foreach ($fields as $key => $value) {
                 if (substr_count($key, $field)) {
                     return true;
+                } else {
+                    return false;
                 }
             }
-            return false;
         }
     }
 
@@ -42,7 +43,7 @@ class jbsDBhelper {
      * @param array tables is an array of tables, fields, type of query and optional command line
      * @return boolean
      */
-    function alterDB($tables) {
+    public function alterDB($tables) {
         $msg = array();
         $result = null;
         foreach ($tables as $t) {
@@ -56,9 +57,9 @@ class jbsDBhelper {
                         break;
                     }
                     //check the field to see if it exists first
-                    if ($this->checkTables($table, $field)) {
-                        $query = 'ALTER TABLE ' . $table . ' DROP ' . $field;
-                        $result = $this->performDB($query);
+                    if (jbsDBhelper::checkTables($table, $field)) {
+                        $query = 'ALTER TABLE `' . $table . '` DROP ' . $field;
+                        $result = jbsDBhelper::performDB($query);
                         if ($result) {
                             $msg[] = $result;
                         }
@@ -67,11 +68,13 @@ class jbsDBhelper {
 
                 case 'add':
                     if (!$table || !$field) {
+                        return 'Bad Table info';
                         break;
                     }
-                    if ($this->checkTables($table, $field)) {
-                        $query = 'ALTER TABLE ' . $table . ' ADD ' . $field . ' ' . $command;
-                        $result = $this->performDB($query);
+                    $checktable =jbsDBhelper::checkTables($table, $field);
+                    if (empty($checktable)) {
+                        $query = 'ALTER TABLE `' . $table . '` ADD `' . $field . '` ' . $command;
+                        $result = jbsDBhelper::performDB($query);
                         if ($result) {
                             $msg[] = $result;
                         }
@@ -82,9 +85,9 @@ class jbsDBhelper {
                     if (!$table || !$field) {
                         break;
                     }
-                    if ($this->checkTables($table, $field)) {
-                        $query = 'ALTER TABLE ' . $table . ' MODIFY ' . $field . ' ' . $command;
-                        $result = $this->performDB($query);
+                    if (jbsDBhelper::checkTables($table, $field)) {
+                        $query = 'ALTER TABLE `' . $table . '` MODIFY `' . $field . '` ' . $command;
+                        $result = jbsDBhelper::performDB($query);
                         if ($result) {
                             $msg[] = $result;
                         }
@@ -96,7 +99,7 @@ class jbsDBhelper {
         if (!empty($msg)) {
             return $msg;
         } else {
-            return true;
+            return TRUE;
         }
     }
 
@@ -105,7 +108,7 @@ class jbsDBhelper {
      * @param $query is a Joomla ready query
      * @return boolean true if success, or error string if failed
      */
-    function performDB($query) {
+    static function performDB($query) {
         if (!$query) {
             return false;
         }

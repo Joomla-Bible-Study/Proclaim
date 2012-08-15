@@ -46,7 +46,7 @@ class BiblestudyControllerMigration extends JController {
             if (!$result = $export->exportdb($run)) {
                 $msg = JText::_('JBS_CMN_OPERATION_FAILED');
                 $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
-            } elseif($run == 2) {
+            } elseif ($run == 2) {
                 if (!$result) {
                     $msg = $result;
                 } else {
@@ -102,13 +102,12 @@ class BiblestudyControllerMigration extends JController {
      * @param boolon $urlparams Description
      */
     public function doimport($cachable = false, $urlparams = false) {
-
         $copysuccess = false;
-//        $import = new JBSImport();
-        //      $result = $import->importdb();
+
         //This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
         $application = JFactory::getApplication();
         JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
+
         //Add commands to move tables from old prefix to new
         $oldprefix = '';
         $oldprefix = JRequest::getWord('oldprefix', '', 'post');
@@ -124,9 +123,8 @@ class BiblestudyControllerMigration extends JController {
                 print_r($tablescopied);
             }
         } else {
-
             $import = new JBSImport();
-            $result = $import->importdb();
+            $result = $import->importdb($parent = FALSE);
         }
         if ($result || $copysuccess) {
             //We need to drop the update table first as it will be added back later

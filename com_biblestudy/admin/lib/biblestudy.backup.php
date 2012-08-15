@@ -69,6 +69,7 @@ class JBSExport {
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
+
         $export = "\n--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
         $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
@@ -96,7 +97,7 @@ class JBSExport {
                 foreach ($result as $key => $value) {
                     if ($value === NULL):
                         $data[] = "`" . $key . "`=NULL";
-                        else:
+                    else:
                         $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
                     endif;
                 }
