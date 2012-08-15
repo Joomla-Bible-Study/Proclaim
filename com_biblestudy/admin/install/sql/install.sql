@@ -260,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `alternatelink` varchar(300) COMMENT 'replaces podcast file link on subscription',
-  `alternateimage` varchar(150),
+  `alternateimage` varchar(150) COMMENT 'alternate image path for podcast',
   `podcast_subscribe_show` int(3),
   `podcast_image_subscribe` VARCHAR(150) COMMENT 'The image to use for the podcast subscription image',
   `podcast_subscribe_desc` VARCHAR(150) COMMENT 'Words to go below podcast subscribe image',
