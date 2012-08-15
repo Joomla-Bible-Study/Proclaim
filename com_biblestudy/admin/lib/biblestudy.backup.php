@@ -94,7 +94,11 @@ class JBSExport {
                 $data = array();
                 $export .= 'INSERT INTO ' . $table . ' SET ';
                 foreach ($result as $key => $value) {
-                    $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
+                    if ($value === NULL):
+                        $data[] = "`" . $key . "`=NULL";
+                        else:
+                        $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
+                    endif;
                 }
                 $export .= implode(',', $data);
                 $export .= ";\n";
