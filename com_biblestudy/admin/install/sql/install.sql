@@ -225,7 +225,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_order` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `value` varchar(15) DEFAULT '',
   `text` varchar(50) DEFAULT '',
-  PRIMARY KEY (`id`)
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+  `access` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_access` (`access`)
 ) DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
