@@ -84,7 +84,7 @@ class BiblestudyControllerMigration extends JController {
     public function import() {
         $application = JFactory::getApplication();
         $import = new JBSImport();
-        $result = $import->importdb();
+        $result = $import->importdb($parent = FALSE);
         if ($result === true) {
             $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
         } elseif ($result === false) {
@@ -124,7 +124,7 @@ class BiblestudyControllerMigration extends JController {
             }
         } else {
             $import = new JBSImport();
-            $result = $import->importdb($parent = FALSE);
+            $result = $import->importdb($parent = TRUE);
         }
         if ($result || $copysuccess) {
             //We need to drop the update table first as it will be added back later

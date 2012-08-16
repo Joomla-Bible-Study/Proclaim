@@ -19,6 +19,7 @@ class JBSImport {
 
     /**
      * Import DB
+     * @param boolean $perent Switch to see if it is coming from migration or restore.
      * @return boolean
      */
     public function importdb($perent) {
@@ -50,8 +51,7 @@ class JBSImport {
                 @unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
             }
         }
-        if ($perent):
-            dump('importdb fixassets');
+        if ($perent !== TRUE):
             require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
             $fix = new fixJBSAssets();
             $fix->fixassets();
@@ -163,7 +163,7 @@ class JBSImport {
         @set_time_limit(300);
         $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
         $query = str_replace('\n', ' ', $query);
-        // dump($query,'restoreDB');
+
         //Check to see if this is a backup from an old db and not a migration
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');

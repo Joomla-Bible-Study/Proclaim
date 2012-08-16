@@ -39,7 +39,7 @@ class JBSExport {
     }
 
     /**
-     * Not sure if this works or is used right.
+     * Creates Backup File.
      * @param string $localfilename
      * @return boolean
      */
@@ -73,9 +73,9 @@ class JBSExport {
         //Get the prefix
         $prefix = $db->getPrefix();
 
+        $export = "\n--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS `' . $table . "`;
-        ";
+        $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
 
         //Create a new table defintion based on the incoming database
         $query = 'SHOW CREATE TABLE `' . $table . '`';
@@ -84,35 +84,36 @@ class JBSExport {
         $table_def = $db->loadObject();
         foreach ($table_def as $key => $value) {
             if (substr_count($value, 'CREATE')) {
-                $export .= str_replace($prefix, '#__', $value) . ";
-                ";
+                $export .= str_replace($prefix, '#__', $value) . ";\n";
                 $export = str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
+        $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";
 
         //Get the table rows and create insert statements from them
         $query = 'SELECT * FROM ' . $table;
         $db->setQuery($query);
         $db->query();
         $results = $db->loadObjectList();
-        if (!$results) {
-            return false;
-        }
-        foreach ($results as $result) {
-            $data = array();
-            $export .= 'INSERT INTO ' . $table . ' SET ';
-            foreach ($result as $key => $value) {
-                $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
+        if ($results) {
+            foreach ($results as $result) {
+                $data = array();
+                $export .= 'INSERT INTO ' . $table . ' SET ';
+                foreach ($result as $key => $value) {
+                    if ($value === NULL):
+                        $data[] = "`" . $key . "`=NULL";
+                    else:
+                        $data[] = "`" . $key . "`='" . $db->getEscaped($value) . "'";
+                    endif;
+                }
+                $export .= implode(',', $data);
+                $export .= ";\n";
             }
-            $export .= implode(',', $data);
-            $export .= ";";
         }
+        $export .= "\n-- --------------------------------------------------------\n\n";
         $handle = fopen($serverfile, 'a');
         fwrite($handle, $export);
         fclose($handle);
-        // echo $export;
-        //Change the BLOB fields back to TEXT
-        // $backtotext = $this->TablestoText();
         return true;
     }
 

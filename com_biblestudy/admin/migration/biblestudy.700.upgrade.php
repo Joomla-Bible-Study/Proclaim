@@ -10,7 +10,8 @@
 defined('_JEXEC') or die;
 
 require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
-require_once(JPATH_ADMINISTRATOR.'/components/com_biblestudy/helpers/dbhelper.php');
+require_once(BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'dbhelper.php');
+
 /**
  * Upgrade class for 7.0.0
  * @package BibleStudy.Admin
@@ -31,40 +32,81 @@ class jbs700Install {
 
         @set_time_limit(300);
 
-       $dbhelper = new jbsDBhelper();
-       //alter the admin table
+        $dbhelper = new jbsDBhelper();
+        //alter the admin table
 
-       $tables = array(
-           array('table'=>'#__bsms_admin','field'=>'main','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'podcast','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'series','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'study','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'teacher','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'media','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'showhide','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'download','type'=>'DROP','command'=>''),
-           array('table'=>'#__bsms_admin','field'=>'drop_tables','type'=>'ADD','command'=>'int(3) NULL default "0"'),
-           array('table'=>'#__bsms_admin','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_comments','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_admin','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_folders','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_media','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_mediafiles','field'=>'podcast_id','type'=>'MODIFY','command'=>'VARCHAR(50)'),
-           array('table'=>'#__bsms_mediafiles','field'=>'player','type'=>'ADD','command'=>'INT( 2 ) NULL DEFAULT NULL'),
-           array('table'=>'#__bsms_mediafiles','field'=>'popup','type'=>'ADD','command'=>'INT( 2 ) NULL DEFAULT NULL'),
-           array('table'=>'#__bsms_mediafiles','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_order','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_order','field'=>'text','type'=>'MODIFY','command'=>'VARCHAR(50) DEFAULT NULL'),
-           array('table'=>'#__bsms_search','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_series','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_servers','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_share','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
-           array('table'=>'#__bsms_studies','field'=>'id','type'=>'MODIFY','command'=>'int(3) UNSIGNED NOT NULL AUTO_INCREMENT')
-       );
+        $tables = array(
+            array('table' => '#__bsms_admin', 'field' => 'main', 'type' => 'DROP', 'command' => ''),
+            array('table' => '#__bsms_admin', 'field' => 'podcast', 'type' => 'DROP', 'command' => ''),
+            array('table' => '#__bsms_admin', 'field' => 'series', 'type' => 'DROP', 'command' => ''),
+            array('table' => '#__bsms_admin', 'field' => 'study', 'type' => 'DROP', 'command' => ''),
+            array('table' => '#__bsms_admin', 'field' => 'teacher', 'type' => 'DROP', 'command' => ''),
+            array('table' => '#__bsms_admin', 'field' => 'media', 'type' => 'DROP', 'command' => ''),
+            array('table' => '#__bsms_admin', 'field' => 'showhide', 'type' => 'DROP', 'command' => ''),
+            array('table' => '#__bsms_admin', 'field' => 'download', 'type' => 'DROP', 'command' => ''),
+            array('table' => '#__bsms_admin', 'field' => 'drop_tables', 'type' => 'ADD', 'command' => 'int(3) NULL default "0"'),
+            array('table' => '#__bsms_admin', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_comments', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_admin', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_folders', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_media', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_mediafiles', 'field' => 'podcast_id', 'type' => 'MODIFY', 'command' => 'VARCHAR(50)'),
+            array('table' => '#__bsms_mediafiles', 'field' => 'player', 'type' => 'ADD', 'command' => 'INT( 2 ) NULL DEFAULT NULL'),
+            array('table' => '#__bsms_mediafiles', 'field' => 'popup', 'type' => 'ADD', 'command' => 'INT( 2 ) NULL DEFAULT NULL'),
+            array('table' => '#__bsms_mediafiles', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_order', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_order', 'field' => 'text', 'type' => 'MODIFY', 'command' => 'VARCHAR(50) DEFAULT NULL'),
+            array('table' => '#__bsms_search', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_series', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_servers', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_share', 'field' => 'id', 'type' => 'MODIFY', 'command' => 'int(3) UNSIGNED NOT NULL AUTO_INCREMENT'),
+            array('table' => '#__bsms_comments', 'field' => 'show_level', 'type' => 'ADD', 'command' => "varchar(100) NOT NULL DEFAULT '0'"),
+            array('table' => '#__bsms_comments', 'field' => 'study_id', 'type' => 'MODIFY', 'command' => "int(11) NOT NULL DEFAULT '0'"),
+            array('table' => '#__bsms_comments', 'field' => 'user_id', 'type' => 'MODIFY', 'command' => "int(11) NOT NULL DEFAULT '0'"),
+            array('table' => '#__bsms_comments', 'field' => 'full_name', 'type' => 'MODIFY', 'command' => "varchar(50) NOT NULL DEFAULT ''"),
+            array('table' => '#__bsms_comments', 'field' => 'user_email', 'type' => 'MODIFY', 'command' => "varchar(100) NOT NULL DEFAULT ''"),
+            array('table' => '#__bsms_comments', 'field' => 'comment_date', 'type' => 'MODIFY', 'command' => "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'"),
+            array('table' => '#__bsms_folders', 'field' => 'foldername', 'type' => 'MODIFY', 'command' => "varchar(250) NOT NULL DEFAULT ''"),
+            array('table' => '#__bsms_folders', 'field' => 'folderpath', 'type' => 'MODIFY', 'command' => "varchar(250) NOT NULL DEFAULT ''"),
+            array('table' => '#__bsms_folders', 'field' => 'published', 'type' => 'MODIFY', 'command' => "tinyint(3) NOT NULL DEFAULT '1'"),
+            array('table' => '#__bsms_locations', 'field' => 'published', 'type' => 'MODIFY', 'command' => "tinyint(3) NOT NULL DEFAULT '1'"),
+            array('table' => '#__bsms_media', 'field' => 'media_image_name', 'type' => 'MODIFY', 'command' => "varchar(250) NOT NULL DEFAULT ''"),
+            array('table' => '#__bsms_media', 'field' => 'media_image_path', 'type' => 'MODIFY', 'command' => "varchar(250) NOT NULL DEFAULT ''"),
+            array('table' => '#__bsms_media', 'field' => 'media_alttext', 'type' => 'MODIFY', 'command' => "varchar(250) NOT NULL DEFAULT ''"),
+            array('table' => '#__bsms_media', 'field' => 'published', 'type' => 'MODIFY', 'command' => "tinyint(3) NOT NULL DEFAULT '1'"),
+            array('table' => '#__bsms_mediafiles', 'field' => 'mediacode', 'type' => 'MODIFY', 'command' => "text"),
+            array('table' => '#__bsms_mediafiles', 'field' => 'link_type', 'type' => 'MODIFY', 'command' => "char(1) DEFAULT NULL"),
+            array('table' => '#__bsms_mediafiles', 'field' => 'published', 'type' => 'MODIFY', 'command' => "tinyint(3) NOT NULL DEFAULT '1'"),
+            array('table' => '#__bsms_mediafiles', 'field' => 'downloads', 'type' => 'MODIFY', 'command' => "int(10) DEFAULT '0'"),
+            array('table' => '#__bsms_mediafiles', 'field' => 'plays', 'type' => 'MODIFY', 'command' => "int(10) DEFAULT '0'"),
+            array('table' => '#__bsms_message_type', 'field' => 'message_type', 'type' => 'MODIFY', 'command' => "text NOT NULL"),
+            array('table' => '#__bsms_message_type', 'field' => 'published', 'type' => 'MODIFY', 'command' => "tinyint(3) NOT NULL DEFAULT '1'"),
+            array('table' => '#__bsms_mimetype', 'field' => 'published', 'type' => 'MODIFY', 'command' => "tinyint(3) NOT NULL DEFAULT '1'"),
+            array('table' => '#__bsms_podcast', 'field' => 'description', 'type' => 'MODIFY', 'command' => "text"),
+            array('table' => '#__bsms_podcast', 'field' => 'published', 'type' => 'MODIFY', 'command' => "tinyint(3) NOT NULL DEFAULT '1'"),
+            array('table' => '#__bsms_search', 'field' => 'value', 'type' => 'MODIFY', 'command' => "varchar(15) DEFAULT ''"),
+            array('table' => '#__bsms_search', 'field' => 'text', 'type' => 'MODIFY', 'command' => "varchar(15) DEFAULT ''"),
+            array('table' => '#__bsms_series', 'field' => 'published', 'type' => 'MODIFY', 'command' => "tinyint(3) NOT NULL DEFAULT '1'"),
+            array('table' => '#__bsms_servers', 'field' => 'ftp_username', 'type' => 'ADD', 'command' => "char(255) NOT NULL"),
+            array('table' => '#__bsms_servers', 'field' => 'ftp_password', 'type' => 'ADD', 'command' => "char(255) NOT NULL"),
+            array('table' => '#__bsms_studies', 'field' => 'chapter_begin', 'type' => 'MODIFY', 'command' => "int(3) DEFAULT '1'"),
+            array('table' => '#__bsms_studies', 'field' => 'verse_begin', 'type' => 'MODIFY', 'command' => "int(3) DEFAULT '1'"),
+            array('table' => '#__bsms_studies', 'field' => 'chapter_end', 'type' => 'MODIFY', 'command' => "int(3) DEFAULT '1'"),
+            array('table' => '#__bsms_studies', 'field' => 'verse_end', 'type' => 'MODIFY', 'command' => "int(3) DEFAULT '1'"),
+            array('table' => '#__bsms_studies', 'field' => 'series_id', 'type' => 'MODIFY', 'command' => "int(3) DEFAULT '0'"),
+            array('table' => '#__bsms_studies', 'field' => 'topics_id', 'type' => 'MODIFY', 'command' => "int(3) DEFAULT '0'"),
+            array('table' => '#__bsms_studies', 'field' => 'show_level', 'type' => 'MODIFY', 'command' => "varchar(100) NOT NULL DEFAULT '0'"),
+            array('table' => '#__bsms_teachers', 'field' => 'teachername', 'type' => 'MODIFY', 'command' => "varchar(250) NOT NULL DEFAULT ''"),
+            array('table' => '#__bsms_teachers', 'field' => 'website', 'type' => 'MODIFY', 'command' => "text"),
+            array('table' => '#__bsms_timeset', 'field' => 'backup', 'type' => 'ADD', 'command' => "varchar(14) DEFAULT NULL"),
+        );
 
-       $admin = $dbhelper->alterDB($tables);
-       if (!empty($admin)){$messages[] = $admin;}
+        $admin = $dbhelper->alterDB($tables);
+        if (!empty($admin)) {
+            $messages[] = $admin;
+        }
 
+        /* Start of Adding Assets and Access Columns */
         $table = '#__bsms_admin';
         $msg[] = $this->addAssetColumn($table);
         if ($dbhelper->checkTables($table, 'drop_tables') == 'true') {
@@ -76,6 +118,9 @@ class jbs700Install {
         $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_folders';
+        $messages[] = $this->addAssetColumn($table);
+
+        $table = '#__bsms_locations';
         $messages[] = $this->addAssetColumn($table);
 
         $table = '#__bsms_media';
@@ -107,6 +152,40 @@ class jbs700Install {
         $table = '#__bsms_studies';
         $messages[] = $this->addAssetColumn($table);
 
+        $table = '#__bsms_studytopics';
+        $messages[] = $this->addAssetColumn($table);
+
+        $table = '#__bsms_teachers';
+        $messages[] = $this->addAssetColumn($table);
+
+        $table = '#__bsms_templates';
+        $messages[] = $this->addAssetColumn($table);
+
+        $table = '#__bsms_topics';
+        $messages[] = $this->addAssetColumn($table);
+        /* End of Adding Assets and Access Columns */
+
+        /* Fix Mimtype Flash from old plyers */
+        $query = "UPDATE `#__bsms_mimetype` SET `id` = '15', `mimetype` = 'video/x-flv .flv', `mimetext` = ' Flash Video FLV', `published` = '1', `asset_id` = '3900', `access` = '0' WHERE `#__bsms_mimetype`.`id` = '15'";
+        $messages[] = $this->performdb($query);
+
+        /* Update Show levels */
+        $query = "UPDATE `#__bsms_studies` SET `access` = '1' WHERE `show_level` = '0'";
+        $messages[] = $this->performdb($query);
+        $query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '18'";
+        $messages[] = $this->performdb($query);
+        $query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '19'";
+        $messages[] = $this->performdb($query);
+        $query = "UPDATE `#__bsms_studies` SET `access` = '2' WHERE `show_level` = '20'";
+        $messages[] = $this->performdb($query);
+        $query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '22'";
+        $messages[] = $this->performdb($query);
+        $query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '23'";
+        $messages[] = $this->performdb($query);
+        $query = "UPDATE `#__bsms_studies` SET `access` = '3' WHERE `show_level` = '24'";
+        $messages[] = $this->performdb($query);
+
+        /* Perform Mediafiles players. */
         $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
         $db->setQuery($query);
         $db->query();
@@ -137,7 +216,6 @@ class jbs700Install {
                     $messages[] = $this->performdb($query);
                 }
                 //Update the params to json
-                // $params = new JParameter($result->params);
                 $registry = new JRegistry;
                 $registry->loadJSON($result->params);
                 $params = $registry;
@@ -151,7 +229,7 @@ class jbs700Install {
         }
 
 
-        //Get all the study records
+//Get all the study records
 
 
         $query = 'DROP TABLE #__bsms_books';
@@ -257,7 +335,7 @@ class jbs700Install {
             $messages[] = $msg;
         }
 
-        //Fix studies params
+//Fix studies params
         $query = "SELECT `id`, `params` FROM #__bsms_studies";
         $db->setQuery($query);
         $db->query();
@@ -279,7 +357,7 @@ class jbs700Install {
             }
         }
 
-        //Fix topics text
+//Fix topics text
         $query = "SELECT `id`, `topic_text` FROM #__bsms_topics";
         $db->setQuery($query);
         $db->query();
@@ -296,7 +374,7 @@ class jbs700Install {
             }
         }
 
-        //Fix share params
+//Fix share params
         $query = "SELECT `id`, `params` FROM #__bsms_share";
         $db->setQuery($query);
         $db->query();
@@ -319,7 +397,7 @@ class jbs700Install {
         }
 
 
-        //Fix template params
+//Fix template params
         $query = "SELECT `id`, `params` FROM #__bsms_templates";
         $db->setQuery($query);
         $db->query();
@@ -374,17 +452,17 @@ class jbs700Install {
     protected function addAssetColumn($table) {
         $msg = array();
         $dbhelper = new jbsDBhelper();
-        if (jbsDBhelper::checkTables($table, 'asset_id') == FALSE) {
-            $array = array('table'=>$table,'field'=>'asset_id','type'=>'ADD','command'=>'INT( 10 ) NULL DEFAULT NULL');
+        if (jbsDBhelper::checkTables($table, 'asset_id') !== TRUE) {
+            $array = array(array('table' => $table, 'field' => 'asset_id', 'type' => 'ADD', 'command' => "int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.'"));
             $alteradmin = $dbhelper->alterDB($array);
-            if ($alteradmin != TRUE) {
+            if ($alteradmin !== TRUE) {
                 $msg[] = $alteradmin;
             }
         }
-        if (jbsDBhelper::checkTables($table, 'access') == FALSE) {
-            $array = array('table'=>$table,'field'=>'access','type'=>'ADD','command'=>'INT( 10 ) NULL DEFAULT NULL');
+        if (jbsDBhelper::checkTables($table, 'access') !== TRUE) {
+            $array = array(array('table' => $table, 'field' => 'access', 'type' => 'ADD', 'command' => "int(10) unsigned NOT NULL DEFAULT '0'"));
             $alteradmin = $dbhelper->alterDB($array);
-            if ($alteradmin != TRUE) {
+            if ($alteradmin !== TRUE) {
                 $msg[] = $alteradmin;
             }
         }

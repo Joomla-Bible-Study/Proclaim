@@ -121,41 +121,41 @@ class JBSMigrate {
                 $version = $db->loadObject();
                 switch ($version->build) {
                     case '700':
-                        $message[] = $this->allupdate();
                         $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
 
                     case '624':
-                        $message[] = $this->allupdate();
                         $message[] = $this->update700();
                         $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
 
                     case '623':
                         $message[] = $this->update623();
-                        $message[] = $this->allupdate();
                         $message[] = $this->update700();
                         $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
 
                     case '622':
                         $message[] = $this->update622();
                         $message[] = $this->update623();
-                        $message[] = $this->allupdate();
                         $message[] = $this->update700();
                         $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
 
                     case '615':
                         $message[] = $this->update622();
                         $message[] = $this->update623();
-                        $message[] = $this->allupdate();
                         $message[] = $this->update700();
                         $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
 
@@ -163,9 +163,9 @@ class JBSMigrate {
                         $message[] = $this->update614();
                         $message[] = $this->update622();
                         $message[] = $this->update623();
-                        $message[] = $this->allupdate();
                         $message[] = $this->update700();
                         $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
                     case NULL:
@@ -197,9 +197,9 @@ class JBSMigrate {
                         $message[] = $this->update614();
                         $message[] = $this->update622();
                         $message[] = $this->update623();
-                        $message[] = $this->allupdate();
                         $message[] = $this->update700();
                         $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
 
@@ -209,9 +209,9 @@ class JBSMigrate {
                         $message[] = $this->update614();
                         $message[] = $this->update622();
                         $message[] = $this->update623();
-                        $message[] = $this->allupdate();
                         $message[] = $this->update700();
                         $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
 
@@ -220,9 +220,9 @@ class JBSMigrate {
                         $message[] = $this->update614();
                         $message[] = $this->update622();
                         $message[] = $this->update623();
-                        $message[] = $this->allupdate();
                         $message[] = $this->update700();
                         $message[] = $this->update701();
+                        $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
                 }

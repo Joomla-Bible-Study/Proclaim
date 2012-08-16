@@ -57,22 +57,20 @@ class jbsDBhelper {
                         break;
                     }
                     //check the field to see if it exists first
-                    if (jbsDBhelper::checkTables($table, $field)) {
-                        $query = 'ALTER TABLE `' . $table . '` DROP ' . $field;
+                    if (jbsDBhelper::checkTables($table, $field) !== TRUE) {
+                        $query = 'ALTER TABLE `' . $table . '` DROP `' . $field . '`';
                         $result = jbsDBhelper::performDB($query);
                         if ($result) {
-                            $msg[] = $result;
+                        $msg[] = $result;
                         }
                     }
                     break;
 
                 case 'add':
                     if (!$table || !$field) {
-                        return 'Bad Table info';
                         break;
                     }
-                    $checktable =jbsDBhelper::checkTables($table, $field);
-                    if (empty($checktable)) {
+                    if (jbsDBhelper::checkTables($table, $field) !== TRUE) {
                         $query = 'ALTER TABLE `' . $table . '` ADD `' . $field . '` ' . $command;
                         $result = jbsDBhelper::performDB($query);
                         if ($result) {
@@ -85,7 +83,7 @@ class jbsDBhelper {
                     if (!$table || !$field) {
                         break;
                     }
-                    if (jbsDBhelper::checkTables($table, $field)) {
+                    if (jbsDBhelper::checkTables($table, $field) !== TRUE) {
                         $query = 'ALTER TABLE `' . $table . '` MODIFY `' . $field . '` ' . $command;
                         $result = jbsDBhelper::performDB($query);
                         if ($result) {
@@ -94,10 +92,11 @@ class jbsDBhelper {
                     }
                     break;
             }
-            //dump($type,'type: '); dump($command, 'command: '); dump($table, 'table: '); dump($field, 'field: ');
         }
         if (!empty($msg)) {
             return $msg;
+        } elseif ($msg === FALSE) {
+            return FALSE;
         } else {
             return TRUE;
         }
@@ -108,7 +107,7 @@ class jbsDBhelper {
      * @param $query is a Joomla ready query
      * @return boolean true if success, or error string if failed
      */
-    static function performDB($query) {
+    public static function performDB($query) {
         if (!$query) {
             return false;
         }

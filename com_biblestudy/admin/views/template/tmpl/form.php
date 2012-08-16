@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 ?>
 <form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
-    <?php echo JHtml::_('tabs.start'); ?>
+    <?php echo JHtml::_('tabs.start','com_biblestudy_template_' . $this->item->id, array('useCookie' => 1)); ?>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_GENERAL'), 'general'); ?>
     <div class="width-100">
         <div class="width-80 fltlft">

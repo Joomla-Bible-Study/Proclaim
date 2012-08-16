@@ -53,14 +53,14 @@ class BiblestudyViewAdmin extends JView {
      */
     public function display($tpl = null) {
 
-        $dbhelper = new jbsDBhelper();
+        //$dbhelper = new jbsDBhelper();
         //alter the admin table
-        $table = '#__bsms_admin';
-        $tables = array(
-            array('table' => '#__bsms_admin', 'field' => 'main', 'type' => 'DROP', 'command' => ''),
-            array('table' => '#__bsms_admin', 'field' => 'podcast', 'type' => 'DROP', 'command' => '')
-        );
-        $res = $dbhelper->alterDB($tables);
+        //$table = '#__bsms_admin';
+        //$tables = array(
+        //    array('table' => '#__bsms_admin', 'field' => 'main', 'type' => 'DROP', 'command' => ''),
+        //    array('table' => '#__bsms_admin', 'field' => 'podcast', 'type' => 'DROP', 'command' => '')
+        //);
+        //$res = $dbhelper->alterDB($tables);
         $language = JFactory::getLanguage();
         $language->load('com_installer');
 
