@@ -37,8 +37,6 @@ class JElementtopic extends JElement {
      */
     function fetchElement($name, $value, &$node, $control_name) {
         $db = JFactory::getDBO();
-        $language = JFactory::getLanguage();
-        $language->load('com_biblestudy');
 
         $query = 'SELECT DISTINCT #__bsms_studies.topics_id, #__bsms_topics.topic_text, #__bsms_topics.id AS tid' .
                 ' FROM #__bsms_studies' .

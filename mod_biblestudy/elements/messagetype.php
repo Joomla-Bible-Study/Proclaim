@@ -37,8 +37,6 @@ class JElementmessagetype extends JElement {
      */
     function fetchElement($name, $value, &$node, $control_name) {
         $db = JFactory::getDBO();
-        $language = JFactory::getLanguage();
-        $language->load('com_biblestudy');
 
         $query = 'SELECT DISTINCT #__bsms_studies.messagetype, #__bsms_message_type.message_type, #__bsms_message_type.id' .
                 ' FROM #__bsms_studies' .

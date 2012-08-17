@@ -37,9 +37,7 @@ class JElementbook extends JElement {
      */
     function fetchElement($name, $value, &$node, $control_name) {
         $db = JFactory::getDBO();
-        $language = JFactory::getLanguage();
-        $language->load('com_biblestudy');
-
+        
         $query = 'SELECT DISTINCT #__bsms_studies.booknumber, #__bsms_books.bookname, #__bsms_books.booknumber AS bnum, #__bsms_books.id AS bid' .
                 ' FROM #__bsms_studies' .
                 ' LEFT JOIN #__bsms_books ON (#__bsms_books.booknumber = #__bsms_studies.booknumber)' .

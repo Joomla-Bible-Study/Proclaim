@@ -37,8 +37,6 @@ class JElementseries extends JElement {
      */
     function fetchElement($name, $value, &$node, $control_name) {
         $db = JFactory::getDBO();
-        $language = JFactory::getLanguage();
-        $language->load('com_biblestudy');
 
         $query = 'SELECT DISTINCT #__bsms_studies.series_id, #__bsms_series.series_text, #__bsms_series.id AS sid' .
                 ' FROM #__bsms_studies' .

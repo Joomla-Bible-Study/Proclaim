@@ -39,7 +39,7 @@ class modBiblestudyHelper {
      * @param array $params
      * @return array
      */
-    function getLatest($params) {
+    static function getLatest($params) {
 
         $items = $params->get('locations', 1);
 
@@ -263,7 +263,7 @@ class modBiblestudyHelper {
      * @param array $params
      * @return object
      */
-    function getTemplate($params) {
+    static function getTemplate($params) {
         $db = JFactory::getDBO();
         $templateid = $params->get('modulemenuid', 1);
         $query = 'SELECT *'
@@ -278,7 +278,7 @@ class modBiblestudyHelper {
      * Get Admin Setting
      * @return object
      */
-    function getAdmin() {
+    static function getAdmin() {
         $db = JFactory::getDBO();
         $query = 'SELECT *'
                 . ' FROM #__bsms_admin'

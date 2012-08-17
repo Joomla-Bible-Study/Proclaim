@@ -37,8 +37,6 @@ class JElementteacher extends JElement {
      */
     function fetchElement($name, $value, &$node, $control_name) {
         $db = JFactory::getDBO();
-        $language = JFactory::getLanguage();
-        $language->load('com_biblestudy');
 
         $query = 'SELECT DISTINCT #__bsms_studies.teacher_id, #__bsms_teachers.teachername, #__bsms_teachers.id AS tid' .
                 ' FROM #__bsms_studies' .
