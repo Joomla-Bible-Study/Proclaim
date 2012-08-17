@@ -69,7 +69,8 @@ $document = JFactory::getDocument();
 $css = $params->get('css', 'biblestudy.css');
 $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
 $language = JFactory::getLanguage();
-$language->load('com_biblestudy');
+dump($language, 'Language');
+$language->load('com_biblestudy', JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy');
 $config = JComponentHelper::getParams('com_biblestudy');
 //we need to load the path to the helper files
 $path1 = JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy/helpers/';
