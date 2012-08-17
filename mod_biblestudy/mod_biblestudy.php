@@ -9,23 +9,20 @@
  * @link http://www.JoomlaBibleStudy.org
  * */
 defined('_JEXEC') or die;
-?>
-<script type="text/javascript" src="media/com_biblestudy/js/tooltip.js"></script>
-
-<?php
 
 require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.pagebuilder.class.php');
 require(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'helper.php');
-require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
+//require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
+//jimport( 'joomla.html.parameter' );
 // Need for inline player
 $document = JFactory::getDocument();
+$document->addScript('media/com_biblestudy/js/tooltip.js');
 $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
-$params = new JParameter($params);
 $templatemenuid = $params->get('t');
 $template = modBiblestudyHelper::getTemplate($params);
 
 $admin = modBiblestudyHelper::getAdmin();
-$admin_params = new JParameter($admin[0]->params);
+$admin_params = new JRegistry($admin[0]->params);
 $items = modBiblestudyHelper::getLatest($params);
 
 //attempt to change mysql for error in large select
