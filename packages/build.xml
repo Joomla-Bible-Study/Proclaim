@@ -9,13 +9,15 @@
         <delete file="packages/plg_biblestudy_search.zip" />
         <delete file="packages/plg_biblestudy_podcast.zip" />
         <delete file="packages/plg_biblestudy_backup.zip" />
-        <delete file="pkg_churchdirectory.zip" />
+        <delete file="pkg_biblestudy.zip" />
     </target>
     <target name="build">
-        <echo message="Building package" />
-        <mkdir dir="packages" />
+        <echo message="Remove test files" />
         <delete file="../com_biblestudy/admin/biblestudy.xml" />
         <delete file="../com_biblestudy/admin/biblestudy.script.php" />
+        <delete file="../com_biblestudy/media/css/site/biblestudy.css" />
+        <echo message="Building package" />
+        <mkdir dir="packages" />
         <zip destfile="packages/com_biblestudy.zip" basedir="../com_biblestudy" />
         <zip destfile="packages/mod_biblestudy.zip" basedir="../mod_biblestudy" />
         <zip destfile="packages/mod_biblestudy_podcast.zip" basedir="../mod_biblestudy_podcast" />

@@ -29,7 +29,7 @@ class fixJBSAssets {
         //Remove all old assets_id exept the parent_id
         $query = "SELECT * FROM `#__assets` WHERE name='com_biblestudy'";
         $db->setQuery($query);
-        
+
         $object_parent_id = $db->loadObject();
         if ($object_parent_id)
         {$parent_id = $object_parent_id->id;
@@ -51,7 +51,7 @@ class fixJBSAssets {
                     JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
                     $table = JTable::getInstance($object['assetname'], 'Table', array('dbo' => $db));
                     if ($data->id) {
-                        try { 
+                        try {
                             $table->load($data->id);
                         } catch (Exception $e) {
                             echo 'Caught exception: ', $e->getMessage(), "\n";
