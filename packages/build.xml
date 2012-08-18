@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="biblestudy_package" default="build">
-	<target name="build">
-		<mkdir dir="packages" />
-		<zip destfile="packages/com_biblestudy.zip" basedir="../com_biblestudy" />
-		<zip destfile="packages/mod_biblestudy.zip" basedir="../mod_biblestudy" />
-		<zip destfile="packages/mod_biblestudy_podcast.zip" basedir="../mod_biblestudy_podcast" />
-                <zip destfile="packages/plg_biblestudy_finder.zip" basedir="../plg_biblestudy_finder" />
-		<zip destfile="packages/plg_biblestudy_search.zip" basedir="../plg_biblestudy_search" />
-		<zip destfile="packages/plg_biblestudy_podcast.zip" basedir="../plg_biblestudy_podcast" />
-                <zip destfile="packages/plg_biblestudy_backup.zip" basedir="../plg_biblestudy_backup" />
-		<zip destfile="pkg_biblestudy.zip">
-			<fileset dir=".">
-				<include name="packages/**" />
-				<include name="pkg_biblestudy_package.xml" />
-			</fileset>
-		</zip>
-	</target>
+    <target name="clean">
+        <echo message="Cleaning directories" />
+        <delete file="packages/com_biblestudy.zip" />
+        <delete file="packages/mod_biblestudy.zip" />
+        <delete file="packages/mod_biblestudy_podcast.zip" />
+        <delete file="packages/plg_biblestudy_finder.zip" />
+        <delete file="packages/plg_biblestudy_search.zip" />
+        <delete file="packages/plg_biblestudy_podcast.zip" />
+        <delete file="packages/plg_biblestudy_backup.zip" />
+        <delete file="pkg_churchdirectory.zip" />
+    </target>
+    <target name="build">
+        <echo message="Building package" />
+        <mkdir dir="packages" />
+        <delete file="../com_biblestudy/admin/biblestudy.xml" />
+        <delete file="../com_biblestudy/admin/biblestudy.script.php" />
+        <zip destfile="packages/com_biblestudy.zip" basedir="../com_biblestudy" />
+        <zip destfile="packages/mod_biblestudy.zip" basedir="../mod_biblestudy" />
+        <zip destfile="packages/mod_biblestudy_podcast.zip" basedir="../mod_biblestudy_podcast" />
+        <zip destfile="packages/plg_biblestudy_finder.zip" basedir="../plg_biblestudy_finder" />
+        <zip destfile="packages/plg_biblestudy_search.zip" basedir="../plg_biblestudy_search" />
+        <zip destfile="packages/plg_biblestudy_podcast.zip" basedir="../plg_biblestudy_podcast" />
+        <zip destfile="packages/plg_biblestudy_backup.zip" basedir="../plg_biblestudy_backup" />
+        <zip destfile="pkg_biblestudy.zip">
+            <fileset dir=".">
+                <include name="packages/**" />
+                <include name="pkg_biblestudy_package.xml" />
+            </fileset>
+        </zip>
+    </target>
 </project>
