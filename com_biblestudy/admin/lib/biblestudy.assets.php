@@ -27,15 +27,14 @@ class fixJBSAssets {
         @set_time_limit(300);
 
         //Remove all old assets_id exept the parent_id
-        $query = "SELECT * FROM `#__assets` WHERE name='com_biblestudy'";
+        $query = "SELECT id FROM `#__assets` WHERE name='com_biblestudy'";
         $db->setQuery($query);
-
-        $object_parent_id = $db->loadObject();
-        if ($object_parent_id)
-        {$parent_id = $object_parent_id->id;
-        $query = "DELETE FROM `#__assets` WHERE parent_id= " . $parent_id;
-        $db->setQuery($query);
-        $db->query();}
+        $object_parent_id = $db->loadResult();
+        if ($object_parent_id):
+            $query = "DELETE FROM `#__assets` WHERE parent_id= " . $object_parent_id;
+            $db->setQuery($query);
+            $db->query();
+        endif;
 
         //Get all of the table names
         $objects = fixJBSAssets::getObjects();
@@ -44,8 +43,8 @@ class fixJBSAssets {
             @set_time_limit(300);
             $query = 'SELECT id FROM ' . $object['name'];
             $db->setQuery($query);
-           // $db->query();
             $datarows = $db->loadObjectList();
+
             if ($datarows) {
                 foreach ($datarows as $data) {
                     JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');

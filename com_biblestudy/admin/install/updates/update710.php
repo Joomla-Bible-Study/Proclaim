@@ -284,6 +284,7 @@ class JBS710Update {
         if (!JFile::write($dest, $newcss)) {
             return false;
         }
+        return TRUE;
     }
 
 

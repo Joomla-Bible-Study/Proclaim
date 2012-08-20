@@ -201,17 +201,11 @@ class BiblestudyControllerAdmin extends JControllerForm {
      * Fix Assets
      */
     function fixAssets() {
-        $application = JFactory::getApplication();
         require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
         $asset = new fixJBSAssets();
         $fixassets = $asset->fixAssets();
         JRequest::setVar('messages', $fixassets, 'get', 'true');
-        $jbsperent = JRequest::getVar('jbsperent');
-        if ($jbsperent === 'install'):
-            $this->setRedirect('index.php?option=com_biblestudy', 'Finished Install');
-        else:
-            $this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets', $fixassets);
-        endif;
+        $this->setRedirect('index.php?option=com_biblestudy&view=admin&id=1&task=admin.checkassets', $fixassets);
     }
 
     /**

@@ -6,7 +6,7 @@ SET time_zone = "+00:00";
 --
 
 INSERT INTO `#__bsms_admin` (`id`, `drop_tables`, `params`, `asset_id`, `access`) VALUES
-(1, 0, '{"metakey":"","metadesc":"","compat_mode":"0","jbsmigrationshow":"0","studylistlimit":"10","show_location_media":"0","popular_limit":"","character_filter":"1","format_popular":"0","uploadtype":"1","socialnetworking":"1","sharetype":"1","default_main_image":"","default_series_image":"","default_teacher_image":"","default_download_image":"","default_showHide_image":"","location_id":"-1","teacher_id":"1","series_id":"-1","booknumber":"-1","messagetype":"-1","default_study_image":"","download":"1","target":" ","server":"1","path":"-1","podcast":["-1"],"mime":"1","from":"x","to":"x","pFrom":"x","pTo":"x"}', 59, 1);
+(1, 0, '{"metakey":"","metadesc":"","compat_mode":"0","jbsmigrationshow":"0","studylistlimit":"10","show_location_media":"0","popular_limit":"","character_filter":"1","format_popular":"0","uploadtype":"1","socialnetworking":"1","sharetype":"1","default_main_image":"","default_series_image":"","default_teacher_image":"","default_download_image":"","default_showHide_image":"","location_id":"-1","teacher_id":"1","series_id":"-1","booknumber":"-1","messagetype":"-1","default_study_image":"","download":"1","target":" ","server":"1","path":"-1","podcast":["-1"],"mime":"1","from":"x","to":"x","pFrom":"x","pTo":"x"}', 0, 1);
 
 --
 -- Dumping data for table `#__bsms_books`
@@ -168,7 +168,7 @@ INSERT INTO `#__bsms_order` (`id`, `value`, `text`) VALUES
 --
 
 INSERT INTO `#__bsms_podcast` (`id`, `title`, `website`, `description`, `image`, `imageh`, `imagew`, `author`, `podcastimage`, `podcastsearch`, `filename`, `language`, `editor_name`, `editor_email`, `podcastlimit`, `published`, `episodetitle`, `custom`, `detailstemplateid`, `asset_id`, `access`) VALUES
-(1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com', 50, 1, 0, '', 1, 60, 1);
+(1, 'My Podcast', 'www.mywebsite.com', 'Podcast Description goes here', 'www.mywebsite.com/myimage.jpg', 30, 30, 'Pastor Billy', 'www.mywebsite.com/myimage.jpg', 'jesus', 'mypodcast.xml', '*', 'Jim Editor', 'jim@mywebsite.com', 50, 1, 0, '', 1, 0, 1);
 
 --
 -- Dumping data for table `#__bsms_series`
@@ -199,7 +199,7 @@ INSERT INTO `#__bsms_share` (`id`, `name`, `params`, `published`, `asset_id`, `a
 --
 
 INSERT INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `booknumber`, `chapter_begin`, `verse_begin`, `chapter_end`, `verse_end`, `secondary_reference`, `booknumber2`, `chapter_begin2`, `verse_begin2`, `chapter_end2`, `verse_end2`, `prod_dvd`, `prod_cd`, `server_cd`, `server_dvd`, `image_cd`, `image_dvd`, `studytext2`, `comments`, `hits`, `user_id`, `user_name`, `show_level`, `location_id`, `studytitle`, `alias`, `studyintro`, `media_hours`, `media_minutes`, `media_seconds`, `messagetype`, `series_id`, `topics_id`, `studytext`, `thumbnailm`, `thumbhm`, `thumbwm`, `params`, `published`, `asset_id`, `access`, `ordering`, `language`) VALUES
-(1, '2010-03-13 00:10:00', 1, '2010-001', 101, 1, 1, 1, 31, '', '-1', '', '', '', '', NULL, NULL, NULL, NULL, NULL, '0', NULL, 1, 0, 0, NULL, '0', -1, 'Sample Study Title', 'sample-study-title', 'Sample text you can use as an introduction to your study', '', '', '', '1', -1, 0, 'This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com', '', NULL, NULL, '{"metakey":"","metadesc":""}', 1, 58, 1, 1, '*');
+(1, '2010-03-13 00:10:00', 1, '2010-001', 101, 1, 1, 1, 31, '', '-1', '', '', '', '', NULL, NULL, NULL, NULL, NULL, '0', NULL, 1, 0, 0, NULL, '0', -1, 'Sample Study Title', 'sample-study-title', 'Sample text you can use as an introduction to your study', '', '', '', '1', -1, 0, 'This is where you would put study notes or other information. This could be the full text of your study as well. If you install the scripture links plugin you will have all verses as links to BibleGateway.com', '', NULL, NULL, '{"metakey":"","metadesc":""}', 1, 0, 1, 1, '*');
 
 --
 -- Dumping data for table `#__bsms_styles`

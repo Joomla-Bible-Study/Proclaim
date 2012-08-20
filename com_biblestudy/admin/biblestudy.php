@@ -59,6 +59,7 @@ $controller->redirect();
 function addCSS() {
     JHTML::stylesheet('general.css', JURI::root() . 'media/com_biblestudy/css/');
     JHTML::stylesheet('icons.css', JURI::root() . 'media/com_biblestudy/css/');
+    JHTML::stylesheet('biblestudy-core.css', JURI::root() . 'media/com_biblestudy/css/');
 }
 
 /**

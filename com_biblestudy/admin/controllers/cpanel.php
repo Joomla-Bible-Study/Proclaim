@@ -17,7 +17,7 @@ jimport('joomla.application.component.controllerform');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class biblestudyControllercpanel extends JControllerForm {
+class BiblestudyControllerCpanel extends JControllerForm {
 
     /**
      * Class constructor.

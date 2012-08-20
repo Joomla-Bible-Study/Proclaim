@@ -222,81 +222,12 @@ class Com_BiblestudyInstallerScript {
         $params['my_param2'] = '1';
         $this->setParams($params);
 
-        //We need to check on the topics table. There were changes made between the migration component 1.08 and 1.011 that might differ so it is best to address here
-        require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update701.php');
-        $update = new updatejbs701();
-        $update701 = $update->do701update();
-        if (!$update701) {
-            echo JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.0.2');
-        }
-        ?>
-        <fieldset class="panelform">
-            <legend>
-                <?php echo JText::sprintf('JBS_INS_INSTALLATION_RESULTS', $type . '_TEXT'); ?>
-            </legend>
-            <div>
-                <?php
-                //changes after 7.0.2
-                require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'updateAll.php');
+        $query1 = "UPDATE `#__bsms_admin` SET installstate = '{\"release\":\"".$this->release."\",\"jbsparent\":\"".$parent."\",\"jbstype\":\"".$type."\",\"jbsname\":\"com_biblestudy\"}' WHERE id = 1";
+        $db->setQuery($query1);
+        $db->query();
 
-                //Check for presence of css or backup or other things for upgrade to 7.1.0
-                require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update710.php');
-                $JBS710Update = new JBS710Update();
-                $JBS710 = $JBS710Update->update710();
-                if (!$JBS710) {
-                    echo '<br />' . JText::_('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.1');
-                } else {
-                    echo '<br />' . JText::_('JBS_INS_SUCCESS');
-                }
-
-                //Check for default details text link image and copy if not present
-                $src = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
-                $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
-                $imageexists = JFile::exists($dest);
-                if (!$imageexists) {
-                    echo '<br /><br />' . JText::_('JBS_INS_COPYING_IMAGE');
-                    //@todo need to move the copy funtions out of the if call
-                    if ($imagesuccess = JFile::copy($src, $dest)) {
-                        echo '<br />' . JText::_('JBS_INS_COPYING_SUCCESS');
-                    } else {
-                        echo '<br />' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER1') . '/media/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER2');
-                    }
-                }
-                ?>
-            </div>
-        </fieldset>
-        <!--end of div for panelform -->
-
-        <!-- Rest of footer -->
-        <div style="border: 1px solid #99CCFF; background: #D9D9FF; padding: 20px; margin: 20px; clear: both;">
-
-            <img src="media/com_biblestudy/images/openbible.png" alt="Bible Study" border="0" class="float: left" />
-            <p>
-                <strong><?php echo JText::_('JBS_INS_THANK_YOU'); ?></strong>
-            </p>
-            <p>
-                <?php echo JText::_('JBS_INS_STATEMENT_710'); ?> </p>
-            <p>
-                <?php echo JText::_('JBS_INS_STATEMENT1'); ?> </p>
-            <p>
-                <?php echo JText::_('JBS_INS_STATEMENT2'); ?></p>
-            <p>
-                <?php echo JText::_('JBS_INS_STATEMENT3'); ?></p>
-
-
-            <p><a href="http://www.joomlabiblestudy.org/forum.html" target="_blank"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
-            <p><a href="http://www.joomlabiblestudy.org" target="_blank"><?php echo JText::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
-            <p><a href="http://www.joomlabiblestudy.org/jbs-documentation.html" target="_blank"><?php echo JText::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
-            <p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a
-                    href="http://www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a>.
-                All rights reserved.</p>
-        </div>
-        <div style="clear: both;"></div>
-        <p style="font-size: 24px;"><a href="<?php echo JURI::base() . 'index.php?option=com_biblestudy&view=admin&id=1&task=admin.fixAssets&id=1&jbsperent=install'; ?>" title="Fix Assets"><?php echo JText::_('JBS_INS_VISIT_FORUM'); ?></a></p>
-
-        <?php
         // An example of setting a redirect to a new location after the install is completed
-        $parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy&view=admin&id=1&task=admin.fixAssets&id=1&jbsperent=install');
+        $parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
     }
 
     /**

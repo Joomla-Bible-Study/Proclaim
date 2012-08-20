@@ -61,7 +61,7 @@ class jbsDBhelper {
                         $query = 'ALTER TABLE `' . $table . '` DROP `' . $field . '`';
                         $result = jbsDBhelper::performDB($query);
                         if ($result) {
-                        $msg[] = $result;
+                            $msg[] = $result;
                         }
                     }
                     break;
@@ -157,6 +157,41 @@ class jbsDBhelper {
             }
         }
         return $objects;
+    }
+
+    /**
+     * Get State of install for Main Admin Controller
+     * @return \JRegistry
+     * @since 7.1.0
+     */
+    public static function getinstallstate() {
+        $db = JFactory::getDbo();
+        $db->setQuery('SELECT installstate FROM #__bsms_admin WHERE id = 1');
+        $db->query();
+        $results = $db->loadObject();
+        // Convert parameter fields to objects.
+        $registry = new JRegistry;
+        $registry->loadJSON($results->installstate);
+        if ($registry->get('jbsname')):
+            return $registry;
+        else:
+            return FALSE;
+        endif;
+    }
+
+    /**
+     * Get State of install for Main Admin Controller
+     * @return \JRegistry
+     * @since 7.1.0
+     */
+    public static function setinstallstate() {
+        $query = 'UPDATE #__bsms_admin SET installstate = NULL WHERE id = 1';
+        $result = jbsDBhelper::performDB($query);
+        if ($result) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
     }
 
 }

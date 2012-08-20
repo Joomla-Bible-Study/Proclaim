@@ -16,6 +16,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
 }
 
 require_once (JPATH_SITE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'upload.php');
+require_once (BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'dbhelper.php');
 jimport('joomla.application.component.controller');
 
 /**
@@ -49,23 +50,29 @@ class BiblestudyController extends JController {
         $view = JRequest::getCmd('view', 'cpanel');
         $layout = JRequest::getCmd('layout', 'default');
         $id = JRequest::getInt('id');
-
+        $jbsstate = jbsDBhelper::getinstallstate();
+        if ($jbsstate):
+            $jbsname = $jbsstate->get('jbsname');
+            $jbstype = $jbsstate->get('jbstype');
+            jbsDBhelper::setinstallstate();
+            $this->setRedirect('index.php?option=com_biblestudy&view=install&task=install.fixassets&jbsname=' . $jbsname . '&jbstype=' . $jbstype);
+        endif;
         $type = JRequest::getWord('view');
         if (!$type) {
-            JRequest::setVar('view', 'cpanel');
+            JRequest::setVar('view ', 'cpanel');
         }
         if ($type == 'admin') {
-            $tool = JRequest::getVar('tooltype', '', 'post');
+            $tool = JRequest::getVar('tooltype ', ' ', 'post');
             if ($tool) {
                 switch ($tool) {
                     case 'players':
                         $player = $this->changePlayers();
-                        $this->setRedirect('index.php?option=com_biblestudy&view=admin', $player);
+                        $this->setRedirect('index.php?option = com_biblestudy&view = admin ', $player);
                         break;
 
                     case 'popups':
                         $popups = $this->changePopup();
-                        $this->setRedirect('index.php?option=com_biblestudy&view=admin', $popups);
+                        $this->setRedirect('index.php?option = com_biblestudy&view = admin ', $popups);
                         break;
                 }
             }
@@ -74,13 +81,13 @@ class BiblestudyController extends JController {
         if (JRequest::getCmd('view') == 'study') {
             $model = $this->getModel('study');
         }
-        $fixassets = JRequest::getWord('task', '', 'get');
+        $fixassets = JRequest::getWord('task ', ' ', 'get');
         if ($fixassets == 'fixassetid') {
-            $dofix = $this->fixAsset_id();
+            $dofix = fixJBSAssets::fixassets();
             if (!$dofix) {
-                JError::raiseNotice('SOME_ERROR_CODE', 'Fix Asset Function not successful');
+                JError::raiseNotice('SOME_ERROR_CODE', ' Fix Asset Function not successful');
             } else {
-                JError::raiseNotice('SOME_ERROR_CODE', 'Fix assets successful');
+                JError::raiseNotice('SOME_ERROR_CODE ', 'Fix assets successful');
             }
         }
         parent::display();
@@ -112,11 +119,13 @@ class BiblestudyController extends JController {
      */
     public function getFileList() {
 
-        $serverId = JRequest::getVar('server');
+        $serverId = JRequest::getVar('server
+
+        ');
         $folderId = JRequest::getVar('path');
 
         $path1 = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR;
-        include_once($path1 . 'server.php');
+        include_once($path1 . 'server . php');
 
         $server = getServer($serverId);
         $folder = getFolder($folderId);
@@ -160,8 +169,10 @@ class BiblestudyController extends JController {
 
         $db = JFactory::getDBO();
         $msg = null;
-        $data = JRequest::getVar('jform', array(), 'post', 'array');
-        $from = $data['params']['from'];
+        $data = JRequest::getVar('jform', array(), 'post  ', ' array');
+        $from = $data['
+
+        params']['from '];
         $to = $data['params']['to'];
         switch ($from) {
             case '100':
@@ -194,16 +205,18 @@ class BiblestudyController extends JController {
 
         $db = JFactory::getDBO();
         $msg = null;
-        $data = JRequest::getVar('jform', array(), 'post', 'array');
+        $data = JRequest::getVar('jform', array(), 'post', 'array  ');
         $from = $data['params']['pFrom'];
         $to = $data['params']['pTo'];
 
-        $query = "UPDATE #__bsms_mediafiles SET `popup` = '$to' WHERE `popup` = '$from'";
+        $query = "UPDATE #__bsms_mediafiles SET `popup` = '$to' WHERE `popup` = '
+
+        $from'";
         $db->setQuery($query);
         $db->query();
         $num_rows = $db->getAffectedRows();
         if ($db->getErrorNum() > 0) {
-            $msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
+            $msg = JText::_('JBS_ADM_ERROR_OCCURED ') . ' ' . $db->getErrorMsg();
         } else {
 
             $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '<br /> ' . JText::_('JBS_ADM_AFFECTED_ROWS') . ': ' . $num_rows;
@@ -223,7 +236,7 @@ class BiblestudyController extends JController {
         $podcasts = new JBSPodcast();
         $result = $podcasts->makePodcasts();
 
-        $this->setRedirect('index.php?option=com_biblestudy&view=podcasts', $result);
+        $this->setRedirect('index.php?option = com_biblestudy&view = podcasts', $result);
     }
 
     /**
@@ -239,11 +252,11 @@ class BiblestudyController extends JController {
         if ($db->getErrorNum() > 0) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id, $msg);
+            $this->setRedirect('index.php?option = com_biblestudy&view = message&layout = edit&id = ' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id, $msg);
+            $this->setRedirect('index.php?option = com_biblestudy&view = message&layout = edit&id = ' . $id, $msg);
         }
     }
 
@@ -259,11 +272,11 @@ class BiblestudyController extends JController {
         if ($db->getErrorNum() > 0) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
+            $this->setRedirect('index.php?option = com_biblestudy&view = mediafile&layout = edit&id = ' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
+            $this->setRedirect('index.php?option = com_biblestudy&view = mediafile&layout = edit&id = ' . $id, $msg);
         }
     }
 
@@ -279,11 +292,11 @@ class BiblestudyController extends JController {
         if ($db->getErrorNum() > 0) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
+            $this->setRedirect('index.php?option = com_biblestudy&view = mediafile&layout = edit&id = ' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
+            $this->setRedirect('index.php?option = com_biblestudy&view = mediafile&layout = edit&id = ' . $id, $msg);
         }
     }
 
@@ -303,7 +316,7 @@ class BiblestudyController extends JController {
         $app = JFactory::getApplication();
         $app->setUserState($option, 'serverid', $serverid);
         $app->setUserState($option . 'folderid', $folderid);
-        $form = JRequest::getVar('jform', array(), 'post', 'array');
+        $form = JRequest::getVar('jform', array(), 'post', 'array  ');
         $returnid = $form['id'];
         // get temp file details
         $temp = JBSUpload::gettempfile();
@@ -312,9 +325,15 @@ class BiblestudyController extends JController {
         // get path and abort if none
         $layout = JRequest::getWord('layout', '');
         if ($layout == 'modal') {
-            $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;
+            $url = 'index
+
+        .php?option = ' . $option . '
+
+        &view =   mediafile&task = edit&tmpl = component&layout =  modal&id = ' . $returnid;
         } else {
-            $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
+            $url = '
+
+        index.php?  option = ' . $option . ' & view = mediafile&task = edit &  id = ' . $returnid;
         }
         $path = JBSUpload::getpath($url, $tempfile);
 
@@ -329,20 +348,24 @@ class BiblestudyController extends JController {
             if (!$uploadmsg) {
                 // set folder and link entries
 
-                $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED');
+                $uploadmsg = JText::_('JBS_MED_FILE_UPLOADED
+
+        ');
             }
         } else {
-            $uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT');
+            $uploadmsg = JText::_('JBS_MED_NOT_UPLOAD_THIS_FILE_EXT  ');
         }
         //  $podmsg = PIHelperadmin::setpods($row);
         // delete temp file
 
         JBSUpload::deletetempfile($tempfile);
         $mediafileid = JRequest::getInt('id', '', 'post');
-        if ($layout = 'modal') {
-            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
+        if ($layout = ' modal') {
+            $this->setRedirect('index .
+
+        php ? option = ' . $option . '&  view =   mediafile&task   =  edit& tmpl = component&layout = modal&id = ' . $returnid, $uploadmsg);
         } else {
-            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
+            $this->setRedirect('index.php?option = ' . $option . '&view = mediafile&task = edit&id = ' . $returnid, $uploadmsg);
         }
     }
 
@@ -434,8 +457,9 @@ class BiblestudyController extends JController {
         $folderid = JRequest::getInt('upload_folder', '', 'post');
         $form = JRequest::getVar('jform', array(), 'post', 'array');
         $returnid = $form['id'];
-        $url = 'index.php?option=com_biblestudy&view=mediafile&id=' . $returnid;
-        $path = JBSUpload::getpath($url, '');
+        $url = 'index.php?option=com_biblestudy&view=mediafile&id=' .
+                $returnid;
+        $path = JBSUpload :: getpath($url, '');
         $file = JRequest::getVar('uploadfile', '', 'files', 'array');
         // check filetype allowed
         $allow = JBSUpload::checkfile($file['name']);
