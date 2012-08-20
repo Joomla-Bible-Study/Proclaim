@@ -8,14 +8,14 @@ CREATE TABLE IF NOT EXISTS `#__jbsbackup_update` (
 
 INSERT INTO `#__jbsbackup_update` (id,version) VALUES
 (1,'7.0.3'),
-(2,'7.0.4');
+(2,'7.0.4'),
 (3,'7.1.1');
 
 CREATE TABLE IF NOT EXISTS `#__jbsbackup_timeset` (
 	`timeset` varchar(14) NOT NULL DEFAULT '',
 	`backup` varchar(14) DEFAULT NULL,
 	PRIMARY KEY (`timeset`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `#__jbsbackup_timeset`
