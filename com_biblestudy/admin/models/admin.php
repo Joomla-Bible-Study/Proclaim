@@ -399,9 +399,13 @@ class biblestudyModeladmin extends JModelAdmin {
      * @since 1.7.3
      */
     public function getCompVersion() {
+        $jversion = null;
+        $xml = null;
         $file = JPATH_COMPONENT_ADMINISTRATOR . '/biblestudy.xml';
         $xml = JFactory::getXML($file);
-        $jversion = (string) $xml->version;
+        if ($xml):
+            $jversion = (string) $xml->version;
+        endif;
         return $jversion;
     }
 
