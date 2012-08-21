@@ -11,6 +11,8 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 include_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.stats.class.php');
+require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.debug.php');
+require_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate' . DIRECTORY_SEPARATOR . 'liveupdate.php');
 
 /**
  * JView class for Cpanel
@@ -26,7 +28,7 @@ class biblestudyViewcpanel extends JView {
     public function display($tpl = null) {
 
 
-        JHTML::stylesheet('cpanel.css', JURI::base() . '../media/com_biblestudy/css/');
+        JHTML::stylesheet('media/com_biblestudy/css/cpanel.css');
         //get version information
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);

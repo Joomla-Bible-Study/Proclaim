@@ -57,9 +57,9 @@ $controller->redirect();
  * @since   1.7.0
  */
 function addCSS() {
-    JHTML::stylesheet('general.css', JURI::root() . 'media/com_biblestudy/css/');
-    JHTML::stylesheet('icons.css', JURI::root() . 'media/com_biblestudy/css/');
-    JHTML::stylesheet('biblestudy-core.css', JURI::root() . 'media/com_biblestudy/css/');
+    JHTML::stylesheet('media/com_biblestudy/css/general.css');
+    JHTML::stylesheet('media/com_biblestudy/css/icons.css');
+    JHTML::stylesheet('media/com_biblestudy/css/biblestudy-core.css');
 }
 
 /**
@@ -68,7 +68,7 @@ function addCSS() {
  * @since   7.0
  */
 function addJS() {
-    JHTML::script('jquery.js', JURI::root() . 'media/com_biblestudy/js/');
-    JHTML::script('noconflict.js', JURI::root() . 'media/com_biblestudy/js/');
-    JHTML::script('jquery-ui.js', JURI::root() . 'media/com_biblestudy/js/ui/');
+    JHTML::script('media/com_biblestudy/js/jquery.js');
+    JHTML::script('media/com_biblestudy/js/noconflict.js');
+    JHTML::script('media/com_biblestudy/js/ui/jquery-ui.js');
 }
