@@ -61,7 +61,12 @@ class JBSExport {
         if (!$table) {
             return false;
         }
-        @set_time_limit(300);
+        /**
+         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         */
+        if (!ini_get('safe_mode')) {
+            set_time_limit(300);
+        }
 
         $data = array();
         $export = '';
