@@ -27,14 +27,14 @@ class biblestudyViewInstall extends JView {
         $this->msg = JRequest::getVar('msg', '', 'post');
         $this->jbsname = JRequest::getVar('jbsname');
         $this->jbstype = JRequest::getVar('jbstype');
-        $install = $this->jbsname === NULL || $this->jbstype === NULL;
-        if ($install === true):
+
+        if ($this->jbsname === NULL || $this->jbstype === NULL):
             JError::raiseWarning(500, JText::_('JBS_ERR_WARNING_INSTALL'));
             JRequest::setVar('hidemainmenu', TRUE);
             return FALSE;
         endif;
 
-
+        // install systems
         $this->installscripts();
         $this->installsetup();
 
@@ -68,6 +68,12 @@ class biblestudyViewInstall extends JView {
         $document->setTitle(JText::sprintf('JBS_TITLE_INSTALL', $this->jbstype, $this->jbsname));
     }
 
+    /**
+     * Install Script PostFlight
+     * @param boolean $msg
+     * @return string
+     * @since 7.1.0
+     */
     protected function installscripts($msg = null) {
         //We need to check on the topics table. There were changes made between the migration component 1.08 and 1.011 that might differ so it is best to address here
         require_once(BIBLESTUDY_PATH_ADMIN_INSTALL . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update701.php');
@@ -104,6 +110,10 @@ class biblestudyViewInstall extends JView {
         return $msg;
     }
 
+    /**
+     * Setup Array for install System
+     * @since 7.1.0
+     */
     protected function installsetup() {
         $installation_queue = array(
             // modules => { (folder) => { (module) => { (position), (published) } }* }*

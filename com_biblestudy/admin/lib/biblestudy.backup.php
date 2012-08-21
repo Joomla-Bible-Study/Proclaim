@@ -70,7 +70,11 @@ class JBSExport {
         //Get the prefix
         $prefix = $db->getPrefix();
 
-        $export = "\n--\n-- Table structure for table `" . $table . "`\n--\n\n";
+        // Used for Checking file is from the correct version of biblestudy component
+        $export = "--\n--" . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
+
+        //Start of Tables
+        $export .= "--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
         $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
         //Create a new table defintion based on the incoming database

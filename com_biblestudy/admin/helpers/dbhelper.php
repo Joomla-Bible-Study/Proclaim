@@ -165,18 +165,22 @@ class jbsDBhelper {
      * @since 7.1.0
      */
     public static function getinstallstate() {
-        $db = JFactory::getDbo();
-        $db->setQuery('SELECT installstate FROM #__bsms_admin WHERE id = 1');
-        $db->query();
-        $results = $db->loadObject();
-        // Convert parameter fields to objects.
-        $registry = new JRegistry;
-        $registry->loadJSON($results->installstate);
-        if ($registry->get('jbsname')):
-            return $registry;
-        else:
-            return FALSE;
+        $result = FALSE;
+        $db = JFactory::getDBO();
+        $table = '#__bsms_admin';
+        $field = 'id';
+        if (jbsDBhelper::checkTables($table, $field) === TRUE):
+            $db->setQuery('SELECT installstate FROM #__bsms_admin WHERE id = 1');
+            $db->query();
+            $results = $db->loadObject();
+            // Convert parameter fields to objects.
+            $registry = new JRegistry;
+            $registry->loadJSON($results->installstate);
+            if ($registry->get('jbsname')):
+                $result = $registry;
+            endif;
         endif;
+        return $result;
     }
 
     /**

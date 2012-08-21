@@ -25,8 +25,12 @@ class JBSImport {
     public function importdb($perent) {
         $result = FALSE;
         jimport('joomla.filesystem.file');
-        // Attempt to increase the maximum execution time for php scripts
-        @set_time_limit(300);
+        /**
+         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         */
+        if (!ini_get('safe_mode')) {
+            set_time_limit(300);
+        }
         $installtype = JRequest::getString('install_directory', '', 'post');
         $backuprestore = JRequest::getString('backuprestore', '', 'post');
         if (substr_count($backuprestore, '.sql')) {
@@ -37,25 +41,25 @@ class JBSImport {
         }
         if (substr_count($installtype, 'sql')) {
             $uploadresults = JBSImport::_getPackageFromFolder();
-            if ($uploadresults) {
+            if ($uploadresults === TRUE) {
                 $result = true;
             }
         } else {
             $uploadresults = JBSImport::_getPackageFromUpload();
             $result = $uploadresults;
         }
-        if ($result == true) {
-            $result = JBSImport::installdb($uploadresults);
+        if ($result === true) {
+            $result = JBSImport::installdb($uploadresults, $perent);
             $userfile = JRequest::getVar('importdb', null, 'files', 'array');
             if (JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'])) {
-                @unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+                unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
             }
+            if ($perent !== TRUE || $result === TRUE):
+                require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+                $fix = new fixJBSAssets();
+                $fix->fixassets();
+            endif;
         }
-        if ($perent !== TRUE):
-            require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
-            $fix = new fixJBSAssets();
-            $fix->fixassets();
-        endif;
         return $result;
     }
 
@@ -94,7 +98,11 @@ class JBSImport {
 
         // Move uploaded file
         jimport('joomla.filesystem.file');
-        $uploaded = @move_uploaded_file($tmp_src, $tmp_dest);
+        if (JFile::exists($tmp_src)):
+            if (JFile::exists($tmp_dest)):
+                $uploaded = @move_uploaded_file($tmp_src, $tmp_dest);
+            endif;
+        endif;
 
         if ($uploaded) {
             return true;
@@ -106,19 +114,17 @@ class JBSImport {
     /**
      * Install DB
      * @param string $tmp_src Temp info
+     * @param boolean $parent To tell if coming from migration
      * @return boolean If db installed corectrly.
      */
-    protected static function installdb($tmp_src) {
-        //first we need to drop the existing JBS tables
-        $objects = JBSImport::getObjects();
-        foreach ($objects as $object) {
-            $db = JFactory::getDBO();
-            $query = 'DROP TABLE ' . $object['name'] . ';';
-            $db->setQuery($query);
-            $db->query();
-        }
+    protected static function installdb($tmp_src, $parent) {
         jimport('joomla.filesystem.file');
-        @set_time_limit(300);
+        /**
+         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         */
+        if (!ini_get('safe_mode')) {
+            set_time_limit(300);
+        }
         $error = '';
         $errors = array();
         $result = false;
@@ -126,16 +132,28 @@ class JBSImport {
         $db = JFactory::getDBO();
 
         $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
-        $query = str_replace('\n', ' ', $query);
+        //$query = str_replace('\n', ' ', $query);
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
+        $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
+        dump($iscernt, 'iscernt');
         if ($isold !== 0 && $isnot === 0) :
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DB'));
+            JError::raiseWarning('403', JText::_('JBS_ADM_OLD_DB'));
             return false;
         elseif ($isnot === 0):
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_NOT_DB'));
+            JError::raiseWarning('403', JText::_('JBS_ADM_NOT_DB'));
+            return false;
+        elseif ($iscernt === 0 || $parent === TRUE): // Way to check to see if file came from restor and is cerent.
+            JError::raiseWarning('403', JText::_('JBS_ADM_NOT_CURENT_DB'));
             return false;
         else:
+            //first we need to drop the existing JBS tables
+            $objects = JBSImport::getObjects();
+            foreach ($objects as $object) {
+                $dropquery = 'DROP TABLE ' . $object['name'] . ';';
+                $db->setQuery($dropquery);
+                $db->query();
+            }
             $db->setQuery($query);
             $db->queryBatch();
             if ($db->getErrorNum() != 0) {
@@ -154,24 +172,32 @@ class JBSImport {
     }
 
     /**
-     * Restor DB
+     * Restor DB for exesting Joomla Bible Study
      * @param string $backuprestore
      * @return boolean See if the restore worked.
      */
     public static function restoreDB($backuprestore) {
         $db = JFactory::getDBO();
-        @set_time_limit(300);
-        $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
-        $query = str_replace('\n', ' ', $query);
-
+        /**
+         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         */
+        if (!ini_get('safe_mode')) {
+            set_time_limit(300);
+        }
+        $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
+        //$query = str_replace('\n', ' ', $query);
         //Check to see if this is a backup from an old db and not a migration
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
+        $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
         if ($isold !== 0 && $isnot === 0) :
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_OLD_DB'));
+            JError::raiseWarning('403', JText::_('JBS_ADM_OLD_DB'));
             return false;
         elseif ($isnot === 0):
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_ADM_NOT_DB'));
+            JError::raiseWarning('403', JText::_('JBS_ADM_NOT_DB'));
+            return false;
+        elseif (!$iscernt):
+            JError::raiseWarning('403', JText::_('JBS_ADM_NOT_CURENT_DB'));
             return false;
         else:
             $queries = $db->splitSql($query);
@@ -205,7 +231,12 @@ class JBSImport {
 
         $db = JFactory::getDBO();
         $query = file_get_contents($p_dir);
-        @set_time_limit(300);
+        /**
+         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         */
+        if (!ini_get('safe_mode')) {
+            set_time_limit(300);
+        }
         $db->setQuery($query);
         $db->queryBatch();
         if ($db->getErrorNum() != 0) {
