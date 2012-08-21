@@ -237,11 +237,13 @@ class modBiblestudyHelper {
 
             $query->where($subquery);
         } else {
-            foreach ($filters AS $filter) {
-                if ($filter != -1) {
-                    $query->where('YEAR(study.studydate) = ' . (int) $filter, $condition);
+            if ($filters !== NULL):
+                foreach ($filters AS $filter) {
+                    if ($filter != -1) {
+                        $query->where('YEAR(study.studydate) = ' . (int) $filter, $condition);
+                    }
                 }
-            }
+            endif;
         }
         $query->where('study.published = 1');
         $query->order('studydate ' . $order);
