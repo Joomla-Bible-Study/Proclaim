@@ -72,7 +72,7 @@ switch ($this->params->get('link_comments', 0)) {
         $comment_access = $this->params->get('comment_access');
 
         if (in_array($show_comments, $groups)) {
-            $allow = 9;
+            $allow == 9;
         }
         if (in_array($comment_access, $groups)) {
             $allow = 10;
