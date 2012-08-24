@@ -48,10 +48,10 @@ class Com_BiblestudyInstallerScript {
         // Extract the version number from the manifest. This will overwrite the 1.0 value set above
         $this->release = $parent->get("manifest")->version;
 
-        // check to see if we are dealing with version 7.0.0 and create the update table if needed
+        // Start DB factory
         $db = JFactory::getDBO();
 
-        //Set the #__schemas version_id to the correct number so the update will occur
+        //Set the #__schemas version_id to the correct number so the update will occur if out of seqence.
         $query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
         $db->setQuery($query);
         $db->query();
@@ -70,33 +70,33 @@ class Com_BiblestudyInstallerScript {
         // @TODO Tom add test to see if podcastlanguage colum exests
         //$db->setQuery('ALTER TABLE `#__bsms_podcast` CHANGE `language` `podcastlanguage` VARCHAR( 10 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'en-us',');
         //
-        //
-        // First see if there is an update table
-        $tables = $db->getTableList();
-        $prefix = $db->getPrefix();
-        $updatetable = $prefix . 'bsms_update';
-        $updatefound = false;
-        $this->is700 = false;
-        foreach ($tables as $table) {
-            if ($table == $updatetable) {
-                $updatefound = true;
-            }
-        }
-        if (!$updatefound) {
-            //Do the query here to create the table. This will tell Joomla to update the db from this version on
-            $query = 'CREATE TABLE IF NOT EXISTS #__bsms_update (
-                              id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-                              version VARCHAR(255) DEFAULT NULL,
-                              PRIMARY KEY (id)
-                            ) DEFAULT CHARSET=utf8';
-            $db->setQuery($query);
-            $db->query();
-            $query = "INSERT INTO #__bsms_update (id,version) VALUES(1,'7.0.0')";
-            $db->setQuery($query);
-            $db->query();
-
-            $this->is700 = true;
-        }
+        // FIXME do not like how this is being don dos not work if you are doing a fresh install?? may not even be needed.
+//        // First see if there is an update table
+//        $tables = $db->getTableList();
+//        $prefix = $db->getPrefix();
+//        $updatetable = $prefix . 'bsms_update';
+//        $updatefound = false;
+//        $this->is700 = false;
+//        foreach ($tables as $table) {
+//            if ($table == $updatetable) {
+//                $updatefound = true;
+//            }
+//        }
+//        if (!$updatefound) {
+//            //Do the query here to create the table. This will tell Joomla to update the db from this version on
+//            $query = 'CREATE TABLE IF NOT EXISTS #__bsms_update (
+//                              id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+//                              version VARCHAR(255) DEFAULT NULL,
+//                              PRIMARY KEY (id)
+//                            ) DEFAULT CHARSET=utf8';
+//            $db->setQuery($query);
+//            $db->query();
+//            $query = "INSERT INTO #__bsms_update (id,version) VALUES(1,'7.0.0')";
+//            $db->setQuery($query);
+//            $db->query();
+//
+//            $this->is700 = true;
+//        }
 
 
         // Find mimimum required joomla version
@@ -109,6 +109,13 @@ class Com_BiblestudyInstallerScript {
 
         // abort if the component being installed is not newer than the currently installed version
         if ($type == 'update') {
+            $oldRelease = $this->getParam('version');
+            $rel = $oldRelease . ' to ' . $this->release;
+            if (version_compare($this->release, $oldRelease, 'le')) {
+                Jerror::raiseWarning(null, 'Incorrect version sequence. Cannot upgrade ' . $rel);
+                return false;
+            }
+        } else {
             $rel = $this->release;
         }
     }
