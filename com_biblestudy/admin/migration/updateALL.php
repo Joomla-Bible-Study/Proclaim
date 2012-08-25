@@ -19,7 +19,7 @@ class updatejbsALL {
 
     /**
      * Funtion to do updates
-     *
+     * @todo add db lookup for seqencual files.
      * @return array
      */
     function doALLupdate() {
@@ -29,36 +29,103 @@ class updatejbsALL {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
         $path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'mysql';
-        $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX');
-        $excludefilter = array('^\..*', '.*~');
-        $files = JFolder::files($path, '', '', 'false', $exclude, $excludefilter);
+
+        $files = str_replace('.sql', '', JFolder::files($path, '\.sql$'));
+        usort($files, 'version_compare');
+
+        /* Finde Extension ID of component */
+        $query = $db->getQuery(true);
+        $query->select('extension_id')
+                ->from('#__extensions')
+                ->where('`name` = "com_biblestudy"');
+        $db->setQuery($query);
+        $eid = $db->loadResult();
+
+        /* Find Last updated Version in Update table */
+        $query = $db->getQuery(true);
+        $query->select('version')
+                ->from('#__bsms_update');
+        $db->setQuery($query);
+        $updates = $db->loadResultArray();
+        $update = end($updates);
+        $results[] = $this->setSchemaVersion($update, $eid);
         foreach ($files as $i => $value) {
-            if (!substr_count($value, '.sql')) {
+            if (version_compare($value, $update) <= 0) {
                 unset($files[$i]);
-            } elseif (substr_count($value, '7.0.0')) {
-                //unset($files[$i]);
-            } elseif (substr_count($value, '7.0.1')) {
-                unset($files[$i]);
-            } elseif (substr_count($value, '7.0.1.1')) {
-                //unset($files[$i]);
-            } elseif (substr_count($value, BIBLESTUDY_VERSION)) {
-                unset($files[$i]);
+            } elseif ($files) {
+                // Get file contents
+                $buffer = file_get_contents($path . '/' . $value . '.sql');
+
+                // Graceful exit and rollback if read not successful
+                if ($buffer === false) {
+                    JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
+
+                    return false;
+                }
+
+                // Create an array of queries from the sql file
+                $queries = $db->splitSql($buffer);
+
+
+                if (count($queries) == 0) {
+                    // No queries to process
+                    return 0;
+                }// Process each query in the $queries array (split out of sql file).
+                foreach ($queries as $query) {
+                    $query = trim($query);
+
+                    if ($query != '' && $query{0} != '#') {
+                        $db->setQuery($query);
+
+                        if (!$db->execute()) {
+                            JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
+
+                            return false;
+                        }
+                    }
+                }
             } else {
-                $query = file_get_contents($value);
-                $db->setQuery($query);
-                $db->queryBatch();
-                if ($db->getErrorNum() != 0) :
-                    $results = JText::_('JBS_IBM_DB_ERROR') . ': ' . $db->getErrorNum() . "<br /><font color=\"red\">";
-                    $results .= $db->stderr(true);
-                    $results .= "</font>";
-                    $messages[] = $results;
-                    JError::raiseWarning('SOME_ERROR_CODE', $db->stderr(true));
-                endif;
+                JError::raiseWarning(1, JText::_('JBS_INS_NO_UPDATE_SQL_FILES'));
+
+                return false;
             }
         }
+        return TRUE;
+    }
 
-        $result = array('build' => 'ALL', 'messages' => $messages);
-        return $result;
+    /**
+     * Set the schema version for an extension by looking at its latest update
+     *
+     * @param   SimpleXMLElement  $schema  Schema Tag
+     * @param   integer           $eid     Extension ID
+     *
+     * @return  void
+     *
+     * @since   11.1
+     */
+    public function setSchemaVersion($version, $eid) {
+        if ($version && $eid) {
+            $db = JFactory::getDBO();
+            // Update the database
+            $query = $db->getQuery(true);
+            $query->delete()
+                    ->from('#__schemas')
+                    ->where('extension_id = ' . $eid);
+            $db->setQuery($query);
+
+            if ($db->execute()) {
+                $query->clear();
+                $query->insert($db->quoteName('#__schemas'));
+                $query->columns(array($db->quoteName('extension_id'), $db->quoteName('version_id')));
+                $query->values($eid . ', ' . $db->quote($version));
+                $db->setQuery($query);
+                $db->execute();
+                return TRUE;
+            } else {
+                return 'Could not locate extension id in schemas table';
+            }
+        }
+        return 'No Version and eid';
     }
 
 }
