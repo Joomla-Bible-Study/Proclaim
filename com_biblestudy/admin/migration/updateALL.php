@@ -41,6 +41,8 @@ class updatejbsALL {
                 unset($files[$i]);
             } elseif (substr_count($value, '7.0.1.1')) {
                 //unset($files[$i]);
+            } elseif (substr_count($value, BIBLESTUDY_VERSION)) {
+                unset($files[$i]);
             } else {
                 $query = file_get_contents($value);
                 $db->setQuery($query);
