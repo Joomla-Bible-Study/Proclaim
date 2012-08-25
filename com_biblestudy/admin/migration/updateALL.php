@@ -19,12 +19,11 @@ class updatejbsALL {
 
     /**
      * Funtion to do updates
-     * @todo add db lookup for seqencual files.
+     *
      * @return array
+     * @since 7.0.4
      */
     function doALLupdate() {
-        $messages = array();
-        $results = array();
         $db = JFactory::getDBO();
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
@@ -48,7 +47,7 @@ class updatejbsALL {
         $db->setQuery($query);
         $updates = $db->loadResultArray();
         $update = end($updates);
-        $results[] = $this->setSchemaVersion($update, $eid);
+        $this->setSchemaVersion($update, $eid);
         foreach ($files as $i => $value) {
             if (version_compare($value, $update) <= 0) {
                 unset($files[$i]);
@@ -96,12 +95,12 @@ class updatejbsALL {
     /**
      * Set the schema version for an extension by looking at its latest update
      *
-     * @param   SimpleXMLElement  $schema  Schema Tag
+     * @param   string            $version  Version number
      * @param   integer           $eid     Extension ID
      *
      * @return  void
      *
-     * @since   11.1
+     * @since   7.1.0
      */
     public function setSchemaVersion($version, $eid) {
         if ($version && $eid) {

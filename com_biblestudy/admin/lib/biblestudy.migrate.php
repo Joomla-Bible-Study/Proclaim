@@ -34,12 +34,21 @@ class JBSMigrate {
         $currentversion = false;
         $oldversion = false;
         $jbsexists = false;
+        // check to see if version is newer the 7.0.2
+        foreach ($tables as $table) {
+            $studies = $prefix . 'bsms_update';
+            $currentversionexists = substr_count($table, $studies);
+            if ($currentversionexists > 0) {
+                $currentversion = true;
+                $versiontype = 1;
+            }
+        }
         foreach ($tables as $table) {
             $studies = $prefix . 'bsms_version';
             $currentversionexists = substr_count($table, $studies);
             if ($currentversionexists > 0) {
                 $currentversion = true;
-                $versiontype = 1;
+                $versiontype = 2;
             }
         }
         //Only move forward if a current version type is not found
@@ -52,7 +61,7 @@ class JBSMigrate {
                 if ($oldversionexists > 0) {
                     $oldversion = true;
                     $olderversiontype = 1;
-                    $versiontype = 2;
+                    $versiontype = 3;
                 }
             }
             if (!$oldversion) {
@@ -62,7 +71,7 @@ class JBSMigrate {
                     if ($olderversionexists > 0) {
                         $oldversion = true;
                         $olderversiontype = 2;
-                        $versiontype = 2;
+                        $versiontype = 3;
                     }
                 }
             }
@@ -73,10 +82,10 @@ class JBSMigrate {
                 $studies = $prefix . 'bsms_studies';
                 $jbsexists = substr_count($table, $studies);
                 if (!$jbsexists) {
-                    $versiontype = 4;
+                    $versiontype = 5;
                 }
                 if ($jbsexists > 0) {
-                    $versiontype = 3;
+                    $versiontype = 4;
                 }
             }
         }
@@ -110,8 +119,34 @@ class JBSMigrate {
             }
         }
         //Now we run a switch case on the versiontype and run an install routine accordingly
+        // @todo need to rewright this like we do the sql update on allupdate.php but for now will work it this way.
         switch ($versiontype) {
             case 1:
+                /* Find Last updated Version in Update table */
+                $query = $db->getQuery(true);
+                $query->select('*')
+                        ->from('#__bsms_update');
+                $db->setQuery($query);
+                $updates = $db->loadObject();
+                switch ($updates->version):
+                    case '7.0.1':
+                        $message[] = $this->allupdate();
+                        $message[] = $this->update710();
+                        break;
+                    case '7.0.2':
+                        $message[] = $this->allupdate();
+                        $message[] = $this->update710();
+                        break;
+                    case '7.0.3':
+                        $message[] = $this->allupdate();
+                        $message[] = $this->update710();
+                        break;
+                    case '7.0.4':
+                        $message[] = $this->allupdate();
+                        $message[] = $this->update710();
+                        break;
+                endswitch;
+            case 2:
                 //This is a current database version so we check to see which version. We query to get the highest build in the version table
                 $query = 'SELECT * FROM #__bsms_version ORDER BY `build` DESC';
                 $db->setQuery($query);
@@ -174,7 +209,7 @@ class JBSMigrate {
 
                 break;
 
-            case 2:
+            case 3:
                 //This is an older version of the software so we check it's version
                 if ($olderversiontype == 1) {
                     $db->setQuery("SELECT schemaVersion  FROM #__bsms_schemaVersion");
@@ -226,7 +261,7 @@ class JBSMigrate {
                 }
                 break;
 
-            case 3:
+            case 4:
                 //There is a version installed, but it is older than 6.0.8 and we can't upgrade it
                 JError::raiseNotice('SOME_ERROR_CODE', 'JBS_IBM_VERSION_TOO_OLD');
                 return false;
