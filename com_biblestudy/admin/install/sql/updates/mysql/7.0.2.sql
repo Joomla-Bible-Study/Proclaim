@@ -175,6 +175,7 @@ ALTER TABLE `#__bsms_studytopics` ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- Teachers
 --

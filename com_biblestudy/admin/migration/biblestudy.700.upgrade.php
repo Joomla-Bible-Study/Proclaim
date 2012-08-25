@@ -176,8 +176,7 @@ class jbs700Install {
         $table = '#__bsms_mimetype';
         $messages[] = $this->addAssetColumn($table);
 
-        $table = '#__bsms_order';
-        $messages[] = $this->addAssetColumn($table);
+        // was not in 7.0.2 will be added in sql 7.1.0.sql under allupdate.php (#__bsms_order)
 
         $table = '#__bsms_podcast';
         $messages[] = $this->addAssetColumn($table);

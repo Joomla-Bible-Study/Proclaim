@@ -76,7 +76,6 @@ ALTER TABLE `#__bsms_servers` ADD COLUMN `ftppassword` varchar(250) NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `ftpport` varchar(10) NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_key` varchar(100) NOT NULL;
 ALTER TABLE `#__bsms_servers` ADD COLUMN `aws_secret` varchar(100) NOT NULL;
-ALTER TABLE `#__bsms_servers` ADD COLUMN `server_type` char(5) NOT NULL DEFAULT 'local';
 
 ALTER TABLE `#__bsms_podcast` ADD COLUMN `podcast_image_subscribe` VARCHAR(150) COMMENT 'The image to use for the podcast subscription image';
 ALTER TABLE `#__bsms_podcast` ADD COLUMN `podcast_subscribe_desc` VARCHAR(150) COMMENT 'Words to go below podcast subscribe image';
@@ -102,8 +101,8 @@ ALTER TABLE `#__bsms_message_type` ADD COLUMN `landing_show` INT(3) DEFAULT NULL
 ALTER TABLE `#__bsms_series` ADD COLUMN `landing_show` INT(3) DEFAULT NULL;
 ALTER TABLE `#__bsms_locations` ADD COLUMN `landing_show` INT(3) DEFAULT NULL;
 
-ALTER TABLE `#__bsms_order`ADD INDEX `idx_access` (`access`);
+ALTER TABLE `#__bsms_order` ADD COLUMN `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.';
 
--- removed bad index that came from 6.2.4
-ALTER TABLE `#__bsms_studytopics` DROP INDEX id;
-ALTER TABLE `#__bsms_studytopics` DROP INDEX id_2;
+ALTER TABLE `#__bsms_order` ADD COLUMN `access` int(10) unsigned NOT NULL DEFAULT '0';
+
+ALTER TABLE `#__bsms_order` ADD INDEX `idx_access` (`access`);
