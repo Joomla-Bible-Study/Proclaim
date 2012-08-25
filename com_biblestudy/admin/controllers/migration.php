@@ -145,6 +145,7 @@ class BiblestudyControllerMigration extends JController {
         } else {
             $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration . '');
         }
+        $msg = JRequest::getVar('jbsmessages', '1' , 'get');
         $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
     }
 

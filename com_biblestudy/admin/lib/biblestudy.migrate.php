@@ -21,8 +21,6 @@ class JBSMigrate {
      * @return boolean
      */
     function migrate() {
-        //$result = false;
-        //$msg2 = '';
         $message = array();
         $application = JFactory::getApplication();
         $db = JFactory::getDBO();
@@ -236,7 +234,7 @@ class JBSMigrate {
         }
         $jbsmessages = $message;
         JRequest::setVar('jbsmessages', $jbsmessages, 'get', 'array');
-        return true;
+        return $jbsmessages;
     }
 
     /**

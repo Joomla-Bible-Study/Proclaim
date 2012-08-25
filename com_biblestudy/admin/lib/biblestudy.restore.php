@@ -99,7 +99,7 @@ class JBSImport {
         // Move uploaded file
         jimport('joomla.filesystem.file');
         if (JFile::exists($tmp_src)):
-            if (JFile::exists($tmp_dest)):
+            if (!JFile::exists($tmp_dest)):
                 $uploaded = @move_uploaded_file($tmp_src, $tmp_dest);
             endif;
         endif;
@@ -136,14 +136,13 @@ class JBSImport {
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_admin');
         $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
-        dump($iscernt, 'iscernt');
         if ($isold !== 0 && $isnot === 0) :
             JError::raiseWarning('403', JText::_('JBS_ADM_OLD_DB'));
             return false;
         elseif ($isnot === 0):
             JError::raiseWarning('403', JText::_('JBS_ADM_NOT_DB'));
             return false;
-        elseif ($iscernt === 0 || $parent === TRUE): // Way to check to see if file came from restor and is cerent.
+        elseif ($iscernt === 0 && $parent !== TRUE): // Way to check to see if file came from restor and is cerent.
             JError::raiseWarning('403', JText::_('JBS_ADM_NOT_CURENT_DB'));
             return false;
         else:
