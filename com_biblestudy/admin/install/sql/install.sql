@@ -1,14 +1,14 @@
-DROP TABLE IF EXISTS `r9s7a_bsms_install`;
+DROP TABLE IF EXISTS `#__bsms_install`;
 
-DROP TABLE IF EXISTS `r9s7a_bsms_update`;
+DROP TABLE IF EXISTS `#__bsms_update`;
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_update` (
+CREATE TABLE IF NOT EXISTS `#__bsms_update` (
   id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   version VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8;
 
-INSERT INTO `r9s7a_bsms_update` (id,version) VALUES
+INSERT INTO `#__bsms_update` (id,version) VALUES
 (1,'7.0.0'),
 (2,'7.0.1'),
 (3,'7.0.1.1'),
@@ -20,14 +20,14 @@ INSERT INTO `r9s7a_bsms_update` (id,version) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_admin`
+-- Table structure for table `#__bsms_admin`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_admin` (
+CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `drop_tables` int(3) DEFAULT '0',
   `params` text,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `installstate` text,
   PRIMARY KEY (`id`),
@@ -37,10 +37,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_admin` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_books`
+-- Table structure for table `#__bsms_books`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_books` (
+CREATE TABLE IF NOT EXISTS `#__bsms_books` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `bookname` varchar(250) DEFAULT NULL,
   `booknumber` int(5) DEFAULT NULL,
@@ -52,10 +52,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_books` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_comments`
+-- Table structure for table `#__bsms_comments`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_comments` (
+CREATE TABLE IF NOT EXISTS `#__bsms_comments` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `published` tinyint(3) NOT NULL DEFAULT '0',
   `study_id` int(11) NOT NULL DEFAULT '0',
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_comments` (
   `user_email` varchar(100) NOT NULL DEFAULT '',
   `comment_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `comment_text` text NOT NULL,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL COMMENT 'The language code for the Comments.',
   PRIMARY KEY (`id`),
@@ -75,15 +75,15 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_comments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_folders`
+-- Table structure for table `#__bsms_folders`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_folders` (
+CREATE TABLE IF NOT EXISTS `#__bsms_folders` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `foldername` varchar(250) NOT NULL DEFAULT '',
   `folderpath` varchar(250) NOT NULL DEFAULT '',
   `published` tinyint(3) NOT NULL DEFAULT '1',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
@@ -93,10 +93,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_folders` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_locations`
+-- Table structure for table `#__bsms_locations`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_locations` (
+CREATE TABLE IF NOT EXISTS `#__bsms_locations` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `location_text` varchar(250) DEFAULT NULL,
   `published` tinyint(3) NOT NULL DEFAULT '1',
@@ -112,10 +112,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_locations` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_media`
+-- Table structure for table `#__bsms_media`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_media` (
+CREATE TABLE IF NOT EXISTS `#__bsms_media` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `media_text` text,
   `media_image_name` varchar(250) NOT NULL DEFAULT '',
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_media` (
   `path2` varchar(150) NOT NULL,
   `media_alttext` varchar(250) NOT NULL DEFAULT '',
   `published` tinyint(3) NOT NULL DEFAULT '1',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -134,10 +134,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_media` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_mediafiles`
+-- Table structure for table `#__bsms_mediafiles`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_mediafiles` (
+CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `study_id` int(5) DEFAULT NULL,
   `media_image` int(3) DEFAULT NULL,
@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_mediafiles` (
   `params` text,
   `player` int(2) DEFAULT NULL,
   `popup` int(2) DEFAULT NULL,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL COMMENT 'The language code for the MediaFile.',
   `created_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
@@ -180,15 +180,15 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_mediafiles` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_message_type`
+-- Table structure for table `#__bsms_message_type`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_message_type` (
+CREATE TABLE IF NOT EXISTS `#__bsms_message_type` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `message_type` text NOT NULL,
   `alias` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
   `published` tinyint(3) NOT NULL DEFAULT '1',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `landing_show` int(3),
@@ -200,15 +200,15 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_message_type` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_mimetype`
+-- Table structure for table `#__bsms_mimetype`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_mimetype` (
+CREATE TABLE IF NOT EXISTS `#__bsms_mimetype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `mimetype` varchar(50) DEFAULT NULL,
   `mimetext` varchar(50) DEFAULT NULL,
   `published` tinyint(3) NOT NULL DEFAULT '1',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -219,14 +219,14 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_mimetype` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_order`
+-- Table structure for table `#__bsms_order`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_order` (
+CREATE TABLE IF NOT EXISTS `#__bsms_order` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `value` varchar(15) DEFAULT '',
   `text` varchar(50) DEFAULT '',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_access` (`access`)
@@ -235,10 +235,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_order` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_podcast`
+-- Table structure for table `#__bsms_podcast`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_podcast` (
+CREATE TABLE IF NOT EXISTS `#__bsms_podcast` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `website` varchar(100) DEFAULT NULL,
@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_podcast` (
   `episodetitle` int(11) DEFAULT NULL,
   `custom` varchar(200) DEFAULT NULL,
   `detailstemplateid` int(11) DEFAULT NULL,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `alternatelink` varchar(300) COMMENT 'replaces podcast file link on subscription',
   `alternateimage` varchar(150) COMMENT 'alternate image path for podcast',
@@ -274,10 +274,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_podcast` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_search`
+-- Table structure for table `#__bsms_search`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_search` (
+CREATE TABLE IF NOT EXISTS `#__bsms_search` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `value` varchar(15) DEFAULT '',
   `text` varchar(15) DEFAULT '',
@@ -287,10 +287,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_search` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_series`
+-- Table structure for table `#__bsms_series`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_series` (
+CREATE TABLE IF NOT EXISTS `#__bsms_series` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `series_text` text,
   `alias` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
@@ -298,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_series` (
   `description` text,
   `series_thumbnail` varchar(150) DEFAULT NULL,
   `published` tinyint(3) NOT NULL DEFAULT '1',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL COMMENT 'The language code for the Series.',
@@ -311,10 +311,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_series` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_servers`
+-- Table structure for table `#__bsms_servers`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_servers` (
+CREATE TABLE IF NOT EXISTS `#__bsms_servers` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `server_name` varchar(250) NOT NULL DEFAULT '',
   `server_path` varchar(250) NOT NULL DEFAULT '',
@@ -322,7 +322,7 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_servers` (
   `server_type` char(5) NOT NULL DEFAULT 'local',
   `ftp_username` char(255) NOT NULL,
   `ftp_password` char(255) NOT NULL,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(3) NOT NULL,
   `ftphost` varchar(100) NOT NULL,
@@ -339,15 +339,15 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_servers` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_share`
+-- Table structure for table `#__bsms_share`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_share` (
+CREATE TABLE IF NOT EXISTS `#__bsms_share` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(250) DEFAULT NULL,
   `params` text,
   `published` tinyint(3) NOT NULL DEFAULT '1',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -358,10 +358,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_share` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_studies`
+-- Table structure for table `#__bsms_studies`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_studies` (
+CREATE TABLE IF NOT EXISTS `#__bsms_studies` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `studydate` datetime DEFAULT NULL,
   `teacher_id` int(11) DEFAULT '1',
@@ -405,7 +405,7 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_studies` (
   `thumbwm` int(11) DEFAULT NULL,
   `params` text,
   `published` tinyint(3) NOT NULL DEFAULT '0',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL COMMENT 'The language code for the Studies.',
@@ -420,14 +420,14 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_studies` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_studytopics`
+-- Table structure for table `#__bsms_studytopics`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_studytopics` (
+CREATE TABLE IF NOT EXISTS `#__bsms_studytopics` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `study_id` int(3) NOT NULL DEFAULT '0',
   `topic_id` int(3) NOT NULL DEFAULT '0',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_access` (`access`),
@@ -438,15 +438,15 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_studytopics` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_styles`
+-- Table structure for table `#__bsms_styles`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_styles` (
+CREATE TABLE IF NOT EXISTS `#__bsms_styles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `filename` text NOT NULL,
   `stylecode` longtext NOT NULL,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`)
 ) DEFAULT CHARSET=utf8;
@@ -454,10 +454,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_styles` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_teachers`
+-- Table structure for table `#__bsms_teachers`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_teachers` (
+CREATE TABLE IF NOT EXISTS `#__bsms_teachers` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `teacher_image` text,
   `teacher_thumbnail` text,
@@ -479,7 +479,7 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_teachers` (
   `catid` int(3) DEFAULT '1',
   `list_show` tinyint(1) NOT NULL DEFAULT '1',
   `published` tinyint(3) NOT NULL DEFAULT '0',
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL COMMENT 'The language code for the Teachers.',
   `facebooklink` varchar(150),
@@ -503,15 +503,15 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_teachers` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_templatecode`
+-- Table structure for table `#__bsms_templatecode`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_templatecode` (
+CREATE TABLE IF NOT EXISTS `#__bsms_templatecode` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `type` tinyint(3) NOT NULL,
   `filename` text NOT NULL,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `templatecode` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
@@ -519,10 +519,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_templatecode` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_templates`
+-- Table structure for table `#__bsms_templates`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_templates` (
+CREATE TABLE IF NOT EXISTS `#__bsms_templates` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `type` varchar(255) NOT NULL,
   `tmpl` longtext NOT NULL,
@@ -531,7 +531,7 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_templates` (
   `title` text,
   `text` text,
   `pdf` text,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
@@ -541,10 +541,10 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_templates` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_timeset`
+-- Table structure for table `#__bsms_timeset`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_timeset` (
+CREATE TABLE IF NOT EXISTS `#__bsms_timeset` (
   `timeset` varchar(14) NOT NULL DEFAULT '',
   `backup` varchar(14) DEFAULT NULL,
   PRIMARY KEY (`timeset`)
@@ -553,15 +553,15 @@ CREATE TABLE IF NOT EXISTS `r9s7a_bsms_timeset` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `r9s7a_bsms_topics`
+-- Table structure for table `#__bsms_topics`
 --
 
-CREATE TABLE IF NOT EXISTS `r9s7a_bsms_topics` (
+CREATE TABLE IF NOT EXISTS `#__bsms_topics` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `topic_text` text,
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `params` varchar(511) DEFAULT NULL,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the r9s7a_assets table.',
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_state` (`published`),
