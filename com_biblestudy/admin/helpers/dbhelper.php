@@ -168,7 +168,7 @@ class jbsDBhelper {
         $result = FALSE;
         $db = JFactory::getDBO();
         $table = '#__bsms_admin';
-        $field = 'installstate';
+        $field = 'id';
         if (jbsDBhelper::checkTables($table, $field) === TRUE):
             $db->setQuery('SELECT installstate FROM #__bsms_admin WHERE id = 1');
             $db->query();
