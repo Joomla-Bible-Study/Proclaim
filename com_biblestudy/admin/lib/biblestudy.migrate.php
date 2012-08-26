@@ -41,7 +41,10 @@ class JBSMigrate {
             if ($currentversionexists > 0) {
                 $currentversion = true;
                 $versiontype = 1;
-            } else {
+            }
+        }
+        if ($versiontype !== 1):
+            foreach ($tables as $table) {
                 $studies = $prefix . 'bsms_version';
                 $currentversionexists = substr_count($table, $studies);
                 if ($currentversionexists > 0) {
@@ -49,7 +52,7 @@ class JBSMigrate {
                     $versiontype = 2;
                 }
             }
-        }
+        endif;
         //Only move forward if a current version type is not found
         if (!$currentversion) {
             //Now let's check to see if there is an older database type (prior to 6.2)
@@ -121,14 +124,19 @@ class JBSMigrate {
         // @todo need to rewright this like we do the sql update on allupdate.php but for now will work it this way.
         switch ($versiontype) {
             case 1:
+                JBSMigrate::corectversions();
                 /* Find Last updated Version in Update table */
-                $query = $db->getQuery(true);
-                $query->select('*')
-                        ->from('#__bsms_update');
+                $query = 'SELECT * FROM #__bsms_update ORDER BY `version` DESC';
                 $db->setQuery($query);
                 $updates = $db->loadObject();
-                switch (end($updates->version)):
+                $version = $updates->version;
+                dump($version, 'Version');
+                switch ($version):
                     case '7.0.1':
+                        $message[] = $this->allupdate();
+                        $message[] = $this->update710();
+                        break;
+                    case '7.0.1.1':
                         $message[] = $this->allupdate();
                         $message[] = $this->update710();
                         break;
@@ -377,6 +385,31 @@ class JBSMigrate {
         $install = new updatejbsALL();
         $message = $install->doALLupdate();
         return $message;
+    }
+
+    /**
+     * Correct problem in are update table under 7.0.2 systems
+     */
+    static function corectversions() {
+        $db = JFactory::getDBO();
+        /* Find Last updated Version in Update table */
+        $query = 'SELECT * FROM #__bsms_update';
+        $db->setQuery($query);
+        $updates = $db->loadObjectlist();
+        foreach ($updates AS $value):
+            /* Check to see if Bad version is in key 3 */
+            if (($value->id === '3') && ($value->version !== '7.0.1.1')):
+                /* Find Last updated Version in Update table */
+                $query = "INSERT INTO `#__bsms_update` (id,version) VALUES (3,'7.0.1.1')
+                            ON DUPLICATE KEY UPDATE version= '7.0.1.1';
+                            ";
+                $db->setQuery($query);
+                $db->execute();
+                $query = "INSERT INTO `#__bsms_update` (id,version) VALUES (4,'7.0.2') ON DUPLICATE KEY UPDATE version= '7.0.2';";
+                $db->setQuery($query);
+                $db->execute();
+            endif;
+        endforeach;
     }
 
 }
