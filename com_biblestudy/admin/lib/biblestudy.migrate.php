@@ -34,21 +34,20 @@ class JBSMigrate {
         $currentversion = false;
         $oldversion = false;
         $jbsexists = false;
-        // check to see if version is newer the 7.0.2
+        // check to see if version is newer then 7.0.2
         foreach ($tables as $table) {
             $studies = $prefix . 'bsms_update';
             $currentversionexists = substr_count($table, $studies);
             if ($currentversionexists > 0) {
                 $currentversion = true;
                 $versiontype = 1;
-            }
-        }
-        foreach ($tables as $table) {
-            $studies = $prefix . 'bsms_version';
-            $currentversionexists = substr_count($table, $studies);
-            if ($currentversionexists > 0) {
-                $currentversion = true;
-                $versiontype = 2;
+            } else {
+                $studies = $prefix . 'bsms_version';
+                $currentversionexists = substr_count($table, $studies);
+                if ($currentversionexists > 0) {
+                    $currentversion = true;
+                    $versiontype = 2;
+                }
             }
         }
         //Only move forward if a current version type is not found
@@ -104,7 +103,7 @@ class JBSMigrate {
                       PRIMARY KEY (`id`)
                     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ";
                 $db->setQuery($query);
-                $db->query();
+                $db->execute();
             }
             $update = $prefix . 'bsms_update';
             $jbsexists2 = substr_count($table, $update);
@@ -115,7 +114,7 @@ class JBSMigrate {
                         PRIMARY KEY (id)
                         ) DEFAULT CHARSET=utf8";
                 $db->setQuery($query);
-                $db->query();
+                $db->execute();
             }
         }
         //Now we run a switch case on the versiontype and run an install routine accordingly
@@ -128,7 +127,7 @@ class JBSMigrate {
                         ->from('#__bsms_update');
                 $db->setQuery($query);
                 $updates = $db->loadObject();
-                switch ($updates->version):
+                switch (end($updates->version)):
                     case '7.0.1':
                         $message[] = $this->allupdate();
                         $message[] = $this->update710();
@@ -146,6 +145,7 @@ class JBSMigrate {
                         $message[] = $this->update710();
                         break;
                 endswitch;
+                break;
             case 2:
                 //This is a current database version so we check to see which version. We query to get the highest build in the version table
                 $query = 'SELECT * FROM #__bsms_version ORDER BY `build` DESC';

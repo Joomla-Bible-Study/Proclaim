@@ -54,11 +54,11 @@ class JBSImport {
             if (JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'])) {
                 unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
             }
-            if ($perent !== TRUE || $result === TRUE):
-                require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
-                $fix = new fixJBSAssets();
-                $fix->fixassets();
-            endif;
+//            if ($perent !== TRUE || $result === TRUE):
+//                require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+//                $fix = new fixJBSAssets();
+//                $fix->fixassets();
+//            endif;
         }
         return $result;
     }
@@ -151,7 +151,7 @@ class JBSImport {
             foreach ($objects as $object) {
                 $dropquery = 'DROP TABLE ' . $object['name'] . ';';
                 $db->setQuery($dropquery);
-                $db->query();
+                $db->execute();
             }
             $db->setQuery($query);
             $db->queryBatch();

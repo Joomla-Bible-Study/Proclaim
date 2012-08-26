@@ -111,7 +111,7 @@ class updatejbs701 {
         $db = JFactory::getDBO();
         $results = false;
         $db->setQuery($query);
-        $db->query();
+        $db->execute();
         if ($db->getErrorNum() != 0) {
             $results = JText::_('JBS_IBM_DB_ERROR') . ': ' . $db->getErrorNum() . "<br /><font color=\"red\">";
             $results .= $db->stderr(true);

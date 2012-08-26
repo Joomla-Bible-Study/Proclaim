@@ -84,7 +84,8 @@ class BiblestudyControllerMigration extends JController {
     public function import() {
         $application = JFactory::getApplication();
         $import = new JBSImport();
-        $result = $import->importdb($parent = FALSE);
+        $parent = FALSE;
+        $result = $import->importdb($parent);
         if ($result === true) {
             $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
         } elseif ($result === false) {
@@ -104,10 +105,10 @@ class BiblestudyControllerMigration extends JController {
      */
     public function doimport($parent, $cachable = false, $urlparams = false) {
         $copysuccess = false;
-        if (!$parent === FALSE):
+        if ($parent !== FALSE):
             $parent = TRUE;
         endif;
-
+        var_dump($parent);
         //This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
         $application = JFactory::getApplication();
         JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
@@ -131,10 +132,6 @@ class BiblestudyControllerMigration extends JController {
             $result = $import->importdb($parent);
         }
         if ($result || $copysuccess) {
-            //We need to drop the update table first as it will be added back later
-            $db = JFactory::getDBO();
-            $db->setQuery('DROP TABLE IF EXISTS `#__bsms_update`');
-            $db->query();
             $migrate = new JBSMigrate();
             $migration = $migrate->migrate();
             //Final step is to fix assets
