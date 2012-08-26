@@ -108,7 +108,6 @@ class BiblestudyControllerMigration extends JController {
         if ($parent !== FALSE):
             $parent = TRUE;
         endif;
-        var_dump($parent);
         //This should be where the form admin/form_migrate comes to with either the file select box or the tmp folder input field
         $application = JFactory::getApplication();
         JRequest::setVar('view', JRequest::getCmd('view', 'admin'));
