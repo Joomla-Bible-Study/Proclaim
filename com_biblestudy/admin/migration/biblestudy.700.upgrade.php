@@ -376,7 +376,7 @@ class jbs700Install {
             $messages[] = $msg;
         }
 
-//Fix studies params
+        //Fix studies params
         $query = "SELECT `id`, `params` FROM #__bsms_studies";
         $db->setQuery($query);
         $db->query();
@@ -398,7 +398,7 @@ class jbs700Install {
             }
         }
 
-//Fix topics text
+        //Fix topics text
         $query = "SELECT `id`, `topic_text` FROM #__bsms_topics";
         $db->setQuery($query);
         $db->query();
@@ -415,7 +415,7 @@ class jbs700Install {
             }
         }
 
-//Fix share params
+        //Fix share params
         $query = "SELECT `id`, `params` FROM #__bsms_share";
         $db->setQuery($query);
         $db->query();
@@ -438,7 +438,7 @@ class jbs700Install {
         }
 
 
-//Fix template params
+        //Fix template params
         $query = "SELECT `id`, `params` FROM #__bsms_templates";
         $db->setQuery($query);
         $db->query();

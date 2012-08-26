@@ -115,6 +115,10 @@ MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '0',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
+-- Order
+--
+ALTER TABLE `#__bsms_order` MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
 -- Podcast
 --
 ALTER TABLE `#__bsms_podcast` ADD INDEX `idx_state` ( `published` );
@@ -174,6 +178,9 @@ MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `#__bsms_studytopics` ADD INDEX `idx_access` ( `access` ),
 MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
+-- The drop of Keys are in the update.701.php file
+--	UNIQUE KEY `id` (`id`),
+--	KEY `id_2` (`id`)
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -205,3 +212,7 @@ MODIFY `asset_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__
 MODIFY `access` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 MODIFY `published` TINYINT( 3 ) NOT NULL DEFAULT '1',
 MODIFY `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- Drop `#__bsms_version`
+--
+DROP TABLE IF EXISTS #__bsms_version;
