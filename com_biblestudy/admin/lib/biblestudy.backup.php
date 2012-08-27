@@ -9,7 +9,7 @@
  * @since 7.0.2
  * */
 defined('_JEXEC') or die;
-
+require_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.defines.php');
 /**
  * JBS Export class
  * @package BibleStudy.Admin
