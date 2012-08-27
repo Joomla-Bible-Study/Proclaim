@@ -90,6 +90,10 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
                         <?php echo $this->form->getLabel('sharetype', 'params'); ?>
                         <?php echo $this->form->getInput('sharetype', 'params'); ?>
                     </li>
+                    <li>
+                        <?php echo $this->form->getLabel('debug', 'params'); ?>
+                        <?php echo $this->form->getInput('debug', 'params'); ?>
+                    </li>
                 </ul>
 
             </fieldset>

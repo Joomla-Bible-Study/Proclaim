@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fields name="params">
-        
+
         <field name ="metakey" type="text" class="inputbox" size="50" label="JBS_STY_METAKEYWORDS" description="JBS_STY_METAKEYWORDS_DESC" />
         <field name = "metadesc" type="textarea" class="inputbox" cols="50" rows="4" label="JBS_STY_METADESCRIPTION" description="JBS_STY_METADESCRIPTION_DESC" />
         <field name="compat_mode" type="radio" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE" description="JBS_ADM_MEDIA_COMPAT_MODE_DESC">
@@ -154,12 +154,17 @@
         Eugen:
         This is for future versions of the component to simplify all of our image
         operations. Currently this is not implemented at all
-	santon: Please use JBS_* phrases
+       	santon: Please use JBS_* phrases
         -->
         <field name="imageLib" type="list" label="JBS_ADM_IMAGE_LIBRARY">
             <option value="legacy">Legacy</option>
             <option value="gd">GD</option>
             <option value="imagemagick">ImageMagick</option>
+        </field>
+        <!-- End of Eugen Note -->
+        <field name="debug" type="radio" default="0" label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC">
+            <option value="0">JBS_CMN_NO</option>
+            <option value="1">JBS_CMN_YES</option>
         </field>
     </fields>
     <fieldset>

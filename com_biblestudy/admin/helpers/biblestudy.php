@@ -320,4 +320,17 @@ class BibleStudyHelper {
         return $text;
     }
 
+    /**
+     * Make it pull from Admin switch
+     * @todo pull form admin table params
+     * @return int
+     * @since 7.1.0
+     */
+    public static function debug() {
+        include_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'params.php');
+        $admin_params = BsmHelper::getAdmin(true);
+        $admin_params = $admin_params->params;
+        return $admin_params['debug'];
+    }
+
 }

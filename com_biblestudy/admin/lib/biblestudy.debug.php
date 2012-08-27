@@ -38,7 +38,7 @@ function debug_assert_callback($script, $line, $message) {
  * @param int $back
  */
 function trigger_dberror($text = '', $back = 0) {
-    $biblestudy_db = &JFactory::getDBO();
+    $biblestudy_db = JFactory::getDBO();
     $dberror = $biblestudy_db->stderr(true);
     echo debug_callstackinfo($back + 1);
 

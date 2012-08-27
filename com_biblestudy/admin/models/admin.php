@@ -216,7 +216,7 @@ class biblestudyModeladmin extends JModelAdmin {
     public function fix() {
         $changeSet = $this->getItems();
         $changeSet->fix();
-        $this->fixSchemaVersion($changeSet);
+        $this->fixSchemaVersion();
         $this->fixUpdateVersion();
         //$installer = new Com_BiblestudyInstallerScript();
         //$installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
@@ -270,15 +270,18 @@ class biblestudyModeladmin extends JModelAdmin {
      *
      * @return   mixed  string schema version if success, false if fail
      */
-    public function fixSchemaVersion($changeSet) {
+    public function fixSchemaVersion() {
         // Get correct schema version -- last file in array
-        $schema = $changeSet->getSchema();
+        $schema = $this->getCompVersion();
         $db = JFactory::getDbo();
         $result = false;
         $extensionresult = $this->getExtentionId();
 
         // Check value. If ok, don't do update
         $version = $this->getSchemaVersion();
+        dump($version, 'version');
+        dump($schema, 'schema');
+        dump($extensionresult, 'Extensionresult');
         if ($version == $schema) {
             $result = $version;
         } else {
