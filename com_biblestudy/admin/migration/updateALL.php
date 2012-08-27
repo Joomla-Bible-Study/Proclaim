@@ -41,14 +41,6 @@ class updatejbsALL {
         $eid = $db->loadResult();
 
         foreach ($files as $i => $value) {
-            /* Check to see if Bad version is in key 3 */
-            if ($i === 3 && $value !== '7.0.1.1'):
-                /* Find Last updated Version in Update table */
-                $query = "INSERT INTO `#__bsms_update` (id,version) VALUES (3,'7.0.1.1')
-                            ON DUPLICATE KEY UPDATE version= '7.0.1.1';";
-                $db->setQuery($query);
-                $db->execute();
-            endif;
 
             /* Find Last updated Version in Update table */
             $query = $db->getQuery(true);
@@ -57,12 +49,12 @@ class updatejbsALL {
             $db->setQuery($query);
             $updates = $db->loadResultArray();
             $update = end($updates);
-
             /* Set new Schema Version */
             $this->setSchemaVersion($update, $eid);
             if (version_compare($value, $update) <= 0) {
                 unset($files[$i]);
             } elseif ($files) {
+                dump($files, 'files parsed');
                 // Get file contents
                 $buffer = file_get_contents($path . '/' . $value . '.sql');
 
@@ -99,6 +91,15 @@ class updatejbsALL {
 
                 return false;
             }
+            /* Find Last updated Version in Update table */
+            $query = $db->getQuery(true);
+            $query->select('version')
+                    ->from('#__bsms_update');
+            $db->setQuery($query);
+            $updates = $db->loadResultArray();
+            $update = end($updates);
+            /* Set new Schema Version */
+            $this->setSchemaVersion($update, $eid);
         }
         return TRUE;
     }

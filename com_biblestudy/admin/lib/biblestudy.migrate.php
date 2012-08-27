@@ -405,9 +405,6 @@ class JBSMigrate {
                             ";
                 $db->setQuery($query);
                 $db->execute();
-                $query = "INSERT INTO `#__bsms_update` (id,version) VALUES (4,'7.0.2') ON DUPLICATE KEY UPDATE version= '7.0.2';";
-                $db->setQuery($query);
-                $db->execute();
             endif;
         endforeach;
     }
