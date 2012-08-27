@@ -130,7 +130,7 @@ class JBSMigrate {
                 $db->setQuery($query);
                 $updates = $db->loadObject();
                 $version = $updates->version;
-                dump($version, 'Version');
+                //dump($version, 'Version');
                 switch ($version):
                     case '7.0.1':
                         $message[] = $this->allupdate();

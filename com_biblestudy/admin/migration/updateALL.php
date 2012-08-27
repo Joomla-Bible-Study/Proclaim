@@ -54,7 +54,7 @@ class updatejbsALL {
             if (version_compare($value, $update) <= 0) {
                 unset($files[$i]);
             } elseif ($files) {
-                dump($files, 'files parsed');
+                //dump($files, 'files parsed');
                 // Get file contents
                 $buffer = file_get_contents($path . '/' . $value . '.sql');
 

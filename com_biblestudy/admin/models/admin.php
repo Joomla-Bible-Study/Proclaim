@@ -279,9 +279,9 @@ class biblestudyModeladmin extends JModelAdmin {
 
         // Check value. If ok, don't do update
         $version = $this->getSchemaVersion();
-        dump($version, 'version');
-        dump($schema, 'schema');
-        dump($extensionresult, 'Extensionresult');
+        //dump($version, 'version');
+        //dump($schema, 'schema');
+        //dump($extensionresult, 'Extensionresult');
         if ($version == $schema) {
             $result = $version;
         } else {
