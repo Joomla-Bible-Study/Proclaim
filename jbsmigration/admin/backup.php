@@ -26,10 +26,10 @@ class JBSExport {
         $date = date('Y_F_j');
         $localfilename = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
         $mainframe = JFactory::getApplication();
+
         if (!$outputDB = $this->createBackup($localfilename)) {
             $mainframe->redirect('index.php?option=com_biblestudy&view=admin', JText::_('JBS_EI_NO_BACKUP'));
         }
-
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
 
         if (!$downloadfile = $this->output_file($serverfile, $localfilename, $mime_type = 'text/x-sql')) {
@@ -48,7 +48,11 @@ class JBSExport {
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
         $export = '';
         foreach ($objects as $object) {
-            $tables = $this->getExportTable($object['name'], $localfilename);
+            $tables[] = $this->getExportTable($object['name'], $localfilename);
+        }
+        $export = implode(' ', $tables);
+        if (!JFile::write($serverfile, $export)) {
+            return false;
         }
         return true;
     }
@@ -59,21 +63,25 @@ class JBSExport {
      * @param string $localfilename
      * @return boolean
      */
-    function getExportTable($table, $localfilename) {
+    function getExportTable($table) {
         if (!$table) {
             return false;
         }
-        @set_time_limit(300);
+        /**
+         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         */
+        if (!ini_get('safe_mode')) {
+            set_time_limit(300);
+        }
 
         $data = array();
         $export = '';
-        $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
 
         $db = JFactory::getDBO();
         //Get the prefix
         $prefix = $db->getPrefix();
 
-        $export = "\n--\n-- Table structure for table `" . $table . "`\n--\n\n";
+        $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
         $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
 
@@ -111,10 +119,7 @@ class JBSExport {
             }
         }
         $export .= "\n-- --------------------------------------------------------\n\n";
-        $handle = fopen($serverfile, 'a');
-        fwrite($handle, $export);
-        fclose($handle);
-        return true;
+        return $export;
     }
 
     /**
