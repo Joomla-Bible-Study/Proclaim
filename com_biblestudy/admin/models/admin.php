@@ -21,7 +21,7 @@ JLoader::register('Com_BiblestudyInstallerScript', JPATH_ADMINISTRATOR . '/compo
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class biblestudyModeladmin extends JModelAdmin {
+class BiblestudyModelAdmin extends JModelAdmin {
 
     /**
      * Context

@@ -19,7 +19,7 @@ jimport('joomla.application.component.modellist');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class biblestudyModelmessages extends JModelList {
+class BiblestudyModelMessages extends JModelList {
 
     /**
      * Constructor.

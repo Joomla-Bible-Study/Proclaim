@@ -17,7 +17,7 @@ jimport('joomla.application.component.modellist');
  * @package BibleStudy.Admin
  * @since 7.1.0
  */
-class BiblestudyModelstyles extends JModelList {
+class BiblestudyModelStyles extends JModelList {
 
     /**
      * locationslist data array
