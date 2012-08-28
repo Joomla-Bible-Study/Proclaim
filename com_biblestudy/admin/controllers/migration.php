@@ -59,13 +59,13 @@ class BiblestudyControllerMigration extends JController {
         if ($task == 'migrate' && $run == 1 && !$oldprefix) {
 
             $migrate = new JBSMigrate();
-            $migration = $migrate->migrate();
+            $migration = $migrate->migrate(); 
             if ($migration) {
                 $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
                 JRequest::setVar('migrationdone', '1', 'get');
                 $errors = JRequest::getVar('jbsmessages', $jbsmessages, 'get', 'array');
             } else {
-                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . '');
+                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration);
             }
         }
 

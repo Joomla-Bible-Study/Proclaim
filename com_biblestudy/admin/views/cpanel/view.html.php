@@ -34,7 +34,7 @@ class biblestudyViewcpanel extends JView {
         $query = $db->getQuery(true);
         $query->select('*');
         $query->from('#__extensions');
-        $query->where('element = "com_biblestudy"');
+        $query->where('element = "com_biblestudy" and type = "component"');
         $db->setQuery($query);
         $data = $db->loadObject();
         // Convert parameter fields to objects.
