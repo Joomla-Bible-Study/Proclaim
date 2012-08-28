@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.helper');
-jimport('joomla.application.component.model');
+//jimport('joomla.application.component.model');
 
 /**
  * //Eugen
@@ -32,7 +32,7 @@ class BsmHelper extends JComponentHelper {
     public static function getAdmin($isSite = false) {
         if ($isSite)
             JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'models');
-        $admin = JModel::getInstance('Admin', 'biblestudyModel');
+        $admin = JModel::getInstance('Admin', 'BiblestudyModel');
         $admin = $admin->getItem(1);
 
         //Add the current user id
