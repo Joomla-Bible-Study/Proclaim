@@ -9,7 +9,7 @@ ALTER TABLE `#__bsms_admin` ADD COLUMN `installstate` TEXT;
 --
 -- Books
 --
-ALTER TABLE `#__bsms_boooks` MODIFY `published` tinyint(3) NOT NULL DEFAULT '0';
+ALTER TABLE `#__bsms_books` MODIFY `published` tinyint(3) NOT NULL DEFAULT '0';
 
 --
 -- Comments Table
