@@ -130,21 +130,28 @@ class BiblestudyControllerMigration extends JController {
             $import = new JBSImport();
             $result = $import->importdb($parent);
         }
-        if ($result || $copysuccess) {
-            $migrate = new JBSMigrate();
-            $migration = $migrate->migrate();
-            //Final step is to fix assets
-            $this->fixAssets();
-            if ($migration) {
-                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . '', 'message');
+        if ($result || $copysuccess) 
+            {
+                $migrate = new JBSMigrate();
+                $migration = $migrate->migrate();
+
+                //Final step is to fix assets
+                $this->fixAssets();
+                if ($migration) 
+                    { 
+                        $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . '', 'message');
+                        JRequest::setVar('migrationdone', '1', 'get');
+                    } 
+                else 
+                    {
+                        $application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_MIGRATED') . $migration . '', 'message');
+                    }
                 JRequest::setVar('migrationdone', '1', 'get');
-            } else {
-                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration . '', 'message');
+            } 
+        else 
+            {
+                $application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_COPIED') . $migration . '', 'message');
             }
-            JRequest::setVar('migrationdone', '1', 'get');
-        } else {
-            $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration . '', 'message');
-        }
         $this->setRedirect('index.php?option=com_biblestudy&task=admin.edit&id=1');
     }
 

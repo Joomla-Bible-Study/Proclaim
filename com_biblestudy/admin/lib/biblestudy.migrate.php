@@ -275,9 +275,9 @@ class JBSMigrate {
                 return false;
                 break;
         }
-        $jbsmessages = $message;
+        $jbsmessages = $message; 
         JRequest::setVar('jbsmessages', $jbsmessages, 'get', 'array');
-        return TRUE;
+        return $jbsmessages;
     }
 
     /**
