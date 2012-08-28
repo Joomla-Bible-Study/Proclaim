@@ -68,11 +68,12 @@ class updatejbsALL {
                 // Create an array of queries from the sql file
                 $queries = $db->splitSql($buffer);
 
-
                 if (count($queries) == 0) {
                     // No queries to process
                     return 0;
-                }// Process each query in the $queries array (split out of sql file).
+                }
+
+                // Process each query in the $queries array (split out of sql file).
                 foreach ($queries as $query) {
                     $query = trim($query);
 

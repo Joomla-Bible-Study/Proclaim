@@ -127,7 +127,6 @@ class JBSImport {
         }
         $error = '';
         $errors = array();
-        $result = false;
         $userfile = JRequest::getVar('importdb', null, 'files', 'array');
         $db = JFactory::getDBO();
 
@@ -159,13 +158,34 @@ class JBSImport {
                 $db->setQuery($dropquery);
                 $db->execute();
             }
-            $db->setQuery($query);
-            if (!$db->queryBatch()) {
-                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
-                $error .= $db->stderr(true);
-                $error .= "</font>";
-                $errors[] = $error;
+            // Create an array of queries from the sql file
+            $queries = $db->splitSql($query);
+
+            if (count($queries) == 0) {
+                // No queries to process
+                return 0;
             }
+            // Process each query in the $queries array (split out of sql file).
+            foreach ($queries as $query) {
+                $query = trim($query);
+
+                if ($query != '' && $query{0} != '#') {
+                    $db->setQuery($query);
+
+                    if (!$db->execute()) {
+                        JError::raiseWarning(1, JText::sprintf('JBS_INS_INSTALLDB_ERRORS', $db->stderr(true)));
+
+                        return JText::sprintf('JBS_INS_INSTALLDB_ERRORS', $db->stderr(true));
+                    }
+                }
+            }
+//            $db->setQuery($query);
+//            if (!$db->queryBatch()) {
+//                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
+//                $error .= $db->stderr(true);
+//                $error .= "</font>";
+//                $errors[] = $error;
+//            }
         endif;
         if (!empty($errors)) {
             JError::raiseWarning(1, $errors);
