@@ -321,9 +321,9 @@ class BibleStudyHelper {
     }
 
     /**
-     * Make it pull from Admin switch
-     * @todo pull form admin table params
-     * @return int
+     * Debug switch state form Admin Settings page
+     *
+     * @return int '1' is on '0' is off
      * @since 7.1.0
      */
     public static function debug() {
