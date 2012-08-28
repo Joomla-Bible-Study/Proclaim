@@ -68,3 +68,10 @@ div.current .panelform {
 	height: 19px;
 	float: left;
 }
+.jbs_install_footer{
+    border: 1px solid #99CCFF;
+    background: #D9D9FF;
+    padding: 20px;
+    margin: 20px;
+    clear: both;
+}

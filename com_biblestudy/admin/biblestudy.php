@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 // Access check.
 if (!JFactory::getUser()->authorise('core.manage', 'com_biblestudy')) {
-	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+    return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
 require_once(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'liveupdate' . DIRECTORY_SEPARATOR . 'liveupdate.php');
@@ -59,7 +59,9 @@ $controller->redirect();
 function addCSS() {
     JHTML::stylesheet('media/com_biblestudy/css/general.css');
     JHTML::stylesheet('media/com_biblestudy/css/icons.css');
-    JHTML::stylesheet('media/com_biblestudy/css/biblestudy-core.css');
+    if (BibleStudyHelper::debug() === '1'):
+        JHTML::stylesheet('media/com_biblestudy/css/biblestudy-debug.css');
+    endif;
 }
 
 /**
