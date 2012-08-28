@@ -41,9 +41,7 @@ class JBSImport {
         }
         if (substr_count($installtype, 'sql')) {
             $uploadresults = JBSImport::_getPackageFromFolder();
-            if ($uploadresults === TRUE) {
-                $result = true;
-            }
+            $result = $uploadresults;
         } else {
             $uploadresults = JBSImport::_getPackageFromUpload();
             $result = $uploadresults;
@@ -60,6 +58,7 @@ class JBSImport {
                 $fix->fixassets();
             endif;
         }
+        //To do: delete uploaded files or have a option to do this??
         return $result;
     }
 
@@ -73,20 +72,20 @@ class JBSImport {
 
         // Make sure that file uploads are enabled in php
         if (!(bool) ini_get('file_uploads')) {
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('WARNINSTALLFILE'));
+            JError::raiseWarning('1', JText::_('WARNINSTALLFILE'));
             return false;
         }
 
 
         // If there is no uploaded file, we have a problem...
         if (!is_array($userfile)) {
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('No file selected'));
+            JError::raiseWarning('1', JText::_('No file selected'));
             return false;
         }
 
         // Check if there was a problem uploading the file.
         if ($userfile['error'] || $userfile['size'] < 1) {
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('WARNINSTALLUPLOADERROR'));
+            JError::raiseWarning('1', JText::_('WARNINSTALLUPLOADERROR'));
             return false;
         }
 
@@ -105,7 +104,7 @@ class JBSImport {
         endif;
 
         if ($uploaded) {
-            return true;
+            return $tmp_src;
         } else {
             return false;
         }
@@ -125,12 +124,12 @@ class JBSImport {
         if (!ini_get('safe_mode')) {
             set_time_limit(300);
         }
-        $error = '';
+        //$error = '';
         $errors = array();
-        $userfile = JRequest::getVar('importdb', null, 'files', 'array');
+        //$userfile = JRequest::getVar('importdb', null, 'files', 'array');
         $db = JFactory::getDBO();
 
-        $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+        $query = file_get_contents($tmp_src);
         // Graceful exit and rollback if read not successful
         if ($query === false) {
             JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
@@ -147,7 +146,7 @@ class JBSImport {
         elseif ($isnot === 0):
             JError::raiseWarning('403', JText::_('JBS_ADM_NOT_DB'));
             return false;
-        elseif ($iscernt === 0 && $parent !== TRUE): // Way to check to see if file came from restor and is cerent.
+        elseif (($iscernt === 0) && ($parent !== TRUE)): // Way to check to see if file came from restor and is cerent.
             JError::raiseWarning('403', JText::_('JBS_ADM_NOT_CURENT_DB'));
             return false;
         else:
@@ -187,13 +186,8 @@ class JBSImport {
 //                $errors[] = $error;
 //            }
         endif;
-        if (!empty($errors)) {
-            JError::raiseWarning(1, $errors);
-            return $errors;
-        } else {
             return true;
         }
-    }
 
     /**
      * Restor DB for exesting Joomla Bible Study
@@ -209,7 +203,7 @@ class JBSImport {
             set_time_limit(300);
         }
         $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . $backuprestore);
-        //$query = str_replace('\n', ' ', $query);
+
         //Check to see if this is a backup from an old db and not a migration
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_studies');
@@ -233,7 +227,7 @@ class JBSImport {
                     $error .= $db->stderr(true);
                     $error .= "</font>";
                     print_r($error);
-                    //return false;
+                    return false;
                 }
             }
         endif;
@@ -245,34 +239,9 @@ class JBSImport {
      * @return boolean
      */
     private static function _getPackageFromFolder() {
-        $result = false;
-
         $p_dir = JRequest::getString('install_directory', '', 'post');
-
-        $config = JFactory::getConfig();
-
         $p_dir = JPath::clean($p_dir);
-
-        $db = JFactory::getDBO();
-        $query = file_get_contents($p_dir);
-        /**
-         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
-         */
-        if (!ini_get('safe_mode')) {
-            set_time_limit(300);
-        }
-        $db->setQuery($query);
-        $db->queryBatch();
-        if ($db->getErrorNum() != 0) {
-            $error = JText::_("JBS_IBM_DB_ERROR") . ": " . $db->getErrorNum() . "<br /><font color=\"red\">";
-            $error .= $db->stderr(true);
-            $error .= "</font>";
-            echo $error;
-        } else {
-            $result = true;
-        }
-        //To do: delete uploaded file
-        return $result;
+        return $p_dir;
     }
 
     /**
