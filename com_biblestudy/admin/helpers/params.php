@@ -11,12 +11,13 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.helper');
+jimport('joomla.application.component.model');
 
 /**
  * //Eugen
  * @todo remove file in version 1.7+
  * This class may not be required
- * 
+ *
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
