@@ -136,17 +136,16 @@ class BiblestudyControllerMigration extends JController {
             //Final step is to fix assets
             $this->fixAssets();
             if ($migration) {
-                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . '');
+                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . '', 'message');
                 JRequest::setVar('migrationdone', '1', 'get');
             } else {
-                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration . '');
+                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration . '', 'message');
             }
             JRequest::setVar('migrationdone', '1', 'get');
         } else {
-            $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration . '');
+            $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration . '', 'message');
         }
-        $msg = JRequest::getVar('jbsmessages', '1', 'get');
-        $this->setRedirect('index.php?option=com_biblestudy&view=admin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_biblestudy&task=admin.edit&id=1');
     }
 
     /**

@@ -62,7 +62,7 @@ class updatejbsALL {
                 if ($buffer === false) {
                     JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
 
-                    return false;
+                    return JText::_('JBS_INS_ERROR_SQL_READBUFFER');
                 }
 
                 // Create an array of queries from the sql file
@@ -82,14 +82,14 @@ class updatejbsALL {
                         if (!$db->execute()) {
                             JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)));
 
-                            return false;
+                            return JText::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true));
                         }
                     }
                 }
             } else {
                 JError::raiseWarning(1, JText::_('JBS_INS_NO_UPDATE_SQL_FILES'));
 
-                return false;
+                return JText::_('JBS_INS_NO_UPDATE_SQL_FILES');
             }
             /* Find Last updated Version in Update table */
             $query = $db->getQuery(true);
