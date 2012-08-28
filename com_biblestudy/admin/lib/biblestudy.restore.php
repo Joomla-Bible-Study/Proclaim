@@ -46,13 +46,13 @@ class JBSImport {
             $uploadresults = JBSImport::_getPackageFromUpload();
             $result = $uploadresults;
         }
-        if ($result === true) {
+        if ($result) {
             $result = JBSImport::installdb($uploadresults, $perent);
             $userfile = JRequest::getVar('importdb', null, 'files', 'array');
             if (JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'])) {
                 unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
             }
-            if ($perent !== TRUE || $result === TRUE):
+            if (($perent !== TRUE) && $result):
                 require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
                 $fix = new fixJBSAssets();
                 $fix->fixassets();
@@ -124,9 +124,7 @@ class JBSImport {
         if (!ini_get('safe_mode')) {
             set_time_limit(300);
         }
-        //$error = '';
-        $errors = array();
-        //$userfile = JRequest::getVar('importdb', null, 'files', 'array');
+
         $db = JFactory::getDBO();
 
         $query = file_get_contents($tmp_src);
@@ -178,16 +176,9 @@ class JBSImport {
                     }
                 }
             }
-//            $db->setQuery($query);
-//            if (!$db->queryBatch()) {
-//                $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
-//                $error .= $db->stderr(true);
-//                $error .= "</font>";
-//                $errors[] = $error;
-//            }
         endif;
-            return true;
-        }
+        return true;
+    }
 
     /**
      * Restor DB for exesting Joomla Bible Study
