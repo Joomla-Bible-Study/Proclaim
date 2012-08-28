@@ -75,3 +75,7 @@ div.current .panelform {
     margin: 20px;
     clear: both;
 }
+.css-editor{
+    width: 97%;
+    border:none;
+}

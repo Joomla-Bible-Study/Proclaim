@@ -46,7 +46,7 @@ JHtml::_('behavior.keepalive');
                 <?php echo $this->form->getLabel('stylecode'); ?></li>
         </ul>
         <div class="clr"></div>
-        <div class="editor-border">
+        <div class="css-editor">
             <?php echo $this->form->getInput('stylecode', null, empty($this->item->stylecode) ? $this->defaultstyle : $this->item->stylecode); ?>
         </div>
     </fieldset>
