@@ -54,11 +54,11 @@ class JBSImport {
             if (JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name'])) {
                 unlink(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
             }
-//            if ($perent !== TRUE || $result === TRUE):
-//                require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
-//                $fix = new fixJBSAssets();
-//                $fix->fixassets();
-//            endif;
+            if ($perent !== TRUE || $result === TRUE):
+                require_once (BIBLESTUDY_PATH_ADMIN_LIB . DIRECTORY_SEPARATOR . 'biblestudy.assets.php');
+                $fix = new fixJBSAssets();
+                $fix->fixassets();
+            endif;
         }
         return $result;
     }
@@ -132,7 +132,13 @@ class JBSImport {
         $db = JFactory::getDBO();
 
         $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
-        //$query = str_replace('\n', ' ', $query);
+        // Graceful exit and rollback if read not successful
+        if ($query === false) {
+            JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
+
+            return JText::_('JBS_INS_ERROR_SQL_READBUFFER');
+        }
+        // Check if sql file is for Joomla! Bible Studys
         $isold = substr_count($query, '#__bsms_admin_genesis');
         $isnot = substr_count($query, '#__bsms_studies');
         $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
@@ -149,13 +155,12 @@ class JBSImport {
             //first we need to drop the existing JBS tables
             $objects = JBSImport::getObjects();
             foreach ($objects as $object) {
-                $dropquery = 'DROP TABLE ' . $object['name'] . ';';
+                $dropquery = 'DROP TABLE IF EXISTS ' . $object['name'] . ';';
                 $db->setQuery($dropquery);
                 $db->execute();
             }
             $db->setQuery($query);
-            $db->queryBatch();
-            if ($db->getErrorNum() != 0) {
+            if (!$db->queryBatch()) {
                 $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
                 $error .= $db->stderr(true);
                 $error .= "</font>";
@@ -163,7 +168,7 @@ class JBSImport {
             }
         endif;
         if (!empty($errors)) {
-            JError::raiseWarning('SOME_ERROR_CODE', $error);
+            JError::raiseWarning(1, $errors);
             return $errors;
         } else {
             return true;
