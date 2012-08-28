@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.helper');
-//jimport('joomla.application.component.model');
+jimport('joomla.application.component.model');
 
 /**
  * //Eugen
