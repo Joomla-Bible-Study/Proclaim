@@ -127,7 +127,14 @@ class JBSImport {
 
         $db = JFactory::getDBO();
 
-        $query = file_get_contents($tmp_src);
+        $query = file_get_contents($tmp_src); 
+        $exists = JFile::exists($tmp_src); 
+        if (!$exists)
+        {
+            JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_FILE_DOES_NOT_EXIST'));
+
+            return JText::_('JBS_INS_ERROR_SQL_FILE_DOES_NOT_EXIST');
+        }
         // Graceful exit and rollback if read not successful
         if ($query === false) {
             JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
