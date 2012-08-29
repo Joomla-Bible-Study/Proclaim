@@ -104,7 +104,7 @@ class JBSImport {
         endif;
 
         if ($uploaded) {
-            return $tmp_src;
+            return $tmp_dest;
         } else {
             return false;
         }
@@ -127,14 +127,9 @@ class JBSImport {
 
         $db = JFactory::getDBO();
 
-        $query = file_get_contents($tmp_src); 
-        $exists = JFile::exists($tmp_src); 
-        if (!$exists)
-        {
-            JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_FILE_DOES_NOT_EXIST'));
-
-            return JText::_('JBS_INS_ERROR_SQL_FILE_DOES_NOT_EXIST');
-        }
+        $query = file_get_contents($tmp_src);
+        $exists = JFile::exists($tmp_src);
+        
         // Graceful exit and rollback if read not successful
         if ($query === false) {
             JError::raiseWarning(1, JText::_('JBS_INS_ERROR_SQL_READBUFFER'));
