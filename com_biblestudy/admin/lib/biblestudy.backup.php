@@ -76,7 +76,7 @@ class JBSExport {
         $prefix = $db->getPrefix();
 
         // Used for Checking file is from the correct version of biblestudy component
-        $export = "--\n--" . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
+        $export = "\n--\n-- " . BIBLESTUDY_VERSION_UPDATEFILE . "\n--\n\n";
 
         //Start of Tables
         $export .= "--\n-- Table structure for table `" . $table . "`\n--\n\n";
