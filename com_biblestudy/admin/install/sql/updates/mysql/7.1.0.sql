@@ -5,6 +5,7 @@ ON DUPLICATE KEY UPDATE version= '7.1.0';
 -- Admin Table
 --
 ALTER TABLE `#__bsms_admin` ADD COLUMN `installstate` TEXT;
+ALTER TABLE `#__bsms_admin` ADD `debug` TINYINT( 3 ) NOT NULL DEFAULT '0';
 
 --
 -- Books

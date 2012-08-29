@@ -162,13 +162,14 @@
             <option value="imagemagick">ImageMagick</option>
         </field>
         <!-- End of Eugen Note -->
-        <field name="debug" type="radio" default="0" label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC">
-            <option value="0">JBS_CMN_NO</option>
-            <option value="1">JBS_CMN_YES</option>
-        </field>
     </fields>
     <fieldset>
         <field name="drop_tables" type="radio" default="0" label="JBS_ADM_DROP_TABLES" description="JBS_ADM_DROP_TABLES_DESC">
+            <option value="0">JBS_CMN_NO</option>
+            <option value="1">JBS_CMN_YES</option>
+        </field>
+
+        <field name="debug" type="radio" default="0" label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>

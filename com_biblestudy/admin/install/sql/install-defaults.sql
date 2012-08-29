@@ -5,8 +5,8 @@ SET time_zone = "+00:00";
 -- Dumping data for table `#__bsms_admin`
 --
 
-INSERT INTO `#__bsms_admin` (`id`, `drop_tables`, `params`, `asset_id`, `access`) VALUES
-(1, 0, '{"metakey":"","metadesc":"","compat_mode":"0","jbsmigrationshow":"0","studylistlimit":"10","show_location_media":"0","popular_limit":"","character_filter":"1","format_popular":"0","uploadtype":"1","socialnetworking":"1","sharetype":"1","default_main_image":"","default_series_image":"","default_teacher_image":"","default_download_image":"","default_showHide_image":"","location_id":"-1","teacher_id":"1","series_id":"-1","booknumber":"-1","messagetype":"-1","default_study_image":"","download":"1","target":" ","server":"1","path":"-1","podcast":["-1"],"mime":"1","from":"x","to":"x","pFrom":"x","pTo":"x","debug":"0"}', 0, 1);
+INSERT INTO `#__bsms_admin` (`id`, `drop_tables`, `params`, `asset_id`, `access`, `installstate`, `debug`) VALUES
+(1, 0, '{"metakey":"","metadesc":"","compat_mode":"0","jbsmigrationshow":"0","studylistlimit":"10","show_location_media":"0","popular_limit":"","character_filter":"1","format_popular":"0","uploadtype":"1","socialnetworking":"1","sharetype":"1","default_main_image":"","default_series_image":"","default_teacher_image":"","default_download_image":"","default_showHide_image":"","location_id":"-1","teacher_id":"1","series_id":"-1","booknumber":"-1","messagetype":"-1","default_study_image":"","download":"1","target":" ","server":"1","path":"-1","podcast":["-1"],"mime":"1","from":"x","to":"x","pFrom":"x","pTo":"x","debug":"0"}', 0, 1, NULL, 0);
 
 --
 -- Dumping data for table `#__bsms_books`

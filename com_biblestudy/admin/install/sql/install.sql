@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_admin` (
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `installstate` text,
+  `debug` TINYINT( 3 ) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_access` (`access`)
 ) DEFAULT CHARSET=utf8;
