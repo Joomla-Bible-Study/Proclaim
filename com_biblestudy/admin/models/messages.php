@@ -79,13 +79,13 @@ class BiblestudyModelMessages extends JModelList {
     protected function getStoreId($id = '') {
 
         // Compile the store id.
-        $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.studytitle');
         $id .= ':' . $this->getState('filter.book');
         $id .= ':' . $this->getState('filter.teacher');
         $id .= ':' . $this->getState('filter.series');
         $id .= ':' . $this->getState('filter.messageType');
         $id .= ':' . $this->getState('filter.year');
+        $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.language');
 
         return parent::getStoreId($id);
@@ -204,37 +204,29 @@ class BiblestudyModelMessages extends JModelList {
         $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
         $query->group('study.id');
 
-        //Filter by studytitle
-        $studytitle = $this->getState('filter.studytitle');
-        if (!empty($studytitle))
-            $query->where('study.studytitle LIKE "' . $studytitle . '%"');
-
-        //Filter by book
-
-        if ($book = $this->getState('filter.book')) {
-            $query->where('study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book);
-            $query->join('LEFT', '#__bsms_books AS books ON books.booknumber = study.booknumber');
-        }
-
         //Filter by teacher
         $teacher = $this->getState('filter.teacher');
-        if (!empty($teacher))
+        if (is_numeric($teacher)) {
             $query->where('study.teacher_id = ' . (int) $teacher);
+        }
 
         //Filter by series
         $series = $this->getState('filter.series');
-        if (!empty($series))
+        if (is_numeric($series)) {
             $query->where('study.series_id = ' . (int) $series);
+        }
 
         //Filter by message type
         $messageType = $this->getState('filter.messageType');
-        if (!empty($messageType))
+        if (is_numeric($messageType)) {
             $query->where('study.messageType = ' . (int) $messageType);
+        }
 
         //Filter by Year
         $year = $this->getState('filter.year');
-        if (!empty($year))
+        if (!empty($year)) {
             $query->where('YEAR(study.studydate) = ' . (int) $year);
+        }
 
         // Filter by published state
         $published = $this->getState('filter.published');
@@ -242,6 +234,23 @@ class BiblestudyModelMessages extends JModelList {
             $query->where('study.published = ' . (int) $published);
         } else if ($published === '') {
             $query->where('(study.published = 0 OR study.published = 1)');
+        }
+
+        //Filter by studytitle
+        $studytitle = $this->getState('filter.studytitle');
+        if (!empty($studytitle)) {
+            if (stripos($studytitle, 'id:') === 0) {
+                $query->where('study.id = ' . (int) substr($studytitle, 3));
+            } else {
+                $studytitle = $db->Quote('%' . $db->escape($studytitle, true) . '%');
+                $query->where('(study.studytitle LIKE ' . $studytitle . ' OR study.alias LIKE ' . $studytitle . ')');
+            }
+        }
+
+        //Filter by book
+        $book = $this->getState('filter.book');
+        if (is_numeric($book)) {
+            $query->where('(study.booknumber = ' . (int) $book . ' OR study.booknumber2 = ' . (int) $book . ')');
         }
 
         //Add the list ordering clause
@@ -347,16 +356,20 @@ class BiblestudyModelMessages extends JModelList {
      * @since 7.0
      */
     public function getYears() {
+        // Create a new query object.
         $db = $this->getDBO();
         $query = $db->getQuery(true);
 
+        // Construct the query
         $query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
         $query->from('#__bsms_studies');
         $query->order('value');
 
+        // Setup the query
         $db->setQuery($query->__toString());
-        $year = $db->loadObjectList();
-        return $year;
+
+        // Return the result
+        return $db->loadObjectList();
     }
 
     /**
@@ -365,16 +378,45 @@ class BiblestudyModelMessages extends JModelList {
      * @since 7.0
      */
     public function getPlays($id) {
+        // Create a new query object.
         $db = $this->getDBO();
         $query = $db->getQuery(true);
 
+        // Construct the query
         $query->select('SUM(plays) AS totalPlays');
         $query->from('#__bsms_mediafiles');
         $query->group('study_id');
         $query->where('study_id = ' . $id);
+
+        // Setup the query
         $db->setQuery($query->__toString());
-        $plays = $db->loadResult();
-        return $plays;
+
+        // Return the result
+        return $db->loadResult();
+    }
+
+    /**
+     * Method to get a list of articles.
+     * Overridden to add a check for access levels.
+     *
+     * @return	mixed	An array of data items on success, false on failure.
+     * @since	1.6.1
+     */
+    public function getItems() {
+        $items = parent::getItems();
+        $app = JFactory::getApplication();
+        if ($app->isSite()) {
+            $user = JFactory::getUser();
+            $groups = $user->getAuthorisedViewLevels();
+
+            for ($x = 0, $count = count($items); $x < $count; $x++) {
+                //Check the access level. Remove articles the user shouldn't see
+                if (!in_array($items[$x]->access, $groups)) {
+                    unset($items[$x]);
+                }
+            }
+        }
+        return $items;
     }
 
 }

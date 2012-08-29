@@ -176,19 +176,21 @@ class BiblestudyModelMediafiles extends JModelList {
 
         //Filter by filename
         $filename = $this->getState('filter.filename');
-        if (!empty($filename))
-            $query->where('mediafile.filename LIKE "' . $filename . '%"');
+        if (!empty($filename)) {
+            $query->where('mediafile.filename LIKE "%' . $filename . '%"');
+        }
 
         //Filter by study title
         $study = $this->getState('filter.studytitle');
-        if (!empty($study))
-            $query->where('study.studytitle LIKE "' . $study . '%"');
+        if (!empty($study)) {
+            $query->where('study.studytitle LIKE "%' . $study . '%"');
+        }
 
         //Filter by media type
         $mediaType = $this->getState('filter.mediatypeId');
-        if (!empty($mediaType))
+        if (is_numeric($mediaType)) {
             $query->where('mediafile.media_image = ' . (int) $mediaType);
-
+        }
         //Add the list ordering clause
         $orderCol = $this->state->get('list.ordering', 'mediafile.filename');
         $orderDirn = $this->state->get('list.direction', 'asc');

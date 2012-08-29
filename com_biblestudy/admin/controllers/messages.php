@@ -18,7 +18,7 @@ jimport('joomla.application.component.controlleradmin');
  * @package BibleStudy.Admin
  * @since 7.0.0
  */
-class biblestudyControllerMessages extends JControllerAdmin {
+class BiblestudyControllerMessages extends JControllerAdmin {
 
     /**
      * Constructor.
