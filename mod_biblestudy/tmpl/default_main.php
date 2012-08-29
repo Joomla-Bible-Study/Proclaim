@@ -46,6 +46,7 @@ $ismodule = 1;
         </tbody>
     </table>
 </div>
+<div style="clear: both;"></div>
 <div class="modulelistingfooter">
     <br />
     <?php

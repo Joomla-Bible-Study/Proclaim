@@ -62,7 +62,7 @@ switch ($params->get('module_wrapcode')) {
 }
     ?>
 </div>
-
+<div style="clear: both;"></div>
 <div class="modulelistingfooter">
     <br />
 
