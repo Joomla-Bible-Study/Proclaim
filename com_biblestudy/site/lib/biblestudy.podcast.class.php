@@ -213,7 +213,7 @@ class JBSPodcast {
                     $podfoot = '
                         </channel>
                         </rss>';
-                    $client = & JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
+                    $client = JApplicationHelper::getClientInfo(JRequest::getVar('client', '0', '', 'int'));
                     $file = $client->path . DIRECTORY_SEPARATOR . $podinfo->filename;
                     $filecontent = $podhead . $episodedetail . $podfoot;
                     $filewritten = $this->writeFile($file, $filecontent);
