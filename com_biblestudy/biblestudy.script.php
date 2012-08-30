@@ -275,7 +275,6 @@ class Com_BiblestudyInstallerScript {
             '/components/com_biblestudy/views/serieslist',
             '/components/com_biblestudy/views/seriesdetail',
             '/administrator/components/com_biblestudy/css',
-            '/administrator/components/com_biblestudy/images',
             '/administrator/components/com_biblestudy/js',
         );
 
@@ -308,7 +307,7 @@ class Com_BiblestudyInstallerScript {
         foreach ($menus AS $menu):
             $menu->link = str_replace('teacherlist', 'teachers', $menu->link);
             $menu->link = str_replace('teacherdisplay', 'teacher', $menu->link);
-            $menu->link = str_replace('studydisplay', 'sermon', $menu->link);
+            $menu->link = str_replace('studydetails', 'sermon', $menu->link);
             $menu->link = str_replace('serieslist', 'seriesdisplays', $menu->link);
             $menu->link = str_replace('seriesdetail', 'seriesdisplay', $menu->link);
             $menu->link = str_replace('studieslist', 'sermons', $menu->link);
