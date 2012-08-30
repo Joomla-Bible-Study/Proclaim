@@ -199,10 +199,7 @@ class Com_BiblestudyInstallerScript {
         $db->setQuery($query1);
         $db->query();
 
-        //remove uneeded folders and files and reset menus between 7.0 and 7.1
-        $this->deleteUnexistingFiles();
-        $this->fixMenus();
-        
+                       
         // An example of setting a redirect to a new location after the install is completed
         $parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
     }
@@ -271,12 +268,12 @@ class Com_BiblestudyInstallerScript {
         $folders = array(
             '/components/com_biblestudy/assets',
             '/components/com_biblestudy/images',
-            '/components/com_biblestudy/view/teacherlist',
-            '/components/com_biblestudy/view/teacherdisplay',
-            '/components/com_biblestudy/view/studieslist',
-            '/components/com_biblestudy/view/studydetails',
-            '/components/com_biblestudy/view/serieslist',
-            '/components/com_biblestudy/view/seriesdetail',
+            '/components/com_biblestudy/views/teacherlist',
+            '/components/com_biblestudy/views/teacherdisplay',
+            '/components/com_biblestudy/views/studieslist',
+            '/components/com_biblestudy/views/studydetails',
+            '/components/com_biblestudy/views/serieslist',
+            '/components/com_biblestudy/views/seriesdetail',
             '/administrator/components/com_biblestudy/css',
             '/administrator/components/com_biblestudy/images',
             '/administrator/components/com_biblestudy/js',
