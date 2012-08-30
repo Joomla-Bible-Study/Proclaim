@@ -160,6 +160,7 @@ class Com_BiblestudyInstallerScript {
     function update($parent) {
         $this->deleteUnexistingFiles();
         $this->fixMenus();
+        $this->fixImagePaths();
     }
 
     /**
@@ -322,4 +323,32 @@ class Com_BiblestudyInstallerScript {
         endforeach;
     }
 
+/**
+     * Fix Image paths
+     * @since 7.1.0
+     */
+    public function fixImagePaths() {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('*')
+                ->from('#__bsms_media');
+        $db->setQuery($query);
+        $images = $db->getObjectList();
+        foreach ($images as $image)
+        {
+            if ($image->media_image_path)
+            {
+                $image->media_image_path = str_replace('components','media', $image->media_image_path);
+                $query = $db->getQuery(TRUE);
+                $query->update('#__bsms_media');
+                $query->set("`media_image_path` = '" . $db->escape($image->media_image_path) . "'");
+                $query->where('id = ' . $image->id);
+                $db->setQuery($query);
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+                }
+            }
+            
+        }
+}
 }
