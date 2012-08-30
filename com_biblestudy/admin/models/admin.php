@@ -221,6 +221,7 @@ class BiblestudyModelAdmin extends JModelAdmin {
         $installer = new Com_BiblestudyInstallerScript();
         $installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
         $installer->fixMenus();
+        $installer->fixImagePaths();
         $this->fixDefaultTextFilters();
     }
 
