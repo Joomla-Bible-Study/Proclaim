@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bible Study Component
  * @package BibleStudy.Admin
@@ -67,37 +68,6 @@ class Com_BiblestudyInstallerScript {
                 $db->query();
             }
         }
-        // @TODO Tom add test to see if podcastlanguage colum exests
-        //$db->setQuery('ALTER TABLE `#__bsms_podcast` CHANGE `language` `podcastlanguage` VARCHAR( 10 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'en-us',');
-        //
-        // FIXME do not like how this is being don dos not work if you are doing a fresh install?? may not even be needed.
-//        // First see if there is an update table
-//        $tables = $db->getTableList();
-//        $prefix = $db->getPrefix();
-//        $updatetable = $prefix . 'bsms_update';
-//        $updatefound = false;
-//        $this->is700 = false;
-//        foreach ($tables as $table) {
-//            if ($table == $updatetable) {
-//                $updatefound = true;
-//            }
-//        }
-//        if (!$updatefound) {
-//            //Do the query here to create the table. This will tell Joomla to update the db from this version on
-//            $query = 'CREATE TABLE IF NOT EXISTS #__bsms_update (
-//                              id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-//                              version VARCHAR(255) DEFAULT NULL,
-//                              PRIMARY KEY (id)
-//                            ) DEFAULT CHARSET=utf8';
-//            $db->setQuery($query);
-//            $db->query();
-//            $query = "INSERT INTO #__bsms_update (id,version) VALUES(1,'7.0.0')";
-//            $db->setQuery($query);
-//            $db->query();
-//
-//            $this->is700 = true;
-//        }
-
 
         // Find mimimum required joomla version
         $this->minimum_joomla_release = $parent->get("manifest")->attributes()->version;
@@ -183,17 +153,14 @@ class Com_BiblestudyInstallerScript {
         echo '<h2>' . JText::_('JBS_INS_UNINSTALLED_') . ' ' . $this->release . '</h2> <div>' . $drop_result . '</div>';
     }
 
-//end of function uninstall()
-
     /**
      * Update
      * @param string $parent
      */
     function update($parent) {
-
+        $this->deleteUnexistingFiles();
+        $this->fixMenus();
     }
-
-// End Update
 
     /**
      * Post Flight
@@ -220,16 +187,15 @@ class Com_BiblestudyInstallerScript {
             }
         }
         $params = null;
-        //@tobo Need to move this out $fixassets = null;
-        $imagesuccess = null;
 
-        // set initial values for component parameters
+        // Set initial values for component parameters
         $params['my_param0'] = 'Component version ' . $this->release;
         $params['my_param1'] = 'Start';
         $params['my_param2'] = '1';
         $this->setParams($params);
 
-        $query1 = "UPDATE `#__bsms_admin` SET installstate = '{\"release\":\"".$this->release."\",\"jbsparent\":\"".$parent."\",\"jbstype\":\"".$type."\",\"jbsname\":\"com_biblestudy\"}' WHERE id = 1";
+        // Set installstate
+        $query1 = "UPDATE `#__bsms_admin` SET installstate = '{\"release\":\"" . $this->release . "\",\"jbsparent\":\"" . $parent . "\",\"jbstype\":\"" . $type . "\",\"jbsname\":\"com_biblestudy\"}' WHERE id = 1";
         $db->setQuery($query1);
         $db->query();
 
@@ -273,6 +239,72 @@ class Com_BiblestudyInstallerScript {
         }
     }
 
-}
+    /**
+     * Remove Old Foles and Folders
+     * @since 7.1.0
+     */
+    public function deleteUnexistingFiles() {
+        $files = array(
+            '/components/com_biblestudy/biblestudy.css',
+            '/components/com_biblestudy/class.biblestudydownload.php',
+            '/administrator/components/com_biblestudy/Snoopy.class.php',
+            '/administrator/components/com_biblestudy/admin.biblestudy.php',
+        );
 
-// end of class
+        // TODO There is an issue while deleting folders using the ftp mode
+        $folders = array(
+            '/components/com_biblestudy/assets',
+            '/components/com_biblestudy/images',
+            '/components/com_biblestudy/view/teacherlist',
+            '/components/com_biblestudy/view/teacherdisplay',
+            '/components/com_biblestudy/view/studieslist',
+            '/components/com_biblestudy/view/studydetails',
+            '/components/com_biblestudy/view/serieslist',
+            '/administrator/components/com_biblestudy/css',
+            '/administrator/components/com_biblestudy/images',
+            '/administrator/components/com_biblestudy/js',
+        );
+
+        foreach ($files as $file) {
+            if (JFile::exists(JPATH_ROOT . $file) && !JFile::delete(JPATH_ROOT . $file)) {
+                echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $file) . '<br />';
+            }
+        }
+
+        foreach ($folders as $folder) {
+            if (JFolder::exists(JPATH_ROOT . $folder) && !JFolder::delete(JPATH_ROOT . $folder)) {
+                echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $folder) . '<br />';
+            }
+        }
+    }
+
+    /**
+     * Fix Menus
+     * @since 7.1.0
+     */
+    public function fixMenus() {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('*')
+                ->from('#__menu')
+                ->where("`menutype` != 'main'")
+                ->where("`link` LIKE '%com_biblestudy%'");
+        $db->setQuery($query);
+        $menus = $db->loadObjectList();
+        foreach ($menus AS $menu):
+            $menu->link = str_replace('teacherlist', 'teachers', $menu->link);
+            $menu->link = str_replace('teacherdisplay', 'teacher', $menu->link);
+            $menu->link = str_replace('tudydisplay', 'sermon', $menu->link);
+            $menu->link = str_replace('serieslist', 'seriesdisplays', $menu->link);
+            $query = $db->getQuery(TRUE);
+            $query->update('#__menu');
+            $query->set("`link` = '" . $db->escape($menu->link) . "'");
+            $query->where('id = ' . $menu->id);
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+            }
+        endforeach;
+    }
+
+}

@@ -8,9 +8,13 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
-JHtml::_('script', 'system/multiselect.js', false, true);
-$listOrder = $this->state->get('list.ordering');
-$listDirn = $this->state->get('list.direction');
+
+JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.multiselect');
+
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 $saveOrder = $listOrder == 'series.ordering';
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=series'); ?>" method="post" name="adminForm" id="adminForm">
@@ -26,11 +30,13 @@ $saveOrder = $listOrder == 'series.ordering';
             </select>
         </div>
     </fieldset>
+    <div class="clr"> </div>
+
     <table class="adminlist">
         <thead>
             <tr>
                 <th width="1%">
-                    <input type="checkbox" name="checkall-toggle" value="" onclick="checkAll(this)" />
+                    <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="checkAll(this)" />
                 </th>
                 <th width="1%">
                     <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
@@ -53,36 +59,38 @@ $saveOrder = $listOrder == 'series.ordering';
                 </td>
             </tr>
         </tfoot>
-        <?php
-        foreach ($this->items as $i => $item) :
-            $ordering = ($listOrder == 'series.ordering');
-            ?>
-            <tr class="row<?php echo $i % 2; ?>">
-                <td class="center">
-                    <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-                </td>
-                <td class="center">
-                    <?php echo JHtml::_('jgrid.published', $item->published, $i, 'series.', true, 'cb', '', ''); ?>
-                </td>
-                <td align="left">
-                    <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=serie.edit&id=' . (int) $item->id); ?>">
-                        <?php echo $this->escape($item->series_text); ?>
-                    </a>
-                    <p class="smallsub">
-                        <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
-                </td>
-                <td class="center">
-                    <?php if ($item->language == '*'): ?>
-                        <?php echo JText::alt('JALL', 'language'); ?>
-                    <?php else: ?>
-                        <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-                    <?php endif; ?>
-                </td>
-                <td class="center">
-                    <?php echo (int) $item->id; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
+        <tbody>
+            <?php
+            foreach ($this->items as $i => $item) :
+                $ordering = ($listOrder == 'series.ordering');
+                ?>
+                <tr class="row<?php echo $i % 2; ?>">
+                    <td class="center">
+                        <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                    </td>
+                    <td class="center">
+                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'series.', true, 'cb', '', ''); ?>
+                    </td>
+                    <td align="left">
+                        <a href="<?php echo JRoute::_('index.php?option=com_biblestudy&task=serie.edit&id=' . (int) $item->id); ?>">
+                            <?php echo $this->escape($item->series_text); ?>
+                        </a>
+                        <p class="smallsub">
+                            <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?></p>
+                    </td>
+                    <td class="center">
+                        <?php if ($item->language == '*'): ?>
+                            <?php echo JText::alt('JALL', 'language'); ?>
+                        <?php else: ?>
+                            <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                        <?php endif; ?>
+                    </td>
+                    <td class="center">
+                        <?php echo (int) $item->id; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
     </table>
     <div>
         <input type="hidden" name="task" value="" />

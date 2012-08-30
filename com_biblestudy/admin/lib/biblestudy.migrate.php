@@ -130,7 +130,6 @@ class JBSMigrate {
                 $db->setQuery($query);
                 $updates = $db->loadObject();
                 $version = $updates->version;
-                //dump($version, 'Version');
                 switch ($version):
                     case '7.0.1':
                         $message[] = $this->allupdate();
@@ -275,7 +274,7 @@ class JBSMigrate {
                 return false;
                 break;
         }
-        $jbsmessages = $message; 
+        $jbsmessages = $message;
         JRequest::setVar('jbsmessages', $jbsmessages, 'get', 'array');
         return $jbsmessages;
     }

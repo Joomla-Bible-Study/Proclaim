@@ -8,56 +8,61 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
+
 $function = JRequest::getVar('function', 'jSelectStudy');
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=series&layout=modal&tmpl=component'); ?>" method="post" name="adminForm">
-    <div id="editcell">
-        <table class="adminlist">
-            <thead>
-                <tr>
-                    <th width="5">
-                        <?php echo JText::_('JBS_CMN_ID'); ?>
-                    </th>
-                    <th>
-                        <?php echo JText::_('JBS_CMN_SERIES'); ?>
-                    </th>
-                    <th width="5%">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
-                    </th>
-                </tr>
-            </thead>
-            <?php
-            $k = 0;
-            for ($i = 0, $n = count($this->items); $i < $n; $i++) {
-                $row = &$this->items[$i];
-                // workaround for JS: replace quotes and double quotes by another character
-                $row->series_text = str_replace("'", '`', $row->series_text);
-                $row->series_text = str_replace('"', '`', $row->series_text);
-                ?>
-                <tr class="<?php echo "row$k"; ?>">
-                    <td width="5">
-                        <?php echo $row->id; ?>
-                    </td>
-
-                    <td><a class="pointer" onclick="if (window.parent) window.parent.<?php echo $function; ?>('<?php echo $row->id; ?>', '<?php echo $row->series_text; ?>');">
-                            <?php echo $row->series_text; ?></a></td>
-
-                </tr>
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=series&layout=modal&tmpl=component'); ?>" method="post" name="adminForm" id="adminForm">
+    <fieldset id="filter clearfix">
+        <div class="filter-select fltrt">
+            <select name="filter_language" class="inputbox" onchange="this.form.submit()">
+                <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE'); ?></option>
+                <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language')); ?>
+            </select>
+        </div>
+    </fieldset>
+    <table class="adminlist">
+        <thead>
+            <tr>
+                <th class="title">
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'mediafile.id', $listDirn, $listOrder); ?>
+                    <?php //echo JText::_('JBS_CMN_SERIES'); ?>
+                </th>
+                <th width="5%">
+                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+                </th>
+                <th width="5">
+                    <?php echo JText::_('JBS_CMN_ID'); ?>
+                </th>
+            </tr>
+        </thead>
+        <?php foreach ($this->items as $i => $item) : ?>
+            <tr class="row<?php echo $i % 2; ?>">
+                <td>
+                    <a class="pointer" onclick="if (window.parent) window.parent.<?php echo $this->escape($function); ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->series_text)); ?>');">
+                        <?php echo $this->escape($item->series_text); ?>
+                    </a>
+                </td>
                 <td class="center">
-                    <?php if ($row->language == '*'): ?>
+                    <?php if ($item->language == '*'): ?>
                         <?php echo JText::alt('JALL', 'language'); ?>
                     <?php else: ?>
-                        <?php echo $row->language_title ? $this->escape($row->language_title) : JText::_('JUNDEFINED'); ?>
+                        <?php echo $item->language_title ? $item->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                     <?php endif; ?>
                 </td>
-                <?php
-                $k = 1 - $k;
-            }
-            ?>
-        </table>
-    </div>
+                <td align="center">
+                    <?php echo (int) $item->id; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
     <input type="hidden" name="task" value="" />
+    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
+    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
     <?php echo JHtml::_('form.token'); ?>
 </form>

@@ -84,6 +84,7 @@ class BiblestudyModelSeries extends JModelList {
 
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
+
         parent::populateState('series.series_text', 'ASC');
     }
 
@@ -105,6 +106,12 @@ class BiblestudyModelSeries extends JModelList {
         $query->select('l.title AS language_title');
         $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = series.language');
 
+
+        // Filter on the language.
+        if ($language = $this->getState('filter.language')) {
+            $query->where('series.language = ' . $db->quote($language));
+        }
+
         // Filter by published state
         $published = $this->getState('filter.published');
         if (is_numeric($published)) {
@@ -114,9 +121,9 @@ class BiblestudyModelSeries extends JModelList {
         }
 
         //Add the list ordering clause
-        $orderCol = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        $orderCol = $this->state->get('list.ordering', 'series_text');
+        $orderDirn = $this->state->get('list.direction', 'asc');
+        $query->order($db->escape($orderCol . ' ' . $orderDirn));
         return $query;
     }
 

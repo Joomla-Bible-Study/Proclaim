@@ -218,8 +218,9 @@ class BiblestudyModelAdmin extends JModelAdmin {
         $changeSet->fix();
         $this->fixSchemaVersion();
         $this->fixUpdateVersion();
-        //$installer = new Com_BiblestudyInstallerScript();
-        //$installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
+        $installer = new Com_BiblestudyInstallerScript();
+        $installer->deleteUnexistingFiles();  // Need to Update first deleat files of the new template do to them not in the biblestudy xml
+        $installer->fixMenus();
         $this->fixDefaultTextFilters();
     }
 
@@ -279,9 +280,6 @@ class BiblestudyModelAdmin extends JModelAdmin {
 
         // Check value. If ok, don't do update
         $version = $this->getSchemaVersion();
-        //dump($version, 'version');
-        //dump($schema, 'schema');
-        //dump($extensionresult, 'Extensionresult');
         if ($version == $schema) {
             $result = $version;
         } else {
