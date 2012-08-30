@@ -199,6 +199,10 @@ class Com_BiblestudyInstallerScript {
         $db->setQuery($query1);
         $db->query();
 
+        //remove uneeded folders and files and reset menus between 7.0 and 7.1
+        $this->deleteUnexistingFiles();
+        $this->fixMenus();
+        
         // An example of setting a redirect to a new location after the install is completed
         $parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
     }
@@ -240,7 +244,7 @@ class Com_BiblestudyInstallerScript {
     }
 
     /**
-     * Remove Old Foles and Folders
+     * Remove Old Files and Folders
      * @since 7.1.0
      */
     public function deleteUnexistingFiles() {
@@ -249,6 +253,18 @@ class Com_BiblestudyInstallerScript {
             '/components/com_biblestudy/class.biblestudydownload.php',
             '/administrator/components/com_biblestudy/Snoopy.class.php',
             '/administrator/components/com_biblestudy/admin.biblestudy.php',
+            '/components/com_biblestudy/controllers/teacherlist.php',
+            '/components/com_biblestudy/controllers/teacherdisplay.php',
+            '/components/com_biblestudy/controllers/studydetails.php',
+            '/components/com_biblestudy/controllers/studieslist.php',
+            '/components/com_biblestudy/controllers/serieslist.php',
+            '/components/com_biblestudy/controllers/seriesdetail.php',
+            '/components/com_biblestudy/models/teacherlist.php',
+            '/components/com_biblestudy/models/teacherdisplay.php',
+            '/components/com_biblestudy/models/studydetails.php',
+            '/components/com_biblestudy/models/studieslist.php',
+            '/components/com_biblestudy/models/seriesdetail.php',
+            '/components/com_biblestudy/models/serieslist.php',
         );
 
         // TODO There is an issue while deleting folders using the ftp mode
@@ -260,6 +276,7 @@ class Com_BiblestudyInstallerScript {
             '/components/com_biblestudy/view/studieslist',
             '/components/com_biblestudy/view/studydetails',
             '/components/com_biblestudy/view/serieslist',
+            '/components/com_biblestudy/view/seriesdetail',
             '/administrator/components/com_biblestudy/css',
             '/administrator/components/com_biblestudy/images',
             '/administrator/components/com_biblestudy/js',
@@ -294,8 +311,10 @@ class Com_BiblestudyInstallerScript {
         foreach ($menus AS $menu):
             $menu->link = str_replace('teacherlist', 'teachers', $menu->link);
             $menu->link = str_replace('teacherdisplay', 'teacher', $menu->link);
-            $menu->link = str_replace('tudydisplay', 'sermon', $menu->link);
+            $menu->link = str_replace('studydisplay', 'sermon', $menu->link);
             $menu->link = str_replace('serieslist', 'seriesdisplays', $menu->link);
+            $menu->link = str_replace('seriesdetail', 'seriesdisplay', $menu->link);
+            $menu->link = str_replace('studieslist', 'sermons', $menu->link);
             $query = $db->getQuery(TRUE);
             $query->update('#__menu');
             $query->set("`link` = '" . $db->escape($menu->link) . "'");
