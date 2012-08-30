@@ -336,7 +336,7 @@ class Com_BiblestudyInstallerScript {
         $images = $db->getObjectList();
         foreach ($images as $image)
         {
-            if ($image->media_image_path)
+            if (!empty($image->media_image_path))
             {
                 $image->media_image_path = str_replace('components','media', $image->media_image_path);
                 $query = $db->getQuery(TRUE);
