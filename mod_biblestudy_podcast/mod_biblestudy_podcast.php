@@ -34,4 +34,4 @@ $podcast = new podcastSubscribe();
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
 //display the module
-require JModuleHelper::getLayoutPath('mod_biblestudy_podcast', $params->get('layout', 'default'));
+require JModuleHelper::getLayoutPath('mod_biblestudy_podcast', 'default');
