@@ -60,7 +60,6 @@ class JBSExport {
     /**
      * Get Export Table
      * @param string $table
-     * @param string $localfilename
      * @return boolean
      */
     function getExportTable($table) {

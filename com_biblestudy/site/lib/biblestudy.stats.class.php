@@ -23,7 +23,6 @@ class jbStats {
 
     /**
      * Top Score Site
-     * @param object $item
      * @return string
      */
     function top_score_site() {

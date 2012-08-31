@@ -268,8 +268,6 @@ class BiblestudyModelAdmin extends JModelAdmin {
     /**
      * Fix schema version if wrong
      *
-     * @param JSchema ChangeSet
-     *
      * @return   mixed  string schema version if success, false if fail
      */
     public function fixSchemaVersion() {
