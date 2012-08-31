@@ -84,6 +84,7 @@
             <menu link="option=com_biblestudy&amp;view=podcasts" view="podcasts" img="../media/com_biblestudy/images/menu/icon-16-podcast.png" alt="JBS_MNU_PODCASTS">JBS_MNU_PODCASTS</menu>
             <menu link="option=com_biblestudy&amp;view=shares" view="shares" img="../media/com_biblestudy/images/menu/icon-16-social.png" alt="JBS_MNU_SOCIAL_NETWORK_LINKS">JBS_MNU_SOCIAL_NETWORK_LINKS</menu>
             <menu link="option=com_biblestudy&amp;view=templates" view="templates" img="../media/com_biblestudy/images/menu/icon-16-templates.png" alt="JBS_MNU_TEMPLATE_DISPLAY">JBS_MNU_TEMPLATE_DISPLAY</menu>
+            <menu link="option=com_biblestudy&amp;view=templatecodes" view="templatecodes" img="../media/com_biblestudy/images/menu/icon-16-templates.png" alt="JBS_MNU_TEMPLATE_CODE_DISPLAY">JBS_MNU_TEMPLATE_DISPLAY</menu>
             <menu link="option=com_biblestudy&amp;view=mediaimages" view="mediaimages" img="../media/com_biblestudy/images/menu/icon-16-mediaimages.png" alt="JBS_MNU_MEDIA_IMAGES">JBS_MNU_MEDIA_IMAGES</menu>
             <menu link="option=com_biblestudy&amp;view=mimetypes" view="mimetypes" img="../media/com_biblestudy/images/menu/icon-16-mimetype.png" alt="JBS_MNU_MIME_TYPES">JBS_MNU_MIME_TYPES</menu>
             <menu link="option=com_biblestudy&amp;view=styles" view="styles" img="../media/com_biblestudy/images/menu/icon-16-css.png" alt="JBS_MNU_STYLES">JBS_MNU_STYLES</menu>
