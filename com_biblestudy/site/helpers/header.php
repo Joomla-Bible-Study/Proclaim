@@ -432,8 +432,8 @@ function getHeader($row, $params, $admin_params, $template, $showheader, $ismodu
  */
 function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $rowcolid, $nh, $admin_params, $template) {
     $headercell = '<th id="';
+    $elementid = new stdClass();
     if ($rowid == '20') {
-        $elementid = null;
         $elementid->headertext = JText::_('JBS_CMN_MEDIA');
         $elementid->id = 'jbsmedia';
     } else {
@@ -457,7 +457,7 @@ function getHeadercell($rowid, $row, $params, $lastcol, $colspan, $rowspan, $row
         $headercell .='rowspan="' . $rowspan . '"';
     }
     $headercell .= '>';
-    if (isset($elementid)) {
+    if (isset($elementid->headertext)) {
         $headercell .= $elementid->headertext;
     } else {
         $headercell .= getCustomhead($rowcolid, $params);

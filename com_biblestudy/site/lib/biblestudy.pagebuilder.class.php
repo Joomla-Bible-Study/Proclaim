@@ -40,6 +40,7 @@ class JBSPagebuilder {
         $images = new jbsImages();
         //media files image, links, download
         $mids = $item->mids;
+        $page = new stdClass();
         if ($mids) {
             $page->media = $this->mediaBuilder($mids, $params, $admin_params);
         } else {
@@ -157,7 +158,6 @@ class JBSPagebuilder {
 
                 case 1:
                     $mediareturns[] = $playercode . $downloadlink;
-                    echo $mediareturn;
                     break;
 
                 case 2:

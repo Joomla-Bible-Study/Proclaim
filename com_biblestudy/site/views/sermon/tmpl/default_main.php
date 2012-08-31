@@ -51,35 +51,31 @@ if ($this->params->get('showpodcastsubscribedetails') == 1) {
         </div>
     <?php } //End Social Networking    ?>
     <table>
-        <tr>
-            <td>
-                <?php if ($this->params->get('show_teacher_view') > 0) {
-                    ?>
-
+        <tbody>
+            <tr>
+                <td>
                     <?php
-                    $teacher_call = JView::loadHelper('teacher');
-                    $teacher = getTeacher($this->params, $row->teacher_id, $this->admin_params);
-                    echo $teacher;
+                    if ($this->params->get('show_teacher_view') > 0) {
+                        $teacher_call = JView::loadHelper('teacher');
+                        $teacher = getTeacher($this->params, $row->teacher_id, $this->admin_params);
+                        echo $teacher;
+                        ?>
+                    </td>
+                    <td>
+                    <?php
+                    }
+                    if ($this->params->get('title_line_1') + $params->get('title_line_2') > 0) {
+                        $title_call = JView::loadHelper('title');
+                        $title = getTitle($this->params, $row, $this->admin_params, $this->template);
+                        echo $title;
+                    }
                     ?>
                 </td>
-                <td><?php
-            }
-                ?>
-
-                <?php
-                if ($this->params->get('title_line_1') + $params->get('title_line_2') > 0) {
-                    $title_call = JView::loadHelper('title');
-                    $title = getTitle($this->params, $row, $this->admin_params, $this->template);
-                    echo $title;
-                }
-                ?>
-
-
-            </td>
-        </tr>
+            </tr>
+        </tbody>
     </table>
 </div><!-- header -->
-
+<div>
 <table id="bsmsdetailstable" cellspacing="0">
     <?php
     if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items_view') < 1) {
@@ -130,3 +126,5 @@ if ($this->params->get('showrelated') == 2) {
 if ($this->params->get('showpodcastsubscribedetails') == 2) {
     echo $this->subscribe;
 }
+?>
+</div>

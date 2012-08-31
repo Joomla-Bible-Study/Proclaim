@@ -24,7 +24,7 @@ class jbsImages {
      * @return \JRegistry
      */
     function adminSettings() {
-        $database = & JFactory::getDBO();
+        $database = JFactory::getDBO();
         $database->setQuery("SELECT params FROM #__bsms_admin WHERE id = 1");
         $database->query();
         $compat = $database->loadObject();
@@ -43,34 +43,43 @@ class jbsImages {
      * @return \JObject
      */
     function getImagePath($path) {
-        error_reporting(0);
+        //error_reporting(0);
+        $tmp = new JObject();
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
-        $tmp = new JObject();
-        $tmp->path = $path;
-        $tmp->size = filesize($tmp->path);
-        $ext = strtolower(JFile::getExt($path));
-        switch ($ext) {
-            // Image
-            case 'jpg':
-            case 'png':
-            case 'gif':
-            case 'xcf':
-            case 'odg':
-            case 'bmp':
-            case 'jpeg':
-                $info = @getimagesize($tmp->path);
-                $tmp->width = @$info[0];
-                $tmp->height = @$info[1];
-                $tmp->type = @$info[2];
-                $tmp->mime = @$info['mime'];
-                if (!$tmp->width) {
-                    $tmp->width = 0;
-                }
-                if (!$tmp->height) {
-                    $tmp->height = 0;
-                }
-        }
+        if (JFile::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path)):
+            $tmp->path = $path;
+            $tmp->size = filesize($tmp->path);
+            $ext = strtolower(JFile::getExt($path));
+            switch ($ext) {
+                // Image
+                case 'jpg':
+                case 'png':
+                case 'gif':
+                case 'xcf':
+                case 'odg':
+                case 'bmp':
+                case 'jpeg':
+                    $info = getimagesize($tmp->path);
+                    $tmp->width = $info[0];
+                    $tmp->height = $info[1];
+                    $tmp->type = $info[2];
+                    $tmp->mime = $info['mime'];
+                    if (!$tmp->width) {
+                        $tmp->width = 0;
+                    }
+                    if (!$tmp->height) {
+                        $tmp->height = 0;
+                    }
+            }
+        else:
+            $tmp->path = $path;
+            $tmp->size = null;
+            $tmp->width = 0;
+            $tmp->height = 0;
+            $tmp->type = '';
+            $tmp->mime = '';
+        endif;
         return $tmp;
     }
 

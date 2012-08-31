@@ -126,6 +126,7 @@ class BiblestudyViewSermons extends JView {
         $studies = $items;
         $pagebuilder = new JBSPagebuilder();
         foreach ($studies as $i => $study) {
+            $article = new stdClass();
             $pelements = $pagebuilder->buildPage($study, $params, $this->admin_params);
             $studies[$i]->scripture1 = $pelements->scripture1;
             $studies[$i]->scripture2 = $pelements->scripture2;
@@ -139,8 +140,16 @@ class BiblestudyViewSermons extends JView {
             $studies[$i]->duration = $pelements->duration;
             $studies[$i]->studydate = $pelements->studydate;
             $studies[$i]->topics = $pelements->topics;
-            $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-            $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
+            if (isset($pelements->study_thumbnail)):
+                $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
+            else:
+                $studies[$i]->study_thumbnail = null;
+            endif;
+            if (isset($pelements->series_thumbnail)):
+                $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
+            else:
+                $studies[$i]->series_thumbnail = null;
+            endif;
             $studies[$i]->detailslink = $pelements->detailslink;
             $article->text = $studies[$i]->studyintro;
             $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart));
@@ -223,7 +232,8 @@ class BiblestudyViewSermons extends JView {
         $this->assignRef('pagination', $pagination);
         $this->assignRef('order', $this->orders);
         $this->assignRef('topic', $this->topics);
-        $menu = JSite::getMenu();
+        $JSite = new JSite();
+        $menu = $JSite->getMenu();
         $item = $menu->getActive();
         $images = new jbsImages();
         $main = $images->mainStudyImage();
@@ -233,6 +243,7 @@ class BiblestudyViewSermons extends JView {
         $stats = new jbStats();
         $popular = $stats->top_score_site($item->id);
         //$this->assignRef('popular', $popular);
+        $this->page = new stdClass();
         $this->page->popular = $stats->top_score_site($item->id);
 
         //Get whether "Go" Button is used then turn off onchange if it is
@@ -300,8 +311,8 @@ class BiblestudyViewSermons extends JView {
 
         $this->assignRef('lists', $lists);
         $this->assignRef('items', $items);
-
-        $this->assignRef('request_url', $uri->toString());
+        $stringuri = $uri->toString();
+        $this->assignRef('request_url', $stringuri);
         $this->assignRef('params', $params);
         parent::display($tpl);
     }

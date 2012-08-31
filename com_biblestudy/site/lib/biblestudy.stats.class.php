@@ -35,7 +35,7 @@ class jbStats {
         $final = array();
         $final2 = array();
 
-        $db = &JFactory::getDBO();
+        $db = JFactory::getDBO();
         $db->setQuery('SELECT m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added FROM #__bsms_mediafiles AS m
 		LEFT JOIN #__bsms_studies AS s ON (m.study_id = s.id)
 			where m.published = 1 GROUP BY m.study_id');

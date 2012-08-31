@@ -87,10 +87,23 @@ class BiblestudyViewSermon extends JView {
         $study->duration = $pelements->duration;
         $study->studydate = $pelements->studydate;
         $study->topics = $pelements->topics;
-        $study->study_thumbnail = $pelements->study_thumbnail;
-        $study->series_thumbnail = $pelements->series_thumbnail;
+        if (isset($pelements->study_thumbnail)):
+            $study->study_thumbnail = $pelements->study_thumbnail;
+        else:
+            $study->study_thumbnail = null;
+        endif;
+        if (isset($pelements->series_thumbnail)):
+            $study->series_thumbnail = $pelements->series_thumbnail;
+        else:
+            $study->series_thumbnail = null;
+        endif;
         $study->detailslink = $pelements->detailslink;
-        $study->teacherimage = $pelements->teacherimage;
+        if (isset($pelements->teacherimage)):
+            $study->teacherimage = $pelements->teacherimage;
+        else:
+            $study->teacherimage = null;
+        endif;
+        $article = new stdClass();
         $article->text = $study->scripture1;
         $results = $dispatcher->trigger('onContentPrepare', array('com_biblestudy.sermons', & $article, & $params, $limitstart = null));
         $study->scripture1 = $article->text;
@@ -191,6 +204,7 @@ class BiblestudyViewSermon extends JView {
         $detailslink = JRoute::_($detailslink);
         $this->assignRef('detailslink', $detailslink);
         $share = JView::loadHelper('share');
+        $this->page = new stdClass();
         $this->page->social = getShare($detailslink, $study, $params, $this->admin_params);
         JHtml::addIncludePath(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'helpers');
         JHTML::_('behavior.tooltip');

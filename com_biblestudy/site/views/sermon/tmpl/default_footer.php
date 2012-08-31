@@ -10,3 +10,4 @@
 defined('_JEXEC') or die;
 ?>
 </div><!--End of page container div-->
+<div style="clear: both"></div>

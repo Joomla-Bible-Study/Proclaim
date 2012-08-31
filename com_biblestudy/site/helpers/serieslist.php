@@ -155,7 +155,7 @@ function seriesGetelement($r, $row, $listelementid, $custom, $islink, $admin_par
             $images = new jbsImages();
             $image = $images->getSeriesThumbnail($row->series_thumbnail);
 
-            $element = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
+            $element = '<img src="test' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="' . $row->series_text . '">';
             if ($islink > 0 && $view == 0) {
                 $element = getSerieslink($islink, $row, $element, $params, $admin_params);
             }

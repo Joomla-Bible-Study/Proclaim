@@ -21,10 +21,11 @@ class JHtmlIcon {
 
     /**
      * Print Popup
+     * @todo need to verify what the $request is coming from error out now.
      * @return string
      */
     static function print_popup() {
-        $url = '&tmpl=component&print=1&layout=default&page=' . $request->limitstart;
+        $url = '&tmpl=component&print=1&layout=default'; //&page=' . $request->limitstart;
 
         $status = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
 

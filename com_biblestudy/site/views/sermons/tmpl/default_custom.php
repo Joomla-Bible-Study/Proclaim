@@ -25,8 +25,6 @@ $series_menu1 = $this->params->get('series_id');
 $series_menu = $series_menu1[0];
 $messagetype_menu1 = $this->params->get('messagetype');
 $messagetype_menu = $messagetype_menu1[0];
-$document = JFactory::getDocument();
-$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblestudy.css');
 $params = $this->params;
 $teachers = $params->get('teacher_id');
 
