@@ -55,7 +55,7 @@ defined('_JEXEC') or die;
                 <tr class="row<?php echo (++$rows % 2); ?>">
                     <td class="key"><?php echo $module['name']; ?></td>
                     <td class="key"><?php echo ucfirst($module['client']); ?></td>
-                    <td><strong><?php echo ($module['result']) ? 'Installed' : 'Not installed'; ?></strong></td>
+                    <td><strong style="color: <?php echo ($module['result']) ? "green" : "red" ?>"><?php echo ($module['result']) ? 'Installed' : 'Not installed'; ?></strong></td>
                 </tr>
             <?php endforeach; ?>
         <?php endif; ?>
@@ -69,7 +69,7 @@ defined('_JEXEC') or die;
                 <tr class="row<?php echo (++$rows % 2); ?>">
                     <td class="key"><?php echo ucfirst($plugin['name']); ?></td>
                     <td class="key"><?php echo ucfirst($plugin['group']); ?></td>
-                    <td><strong><?php echo ($plugin['result']) ? 'Installed' : 'Not installed'; ?></strong></td>
+                    <td><strong style="color: <?php echo ($plugin['result']) ? "green" : "red" ?>"><?php echo ($plugin['result']) ? 'Installed' : 'Not installed'; ?></strong></td>
                 </tr>
             <?php endforeach; ?>
         <?php endif; ?>
@@ -94,13 +94,15 @@ defined('_JEXEC') or die;
         <p><?php echo JText::_('JBS_INS_TITLE'); ?> &copy; by <a href="http://www.JoomlaBibleStudy.org" target="_blank">www.JoomlaBibleStudy.org</a> All rights reserved.</p>
     </div>
     <div class="width-35 fltrt">
-        <div style="border-style:solid; border-width:5px;">
+        <div class ="finishbutton" onmouseover="this.className='finishbutton1'" onmouseout="this.className='finishbutton'">
             <a href="index.php?option=com_biblestudy" >
-                <image src="../media/com_biblestudy/images/done-icon.jpg" alt="Done" border="" style="clear:both;" />
+                <image src="../media/com_biblestudy/images/done-icon.jpg" alt="Done" class="imgcenter"/>
                 <div style="clear:both;"></div>
-                <span style="font-size: 24px;">
-                    Clear Here To Finish
-                </span>
+                <div style="text-align: center; width: 100%">
+                    <span style="font-size: 24px;">
+                        Clear Here To Finish
+                    </span>
+                </div>
             </a>
         </div>
     </div>
