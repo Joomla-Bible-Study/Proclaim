@@ -88,7 +88,11 @@ class BiblestudyViewSermon extends JView {
         $study->media = $pelements->media;
         $study->duration = $pelements->duration;
         $study->studydate = $pelements->studydate;
-        $study->topics = $pelements->topics;
+        if (isset($pelements->topics)):
+            $study->topics = $pelements->topics;
+        else:
+            $study->topics = '';
+        endif;
         if (isset($pelements->study_thumbnail)):
             $study->study_thumbnail = $pelements->study_thumbnail;
         else:

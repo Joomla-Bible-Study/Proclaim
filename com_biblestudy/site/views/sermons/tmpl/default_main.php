@@ -26,14 +26,13 @@ $params = $this->params;
 $teachers = $params->get('teacher_id');
 $listingcall = JView::loadHelper('listing');
 ?>
-
-<?php
-if ($this->params->get('showpodcastsubscribelist') == 1) {
-    echo $this->subscribe;
-}
-?>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
     <div id="bsheader">
+        <?php
+        if ($this->params->get('showpodcastsubscribelist') == 1) {
+            echo $this->subscribe;
+        }
+        ?>
         <h1 class="componentheading">
             <?php
             if ($this->params->get('show_page_image') > 0) {

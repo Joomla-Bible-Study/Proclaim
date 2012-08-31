@@ -20,12 +20,12 @@ $row = $this->study;
 // @todo need to clean up old code.
 $listingcall = JView::loadHelper('listing');
 $sharecall = JView::loadHelper('share');
-if ($this->params->get('showpodcastsubscribedetails') == 1) {
-    echo $this->subscribe;
-}
 ?>
 <div id="bsmHeader">
     <?php
+    if ($this->params->get('showpodcastsubscribedetails') == 1) {
+        echo $this->subscribe;
+    }
     if ($this->params->get('showrelated') == 1) {
         echo $this->related;
     }
@@ -49,7 +49,7 @@ if ($this->params->get('showpodcastsubscribedetails') == 1) {
             echo $this->page->social;
             ?>
         </div>
-    <?php } //End Social Networking    ?>
+<?php } //End Social Networking     ?>
     <table>
         <tbody>
             <tr>
