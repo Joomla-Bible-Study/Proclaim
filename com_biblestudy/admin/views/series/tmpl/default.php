@@ -39,16 +39,16 @@ $saveOrder = $listOrder == 'series.ordering';
                     <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="checkAll(this)" />
                 </th>
                 <th width="1%">
-                    <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'mediafile.published', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'series.published', $listDirn, $listOrder); ?>
                 </th>
                 <th width="98%">
-                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'mediafile.filename', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort', 'JBS_CMN_SERIES', 'series.series_text', $listDirn, $listOrder); ?>
                 </th>
                 <th width="5%">
                     <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
                 </th>
                 <th width="1%" class="nowrap">
-                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'mediafile.id', $listDirn, $listOrder); ?>
+                    <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'series.id', $listDirn, $listOrder); ?>
                 </th>
             </tr>
         </thead>

@@ -43,7 +43,7 @@ $saveOrder = $listOrder == 'share.ordering';
                     <th width="10%">
                         <?php echo JHtml::_('grid.sort', 'JBS_CMN_ORDERING', 'share.ordering', $listDirn, $listOrder); ?>
                         <?php if ($canOrder && $saveOrder) : ?>
-                            <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'share.saveorder'); ?>
+                            <?php echo JHtml::_('grid.order', $this->items, 'filesave.png', 'shares.saveorder'); ?>
                         <?php endif; ?>
                     </th>
                     <th>
@@ -76,11 +76,11 @@ $saveOrder = $listOrder == 'share.ordering';
                         <?php if ($canChange) : ?>
                             <?php if ($saveOrder) : ?>
                                 <?php if ($listDirn == 'asc') : ?>
-                                    <span><?php echo $this->pagination->orderUpIcon($i, ('1' == @$this->items[$i - 1]->id), 'share.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                    <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'share.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                    <span><?php echo $this->pagination->orderUpIcon($i, ('1' == @$this->items[$i - 1]->id), 'shares.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                                    <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'shares.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
                                 <?php elseif ($listDirn == 'desc') : ?>
-                                    <span><?php echo $this->pagination->orderUpIcon($i, ('1' == @$this->items[$i - 1]->id), 'share.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                    <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'share.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+                                    <span><?php echo $this->pagination->orderUpIcon($i, ('1' == @$this->items[$i - 1]->id), 'shares.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+                                    <span><?php echo $this->pagination->orderDownIcon($i, $n, ($this->pagination->total == @$this->items[$i + 1]->id), 'shares.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
                                 <?php endif; ?>
                             <?php endif; ?>
                             <?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
