@@ -88,6 +88,7 @@ class BiblestudyViewTeachers extends JView {
             $document->setDescription($this->admin_params->get('metadesc'));
         }
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/tooltip.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
@@ -103,21 +104,21 @@ class BiblestudyViewTeachers extends JView {
 
         foreach ($items as $i => $item) {
             $image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
-            $items[$i]->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '">';
+            $items[$i]->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . ' alt="' . $item->teachername . '">';
             $items[$i]->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':' . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
             $items[$i]->teacherlink = JRoute::_('index.php?option=com_biblestudy&view=teacher&id=' . $item->slug . '&t=' . $t);
         }
-
-        $menu = & JSite::getMenu();
-        //	$item =& $menu->getActive();
+        $JSite = new JSite();
+        $menu = $JSite->getMenu();
 
         $pagination = $this->get('Pagination');
+        $this->page = new stdClass();
         $this->page->pagelinks = $pagination->getPagesLinks();
         $this->page->counter = $pagination->getPagesCounter();
         $this->assignRef('pagination', $pagination);
         $this->assignRef('items', $items);
-
-        $this->assignRef('request_url', $uri->toString());
+        $stringuri = $uri->toString();
+        $this->assignRef('request_url', $stringuri);
         $this->assignRef('params', $params);
 
         parent::display($tpl);

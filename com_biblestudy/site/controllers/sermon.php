@@ -35,7 +35,8 @@ class BiblestudyControllerSermon extends JController {
 
         //Get the params so we can set the proper view
         $model = $this->getModel('sermon');
-        $menu = JSite::getMenu();
+        $JSite = new JSite();
+        $menu = $JSite->getMenu();
         $item = $menu->getActive();
         $params = $mainframe->getPageParameters();
         $t = $params->get('t');
@@ -69,7 +70,8 @@ class BiblestudyControllerSermon extends JController {
         $mainframe = JFactory::getApplication();
         $option = JRequest::getCmd('option');
         $model = $this->getModel('sermon');
-        $menu = JSite::getMenu();
+        $JSite = new JSite();
+        $menu = $JSite->getMenu();
         $item = $menu->getActive();
         $params = $mainframe->getPageParameters();
         $t = $params->get('t');
@@ -159,7 +161,8 @@ class BiblestudyControllerSermon extends JController {
         $mainframe = JFactory::getApplication();
         $menuitemid = JRequest::getInt('Itemid');
         if ($menuitemid) {
-            $menu = JSite::getMenu();
+            $JSite = new JSite();
+            $menu = $JSite->getMenu();
             $menuparams = $menu->getParams($menuitemid);
         }
         $comment_author = JRequest::getVar('full_name', 'Anonymous', 'POST', 'WORD');

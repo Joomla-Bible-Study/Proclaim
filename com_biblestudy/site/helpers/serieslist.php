@@ -289,7 +289,8 @@ function getseriesElementnumber($subcustom) {
  * @return string
  */
 function getSeriesstudiesDBO($id, $params, $limit = '') {
-    $menu = JSite::getMenu();
+    $menu = $JSite = new JSite();
+    $menu = $JSite->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);
@@ -303,7 +304,7 @@ function getSeriesstudiesDBO($id, $params, $limit = '') {
     } elseif ($language != '*') {
         $langlink = '&filter.languages=' . $language;
     }
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     $query = 'SELECT s.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
             . ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
             . ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
@@ -447,7 +448,8 @@ function getSeriesLandingPage($params, $id, $admin_params) {
         $limit = 10000;
     }
     $seriesuselimit = $params->get('landingseriesuselimit', 0);
-    $menu = JSite::getMenu();
+    $menu = $JSite = new JSite();
+    $menu = $JSite->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);

@@ -43,7 +43,6 @@ class jbsImages {
      * @return \JObject
      */
     function getImagePath($path) {
-        //error_reporting(0);
         $tmp = new JObject();
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
@@ -73,8 +72,8 @@ class jbsImages {
                     }
             }
         else:
-            $tmp->path = $path;
-            $tmp->size = null;
+            $tmp->path = NULL;
+            $tmp->size = NULL;
             $tmp->width = 0;
             $tmp->height = 0;
             $tmp->type = '';

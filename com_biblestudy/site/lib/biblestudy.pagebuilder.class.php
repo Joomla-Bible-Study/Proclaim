@@ -57,7 +57,7 @@ class JBSPagebuilder {
         //scripture 2
         $esv = 0;
         $scripturerow = 2;
-        if ($item->chapter_begin2) {
+        if (isset($item->chapter_begin2)) {
             $page->scripture2 = getScripture($params, $item, $esv, $scripturerow);
         } else {
             $page->scripture2 = '';
@@ -77,19 +77,29 @@ class JBSPagebuilder {
         if ($item->thumbnailm) {
             $image = $images->getStudyThumbnail($item->thumbnailm);
             $page->study_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->studytitle . '">';
+        } else {
+            $page->study_thumbnail = '';
         }
         if ($item->series_thumbnail) {
             $image = $images->getSeriesThumbnail($item->series_thumbnail);
             $page->series_thumbnail = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->series_text . '">';
+        } else {
+            $page->series_thumnail = '';
         }
         $page->detailslink = JRoute::_('index.php?option=com_biblestudy&view=sermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid'));
-        return $page;
+        if (!isset($item->image)):
+            $item->image = '';
+        endif;
+        if (!isset($item->thumb)):
+            $item->thumb = '';
+        endif;
         if ($item->image || $item->thumb) {
             $teacherimage = $images->getTeacherImage($item->image, $item->thumb);
             $page->teacherimage = '<img src="' . JURI::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="' . $item->teachername . '">';
         } else {
             $page->teacherimage = '';
         }
+        return $page;
     }
 
     /**
@@ -180,7 +190,8 @@ class JBSPagebuilder {
      * @return object
      */
     function studyBuilder($whereitem, $wherefield, $params, $admin_params, $limit, $order) {
-        $menu = JSite::getMenu();
+        $JSite = new JSite();
+        $menu = $JSite->getMenu();
         $item = $menu->getActive();
         $language = $item->language;
         if ($language == '*' || !$language) {
@@ -254,22 +265,7 @@ class JBSPagebuilder {
             $limit = 10;
         }
         $db->setQuery($query, 0, $limit);
-        //  $db->setQuery($query->__toString());
-        //   print_r ($query);
-        //$studies = $db->loadObjectList();
         $studies = $db->loadObjectList();
-        //Remove items user is not authorized to see
-        /*   $user = JFactory::getUser();
-          $groups = $user->getAuthorisedViewLevels();
-          $count = count($studies);
-          for ($i = 0; $i < $count; $i++) {
-
-          if ($studies[$i]->access > 1) {
-          if (!in_array($studies[$i]->access, $groups)) {
-          unset($studies[$i]);
-          }
-          }
-          } */
         foreach ($studies as $study) {
             $pelements = $this->buildPage($study, $params, $admin_params);
             $study->scripture1 = $pelements->scripture1;
@@ -278,8 +274,16 @@ class JBSPagebuilder {
             $study->duration = $pelements->duration;
             $study->studydate = $pelements->studydate;
             $study->topics = $pelements->topics;
-            $study->study_thumbnail = $pelements->study_thumbnail;
-            $study->series_thumbnail = $pelements->series_thumbnail;
+            if (isset($pelements->study_thumbnail)):
+                $study->study_thumbnail = $pelements->study_thumbnail;
+            else:
+                $study->study_thumbnail = '';
+            endif;
+            if (isset($pelements->series_thumbnail)):
+                $study->series_thumbnail = $pelements->series_thumbnail;
+            else:
+                $study->series_thumbnail = '';
+            endif;
             $study->detailslink = $pelements->detailslink;
         }
 

@@ -30,7 +30,8 @@ function getYearsLandingPage($params, $id, $admin_params) {
     if (!$limit) {
         $limit = 10000;
     }
-    $menu = JSite::getMenu();
+    $JSite = new JSite();
+    $menu = $JSite->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);

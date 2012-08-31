@@ -150,6 +150,7 @@ class BiblestudyViewSeriesdisplay extends JView {
 
 
         $limitstart = 0;
+        $article = new stdClass();
         $article->text = $items->description;
         $linkit = $params->get('show_scripture_link');
         if ($linkit) {
@@ -174,7 +175,8 @@ class BiblestudyViewSeriesdisplay extends JView {
         $this->assignRef('passage_link', $passage_link);
         $this->assignRef('studies', $studies);
         $uri = JFactory::getURI();
-        $this->assignRef('request_url', $uri->toString());
+        $stringuri = $uri->toString();
+        $this->assignRef('request_url', $stringuri);
         parent::display($tpl);
     }
 

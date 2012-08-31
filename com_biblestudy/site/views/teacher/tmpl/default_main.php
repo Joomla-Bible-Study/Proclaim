@@ -30,7 +30,7 @@ if (!$studieslisttemplateid) {
         <tr>
             <td class="bsm_teacherthumbnail">
                 <?php
-                if ($item->title) {
+                if (isset($item->title)) {
                     $teacherdisplay = $this->item->teachername . ' - ' . $this->item->title;
                 } else {
                     $teacherdisplay = $this->item->teachername;
@@ -50,7 +50,7 @@ if (!$studieslisttemplateid) {
                     <tr><td class="bsm_teacheremail">
                             <?php
                             if ($this->item->email) {
-                                if (!stristr($item->email, '@')) {
+                                if (!stristr($this->item->email, '@')) {
                                     ?>
                                     <a href="<?php echo $this->item->email; ?>"><?php echo JText::_('JBS_TCH_EMAIL_CONTACT'); ?></a>
                                 <?php } else {

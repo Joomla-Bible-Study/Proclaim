@@ -32,7 +32,8 @@ function getMessageTypesLandingPage($params, $id, $admin_params) {
         $limit = 10000;
     }
     $messagetypeuselimit = $params->get('landingmessagetypeuselimit', 0);
-    $menu = JSite::getMenu();
+    $menu = $JSite = new JSite();
+    $menu = $JSite->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);

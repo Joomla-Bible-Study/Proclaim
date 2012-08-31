@@ -33,7 +33,8 @@ function getTopicsLandingPage($params, $id, $admin_params) {
     if (!$t) {
         $t = JRequest::getVar('t', 1, 'get', 'int');
     }
-    $menu = JSite::getMenu();
+    $JSite = new JSite();
+    $menu = $JSite->getMenu();
     $item = $menu->getActive();
     $registry = new JRegistry;
     $registry->loadJSON($item->params);
