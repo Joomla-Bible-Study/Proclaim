@@ -200,7 +200,7 @@ class Com_BiblestudyInstallerScript {
         $db->setQuery($query1);
         $db->query();
 
-
+                       
         // An example of setting a redirect to a new location after the install is completed
         $parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
     }
@@ -313,9 +313,9 @@ class Com_BiblestudyInstallerScript {
             $menu->link = str_replace('seriesdetail', 'seriesdisplay', $menu->link);
             $menu->link = str_replace('studieslist', 'sermons', $menu->link);
             $query = $db->getQuery(TRUE);
-            $query->update('#__menu')
-                    ->set("`link` = '" . $db->escape($menu->link) . "'")
-                    ->where('id = ' . $menu->id);
+            $query->update('#__menu');
+            $query->set("`link` = '" . $db->escape($menu->link) . "'");
+            $query->where('id = ' . $menu->id);
             $db->setQuery($query);
             if (!$db->execute()) {
                 JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
@@ -323,7 +323,7 @@ class Com_BiblestudyInstallerScript {
         endforeach;
     }
 
-    /**
+/**
      * Fix Image paths
      * @since 7.1.0
      */
@@ -334,20 +334,21 @@ class Com_BiblestudyInstallerScript {
                 ->from('#__bsms_media');
         $db->setQuery($query);
         $images = $db->loadObjectList();
-        foreach ($images as $image) {
-            dump($image, 'image');
-            if (!empty($image->media_image_path)) {
-                $image->media_image_path = str_replace('components', 'media', $image->media_image_path);
-                $query = $db->getQuery(TRUE);
-                $query->update('#__bsms_media')
-                        ->set("`media_image_path` = '" . $db->escape($image->media_image_path) . "'")
-                        ->where('id = ' . $image->id);
-                $db->setQuery($query);
-                if (!$db->execute()) {
-                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+        foreach ($images as $image)
+        {
+            if (!empty($image->media_image_path))
+                {
+                    $image->media_image_path = str_replace('components','media', $image->media_image_path);
+                    $query = $db->getQuery(TRUE);
+                    $query->update('#__bsms_media');
+                    $query->set("`media_image_path` = '" . $db->escape($image->media_image_path) . "'");
+                    $query->where('id = ' . $image->id);
+                    $db->setQuery($query);
+                    if (!$db->execute()) {
+                        JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+                    }
                 }
-            }
+            
         }
-    }
-
+}
 }
