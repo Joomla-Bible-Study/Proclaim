@@ -32,9 +32,9 @@ class JBSExport {
             $mainframe->redirect('index.php?option=com_jbsmigration', JText::_('JBS_EI_NO_BACKUP'));
         }
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
-        
+
         if (!$downloadfile = $this->output_file($serverfile, $localfilename, $mime_type = 'text/x-sql')) {
-            $mainframe->redirect('index.php?option=com_jbsmigration', JText::_('JBS_CMN_OPERATION_FAILED'));
+            $mainframe->redirect('index.php?option=com_jbsmigration', JText::_('JBS_EI_FAILURE'));
         }
         return TRUE;
     }
