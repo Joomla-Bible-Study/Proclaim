@@ -29,7 +29,7 @@ class biblestudyViewInstall extends JView {
         $this->jbstype = JRequest::getVar('jbstype');
 
         if ($this->jbsname === NULL || $this->jbstype === NULL):
-            JError::raiseWarning(500, JText::_('JBS_ERR_WARNING_INSTALL'));
+            JError::raiseWarning(500, JText::_('JBS_INS_WARNING_INSTALL'));
             JRequest::setVar('hidemainmenu', TRUE);
             return FALSE;
         endif;
