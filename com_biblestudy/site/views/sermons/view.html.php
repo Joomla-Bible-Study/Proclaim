@@ -241,10 +241,8 @@ class BiblestudyViewSermons extends JView {
 
         //Get the Popular stats
         $stats = new jbStats();
-        $popular = $stats->top_score_site($item->id);
-        //$this->assignRef('popular', $popular);
         $this->page = new stdClass();
-        $this->page->popular = $stats->top_score_site($item->id);
+        $this->page->popular = $stats->top_score_site();
 
         //Get whether "Go" Button is used then turn off onchange if it is
         if ($params->get('use_go_button', 0) == 0) {

@@ -26,7 +26,7 @@ class jbStats {
      * @param object $item
      * @return string
      */
-    function top_score_site($item) {
+    function top_score_site() {
         $t = JRequest::getInt('t', 1, 'get');
 
         $admin_params = getAdminsettings();
