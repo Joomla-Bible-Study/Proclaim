@@ -276,7 +276,7 @@ class biblestudyController extends JController {
 
         JBSUpload::deletetempfile($tempfile);
         $mediafileid = JRequest::getInt('id', '', 'post');
-        if ($layout = 'modal') {
+        if ($layout == 'modal') {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
         } else {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
@@ -391,7 +391,7 @@ class biblestudyController extends JController {
         $app->setUserState($option . 'size', $file['size']);
         $app->setUserState($option . 'serverid', $serverid);
         $app->setUserState($option . 'folderid', $folderid);
-        if ($layout = 'modal') {
+        if ($layout == 'modal') {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
         } else {
             $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);

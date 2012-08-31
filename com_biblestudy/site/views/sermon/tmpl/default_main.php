@@ -45,7 +45,7 @@ if ($this->params->get('showpodcastsubscribedetails') == 1) {
         ?>
         <div id="bsms_share">
             <?php
-            //  $social = getShare($this->detailslink, $row, $params, $this->admin_params);
+            $social = getShare($this->detailslink, $row, $params, $this->admin_params);
             echo $this->page->social;
             ?>
         </div>
@@ -62,7 +62,7 @@ if ($this->params->get('showpodcastsubscribedetails') == 1) {
                         ?>
                     </td>
                     <td>
-                    <?php
+                        <?php
                     }
                     if ($this->params->get('title_line_1') + $params->get('title_line_2') > 0) {
                         $title_call = JView::loadHelper('title');
@@ -76,55 +76,55 @@ if ($this->params->get('showpodcastsubscribedetails') == 1) {
     </table>
 </div><!-- header -->
 <div>
-<table id="bsmsdetailstable" cellspacing="0">
-    <?php
-    if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items_view') < 1) {
-        $headerCall = JView::loadHelper('header');
-        $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_view'), $ismodule = 0);
-        echo $header;
-    }
-    ?>
-    <tbody>
-
+    <table id="bsmsdetailstable" cellspacing="0">
         <?php
-        if ($this->params->get('list_items_view') == 1) {
-            echo '<tr class="bseven"><td class="media">';
-            require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
-            $media = new jbsMedia();
-            $listing = $media->getMediaTable($row, $this->params, $this->admin_params);
-            echo $listing;
-            echo '</td></tr>';
-        }
-        if ($params->get('list_items_view') == 0) {
-            $oddeven = 'bsodd';
-            $listing = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
-            echo $listing;
+        if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items_view') < 1) {
+            $headerCall = JView::loadHelper('header');
+            $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_view'), $ismodule = 0);
+            echo $header;
         }
         ?>
-    </tbody>
-</table>
-<table id="bsmsdetailstable" cellspacing="0">
-    <tr>
-        <td id="studydetailstext">
+        <tbody>
+
             <?php
-            echo $this->passage;
-            if ($this->params->get('show_scripture_link') > 0) {
-                echo $this->article->studytext;
-            } else {
-                echo $this->study->studytext;
+            if ($this->params->get('list_items_view') == 1) {
+                echo '<tr class="bseven"><td class="media">';
+                require_once (JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.media.class.php');
+                $media = new jbsMedia();
+                $listing = $media->getMediaTable($row, $this->params, $this->admin_params);
+                echo $listing;
+                echo '</td></tr>';
+            }
+            if ($params->get('list_items_view') == 0) {
+                $oddeven = 'bsodd';
+                $listing = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
+                echo $listing;
             }
             ?>
-        </td>
-    </tr>
-</table>
-<?php
-if ($this->params->get('showrelated') == 2) {
-    echo $this->related;
-}
-?>
-<?php
-if ($this->params->get('showpodcastsubscribedetails') == 2) {
-    echo $this->subscribe;
-}
-?>
+        </tbody>
+    </table>
+    <table id="bsmsdetailstable" cellspacing="0">
+        <tr>
+            <td id="studydetailstext">
+                <?php
+                echo $this->passage;
+                if ($this->params->get('show_scripture_link') > 0) {
+                    echo $this->article->studytext;
+                } else {
+                    echo $this->study->studytext;
+                }
+                ?>
+            </td>
+        </tr>
+    </table>
+    <?php
+    if ($this->params->get('showrelated') == 2) {
+        echo $this->related;
+    }
+    ?>
+    <?php
+    if ($this->params->get('showpodcastsubscribedetails') == 2) {
+        echo $this->subscribe;
+    }
+    ?>
 </div>

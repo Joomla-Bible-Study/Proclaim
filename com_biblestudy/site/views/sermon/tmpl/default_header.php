@@ -12,4 +12,18 @@ defined('_JEXEC') or die;
  *
  */
 ?>
+<script language="javascript">
+function ReverseDisplay() {
+	var ele = document.getElementById("scripture");
+	var text = document.getElementById("heading");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "show";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "hide";
+	}
+}
+</script>
 <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->

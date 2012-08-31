@@ -67,6 +67,8 @@ class BiblestudyViewSermon extends JView {
         $document->addScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js');
         $document->addScript('http://www.google.com/recaptcha/api/js/recaptcha_ajax.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/player/jwplayer.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/jquery.js');
+        $document->addScript(JURI::base() . 'media/com_biblestudy/js/noconflict.js');
         $document->addScript(JURI::base() . 'media/com_biblestudy/js/biblestudy.js');
         $url = $params->get('css', 'biblestudy.css');
         if ($url) {
