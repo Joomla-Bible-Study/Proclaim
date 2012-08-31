@@ -99,7 +99,7 @@ class BiblestudyViewTeachers extends JView {
         $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
         $images = new jbsImages();
         // Get data from the model
-        $items = & $this->get('Items');
+        $items = $this->get('Items');
 
         foreach ($items as $i => $item) {
             $image = $images->getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);

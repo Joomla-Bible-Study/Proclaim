@@ -16,20 +16,15 @@ if (!$t) {
 }
 ?>
 <form action="<?php echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
-
-<!--<tbody><tr>-->
     <div id="biblestudy" class="noRefTagger"> <!-- This div is the container for the whole page -->
 
         <!--header-->
         <table id="seriestable" cellspacing="0">
             <tbody>
-
                 <?php
                 $listing = getSerieslist($this->items, $this->params, $oddeven = 'bsodd', $this->admin_params, $this->template, $view = 1);
                 echo $listing;
                 ?>
-
-
                 <?php
                 switch ($this->params->get('series_detail_listtype')) {
 

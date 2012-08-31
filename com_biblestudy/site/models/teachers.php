@@ -29,7 +29,8 @@ class BiblestudyModelTeachers extends JModelList {
         $db = $this->getDbo();
 
         //See if this view is being filtered by language in the menu
-        $menu = JSite::getMenu();
+        $JSite = new JSite();
+        $menu = $JSite->getMenu();
         $item = $menu->getActive();
         $language = $item->language;
         $query = $db->getQuery(true);
