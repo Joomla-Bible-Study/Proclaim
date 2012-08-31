@@ -10,6 +10,7 @@
  * @since 7.0.2
  * */
 defined('_JEXEC') or die;
+jimport('joomla.filesystem.file');
 
 /**
  * Export Class
@@ -27,13 +28,13 @@ class JBSExport {
         $localfilename = 'jbs-db-backup_' . $date . '_' . time() . '.sql';
         $mainframe = JFactory::getApplication();
 
-        if (!$outputDB = $this->createBackup($localfilename)) {
-            $mainframe->redirect('index.php?option=com_biblestudy&view=admin', JText::_('JBS_EI_NO_BACKUP'));
+        if (!$this->createBackup($localfilename)) {
+            $mainframe->redirect('index.php?option=com_jbsmigration', JText::_('JBS_EI_NO_BACKUP'));
         }
         $serverfile = JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $localfilename;
-
+        
         if (!$downloadfile = $this->output_file($serverfile, $localfilename, $mime_type = 'text/x-sql')) {
-            $mainframe->redirect('index.php?option=com_biblestudy&view=admin', JText::_('JBS_CMN_OPERATION_FAILED'));
+            $mainframe->redirect('index.php?option=com_jbsmigration', JText::_('JBS_CMN_OPERATION_FAILED'));
         }
         return TRUE;
     }
@@ -80,7 +81,7 @@ class JBSExport {
         //Get the prefix
         $prefix = $db->getPrefix();
 
-        $export = "--\n-- Table structure for table `" . $table . "`\n--\n\n";
+        $export = "\n--\n-- Table structure for table `" . $table . "`\n--\n\n";
         //Drop the existing table
         $export .= 'DROP TABLE IF EXISTS `' . $table . "`;\n";
 
