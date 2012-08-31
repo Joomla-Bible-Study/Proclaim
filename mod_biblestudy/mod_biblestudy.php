@@ -53,8 +53,16 @@ foreach ($items AS $item) {
     $item->duration = $pelements->duration;
     $item->studydate = $pelements->studydate;
     $item->topics = $pelements->topics;
-    $item->study_thumbnail = $pelements->study_thumbnail;
-    $item->series_thumbnail = $pelements->series_thumbnail;
+    if (isset($pelements->study_thumbnail)):
+        $item->study_thumbnail = $pelements->study_thumbnail;
+    else:
+        $item->study_thumbnail = null;
+    endif;
+    if (isset($pelements->series_thumbnail)):
+        $item->series_thumbnail = $pelements->series_thumbnail;
+    else:
+        $item->series_thumbnail = null;
+    endif;
     $item->detailslink = $pelements->detailslink;
 }
 $list = $items;
