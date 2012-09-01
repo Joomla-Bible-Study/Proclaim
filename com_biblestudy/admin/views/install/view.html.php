@@ -92,21 +92,6 @@ class biblestudyViewInstall extends JView {
         if (!$JBS710) {
             $msg[] = '<br />' . JText::sprintf('JBS_INS_UPDATE_FAILURE', '7.0.1', '7.1');
         }
-
-
-        //Check for default details text link image and copy if not present
-        $src = BIBLESTUDY_MEDIA_PATH . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
-        $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'textfile24.png';
-        $imageexists = JFile::exists($dest);
-        if (!$imageexists) {
-            $msg[] = '<br /><br />' . JText::_('JBS_INS_COPYING_IMAGE');
-            $imagesuccess = JFile::copy($src, $dest);
-            if ($imagesuccess) {
-                $msg[] = '<br />' . JText::_('JBS_INS_COPYING_SUCCESS');
-            } else {
-                $msg[] = '<br />' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER1') . '/media/com_biblestudy/images/textfile24.png' . JText::_('JBS_INS_COPYING_PROBLEM_FOLDER2');
-            }
-        }
         return $msg;
     }
 
