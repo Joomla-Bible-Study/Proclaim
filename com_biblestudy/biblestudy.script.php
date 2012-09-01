@@ -51,7 +51,7 @@ class Com_BiblestudyInstallerScript {
         } else {
             $this->_bugfixCantBuildAdminMenus();
         }
-        
+
         $rel = null;
         // this component does not work with Joomla releases prior to 1.6
         // abort if the current Joomla release is older
@@ -258,6 +258,7 @@ class Com_BiblestudyInstallerScript {
      */
     public function deleteUnexistingFiles() {
         $files = array(
+            '/images/textfile24.png',
             '/components/com_biblestudy/biblestudy.css',
             '/components/com_biblestudy/class.biblestudydownload.php',
             '/administrator/components/com_biblestudy/Snoopy.class.php',
@@ -433,6 +434,63 @@ class Com_BiblestudyInstallerScript {
                 echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $folder) . '<br />';
             }
         }
+    }
+
+    /**
+     * Joomla! 1.6+ bugfix for "DB function returned no error"
+     */
+    private function _bugfixDBFunctionReturnedNoError() {
+        $db = JFactory::getDbo();
+
+        // Fix broken #__assets records
+        $query = $db->getQuery(true);
+        $query->select('id')
+                ->from('#__assets')
+                ->where($db->nameQuote('name') . ' = ' . $db->Quote($this->_biblestudy_extension));
+        $db->setQuery($query);
+        $ids = $db->loadResultArray();
+        if (!empty($ids))
+            foreach ($ids as $id) {
+                $query = $db->getQuery(true);
+                $query->delete('#__assets')
+                        ->where($db->nameQuote('id') . ' = ' . $db->Quote($id));
+                $db->setQuery($query);
+                $db->query();
+            }
+
+        // Fix broken #__extensions records
+        $query = $db->getQuery(true);
+        $query->select('extension_id')
+                ->from('#__extensions')
+                ->where($db->nameQuote('element') . ' = ' . $db->Quote($this->_biblestudy_extension));
+        $db->setQuery($query);
+        $ids = $db->loadResultArray();
+        if (!empty($ids))
+            foreach ($ids as $id) {
+                $query = $db->getQuery(true);
+                $query->delete('#__extensions')
+                        ->where($db->nameQuote('extension_id') . ' = ' . $db->Quote($id));
+                $db->setQuery($query);
+                $db->query();
+            }
+
+        // Fix broken #__menu records
+        $query = $db->getQuery(true);
+        $query->select('id')
+                ->from('#__menu')
+                ->where($db->nameQuote('type') . ' = ' . $db->Quote('component'))
+                ->where($db->nameQuote('menutype') . ' = ' . $db->Quote('main'))
+                ->where($db->nameQuote('link') . ' LIKE ' . $db->Quote('index.php?option=' . $this->_biblestudy_extension));
+        $db->setQuery($query);
+        $ids = $db->loadResultArray();
+        if (!empty($ids))
+            foreach ($ids as $id) {
+                $query = $db->getQuery(true);
+                $query->delete('#__menu')
+                        ->where($db->nameQuote('id') . ' = ' . $db->Quote($id));
+                $db->setQuery($query);
+                $db->query();
+            }
     }
 
     /**
