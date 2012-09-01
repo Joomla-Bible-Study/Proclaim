@@ -28,6 +28,32 @@ class BiblestudyModelTemplatecode extends JModelAdmin {
     protected $text_prefix = 'COM_BIBLESTUDY';
 
     /**
+     * Method to auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     *
+     * @since	1.6
+     */
+    protected function populateState() {
+
+        $app = JFactory::getApplication('administrator');
+
+        // Save the syntax for later use
+        $app->setUserState('editor.source.syntax', 'php');
+
+        // Initialise variables.
+        $table = $this->getTable();
+        $key = $table->getKeyName();
+
+        // Get the pk of the record from the request.
+        $pk = JRequest::getInt($key);
+        $this->setState($this->getName() . '.id', $pk);
+
+        // Load the parameters.
+        $value = JComponentHelper::getParams($this->option);
+        $this->setState('params', $value);
+    }
+    /**
      * Method override to check if you can edit an existing record.
      *
      * @param       array   $data   An array of input data.

@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
-      <div class="width-60 fltlft">
+    <div class="width-60 fltlft">
         <fieldset class="panelform">
             <legend>
 
@@ -39,7 +39,8 @@ defined('_JEXEC') or die;
                 <li>
                     <?php echo $this->form->getLabel('series_thumbnail'); ?>
 
-                    <?php // series_text is required; fill in default if empty and leave value otherwise
+                    <?php
+                    // series_text is required; fill in default if empty and leave value otherwise
                     echo $this->form->getInput('series_thumbnail', null, empty($this->item->series_text) ? $this->admin->params['default_series_image'] : $this->item->series_thumbnail);
                     ?>
                 </li>
@@ -77,5 +78,6 @@ defined('_JEXEC') or die;
         </div>
     <?php endif; ?>
     <input type="hidden" name="task" value="" />
+    <input type="hidden" name="controller" value="serie" />
 <?php echo JHtml::_('form.token'); ?>
 </form>
