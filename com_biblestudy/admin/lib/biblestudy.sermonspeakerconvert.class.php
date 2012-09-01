@@ -21,7 +21,7 @@ class JBSConvert {
      * @return string Table for resultes
      */
     function convertSS() {
-        $result_table = '<table><tr><td><strong>' . JText::_('JBS_ADM_NOTE_ERRORS') . '</strong></td></tr>';
+        $result_table = '<table><tr><td><strong>' . JText::_('JBS_IBM_NOTE_ERRORS') . '</strong></td></tr>';
         $db = JFactory::getDBO();
         //Make a server record
         $base = JURI::base();
@@ -31,9 +31,9 @@ class JBSConvert {
         $db->query();
         if ($db->getErrorNum() > 0) {
             $error = $db->getErrorMsg();
-            $result_table .= '<tr><td>' . JText::_('JBS_ADM_ERROR_OCCURED_SERVER') . ': ' . $error . '</td></tr>';
+            $result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_OCCURED_SERVER') . ': ' . $error . '</td></tr>';
         } else {
-            $result_table .= '<tr><td>' . JText::_('JBS_ADM_SERVER_RECORD_ADDED') . '</td></tr>';
+            $result_table .= '<tr><td>' . JText::_('JBS_IBM_SERVER_RECORD_ADDED') . '</td></tr>';
         }
         $query = 'SELECT * FROM #__bsms_servers WHERE published = 1 ORDER BY `id` DESC LIMIT 1 ';
         $db->setQuery($query);
@@ -48,7 +48,7 @@ class JBSConvert {
         $db->query();
         $num_rows = $db->getNumRows();
         if ($num_rows < 1) {
-            $result_table .= '<tr><td><span style="font-color: red;">' . JText::_('JBS_ADM_NO_SERIES_FOUND_IN_SERMON_SPEAKER') . '</span>';
+            $result_table .= '<tr><td><span style="font-color: red;">' . JText::_('JBS_IBM_NO_SERIES_FOUND_SS') . '</span>';
         } else {
             $series = $db->loadObjectList();
             $addse = 0;
@@ -68,14 +68,14 @@ class JBSConvert {
                 $db->query();
                 if ($db->getErrorNum() > 0) {
                     $error = $db->getErrorMsg();
-                    $result_table .= '<tr><td>' . JText::_('JBS_ADM_ERROR_OCCURED_SS_SERIES') . ': ' . $error . '</td></tr>';
+                    $result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_OCCURED_SS_SERIES') . ': ' . $error . '</td></tr>';
                 } else {
                     $updatedse = 0;
                     $updatedse = $db->getAffectedRows(); //echo 'affected: '.$updated;
                     $addse = $addse + $updatedse;
                 }
             } //end foreach $series as $single
-            $result_table .= '<tr><td>' . $addse . ' ' . JText::_('JBS_ADM_SERIES_CONVERTED') . '</td></tr>';
+            $result_table .= '<tr><td>' . $addse . ' ' . JText::_('JBS_IBM_SERIES_CONVERTED') . '</td></tr>';
         }
 
         //Teacher Records
@@ -84,7 +84,7 @@ class JBSConvert {
         $db->query();
         $numrows = $db->getNumRows();
         if ($numrows < 1) {
-            $result_table .= '<tr><td><span style="font-color: red;">' . JText::_('JBS_ADM_NO_TEACHERS_FOUND_SS') . '</span></td></tr>';
+            $result_table .= '<tr><td><span style="font-color: red;">' . JText::_('JBS_IBM_NO_TEACHERS_FOUND_SS') . '</span></td></tr>';
         }
 
         $teachers = $db->loadObjectList();
@@ -111,7 +111,7 @@ class JBSConvert {
             $db->query();
             if ($db->getErrorNum() > 0) {
                 $error = $db->getErrorMsg();
-                $result_table .= '<tr><td>' . JText::_('JBS_ADM_ERROR_OCCURED_CREATING_TEACHERS') . ': ' . $error . '</td></tr>';
+                $result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_OCCURED_CREATING_TEACHERS') . ': ' . $error . '</td></tr>';
             } else {
                 $updated = 0;
                 $updated = $db->getAffectedRows(); //echo 'affected: '.$updated;
@@ -133,7 +133,7 @@ class JBSConvert {
             $db->query();
             $num_rows = $db->getNumRows();
             if ($num_rows < 1) {
-                $result_table .= '<tr><td><span style="font-color: red;">' . JText::_('JBS_ADM_NO_SERMONS_FOUND_SS') . '</span>';
+                $result_table .= '<tr><td><span style="font-color: red;">' . JText::_('JBS_IBM_NO_SERMONS_FOUND_SS') . '</span>';
             } else {
                 $sermons = $db->loadObjectList();
                 $adds = 0;
@@ -178,7 +178,7 @@ class JBSConvert {
 
                     if ($db->getErrorNum() > 0) {
                         $error = $db->getErrorMsg();
-                        $result_table .= '<tr><td>' . JText::_('JBS_ADM_ERROR_OCCURED_CREATING_SERMONS_SS') . ': ' . $error . '</td></tr>';
+                        $result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_OCCURED_CREATING_SERMONS_SS') . ': ' . $error . '</td></tr>';
                     } else {
                         $updateds = 0;
                         $updateds = $db->getAffectedRows(); //echo 'affected: '.$updated;
@@ -196,7 +196,7 @@ class JBSConvert {
                     $db->query();
                     if ($db->getErrorNum() > 0) {
                         $error = $db->getErrorMsg();
-                        $result_table .= '<tr><td>' . JText::_('JBS_ADM_ERROR_CREATING_MEDIAFILES_SS') . ': ' . $error . '</td></tr>';
+                        $result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_CREATING_MEDIAFILES_SS') . ': ' . $error . '</td></tr>';
                     } else {
                         $updated2 = 0;
                         $updated2 = $db->getAffectedRows(); //echo 'affected: '.$updated;
@@ -210,19 +210,19 @@ class JBSConvert {
                     }
                     if ($db->getErrorNum() > 0) {
                         $error = $db->getErrorMsg();
-                        $result_table .= '<tr><td>' . JText::_('JBS_ADM_ERROR_CREATING_MEDIAFILES_SS') . ': ' . $error . '</td></tr>';
+                        $result_table .= '<tr><td>' . JText::_('JBS_IBM_ERROR_CREATING_MEDIAFILES_SS') . ': ' . $error . '</td></tr>';
                     } else {
                         $updated2 = 0;
                         $updated2 = $db->getAffectedRows(); //echo 'affected: '.$updated;
                         $add2 = $add2 + $updated2;
                     }
                 } // end foreach sermon
-                $result_table .= '<tr><td>' . $adds . ' ' . JText::_('JBS_ADM_SERMONS_CREATED_FOR') . ' ' . $teachername . '</td></tr>';
-                $result_table .= '<tr><td>' . $add2 . ' ' . JText::_('JBS_ADM_MEDIAFILES_CREATED') . ' ' . $teachername . '</td></tr>';
+                $result_table .= '<tr><td>' . $adds . ' ' . JText::_('JBS_IBM_SERMONS_CREATED_FOR') . ' ' . $teachername . '</td></tr>';
+                $result_table .= '<tr><td>' . $add2 . ' ' . JText::_('JBS_IBM_MEDIAFILES_CREATED') . ' ' . $teachername . '</td></tr>';
             } //End of foreach $teachers as $teacher
         }
 
-        $result_table .= '<tr><td>' . $add . ' ' . JText::_('JBS_ADM_TEACHERS_CREATED') . '</td></tr>';
+        $result_table .= '<tr><td>' . $add . ' ' . JText::_('JBS_IBM_TEACHERS_CREATED') . '</td></tr>';
         $result_table .= '</table>';
         return $result_table;
     }

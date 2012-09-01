@@ -119,14 +119,14 @@ class BiblestudyViewAdmin extends JView {
         $extensions = $db->loadObjectList();
         foreach ($extensions as $extension) {
             if ($extension->element == 'com_sermonspeaker') {
-                $this->ss = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertSermonSpeaker">' . JText::_('JBS_ADM_CONVERT_SERMON_SPEAKER') . '</a>';
+                $this->ss = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertSermonSpeaker">' . JText::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
             } else {
-                $this->ss = JText::_('JBS_ADM_NO_SERMON_SPEAKER_FOUND');
+                $this->ss = JText::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
             }
             if ($extension->element == 'com_preachit') {
-                $this->pi = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertPreachIt">' . JText::_('JBS_ADM_CONVERT_PREACH_IT') . '</a>';
+                $this->pi = '<a href="index.php?option=com_biblestudy&view=admin&id=1&task=admin.convertPreachIt">' . JText::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
             } else {
-                $this->pi = JText::_('JBS_ADM_NO_PREACHIT_FOUND');
+                $this->pi = JText::_('JBS_IBM_NO_PREACHIT_FOUND');
             }
         }
 

@@ -141,13 +141,13 @@ class JBSImport {
         $isnot = substr_count($query, '#__bsms_studies');
         $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
         if ($isold !== 0 && $isnot === 0) :
-            JError::raiseWarning('403', JText::_('JBS_ADM_OLD_DB'));
+            JError::raiseWarning('403', JText::_('JBS_IBM_OLD_DB'));
             return false;
         elseif ($isnot === 0):
-            JError::raiseWarning('403', JText::_('JBS_ADM_NOT_DB'));
+            JError::raiseWarning('403', JText::_('JBS_IBM_NOT_DB'));
             return false;
         elseif (($iscernt === 0) && ($parent !== TRUE)): // Way to check to see if file came from restor and is cerent.
-            JError::raiseWarning('403', JText::_('JBS_ADM_NOT_CURENT_DB'));
+            JError::raiseWarning('403', JText::_('JBS_IBM_NOT_CURENT_DB'));
             return false;
         else:
             //first we need to drop the existing JBS tables
@@ -202,13 +202,13 @@ class JBSImport {
         $isnot = substr_count($query, '#__bsms_studies');
         $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
         if ($isold !== 0 && $isnot === 0) :
-            JError::raiseWarning('403', JText::_('JBS_ADM_OLD_DB'));
+            JError::raiseWarning('403', JText::_('JBS_IBM_OLD_DB'));
             return false;
         elseif ($isnot === 0):
-            JError::raiseWarning('403', JText::_('JBS_ADM_NOT_DB'));
+            JError::raiseWarning('403', JText::_('JBS_IBM_NOT_DB'));
             return false;
         elseif (!$iscernt):
-            JError::raiseWarning('403', JText::_('JBS_ADM_NOT_CURENT_DB'));
+            JError::raiseWarning('403', JText::_('JBS_IBM_NOT_CURENT_DB'));
             return false;
         else:
             $queries = $db->splitSql($query);

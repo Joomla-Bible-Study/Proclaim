@@ -8,7 +8,7 @@
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
-        <field name="jbsmigrationshow" type="radio" default="0" label="JBS_ADM_SHOW_JBSMIGRATION_LABEL" description="JBS_ADM_SHOW_JBSMIGRATION_LABEL_DESC">
+        <field name="jbsmigrationshow" type="radio" default="0" label="JBS_IBM_SHOW_JBSMIGRATION_LABEL" description="JBS_IBM_SHOW_JBSMIGRATION_LABEL_DESC">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>

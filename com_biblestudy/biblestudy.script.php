@@ -150,7 +150,7 @@ class Com_BiblestudyInstallerScript {
         } else {
             $drop_result = '<H3>' . JText::_('JBS_INS_NO_DATABASE_REMOVED') . '</H3>';
         }
-        echo '<h2>' . JText::_('JBS_INS_UNINSTALLED_') . ' ' . $this->release . '</h2> <div>' . $drop_result . '</div>';
+        echo '<h2>' . JText::_('JBS_INS_UNINSTALLED') . ' ' . $this->release . '</h2> <div>' . $drop_result . '</div>';
     }
 
     /**

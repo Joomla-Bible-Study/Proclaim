@@ -69,7 +69,7 @@ class JBSPIconvert {
                 if ($db->getErrorNum() > 0) {
                     $svnoadd++;
                     //$error = $db->getErrorMsg();
-                    //$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_SERVERS').' id: '.$pi->id.' - '.$error.'</td></tr>';
+                    //$piconversion .= '<tr><td>'.JText::_('JBS_IBM_ERROR_OCCURED_MIGRATING_SERVERS').' id: '.$pi->id.' - '.$error.'</td></tr>';
                 } else {
                     $svadd++;
                     //$supdated = 0;
@@ -89,7 +89,7 @@ class JBSPIconvert {
                 if ($db->getErrorNum() > 0) {
                     $fnoadd++;
                     //$error = $db->getErrorMsg();
-                    //$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_FOLDER').' id: '.$pi->id.' - '.$error.'</td></tr>';
+                    //$piconversion .= '<tr><td>'.JText::_('JBS_IBM_ERROR_OCCURED_MIGRATING_FOLDER').' id: '.$pi->id.' - '.$error.'</td></tr>';
                 } else {
                     $fadd++;
                     //$fupdated = 0;
@@ -143,7 +143,7 @@ class JBSPIconvert {
                 if ($db->getErrorNum() > 0) {
                     $tnoadd++;
                     //$error = $db->getErrorMsg();
-                    //$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_TEACHER').' id: '.$pi->id.' - '.$error.'</td></tr>';
+                    //$piconversion .= '<tr><td>'.JText::_('JBS_IBM_ERROR_OCCURED_MIGRATING_TEACHER').' id: '.$pi->id.' - '.$error.'</td></tr>';
                 } else {
                     $tadd++;
                     //$tupdated = 0;
@@ -165,7 +165,7 @@ class JBSPIconvert {
         $db->query();
         $ministries = $db->loadObjectList();
         if (!$ministries) {
-            $piconversion .= '<tr><td>' . JText::_('JBS_ADM_NO_MINISTRIES') . '</td></tr>';
+            $piconversion .= '<tr><td>' . JText::_('JBS_IBM_NO_MINISTRIES') . '</td></tr>';
         } else {
             foreach ($ministries as $pi) {
                 $query = 'INSERT INTO #__bsms_locations SET `published` = "' . $pi->published . '", `location_text` = "' . $pi->ministry_name . '",
@@ -175,7 +175,7 @@ class JBSPIconvert {
                 if ($db->getErrorNum() > 0) {
                     $lnoadd++;
                     //$error = $db->getErrorMsg();
-                    //	$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_MINSTRY').' id: '.$pi->id.' - '.$error.'</td></tr>';
+                    //	$piconversion .= '<tr><td>'.JText::_('JBS_IBM_ERROR_OCCURED_MIGRATING_MINSTRY').' id: '.$pi->id.' - '.$error.'</td></tr>';
                 } else {
                     $ladd++;
                     //$mupdated = 0;
@@ -197,7 +197,7 @@ class JBSPIconvert {
         $db->query();
         $series = $db->loadObjectList();
         if (!$series) {
-            $piconversion .= '<tr><td>' . JText::_('JBS_ADM_NO_SERIES') . '</td></tr>';
+            $piconversion .= '<tr><td>' . JText::_('JBS_IBM_NO_SERIES') . '</td></tr>';
         } else {
             foreach ($series AS $pi) {
                 //Map new folder for images to old one
@@ -227,7 +227,7 @@ class JBSPIconvert {
                 if ($db->getErrorNum() > 0) {
                     $srnoadd++;
                     //$error = $db->getErrorMsg();
-                    //$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_SERIES').' id: '.$pi->id.' - '.$error.'</td></tr>';
+                    //$piconversion .= '<tr><td>'.JText::_('JBS_IBM_ERROR_OCCURED_MIGRATING_SERIES').' id: '.$pi->id.' - '.$error.'</td></tr>';
                 } else {
                     $sradd++;
                     // $tupdated = 0;
@@ -249,7 +249,7 @@ class JBSPIconvert {
         $db->query();
         $podcasts = $db->loadObjectList();
         if (!$podcasts) {
-            $piconversion .= '<tr><td>' . JText::_('JBS_ADM_NO_PODCASTS') . '</td></tr>';
+            $piconversion .= '<tr><td>' . JText::_('JBS_IBM_NO_PODCASTS') . '</td></tr>';
         } else {
             foreach ($podcasts AS $pi) {
                 $query = 'INSERT INTO #__bsms_podcast SET `title` = "' . $pi->name . '", `website` = "' . $pi->website . '",
@@ -262,7 +262,7 @@ class JBSPIconvert {
                 if ($db->getErrorNum() > 0) {
                     $pnoadd++;
                     //$error = $db->getErrorMsg();
-                    //$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_PODCAST').' id: '.$pi->id.' - '.$error.'</td></tr>';
+                    //$piconversion .= '<tr><td>'.JText::_('JBS_IBM_ERROR_OCCURED_MIGRATING_PODCAST').' id: '.$pi->id.' - '.$error.'</td></tr>';
                 } else {
                     $padd++;
                     //$pupdated = 0;
@@ -286,7 +286,7 @@ class JBSPIconvert {
         $db->query();
         $studies = $db->loadObjectList();
         if (!$studies) {
-            $piconversion .= '<tr><td>' . JText::_('JBS_ADM_NO_STUDIES') . '</td></tr>';
+            $piconversion .= '<tr><td>' . JText::_('JBS_IBM_NO_STUDIES') . '</td></tr>';
         } else {
             foreach ($studies AS $pi) {
                 $studydate = $pi->study_date;
@@ -382,7 +382,7 @@ class JBSPIconvert {
                 if ($db->getErrorNum() > 0) {
                     $snoadd++;
                     //$error = $db->getErrorMsg();
-                    //$piconversion .= '<tr><td>'.JText::_('JBS_ADM_ERROR_OCCURED_MIGRATING_STUDY').' id: '.$pi->id.' - '.$error.'</td></tr>';
+                    //$piconversion .= '<tr><td>'.JText::_('JBS_IBM_ERROR_OCCURED_MIGRATING_STUDY').' id: '.$pi->id.' - '.$error.'</td></tr>';
                 } else {
                     $sadd++;
                     // $mupdated = 0;
@@ -429,15 +429,15 @@ class JBSPIconvert {
             } //endforeach study
         }
 
-        $piconversion = '<table><tr><td><h3>' . JText::_('JBS_ADM_PREACHIT_RESULTS') . '</h3></td></tr>'
-                . '<tr><td>' . JText::_('JBS_ADM_PI_SERVERS') . '<strong>' . $svadd . '</strong> - ' . JText::_('JBS_ADM_NOT_CONVERTED') . $svnoadd . '</td></tr>'
-                . '<tr><td>' . JText::_('JBS_ADM_PI_FOLDERS') . '<strong>' . $fadd . '</strong> - ' . JText::_('JBS_ADM_NOT_CONVERTED') . $fnoadd . '</td></tr>'
-                . '<tr><td>' . JText::_('JBS_ADM_PI_TEACHERS') . '<strong>' . $tadd . '</strong> - ' . JText::_('JBS_ADM_NOT_CONVERTED') . $tnoadd . '</td></tr>'
-                . '<tr><td>' . JText::_('JBS_ADM_PI_SERIES') . '<strong>' . $sradd . '</strong> - ' . JText::_('JBS_ADM_NOT_CONVERTED') . $srnoadd . '</td></tr>'
-                . '<tr><td>' . JText::_('JBS_ADM_PI_PODCAST') . '<strong>' . $padd . '</strong> - ' . JText::_('JBS_ADM_NOT_CONVERTED') . $pnoadd . '</td></tr>'
-                . '<tr><td>' . JText::_('JBS_ADM_PI_STUDIES') . '<strong>' . $sadd . '</strong> - ' . JText::_('JBS_ADM_NOT_CONVERTED') . $snoadd . '</td></tr>'
-                . '<tr><td>' . JText::_('JBS_ADM_PI_MEDIA') . '<strong>' . $madd . '</strong> - ' . JText::_('JBS_ADM_NOT_CONVERTED') . $mnoadd . '</td></tr>'
-                . '<tr><td>' . JText::_('JBS_ADM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_ADM_NOT_CONVERTED') . $this->cnoadd . '</td></tr>'
+        $piconversion = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
+                . '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $svnoadd . '</td></tr>'
+                . '<tr><td>' . JText::_('JBS_IBM_PI_FOLDERS') . '<strong>' . $fadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $fnoadd . '</td></tr>'
+                . '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $tnoadd . '</td></tr>'
+                . '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $srnoadd . '</td></tr>'
+                . '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $pnoadd . '</td></tr>'
+                . '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $snoadd . '</td></tr>'
+                . '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $mnoadd . '</td></tr>'
+                . '<tr><td>' . JText::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->cnoadd . '</td></tr>'
                 . '</table>';
         return $piconversion;
     }

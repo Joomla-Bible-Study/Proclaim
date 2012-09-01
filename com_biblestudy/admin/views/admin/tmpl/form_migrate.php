@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
         <tr>
             <td><img src="<?php echo JURI::base() . '../media/com_biblestudy/images/icons/import.png'; ?>" alt="Import" height="48" width="48" /></td>
             <td>
-                <strong><?php echo JText::_('JBS_ADM_IMPORT'); ?></strong>
+                <strong><?php echo JText::_('JBS_IBM_IMPORT_FROM_FILE'); ?></strong>
             </td>
             <td>
                 <input class="input_box" id="importdb" name="importdb" type="file" size="57" />
