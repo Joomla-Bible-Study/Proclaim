@@ -317,9 +317,9 @@ class Com_BiblestudyInstallerScript {
             '/administrator/components/com_biblestudy/models/forms/mimetypeedit.xml',
             '/administrator/components/com_biblestudy/models/forms/podcastedit.xml',
             '/administrator/components/com_biblestudy/models/forms/seriesedit.xml',
-            //'/administrator/components/com_biblestudy/models/forms/serversedit.xml', // not shure if this file is needed
+            '/administrator/components/com_biblestudy/models/forms/serversedit.xml', 
             '/administrator/components/com_biblestudy/models/forms/shareedit.xml',
-            //'/administrator/components/com_biblestudy/models/forms/studiesedit.xml', // not shure if this file is needed
+            '/administrator/components/com_biblestudy/models/forms/studiesedit.xml', 
             '/administrator/components/com_biblestudy/models/forms/teacheredit.xml',
             '/administrator/components/com_biblestudy/models/forms/templateedit.xml',
             '/administrator/components/com_biblestudy/models/forms/topicsedit.xml',
