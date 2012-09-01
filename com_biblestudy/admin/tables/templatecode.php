@@ -148,7 +148,7 @@ class TableTemplatecode extends JTable {
                 $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'seriesdisplay' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . $filename;
                 break;
             case 7:
-                //seriesdisplay
+                //Model Desplay
                 $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy' . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . $filename;
                 break;
         }
@@ -214,7 +214,7 @@ class TableTemplatecode extends JTable {
                 $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'seriesdisplay' . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . $filename;
                 break;
             case 7:
-                //seriesdisplay
+                //Moduels Deplay
                 $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy' . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR . 'tmpl' . DIRECTORY_SEPARATOR . $filename;
                 break;
         }
