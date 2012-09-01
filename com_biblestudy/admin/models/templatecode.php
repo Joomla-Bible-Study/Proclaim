@@ -53,6 +53,7 @@ class BiblestudyModelTemplatecode extends JModelAdmin {
         $value = JComponentHelper::getParams($this->option);
         $this->setState('params', $value);
     }
+
     /**
      * Method override to check if you can edit an existing record.
      *

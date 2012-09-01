@@ -186,7 +186,7 @@ class TableTemplatecode extends JTable {
         jimport('joomla.filesystem.file');
         JClientHelper::setCredentialsFromRequest('ftp');
         $ftp = JClientHelper::getCredentials('ftp');
-        $filename = $this->filename . '.php';
+        $filename = 'default_' . $this->filename . '.php';
         $templatetype = $this->type;
         switch ($templatetype) {
             case 1:
