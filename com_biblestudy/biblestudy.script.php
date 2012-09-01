@@ -31,6 +31,9 @@ class Com_BiblestudyInstallerScript {
      */
     private $minimum_joomla_release = '2.5.0';
 
+    /** @var string The component's name */
+    protected $_biblestudy_extension = 'com_biblestudy';
+
     /**
      * $parent is the class calling this method.
      * $type is the type of change (install, update or discover_install, not uninstall).
@@ -41,6 +44,14 @@ class Com_BiblestudyInstallerScript {
      * @return boolean
      */
     function preflight($type, $parent) {
+
+        // Bugfix for "Can not build admin menus"
+        if (in_array($type, array('install', 'discover_install'))) {
+            $this->_bugfixDBFunctionReturnedNoError();
+        } else {
+            $this->_bugfixCantBuildAdminMenus();
+        }
+        
         $rel = null;
         // this component does not work with Joomla releases prior to 1.6
         // abort if the current Joomla release is older
@@ -422,6 +433,85 @@ class Com_BiblestudyInstallerScript {
                 echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $folder) . '<br />';
             }
         }
+    }
+
+    /**
+     * Joomla! 1.6+ bugfix for "Can not build admin menus"
+     */
+    private function _bugfixCantBuildAdminMenus() {
+        $db = JFactory::getDbo();
+
+        // If there are multiple #__extensions record, keep one of them
+        $query = $db->getQuery(true);
+        $query->select('extension_id')
+                ->from('#__extensions')
+                ->where($db->qn('element') . ' = ' . $db->q($this->_biblestudy_extension));
+        $db->setQuery($query);
+        $ids = $db->loadColumn();
+        if (count($ids) > 1) {
+            asort($ids);
+            $extension_id = array_shift($ids); // Keep the oldest id
+
+            foreach ($ids as $id) {
+                $query = $db->getQuery(true);
+                $query->delete('#__extensions')
+                        ->where($db->qn('extension_id') . ' = ' . $db->q($id));
+                $db->setQuery($query);
+                $db->query();
+            }
+        }
+
+        // @todo
+        // If there are multiple assets records, delete all except the oldest one
+        $query = $db->getQuery(true);
+        $query->select('id')
+                ->from('#__assets')
+                ->where($db->qn('name') . ' = ' . $db->q($this->_biblestudy_extension));
+        $db->setQuery($query);
+        $ids = $db->loadObjectList();
+        if (count($ids) > 1) {
+            asort($ids);
+            $asset_id = array_shift($ids); // Keep the oldest id
+
+            foreach ($ids as $id) {
+                $query = $db->getQuery(true);
+                $query->delete('#__assets')
+                        ->where($db->qn('id') . ' = ' . $db->q($id));
+                $db->setQuery($query);
+                $db->query();
+            }
+        }
+
+        // Remove #__menu records for good measure!
+        $query = $db->getQuery(true);
+        $query->select('id')
+                ->from('#__menu')
+                ->where($db->qn('type') . ' = ' . $db->q('component'))
+                ->where($db->qn('menutype') . ' = ' . $db->q('main'))
+                ->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->_biblestudy_extension));
+        $db->setQuery($query);
+        $ids1 = $db->loadColumn();
+        if (empty($ids1))
+            $ids1 = array();
+        $query = $db->getQuery(true);
+        $query->select('id')
+                ->from('#__menu')
+                ->where($db->qn('type') . ' = ' . $db->q('component'))
+                ->where($db->qn('menutype') . ' = ' . $db->q('main'))
+                ->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->_biblestudy_extension . '&%'));
+        $db->setQuery($query);
+        $ids2 = $db->loadColumn();
+        if (empty($ids2))
+            $ids2 = array();
+        $ids = array_merge($ids1, $ids2);
+        if (!empty($ids))
+            foreach ($ids as $id) {
+                $query = $db->getQuery(true);
+                $query->delete('#__menu')
+                        ->where($db->qn('id') . ' = ' . $db->q($id));
+                $db->setQuery($query);
+                $db->query();
+            }
     }
 
     /**
