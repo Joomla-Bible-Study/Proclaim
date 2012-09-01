@@ -100,7 +100,7 @@ defined('_JEXEC') or die;
                 <div style="clear:both;"></div>
                 <div style="text-align: center; width: 100%">
                     <span style="font-size: 24px;">
-                        Clear Here To Finish
+                        <?php echo JText::_('JBS_INS_CLICK_TO_FINISH'); ?>
                     </span>
                 </div>
             </a>

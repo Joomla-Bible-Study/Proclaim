@@ -15,7 +15,7 @@ ALTER TABLE `#__bsms_books` MODIFY `published` tinyint(3) NOT NULL DEFAULT '0';
 --
 -- Comments Table
 --
-ALTER TABLE `#__bsms_comments` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the MediaFile.';
+ALTER TABLE `#__bsms_comments` ADD COLUMN `language` CHAR( 7 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The language code for the Comments.';
 
 UPDATE `#__bsms_comments` SET `language` = '*' WHERE `#__bsms_comments`.`language` = '';
 
@@ -156,9 +156,9 @@ ALTER TABLE `#__bsms_teachers` ADD COLUMN `linklabel2` varchar(150);
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `link3` varchar(150);
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `linklabel3` varchar(150);
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `contact` int(11);
-ALTER TABLE `#__bsms_teachers` ADD COLUMN `address1` MEDIUMTEXT NOT NULL;
-ALTER TABLE `#__bsms_teachers` ADD COLUMN `landing_show` int(3) DEFAULT NULL;
 ALTER TABLE `#__bsms_teachers` ADD COLUMN `address` mediumtext NOT NULL;
+ALTER TABLE `#__bsms_teachers` ADD COLUMN `landing_show` int(3) DEFAULT NULL;
+ALTER TABLE `#__bsms_teachers` ADD COLUMN `address1` mediumtext NOT NULL;
 UPDATE `#__bsms_teachers` SET `language` = '*' WHERE `#__bsms_teachers`.`language` = '';
 
 
