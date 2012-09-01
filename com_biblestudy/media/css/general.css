@@ -79,24 +79,30 @@ div.current .panelform {
 }
 
 .finishbutton {
-    height:320px;
-    width:320px;
+    height:300px;
+    width:300px;
     color: #fff;
     outline: 1px solid #ddd;
     border-top: 1px solid #fff;
-    padding: 10px;
+    padding-top: 10px;
+    padding-bottom: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
     background: #f0f0f0;
 }
 
-.finishbutton1 {
-    height:320px;
-    width:320px;
-    padding: 20px;
+.finishbutton1:hover {
+    height:300px;
+    width:300px;
     outline: 1px solid #ddd;
     border-top: 1px solid #fff;
-    padding: 10px;
-    background: #f0f0f8;
+    padding-top: 10px;
+    padding-bottom: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background: #f0f088;
 }
+
 img.imgcenter {
     display: block;
     margin-left: auto;

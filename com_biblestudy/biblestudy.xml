@@ -54,14 +54,14 @@
 
     <!-- Media files -->
     <media destination="com_biblestudy" folder="media">
-        <folder>images</folder>
-        <folder>js</folder>
         <folder>backup</folder>
         <folder>captcha</folder>
         <folder>css</folder>
+        <folder>database</folder>
+        <folder>images</folder>
+        <folder>js</folder>
         <folder>legacyplayer</folder>
         <folder>player</folder>
-        <folder>database</folder>
         <filename>index.html</filename>
     </media>
 

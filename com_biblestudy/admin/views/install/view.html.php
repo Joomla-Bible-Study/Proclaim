@@ -33,7 +33,7 @@ class biblestudyViewInstall extends JView {
             JRequest::setVar('hidemainmenu', TRUE);
             return FALSE;
         endif;
-
+        JHTML::stylesheet('media/com_biblestudy/css/general.css');
         // install systems
         $this->installscripts();
         $this->installsetup();

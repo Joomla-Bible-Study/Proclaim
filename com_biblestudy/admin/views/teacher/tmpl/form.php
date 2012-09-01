@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
         }
     }
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?> method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
       <div class="width-45 fltrt">
         <fieldset class="panelform">
             <legend>
@@ -203,5 +203,6 @@ defined('_JEXEC') or die;
         </div>
     <?php endif; ?>
     <input type="hidden" name="task" value="" />
+    <input type="hidden" name="controller" value="teacher" />
     <?php echo JHtml::_('form.token'); ?>
 </form>

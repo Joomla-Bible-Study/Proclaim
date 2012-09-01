@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
-require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'biblestudy.php';
 
 /**
  * Teacher model class
@@ -39,20 +38,6 @@ class BiblestudyModelTeacher extends JModelAdmin {
     protected function allowEdit($data = array(), $key = 'id') {
         // Check specific edit permission then general edit permission.
         return JFactory::getUser()->authorise('core.edit', 'com_biblestudy.teacher.' . ((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
-    }
-
-    /**
-     * Get Admin settings
-     * @return object
-     */
-    public function getAdmin() {
-        if (empty($this->_admin)) {
-            $query = 'SELECT *'
-                    . ' FROM #__bsms_admin'
-                    . ' WHERE id = 1';
-            $this->_admin = $this->_getList($query);
-        }
-        return $this->_admin;
     }
 
     /**

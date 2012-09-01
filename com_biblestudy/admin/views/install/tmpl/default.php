@@ -97,12 +97,7 @@ defined('_JEXEC') or die;
         <div class ="finishbutton" onmouseover="this.className='finishbutton1'" onmouseout="this.className='finishbutton'">
             <a href="index.php?option=com_biblestudy" >
                 <image src="../media/com_biblestudy/images/done-icon.jpg" alt="Done" class="imgcenter"/>
-                <div style="clear:both;"></div>
-                <div style="text-align: center; width: 100%">
-                    <span style="font-size: 24px;">
-                        <?php echo JText::_('JBS_INS_CLICK_TO_FINISH'); ?>
-                    </span>
-                </div>
+                Clear Here To Finish
             </a>
         </div>
     </div>
