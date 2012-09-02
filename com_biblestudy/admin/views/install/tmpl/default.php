@@ -97,7 +97,7 @@ defined('_JEXEC') or die;
         <div class ="finishbutton" onmouseover="this.className='finishbutton1'" onmouseout="this.className='finishbutton'">
             <a href="index.php?option=com_biblestudy" >
                 <image src="../media/com_biblestudy/images/done-icon.jpg" alt="Done" class="imgcenter"/>
-                Clear Here To Finish
+                <h3 style="text-align: center;">Clear Here To Finish</h3>
             </a>
         </div>
     </div>
