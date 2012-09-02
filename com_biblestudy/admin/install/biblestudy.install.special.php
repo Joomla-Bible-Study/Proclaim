@@ -26,7 +26,6 @@ class JBSFreshInstall {
         $dest = JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . 'biblestudy.css';
         $query = 'SELECT * FROM #__bsms_styles WHERE `filename` = "biblestudy"';
         $db->setQuery($query);
-        $db->query();
         $result = $db->loadObject();
         $newcss = $result->stylecode;
         if (!$result) {

@@ -8,7 +8,6 @@
  * @link http://www.JoomlaBibleStudy.org
  * @todo Need to redisign to show progress stages.
  * */
-//
 //No Direct Access
 defined('_JEXEC') or die;
 
@@ -44,15 +43,6 @@ class Com_BiblestudyInstallerScript {
      * @return boolean
      */
     function preflight($type, $parent) {
-
-        // Bugfix for "Can not build admin menus"
-        if (in_array($type, array('install', 'discover_install'))) {
-            $this->_bugfixDBFunctionReturnedNoError();
-        } else {
-            $this->_bugfixCantBuildAdminMenus();
-        }
-
-        $rel = null;
         // this component does not work with Joomla releases prior to 1.6
         // abort if the current Joomla release is older
         $jversion = new JVersion();
@@ -66,17 +56,15 @@ class Com_BiblestudyInstallerScript {
         //Set the #__schemas version_id to the correct number so the update will occur if out of seqence.
         $query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
         $db->setQuery($query);
-        $db->query();
         $extensionid = $db->loadResult();
         if ($extensionid) {
             $query = 'SELECT version_id FROM #__schemas WHERE extension_id = ' . $extensionid;
             $db->setQuery($query);
-            $db->query();
             $jbsversion = $db->loadResult();
             if ($jbsversion == '20100101') {
                 $query = 'UPDATE #__schemas SET version_id = "7.0.0" WHERE extension_id = ' . $extensionid;
                 $db->setQuery($query);
-                $db->query();
+                $db->execute();
             }
         }
 
@@ -96,8 +84,6 @@ class Com_BiblestudyInstallerScript {
                 Jerror::raiseWarning(null, 'Incorrect version sequence. Cannot upgrade ' . $rel);
                 return false;
             }
-        } else {
-            $rel = $this->release;
         }
     }
 
@@ -110,17 +96,15 @@ class Com_BiblestudyInstallerScript {
         $query = file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install-defaults.sql');
         $queries = $db->splitSql($query);
         foreach ($queries as $querie) {
+            $querie = trim($querie);
             $db->setQuery($querie);
-            $db->query();
+            $db->execute();
         }
         require_once (JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'biblestudy.install.special.php');
         $fresh = new JBSFreshInstall();
-        if (!$freshcss = $fresh->installCSS()) {
-            echo '<br />' . JText::_('JBS_INS_FAILURE');
-        } else {
-            echo '<br />' . JText::_('JBS_INS_SUCCESS');
+        if (!$fresh->installCSS()) {
+            JError::raiseWarning(1, JText::_('JBS_INS_FAILURE'));
         }
-        echo JHtml::_('sliders.panel', JText::_('JBS_INS_INSTALLING_VERSION_TO_') . ' ' . $this->release, 'publishing-details');
     }
 
     /**
@@ -144,20 +128,22 @@ class Com_BiblestudyInstallerScript {
             $db = JFactory::getDBO();
             $query = "SELECT id FROM #__assets WHERE name = 'com_biblestudy'";
             $db->setQuery($query);
-            $db->query();
             $parent_id = $db->loadResult();
             $query = "DELETE FROM #__assets WHERE parent_id = " . $parent_id;
             $db->setQuery($query);
-            $db->query();
+            $db->execute();
             $query = 'DELETE FROM #__assets WHERE name like "%com_biblestudy%" and parent_id < 1';
             $db->setQuery($query);
-            $db->query();
+            $db->execute();
             $query = file_get_contents(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'uninstall-dbtables.sql');
-            $db->setQuery($query);
-            $db->queryBatch();
+            $queries = $db->splitSql($query);
+            foreach ($queries as $querie) {
+                $querie = trim($querie);
+                $db->setQuery($querie);
+                $db->execute();
+            }
             $drop_result = '';
             $drop_result .= '<p>db Error: ' . $db->stderr() . '</p>';
-            $drop_result .= '<H3>' . JText::_('JBS_INS_CUSTOM_UNINSTALL_SCRIPT') . '</H3>';
         } else {
             $drop_result = '<H3>' . JText::_('JBS_INS_NO_DATABASE_REMOVED') . '</H3>';
         }
@@ -180,25 +166,21 @@ class Com_BiblestudyInstallerScript {
      * @param string $parent
      */
     function postflight($type, $parent) {
-        jimport('joomla.filesystem.file');
         //Set the #__schemas version_id to the correct number for error from 7.0.0
         $db = JFactory::getDBO();
         $query = 'SELECT extension_id from #__extensions where name LIKE "%com_biblestudy%"';
         $db->setQuery($query);
-        $db->query();
         $extensionid = $db->loadResult();
         if ($extensionid) {
             $query = 'SELECT version_id FROM #__schemas WHERE extension_id = ' . $extensionid;
             $db->setQuery($query);
-            $db->query();
             $jbsversion = $db->loadResult();
             if ($jbsversion == '20100101') {
                 $query = 'UPDATE #__schemas SET version_id = "' . $this->release . '" WHERE extension_id = ' . $extensionid;
                 $db->setQuery($query);
-                $db->query();
+                $db->execute();
             }
         }
-        $params = null;
 
         // Set initial values for component parameters
         $params['my_param0'] = 'Component version ' . $this->release;
@@ -209,8 +191,7 @@ class Com_BiblestudyInstallerScript {
         // Set installstate
         $query1 = "UPDATE `#__bsms_admin` SET installstate = '{\"release\":\"" . $this->release . "\",\"jbsparent\":\"" . $parent . "\",\"jbstype\":\"" . $type . "\",\"jbsname\":\"com_biblestudy\"}' WHERE id = 1";
         $db->setQuery($query1);
-        $db->query();
-
+        $db->execute();
 
         // An example of setting a redirect to a new location after the install is completed
         $parent->getParent()->set('redirect_url', JURI::base() . 'index.php?option=com_biblestudy');
@@ -248,7 +229,7 @@ class Com_BiblestudyInstallerScript {
             $db->setQuery('UPDATE #__extensions SET params = ' .
                     $db->quote($paramsString) .
                     ' WHERE name = "com_biblestudy"');
-            $db->query();
+            $db->execute();
         }
     }
 
@@ -317,9 +298,9 @@ class Com_BiblestudyInstallerScript {
             '/administrator/components/com_biblestudy/models/forms/mimetypeedit.xml',
             '/administrator/components/com_biblestudy/models/forms/podcastedit.xml',
             '/administrator/components/com_biblestudy/models/forms/seriesedit.xml',
-            '/administrator/components/com_biblestudy/models/forms/serversedit.xml', 
+            '/administrator/components/com_biblestudy/models/forms/serversedit.xml',
             '/administrator/components/com_biblestudy/models/forms/shareedit.xml',
-            '/administrator/components/com_biblestudy/models/forms/studiesedit.xml', 
+            '/administrator/components/com_biblestudy/models/forms/studiesedit.xml',
             '/administrator/components/com_biblestudy/models/forms/teacheredit.xml',
             '/administrator/components/com_biblestudy/models/forms/templateedit.xml',
             '/administrator/components/com_biblestudy/models/forms/topicsedit.xml',
@@ -434,142 +415,6 @@ class Com_BiblestudyInstallerScript {
                 echo JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $folder) . '<br />';
             }
         }
-    }
-
-    /**
-     * Joomla! 1.6+ bugfix for "DB function returned no error"
-     */
-    private function _bugfixDBFunctionReturnedNoError() {
-        $db = JFactory::getDbo();
-
-        // Fix broken #__assets records
-        $query = $db->getQuery(true);
-        $query->select('id')
-                ->from('#__assets')
-                ->where($db->nameQuote('name') . ' = ' . $db->Quote($this->_biblestudy_extension));
-        $db->setQuery($query);
-        $ids = $db->loadResultArray();
-        if (!empty($ids))
-            foreach ($ids as $id) {
-                $query = $db->getQuery(true);
-                $query->delete('#__assets')
-                        ->where($db->nameQuote('id') . ' = ' . $db->Quote($id));
-                $db->setQuery($query);
-                $db->query();
-            }
-
-        // Fix broken #__extensions records
-        $query = $db->getQuery(true);
-        $query->select('extension_id')
-                ->from('#__extensions')
-                ->where($db->nameQuote('element') . ' = ' . $db->Quote($this->_biblestudy_extension));
-        $db->setQuery($query);
-        $ids = $db->loadResultArray();
-        if (!empty($ids))
-            foreach ($ids as $id) {
-                $query = $db->getQuery(true);
-                $query->delete('#__extensions')
-                        ->where($db->nameQuote('extension_id') . ' = ' . $db->Quote($id));
-                $db->setQuery($query);
-                $db->query();
-            }
-
-        // Fix broken #__menu records
-        $query = $db->getQuery(true);
-        $query->select('id')
-                ->from('#__menu')
-                ->where($db->nameQuote('type') . ' = ' . $db->Quote('component'))
-                ->where($db->nameQuote('menutype') . ' = ' . $db->Quote('main'))
-                ->where($db->nameQuote('link') . ' LIKE ' . $db->Quote('index.php?option=' . $this->_biblestudy_extension));
-        $db->setQuery($query);
-        $ids = $db->loadResultArray();
-        if (!empty($ids))
-            foreach ($ids as $id) {
-                $query = $db->getQuery(true);
-                $query->delete('#__menu')
-                        ->where($db->nameQuote('id') . ' = ' . $db->Quote($id));
-                $db->setQuery($query);
-                $db->query();
-            }
-    }
-
-    /**
-     * Joomla! 1.6+ bugfix for "Can not build admin menus"
-     */
-    private function _bugfixCantBuildAdminMenus() {
-        $db = JFactory::getDbo();
-
-        // If there are multiple #__extensions record, keep one of them
-        $query = $db->getQuery(true);
-        $query->select('extension_id')
-                ->from('#__extensions')
-                ->where($db->qn('element') . ' = ' . $db->q($this->_biblestudy_extension));
-        $db->setQuery($query);
-        $ids = $db->loadColumn();
-        if (count($ids) > 1) {
-            asort($ids);
-            $extension_id = array_shift($ids); // Keep the oldest id
-
-            foreach ($ids as $id) {
-                $query = $db->getQuery(true);
-                $query->delete('#__extensions')
-                        ->where($db->qn('extension_id') . ' = ' . $db->q($id));
-                $db->setQuery($query);
-                $db->query();
-            }
-        }
-
-        // @todo
-        // If there are multiple assets records, delete all except the oldest one
-        $query = $db->getQuery(true);
-        $query->select('id')
-                ->from('#__assets')
-                ->where($db->qn('name') . ' = ' . $db->q($this->_biblestudy_extension));
-        $db->setQuery($query);
-        $ids = $db->loadObjectList();
-        if (count($ids) > 1) {
-            asort($ids);
-            $asset_id = array_shift($ids); // Keep the oldest id
-
-            foreach ($ids as $id) {
-                $query = $db->getQuery(true);
-                $query->delete('#__assets')
-                        ->where($db->qn('id') . ' = ' . $db->q($id));
-                $db->setQuery($query);
-                $db->query();
-            }
-        }
-
-        // Remove #__menu records for good measure!
-        $query = $db->getQuery(true);
-        $query->select('id')
-                ->from('#__menu')
-                ->where($db->qn('type') . ' = ' . $db->q('component'))
-                ->where($db->qn('menutype') . ' = ' . $db->q('main'))
-                ->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->_biblestudy_extension));
-        $db->setQuery($query);
-        $ids1 = $db->loadColumn();
-        if (empty($ids1))
-            $ids1 = array();
-        $query = $db->getQuery(true);
-        $query->select('id')
-                ->from('#__menu')
-                ->where($db->qn('type') . ' = ' . $db->q('component'))
-                ->where($db->qn('menutype') . ' = ' . $db->q('main'))
-                ->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->_biblestudy_extension . '&%'));
-        $db->setQuery($query);
-        $ids2 = $db->loadColumn();
-        if (empty($ids2))
-            $ids2 = array();
-        $ids = array_merge($ids1, $ids2);
-        if (!empty($ids))
-            foreach ($ids as $id) {
-                $query = $db->getQuery(true);
-                $query->delete('#__menu')
-                        ->where($db->qn('id') . ' = ' . $db->q($id));
-                $db->setQuery($query);
-                $db->query();
-            }
     }
 
     /**
