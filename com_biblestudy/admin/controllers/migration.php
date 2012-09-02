@@ -65,7 +65,8 @@ class BiblestudyControllerMigration extends JController {
                 JRequest::setVar('migrationdone', '1', 'get');
                 $errors = JRequest::getVar('jbsmessages', $jbsmessages, 'get', 'array');
             } else {
-                $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration);
+                //$application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_FAILED') . $migration);
+                JError::raiseWarning('403', JText::_('JBS_CMN_OPERATION_FAILED'));
             }
         }
 
@@ -146,13 +147,15 @@ class BiblestudyControllerMigration extends JController {
                     } 
                 else 
                     {
-                        $application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_MIGRATED') . $messages . '', 'message');
+                        //$application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_MIGRATED') . $messages . '', 'message');
+                        JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'));
                     }
                 JRequest::setVar('migrationdone', '1', 'get');
             } 
         else 
             {
-                $application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_COPIED') . $messages . '', 'message');
+                //$application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_COPIED') . $messages . '', 'message');
+                JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_COPIED'));
             }
         $this->setRedirect('index.php?option=com_biblestudy&task=admin.edit&id=1');
     }
