@@ -366,6 +366,7 @@ class Com_BiblestudyInstallerScript {
             '/components/com_biblestudy/views/studydetails',
             '/components/com_biblestudy/views/serieslist',
             '/components/com_biblestudy/views/seriesdetail',
+            '/administrator/media',
             '/administrator/components/com_biblestudy/assets',
             '/administrator/components/com_biblestudy/images',
             '/administrator/components/com_biblestudy/views/commentsedit',
@@ -430,22 +431,24 @@ class Com_BiblestudyInstallerScript {
                 ->where("`link` LIKE '%com_biblestudy%'");
         $db->setQuery($query);
         $menus = $db->loadObjectList();
-        foreach ($menus AS $menu):
-            $menu->link = str_replace('teacherlist', 'teachers', $menu->link);
-            $menu->link = str_replace('teacherdisplay', 'teacher', $menu->link);
-            $menu->link = str_replace('studydetails', 'sermon', $menu->link);
-            $menu->link = str_replace('serieslist', 'seriesdisplays', $menu->link);
-            $menu->link = str_replace('seriesdetail', 'seriesdisplay', $menu->link);
-            $menu->link = str_replace('studieslist', 'sermons', $menu->link);
-            $query = $db->getQuery(TRUE);
-            $query->update('#__menu')
-                    ->set("`link` = '" . $db->escape($menu->link) . "'")
-                    ->where('id = ' . $menu->id);
-            $db->setQuery($query);
-            if (!$db->execute()) {
-                JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
-            }
-        endforeach;
+        if (count($menus) !== 0) :
+            foreach ($menus AS $menu):
+                $menu->link = str_replace('teacherlist', 'teachers', $menu->link);
+                $menu->link = str_replace('teacherdisplay', 'teacher', $menu->link);
+                $menu->link = str_replace('studydetails', 'sermon', $menu->link);
+                $menu->link = str_replace('serieslist', 'seriesdisplays', $menu->link);
+                $menu->link = str_replace('seriesdetail', 'seriesdisplay', $menu->link);
+                $menu->link = str_replace('studieslist', 'sermons', $menu->link);
+                $query = $db->getQuery(TRUE);
+                $query->update('#__menu')
+                        ->set("`link` = '" . $db->escape($menu->link) . "'")
+                        ->where('id = ' . $menu->id);
+                $db->setQuery($query);
+                if (!$db->execute()) {
+                    JError::raiseWarning(1, JText::sprintf('JBS_INS_SQL_ERRORS', $db->stderr(true)));
+                }
+            endforeach;
+        endif;
     }
 
     /**

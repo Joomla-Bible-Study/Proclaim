@@ -286,7 +286,7 @@ class jbs613Install {
 
 
         //Now we are going to update the db. We no longer use the field for AVR but it happens in a param so we need to get rid of the internal_viewer after setting the param accordingly
-        $database = &JFactory::getDBO();
+        $database = JFactory::getDBO();
         $query = "UPDATE #__bsms_mediafiles SET params = 'player=2', internal_viewer = '0' WHERE internal_viewer = '1' AND params IS NULL";
         $msg = $this->performdb($query);
         if (!$msg) {
