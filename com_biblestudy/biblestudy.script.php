@@ -242,6 +242,9 @@ class Com_BiblestudyInstallerScript {
             '/images/textfile24.png',
             '/components/com_biblestudy/biblestudy.css',
             '/components/com_biblestudy/class.biblestudydownload.php',
+            '/components/language/en-GB/en-GB.com_biblestudy.ini',
+            '/administrator/language/en-GB/en-GB.com_biblestudy.ini',
+            '/administrator/language/en-GB/en-GB.com_biblestudy.sys.ini',
             '/administrator/components/com_biblestudy/Snoopy.class.php',
             '/administrator/components/com_biblestudy/admin.biblestudy.php',
             '/components/com_biblestudy/controllers/teacherlist.php',
@@ -369,6 +372,8 @@ class Com_BiblestudyInstallerScript {
             '/administrator/media',
             '/administrator/components/com_biblestudy/assets',
             '/administrator/components/com_biblestudy/images',
+            '/administrator/components/com_biblestudy/css',
+            '/administrator/components/com_biblestudy/js',
             '/administrator/components/com_biblestudy/views/commentsedit',
             '/administrator/components/com_biblestudy/views/commentslist',
             '/administrator/components/com_biblestudy/views/cssedit',
@@ -400,9 +405,6 @@ class Com_BiblestudyInstallerScript {
             '/administrator/components/com_biblestudy/views/templateslist',
             '/administrator/components/com_biblestudy/views/topicslist',
             '/administrator/components/com_biblestudy/views/topicsedit',
-            '/administrator/components/com_biblestudy/css',
-            '/administrator/components/com_biblestudy/js',
-            '/administrator/components/com_biblestudy/images',
         );
 
         foreach ($files as $file) {
