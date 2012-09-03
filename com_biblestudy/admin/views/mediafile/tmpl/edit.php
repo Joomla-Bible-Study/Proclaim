@@ -143,8 +143,7 @@ if (JRequest::getWord('layout') == 'modal') {
 } else {
     $url = 'index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . (int) $this->item->id;
 } echo $url;
-?>"
-    method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
             <legend>
@@ -222,7 +221,6 @@ if (JRequest::getWord('layout') == 'modal') {
         </fieldset>
         <fieldset class="panelform">
             <legend>
-
                 <?php echo JText::_('JBS_MED_MEDIA_FILES_SETTINGS'); ?></legend>
             <ul class="adminformlist">
                 <li>
@@ -239,8 +237,6 @@ if (JRequest::getWord('layout') == 'modal') {
                     <?php echo $this->form->getInput('mediacode'); ?></li>
             </ul>
         </fieldset>
-
-
     </div>
     <div class="width-35 fltrt">
         <fieldset class="panelform">
@@ -323,6 +319,9 @@ if (JRequest::getWord('layout') == 'modal') {
             </ul>
         </fieldset>
     </div>
+    <?php if (JRequest::getWord('layout') == 'modal') { ?>
+        <div class="clr"></div>
+    <?php } ?>
     <div class="width-35 fltrt">
         <?php
         foreach ($params as $name => $fieldset):
