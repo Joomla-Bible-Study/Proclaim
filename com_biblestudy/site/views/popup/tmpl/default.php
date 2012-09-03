@@ -55,7 +55,7 @@ $registry->loadJSON($media->params);
 $itemparams = $registry;
 $saveid = $media->id;
 $media->id = $media->study_id;
-//$scripture = getScripture($params, $media, $esv = '0', $scripturerow = '1');
+$scripture = getScripture($params, $media, $esv = '0', $scripturerow = '1');
 $media->id = $saveid;
 $date = getstudyDate($params, $media->studydate);
 // The popup window call the counter function
@@ -75,7 +75,9 @@ if (preg_match('@^(?:http://)?([^/]+)@i', $path1)) {
 }
 $playerwidth = $params->get('player_width');
 $playerheight = $params->get('player_height');
-if ($itemparams->get('playerheight')) {
+if ($itemparams->get('playerheight') < 55) {
+    $playerheight = 55;
+} else {
     $playerheight = $itemparams->get('playerheight');
 }
 if ($itemparams->get('playerwidth')) {
@@ -109,9 +111,10 @@ if ($itemparams->get('autostart') == 1) {
     $footertext = '';
 
     // Need to add in template
-    ?>"<body bgcolor='<?php echo $params->get('popupbackground', 'black') ?>'>
+    ?><body bgcolor='<?php echo $params->get('popupbackground', 'black') ?>'>
         <?php
         $headertext = $this->titles($params->get('popuptitle'), $media, $scripture, $date, $length);
+
         if ($itemparams->get('itempopuptitle')) {
             $headertext = $this->titles($itemparams->get('itempopuptitle'), $media, $scripture, $date, $length);
         }
@@ -120,7 +123,7 @@ if ($itemparams->get('autostart') == 1) {
             $footertext = $this->titles($itemparams->get('itempopupfooter'), $media, $scripture, $date, $length);
         }
         ?>
-        <div class="popuptitle"><p class="popuptitle"><?php $headertext ?>
+        <div class="popuptitle"><p class="popuptitle"><?php echo $headertext ?>
             </p>
         </div>
         <?php
@@ -133,10 +136,11 @@ if ($itemparams->get('autostart') == 1) {
         if ($itemparams->get('player') == 1 || $player == 1) {
             ?>
 
-            echo "<div class='playeralign'>";
-                echo "<video height=<?php echo $playerheight ?>
-                             poster=<?php echo $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>
-                             width=<?php echo $playerwidth ?> id='placeholder'><source src='<?php echo $path1 ?>'>
+            <div class='playeralign'>
+                <video height="<?php dump($playerheight);
+        echo $playerheight; ?>"
+                       poster="<?php echo $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>"
+                       width="<?php echo $playerwidth; ?>" id='placeholder'><source src='<?php echo $path1; ?>' sytle="padding: 10px">
                     <a href='http://www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?></video>
             </div>
             <script type='text/javascript'>
@@ -158,7 +162,7 @@ if ($itemparams->get('autostart') == 1) {
             <div class=\'direct\'>
                 <iframe src ="' . $path1 . '" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0">
                 <p>
-                    <?php JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') ?>
+    <?php JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') ?>
                 </p>
 
                 </iframe>
@@ -184,11 +188,11 @@ if ($itemparams->get('autostart') == 1) {
         }
         ?>
 
-        <?php // Footer    ?>
+<?php // Footer     ?>
 </div>
 <div class="popupfooter">
     <p class="popupfooter">
-        <?php echo $footertext; ?>
+<?php echo $footertext; ?>
     </p>
 </div>
 
