@@ -61,9 +61,9 @@ $date = getstudyDate($params, $media->studydate);
 // The popup window call the counter function
 $getMedia->hitPlay($mediaid);
 $length = getDuration($params, $media);
-//$badchars = array("'", '"');
-//$studytitle = str_replace($badchars, ' ', $media->studytitle);
-//$studyintro = str_replace($badchars, ' ', $media->studyintro);
+$badchars = array("'", '"');
+$studytitle = str_replace($badchars, ' ', $media->studytitle);
+$studyintro = str_replace($badchars, ' ', $media->studyintro);
 $images = new jbsImages();
 $seriesimage = $images->getSeriesThumbnail($media->series_thumbnail);
 $this->series_thumbnail = '<img src="' . JURI::base() . $seriesimage->path . '" width="' . $seriesimage->width . '" height="' . $seriesimage->height . '" alt="' . $media->series_text . '">';
