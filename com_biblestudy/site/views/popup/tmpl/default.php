@@ -137,8 +137,7 @@ if ($itemparams->get('autostart') == 1) {
             ?>
 
             <div class='playeralign'>
-                <video height="<?php dump($playerheight);
-        echo $playerheight; ?>"
+                <video height="<?php echo $playerheight; ?>"
                        poster="<?php echo $params->get('popupimage', 'media/com_biblestudy/images/speaker24.png') ?>"
                        width="<?php echo $playerwidth; ?>" id='placeholder'><source src='<?php echo $path1; ?>' sytle="padding: 10px">
                     <a href='http://www.adobe.com/go/getflashplayer'><?php echo JText::_('Get flash') ?></a> <?php echo JText::_('to see this player') ?></video>
@@ -162,7 +161,7 @@ if ($itemparams->get('autostart') == 1) {
             <div class=\'direct\'>
                 <iframe src ="' . $path1 . '" width="100%" height="100%" scrolling="no" frameborder="1" marginheight="0" marginwidth="0">
                 <p>
-    <?php JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') ?>
+                    <?php JText::_('JBS_MED_BROWSER_DOESNOT_SUPPORT_IFRAMES') ?>
                 </p>
 
                 </iframe>
@@ -188,11 +187,11 @@ if ($itemparams->get('autostart') == 1) {
         }
         ?>
 
-<?php // Footer     ?>
+        <?php // Footer     ?>
 </div>
 <div class="popupfooter">
     <p class="popupfooter">
-<?php echo $footertext; ?>
+        <?php echo $footertext; ?>
     </p>
 </div>
 
