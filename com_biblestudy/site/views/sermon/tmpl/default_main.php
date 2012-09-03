@@ -49,7 +49,7 @@ $sharecall = JView::loadHelper('share');
             echo $this->page->social;
             ?>
         </div>
-<?php } //End Social Networking     ?>
+    <?php } //End Social Networking     ?>
     <table>
         <tbody>
             <tr>
@@ -108,6 +108,7 @@ $sharecall = JView::loadHelper('share');
             <td id="studydetailstext">
                 <?php
                 echo $this->passage;
+                ?><div style="clear: both"></div><?php
                 if ($this->params->get('show_scripture_link') > 0) {
                     echo $this->article->studytext;
                 } else {
