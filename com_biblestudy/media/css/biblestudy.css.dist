@@ -131,6 +131,7 @@ display:inline;
 clear:both;
 display:table;
 width:auto;
+border-radius: 15px 15px 15px 15px;
 background-color:#eee;
 border: 1px solid grey;
 padding: 1em;

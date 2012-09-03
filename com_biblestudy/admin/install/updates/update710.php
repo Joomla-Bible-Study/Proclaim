@@ -228,6 +228,7 @@ class JBS710Update {
             display:table;
             width:auto;
             background-color:#eee;
+            border-radius: 15px 15px 15px 15px;
             border: 1px solid grey;
             padding: 1em;
             }

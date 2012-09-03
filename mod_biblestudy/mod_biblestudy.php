@@ -75,7 +75,12 @@ $linkurl = JRoute::_('index.php?option=com_biblestudy&view=sermons&t=' . $templa
 $link = '<a href="' . $linkurl . '">' . $link_text . '</a>';
 $document = JFactory::getDocument();
 $css = $params->get('css', 'biblestudy.css');
-$document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+if ($css === '-1'):
+    $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/biblestudy.css');
+else:
+    $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/site/' . $css);
+endif;
+
 $language = JFactory::getLanguage();
 $language->load('com_biblestudy', JPATH_ROOT . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy');
 $config = JComponentHelper::getParams('com_biblestudy');
