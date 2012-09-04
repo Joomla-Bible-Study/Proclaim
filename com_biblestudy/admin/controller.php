@@ -67,12 +67,12 @@ class BiblestudyController extends JController {
                 switch ($tool) {
                     case 'players':
                         $player = $this->changePlayers();
-                        $this->setRedirect('index.php?option = com_biblestudy&view = admin ', $player);
+                        $this->setRedirect('index.php?option=com_biblestudy&view=admin ', $player);
                         break;
 
                     case 'popups':
                         $popups = $this->changePopup();
-                        $this->setRedirect('index.php?option = com_biblestudy&view = admin ', $popups);
+                        $this->setRedirect('index.php?option=com_biblestudy&view=admin ', $popups);
                         break;
                 }
             }
@@ -236,7 +236,7 @@ class BiblestudyController extends JController {
         $podcasts = new JBSPodcast();
         $result = $podcasts->makePodcasts();
 
-        $this->setRedirect('index.php?option = com_biblestudy&view = podcasts', $result);
+        $this->setRedirect('index.php?option=com_biblestudy&view=podcasts', $result);
     }
 
     /**
@@ -252,11 +252,11 @@ class BiblestudyController extends JController {
         if ($db->getErrorNum() > 0) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
-            $this->setRedirect('index.php?option = com_biblestudy&view = message&layout = edit&id = ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id= ' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option = com_biblestudy&view = message&layout = edit&id = ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id= ' . $id, $msg);
         }
     }
 
@@ -272,11 +272,11 @@ class BiblestudyController extends JController {
         if ($db->getErrorNum() > 0) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS') . ' ' . $error;
-            $this->setRedirect('index.php?option = com_biblestudy&view = mediafile&layout = edit&id = ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option = com_biblestudy&view = mediafile&layout = edit&id = ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
         }
     }
 
@@ -292,11 +292,11 @@ class BiblestudyController extends JController {
         if ($db->getErrorNum() > 0) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
-            $this->setRedirect('index.php?option = com_biblestudy&view = mediafile&layout = edit&id = ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id = ' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option = com_biblestudy&view = mediafile&layout = edit&id = ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id= ' . $id, $msg);
         }
     }
 
