@@ -93,7 +93,7 @@ class JBSExport {
         foreach ($table_def as $key => $value) {
             if (substr_count($value, 'CREATE')) {
                 $export .= str_replace($prefix, '#__', $value) . ";\n";
-                $export = str_replace('TYPE=', 'ENGINE=', $export);
+                $export .= str_replace('TYPE=', 'ENGINE=', $export);
             }
         }
         $export .= "\n\n--\n-- Dumping data for table `" . $table . "`\n--\n\n";

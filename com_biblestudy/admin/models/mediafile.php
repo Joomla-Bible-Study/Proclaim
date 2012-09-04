@@ -132,11 +132,9 @@ class BiblestudyModelMediafile extends JModelAdmin {
     public function getForm($data = array(), $loadData = true) {
         // Get the form.
         $form = $this->loadForm('com_biblestudy.mediafile', 'mediafile', array('control' => 'jform', 'load_data' => $loadData));
-
         if (empty($form)) {
             return false;
         }
-
         return $form;
     }
 
@@ -149,11 +147,8 @@ class BiblestudyModelMediafile extends JModelAdmin {
         $data = JFactory::getApplication()->getUserState('com_biblestudy.edit.mediafile.data', array());
         if (empty($data)) {
             $data = $this->getItem();
-
             $data->podcast_id = explode(',', $data->podcast_id);
         }
-
-
         return $data;
     }
 

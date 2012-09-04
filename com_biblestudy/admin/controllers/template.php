@@ -53,7 +53,7 @@ class BiblestudyControllerTemplate extends JControllerForm {
      *
      */
     function makeDefault() {
-        $mainframe = & JFactory::getApplication();
+        $mainframe = JFactory::getApplication();
         $cid = JRequest::getVar('cid', array(0), 'post', 'array');
 
         if (!is_array($cid) || count($cid) < 1) {
@@ -74,14 +74,12 @@ class BiblestudyControllerTemplate extends JControllerForm {
      * @return boolean
      */
     function template_import() {
-        jimport('joomla.filesystem.file');
-        // Make sure that file uploads are enabled in php
-        if (!(bool) ini_get('file_uploads')) {
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_TPL_NO_UPLOADS'));
-            return false;
+        /**
+         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         */
+        if (!ini_get('safe_mode')) {
+            set_time_limit(300);
         }
-        jimport('joomla.filesystem.file');
-        @set_time_limit(300);
 
         $result = false;
         $userfile = JRequest::getVar('template_import', null, 'files', 'array');
@@ -112,33 +110,35 @@ class BiblestudyControllerTemplate extends JControllerForm {
 
         // Move uploaded file
         jimport('joomla.filesystem.file');
-        $uploaded = @move_uploaded_file($tmp_src, $tmp_dest);
+        $uploaded = move_uploaded_file($tmp_src, $tmp_dest);
 
         $db = JFactory::getDBO();
 
-        $query = @file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
+        $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
         $queries = $db->splitSql($query);
+        if (count($queries) == 0) {
+            // No queries to process
+            return 0;
+        }
         foreach ($queries as $querie) {
+            $querie = trim($querie);
             if (substr_count($querie, 'INSERT')) {
-                $db->setQuery($querie);
-                $db->query();
-                if ($db->getErrorNum() != 0) {
-                    $error = "DB function failed with error number " . $db->getErrorNum() . "<br /><font color=\"red\">";
-                    $error .= $db->stderr(true);
-                    $error .= "</font>";
-                    print_r($error);
-                    //return false;
-                }
+                if ($querie != '' && $querie{0} != '#') :
+                    $db->setQuery($querie);
+                    if (!$db->execute()) {
+                        JError::raiseWarning(1, "DB function failed with error number " . $db->getErrorNum() . " " . $db->stderr(true));
+                        return false;
+                    }
+                endif;
                 $typecss = substr_count($querie, '#__bsms_styles');
                 $typefile = substr_count($querie, '#__bsms_templatecode');
                 $typetemplate = substr_count($querie, '#__bsms_templates');
                 if ($typecss) {
                     $query = 'SELECT id from #__bsms_styles ORDER BY id DESC LIMIT 1';
                     $db->setQuery($query);
-                    $db->query();
                     $data = $db->loadObject();
                     JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-                    $table = JTable::getInstance('Style', 'BiblestudyTable', array('dbo' => $db));
+                    $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
                     if ($data->id) {
                         $cssid = $data->filename;
                         try {
@@ -153,12 +153,11 @@ class BiblestudyControllerTemplate extends JControllerForm {
                     }
                 }
                 if ($typefile) {
-                    $query = 'SELECT id, filename from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
+                    $query = 'SELECT id, type, filename from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
                     $db->setQuery($query);
-                    $db->query();
                     $data = $db->loadObject();
                     JTable::addIncludePath(JPATH_COMPONENT . '/tables');
-                    $table = JTable::getInstance('Templatecode', 'BiblestudyTable', array('dbo' => $db));
+                    $table = JTable::getInstance('Templatecode', 'Table', array('dbo' => $db));
                     if ($data->id) {
                         switch ($data->type) {
                             case 1:
@@ -209,22 +208,32 @@ class BiblestudyControllerTemplate extends JControllerForm {
                 if ($typetemplate) {
                     $query = 'SELECT id from #__bsms_templates ORDER BY id DESC LIMIT 1';
                     $db->setQuery($query);
-                    $db->query();
                     $data = $db->loadObject();
                     JTable::addIncludePath(JPATH_COMPONENT . '/tables');
                     $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
                     if ($data->id) {
-
                         try {
                             $table->load($data->id);
                             $registry = new JRegistry();
                             $registry->loadArray($table->params);
-                            $registry->set('sermonstemplate', $sermonstemplate);
-                            $registry->set('sermontemplate', $sermontemplate);
-                            $registry->set('teachertemplate', $teachertemplate);
-                            $registry->set('teacherstemplate', $sermonstemplate);
-                            $registry->set('seriesdisplaystemplate', $seriesdisplaystemplate);
-                            $registry->set('seriesdisplaytemplate', $seriesdisplaytemplate);
+                            if (!empty($sermonstemplate)):
+                                $registry->set('sermonstemplate', $sermonstemplate);
+                            endif;
+                            if (!empty($sermontemplate)):
+                                $registry->set('sermontemplate', $sermontemplate);
+                            endif;
+                            if (!empty($teachertemplate)):
+                                $registry->set('teachertemplate', $teachertemplate);
+                            endif;
+                            if (!empty($teacherstemplate)):
+                                $registry->set('teacherstemplate', $teacherstemplate);
+                            endif;
+                            if (!empty($seriesdisplaystemplate)):
+                                $registry->set('seriesdisplaystemplate', $seriesdisplaystemplate);
+                            endif;
+                            if (!empty($seriesdisplaytemplate)):
+                                $registry->set('seriesdisplaytemplate', $seriesdisplaytemplate);
+                            endif;
                             $registry->set('css', $cssid);
                             $data->params = $registry->toString();
                             $table->bind($data->id);
@@ -304,7 +313,7 @@ class BiblestudyControllerTemplate extends JControllerForm {
 
     /**
      * Get Exported Template Settings
-     * 
+     *
      * @param object $result
      * @param object $data
      * @return string

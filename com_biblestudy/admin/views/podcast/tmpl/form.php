@@ -12,9 +12,7 @@ defined('_JEXEC') or die;
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="width-65 fltlft">
         <fieldset class="panelform">
-            <legend>
-
-                <?php echo JText::_('JBS_PDC_PODCAST_DETAILS'); ?></legend>
+            <legend><?php echo JText::_('JBS_PDC_PODCAST_DETAILS'); ?></legend>
             <ul class="adminformlist">
                 <li>
                     <?php echo $this->form->getLabel('id'); ?>
@@ -73,9 +71,7 @@ defined('_JEXEC') or die;
     </div>
     <div class="width-35 fltrt">
         <fieldset class="panelform">
-            <legend>
-
-                <?php echo JText::_('JBS_PDC_PODCAST_IMAGES'); ?></legend>
+            <legend><?php echo JText::_('JBS_PDC_PODCAST_IMAGES'); ?></legend>
             <ul>
                 <li>
                     <?php echo $this->form->getLabel('image'); ?>
@@ -114,9 +110,7 @@ defined('_JEXEC') or die;
             </ul>
         </fieldset>
         <fieldset class="panelform">
-            <legend>
-
-                <?php echo JText::_('JBS_PDC_XML_FILE'); ?></legend>
+            <legend><?php echo JText::_('JBS_PDC_XML_FILE'); ?></legend>
             <ul>
                 <li>
                     <?php echo $this->form->getLabel('filename'); ?>
@@ -125,9 +119,7 @@ defined('_JEXEC') or die;
             </ul>
         </fieldset>
         <fieldset class="panelform">
-            <legend>
-
-                <?php echo JText::_('JBS_PDC_EPISODES'); ?></legend>
+            <legend><?php echo JText::_('JBS_PDC_EPISODES'); ?></legend>
             <ul>
                 <li>
                     <?php echo $this->form->getLabel('podcastlimit'); ?>
@@ -145,18 +137,14 @@ defined('_JEXEC') or die;
         </fieldset>
     </div>
     <div class="clr"></div>
-
     <?php if ($this->canDo->get('core.admin')): ?>
         <div class="width-100 fltlft">
             <?php echo JHtml::_('sliders.start', 'permissions-sliders-' . $this->item->id, array('useCookie' => 1)); ?>
-
             <?php echo JHtml::_('sliders.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'access-rules'); ?>
-
             <fieldset class="panelform">
                 <?php echo $this->form->getLabel('rules'); ?>
                 <?php echo $this->form->getInput('rules'); ?>
             </fieldset>
-
             <?php echo JHtml::_('sliders.end'); ?>
         </div>
     <?php endif; ?>

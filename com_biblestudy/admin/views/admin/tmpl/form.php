@@ -27,7 +27,6 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=admin&layout=form&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm">
     <?php echo JHtml::_('tabs.start', 'com_biblestudy_admin_' . $this->item->id, array('useCookie' => 1)); ?>
-
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_ADMIN_PARAMS'), 'admin-settings'); ?>
     <div class="width-100">
         <div class="width-60 fltlft">
@@ -38,9 +37,12 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
                         <?php echo $this->form->getLabel('jbsmigrationshow', 'params'); ?>
                         <?php echo $this->form->getInput('jbsmigrationshow', 'params'); ?>
                     </li>
-                    <div class="clr"></div>
                     <li>
-                        <?php echo '<label class="hasTip"><a href="index.php?option=com_biblestudy&view=admin&task=admin.aliasUpdate">' . JText::_('JBS_ADM_RESET_ALIAS') . '</a></label>'; ?>
+                        <label style="max-width: 100%; padding: 0 5px 0 0;">
+                            <a href="index.php?option=com_biblestudy&view=admin&task=admin.aliasUpdate">
+                                <?php echo JText::_('JBS_ADM_RESET_ALIAS') ?>
+                            </a>
+                        </label>
                     </li>
                     <li>
                         <?php echo $this->form->getLabel('metakey', 'params'); ?>
@@ -95,11 +97,8 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
                         <?php echo $this->form->getInput('debug'); ?>
                     </li>
                 </ul>
-
             </fieldset>
-
         </div>
-
     </div>
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_SYSTEM_DEFAULTS'), 'admin-system-defaults'); ?>
@@ -249,7 +248,6 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
 </form>
 <?php echo $this->loadTemplate('assets'); ?>
 <div class="clr"></div>
-
 <?php echo JHtml::_('tabs.panel', JText::_('JBS_IBM_BACKUP'), 'admin-backup-settings'); ?>
 <div class="width-100">
     <div class="width-60 fltlft">
@@ -259,7 +257,6 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
         </fieldset>
     </div>
 </div>
-
 <div class="clr"></div>
 <?php if ($this->form->getValue('jbsmigrationshow', 'params') == 1) : ?>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_IBM_MIGRATE'), 'admin-migrate-settings'); ?>
@@ -273,7 +270,6 @@ $messages = JRequest::getVar('messages', '', 'get', 'array');
     </div>
 
 <?php endif ?>
-
 <div class="clr"></div>
 <?php echo JHtml::_('tabs.panel', JText::_('JBS_ADM_DATABASE'), 'admin-database'); ?>
 <div class="width-100">

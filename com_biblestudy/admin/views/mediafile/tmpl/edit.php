@@ -300,8 +300,6 @@ if (JRequest::getWord('layout') == 'modal') {
                 </tbody>
             </table>
         </fieldset>
-    </div>
-    <div class="width-35 fltrt">
         <fieldset class="panelform">
             <legend>
 
@@ -318,11 +316,6 @@ if (JRequest::getWord('layout') == 'modal') {
                 </li>
             </ul>
         </fieldset>
-    </div>
-    <?php if (JRequest::getWord('layout') == 'modal') { ?>
-        <div class="clr"></div>
-    <?php } ?>
-    <div class="width-35 fltrt">
         <?php
         foreach ($params as $name => $fieldset):
             if (isset($fieldset->description) && trim($fieldset->description)):
