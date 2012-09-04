@@ -62,7 +62,7 @@ class BiblestudyController extends JController {
             JRequest::setVar('view ', 'cpanel');
         }
         if ($type == 'admin') {
-            $tool = JRequest::getVar('tooltype ', ' ', 'post');
+            $tool = JRequest::getVar('tooltype', '', 'post'); 
             if ($tool) {
                 switch ($tool) {
                     case 'players':
@@ -170,10 +170,8 @@ class BiblestudyController extends JController {
         $db = JFactory::getDBO();
         $msg = null;
         $data = JRequest::getVar('jform', array(), 'post  ', ' array');
-        $from = $data['
-
-        params']['from '];
-        $to = $data['params']['to'];
+        $from = $data['params']['from']; 
+        $to = $data['params']['to']; 
         switch ($from) {
             case '100':
                 $query = "UPDATE #__bsms_mediafiles SET `player` = '$to' WHERE `player` IS NULL";
@@ -209,9 +207,7 @@ class BiblestudyController extends JController {
         $from = $data['params']['pFrom'];
         $to = $data['params']['pTo'];
 
-        $query = "UPDATE #__bsms_mediafiles SET `popup` = '$to' WHERE `popup` = '
-
-        $from'";
+        $query = "UPDATE #__bsms_mediafiles SET `popup` = '$to' WHERE `popup` = '$from'";
         $db->setQuery($query);
         $db->query();
         $num_rows = $db->getAffectedRows();
