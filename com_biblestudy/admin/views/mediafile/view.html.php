@@ -153,6 +153,7 @@ class BiblestudyViewMediafile extends JView {
             //JToolBarHelper::divider();
             //JToolBarHelper::media_manager();
         }
+        
         JToolBarHelper::divider();
         JToolBarHelper::help('biblestudy', true);
     }
