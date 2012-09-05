@@ -146,7 +146,7 @@ class JBSImport {
         elseif ($isnot === 0):
             JError::raiseWarning('403', JText::_('JBS_IBM_NOT_DB'));
             return false;
-        elseif (($iscernt === 0) && ($parent !== TRUE)): // Way to check to see if file came from restor and is cerent.
+        elseif (($iscernt === 0) && ($parent !== TRUE)): // Way to check to see if file came from restore and is current.
             JError::raiseWarning('403', JText::_('JBS_IBM_NOT_CURENT_DB'));
             return false;
         else:
@@ -172,9 +172,9 @@ class JBSImport {
                     $db->setQuery($query);
 
                     if (!$db->execute()) {
-                        JError::raiseWarning(1, JText::sprintf('JBS_INS_INSTALLDB_ERRORS', $db->stderr(true)));
+                        JError::raiseWarning(1, JText::sprintf('JBS_IBM_INSTALLDB_ERRORS', $db->stderr(true)));
 
-                        return JText::sprintf('JBS_INS_INSTALLDB_ERRORS', $db->stderr(true));
+                        return JText::sprintf('JBS_IBM_INSTALLDB_ERRORS', $db->stderr(true));
                     }
                 }
             }

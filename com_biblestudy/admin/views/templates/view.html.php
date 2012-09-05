@@ -73,8 +73,8 @@ class BiblestudyViewTemplates extends JView {
         }
         if ($this->canDo->get('core.edit')) {
             JToolBarHelper::editList('template.edit');
-            JToolBarHelper::custom( $task = 'template.template_export ', $icon = 'download.png', $iconOver = 'JBS_CMN_EXPORT_TEMPLATE', $alt = 'JBS_CMN_EXPORT_TEMPLATE', $listSelect = true, $x = false );
-            JToolBarHelper::custom( $task = 'template.template_import ', $icon = 'upload.png', $iconOver = 'JBS_CMN_IMPORT_TEMPLATE', $alt = 'JBS_CMN_IMPORT_TEMPLATE', $listSelect = false, $x = false );
+            JToolBarHelper::custom( $task = 'template.template_export ', $icon = 'download.png', $iconOver = 'JBS_TPL_EXPORT_TEMPLATE', $alt = 'JBS_TPL_EXPORT_TEMPLATE', $listSelect = true, $x = false );
+            JToolBarHelper::custom( $task = 'template.template_import ', $icon = 'upload.png', $iconOver = 'JBS_TPL_IMPORT_TEMPLATE', $alt = 'JBS_TPL_IMPORT_TEMPLATE', $listSelect = false, $x = false );
         }
         if ($this->canDo->get('core.edit.state')) {
             JToolBarHelper::divider();
