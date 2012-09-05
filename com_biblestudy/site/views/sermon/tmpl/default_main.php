@@ -50,40 +50,34 @@ $sharecall = JView::loadHelper('share');
             ?>
         </div>
     <?php } //End Social Networking     ?>
-    <table>
-        <tbody>
-            <tr>
-                <td>
-                    <?php
-                    if ($this->params->get('show_teacher_view') > 0) {
-                        $teacher_call = JView::loadHelper('teacher');
-                        $teacher = getTeacher($this->params, $row->teacher_id, $this->admin_params);
-                        echo $teacher;
-                        ?>
-                    </td>
-                    <td>
-                        <?php
-                    }
-                    if ($this->params->get('title_line_1') + $params->get('title_line_2') > 0) {
-                        $title_call = JView::loadHelper('title');
-                        $title = getTitle($this->params, $row, $this->admin_params, $this->template);
-                        echo $title;
-                    }
-                    ?>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <?php
+    if ($this->params->get('show_teacher_view') > 0) {
+        $teacher_call = JView::loadHelper('teacher');
+        $teacher = getTeacher($this->params, $row->teacher_id, $this->admin_params);
+        echo $teacher;
+        ?>
+    </td>
+    <td>
+        <?php
+    }
+    if ($this->params->get('title_line_1') + $params->get('title_line_2') > 0) {
+        $title_call = JView::loadHelper('title');
+        $title = getTitle($this->params, $row, $this->admin_params, $this->template);
+        echo $title;
+    }
+    ?>
 </div><!-- header -->
 <div>
     <table id="bsmsdetailstable" cellspacing="0">
-        <?php
-        if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items_view') < 1) {
-            $headerCall = JView::loadHelper('header');
-            $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_view'), $ismodule = 0);
-            echo $header;
-        }
-        ?>
+        <thead>
+            <?php
+            if ($this->params->get('use_headers_view') > 0 || $this->params->get('list_items_view') < 1) {
+                $headerCall = JView::loadHelper('header');
+                $header = getHeader($row, $this->params, $this->admin_params, $this->template, $showheader = $params->get('use_headers_view'), $ismodule = 0);
+                echo $header;
+            }
+            ?>
+        </thead>
         <tbody>
 
             <?php
@@ -96,36 +90,36 @@ $sharecall = JView::loadHelper('share');
                 echo '</td></tr>';
             }
             if ($params->get('list_items_view') == 0) {
+                echo '<tr class="bseven"><td class="media">';
                 $oddeven = 'bsodd';
                 $listing = getListing($row, $this->params, $oddeven, $this->admin_params, $this->template, $ismodule = 0);
                 echo $listing;
+                echo '</td></tr>';
             }
             ?>
         </tbody>
     </table>
-    <table id="bsmsdetailstable" cellspacing="0">
-        <tr>
-            <td id="studydetailstext">
-                <?php
-                echo $this->passage;
-                ?><div style="clear: both"></div><?php
-                if ($this->params->get('show_scripture_link') > 0) {
-                    echo $this->article->studytext;
-                } else {
-                    echo $this->study->studytext;
-                }
-                ?>
-            </td>
-        </tr>
-    </table>
     <?php
-    if ($this->params->get('showrelated') == 2) {
-        echo $this->related;
-    }
-    ?>
-    <?php
-    if ($this->params->get('showpodcastsubscribedetails') == 2) {
-        echo $this->subscribe;
-    }
-    ?>
+    echo $this->passage;
+    ?></td></tr><tr><td><?php
+    if ($this->params->get('show_scripture_link') > 0) {
+        ?>
+            <div sytle="width:80%">
+                <?php echo $this->article->studytext; ?>
+            </div>
+            <?php
+        } else {
+            echo $this->study->studytext;
+        }
+        ?>
+        <?php
+        if ($this->params->get('showrelated') == 2) {
+            echo $this->related;
+        }
+        ?>
+        <?php
+        if ($this->params->get('showpodcastsubscribedetails') == 2) {
+            echo $this->subscribe;
+        }
+        ?>
 </div>

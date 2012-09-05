@@ -30,7 +30,10 @@ class Com_BiblestudyInstallerScript {
      */
     private $minimum_joomla_release = '2.5.0';
 
-    /** @var string The component's name */
+    /**
+     * The component's name
+     *  @var string
+     * */
     protected $_biblestudy_extension = 'com_biblestudy';
 
     /**

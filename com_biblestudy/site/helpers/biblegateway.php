@@ -9,6 +9,7 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+require_once BIBLESTUDY_PATH_ADMIN_HELPERS . DIRECTORY_SEPARATOR . 'cleanurl.php';
 
 /**
  * Scripture Show class.
@@ -29,7 +30,6 @@ class showScripture {
         if (!$row->bname) {
             return false;
         }
-
         $reference = $this->formReference($row);
         $version = $params->get('bible_version', '77');
         $this->link = $this->getBiblegateway($reference, $version);
@@ -66,10 +66,13 @@ class showScripture {
      * @return string
      */
     function getHideShow($row, $reference) {
-        $passage = '<div class = passage>';
+        $webpage = Filter::strip_only(file_get_contents($this->link));
+        $document = JFactory::getDocument();
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblegateway-print.css');
+        $passage = '<div class="passage">';
         $passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . JText::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '<<</a>';
         $passage .= '<div id="scripture" style="display: none;">';
-        $passage .= file_get_contents($this->link);
+        $passage .= $webpage;
         $passage .= '</div>';
         $passage .= '</div>';
         return $passage;
@@ -83,7 +86,10 @@ class showScripture {
      * @return string
      */
     function getShow($row, $reference) {
-        $passage = '<div class = "passage">' . file_get_contents($this->link) . '</div>';
+        $webpage = Filter::strip_only(file_get_contents($this->link));
+        $document = JFactory::getDocument();
+        $document->addStyleSheet(JURI::base() . 'media/com_biblestudy/css/biblegateway-print.css');
+        $passage = '<div class = "passage">' . $webpage . '</div>';
         return $passage;
     }
 
