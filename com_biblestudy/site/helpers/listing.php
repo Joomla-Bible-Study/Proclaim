@@ -750,7 +750,7 @@ function getListingExp($row, $params, $admin_params, $template) {
     include_once($path1 . 'image.php');
     $images = new jbsImages();
     $image = $images->getStudyThumbnail($row->thumbnailm);
-    $label = $params->get('templatecode'); //dump ($label, 'label: ');
+    $label = $params->get('templatecode');
     $label = str_replace('{{teacher}}', $row->teachername, $label);
     $label = str_replace('{{title}}', $row->studytitle, $label);
     $label = str_replace('{{date}}', getStudydate($params, $row->studydate), $label);

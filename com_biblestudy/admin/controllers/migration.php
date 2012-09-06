@@ -130,7 +130,6 @@ class BiblestudyControllerMigration extends JController {
         } else {
             $import = new JBSImport();
             $result = $import->importdb($parent);
-            dump($result, 'Importdb at Migation 133');
         }
         if ($result || $copysuccess)
             {
