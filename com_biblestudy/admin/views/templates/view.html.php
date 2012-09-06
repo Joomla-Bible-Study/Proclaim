@@ -52,15 +52,17 @@ class BiblestudyViewTemplates extends JView {
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->canDo = BibleStudyHelper::getActions('', 'template');
+        $templates = $this->get('templates');
+        $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEMPLATE'));
+        $types = array_merge($types, $templates);
+        $this->templates = JHTML::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox" size="1" ' , 'value', 'text', "$");
+
         // Set the toolbar
         $this->addToolbar();
         $bar = & JToolBar::getInstance('toolbar');
-        //$url1 = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=modal&tmpl=component&task=template.template_export');
-        //$url2 = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=modal&tmpl=component&task=template.template_import');
-        $url1 = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=modal&tmpl=component');
-        $url2 = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=modal&tmpl=component');
-        $bar->appendButton('Link','export', 'JBS_TPL_EXPORT_TEMPLATE', $url1);
-        $bar->appendButton('Link','upload', 'JBS_TPL_IMPORT_TEMPLATE', $url2);
+        $url = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=default_export');
+        $bar->appendButton('Link','export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
+        
         // Display the template
         parent::display($tpl);
 

@@ -31,7 +31,7 @@ class BiblestudyModelTemplates extends JModelList {
      */
     function getTemplates() {
         if (empty($this->_templates)) {
-            $query = 'SELECT * FROM #__bsms_templates ORDER BY id ASC';
+            $query = 'SELECT id as value, title as text FROM #__bsms_templates ORDER BY id ASC';
             $this->_templates = $this->_getList($query);
         }
         return $this->_templates;
