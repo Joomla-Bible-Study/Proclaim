@@ -182,12 +182,10 @@ class BiblestudyController extends JController {
                 break;
         }
         $db->setQuery($query);
-        $db->execute();
-        $num_rows = $db->getAffectedRows();
-        if ($db->getErrorNum() > 0) {
+        if (!$db->execute()) {
             $msg = JText::_('JBS_ADM_ERROR_OCCURED') . ' ' . $db->getErrorMsg();
         } else {
-
+            $num_rows = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '<br /> ' . JText::_('JBS_ADM_AFFECTED_ROWS') . ': ' . $num_rows;
         }
 
@@ -209,12 +207,10 @@ class BiblestudyController extends JController {
 
         $query = "UPDATE #__bsms_mediafiles SET `popup` = '$to' WHERE `popup` = '$from'";
         $db->setQuery($query);
-        $db->query();
-        $num_rows = $db->getAffectedRows();
-        if ($db->getErrorNum() > 0) {
+        if (!$db->execute()) {
             $msg = JText::_('JBS_ADM_ERROR_OCCURED ') . ' ' . $db->getErrorMsg();
         } else {
-
+            $num_rows = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '<br /> ' . JText::_('JBS_ADM_AFFECTED_ROWS') . ': ' . $num_rows;
         }
 
@@ -247,11 +243,11 @@ class BiblestudyController extends JController {
         if (!$db->execute()) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_HITS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id= ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id= ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=message&layout=edit&id=' . $id, $msg);
         }
     }
 
@@ -285,11 +281,11 @@ class BiblestudyController extends JController {
         if (!$db->execute()) {
             $error = $db->getErrorMsg();
             $msg = JText::_('JBS_CMN_ERROR_RESETTING_PLAYS') . ' ' . $error;
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id = ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
         } else {
             $updated = $db->getAffectedRows();
             $msg = JText::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . JText::_('JBS_CMN_ROWS_RESET');
-            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id= ' . $id, $msg);
+            $this->setRedirect('index.php?option=com_biblestudy&view=mediafile&layout=edit&id=' . $id, $msg);
         }
     }
 
@@ -318,15 +314,9 @@ class BiblestudyController extends JController {
         // get path and abort if none
         $layout = JRequest::getWord('layout', '');
         if ($layout == 'modal') {
-            $url = 'index
-
-        .php?option = ' . $option . '
-
-        &view =   mediafile&task = edit&tmpl = component&layout =  modal&id = ' . $returnid;
+            $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid;
         } else {
-            $url = '
-
-        index.php?  option = ' . $option . ' & view = mediafile&task = edit &  id = ' . $returnid;
+            $url = 'index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid;
         }
         $path = JBSUpload::getpath($url, $tempfile);
 
@@ -354,11 +344,9 @@ class BiblestudyController extends JController {
         JBSUpload::deletetempfile($tempfile);
         $mediafileid = JRequest::getInt('id', '', 'post');
         if ($layout == ' modal') {
-            $this->setRedirect('index .
-
-        php ? option = ' . $option . '&  view =   mediafile&task   =  edit& tmpl = component&layout = modal&id = ' . $returnid, $uploadmsg);
+            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&tmpl=component&layout=modal&id=' . $returnid, $uploadmsg);
         } else {
-            $this->setRedirect('index.php?option = ' . $option . '&view = mediafile&task = edit&id = ' . $returnid, $uploadmsg);
+            $this->setRedirect('index.php?option=' . $option . '&view=mediafile&task=edit&id=' . $returnid, $uploadmsg);
         }
     }
 
