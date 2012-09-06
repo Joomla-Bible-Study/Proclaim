@@ -9,6 +9,8 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die;
+include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.backup.php');
+require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
 
 jimport('joomla.application.component.controlleradmin');
 
@@ -223,8 +225,8 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
      * @return boolean
      */
     function template_export() {
-        $data = JRequest::getVar('jform', array(), 'post', 'array');
-        $exporttemplate = $data['params']['template_export'];
+        $data = JRequest::getVar('template_export', '', 'post', '');
+        $exporttemplate = $data;
         if (!$exporttemplate) {
             $message = JText::_('JBS_TPL_NO_FILE_SELECTED');
             $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
@@ -251,5 +253,98 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
     }
 
+    /**
+     * Get Exported Template Settings
+     *
+     * @param object $result
+     * @param object $data
+     * @return string
+     */
+    private function getExportSetting($result, $data) {
+        $registry = new JRegistry;
+        $registry->loadJSON($result->params);
+        $params = $registry;
+        $db = JFactory::getDBO();
+        $objects = '';
+        $objects = "--\n-- Template Table\n--\n";
+        //Create the main template insert
+        $objects .= "\nINSERT INTO #__bsms_templates SET `type` = '" . $db->getEscaped($result->type) . "',";
+        $objects .= "\n`params` = '" . $db->getEscaped($result->params) . "',";
+        $objects .= "\n`title` = '" . $db->getEscaped($result->title) . "',";
+        $objects .= "\n`text` = '" . $db->getEscaped($result->text) . "';";
+
+        //Get the individual template files
+        $sermons = $params->get('sermonstemplate');
+        if ($sermons) {
+            $objects .= "\n--\n-- Sermons\n--";
+            $objects .= $this->getTemplate($sermons);
+        }
+        $sermon = $params->get('sermontemplate');
+        if ($sermon) {
+            $objects .= "\n--\n-- Sermon\n--";
+            $objects .= $this->getTemplate($sermon);
+        }
+        $teachers = $params->get('teacherstemplate');
+        if ($teachers) {
+            $objects .= "\n--\n-- Teachers\n--";
+            $objects .= $this->getTemplate($teachers);
+        }
+        $teacher = $params->get('teachertemplate');
+        if ($teacher) {
+            $objects .= "\n--\n-- Teacher\n--";
+            $objects .= $this->getTemplate($teacher);
+        }
+        $seriesdisplays = $params->get('seriesdisplaystemplate');
+        if ($seriesdisplays) {
+            $objects .= "\n--\n-- Seriesdisplays\n--";
+            $objects .= $this->getTemplate($seriesdisplays);
+        }
+        $seriesdisplay = $params->get('seriesdisplaytemplate');
+        if ($seriesdisplay) {
+            $objects .= "\n--\n-- SeriesDisplay\n--";
+            $objects .= $this->getTemplate($seriesdisplay);
+        }
+        $css = $params->get('css');
+        $length = strlen($css);
+        $css = substr($css, 0, -4);
+        if ($css) {
+            $objects .= "\n\n--\n-- CSS Style Code\n--\n";
+            $query2 = $db->getQuery(true);
+            $query2->select('style.*');
+            $query2->from('#__bsms_styles AS style');
+            $query2->where('style.filename = "' . $css . '"');
+            $db->setQuery($query2);
+            $db->query();
+            $cssresult = $db->loadObject();
+            $objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = '" . $db->getEscaped($cssresult->filename) . "',\n`stylecode` = '" . $db->getEscaped($cssresult->stylecode) . "';\n";
+        }
+        $objects .= "\n-- --------------------------------------------------------\n\n";
+        return $objects;
+    }
     
+    /**
+     * Get Template Settings
+     *
+     * @param array $template
+     * @return boolean|string
+     */
+    function getTemplate($template) {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('tc.id, tc.templatecode,tc.type,tc.filename');
+        $query->from('#__bsms_templatecode as tc');
+        $query->where('tc.filename ="' . $template . '"');
+        $db->setQuery($query);
+        if (!$object = $db->loadObject()) {
+            return false;
+        }
+        $templatereturn = '
+                        INSERT INTO #__bsms_templatecode SET `type` = "' . $db->getEscaped($object->type) . '",
+                        `templatecode` = "' . $db->getEscaped($object->templatecode) . '",
+                        `filename`="' . $db->getEscaped($template) . '",
+                        `published` = "1";
+                        ';
+        return $templatereturn;
+    }
+
 }

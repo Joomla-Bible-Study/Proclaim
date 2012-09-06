@@ -55,7 +55,7 @@ class BiblestudyViewTemplates extends JView {
         $templates = $this->get('templates');
         $types[] = JHTML::_('select.option', '0', JTEXT::_('JBS_CMN_SELECT_TEMPLATE'));
         $types = array_merge($types, $templates);
-        $this->templates = JHTML::_('select.genericlist', $types, 'filter_teacher', 'class="inputbox" size="1" ' , 'value', 'text', "$");
+        $this->templates = JHTML::_('select.genericlist', $types, 'template_export', 'class="inputbox" size="1" ' , 'value', 'text', "$");
 
         // Set the toolbar
         $this->addToolbar();
