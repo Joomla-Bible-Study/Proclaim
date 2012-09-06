@@ -59,7 +59,7 @@ class BiblestudyControllerMigration extends JController {
         if ($task == 'migrate' && $run == 1 && !$oldprefix) {
 
             $migrate = new JBSMigrate();
-            $migration = $migrate->migrate(); 
+            $migration = $migrate->migrate();
             if ($migration) {
                 $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
                 JRequest::setVar('migrationdone', '1', 'get');
@@ -130,8 +130,9 @@ class BiblestudyControllerMigration extends JController {
         } else {
             $import = new JBSImport();
             $result = $import->importdb($parent);
+            dump($result, 'Importdb at Migation 133');
         }
-        if ($result || $copysuccess) 
+        if ($result || $copysuccess)
             {
                 $migrate = new JBSMigrate();
                 $migration = $migrate->migrate();
@@ -140,19 +141,19 @@ class BiblestudyControllerMigration extends JController {
                 {$messages = implode('<br>', $migration); }
                 //Final step is to fix assets
                 $this->fixAssets();
-                if ($migration) 
-                    { 
+                if ($migration)
+                    {
                         $application->enqueueMessage('' . JText::_('JBS_CMN_OPERATION_SUCCESSFUL') . JText::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE') . $messages, 'message');
                         JRequest::setVar('migrationdone', '1', 'get');
-                    } 
-                else 
+                    }
+                else
                     {
                         //$application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_MIGRATED') . $messages . '', 'message');
                         JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_MIGRATED'));
                     }
                 JRequest::setVar('migrationdone', '1', 'get');
-            } 
-        else 
+            }
+        else
             {
                 //$application->enqueueMessage('' . JText::_('JBS_CMN_DATABASE_NOT_COPIED') . $messages . '', 'message');
                 JError::raiseWarning('403', JText::_('JBS_CMN_DATABASE_NOT_COPIED'));

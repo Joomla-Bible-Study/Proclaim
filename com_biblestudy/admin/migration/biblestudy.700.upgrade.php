@@ -87,8 +87,6 @@ class jbs700Install {
             array('table' => '#__bsms_search', 'field' => 'value', 'type' => 'MODIFY', 'command' => "varchar(15) DEFAULT ''"),
             array('table' => '#__bsms_search', 'field' => 'text', 'type' => 'MODIFY', 'command' => "varchar(15) DEFAULT ''"),
             array('table' => '#__bsms_series', 'field' => 'published', 'type' => 'MODIFY', 'command' => "tinyint(3) NOT NULL DEFAULT '1'"),
-            array('table' => '#__bsms_servers', 'field' => 'ftp_username', 'type' => 'ADD', 'command' => "char(255) NOT NULL"),
-            array('table' => '#__bsms_servers', 'field' => 'ftp_password', 'type' => 'ADD', 'command' => "char(255) NOT NULL"),
             array('table' => '#__bsms_studies', 'field' => 'chapter_begin', 'type' => 'MODIFY', 'command' => "int(3) DEFAULT '1'"),
             array('table' => '#__bsms_studies', 'field' => 'verse_begin', 'type' => 'MODIFY', 'command' => "int(3) DEFAULT '1'"),
             array('table' => '#__bsms_studies', 'field' => 'chapter_end', 'type' => 'MODIFY', 'command' => "int(3) DEFAULT '1'"),
@@ -229,7 +227,6 @@ class jbs700Install {
         /* Perform Mediafiles players. */
         $query = 'SELECT `id`, `params` FROM #__bsms_mediafiles';
         $db->setQuery($query);
-        $db->query();
         $results = $db->loadObjectList();
         if ($results) {
             //Now run through all the results, pull out the media player and the popup type and move them to their respective db fields
@@ -379,7 +376,6 @@ class jbs700Install {
         //Fix studies params
         $query = "SELECT `id`, `params` FROM #__bsms_studies";
         $db->setQuery($query);
-        $db->query();
         $results = $db->loadObjectList();
         if ($results) {
             foreach ($results AS $result) {
@@ -401,7 +397,6 @@ class jbs700Install {
         //Fix topics text
         $query = "SELECT `id`, `topic_text` FROM #__bsms_topics";
         $db->setQuery($query);
-        $db->query();
         $results = $db->loadObjectList();
         if ($results) {
             foreach ($results AS $result) {
@@ -418,7 +413,6 @@ class jbs700Install {
         //Fix share params
         $query = "SELECT `id`, `params` FROM #__bsms_share";
         $db->setQuery($query);
-        $db->query();
         $results = $db->loadObjectList();
         if ($results) {
             foreach ($results AS $result) {
@@ -441,7 +435,6 @@ class jbs700Install {
         //Fix template params
         $query = "SELECT `id`, `params` FROM #__bsms_templates";
         $db->setQuery($query);
-        $db->query();
         $results = $db->loadObjectList();
         if ($results) {
             foreach ($results AS $result) {
@@ -473,7 +466,6 @@ class jbs700Install {
         $db = JFactory::getDBO();
         $results = false;
         $db->setQuery($query);
-        $db->query();
         if ($db->getErrorNum() != 0) {
             $results = JText::_('JBS_IBM_DB_ERROR') . ': ' . $db->getErrorNum() . "<br /><font color=\"red\">";
             $results .= $db->stderr(true);

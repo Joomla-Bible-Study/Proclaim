@@ -24,7 +24,6 @@ class jbsDBhelper {
      */
     static function checkTables($table, $field) {
         $db = JFactory::getDBO();
-        $prefix = $db->getPrefix();
         $fields = $db->getTableColumns($table, 'false');
         if ($fields) {
             foreach ($fields as $key => $value) {
@@ -57,7 +56,7 @@ class jbsDBhelper {
                         break;
                     }
                     //check the field to see if it exists first
-                    if (jbsDBhelper::checkTables($table, $field) !== TRUE) {
+                    if (jbsDBhelper::checkTables($table, $field) === TRUE) {
                         $query = 'ALTER TABLE `' . $table . '` DROP `' . $field . '`';
                         $result = jbsDBhelper::performDB($query);
                         if ($result) {
@@ -113,8 +112,7 @@ class jbsDBhelper {
         }
         $db = JFactory::getDbo();
         $db->setQuery($query);
-        $db->query();
-        if ($db->getErrorNum() != 0) {
+        if (!$db->execute()) {
             return $db->stderr(true);
         } else {
             return true;
@@ -171,7 +169,6 @@ class jbsDBhelper {
         $field = 'id';
         if (jbsDBhelper::checkTables($table, $field) === TRUE):
             $db->setQuery('SELECT installstate FROM #__bsms_admin WHERE id = 1');
-            $db->query();
             $results = $db->loadObject();
             // Convert parameter fields to objects.
             $registry = new JRegistry;

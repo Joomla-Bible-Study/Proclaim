@@ -51,8 +51,7 @@ class updatejbs701 {
                 }
             }
         }
-        $query = 'ALTER TABLE `#__bsms_studytopics` DROP INDEX id;
-                ALTER TABLE `#__bsms_studytopics` DROP INDEX id_2;';
+        $query = 'ALTER TABLE `#__bsms_studytopics` DROP INDEX id, DROP INDEX id_2;';
         $msg = $this->performdb($query);
         if (!$msg) {
             $messages[] = '<font color="green">' . JText::_('JBS_IBM_QUERY_SUCCESS') . ': ' . $query . ' </font><br /><br />';
