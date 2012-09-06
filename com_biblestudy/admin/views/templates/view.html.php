@@ -54,7 +54,13 @@ class BiblestudyViewTemplates extends JView {
         $this->canDo = BibleStudyHelper::getActions('', 'template');
         // Set the toolbar
         $this->addToolbar();
-
+        $bar = & JToolBar::getInstance('toolbar');
+        //$url1 = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=modal&tmpl=component&task=template.template_export');
+        //$url2 = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=modal&tmpl=component&task=template.template_import');
+        $url1 = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=modal&tmpl=component');
+        $url2 = JRoute::_('index.php?option=com_biblestudy&view=templates&layout=modal&tmpl=component');
+        $bar->appendButton('Link','export', 'JBS_TPL_EXPORT_TEMPLATE', $url1);
+        $bar->appendButton('Link','upload', 'JBS_TPL_IMPORT_TEMPLATE', $url2);
         // Display the template
         parent::display($tpl);
 
@@ -73,8 +79,8 @@ class BiblestudyViewTemplates extends JView {
         }
         if ($this->canDo->get('core.edit')) {
             JToolBarHelper::editList('template.edit');
-            JToolBarHelper::custom( $task = 'template.template_export ', $icon = 'download.png', $iconOver = 'JBS_TPL_EXPORT_TEMPLATE', $alt = 'JBS_TPL_EXPORT_TEMPLATE', $listSelect = true, $x = false );
-            JToolBarHelper::custom( $task = 'template.template_import ', $icon = 'upload.png', $iconOver = 'JBS_TPL_IMPORT_TEMPLATE', $alt = 'JBS_TPL_IMPORT_TEMPLATE', $listSelect = false, $x = false );
+          //  JToolBarHelper::custom( $task = 'template.template_export ', $icon = 'download.png', $iconOver = 'JBS_TPL_EXPORT_TEMPLATE', $alt = 'JBS_TPL_EXPORT_TEMPLATE', $listSelect = true, $x = false );
+           // JToolBarHelper::custom( $task = 'template.template_import ', $icon = 'upload.png', $iconOver = 'JBS_TPL_IMPORT_TEMPLATE', $alt = 'JBS_TPL_IMPORT_TEMPLATE', $listSelect = false, $x = false );
         }
         if ($this->canDo->get('core.edit.state')) {
             JToolBarHelper::divider();
@@ -86,6 +92,7 @@ class BiblestudyViewTemplates extends JView {
         } elseif ($this->canDo->get('core.delete')) {
             JToolBarHelper::trash('templates.trash');
         }
+        JToolBarHelper::divider();
     }
 
     /**
