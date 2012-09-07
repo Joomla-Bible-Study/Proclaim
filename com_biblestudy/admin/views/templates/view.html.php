@@ -48,6 +48,8 @@ class BiblestudyViewTemplates extends JView {
      * @since   11.1
      */
     public function display($tpl = null) {
+        
+        
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');

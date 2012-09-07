@@ -48,25 +48,25 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             set_time_limit(300);
         }
 
-        $result = false;
-        $userfile = JRequest::getVar('template_import', null, 'files', 'array');
+        $result = false; 
+        $userfile = JRequest::getVar('template_import', null, 'files', 'array'); 
         // Make sure that file uploads are enabled in php
         if (!(bool) ini_get('file_uploads')) {
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('WARNINSTALLFILE'));
-            return false;
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_CMN_UPLOADS_NOT_ENABLED'));
+            $this->setRedirect('index.php?option=com_biblestudy&view=templates');
         }
 
 
         // If there is no uploaded file, we have a problem...
         if (!is_array($userfile)) {
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('No file selected'));
-            return false;
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_CMN_NO_FILE_SELECTED'));
+            $this->setRedirect('index.php?option=com_biblestudy&view=templates');
         }
 
         // Check if there was a problem uploading the file.
         if ($userfile['error'] || $userfile['size'] < 1) {
-            JError::raiseWarning('SOME_ERROR_CODE', JText::_('WARNINSTALLUPLOADERROR'));
-            return false;
+            JError::raiseWarning('SOME_ERROR_CODE', JText::_('JBS_CMN_WARN_INSTALL_UPLOAD_ERROR'));
+            $this->setRedirect('index.php?option=com_biblestudy&view=templates');
         }
 
         // Build the appropriate paths
@@ -82,25 +82,70 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         $db = JFactory::getDBO();
 
         $query = file_get_contents(JPATH_SITE . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $userfile['name']);
-        $queries = $db->splitSql($query);
+        $queries = $db->splitSql($query); //dump($query,'query: '); dump($queries,'queries: ');
         if (count($queries) == 0) {
             // No queries to process
             return 0;
         }
+        //get all of the items in the db
+        $query = 'SELECT filename FROM #__bsms_styles';
+        $db->setQuery($query);
+        $styles = $db->loadObjectList();
+        //Get all templates
+        $query = 'SELECT title FROM #__bsms_templates';
+        $db->setQuery($query);
+        $temps = $db->loadObjectList();
+        //Get all template files
+        $query = 'SELECT filename FROM #__bsms_templatecode';
+        $db->setQuery($query);
+        $codes = $db->loadObjectList();
+        
         foreach ($queries as $querie) {
             $querie = trim($querie);
             if (substr_count($querie, 'INSERT')) {
                 if ($querie != '' && $querie{0} != '#') :
-                    $db->setQuery($querie);
+                    //check for duplicate names and change
+                    foreach ($styles as $style)
+                    {
+                    if ($style->filename != '')    
+                        {
+                            if (substr_count($querie,$style->filename))
+                            {
+                                str_replace($style->filename,$style->filename.'_copy',$querie); dump($style->filename);
+                            }
+                        }
+                    }
+                     foreach ($temps as $temp)
+                    {
+                         if ($temp->title != '')
+                         {
+                            if (substr_count($querie,$temp->title))
+                            {
+                                str_replace($temp->title,$temp->title.'_copy',$querie);
+                            }
+                         }
+                    }
+                     foreach ($codes as $code)
+                    {
+                         if ($code->filename != '')
+                         {
+                            if (substr_count($querie,$code->filename))
+                            {
+                                str_replace($code->filename,$code->filename.'_copy',$querie);
+                            }
+                         }
+                    }
+                    $db->setQuery($querie); 
                     if (!$db->execute()) {
                         JError::raiseWarning(1, "DB function failed with error number " . $db->getErrorNum() . " " . $db->stderr(true));
-                        return false;
+                        $this->setRedirect('index.php?option=com_biblestudy&view=templates');
                     }
                 endif;
                 $typecss = substr_count($querie, '#__bsms_styles');
                 $typefile = substr_count($querie, '#__bsms_templatecode');
                 $typetemplate = substr_count($querie, '#__bsms_templates');
                 if ($typecss) {
+                    
                     $query = 'SELECT id from #__bsms_styles ORDER BY id DESC LIMIT 1';
                     $db->setQuery($query);
                     $data = $db->loadObject();
@@ -108,6 +153,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                     $table = JTable::getInstance('Style', 'Table', array('dbo' => $db));
                     if ($data->id) {
                         $cssid = $data->filename;
+                        
                         try {
                             $table->load($data->id);
                         } catch (Exception $e) {
@@ -115,7 +161,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         }
                         if (!$table->store()) {
                             $this->setError($db->getErrorMsg());
-                            return false;
+                            $this->setRedirect('index.php?option=com_biblestudy&view=templates');
                         }
                     }
                 }
@@ -168,7 +214,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         }
                         if (!$table->store()) {
                             $this->setError($db->getErrorMsg());
-                            return false;
+                            $this->setRedirect('index.php?option=com_biblestudy&view=templates');
                         }
                     }
                 }
@@ -209,7 +255,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         }
                         if (!$table->store()) {
                             $this->setError($db->getErrorMsg());
-                            return false;
+                            $this->setRedirect('index.php?option=com_biblestudy&view=templates');
                         }
                     }
                 }

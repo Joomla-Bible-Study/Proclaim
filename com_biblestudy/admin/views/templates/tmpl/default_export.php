@@ -8,23 +8,8 @@
  * */
 //No Direct Access
 defined('_JEXEC') or die; ?>
-<form action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templates'); ?>" method="post" name="adminForm" id="adminForm">
+<form enctype="multipart/form-data" action="<?php echo JRoute::_('index.php?option=com_biblestudy&view=templates'); ?>" method="post" name="adminForm" id="adminForm">
 
-<script type="text/javascript">
-    Joomla.submitbutton3 = function(pressbutton) {
-        var form = document.getElementById('adminForm');
-        form.tooltype.value = 'export';
-        form.task = 'template.export_import';
-        form.submit();
-    }
-
-    Joomla.submitbutton4 = function(pressbutton) {
-        var form = document.getElementById('adminForm');
-        form.tooltype.value = 'import';
-        form.task = 'templates.export_import';
-        form.submit();
-    }
-</script>
 <div class="width-100 fltlft">
     <fieldset class="panelform">
         <legend><?php echo JText::_('JBS_CMN_EXPORT'); ?></legend>
