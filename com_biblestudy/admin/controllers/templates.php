@@ -88,15 +88,15 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             return 0;
         }
         //get all of the items in the db
-        $query = 'SELECT filename FROM #__bsms_styles';
+        $query = 'SELECT filename FROM #__bsms_styles WHERE published = 1';
         $db->setQuery($query);
-        $styles = $db->loadObjectList();
+        $styles = $db->loadObjectList(); 
         //Get all templates
-        $query = 'SELECT title FROM #__bsms_templates';
+        $query = 'SELECT title FROM #__bsms_templates WHERE published = 1';
         $db->setQuery($query);
         $temps = $db->loadObjectList();
         //Get all template files
-        $query = 'SELECT filename FROM #__bsms_templatecode';
+        $query = 'SELECT filename FROM #__bsms_templatecode WHERE published = 1';
         $db->setQuery($query);
         $codes = $db->loadObjectList();
         
@@ -109,7 +109,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                     {
                     if ($style->filename != '')    
                         {
-                            if (substr_count($querie,$style->filename))
+                            if (substr_count ($querie, '#__bsms_styles') && substr_count($querie,$style->filename))
                             {
                                 $querie = str_replace($style->filename,$style->filename.'_copy',$querie); 
                             }
@@ -119,7 +119,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                     {
                          if ($temp->title != '')
                          {
-                            if (substr_count($querie,$temp->title))
+                            if (substr_count ($querie, '#__bsms_templates') && substr_count($querie,$temp->title))
                             {
                                 $querie = str_replace($temp->title,$temp->title.'_copy',$querie);
                             }
@@ -129,15 +129,15 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                     {
                          if ($code->filename != '')
                          {
-                            if (substr_count($querie,$code->filename))
+                            if (substr_count ($querie, '#__bsms_templatecode') && substr_count($querie,$code->filename))
                             {
                                 $querie = str_replace($code->filename,$code->filename.'_copy',$querie);
                             }
                          }
-                    }
+                    } 
                     $db->setQuery($querie); 
                     if (!$db->execute()) {
-                        JError::raiseWarning(1, "DB function failed with error number " . $db->getErrorNum() . " " . $db->stderr(true));
+                        JError::raiseWarning(1, JText::_('JBS_CMN_DB_ERROR') . $db->getErrorNum() . " " . $db->stderr(true));
                         $this->setRedirect('index.php?option=com_biblestudy&view=templates');
                     }
                 endif;

@@ -1569,13 +1569,7 @@
 			<field name="yearslabel" type="text" label="JBS_TPL_LANDINGPAGE_YEARSLABEL"
 				default="Years" size="45" />
 		</fieldset>
-                <fieldset name="JBS_TPL_IMPORT_EXPORT">
-                        <field name="template_export" type="sql" default=""
-				label="JBS_TPL_TEMPLATE_TO_EXPORT" description="JBS_TPL_TEMPLATE_TO_EXPORT_DESC"
-				query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-				key_field="id" value_field="title" required="false" />
-                        
-                </fieldset>
+                
 	</fields>
 	<field name="asset_id" type="hidden" filter="unset" />
 	<field name="rules" type="rules" label="JFIELD_RULES_LABEL"

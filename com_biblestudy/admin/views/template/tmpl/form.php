@@ -336,17 +336,7 @@ defined('_JEXEC') or die;
             </fieldset>
         </div>
     </div>
-    <div class="clr"></div>
-    <?php echo JHtml::_('tabs.panel', JText::_('JBS_TPL_IMPORT_EXPORT'), 'template-export-settings'); ?>
-    <div class="width-100">
-        <div class="width-60 fltlft">
-            <fieldset class="panelform">
-                <legend><?php echo JText::_('JBS_TPL_IMPORT_EXPORT'); ?></legend>
-                <?php echo $this->loadTemplate('export'); ?>
-            </fieldset>
-        </div>
-    </div>
-
+   
     <div class="clr"></div>
     <?php echo JHtml::_('tabs.panel', JText::_('JBS_CMN_FIELDSET_RULES'), 'admin-system-defaults'); ?>
     <div class="clr"></div>
