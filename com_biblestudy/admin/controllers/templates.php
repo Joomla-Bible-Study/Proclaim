@@ -111,20 +111,16 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         {
                             if (substr_count ($querie, '#__bsms_styles') && substr_count($querie,$style->filename))
                             {
-                                $querie = str_replace($style->filename,$style->filename.'_copy',$querie); 
+                                $querie = str_replace($style->filename,$style->filename.'_copy',$querie);
+                                $result = $this->performDB($querie);
+                                $query = 'SELECT filename from #__bsms_styles ORDER BY id DESC LIMIT 1';
+                                $db->setQuery($query);
+                                $data = $db->loadObject();
+                                $css = '"css":"'.$data->filename.'"';
                             }
                         }
                     }
-                     foreach ($temps as $temp)
-                    {
-                         if ($temp->title != '')
-                         {
-                            if (substr_count ($querie, '#__bsms_templates') && substr_count($querie,$temp->title))
-                            {
-                                $querie = str_replace($temp->title,$temp->title.'_copy',$querie);
-                            }
-                         }
-                    }
+                     
                      foreach ($codes as $code)
                     {
                          if ($code->filename != '')
@@ -132,14 +128,85 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                             if (substr_count ($querie, '#__bsms_templatecode') && substr_count($querie,$code->filename))
                             {
                                 $querie = str_replace($code->filename,$code->filename.'_copy',$querie);
+                                $result = $this->performDB($querie);
+                                $query = 'SELECT filename, type from #__bsms_templatecode ORDER BY id DESC LIMIT 1';
+                                $db->setQuery($query);
+                                $data = $db->loadObject();
+                                $type = $data->type;
+                                switch ($type) {
+                                    case 1:
+                                        //sermonlist
+                                        $sermonstemplate = '"sermonstemplate":"'.$data->filename.'"';
+                                        break;
+
+                                    case 2:
+                                        //sermon
+                                        $sermontemplate = '"sermontemplate":'.$data->filename.'"';
+                                        break;
+
+                                    case 3:
+                                        //teachers
+                                        $teacherstemplate = '"teacherstemplate":'.$data->filename.'"';
+                                        break;
+
+                                    case 4:
+                                        //teacher
+                                        $teachertemplate = '"teachertemplate":'.$data->filename.'"';
+                                        break;
+
+                                    case 5:
+                                        //serieslist
+                                        $seriesdisplays = '"seriesdisplaystemplate":'.$data->filename.'"';
+                                        break;
+
+                                    case 6:
+                                        //series
+                                        $seriesdisplay = '"seriesdisplaytemplate":'.$data->filename.'"';
+                                        break;
+                                    case 7:
+                                        //module
+                                        $moduletemplate = '"moduletemplate":"'.$data->filename.'"';
+                                        break;
+                                }
                             }
                          }
                     } 
-                    $db->setQuery($querie); 
-                    if (!$db->query()) {
-                        JError::raiseWarning(1, JText::_('JBS_CMN_DB_ERROR') . $db->getErrorNum() . " " . $db->stderr(true));
-                        $this->setRedirect('index.php?option=com_biblestudy&view=templates');
+                    
+                    foreach ($temps as $temp)
+                    {
+                         if ($temp->title != '')
+                         {
+                            if (substr_count ($querie, '#__bsms_templates') && substr_count($querie,$temp->title))
+                            {
+                                $querie = str_replace($temp->title,$temp->title.'_copy',$querie);
+                                $result = $this->performDB($querie);
+                                $query = 'SELECT id, params from #__bsms_templates ORDER BY id DESC LIMIT 1';
+                                $db->setQuery($query);
+                                $data = $db->loadObject();
+                                JTable::addIncludePath(JPATH_COMPONENT . '/tables');
+                                $table = JTable::getInstance('Template', 'Table', array('dbo' => $db));
+                                try {
+                                    $table->load($data->id);
+                                } catch (Exception $e) {
+                                    echo 'Caught exception: ', $e->getMessage(), "\n";
+                                }
+                                //need to adjust the params and write back
+                                $registry = new JRegistry();
+                                $registry->loadJSON($table->params);
+                                $params = $registry;
+                                $params->set('sermonstemplate', $sermonstemplate);
+                                $params->set('sermontemplate', $sermontemplte);
+                                $params->set('teacherstemplate', $teacherstemplate);
+                                $params->set('teachertemplate', $teachertemplate);
+                                $params->set('seriesdisplaystemplate', $seriesdisplaystemplate);
+                                $params->set('seriesdisplaytemplate', $seriesdisplaytemplate);
+                                $params->set('moduletemplate', $moduletemplate);
+                                //Now write the params back into the $table array and store.
+                                
+                            }
+                         }
                     }
+                  
                 endif;
                 $typecss = substr_count($querie, '#__bsms_styles');
                 $typefile = substr_count($querie, '#__bsms_templatecode');
@@ -392,5 +459,57 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         ';
         return $templatereturn;
     }
+ function performDB($query)
+ {
+     $db = JFactory::getDBO();
+     $db->setQuery($query);
+     if (!$db->query())
+     {
+         JError::raiseWarning(1, JText::_('JBS_CMN_DB_ERROR') . $db->getErrorNum() . " " . $db->stderr(true));
+         return false;
+     }
+     return true;
+ }
+ 
+ function getTemplateType($type)
+ {
+     if ($data->id) {
+        switch ($type) {
+            case 1:
+                //sermonlist
+                $return = 'sermonstemplate';
+                break;
 
+            case 2:
+                //sermon
+                $return = 'sermontemplate';
+                break;
+
+            case 3:
+                //teachers
+                $return = 'teacherstemplate';
+                break;
+
+            case 4:
+                //teacher
+                $return = 'teachertemplate';
+                break;
+
+            case 5:
+                //serieslist
+                $return = 'seriesdisplaystemplate';
+                break;
+
+            case 6:
+                //series
+                $return = 'seriesdisplaytemplate';
+                break;
+            case 7:
+                //module
+                $moduletemplate = $data->filename;
+                break;
+        }
+        return $return;
+     }
+ }
 }
