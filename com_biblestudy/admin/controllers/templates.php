@@ -136,7 +136,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                          }
                     } 
                     $db->setQuery($querie); 
-                    if (!$db->execute()) {
+                    if (!$db->query()) {
                         JError::raiseWarning(1, JText::_('JBS_CMN_DB_ERROR') . $db->getErrorNum() . " " . $db->stderr(true));
                         $this->setRedirect('index.php?option=com_biblestudy&view=templates');
                     }
@@ -262,7 +262,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             }
         }
         $message = JText::_('JBS_TPL_IMPORT_SUCCESS');
-        $this->setRedirect('index.php?option=com_biblestudy&view=templates', $message);
+        $this->setRedirect('index.php?option=com_biblestudy&view=templates',$message);
     }
 
     /**
