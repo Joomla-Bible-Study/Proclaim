@@ -111,7 +111,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                         {
                             if (substr_count($querie,$style->filename))
                             {
-                                str_replace($style->filename,$style->filename.'_copy',$querie); dump($style->filename);
+                                $querie = str_replace($style->filename,$style->filename.'_copy',$querie); 
                             }
                         }
                     }
@@ -121,7 +121,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                          {
                             if (substr_count($querie,$temp->title))
                             {
-                                str_replace($temp->title,$temp->title.'_copy',$querie);
+                                $querie = str_replace($temp->title,$temp->title.'_copy',$querie);
                             }
                          }
                     }
@@ -131,7 +131,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                          {
                             if (substr_count($querie,$code->filename))
                             {
-                                str_replace($code->filename,$code->filename.'_copy',$querie);
+                                $querie = str_replace($code->filename,$code->filename.'_copy',$querie);
                             }
                          }
                     }
