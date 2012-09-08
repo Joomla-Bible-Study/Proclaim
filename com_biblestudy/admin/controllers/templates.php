@@ -117,6 +117,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                                 $db->setQuery($query);
                                 $data = $db->loadObject();
                                 $css = '"css":"'.$data->filename.'"';
+                                $css = $data->filename;
                             }
                         }
                     }
@@ -137,21 +138,25 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
                                     case 1:
                                         //sermonlist
                                         $sermonstemplate = '"sermonstemplate":"'.$data->filename.'"';
+                                        $sermonstemplate = $data->filename;
                                         break;
 
                                     case 2:
                                         //sermon
                                         $sermontemplate = '"sermontemplate":'.$data->filename.'"';
+                                        $sermontemplate = $data->filename;
                                         break;
 
                                     case 3:
                                         //teachers
                                         $teacherstemplate = '"teacherstemplate":'.$data->filename.'"';
+                                        $teacherstemplate = $data->filename;
                                         break;
 
                                     case 4:
                                         //teacher
                                         $teachertemplate = '"teachertemplate":'.$data->filename.'"';
+                                        $teachertemplate = $data->filename;
                                         break;
 
                                     case 5:
