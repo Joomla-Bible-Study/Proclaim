@@ -10,7 +10,6 @@
 //No Direct Access
 defined('_JEXEC') or die;
 include_once(JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_biblestudy' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'biblestudy.backup.php');
-//require_once ( JPATH_ROOT . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'joomla' . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . 'parameter.php' );
 
 jimport('joomla.application.component.controlleradmin');
 
@@ -40,7 +39,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
      *
      * @return boolean
      */
-    function template_import() {
+    public function template_import() {
         /**
          * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
          */
@@ -228,7 +227,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
      *
      * @return boolean
      */
-    function template_export() {
+    public function template_export() {
         $data = JRequest::getVar('template_export', '', 'post', '');
         $exporttemplate = $data;
         if (!$exporttemplate) {
@@ -273,7 +272,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         $css = $params->get('css');
         $css = substr($css, 0, -4);
         if ($css) {
-            $objects .= "\n\n--\n-- CSS Style Code\n--\n";
+            $objects = "--\n-- CSS Style Code\n--\n";
             $query2 = $db->getQuery(true);
             $query2->select('style.*');
             $query2->from('#__bsms_styles AS style');
@@ -316,7 +315,7 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
             $objects .= $this->getTemplate($seriesdisplay);
         }
 
-        $objects = "--\n-- Template Table\n--\n";
+        $objects .= "\n\n--\n-- Template Table\n--\n";
         //Create the main template insert
         $objects .= "\nINSERT INTO #__bsms_templates SET `type` = '" . $db->getEscaped($result->type) . "',";
         $objects .= "\n`params` = '" . $db->getEscaped($result->params) . "',";
@@ -352,6 +351,12 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         return $templatereturn;
     }
 
+    /**
+     * Perform DB Qurey
+     *
+     * @param string $query
+     * @return boolean
+     */
     function performDB($query) {
         $db = JFactory::getDBO();
         $db->setQuery($query);
@@ -362,6 +367,12 @@ class BiblestudyControllerTemplates extends JControllerAdmin {
         return true;
     }
 
+    /**
+     * Return Template Type
+     * 
+     * @param string $type
+     * @return string
+     */
     function getTemplateType($type) {
         if ($data->id) {
             switch ($type) {
